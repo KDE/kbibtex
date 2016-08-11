@@ -298,7 +298,16 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
     const QString primaryUrl = reply->property("primaryurl").toString();
     const QString documentUrl = reply->property("documenturl").toString();
 
-    if (handleErrors(reply)) {
+    KUrl newDomainUrl;
+    if (handleErrors(reply, newDomainUrl)) {
+        if (newDomainUrl.isValid() && newDomainUrl != reply->url()) {
+            /// following redirection to country-specific domain
+            ++d->numSteps;
+            QNetworkRequest request(newDomainUrl);
+            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+        } else {
         /// ensure proper treatment of UTF-8 characters
         QString rawText = QString::fromUtf8(reply->readAll().constData());
         File *bibtexFile = d->importer.fromString(rawText);
@@ -358,6 +367,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         } else {
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
+        }
         }
     } else
         kDebug() << "url was" << reply->url().toString();
