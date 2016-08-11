@@ -308,66 +308,66 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
             connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
         } else {
-        /// ensure proper treatment of UTF-8 characters
-        QString rawText = QString::fromUtf8(reply->readAll().constData());
-        File *bibtexFile = d->importer.fromString(rawText);
+            /// ensure proper treatment of UTF-8 characters
+            QString rawText = QString::fromUtf8(reply->readAll().constData());
+            File *bibtexFile = d->importer.fromString(rawText);
 
-        bool hasEntry = false;
-        if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                if (!entry.isNull()) {
-                    Value v;
-                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
-                    entry->insert("x-fetchedfrom", v);
-                    if (!primaryUrl.isEmpty()) {
-                        /// There is an external document associated with this BibTeX entry
-                        Value urlValue = entry->value(Entry::ftUrl);
-                        urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(primaryUrl)));
-                        entry->insert(Entry::ftUrl, urlValue);
+            bool hasEntry = false;
+            if (bibtexFile != NULL) {
+                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                    QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                    if (!entry.isNull()) {
+                        Value v;
+                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
+                        entry->insert("x-fetchedfrom", v);
+                        if (!primaryUrl.isEmpty()) {
+                            /// There is an external document associated with this BibTeX entry
+                            Value urlValue = entry->value(Entry::ftUrl);
+                            urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(primaryUrl)));
+                            entry->insert(Entry::ftUrl, urlValue);
+                        }
+                        if (!documentUrl.isEmpty() &&
+                                primaryUrl != documentUrl /** avoid duplicates */) {
+                            /// There is a web page associated with this BibTeX entry
+                            Value urlValue = entry->value(Entry::ftUrl);
+                            urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(documentUrl)));
+                            entry->insert(Entry::ftUrl, urlValue);
+                        }
+                        emit foundEntry(entry);
+                        hasEntry = true;
                     }
-                    if (!documentUrl.isEmpty() &&
-                            primaryUrl != documentUrl /** avoid duplicates */) {
-                        /// There is a web page associated with this BibTeX entry
-                        Value urlValue = entry->value(Entry::ftUrl);
-                        urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(documentUrl)));
-                        entry->insert(Entry::ftUrl, urlValue);
-                    }
-                    emit foundEntry(entry);
-                    hasEntry = true;
                 }
+                delete bibtexFile;
             }
-            delete bibtexFile;
-        }
 
-        if (!hasEntry) {
-            kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
-            emit stoppedSearch(resultUnspecifiedError);
-            return;
-        }
+            if (!hasEntry) {
+                kWarning() << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
+                emit stoppedSearch(resultUnspecifiedError);
+                return;
+            }
 
-        if (!d->listBibTeXurls.isEmpty()) {
-            const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
-            const QStringList urls = d->listBibTeXurls.constBegin().value().split(QLatin1String("|"), QString::KeepEmptyParts);
-            const QString primaryUrl = urls.first();
-            const QString documentUrl = urls.last();
-            QNetworkRequest request(bibtexUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            if (!primaryUrl.isEmpty()) {
-                /// Store primary URL as a property of the request/reply
-                newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
+            if (!d->listBibTeXurls.isEmpty()) {
+                const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
+                const QStringList urls = d->listBibTeXurls.constBegin().value().split(QLatin1String("|"), QString::KeepEmptyParts);
+                const QString primaryUrl = urls.first();
+                const QString documentUrl = urls.last();
+                QNetworkRequest request(bibtexUrl);
+                QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+                if (!primaryUrl.isEmpty()) {
+                    /// Store primary URL as a property of the request/reply
+                    newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
+                }
+                if (!documentUrl.isEmpty()) {
+                    /// Store URL to document as a property of the request/reply
+                    newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
+                }
+                connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+                d->listBibTeXurls.erase(d->listBibTeXurls.begin());
+            } else {
+                emit stoppedSearch(resultNoError);
+                emit progress(d->numSteps, d->numSteps);
             }
-            if (!documentUrl.isEmpty()) {
-                /// Store URL to document as a property of the request/reply
-                newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
-            }
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
-            d->listBibTeXurls.erase(d->listBibTeXurls.begin());
-        } else {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
-        }
         }
     } else
         kDebug() << "url was" << reply->url().toString();
