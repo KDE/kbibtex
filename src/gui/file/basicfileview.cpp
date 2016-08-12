@@ -326,7 +326,7 @@ void BasicFileView::setModel(QAbstractItemModel *model)
     }
     if (d->fileModel == NULL)
         qCWarning(LOG_KBIBTEX_GUI) << "Failed to dynamically cast model to FileModel*";
-    QTreeView::setModel(d->fileModel);
+    QTreeView::setModel(model);
 
     /// sort according to session
     if (header()->isSortIndicatorShown())
