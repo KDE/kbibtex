@@ -51,7 +51,7 @@ XSLTransform *XSLTransform::createXSLTransform(const QString &xsltFilename)
 XSLTransform::XSLTransform(const xsltStylesheetPtr xsltSS)
         : xsltStylesheet(xsltSS)
 {
-    // nothing
+    /// nothing
 }
 
 XSLTransform::~XSLTransform()

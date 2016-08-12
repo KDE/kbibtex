@@ -45,6 +45,8 @@ public:
     static const QString configGroupName;
 
     IdSuggestions();
+    IdSuggestions(const IdSuggestions &) = delete;
+    IdSuggestions &operator= (const IdSuggestions &other) = delete;
     ~IdSuggestions();
 
     QString formatId(const Entry &entry, const QString &formatStr) const;

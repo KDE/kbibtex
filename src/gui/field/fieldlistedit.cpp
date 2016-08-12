@@ -82,6 +82,9 @@ public:
         setupGUI();
     }
 
+    FieldListEditProtected(const FieldListEditProtected &other) = delete;
+    FieldListEditProtected &operator= (const FieldListEditProtected &other) = delete;
+
     ~FieldListEditProtected() {
         delete smRemove;
         delete smGoUp;

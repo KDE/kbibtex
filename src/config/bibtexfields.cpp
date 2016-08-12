@@ -105,7 +105,8 @@ public:
 
         QStringList treeViewNames;
         int columnCount = 0;
-        foreach (const FieldDescription *fd, *p) {
+        for (BibTeXFields::ConstIterator it = p->constBegin(); it != p->constEnd(); ++it) {
+            const FieldDescription *fd = *it;
             ++columnCount;
             QString groupName = QString(QStringLiteral("Column%1")).arg(columnCount);
             KConfigGroup configGroup(layoutConfig, groupName);

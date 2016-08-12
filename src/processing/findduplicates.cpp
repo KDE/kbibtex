@@ -474,20 +474,17 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
 
 class MergeDuplicates::MergeDuplicatesPrivate
 {
-private:
-    // UNUSED MergeDuplicates *p;
-
 public:
     QWidget *widget;
 
-    MergeDuplicatesPrivate(MergeDuplicates */* UNUSED parent*/, QWidget *w)
-        : /* UNUSED p(parent),*/ widget(w) {
-        // nothing
+    MergeDuplicatesPrivate(QWidget *w)
+            : widget(w) {
+        /// nothing
     }
 };
 
 MergeDuplicates::MergeDuplicates(QWidget *parent)
-        : d(new MergeDuplicatesPrivate(this, parent))
+        : d(new MergeDuplicatesPrivate(parent))
 {
     /// nothing
 }

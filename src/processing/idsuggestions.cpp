@@ -253,7 +253,7 @@ const QString IdSuggestions::configGroupName = QStringLiteral("IdSuggestions");
 IdSuggestions::IdSuggestions()
         : d(new IdSuggestionsPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 IdSuggestions::~IdSuggestions()

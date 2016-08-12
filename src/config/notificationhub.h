@@ -37,6 +37,10 @@ public:
 class KBIBTEXCONFIG_EXPORT NotificationHub
 {
 public:
+    NotificationHub(const NotificationHub &other) = delete;
+    NotificationHub &operator= (const NotificationHub &other) = delete;
+    ~NotificationHub();
+
     static const int EventAny;
     static const int EventConfigurationChanged;
     static const int EventUserDefined;
@@ -53,7 +57,6 @@ private:
     static NotificationHub *getHub();
 
     NotificationHub();
-    ~NotificationHub();
 };
 
 #endif // CONFIG_NOTIFICATIONHUB_H

@@ -154,7 +154,8 @@ public:
 
         lineeditFilter->clear();
         comboboxFieldNames->clear();
-        foreach (const FieldDescription *fd, *bibtexFields) {
+        for (BibTeXFields::ConstIterator it = bibtexFields->constBegin(); it != bibtexFields->constEnd(); ++it) {
+            const FieldDescription *fd = *it;
             if (!fd->upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
             if (fd->upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
             comboboxFieldNames->addItem(fd->label, fd->upperCamelCase);

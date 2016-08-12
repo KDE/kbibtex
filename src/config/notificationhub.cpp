@@ -37,10 +37,9 @@ public:
     QHash<int, QSet<NotificationListener *> > listenersPerEventId;
     QSet<NotificationListener *> allListeners;
 
-    NotificationHubPrivate(NotificationHub */* UNUSED parent*/)
-    // UNUSED : p(parent)
+    NotificationHubPrivate(NotificationHub *)
     {
-        // nothing
+        /// nothing
     }
 };
 

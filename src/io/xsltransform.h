@@ -39,6 +39,8 @@ public:
      */
     static XSLTransform *createXSLTransform(const QString &xsltFilename);
 
+    XSLTransform(const XSLTransform &other) = delete;
+    XSLTransform &operator= (const XSLTransform &other) = delete;
     ~XSLTransform();
 
     /**

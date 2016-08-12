@@ -56,6 +56,8 @@ uint qHash(const FieldDescription &a);
 class KBIBTEXCONFIG_EXPORT BibTeXFields : public QList<FieldDescription *>
 {
 public:
+    BibTeXFields(const BibTeXFields &other) = delete;
+    BibTeXFields &operator= (const BibTeXFields &other) = delete;
     ~BibTeXFields();
 
     /**
