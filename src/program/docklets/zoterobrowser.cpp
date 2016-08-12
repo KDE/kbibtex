@@ -26,7 +26,7 @@
 #include <QRadioButton>
 #include <QPushButton>
 #include <QDebug>
-#include <QLineEdit>
+#include <KLineEdit>
 
 #include <KLocalizedString>
 #include <KComboBox>
@@ -71,8 +71,8 @@ public:
     QTabWidget *tabWidget;
     QTreeView *collectionBrowser;
     QListView *tagBrowser;
-    QLineEdit *lineEditNumericUserId;
-    QLineEdit *lineEditApiKey;
+    KLineEdit *lineEditNumericUserId;
+    KLineEdit *lineEditApiKey;
     QRadioButton *radioPersonalLibrary;
     QRadioButton *radioGroupLibrary;
     bool comboBoxGroupListInitialized;
@@ -123,8 +123,8 @@ public:
         radioPersonalLibrary->setChecked(true);
         comboBoxGroupList->setEnabled(false);
         comboBoxGroupList->addItem(i18n("No groups available"));
-        connect(radioGroupLibrary, SIGNAL(toggled(bool)), p, SLOT(radioButtonsToggled()));
-        connect(radioPersonalLibrary, SIGNAL(toggled(bool)), p, SLOT(radioButtonsToggled()));
+        connect(radioGroupLibrary, &QRadioButton::toggled, p, &ZoteroBrowser::radioButtonsToggled);
+        connect(radioPersonalLibrary, &QRadioButton::toggled, p, &ZoteroBrowser::radioButtonsToggled);
 
         QBoxLayout *containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);
@@ -132,7 +132,7 @@ public:
         containerButtonLayout->addStretch(1);
         buttonLoadBibliography = new QPushButton(QIcon::fromTheme(QStringLiteral("download")), i18n("Load bibliography"), container);
         containerButtonLayout->addWidget(buttonLoadBibliography, 0);
-        connect(buttonLoadBibliography, SIGNAL(clicked()), p, SLOT(applyCredentials()));
+        connect(buttonLoadBibliography, &QPushButton::clicked, p, &ZoteroBrowser::applyCredentials);
 
         containerLayout->addStretch(10);
 
@@ -140,17 +140,17 @@ public:
         QFormLayout *containerForm = new QFormLayout();
         containerLayout->addLayout(containerForm, 1);
         containerForm->setMargin(0);
-        lineEditNumericUserId = new QLineEdit(container);
+        lineEditNumericUserId = new KLineEdit(container);
         lineEditNumericUserId->setSizePolicy(sizePolicy);
         lineEditNumericUserId->setReadOnly(true);
         containerForm->addRow(i18n("Numeric user id:"), lineEditNumericUserId);
-        connect(lineEditNumericUserId, &QLineEdit::textChanged, p, &ZoteroBrowser::invalidateGroupList);
+        connect(lineEditNumericUserId, &KLineEdit::textChanged, p, &ZoteroBrowser::invalidateGroupList);
 
-        lineEditApiKey = new QLineEdit(container);
+        lineEditApiKey = new KLineEdit(container);
         lineEditApiKey->setSizePolicy(sizePolicy);
         lineEditApiKey->setReadOnly(true);
         containerForm->addRow(i18n("API key:"), lineEditApiKey);
-        connect(lineEditApiKey, &QLineEdit::textChanged, p, &ZoteroBrowser::invalidateGroupList);
+        connect(lineEditApiKey, &KLineEdit::textChanged, p, &ZoteroBrowser::invalidateGroupList);
 
         containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);
@@ -165,12 +165,12 @@ public:
         tabWidget->addTab(collectionBrowser, QIcon::fromTheme(QStringLiteral("folder-yellow")), i18n("Collections"));
         collectionBrowser->setHeaderHidden(true);
         collectionBrowser->setExpandsOnDoubleClick(false);
-        connect(collectionBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(collectionDoubleClicked(QModelIndex)));
+        connect(collectionBrowser, &QTreeView::doubleClicked, p, &ZoteroBrowser::collectionDoubleClicked);
 
         /// Tag browser
         tagBrowser = new QListView(tabWidget);
         tabWidget->addTab(tagBrowser, QIcon::fromTheme(QStringLiteral("mail-tagged")), i18n("Tags"));
-        connect(tagBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(tagDoubleClicked(QModelIndex)));
+        connect(tagBrowser, &QListView::doubleClicked, p, &ZoteroBrowser::tagDoubleClicked);
     }
 
     void queueWriteOAuthCredentials() {
@@ -286,9 +286,9 @@ void ZoteroBrowser::applyCredentials()
 
         connect(d->collectionModel, &Zotero::CollectionModel::modelReset, this, &ZoteroBrowser::modelReset);
         connect(d->tagModel, &Zotero::TagModel::modelReset, this, &ZoteroBrowser::modelReset);
-        connect(d->items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
-        connect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableWidget()));
-        connect(d->tags, SIGNAL(finishedLoading()), this, SLOT(reenableWidget()));
+        connect(d->items, &Zotero::Items::foundElement, this, &ZoteroBrowser::showItem);
+        connect(d->items, &Zotero::Items::stoppedSearch, this, &ZoteroBrowser::reenableWidget);
+        connect(d->tags, &Zotero::Tags::finishedLoading, this, &ZoteroBrowser::reenableWidget);
 
         d->tabWidget->setCurrentIndex(1);
     } else
@@ -316,7 +316,7 @@ void ZoteroBrowser::retrieveGroupList() {
         d->api = new Zotero::API(Zotero::API::UserRequest, userId, d->lineEditApiKey->text(), this);
         d->groups = new Zotero::Groups(d->api, this);
 
-        connect(d->groups, SIGNAL(finishedLoading()), this, SLOT(gotGroupList()));
+        connect(d->groups, &Zotero::Groups::finishedLoading, this, &ZoteroBrowser::gotGroupList);
     }
 }
 

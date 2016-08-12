@@ -52,7 +52,7 @@ public:
         api->addLimitToUrl(internalUrl);
         QNetworkRequest request = api->request(internalUrl);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        connect(reply, SIGNAL(finished()), p, SLOT(finishedFetchingGroups()));
+        connect(reply, &QNetworkReply::finished, p, &Zotero::Groups::finishedFetchingGroups);
         return reply;
     }
 };

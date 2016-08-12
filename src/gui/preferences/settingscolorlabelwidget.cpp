@@ -339,7 +339,7 @@ public:
         view->setModel(model);
         /// Changes in the model (e.g. through setData(..))
         /// get propagated as this widget's changed() signal
-        connect(model, SIGNAL(modified()), p, SIGNAL(changed()));
+        connect(model, &ColorLabelSettingsModel::modified, p, &SettingsColorLabelWidget::changed);
 
         /// Delegate to handle changes of color (through KColorButton)
         /// and label (throuh KLineEdit)
@@ -349,14 +349,14 @@ public:
         /// Button to add a new randomized color
         QPushButton *buttonAdd = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add..."), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
-        connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addColor()));
+        connect(buttonAdd, &QPushButton::clicked, p, &SettingsColorLabelWidget::addColor);
 
         /// Remove selected color-label pair; button is disabled
         /// if no row is selected in tree view
         buttonRemove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
         buttonRemove->setEnabled(false);
-        connect(buttonRemove, SIGNAL(clicked()), p, SLOT(removeColor()));
+        connect(buttonRemove, &QPushButton::clicked, p, &SettingsColorLabelWidget::removeColor);
     }
 };
 
@@ -370,7 +370,7 @@ SettingsColorLabelWidget::SettingsColorLabelWidget(QWidget *parent)
     /// Setup GUI elements
     d->setupGUI();
     /// Connect signals
-    connect(d->view->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(updateRemoveButtonStatus()));
+    connect(d->view->selectionModel(), &QItemSelectionModel::selectionChanged, this, &SettingsColorLabelWidget::updateRemoveButtonStatus);
 }
 
 SettingsColorLabelWidget::~SettingsColorLabelWidget()
@@ -467,7 +467,7 @@ public:
             QAction *action = new QAction(QIcon(ColorLabelWidget::createSolidIcon(*itc)), i18n((*itl).toUtf8().constData()), menu);
             menu->addAction(action);
             sm->setMapping(action, *itc);
-            connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+            connect(action, &QAction::triggered, sm, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         }
 
         QAction *action = new QAction(menu);
@@ -479,7 +479,7 @@ public:
         action = new QAction(i18n("No color"), menu);
         menu->addAction(action);
         sm->setMapping(action, QStringLiteral("#000000"));
-        connect(action, SIGNAL(triggered()), sm, SLOT(map()));
+        connect(action, &QAction::triggered, sm, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
     }
 };
 
@@ -487,7 +487,7 @@ public:
 ColorLabelContextMenu::ColorLabelContextMenu(FileView *widget)
         : QObject(widget), d(new Private(widget, this))
 {
-    connect(d->sm, SIGNAL(mapped(QString)), this, SLOT(colorActivated(QString)));
+    connect(d->sm, static_cast<void(QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &ColorLabelContextMenu::colorActivated);
 
     /// Listen to changes in the configuration files
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);

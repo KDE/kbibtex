@@ -135,8 +135,10 @@ public:
     void setFormatString(const QString &formatString);
     QString formatString() const;
 
-private slots:
+public slots:
     void updatePreview();
+
+private slots:
     void moveUpToken(QWidget *);
     void moveDownToken(QWidget *);
     void removeToken(QWidget *);

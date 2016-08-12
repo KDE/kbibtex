@@ -142,7 +142,7 @@ void OnlineSearchOCLCWorldCat::startSearch(const QMap<QString, QString> &query, 
     QNetworkRequest request(startUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+    connect(reply, &QNetworkReply::finished, this, SLOT(downloadDone()));
 }
 
 QString OnlineSearchOCLCWorldCat::label() const {
@@ -200,7 +200,7 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-                connect(newReply, SIGNAL(finished()), this, SLOT(downloadDone()));
+                connect(newReply, &QNetworkReply::finished, this, SLOT(downloadDone()));
             } else {
                 emit progress(d->maxSteps, d->maxSteps);
                 emit stoppedSearch(resultNoError);

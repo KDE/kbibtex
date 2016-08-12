@@ -71,8 +71,8 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     m_process->setWorkingDirectory(tempDir.path());
 
     if (m_errorLog != NULL) {
-        connect(m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(slotReadProcessStandardOutput()));
-        connect(m_process, SIGNAL(readyReadStandardError()), this, SLOT(slotReadProcessErrorOutput()));
+        connect(m_process, &QProcess::readyReadStandardOutput, this, &FileExporterToolchain::slotReadProcessStandardOutput);
+        connect(m_process, &QProcess::readyReadStandardError, this, &FileExporterToolchain::slotReadProcessErrorOutput);
     }
 
     if (errorLog != NULL)

@@ -112,15 +112,15 @@ public:
 
         addLineButton = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add"), pushButtonContainer);
         addLineButton->setObjectName(QStringLiteral("addButton"));
-        connect(addLineButton, SIGNAL(clicked()), p, SLOT(lineAdd()));
-        connect(addLineButton, SIGNAL(clicked()), p, SIGNAL(modified()));
+        connect(addLineButton, &QPushButton::clicked, p, static_cast<void(FieldListEdit::*)()>(&FieldListEdit::lineAdd));
+        connect(addLineButton, &QPushButton::clicked, p, &FieldListEdit::modified);
         pushButtonContainerLayout->addWidget(addLineButton);
 
         layout->addStretch(100);
 
-        connect(smRemove, SIGNAL(mapped(QWidget*)), p, SLOT(lineRemove(QWidget*)));
-        connect(smGoDown, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoDown(QWidget*)));
-        connect(smGoUp, SIGNAL(mapped(QWidget*)), p, SLOT(lineGoUp(QWidget*)));
+        connect(smRemove, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), p, &FieldListEdit::lineRemove);
+        connect(smGoDown, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), p, &FieldListEdit::lineGoDown);
+        connect(smGoUp, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), p, &FieldListEdit::lineGoUp);
 
         scrollArea->setBackgroundRole(QPalette::Base);
         scrollArea->ensureWidgetVisible(container);
@@ -156,22 +156,22 @@ public:
         QPushButton *remove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), QStringLiteral(""), le);
         remove->setToolTip(i18n("Remove value"));
         le->appendWidget(remove);
-        connect(remove, SIGNAL(clicked()), smRemove, SLOT(map()));
+        connect(remove, &QPushButton::clicked, smRemove, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         smRemove->setMapping(remove, le);
 
         QPushButton *goDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QStringLiteral(""), le);
         goDown->setToolTip(i18n("Move value down"));
         le->appendWidget(goDown);
-        connect(goDown, SIGNAL(clicked()), smGoDown, SLOT(map()));
+        connect(goDown, &QPushButton::clicked, smGoDown, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         smGoDown->setMapping(goDown, le);
 
         QPushButton *goUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QStringLiteral(""), le);
         goUp->setToolTip(i18n("Move value up"));
         le->appendWidget(goUp);
-        connect(goUp, SIGNAL(clicked()), smGoUp, SLOT(map()));
+        connect(goUp, &QPushButton::clicked, smGoUp, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         smGoUp->setMapping(goUp, le);
 
-        connect(le, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
+        connect(le, &FieldLineEdit::textChanged, p, &FieldListEdit::modified);
 
         return le;
     }
@@ -401,14 +401,15 @@ PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::Typ
         : FieldListEdit(preferredTypeFlag, typeFlags, parent)
 {
     m_checkBoxOthers = new QCheckBox(i18n("... and others (et al.)"), this);
-    connect(m_checkBoxOthers, SIGNAL(toggled(bool)), this, SIGNAL(modified()));
+    connect(m_checkBoxOthers, &QCheckBox::toggled, this, &PersonListEdit::modified);
     QBoxLayout *boxLayout = static_cast<QBoxLayout *>(layout());
     boxLayout->addWidget(m_checkBoxOthers);
 
     m_buttonAddNamesFromClipboard = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-paste")), i18n("Add from Clipboard"), this);
     m_buttonAddNamesFromClipboard->setToolTip(i18n("Add a list of names from clipboard"));
     addButton(m_buttonAddNamesFromClipboard);
-    connect(m_buttonAddNamesFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddNamesFromClipboard()));
+
+    connect(m_buttonAddNamesFromClipboard, &QPushButton::clicked, this, &PersonListEdit::slotAddNamesFromClipboard);
 }
 
 bool PersonListEdit::reset(const Value &value)
@@ -468,15 +469,15 @@ UrlListEdit::UrlListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, parent)
 {
     m_signalMapperSaveLocallyButtonClicked = new QSignalMapper(this);
-    connect(m_signalMapperSaveLocallyButtonClicked, SIGNAL(mapped(QWidget*)), this, SLOT(slotSaveLocally(QWidget*)));
+    connect(m_signalMapperSaveLocallyButtonClicked, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), this, &UrlListEdit::slotSaveLocally);
     m_signalMapperFieldLineEditTextChanged = new QSignalMapper(this);
-    connect(m_signalMapperFieldLineEditTextChanged, SIGNAL(mapped(QWidget*)), this, SLOT(textChanged(QWidget*)));
+    connect(m_signalMapperFieldLineEditTextChanged, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), this, &UrlListEdit::textChanged);
 
     m_buttonAddFile = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add file..."), this);
     addButton(m_buttonAddFile);
     QMenu *menuAddFile = new QMenu(m_buttonAddFile);
     m_buttonAddFile->setMenu(menuAddFile);
-    connect(m_buttonAddFile, SIGNAL(clicked()), m_buttonAddFile, SLOT(showMenu()));
+    connect(m_buttonAddFile, &QPushButton::clicked, m_buttonAddFile, &QPushButton::showMenu);
 
     menuAddFile->addAction(QIcon::fromTheme(QStringLiteral("emblem-symbolic-link")), i18n("Add reference ..."), this, SLOT(slotAddReference()));
     menuAddFile->addAction(QIcon::fromTheme(QStringLiteral("emblem-symbolic-link")), i18n("Add reference from clipboard"), this, SLOT(slotAddReferenceFromClipboard()));
@@ -632,8 +633,8 @@ FieldLineEdit *UrlListEdit::addFieldLineEdit()
     /// or changes in the FieldLineEdit's text
     m_signalMapperSaveLocallyButtonClicked->setMapping(buttonSaveLocally, fieldLineEdit);
     m_signalMapperFieldLineEditTextChanged->setMapping(fieldLineEdit, buttonSaveLocally);
-    connect(buttonSaveLocally, SIGNAL(clicked()), m_signalMapperSaveLocallyButtonClicked, SLOT(map()));
-    connect(fieldLineEdit, SIGNAL(textChanged(QString)), m_signalMapperFieldLineEditTextChanged, SLOT(map()));
+    connect(buttonSaveLocally, &QPushButton::clicked, m_signalMapperSaveLocallyButtonClicked, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+    connect(fieldLineEdit, &FieldLineEdit::textChanged, m_signalMapperFieldLineEditTextChanged, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
 
     return fieldLineEdit;
 }
@@ -653,11 +654,11 @@ KeywordListEdit::KeywordListEdit(QWidget *parent)
     m_buttonAddKeywordsFromList = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add Keywords from List"), this);
     m_buttonAddKeywordsFromList->setToolTip(i18n("Add keywords as selected from a pre-defined list of keywords"));
     addButton(m_buttonAddKeywordsFromList);
-    connect(m_buttonAddKeywordsFromList, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromList()));
+    connect(m_buttonAddKeywordsFromList, &QPushButton::clicked, this, &KeywordListEdit::slotAddKeywordsFromList);
     m_buttonAddKeywordsFromClipboard = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-paste")), i18n("Add Keywords from Clipboard"), this);
     m_buttonAddKeywordsFromClipboard->setToolTip(i18n("Add a punctuation-separated list of keywords from clipboard"));
     addButton(m_buttonAddKeywordsFromClipboard);
-    connect(m_buttonAddKeywordsFromClipboard, SIGNAL(clicked()), this, SLOT(slotAddKeywordsFromClipboard()));
+    connect(m_buttonAddKeywordsFromClipboard, &QPushButton::clicked, this, &KeywordListEdit::slotAddKeywordsFromClipboard);
 }
 
 void KeywordListEdit::slotAddKeywordsFromList()

@@ -41,8 +41,8 @@ DelayedExecutionTimer::DelayedExecutionTimer(int maximumDelay, int minimumDelay,
     m_minimumTimer(new QTimer(this)),
     m_maximumTimer(new QTimer(this))
 {
-    connect(m_minimumTimer, SIGNAL(timeout()), SLOT(timeout()));
-    connect(m_maximumTimer, SIGNAL(timeout()), SLOT(timeout()));
+    connect(m_minimumTimer, &QTimer::timeout, this, &DelayedExecutionTimer::timeout);
+    connect(m_maximumTimer, &QTimer::timeout, this, &DelayedExecutionTimer::timeout);
 }
 
 DelayedExecutionTimer::DelayedExecutionTimer(QObject *parent):
@@ -53,8 +53,8 @@ DelayedExecutionTimer::DelayedExecutionTimer(QObject *parent):
     m_minimumTimer(new QTimer(this)),
     m_maximumTimer(new QTimer(this))
 {
-    connect(m_minimumTimer, SIGNAL(timeout()), SLOT(timeout()));
-    connect(m_maximumTimer, SIGNAL(timeout()), SLOT(timeout()));
+    connect(m_minimumTimer, &QTimer::timeout, this, &DelayedExecutionTimer::timeout);
+    connect(m_maximumTimer, &QTimer::timeout, this, &DelayedExecutionTimer::timeout);
 }
 
 void DelayedExecutionTimer::timeout()

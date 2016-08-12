@@ -64,8 +64,8 @@ public:
         layout->addWidget(dirOperator, 1, 0, 1, 3);
         dirOperator->setView(KFile::Detail);
 
-        connect(buttonUp, SIGNAL(clicked()), dirOperator, SLOT(cdUp()));
-        connect(buttonHome, SIGNAL(clicked()), dirOperator, SLOT(home()));
+        connect(buttonUp, &QPushButton::clicked, dirOperator, &KDirOperator::cdUp);
+        connect(buttonHome, &QPushButton::clicked, dirOperator, &KDirOperator::home);
     }
 };
 
@@ -150,7 +150,7 @@ DocumentListModel::DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObjec
 {
     listsChanged(d->sf);
 
-    connect(OpenFileInfoManager::instance(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(listsChanged(OpenFileInfo::StatusFlags)));
+    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &DocumentListModel::listsChanged);
 }
 
 DocumentListModel::~DocumentListModel()
@@ -257,7 +257,7 @@ public:
 
     DocumentListViewPrivate(DocumentListView *parent)
             : p(parent), ofim(OpenFileInfoManager::instance()), actionAddToFav(NULL), actionRemFromFav(NULL), actionCloseFile(NULL), actionOpenFile(NULL), actionOpenMenu(NULL) {
-        connect(&openMenuSignalMapper, SIGNAL(mapped(int)), p, SLOT(openFileWithService(int)));
+        connect(&openMenuSignalMapper, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &DocumentListView::openFileWithService);
     }
 };
 
@@ -269,11 +269,11 @@ DocumentListView::DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget 
 
     if (statusFlag == OpenFileInfo::Open) {
         d->actionCloseFile = new QAction(QIcon::fromTheme(QStringLiteral("document-close")), i18n("Close File"), this);
-        connect(d->actionCloseFile, SIGNAL(triggered()), this, SLOT(closeFile()));
+        connect(d->actionCloseFile, &QAction::triggered, this, &DocumentListView::closeFile);
         addAction(d->actionCloseFile);
     } else {
         d->actionOpenFile = new QAction(QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open File"), this);
-        connect(d->actionOpenFile, SIGNAL(triggered()), this, SLOT(openFile()));
+        connect(d->actionOpenFile, &QAction::triggered, this, &DocumentListView::openFile);
         addAction(d->actionOpenFile);
     }
 
@@ -282,15 +282,15 @@ DocumentListView::DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget 
 
     if (statusFlag == OpenFileInfo::Favorite) {
         d->actionRemFromFav = new QAction(QIcon::fromTheme(QStringLiteral("favorites")), i18n("Remove from Favorites"), this);
-        connect(d->actionRemFromFav, SIGNAL(triggered()), this, SLOT(removeFromFavorites()));
+        connect(d->actionRemFromFav, &QAction::triggered, this, &DocumentListView::removeFromFavorites);
         addAction(d->actionRemFromFav);
     } else {
         d->actionAddToFav = new QAction(QIcon::fromTheme(QStringLiteral("favorites")), i18n("Add to Favorites"), this);
-        connect(d->actionAddToFav, SIGNAL(triggered()), this, SLOT(addToFavorites()));
+        connect(d->actionAddToFav, &QAction::triggered, this, &DocumentListView::addToFavorites);
         addAction(d->actionAddToFav);
     }
 
-    connect(this, SIGNAL(activated(QModelIndex)), this, SLOT(openFile()));
+    connect(this, &DocumentListView::activated, this, &DocumentListView::openFile);
 
     currentChanged(QModelIndex(), QModelIndex());
 }
@@ -376,7 +376,7 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
             d->openMenuActions << menuItem;
 
             d->openMenuSignalMapper.setMapping(menuItem, i);
-            connect(menuItem, SIGNAL(triggered()), &d->openMenuSignalMapper, SLOT(map()));
+            connect(menuItem, &QAction::triggered, &d->openMenuSignalMapper, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
             ++i;
         }
     }
@@ -409,7 +409,7 @@ public:
 
         dirOperator = new DirOperatorWidget(p);
         p->addTab(dirOperator,  QIcon::fromTheme(QStringLiteral("system-file-manager")), i18n("Filesystem Browser"));
-        connect(dirOperator->dirOperator, SIGNAL(fileSelected(KFileItem)), p, SLOT(fileSelected(KFileItem)));
+        connect(dirOperator->dirOperator, &KDirOperator::fileSelected, p, &DocumentList::fileSelected);
     }
 };
 

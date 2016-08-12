@@ -167,10 +167,10 @@ public:
 Clipboard::Clipboard(FileView *fileView)
         : QObject(fileView), d(new ClipboardPrivate(fileView, this))
 {
-    connect(fileView, SIGNAL(editorMouseEvent(QMouseEvent*)), this, SLOT(editorMouseEvent(QMouseEvent*)));
-    connect(fileView, SIGNAL(editorDragEnterEvent(QDragEnterEvent*)), this, SLOT(editorDragEnterEvent(QDragEnterEvent*)));
-    connect(fileView, SIGNAL(editorDragMoveEvent(QDragMoveEvent*)), this, SLOT(editorDragMoveEvent(QDragMoveEvent*)));
-    connect(fileView, SIGNAL(editorDropEvent(QDropEvent*)), this, SLOT(editorDropEvent(QDropEvent*)));
+    connect(fileView, &FileView::editorMouseEvent, this, &Clipboard::editorMouseEvent);
+    connect(fileView, &FileView::editorDragEnterEvent, this, &Clipboard::editorDragEnterEvent);
+    connect(fileView, &FileView::editorDragMoveEvent, this, &Clipboard::editorDragMoveEvent);
+    connect(fileView, &FileView::editorDropEvent, this, &Clipboard::editorDropEvent);
     fileView->setAcceptDrops(!fileView->isReadOnly());
 }
 

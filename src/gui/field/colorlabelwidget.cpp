@@ -146,7 +146,7 @@ ColorLabelWidget::ColorLabelWidget(QWidget *parent)
         : KComboBox(false, parent), d(new ColorLabelWidgetPrivate(this, new ColorLabelComboBoxModel(this)))
 {
     setModel(d->model);
-    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurrentIndexChanged(int)));
+    connect(this, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ColorLabelWidget::slotCurrentIndexChanged);
 }
 
 ColorLabelWidget::~ColorLabelWidget()
@@ -162,7 +162,7 @@ void ColorLabelWidget::clear()
 bool ColorLabelWidget::reset(const Value &value)
 {
     /// Avoid triggering signal when current index is set by the program
-    disconnect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurrentIndexChanged(int)));
+    disconnect(this, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ColorLabelWidget::slotCurrentIndexChanged);
 
     QSharedPointer<VerbatimText> verbatimText;
     if (value.count() == 1 && !(verbatimText = value.first().dynamicCast<VerbatimText>()).isNull()) {
@@ -181,7 +181,7 @@ bool ColorLabelWidget::reset(const Value &value)
         setCurrentIndex(0);
 
     /// Re-enable triggering signal after setting current index
-    connect(this, SIGNAL(currentIndexChanged(int)), this, SLOT(slotCurrentIndexChanged(int)));
+    connect(this, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &ColorLabelWidget::slotCurrentIndexChanged);
 
     return true;
 }

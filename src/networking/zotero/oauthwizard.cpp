@@ -87,7 +87,7 @@ public:
         layout->addLayout(formLayout);
         lineEditVerificationCode = new HexInputLineEdit(20, this);
         formLayout->addRow(i18n("Verification Code:"), lineEditVerificationCode);
-        connect(lineEditVerificationCode, SIGNAL(textEdited(QString)), this, SIGNAL(completeChanged()));
+        connect(lineEditVerificationCode, &HexInputLineEdit::textEdited, this, &VerificationCodePage::completeChanged);
     }
 
     virtual bool isComplete() const {
@@ -184,12 +184,12 @@ public:
         gridLayout->addWidget(lineEditAuthorizationUrl, 0, 0, 1, 3);
         QPushButton *buttonCopyAuthorizationUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy URL"), page);
         gridLayout->addWidget(buttonCopyAuthorizationUrl, 1, 1, 1, 1);
-        connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(copyAuthorizationUrl()));
-        connect(buttonCopyAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));
+        connect(buttonCopyAuthorizationUrl, &QPushButton::clicked, p, &Zotero::OAuthWizard::copyAuthorizationUrl);
+        connect(buttonCopyAuthorizationUrl, &QPushButton::clicked, p, &Zotero::OAuthWizard::next);
         QPushButton *buttonOpenAuthorizationUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open-remote")), i18n("Open URL"), page);
         gridLayout->addWidget(buttonOpenAuthorizationUrl, 1, 2, 1, 1);
-        connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(openAuthorizationUrl()));
-        connect(buttonOpenAuthorizationUrl, SIGNAL(clicked()), p, SLOT(next()));
+        connect(buttonOpenAuthorizationUrl, &QPushButton::clicked, p, &Zotero::OAuthWizard::openAuthorizationUrl);
+        connect(buttonOpenAuthorizationUrl, &QPushButton::clicked, p, &Zotero::OAuthWizard::next);
         gridLayout->setRowMinimumHeight(2, 8);
         label = new QLabel(i18n("You will be asked to login into Zotero and select and confirm the permissions for KBibTeX."), page);
         label->setWordWrap(true);

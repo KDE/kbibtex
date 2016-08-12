@@ -155,15 +155,15 @@ void Statistics::setFile(const File *file, const QItemSelectionModel *selectionM
 {
     /// unregister from update notifications of selection models no longer used
     if (d->selectionModel != NULL && selectionModel != d->selectionModel) {
-        disconnect(d->selectionModel, SIGNAL(destroyed()), this, SLOT(selectionModelDestroyed()));
-        disconnect(d->selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(update()));
+        disconnect(d->selectionModel, &QItemSelectionModel::destroyed, this, &Statistics::selectionModelDestroyed);
+        disconnect(d->selectionModel, &QItemSelectionModel::selectionChanged, this, &Statistics::update);
     }
 
     if (selectionModel != NULL) {
-        connect(selectionModel, SIGNAL(destroyed()), this, SLOT(selectionModelDestroyed()));
+        connect(selectionModel, &QItemSelectionModel::destroyed, this, &Statistics::selectionModelDestroyed);
         /// register to update notifications of selection models to be used
         if (selectionModel != d->selectionModel)
-            connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SLOT(update()));
+            connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &Statistics::update);
     }
 
     d->file = file;

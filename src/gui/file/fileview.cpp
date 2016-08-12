@@ -101,7 +101,7 @@ const QString ElementEditorDialog::configGroupNameWindowSize = QStringLiteral("E
 FileView::FileView(const QString &name, QWidget *parent)
         : BasicFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(NULL), m_lastEditorPage(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL), m_dbb(NULL)
 {
-    connect(this, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(itemActivated(QModelIndex)));
+    connect(this, &FileView::doubleClicked, this, &FileView::itemActivated);
 }
 
 void FileView::viewCurrentElement()
@@ -138,7 +138,7 @@ bool FileView::editElement(QSharedPointer<Element> element)
         if (changed) {
             emit currentElementChanged(currentElement(), fileModel()->bibliographyFile());
             emit selectedElementsChanged();
-            emit modified();
+            emit modified(true);
         }
         return changed;
     } else
@@ -232,13 +232,13 @@ void FileView::selectionDelete()
 
     fileModel()->removeRowList(rows);
 
-    emit modified();
+    emit modified(true);
 }
 
 /// FIXME the existence of this function is basically just one big hack
 void FileView::externalModification()
 {
-    emit modified();
+    emit modified(true);
 }
 
 void FileView::setReadOnly(bool isReadOnly)
@@ -257,7 +257,7 @@ ValueListModel *FileView::valueListModel(const QString &field)
     if (model != NULL) {
         ValueListModel *result = new ValueListModel(model->bibliographyFile(), field, this);
         /// Keep track of external changes through modifications in this ValueListModel instance
-        connect(result, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(externalModification()));
+        connect(result, &ValueListModel::dataChanged, this, &FileView::externalModification);
         return result;
     }
 

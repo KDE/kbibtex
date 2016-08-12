@@ -435,7 +435,7 @@ OpenFileInfoManager *OpenFileInfoManager::singleton = NULL;
 OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
         : QObject(parent), d(new OpenFileInfoManagerPrivate(this))
 {
-    QTimer::singleShot(300, this, SLOT(delayedReadConfig()));
+    QTimer::singleShot(300, this, &OpenFileInfoManager::delayedReadConfig);
 }
 
 OpenFileInfoManager *OpenFileInfoManager::instance() {
@@ -452,7 +452,7 @@ OpenFileInfoManager::~OpenFileInfoManager()
 OpenFileInfo *OpenFileInfoManager::createNew(const QString &mimeType)
 {
     OpenFileInfo *result = new OpenFileInfo(this, mimeType);
-    connect(result, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)));
+    connect(result, &OpenFileInfo::flagsChanged, this, &OpenFileInfoManager::flagsChanged);
     d->openFileInfoList << result;
     result->setLastAccess();
     return result;
@@ -466,7 +466,7 @@ OpenFileInfo *OpenFileInfoManager::open(const QUrl &url)
     if (result == NULL) {
         /// file not yet open
         result = new OpenFileInfo(this, url);
-        connect(result, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)));
+        connect(result, &OpenFileInfo::flagsChanged, this, &OpenFileInfoManager::flagsChanged);
         d->openFileInfoList << result;
     } /// else: file was already open, re-use and return existing OpenFileInfo pointer
     result->setLastAccess();

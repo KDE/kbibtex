@@ -100,7 +100,7 @@ public:
 
         /// ** Online Search **
         actionStartOnlineSearchTests = new QAction(QStringLiteral("Online Search"), m_parent);
-        connect(actionStartOnlineSearchTests, SIGNAL(triggered()), m_parent, SLOT(startOnlineSearchTests()));
+        connect(actionStartOnlineSearchTests, &QAction::triggered, m_parent, &KBibTeXTest::startOnlineSearchTests);
         menu->addAction(actionStartOnlineSearchTests);
     }
 
@@ -236,15 +236,15 @@ void KBibTeXTest::processNextSearch()
 
         QMap<QString, QString> query;
         query.insert(OnlineSearchAbstract::queryKeyAuthor, QStringLiteral("smith"));
-        connect((*m_currentOnlineSearch), SIGNAL(stoppedSearch(int)), this, SLOT(onlineSearchStoppedSearch(int)));
-        connect((*m_currentOnlineSearch), SIGNAL(foundEntry(QSharedPointer<Entry>)), this, SLOT(onlineSearchFoundEntry()));
-        connect((*m_currentOnlineSearch), SIGNAL(progress(int,int)), this, SLOT(progress(int,int)));
+        connect(*m_currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
+        connect(*m_currentOnlineSearch, &OnlineSearchAbstract::foundEntry, this, &KBibTeXTest::onlineSearchFoundEntry);
+        connect(*m_currentOnlineSearch, &OnlineSearchAbstract::progress, this, &KBibTeXTest::progress);
         (*m_currentOnlineSearch)->startSearch(query, 3);
     } else {
         addMessage(QStringLiteral("Done testing"), iconINFO);
         setBusy(false);
         m_running = false;
-        QTimer::singleShot(500, this, SLOT(resetProgress()));
+        QTimer::singleShot(500, this, &KBibTeXTest::resetProgress);
     }
 }
 

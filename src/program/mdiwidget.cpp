@@ -151,11 +151,11 @@ private:
 
         QPushButton *buttonNew = new QPushButton(QIcon::fromTheme(QStringLiteral("document-new")), i18n("New"), welcomeWidget);
         layout->addWidget(buttonNew, 2, 2, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
-        connect(buttonNew, SIGNAL(clicked()), p, SIGNAL(documentNew()));
+        connect(buttonNew, &QPushButton::clicked, p, &MDIWidget::documentNew);
 
         QPushButton *buttonOpen = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open..."), welcomeWidget);
         layout->addWidget(buttonOpen, 2, 4, 1, 1, Qt::AlignRight | Qt::AlignBottom);
-        connect(buttonOpen, SIGNAL(clicked()), p, SIGNAL(documentOpen()));
+        connect(buttonOpen, &QPushButton::clicked, p, &MDIWidget::documentOpen);
 
         label = new QLabel(i18n("List of recently used files:"), welcomeWidget);
         layout->addWidget(label, 3, 1, 1, 5, Qt::AlignLeft | Qt::AlignBottom);
@@ -164,7 +164,7 @@ private:
         listLRU->setSortingEnabled(true);
         listLRU->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
         layout->addWidget(listLRU, 4, 1, 1, 5);
-        connect(listLRU, SIGNAL(activated(QModelIndex)), p, SLOT(slotOpenLRU(QModelIndex)));
+        connect(listLRU, &QTreeView::activated, p, &MDIWidget::slotOpenLRU);
         label->setBuddy(listLRU);
 
         p->addWidget(welcomeWidget);
@@ -203,7 +203,7 @@ public:
         sfpm->setSortRole(LRUItemModel::SortRole);
         listLRU->setModel(sfpm);
 
-        connect(&signalMapperCompleted, SIGNAL(mapped(QObject*)), p, SLOT(slotCompleted(QObject*)));
+        connect(&signalMapperCompleted, static_cast<void(QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), p, &MDIWidget::slotCompleted);
 
         restoreColumnsState();
     }
@@ -216,7 +216,7 @@ public:
     void addToMapper(OpenFileInfo *openFileInfo) {
         KParts::ReadOnlyPart *part = openFileInfo->part(p);
         signalMapperCompleted.setMapping(part, openFileInfo);
-        connect(part, SIGNAL(completed()), &signalMapperCompleted, SLOT(map()));
+        connect(part, static_cast<void(KParts::ReadOnlyPart::*)()>(&KParts::ReadOnlyPart::completed), &signalMapperCompleted, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
     }
 
     void updateLRU() {
@@ -230,7 +230,7 @@ const QString MDIWidget::MDIWidgetPrivate::configHeaderState = QStringLiteral("L
 MDIWidget::MDIWidget(QWidget *parent)
         : QStackedWidget(parent), d(new MDIWidgetPrivate(this))
 {
-    connect(d->ofim, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(slotStatusFlagsChanged(OpenFileInfo::StatusFlags)));
+    connect(d->ofim, &OpenFileInfoManager::flagsChanged, this, &MDIWidget::slotStatusFlagsChanged);
 }
 
 MDIWidget::~MDIWidget()

@@ -105,40 +105,40 @@ public:
         treeviewFieldValues->setContextMenuPolicy(Qt::ActionsContextMenu);
         /// create context menu item to start renaming
         QAction *action = new QAction(QIcon::fromTheme(QStringLiteral("edit-rename")), i18n("Replace all occurrences"), p);
-        connect(action, SIGNAL(triggered()), p, SLOT(startItemRenaming()));
+        connect(action, &QAction::triggered, p, &ValueList::startItemRenaming);
         treeviewFieldValues->addAction(action);
         /// create context menu item to delete value
         action = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-delete-row")), i18n("Delete all occurrences"), p);
-        connect(action, SIGNAL(triggered()), p, SLOT(deleteAllOccurrences()));
+        connect(action, &QAction::triggered, p, &ValueList::deleteAllOccurrences);
         treeviewFieldValues->addAction(action);
         /// create context menu item to search for multiple selections
         action = new QAction(QIcon::fromTheme(QStringLiteral("edit-find")), i18n("Search for selected values"), p);
-        connect(action, SIGNAL(triggered()), p, SLOT(searchSelection()));
+        connect(action, &QAction::triggered, p, &ValueList::searchSelection);
         treeviewFieldValues->addAction(action);
         /// create context menu item to assign value to selected bibliography elements
         assignSelectionAction = new QAction(QIcon::fromTheme(QStringLiteral("emblem-new")), i18n("Add value to selected entries"), p);
-        connect(assignSelectionAction, SIGNAL(triggered()), p, SLOT(assignSelection()));
+        connect(assignSelectionAction, &QAction::triggered, p, &ValueList::assignSelection);
         treeviewFieldValues->addAction(assignSelectionAction);
         /// create context menu item to remove value from selected bibliography elements
         removeSelectionAction = new QAction(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Remove value from selected entries"), p);
-        connect(removeSelectionAction, SIGNAL(triggered()), p, SLOT(removeSelection()));
+        connect(removeSelectionAction, &QAction::triggered, p, &ValueList::removeSelection);
         treeviewFieldValues->addAction(removeSelectionAction);
 
         p->setEnabled(false);
 
-        connect(comboboxFieldNames, SIGNAL(activated(int)), p, SLOT(fieldNamesChanged(int)));
-        connect(comboboxFieldNames, SIGNAL(activated(int)), lineeditFilter, SLOT(clear()));
-        connect(treeviewFieldValues, SIGNAL(activated(QModelIndex)), p, SLOT(listItemActivated(QModelIndex)));
-        connect(delegate, SIGNAL(closeEditor(QWidget*)), treeviewFieldValues, SLOT(reset()));
+        connect(comboboxFieldNames, static_cast<void(KComboBox::*)(int)>(&KComboBox::activated), p, &ValueList::fieldNamesChanged);
+        connect(comboboxFieldNames, static_cast<void(KComboBox::*)(int)>(&KComboBox::activated), lineeditFilter, &KLineEdit::clear);
+        connect(treeviewFieldValues, &QTreeView::activated, p, &ValueList::listItemActivated);
+        connect(delegate, &ValueListDelegate::closeEditor, treeviewFieldValues, &QTreeView::reset);
 
         /// add context menu to header
         treeviewFieldValues->header()->setContextMenuPolicy(Qt::ActionsContextMenu);
         showCountColumnAction = new KToggleAction(i18n("Show Count Column"), treeviewFieldValues);
-        connect(showCountColumnAction, SIGNAL(triggered()), p, SLOT(showCountColumnToggled()));
+        connect(showCountColumnAction, &QAction::triggered, p, &ValueList::showCountColumnToggled);
         treeviewFieldValues->header()->addAction(showCountColumnAction);
 
         sortByCountAction = new KToggleAction(i18n("Sort by Count"), treeviewFieldValues);
-        connect(sortByCountAction, SIGNAL(triggered()), p, SLOT(sortByCountToggled()));
+        connect(sortByCountAction, &QAction::triggered, p, &ValueList::sortByCountToggled);
         treeviewFieldValues->header()->addAction(sortByCountAction);
     }
 
@@ -174,7 +174,7 @@ public:
         QByteArray headerState = configGroup.readEntry(configKeyHeaderState, QByteArray());
         treeviewFieldValues->header()->restoreState(headerState);
 
-        connect(treeviewFieldValues->header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), p, SLOT(columnsChanged()));
+        connect(treeviewFieldValues->header(), &QHeaderView::sortIndicatorChanged, p, &ValueList::columnsChanged);
     }
 
     void update() {
@@ -199,7 +199,7 @@ public:
             sortingModel->setFilterKeyColumn(0);
             sortingModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
             sortingModel->setFilterRole(ValueListModel::SearchTextRole);
-            connect(lineeditFilter, SIGNAL(textEdited(QString)), sortingModel, SLOT(setFilterFixedString(QString)));
+            connect(lineeditFilter, &KLineEdit::textEdited, sortingModel, &QSortFilterProxyModel::setFilterFixedString);
             sortingModel->setSortLocaleAware(true);
             usedModel = sortingModel;
         }
@@ -223,7 +223,7 @@ public:
 ValueList::ValueList(QWidget *parent)
         : QWidget(parent), d(new ValueListPrivate(this))
 {
-    QTimer::singleShot(500, this, SLOT(delayedResize()));
+    QTimer::singleShot(500, this, &ValueList::delayedResize);
 }
 
 ValueList::~ValueList()
@@ -234,11 +234,11 @@ ValueList::~ValueList()
 void ValueList::setFileView(FileView *fileView)
 {
     if (d->fileView != NULL)
-        disconnect(d->fileView, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
+        disconnect(d->fileView, &FileView::selectedElementsChanged, this, &ValueList::editorSelectionChanged);
     d->fileView = fileView;
     if (d->fileView != NULL) {
-        connect(d->fileView, SIGNAL(selectedElementsChanged()), this, SLOT(editorSelectionChanged()));
-        connect(d->fileView, SIGNAL(destroyed()), this, SLOT(editorDestroyed()));
+        connect(d->fileView, &FileView::selectedElementsChanged, this, &ValueList::editorSelectionChanged);
+        connect(d->fileView, &FileView::destroyed, this, &ValueList::editorDestroyed);
     }
     editorSelectionChanged();
     update();

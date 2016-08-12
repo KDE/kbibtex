@@ -88,7 +88,7 @@ public:
         radioMoveFile = new QRadioButton(i18n("Move document next to bibliography file"), groupBox);
         groupBoxLayout->addWidget(radioMoveFile);
         buttonGroup->addButton(radioMoveFile);
-        connect(buttonGroup, SIGNAL(buttonClicked(int)), p, SLOT(updateUIandPreview()));
+        connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), p, &AssociatedFilesUI::updateUIandPreview);
         radioNoCopyMove->setChecked(true); /// by default
         groupBoxLayout->addSpacing(4);
         labelMoveCopyLocation = new QLabel(i18n("Path and filename of bibliography file:"), groupBox);
@@ -115,8 +115,8 @@ public:
         buttonGroup->addButton(radioUserDefinedName);
         lineEditUserDefinedName = new KLineEdit(groupBoxRename);
         gridLayout->addWidget(lineEditUserDefinedName, 3, 1, 1, 1);
-        connect(lineEditUserDefinedName, SIGNAL(textEdited(QString)), p, SLOT(updateUIandPreview()));
-        connect(buttonGroup, SIGNAL(buttonClicked(int)), p, SLOT(updateUIandPreview()));
+        connect(lineEditUserDefinedName, &KLineEdit::textEdited, p, &AssociatedFilesUI::updateUIandPreview);
+        connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), p, &AssociatedFilesUI::updateUIandPreview);
         radioRenameToEntryId->setChecked(true); /// by default
 
         groupBoxPathType = new QGroupBox(i18n("Path as Inserted into Entry"), p);
@@ -129,7 +129,7 @@ public:
         radioAbsolutePath = new QRadioButton(i18n("Absolute Path"), groupBoxPathType);
         groupBoxLayout->addWidget(radioAbsolutePath);
         buttonGroup->addButton(radioAbsolutePath);
-        connect(buttonGroup, SIGNAL(buttonClicked(int)), p, SLOT(updateUIandPreview()));
+        connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), p, &AssociatedFilesUI::updateUIandPreview);
         radioRelativePath->setChecked(true); /// by default
 
         layout->addSpacing(8);

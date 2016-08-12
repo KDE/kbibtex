@@ -83,7 +83,7 @@ void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int n
     QNetworkRequest request(urlText);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(resultsPageDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultsPageDone);
 }
 
 QString OnlineSearchBioRxiv::label() const {
@@ -126,7 +126,7 @@ void OnlineSearchBioRxiv::resultsPageDone() {
             QNetworkRequest request(firstUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-            connect(reply, SIGNAL(finished()), this, SLOT(resultPageDone()));
+            connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
         }
     }
 }
@@ -145,14 +145,14 @@ void OnlineSearchBioRxiv::resultPageDone() {
             QNetworkRequest request(url);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-            connect(reply, SIGNAL(finished()), this, SLOT(bibTeXDownloadDone()));
+            connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::bibTeXDownloadDone);
         } else if (!d->resultPageUrls.isEmpty()) {
             const QUrl firstUrl = *d->resultPageUrls.constBegin();
             d->resultPageUrls.remove(firstUrl);
             QNetworkRequest request(firstUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-            connect(reply, SIGNAL(finished()), this, SLOT(resultPageDone()));
+            connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
         } else
             emit stoppedSearch(resultNoError);
     }
@@ -192,6 +192,6 @@ void OnlineSearchBioRxiv::bibTeXDownloadDone() {
         QNetworkRequest request(firstUrl);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-        connect(reply, SIGNAL(finished()), this, SLOT(resultPageDone()));
+        connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
     }
 }

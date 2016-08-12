@@ -47,7 +47,7 @@ public:
 
         fileView->setFocus();
 
-        connect(fileView, SIGNAL(searchFor(QString)), p, SLOT(searchFor(QString)));
+        connect(fileView, &FileView::searchFor, p, &PartWidget::searchFor);
     }
 };
 

@@ -154,7 +154,7 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     QNetworkRequest request(url);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingStartPage);
 
     emit progress(0, d->numSteps);
 }
@@ -173,7 +173,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             QNetworkRequest request(newDomainUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+            connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingStartPage);
         } else {
             /// landed on country-specific domain
             QUrl url(d->configPageUrl.arg(reply->url().host()));
@@ -185,7 +185,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingConfigPage()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingConfigPage);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
@@ -215,7 +215,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingSetConfigPage()));
+        connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
@@ -241,7 +241,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingQueryPage()));
+        connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
@@ -285,7 +285,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                 newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
             }
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
             d->listBibTeXurls.erase(d->listBibTeXurls.begin());
         } else {
             emit stoppedSearch(resultNoError);
@@ -312,7 +312,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             QNetworkRequest request(newDomainUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-            connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+            connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
         } else {
             /// ensure proper treatment of UTF-8 characters
             QString rawText = QString::fromUtf8(reply->readAll().constData());
@@ -368,7 +368,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                     /// Store URL to document as a property of the request/reply
                     newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
                 }
-                connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
                 d->listBibTeXurls.erase(d->listBibTeXurls.begin());
             } else {
                 emit stoppedSearch(resultNoError);

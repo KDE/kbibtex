@@ -260,11 +260,11 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     header()->setSectionsClickable(true);
     header()->setSortIndicatorShown(true);
     header()->setSortIndicator(-1, Qt::AscendingOrder);
-    connect(header(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(sort(int,Qt::SortOrder)));
+    connect(header(), &QHeaderView::sortIndicatorChanged, this, &BasicFileView::sort);
     header()->setContextMenuPolicy(Qt::ActionsContextMenu);
 
-    connect(header(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(columnMoved()));
-    connect(header(), SIGNAL(sectionResized(int,int,int)), this, SLOT(columnResized(int,int,int)));
+    connect(header(), &QHeaderView::sectionMoved, this, &BasicFileView::columnMoved);
+    connect(header(), &QHeaderView::sectionResized, this, &BasicFileView::columnResized);
 
     /// build context menu for header to show/hide single columns
     int col = 0;
@@ -275,7 +275,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
         action->setData(col);
         action->setCheckable(true);
         action->setChecked(!isColumnHidden(col));
-        connect(action, SIGNAL(triggered()), this, SLOT(headerActionToggled()));
+        connect(action, &QAction::triggered, this, &BasicFileView::headerActionToggled);
         header()->addAction(action);
         ++col;
     }
@@ -287,7 +287,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
 
     /// add action to reset to defaults (regarding column visibility) to header's context menu
     action = new QAction(i18n("Reset to defaults"), header());
-    connect(action, SIGNAL(triggered()), this, SLOT(headerResetToDefaults()));
+    connect(action, &QAction::triggered, this, &BasicFileView::headerResetToDefaults);
     header()->addAction(action);
 
     /// add separator to header's context menu
@@ -297,7 +297,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
 
     /// add action to disable any sorting
     action = new QAction(i18n("No sorting"), header());
-    connect(action, SIGNAL(triggered()), this, SLOT(noSorting()));
+    connect(action, &QAction::triggered, this, &BasicFileView::noSorting);
     header()->addAction(action);
 
     /// restore header appearance

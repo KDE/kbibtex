@@ -106,7 +106,7 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     QNetworkRequest request(OnlineSearchJStorPrivate::jstorBaseUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingStartPage);
     emit progress(d->curStep, d->numSteps);
 }
 
@@ -156,12 +156,12 @@ void OnlineSearchJStor::doneFetchingStartPage()
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingStartPage);
         } else {
             QNetworkRequest request(d->queryUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingResultPage);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
@@ -207,7 +207,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXCode()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingBibTeXCode);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();

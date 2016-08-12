@@ -141,12 +141,12 @@ public:
 
     KBibTeXPartPrivate(QWidget *parentWidget, KBibTeXPart *parent)
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
-        connect(signalMapperViewDocument, SIGNAL(mapped(QObject*)), p, SLOT(elementViewDocumentMenu(QObject*)));
-        connect(&fileSystemWatcher, SIGNAL(fileChanged(QString)), p, SLOT(fileExternallyChange(QString)));
+        connect(signalMapperViewDocument, static_cast<void(QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), p, &KBibTeXPart::elementViewDocumentMenu);
+        connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged, p, &KBibTeXPart::fileExternallyChange);
 
         partWidget = new PartWidget(parentWidget);
         partWidget->fileView()->setReadOnly(!p->isReadWrite());
-        connect(partWidget->fileView(), SIGNAL(modified()), p, SLOT(setModified()));
+        connect(partWidget->fileView(), &FileView::modified, p, &KBibTeXPart::setModified);
 
         setupActions();
     }
@@ -163,9 +163,11 @@ public:
     void setupActions()
     {
         /// "Save" action
-        fileSaveAction = p->actionCollection()->addAction(KStandardAction::Save, p, SLOT(documentSave()));
+        fileSaveAction = p->actionCollection()->addAction(KStandardAction::Save);
+        connect(fileSaveAction, &QAction::triggered, p, &KBibTeXPart::documentSave);
         fileSaveAction->setEnabled(false);
-        p->actionCollection()->addAction(KStandardAction::SaveAs, p, SLOT(documentSaveAs()));
+        QAction *action = p->actionCollection()->addAction(KStandardAction::SaveAs);
+        connect(action, &QAction::triggered, p, &KBibTeXPart::documentSaveAs);
         /// "Save copy as" action
         QAction *saveCopyAsAction = new QAction(QIcon::fromTheme(QStringLiteral("document-save")), i18n("Save Copy As..."), p);
         p->actionCollection()->addAction(QStringLiteral("file_save_copy_as"), saveCopyAsAction);
@@ -176,7 +178,7 @@ public:
         p->actionCollection()->addAction(QStringLiteral("toolbar_filter_widget"), filterWidgetAction);
         filterWidgetAction->setIcon(QIcon::fromTheme(QStringLiteral("view-filter")));
         p->actionCollection()->setDefaultShortcut(filterWidgetAction, Qt::CTRL + Qt::Key_F);
-        connect(filterWidgetAction, SIGNAL(triggered()), partWidget->filterBar(), SLOT(setFocus()));
+        connect(filterWidgetAction, &QAction::triggered, partWidget->filterBar(), static_cast<void(QWidget::*)()>(&QWidget::setFocus));
         partWidget->filterBar()->setPlaceholderText(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
 
         /// Actions for creating new elements (entries, macros, ...)
@@ -184,43 +186,43 @@ public:
         p->actionCollection()->addAction(QStringLiteral("element_new"), newElementAction);
         QMenu *newElementMenu = new QMenu(newElementAction->text(), p->widget());
         newElementAction->setMenu(newElementMenu);
-        connect(newElementAction, SIGNAL(triggered()), p, SLOT(newEntryTriggered()));
+        connect(newElementAction, &QAction::triggered, p, &KBibTeXPart::newEntryTriggered);
         QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New entry"));
         p->actionCollection()->setDefaultShortcut(newEntry, Qt::CTRL + Qt::SHIFT + Qt::Key_N);
-        connect(newEntry, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
+        connect(newEntry, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperNewElement->setMapping(newEntry, smEntry);
         QAction *newComment = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New comment"));
-        connect(newComment, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
+        connect(newComment, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperNewElement->setMapping(newComment, smComment);
         QAction *newMacro = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New macro"));
-        connect(newMacro, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
+        connect(newMacro, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperNewElement->setMapping(newMacro, smMacro);
         QAction *newPreamble = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New preamble"));
-        connect(newPreamble, SIGNAL(triggered()), signalMapperNewElement, SLOT(map()));
+        connect(newPreamble, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperNewElement->setMapping(newPreamble, smPreamble);
-        connect(signalMapperNewElement, SIGNAL(mapped(int)), p, SLOT(newElementTriggered(int)));
+        connect(signalMapperNewElement, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &KBibTeXPart::newElementTriggered);
 
         /// Action to edit an element
         elementEditAction = new QAction(QIcon::fromTheme(QStringLiteral("document-edit")), i18n("Edit Element"), p);
         p->actionCollection()->addAction(QStringLiteral("element_edit"), elementEditAction);
         p->actionCollection()->setDefaultShortcut(elementEditAction, Qt::CTRL + Qt::Key_E);
-        connect(elementEditAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(editCurrentElement()));
+        connect(elementEditAction, &QAction::triggered, partWidget->fileView(), &FileView::editCurrentElement);
 
         /// Action to view the document associated to the current element
         elementViewDocumentAction = new QAction(QIcon::fromTheme(QStringLiteral("application-pdf")), i18n("View Document"), p);
         p->actionCollection()->addAction(QStringLiteral("element_viewdocument"), elementViewDocumentAction);
         p->actionCollection()->setDefaultShortcut(elementViewDocumentAction, Qt::CTRL + Qt::Key_D);
-        connect(elementViewDocumentAction, SIGNAL(triggered()), p, SLOT(elementViewDocument()));
+        connect(elementViewDocumentAction, &QAction::triggered, p, &KBibTeXPart::elementViewDocument);
 
         /// Action to find a PDF matching the current element
         elementFindPDFAction = new QAction(QIcon::fromTheme(QStringLiteral("application-pdf")), i18n("Find PDF..."), p);
         p->actionCollection()->addAction(QStringLiteral("element_findpdf"), elementFindPDFAction);
-        connect(elementFindPDFAction, SIGNAL(triggered()), p, SLOT(elementFindPDF()));
+        connect(elementFindPDFAction, &QAction::triggered, p, &KBibTeXPart::elementFindPDF);
 
         /// Action to reformat the selected elements' ids
         entryApplyDefaultFormatString = new QAction(QIcon::fromTheme(QStringLiteral("favorites")), i18n("Format entry ids"), p);
         p->actionCollection()->addAction(QStringLiteral("entry_applydefaultformatstring"), entryApplyDefaultFormatString);
-        connect(entryApplyDefaultFormatString, SIGNAL(triggered()), p, SLOT(applyDefaultFormatString()));
+        connect(entryApplyDefaultFormatString, &QAction::triggered, p, &KBibTeXPart::applyDefaultFormatString);
 
         /// Clipboard object, required for various copy&paste operations
         Clipboard *clipboard = new Clipboard(partWidget->fileView());
@@ -233,7 +235,7 @@ public:
         editCopyReferencesAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy References"), p);
         p->actionCollection()->setDefaultShortcut(editCopyReferencesAction, Qt::CTRL + Qt::SHIFT + Qt::Key_C);
         p->actionCollection()->addAction(QStringLiteral("edit_copy_references"), editCopyReferencesAction);
-        connect(editCopyReferencesAction, SIGNAL(triggered()), clipboard, SLOT(copyReferences()));
+        connect(editCopyReferencesAction, &QAction::triggered, clipboard, &Clipboard::copyReferences);
 
         /// Action to paste BibTeX code
         editPasteAction = p->actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
@@ -242,7 +244,7 @@ public:
         editDeleteAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-delete-row")), i18n("Delete"), p);
         p->actionCollection()->setDefaultShortcut(editDeleteAction, Qt::Key_Delete);
         p->actionCollection()->addAction(QStringLiteral("edit_delete"), editDeleteAction);
-        connect(editDeleteAction, SIGNAL(triggered()), partWidget->fileView(), SLOT(selectionDelete()));
+        connect(editDeleteAction, &QAction::triggered, partWidget->fileView(), &FileView::selectionDelete);
 
         /// Build context menu for central BibTeX file view
         partWidget->fileView()->setContextMenuPolicy(Qt::ActionsContextMenu); ///< context menu is based on actions
@@ -339,7 +341,7 @@ public:
         sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
         partWidget->fileView()->setModel(sortFilterProxyModel);
-        connect(partWidget->filterBar(), SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
+        connect(partWidget->filterBar(), &FilterBar::filterChanged, sortFilterProxyModel, &SortFilterFileModel::updateFilter);
     }
 
     bool openFile(const QUrl &url, const QString &localFilePath) {
@@ -391,7 +393,7 @@ public:
         sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
         partWidget->fileView()->setModel(sortFilterProxyModel);
-        connect(partWidget->filterBar(), SIGNAL(filterChanged(SortFilterFileModel::FilterQuery)), sortFilterProxyModel, SLOT(updateFilter(SortFilterFileModel::FilterQuery)));
+        connect(partWidget->filterBar(), &FilterBar::filterChanged, sortFilterProxyModel, &SortFilterFileModel::updateFilter);
 
         if (url.isLocalFile())
             fileSystemWatcher.addPath(url.url(QUrl::PreferLocalFile));
@@ -661,7 +663,7 @@ public:
                     action->setData((*it).url(QUrl::PreferLocalFile));
                     action->setToolTip((*it).url(QUrl::PreferLocalFile));
                     /// Register action at signal handler to open URL when triggered
-                    connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
+                    connect(action, &QAction::triggered, signalMapperViewDocument, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
                     signalMapperViewDocument->setMapping(action, action);
                     signalMapperViewDocumentSenders.insert(action);
                     viewDocumentMenu->addAction(action);
@@ -687,7 +689,7 @@ public:
                     action->setData(prettyUrl);
                     action->setToolTip(prettyUrl);
                     /// Register action at signal handler to open URL when triggered
-                    connect(action, SIGNAL(triggered()), signalMapperViewDocument, SLOT(map()));
+                    connect(action, &QAction::triggered, signalMapperViewDocument, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
                     signalMapperViewDocument->setMapping(action, action);
                     signalMapperViewDocumentSenders.insert(action);
                     viewDocumentMenu->addAction(action);
@@ -713,14 +715,14 @@ public:
         KConfigGroup configGroup(config, Preferences::groupUserInterface);
         const Preferences::ElementDoubleClickAction doubleClickAction = (Preferences::ElementDoubleClickAction)configGroup.readEntry(Preferences::keyElementDoubleClickAction, (int)Preferences::defaultElementDoubleClickAction);
 
-        disconnect(partWidget->fileView(), SIGNAL(elementExecuted(QSharedPointer<Element>)), partWidget->fileView(), SLOT(editElement(QSharedPointer<Element>)));
-        disconnect(partWidget->fileView(), SIGNAL(elementExecuted(QSharedPointer<Element>)), p, SLOT(elementViewDocument()));
+        disconnect(partWidget->fileView(), &FileView::elementExecuted, partWidget->fileView(), &FileView::editElement);
+        disconnect(partWidget->fileView(), &FileView::elementExecuted, p, &KBibTeXPart::elementViewDocument);
         switch (doubleClickAction) {
         case Preferences::ActionOpenEditor:
-            connect(partWidget->fileView(), SIGNAL(elementExecuted(QSharedPointer<Element>)), partWidget->fileView(), SLOT(editElement(QSharedPointer<Element>)));
+            connect(partWidget->fileView(), &FileView::elementExecuted, partWidget->fileView(), &FileView::editElement);
             break;
         case Preferences::ActionViewDocument:
-            connect(partWidget->fileView(), SIGNAL(elementExecuted(QSharedPointer<Element>)), p, SLOT(elementViewDocument()));
+            connect(partWidget->fileView(), &FileView::elementExecuted, p, &KBibTeXPart::elementViewDocument);
             break;
         }
     }

@@ -47,7 +47,7 @@ CollectionModel::CollectionModel(Collection *collection, QObject *parent)
         : QAbstractItemModel(parent), d(new Zotero::CollectionModel::Private(collection, this))
 {
     beginResetModel();
-    connect(collection, SIGNAL(finishedLoading()), this, SLOT(fetchingDone()));
+    connect(collection, &Collection::finishedLoading, this, &CollectionModel::fetchingDone);
 }
 
 QVariant CollectionModel::data(const QModelIndex &index, int role) const

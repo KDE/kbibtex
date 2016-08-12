@@ -39,7 +39,7 @@ FileSettings::FileSettings(QWidget *parent)
 {
     setEnabled(false);
 
-    connect(this, SIGNAL(widgetsChanged()), this, SLOT(widgetsChangedSlot()));
+    connect(this, &FileSettings::widgetsChanged, this, &FileSettings::widgetsChangedSlot);
 
     /// Monitoring file flag changes to get notified of
     /// "Save As" operations where the file settings

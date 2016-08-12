@@ -23,12 +23,12 @@
 #include <QLabel>
 #include <QNetworkReply>
 #include <QIcon>
-#include <QLineEdit>
 
 #include <KLocalizedString>
 #include <KComboBox>
 #include <KMessageBox>
 #include <KConfigGroup>
+#include <KLineEdit>
 
 #include "fileimporterbibtex.h"
 #include "file.h"
@@ -52,7 +52,7 @@ private:
 
 public:
     KComboBox *comboBoxSearchWhere;
-    QLineEdit *lineEditSearchTerm;
+    KLineEdit *lineEditSearchTerm;
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormBibsonomy(QWidget *widget)
@@ -71,10 +71,10 @@ public:
         comboBoxSearchWhere->addItem(i18n("Everywhere"), "search");
         comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
 
-        lineEditSearchTerm = new QLineEdit(this);
+        lineEditSearchTerm = new KLineEdit(this);
         layout->addWidget(lineEditSearchTerm, 0, 1, 1, 1);
         lineEditSearchTerm->setClearButtonEnabled(true);
-        connect(lineEditSearchTerm, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditSearchTerm, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormBibsonomy::returnPressed);
 
         QLabel *label = new QLabel(i18n("Number of Results:"), this);
         layout->addWidget(label, 1, 0, 1, 1);
@@ -191,7 +191,7 @@ void OnlineSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
 
     emit progress(0, d->numSteps);
 }
@@ -205,7 +205,7 @@ void OnlineSearchBibsonomy::startSearch()
     QNetworkRequest request(d->buildQueryUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
 
     emit progress(0, d->numSteps);
 

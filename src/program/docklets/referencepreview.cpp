@@ -197,9 +197,9 @@ ReferencePreview::ReferencePreview(QWidget *parent)
 {
     d->loadState();
 
-    connect(d->buttonOpen, SIGNAL(clicked()), this, SLOT(openAsHTML()));
-    connect(d->buttonSaveAsHTML, SIGNAL(clicked()), this, SLOT(saveAsHTML()));
-    connect(d->comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(renderHTML()));
+    connect(d->buttonOpen, &QPushButton::clicked, this, &ReferencePreview::openAsHTML);
+    connect(d->buttonSaveAsHTML, &QPushButton::clicked, this, &ReferencePreview::saveAsHTML);
+    connect(d->comboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ReferencePreview::renderHTML);
 
     setEnabled(false);
 }

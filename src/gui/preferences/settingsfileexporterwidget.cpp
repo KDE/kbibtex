@@ -117,16 +117,16 @@ public:
             itim->addItem(citeCmdToLabel.arg(citeCommand), citeCommand);
         }
         comboBoxCopyReferenceCmd->setModel(itim);
-        connect(comboBoxCopyReferenceCmd, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
+        connect(comboBoxCopyReferenceCmd, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), p, &SettingsFileExporterWidget::changed);
 
         checkboxUseAutomaticLyXPipeDetection = new QCheckBox(QStringLiteral(""), p);
         layout->addRow(i18n("Detect LyX pipe automatically:"), checkboxUseAutomaticLyXPipeDetection);
-        connect(checkboxUseAutomaticLyXPipeDetection, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
-        connect(checkboxUseAutomaticLyXPipeDetection, SIGNAL(toggled(bool)), p, SLOT(automaticLyXDetectionToggled(bool)));
+        connect(checkboxUseAutomaticLyXPipeDetection, &QCheckBox::toggled, p, &SettingsFileExporterWidget::changed);
+        connect(checkboxUseAutomaticLyXPipeDetection, &QCheckBox::toggled, p, &SettingsFileExporterWidget::automaticLyXDetectionToggled);
 
         lineeditLyXPipePath = new KUrlRequester(p);
         layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
-        connect(lineeditLyXPipePath->lineEdit(), SIGNAL(textEdited(QString)), p, SIGNAL(changed()));
+        connect(lineeditLyXPipePath->lineEdit(), &KLineEdit::textEdited, p, &SettingsFileExporterWidget::changed);
         lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
         lineeditLyXPipePath->setFilter(QStringLiteral("inode/fifo"));
         lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
@@ -136,15 +136,15 @@ public:
         comboBoxBackupScope->addItem(i18n("Local files only"), Preferences::LocalOnly);
         comboBoxBackupScope->addItem(i18n("Both local and remote files"), Preferences::BothLocalAndRemote);
         layout->addRow(i18n("Backups when saving:"), comboBoxBackupScope);
-        connect(comboBoxBackupScope, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
+        connect(comboBoxBackupScope, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsFileExporterWidget::changed);
 
         spinboxNumberOfBackups = new QSpinBox(p);
         spinboxNumberOfBackups->setMinimum(1);
         spinboxNumberOfBackups->setMaximum(16);
         layout->addRow(i18n("Number of Backups:"), spinboxNumberOfBackups);
-        connect(spinboxNumberOfBackups, SIGNAL(valueChanged(int)), p, SIGNAL(changed()));
+        connect(spinboxNumberOfBackups, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), p, &SettingsFileExporterWidget::changed);
 
-        connect(comboBoxBackupScope, SIGNAL(currentIndexChanged(int)), p, SLOT(updateGUI()));
+        connect(comboBoxBackupScope, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsFileExporterWidget::updateGUI);
     }
 };
 

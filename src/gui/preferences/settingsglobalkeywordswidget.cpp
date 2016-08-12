@@ -83,16 +83,16 @@ public:
         listViewKeywords = new QListView(p);
         layout->addWidget(listViewKeywords, 0, 0, 3, 1);
         listViewKeywords->setModel(&stringListModel);
-        connect(listViewKeywords, SIGNAL(pressed(QModelIndex)), p, SLOT(enableRemoveButton()));
+        connect(listViewKeywords, &QListView::pressed, p, &SettingsGlobalKeywordsWidget::enableRemoveButton);
 
         QPushButton *buttonAdd = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add"), p);
         layout->addWidget(buttonAdd, 0, 1, 1, 1);
-        connect(buttonAdd, SIGNAL(clicked()), p, SLOT(addKeyword()));
+        connect(buttonAdd, &QPushButton::clicked, p, &SettingsGlobalKeywordsWidget::addKeyword);
 
         buttonRemove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), i18n("Remove"), p);
         layout->addWidget(buttonRemove, 1, 1, 1, 1);
         buttonRemove->setEnabled(false);
-        connect(buttonRemove, SIGNAL(clicked()), p, SLOT(removeKeyword()));
+        connect(buttonRemove, &QPushButton::clicked, p, &SettingsGlobalKeywordsWidget::removeKeyword);
     }
 };
 

@@ -206,7 +206,7 @@ void EntryConfiguredWidget::createGUI()
         labeledFieldInput->fieldInput = new FieldInput(sfl.fieldInputLayout, preferredTypeFlag, typeFlags, this);
         labeledFieldInput->fieldInput->setFieldKey(sfl.bibtexLabel);
         bibtexKeyToWidget.insert(sfl.bibtexLabel, labeledFieldInput->fieldInput);
-        connect(labeledFieldInput->fieldInput, SIGNAL(modified()), this, SLOT(gotModified()));
+        connect(labeledFieldInput->fieldInput, &FieldInput::modified, this, &EntryConfiguredWidget::gotModified);
 
         /// memorize if field input should grow vertically (e.g. is a list)
         labeledFieldInput->isVerticallyMinimumExpaning = sfl.fieldInputLayout == KBibTeX::MultiLine || sfl.fieldInputLayout == KBibTeX::List || sfl.fieldInputLayout == KBibTeX::PersonList || sfl.fieldInputLayout == KBibTeX::KeywordList;
@@ -362,8 +362,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widgets' values
-    disconnect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
-    disconnect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+    disconnect(entryType->lineEdit(), &KLineEdit::textChanged, this, &ReferenceWidget::gotModified);
+    disconnect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
 
     bool result = false;
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
@@ -401,8 +401,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
         }
     }
 
-    connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
-    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
+    connect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+    connect(entryType->lineEdit(), &KLineEdit::textChanged, this, &ReferenceWidget::gotModified);
 
     return result;
 }
@@ -475,9 +475,9 @@ void ReferenceWidget::createGUI()
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
     buttonSuggestId->setMenu(suggestionsMenu);
 
-    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
-    connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
-    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::entryTypeChanged);
+    connect(entryType->lineEdit(), &KLineEdit::textChanged, this, &ReferenceWidget::gotModified);
+    connect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+    connect(entryType->lineEdit(), &KLineEdit::textChanged, this, &ReferenceWidget::entryTypeChanged);
     connect(suggestionsMenu, &QMenu::aboutToShow, this, &ReferenceWidget::prepareSuggestionsMenu);
 }
 
@@ -517,7 +517,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
 
         /// Mesh action into GUI
         suggestionsMenu->addAction(suggestionAction);
-        connect(suggestionAction, SIGNAL(triggered()), this, SLOT(insertSuggestionFromAction()));
+        connect(suggestionAction, &QAction::triggered, this, &ReferenceWidget::insertSuggestionFromAction);
         /// Remember suggestion string for time when action gets triggered
         suggestionAction->setProperty(PropertyIdSuggestion, suggestion);
     }
@@ -562,10 +562,10 @@ void ReferenceWidget::setEntryIdByDefault()
         const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
         if (!defaultSuggestion.isEmpty()) {
-            disconnect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+            disconnect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
             /// Apply default suggestion to widget
             entryId->setText(defaultSuggestion);
-            connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+            connect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
         }
     }
 }
@@ -577,7 +577,7 @@ FilesWidget::FilesWidget(QWidget *parent)
     fileList = new FieldInput(KBibTeX::UrlList, KBibTeX::tfVerbatim /* eventually ignored, see constructor of UrlListEdit */, KBibTeX::tfVerbatim /* eventually ignored, see constructor of UrlListEdit */, this);
     fileList->setFieldKey(QStringLiteral("^external"));
     layout->addWidget(fileList);
-    connect(fileList, SIGNAL(modified()), this, SLOT(gotModified()));
+    connect(fileList, &FieldInput::modified, this, &FilesWidget::gotModified);
 }
 
 bool FilesWidget::apply(QSharedPointer<Element> element) const
@@ -897,13 +897,13 @@ void OtherFieldsWidget::createGUI()
     buttonOpen->setEnabled(false);
     layout->addWidget(buttonOpen, 3, 2, 1, 1);
 
-    connect(otherFieldsList, SIGNAL(itemActivated(QTreeWidgetItem*,int)), this, SLOT(listElementExecuted(QTreeWidgetItem*,int)));
-    connect(otherFieldsList, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)), this, SLOT(listCurrentChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
-    connect(otherFieldsList, SIGNAL(itemSelectionChanged()), this, SLOT(updateGUI()));
-    connect(fieldName, SIGNAL(textEdited(QString)), this, SLOT(updateGUI()));
-    connect(buttonAddApply, SIGNAL(clicked()), this, SLOT(actionAddApply()));
-    connect(buttonDelete, SIGNAL(clicked()), this, SLOT(actionDelete()));
-    connect(buttonOpen, SIGNAL(clicked()), this, SLOT(actionOpen()));
+    connect(otherFieldsList, &QTreeWidget::itemActivated, this, &OtherFieldsWidget::listElementExecuted);
+    connect(otherFieldsList, &QTreeWidget::currentItemChanged, this, &OtherFieldsWidget::listCurrentChanged);
+    connect(otherFieldsList, &QTreeWidget::itemSelectionChanged, this, &OtherFieldsWidget::updateGUI);
+    connect(fieldName, &KLineEdit::textEdited, this, &OtherFieldsWidget::updateGUI);
+    connect(buttonAddApply, &QPushButton::clicked, this, &OtherFieldsWidget::actionAddApply);
+    connect(buttonDelete, &QPushButton::clicked, this, &OtherFieldsWidget::actionDelete);
+    connect(buttonOpen, &QPushButton::clicked, this, &OtherFieldsWidget::actionOpen);
 }
 
 void OtherFieldsWidget::updateList()
@@ -1003,7 +1003,7 @@ void MacroWidget::createGUI()
     layout->addWidget(fieldInputValue, 1);
     label->setBuddy(fieldInputValue->buddy());
 
-    connect(fieldInputValue, SIGNAL(modified()), this, SLOT(gotModified()));
+    connect(fieldInputValue, &FieldInput::modified, this, &MacroWidget::gotModified);
 }
 
 
@@ -1068,7 +1068,7 @@ void PreambleWidget::createGUI()
     layout->addWidget(fieldInputValue, 1);
     label->setBuddy(fieldInputValue->buddy());
 
-    connect(fieldInputValue, SIGNAL(modified()), this, SLOT(gotModified()));
+    connect(fieldInputValue, &FieldInput::modified, this, &PreambleWidget::gotModified);
 }
 
 
@@ -1147,7 +1147,7 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widget's value
-    disconnect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
+    disconnect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
 
     FileExporterBibTeX exporter;
     exporter.setEncoding(QStringLiteral("utf-8"));
@@ -1157,7 +1157,7 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
         sourceEdit->document()->setPlainText(originalText);
     }
 
-    connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
+    connect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
 
     return !exportedText.isEmpty();
 }
@@ -1201,21 +1201,22 @@ void SourceWidget::createGUI()
 
     m_buttonRestore = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Restore"), this);
     layout->addWidget(m_buttonRestore, 1, 1, 1, 1);
-    connect(m_buttonRestore, SIGNAL(clicked()), this, SLOT(reset()));
+    // FIXME connect(m_buttonRestore, &QPushButton::clicked, this, &SourceWidget::reset);
+    connect(m_buttonRestore, SIGNAL(clicked(bool)), this, SLOT(reset()));
 
-    connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
+    connect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
 }
 
 void SourceWidget::reset()
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widget's value
-    disconnect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
+    disconnect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
 
     sourceEdit->document()->setPlainText(originalText);
     setModified(false);
 
-    connect(sourceEdit, SIGNAL(textChanged()), this, SLOT(gotModified()));
+    connect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
 }
 
 #include "elementwidgets.moc"

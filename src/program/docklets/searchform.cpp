@@ -136,7 +136,7 @@ public:
         whichEnginesLabel->setWordWrap(true);
         vLayout->addWidget(whichEnginesLabel);
         vLayout->setStretchFactor(whichEnginesLabel, 0);
-        connect(whichEnginesLabel, SIGNAL(linkActivated(QString)), p, SLOT(switchToEngines()));
+        connect(whichEnginesLabel, &QLabel::linkActivated, p, &SearchForm::switchToEngines);
 
         vLayout->addSpacing(8);
 
@@ -163,12 +163,12 @@ public:
 
         enginesList = new QListWidget(listContainer);
         layout->addWidget(enginesList, 0, 0, 1, 1);
-        connect(enginesList, SIGNAL(itemChanged(QListWidgetItem*)), p, SLOT(itemCheckChanged(QListWidgetItem*)));
-        connect(enginesList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)), p, SLOT(enginesListCurrentChanged(QListWidgetItem*,QListWidgetItem*)));
+        connect(enginesList, &QListWidget::itemChanged, p, &SearchForm::itemCheckChanged);
+        connect(enginesList, &QListWidget::currentItemChanged, p, &SearchForm::enginesListCurrentChanged);
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
 
         actionOpenHomepage = new QAction(QIcon::fromTheme(QStringLiteral("internet-web-browser")), i18n("Go to Homepage"), p);
-        connect(actionOpenHomepage, SIGNAL(triggered()), p, SLOT(openHomepage()));
+        connect(actionOpenHomepage, &QAction::triggered, p, &SearchForm::openHomepage);
         enginesList->addAction(actionOpenHomepage);
         enginesList->setContextMenuPolicy(Qt::ActionsContextMenu);
 
@@ -194,12 +194,12 @@ public:
         QWidget *listContainer = createEnginesGUI(tabWidget);
         tabWidget->addTab(listContainer, QIcon::fromTheme(QStringLiteral("applications-engineering")), i18n("Engines"));
 
-        connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabSwitched(int)));
+        connect(tabWidget, &QTabWidget::currentChanged, p, &SearchForm::tabSwitched);
 
         useEntryButton = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), i18n("Use Entry"), p);
         layout->addWidget(useEntryButton, 1, 0, 1, 1);
         useEntryButton->setEnabled(false);
-        connect(useEntryButton, SIGNAL(clicked()), p, SLOT(copyFromEntry()));
+        connect(useEntryButton, &QPushButton::clicked, p, &SearchForm::copyFromEntry);
 
         progressBar = new QProgressBar(p);
         layout->addWidget(progressBar, 1, 1, 1, 1);
@@ -208,7 +208,7 @@ public:
 
         searchButton = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-find")), i18n("Search"), p);
         layout->addWidget(searchButton, 1, 2, 1, 1);
-        connect(generalQueryTermsForm, SIGNAL(returnPressed()), searchButton, SLOT(click()));
+        connect(generalQueryTermsForm, &OnlineSearchQueryFormGeneral::returnPressed, searchButton, &QPushButton::click);
 
         updateGUI();
     }
@@ -253,22 +253,22 @@ public:
         OnlineSearchQueryFormAbstract *widget = engine->customWidget(queryTermsStack);
         item->setData(WidgetRole, QVariant::fromValue<OnlineSearchQueryFormAbstract *>(widget));
         if (widget != NULL) {
-            connect(widget, SIGNAL(returnPressed()), searchButton, SLOT(click()));
+            connect(widget, &OnlineSearchQueryFormAbstract::returnPressed, searchButton, &QPushButton::click);
             QScrollArea *scrollArea = wrapInScrollArea(widget, queryTermsStack);
             queryTermsStack->addWidget(scrollArea);
         }
 
         itemToOnlineSearch.insert(item, engine);
-        connect(engine, SIGNAL(foundEntry(QSharedPointer<Entry>)), p, SLOT(foundEntry(QSharedPointer<Entry>)));
-        connect(engine, SIGNAL(stoppedSearch(int)), p, SLOT(stoppedSearch(int)));
-        connect(engine, SIGNAL(progress(int,int)), p, SLOT(updateProgress(int,int)));
+        connect(engine, &OnlineSearchAbstract::foundEntry, p, &SearchForm::foundEntry);
+        connect(engine, &OnlineSearchAbstract::stoppedSearch, p, &SearchForm::stoppedSearch);
+        connect(engine, &OnlineSearchAbstract::progress, p, &SearchForm::updateProgress);
     }
 
     void switchToSearch() {
         for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
-            disconnect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
+            disconnect(searchButton, &QPushButton::clicked, it.value(), &OnlineSearchAbstract::cancel);
 
-        connect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
+        connect(searchButton, &QPushButton::clicked, p, &SearchForm::startSearch);
         searchButton->setText(i18n("Search"));
         searchButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-start")));
         for (int i = tabWidget->count() - 1; i >= 0; --i)
@@ -277,10 +277,10 @@ public:
     }
 
     void switchToCancel() {
-        disconnect(searchButton, SIGNAL(clicked()), p, SLOT(startSearch()));
+        disconnect(searchButton, &QPushButton::clicked, p, &SearchForm::startSearch);
 
         for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
-            connect(searchButton, SIGNAL(clicked()), it.value(), SLOT(cancel()));
+            connect(searchButton, &QPushButton::clicked, it.value(), &OnlineSearchAbstract::cancel);
         searchButton->setText(i18n("Stop"));
         searchButton->setIcon(QIcon::fromTheme(QStringLiteral("media-playback-stop")));
         for (int i = tabWidget->count() - 1; i >= 0; --i)
@@ -429,8 +429,8 @@ void SearchForm::stoppedSearch(int)
             d->switchToSearch();
             emit doneSearching();
 
-            QTimer::singleShot(1000, d->progressBar, SLOT(hide()));
-            QTimer::singleShot(1100, d->useEntryButton, SLOT(show()));
+            QTimer::singleShot(1000, d->progressBar, &QProgressBar::hide);
+            QTimer::singleShot(1100, d->useEntryButton, &QPushButton::show);
         } else {
             QStringList remainingEngines;
             foreach (OnlineSearchAbstract *running, d->runningSearches) {

@@ -246,7 +246,7 @@ FilterBar::FilterBar(QWidget *parent)
 
     setFocusProxy(d->comboBoxFilterText);
 
-    QTimer::singleShot(250, this, SLOT(buttonHeight()));
+    QTimer::singleShot(250, this, &FilterBar::buttonHeight);
 }
 
 FilterBar::~FilterBar()

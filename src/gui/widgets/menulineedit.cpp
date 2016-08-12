@@ -98,7 +98,7 @@ public:
         if (isMultiLine) {
             m_multiLineEditText = new KTextEdit(p);
             appendWidget(m_multiLineEditText);
-            connect(m_multiLineEditText, SIGNAL(textChanged()), p, SLOT(slotTextChanged()));
+            connect(m_multiLineEditText, &KTextEdit::textChanged, p, &MenuLineEdit::slotTextChanged);
             m_multiLineEditText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
             p->setFocusProxy(m_multiLineEditText);
             m_multiLineEditText->setAcceptRichText(false);
@@ -111,7 +111,7 @@ public:
             m_singleLineEditText->setCompletionMode(KCompletion::CompletionPopup);
             m_singleLineEditText->completionObject()->setIgnoreCase(true);
             p->setFocusProxy(m_singleLineEditText);
-            connect(m_singleLineEditText, SIGNAL(textEdited(QString)), p, SIGNAL(textChanged(QString)));
+            connect(m_singleLineEditText, &KLineEdit::textEdited, p, &MenuLineEdit::slotTextChanged);
         }
 
         p->setFocusPolicy(Qt::StrongFocus); // FIXME improve focus handling
@@ -195,7 +195,7 @@ MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
 {
     if (d->m_singleLineEditText != NULL) {
         /// Only for single-line variants stretch buttons vertically
-        QTimer::singleShot(250, this, SLOT(slotVerticallyStretchButtons()));
+        QTimer::singleShot(250, this, &MenuLineEdit::slotVerticallyStretchButtons);
     }
 }
 

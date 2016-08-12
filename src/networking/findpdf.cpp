@@ -70,7 +70,7 @@ public:
             reply->setProperty(termProperty, term);
             reply->setProperty(originProperty, origin);
             runningDownloads.insert(reply);
-            connect(reply, SIGNAL(finished()), p, SLOT(downloadFinished()));
+            connect(reply, &QNetworkReply::finished, p, &FindPDF::downloadFinished);
             ++aliveCounter;
             return true;
         } else

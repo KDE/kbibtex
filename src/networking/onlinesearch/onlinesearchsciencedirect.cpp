@@ -107,7 +107,7 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     QNetworkRequest request(QStringLiteral("http://www.sciencedirect.com/science/search"));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingStartPage);
 
     emit progress(0, d->numSteps);
 }
@@ -158,7 +158,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingStartPage);
         } else {
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
@@ -182,7 +182,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             ++d->runningJobs;
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingResultPage);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         }
     } else
@@ -202,7 +202,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingResultPage);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++d->curStep, d->numSteps);
@@ -224,7 +224,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
                     QNetworkRequest request(url);
                     QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
                     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-                    connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
+                    connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingAbstractPage);
                 }
             }
         }
@@ -250,7 +250,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingAbstractPage()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingAbstractPage);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++d->curStep, d->numSteps);
@@ -269,7 +269,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
                 ++d->runningJobs;
                 QNetworkRequest request(url);
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-                connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeX()));
+                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingBibTeX);
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
             }
         }

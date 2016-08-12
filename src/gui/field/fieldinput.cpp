@@ -84,7 +84,7 @@ public:
             fieldLineEdit->prependWidget(monthSelector);
 
             QSignalMapper *sm = new QSignalMapper(monthSelector);
-            connect(sm, SIGNAL(mapped(int)), p, SLOT(setMonth(int)));
+            connect(sm, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &FieldInput::setMonth);
             QMenu *monthMenu = new QMenu(monthSelector);
             for (int i = 1; i <= 12; ++i) {
                 QAction *monthAction = monthMenu->addAction(QDate::longMonthName(i, QDate::StandaloneFormat), sm, SLOT(map()));
@@ -99,7 +99,7 @@ public:
             QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("flag-gree")), QStringLiteral("")); ///< find better icon
             referenceSelector->setToolTip(i18n("Select an existing entry"));
             fieldLineEdit->prependWidget(referenceSelector);
-            connect(referenceSelector, SIGNAL(clicked()), p, SLOT(selectCrossRef()));
+            connect(referenceSelector, &QPushButton::clicked, p, &FieldInput::selectCrossRef);
         }
         break;
         case KBibTeX::Color: {
@@ -245,24 +245,24 @@ public:
 
     void enableModifiedSignal() {
         if (fieldLineEdit != NULL)
-            connect(fieldLineEdit, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
+            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
         if (fieldListEdit != NULL)
-            connect(fieldListEdit, SIGNAL(modified()), p, SIGNAL(modified()));
+            connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
         if (colorWidget != NULL)
-            connect(colorWidget, SIGNAL(modified()), p, SIGNAL(modified()));
+            connect(colorWidget, &ColorLabelWidget::modified, p, &FieldInput::modified);
         if (starRatingWidget != NULL)
-            connect(starRatingWidget, SIGNAL(modified()), p, SIGNAL(modified()));
+            connect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
     }
 
     void disableModifiedSignal() {
         if (fieldLineEdit != NULL)
-            disconnect(fieldLineEdit, SIGNAL(textChanged(QString)), p, SIGNAL(modified()));
+            disconnect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
         if (fieldListEdit != NULL)
-            disconnect(fieldListEdit, SIGNAL(modified()), p, SIGNAL(modified()));
+            disconnect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
         if (colorWidget != NULL)
-            disconnect(colorWidget, SIGNAL(modified()), p, SIGNAL(modified()));
+            disconnect(colorWidget, &ColorLabelWidget::modified, p, &FieldInput::modified);
         if (starRatingWidget != NULL)
-            disconnect(starRatingWidget, SIGNAL(modified()), p, SIGNAL(modified()));
+            disconnect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
     }
 };
 

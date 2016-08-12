@@ -88,7 +88,7 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     reply->setObjectName(fileNameStem);
     if (listWidgetItem != NULL)
         m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
-    connect(reply, SIGNAL(finished()), this, SLOT(iconDownloadFinished()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchAbstract::iconDownloadFinished);
     return QIcon::fromTheme(QStringLiteral("applications-internet"));
 }
 
@@ -376,7 +376,7 @@ void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &te
 void OnlineSearchAbstract::delayedStoppedSearch(int returnCode)
 {
     m_delayedStoppedSearchReturnCode = returnCode;
-    QTimer::singleShot(500, this, SLOT(delayedStoppedSearchTimer()));
+    QTimer::singleShot(500, this, &OnlineSearchAbstract::delayedStoppedSearchTimer);
 }
 
 void OnlineSearchAbstract::delayedStoppedSearchTimer()

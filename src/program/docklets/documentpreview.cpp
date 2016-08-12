@@ -215,7 +215,7 @@ public:
         message->setAlignment(Qt::AlignCenter);
         message->setWordWrap(true);
         swpMessage = stackedWidget->addWidget(message);
-        connect(message, SIGNAL(linkActivated(QString)), p, SLOT(linkActivated(QString)));
+        connect(message, &QLabel::linkActivated, p, &DocumentPreview::linkActivated);
 
         /// add parts to stackedWidget
         okularPart = locatePart(QStringLiteral("application/pdf"), stackedWidget);
@@ -248,9 +248,9 @@ public:
 
         loadState();
 
-        connect(externalViewerButton, SIGNAL(clicked()), p, SLOT(openExternally()));
-        connect(urlComboBox, SIGNAL(activated(int)), p, SLOT(comboBoxChanged(int)));
-        connect(onlyLocalFilesButton, SIGNAL(toggled(bool)), p, SLOT(onlyLocalFilesChanged()));
+        connect(externalViewerButton, &QPushButton::clicked, p, &DocumentPreview::openExternally);
+        connect(urlComboBox, static_cast<void(KComboBox::*)(int)>(&KComboBox::activated), p, &DocumentPreview::comboBoxChanged);
+        connect(onlyLocalFilesButton, &QPushButton::toggled, p, &DocumentPreview::onlyLocalFilesChanged);
     }
 
     bool addUrl(const struct UrlInfo &urlInfo) {
@@ -328,7 +328,7 @@ public:
                 KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
                 runningJobs << job;
                 KJobWidgets::setWindow(job, p);
-                connect(job, SIGNAL(result(KJob*)), p, SLOT(statFinished(KJob*)));
+                connect(job, &KIO::StatJob::result, p, &DocumentPreview::statFinished);
             }
             if (urlList.isEmpty()) {
                 /// Case no URLs associated with this entry.
@@ -605,7 +605,7 @@ const QString DocumentPreview::DocumentPreviewPrivate::onlyLocalFilesCheckConfig
 DocumentPreview::DocumentPreview(QDockWidget *parent)
         : QWidget(parent), d(new DocumentPreviewPrivate(this))
 {
-    connect(parent, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
+    connect(parent, &QDockWidget::visibilityChanged, this, &DocumentPreview::visibilityChanged);
 }
 
 DocumentPreview::~DocumentPreview()

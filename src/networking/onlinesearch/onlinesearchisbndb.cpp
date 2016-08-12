@@ -110,7 +110,7 @@ void OnlineSearchIsbnDB::startSearch(const QMap<QString, QString> &query, int nu
     QNetworkRequest request(d->buildBooksUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchIsbnDB::downloadDone);
 }
 
 void OnlineSearchIsbnDB::startSearch()
@@ -182,7 +182,7 @@ void OnlineSearchIsbnDB::downloadDone()
                 QNetworkRequest request(nextUrl);
                 QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(nextReply);
-                connect(nextReply, SIGNAL(finished()), this, SLOT(downloadDone()));
+                connect(nextReply, &QNetworkReply::finished, this, &OnlineSearchIsbnDB::downloadDone);
                 return;
             }
         } else {

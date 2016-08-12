@@ -18,7 +18,7 @@
 #include "settingsfileexporterpdfpswidget.h"
 
 #include <QFormLayout>
-#include <QLineEdit>
+#include <KLineEdit>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -99,7 +99,7 @@ public:
         foreach (const QString &labelText, paperSizeLabelToNameKeys) {
             comboBoxPaperSize->addItem(labelText, paperSizeLabelToName[labelText]);
         }
-        connect(comboBoxPaperSize, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
+        connect(comboBoxPaperSize, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsAbstractWidget::changed);
 
         comboBoxBabelLanguage = new KComboBox(true, p);
         comboBoxBabelLanguage->setObjectName(QStringLiteral("comboBoxBabelLanguage"));
@@ -107,7 +107,7 @@ public:
         comboBoxBabelLanguage->addItem(QStringLiteral("english"));
         comboBoxBabelLanguage->addItem(QStringLiteral("ngerman"));
         comboBoxBabelLanguage->addItem(QStringLiteral("swedish"));
-        connect(comboBoxBabelLanguage->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
+        connect(comboBoxBabelLanguage->lineEdit(), &QLineEdit::textChanged, p, &SettingsFileExporterPDFPSWidget::changed);
 
         comboBoxBibliographyStyle = new KComboBox(true, p);
         comboBoxBibliographyStyle->setObjectName("comboBoxBibliographyStyle");
@@ -116,7 +116,7 @@ public:
         foreach (const QString &style, styles) {
             comboBoxBibliographyStyle->addItem(style);
         }
-        connect(comboBoxBibliographyStyle->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));
+        connect(comboBoxBibliographyStyle->lineEdit(), &QLineEdit::textChanged, p, &SettingsFileExporterPDFPSWidget::changed);
     }
 };
 

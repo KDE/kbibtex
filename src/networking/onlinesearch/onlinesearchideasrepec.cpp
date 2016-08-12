@@ -101,7 +101,7 @@ void OnlineSearchIDEASRePEc::startSearch(const QMap<QString, QString> &query, in
     QNetworkRequest request(url);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(downloadListDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadListDone);
 
     emit progress(0, d->numSteps);
 }
@@ -147,7 +147,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(downloadListDone()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadListDone);
         } else {
             /// ensure proper treatment of UTF-8 characters
             const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
@@ -173,7 +173,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
                 QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
                 reply = InternalNetworkAccessManager::self()->get(request, reply);
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-                connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
+                connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadPublicationDone);
             }
         }
     } else
@@ -215,7 +215,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
         reply->setProperty("downloadurl", QVariant::fromValue<QString>(downloadUrl));
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-        connect(reply, SIGNAL(finished()), this, SLOT(downloadBibTeXDone()));
+        connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadBibTeXDone);
 
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
@@ -269,7 +269,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
             reply = InternalNetworkAccessManager::self()->get(request, reply);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-            connect(reply, SIGNAL(finished()), this, SLOT(downloadPublicationDone()));
+            connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadPublicationDone);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";

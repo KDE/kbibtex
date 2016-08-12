@@ -62,7 +62,7 @@ public:
         lineEditFreeText->setFocus(Qt::TabFocusReason);
         layout->addWidget(lineEditFreeText, 0, 1, 1, 1);
         label->setBuddy(lineEditFreeText);
-        connect(lineEditFreeText, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditFreeText, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormArXiv::returnPressed);
 
         label = new QLabel(i18n("Number of Results:"), this);
         layout->addWidget(label, 1, 0, 1, 1);
@@ -586,7 +586,7 @@ void OnlineSearchArXiv::startSearch()
     QNetworkRequest request(d->buildQueryUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchArXiv::downloadDone);
 
     emit progress(0, d->numSteps);
 
@@ -609,7 +609,7 @@ void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int num
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchArXiv::downloadDone);
 
     emit progress(0, d->numSteps);
 }

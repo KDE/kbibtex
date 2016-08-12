@@ -74,42 +74,42 @@ public:
         lineEditFullText = new KLineEdit(this);
         lineEditFullText->setClearButtonEnabled(true);
         layout->addRow(i18n("Full text:"), lineEditFullText);
-        connect(lineEditFullText, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditFullText, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
         lineEditTitle = new KLineEdit(this);
         lineEditTitle->setClearButtonEnabled(true);
         layout->addRow(i18n("Title:"), lineEditTitle);
-        connect(lineEditTitle, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditTitle, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
         lineEditAuthor = new KLineEdit(this);
         lineEditAuthor->setClearButtonEnabled(true);
         layout->addRow(i18n("Author:"), lineEditAuthor);
-        connect(lineEditAuthor, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditAuthor, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
         lineEditAbstractKeywords = new KLineEdit(this);
         lineEditAbstractKeywords->setClearButtonEnabled(true);
         layout->addRow(i18n("Abstract/Keywords:"), lineEditAbstractKeywords);
-        connect(lineEditAbstractKeywords, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditAbstractKeywords, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
         lineEditPublication = new KLineEdit(this);
         lineEditPublication->setClearButtonEnabled(true);
         layout->addRow(i18n("Publication:"), lineEditPublication);
-        connect(lineEditPublication, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditPublication, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
         lineEditISSNDOIISBN = new KLineEdit(this);
         lineEditISSNDOIISBN->setClearButtonEnabled(true);
         layout->addRow(i18n("ISSN/ISBN/DOI:"), lineEditISSNDOIISBN);
-        connect(lineEditISSNDOIISBN, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditISSNDOIISBN, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
         lineEditVolume = new KLineEdit(this);
         lineEditVolume->setClearButtonEnabled(true);
         layout->addRow(i18n("Volume:"), lineEditVolume);
-        connect(lineEditVolume, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditVolume, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
         lineEditIssue = new KLineEdit(this);
         lineEditIssue->setClearButtonEnabled(true);
         layout->addRow(i18n("Issue/Number:"), lineEditIssue);
-        connect(lineEditIssue, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditIssue, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
         numResultsField = new QSpinBox(this);
         layout->addRow(i18n("Number of Results:"), numResultsField);
@@ -317,7 +317,7 @@ void OnlineSearchIngentaConnect::startSearch(const QMap<QString, QString> &query
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchIngentaConnect::downloadDone);
 
     emit progress(0, 1);
 }
@@ -329,7 +329,7 @@ void OnlineSearchIngentaConnect::startSearch()
     QNetworkRequest request(d->buildQueryUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(downloadDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchIngentaConnect::downloadDone);
 
     emit progress(0, 1);
 

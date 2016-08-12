@@ -57,43 +57,43 @@ public:
         settingWidgets.insert(settingsWidget);
         KPageWidgetItem *pageGlobal = p->addPage(settingsWidget, settingsWidget->label());
         pageGlobal->setIcon(settingsWidget->icon());
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+        connect(settingsWidget, &SettingsAbstractWidget::changed, p, &KBibTeXPreferencesDialog::gotChanged);
 
         settingsWidget = new SettingsGlobalKeywordsWidget(p);
         settingWidgets.insert(settingsWidget);
         KPageWidgetItem *page = p->addSubPage(pageGlobal, settingsWidget, settingsWidget->label());
         page->setIcon(settingsWidget->icon());
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+        connect(settingsWidget, &SettingsAbstractWidget::changed, p, &KBibTeXPreferencesDialog::gotChanged);
 
         settingsWidget = new SettingsColorLabelWidget(p);
         settingWidgets.insert(settingsWidget);
         page = p->addSubPage(pageGlobal, settingsWidget, settingsWidget->label());
         page->setIcon(settingsWidget->icon());
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+        connect(settingsWidget, &SettingsAbstractWidget::changed, p, &KBibTeXPreferencesDialog::gotChanged);
 
         settingsWidget = new SettingsIdSuggestionsWidget(p);
         settingWidgets.insert(settingsWidget);
         page = p->addSubPage(pageGlobal, settingsWidget, settingsWidget->label());
         page->setIcon(settingsWidget->icon());
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+        connect(settingsWidget, &SettingsAbstractWidget::changed, p, &KBibTeXPreferencesDialog::gotChanged);
 
         settingsWidget = new SettingsUserInterfaceWidget(p);
         settingWidgets.insert(settingsWidget);
         page = p->addPage(settingsWidget, settingsWidget->label());
         page->setIcon(settingsWidget->icon());
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+        connect(settingsWidget, &SettingsAbstractWidget::changed, p, &KBibTeXPreferencesDialog::gotChanged);
 
         settingsWidget = new SettingsFileExporterWidget(p);
         settingWidgets.insert(settingsWidget);
         KPageWidgetItem *pageSaving = p->addPage(settingsWidget, settingsWidget->label());
         pageSaving->setIcon(settingsWidget->icon());
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+        connect(settingsWidget, &SettingsAbstractWidget::changed, p, &KBibTeXPreferencesDialog::gotChanged);
 
         settingsWidget = new SettingsFileExporterPDFPSWidget(p);
         settingWidgets.insert(settingsWidget);
         page = p->addSubPage(pageSaving, settingsWidget, settingsWidget->label());
         page->setIcon(settingsWidget->icon());
-        connect(settingsWidget, SIGNAL(changed()), p, SLOT(gotChanged()));
+        connect(settingsWidget, &SettingsAbstractWidget::changed, p, &KBibTeXPreferencesDialog::gotChanged);
     }
 
     void loadState() {

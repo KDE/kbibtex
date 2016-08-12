@@ -49,7 +49,7 @@ public:
         api->addLimitToUrl(internalUrl);
         QNetworkRequest request = api->request(internalUrl);
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        connect(reply, SIGNAL(finished()), p, SLOT(finishedFetchingItems()));
+        connect(reply, &QNetworkReply::finished, p, &Zotero::Items::finishedFetchingItems);
         return reply;
     }
 

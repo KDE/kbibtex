@@ -89,25 +89,25 @@ public:
 
         checkBoxShowComments = new QCheckBox(p);
         layout->addRow(i18n("Show Comments:"), checkBoxShowComments);
-        connect(checkBoxShowComments, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
+        connect(checkBoxShowComments, &QCheckBox::toggled, p, &SettingsUserInterfaceWidget::changed);
 
         checkBoxShowMacros = new QCheckBox(p);
         layout->addRow(i18n("Show Macros:"), checkBoxShowMacros);
-        connect(checkBoxShowMacros, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
+        connect(checkBoxShowMacros, &QCheckBox::toggled, p, &SettingsUserInterfaceWidget::changed);
 
         comboBoxBibliographySystem = new KComboBox(p);
         comboBoxBibliographySystem->setObjectName(QStringLiteral("comboBoxBibtexStyle"));
         comboBoxBibliographySystem->addItem(i18n("BibTeX"), QStringLiteral("bibtex"));
         comboBoxBibliographySystem->addItem(i18n("BibLaTeX"), QStringLiteral("biblatex"));
         layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
-        connect(comboBoxBibliographySystem, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
+        connect(comboBoxBibliographySystem, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), p, &SettingsUserInterfaceWidget::changed);
 
         comboBoxElementDoubleClickAction = new KComboBox(p);
         comboBoxElementDoubleClickAction->setObjectName(QStringLiteral("comboBoxElementDoubleClickAction"));
         comboBoxElementDoubleClickAction->addItem(i18n("Open Editor")); ///< ActionOpenEditor = 0
         comboBoxElementDoubleClickAction->addItem(i18n("View Document")); ///< ActionViewDocument = 1
         layout->addRow(i18n("When double-clicking an element:"), comboBoxElementDoubleClickAction);
-        connect(comboBoxElementDoubleClickAction, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
+        connect(comboBoxElementDoubleClickAction, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), p, &SettingsUserInterfaceWidget::changed);
     }
 };
 

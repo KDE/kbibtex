@@ -76,15 +76,15 @@ public:
         menuTypes = new QMenu(parent);
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
-        connect(menuTypesSignalMapper, SIGNAL(mapped(int)), parent, SLOT(slotTypeChanged(int)));
+        connect(menuTypesSignalMapper, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), parent, &FieldLineEdit::slotTypeChanged);
 
         buttonOpenUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open-remote")), QStringLiteral(""), parent);
         buttonOpenUrl->setVisible(false);
         buttonOpenUrl->setProperty("isConst", true);
         parent->appendWidget(buttonOpenUrl);
-        connect(buttonOpenUrl, SIGNAL(clicked()), parent, SLOT(slotOpenUrl()));
+        connect(buttonOpenUrl, &QPushButton::clicked, parent, &FieldLineEdit::slotOpenUrl);
 
-        connect(p, SIGNAL(textChanged(QString)), p, SLOT(slotTextChanged(QString)));
+        connect(p, &FieldLineEdit::textChanged, p, &FieldLineEdit::slotTextChanged);
 
         Value value;
         typeFlag = determineTypeFlag(value, preferredTypeFlag, typeFlags);

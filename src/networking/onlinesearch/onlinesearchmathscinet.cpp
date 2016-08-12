@@ -110,7 +110,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
     QNetworkRequest request(OnlineSearchMathSciNetPrivate::queryFormUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingQueryForm()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingQueryForm);
 }
 
 void OnlineSearchMathSciNet::startSearch()
@@ -173,7 +173,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-        connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingResultPage()));
+        connect(newReply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingResultPage);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
 }
@@ -212,7 +212,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-            connect(newReply, SIGNAL(finished()), this, SLOT(doneFetchingBibTeXcode()));
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingBibTeXcode);
         } else {
             /// nothing found
             emit progress(3, 3);

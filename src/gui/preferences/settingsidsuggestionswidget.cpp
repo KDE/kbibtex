@@ -256,7 +256,7 @@ public:
         idSuggestionsModel = new IdSuggestionsModel(treeViewSuggestions);
         treeViewSuggestions->setModel(idSuggestionsModel);
         treeViewSuggestions->setRootIsDecorated(false);
-        connect(treeViewSuggestions->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)), p, SLOT(itemChanged(QModelIndex)));
+        connect(treeViewSuggestions->selectionModel(), &QItemSelectionModel::currentChanged, p, &SettingsIdSuggestionsWidget::itemChanged);
         treeViewSuggestions->setMinimumSize(treeViewSuggestions->fontMetrics().width(QChar('W')) * 25, treeViewSuggestions->fontMetrics().height() * 15);
 
         buttonNewSuggestion = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add..."), p);
@@ -277,13 +277,13 @@ public:
         buttonToggleDefaultString = new QPushButton(QIcon::fromTheme(QStringLiteral("favorites")), i18n("Toggle Default"), p);
         layout->addWidget(buttonToggleDefaultString, 5, 1, 1, 1);
 
-        connect(buttonNewSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
-        connect(buttonEditSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
-        connect(buttonDeleteSuggestion, SIGNAL(clicked()), p, SLOT(buttonClicked()));
-        connect(buttonSuggestionUp, SIGNAL(clicked()), p, SLOT(buttonClicked()));
-        connect(buttonSuggestionDown, SIGNAL(clicked()), p, SLOT(buttonClicked()));
-        connect(buttonToggleDefaultString, SIGNAL(clicked()), p, SLOT(toggleDefault()));
-        connect(treeViewSuggestions, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(editItem(QModelIndex)));
+        connect(buttonNewSuggestion, &QPushButton::clicked, p, &SettingsIdSuggestionsWidget::buttonClicked);
+        connect(buttonEditSuggestion, &QPushButton::clicked, p, &SettingsIdSuggestionsWidget::buttonClicked);
+        connect(buttonDeleteSuggestion, &QPushButton::clicked, p, &SettingsIdSuggestionsWidget::buttonClicked);
+        connect(buttonSuggestionUp, &QPushButton::clicked, p, &SettingsIdSuggestionsWidget::buttonClicked);
+        connect(buttonSuggestionDown, &QPushButton::clicked, p, &SettingsIdSuggestionsWidget::buttonClicked);
+        connect(buttonToggleDefaultString, &QPushButton::clicked, p, &SettingsIdSuggestionsWidget::toggleDefault);
+        connect(treeViewSuggestions, &QTreeView::doubleClicked, p, &SettingsIdSuggestionsWidget::editItem);
     }
 };
 

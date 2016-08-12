@@ -103,15 +103,15 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
     spinBoxLength->setMaximum(9);
     spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
 
-    connect(spanSliderAuthor, SIGNAL(lowerValueChanged(int)), isew, SLOT(updatePreview()));
-    connect(spanSliderAuthor, SIGNAL(upperValueChanged(int)), isew, SLOT(updatePreview()));
-    connect(spanSliderAuthor, SIGNAL(lowerValueChanged(int)), this, SLOT(updateRangeLabel()));
-    connect(spanSliderAuthor, SIGNAL(upperValueChanged(int)), this, SLOT(updateRangeLabel()));
-    connect(checkBoxLastAuthor, SIGNAL(toggled(bool)), isew, SLOT(updatePreview()));
-    connect(checkBoxLastAuthor, SIGNAL(toggled(bool)), this, SLOT(updateRangeLabel()));
-    connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
-    connect(lineEditTextInBetween, SIGNAL(textEdited(QString)), isew, SLOT(updatePreview()));
-    connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
+    connect(spanSliderAuthor, &QxtSpanSlider::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(spanSliderAuthor, &QxtSpanSlider::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(spanSliderAuthor, &QxtSpanSlider::lowerValueChanged, this, &AuthorWidget::updateRangeLabel);
+    connect(spanSliderAuthor, &QxtSpanSlider::upperValueChanged, this, &AuthorWidget::updateRangeLabel);
+    connect(checkBoxLastAuthor, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(checkBoxLastAuthor, &QCheckBox::toggled, this, &AuthorWidget::updateRangeLabel);
+    connect(comboBoxChangeCase, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
 
     updateRangeLabel();
 }
@@ -171,7 +171,7 @@ public:
         formLayout->addRow(i18n("Digits:"), comboBoxDigits);
         comboBoxDigits->setCurrentIndex(comboBoxDigits->findData(digits));
 
-        connect(comboBoxDigits, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
+        connect(comboBoxDigits, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
     QString toString() const {
@@ -231,14 +231,14 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
     spinBoxLength->setMaximum(9);
     spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
 
-    connect(spanSliderWords, SIGNAL(lowerValueChanged(int)), isew, SLOT(updatePreview()));
-    connect(spanSliderWords, SIGNAL(upperValueChanged(int)), isew, SLOT(updatePreview()));
-    connect(spanSliderWords, SIGNAL(lowerValueChanged(int)), this, SLOT(updateRangeLabel()));
-    connect(spanSliderWords, SIGNAL(upperValueChanged(int)), this, SLOT(updateRangeLabel()));
-    connect(checkBoxRemoveSmallWords, SIGNAL(toggled(bool)), isew, SLOT(updatePreview()));
-    connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
-    connect(lineEditTextInBetween, SIGNAL(textEdited(QString)), isew, SLOT(updatePreview()));
-    connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
+    connect(spanSliderWords, &QxtSpanSlider::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(spanSliderWords, &QxtSpanSlider::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(spanSliderWords, &QxtSpanSlider::lowerValueChanged, this, &TitleWidget::updateRangeLabel);
+    connect(spanSliderWords, &QxtSpanSlider::upperValueChanged, this, &TitleWidget::updateRangeLabel);
+    connect(checkBoxRemoveSmallWords, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(comboBoxChangeCase, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
 
     updateRangeLabel();
 }
@@ -324,8 +324,8 @@ public:
         spinBoxLength->setMaximum(9);
         spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
 
-        connect(comboBoxChangeCase, SIGNAL(currentIndexChanged(int)), isew, SLOT(updatePreview()));
-        connect(spinBoxLength, SIGNAL(valueChanged(int)), isew, SLOT(updatePreview()));
+        connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
     QString toString() const
@@ -363,7 +363,7 @@ public:
         formLayout->addRow(i18n("Text:"), lineEditText);
         lineEditText->setText(text);
 
-        connect(lineEditText, SIGNAL(textEdited(QString)), isew, SLOT(updatePreview()));
+        connect(lineEditText, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
     QString toString() const {
@@ -422,39 +422,39 @@ public:
         QMenu *menuAddToken = new QMenu(p);
         QSignalMapper *signalMapperAddMenu = new QSignalMapper(p);
         buttonAddTokenAtTop->setMenu(menuAddToken);
-        QAction *action = menuAddToken->addAction(i18n("Title"), signalMapperAddMenu, SLOT(map()));
+        QAction *action = menuAddToken->addAction(i18n("Title"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, -ttTitle);
-        action = menuAddToken->addAction(i18n("Author"), signalMapperAddMenu, SLOT(map()));
+        action = menuAddToken->addAction(i18n("Author"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, -ttAuthor);
-        action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, SLOT(map()));
+        action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, -ttYear);
-        action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, SLOT(map()));
+        action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, -ttJournal);
-        action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, SLOT(map()));
+        action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, -ttText);
-        connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
+        connect(signalMapperAddMenu, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &IdSuggestionsEditWidget::addToken);
 
         menuAddToken = new QMenu(p);
         signalMapperAddMenu = new QSignalMapper(p);
         buttonAddTokenAtBottom->setMenu(menuAddToken);
-        action = menuAddToken->addAction(i18n("Title"), signalMapperAddMenu, SLOT(map()));
+        action = menuAddToken->addAction(i18n("Title"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, ttTitle);
-        action = menuAddToken->addAction(i18n("Author"), signalMapperAddMenu, SLOT(map()));
+        action = menuAddToken->addAction(i18n("Author"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, ttAuthor);
-        action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, SLOT(map()));
+        action = menuAddToken->addAction(i18n("Year"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, ttYear);
-        action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, SLOT(map()));
+        action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, ttJournal);
-        action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, SLOT(map()));
+        action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, ttText);
-        connect(signalMapperAddMenu, SIGNAL(mapped(int)), p, SLOT(addToken(int)));
+        connect(signalMapperAddMenu, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &IdSuggestionsEditWidget::addToken);
 
         signalMapperMoveUp = new QSignalMapper(p);
-        connect(signalMapperMoveUp, SIGNAL(mapped(QWidget*)), p, SLOT(moveUpToken(QWidget*)));
+        connect(signalMapperMoveUp, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), p, &IdSuggestionsEditWidget::moveUpToken);
         signalMapperMoveDown = new QSignalMapper(p);
-        connect(signalMapperMoveDown, SIGNAL(mapped(QWidget*)), p, SLOT(moveDownToken(QWidget*)));
+        connect(signalMapperMoveDown, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), p, &IdSuggestionsEditWidget::moveDownToken);
         signalMapperRemove = new QSignalMapper(p);
-        connect(signalMapperRemove, SIGNAL(mapped(QWidget*)), p, SLOT(removeToken(QWidget*)));
+        connect(signalMapperRemove, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), p, &IdSuggestionsEditWidget::removeToken);
 
     }
 
@@ -464,11 +464,11 @@ public:
             QPushButton *buttonDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QStringLiteral(""), tokenWidget);
             QPushButton *buttonRemove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), QStringLiteral(""), tokenWidget);
             tokenWidget->addButtons(buttonUp, buttonDown, buttonRemove);
-            connect(buttonUp, SIGNAL(clicked(bool)), signalMapperMoveUp, SLOT(map()));
+            connect(buttonUp, &QPushButton::clicked, signalMapperMoveUp, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
             signalMapperMoveUp->setMapping(buttonUp, tokenWidget);
-            connect(buttonDown, SIGNAL(clicked(bool)), signalMapperMoveDown, SLOT(map()));
+            connect(buttonDown, &QPushButton::clicked, signalMapperMoveDown, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
             signalMapperMoveDown->setMapping(buttonDown, tokenWidget);
-            connect(buttonRemove, SIGNAL(clicked(bool)), signalMapperRemove, SLOT(map()));
+            connect(buttonRemove, &QPushButton::clicked, signalMapperRemove, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
             signalMapperRemove->setMapping(buttonRemove, tokenWidget);
         }
     }

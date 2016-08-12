@@ -155,7 +155,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(eSearchDone()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchPubMed::eSearchDone);
 
     emit progress(0, d->numSteps);
 }
@@ -218,7 +218,7 @@ void OnlineSearchPubMed::eSearchDone()
                 QNetworkRequest request(d->buildFetchIdUrl(idList));
                 QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
                 InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
-                connect(newReply, SIGNAL(finished()), this, SLOT(eFetchDone()));
+                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchPubMed::eFetchDone);
             }
         } else {
             /// search resulted in no hits (and PubMed told so)

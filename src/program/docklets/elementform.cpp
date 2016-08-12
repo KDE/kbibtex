@@ -69,7 +69,7 @@ public:
         layout->addWidget(elementEditor, 0, 0, 1, 4);
         elementEditor->setEnabled(false);
         elementEditor->layout()->setMargin(0);
-        connect(elementEditor, SIGNAL(modified(bool)), p, SLOT(modified(bool)));
+        connect(elementEditor, &ElementEditor::modified, p, &ElementForm::modified);
 
         /// Checkbox enabling/disabling setting to automatically apply changes in form to element
         checkBoxAutoApply = new QCheckBox(i18n("Automatically apply changes"), p);
@@ -98,8 +98,8 @@ public:
         buttonReset = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Reset"), p);
         layout->addWidget(buttonReset, 1, 3, 1, 1);
 
-        connect(buttonApply, SIGNAL(clicked()), p, SIGNAL(elementModified()));
-        connect(checkBoxAutoApply, SIGNAL(toggled(bool)), p, SLOT(autoApplyToggled(bool)));
+        connect(buttonApply, &QPushButton::clicked, p, &ElementForm::elementModified);
+        connect(checkBoxAutoApply, &QCheckBox::toggled, p, &ElementForm::autoApplyToggled);
     }
 
     ~ElementFormPrivate() {
@@ -131,8 +131,8 @@ public:
         buttonReset->setEnabled(false);
         widgetUnmodifiedChanges->setVisible(false);
         gotModified = false;
-        connect(buttonApply, SIGNAL(clicked()), p, SLOT(apply()));
-        connect(buttonReset, SIGNAL(clicked()), p, SLOT(reset()));
+        connect(buttonApply, &QPushButton::clicked, p, &ElementForm::apply);
+        connect(buttonReset, &QPushButton::clicked, p, &ElementForm::reset);
     }
 
     bool isVisible() {
@@ -165,7 +165,7 @@ const QString ElementForm::ElementFormPrivate::configKeyAutoApply = QStringLiter
 ElementForm::ElementForm(MDIWidget *mdiWidget, QDockWidget *parent)
         : QWidget(parent), d(new ElementFormPrivate(mdiWidget, this))
 {
-    connect(parent, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
+    connect(parent, &QDockWidget::visibilityChanged, this, &ElementForm::visibilityChanged);
 }
 
 ElementForm::~ElementForm()

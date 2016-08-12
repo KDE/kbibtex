@@ -41,7 +41,7 @@ OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
     lineEdit->setFocus(Qt::TabFocusReason);
     queryFields.insert(OnlineSearchAbstract::queryKeyFreeText, lineEdit);
     label->setBuddy(lineEdit);
-    connect(lineEdit, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+    connect(lineEdit, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
 
     label = new QLabel(i18n("Title:"), this);
     lineEdit = new KLineEdit(this);
@@ -49,7 +49,7 @@ OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
     lineEdit->setClearButtonEnabled(true);
     queryFields.insert(OnlineSearchAbstract::queryKeyTitle, lineEdit);
     label->setBuddy(lineEdit);
-    connect(lineEdit, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+    connect(lineEdit, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
 
     label = new QLabel(i18n("Author:"), this);
     lineEdit = new KLineEdit(this);
@@ -57,7 +57,7 @@ OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
     lineEdit->setClearButtonEnabled(true);
     queryFields.insert(OnlineSearchAbstract::queryKeyAuthor, lineEdit);
     label->setBuddy(lineEdit);
-    connect(lineEdit, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+    connect(lineEdit, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
 
     label = new QLabel(i18n("Year:"), this);
     lineEdit = new KLineEdit(this);
@@ -65,7 +65,7 @@ OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
     lineEdit->setClearButtonEnabled(true);
     queryFields.insert(OnlineSearchAbstract::queryKeyYear, lineEdit);
     label->setBuddy(lineEdit);
-    connect(lineEdit, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+    connect(lineEdit, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
 
     label = new QLabel(i18n("Number of Results:"), this);
     numResultsField = new QSpinBox(this);

@@ -65,7 +65,7 @@ public:
 
         clearButton = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-clear-locationbar-rtl")), QString(), p);
         layout->addWidget(clearButton, 0, Qt::AlignRight | Qt::AlignVCenter);
-        connect(clearButton, SIGNAL(clicked()), p, SLOT(clear()));
+        connect(clearButton, &QPushButton::clicked, p, &StarRating::clear);
     }
 
     QRect starsInside() const

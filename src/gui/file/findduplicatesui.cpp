@@ -572,10 +572,10 @@ public:
 
         showCurrentClique();
 
-        connect(buttonPrev, SIGNAL(clicked()), p, SLOT(previousClique()));
-        connect(buttonNext, SIGNAL(clicked()), p, SLOT(nextClique()));
+        connect(buttonPrev, &QPushButton::clicked, p, &MergeWidget::previousClique);
+        connect(buttonNext, &QPushButton::clicked, p, &MergeWidget::nextClique);
 
-        connect(editor, SIGNAL(doubleClicked(QModelIndex)), editor, SLOT(viewCurrentElement()));
+        connect(editor, &FileView::doubleClicked, editor, &FileView::viewCurrentElement);
     }
 
     void showCurrentClique() {
@@ -646,7 +646,7 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
 {
     QAction *newAction = new QAction(QIcon::fromTheme(QStringLiteral("tab-duplicate")), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QStringLiteral("findduplicates"), newAction);
-    connect(newAction, SIGNAL(triggered()), this, SLOT(slotFindDuplicates()));
+    connect(newAction, &QAction::triggered, this, &FindDuplicatesUI::slotFindDuplicates);
 }
 
 FindDuplicatesUI::~FindDuplicatesUI()

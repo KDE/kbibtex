@@ -62,7 +62,7 @@ signals:
     void editorDragEnterEvent(QDragEnterEvent *);
     void editorDragMoveEvent(QDragMoveEvent *);
     void editorDropEvent(QDropEvent *);
-    void modified();
+    void modified(bool);
 
 public slots:
     void viewCurrentElement();

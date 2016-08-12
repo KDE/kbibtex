@@ -93,7 +93,7 @@ LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)
     d->action = new QAction(QIcon::fromTheme(QStringLiteral("application-x-lyx")), i18n("Send to LyX/Kile"), this);
     part->actionCollection()->addAction(QStringLiteral("sendtolyx"), d->action);
     d->action->setEnabled(false);
-    connect(d->action, SIGNAL(triggered()), this, SLOT(sendReferenceToLyX()));
+    connect(d->action, &QAction::triggered, this, &LyX::sendReferenceToLyX);
     widget->addAction(d->action);
 }
 

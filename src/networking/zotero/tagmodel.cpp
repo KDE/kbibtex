@@ -45,7 +45,7 @@ TagModel::TagModel(Tags *tags, QObject *parent)
         : QAbstractItemModel(parent), d(new Zotero::TagModel::Private(tags, this))
 {
     beginResetModel();
-    connect(tags, SIGNAL(finishedLoading()), this, SLOT(fetchingDone()));
+    connect(tags, &Tags::finishedLoading, this, &TagModel::fetchingDone);
 }
 
 QVariant TagModel::data(const QModelIndex &index, int role) const

@@ -71,35 +71,35 @@ public:
         QLabel *label = new QLabel(i18n("Free Text:"), this);
         label->setBuddy(lineEditFreeText);
         layout->addRow(label, lineEditFreeText);
-        connect(lineEditFreeText, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditFreeText, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         lineEditTitle = new KLineEdit(this);
         lineEditTitle->setClearButtonShown(true);
         label = new QLabel(i18n("Title:"), this);
         label->setBuddy(lineEditTitle);
         layout->addRow(label, lineEditTitle);
-        connect(lineEditTitle, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditTitle, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         lineEditBookTitle = new KLineEdit(this);
         lineEditBookTitle->setClearButtonShown(true);
         label = new QLabel(i18n("Book/Journal title:"), this);
         label->setBuddy(lineEditBookTitle);
         layout->addRow(label, lineEditBookTitle);
-        connect(lineEditBookTitle, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditBookTitle, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         lineEditAuthorEditor = new KLineEdit(this);
         lineEditAuthorEditor->setClearButtonShown(true);
         label = new QLabel(i18n("Author or Editor:"), this);
         label->setBuddy(lineEditAuthorEditor);
         layout->addRow(label, lineEditAuthorEditor);
-        connect(lineEditAuthorEditor, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditAuthorEditor, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         lineEditYear = new KLineEdit(this);
         lineEditYear->setClearButtonShown(true);
         label = new QLabel(i18n("Year:"), this);
         label->setBuddy(lineEditYear);
         layout->addRow(label, lineEditYear);
-        connect(lineEditYear, SIGNAL(returnPressed()), this, SIGNAL(returnPressed()));
+        connect(lineEditYear, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         numResultsField = new QSpinBox(this);
         label = new QLabel(i18n("Number of Results:"), this);
@@ -256,7 +256,7 @@ void OnlineSearchSpringerLink::startSearch()
     QNetworkRequest request(springerLinkSearchUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingPAM()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchSpringerLink::doneFetchingPAM);
 
     if (d->form != NULL) d->form->saveState();
 }
@@ -281,7 +281,7 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
     QNetworkRequest request(springerLinkSearchUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
-    connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingPAM()));
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchSpringerLink::doneFetchingPAM);
 }
 
 QString OnlineSearchSpringerLink::label() const

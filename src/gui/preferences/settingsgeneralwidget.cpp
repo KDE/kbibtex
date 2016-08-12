@@ -75,7 +75,7 @@ public:
             comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(&dummyPerson, formattingOption), formattingOption);
         }
         comboBoxPersonNameFormatting->setToolTip(restartRequiredMsg);
-        connect(comboBoxPersonNameFormatting, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
+        connect(comboBoxPersonNameFormatting, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), p, &SettingsGeneralWidget::changed);
     }
 };
 

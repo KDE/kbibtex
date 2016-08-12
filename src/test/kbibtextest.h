@@ -32,9 +32,11 @@ class KBibTeXTest : public QDialog
 public:
     explicit KBibTeXTest(QWidget *parent = NULL);
 
+public slots:
+    void startOnlineSearchTests();
+
 private slots:
     void aboutToQuit();
-    void startOnlineSearchTests();
     void onlineSearchStoppedSearch(int);
     void onlineSearchFoundEntry();
     void progress(int, int);

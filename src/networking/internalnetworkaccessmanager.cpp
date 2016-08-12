@@ -180,10 +180,10 @@ QString InternalNetworkAccessManager::userAgent()
 void InternalNetworkAccessManager::setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec)
 {
     QTimer *timer = new QTimer(reply);
-    connect(timer, SIGNAL(timeout()), this, SLOT(networkReplyTimeout()));
+    connect(timer, &QTimer::timeout, this, &InternalNetworkAccessManager::networkReplyTimeout);
     m_mapTimerToReply.insert(timer, reply);
     timer->start(timeOutSec * 1000);
-    connect(reply, SIGNAL(finished()), this, SLOT(networkReplyFinished()));
+    connect(reply, &QNetworkReply::finished, this, &InternalNetworkAccessManager::networkReplyFinished);
 }
 
 void InternalNetworkAccessManager::networkReplyTimeout()
@@ -202,7 +202,7 @@ void InternalNetworkAccessManager::networkReplyFinished()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     QTimer *timer = m_mapTimerToReply.key(reply, NULL);
     if (timer != NULL) {
-        disconnect(timer, SIGNAL(timeout()), this, SLOT(networkReplyTimeout()));
+        disconnect(timer, &QTimer::timeout, this, &InternalNetworkAccessManager::networkReplyTimeout);
         timer->stop();
         m_mapTimerToReply.remove(timer);
     }

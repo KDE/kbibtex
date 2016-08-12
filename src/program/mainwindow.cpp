@@ -119,7 +119,7 @@ public:
         dockDocumentList->setWidget(listDocumentList);
         dockDocumentList->setObjectName(QStringLiteral("dockDocumentList"));
         dockDocumentList->setFeatures(QDockWidget::DockWidgetClosable    | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-        connect(listDocumentList, SIGNAL(openFile(QUrl)), p, SLOT(openDocument(QUrl)));
+        connect(listDocumentList, &DocumentList::openFile, p, &KBibTeXMainWindow::openDocument);
         showPanelsMenu->addAction(dockDocumentList->toggleViewAction());
 
         dockValueList = new QDockWidget(i18n("List of Values"), p);
@@ -155,7 +155,7 @@ public:
         dockSearchForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         p->addDockWidget(Qt::LeftDockWidgetArea, dockSearchForm);
         searchForm = new SearchForm(searchResults, dockSearchForm);
-        connect(searchForm, SIGNAL(doneSearching()), p, SLOT(showSearchResults()));
+        connect(searchForm, &SearchForm::doneSearching, p, &KBibTeXMainWindow::showSearchResults);
         dockSearchForm->setWidget(searchForm);
         dockSearchForm->setObjectName(QStringLiteral("dockSearchFrom"));
         dockSearchForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
@@ -216,12 +216,17 @@ public:
         p->tabifyDockWidget(dockSearchForm, dockReferencePreview);
         p->tabifyDockWidget(dockFileSettings, dockDocumentList);
 
-        p->actionCollection()->addAction(KStandardAction::New, p, SLOT(newDocument()));
-        p->actionCollection()->addAction(KStandardAction::Open, p, SLOT(openDocumentDialog()));
-        actionClose = p->actionCollection()->addAction(KStandardAction::Close, p, SLOT(closeDocument()));
+        QAction *action = p->actionCollection()->addAction(KStandardAction::New);
+        connect(action, &QAction::triggered, p, &KBibTeXMainWindow::newDocument);
+        action = p->actionCollection()->addAction(KStandardAction::Open);
+        connect(action, &QAction::triggered, p, &KBibTeXMainWindow::openDocumentDialog);
+        actionClose = p->actionCollection()->addAction(KStandardAction::Close);
+        connect(actionClose, &QAction::triggered, p, &KBibTeXMainWindow::closeDocument);
         actionClose->setEnabled(false);
-        p->actionCollection()->addAction(KStandardAction::Quit, p, SLOT(queryCloseAll()));
-        p->actionCollection()->addAction(KStandardAction::Preferences, p, SLOT(showPreferences()));
+        action = p->actionCollection()->addAction(KStandardAction::Quit);
+        connect(action, &QAction::triggered, p, &KBibTeXMainWindow::queryCloseAll);
+        action = p->actionCollection()->addAction(KStandardAction::Preferences);
+        connect(action, &QAction::triggered, p, &KBibTeXMainWindow::showPreferences);
     }
 
     ~KBibTeXMainWindowPrivate() {
@@ -249,12 +254,12 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     connect(d->mdiWidget, &MDIWidget::documentSwitched, this, &KBibTeXMainWindow::documentSwitched);
     connect(d->mdiWidget, &MDIWidget::activePartChanged, this, &KBibTeXMainWindow::createGUI); ///< actually: KParts::MainWindow::createGUI
-    connect(d->mdiWidget, SIGNAL(documentNew()), this, SLOT(newDocument()));
-    connect(d->mdiWidget, SIGNAL(documentOpen()), this, SLOT(openDocumentDialog()));
-    connect(d->mdiWidget, SIGNAL(documentOpenURL(QUrl)), this, SLOT(openDocument(QUrl)));
+    connect(d->mdiWidget, &MDIWidget::documentNew, this, &KBibTeXMainWindow::newDocument);
+    connect(d->mdiWidget, &MDIWidget::documentOpen, this, &KBibTeXMainWindow::openDocumentDialog);
+    connect(d->mdiWidget, &MDIWidget::documentOpenURL, this, &KBibTeXMainWindow::openDocument);
     connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::currentChanged, d->mdiWidget, &MDIWidget::setFile);
-    connect(OpenFileInfoManager::instance(), SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(documentListsChanged(OpenFileInfo::StatusFlags)));
-    connect(d->mdiWidget, &MDIWidget::setCaption, this, static_cast<void(KMainWindow::*)(const QString&)>(&KMainWindow::setCaption)); ///< actually: KMainWindow::setCaption
+    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &KBibTeXMainWindow::documentListsChanged);
+    connect(d->mdiWidget, &MDIWidget::setCaption, this, static_cast<void(KMainWindow::*)(const QString &)>(&KMainWindow::setCaption)); ///< actually: KMainWindow::setCaption
 
     documentListsChanged(OpenFileInfo::RecentlyUsed); /// force initialization of menu of recently used files
 
@@ -268,7 +273,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 
     setAcceptDrops(true);
 
-    QTimer::singleShot(500, this, SLOT(delayed()));
+    QTimer::singleShot(500, this, &KBibTeXMainWindow::delayed);
 }
 
 KBibTeXMainWindow::~KBibTeXMainWindow()
@@ -402,7 +407,7 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
         connect(newFileView, &FileView::modified, d->valueList, &ValueList::update);
         connect(newFileView, &FileView::modified, d->statistics, &Statistics::update);
         // FIXME connect(newEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
-        connect(d->elementForm, SIGNAL(elementModified()), newFileView, SLOT(externalModification()));
+        connect(d->elementForm, &ElementForm::elementModified, newFileView, &FileView::externalModification);
         connect(d->elementForm, &ElementForm::elementModified, newFileView, &FileView::externalModification);
     }
 
@@ -439,7 +444,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
             action->setData(cur->url());
             action->setIcon(QIcon::fromTheme(cur->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'))));
             d->actionMenuRecentFilesMenu->addAction(action);
-            connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+            connect(action, &QAction::triggered, this, &KBibTeXMainWindow::openRecentFile);
         }
     }
 }
@@ -470,7 +475,7 @@ void KBibTeXMainWindow::delayed() {
             bs->setKBibTeXasDefault();
             /// QTimer calls this slot again, but as 'bs' will not be NULL,
             /// the 'if' construct's 'else' path will be followed.
-            QTimer::singleShot(5000, this, SLOT(delayed()));
+            QTimer::singleShot(5000, this, &KBibTeXMainWindow::delayed);
         } else {
             /// KBibTeX is default application or user doesn't care,
             /// therefore clean up memory

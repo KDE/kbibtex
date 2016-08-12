@@ -113,7 +113,7 @@ QList<QWidget *> PDFItemDelegate::createItemWidgets(const QModelIndex &index) co
     /// add a push button to view the PDF file
     QPushButton *pushButton = new QPushButton(QIcon::fromTheme(QStringLiteral("application-pdf")), i18n("View"));
     list << pushButton;
-    connect(pushButton, SIGNAL(clicked()), this, SLOT(slotViewPDF()));
+    connect(pushButton, &QPushButton::clicked, this, &PDFItemDelegate::slotViewPDF);
     Q_ASSERT_X(list.count() == posViewButton + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posViewButton + 1");
 
     /// a button group to choose what to do with this particular PDF file
@@ -123,21 +123,21 @@ QList<QWidget *> PDFItemDelegate::createItemWidgets(const QModelIndex &index) co
     QRadioButton *radioButton = new QRadioButton(i18n("Ignore"));
     bg->addButton(radioButton);
     list << radioButton;
-    connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(slotRadioNoDownloadToggled(bool)));
+    connect(radioButton, &QRadioButton::toggled, this, &PDFItemDelegate::slotRadioNoDownloadToggled);
     Q_ASSERT_X(list.count() == posRadioNoDownload + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posRadioNoDownload + 1");
 
     /// download this file and store it locally, user will be asked for "Save As"
     radioButton = new QRadioButton(i18n("Download"));
     bg->addButton(radioButton);
     list << radioButton;
-    connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(slotRadioDownloadToggled(bool)));
+    connect(radioButton, &QRadioButton::toggled, this, &PDFItemDelegate::slotRadioDownloadToggled);
     Q_ASSERT_X(list.count() == posRadioDownload + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posRadioDownload + 1");
 
     /// paste URL into BibTeX entry, no local copy is stored
     radioButton = new QRadioButton(i18n("Use URL only"));
     bg->addButton(radioButton);
     list << radioButton;
-    connect(radioButton, SIGNAL(toggled(bool)), this, SLOT(slotRadioURLonlyToggled(bool)));
+    connect(radioButton, &QRadioButton::toggled, this, &PDFItemDelegate::slotRadioURLonlyToggled);
     Q_ASSERT_X(list.count() == posRadioURLonly + 1, "QList<QWidget *> PDFItemDelegate::createItemWidgets() const", "list.count() != posRadioURLonly + 1");
 
     return list;
@@ -384,8 +384,8 @@ FindPDFUI::FindPDFUI(Entry &entry, QWidget *parent)
     d->labelMessage->show();
     d->labelMessage->setText(i18n("Starting to search..."));
 
-    connect(d->findpdf, SIGNAL(finished()), this, SLOT(searchFinished()));
-    connect(d->findpdf, SIGNAL(progress(int,int,int)), this, SLOT(searchProgress(int,int,int)));
+    connect(d->findpdf, &FindPDF::finished, this, &FindPDFUI::searchFinished);
+    connect(d->findpdf, &FindPDF::progress, this, &FindPDFUI::searchProgress);
     d->findpdf->search(entry);
 }
 

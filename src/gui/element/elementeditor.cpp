@@ -106,7 +106,7 @@ public:
         for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
             QSharedPointer<EntryTabLayout> etl = *elit;
             ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
-            connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+            connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
             widgets << widget;
             if (previousWidget == NULL)
                 previousWidget = widget; ///< memorize the first tab
@@ -115,19 +115,19 @@ public:
         }
 
         ElementWidget *widget = new PreambleWidget(tab);
-        connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
         widgets << widget;
         int index = tab->addTab(widget, widget->icon(), widget->label());
         tab->hideTab(index);
 
         widget = new MacroWidget(tab);
-        connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
         widgets << widget;
         index = tab->addTab(widget, widget->icon(), widget->label());
         tab->hideTab(index);
 
         FilesWidget *filesWidget = new FilesWidget(tab);
-        connect(filesWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        connect(filesWidget, &FilesWidget::modified, p, &ElementEditor::childModified);
         widgets << filesWidget;
         index = tab->addTab(filesWidget, filesWidget->icon(), filesWidget->label());
         tab->hideTab(index);
@@ -145,13 +145,13 @@ public:
             blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QStringLiteral("ee") + QString::number(i) << QStringLiteral("postscript") + QString::number(i);
 
         widget = new OtherFieldsWidget(blacklistedFields, tab);
-        connect(widget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
         widgets << widget;
         index = tab->addTab(widget, widget->icon(), widget->label());
         tab->hideTab(index);
 
         sourceWidget = new SourceWidget(tab);
-        connect(sourceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
+        connect(sourceWidget, &ElementWidget::modified, p, &ElementEditor::childModified);
         widgets << sourceWidget;
         index = tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
         tab->hideTab(index);
@@ -169,8 +169,8 @@ public:
 
         referenceWidget = new ReferenceWidget(p);
         referenceWidget->setApplyElementInterface(this);
-        connect(referenceWidget, SIGNAL(modified(bool)), p, SLOT(childModified(bool)));
-        connect(referenceWidget, SIGNAL(entryTypeChanged()), p, SLOT(updateReqOptWidgets()));
+        connect(referenceWidget, &ElementWidget::modified, p, &ElementEditor::childModified);
+        connect(referenceWidget, &ReferenceWidget::entryTypeChanged, p, &ElementEditor::updateReqOptWidgets);
         vLayout->addWidget(referenceWidget, 0);
         widgets << referenceWidget;
 
@@ -211,13 +211,13 @@ public:
 
         buttonCheckWithBibTeX = new QPushButton(QIcon::fromTheme(QStringLiteral("tools-check-spelling")), i18n("Check with BibTeX"), p);
         hLayout->addWidget(buttonCheckWithBibTeX, 0);
-        connect(buttonCheckWithBibTeX, SIGNAL(clicked()), p, SLOT(checkBibTeX()));
+        connect(buttonCheckWithBibTeX, &QPushButton::clicked, p, &ElementEditor::checkBibTeX);
 
         addTabWidgets();
     }
 
     void updateTabVisibility() {
-        disconnect(tab, SIGNAL(currentChanged(int)), p, SLOT(tabChanged()));
+        disconnect(tab, &HidingTabWidget::currentChanged, p, &ElementEditor::tabChanged);
         if (element.isNull()) {
             p->setEnabled(false);
         } else {
@@ -243,7 +243,7 @@ public:
             if (firstEnabledTab < 1024)
                 tab->setCurrentIndex(firstEnabledTab);
         }
-        connect(tab, SIGNAL(currentChanged(int)), p, SLOT(tabChanged()));
+        connect(tab, &HidingTabWidget::currentChanged, p, &ElementEditor::tabChanged);
     }
 
     bool hasDuplicateId() const {
@@ -442,12 +442,12 @@ public:
 ElementEditor::ElementEditor(bool scrollable, QWidget *parent)
         : QWidget(parent), d(new ElementEditorPrivate(scrollable, this))
 {
-    connect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
+    connect(d->tab, &HidingTabWidget::currentChanged, this, &ElementEditor::tabChanged);
 }
 
 ElementEditor::~ElementEditor()
 {
-    disconnect(d->tab, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
+    disconnect(d->tab, &HidingTabWidget::currentChanged, this, &ElementEditor::tabChanged);
     delete d;
 }
 

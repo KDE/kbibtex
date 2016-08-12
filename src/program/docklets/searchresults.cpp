@@ -95,21 +95,21 @@ public:
         actionViewCurrent = new QAction(QIcon::fromTheme(QStringLiteral("document-preview")), i18n("View Element"), parent);
         resultList->addAction(actionViewCurrent);
         actionViewCurrent->setEnabled(false);
-        connect(actionViewCurrent, SIGNAL(triggered()), resultList, SLOT(viewCurrentElement()));
+        connect(actionViewCurrent, &QAction::triggered, resultList, &FileView::viewCurrentElement);
 
         actionImportSelected = new QAction(QIcon::fromTheme(QStringLiteral("svn-update")), i18n("Import"), parent);
         resultList->addAction(actionImportSelected);
         actionImportSelected->setEnabled(false);
-        connect(actionImportSelected, SIGNAL(triggered()), parent, SLOT(importSelected()));
+        connect(actionImportSelected, &QAction::triggered, parent, &SearchResults::importSelected);
 
         actionCopySelected = new QAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy"), parent);
         resultList->addAction(actionCopySelected);
         actionCopySelected->setEnabled(false);
-        connect(actionCopySelected, SIGNAL(triggered()), clipboard, SLOT(copy()));
+        connect(actionCopySelected, &QAction::triggered, clipboard, &Clipboard::copy);
 
-        connect(resultList, SIGNAL(doubleClicked(QModelIndex)), resultList, SLOT(viewCurrentElement()));
-        connect(resultList, SIGNAL(selectedElementsChanged()), parent, SLOT(updateGUI()));
-        connect(buttonImport, SIGNAL(clicked()), parent, SLOT(importSelected()));
+        connect(resultList, &FileView::doubleClicked, resultList, &FileView::viewCurrentElement);
+        connect(resultList, &FileView::selectedElementsChanged, parent, &SearchResults::updateGUI);
+        connect(buttonImport, &QPushButton::clicked, parent, &SearchResults::importSelected);
 
         updateCannotImportMessage();
     }
