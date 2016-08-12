@@ -329,6 +329,7 @@ void ValueList::assignSelection() {
 
                 if (!valueItemAlreadyContained) {
                     /// Add each ValueItem from the to-be-assigned value to the entry's value for this field
+                    entrysValueForField.reserve(toBeAssignedValue.size());
                     foreach (const QSharedPointer<ValueItem> &newValueItem, toBeAssignedValue) {
                         entrysValueForField.append(newValueItem);
                     }

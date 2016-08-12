@@ -89,7 +89,7 @@ const int StarRating::Private::paintMargin = 2;
 StarRating::StarRating(int maxNumberOfStars, QWidget *parent)
         : QWidget(parent), d(new Private(maxNumberOfStars, this))
 {
-    QTimer::singleShot(250, this, SLOT(buttonHeight()));
+    QTimer::singleShot(250, this, &StarRating::buttonHeight);
 
     setMouseTracking(true);
 }

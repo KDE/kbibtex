@@ -39,7 +39,7 @@ public:
     FilterBar *filterBar();
 
 private slots:
-    void searchFor(QString);
+    void searchFor(const QString &);
 
 private:
     class Private;

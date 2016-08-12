@@ -419,8 +419,6 @@ Value::~Value()
 
 void Value::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    const QString valueText = PlainTextValue::text(*this);
-
     QSet<QSharedPointer<ValueItem> > unique;
     /// Delegate the replace operation to each individual ValueItem
     /// contained in this Value object

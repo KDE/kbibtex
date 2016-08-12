@@ -69,7 +69,7 @@ FilterBar *PartWidget::filterBar() {
     return d->filterBar;
 }
 
-void PartWidget::searchFor(QString text) {
+void PartWidget::searchFor(const QString &text) {
     SortFilterFileModel::FilterQuery fq;
     fq.combination = SortFilterFileModel::EveryTerm;
     fq.field = QString();

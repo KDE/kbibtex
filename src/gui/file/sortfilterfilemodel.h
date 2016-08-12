@@ -46,7 +46,7 @@ public:
     FileModel *fileSourceModel() const;
 
 public slots:
-    void updateFilter(SortFilterFileModel::FilterQuery);
+    void updateFilter(const SortFilterFileModel::FilterQuery &);
 
 protected:
     virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;

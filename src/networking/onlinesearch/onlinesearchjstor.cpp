@@ -24,7 +24,6 @@
 #include <KLocalizedString>
 
 #include "internalnetworkaccessmanager.h"
-#include "iocommon.h"
 #include "fileimporterbibtex.h"
 #include "logging_networking.h"
 
@@ -202,7 +201,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
                 body.append(QStringLiteral("citations=") + encodeURL(*it));
             }
             QUrl bibTeXUrl = QUrl(OnlineSearchJStorPrivate::jstorBaseUrl);
-            bibTeXUrl.setPath("/citation/bulk/text");
+            bibTeXUrl.setPath(QStringLiteral("/citation/bulk/text"));
             QNetworkRequest request(bibTeXUrl);
             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
@@ -271,11 +270,11 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
     const QString formattedDateLower = formattedDate.toLower();
     int i;
     for (i = 0; i < 12; ++i)
-        if (formattedDateLower.startsWith(MonthsTriple[i])) break;
+        if (formattedDateLower.startsWith(KBibTeX::MonthsTriple[i])) break;
     entry->remove(formattedDateKey);
     if (i < 12) {
         Value v;
-        v.append(QSharedPointer<MacroKey>(new MacroKey(MonthsTriple[i])));
+        v.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[i])));
         entry->insert(Entry::ftMonth, v);
     }
     /// guessing failed, therefore extract first part if it exists

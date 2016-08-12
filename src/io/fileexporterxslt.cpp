@@ -30,7 +30,6 @@
 #include "comment.h"
 #include "encoderxml.h"
 #include "fileexporterxml.h"
-#include "iocommon.h"
 #include "xsltransform.h"
 #include "logging_io.h"
 

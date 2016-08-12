@@ -73,7 +73,7 @@ public slots:
     void setSelectedElement(QSharedPointer<Element>);
     void selectionDelete();
     void externalModification();
-    void setFilterBarFilter(SortFilterFileModel::FilterQuery);
+    void setFilterBarFilter(const SortFilterFileModel::FilterQuery &);
 
 protected:
     bool m_isReadOnly;

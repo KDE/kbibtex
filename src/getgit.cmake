@@ -67,7 +67,7 @@ file(
 file(
     APPEND
     "${BINARY_DIR}/version.h.tmp"
-    "const char *versionNumber = \"Git revision ${GIT_INFO}"
+    "static const char *versionNumber = \"Git revision ${GIT_INFO}"
 )
 file(
     APPEND

@@ -29,6 +29,10 @@ const QString KBibTeX::extensionPDF = QStringLiteral(".pdf");
 const QString KBibTeX::extensionPostScript = QStringLiteral(".ps");
 const QString KBibTeX::extensionRTF = QStringLiteral(".rtf");
 
+const QString KBibTeX::Months[] = {
+    QStringLiteral("January"), QStringLiteral("February"), QStringLiteral("March"), QStringLiteral("April"), QStringLiteral("May"), QStringLiteral("June"), QStringLiteral("July"), QStringLiteral("August"), QStringLiteral("September"), QStringLiteral("October"), QStringLiteral("November"), QStringLiteral("December")
+};
+
 const QString KBibTeX::MonthsTriple[] = {
     QStringLiteral("jan"), QStringLiteral("feb"), QStringLiteral("mar"), QStringLiteral("apr"), QStringLiteral("may"), QStringLiteral("jun"), QStringLiteral("jul"), QStringLiteral("aug"), QStringLiteral("sep"), QStringLiteral("oct"), QStringLiteral("nov"), QStringLiteral("dec")
 };

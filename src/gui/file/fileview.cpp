@@ -269,7 +269,7 @@ void FileView::setFilterBar(FilterBar *filterBar)
     m_filterBar = filterBar;
 }
 
-void FileView::setFilterBarFilter(SortFilterFileModel::FilterQuery fq)
+void FileView::setFilterBarFilter(const SortFilterFileModel::FilterQuery &fq)
 {
     if (m_filterBar != NULL)
         m_filterBar->setFilter(fq);

@@ -40,7 +40,7 @@ public:
     QSortFilterProxyModel *sortFilterProxyModel();
 
 signals:
-    void searchFor(QString);
+    void searchFor(const QString &);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event);

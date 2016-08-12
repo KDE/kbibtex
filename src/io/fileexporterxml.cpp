@@ -20,12 +20,12 @@
 #include <QRegExp>
 #include <QStringList>
 
+#include "kbibtex.h"
 #include "file.h"
 #include "entry.h"
 #include "macro.h"
 #include "comment.h"
 #include "encoderxml.h"
-#include "iocommon.h"
 #include "logging_io.h"
 
 FileExporterXML::FileExporterXML()
@@ -159,12 +159,12 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
                 QSharedPointer<const MacroKey> macro = (*it).dynamicCast<const MacroKey>();
                 if (!macro.isNull())
                     for (int i = 0; i < 12; i++) {
-                        if (QString::compare(macro->text(), MonthsTriple[ i ]) == 0) {
+                        if (QString::compare(macro->text(), KBibTeX::MonthsTriple[ i ]) == 0) {
                             if (month < 1) {
-                                tag = MonthsTriple[ i ];
+                                tag = KBibTeX::MonthsTriple[ i ];
                                 month = i + 1;
                             }
-                            content.append(Months[ i ]);
+                            content.append(KBibTeX::Months[ i ]);
                             ok = true;
                             break;
                         }

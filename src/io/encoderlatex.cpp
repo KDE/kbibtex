@@ -25,7 +25,7 @@
 #include "iconvlatex.h"
 #include "logging_io.h"
 
-inline bool isAsciiLetter(const QChar &c) {
+inline bool isAsciiLetter(const QChar c) {
     return ((c >= QLatin1Char('A') && c <= QLatin1Char('Z')) || (c >= QLatin1Char('a') && c <= QLatin1Char('z')));
 }
 

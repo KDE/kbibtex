@@ -28,15 +28,12 @@
 
 class OnlineSearchBioRxiv::Private
 {
-private:
-    OnlineSearchBioRxiv *parent;
-
 public:
     QSet<QUrl> resultPageUrls;
     int totalSteps, currentStep;
 
-    explicit Private(OnlineSearchBioRxiv *_parent)
-            : parent(_parent), totalSteps(0), currentStep(0)
+    explicit Private(OnlineSearchBioRxiv *)
+            : totalSteps(0), currentStep(0)
     {
         /// nothing
     }

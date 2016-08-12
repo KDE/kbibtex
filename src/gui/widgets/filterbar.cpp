@@ -144,7 +144,7 @@ public:
         return result;
     }
 
-    void setFilter(SortFilterFileModel::FilterQuery fq) {
+    void setFilter(const SortFilterFileModel::FilterQuery &fq) {
         /// Avoid triggering loops of activation
         comboBoxCombination->blockSignals(true);
         /// Set check state for action for either "any word",
@@ -254,7 +254,7 @@ FilterBar::~FilterBar()
     delete d;
 }
 
-void FilterBar::setFilter(SortFilterFileModel::FilterQuery fq)
+void FilterBar::setFilter(const SortFilterFileModel::FilterQuery &fq)
 {
     d->setFilter(fq);
     emit filterChanged(fq);

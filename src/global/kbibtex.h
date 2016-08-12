@@ -69,7 +69,7 @@ public:
     };
     Q_DECLARE_FLAGS(TypeFlags, TypeFlag)
 
-    static const QString MonthsTriple[];
+    static const QString Months[], MonthsTriple[];
 
     static const QRegExp fileListSeparatorRegExp;
     static const QRegExp fileRegExp;

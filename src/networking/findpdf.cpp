@@ -36,9 +36,9 @@
 #include "logging_networking.h"
 
 int maxDepth = 5;
-const char *depthProperty = "depth";
-const char *termProperty = "term";
-const char *originProperty = "origin";
+static const char *depthProperty = "depth";
+static const char *termProperty = "term";
+static const char *originProperty = "origin";
 
 
 class FindPDF::Private

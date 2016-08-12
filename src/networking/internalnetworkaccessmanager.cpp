@@ -53,7 +53,6 @@ public:
                 && cookieContent.indexIn(htmlCode.mid(p1 + 9, 256)) >= 0) {
             const QString key = cookieContent.cap(1);
             const QString value = cookieContent.cap(2);
-            const QString path = cookieContent.cap(3);
             QUrl cookieUrl = url;
             QList<QNetworkCookie> cookies = cookiesForUrl(cookieUrl);
             cookies.append(QNetworkCookie(key.toLatin1(), value.toLatin1()));

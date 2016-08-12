@@ -57,7 +57,6 @@ set(
     fileimporterris.h
     fileinfo.h
     iconvlatex.h
-    iocommon.h
     bibutils.h
     xsltransform.h
 )

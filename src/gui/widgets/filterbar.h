@@ -43,10 +43,10 @@ public slots:
      * and applied to the list of elements.
      * @param fq query data structure to be used
      */
-    void setFilter(SortFilterFileModel::FilterQuery fq);
+    void setFilter(const SortFilterFileModel::FilterQuery &fq);
 
 signals:
-    void filterChanged(SortFilterFileModel::FilterQuery);
+    void filterChanged(const SortFilterFileModel::FilterQuery &);
 
 private:
     class FilterBarPrivate;

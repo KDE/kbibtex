@@ -555,7 +555,8 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                         if (!result.isEmpty()) result.append(" # ");
                         result.append(d->stringOpenDelimiter);
                     } else if (!prev.dynamicCast<const VerbatimText>().isNull()) {
-                        if (key.toLower().startsWith(Entry::ftUrl) || key.toLower().startsWith(Entry::ftLocalFile) || key.toLower().startsWith(Entry::ftDOI))
+                        const QString keyToLower(key.toLower());
+                        if (keyToLower.startsWith(Entry::ftUrl) || keyToLower.startsWith(Entry::ftLocalFile) || keyToLower.startsWith(Entry::ftDOI))
                             /// Filenames and alike have be separated by a semicolon,
                             /// as a plain comma may be part of the filename or URL
                             result.append(QStringLiteral("; "));

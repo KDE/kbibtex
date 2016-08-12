@@ -195,7 +195,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
         return KDE::icon(iconName, overlays, 0);
     }
     case Qt::ToolTipRole: {
-        QString htmlText(QString(QStringLiteral("<qt><img src=\"%1\"> <b>%2</b>")).arg(KIconLoader::global()->iconPath(iconName, KIconLoader::Small)).arg(openFileInfo->shortCaption()));
+        QString htmlText(QString(QStringLiteral("<qt><img src=\"%1\"> <b>%2</b>")).arg(KIconLoader::global()->iconPath(iconName, KIconLoader::Small), openFileInfo->shortCaption()));
         const QUrl url = openFileInfo->url();
         if (url.isValid()) {
             QString path(QFileInfo(url.path()).path());
@@ -214,8 +214,9 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             flagListItems << i18n("Modified");
         if (!flagListItems.empty()) {
             htmlText.append(QStringLiteral("<ul>"));
-            for (const QString &flagListItem : flagListItems)
+            Q_FOREACH(const QString & flagListItem, flagListItems) {
                 htmlText.append(QString(QStringLiteral("<li>%1</li>")).arg(flagListItem));
+            }
             htmlText.append(QStringLiteral("</ul>"));
         }
         htmlText.append(QStringLiteral("</qt>"));

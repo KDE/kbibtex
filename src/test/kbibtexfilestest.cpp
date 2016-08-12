@@ -112,7 +112,7 @@ void KBibTeXFilesTest::testFiles()
     QFETCH(TestFile, testFile);
 
     const QString absoluteFilename = QLatin1String(TESTSET_DIRECTORY) + testFile.filename;
-    QVERIFY(QFileInfo(absoluteFilename).exists());
+    QVERIFY(QFileInfo::exists(absoluteFilename));
 
     /// First load the file ...
     File *file = NULL;

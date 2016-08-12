@@ -110,7 +110,7 @@ public:
         connect(comboBoxBabelLanguage->lineEdit(), &QLineEdit::textChanged, p, &SettingsFileExporterPDFPSWidget::changed);
 
         comboBoxBibliographyStyle = new KComboBox(true, p);
-        comboBoxBibliographyStyle->setObjectName("comboBoxBibliographyStyle");
+        comboBoxBibliographyStyle->setObjectName(QStringLiteral("comboBoxBibliographyStyle"));
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
         static const QStringList styles = QStringList() << QString(QStringLiteral("abbrv")) << QString(QStringLiteral("alpha")) << QString(QStringLiteral("plain")) << QString(QStringLiteral("agsm")) << QString(QStringLiteral("dcu")) << QString(QStringLiteral("jmr")) << QString(QStringLiteral("jphysicsB")) << QString(QStringLiteral("kluwer")) << QString(QStringLiteral("nederlands"));
         foreach (const QString &style, styles) {

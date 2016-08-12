@@ -63,7 +63,7 @@ signals:
     void activePartChanged(KParts::Part *);
     void documentNew();
     void documentOpen();
-    void documentOpenURL(QUrl);
+    void documentOpenURL(const QUrl &);
 
 private:
     class MDIWidgetPrivate;

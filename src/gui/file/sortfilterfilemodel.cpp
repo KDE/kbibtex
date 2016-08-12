@@ -48,7 +48,7 @@ FileModel *SortFilterFileModel::fileSourceModel() const
     return m_internalModel;
 }
 
-void SortFilterFileModel::updateFilter(SortFilterFileModel::FilterQuery filterQuery)
+void SortFilterFileModel::updateFilter(const SortFilterFileModel::FilterQuery &filterQuery)
 {
     m_filterQuery = filterQuery;
     m_filterQuery.field = filterQuery.field.toLower(); /// required for comparison in filter code
