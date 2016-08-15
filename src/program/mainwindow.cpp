@@ -165,6 +165,7 @@ public:
         dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         p->addDockWidget(Qt::LeftDockWidgetArea, dockZotero);
         zotero = new ZoteroBrowser(searchResults, dockZotero);
+        connect(dockZotero, &QDockWidget::visibilityChanged, zotero, &ZoteroBrowser::visibiltyChanged);
         dockZotero->setWidget(zotero);
         dockZotero->setObjectName(QStringLiteral("dockZotero"));
         dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
