@@ -35,6 +35,9 @@ public:
     explicit ZoteroBrowser(SearchResults *searchResults, QWidget *parent);
     ~ZoteroBrowser();
 
+public slots:
+    void visibiltyChanged(bool);
+
 private:
     class Private;
     Private *const d;
@@ -48,6 +51,7 @@ private slots:
     void updateButtons();
     void applyCredentials();
     void radioButtonsToggled();
+    void groupListChanged();
     void retrieveGroupList();
     void invalidateGroupList();
     void gotGroupList();
@@ -56,6 +60,7 @@ private slots:
 #endif // HAVE_QTOAUTH
     void readOAuthCredentials(bool);
     void writeOAuthCredentials(bool);
+    void tabChanged(int);
 };
 
 

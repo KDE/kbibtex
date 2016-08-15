@@ -189,6 +189,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockZotero);
     d->zotero = new ZoteroBrowser(d->searchResults, d->dockZotero);
+    connect(d->dockZotero, SIGNAL(visibilityChanged(bool)), d->zotero, SLOT(visibiltyChanged(bool)));
     d->dockZotero->setWidget(d->zotero);
     d->dockZotero->setObjectName("dockZotero");
     d->dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);

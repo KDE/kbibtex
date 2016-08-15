@@ -64,6 +64,7 @@ public:
     Zotero::Collection *collection;
     Zotero::CollectionModel *collectionModel;
     Zotero::API *api;
+    bool needToApplyCredentials;
 
     SearchResults *searchResults;
 
@@ -76,7 +77,6 @@ public:
     QRadioButton *radioGroupLibrary;
     bool comboBoxGroupListInitialized;
     KComboBox *comboBoxGroupList;
-    KPushButton *buttonLoadBibliography;
 
     QCursor nonBusyCursor;
 
@@ -84,15 +84,13 @@ public:
     static const QString walletFolderOAuth, walletEntryKBibTeXZotero, walletKeyZoteroId, walletKeyZoteroApiKey;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), needToApplyCredentials(true), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()), wallet(NULL) {
         setupGUI();
-
-        wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(), parent->winId(), KWallet::Wallet::Asynchronous);
-        connect(wallet, SIGNAL(walletOpened(bool)), parent, SLOT(readOAuthCredentials(bool)));
     }
 
     ~Private() {
-        delete wallet;
+        if (wallet != NULL)
+            delete wallet;
     }
 
     void setupGUI()
@@ -103,6 +101,7 @@ public:
 
         QWidget *container = new QWidget(tabWidget);
         tabWidget->addTab(container, KIcon("preferences-web-browser-identification"), i18n("Library"));
+        connect(tabWidget, SIGNAL(currentChanged(int)), p, SLOT(tabChanged(int)));
         QBoxLayout *containerLayout = new QVBoxLayout(container);
 
         /// Personal or Group Library
@@ -124,14 +123,6 @@ public:
         comboBoxGroupList->addItem(i18n("No groups available"));
         connect(radioGroupLibrary, SIGNAL(toggled(bool)), p, SLOT(radioButtonsToggled()));
         connect(radioPersonalLibrary, SIGNAL(toggled(bool)), p, SLOT(radioButtonsToggled()));
-
-        QBoxLayout *containerButtonLayout = new QHBoxLayout();
-        containerLayout->addLayout(containerButtonLayout, 0);
-        containerButtonLayout->setMargin(0);
-        containerButtonLayout->addStretch(1);
-        buttonLoadBibliography = new KPushButton(KIcon("download"), i18n("Load bibliography"), container);
-        containerButtonLayout->addWidget(buttonLoadBibliography, 0);
-        connect(buttonLoadBibliography, SIGNAL(clicked()), p, SLOT(applyCredentials()));
 
         containerLayout->addStretch(10);
 
@@ -159,10 +150,10 @@ public:
         containerForm->addRow(i18n("API key:"), lineEditApiKey);
         connect(lineEditApiKey, SIGNAL(textChanged(QString)), p, SLOT(invalidateGroupList()));
 
-        containerButtonLayout = new QHBoxLayout();
+        QBoxLayout *containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);
         containerButtonLayout->setMargin(0);
-        QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme("preferences-web-browser-identification"), i18n("Get Credentials"), container);
+        QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme(QLatin1String("preferences-web-browser-identification")), i18n("Get New Credentials"), container);
         containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
         connect(buttonGetOAuthCredentials, SIGNAL(clicked()), p, SLOT(getOAuthCredentials()));
         containerButtonLayout->addStretch(1);
@@ -180,12 +171,37 @@ public:
         connect(tagBrowser, SIGNAL(doubleClicked(QModelIndex)), p, SLOT(tagDoubleClicked(QModelIndex)));
     }
 
+    void queueReadOAuthCredentials() {
+        if (wallet != NULL && wallet->isOpen())
+            p->readOAuthCredentials(true);
+        else {
+            /// Wallet is closed or not initialized
+            if (wallet != NULL)
+                /// Delete existing but closed wallet, will be replaced by new, open wallet soon
+                delete wallet;
+            wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(), p->winId(), KWallet::Wallet::Asynchronous);
+            if (wallet != NULL) {
+                p->setEnabled(false);
+                p->setCursor(Qt::WaitCursor);
+                connect(wallet, SIGNAL(walletOpened(bool)), p, SLOT(readOAuthCredentials(bool)));
+            }
+        }
+    }
+
     void queueWriteOAuthCredentials() {
-        if (wallet->isOpen())
+        if (wallet != NULL && wallet->isOpen())
             p->writeOAuthCredentials(true);
         else {
+            /// Wallet is closed or not initialized
+            if (wallet != NULL)
+                /// Delete existing but closed wallet, will be replaced by new, open wallet soon
+                delete wallet;
             wallet = KWallet::Wallet::openWallet(KWallet::Wallet::NetworkWallet(), p->winId(), KWallet::Wallet::Asynchronous);
-            connect(wallet, SIGNAL(walletOpened(bool)), p, SLOT(writeOAuthCredentials(bool)));
+            if (wallet != NULL) {
+                p->setEnabled(false);
+                p->setCursor(Qt::WaitCursor);
+                connect(wallet, SIGNAL(walletOpened(bool)), p, SLOT(writeOAuthCredentials(bool)));
+            }
         }
     }
 };
@@ -208,6 +224,13 @@ ZoteroBrowser::~ZoteroBrowser()
 {
     delete d;
 }
+
+void ZoteroBrowser::visibiltyChanged(bool v) {
+    if (v && d->lineEditApiKey->text().isEmpty())
+        /// If Zotero dock became visible and no API key is set, check KWallet for credentials
+        d->queueReadOAuthCredentials();
+}
+
 
 void ZoteroBrowser::modelReset()
 {
@@ -257,9 +280,9 @@ void ZoteroBrowser::reenableWidget()
 void ZoteroBrowser::updateButtons()
 {
     const bool validNumericIdAndApiKey = !d->lineEditNumericUserId->text().isEmpty() && !d->lineEditApiKey->text().isEmpty();
-    d->buttonLoadBibliography->setEnabled(validNumericIdAndApiKey);
     d->radioGroupLibrary->setEnabled(validNumericIdAndApiKey);
     d->radioPersonalLibrary->setEnabled(validNumericIdAndApiKey);
+    d->needToApplyCredentials = true;
 }
 
 void ZoteroBrowser::applyCredentials()
@@ -297,7 +320,7 @@ void ZoteroBrowser::applyCredentials()
         connect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableWidget()));
         connect(d->tags, SIGNAL(finishedLoading()), this, SLOT(reenableWidget()));
 
-        d->tabWidget->setCurrentIndex(1);
+        d->needToApplyCredentials = false;
     } else
         KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->lineEditNumericUserId->text()), i18n("Invalid numeric identifier"));
 }
@@ -306,6 +329,11 @@ void ZoteroBrowser::radioButtonsToggled() {
     d->comboBoxGroupList->setEnabled(d->comboBoxGroupListInitialized && d->comboBoxGroupList->count() > 0 && d->radioGroupLibrary->isChecked());
     if (!d->comboBoxGroupListInitialized && d->radioGroupLibrary->isChecked())
         retrieveGroupList();
+    d->needToApplyCredentials = true;
+}
+
+void ZoteroBrowser::groupListChanged() {
+    d->needToApplyCredentials = true;
 }
 
 void ZoteroBrowser::retrieveGroupList() {
@@ -345,6 +373,7 @@ void ZoteroBrowser::gotGroupList() {
     } else {
         d->comboBoxGroupListInitialized = true;
         d->comboBoxGroupList->setEnabled(true);
+        d->needToApplyCredentials = true;
     }
 
     reenableWidget();
@@ -378,11 +407,15 @@ void ZoteroBrowser::readOAuthCredentials(bool ok) {
                     d->lineEditApiKey->setText(map.value(ZoteroBrowser::Private::walletKeyZoteroApiKey, QString()));
                     updateButtons();
                     retrieveGroupList();
-                }
-            }
-        }
+                } else
+                    qWarning() << "Failed to locate Zotero Id and/or API key in KWallet";
+            } else
+                qWarning() << "Failed to access Zotero data in KWallet";
+        } else
+            qDebug() << "No Zotero credentials stored in KWallet";
     } else
         kWarning() << "Accessing KWallet to sync API key did not succeed";
+    reenableWidget();
 }
 
 void ZoteroBrowser::writeOAuthCredentials(bool ok) {
@@ -396,4 +429,11 @@ void ZoteroBrowser::writeOAuthCredentials(bool ok) {
             kWarning() << "Writing API key to KWallet failed";
     } else
         kWarning() << "Accessing KWallet to sync API key did not succeed";
+    reenableWidget();
+}
+
+void ZoteroBrowser::tabChanged(int newTabIndex) {
+    if (newTabIndex > 0 /** tabs after credential tab*/ && d->needToApplyCredentials) {
+        applyCredentials();
+    }
 }
