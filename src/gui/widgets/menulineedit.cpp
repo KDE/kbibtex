@@ -111,7 +111,7 @@ public:
             m_singleLineEditText->setCompletionMode(KCompletion::CompletionPopup);
             m_singleLineEditText->completionObject()->setIgnoreCase(true);
             p->setFocusProxy(m_singleLineEditText);
-            connect(m_singleLineEditText, &KLineEdit::textEdited, p, &MenuLineEdit::slotTextChanged);
+            connect(m_singleLineEditText, &KLineEdit::textEdited, p, &MenuLineEdit::textChanged);
         }
 
         p->setFocusPolicy(Qt::StrongFocus); // FIXME improve focus handling
