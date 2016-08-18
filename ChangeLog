@@ -9,6 +9,7 @@ Diff 0.6 to 0.6.1
 - KDE Bug 354785: https://bugs.kde.org/show_bug.cgi?id=354785
   Using QTextDocument/QTextEdit instead of WebKit/WebEngine: more lightweight and supported on all platforms
 - Correcting choke on PubMed searches to 10 seconds
+- Fixing search issues for ACM, Google Scholar, JSTOR, and ScienceDirect
 - Setting foreground color of colored rows to either black or white for better readability
 - Disabling OCLC WorldCat (request for support denied by this organization)
 - Generally improved code quality as detected by code checkers such as Clazy or Coverity
@@ -16,6 +17,8 @@ Diff 0.6 to 0.6.1
 - Fixing setting default id suggestion
 - Adding 'Keywords' field to .desktop file
 - Removing file that was licensed under CC BY-NC, but never got installed
+- Improved Unicode support
+- Better handling quotation marks and protective curly brackets around titles
 - Updating translations
 
 Diff 0.5.2 to 0.6
