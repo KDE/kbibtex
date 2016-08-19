@@ -670,7 +670,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     /// Stays the same even when merging is restricted to selected elements
 
     const int rowCount = d->view->selectedElements().count();
-    if (rowCount <= 1 || rowCount == d->view->sortFilterProxyModel()->sourceModel()->rowCount() || KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
+    if (rowCount <= 1 || rowCount == d->view->sortFilterProxyModel()->sourceModel()->rowCount() || KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::No) {
         for (int i = 0; i < d->view->fileModel()->rowCount(); ++i)
             file->append(d->view->fileModel()->element(i));
     } else {
