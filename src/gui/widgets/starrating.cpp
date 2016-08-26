@@ -135,7 +135,7 @@ void StarRating::mouseMoveEvent(QMouseEvent *ev)
 {
     QWidget::mouseMoveEvent(ev);
 
-    if (!d->isReadOnly) {
+    if (!d->isReadOnly && d->starsInside().contains(ev->pos())) {
         d->mouseLocation = ev->pos();
         if (d->mouseLocation.x() < d->labelPercent->width() || d->mouseLocation.x() > width() - d->clearButton->width())
             d->mouseLocation = QPoint();
@@ -173,6 +173,7 @@ void StarRating::setValue(float percent)
 void StarRating::unsetValue() {
     if (d->isReadOnly) return; ///< disallow modifications if read-only
 
+    d->mouseLocation = QPoint();
     d->percent = -1.0;
     update();
 }
