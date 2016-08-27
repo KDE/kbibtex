@@ -161,7 +161,8 @@ public:
                     QFont f = p->font();
                     f.setItalic(true);
                     return f;
-                }
+                } else
+                    return p->font();
             }
         } else if (index.parent().parent() == QModelIndex()) {
             /// second-level entries for alternatives
