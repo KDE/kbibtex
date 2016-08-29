@@ -38,11 +38,6 @@ FileSettingsWidget::FileSettingsWidget(QWidget *parent)
     setupGUI();
 }
 
-void FileSettingsWidget::loadProperties()
-{
-    loadProperties(m_file);
-}
-
 void FileSettingsWidget::loadProperties(File *file)
 {
     m_file = file;
@@ -90,11 +85,6 @@ void FileSettingsWidget::loadProperties(File *file)
         m_comboBoxListSeparator->setCurrentIndex(m_comboBoxListSeparator->findData(file->property(File::ListSeparator)));
         m_comboBoxListSeparator->blockSignals(false);
     }
-}
-
-void FileSettingsWidget::saveProperties()
-{
-    saveProperties(m_file);
 }
 
 void FileSettingsWidget::saveProperties(File *file)

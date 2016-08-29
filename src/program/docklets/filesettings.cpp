@@ -32,37 +32,35 @@
 #include "value.h"
 #include "iconvlatex.h"
 #include "file.h"
+#include "openfileinfo.h"
 
 FileSettings::FileSettings(OpenFileInfoManager *ofim, QWidget *parent)
-        : FileSettingsWidget(parent), m_currentFile(NULL), m_fileView(NULL)
+        : FileSettingsWidget(parent), m_fileView(NULL)
 {
     setEnabled(false);
 
     connect(this, SIGNAL(widgetsChanged()), this, SLOT(widgetsChangedSlot()));
-
-    /// Monitoring file flag changes to get notified of
-    /// "Save As" operations where the file settings
-    /// may get changed (requires a reload of properties)
-    connect(ofim, SIGNAL(flagsChanged(OpenFileInfo::StatusFlags)), this, SLOT(loadProperties()));
+    connect(ofim, SIGNAL(currentChanged(OpenFileInfo*,KService::Ptr)), this, SLOT(currentFileChangedSlot()));
 }
 
 void FileSettings::setFileView(FileView *fileView)
 {
-    m_currentFile = NULL;
     m_fileView = fileView;
-
-    if (m_fileView != NULL && m_fileView->fileModel() != NULL)
-        m_currentFile = m_fileView->fileModel()->bibliographyFile();
-
-    loadProperties(m_currentFile);
-    setEnabled(m_currentFile != NULL);
+    currentFileChangedSlot();
 }
 
 void FileSettings::widgetsChangedSlot()
 {
-    if (m_currentFile != NULL) {
-        saveProperties(m_currentFile);
+    File *file = m_fileView != NULL && m_fileView->fileModel() != NULL ? m_fileView->fileModel()->bibliographyFile() : NULL;
+    if (file != NULL) {
+        saveProperties(file);
         /// Notify main view about change it its data
         m_fileView->externalModification();
     }
+}
+
+void FileSettings::currentFileChangedSlot() {
+    File *file = m_fileView != NULL && m_fileView->fileModel() != NULL ? m_fileView->fileModel()->bibliographyFile() : NULL;
+    loadProperties(file);
+    setEnabled(file != NULL);
 }

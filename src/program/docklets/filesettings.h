@@ -23,8 +23,7 @@
 
 class FileView;
 class File;
-
-#include "openfileinfo.h"
+class OpenFileInfoManager;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -40,9 +39,9 @@ public:
 
 private slots:
     void widgetsChangedSlot();
+    void currentFileChangedSlot();
 
 private:
-    File *m_currentFile;
     FileView *m_fileView;
 };
 
