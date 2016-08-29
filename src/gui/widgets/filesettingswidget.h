@@ -45,8 +45,6 @@ public:
     void saveProperties(File *file);
 
 public slots:
-    void loadProperties();
-    void saveProperties();
     void resetToDefaults();
 
 signals:
