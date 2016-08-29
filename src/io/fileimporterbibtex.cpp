@@ -841,13 +841,16 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     QString internalText = text;
 
     /// Remove invalid characters such as dots or (double) daggers for footnotes
-    static const QList<QChar> invalidChars = QList<QChar>() << QChar(0x00b7) << QChar(0x2020) << QChar(0x2217) << QChar(0x2021) << QChar('*');
+    static const QList<QChar> invalidChars = QList<QChar>() << QChar(0x00b7) << QChar(0x2020) << QChar(0x2217) << QChar(0x2021) << QChar(0x002a) << QChar(0x21d1) /** Upwards double arrow */;
     for (QList<QChar>::ConstIterator it = invalidChars.constBegin(); it != invalidChars.constEnd(); ++it)
         /// Replacing daggers with commas ensures that they act as persons' names separator
         internalText = internalText.replace(*it, QChar(','));
     /// Remove numbers to footnotes
     static const QRegExp numberFootnoteRegExp(QStringLiteral("(\\w)\\d+\\b"));
     internalText = internalText.replace(numberFootnoteRegExp, QStringLiteral("\\1"));
+    /// Remove academic degrees
+    static const QRegExp academicDegreesRegExp(QStringLiteral("(,\\s*)?(MA|PhD)\\b"));
+    internalText = internalText.remove(academicDegreesRegExp);
 
     /// Split input string into tokens which are either name components (first or last name)
     /// or full names (composed of first and last name), depending on the input string's structure
