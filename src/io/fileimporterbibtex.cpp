@@ -851,6 +851,9 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     /// Remove academic degrees
     static const QRegExp academicDegreesRegExp(QStringLiteral("(,\\s*)?(MA|PhD)\\b"));
     internalText = internalText.remove(academicDegreesRegExp);
+    /// Remove email addresses
+    static const QRegExp emailAddressRegExp(QLatin1String("\\b[a-zA-Z0-9][a-zA-Z0-9._-]+[a-zA-Z0-9]@[a-z0-9][a-z0-9-]*([.][a-z0-9-]+)*([.][a-z]+)+\\b"));
+    internalText = internalText.remove(emailAddressRegExp);
 
     /// Split input string into tokens which are either name components (first or last name)
     /// or full names (composed of first and last name), depending on the input string's structure
