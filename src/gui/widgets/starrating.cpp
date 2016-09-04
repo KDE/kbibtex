@@ -61,12 +61,14 @@ public:
         labelPercent->setFixedWidth(fm.width(unsetStarsText));
         labelPercent->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         labelPercent->setText(unsetStarsText);
+        labelPercent->installEventFilter(parent);
 
         layout->addStretch(1);
 
         clearButton = new KPushButton(KIcon("edit-clear-locationbar-rtl"), QString(), p);
         layout->addWidget(clearButton, 0, Qt::AlignRight | Qt::AlignVCenter);
         connect(clearButton, SIGNAL(clicked()), p, SLOT(clear()));
+        clearButton->installEventFilter(parent);
     }
 
     QRect starsInside() const
@@ -135,7 +137,7 @@ void StarRating::mouseMoveEvent(QMouseEvent *ev)
 {
     QWidget::mouseMoveEvent(ev);
 
-    if (!d->isReadOnly && d->starsInside().contains(ev->pos())) {
+    if (!d->isReadOnly) {
         d->mouseLocation = ev->pos();
         if (d->mouseLocation.x() < d->labelPercent->width() || d->mouseLocation.x() > width() - d->clearButton->width())
             d->mouseLocation = QPoint();
@@ -153,6 +155,18 @@ void StarRating::leaveEvent(QEvent *ev)
         update();
         ev->accept();
     }
+}
+
+bool StarRating::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj != d->labelPercent && obj != d->clearButton)
+        return false;
+
+    if ((event->type() == QEvent::MouseMove || event->type() == QEvent::Enter) && d->mouseLocation != QPoint()) {
+        d->mouseLocation = QPoint();
+        update();
+    }
+    return false;
 }
 
 float StarRating::value() const

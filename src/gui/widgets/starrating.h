@@ -102,6 +102,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *);
     void mouseMoveEvent(QMouseEvent *);
     void leaveEvent(QEvent *);
+    bool eventFilter(QObject *obj, QEvent *event);
 
 private slots:
     void clear();
