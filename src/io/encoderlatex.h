@@ -20,6 +20,8 @@
 
 #include "kbibtexio_export.h"
 
+#include <unicode/translit.h>
+
 #include "encoder.h"
 
 /**
@@ -85,6 +87,8 @@ private:
     QString readAlphaCharacters(const QString &base, int startFrom) const;
 
     static EncoderLaTeX *self;
+
+    icu::Transliterator *m_trans;
 };
 
 #endif // ENCODERLATEX_H

@@ -19,7 +19,6 @@
 
 #include <unicode/translit.h>
 
-
 #include <QString>
 
 #include "iconvlatex.h"
@@ -522,6 +521,11 @@ static const int encoderLaTeXSymbolSequencesLen = sizeof(encoderLaTeXSymbolSeque
 
 EncoderLaTeX::EncoderLaTeX()
 {
+    /// Create an ICO Transliterator, configured to
+    /// transliterate virtually anything into plain ASCII
+    UErrorCode uec = U_ZERO_ERROR;
+    m_trans = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
+
     /// Initialize lookup table with NULL pointers
     for (int i = 0; i < lookupTableNumModifiers; ++i) lookupTable[i] = NULL;
 
@@ -566,6 +570,9 @@ EncoderLaTeX::~EncoderLaTeX()
     for (int i = lookupTableNumModifiers - 1; i >= 0; --i)
         if (lookupTable[i] != NULL)
             delete lookupTable[i];
+
+    if (m_trans != NULL)
+        delete m_trans;
 }
 
 QString EncoderLaTeX::decode(const QString &input) const
@@ -1091,19 +1098,15 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
         uChars[i] = ninput.at(i).unicode();
     /// Create an ICU-specific unicode string
     UnicodeString uString = UnicodeString(uChars, ninputLen);
-    /// Create an ICO Transliterator, configured to
-    /// transliterate virtually anything into plain ASCII
-    UErrorCode uec = U_ZERO_ERROR;
-    Transliterator *trans = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
     /// Perform the actual transliteration, modifying Unicode string
-    trans->transliterate(uString);
+    m_trans->transliterate(uString);
     /// Create regular C++ string from Unicode string
     std::string cppString;
     uString.toUTF8String(cppString);
     /// Clean up any mess
     delete[] uChars;
-    delete trans;
-    /// Convert regular C++ to Qt-specific QString
+    /// Convert regular C++ to Qt-specific QString,
+    /// should work as cppString contains only ASCII text
     return QString::fromStdString(cppString);
 }
 
