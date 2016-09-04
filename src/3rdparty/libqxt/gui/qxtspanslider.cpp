@@ -216,6 +216,7 @@ void QxtSpanSliderPrivate::triggerAction(QAbstractSlider::SliderAction action, b
     case QAbstractSlider::SliderMove:
         if ((main && mainControl == UpperHandle) || (!main && altControl == UpperHandle))
             up = true;
+        break; ///< Missing break was detected by Coverity Scan CID 105894
     case QAbstractSlider::SliderNoAction:
         no = true;
         break;
