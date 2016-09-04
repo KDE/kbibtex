@@ -153,17 +153,22 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     }
 
     /// determine some variables used for layout
-    int margin = option.fontMetrics.height() / 3;
-    int buttonHeight = option.fontMetrics.height() * 7 / 4;
-    int maxTextWidth = qMax(qMax(option.fontMetrics.width(i18n("Use URL only")), option.fontMetrics.width(i18n("Ignore"))), qMax(option.fontMetrics.width(i18n("Download")), option.fontMetrics.width(i18n("View"))));
-    int buttonWidth = maxTextWidth * 3 / 2;
-    int labelWidth = option.rect.width() - 3 * margin - KIconLoader::SizeMedium;
-    int labelHeight = (option.rect.height() - 4 * margin - buttonHeight) / 2;
+    const int margin = option.fontMetrics.height() / 3;
+    const int buttonHeight = option.fontMetrics.height() * 6 / 3;
+    const int maxTextWidth = qMax(qMax(option.fontMetrics.width(i18n("Use URL only")), option.fontMetrics.width(i18n("Ignore"))), qMax(option.fontMetrics.width(i18n("Download")), option.fontMetrics.width(i18n("View"))));
+    const int buttonWidth = maxTextWidth * 3 / 2;
+    const int labelWidth = option.rect.width() - 3 * margin - KIconLoader::SizeMedium;
+    const int labelHeight = option.fontMetrics.height();//(option.rect.height() - 4 * margin - buttonHeight) / 2;
+    /// Total height = margin + labelHeight + margin + labelHeight + marin + buttonHeight + margin
+    ///              = option.fontMetrics.height() * (1/3 + 1 + 1/3 + 1 + 1/3 + 6/3 + 1/3)
+    ///              = option.fontMetrics.height() * 16 / 3
 
     /// setup label which will show the PDF file's URL
     KSqueezedTextLabel *label = qobject_cast<KSqueezedTextLabel *>(widgets[posLabelUrl]);
     if (label != NULL) {
-        label->setText(index.data(Qt::DisplayRole).toString());
+        const QString text = index.data(URLRole).toUrl().toString();
+        label->setText(text);
+        label->setToolTip(text);
         label->move(margin * 2 + KIconLoader::SizeMedium, margin);
         label->resize(labelWidth, labelHeight);
     }
@@ -172,7 +177,6 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     QLabel *previewLabel = qobject_cast<QLabel *>(widgets[posLabelPreview]);
     if (previewLabel != NULL) {
         previewLabel->setText(index.data(TextualPreviewRole).toString());
-        previewLabel->setToolTip(QLatin1String("<qt>") + previewLabel->text() + QLatin1String("</qt>"));
         previewLabel->move(margin * 2 + KIconLoader::SizeMedium, margin * 2 + labelHeight);
         previewLabel->resize(labelWidth, labelHeight);
     }
@@ -180,16 +184,20 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     /// setup the view button
     KPushButton *viewButton = qobject_cast<KPushButton *>(widgets[posViewButton]);
     if (viewButton != NULL) {
-        viewButton->move(margin * 2 + KIconLoader::SizeMedium, option.rect.height() - margin - buttonHeight);
-        viewButton->resize(buttonWidth, buttonHeight);
+        const QSize hint = viewButton->sizeHint();
+        const int h = hint.isValid() ? qMin(buttonHeight, hint.height()) : buttonHeight;
+        viewButton->move(margin * 2 + KIconLoader::SizeMedium, option.rect.height() - margin - h);
+        viewButton->resize(buttonWidth, h);
     }
 
     /// setup each of the three radio buttons
     for (int i = 0; i < 3; ++i) {
         QRadioButton *radioButton = qobject_cast<QRadioButton *>(widgets[posRadioNoDownload + i]);
         if (radioButton != NULL) {
-            radioButton->move(option.rect.width() - margin - (3 - i) * (buttonWidth + margin), option.rect.height() - margin - buttonHeight);
-            radioButton->resize(buttonWidth, buttonHeight);
+            const QSize hint = radioButton->sizeHint();
+            const int h = hint.isValid() ? qMin(buttonHeight, hint.height()) : buttonHeight;
+            radioButton->move(option.rect.width() - margin - (3 - i) * (buttonWidth + margin), option.rect.height() - margin - h);
+            radioButton->resize(buttonWidth, h);
             bool ok = false;
             radioButton->setChecked(i + FindPDF::NoDownload == index.data(DownloadModeRole).toInt(&ok) && ok);
         }
@@ -201,7 +209,7 @@ QSize PDFItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModel
     /// set a size that is suiteable
     QSize size;
     size.setWidth(option.fontMetrics.width(i18n("Download")) * 6);
-    size.setHeight(qMax(option.fontMetrics.height() * 6, (int)KIconLoader::SizeMedium));
+    size.setHeight(qMax(option.fontMetrics.height() * 16 / 3, (int)KIconLoader::SizeMedium));
     return size;
 }
 
@@ -214,15 +222,15 @@ void PDFItemDelegate::slotViewPDF()
     QModelIndex index = focusedIndex();
 
     if (index.isValid()) {
-        QString tempfileName = index.data(TempFileNameRole).toString();
-        QUrl url = index.data(URLRole).toUrl();
+        const QString tempfileName = index.data(TempFileNameRole).toString();
+        const QUrl url = index.data(URLRole).toUrl();
         if (!tempfileName.isEmpty()) {
             /// Guess mime type for url to open
             KUrl tempUrl(tempfileName);
             KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(tempUrl);
             const QString mimeTypeName = mimeType->name();
             /// Ask KDE subsystem to open url in viewer matching mime type
-            KRun::runUrl(tempUrl, mimeTypeName, NULL, false, false);
+            KRun::runUrl(tempUrl, mimeTypeName, NULL, false, false, url.toString());
         } else if (url.isValid()) {
             /// Guess mime type for url to open
             KMimeType::Ptr mimeType = FileInfo::mimeTypeForUrl(url);
@@ -285,12 +293,14 @@ int PDFListModel::rowCount(const QModelIndex &parent) const
 QVariant PDFListModel::data(const QModelIndex &index, int role) const
 {
     if (index != QModelIndex() && index.parent() == QModelIndex() && index.row() < m_resultList.count()) {
-        if (role == Qt::DisplayRole || role == Qt::ToolTipRole)
+        if (role == Qt::DisplayRole)
             return m_resultList[index.row()].url.toString();
         else if (role == URLRole)
             return  m_resultList[index.row()].url;
         else if (role == TextualPreviewRole)
             return  m_resultList[index.row()].textPreview;
+        else if (role == Qt::ToolTipRole)
+            return  QLatin1String("<qt>") + m_resultList[index.row()].textPreview + QLatin1String("</qt>"); ///<  'qt' tags required for word wrap
         else if (role == TempFileNameRole) {
             if (m_resultList[index.row()].tempFilename != NULL)
                 return m_resultList[index.row()].tempFilename->fileName();
