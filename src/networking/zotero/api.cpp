@@ -47,6 +47,11 @@ API::API(RequestScope requestScope, int userOrGroupPrefix, const QString &apiKey
     /// nothing
 }
 
+API::~API()
+{
+    delete d;
+}
+
 void API::addLimitToUrl(KUrl &url) const
 {
     static const QString limitKey = QLatin1String("limit");

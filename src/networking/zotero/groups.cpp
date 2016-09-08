@@ -34,9 +34,9 @@ private:
     Zotero::Groups *p;
 
 public:
-    API *api;
+    QSharedPointer<Zotero::API> api;
 
-    Private(API *a, Zotero::Groups *parent)
+    Private(QSharedPointer<Zotero::API> a, Zotero::Groups *parent)
             : p(parent), api(a) {
         initialized = false;
         busy = false;
@@ -57,7 +57,7 @@ public:
     }
 };
 
-Groups::Groups(API *api, QObject *parent)
+Groups::Groups(QSharedPointer<Zotero::API> api, QObject *parent)
         : QObject(parent), d(new Zotero::Groups::Private(api, this))
 {
     KUrl url = api->baseUrl();

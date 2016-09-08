@@ -37,9 +37,9 @@ private:
     Zotero::Items *p;
 
 public:
-    API *api;
+    QSharedPointer<Zotero::API> api;
 
-    Private(API *a, Zotero::Items *parent)
+    Private(QSharedPointer<Zotero::API> a, Zotero::Items *parent)
             : p(parent), api(a) {
         /// nothing
     }
@@ -64,7 +64,7 @@ public:
     }
 };
 
-Items::Items(API *api, QObject *parent)
+Items::Items(QSharedPointer<Zotero::API> api, QObject *parent)
         : QObject(parent), d(new Zotero::Items::Private(api, this))
 {
     /// nothing
