@@ -88,10 +88,14 @@ public:
      * a valid URL or the element being invalid.
      */
     bool insertUrl(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
+        const QUrl url = QUrl::fromUserInput(text);
+        return insertUrl(url, element);
+    }
+
+    bool insertUrl(const QUrl &url, QSharedPointer<Element> element = QSharedPointer<Element>()) {
         if (element.isNull()) return false;
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (entry.isNull()) return false;
-        const QUrl url = QUrl::fromUserInput(text);
         if (!url.isValid()) return false;
 
         qCDebug(LOG_KBIBTEX_GUI) << "About to add URL " << url.toString() << " to entry" << entry->id();
@@ -246,21 +250,37 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
 
 void Clipboard::editorDragEnterEvent(QDragEnterEvent *event)
 {
-    if (event->mimeData()->hasText() && !d->fileView->isReadOnly())
+    if (d->fileView->isReadOnly()) {
+        event->ignore();
+        return;
+    }
+
+    if (event->mimeData()->hasText() || event->mimeData()->hasUrls())
         event->acceptProposedAction();
 }
 
 void Clipboard::editorDragMoveEvent(QDragMoveEvent *event)
 {
-    if (event->mimeData()->hasText() && !d->fileView->isReadOnly())
+    if (d->fileView->isReadOnly()) {
+        event->ignore();
+        return;
+    }
+
+    if (event->mimeData()->hasText() || event->mimeData()->hasUrls())
         event->acceptProposedAction();
 }
 
 void Clipboard::editorDropEvent(QDropEvent *event)
 {
-    const QString text = event->mimeData()->text();
+    if (d->fileView->isReadOnly()) {
+        event->ignore();
+        return;
+    }
 
-    if (!text.isEmpty() && !d->fileView->isReadOnly()) {
+    if (event->mimeData()->hasText() || event->mimeData()->hasUrls()) {
+        const QString text = event->mimeData()->text();
+        const QList<QUrl> urls = event->mimeData()->urls();
+
         QSharedPointer<Element> element;
         /// Locate element drop was performed on (if dropped, and not some copy&paste)
         QModelIndex dropIndex = d->fileView->indexAt(event->pos());
@@ -271,7 +291,7 @@ void Clipboard::editorDropEvent(QDropEvent *event)
             element = d->fileView->currentElement();
         }
 
-        const bool modified = d->insertText(text, element);
+        const bool modified = !urls.isEmpty() ? d->insertUrl(urls.first(), element) : (!text.isEmpty() ? d->insertText(text, element) : false);
         if (modified)
             d->fileView->externalModification();
     }
