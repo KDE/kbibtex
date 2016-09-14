@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,6 +16,8 @@
  ***************************************************************************/
 
 #include "idsuggestions.h"
+
+#include <QRegularExpression>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -43,9 +45,14 @@ public:
         return EncoderLaTeX::instance()->convertToPlainAscii(input).remove(unwantedChars);
     }
 
-    inline int extractYear(const Entry &entry) const {
+    inline int numberFromEntry(const Entry &entry, const QString &field) const {
+        static const QRegularExpression firstDigits(QStringLiteral("^[0-9]+"));
+        const QString text = PlainTextValue::text(entry.value(field));
+        const QRegularExpressionMatch match = firstDigits.match(text);
+        if (!match.hasMatch()) return -1;
+
         bool ok = false;
-        int result = PlainTextValue::text(entry.value(Entry::ftYear)).toInt(&ok);
+        const int result = match.captured(0).toInt(&ok);
         return ok ? result : -1;
     }
 
@@ -207,13 +214,13 @@ public:
             return translateAuthorsToken(entry, ati);
         }
         case 'y': {
-            int year = extractYear(entry);
+            int year = numberFromEntry(entry, Entry::ftYear);
             if (year > -1)
                 return QString::number(year % 100 + 100).mid(1);
             break;
         }
         case 'Y': {
-            int year = extractYear(entry);
+            const int year = numberFromEntry(entry, Entry::ftYear);
             if (year > -1)
                 return QString::number(year % 10000 + 10000).mid(1);
             break;

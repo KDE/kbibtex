@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -474,8 +474,7 @@ public:
     }
 
     void add(TokenType tokenType, bool atTop) {
-        const int pos = atTop ? 1 : containerLayout->count() - 2;
-        TokenWidget *tokenWidget = NULL;
+        TokenWidget *tokenWidget = nullptr;
         switch (tokenType) {
         case ttTitle: {
             struct IdSuggestions::IdSuggestionTokenInfo info;
@@ -486,8 +485,6 @@ public:
             info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new TitleWidget(info, true, p, container);
-            widgetList << tokenWidget;
-            containerLayout->insertWidget(pos, tokenWidget, 1);
         }
         break;
         case ttAuthor: {
@@ -499,14 +496,10 @@ public:
             info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new AuthorWidget(info, p, container);
-            widgetList << tokenWidget;
-            containerLayout->insertWidget(pos, tokenWidget, 1);
         }
         break;
         case ttYear:
             tokenWidget = new YearWidget(4, p, container);
-            widgetList << tokenWidget;
-            containerLayout->insertWidget(pos, tokenWidget, 1);
             break;
         case ttJournal: {
             struct IdSuggestions::IdSuggestionTokenInfo info;
@@ -517,17 +510,19 @@ public:
             info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new JournalWidget(info, p, container);
-            widgetList << tokenWidget;
-            containerLayout->insertWidget(pos, tokenWidget, 1);
         }
         break;
         case ttText:
             tokenWidget = new TextWidget(QString(), p, container);
-            widgetList << tokenWidget;
-            containerLayout->insertWidget(pos, tokenWidget, 1);
+            break;
         }
 
-        addManagementButtons(tokenWidget);
+        if (tokenWidget != nullptr) {
+            const int pos = atTop ? 1 : containerLayout->count() - 2;
+            atTop ? widgetList.prepend(tokenWidget) : widgetList.append(tokenWidget);
+            containerLayout->insertWidget(pos, tokenWidget, 1);
+            addManagementButtons(tokenWidget);
+        }
     }
 
     void reset(const QString &formatString) {
@@ -574,7 +569,8 @@ public:
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             }
 
-            addManagementButtons(tokenWidget);
+            if (tokenWidget != nullptr)
+                addManagementButtons(tokenWidget);
         }
 
         p->updatePreview();
@@ -629,6 +625,7 @@ void IdSuggestionsEditWidget::moveUpToken(QWidget *widget)
         d->containerLayout->removeWidget(tokenWidget);
         d->widgetList.insert(curPos - 1, tokenWidget);
         d->containerLayout->insertWidget(layoutPos - 1, tokenWidget, 1);
+        updatePreview();
     }
 }
 
@@ -642,6 +639,7 @@ void IdSuggestionsEditWidget::moveDownToken(QWidget *widget)
         d->containerLayout->removeWidget(tokenWidget);
         d->widgetList.insert(curPos + 1, tokenWidget);
         d->containerLayout->insertWidget(layoutPos + 1, tokenWidget, 1);
+        updatePreview();
     }
 }
 
@@ -686,6 +684,8 @@ QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const
     QDialogButtonBox *dbb = new QDialogButtonBox(dlg);
     dbb->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     boxLayout->addWidget(dbb);
+    connect(dbb->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
+    connect(dbb->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
 
     widget->setFormatString(suggestion);
     if (dlg->exec() == Accepted) {
