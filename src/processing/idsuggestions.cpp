@@ -45,7 +45,7 @@ public:
         return EncoderLaTeX::instance()->convertToPlainAscii(input).remove(unwantedChars);
     }
 
-    inline int numberFromEntry(const Entry &entry, const QString &field) const {
+    int numberFromEntry(const Entry &entry, const QString &field) const {
         static const QRegularExpression firstDigits(QStringLiteral("^[0-9]+"));
         const QString text = PlainTextValue::text(entry.value(field));
         const QRegularExpressionMatch match = firstDigits.match(text);
@@ -54,6 +54,15 @@ public:
         bool ok = false;
         const int result = match.captured(0).toInt(&ok);
         return ok ? result : -1;
+    }
+
+    QString pageNumberFromEntry(const Entry &entry) const {
+        static const QRegularExpression whitespace(QStringLiteral("[ \t]+"));
+        static const QRegularExpression pageNumber(QStringLiteral("[a-z0-9+:]+"), QRegularExpression::CaseInsensitiveOption);
+        const QString text = PlainTextValue::text(entry.value(Entry::ftPages)).remove(whitespace).remove(QStringLiteral("mbox"));
+        const QRegularExpressionMatch match = pageNumber.match(text);
+        if (!match.hasMatch()) return QString();
+        return match.captured(0);
     }
 
     QString translateTitleToken(const Entry &entry, const struct IdSuggestionTokenInfo &tti, bool removeSmallWords) const {
@@ -236,6 +245,12 @@ public:
             const struct IdSuggestionTokenInfo jti = p->evalToken(token.mid(1));
             return translateJournalToken(entry, jti);
         }
+        case 'v': {
+            return normalizeText(PlainTextValue::text(entry.value(Entry::ftVolume)));
+        }
+        case 'p': {
+            return pageNumberFromEntry(entry);
+        }
         case '"': return token.mid(1);
         }
 
@@ -395,6 +410,10 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
             case IdSuggestions::ccNoChange:
                 break;
             }
+        } else if (token[0] == 'v') {
+            text.append(i18n("Volume"));
+        } else if (token[0] == 'p') {
+            text.append(i18n("First page number"));
         } else if (token[0] == '"')
             text.append(i18n("Text: '%1'", token.mid(1)));
         else

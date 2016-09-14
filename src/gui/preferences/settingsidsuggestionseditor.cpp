@@ -33,9 +33,9 @@
 #include <KLineEdit>
 #include <KComboBox>
 #include <KLocalizedString>
+#include <KIconLoader>
 
 #include <qxtspanslider.h>
-
 
 TokenWidget::TokenWidget(QWidget *parent)
         : QGroupBox(parent)
@@ -179,6 +179,50 @@ public:
         QString result = year == 4 ? QStringLiteral("Y") : QStringLiteral("y");
 
         return result;
+    }
+};
+
+class VolumeWidget : public TokenWidget
+{
+    Q_OBJECT
+
+private:
+    QLabel *labelCheckmark;
+
+public:
+    VolumeWidget(IdSuggestionsEditWidget *, QWidget *parent)
+            : TokenWidget(parent) {
+        setTitle(i18n("Volume"));
+
+        labelCheckmark = new QLabel(this);
+        labelCheckmark->setPixmap(KIconLoader::global()->loadMimeTypeIcon(QStringLiteral("dialog-ok-apply"), KIconLoader::Small));
+        formLayout->addRow(i18n("Volume:"), labelCheckmark);
+    }
+
+    QString toString() const {
+        return QStringLiteral("v");
+    }
+};
+
+class PageNumberWidget : public TokenWidget
+{
+    Q_OBJECT
+
+private:
+    QLabel *labelCheckmark;
+
+public:
+    PageNumberWidget(IdSuggestionsEditWidget *, QWidget *parent)
+            : TokenWidget(parent) {
+        setTitle(i18n("Page Number"));
+
+        labelCheckmark = new QLabel(this);
+        labelCheckmark->setPixmap(KIconLoader::global()->loadMimeTypeIcon(QStringLiteral("dialog-ok-apply"), KIconLoader::Small));
+        formLayout->addRow(i18n("First page's number:"), labelCheckmark);
+    }
+
+    QString toString() const {
+        return QStringLiteral("p");
     }
 };
 
@@ -377,7 +421,7 @@ class IdSuggestionsEditWidget::IdSuggestionsEditWidgetPrivate
 private:
     IdSuggestionsEditWidget *p;
 public:
-    enum TokenType {ttTitle = 0, ttAuthor = 1, ttYear = 2, ttJournal = 3, ttText = 4};
+    enum TokenType {ttTitle, ttAuthor, ttYear, ttJournal, ttText, ttVolume, ttPageNumber};
 
     QWidget *container;
     QBoxLayout *containerLayout;
@@ -430,6 +474,10 @@ public:
         signalMapperAddMenu->setMapping(action, -ttYear);
         action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, -ttJournal);
+        action = menuAddToken->addAction(i18n("Volume"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+        signalMapperAddMenu->setMapping(action, -ttVolume);
+        action = menuAddToken->addAction(i18n("Page Number"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+        signalMapperAddMenu->setMapping(action, -ttPageNumber);
         action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, -ttText);
         connect(signalMapperAddMenu, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &IdSuggestionsEditWidget::addToken);
@@ -445,6 +493,10 @@ public:
         signalMapperAddMenu->setMapping(action, ttYear);
         action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, ttJournal);
+        action = menuAddToken->addAction(i18n("Volume"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+        signalMapperAddMenu->setMapping(action, ttVolume);
+        action = menuAddToken->addAction(i18n("Page Number"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+        signalMapperAddMenu->setMapping(action, ttPageNumber);
         action = menuAddToken->addAction(i18n("Text"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, ttText);
         connect(signalMapperAddMenu, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &IdSuggestionsEditWidget::addToken);
@@ -515,6 +567,12 @@ public:
         case ttText:
             tokenWidget = new TextWidget(QString(), p, container);
             break;
+        case ttVolume:
+            tokenWidget = new VolumeWidget(p, container);
+            break;
+        case ttPageNumber:
+            tokenWidget = new PageNumberWidget(p, container);
+            break;
         }
 
         if (tokenWidget != nullptr) {
@@ -561,6 +619,14 @@ public:
             } else if (token[0] == 'j') {
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
                 tokenWidget = new JournalWidget(info, p, container);
+                widgetList << tokenWidget;
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
+            } else if (token[0] == 'v') {
+                tokenWidget = new VolumeWidget(p, container);
+                widgetList << tokenWidget;
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
+            } else if (token[0] == 'p') {
+                tokenWidget = new PageNumberWidget(p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == '"') {
