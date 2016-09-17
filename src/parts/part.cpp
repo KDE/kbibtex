@@ -904,12 +904,14 @@ void KBibTeXPart::elementFindPDF()
 
 void KBibTeXPart::applyDefaultFormatString()
 {
+    bool documentModified = false;
     QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
     foreach (const QModelIndex &index, mil) {
         QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull()) {
             static IdSuggestions idSuggestions;
             bool success = idSuggestions.applyDefaultFormatId(*entry.data());
+            documentModified |= success;
             if (!success) {
                 KMessageBox::information(widget(), i18n("Cannot apply default formatting for entry ids: No default format specified."), i18n("Cannot Apply Default Formatting"));
                 break;
@@ -917,6 +919,8 @@ void KBibTeXPart::applyDefaultFormatString()
         }
     }
 
+    if (documentModified)
+        d->partWidget->fileView()->externalModification();
 }
 
 bool KBibTeXPart::openFile()
