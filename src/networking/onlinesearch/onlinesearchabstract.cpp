@@ -322,6 +322,19 @@ void OnlineSearchAbstract::iconDownloadFinished()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (reply->error() == QNetworkReply::NoError) {
+        const QUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+        if (redirUrl.isValid()) {
+            QNetworkRequest request(redirUrl);
+            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
+            newReply->setObjectName(reply->objectName());
+            QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, NULL);
+            m_iconReplyToListWidgetItem.remove(reply);
+            if (listWidgetItem != NULL)
+                m_iconReplyToListWidgetItem.insert(newReply, listWidgetItem);
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAbstract::iconDownloadFinished);
+            return;
+        }
+
         const QByteArray iconData = reply->readAll();
         if (iconData.size() < 10) {
             /// Unlikely that an icon's data is less than 10 bytes,
@@ -338,6 +351,11 @@ void OnlineSearchAbstract::iconDownloadFinished()
             /// Microsoft Icon have first two bytes always 0x0000,
             /// third and fourth byte is 0x0001 (for .ico)
             extension = QStringLiteral(".ico");
+        } else if (iconData[0] == '<') {
+            /// HTML or XML code
+            QString htmlCode = QString::fromUtf8(iconData);
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "Favicon HTML code for URL " << reply->url().toDisplayString() << ": " << htmlCode;
+            return;
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << reply->url().toDisplayString();
             return;
