@@ -357,7 +357,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
             return;
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon " << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon from URL " << reply->url().toString() << ": " << reply->errorString();
 }
 
 void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)

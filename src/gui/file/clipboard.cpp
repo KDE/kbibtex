@@ -230,7 +230,7 @@ void Clipboard::paste()
 
 void Clipboard::editorMouseEvent(QMouseEvent *event)
 {
-    if (!(event->buttons()&Qt::LeftButton))
+    if (!(event->buttons() & Qt::LeftButton))
         return;
 
     if (d->previousPosition.x() > -1 && (event->pos() - d->previousPosition).manhattanLength() >= QApplication::startDragDistance()) {

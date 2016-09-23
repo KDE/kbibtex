@@ -20,11 +20,11 @@
 #include <QLayout>
 #include <QTreeView>
 #include <QPushButton>
+#include <QFontDatabase>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#include <QFontDatabase>
 #include <KMessageBox>
 
 #include "fileimporterbibtex.h"
