@@ -386,7 +386,7 @@ QString OnlineSearchGoogleScholar::label() const
 
 QString OnlineSearchGoogleScholar::favIconUrl() const
 {
-    return QStringLiteral("http://scholar.google.com/favicon.ico");
+    return QStringLiteral("http://scholar.google.com/favicon-png.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchGoogleScholar::customWidget(QWidget *)
