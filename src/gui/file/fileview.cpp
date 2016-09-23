@@ -327,6 +327,7 @@ void FileView::prepareEditorDialog(DialogType dialogType)
         m_dbb = new QDialogButtonBox(QDialogButtonBox::Close, m_elementEditorDialog);
         QBoxLayout *boxLayout = qobject_cast<QBoxLayout *>(m_elementEditorDialog->layout());
         boxLayout->addWidget(m_dbb);
+        connect(m_dbb, &QDialogButtonBox::clicked, this, &FileView::dialogButtonClicked);
     } else if (dialogType == DialogTypeEdit) {
         /// Edit mode, used in normal operations
         m_elementEditor->setReadOnly(false);
@@ -351,6 +352,7 @@ void FileView::dialogButtonClicked(QAbstractButton *button) {
     case QDialogButtonBox::Apply:
         m_elementEditor->apply();
         break;
+    case QDialogButtonBox::Close: ///< fall-through is intentional
     case QDialogButtonBox::Cancel:
         m_elementEditorDialog->reject();
         break;
