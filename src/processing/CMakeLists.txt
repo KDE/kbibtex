@@ -45,11 +45,6 @@ add_library(
 target_link_libraries( kbibtexproc
     Qt5::Core
     KF5::Parts
-#     Qt5::Widgets
-#     KF5::I18n
-#     KF5::XmlGui
-#     ${LIBXML2_LIBRARIES}
-#     ${LIBXSLT_LIBRARIES}
     kbibtexconfig
     kbibtexdata
     kbibtexio

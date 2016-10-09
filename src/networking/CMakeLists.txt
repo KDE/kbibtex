@@ -93,7 +93,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/global
-    ${LIBXML2_INCLUDE_DIR}
 )
 
 add_library(

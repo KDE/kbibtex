@@ -49,7 +49,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/element
     ${CMAKE_SOURCE_DIR}/src/program/docklets
     ${CMAKE_SOURCE_DIR}/src/global
-    ${LIBXML2_INCLUDE_DIR}
 )
 
 ecm_add_app_icon( kbibtex_SRCS

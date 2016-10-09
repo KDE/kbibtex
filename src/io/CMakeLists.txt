@@ -66,7 +66,6 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
-#     ${POPPLER_QT5_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
