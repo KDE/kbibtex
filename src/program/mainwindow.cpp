@@ -280,7 +280,6 @@ KBibTeXMainWindow::KBibTeXMainWindow()
 KBibTeXMainWindow::~KBibTeXMainWindow()
 {
     delete d;
-    XSLTransform::cleanupGlobals();
 }
 
 void KBibTeXMainWindow::setupControllers()

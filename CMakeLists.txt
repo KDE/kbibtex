@@ -43,6 +43,7 @@ find_package(
     Widgets
     Network
     Test
+    XmlPatterns
 )
 
 #FIXME this code fragment is intended to test for optional
@@ -127,16 +128,6 @@ endif(UNITY_BUILD)
 # endif(
 #     APPLE
 # )
-
-find_package(
-    LibXslt
-    REQUIRED
-)
-
-find_package(
-    LibXml2
-    REQUIRED
-)
 
 find_package(
     Poppler

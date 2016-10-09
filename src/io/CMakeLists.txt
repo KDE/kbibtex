@@ -66,8 +66,6 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
-    ${LIBXML2_INCLUDE_DIR}
-    ${LIBXSLT_INCLUDE_DIR}
 #     ${POPPLER_QT5_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/config
@@ -92,10 +90,9 @@ add_library(
 target_link_libraries( kbibtexio
     Qt5::Core
     Qt5::Widgets
+    Qt5::XmlPatterns
     KF5::I18n
     KF5::XmlGui
-    ${LIBXML2_LIBRARIES}
-    ${LIBXSLT_LIBRARIES}
     ${POPPLER_LIBRARY}
     ${ICU_LIBRARIES}
     kbibtexconfig

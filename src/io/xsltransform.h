@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,12 +22,7 @@
 
 #include <QString>
 
-#include <libxslt/transform.h>
-
 /**
- * This class is a wrapper around libxslt, which allows to
- * apply XSL transformation on XML files.
- *
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
 class KBIBTEXIO_EXPORT XSLTransform
@@ -41,7 +36,6 @@ public:
 
     XSLTransform(const XSLTransform &other) = delete;
     XSLTransform &operator= (const XSLTransform &other) = delete;
-    ~XSLTransform();
 
     /**
      * Transform a given XML document using the tranformer's
@@ -51,13 +45,11 @@ public:
      */
     QString transform(const QString &xmlText) const;
 
-    static void cleanupGlobals();
-
 protected:
-    XSLTransform(const xsltStylesheetPtr xsltStylesheet);
+    XSLTransform(const QString &xsltText);
 
 private:
-    const xsltStylesheetPtr xsltStylesheet;
+    QString xsltText;
 };
 
 #endif // KBIBTEX_XSLTRANSFORM_H

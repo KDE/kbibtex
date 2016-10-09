@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,9 +17,9 @@
 
 #include "xsltransform.h"
 
-#include <libxslt/xsltutils.h>
-
 #include <QFileInfo>
+#include <QXmlQuery>
+#include <QBuffer>
 
 #include "logging_io.h"
 
@@ -38,58 +38,45 @@ XSLTransform *XSLTransform::createXSLTransform(const QString &xsltFilename)
         return NULL;
     }
 
-    /// create an internal representation of the XSL file using libxslt
-    const xsltStylesheetPtr xsltStylesheet = xsltParseStylesheetFile((const xmlChar *) xsltFilename.toLatin1().data());
-    if (xsltStylesheet == NULL) {
-        qCWarning(LOG_KBIBTEX_IO) << "File xsltFilename=" << xsltFilename << " resulted in empty/invalid XSLT style sheet";
+    QFile xsltFile(xsltFilename);
+    if (xsltFile.open(QFile::ReadOnly)) {
+        const QString xsltText = QString::fromUtf8(xsltFile.readAll().constData());
+        if (xsltText.isEmpty()) {
+            qCWarning(LOG_KBIBTEX_IO) << "File xsltFilename=" << xsltFilename << " is empty";
+            return NULL;
+        } else
+            return new XSLTransform(xsltText);
+    } else {
+        qCWarning(LOG_KBIBTEX_IO) << "File xsltFilename=" << xsltFilename << " cannot be opened for reading";
         return NULL;
     }
-
-    return new XSLTransform(xsltStylesheet);
 }
 
-XSLTransform::XSLTransform(const xsltStylesheetPtr xsltSS)
-        : xsltStylesheet(xsltSS)
+XSLTransform::XSLTransform(const QString &_xsltText)
+    : xsltText(_xsltText)
 {
     /// nothing
 }
 
-XSLTransform::~XSLTransform()
-{
-    /// Clean up memory
-    xsltFreeStylesheet(xsltStylesheet);
-}
-
 QString XSLTransform::transform(const QString &xmlText) const
 {
+    QXmlQuery query(QXmlQuery::XSLT20);
+
+    /// Create QBuffer from QString, set as XML data via setFocus(..)
+    QByteArray xmlData(xmlText.toUtf8());
+    QBuffer xmlBuffer(&xmlData);
+    xmlBuffer.open(QIODevice::ReadOnly);
+    query.setFocus(&xmlBuffer);
+
+    /// Create QBuffer from QString, set as XSLT data via setQuery(..)
+    QByteArray xsltData(xsltText.toUtf8());
+    QBuffer xsltBuffer(&xsltData);
+    xsltBuffer.open(QIODevice::ReadOnly);
+    query.setQuery(&xsltBuffer);
+
     QString result;
-    QByteArray xmlCText = xmlText.toUtf8();
-    xmlDocPtr document = xmlParseMemory(xmlCText, xmlCText.length());
-    if (document) {
-        if (xsltStylesheet != NULL) {
-            xmlDocPtr resultDocument = xsltApplyStylesheet(xsltStylesheet, document, NULL);
-            if (resultDocument) {
-                /// Save the result into the QString
-                xmlChar *mem;
-                int size;
-                xmlDocDumpMemoryEnc(resultDocument, &mem, &size, "UTF-8");
-                result = QString::fromUtf8(QByteArray((char *)(mem), size + 1));
-                xmlFree(mem);
-
-                xmlFreeDoc(resultDocument);
-            } else
-                qCCritical(LOG_KBIBTEX_IO) << "Applying XSLT stylesheet to XML document failed";
-        } else
-            qCCritical(LOG_KBIBTEX_IO) << "XSLT stylesheet is not available or not valid";
-
-        xmlFreeDoc(document);
-    } else
-        qCCritical(LOG_KBIBTEX_IO) << "XML document is not available or not valid";
-
-    return result;
-}
-
-void XSLTransform::cleanupGlobals()
-{
-    xsltCleanupGlobals();
+    if (query.evaluateTo(&result))
+        return result;
+    else
+        return QString();
 }
