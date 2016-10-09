@@ -52,7 +52,7 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     stream.setCodec("UTF-8");
 
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
-    stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX/KDE4 -->" << endl;
+    stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX -->" << endl;
     stream << "<!-- http://home.gna.org/kbibtex/ -->" << endl;
     stream << "<bibliography>" << endl;
 
@@ -76,7 +76,7 @@ bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     stream.setCodec("UTF-8");
 
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
-    stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX/KDE4 -->" << endl;
+    stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX -->" << endl;
     stream << "<!-- http://home.gna.org/kbibtex/ -->" << endl;
 
     const bool result = write(stream, element.data());
