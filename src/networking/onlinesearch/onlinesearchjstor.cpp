@@ -298,6 +298,13 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(Entry::ftPages, v);
     }
 
+    /// Some entries may have no 'author' field, but a 'bookauthor' field instead
+    if (!entry->contains(Entry::ftAuthor) && entry->contains(QStringLiteral("bookauthor"))) {
+        Value v = entry->value(QStringLiteral("bookauthor"));
+        entry->remove(QStringLiteral("bookauthor"));
+        entry->insert(Entry::ftAuthor, v);
+    }
+
     for (QMap<QString, Value>::Iterator it = entry->begin(); it != entry->end();) {
         if (PlainTextValue::text(it.value()).isEmpty())
             it = entry->erase(it);

@@ -44,6 +44,7 @@ FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keyw
 {
     m_keysForPersonDetection.append(Entry::ftAuthor);
     m_keysForPersonDetection.append(Entry::ftEditor);
+    m_keysForPersonDetection.append(QStringLiteral("bookauthor")); /// used by JSTOR
 }
 
 FileImporterBibTeX::~FileImporterBibTeX()
