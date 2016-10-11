@@ -950,11 +950,6 @@ QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name,
     return personFromTokenList(tokens, comma);
 }
 
-void FileImporterBibTeX::setKeysForPersonDetection(const QStringList &keylist)
-{
-    m_keysForPersonDetection.append(keylist);
-}
-
 QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList &tokens, CommaContainment *comma)
 {
     if (comma != NULL) *comma = ccNoComma;

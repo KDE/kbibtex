@@ -103,16 +103,6 @@ public:
 
     static void parsePersonList(const QString &text, Value &value);
 
-
-    /**
-      * As not always only @c Entry::ftAuthor and @c Entry::ftEditor should be interpreted as Persons, this allows to expand it
-      *
-      * Any key in this list will also be checked for a Person entry. Thus the splitPerson (xxx and yyy) take place
-      * as well as the nameing split in first, last, suffix.
-      * @param keylist list of additional keys beside ftAuthor and ftEditor. Must be lowercase
-      */
-    void setKeysForPersonDetection(const QStringList &keylist);
-
 public slots:
     void cancel();
 
