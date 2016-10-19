@@ -50,7 +50,7 @@ public:
         const QRegExp quotationMarks("([^= ]\\s*)\"(\\s*[a-z.])", Qt::CaseInsensitive);
         int p = -2;
         while ((p = quotationMarks.indexIn(code, p + 2)) >= 0) {
-            code = code.left(p - 1) + quotationMarks.cap(1) + '\\' + '"' + quotationMarks.cap(2) + code.mid(p + quotationMarks.cap(0).length());
+            code = code.left(p - 1) + quotationMarks.cap(1) + QStringLiteral("\\\"") + quotationMarks.cap(2) + code.mid(p + quotationMarks.cap(0).length());
         }
         /// Remove "<!-- Tag Not Handled -->" and other XML tags from keywords
         int i1 = -1;
@@ -99,7 +99,7 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     d->curStep = 0;
     d->numSteps = 2 + 2 * numResults;
 
-    d->queryFreetext = query[queryKeyFreeText] + ' ' + query[queryKeyTitle] + ' ' + query[queryKeyYear];
+    d->queryFreetext = query[queryKeyFreeText] + QStringLiteral(" ") + query[queryKeyTitle] + QStringLiteral(" ") + query[queryKeyYear];
     d->queryAuthor = query[queryKeyAuthor];
     d->numExpectedResults = numResults;
 

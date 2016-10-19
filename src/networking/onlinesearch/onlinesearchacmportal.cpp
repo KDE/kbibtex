@@ -95,7 +95,7 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
 
     for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
         // FIXME: Is there a need for percent encoding?
-        d->joinedQueryString.append(it.value() + ' ');
+        d->joinedQueryString.append(it.value() + QStringLiteral(" "));
     }
     d->numExpectedResults = numResults;
 
