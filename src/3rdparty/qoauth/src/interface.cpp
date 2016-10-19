@@ -46,7 +46,7 @@
 
   \section sec_lic License and Authors
 
-  The project is licensed under <a href=http://www.gnu.org/licenses/lgpl-2.1.html>GNU LGPL
+  The project is licensed under <a href=https://www.gnu.org/licenses/lgpl-2.1.html>GNU LGPL
   license</a> version 2.1 or later. The work is done by Dominik Kapusta (d at ayoy dot net).
 
   \section sec_inst How to install?
