@@ -175,7 +175,7 @@ QString OnlineSearchIEEEXplore::label() const
 
 QString OnlineSearchIEEEXplore::favIconUrl() const
 {
-    return QStringLiteral("http://ieeexplore.ieee.org/favicon.ico");
+    return QStringLiteral("https://ieeexplore.ieee.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchIEEEXplore::customWidget(QWidget *)
@@ -185,7 +185,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchIEEEXplore::customWidget(QWidget *)
 
 QUrl OnlineSearchIEEEXplore::homepage() const
 {
-    return QUrl(QStringLiteral("http://ieeexplore.ieee.org/"));
+    return QUrl(QStringLiteral("https://ieeexplore.ieee.org/"));
 }
 
 void OnlineSearchIEEEXplore::cancel()

@@ -54,10 +54,10 @@ public:
     OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar */* UNUSED parent*/)
         : /* UNUSED p(parent), */ numResults(0), numSteps(0), curStep(0)
     {
-        startPageUrl = QStringLiteral("http://scholar.google.com/");
-        configPageUrl = QStringLiteral("http://%1/scholar_settings");
-        setConfigPageUrl = QStringLiteral("http://%1/scholar_setprefs");
-        queryPageUrl = QStringLiteral("http://%1/scholar");
+        startPageUrl = QStringLiteral("https://scholar.google.com/");
+        configPageUrl = QStringLiteral("https://%1/scholar_settings");
+        setConfigPageUrl = QStringLiteral("https://%1/scholar_setprefs");
+        queryPageUrl = QStringLiteral("https://%1/scholar");
     }
 
     QString documentUrlForBibTeXEntry(const QString &htmlText, int bibLinkPos) {
@@ -264,7 +264,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             /// Extract primary link associated with BibTeX entry
             const QString primaryUrl = d->mainUrlForBibTeXEntry(htmlText, pos);
 
-            const QString bibtexUrl("http://" + reply->url().host() + linkToBib.cap(0).replace(QStringLiteral("&amp;"), QStringLiteral("&")));
+            const QString bibtexUrl("https://" + reply->url().host() + linkToBib.cap(0).replace(QStringLiteral("&amp;"), QStringLiteral("&")));
             d->listBibTeXurls.insert(bibtexUrl, primaryUrl + QLatin1Char('|') + documentUrl);
             pos += linkToBib.matchedLength();
         }
@@ -386,7 +386,7 @@ QString OnlineSearchGoogleScholar::label() const
 
 QString OnlineSearchGoogleScholar::favIconUrl() const
 {
-    return QStringLiteral("http://scholar.google.com/favicon-png.ico");
+    return QStringLiteral("https://scholar.google.com/favicon-png.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchGoogleScholar::customWidget(QWidget *)
@@ -396,7 +396,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchGoogleScholar::customWidget(QWidget *
 
 QUrl OnlineSearchGoogleScholar::homepage() const
 {
-    return QUrl(QStringLiteral("http://scholar.google.com/"));
+    return QUrl(QStringLiteral("https://scholar.google.com/"));
 }
 
 void OnlineSearchGoogleScholar::cancel()
