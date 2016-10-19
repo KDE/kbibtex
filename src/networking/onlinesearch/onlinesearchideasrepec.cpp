@@ -177,7 +177,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             }
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 
 }
 
@@ -218,7 +218,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadBibTeXDone);
 
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchIDEASRePEc::downloadBibTeXDone()
@@ -272,5 +272,5 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadPublicationDone);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString() << "(was" << downloadUrl << ")";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString() << "(was" << downloadUrl << ")";
 }

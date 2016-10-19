@@ -377,7 +377,7 @@ void FindPDF::downloadFinished()
 
         QUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
         redirUrl = redirUrl.isEmpty() ? QUrl() : reply->url().resolved(redirUrl);
-        qCDebug(LOG_KBIBTEX_NETWORKING) << "finished Downloading " << reply->url().toString() << "   depth=" << depth  << "  d->aliveCounter=" << d->aliveCounter << "  data.size=" << data.size() << "  redirUrl=" << redirUrl.toString() << "   origin=" << origin;
+        qCDebug(LOG_KBIBTEX_NETWORKING) << "finished Downloading " << reply->url().toDisplayString() << "   depth=" << depth  << "  d->aliveCounter=" << d->aliveCounter << "  data.size=" << data.size() << "  redirUrl=" << redirUrl.toDisplayString() << "   origin=" << origin;
 
         if (!redirUrl.isEmpty())
             d->queueUrl(redirUrl, term, origin, depth - 1);
@@ -425,7 +425,7 @@ void FindPDF::downloadFinished()
             qCWarning(LOG_KBIBTEX_NETWORKING) << "don't know how to handle " << text.left(256);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "error from reply: " << reply->errorString() << "(" << reply->url().toString() << ")" << "  term=" << term << "  origin=" << origin << "  depth=" << depth;
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "error from reply: " << reply->errorString() << "(" << reply->url().toDisplayString() << ")" << "  term=" << term << "  origin=" << origin << "  depth=" << depth;
 
     if (d->aliveCounter == 0) {
         /// no more running downloads left

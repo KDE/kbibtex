@@ -206,9 +206,9 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
                 emit stoppedSearch(resultNoError);
             }
         } else {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }

@@ -175,7 +175,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingResultPage);
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchMathSciNet::doneFetchingResultPage()
@@ -219,7 +219,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
             emit stoppedSearch(resultNoError);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
@@ -254,7 +254,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 
         emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchMathSciNet::sanitizeEntry(QSharedPointer<Entry> entry)

@@ -186,7 +186,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchScienceDirect::doneFetchingResultPage()
@@ -234,7 +234,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchScienceDirect::doneFetchingAbstractPage()
@@ -279,7 +279,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchScienceDirect::doneFetchingBibTeX()
@@ -313,5 +313,5 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }

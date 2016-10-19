@@ -353,13 +353,13 @@ public:
         if (bibTeXFile != NULL) {
             const QUrl oldUrl = bibTeXFile->property(File::Url, QUrl()).toUrl();
             if (oldUrl.isValid() && oldUrl.isLocalFile()) {
-                const QString path = oldUrl.toString();
+                const QString path = oldUrl.toDisplayString();
                 if (!path.isEmpty())
                     fileSystemWatcher.removePath(path);
                 else
                     qCWarning(LOG_KBIBTEX_PARTS) << "No filename to stop watching";
             } else
-                qCWarning(LOG_KBIBTEX_PARTS) << "Not removing" << oldUrl.toString() << "from fileSystemWatcher";
+                qCWarning(LOG_KBIBTEX_PARTS) << "Not removing" << oldUrl.toDisplayString() << "from fileSystemWatcher";
             delete bibTeXFile;
         }
 

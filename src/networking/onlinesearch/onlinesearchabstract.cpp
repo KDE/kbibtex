@@ -161,7 +161,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
         newUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
     } else if (reply->size() == 0)
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "on url" << reply->url().toString() << "returned no data";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "on url" << reply->url().toDisplayString() << "returned no data";
 
     return true;
 }
@@ -339,7 +339,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
         if (iconData.size() < 10) {
             /// Unlikely that an icon's data is less than 10 bytes,
             /// must be an error.
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Received invalid icon data from " << reply->url().toString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Received invalid icon data from " << reply->url().toDisplayString();
             return;
         }
 
@@ -375,7 +375,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
             return;
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon from URL " << reply->url().toString() << ": " << reply->errorString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon from URL " << reply->url().toDisplayString() << ": " << reply->errorString();
 }
 
 void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)

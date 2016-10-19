@@ -122,7 +122,7 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
     request.setRawHeader(QByteArray("Accept-Language"), QByteArray("en-US, en;q=0.9"));
     request.setRawHeader(QByteArray("User-Agent"), userAgent().toLatin1());
     if (oldUrl.isValid())
-        request.setRawHeader(QByteArray("Referer"), oldUrl.toString().toLatin1());
+        request.setRawHeader(QByteArray("Referer"), oldUrl.toDisplayString().toLatin1());
     QNetworkReply *reply = QNetworkAccessManager::get(request);
     return reply;
 }
@@ -191,7 +191,7 @@ void InternalNetworkAccessManager::networkReplyTimeout()
     timer->stop();
     QNetworkReply *reply = m_mapTimerToReply[timer];
     if (reply != NULL) {
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Timeout on reply to " << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Timeout on reply to " << reply->url().toDisplayString();
         reply->close();
         m_mapTimerToReply.remove(timer);
     }

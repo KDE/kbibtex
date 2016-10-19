@@ -98,7 +98,7 @@ public:
         if (entry.isNull()) return false;
         if (!url.isValid()) return false;
 
-        qCDebug(LOG_KBIBTEX_GUI) << "About to add URL " << url.toString() << " to entry" << entry->id();
+        qCDebug(LOG_KBIBTEX_GUI) << "About to add URL " << url.toDisplayString() << " to entry" << entry->id();
         return AssociatedFilesUI::associateUrl(url, entry, fileView->fileModel()->bibliographyFile(), fileView);
     }
 

@@ -129,7 +129,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
 
         emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)

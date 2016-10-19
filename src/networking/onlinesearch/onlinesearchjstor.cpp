@@ -163,7 +163,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingResultPage);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchJStor::doneFetchingResultPage()
@@ -209,7 +209,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingBibTeXCode);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchJStor::doneFetchingBibTeXCode()
@@ -238,7 +238,7 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         emit progress(d->numSteps, d->numSteps);
         emit stoppedSearch(numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)

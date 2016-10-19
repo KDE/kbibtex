@@ -396,7 +396,7 @@ void ReferencePreview::saveAsHTML()
 
 void ReferencePreview::linkClicked(const QUrl &url)
 {
-    QString text = url.toString();
+    QString text = url.toDisplayString();
     if (text.startsWith(QStringLiteral("kbibtex:filter:"))) {
         text = text.mid(15);
         if (d->fileView != NULL) {

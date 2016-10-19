@@ -280,7 +280,7 @@ void AssociatedFilesUI::updateUIandPreview() {
 
 void AssociatedFilesUI::setupForRemoteUrl(const QUrl &url, const QString &entryId) {
     d->sourceUrl = url;
-    d->lineEditSourceUrl->setText(url.toString());
+    d->lineEditSourceUrl->setText(url.toDisplayString());
     if (entryId.isEmpty()) {
         d->labelGreeting->setText(i18n("The following remote document is about to be associated with the current entry:"));
         d->radioRenameToEntryId->setText(i18n("Rename after entry's id"));

@@ -265,7 +265,7 @@ void OnlineSearchBibsonomy::downloadDone()
 
                 delete bibtexFile;
             } else {
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
                 emit stoppedSearch(resultUnspecifiedError);
             }
         } else {
@@ -274,7 +274,7 @@ void OnlineSearchBibsonomy::downloadDone()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 #include "onlinesearchbibsonomy.moc"

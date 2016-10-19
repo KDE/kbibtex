@@ -168,7 +168,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     /// setup label which will show the PDF file's URL
     KSqueezedTextLabel *label = qobject_cast<KSqueezedTextLabel *>(widgets[posLabelUrl]);
     if (label != NULL) {
-        const QString text = index.data(URLRole).toUrl().toString();
+        const QString text = index.data(URLRole).toUrl().toDisplayString();
         label->setText(text);
         label->setToolTip(text);
         label->move(margin * 2 + KIconLoader::SizeMedium, margin);
@@ -296,7 +296,7 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
 {
     if (index != QModelIndex() && index.parent() == QModelIndex() && index.row() < m_resultList.count()) {
         if (role == Qt::DisplayRole)
-            return m_resultList[index.row()].url.toString();
+            return m_resultList[index.row()].url.toDisplayString();
         else if (role == URLRole)
             return  m_resultList[index.row()].url;
         else if (role == TextualPreviewRole)
@@ -447,10 +447,10 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             bool alreadyContained = false;
             for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd(); ++it)
                 // FIXME this will terribly break if URLs in an entry's URL field are separated with semicolons
-                alreadyContained |= it.key().toLower().startsWith(Entry::ftUrl) && PlainTextValue::text(it.value()) == url.toString();
+                alreadyContained |= it.key().toLower().startsWith(Entry::ftUrl) && PlainTextValue::text(it.value()) == url.toDisplayString();
             if (!alreadyContained) {
                 Value value;
-                value.append(QSharedPointer<VerbatimText>(new VerbatimText(url.toString())));
+                value.append(QSharedPointer<VerbatimText>(new VerbatimText(url.toDisplayString())));
                 if (!entry.contains(Entry::ftUrl))
                     entry.insert(Entry::ftUrl, value);
                 else
@@ -474,7 +474,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
 
                 bool alreadyContained = false;
                 for (QMap<QString, Value>::ConstIterator it = entry.constBegin(); !alreadyContained && it != entry.constEnd(); ++it)
-                    alreadyContained |= (it.key().toLower().startsWith(Entry::ftLocalFile) || it.key().toLower().startsWith(Entry::ftUrl)) && PlainTextValue::text(it.value()) == url.toString();
+                    alreadyContained |= (it.key().toLower().startsWith(Entry::ftLocalFile) || it.key().toLower().startsWith(Entry::ftUrl)) && PlainTextValue::text(it.value()) == url.toDisplayString();
                 if (!alreadyContained) {
                     Value value;
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));

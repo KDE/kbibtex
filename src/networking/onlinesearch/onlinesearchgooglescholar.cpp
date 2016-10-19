@@ -188,7 +188,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingConfigPage);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingConfigPage()
@@ -217,7 +217,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
@@ -243,7 +243,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingQueryPage()
@@ -292,7 +292,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingBibTeX()
@@ -376,7 +376,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             }
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 QString OnlineSearchGoogleScholar::label() const

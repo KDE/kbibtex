@@ -214,7 +214,7 @@ void OnlineSearchPubMed::eSearchDone()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchPubMed::eFetchDone()
@@ -231,7 +231,7 @@ void OnlineSearchPubMed::eFetchDone()
         /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = d->xslt.transform(input);
         if (bibTeXcode.isEmpty()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
             emit stoppedSearch(resultInvalidArguments);
         } else {  /// remove XML header
             if (bibTeXcode[0] == '<')
@@ -255,5 +255,5 @@ void OnlineSearchPubMed::eFetchDone()
             }
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }

@@ -162,7 +162,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             emit stoppedSearch(resultUnspecifiedError);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchAcmPortal::doneFetchingSearchPage()
@@ -203,7 +203,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             emit progress(d->numSteps, d->numSteps);
         }
     }  else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
 void OnlineSearchAcmPortal::doneFetchingCitation()
@@ -230,7 +230,7 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
             return;
         }
     }  else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 
     if (bibTeXUrl.isEmpty()) {
         if (!d->citationUrls.isEmpty()) {
@@ -285,5 +285,5 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
             emit progress(d->numSteps, d->numSteps);
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
