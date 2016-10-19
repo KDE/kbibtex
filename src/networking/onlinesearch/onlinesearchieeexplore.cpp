@@ -38,20 +38,15 @@ private:
 
 public:
     const QString gatewayUrl;
-    XSLTransform *xslt;
+    XSLTransform xslt;
     int numSteps, curStep;
 
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
-            : p(parent), gatewayUrl(QStringLiteral("http://ieeexplore.ieee.org/gateway/ipsSearch.jsp")), numSteps(0), curStep(0) {
-        const QString xsltFilename = QStringLiteral("kbibtex/ieeexplore2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
-        if (xslt == NULL)
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
-    }
-
-
-    ~OnlineSearchIEEEXplorePrivate() {
-        delete xslt;
+            : p(parent), gatewayUrl(QStringLiteral("https://ieeexplore.ieee.org/gateway/ipsSearch.jsp")),
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/ieeexplore2bibtex.xsl"))),
+          numSteps(0), curStep(0)
+    {
+        /// nothing
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -110,13 +105,6 @@ void OnlineSearchIEEEXplore::startSearch()
 
 void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    if (d->xslt == NULL) {
-        /// Don't allow searches if xslt is not defined
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot allow searching" << label() << "if XSL Transformation not available";
-        delayedStoppedSearch(resultUnspecifiedError);
-        return;
-    }
-
     m_hasBeenCanceled = false;
     d->curStep = 0;
     d->numSteps = 2;
@@ -151,25 +139,29 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
             const QString xmlCode = QString::fromUtf8(reply->readAll().constData());
 
             /// use XSL transformation to get BibTeX document from XML result
-            const QString bibTeXcode = d->xslt->transform(xmlCode);
-
-            FileImporterBibTeX importer;
-            File *bibtexFile = importer.fromString(bibTeXcode);
-
-            bool hasEntries = false;
-            if (bibtexFile != NULL) {
-                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                    QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                    hasEntries |= publishEntry(entry);
-                }
-
-                emit stoppedSearch(resultNoError);
-                emit progress(d->numSteps, d->numSteps);
-
-                delete bibtexFile;
+            const QString bibTeXcode = d->xslt.transform(xmlCode);
+            if (bibTeXcode.isEmpty()) {
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toString();
+                emit stoppedSearch(resultInvalidArguments);
             } else {
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
-                emit stoppedSearch(resultUnspecifiedError);
+                FileImporterBibTeX importer;
+                File *bibtexFile = importer.fromString(bibTeXcode);
+
+                bool hasEntries = false;
+                if (bibtexFile != NULL) {
+                    for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                        QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                        hasEntries |= publishEntry(entry);
+                    }
+
+                    emit stoppedSearch(resultNoError);
+                    emit progress(d->numSteps, d->numSteps);
+
+                    delete bibtexFile;
+                } else {
+                    qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                    emit stoppedSearch(resultUnspecifiedError);
+                }
             }
         }
     } else

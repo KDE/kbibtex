@@ -17,7 +17,6 @@
 
 #include "onlinesearchspringerlink.h"
 
-#include <QFile>
 #include <QFormLayout>
 #include <QSpinBox>
 #include <QLabel>
@@ -145,19 +144,15 @@ private:
 
 public:
     const QString springerMetadataKey;
-    XSLTransform *xslt;
+    XSLTransform xslt;
     OnlineSearchQueryFormSpringerLink *form;
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
-            : p(parent), springerMetadataKey(QStringLiteral("7pphfmtb9rtwt3dw3e4hm7av")), form(NULL) {
-        const QString xsltFilename = QStringLiteral("kbibtex/pam2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
-        if (xslt == NULL)
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
-    }
-
-    ~OnlineSearchSpringerLinkPrivate() {
-        delete xslt;
+            : p(parent), springerMetadataKey(QStringLiteral("7pphfmtb9rtwt3dw3e4hm7av")),
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pam2bibtex.xsl"))),
+          form(NULL)
+    {
+        /// nothing
     }
 
     QUrl buildQueryUrl() {
@@ -241,13 +236,6 @@ OnlineSearchSpringerLink::~OnlineSearchSpringerLink()
 
 void OnlineSearchSpringerLink::startSearch()
 {
-    if (d->xslt == NULL) {
-        /// Don't allow searches if xslt is not defined
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot allow searching" << label() << "if XSL Transformation not available";
-        delayedStoppedSearch(resultUnspecifiedError);
-        return;
-    }
-
     m_hasBeenCanceled = false;
 
     QUrl springerLinkSearchUrl = d->buildQueryUrl();
@@ -263,13 +251,6 @@ void OnlineSearchSpringerLink::startSearch()
 
 void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    if (d->xslt == NULL) {
-        /// Don't allow searches if xslt is not defined
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot allow searching" << label() << "if XSL Transformation not available";
-        delayedStoppedSearch(resultUnspecifiedError);
-        return;
-    }
-
     m_hasBeenCanceled = false;
 
     QUrl springerLinkSearchUrl = d->buildQueryUrl(query);
@@ -318,26 +299,29 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
         /// ensure proper treatment of UTF-8 characters
         const QString xmlSource = QString::fromUtf8(reply->readAll().constData());
 
-        QString bibTeXcode = d->xslt->transform(xmlSource);
-        bibTeXcode = bibTeXcode.replace(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"), QString());
-
-        FileImporterBibTeX importer;
-        File *bibtexFile = importer.fromString(bibTeXcode);
-
-        bool hasEntries = false;
-        if (bibtexFile != NULL) {
-            foreach (const QSharedPointer<Element> &element, *bibtexFile) {
-                QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
-                hasEntries |= publishEntry(entry);
-            }
-
-            emit stoppedSearch(resultNoError);
-            emit progress(1, 1);
-
-            delete bibtexFile;
+        const QString bibTeXcode = d->xslt.transform(xmlSource).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        if (bibTeXcode.isEmpty()) {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toString();
+            emit stoppedSearch(resultInvalidArguments);
         } else {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
-            emit stoppedSearch(resultUnspecifiedError);
+            FileImporterBibTeX importer;
+            File *bibtexFile = importer.fromString(bibTeXcode);
+
+            bool hasEntries = false;
+            if (bibtexFile != NULL) {
+                foreach (const QSharedPointer<Element> &element, *bibtexFile) {
+                    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+                    hasEntries |= publishEntry(entry);
+                }
+
+                emit stoppedSearch(resultNoError);
+                emit progress(1, 1);
+
+                delete bibtexFile;
+            } else {
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                emit stoppedSearch(resultUnspecifiedError);
+            }
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();

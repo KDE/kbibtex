@@ -56,33 +56,23 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QString
     }
 
     m_cancelFlag = false;
-    XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
-    if (xsltransformer == NULL)
-        qCWarning(LOG_KBIBTEX_IO) << "Could not create XSLT transformation for" << m_xsltFilename;
-    else {
-        FileExporterXML xmlExporter;
+    XSLTransform xsltransformer(m_xsltFilename);
+    FileExporterXML xmlExporter;
 
-        QBuffer buffer;
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
+    if (xmlExporter.save(&buffer, bibtexfile, errorLog)) {
+        buffer.close();
+        buffer.open(QIODevice::ReadOnly);
+        const QString xml = QString::fromUtf8(buffer.readAll().constData());
+        buffer.close();
 
-        buffer.open(QIODevice::WriteOnly);
-        if (xmlExporter.save(&buffer, bibtexfile, errorLog)) {
-            buffer.close();
-            buffer.open(QIODevice::ReadOnly);
-            QTextStream ts(&buffer);
-            ts.setCodec("UTF-8");
-            QString xml = ts.readAll();
-            buffer.close();
-            QString html = xsltransformer->transform(xml);
-            QTextStream htmlTS(iodevice);
-            htmlTS.setCodec("UTF-8");
-            htmlTS << html << endl;
-
-            delete xsltransformer;
+        const QString html = xsltransformer.transform(xml);
+        if (!html.isEmpty()) {
+            iodevice->write(html.toUtf8());
             iodevice->close();
             return !m_cancelFlag;
         }
-
-        delete xsltransformer;
     }
 
     iodevice->close();
@@ -97,34 +87,23 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Elem
     }
 
     m_cancelFlag = false;
-    XSLTransform *xsltransformer = XSLTransform::createXSLTransform(m_xsltFilename);
-    if (xsltransformer == NULL)
-        qCWarning(LOG_KBIBTEX_IO) << "Could not create XSLT transformation for" << m_xsltFilename;
-    else {
-        FileExporterXML xmlExporter;
+    XSLTransform xsltransformer(m_xsltFilename);
+    FileExporterXML xmlExporter;
 
-        QBuffer buffer;
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
+    if (xmlExporter.save(&buffer, element, bibtexfile, errorLog)) {
+        buffer.close();
+        buffer.open(QIODevice::ReadOnly);
+        const QString xml = QString::fromUtf8(buffer.readAll().constData());
+        buffer.close();
 
-        buffer.open(QIODevice::WriteOnly);
-        if (xmlExporter.save(&buffer, element, bibtexfile, errorLog)) {
-            buffer.close();
-            buffer.open(QIODevice::ReadOnly);
-            QTextStream ts(&buffer);
-            ts.setCodec("UTF-8");
-            QString xml = ts.readAll();
-            buffer.close();
-
-            QString html = xsltransformer->transform(xml);
-            QTextStream htmlTS(iodevice);
-            htmlTS.setCodec("UTF-8");
-            htmlTS << html << endl;
-
-            delete xsltransformer;
+        const QString html = xsltransformer.transform(xml);
+        if (!html.isEmpty()) {
+            iodevice->write(html.toUtf8());
             iodevice->close();
             return !m_cancelFlag;
         }
-
-        delete xsltransformer;
     }
 
     iodevice->close();

@@ -22,6 +22,8 @@
 
 #include <QString>
 
+class QXmlQuery;
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -32,7 +34,8 @@ public:
      * Create a new instance of a transformer.
      * @param xsltFilename file name of the XSL file
      */
-    static XSLTransform *createXSLTransform(const QString &xsltFilename);
+    XSLTransform(const QString &xsltFilename);
+    ~XSLTransform();
 
     XSLTransform(const XSLTransform &other) = delete;
     XSLTransform &operator= (const XSLTransform &other) = delete;
@@ -45,11 +48,9 @@ public:
      */
     QString transform(const QString &xmlText) const;
 
-protected:
-    XSLTransform(const QString &xsltText);
-
 private:
-    QString xsltText;
+    const QString xsltFilename;
+    QXmlQuery *query;
 };
 
 #endif // KBIBTEX_XSLTRANSFORM_H

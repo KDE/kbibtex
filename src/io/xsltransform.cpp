@@ -26,56 +26,27 @@
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-XSLTransform *XSLTransform::createXSLTransform(const QString &xsltFilename)
-{
-    if (xsltFilename.isEmpty()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Filename xsltFilename=" << xsltFilename << "is empty";
-        return NULL;
-    }
-
-    if (!QFileInfo::exists(xsltFilename)) {
-        qCWarning(LOG_KBIBTEX_IO) << "File xsltFilename=" << xsltFilename << " does not exist";
-        return NULL;
-    }
-
-    QFile xsltFile(xsltFilename);
-    if (xsltFile.open(QFile::ReadOnly)) {
-        const QString xsltText = QString::fromUtf8(xsltFile.readAll().constData());
-        if (xsltText.isEmpty()) {
-            qCWarning(LOG_KBIBTEX_IO) << "File xsltFilename=" << xsltFilename << " is empty";
-            return NULL;
-        } else
-            return new XSLTransform(xsltText);
-    } else {
-        qCWarning(LOG_KBIBTEX_IO) << "File xsltFilename=" << xsltFilename << " cannot be opened for reading";
-        return NULL;
-    }
-}
-
-XSLTransform::XSLTransform(const QString &_xsltText)
-    : xsltText(_xsltText)
+XSLTransform::XSLTransform(const QString &_xsltFilename)
+        : xsltFilename(_xsltFilename), query(new QXmlQuery(QXmlQuery::XSLT20))
 {
     /// nothing
 }
 
+XSLTransform::~XSLTransform() {
+    delete query;
+}
+
 QString XSLTransform::transform(const QString &xmlText) const
 {
-    QXmlQuery query(QXmlQuery::XSLT20);
-
     /// Create QBuffer from QString, set as XML data via setFocus(..)
     QByteArray xmlData(xmlText.toUtf8());
     QBuffer xmlBuffer(&xmlData);
     xmlBuffer.open(QIODevice::ReadOnly);
-    query.setFocus(&xmlBuffer);
-
-    /// Create QBuffer from QString, set as XSLT data via setQuery(..)
-    QByteArray xsltData(xsltText.toUtf8());
-    QBuffer xsltBuffer(&xsltData);
-    xsltBuffer.open(QIODevice::ReadOnly);
-    query.setQuery(&xsltBuffer);
+    query->setFocus(&xmlBuffer);
+    query->setQuery(QUrl::fromLocalFile(xsltFilename));
 
     QString result;
-    if (query.evaluateTo(&result))
+    if (query->evaluateTo(&result))
         return result;
     else
         return QString();

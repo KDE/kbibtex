@@ -41,20 +41,15 @@ private:
     const QString pubMedUrlPrefix;
 
 public:
-    XSLTransform *xslt;
+    XSLTransform xslt;
     int numSteps, curStep;
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
             : p(parent), pubMedUrlPrefix(QStringLiteral("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
-          numSteps(0), curStep(0) {
-        const QString xsltFilename = QStringLiteral("kbibtex/pubmed2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
-        if (xslt == NULL)
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
-    }
-
-    ~OnlineSearchPubMedPrivate() {
-        delete xslt;
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pubmed2bibtex.xsl"))),
+          numSteps(0), curStep(0)
+    {
+        /// nothing
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -132,13 +127,6 @@ void OnlineSearchPubMed::startSearch()
 
 void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    if (d->xslt == NULL) {
-        /// Don't allow searches if xslt is not defined
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot allow searching" << label() << "if XSL Transformation not available";
-        delayedStoppedSearch(resultUnspecifiedError);
-        return;
-    }
-
     d->curStep = 0;
     d->numSteps = 2;
     m_hasBeenCanceled = false;
@@ -241,26 +229,30 @@ void OnlineSearchPubMed::eFetchDone()
         QString input = QString::fromUtf8(reply->readAll().constData());
 
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibTeXcode = d->xslt->transform(input);
-        /// remove XML header
-        if (bibTeXcode[0] == '<')
-            bibTeXcode = bibTeXcode.mid(bibTeXcode.indexOf(QStringLiteral(">")) + 1);
+        QString bibTeXcode = d->xslt.transform(input);
+        if (bibTeXcode.isEmpty()) {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toString();
+            emit stoppedSearch(resultInvalidArguments);
+        } else {  /// remove XML header
+            if (bibTeXcode[0] == '<')
+                bibTeXcode = bibTeXcode.mid(bibTeXcode.indexOf(QStringLiteral(">")) + 1);
 
-        FileImporterBibTeX importer;
-        File *bibtexFile = importer.fromString(bibTeXcode);
+            FileImporterBibTeX importer;
+            File *bibtexFile = importer.fromString(bibTeXcode);
 
-        if (bibtexFile != NULL) {
-            bool hasEntry = false;
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                hasEntry |= publishEntry(entry);
+            if (bibtexFile != NULL) {
+                bool hasEntry = false;
+                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                    QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                    hasEntry |= publishEntry(entry);
+                }
+
+                emit stoppedSearch(resultNoError);
+                emit progress(d->numSteps, d->numSteps);
+                delete bibtexFile;
+            } else {
+                emit stoppedSearch(resultUnspecifiedError);
             }
-
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
-            delete bibtexFile;
-        } else {
-            emit stoppedSearch(resultUnspecifiedError);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();

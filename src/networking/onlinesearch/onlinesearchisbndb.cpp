@@ -31,25 +31,19 @@
 class OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate
 {
 private:
-    // UNUSED OnlineSearchIsbnDB *p;
     static const QString accessKey;
     static const QString booksUrl, authorsUrl;
 
 public:
-    XSLTransform *xslt;
+    XSLTransform xslt;
     QUrl queryUrl;
     int currentPage, maxPage;
 
-    OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ xslt(), currentPage(0), maxPage(0) {
-        const QString xsltFilename = QStringLiteral("kbibtex/isbndb2bibtex.xsl");
-        xslt = XSLTransform::createXSLTransform(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xsltFilename));
-        if (xslt == NULL)
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not create XSLT transformation for" << xsltFilename;
-    }
-
-    ~OnlineSearchIsbnDBPrivate() {
-        delete xslt;
+    OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB *)
+            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/isbndb2bibtex.xsl"))),
+          currentPage(0), maxPage(0)
+    {
+        /// nothing
     }
 
     QUrl buildBooksUrl(const QMap<QString, QString> &query, int numResults) {
@@ -96,13 +90,6 @@ OnlineSearchIsbnDB::~OnlineSearchIsbnDB()
 
 void OnlineSearchIsbnDB::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    if (d->xslt == NULL) {
-        /// Don't allow searches if xslt is not defined
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot allow searching" << label() << "if XSL Transformation not available";
-        delayedStoppedSearch(resultUnspecifiedError);
-        return;
-    }
-
     m_hasBeenCanceled = false;
 
     emit progress(0, d->maxPage);
@@ -156,38 +143,42 @@ void OnlineSearchIsbnDB::downloadDone()
         const QString xmlCode = QString::fromUtf8(reply->readAll().constData());
 
         /// use XSL transformation to get BibTeX document from XML result
-        const QString bibtexCode = d->xslt->transform(xmlCode).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")).replace(QStringLiteral("&amp;"), QStringLiteral("&"));
-
-        FileImporterBibTeX importer;
-        File *bibtexFile = importer.fromString(bibtexCode);
-
-        bool hasEntries = false;
-        if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
-                hasEntries |= publishEntry(entry);
-            }
-            delete bibtexFile;
-
-            if (!hasEntries) {
-                emit stoppedSearch(resultNoError);
-            } else if (d->currentPage >= d->maxPage)
-                emit stoppedSearch(resultNoError);
-            else {
-                ++d->currentPage;
-                QUrl nextUrl = d->queryUrl;
-                QUrlQuery query(nextUrl);
-                query.addQueryItem(QStringLiteral("page_number"), QString::number(d->currentPage));
-                nextUrl.setQuery(query);
-                QNetworkRequest request(nextUrl);
-                QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);
-                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(nextReply);
-                connect(nextReply, &QNetworkReply::finished, this, &OnlineSearchIsbnDB::downloadDone);
-                return;
-            }
+        const QString bibTeXcode = d->xslt.transform(xmlCode).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")).replace(QStringLiteral("&amp;"), QStringLiteral("&"));
+        if (bibTeXcode.isEmpty()) {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toString();
+            emit stoppedSearch(resultInvalidArguments);
         } else {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
-            emit stoppedSearch(resultUnspecifiedError);
+            FileImporterBibTeX importer;
+            File *bibtexFile = importer.fromString(bibTeXcode);
+
+            bool hasEntries = false;
+            if (bibtexFile != NULL) {
+                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                    QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                    hasEntries |= publishEntry(entry);
+                }
+                delete bibtexFile;
+
+                if (!hasEntries) {
+                    emit stoppedSearch(resultNoError);
+                } else if (d->currentPage >= d->maxPage)
+                    emit stoppedSearch(resultNoError);
+                else {
+                    ++d->currentPage;
+                    QUrl nextUrl = d->queryUrl;
+                    QUrlQuery query(nextUrl);
+                    query.addQueryItem(QStringLiteral("page_number"), QString::number(d->currentPage));
+                    nextUrl.setQuery(query);
+                    QNetworkRequest request(nextUrl);
+                    QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);
+                    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(nextReply);
+                    connect(nextReply, &QNetworkReply::finished, this, &OnlineSearchIsbnDB::downloadDone);
+                    return;
+                }
+            } else {
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toString();
+                emit stoppedSearch(resultUnspecifiedError);
+            }
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toString();
