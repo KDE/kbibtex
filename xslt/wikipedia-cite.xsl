@@ -46,6 +46,16 @@
 <xsl:text>hdl|</xsl:text>
 <xsl:value-of select="substring(url/text, 23)" />
 </xsl:when>
+<xsl:when test="starts-with(url/text, 'http://www.jstor.org/stable/')">
+<xsl:text>jstor|</xsl:text>
+<xsl:value-of select="substring(url/text, 28)" />
+<xsl:when test="starts-with(url/text, 'http://doi.acm.org/')">
+<xsl:text>doi|</xsl:text>
+<xsl:value-of select="substring(url/text, 19)" />
+<xsl:when test="starts-with(url/text, 'http://doi.wiley.com/')">
+<xsl:text>doi|</xsl:text>
+<xsl:value-of select="substring(url/text, 21)" />
+</xsl:when>
 <xsl:when test="isbn/text">
 <xsl:text>isbn|</xsl:text>
 <xsl:value-of select="isbn/text" />
@@ -71,7 +81,7 @@
 <xsl:when test="@type='article'">
 <xsl:text>journal</xsl:text>
 <xsl:if test="title/text"><xsl:text>|title=</xsl:text><xsl:value-of select="title/text" /></xsl:if>
-<xsl:if test="url/text"><xsl:text>|issue=</xsl:text><xsl:value-of select="url/text" /></xsl:if>
+<xsl:if test="url/text"><xsl:text>|url=</xsl:text><xsl:value-of select="url/text" /></xsl:if>
 <xsl:if test="year/text"><xsl:text>|year=</xsl:text><xsl:value-of select="year/text" /></xsl:if>
 <xsl:if test="journal/text"><xsl:text>|journal=</xsl:text><xsl:value-of select="journal/text" /></xsl:if>
 <xsl:if test="volume"><xsl:text>|volume=</xsl:text><xsl:value-of select="volume" /></xsl:if>
@@ -90,7 +100,7 @@
 <xsl:when test="@type='book'">
 <xsl:text>book</xsl:text>
 <xsl:if test="title/text"><xsl:text>|title=</xsl:text><xsl:value-of select="title/text" /></xsl:if>
-<xsl:if test="url/text"><xsl:text>|issue=</xsl:text><xsl:value-of select="url/text" /></xsl:if>
+<xsl:if test="url/text"><xsl:text>|url=</xsl:text><xsl:value-of select="url/text" /></xsl:if>
 <xsl:if test="year/text"><xsl:text>|year=</xsl:text><xsl:value-of select="year/text" /></xsl:if>
 <xsl:if test="month"><xsl:text>|month=</xsl:text><xsl:value-of select="month" /></xsl:if>
 <xsl:if test="edition"><xsl:text>|edition=</xsl:text><xsl:value-of select="edition" /></xsl:if>
@@ -125,7 +135,7 @@
 <xsl:when test="@type='techreport'">
 <xsl:text>techreport</xsl:text>
 <xsl:if test="title/text"><xsl:text>|title=</xsl:text><xsl:value-of select="title/text" /></xsl:if>
-<xsl:if test="url/text"><xsl:text>|issue=</xsl:text><xsl:value-of select="url/text" /></xsl:if>
+<xsl:if test="url/text"><xsl:text>|url=</xsl:text><xsl:value-of select="url/text" /></xsl:if>
 <xsl:if test="year/text"><xsl:text>|year=</xsl:text><xsl:value-of select="year/text" /></xsl:if>
 <xsl:if test="month"><xsl:text>|month=</xsl:text><xsl:value-of select="month" /></xsl:if>
 <xsl:if test="number"><xsl:text>|issue=</xsl:text><xsl:value-of select="number" /></xsl:if>
