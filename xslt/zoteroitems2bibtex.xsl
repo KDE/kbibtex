@@ -1,4 +1,4 @@
-<xsl:transform version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:zapi="http://zotero.org/ns/api"  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<xsl:transform version='2.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:zapi="http://zotero.org/ns/api"  xmlns:atom="http://www.w3.org/2005/Atom" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
 <!--
   - This Extensible Stylesheet Language Transformation file translates XML files

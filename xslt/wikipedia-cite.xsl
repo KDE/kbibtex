@@ -1,4 +1,4 @@
-<xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
+<xsl:stylesheet version='2.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 
 <!--
   - This Extensible Stylesheet Language Transformation file translates XML files
@@ -10,7 +10,7 @@
 
 <xsl:output method="text" standalone="yes" omit-xml-declaration="yes" encoding="UTF-8" media-type="text/plain" />
 
-<xsl:template match="entry">
+<xsl:template match="/entry">
 <xsl:text>{{cite </xsl:text>
 
 <xsl:choose>

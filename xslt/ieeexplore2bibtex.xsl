@@ -1,4 +1,4 @@
-<xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
+<xsl:stylesheet version='2.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 
 <!--
   - This Extensible Stylesheet Language Transformation file translates XML files
@@ -8,9 +8,6 @@
   - This file was written by Thomas Fischer <fischer@unix-ag.uni-kl.de>
   - It is released under the GNU Public License version 2 or later.
   -
-  - To run test this transformation file, run e.g.
-  - wget 'http://ieeexplore.ieee.org/gateway/ipsSearch.jsp?querytext=java&au=Wang&hc=10&rs=11&sortfield=ti&sortorder=asc' -O - | xsltproc ieeexplore2bibtex.xsl -
-  - Within KBibTeX, some post-processing on the resulting BibTeX file is done.
   -->
 
 <xsl:output method="text" omit-xml-declaration="yes" indent="no" encoding="UTF-8"/>
@@ -32,7 +29,7 @@
 <xsl:when test="pubtype='Conference Publications'">
 <xsl:text>@inproceedings</xsl:text>
 </xsl:when>
-<xsl:when test="pubtype='Journals &amp; Magazines'">
+<xsl:when test="pubtype='Journals &#160; Magazines'">
 <xsl:text>@article</xsl:text>
 </xsl:when>
 <xsl:otherwise>
@@ -46,16 +43,15 @@
    title={{</xsl:text><xsl:value-of select="title" /><xsl:text>}}</xsl:text></xsl:if>
 
 <!-- Authors -->
-<!-- FIXME replace ';' by 'and' in author list; rename field from "x-author" to "author" -->
 <xsl:if test="authors"><xsl:text>,
-   x-author={</xsl:text><xsl:value-of select="authors" /><xsl:text>}</xsl:text></xsl:if>
+   author={</xsl:text><xsl:value-of select="replace(authors,'\s*;\s*',' and ')" /><xsl:text>}</xsl:text></xsl:if>
 
 <!-- Conference's Title -->
 <xsl:if test="pubtitle and pubtype='Conference Publications'"><xsl:text>,
    booktitle={{</xsl:text><xsl:value-of select="pubtitle" /><xsl:text>}}</xsl:text></xsl:if>
 
 <!-- Journal's Title -->
-<xsl:if test="pubtitle and pubtype='Journals &amp; Magazines'"><xsl:text>,
+<xsl:if test="pubtitle and pubtype='Journals &#160; Magazines'"><xsl:text>,
    journal={{</xsl:text><xsl:value-of select="pubtitle" /><xsl:text>}}</xsl:text></xsl:if>
 
 <!-- Publisher -->

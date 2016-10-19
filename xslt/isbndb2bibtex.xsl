@@ -1,4 +1,4 @@
-<xsl:transform version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
+<xsl:transform version='2.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'>
 
 <!--
   - This Extensible Stylesheet Language Transformation file translates XML files
@@ -33,14 +33,12 @@
 <xsl:value-of select="TitleLong" />
 <xsl:text>}}</xsl:text>
 </xsl:when>
-<xsl:otherwise>
-<xsl:if test="Title and string-length(Title)>2">
+<xsl:when test="Title and string-length(Title)>2">
 <xsl:text>,
     title = {{</xsl:text>
 <xsl:value-of select="Title" />
 <xsl:text>}}</xsl:text>
-</xsl:if>
-</xsl:otherwise>
+</xsl:when>
 </xsl:choose>
 
 <!-- summary/abstract -->
@@ -61,14 +59,13 @@
 
 <!-- authors -->
 <xsl:choose>
-<xsl:when test="AuthorsText and string-length(AuthorsText)>2">
+<xsl:when test="AuthorsText">
 <xsl:text>,
     author = {{</xsl:text>
 <xsl:value-of select="AuthorsText" />
 <xsl:text>}}</xsl:text>
 </xsl:when>
-<xsl:otherwise>
-<xsl:if test="Authors/Person and string-length(Authors/Person)>2">
+<xsl:when test="Authors/Person">
 <xsl:text>,
     author = {</xsl:text>
 <xsl:for-each select="Authors/Person">
@@ -76,8 +73,7 @@
 <xsl:if test="position()!=last()"><xsl:text> and </xsl:text></xsl:if>
 </xsl:for-each>
 <xsl:text>}</xsl:text>
-</xsl:if>
-</xsl:otherwise>
+</xsl:when>
 </xsl:choose>
 
 <!-- ISBN -->
@@ -88,14 +84,12 @@
 <xsl:value-of select="@isbn13" />
 <xsl:text>}</xsl:text>
 </xsl:when>
-<xsl:otherwise>
-<xsl:if test="@isbn and string-length(@isbn)>2">
+<xsl:when test="@isbn and string-length(@isbn)>2">
 <xsl:text>,
     isbn = {</xsl:text>
 <xsl:value-of select="@isbn" />
 <xsl:text>}</xsl:text>
-</xsl:if>
-</xsl:otherwise>
+</xsl:when>
 </xsl:choose>
 
 <!-- closing entry -->

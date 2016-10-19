@@ -1,4 +1,4 @@
-<xsl:transform version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:pam="http://prismstandard.org/namespaces/pam/2.0/" xmlns:prism="http://prismstandard.org/namespaces/basic/2.0/" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<xsl:transform version='2.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:pam="http://prismstandard.org/namespaces/pam/2.0/" xmlns:prism="http://prismstandard.org/namespaces/basic/2.0/" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
 <!--
   - This Extensible Stylesheet Language Transformation file translates XML files

@@ -1,4 +1,4 @@
-<xsl:stylesheet version = '1.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:arxiv="http://arxiv.org/schemas/atom">
+<xsl:stylesheet version='2.0' xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:arxiv="http://arxiv.org/schemas/atom">
 
 <!--
   - This Extensible Stylesheet Language Transformation file translates XML files
