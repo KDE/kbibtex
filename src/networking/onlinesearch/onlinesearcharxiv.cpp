@@ -135,15 +135,15 @@ public:
     void interpreteJournal(Entry &entry) {
         /**
          * TODO examples
-         *  - http://arxiv.org/abs/1111.5338
+         *  - https://arxiv.org/abs/1111.5338
          *    Eur. Phys. J. H 36, 183-201 (2011)
-         *  - http://arxiv.org/abs/1111.5348
+         *  - https://arxiv.org/abs/1111.5348
          *    IJCSI International Journal of Computer Science Issues, Vol. 8, Issue 3, No. 1, 2011, 224-229
-         *  - http://arxiv.org/abs/1110.3379
+         *  - https://arxiv.org/abs/1110.3379
          *    IJCSI International Journal of Computer Science Issues, Vol. 8, Issue 5, No 3, September 2011 ISSN (Online): 1694-0814
-         *  - http://arxiv.org/abs/1102.5769
+         *  - https://arxiv.org/abs/1102.5769
          *    The International Journal of Multimedia & Its Applications, 3(1), 2011
-         *  - http://arxiv.org/abs/1003.3022
+         *  - https://arxiv.org/abs/1003.3022
          *    American Journal of Physics -- April 2010 -- Volume 78, Issue 4, pp. 377-383
          */
         static const QRegExp
@@ -159,11 +159,11 @@ public:
          *   Physics Letters A 297 (2002) 4-8
          *   Appl.Phys. B75 (2002) 655-665
          *   JHEP 0611 (2006) 045
-         *  - http://arxiv.org/abs/1105.4915
+         *  - https://arxiv.org/abs/1105.4915
          *    Astrophys. J. 736 (2011) 7
-         *  - http://arxiv.org/abs/astro-ph/0209123
+         *  - https://arxiv.org/abs/astro-ph/0209123
          *    Astrophys.J. 578 (2002) L103-L106
-         *  - http://arxiv.org/abs/quant-ph/0611139
+         *  - https://arxiv.org/abs/quant-ph/0611139
          *    Journal of Physics: Conference Series 70 (2007) 012003
          * Captures:
          *   1: journal title
@@ -602,7 +602,7 @@ QString OnlineSearchArXiv::label() const
 
 QString OnlineSearchArXiv::favIconUrl() const
 {
-    return QStringLiteral("http://arxiv.org/favicon.ico");
+    return QStringLiteral("https://arxiv.org/favicon.ico");
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchArXiv::customWidget(QWidget *parent)
@@ -612,7 +612,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchArXiv::customWidget(QWidget *parent)
 
 QUrl OnlineSearchArXiv::homepage() const
 {
-    return QUrl(QStringLiteral("http://arxiv.org/"));
+    return QUrl(QStringLiteral("https://arxiv.org/"));
 }
 
 void OnlineSearchArXiv::cancel()
