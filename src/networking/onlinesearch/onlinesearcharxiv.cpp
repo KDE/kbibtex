@@ -272,6 +272,18 @@ public:
          *   7: page end
          */
         journalRef6("^([a-zA-Z. ]+),\\s+(\\d+)\\((\\d+)\\)\\s+(\\(([A-Za-z]+\\s+)?(\\d{4})\\))?\\s+(\\d+)(-(\\d+))?$"),
+        /**
+         * Examples:
+         *  Pacific J. Math. 231 (2007), no. 2, 279–291
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   3: year
+         *   4: number
+         *   5: page start
+         *   6: page end
+         */
+        journalRef7("^([a-zA-Z. ]+[a-zA-Z.])\\s+(\\d+)\\s+\\((\\d+)\\), no\\.\\s+(\\d+),\\s+(\\d)[^ ]+(\\d+)$"),
         generalJour("^[a-z0-9]{,3}[a-z. ]+", Qt::CaseInsensitive), generalYear("\\b(18|19|20)\\d{2}\\b"), generalPages("\\b([1-9]\\d{0,2})\\s*[-]+\\s*([1-9]\\d{0,2})\\b");
         const QString journalText = PlainTextValue::text(entry.value(Entry::ftJournal));
 
@@ -524,6 +536,51 @@ public:
                     entry.insert(Entry::ftPages, v);
                 }
             }
+
+        } else if (journalRef7.indexIn(journalText, Qt::CaseInsensitive) >= 0) {
+            /** Captures:
+             *   1: journal title
+             *   2: volume
+             *   3: year
+             *   4: number
+             *   5: page start
+             *   6: page end
+             */
+
+            QString text;
+            if (!(text = journalRef7.cap(1)).isEmpty()) {
+                Value v;
+                v.append(QSharedPointer<PlainText>(new PlainText(text)));
+                entry.insert(Entry::ftJournal, v);
+            }
+            if (!(text = journalRef7.cap(2)).isEmpty()) {
+                Value v;
+                v.append(QSharedPointer<PlainText>(new PlainText(text)));
+                entry.insert(Entry::ftVolume, v);
+            }
+            if (!(text = journalRef7.cap(3)).isEmpty()) {
+                Value v;
+                v.append(QSharedPointer<PlainText>(new PlainText(text)));
+                entry.insert(Entry::ftYear, v);
+            }
+            if (!(text = journalRef7.cap(4)).isEmpty()) {
+                Value v;
+                v.append(QSharedPointer<PlainText>(new PlainText(text)));
+                entry.insert(Entry::ftNumber, v);
+            }
+            if (!(text = journalRef7.cap(5)).isEmpty()) {
+                const QString endPage = journalRef7.cap(6);
+                if (endPage.isEmpty()) {
+                    Value v;
+                    v.append(QSharedPointer<PlainText>(new PlainText(text)));
+                    entry.insert(Entry::ftPages, v);
+                } else {
+                    Value v;
+                    v.append(QSharedPointer<PlainText>(new PlainText(QString(QStringLiteral("%1%3%2")).arg(text, endPage, QChar(0x2013)))));
+                    entry.insert(Entry::ftPages, v);
+                }
+            }
+
         } else {
             if (generalJour.indexIn(journalText) >= 0) {
                 Value v;
