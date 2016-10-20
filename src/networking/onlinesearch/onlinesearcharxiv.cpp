@@ -173,112 +173,107 @@ public:
          *   6: page end
          */
         journalRef1("^([a-z. ]+[a-z.])\\s*(\\d+)\\s+\\((\\d{4})\\)\\s+([0-9A-Z]+)(-([0-9A-Z]+))?$", Qt::CaseInsensitive),
-
-                    /**
-                     * Examples:
-                     *  Journal of Inefficient Algorithms, Vol. 93, No. 2 (2009), pp. 42-51
-                     *  Stud. Hist. Phil. Mod. Phys., Vol 33 no 3 (2003), pp. 441-468
-                     *  - http://arxiv.org/abs/quant-ph/0311028
-                     *    International Journal of Quantum Information, Vol. 1, No. 4 (2003) 427-441
-                     *  - http://arxiv.org/abs/1003.3521
-                     *    Int. J. Geometric Methods in Modern Physics Vol. 8, No. 1 (2011) 155-165
-                     * Captures:
-                     *   1: journal title
-                     *   2: volume
-                     *   3: number
-                     *   4: year
-                     *   5: page start
-                     *   7: page end
-                     */
-                    journalRef2("^([a-zA-Z. ]+[a-zA-Z.]),\\s+Vol\\.?\\s+(\\d+)[,]?\\s+No\\.?\\s+(\\d+)\\s+\\((\\d{4})\\)[,]?\\s+(pp\\.\\s+)?(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
-
-                    /**
-                     * Examples:
-                     *   Journal of Inefficient Algorithms, volume 4, number 1, pp. 12-21, 2008
-                     *  - http://arxiv.org/abs/cs/0601030
-                     *    Scientometrics, volume 69, number 3, pp. 669-687, 2006
-                     * Captures:
-                     *   1: journal title
-                     *   2: volume
-                     *   3: number
-                     *   4: page start
-                     *   6: page end
-                     *   7: year
-                     */
-                    journalRef3("^([a-zA-Z. ]+),\\s+volume\\s+(\\d+),\\s+number\\s+(\\d+),\\s+pp\\.\\s+(\\d+)(-(\\d+))?,\\s+(\\d{4})$", Qt::CaseInsensitive),
-
-                    /**
-                     * Examples:
-                     *  Journal of Inefficient Algorithms 4(1): 101-122, 2010
-                     *  JHEP0809:131,2008
-                     *  Phys.Rev.D78:013004,2008
-                     *  Lect.NotesPhys.690:107-127,2006
-                     *  Europhys. Letters 70:1-7 (2005)
-                     *  - http://arxiv.org/abs/quant-ph/0608209
-                     *    J.Phys.A40:9025-9032,2007
-                     *  - http://arxiv.org/abs/hep-th/9907001
-                     *    Phys.Rev.Lett.85:5042-5045,2000
-                     *  - http://arxiv.org/abs/physics/0606007
-                     *    Journal of Conflict Resolution 51(1): 58 - 88 (2007)
-                     *  - http://arxiv.org/abs/arxiv:cs/0609126
-                     *    Learn.Publ.20:16-22,2007
-                     *  - http://arxiv.org/abs/cs/9901005
-                     *    Journal of Artificial Intelligence Research (JAIR), 9:247-293
-                     *  - http://arxiv.org/abs/hep-ph/0403113
-                     *    Nucl.Instrum.Meth.A534:250-259,2004
-                     * Captures:
-                     *   1: journal title
-                     *   2: volume
-                     *   4: number
-                     *   5: page start
-                     *   7: page end
-                     *   9 or 10: year
-                     */
-                    journalRef4("^([a-z. ()]+)[,]?\\s*(\\d+)(\\((\\d+)\\))?:\\s*(\\d+)(\\s*-\\s*(\\d+))?(,\\s*(\\d{4})|\\s+\\((\\d{4})\\))?$", Qt::CaseInsensitive),
-
-                    /**
-                     * Examples:
-                     *  Journal of Inefficient Algorithms vol. 31, 4 2000
-                     *  Phys. Rev. A 71, 032339 (2005)
-                     *  Phys. Rev. Lett. 91, 027901 (2003)
-                     *  Phys. Rev. A 78, 013620 (2008)
-                     *  Phys. Rev. E 62, 1842 (2000)
-                     *  J. Math. Phys. 49, 032105 (2008)
-                     *  Phys. Rev. Lett. 91, 217905 (2003).
-                     *  Physical Review B vol. 66, 161320(R) (2002)
-                     *  - http://arxiv.org/abs/1003.1050
-                     *    Phys. Rev. A 82, 012304 (2010)
-                     *  - http://arxiv.org/abs/quant-ph/0607107
-                     *    J. Mod. Opt., 54, 2211 (2007)
-                     *  - http://arxiv.org/abs/quant-ph/0602069
-                     *    New J. Phys. 8, 58 (2006)
-                     *  - http://arxiv.org/abs/quant-ph/0610030
-                     *    Rev. Mod. Phys. 79, 555 (2007)
-                     *  - http://arxiv.org/abs/1007.2292
-                     *    J. Phys. A: Math. Theor. 44, 145304 (2011)
-                     * Captures:
-                     *   1: journal title
-                     *   3: volume
-                     *   4: page start
-                     *   6: year
-                     */
-                    journalRef5("^([a-zA-Z. ]+)\\s+(vol\\.\\s+)?(\\d+),\\s+(\\d+)(\\([A-Z]+\\))?\\s+\\((\\d{4})\\)[.]?$", Qt::CaseInsensitive),
-
-                    /**
-                     * Examples:
-                     *  Journal of Inefficient Algorithms, 11(2) (1999) 42-55
-                     *  Learned Publishing, 20(1) (January 2007) 16-22
-                     * Captures:
-                     *   1: journal title
-                     *   2: volume
-                     *   3: number
-                     *   4: year
-                     *   5: page start
-                     *   7: page end
-                     */
-                    journalRef6("^([a-zA-Z. ]+),\\s+(\\d+)\\((\\d+)\\)\\s+(\\(([A-Za-z]+\\s+)?(\\d{4})\\))?\\s+(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
-                    generalJour("^[a-z0-9]{,3}[a-z. ]+", Qt::CaseInsensitive), generalYear("\\b(18|19|20)\\d{2}\\b"), generalPages("\\b([1-9]\\d{0,2})\\s*[-]+\\s*([1-9]\\d{0,2})\\b");
-        QString journalText = PlainTextValue::text(entry.value(Entry::ftJournal));
+        /**
+         * Examples:
+         *  Journal of Inefficient Algorithms, Vol. 93, No. 2 (2009), pp. 42-51
+         *  Stud. Hist. Phil. Mod. Phys., Vol 33 no 3 (2003), pp. 441-468
+         *  - https://arxiv.org/abs/quant-ph/0311028
+         *    International Journal of Quantum Information, Vol. 1, No. 4 (2003) 427-441
+         *  - https://arxiv.org/abs/1003.3521
+         *    Int. J. Geometric Methods in Modern Physics Vol. 8, No. 1 (2011) 155-165
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   3: number
+         *   4: year
+         *   5: page start
+         *   7: page end
+         */
+        journalRef2("^([a-zA-Z. ]+[a-zA-Z.]),\\s+Vol\\.?\\s+(\\d+)[,]?\\s+No\\.?\\s+(\\d+)\\s+\\((\\d{4})\\)[,]?\\s+(pp\\.\\s+)?(\\d+)(-(\\d+))?$", Qt::CaseInsensitive),
+        /**
+         * Examples:
+         *   Journal of Inefficient Algorithms, volume 4, number 1, pp. 12-21, 2008
+         *  - https://arxiv.org/abs/cs/0601030
+         *    Scientometrics, volume 69, number 3, pp. 669-687, 2006
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   3: number
+         *   4: page start
+         *   6: page end
+         *   7: year
+         */
+        journalRef3("^([a-zA-Z. ]+),\\s+volume\\s+(\\d+),\\s+number\\s+(\\d+),\\s+pp\\.\\s+(\\d+)(-(\\d+))?,\\s+(\\d{4})$", Qt::CaseInsensitive),
+        /**
+         * Examples:
+         *  Journal of Inefficient Algorithms 4(1): 101-122, 2010
+         *  JHEP0809:131,2008
+         *  Phys.Rev.D78:013004,2008
+         *  Lect.NotesPhys.690:107-127,2006
+         *  Europhys. Letters 70:1-7 (2005)
+         *  - https://arxiv.org/abs/quant-ph/0608209
+         *    J.Phys.A40:9025-9032,2007
+         *  - https://arxiv.org/abs/hep-th/9907001
+         *    Phys.Rev.Lett.85:5042-5045,2000
+         *  - https://arxiv.org/abs/physics/0606007
+         *    Journal of Conflict Resolution 51(1): 58 - 88 (2007)
+         *  - https://arxiv.org/abs/arxiv:cs/0609126
+         *    Learn.Publ.20:16-22,2007
+         *  - https://arxiv.org/abs/cs/9901005
+         *    Journal of Artificial Intelligence Research (JAIR), 9:247-293
+         *  - https://arxiv.org/abs/hep-ph/0403113
+         *    Nucl.Instrum.Meth.A534:250-259,2004
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   4: number
+         *   5: page start
+         *   7: page end
+         *   9 or 10: year
+         */
+        journalRef4("^([a-z. ()]+)[,]?\\s*(\\d+)(\\((\\d+)\\))?:\\s*(\\d+)(\\s*-\\s*(\\d+))?(,\\s*(\\d{4})|\\s+\\((\\d{4})\\))?$", Qt::CaseInsensitive),
+        /**
+         * Examples:
+         *  Journal of Inefficient Algorithms vol. 31, 4 2000
+         *  Phys. Rev. A 71, 032339 (2005)
+         *  Phys. Rev. Lett. 91, 027901 (2003)
+         *  Phys. Rev. A 78, 013620 (2008)
+         *  Phys. Rev. E 62, 1842 (2000)
+         *  J. Math. Phys. 49, 032105 (2008)
+         *  Phys. Rev. Lett. 91, 217905 (2003).
+         *  Physical Review B vol. 66, 161320(R) (2002)
+         *  - https://arxiv.org/abs/1003.1050
+         *    Phys. Rev. A 82, 012304 (2010)
+         *  - https://arxiv.org/abs/quant-ph/0607107
+         *    J. Mod. Opt., 54, 2211 (2007)
+         *  - https://arxiv.org/abs/quant-ph/0602069
+         *    New J. Phys. 8, 58 (2006)
+         *  - https://arxiv.org/abs/quant-ph/0610030
+         *    Rev. Mod. Phys. 79, 555 (2007)
+         *  - https://arxiv.org/abs/1007.2292
+         *    J. Phys. A: Math. Theor. 44, 145304 (2011)
+         * Captures:
+         *   1: journal title
+         *   3: volume
+         *   4: page start
+         *   6: year
+         */
+        journalRef5("^([a-zA-Z. ]+)\\s+(vol\\.\\s+)?(\\d+),\\s+(\\d+)(\\([A-Z]+\\))?\\s+\\((\\d{4})\\)[.]?$"),
+        /**
+         * Examples:
+         *  Journal of Inefficient Algorithms, 11(2) (1999) 42-55
+         *  Learned Publishing, 20(1) (January 2007) 16-22
+         * Captures:
+         *   1: journal title
+         *   2: volume
+         *   3: number
+         *   4: year
+         *   5: page start
+         *   7: page end
+         */
+        journalRef6("^([a-zA-Z. ]+),\\s+(\\d+)\\((\\d+)\\)\\s+(\\(([A-Za-z]+\\s+)?(\\d{4})\\))?\\s+(\\d+)(-(\\d+))?$"),
+        generalJour("^[a-z0-9]{,3}[a-z. ]+", Qt::CaseInsensitive), generalYear("\\b(18|19|20)\\d{2}\\b"), generalPages("\\b([1-9]\\d{0,2})\\s*[-]+\\s*([1-9]\\d{0,2})\\b");
+        const QString journalText = PlainTextValue::text(entry.value(Entry::ftJournal));
 
         /// nothing to do on empty journal text
         if (journalText.isEmpty()) return;
