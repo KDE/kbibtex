@@ -512,11 +512,6 @@ public:
                 v.append(QSharedPointer<PlainText>(new PlainText(text)));
                 entry.insert(Entry::ftYear, v);
             }
-            if (!(text = journalRef6.cap(4)).isEmpty()) {
-                Value v;
-                v.append(QSharedPointer<PlainText>(new PlainText(text)));
-                entry.insert(Entry::ftPages, v);
-            }
             if (!(text = journalRef6.cap(5)).isEmpty()) {
                 const QString endPage = journalRef6.cap(7);
                 if (endPage.isEmpty()) {
