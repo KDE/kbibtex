@@ -679,7 +679,7 @@ void OnlineSearchArXiv::downloadDone()
         result = result.remove(QStringLiteral("xmlns=\"http://www.w3.org/2005/Atom\"")); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result
-        const QString bibTeXcode = d->xslt.transform(result).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        const QString bibTeXcode = d->xslt.transform(result);
         if (bibTeXcode.isEmpty()) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
             emit stoppedSearch(resultInvalidArguments);
