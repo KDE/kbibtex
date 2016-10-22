@@ -44,7 +44,7 @@ public:
     XSLTransform xslt;
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
-            : p(parent), pubMedUrlPrefix(QStringLiteral("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
+            : p(parent), pubMedUrlPrefix(QStringLiteral("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
           xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pubmed2bibtex.xsl")))
     {
         /// nothing
@@ -142,12 +142,12 @@ QString OnlineSearchPubMed::label() const
 
 QString OnlineSearchPubMed::favIconUrl() const
 {
-    return QStringLiteral("http://www.ncbi.nlm.nih.gov/favicon.ico");
+    return QStringLiteral("https://www.ncbi.nlm.nih.gov/favicon.ico");
 }
 
 QUrl OnlineSearchPubMed::homepage() const
 {
-    return QUrl(QStringLiteral("http://www.ncbi.nlm.nih.gov/pubmed/"));
+    return QUrl(QStringLiteral("https://www.ncbi.nlm.nih.gov/pubmed/"));
 }
 
 void OnlineSearchPubMed::eSearchDone()
