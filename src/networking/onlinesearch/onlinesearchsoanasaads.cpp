@@ -80,3 +80,16 @@ QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
 
     return QUrl::fromUserInput(urlText);
 }
+
+QString OnlineSearchSOANASAADS::processRawDownload(const QString &download) {
+    /// Skip HTML header and some other non-BibTeX content
+    const int p1 = download.indexOf(QStringLiteral("abstracts, starting"));
+    if (p1 > 1) {
+        const int p2 = download.indexOf(QStringLiteral("\n"), p1);
+        if (p2 > p1)
+            return download.mid(p2 + 1);
+    }
+
+    /// Skipping header failed, return input text as it was
+    return download;
+}

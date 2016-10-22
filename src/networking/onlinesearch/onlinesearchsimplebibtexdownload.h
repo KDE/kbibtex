@@ -33,6 +33,7 @@ public:
 
 protected:
     virtual QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) = 0;
+    virtual QString processRawDownload(const QString &download);
 
 private slots:
     void downloadDone();

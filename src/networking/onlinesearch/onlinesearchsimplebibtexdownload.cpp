@@ -41,6 +41,11 @@ void OnlineSearchSimpleBibTeXDownload::startSearch(const QMap<QString, QString> 
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchSimpleBibTeXDownload::downloadDone);
 }
 
+QString OnlineSearchSimpleBibTeXDownload::processRawDownload(const QString &download) {
+    /// Default implementation does not do anything
+    return download;
+}
+
 void OnlineSearchSimpleBibTeXDownload::downloadDone()
 {
     emit progress(++curStep, numSteps = 2);

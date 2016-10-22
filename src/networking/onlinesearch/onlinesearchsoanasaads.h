@@ -35,6 +35,7 @@ public:
 protected:
     virtual QString favIconUrl() const;
     virtual QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
+    virtual QString processRawDownload(const QString &download);
 };
 
 #endif // KBIBTEX_ONLINESEARCH_SOANASAADS_H
