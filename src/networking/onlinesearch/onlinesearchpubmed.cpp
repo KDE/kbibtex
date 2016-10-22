@@ -98,11 +98,8 @@ public:
     }
 
     QUrl buildFetchIdUrl(const QStringList &idList) {
-        QString url = pubMedUrlPrefix + QStringLiteral("efetch.fcgi?retmode=xml&db=pubmed&id=");
-
-        url.append(idList.join(QStringLiteral(",")));
-
-        return QUrl(url);
+        const QString urlText = pubMedUrlPrefix + QStringLiteral("efetch.fcgi?retmode=xml&db=pubmed&id=") + idList.join(QStringLiteral(","));
+        return QUrl::fromUserInput(urlText);
     }
 };
 

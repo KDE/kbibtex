@@ -68,7 +68,7 @@ void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int n
     if (!title.isEmpty())
         urlText.append(QString(QStringLiteral(" title:%1")).arg(title));
 
-    QNetworkRequest request(urlText);
+    QNetworkRequest request(QUrl::fromUserInput(urlText));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultsPageDone);

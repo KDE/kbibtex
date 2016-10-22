@@ -78,5 +78,5 @@ QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
     /// set number of expected results
     urlText.append(QString(QStringLiteral("&nr_to_return=%1")).arg(numResults));
 
-    return QUrl(urlText);
+    return QUrl::fromUserInput(urlText);
 }
