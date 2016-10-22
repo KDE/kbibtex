@@ -42,6 +42,7 @@ OnlineSearchMRLookup::OnlineSearchMRLookup(QWidget *parent)
 void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
 {
     m_hasBeenCanceled = false;
+    emit progress(curStep = 0, numSteps = 1);
 
     QUrl url(queryUrlStem);
     QUrlQuery q(url);
@@ -58,19 +59,11 @@ void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
 
     q.addQueryItem(QStringLiteral("format"), QStringLiteral("bibtex"));
 
-    emit progress(0, 1);
-
     url.setQuery(q);
     QNetworkRequest request(url);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchMRLookup::doneFetchingResultPage);
-}
-
-void OnlineSearchMRLookup::startSearch()
-{
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
 }
 
 QString OnlineSearchMRLookup::label() const
@@ -83,26 +76,16 @@ QString OnlineSearchMRLookup::favIconUrl() const
     return QStringLiteral("http://www.ams.org/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchMRLookup::customWidget(QWidget *)
-{
-    return NULL;
-}
-
 QUrl OnlineSearchMRLookup::homepage() const
 {
     return QUrl(QStringLiteral("http://www.ams.org/mrlookup"));
-}
-
-void OnlineSearchMRLookup::cancel()
-{
-    OnlineSearchAbstract::cancel();
 }
 
 void OnlineSearchMRLookup::doneFetchingResultPage()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    emit progress(1, 1);
+    emit progress(curStep = numSteps, numSteps);
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
@@ -127,7 +110,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
             delete bibtexFile;
         }
 
-        emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
+        stopSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }

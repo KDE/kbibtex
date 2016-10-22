@@ -31,17 +31,12 @@ public:
     explicit OnlineSearchPubMed(QWidget *parent);
     ~OnlineSearchPubMed();
 
-    virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
-    virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
     virtual QUrl homepage() const;
 
     static const int maxNumResults;
     static const uint queryChokeTimeout;
-
-public slots:
-    void cancel();
 
 protected:
     virtual QString favIconUrl() const;

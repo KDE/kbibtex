@@ -66,6 +66,7 @@ OnlineSearchMathSciNet::~OnlineSearchMathSciNet()
 void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
+    emit progress(curStep = 0, numSteps = 3);
 
     d->queryParameters.clear();
     d->numResults = qMin(50, numResults); /// limit query to max 50 elements
@@ -104,20 +105,11 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
         d->queryParameters.insert(QStringLiteral("arg3"), year);
     }
 
-    emit progress(0, 3);
-
     /// issue request for start page
     QNetworkRequest request(OnlineSearchMathSciNetPrivate::queryFormUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingQueryForm);
-}
-
-void OnlineSearchMathSciNet::startSearch()
-{
-    d->queryParameters.clear();
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
 }
 
 QString OnlineSearchMathSciNet::label() const
@@ -130,26 +122,16 @@ QString OnlineSearchMathSciNet::favIconUrl() const
     return QStringLiteral("http://www.ams.org/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchMathSciNet::customWidget(QWidget *)
-{
-    return NULL;
-}
-
 QUrl OnlineSearchMathSciNet::homepage() const
 {
     return QUrl(QStringLiteral("http://www.ams.org/mathscinet/help/about.html"));
-}
-
-void OnlineSearchMathSciNet::cancel()
-{
-    OnlineSearchAbstract::cancel();
 }
 
 void OnlineSearchMathSciNet::doneFetchingQueryForm()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    emit progress(1, 3);
+    emit progress(++curStep, numSteps);
 
     if (handleErrors(reply)) {
         // UNUSED const QString htmlText = QString::fromUtf8(reply->readAll().constData());
@@ -182,7 +164,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    emit progress(2, 3);
+    emit progress(++curStep, numSteps);
 
     if (handleErrors(reply)) {
         const QString htmlText = QString::fromUtf8(reply->readAll().constData());
@@ -215,8 +197,8 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingBibTeXcode);
         } else {
             /// nothing found
-            emit progress(3, 3);
-            emit stoppedSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
+            stopSearch(resultNoError);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -226,7 +208,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    emit progress(3, 3);
+    emit progress(curStep = numSteps, numSteps);
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
@@ -252,7 +234,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
             delete bibtexFile;
         }
 
-        emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
+        stopSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }

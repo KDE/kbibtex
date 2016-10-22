@@ -116,10 +116,9 @@ private:
 
 public:
     OnlineSearchQueryFormBibsonomy *form;
-    int numSteps, curStep;
 
     OnlineSearchBibsonomyPrivate(OnlineSearchBibsonomy *parent)
-            : p(parent), form(NULL), numSteps(0), curStep(0) {
+            : p(parent), form(NULL) {
         // nothing
     }
 
@@ -185,31 +184,25 @@ OnlineSearchBibsonomy::~OnlineSearchBibsonomy()
 void OnlineSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    d->curStep = 0;
-    d->numSteps = 1;
+    emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
-
-    emit progress(0, d->numSteps);
 }
 
-void OnlineSearchBibsonomy::startSearch()
+void OnlineSearchBibsonomy::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
-    d->curStep = 0;
-    d->numSteps = 1;
+    emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
 
-    emit progress(0, d->numSteps);
-
-    d->form->saveState();
+    emit progress(0, numSteps);
 }
 
 QString OnlineSearchBibsonomy::label() const
@@ -234,14 +227,9 @@ QUrl OnlineSearchBibsonomy::homepage() const
     return QUrl(QStringLiteral("http://www.bibsonomy.org/"));
 }
 
-void OnlineSearchBibsonomy::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchBibsonomy::downloadDone()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -260,18 +248,18 @@ void OnlineSearchBibsonomy::downloadDone()
                     hasEntries |= publishEntry(entry);
                 }
 
-                emit stoppedSearch(resultNoError);
-                emit progress(d->numSteps, d->numSteps);
+                stopSearch(resultNoError);
+                emit progress(curStep = numSteps, numSteps);
 
                 delete bibtexFile;
             } else {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
-                emit stoppedSearch(resultUnspecifiedError);
+                stopSearch(resultUnspecifiedError);
             }
         } else {
             /// returned file is empty
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();

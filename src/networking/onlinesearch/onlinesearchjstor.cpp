@@ -33,12 +33,12 @@ private:
     // UNUSED OnlineSearchJStor *p;
 
 public:
-    int numExpectedResults, curStep, numSteps;
+    int numExpectedResults;
     static const QString jstorBaseUrl;
     QUrl queryUrl;
 
     OnlineSearchJStorPrivate(OnlineSearchJStor */* UNUSED parent*/)
-        : /* UNUSED p(parent), */ numExpectedResults(0), curStep(0), numSteps(0)
+        : /* UNUSED p(parent), */ numExpectedResults(0)
     {
         /// nothing
     }
@@ -60,8 +60,7 @@ OnlineSearchJStor::~OnlineSearchJStor()
 void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    d->curStep = 0;
-    d->numSteps = 3;
+    emit progress(curStep = 0, numSteps = 3);
     d->numExpectedResults = numResults;
 
     /// Build search URL, to be used in the second step
@@ -106,13 +105,6 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingStartPage);
-    emit progress(d->curStep, d->numSteps);
-}
-
-void OnlineSearchJStor::startSearch()
-{
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
 }
 
 QString OnlineSearchJStor::label() const
@@ -125,31 +117,21 @@ QString OnlineSearchJStor::favIconUrl() const
     return QStringLiteral("http://www.jstor.org/assets/search_20151218T0921/files/search/images/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchJStor::customWidget(QWidget *)
-{
-    return NULL;
-}
-
 QUrl OnlineSearchJStor::homepage() const
 {
     return QUrl(QStringLiteral("http://www.jstor.org/"));
 }
 
-void OnlineSearchJStor::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchJStor::doneFetchingStartPage()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     QUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
-            ++d->numSteps;
+            ++numSteps;
 
             /// redirection to another url
             QNetworkRequest request(redirUrl);
@@ -168,7 +150,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
 
 void OnlineSearchJStor::doneFetchingResultPage()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -190,8 +172,8 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
         if (uniqueDOIs.isEmpty()) {
             /// No results found
-            emit progress(d->numSteps, d->numSteps);
-            emit stoppedSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
+            stopSearch(resultNoError);
         } else {
             /// Build POST request that should return a BibTeX document
             QString body;
@@ -214,7 +196,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
 void OnlineSearchJStor::doneFetchingBibTeXCode()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -235,8 +217,8 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
             delete bibtexFile;
         }
 
-        emit progress(d->numSteps, d->numSteps);
-        emit stoppedSearch(numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
+        emit progress(curStep = numSteps, numSteps);
+        stopSearch(numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }

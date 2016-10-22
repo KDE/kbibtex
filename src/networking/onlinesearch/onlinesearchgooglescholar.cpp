@@ -49,10 +49,9 @@ public:
     QString setConfigPageUrl;
     QString queryPageUrl;
     FileImporterBibTeX importer;
-    int numSteps, curStep;
 
     OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar */* UNUSED parent*/)
-        : /* UNUSED p(parent), */ numResults(0), numSteps(0), curStep(0)
+        : /* UNUSED p(parent), */ numResults(0)
     {
         startPageUrl = QStringLiteral("https://scholar.google.com/");
         configPageUrl = QStringLiteral("https://%1/scholar_settings");
@@ -122,18 +121,11 @@ OnlineSearchGoogleScholar::~OnlineSearchGoogleScholar()
     delete d;
 }
 
-void OnlineSearchGoogleScholar::startSearch()
-{
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
-}
-
 void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     d->numResults = numResults;
     m_hasBeenCanceled = false;
-    d->curStep = 0;
-    d->numSteps = numResults + 4;
+    emit progress(curStep = 0, numSteps = numResults + 4);
 
     QStringList queryFragments;
     foreach (const QString & queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
@@ -155,13 +147,11 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingStartPage);
-
-    emit progress(0, d->numSteps);
 }
 
 void OnlineSearchGoogleScholar::doneFetchingStartPage()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -169,7 +159,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
     if (handleErrors(reply, newDomainUrl)) {
         if (newDomainUrl.isValid() && newDomainUrl != reply->url()) {
             /// following redirection to country-specific domain
-            ++d->numSteps;
+            ++numSteps;
             QNetworkRequest request(newDomainUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
@@ -193,7 +183,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 
 void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -222,7 +212,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
 void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -248,7 +238,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 
 void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -288,8 +278,8 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
             d->listBibTeXurls.erase(d->listBibTeXurls.begin());
         } else {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -297,7 +287,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 
 void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     /// Extract previously stored URLs from reply
@@ -308,7 +298,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
     if (handleErrors(reply, newDomainUrl)) {
         if (newDomainUrl.isValid() && newDomainUrl != reply->url()) {
             /// following redirection to country-specific domain
-            ++d->numSteps;
+            ++numSteps;
             QNetworkRequest request(newDomainUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
@@ -348,7 +338,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 
             if (!hasEntry) {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
-                emit stoppedSearch(resultUnspecifiedError);
+                stopSearch(resultUnspecifiedError);
                 return;
             }
 
@@ -371,8 +361,8 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                 connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
                 d->listBibTeXurls.erase(d->listBibTeXurls.begin());
             } else {
-                emit stoppedSearch(resultNoError);
-                emit progress(d->numSteps, d->numSteps);
+                stopSearch(resultNoError);
+                emit progress(curStep = numSteps, numSteps);
             }
         }
     } else
@@ -389,17 +379,7 @@ QString OnlineSearchGoogleScholar::favIconUrl() const
     return QStringLiteral("https://scholar.google.com/favicon-png.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchGoogleScholar::customWidget(QWidget *)
-{
-    return NULL;
-}
-
 QUrl OnlineSearchGoogleScholar::homepage() const
 {
     return QUrl(QStringLiteral("https://scholar.google.com/"));
-}
-
-void OnlineSearchGoogleScholar::cancel()
-{
-    OnlineSearchAbstract::cancel();
 }

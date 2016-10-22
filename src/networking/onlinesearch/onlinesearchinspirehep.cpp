@@ -30,12 +30,6 @@ QString OnlineSearchInspireHep::label() const
     return i18n("Inspire High-Energy Physics Literature Database");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchInspireHep::customWidget(QWidget *parent)
-{
-    Q_UNUSED(parent)
-    return NULL;
-}
-
 QUrl OnlineSearchInspireHep::homepage() const
 {
     return QUrl(QStringLiteral("http://inspirehep.net/"));

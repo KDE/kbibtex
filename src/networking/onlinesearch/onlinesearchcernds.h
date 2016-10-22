@@ -31,7 +31,6 @@ public:
     explicit OnlineSearchCERNDS(QWidget *parent);
 
     virtual QString label() const;
-    virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
     virtual QUrl homepage() const;
 
 protected:

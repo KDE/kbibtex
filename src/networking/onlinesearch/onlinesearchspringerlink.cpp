@@ -234,13 +234,13 @@ OnlineSearchSpringerLink::~OnlineSearchSpringerLink()
     delete d;
 }
 
-void OnlineSearchSpringerLink::startSearch()
+void OnlineSearchSpringerLink::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
+    emit progress(curStep = 0, numSteps = 1);
 
     QUrl springerLinkSearchUrl = d->buildQueryUrl();
 
-    emit progress(0, 1);
     QNetworkRequest request(springerLinkSearchUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
@@ -258,7 +258,7 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
     q.addQueryItem(QStringLiteral("p"), QString::number(numResults));
     springerLinkSearchUrl.setQuery(q);
 
-    emit progress(0, 1);
+    emit progress(curStep = 0, numSteps = 1);
     QNetworkRequest request(springerLinkSearchUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
@@ -287,11 +287,6 @@ QUrl OnlineSearchSpringerLink::homepage() const
     return QUrl(QStringLiteral("http://www.springerlink.com/"));
 }
 
-void OnlineSearchSpringerLink::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchSpringerLink::doneFetchingPAM()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
@@ -302,7 +297,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
         const QString bibTeXcode = d->xslt.transform(xmlSource).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         if (bibTeXcode.isEmpty()) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
-            emit stoppedSearch(resultInvalidArguments);
+            stopSearch(resultInvalidArguments);
         } else {
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);
@@ -314,17 +309,18 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
                     hasEntries |= publishEntry(entry);
                 }
 
-                emit stoppedSearch(resultNoError);
-                emit progress(1, 1);
+                stopSearch(resultNoError);
 
                 delete bibtexFile;
             } else {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
-                emit stoppedSearch(resultUnspecifiedError);
+                stopSearch(resultUnspecifiedError);
             }
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    emit progress(curStep = numSteps, numSteps);
 }
 
 #include "onlinesearchspringerlink.moc"

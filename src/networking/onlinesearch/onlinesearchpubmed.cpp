@@ -42,12 +42,10 @@ private:
 
 public:
     XSLTransform xslt;
-    int numSteps, curStep;
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
             : p(parent), pubMedUrlPrefix(QStringLiteral("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pubmed2bibtex.xsl"))),
-          numSteps(0), curStep(0)
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pubmed2bibtex.xsl")))
     {
         /// nothing
     }
@@ -119,17 +117,10 @@ OnlineSearchPubMed::~OnlineSearchPubMed()
     delete d;
 }
 
-void OnlineSearchPubMed::startSearch()
-{
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
-}
-
 void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    d->curStep = 0;
-    d->numSteps = 2;
     m_hasBeenCanceled = false;
+    emit progress(curStep = 0, numSteps = 2);
 
     /// enforcing limit on number of results
     numResults = qMin(maxNumResults, numResults);
@@ -144,8 +135,6 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchPubMed::eSearchDone);
-
-    emit progress(0, d->numSteps);
 }
 
 
@@ -159,24 +148,14 @@ QString OnlineSearchPubMed::favIconUrl() const
     return QStringLiteral("http://www.ncbi.nlm.nih.gov/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchPubMed::customWidget(QWidget *)
-{
-    return NULL;
-}
-
 QUrl OnlineSearchPubMed::homepage() const
 {
     return QUrl(QStringLiteral("http://www.ncbi.nlm.nih.gov/pubmed/"));
 }
 
-void OnlineSearchPubMed::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchPubMed::eSearchDone()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
     lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
@@ -200,7 +179,7 @@ void OnlineSearchPubMed::eSearchDone()
             }
 
             if (idList.isEmpty()) {
-                emit stoppedSearch(resultUnspecifiedError);
+                stopSearch(resultUnspecifiedError);
             } else {
                 /// fetch full bibliographic details for found PubMed ids
                 QNetworkRequest request(d->buildFetchIdUrl(idList));
@@ -210,8 +189,8 @@ void OnlineSearchPubMed::eSearchDone()
             }
         } else {
             /// search resulted in no hits (and PubMed told so)
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -219,7 +198,7 @@ void OnlineSearchPubMed::eSearchDone()
 
 void OnlineSearchPubMed::eFetchDone()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
     lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
@@ -232,7 +211,7 @@ void OnlineSearchPubMed::eFetchDone()
         QString bibTeXcode = d->xslt.transform(input);
         if (bibTeXcode.isEmpty()) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
-            emit stoppedSearch(resultInvalidArguments);
+            stopSearch(resultInvalidArguments);
         } else {  /// remove XML header
             if (bibTeXcode[0] == '<')
                 bibTeXcode = bibTeXcode.mid(bibTeXcode.indexOf(QStringLiteral(">")) + 1);
@@ -247,11 +226,11 @@ void OnlineSearchPubMed::eFetchDone()
                     hasEntry |= publishEntry(entry);
                 }
 
-                emit stoppedSearch(resultNoError);
-                emit progress(d->numSteps, d->numSteps);
+                stopSearch(resultNoError);
+                emit progress(curStep = numSteps, numSteps);
                 delete bibtexFile;
             } else {
-                emit stoppedSearch(resultUnspecifiedError);
+                stopSearch(resultUnspecifiedError);
             }
         }
     } else

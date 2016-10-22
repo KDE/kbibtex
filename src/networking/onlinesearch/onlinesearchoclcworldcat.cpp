@@ -190,7 +190,7 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
 
             if (!hasEntries) {
                 emit progress(d->maxSteps, d->maxSteps);
-                emit stoppedSearch(resultNoError);
+                stopSearch(resultNoError);
             } else if (d->curStep < d->maxSteps) {
                 QUrl nextUrl = d->baseUrl;
                 QUrlQuery query(nextUrl);
@@ -203,11 +203,11 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
                 connect(newReply, &QNetworkReply::finished, this, SLOT(downloadDone()));
             } else {
                 emit progress(d->maxSteps, d->maxSteps);
-                emit stoppedSearch(resultNoError);
+                stopSearch(resultNoError);
             }
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
-            emit stoppedSearch(resultUnspecifiedError);
+            stopSearch(resultUnspecifiedError);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();

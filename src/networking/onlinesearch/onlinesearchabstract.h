@@ -89,13 +89,14 @@ public:
     static const int resultNetworkError;
     static const int resultInvalidArguments;
 
-    virtual void startSearch() = 0;
+    virtual void startSearchFromForm();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
     QString name();
     virtual QIcon icon(QListWidgetItem *listWidgetItem = NULL);
-    virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) = 0;
+    virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
     virtual QUrl homepage() const = 0;
+    virtual bool busy() const;
 
 public slots:
     void cancel();
@@ -103,6 +104,8 @@ public slots:
 protected:
     QWidget *m_parent;
     bool m_hasBeenCanceled;
+
+    int numSteps, curStep;
 
     virtual QString favIconUrl() const = 0;
 
@@ -165,6 +168,8 @@ protected:
      * @return returns true if a valid entry was passed to this function and all steps could be performed.
      */
     bool publishEntry(QSharedPointer<Entry> entry);
+
+    void stopSearch(int errorCode);
 
 private:
     QString m_name;

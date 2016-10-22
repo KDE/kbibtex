@@ -87,10 +87,9 @@ private:
 
 public:
     OnlineSearchQueryFormDOI *form;
-    int numSteps, curStep;
 
     OnlineSearchDOIPrivate(OnlineSearchDOI */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ form(NULL), numSteps(0), curStep(0) {
+        : /* UNUSED p(parent),*/ form(NULL) {
         // nothing
     }
 
@@ -126,11 +125,10 @@ OnlineSearchDOI::~OnlineSearchDOI()
     delete d;
 }
 
-void OnlineSearchDOI::startSearch()
+void OnlineSearchDOI::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
-    d->curStep = 0;
-    d->numSteps = 1;
+    emit progress(curStep = 0, numSteps = 1);
 
     const QUrl url = d->buildQueryUrl();
     if (url.isValid()) {
@@ -140,8 +138,6 @@ void OnlineSearchDOI::startSearch()
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchDOI::downloadDone);
 
-        emit progress(0, d->numSteps);
-
         d->form->saveState();
     } else
         delayedStoppedSearch(resultNoError);
@@ -150,8 +146,7 @@ void OnlineSearchDOI::startSearch()
 void OnlineSearchDOI::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    d->curStep = 0;
-    d->numSteps = 1;
+    emit progress(curStep = 0, numSteps = 1);
 
     const QUrl url = d->buildQueryUrl(query, numResults);
     if (url.isValid()) {
@@ -160,8 +155,6 @@ void OnlineSearchDOI::startSearch(const QMap<QString, QString> &query, int numRe
         QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
         InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchDOI::downloadDone);
-
-        emit progress(0, d->numSteps);
     } else
         delayedStoppedSearch(resultNoError);
 }
@@ -183,11 +176,6 @@ QUrl OnlineSearchDOI::homepage() const
     return QUrl(QStringLiteral("http://dx.doi.org/"));
 }
 
-void OnlineSearchDOI::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 QString OnlineSearchDOI::favIconUrl() const
 {
     return QStringLiteral("http://dx.doi.org/favicon.ico");
@@ -195,14 +183,14 @@ QString OnlineSearchDOI::favIconUrl() const
 
 void OnlineSearchDOI::downloadDone()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     QUrl redirUrl;
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             /// redirection to another url
-            ++d->numSteps;
+            ++numSteps;
 
             QNetworkRequest request(redirUrl);
             request.setRawHeader(QByteArray("Accept"), QByteArray("text/bibliography; style=bibtex"));
@@ -223,16 +211,16 @@ void OnlineSearchDOI::downloadDone()
                         hasEntries |= publishEntry(entry);
                     }
 
-                    emit stoppedSearch(resultNoError);
+                    stopSearch(resultNoError);
 
                     delete bibtexFile;
                 } else {
                     qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
-                    emit stoppedSearch(resultUnspecifiedError);
+                    stopSearch(resultUnspecifiedError);
                 }
             } else {
                 /// returned file is empty
-                emit stoppedSearch(resultNoError);
+                stopSearch(resultNoError);
             }
         }
     } else

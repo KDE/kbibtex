@@ -85,25 +85,16 @@ OnlineSearchIDEASRePEc::~OnlineSearchIDEASRePEc()
     delete d;
 }
 
-void OnlineSearchIDEASRePEc::startSearch()
-{
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
-}
-
 void OnlineSearchIDEASRePEc::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     const QUrl url = d->buildQueryUrl(query, numResults);
-    d->curStep = 0;
-    d->numSteps = 2 * numResults + 1;
+    emit progress(curStep = 0, numSteps = 2 * numResults + 1);
     m_hasBeenCanceled = false;
 
     QNetworkRequest request(url);
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadListDone);
-
-    emit progress(0, d->numSteps);
 }
 
 
@@ -117,24 +108,14 @@ QString OnlineSearchIDEASRePEc::favIconUrl() const
     return QStringLiteral("https://ideas.repec.org/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchIDEASRePEc::customWidget(QWidget *)
-{
-    return NULL;
-}
-
 QUrl OnlineSearchIDEASRePEc::homepage() const
 {
     return QUrl(QStringLiteral("https://ideas.repec.org/"));
 }
 
-void OnlineSearchIDEASRePEc::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchIDEASRePEc::downloadListDone()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -142,7 +123,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             /// redirection to another url
-            ++d->numSteps;
+            ++numSteps;
 
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
@@ -161,11 +142,11 @@ void OnlineSearchIDEASRePEc::downloadListDone()
                 c = c.replace(QStringLiteral("http://"), QStringLiteral("https://"));
                 d->publicationLinks.insert(c);
             }
-            d->numSteps += 2 * d->publicationLinks.count(); ///< update number of steps
+            numSteps += 2 * d->publicationLinks.count(); ///< update number of steps
 
             if (d->publicationLinks.isEmpty()) {
-                emit stoppedSearch(resultNoError);
-                emit progress(1, 1);
+                stopSearch(resultNoError);
+                emit progress(curStep = numSteps, numSteps);
             } else {
                 QSet<QString>::Iterator it = d->publicationLinks.begin();
                 const QString publicationLink = *it;
@@ -183,7 +164,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
 
 void OnlineSearchIDEASRePEc::downloadPublicationDone()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -223,7 +204,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
 
 void OnlineSearchIDEASRePEc::downloadBibTeXDone()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     const QString downloadUrl = reply->property("downloadurl").toString();
@@ -260,7 +241,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
         }
 
         if (d->publicationLinks.isEmpty()) {
-            emit stoppedSearch(resultNoError);
+            stopSearch(resultNoError);
             emit progress(1, 1);
         } else {
             QSet<QString>::Iterator it = d->publicationLinks.begin();

@@ -30,32 +30,20 @@ OnlineSearchSimpleBibTeXDownload::OnlineSearchSimpleBibTeXDownload(QWidget *pare
     // nothing
 }
 
-void OnlineSearchSimpleBibTeXDownload::startSearch()
-{
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
-}
-
 void OnlineSearchSimpleBibTeXDownload::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
+    emit progress(curStep = 0, numSteps = 2);
 
     QNetworkRequest request(buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchSimpleBibTeXDownload::downloadDone);
-
-    emit progress(0, 2);
-}
-
-void OnlineSearchSimpleBibTeXDownload::cancel()
-{
-    OnlineSearchAbstract::cancel();
 }
 
 void OnlineSearchSimpleBibTeXDownload::downloadDone()
 {
-    emit progress(1, 2);
+    emit progress(++curStep, numSteps = 2);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -94,19 +82,19 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
                     hasEntries |= publishEntry(entry);
                 }
 
-                emit stoppedSearch(resultNoError);
+                stopSearch(resultNoError);
 
                 delete bibtexFile;
             } else {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
-                emit stoppedSearch(resultUnspecifiedError);
+                stopSearch(resultUnspecifiedError);
             }
         } else {
             /// returned file is empty
-            emit stoppedSearch(resultNoError);
+            stopSearch(resultNoError);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 
-    emit progress(2, 2);
+    emit progress(curStep = numSteps, numSteps);
 }

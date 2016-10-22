@@ -39,12 +39,10 @@ private:
 public:
     const QString gatewayUrl;
     XSLTransform xslt;
-    int numSteps, curStep;
 
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
             : p(parent), gatewayUrl(QStringLiteral("https://ieeexplore.ieee.org/gateway/ipsSearch.jsp")),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/ieeexplore2bibtex.xsl"))),
-          numSteps(0), curStep(0)
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/ieeexplore2bibtex.xsl")))
     {
         /// nothing
     }
@@ -97,30 +95,20 @@ OnlineSearchIEEEXplore::~OnlineSearchIEEEXplore()
     delete d;
 }
 
-void OnlineSearchIEEEXplore::startSearch()
-{
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
-}
-
 void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    d->curStep = 0;
-    d->numSteps = 2;
+    emit progress(curStep = 0, numSteps = 2);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIEEEXplore::doneFetchingXML);
-
-    emit progress(d->curStep, d->numSteps);
 }
 
 void OnlineSearchIEEEXplore::doneFetchingXML()
 {
-    ++d->curStep;
-    emit progress(d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -128,7 +116,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
     if (handleErrors(reply, redirUrl)) {
         if (redirUrl.isValid()) {
             /// redirection to another url
-            ++d->numSteps;
+            ++numSteps;
 
             QNetworkRequest request(redirUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
@@ -142,7 +130,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
             const QString bibTeXcode = d->xslt.transform(xmlCode);
             if (bibTeXcode.isEmpty()) {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
-                emit stoppedSearch(resultInvalidArguments);
+                stopSearch(resultInvalidArguments);
             } else {
                 FileImporterBibTeX importer;
                 File *bibtexFile = importer.fromString(bibTeXcode);
@@ -154,13 +142,13 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
                         hasEntries |= publishEntry(entry);
                     }
 
-                    emit stoppedSearch(resultNoError);
-                    emit progress(d->numSteps, d->numSteps);
+                    stopSearch(resultNoError);
+                    emit progress(curStep = numSteps, numSteps);
 
                     delete bibtexFile;
                 } else {
                     qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
-                    emit stoppedSearch(resultUnspecifiedError);
+                    stopSearch(resultUnspecifiedError);
                 }
             }
         }
@@ -178,19 +166,9 @@ QString OnlineSearchIEEEXplore::favIconUrl() const
     return QStringLiteral("https://ieeexplore.ieee.org/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchIEEEXplore::customWidget(QWidget *)
-{
-    return NULL;
-}
-
 QUrl OnlineSearchIEEEXplore::homepage() const
 {
     return QUrl(QStringLiteral("https://ieeexplore.ieee.org/"));
-}
-
-void OnlineSearchIEEEXplore::cancel()
-{
-    OnlineSearchAbstract::cancel();
 }
 
 void OnlineSearchIEEEXplore::sanitizeEntry(QSharedPointer<Entry> entry)

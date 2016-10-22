@@ -30,10 +30,8 @@ class OnlineSearchBioRxiv::Private
 {
 public:
     QSet<QUrl> resultPageUrls;
-    int totalSteps, currentStep;
 
     explicit Private(OnlineSearchBioRxiv *)
-            : totalSteps(0), currentStep(0)
     {
         /// nothing
     }
@@ -49,16 +47,9 @@ OnlineSearchBioRxiv::~OnlineSearchBioRxiv() {
     /// nothing
 }
 
-void OnlineSearchBioRxiv::startSearch() {
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
-}
-
 void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int numResults) {
     m_hasBeenCanceled = false;
-    d->totalSteps = numResults * 2 + 1;
-    d->currentStep = 0;
-    emit progress(d->currentStep++, d->totalSteps);
+    emit progress(curStep = 0, numSteps = numResults * 2 + 1);
 
     QString urlText(QString(QStringLiteral("http://biorxiv.org/search/numresults:%1 sort:relevance-rank title_flags:match-phrase format_result:standard ")).arg(numResults));
     urlText.append(query[queryKeyFreeText]);
@@ -87,11 +78,6 @@ QString OnlineSearchBioRxiv::label() const {
     return i18n("bioRxiv");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchBioRxiv::customWidget(QWidget *parent) {
-    Q_UNUSED(parent)
-    return NULL;
-}
-
 QUrl OnlineSearchBioRxiv::homepage() const {
     return QUrl(QStringLiteral("http://biorxiv.org/"));
 }
@@ -101,7 +87,7 @@ QString OnlineSearchBioRxiv::favIconUrl() const {
 }
 
 void OnlineSearchBioRxiv::resultsPageDone() {
-    emit progress(d->currentStep++, d->totalSteps);
+    emit progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
@@ -116,7 +102,7 @@ void OnlineSearchBioRxiv::resultsPageDone() {
         }
 
         if (d->resultPageUrls.isEmpty())
-            emit stoppedSearch(resultNoError);
+            stopSearch(resultNoError);
         else {
             const QUrl firstUrl = *d->resultPageUrls.constBegin();
             d->resultPageUrls.remove(firstUrl);
@@ -129,7 +115,7 @@ void OnlineSearchBioRxiv::resultsPageDone() {
 }
 
 void OnlineSearchBioRxiv::resultPageDone() {
-    emit progress(d->currentStep++, d->totalSteps);
+    emit progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
@@ -151,13 +137,13 @@ void OnlineSearchBioRxiv::resultPageDone() {
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
         } else
-            emit stoppedSearch(resultNoError);
+            stopSearch(resultNoError);
     }
 }
 
 
 void OnlineSearchBioRxiv::bibTeXDownloadDone() {
-    emit progress(d->currentStep++, d->totalSteps);
+    emit progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
@@ -182,7 +168,7 @@ void OnlineSearchBioRxiv::bibTeXDownloadDone() {
     }
 
     if (d->resultPageUrls.isEmpty())
-        emit stoppedSearch(resultNoError);
+        stopSearch(resultNoError);
     else {
         const QUrl firstUrl = *d->resultPageUrls.constBegin();
         d->resultPageUrls.remove(firstUrl);

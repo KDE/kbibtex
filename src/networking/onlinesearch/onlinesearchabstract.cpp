@@ -64,7 +64,7 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 }
 
 OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
-        : QObject(parent), m_hasBeenCanceled(false), m_delayedStoppedSearchReturnCode(0)
+        : QObject(parent), m_hasBeenCanceled(false), numSteps(0), curStep(0), m_delayedStoppedSearchReturnCode(0)
 {
     m_parent = parent;
 }
@@ -92,6 +92,17 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     return QIcon::fromTheme(QStringLiteral("applications-internet"));
 }
 
+OnlineSearchQueryFormAbstract *OnlineSearchAbstract::customWidget(QWidget *) {
+    return NULL;
+}
+
+void OnlineSearchAbstract::startSearchFromForm()
+{
+    m_hasBeenCanceled = false;
+    curStep = numSteps = 0;
+    delayedStoppedSearch(resultNoError);
+}
+
 QString OnlineSearchAbstract::name()
 {
     static const QRegExp invalidChars("[^-a-z0-9]", Qt::CaseInsensitive);
@@ -100,9 +111,16 @@ QString OnlineSearchAbstract::name()
     return m_name;
 }
 
+bool OnlineSearchAbstract::busy() const
+{
+    return numSteps > 0 && curStep < numSteps;
+}
+
 void OnlineSearchAbstract::cancel()
 {
     m_hasBeenCanceled = true;
+
+    curStep = numSteps = 0;
 }
 
 QStringList OnlineSearchAbstract::splitRespectingQuotationMarks(const QString &text)
@@ -134,10 +152,12 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
 {
     newUrl = QUrl();
     if (m_hasBeenCanceled) {
-        emit stoppedSearch(resultCancelled);
+        stopSearch(resultCancelled);
+        curStep = numSteps = 0;
         return false;
     } else if (reply->error() != QNetworkReply::NoError) {
         m_hasBeenCanceled = true;
+        curStep = numSteps = 0;
         const QString errorString = reply->errorString();
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
         sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), errorString), label(), QStringLiteral("kbibtex"), 7 * 1000);
@@ -147,7 +167,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
             resultCode = resultAuthorizationRequired;
         else if (reply->error() == QNetworkReply::HostNotFoundError || reply->error() == QNetworkReply::TimeoutError)
             resultCode = resultNetworkError;
-        emit stoppedSearch(resultCode);
+        stopSearch(resultCode);
 
         return false;
     }
@@ -400,7 +420,7 @@ void OnlineSearchAbstract::delayedStoppedSearch(int returnCode)
 void OnlineSearchAbstract::delayedStoppedSearchTimer()
 {
     emit progress(1, 1);
-    emit stoppedSearch(m_delayedStoppedSearchReturnCode);
+    stopSearch(m_delayedStoppedSearchReturnCode);
 }
 
 void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
@@ -476,4 +496,12 @@ bool OnlineSearchAbstract::publishEntry(QSharedPointer<Entry> entry)
     emit foundEntry(entry);
 
     return true;
+}
+
+void OnlineSearchAbstract::stopSearch(int errorCode) {
+    if (errorCode == resultNoError)
+        curStep = numSteps;
+    else
+        curStep = numSteps = 0;
+    emit stoppedSearch(errorCode);
 }

@@ -35,12 +35,6 @@ QString OnlineSearchCERNDS::label() const
     return i18n("CERN Document Server");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchCERNDS::customWidget(QWidget *parent)
-{
-    Q_UNUSED(parent)
-    return NULL;
-}
-
 QUrl OnlineSearchCERNDS::homepage() const
 {
     return QUrl(QStringLiteral("http://cds.cern.ch/"));

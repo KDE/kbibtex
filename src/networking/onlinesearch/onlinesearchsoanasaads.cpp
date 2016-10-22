@@ -30,12 +30,6 @@ QString OnlineSearchSOANASAADS::label() const
     return i18n("SAO/NASA Astrophysics Data System (ADS)");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchSOANASAADS::customWidget(QWidget *parent)
-{
-    Q_UNUSED(parent)
-    return NULL;
-}
-
 QUrl OnlineSearchSOANASAADS::homepage() const
 {
     return QUrl(QStringLiteral("http://adswww.harvard.edu/"));

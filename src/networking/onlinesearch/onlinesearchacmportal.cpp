@@ -44,11 +44,9 @@ public:
     int currentSearchPosition;
     QStringList citationUrls;
 
-    int curStep, numSteps;
-
     OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ numExpectedResults(0), numFoundResults(0),
-          acmPortalBaseUrl(QStringLiteral("http://dl.acm.org/")), currentSearchPosition(0), curStep(0), numSteps(0) {
+          acmPortalBaseUrl(QStringLiteral("http://dl.acm.org/")), currentSearchPosition(0) {
         // nothing
     }
 
@@ -90,8 +88,7 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
     d->currentSearchPosition = 1;
     d->citationUrls.clear();
     d->numFoundResults = 0;
-    d->curStep = 0;
-    d->numSteps = numResults * 2 + 2;
+    emit progress(curStep = 0, numSteps = numResults * 2 + 2);
 
     for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
         // FIXME: Is there a need for percent encoding?
@@ -103,13 +100,6 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingStartPage);
-    emit progress(0, d->numSteps);
-}
-
-void OnlineSearchAcmPortal::startSearch()
-{
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
 }
 
 QString OnlineSearchAcmPortal::label() const
@@ -122,24 +112,14 @@ QString OnlineSearchAcmPortal::favIconUrl() const
     return QStringLiteral("http://dl.acm.org/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchAcmPortal::customWidget(QWidget *)
-{
-    return NULL;
-}
-
 QUrl OnlineSearchAcmPortal::homepage() const
 {
     return QUrl(QStringLiteral("http://dl.acm.org/"));
 }
 
-void OnlineSearchAcmPortal::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchAcmPortal::doneFetchingStartPage()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -159,7 +139,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingSearchPage);
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed.";
-            emit stoppedSearch(resultUnspecifiedError);
+            stopSearch(resultUnspecifiedError);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -167,7 +147,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
 
 void OnlineSearchAcmPortal::doneFetchingSearchPage()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -199,8 +179,8 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingCitation);
             d->citationUrls.removeFirst();
         } else {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
         }
     }  else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -208,7 +188,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
 
 void OnlineSearchAcmPortal::doneFetchingCitation()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     QString bibTeXUrl;
@@ -225,8 +205,8 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
             bibTeXUrl = d->acmPortalBaseUrl + QString(QStringLiteral("/downformats.cfm?id=%2&parent_id=%1&expformat=bibtex&CFID=%3&CFTOKEN=%4")).arg(QString::number(parentId), paramRegExp.cap(1),  paramRegExp.cap(2), paramRegExp.cap(3));
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "No citation link found in " << reply->url().toDisplayString() << "  parentId=" << parentId;
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
             return;
         }
     }  else
@@ -240,8 +220,8 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingCitation);
             d->citationUrls.removeFirst();
         } else {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
         }
     } else {
         QNetworkRequest request(bibTeXUrl);
@@ -253,7 +233,7 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
 
 void OnlineSearchAcmPortal::doneFetchingBibTeX()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -281,8 +261,8 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingCitation);
             d->citationUrls.removeFirst();
         } else {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();

@@ -38,10 +38,9 @@ public:
     int numExpectedResults, numFoundResults;
     QStringList bibTeXUrls;
     int runningJobs;
-    int numSteps, curStep;
 
     OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect */* UNUSED parent*/)
-        : /* UNUSED p(parent), */ currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), runningJobs(0), numSteps(0), curStep(0) {
+        : /* UNUSED p(parent), */ currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), runningJobs(0) {
         /// nothing
     }
 
@@ -82,13 +81,6 @@ OnlineSearchScienceDirect::~OnlineSearchScienceDirect()
     delete d;
 }
 
-void OnlineSearchScienceDirect::startSearch()
-{
-    d->runningJobs = 0;
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
-}
-
 void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     d->runningJobs = 0;
@@ -96,8 +88,7 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     m_hasBeenCanceled = false;
     d->bibTeXUrls.clear();
     d->currentSearchPosition = 0;
-    d->curStep = 0;
-    d->numSteps = 2 + 2 * numResults;
+    emit progress(curStep = 0, numSteps = 2 + 2 * numResults);
 
     d->queryFreetext = query[queryKeyFreeText] + QStringLiteral(" ") + query[queryKeyTitle] + QStringLiteral(" ") + query[queryKeyYear];
     d->queryAuthor = query[queryKeyAuthor];
@@ -108,8 +99,6 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingStartPage);
-
-    emit progress(0, d->numSteps);
 }
 
 QString OnlineSearchScienceDirect::label() const
@@ -122,24 +111,14 @@ QString OnlineSearchScienceDirect::favIconUrl() const
     return QStringLiteral("http://www.sciencedirect.com/scidirimg/faviconSD.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchScienceDirect::customWidget(QWidget *)
-{
-    return NULL;
-}
-
 QUrl OnlineSearchScienceDirect::homepage() const
 {
     return QUrl(QStringLiteral("http://www.sciencedirect.com/"));
 }
 
-void OnlineSearchScienceDirect::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchScienceDirect::doneFetchingStartPage()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     --d->runningJobs;
     if (d->runningJobs != 0)
@@ -151,7 +130,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
         const QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         if (redirUrl.isValid()) {
-            ++d->numSteps;
+            ++numSteps;
             ++d->runningJobs;
 
             /// redirection to another url
@@ -205,7 +184,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingResultPage);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         } else {
-            emit progress(++d->curStep, d->numSteps);
+            emit progress(++curStep, numSteps);
 
             const QString htmlText = QString::fromUtf8(reply->readAll().constData());
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
@@ -230,8 +209,8 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
         }
 
         if (d->runningJobs <= 0) {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -253,7 +232,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingAbstractPage);
             InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
         } else {
-            emit progress(++d->curStep, d->numSteps);
+            emit progress(++curStep, numSteps);
 
             const QString htmlText = QString::fromUtf8(reply->readAll().constData());
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
@@ -275,8 +254,8 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
         }
 
         if (d->runningJobs <= 0) {
-            emit stoppedSearch(resultNoError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(resultNoError);
+            emit progress(curStep = numSteps, numSteps);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -284,7 +263,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
 
 void OnlineSearchScienceDirect::doneFetchingBibTeX()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     --d->runningJobs;
     if (d->runningJobs < 0)
@@ -309,8 +288,8 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
         }
 
         if (d->runningJobs <= 0) {
-            emit stoppedSearch(hasEntry ? resultNoError : resultUnspecifiedError);
-            emit progress(d->numSteps, d->numSteps);
+            stopSearch(hasEntry ? resultNoError : resultUnspecifiedError);
+            emit progress(curStep = numSteps, numSteps);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();

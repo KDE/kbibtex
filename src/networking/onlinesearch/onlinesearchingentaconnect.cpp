@@ -313,25 +313,23 @@ OnlineSearchIngentaConnect::~OnlineSearchIngentaConnect()
 void OnlineSearchIngentaConnect::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
+    emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIngentaConnect::downloadDone);
-
-    emit progress(0, 1);
 }
 
-void OnlineSearchIngentaConnect::startSearch()
+void OnlineSearchIngentaConnect::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
+    emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIngentaConnect::downloadDone);
-
-    emit progress(0, 1);
 
     d->form->saveState();
 }
@@ -358,14 +356,9 @@ QUrl OnlineSearchIngentaConnect::homepage() const
     return QUrl(QStringLiteral("http://www.ingentaconnect.com/"));
 }
 
-void OnlineSearchIngentaConnect::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchIngentaConnect::downloadDone()
 {
-    emit progress(1, 1);
+    emit progress(curStep = numSteps, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -384,16 +377,16 @@ void OnlineSearchIngentaConnect::downloadDone()
                     hasEntries |= publishEntry(entry);
                 }
 
-                emit stoppedSearch(resultNoError);
+                stopSearch(resultNoError);
 
                 delete bibtexFile;
             } else {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
-                emit stoppedSearch(resultUnspecifiedError);
+                stopSearch(resultUnspecifiedError);
             }
         } else {
             /// returned file is empty
-            emit stoppedSearch(resultNoError);
+            stopSearch(resultNoError);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();

@@ -103,13 +103,11 @@ public:
     XSLTransform xslt;
     OnlineSearchQueryFormArXiv *form;
     const QString arXivQueryBaseUrl;
-    int numSteps, curStep;
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
             : p(parent),
           xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/arxiv2bibtex.xsl"))),
-          form(NULL), arXivQueryBaseUrl(QStringLiteral("http://export.arxiv.org/api/query?")),
-          numSteps(0), curStep(0)
+          form(NULL), arXivQueryBaseUrl(QStringLiteral("http://export.arxiv.org/api/query?"))
     {
         /// nothing
     }
@@ -612,34 +610,28 @@ OnlineSearchArXiv::~OnlineSearchArXiv()
     delete d;
 }
 
-void OnlineSearchArXiv::startSearch()
+void OnlineSearchArXiv::startSearchFromForm()
 {
-    d->curStep = 0;
-    d->numSteps = 1;
     m_hasBeenCanceled = false;
+    emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchArXiv::downloadDone);
 
-    emit progress(0, d->numSteps);
-
     d->form->saveState();
 }
 
 void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    d->curStep = 0;
-    d->numSteps = 1;
     m_hasBeenCanceled = false;
+    emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchArXiv::downloadDone);
-
-    emit progress(0, d->numSteps);
 }
 
 QString OnlineSearchArXiv::label() const
@@ -654,7 +646,9 @@ QString OnlineSearchArXiv::favIconUrl() const
 
 OnlineSearchQueryFormAbstract *OnlineSearchArXiv::customWidget(QWidget *parent)
 {
-    return (d->form = new OnlineSearchArXiv::OnlineSearchQueryFormArXiv(parent));
+    if (d->form == NULL)
+        d->form = new OnlineSearchArXiv::OnlineSearchQueryFormArXiv(parent);
+    return d->form;
 }
 
 QUrl OnlineSearchArXiv::homepage() const
@@ -662,14 +656,9 @@ QUrl OnlineSearchArXiv::homepage() const
     return QUrl(QStringLiteral("https://arxiv.org/"));
 }
 
-void OnlineSearchArXiv::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchArXiv::downloadDone()
 {
-    emit progress(++d->curStep, d->numSteps);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -682,7 +671,7 @@ void OnlineSearchArXiv::downloadDone()
         const QString bibTeXcode = d->xslt.transform(result);
         if (bibTeXcode.isEmpty()) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
-            emit stoppedSearch(resultInvalidArguments);
+            stopSearch(resultInvalidArguments);
         } else {
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);
@@ -694,13 +683,13 @@ void OnlineSearchArXiv::downloadDone()
                     hasEntries |= publishEntry(entry);
                 }
 
-                emit stoppedSearch(resultNoError);
-                emit progress(d->numSteps, d->numSteps);
+                stopSearch(resultNoError);
+                emit progress(curStep = numSteps, numSteps);
 
                 delete bibtexFile;
             } else {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
-                emit stoppedSearch(resultUnspecifiedError);
+                stopSearch(resultUnspecifiedError);
             }
         }
     } else

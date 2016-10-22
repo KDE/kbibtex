@@ -30,14 +30,9 @@ public:
     explicit OnlineSearchJStor(QWidget *parent);
     ~OnlineSearchJStor();
 
-    virtual void startSearch();
     virtual void startSearch(const QMap<QString, QString> &query, int numResults);
     virtual QString label() const;
-    virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
     virtual QUrl homepage() const;
-
-public slots:
-    void cancel();
 
 protected:
     virtual QString favIconUrl() const;

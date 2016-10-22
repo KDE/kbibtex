@@ -403,7 +403,7 @@ void SearchForm::startSearch()
 
         for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
-                it.value()->startSearch();
+                it.value()->startSearchFromForm();
                 d->runningSearches.insert(it.value());
             }
         if (d->runningSearches.isEmpty()) {

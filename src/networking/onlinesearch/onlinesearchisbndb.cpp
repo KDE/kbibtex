@@ -37,19 +37,14 @@ private:
 public:
     XSLTransform xslt;
     QUrl queryUrl;
-    int currentPage, maxPage;
 
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB *)
-            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/isbndb2bibtex.xsl"))),
-          currentPage(0), maxPage(0)
+            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/isbndb2bibtex.xsl")))
     {
         /// nothing
     }
 
-    QUrl buildBooksUrl(const QMap<QString, QString> &query, int numResults) {
-        currentPage = 1;
-        maxPage = (numResults + 9) / 10;
-
+    QUrl buildBooksUrl(const QMap<QString, QString> &query) {
         queryUrl = QUrl(booksUrl);
         QUrlQuery q(queryUrl);
         q.addQueryItem(QStringLiteral("access_key"), accessKey);
@@ -92,18 +87,12 @@ void OnlineSearchIsbnDB::startSearch(const QMap<QString, QString> &query, int nu
 {
     m_hasBeenCanceled = false;
 
-    emit progress(0, d->maxPage);
+    emit progress(curStep = 0, numSteps = (numResults + 9) / 10);
 
-    QNetworkRequest request(d->buildBooksUrl(query, numResults));
+    QNetworkRequest request(d->buildBooksUrl(query));
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIsbnDB::downloadDone);
-}
-
-void OnlineSearchIsbnDB::startSearch()
-{
-    m_hasBeenCanceled = false;
-    delayedStoppedSearch(resultNoError);
 }
 
 QString OnlineSearchIsbnDB::label() const
@@ -116,25 +105,14 @@ QString OnlineSearchIsbnDB::favIconUrl() const
     return QStringLiteral("https://isbndb.com/favicon.ico");
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchIsbnDB::customWidget(QWidget *parent)
-{
-    Q_UNUSED(parent)
-    return NULL;
-}
-
 QUrl OnlineSearchIsbnDB::homepage() const
 {
     return QUrl(QStringLiteral("http://isbndb.com/"));
 }
 
-void OnlineSearchIsbnDB::cancel()
-{
-    OnlineSearchAbstract::cancel();
-}
-
 void OnlineSearchIsbnDB::downloadDone()
 {
-    emit progress(d->currentPage, d->maxPage);
+    emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -146,7 +124,7 @@ void OnlineSearchIsbnDB::downloadDone()
         const QString bibTeXcode = d->xslt.transform(xmlCode).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")).replace(QStringLiteral("&amp;"), QStringLiteral("&"));
         if (bibTeXcode.isEmpty()) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
-            emit stoppedSearch(resultInvalidArguments);
+            stopSearch(resultInvalidArguments);
         } else {
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);
@@ -160,14 +138,13 @@ void OnlineSearchIsbnDB::downloadDone()
                 delete bibtexFile;
 
                 if (!hasEntries) {
-                    emit stoppedSearch(resultNoError);
-                } else if (d->currentPage >= d->maxPage)
-                    emit stoppedSearch(resultNoError);
+                    stopSearch(resultNoError);
+                } else if (curStep >= numSteps)
+                    stopSearch(resultNoError);
                 else {
-                    ++d->currentPage;
                     QUrl nextUrl = d->queryUrl;
                     QUrlQuery query(nextUrl);
-                    query.addQueryItem(QStringLiteral("page_number"), QString::number(d->currentPage));
+                    query.addQueryItem(QStringLiteral("page_number"), QString::number(curStep /** FIXME? + 1 */));
                     nextUrl.setQuery(query);
                     QNetworkRequest request(nextUrl);
                     QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);
@@ -177,7 +154,7 @@ void OnlineSearchIsbnDB::downloadDone()
                 }
             } else {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
-                emit stoppedSearch(resultUnspecifiedError);
+                stopSearch(resultUnspecifiedError);
             }
         }
     } else
