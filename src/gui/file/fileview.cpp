@@ -150,21 +150,6 @@ const QList<QSharedPointer<Element> > &FileView::selectedElements() const
     return m_selection;
 }
 
-void FileView::setSelectedElements(QList<QSharedPointer<Element> > &list)
-{
-    m_selection = list;
-
-    QItemSelectionModel *selModel = selectionModel();
-    selModel->clear();
-    for (QList<QSharedPointer<Element> >::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it) {
-        int row = fileModel()->row(*it);
-        for (int col = model()->columnCount(QModelIndex()) - 1; col >= 0; --col) {
-            QModelIndex idx = model()->index(row, col);
-            selModel->setCurrentIndex(idx, QItemSelectionModel::Select);
-        }
-    }
-}
-
 void FileView::setSelectedElement(QSharedPointer<Element> element)
 {
     m_selection.clear();
@@ -172,11 +157,9 @@ void FileView::setSelectedElement(QSharedPointer<Element> element)
 
     QItemSelectionModel *selModel = selectionModel();
     selModel->clear();
-    int row = fileModel()->row(element);
-    for (int col = model()->columnCount(QModelIndex()) - 1; col >= 0; --col) {
-        QModelIndex idx = model()->index(row, col);
-        selModel->setCurrentIndex(idx, QItemSelectionModel::Select);
-    }
+    const int row = fileModel()->row(element);
+    const QModelIndex idx = sortFilterProxyModel()->mapFromSource(fileModel()->index(row, 0));
+    selModel->setCurrentIndex(idx, QItemSelectionModel::Select | QItemSelectionModel::Rows);
 }
 
 const QSharedPointer<Element> FileView::currentElement() const
