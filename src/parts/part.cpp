@@ -484,7 +484,7 @@ public:
 
     QUrl getSaveFilename(bool mustBeImportable = true) {
         QString startDir = p->url().isValid() ? p->url().path() : QString();
-        QString supportedMimeTypes = QStringLiteral("text/x-bibtex text/x-bibtex-compiled application/xml text/x-research-info-systems");
+        QString supportedMimeTypes = QStringLiteral("text/x-bibtex text/x-research-info-systems");
         if (BibUtils::available())
             supportedMimeTypes += QStringLiteral(" application/x-isi-export-format application/x-endnote-refer");
         if (!mustBeImportable && !QStandardPaths::findExecutable(QStringLiteral("pdflatex")).isEmpty())
