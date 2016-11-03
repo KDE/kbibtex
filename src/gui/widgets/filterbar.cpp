@@ -32,6 +32,10 @@
 #include "bibtexfields.h"
 #include "delayedexecutiontimer.h"
 
+static bool sortStringsLocaleAware(const QString s1, const QString s2) {
+    return QString::localeAwareCompare(s1, s2) < 0;
+}
+
 class FilterBar::FilterBarPrivate
 {
 private:
@@ -92,10 +96,19 @@ public:
         comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
         const BibTeXFields *bf = BibTeXFields::self();
+        /// Use a hash map to get an alphabetically sorted list
+        QHash<QString, QString> fielddescs;
         for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
             const FieldDescription *fd = *it;
             if (fd->upperCamelCaseAlt.isEmpty())
-                comboBoxField->addItem(fd->label, fd->upperCamelCase);
+                fielddescs.insert(fd->label, fd->upperCamelCase);
+        }
+        /// Sort locale-aware
+        QList<QString> keys = fielddescs.keys();
+        qSort(keys.begin(), keys.end(), sortStringsLocaleAware);
+        foreach(const QString &key, keys) {
+            const QString &value = fielddescs[key];
+            comboBoxField->addItem(key, value);
         }
 
         buttonSearchPDFfiles = new QPushButton(p);

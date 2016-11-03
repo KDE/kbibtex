@@ -27,6 +27,7 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QMimeData>
+#include <QSortFilterProxyModel>
 #include <QStyle>
 #include <QPushButton>
 #include <QFontDatabase>
@@ -372,15 +373,17 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
         buttonSuggestId->setEnabled(!isReadOnly);
         const BibTeXEntries *be = BibTeXEntries::self();
         QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
-        entryType->setCurrentIndex(-1);
         entryType->lineEdit()->setText(type);
-        type = type.toLower();
-        int index = 0;
-        for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it, ++index)
-            if (type == it->upperCamelCase.toLower() || type == it->upperCamelCaseAlt.toLower()) {
-                entryType->setCurrentIndex(index);
-                break;
-            }
+        int index = entryType->findData(type);
+        if (index == -1) {
+            const QString typeLower(type.toLower());
+            for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
+                if (typeLower == it->upperCamelCaseAlt.toLower()) {
+                    index = entryType->findData(it->upperCamelCase);
+                    break;
+                }
+        }
+        entryType->setCurrentIndex(index);
 
         entryId->setText(entry->id());
         /// New entries have no values. Use this fact
@@ -467,6 +470,13 @@ void ReferenceWidget::createGUI()
     const BibTeXEntries *be = BibTeXEntries::self();
     for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
         entryType->addItem(it->label, it->upperCamelCase);
+    /// Sort the combo box locale-aware. Thus we need a SortFilterProxyModel
+    QSortFilterProxyModel *proxy = new QSortFilterProxyModel(entryType);
+    proxy->setSortLocaleAware(true);
+    proxy->setSourceModel(entryType->model());
+    entryType->model()->setParent(proxy);
+    entryType->setModel(proxy);
+    entryType->model()->sort(0);
 
     /// Button with a menu listing a set of preconfigured id suggestions
     buttonSuggestId = new QPushButton(QIcon::fromTheme(QStringLiteral("view-filter")), QStringLiteral(""), this);

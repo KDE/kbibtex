@@ -160,6 +160,13 @@ public:
             if (fd->upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
             comboboxFieldNames->addItem(fd->label, fd->upperCamelCase);
         }
+        /// Sort the combo box locale-aware. Thus we need a SortFilterProxyModel
+        QSortFilterProxyModel *proxy = new QSortFilterProxyModel(comboboxFieldNames);
+        proxy->setSortLocaleAware(true);
+        proxy->setSourceModel(comboboxFieldNames->model());
+        comboboxFieldNames->model()->setParent(proxy);
+        comboboxFieldNames->setModel(proxy);
+        comboboxFieldNames->model()->sort(0);
 
         KConfigGroup configGroup(config, configGroupName);
         QString fieldName = configGroup.readEntry(configKeyFieldName, QString(Entry::ftAuthor));
