@@ -636,17 +636,6 @@ public:
         return result;
     }
 
-    bool checkOverwrite(const QUrl &url, QWidget *parent) {
-        if (!url.isLocalFile())
-            return true;
-
-        QFileInfo info(url.path());
-        if (!info.exists())
-            return true;
-
-        return KMessageBox::Cancel != KMessageBox::warningContinueCancel(parent, i18n("A file named '%1' already exists. Are you sure you want to overwrite it?", info.fileName()), i18n("Overwrite File?"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel(), QString(), KMessageBox::Notify | KMessageBox::Dangerous);
-    }
-
     /**
      * Builds or resets the menu with local and remote
      * references (URLs, files) of an entry.
@@ -841,7 +830,7 @@ bool KBibTeXPart::documentSaveAs()
 {
     d->isSaveAsOperation = true;
     QUrl newUrl = d->getSaveFilename();
-    if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()))
+    if (!newUrl.isValid())
         return false;
 
     /// Remove old URL from file system watcher
@@ -866,7 +855,7 @@ bool KBibTeXPart::documentSaveCopyAs()
 {
     d->isSaveAsOperation = true;
     QUrl newUrl = d->getSaveFilename(false);
-    if (!newUrl.isValid() || !d->checkOverwrite(newUrl, widget()) || newUrl == url())
+    if (!newUrl.isValid() || newUrl == url())
         return false;
 
     /// difference from KParts::ReadWritePart::saveAs:
