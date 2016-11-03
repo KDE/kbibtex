@@ -169,6 +169,10 @@ public:
     }
 };
 
+static bool sortStringsLocaleAware(const QString s1, const QString s2) {
+    return QString::localeAwareCompare(s1, s2) < 0;
+}
+
 FilterBar::FilterBar(QWidget *parent)
         : QWidget(parent), d(new FilterBarPrivate(this))
 {
@@ -201,9 +205,18 @@ FilterBar::FilterBar(QWidget *parent)
     d->comboBoxField->addItem(i18n("any field"), QVariant());
     d->comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
+    /// Use a map to get an alphabetically sorted list
+    QHash<QString, QString> fielddescs;
     foreach(const FieldDescription *fd, *BibTeXFields::self()) {
         if (fd->upperCamelCaseAlt.isEmpty())
-            d->comboBoxField->addItem(fd->label, fd->upperCamelCase);
+            fielddescs.insert(fd->label, fd->upperCamelCase);
+    }
+    /// Sort locale-aware
+    QList<QString> keys = fielddescs.keys();
+    qSort(keys.begin(), keys.end(), sortStringsLocaleAware);
+    foreach(const QString &key, keys) {
+        const QString &value = fielddescs[key];
+        d->comboBoxField->addItem(key, value);
     }
 
     d->buttonSearchPDFfiles = new KPushButton(this);
