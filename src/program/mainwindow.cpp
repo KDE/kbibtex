@@ -158,7 +158,7 @@ KBibTeXMainWindow::KBibTeXMainWindow()
     d->dockStatistics = new QDockWidget(i18n("Statistics"), this);
     d->dockStatistics->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     addDockWidget(Qt::LeftDockWidgetArea, d->dockStatistics);
-    d->statistics = new Statistics(d->dockStatistics);
+    d->statistics = new Statistics(d->mdiWidget->getOpenFileInfoManager(), d->dockStatistics);
     d->dockStatistics->setWidget(d->statistics);
     d->dockStatistics->setObjectName("dockStatistics");
     d->dockStatistics->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
@@ -402,10 +402,7 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
     d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
     d->valueList->setFileView(newFileView);
     d->fileSettings->setFileView(newFileView);
-    if (newFileView != NULL && newFileView->fileModel() != NULL)
-        d->statistics->setFile(newFileView->fileModel()->bibliographyFile(), newFileView->selectionModel());
-    else
-        d->statistics->setFile(NULL, NULL);
+    d->statistics->setFileView(newFileView);
     d->referencePreview->setFileView(newFileView);
 }
 
