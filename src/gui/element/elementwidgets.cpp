@@ -372,7 +372,6 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
         buttonSuggestId->setEnabled(!isReadOnly);
         BibTeXEntries *be = BibTeXEntries::self();
         QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
-        entryType->lineEdit()->setText(type);
         int index = entryType->findData(type);
         if (index == -1) {
             const QString typeLower(type.toLower());
@@ -383,6 +382,10 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
                 }
         }
         entryType->setCurrentIndex(index);
+        if (index == -1) {
+             /// A customized value not known to KBibTeX
+             entryType->lineEdit()->setText(type);
+        }
 
         entryId->setText(entry->id());
         /// New entries have no values. Use this fact
