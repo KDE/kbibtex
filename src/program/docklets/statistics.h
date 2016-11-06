@@ -22,22 +22,22 @@
 
 class QItemSelectionModel;
 
-class Element;
-class File;
+class FileView;
+
+class OpenFileInfoManager;
 
 class Statistics : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Statistics(QWidget *parent);
+    explicit Statistics(OpenFileInfoManager *ofim, QWidget *parent);
     ~Statistics();
 
-    void setFile(const File *, const QItemSelectionModel *);
+    void setFileView(FileView *);
 
 private slots:
     void update();
-    void selectionModelDestroyed();
 
 private:
     class StatisticsPrivate;
