@@ -417,10 +417,7 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
     d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
     d->valueList->setFileView(newFileView);
     d->fileSettings->setFileView(newFileView);
-    if (newFileView != NULL && newFileView->fileModel() != NULL)
-        d->statistics->setFile(newFileView->fileModel()->bibliographyFile(), newFileView->selectionModel());
-    else
-        d->statistics->setFile(NULL, NULL);
+    d->statistics->setFileView(newFileView);
     d->referencePreview->setFileView(newFileView);
 }
 

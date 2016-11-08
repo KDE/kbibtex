@@ -24,11 +24,12 @@
 
 #include <KLocalizedString>
 
-#include "element.h"
 #include "file.h"
+#include "fileview.h"
 #include "entry.h"
 #include "macro.h"
 #include "comment.h"
+#include "openfileinfo.h"
 
 class Statistics::StatisticsPrivate
 {
@@ -37,11 +38,12 @@ private:
     QLabel *labelNumberOfElements, *labelNumberOfEntries, *labelNumberOfJournalArticles, *labelNumberOfConferencePublications, *labelNumberOfBooks, *labelNumberOfOtherEntries, *labelNumberOfComments, *labelNumberOfMacros;
 
 public:
+    FileView *fileView;
     const File *file;
     const QItemSelectionModel *selectionModel;
 
     StatisticsPrivate(Statistics *parent)
-        : /* UNUSED p(parent),*/ file(NULL), selectionModel(NULL) {
+        : /* UNUSED p(parent),*/ fileView(NULL), file(NULL), selectionModel(NULL) {
         QFormLayout *layout = new QFormLayout(parent);
 
         labelNumberOfElements = new QLabel(parent);
@@ -80,6 +82,9 @@ public:
     }
 
     void update() {
+        file = fileView != NULL && fileView->fileModel() != NULL ? fileView->fileModel()->bibliographyFile() : NULL;
+        selectionModel = fileView != NULL ? fileView->selectionModel() : NULL;
+
         if (file != NULL) {
             int numElements, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros;
             countElementTypes(numElements, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);
@@ -122,6 +127,7 @@ public:
 
     void countElementTypes(int &numElements, int &numEntries, int &numJournalArticles, int &numConferencePublications, int &numBooks, int &numComments, int &numMacros) {
         numElements = numEntries = numJournalArticles = numConferencePublications = numBooks = numComments = numMacros = 0;
+        Q_ASSERT_X(file != NULL, "Statistics::StatisticsPrivate::countElementTypes(..)", "Function was called with file==NULL");
 
         if (selectionModel != NULL && selectionModel->selectedRows().count() > 1) {
             /// Use selected items for statistics if selection contains at least two elements
@@ -143,7 +149,8 @@ public:
 Statistics::Statistics(QWidget *parent)
         : QWidget(parent), d(new StatisticsPrivate(this))
 {
-    update();
+    d->update();
+    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::currentChanged, this, &Statistics::update);
 }
 
 Statistics::~Statistics()
@@ -151,32 +158,17 @@ Statistics::~Statistics()
     delete d;
 }
 
-void Statistics::setFile(const File *file, const QItemSelectionModel *selectionModel)
+void Statistics::setFileView(FileView *fileView)
 {
-    /// unregister from update notifications of selection models no longer used
-    if (d->selectionModel != NULL && selectionModel != d->selectionModel) {
-        disconnect(d->selectionModel, &QItemSelectionModel::destroyed, this, &Statistics::selectionModelDestroyed);
-        disconnect(d->selectionModel, &QItemSelectionModel::selectionChanged, this, &Statistics::update);
-    }
-
-    if (selectionModel != NULL && selectionModel != d->selectionModel) {
-        connect(selectionModel, &QItemSelectionModel::destroyed, this, &Statistics::selectionModelDestroyed);
-        connect(selectionModel, &QItemSelectionModel::selectionChanged, this, &Statistics::update);
-    }
-
-    d->file = file;
-    d->selectionModel = selectionModel;
-
-    update();
+    if (d->fileView != NULL)
+        disconnect(d->fileView, &FileView::selectedElementsChanged, this, &Statistics::update);
+    d->fileView = fileView;
+    if (d->fileView != NULL)
+        connect(d->fileView, &FileView::selectedElementsChanged, this, &Statistics::update);
+    d->update();
 }
 
 void Statistics::update()
 {
     d->update();
-}
-
-void Statistics::selectionModelDestroyed() {
-    d->file = NULL;
-    d->selectionModel = NULL;
-    update();
 }

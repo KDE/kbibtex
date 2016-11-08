@@ -22,8 +22,7 @@
 
 class QItemSelectionModel;
 
-class Element;
-class File;
+class FileView;
 
 class Statistics : public QWidget
 {
@@ -33,13 +32,10 @@ public:
     explicit Statistics(QWidget *parent);
     ~Statistics();
 
-    void setFile(const File *, const QItemSelectionModel *);
+    void setFileView(FileView *);
 
 public slots:
     void update();
-
-private slots:
-    void selectionModelDestroyed();
 
 private:
     class StatisticsPrivate;
