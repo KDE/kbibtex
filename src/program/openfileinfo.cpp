@@ -613,7 +613,7 @@ void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo, KService::P
     if (hasChanged) {
         if (previous != NULL) previous->setLastAccess();
         emit currentChanged(openFileInfo, servicePtr);
-    } else if (servicePtr != openFileInfo->currentService())
+    } else if (openFileInfo == NULL || servicePtr != openFileInfo->currentService())
         emit currentChanged(openFileInfo, servicePtr);
 }
 
