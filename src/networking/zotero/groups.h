@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QSharedPointer>
 
 #include "kbibtexnetworking_export.h"
 
@@ -35,7 +36,7 @@ class KBIBTEXNETWORKING_EXPORT Groups : public QObject
 {
     Q_OBJECT
 public:
-    explicit Groups(API *api, QObject *parent = NULL);
+    explicit Groups(QSharedPointer<Zotero::API> api, QObject *parent = NULL);
 
     bool initialized() const;
     bool busy() const;
