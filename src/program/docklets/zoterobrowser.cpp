@@ -53,10 +53,6 @@ class ZoteroBrowser::Private
 private:
     ZoteroBrowser *p;
 
-    KSharedConfigPtr config;
-    static const QString configGroupName;
-    static const QString configEntryNumericUserId, configEntryApiKey;
-
 public:
     Zotero::Items *items;
     Zotero::Groups *groups;
@@ -85,7 +81,7 @@ public:
     static const QString walletFolderOAuth, walletEntryKBibTeXZotero, walletKeyZoteroId, walletKeyZoteroApiKey;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), needToApplyCredentials(true), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()), wallet(NULL) {
+            : p(parent), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), needToApplyCredentials(true), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()), wallet(NULL) {
         setupGUI();
     }
 
@@ -203,7 +199,6 @@ public:
     }
 };
 
-const QString ZoteroBrowser::Private::configGroupName = QStringLiteral("ZoteroBrowser");
 const QString ZoteroBrowser::Private::walletFolderOAuth = QStringLiteral("OAuth");
 const QString ZoteroBrowser::Private::walletEntryKBibTeXZotero = QStringLiteral("KBibTeX/Zotero");
 const QString ZoteroBrowser::Private::walletKeyZoteroId = QStringLiteral("UserId");
