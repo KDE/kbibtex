@@ -49,7 +49,7 @@ private slots:
     void showItem(QSharedPointer<Element>);
     void reenableWidget();
     void updateButtons();
-    void applyCredentials();
+    bool applyCredentials();
     void radioButtonsToggled();
     void groupListChanged();
     void retrieveGroupList();

@@ -287,11 +287,12 @@ void ZoteroBrowser::updateButtons()
     d->needToApplyCredentials = true;
 }
 
-void ZoteroBrowser::applyCredentials()
+bool ZoteroBrowser::applyCredentials()
 {
     bool ok = false;
     const int userId = d->lineEditNumericUserId->text().toInt(&ok);
-    if (ok) {
+    const QString apiKey = d->lineEditApiKey->text();
+    if (ok && !apiKey.isEmpty()) {
         setCursor(Qt::WaitCursor);
         setEnabled(false);
 
@@ -329,8 +330,10 @@ void ZoteroBrowser::applyCredentials()
         connect(d->tags, SIGNAL(finishedLoading()), this, SLOT(reenableWidget()));
 
         d->needToApplyCredentials = false;
+
+        return true;
     } else
-        KMessageBox::information(this, i18n("Value '%1' is not a valid numeric identifier of a user or a group.", d->lineEditNumericUserId->text()), i18n("Invalid numeric identifier"));
+        return false;
 }
 
 void ZoteroBrowser::radioButtonsToggled() {
@@ -443,6 +446,8 @@ void ZoteroBrowser::writeOAuthCredentials(bool ok) {
 
 void ZoteroBrowser::tabChanged(int newTabIndex) {
     if (newTabIndex > 0 /** tabs after credential tab*/ && d->needToApplyCredentials) {
-        applyCredentials();
+        const bool success = applyCredentials();
+        for (int i = 1; i < d->tabWidget->count(); ++i)
+            d->tabWidget->widget(i)->setEnabled(success);
     }
 }
