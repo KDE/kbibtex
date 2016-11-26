@@ -63,7 +63,7 @@ public:
     Zotero::TagModel *tagModel;
     Zotero::Collection *collection;
     Zotero::CollectionModel *collectionModel;
-    Zotero::API *api;
+    QSharedPointer<Zotero::API> api;
     bool needToApplyCredentials;
 
     SearchResults *searchResults;
@@ -84,13 +84,20 @@ public:
     static const QString walletFolderOAuth, walletEntryKBibTeXZotero, walletKeyZoteroId, walletKeyZoteroApiKey;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), api(NULL), needToApplyCredentials(true), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()), wallet(NULL) {
+            : p(parent), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), needToApplyCredentials(true), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()), wallet(NULL) {
         setupGUI();
     }
 
     ~Private() {
         if (wallet != NULL)
             delete wallet;
+        if (items != NULL) delete items;
+        if (groups != NULL) delete groups;
+        if (tags != NULL) delete tags;
+        if (tagModel != NULL) delete tagModel;
+        if (collection != NULL) delete collection;
+        if (collectionModel != NULL) delete collectionModel;
+        api.clear();
     }
 
     void setupGUI()
@@ -297,15 +304,21 @@ void ZoteroBrowser::applyCredentials()
         int groupId = d->comboBoxGroupList->itemData(d->comboBoxGroupList->currentIndex()).toInt(&ok);
         if (!ok) groupId = -1;
 
-        d->api->deleteLater();
+        disconnect(d->tags, SIGNAL(finishedLoading()), this, SLOT(reenableWidget()));
+        disconnect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableWidget()));
+        disconnect(d->items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
+        disconnect(d->tagModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
+        disconnect(d->collectionModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
+
         d->collection->deleteLater();
         d->items->deleteLater();
         d->tags->deleteLater();
         d->collectionModel->deleteLater();
         d->tagModel->deleteLater();
+        d->api.clear();
 
         const bool makeGroupRequest = d->radioGroupLibrary->isChecked() && groupId > 0;
-        d->api = new Zotero::API(makeGroupRequest ? Zotero::API::GroupRequest : Zotero::API::UserRequest, makeGroupRequest ? groupId : userId, d->lineEditApiKey->text(), this);
+        d->api = QSharedPointer<Zotero::API>(new Zotero::API(makeGroupRequest ? Zotero::API::GroupRequest : Zotero::API::UserRequest, makeGroupRequest ? groupId : userId, apiKey, this));
         d->items = new Zotero::Items(d->api, this);
         d->tags = new Zotero::Tags(d->api, this);
         d->tagModel = new Zotero::TagModel(d->tags, this);
@@ -345,10 +358,11 @@ void ZoteroBrowser::retrieveGroupList() {
         d->comboBoxGroupList->clear();
         d->comboBoxGroupListInitialized = false;
 
-        d->api->deleteLater();
+        disconnect(d->groups, SIGNAL(finishedLoading()), this, SLOT(gotGroupList()));
         d->groups->deleteLater();
+        d->api.clear();
 
-        d->api = new Zotero::API(Zotero::API::UserRequest, userId, d->lineEditApiKey->text(), this);
+        d->api = QSharedPointer<Zotero::API>(new Zotero::API(Zotero::API::UserRequest, userId, d->lineEditApiKey->text(), this));
         d->groups = new Zotero::Groups(d->api, this);
 
         connect(d->groups, SIGNAL(finishedLoading()), this, SLOT(gotGroupList()));

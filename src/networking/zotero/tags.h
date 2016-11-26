@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QSharedPointer>
 
 #include "kbibtexnetworking_export.h"
 
@@ -35,7 +36,7 @@ class KBIBTEXNETWORKING_EXPORT Tags : public QObject
 {
     Q_OBJECT
 public:
-    explicit Tags(API *api, QObject *parent = NULL);
+    explicit Tags(QSharedPointer<Zotero::API> api, QObject *parent = NULL);
     ~Tags();
 
     bool initialized() const;

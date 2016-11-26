@@ -35,10 +35,10 @@ private:
     Zotero::Groups *p;
 
 public:
-    API *api;
+    QSharedPointer<Zotero::API> api;
     KUrl queuedRequestZoteroUrl;
 
-    Private(API *a, Zotero::Groups *parent)
+    Private(QSharedPointer<Zotero::API> a, Zotero::Groups *parent)
             : p(parent), api(a) {
         initialized = false;
         busy = false;
@@ -59,11 +59,11 @@ public:
     }
 };
 
-Groups::Groups(API *api, QObject *parent)
+Groups::Groups(QSharedPointer<Zotero::API> api, QObject *parent)
         : QObject(parent), d(new Zotero::Groups::Private(api, this))
 {
     KUrl url = api->baseUrl();
-    Q_ASSERT_X(url.path().contains(QLatin1String("users/")), "Groups::Groups(API *api, QObject *parent)", "Provided base URL does not contain 'users/' as expected");
+    Q_ASSERT_X(url.path().contains(QLatin1String("users/")), "Groups::Groups(QSharedPointer<Zotero::API> api, QObject *parent)", "Provided base URL does not contain 'users/' as expected");
     url.addPath(QLatin1String("/groups"));
     if (d->api->inBackoffMode() && d->queuedRequestZoteroUrl.isEmpty()) {
         d->queuedRequestZoteroUrl = url;
