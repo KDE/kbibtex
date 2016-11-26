@@ -38,11 +38,11 @@ private:
     Zotero::Collection *p;
 
 public:
-    Zotero::API *api;
+    QSharedPointer<Zotero::API> api;
 
     static const QString top;
 
-    Private(API *a, Zotero::Collection *parent)
+    Private(QSharedPointer<Zotero::API> a, Zotero::Collection *parent)
             : p(parent), api(a) {
         initialized = false;
         busy = false;
@@ -82,7 +82,7 @@ public:
 
 const QString Zotero::Collection::Private::top = QStringLiteral("top");
 
-Collection::Collection(API *api, QObject *parent)
+Collection::Collection(QSharedPointer<Zotero::API> api, QObject *parent)
         : QObject(parent), d(new Zotero::Collection::Private(api, this))
 {
     d->collectionToLabel[Private::top] = i18n("Library");

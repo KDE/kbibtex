@@ -20,6 +20,7 @@
 
 #include <QObject>
 #include <QScopedPointer>
+#include <QSharedPointer>
 
 #include <QUrl>
 
@@ -37,7 +38,7 @@ class KBIBTEXNETWORKING_EXPORT Collection : public QObject
 {
     Q_OBJECT
 public:
-    Collection(API *api, QObject *parent);
+    Collection(QSharedPointer<Zotero::API> api, QObject *parent);
     ~Collection();
 
     bool initialized() const;

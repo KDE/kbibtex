@@ -34,9 +34,9 @@ private:
     Zotero::Tags *p;
 
 public:
-    API *api;
+    QSharedPointer<Zotero::API> api;
 
-    Private(API *a, Zotero::Tags *parent)
+    Private(QSharedPointer<Zotero::API> a, Zotero::Tags *parent)
             : p(parent), api(a) {
         initialized = false;
         busy = false;
@@ -57,7 +57,7 @@ public:
     }
 };
 
-Tags::Tags(API *api, QObject *parent)
+Tags::Tags(QSharedPointer<Zotero::API> api, QObject *parent)
         : QObject(parent), d(new Zotero::Tags::Private(api, this))
 {
     QUrl url = api->baseUrl();
