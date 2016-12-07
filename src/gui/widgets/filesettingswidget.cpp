@@ -131,7 +131,7 @@ void FileSettingsWidget::setupGUI()
     layout->addRow(i18n("Encoding:"), m_comboBoxEncodings);
     m_comboBoxEncodings->addItem(QStringLiteral("LaTeX"));
     m_comboBoxEncodings->insertSeparator(1);
-    m_comboBoxEncodings->addItems(IConvLaTeX::encodings());
+    m_comboBoxEncodings->addItems(IConvLaTeX::encodings);
     connect(m_comboBoxEncodings, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
     m_comboBoxStringDelimiters = new KComboBox(false, this);

@@ -22,6 +22,7 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <QStringList>
+#include <QTextCodec>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -60,17 +61,13 @@ public:
     QString personNameFormatting;
     QString listSeparator;
     bool cancelFlag;
-    IConvLaTeX *iconvLaTeX;
+    QTextCodec *destinationCodec;
     KSharedConfigPtr config;
     const QString configGroupName, configGroupNameGeneral;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(Qt::PartiallyChecked), cancelFlag(false), iconvLaTeX(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), configGroupNameGeneral(QStringLiteral("General")) {
+            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(Qt::PartiallyChecked), cancelFlag(false), destinationCodec(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), configGroupNameGeneral(QStringLiteral("General")) {
         // nothing
-    }
-
-    ~FileExporterBibTeXPrivate() {
-        delete iconvLaTeX;
     }
 
     void loadState() {
@@ -164,7 +161,7 @@ public:
             iodevice->putChar(' ');
             iodevice->putChar('=');
             iodevice->putChar(' ');
-            iodevice->write(iconvLaTeX->encode(text));
+            iodevice->write(IConvLaTeX::encode(text, destinationCodec));
         }
         iodevice->putChar('\n');
         iodevice->putChar('}');
@@ -186,11 +183,11 @@ public:
         iodevice->putChar('@');
         iodevice->write(be->format(QStringLiteral("String"), keywordCasing).toLatin1().data());
         iodevice->putChar('{');
-        iodevice->write(iconvLaTeX->encode(macro.key()));
+        iodevice->write(IConvLaTeX::encode(macro.key(), destinationCodec));
         iodevice->putChar(' ');
         iodevice->putChar('=');
         iodevice->putChar(' ');
-        iodevice->write(iconvLaTeX->encode(text));
+        iodevice->write(IConvLaTeX::encode(text, destinationCodec));
         iodevice->putChar('}');
         iodevice->putChar('\n');
         iodevice->putChar('\n');
@@ -207,14 +204,14 @@ public:
             iodevice->putChar('@');
             iodevice->write(be->format(QStringLiteral("Comment"), keywordCasing).toLatin1().data());
             iodevice->putChar('{');
-            iodevice->write(iconvLaTeX->encode(text));
+            iodevice->write(IConvLaTeX::encode(text, destinationCodec));
             iodevice->putChar('}');
             iodevice->putChar('\n');
             iodevice->putChar('\n');
         } else if (quoteComment == Preferences::qcPercentSign) {
             QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
             for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); ++it) {
-                const QByteArray line = iconvLaTeX->encode(*it);
+                const QByteArray line = IConvLaTeX::encode(*it, destinationCodec);
                 if (line.length() == 0 || line[0] != QLatin1Char('%')) {
                     /// Guarantee that every line starts with
                     /// a percent sign
@@ -225,7 +222,7 @@ public:
             }
             iodevice->putChar('\n');
         } else {
-            iodevice->write(iconvLaTeX->encode(text));
+            iodevice->write(IConvLaTeX::encode(text, destinationCodec));
             iodevice->putChar('\n');
             iodevice->putChar('\n');
         }
@@ -241,7 +238,7 @@ public:
         iodevice->putChar('{');
         /// Remember: strings from preamble do not get encoded,
         /// may contain raw LaTeX commands and code
-        iodevice->write(iconvLaTeX->encode(p->internalValueToBibTeX(preamble.value(), QString(), leRaw)));
+        iodevice->write(IConvLaTeX::encode(p->internalValueToBibTeX(preamble.value(), QString(), leRaw), destinationCodec));
         iodevice->putChar('}');
         iodevice->putChar('\n');
         iodevice->putChar('\n');
@@ -311,8 +308,8 @@ public:
 
     void applyEncoding(QString &encoding) {
         encoding = encoding.isEmpty() ? QStringLiteral("latex") : encoding.toLower();
-        delete iconvLaTeX;
-        iconvLaTeX = new IConvLaTeX(encoding == QStringLiteral("latex") ? QStringLiteral("us-ascii") : encoding);
+        destinationCodec = QTextCodec::codecForName(encoding == QStringLiteral("latex") ? "us-ascii" : encoding.toLatin1());
+        qCWarning(LOG_KBIBTEX_IO) << "destinationCodec=" << destinationCodec->name();
     }
 
     bool requiresPersonQuoting(const QString &text, bool isLastName) {

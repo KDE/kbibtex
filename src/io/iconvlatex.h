@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,6 +23,7 @@
 class QString;
 class QByteArray;
 class QStringList;
+class QTextCodec;
 
 /**
  * This class is a specialized wrapper around iconv. It will try to encode
@@ -38,20 +39,14 @@ class QStringList;
 class KBIBTEXIO_EXPORT IConvLaTeX
 {
 public:
-    explicit IConvLaTeX(const QString &destEncoding);
-    explicit IConvLaTeX(const IConvLaTeX &other);
-    ~IConvLaTeX();
-    IConvLaTeX &operator= (const IConvLaTeX &other);
+    static QByteArray encode(const QString &input, const QString &destinationEncoding);
+    static QByteArray encode(const QString &input, const QTextCodec *destinationCodec);
 
-    QByteArray encode(const QString &input);
-
-    static const QStringList encodings();
+    static const QStringList encodings;
 
 private:
-    class IConvLaTeXPrivate;
-    IConvLaTeXPrivate *d;
+    explicit IConvLaTeX();
 
-    static QStringList encodingList;
 };
 
 #endif // KBIBTEX_ICONVLATEX_H

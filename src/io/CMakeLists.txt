@@ -98,18 +98,6 @@ target_link_libraries( kbibtexio
     kbibtexdata
 )
 
-# if(
-#     WIN32
-# )
-#     target_link_libraries(
-#         kbibtexio
-#         LINK_PRIVATE
-#         iconv
-#     )
-# endif(
-#     WIN32
-# )
-
 set_target_properties(
     kbibtexio
     PROPERTIES

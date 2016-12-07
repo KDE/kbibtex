@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,144 +17,67 @@
 
 #include "iconvlatex.h"
 
-#include <iconv.h>
-
 #include <QStringList>
+#include <QTextCodec>
+#include <QDebug>
+#include "logging_io.h"
 
 #include "encoderlatex.h"
 
-QStringList IConvLaTeX::encodingList;
-
-class IConvLaTeX::IConvLaTeXPrivate
-{
-private:
-    // UNUSED IConvLaTeX *p;
-
-public:
-    const QString destEncoding;
-    iconv_t iconvHandle;
-
-    IConvLaTeXPrivate(IConvLaTeX */* UNUSED parent*/, const QString &_destEncoding)
-            : destEncoding(_destEncoding) // , UNUSED p(parent)
-    {
-        iconvHandle = iconv_open(destEncoding.toLatin1().data(), "utf-8");
-    }
-
-    ~IConvLaTeXPrivate()
-    {
-        iconv_close(iconvHandle);
-    }
-};
-
-IConvLaTeX::IConvLaTeX(const QString &destEncoding)
-        : d(new IConvLaTeXPrivate(this, destEncoding))
+IConvLaTeX::IConvLaTeX()
 {
     /// nothing
 }
 
-IConvLaTeX::IConvLaTeX(const IConvLaTeX &other)
-        : d(new IConvLaTeXPrivate(this, other.d->destEncoding))
+QByteArray IConvLaTeX::encode(const QString &input, const QString &destinationEncoding)
 {
-    /// nothing
+    QTextCodec *destinationCodec(QTextCodec::codecForName(destinationEncoding.toLatin1()));
+    return encode(input, destinationCodec);
 }
 
-IConvLaTeX::~IConvLaTeX()
+QByteArray IConvLaTeX::encode(const QString &input, const QTextCodec *destinationCodec)
 {
-    delete d;
-}
+    /// Invalid codec? Cannot do anything
+    if (destinationCodec == NULL)
+        return QByteArray();
 
-IConvLaTeX &IConvLaTeX::operator=(const IConvLaTeX &other) {
-    delete d;
-    d = new IConvLaTeXPrivate(this, other.d->destEncoding);
-    return *this;
-}
-
-QByteArray IConvLaTeX::encode(const QString &ninput)
-{
     /// Perform Canonical Decomposition followed by Canonical Composition
-    const QString input = ninput.normalized(QString::NormalizationForm_C);
-    /// Get an UTF-8 representation of the input string
-    QByteArray inputByteArray = input.toUtf8();
-    /// Limit the size of the output buffer
-    /// by making an educated guess of its maximum size
-    size_t maxOutputByteArraySize = inputByteArray.size() * 4 + 1024;
-#ifdef Q_WS_WIN
-    /// iconv on Windows likes to have it as const char *
-    const char *inputBuffer = inputByteArray.data();
-#else
-    /// iconv on Linux likes to have it as char *
-    char *inputBuffer = inputByteArray.data();
-#endif
-    QByteArray outputByteArray(maxOutputByteArraySize, '\0');
-    char *outputBuffer = outputByteArray.data();
-    size_t inputBufferBytesLeft = inputByteArray.size();
-    size_t ouputBufferBytesLeft = maxOutputByteArraySize;
+    const QString ninput = input.normalized(QString::NormalizationForm_C);
+
+    QByteArray result;
     Encoder *laTeXEncoder = EncoderLaTeX::instance();
-
-    while (iconv(d->iconvHandle, &inputBuffer, &inputBufferBytesLeft, &outputBuffer, &ouputBufferBytesLeft) == (size_t)(-1) && inputBufferBytesLeft > 0) {
-        /// split text into character where iconv stopped and remaining text
-        QString remainingString = QString::fromUtf8(inputBuffer);
-        QChar problematicChar = remainingString.at(0);
-        remainingString = remainingString.mid(1);
-
-        /// setup input buffer to continue with remaining text
-        inputByteArray = remainingString.toUtf8();
-        inputBuffer = inputByteArray.data();
-        inputBufferBytesLeft = inputByteArray.size();
-
-        /// encode problematic character in LaTeX encoding and append to output buffer
-        const QString encodedProblem = laTeXEncoder->encode(problematicChar);
-        QByteArray encodedProblemByteArray = encodedProblem.toUtf8();
-        qstrncpy(outputBuffer, encodedProblemByteArray.data(), ouputBufferBytesLeft);
-        ouputBufferBytesLeft -= encodedProblemByteArray.size();
-        outputBuffer += encodedProblemByteArray.size();
-    }
-
-    /// cut away unused space
-    outputByteArray.resize(maxOutputByteArraySize - ouputBufferBytesLeft);
-
-    return outputByteArray;
-}
-
-const QStringList IConvLaTeX::encodings()
-{
-    if (encodingList.isEmpty()) {
-        /* FIXME this list will contain encodings that are irreversible!
-        QProcess iconvProgram;
-        QStringList iconvProgramArgs = QStringList() << "--list";
-        iconvProgram.start(QStringLiteral("iconv"), iconvProgramArgs);
-        iconvProgram.waitForStarted(10000);
-        if (iconvProgram.state() == QProcess::Running) {
-            iconvProgram.waitForReadyRead(10000);
-            encodingList.clear();
-            QString allText = "";
-            while (iconvProgram.canReadLine()) {
-                allText += iconvProgram.readAllStandardOutput();
-                iconvProgram.waitForReadyRead(10000);
-            }
-            iconvProgram.waitForFinished(10000);
-            iconvProgram.close();
-
-            encodingList = allText.replace("//", "").split('\n', QString::SkipEmptyParts);
+    /// Build result, character by character
+    foreach (const QChar & c, ninput) {
+        /// Get byte sequence representing current character in chosen codec
+        const QByteArray cba = destinationCodec->fromUnicode(c);
+        if (destinationCodec->canEncode(c) && (c == QChar(0x003f /** question mark */) || cba.size() != 1 || cba[0] != 0x3f /** question mark */)) {
+            /// Codec claims that it can encode current character, but some codecs
+            /// still cannot encode character and simply return a question mark, so
+            /// only accept question marks as encoding result if original character
+            /// was question mark (assuming all codecs can encode question marks).
+            result.append(cba);
+        } else {
+            /// Chosen codec can NOT encode current Unicode character, so try to use
+            /// 'LaTeX encoder', which may translate 0x00c5 (A with ring above) into
+            /// '\AA'. LaTeX encoder returns UTF-8 representation if given character
+            /// cannot be encoded
+            result.append(laTeXEncoder->encode(QString(c)).toUtf8());
         }
-        */
-
-        /// approved encodings manually added to list
-        int dosCodepages[] = {437, 720, 737, 775, 850, 852, 855, 857, 858, 860, 861, 862, 863, 864, 865, 866, 869, -1};
-        int windowsCodepages[] = {1250, 1251, 1252, 1253, 1254, 1255, 1256, 1257, 1258, -1};
-        for (int *cur = dosCodepages; *cur > 0; ++cur)
-            encodingList << QStringLiteral("CP") + QString::number(*cur);
-        for (int *cur = windowsCodepages; *cur > 0; ++cur)
-            encodingList << QStringLiteral("CP") + QString::number(*cur);
-        for (int i = 1; i <= 16; ++i)
-            encodingList << QStringLiteral("ISO-8859-") + QString::number(i);
-        encodingList << QStringLiteral("KOI8-R");
-        for (int i = 1; i <= 10; ++i)
-            encodingList << QStringLiteral("Latin") + QString::number(i);
-        encodingList << QStringLiteral("UTF-8");
-        for (int *cur = windowsCodepages; *cur > 0; ++cur)
-            encodingList << QStringLiteral("Windows-") + QString::number(*cur);
     }
 
-    return encodingList;
+    return result;
 }
+
+const QStringList IConvLaTeX::encodings = QStringList()
+        /// the classics
+        << QStringLiteral("US-ASCII") /** effectively like 'LaTeX' encoding */
+        /// ISO 8859 a.k.a. Latin codecs
+        << QStringLiteral("ISO-8859-1") << QStringLiteral("ISO-8859-2") << QStringLiteral("ISO-8859-3") << QStringLiteral("ISO-8859-4") << QStringLiteral("ISO-8859-5") << QStringLiteral("ISO-8859-6") << QStringLiteral("ISO-8859-7") << QStringLiteral("ISO-8859-8") << QStringLiteral("ISO-8859-9") << QStringLiteral("ISO-8859-10") << QStringLiteral("ISO-8859-13") << QStringLiteral("ISO-8859-14") << QStringLiteral("ISO-8859-15") << QStringLiteral("ISO-8859-16")
+        /// various Unicode codecs
+        << QStringLiteral("UTF-8") << QStringLiteral("UTF-16") << QStringLiteral("UTF-16BE") << QStringLiteral("UTF-16LE") << QStringLiteral("UTF-32") << QStringLiteral("UTF-32BE") << QStringLiteral("UTF-32LE")
+        /// various Cyrillic codecs
+        << QStringLiteral("KOI8-R") << QStringLiteral("KOI8-U")
+        /// various CJK codecs
+        << QStringLiteral("Big5") << QStringLiteral("Big5-HKSCS") << QStringLiteral("GB18030") << QStringLiteral("EUC-JP") << QStringLiteral("EUC-KR") << QStringLiteral("ISO 2022-JP") << QStringLiteral("Shift-JIS")
+        /// Windows codecs
+        << QStringLiteral("Windows-1250") << QStringLiteral("Windows-1251") << QStringLiteral("Windows-1252") << QStringLiteral("Windows-1253") << QStringLiteral("Windows-1254") << QStringLiteral("Windows-1255") << QStringLiteral("Windows-1256") << QStringLiteral("Windows-1257") << QStringLiteral("Windows-1258");
