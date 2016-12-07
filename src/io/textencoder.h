@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ICONVLATEX_H
-#define KBIBTEX_ICONVLATEX_H
+#ifndef KBIBTEX_TEXTENCODER_H
+#define KBIBTEX_TEXTENCODER_H
 
 #include "kbibtexio_export.h"
 
@@ -26,7 +26,7 @@ class QStringList;
 class QTextCodec;
 
 /**
- * This class is a specialized wrapper around iconv. It will try to encode
+ * This class is a specialized wrapper around QTextCodec. It will try to encode
  * all characters not supported by the chosen encoding using the special
  * "LaTeX" encoding.
  * Example: When choosing encoding "iso8859-1" (aka Latin-1), you can encode
@@ -36,7 +36,7 @@ class QTextCodec;
  *
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT IConvLaTeX
+class KBIBTEXIO_EXPORT TextEncoder
 {
 public:
     static QByteArray encode(const QString &input, const QString &destinationEncoding);
@@ -45,8 +45,8 @@ public:
     static const QStringList encodings;
 
 private:
-    explicit IConvLaTeX();
+    explicit TextEncoder();
 
 };
 
-#endif // KBIBTEX_ICONVLATEX_H
+#endif // KBIBTEX_TEXTENCODER_H

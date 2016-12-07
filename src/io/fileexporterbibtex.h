@@ -30,7 +30,6 @@ class Comment;
 class Preamble;
 class Macro;
 class Entry;
-class IConvLaTeX;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

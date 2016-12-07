@@ -30,7 +30,6 @@
 #include "fileview.h"
 #include "models/filemodel.h"
 #include "value.h"
-#include "iconvlatex.h"
 #include "file.h"
 #include "openfileinfo.h"
 

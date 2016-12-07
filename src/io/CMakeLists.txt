@@ -24,7 +24,7 @@ set(
     fileimporterpdf.cpp
     fileimporterris.cpp
     fileinfo.cpp
-    iconvlatex.cpp
+    textencoder.cpp
     bibutils.cpp
     xsltransform.cpp
     ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
@@ -56,7 +56,7 @@ set(
     fileimporterpdf.h
     fileimporterris.h
     fileinfo.h
-    iconvlatex.h
+    textencoder.h
     bibutils.h
     xsltransform.h
 )

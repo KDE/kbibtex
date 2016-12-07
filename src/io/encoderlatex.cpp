@@ -21,7 +21,6 @@
 
 #include <QString>
 
-#include "iconvlatex.h"
 #include "logging_io.h"
 
 inline bool isAsciiLetter(const QChar c) {

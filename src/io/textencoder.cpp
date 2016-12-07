@@ -15,7 +15,7 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include "iconvlatex.h"
+#include "textencoder.h"
 
 #include <QStringList>
 #include <QTextCodec>
@@ -24,18 +24,18 @@
 
 #include "encoderlatex.h"
 
-IConvLaTeX::IConvLaTeX()
+TextEncoder::TextEncoder()
 {
     /// nothing
 }
 
-QByteArray IConvLaTeX::encode(const QString &input, const QString &destinationEncoding)
+QByteArray TextEncoder::encode(const QString &input, const QString &destinationEncoding)
 {
     QTextCodec *destinationCodec(QTextCodec::codecForName(destinationEncoding.toLatin1()));
     return encode(input, destinationCodec);
 }
 
-QByteArray IConvLaTeX::encode(const QString &input, const QTextCodec *destinationCodec)
+QByteArray TextEncoder::encode(const QString &input, const QTextCodec *destinationCodec)
 {
     /// Invalid codec? Cannot do anything
     if (destinationCodec == NULL)
@@ -68,7 +68,7 @@ QByteArray IConvLaTeX::encode(const QString &input, const QTextCodec *destinatio
     return result;
 }
 
-const QStringList IConvLaTeX::encodings = QStringList()
+const QStringList TextEncoder::encodings = QStringList()
         /// the classics
         << QStringLiteral("US-ASCII") /** effectively like 'LaTeX' encoding */
         /// ISO 8859 a.k.a. Latin codecs

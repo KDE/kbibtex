@@ -39,7 +39,7 @@
 #include "encoderutf8.h"
 #include "bibtexentries.h"
 #include "bibtexfields.h"
-#include "iconvlatex.h"
+#include "textencoder.h"
 #include "logging_io.h"
 
 #define encodercheck(encoder, text) ((encoder)?(encoder)->encode((text)):(text))
@@ -161,7 +161,7 @@ public:
             iodevice->putChar(' ');
             iodevice->putChar('=');
             iodevice->putChar(' ');
-            iodevice->write(IConvLaTeX::encode(text, destinationCodec));
+            iodevice->write(TextEncoder::encode(text, destinationCodec));
         }
         iodevice->putChar('\n');
         iodevice->putChar('}');
@@ -183,11 +183,11 @@ public:
         iodevice->putChar('@');
         iodevice->write(be->format(QStringLiteral("String"), keywordCasing).toLatin1().data());
         iodevice->putChar('{');
-        iodevice->write(IConvLaTeX::encode(macro.key(), destinationCodec));
+        iodevice->write(TextEncoder::encode(macro.key(), destinationCodec));
         iodevice->putChar(' ');
         iodevice->putChar('=');
         iodevice->putChar(' ');
-        iodevice->write(IConvLaTeX::encode(text, destinationCodec));
+        iodevice->write(TextEncoder::encode(text, destinationCodec));
         iodevice->putChar('}');
         iodevice->putChar('\n');
         iodevice->putChar('\n');
@@ -204,14 +204,14 @@ public:
             iodevice->putChar('@');
             iodevice->write(be->format(QStringLiteral("Comment"), keywordCasing).toLatin1().data());
             iodevice->putChar('{');
-            iodevice->write(IConvLaTeX::encode(text, destinationCodec));
+            iodevice->write(TextEncoder::encode(text, destinationCodec));
             iodevice->putChar('}');
             iodevice->putChar('\n');
             iodevice->putChar('\n');
         } else if (quoteComment == Preferences::qcPercentSign) {
             QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
             for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); ++it) {
-                const QByteArray line = IConvLaTeX::encode(*it, destinationCodec);
+                const QByteArray line = TextEncoder::encode(*it, destinationCodec);
                 if (line.length() == 0 || line[0] != QLatin1Char('%')) {
                     /// Guarantee that every line starts with
                     /// a percent sign
@@ -222,7 +222,7 @@ public:
             }
             iodevice->putChar('\n');
         } else {
-            iodevice->write(IConvLaTeX::encode(text, destinationCodec));
+            iodevice->write(TextEncoder::encode(text, destinationCodec));
             iodevice->putChar('\n');
             iodevice->putChar('\n');
         }
@@ -238,7 +238,7 @@ public:
         iodevice->putChar('{');
         /// Remember: strings from preamble do not get encoded,
         /// may contain raw LaTeX commands and code
-        iodevice->write(IConvLaTeX::encode(p->internalValueToBibTeX(preamble.value(), QString(), leRaw), destinationCodec));
+        iodevice->write(TextEncoder::encode(p->internalValueToBibTeX(preamble.value(), QString(), leRaw), destinationCodec));
         iodevice->putChar('}');
         iodevice->putChar('\n');
         iodevice->putChar('\n');
