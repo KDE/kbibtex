@@ -58,12 +58,14 @@ public:
         if (!group.readEntry(keyUseAutomaticLyXPipeDetection, defaultUseAutomaticLyXPipeDetection))
             result = group.readEntry(keyLyXPipePath, defaultLyXPipePath);
 
+#ifdef QT_LSTAT
         /// Check if the result so far is empty. This means that
         /// either automatic detection is enabled or the path in
         /// the configuration is empty/invalid. Proceed with
         /// automatic detection in this case.
         if (result.isEmpty())
             result = LyX::guessLyXPipeLocation();
+#endif // QT_LSTAT
 
         /// Finally, even if automatic detection was preferred by the user,
         /// still check configuration for a path if automatic detection failed
@@ -77,12 +79,9 @@ public:
 
 const QString LyX::keyUseAutomaticLyXPipeDetection = QStringLiteral("UseAutomaticLyXPipeDetection");
 const QString LyX::keyLyXPipePath = QStringLiteral("LyXPipePath");
-const bool LyX::defaultUseAutomaticLyXPipeDetection =
-#ifdef Q_WS_WIN
-    false; /// Windows is not supported yet
-#else // Q_WS_WIN
-    true;
-#endif // Q_WS_WIN
+#ifdef QT_LSTAT
+const bool LyX::defaultUseAutomaticLyXPipeDetection = true;
+#endif // QT_LSTAT
 const QString LyX::defaultLyXPipePath = QString();
 const QString LyX::configGroupName = QStringLiteral("LyXPipe");
 
@@ -140,6 +139,7 @@ void LyX::sendReferenceToLyX()
     pipe.close();
 }
 
+#ifdef QT_LSTAT
 QString LyX::guessLyXPipeLocation()
 {
     QT_STATBUF statBuffer;
@@ -175,3 +175,4 @@ QString LyX::guessLyXPipeLocation()
 
     return result;
 }
+#endif // QT_LSTAT

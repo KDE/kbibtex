@@ -21,6 +21,7 @@
 #include "kbibtexproc_export.h"
 
 #include <QObject>
+#include <qplatformdefs.h>
 
 namespace KParts
 {
@@ -38,7 +39,9 @@ class KBIBTEXPROC_EXPORT LyX: public QObject
 public:
     static const QString keyUseAutomaticLyXPipeDetection;
     static const QString keyLyXPipePath;
+#ifdef QT_LSTAT
     static const bool defaultUseAutomaticLyXPipeDetection;
+#endif // QT_LSTAT
     static const QString defaultLyXPipePath;
     static const QString configGroupName;
 
@@ -47,7 +50,9 @@ public:
 
     void setReferences(const QStringList &references);
 
+#ifdef QT_LSTAT
     static QString guessLyXPipeLocation();
+#endif // QT_LSTAT
 
 private slots:
     void sendReferenceToLyX();

@@ -21,6 +21,7 @@
 #include <QCheckBox>
 #include <QSpinBox>
 #include <QPushButton>
+#include <qplatformdefs.h>
 
 #include <KLocalizedString>
 #include <KSharedConfig>
@@ -47,12 +48,16 @@ private:
     KSharedConfigPtr config;
 
 public:
+#ifdef QT_LSTAT
     QCheckBox *checkboxUseAutomaticLyXPipeDetection;
+#endif // QT_LSTAT
     KComboBox *comboBoxBackupScope;
     QSpinBox *spinboxNumberOfBackups;
 
     KUrlRequester *lineeditLyXPipePath;
-    QString lastUserInput;
+#ifdef QT_LSTAT
+    QString lastUserInputLyXPipePath;
+#endif // QT_LSTAT
 
     SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
@@ -70,9 +75,13 @@ public:
         spinboxNumberOfBackups->setValue(qMax(0, qMin(spinboxNumberOfBackups->maximum(), configGroup.readEntry(Preferences::keyNumberOfBackups, Preferences::defaultNumberOfBackups))));
 
         KConfigGroup configGroupLyX(config, LyX::configGroupName);
+#ifndef QT_LSTAT
+        lineeditLyXPipePath->setText(configGroupLyX.readEntry(LyX::keyLyXPipePath, LyX::defaultLyXPipePath));
+#else // QT_LSTAT
         checkboxUseAutomaticLyXPipeDetection->setChecked(configGroupLyX.readEntry(LyX::keyUseAutomaticLyXPipeDetection, LyX::defaultUseAutomaticLyXPipeDetection));
-        lastUserInput = configGroupLyX.readEntry(LyX::keyLyXPipePath, LyX::defaultLyXPipePath);
+        lastUserInputLyXPipePath = configGroupLyX.readEntry(LyX::keyLyXPipePath, LyX::defaultLyXPipePath);
         p->automaticLyXDetectionToggled(checkboxUseAutomaticLyXPipeDetection->isChecked());
+#endif // QT_LSTAT
     }
 
     void saveState() {
@@ -84,8 +93,12 @@ public:
         configGroup.writeEntry(Preferences::keyNumberOfBackups, spinboxNumberOfBackups->value());
 
         KConfigGroup configGroupLyX(config, LyX::configGroupName);
+#ifndef QT_LSTAT
+        configGroupLyX.writeEntry(LyX::keyLyXPipePath, lineeditLyXPipePath->text());
+#else // QT_LSTAT
         configGroupLyX.writeEntry(LyX::keyUseAutomaticLyXPipeDetection, checkboxUseAutomaticLyXPipeDetection->isChecked());
-        configGroupLyX.writeEntry(LyX::keyLyXPipePath, checkboxUseAutomaticLyXPipeDetection->isChecked() ? lastUserInput : lineeditLyXPipePath->text());
+        configGroupLyX.writeEntry(LyX::keyLyXPipePath, checkboxUseAutomaticLyXPipeDetection->isChecked() ? lastUserInputLyXPipePath : lineeditLyXPipePath->text());
+#endif // QT_LSTAT
 
         config->sync();
     }
@@ -98,9 +111,13 @@ public:
         comboBoxBackupScope->setCurrentIndex(index);
         spinboxNumberOfBackups->setValue(qMax(0, qMin(spinboxNumberOfBackups->maximum(), Preferences::defaultNumberOfBackups)));
 
+#ifndef QT_LSTAT
+        const QString pipe = LyX::defaultLyXPipePath;
+#else // QT_LSTAT
         checkboxUseAutomaticLyXPipeDetection->setChecked(LyX::defaultUseAutomaticLyXPipeDetection);
         QString pipe = LyX::guessLyXPipeLocation();
         if (pipe.isEmpty()) pipe = LyX::defaultLyXPipePath;
+#endif // QT_LSTAT
         lineeditLyXPipePath->setText(pipe);
     }
 
@@ -119,10 +136,12 @@ public:
         comboBoxCopyReferenceCmd->setModel(itim);
         connect(comboBoxCopyReferenceCmd, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), p, &SettingsFileExporterWidget::changed);
 
+#ifdef QT_LSTAT
         checkboxUseAutomaticLyXPipeDetection = new QCheckBox(QStringLiteral(""), p);
         layout->addRow(i18n("Detect LyX pipe automatically:"), checkboxUseAutomaticLyXPipeDetection);
         connect(checkboxUseAutomaticLyXPipeDetection, &QCheckBox::toggled, p, &SettingsFileExporterWidget::changed);
         connect(checkboxUseAutomaticLyXPipeDetection, &QCheckBox::toggled, p, &SettingsFileExporterWidget::automaticLyXDetectionToggled);
+#endif // QT_LSTAT
 
         lineeditLyXPipePath = new KUrlRequester(p);
         layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
@@ -186,15 +205,17 @@ void SettingsFileExporterWidget::resetToDefaults()
     d->resetToDefaults();
 }
 
+#ifdef QT_LSTAT
 void SettingsFileExporterWidget::automaticLyXDetectionToggled(bool isChecked)
 {
     d->lineeditLyXPipePath->setEnabled(!isChecked);
     if (isChecked) {
-        d->lastUserInput = d->lineeditLyXPipePath->text();
+        d->lastUserInputLyXPipePath = d->lineeditLyXPipePath->text();
         d->lineeditLyXPipePath->setText(LyX::guessLyXPipeLocation());
     } else
-        d->lineeditLyXPipePath->setText(d->lastUserInput);
+        d->lineeditLyXPipePath->setText(d->lastUserInputLyXPipePath);
 }
+#endif // QT_LSTAT
 
 void SettingsFileExporterWidget::updateGUI()
 {

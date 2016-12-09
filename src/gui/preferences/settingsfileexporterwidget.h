@@ -20,6 +20,8 @@
 
 #include <kbibtexgui_export.h>
 
+#include <qplatformdefs.h>
+
 #include "settingsabstractwidget.h"
 
 /**
@@ -40,7 +42,9 @@ public slots:
     void loadState();
     void saveState();
     void resetToDefaults();
+#ifdef QT_LSTAT
     void automaticLyXDetectionToggled(bool);
+#endif // QT_LSTAT
 
 private slots:
     void updateGUI();
