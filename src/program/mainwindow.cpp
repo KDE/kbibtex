@@ -40,7 +40,9 @@
 #include "kbibtex.h"
 #include "preferences/kbibtexpreferencesdialog.h"
 #include "valuelist.h"
+#ifdef HAVE_ZOTERO
 #include "zoterobrowser.h"
+#endif // HAVE_ZOTERO
 #include "statistics.h"
 #include "documentlist.h"
 #include "mdiwidget.h"
@@ -66,7 +68,9 @@ public:
     QDockWidget *dockReferencePreview;
     QDockWidget *dockDocumentPreview;
     QDockWidget *dockValueList;
+#ifdef HAVE_ZOTERO
     QDockWidget *dockZotero;
+#endif // HAVE_ZOTERO
     QDockWidget *dockStatistics;
     QDockWidget *dockSearchForm;
     QDockWidget *dockSearchResults;
@@ -78,7 +82,9 @@ public:
     DocumentPreview *documentPreview;
     FileSettings *fileSettings;
     ValueList *valueList;
+#ifdef HAVE_ZOTERO
     ZoteroBrowser *zotero;
+#endif // HAVE_ZOTERO
     Statistics *statistics;
     SearchForm *searchForm;
     SearchResults *searchResults;
@@ -161,6 +167,7 @@ public:
         dockSearchForm->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockSearchForm->toggleViewAction());
 
+#ifdef HAVE_ZOTERO
         dockZotero = new QDockWidget(i18n("Zotero"), p);
         dockZotero->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
         p->addDockWidget(Qt::LeftDockWidgetArea, dockZotero);
@@ -170,6 +177,7 @@ public:
         dockZotero->setObjectName(QStringLiteral("dockZotero"));
         dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockZotero->toggleViewAction());
+#endif // HAVE_ZOTERO
 
         dockReferencePreview = new QDockWidget(i18n("Reference Preview"), p);
         dockReferencePreview->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -211,7 +219,9 @@ public:
         showPanelsMenu->addAction(dockFileSettings->toggleViewAction());
 
         p->tabifyDockWidget(dockFileSettings, dockSearchForm);
+#ifdef HAVE_ZOTERO
         p->tabifyDockWidget(dockZotero, dockSearchForm);
+#endif // HAVE_ZOTERO
         p->tabifyDockWidget(dockValueList, dockStatistics);
         p->tabifyDockWidget(dockStatistics, dockFileSettings);
         p->tabifyDockWidget(dockSearchForm, dockReferencePreview);

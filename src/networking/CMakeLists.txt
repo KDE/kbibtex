@@ -24,22 +24,29 @@ set(
     onlinesearch/onlinesearchideasrepec.cpp
     onlinesearch/onlinesearchdoi.cpp
     onlinesearch/onlinesearchbiorxiv.cpp
-    zotero/collectionmodel.cpp
-    zotero/collection.cpp
-    zotero/api.cpp
-    zotero/groups.cpp
-    zotero/tags.cpp
-    zotero/tagmodel.cpp
-    zotero/items.cpp
-    zotero/oauthwizard.cpp
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
     ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     logging_networking.cpp
-    # QOAuth for Qt5 from Git
-    ../3rdparty/qoauth/src/interface.cpp
 )
+
+if(NOT WIN32)
+    set(
+        kbibtexnetworking_LIB_SRCS
+        ${kbibtexnetworking_LIB_SRCS}
+        zotero/api.cpp
+        zotero/collectionmodel.cpp
+        zotero/collection.cpp
+        zotero/items.cpp
+        zotero/groups.cpp
+        zotero/oauthwizard.cpp
+        zotero/tags.cpp
+        zotero/tagmodel.cpp
+        # QOAuth for Qt5 from Git
+        ../3rdparty/qoauth/src/interface.cpp
+        )
+endif(NOT WIN32)
 
 set(
     kbibtexnetworking_HDRS
