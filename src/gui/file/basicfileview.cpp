@@ -187,11 +187,14 @@ public:
                 headerProperty->sumWidths += headerProperty->columns[col].width;
             ++col;
         }
+        if (headerProperty->sumWidths <= 0){
+            qCWarning(LOG_KBIBTEX_GUI) << "Sum of column widths over visible columns is zero, resetting configuration";
+            resetHeaderProperties();
+        }
         Q_ASSERT_X(headerProperty->sumWidths > 0, "BasicFileView::Private::loadHeaderProperties", "Sum of column widths over visible columns is zero.");
 
         headerProperty->sortedColumn = configGroup.readEntry(configHeaderState.arg(name).append(QStringLiteral("SortedColumn")), -1);
         headerProperty->sortOrder = (Qt::SortOrder)configGroup.readEntry(configHeaderState.arg(name).append(QStringLiteral("SortOrder")), (int)Qt::AscendingOrder);
-
 
         Q_ASSERT(headerProperty->sumWidths > 0);
     }
