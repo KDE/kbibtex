@@ -49,9 +49,11 @@
 <xsl:when test="starts-with(url/text, 'http://www.jstor.org/stable/')">
 <xsl:text>jstor|</xsl:text>
 <xsl:value-of select="substring(url/text, 28)" />
+</xsl:when>
 <xsl:when test="starts-with(url/text, 'http://doi.acm.org/')">
 <xsl:text>doi|</xsl:text>
 <xsl:value-of select="substring(url/text, 19)" />
+</xsl:when>
 <xsl:when test="starts-with(url/text, 'http://doi.wiley.com/')">
 <xsl:text>doi|</xsl:text>
 <xsl:value-of select="substring(url/text, 21)" />
