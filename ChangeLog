@@ -19,6 +19,9 @@ Diff 0.6 to 0.6.1
   Fixing build issues on ARM architecture
 - KDE Bug 354785: https://bugs.kde.org/show_bug.cgi?id=354785
   Using QTextDocument/QTextEdit instead of WebKit/WebEngine: more lightweight and supported on all platforms
+- KDE Bug 371515: Speeding up selection of elements in bibliography lists
+- KDE Bug 371593: Sorting field and entry types in comboboxes alphabetically
+- Fixing crash when open file got modified externally
 - Correcting choke on PubMed searches to 10 seconds
 - Fixing search issues for ACM, Google Scholar, JSTOR, and ScienceDirect
 - Setting foreground color of colored rows to either black or white for better readability
@@ -29,8 +32,10 @@ Diff 0.6 to 0.6.1
 - Adding 'Keywords' field to .desktop file
 - Removing file that was licensed under CC BY-NC, but never got installed
 - Improved Unicode support
+- Refactoring writing of bibliography files, both to local and to remote places, including writing to symbolic links
 - Better handling quotation marks and protective curly brackets around titles
 - Updating translations
+- Numerous small fixes and changes, run 'git diff v0.6..v0.6.1' for details
 
 Diff 0.5.2 to 0.6
 
