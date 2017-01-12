@@ -361,7 +361,7 @@ const int FindDuplicates::FindDuplicatesPrivate::dsize = 32;
 
 
 FindDuplicates::FindDuplicates(QWidget *parent, int sensitivity)
-        : d(new FindDuplicatesPrivate(sensitivity, parent))
+        : QObject(parent), d(new FindDuplicatesPrivate(sensitivity, parent))
 {
     // nothing
 }
