@@ -97,8 +97,8 @@ public:
     }
 };
 
-KBibTeXMainWindow::KBibTeXMainWindow()
-        : KParts::MainWindow(), d(new KBibTeXMainWindowPrivate(this))
+KBibTeXMainWindow::KBibTeXMainWindow(QWidget *parent)
+        : KParts::MainWindow(parent, (Qt::WindowFlags)KDE_DEFAULT_WINDOWFLAGS), d(new KBibTeXMainWindowPrivate(this))
 {
     setObjectName(QLatin1String("KBibTeXShell"));
 

@@ -36,7 +36,7 @@ class KBibTeXMainWindow : public KParts::MainWindow
     Q_OBJECT
 
 public:
-    explicit KBibTeXMainWindow();
+    explicit KBibTeXMainWindow(QWidget *parent = NULL);
     virtual ~KBibTeXMainWindow();
 
 public slots:
