@@ -57,7 +57,6 @@ public:
     const static QString ListSeparator;
 
     File();
-    File(const File &other);
     ~File();
 
     /**
