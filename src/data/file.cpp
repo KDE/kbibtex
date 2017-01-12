@@ -98,12 +98,6 @@ File::File()
     // nothing
 }
 
-File::File(const File &other)
-        : QList<QSharedPointer<Element> >(other), d(new FilePrivate(this, other))
-{
-    // nothing
-}
-
 File::~File()
 {
     Q_ASSERT_X(d->checkValidity(), "File::~File()", "This File object is not valid");
