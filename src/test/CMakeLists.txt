@@ -67,7 +67,6 @@ kde4_add_unit_test(
 target_link_libraries(
     kbibtextest
     LINK_PRIVATE
-    ${QT_QTWEBKIT_LIBRARIES}
     ${KDE4_KIO_LIBS}
     ${KDE4_KPARTS_LIBS}
     ${KDE4_KFILE_LIBS}

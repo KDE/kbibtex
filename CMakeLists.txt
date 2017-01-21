@@ -47,6 +47,12 @@ set(
 )
 
 option(
+    WITH_QTWEBKIT
+    "Enable QtWebkit support"
+    ON
+)
+
+option(
     UNITY_BUILD
     "Compile multiple C++ files in one big, merged file (\"Unity build\")\nSee also http://t-fischer.dreamwidth.org/3054.html"
 )

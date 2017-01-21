@@ -34,27 +34,43 @@ include(
 ##SET(CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} -pg")
 ##SET(CMAKE_CXX_FLAGS_DISTRIBUTION "${CMAKE_CXX_FLAGS_DISTRIBUTION} -pg")
 
-# check if QtWebKit is available, which seems to be not available
-# on e.g. RedHat Enterprise Linux 6 or Scientific Linux 6
+# check if QtWebKit support is desired and/or available
 if(
-    QT_QTWEBKIT_FOUND
+    WITH_QTWEBKIT
 )
-    message(
-        STATUS
-        "Found QtWebKit, enabling WebKit support"
+    if(
+        QT_QTWEBKIT_FOUND
     )
-    add_definitions(
-        -DHAVE_QTWEBKIT
+        message(
+            STATUS
+            "Found QtWebKit, enabling WebKit support"
+        )
+        add_definitions(
+            -DHAVE_QTWEBKIT
+        )
+        set(
+            OPTIONAL_QTWEBKIT_LIBRARIES
+            ${QT_QTWEBKIT_LIBRARIES}
+        )
+    else(
+        QT_QTWEBKIT_FOUND
+    )
+        message(
+            STATUS
+            "QtWebKit not found, disabling WebKit support"
+        )
+    endif(
+        QT_QTWEBKIT_FOUND
     )
 else(
-    QT_QTWEBKIT_FOUND
+    WITH_QTWEBKIT
 )
     message(
         STATUS
-        "QtWebKit not found, disabling WebKit support"
+        "QtWebKit support has been disabled by configuration option"
     )
 endif(
-    QT_QTWEBKIT_FOUND
+    WITH_QTWEBKIT
 )
 
 add_definitions(

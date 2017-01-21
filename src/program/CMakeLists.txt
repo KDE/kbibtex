@@ -66,7 +66,7 @@ kde4_add_executable(
 target_link_libraries(
     kbibtex
     LINK_PRIVATE
-    ${QT_QTWEBKIT_LIBRARIES}
+    ${OPTIONAL_QTWEBKIT_LIBRARIES}
     ${KDE4_KIO_LIBS}
     ${KDE4_KPARTS_LIBS}
     ${KDE4_KFILE_LIBS}

@@ -133,7 +133,6 @@ target_link_libraries(
     kbibtexnetworking
     LINK_PRIVATE
     ${QT_QTCORE_LIBRARY}
-    ${QT_QTWEBKIT_LIBRARY}
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KIO_LIBS}
     ${POPPLER_QT4_LIBRARIES}
