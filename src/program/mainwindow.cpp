@@ -345,6 +345,7 @@ void KBibTeXMainWindow::openDocumentDialog()
         supportedMimeTypes.append(QStringLiteral("application/x-isi-export-format"));
         supportedMimeTypes.append(QStringLiteral("application/x-endnote-refer"));
     }
+    supportedMimeTypes.append(QStringLiteral("application/pdf"));
     supportedMimeTypes.append(QStringLiteral("all/all"));
     QPointer<QFileDialog> dlg = new QFileDialog(this, i18n("Open file") /* TODO better text */, startDir);
     dlg->setMimeTypeFilters(supportedMimeTypes);

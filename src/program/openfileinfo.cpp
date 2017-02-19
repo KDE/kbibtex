@@ -301,22 +301,45 @@ void OpenFileInfo::setLastAccess(const QDateTime &dateTime)
 
 KService::List OpenFileInfo::listOfServices()
 {
-    KService::List result = KMimeTypeTrader::self()->query(mimeType(), QStringLiteral("KParts/ReadWritePart"));
+    const QString mt(mimeType());
+    KService::List result = KMimeTypeTrader::self()->query(mt, QStringLiteral("KParts/ReadWritePart"));
     if (result.isEmpty())
-        result = KMimeTypeTrader::self()->query(mimeType(), QStringLiteral("KParts/ReadOnlyPart"));
+        result = KMimeTypeTrader::self()->query(mt, QStringLiteral("KParts/ReadOnlyPart"));
+
+    /// Always include KBibTeX part in list of services:
+    /// First, check if KBibTeX part is already in list as returned by
+    /// KMimeTypeTrader::self()->query(..)
+    bool listIncludesKBibTeXPart = false;
+    for (KService::List::ConstIterator it = result.constBegin(); !listIncludesKBibTeXPart && it != result.constEnd(); ++it) {
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "Found library for" << mt << ":" << (*it)->library();
+        listIncludesKBibTeXPart = (*it)->library() == QStringLiteral("kbibtexpart");
+    }
+    /// If KBibTeX part not in list, add it manually
+    if (!listIncludesKBibTeXPart) {
+        result << KService::serviceByDesktopName(QStringLiteral("kbibtexpart"));
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "Adding library for" << mt << ":" << result.last()->library();
+    }
+
     return result;
 }
 
 KService::Ptr OpenFileInfo::defaultService()
 {
-    const QString mt = mimeType();
+    QString mt = mimeType();
+    if (mt == QStringLiteral("application/pdf")) {
+        /// KBibTeX has a FileImporterPDF which allows it to load .pdf file
+        /// that got generated with KBibTeX and contain the original
+        /// .bib file as an 'attachment'.
+        /// This importer does not work with any other .pdf files!!!
+        mt = QStringLiteral("text/x-bibtex");
+    }
     KService::Ptr result = KMimeTypeTrader::self()->preferredService(mt, QStringLiteral("KParts/ReadWritePart"));
     if (!result)
         result = KMimeTypeTrader::self()->preferredService(mt, QStringLiteral("KParts/ReadOnlyPart"));
     if (result)
-        qCDebug(LOG_KBIBTEX_PROGRAM) << "Using service" << result->name() << "(" << result->comment() << ") for mime type" << mt << "through library" << result->library();
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "Using service" << result->name() << "(" << result->comment() << ") for mime type" << mimeType() << "through library" << result->library();
     else
-        qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not find service for mime type" << mt;
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not find service for mime type" << mimeType();
     return result;
 }
 

@@ -20,7 +20,7 @@
 #include <QBuffer>
 #include <QFile>
 
-// FIXME #include <poppler-qt4.h>
+#include <poppler-qt5.h>
 
 #include "file.h"
 #include "fileimporterbibtex.h"
@@ -48,8 +48,6 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     File *result = NULL;
     QByteArray buffer = iodevice->readAll();
 
-    // FIXME
-    /*
     Poppler::Document *doc = Poppler::Document::loadFromData(buffer);
     if (doc == NULL) {
         qCWarning(LOG_KBIBTEX_IO) << "Could not load PDF document";
@@ -57,27 +55,42 @@ File *FileImporterPDF::load(QIODevice *iodevice)
         return NULL;
     }
 
+    /// Iterate through all files embedded in this PDF file (if any),
+    /// check for file extension '.bib', and try to load bibliography
+    /// data.
     if (doc->hasEmbeddedFiles()) {
-        foreach (Poppler::EmbeddedFile *file, doc->embeddedFiles())
-        if (file->name().endsWith(QStringLiteral(".bib"))) {
-            QByteArray data = file->data();
-            QBuffer buffer(&data);
-            FileImporterBibTeX bibTeXimporter;
-            connect(&bibTeXimporter, &FileImporter::progress, this, &FileImporter::progress);
-            buffer.open(QIODevice::ReadOnly);
-            result = bibTeXimporter.load(&buffer);
-            buffer.close();
+        const QList<Poppler::EmbeddedFile *> embeddedFiles = doc->embeddedFiles();
+        for (Poppler::EmbeddedFile *file : embeddedFiles) {
+            if (file->name().endsWith(QStringLiteral(".bib"))) {
+                // TODO maybe request implementation of a constData() for
+                // Poppler::EmbeddedFile to operate on const objects?
+                QByteArray data(file->data());
+                QBuffer buffer(&data);
+                FileImporterBibTeX bibTeXimporter;
+                connect(&bibTeXimporter, &FileImporter::progress, this, &FileImporter::progress);
+                buffer.open(QIODevice::ReadOnly);
+                result = bibTeXimporter.load(&buffer);
+                buffer.close();
 
-            if (result)
-                qCDebug(LOG_KBIBTEX_IO) << "result = " << result->count() << "  " << data.size() << "  " << buffer.size();
-            else
-                qCDebug(LOG_KBIBTEX_IO) << "result is empty";
-            break;
+                if (result) {
+                    qCDebug(LOG_KBIBTEX_IO) << "Bibliography extracted from embedded file" << file->name() << "has" << result->count() << "entries";
+                    if (result->count() > 0)
+                        break; ///< stop processing after first valid, non-empty BibTeX file
+                    else {
+                        /// ... otherwise delete empty bibliography object
+                        delete result;
+                        result = NULL;
+                    }
+                } else
+                    qCDebug(LOG_KBIBTEX_IO) << "Create bibliography file from embedded file" << file->name() << "failed";
+            } else
+                qCDebug(LOG_KBIBTEX_IO) << "Embedded file" << file->name() << "doesn't have right extension ('.bib')";
         }
-    }
+    } else
+        qCDebug(LOG_KBIBTEX_IO) << "PDF document has no files embedded";
 
     delete doc;
-    */
+
     iodevice->close();
     return result;
 }
