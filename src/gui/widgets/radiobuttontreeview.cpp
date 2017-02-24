@@ -33,18 +33,21 @@ void RadioButtonItemDelegate::paint(QPainter *painter, const QStyleOptionViewIte
 {
     if (index.data(RadioButtonTreeView::IsRadioRole).canConvert<bool>() && index.data(RadioButtonTreeView::IsRadioRole).toBool()) {
         /// determine size and spacing of radio buttons in current style
-        int radioButtonWidth = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorWidth, &option);
-        int spacing = QApplication::style()->pixelMetric(QStyle::PM_RadioButtonLabelSpacing, &option);
+        const int radioButtonWidth = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorWidth, &option);
+        const int radioButtonHeight = QApplication::style()->pixelMetric(QStyle::PM_ExclusiveIndicatorHeight, &option);
+        const int spacing = QApplication::style()->pixelMetric(QStyle::PM_RadioButtonLabelSpacing, &option);
 
         /// draw default appearance (text, highlighting) shifted to the left
         QStyleOptionViewItem myOption = option;
-        int left = myOption.rect.left();
+        const int left = myOption.rect.left();
         myOption.rect.setLeft(left + spacing * 3 / 2 + radioButtonWidth);
         QStyledItemDelegate::paint(painter, myOption, index);
 
         /// draw radio button in the open space
         myOption.rect.setLeft(left + spacing / 2);
         myOption.rect.setWidth(radioButtonWidth);
+        myOption.rect.setTop(option.rect.top() + (option.rect.height() - radioButtonHeight) / 2);
+        myOption.rect.setHeight(radioButtonHeight);
         if (index.data(RadioButtonTreeView::RadioSelectedRole).canConvert<bool>()) {
             /// change radio button's visual appearance if selected or not
             bool radioButtonSelected = index.data(RadioButtonTreeView::RadioSelectedRole).toBool();
