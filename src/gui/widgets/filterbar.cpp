@@ -17,6 +17,8 @@
 
 #include "filterbar.h"
 
+#include <algorithm>
+
 #include <QLayout>
 #include <QLabel>
 #include <QTimer>
@@ -105,7 +107,7 @@ public:
         }
         /// Sort locale-aware
         QList<QString> keys = fielddescs.keys();
-        qSort(keys.begin(), keys.end(), sortStringsLocaleAware);
+        std::sort(keys.begin(), keys.end(), sortStringsLocaleAware);
         foreach(const QString &key, keys) {
             const QString &value = fielddescs[key];
             comboBoxField->addItem(key, value);

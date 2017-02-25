@@ -17,6 +17,8 @@
 
 #include "filemodel.h"
 
+#include <algorithm>
+
 #include <QColor>
 #include <QFile>
 #include <QString>
@@ -315,7 +317,7 @@ bool FileModel::removeRowList(const QList<int> &rows)
     if (m_file == NULL) return false;
 
     QList<int> internalRows = rows;
-    qSort(internalRows.begin(), internalRows.end(), qGreater<int>());
+    std::sort(internalRows.begin(), internalRows.end(), std::greater<int>());
 
     beginRemoveRows(QModelIndex(), internalRows.last(), internalRows.first());
     foreach (int row, internalRows) {
