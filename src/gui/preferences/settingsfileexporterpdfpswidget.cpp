@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -96,7 +96,7 @@ public:
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
         QStringList paperSizeLabelToNameKeys = paperSizeLabelToName.keys();
         paperSizeLabelToNameKeys.sort();
-        foreach (const QString &labelText, paperSizeLabelToNameKeys) {
+        for (const QString &labelText : const_cast<const QStringList &>(paperSizeLabelToNameKeys)) {
             comboBoxPaperSize->addItem(labelText, paperSizeLabelToName[labelText]);
         }
         connect(comboBoxPaperSize, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsAbstractWidget::changed);
@@ -113,7 +113,7 @@ public:
         comboBoxBibliographyStyle->setObjectName(QStringLiteral("comboBoxBibliographyStyle"));
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
         static const QStringList styles = QStringList() << QString(QStringLiteral("abbrv")) << QString(QStringLiteral("alpha")) << QString(QStringLiteral("plain")) << QString(QStringLiteral("agsm")) << QString(QStringLiteral("dcu")) << QString(QStringLiteral("jmr")) << QString(QStringLiteral("jphysicsB")) << QString(QStringLiteral("kluwer")) << QString(QStringLiteral("nederlands"));
-        foreach (const QString &style, styles) {
+        for (const QString &style : styles) {
             comboBoxBibliographyStyle->addItem(style);
         }
         connect(comboBoxBibliographyStyle->lineEdit(), &QLineEdit::textChanged, p, &SettingsFileExporterPDFPSWidget::changed);

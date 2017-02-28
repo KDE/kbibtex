@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -130,7 +130,7 @@ public:
         ItalicTextItemModel *itim = new ItalicTextItemModel();
         itim->addItem(i18n("No command"), QString());
         const QStringList citeCommands = QStringList() << QStringLiteral("cite") << QStringLiteral("citealt") << QStringLiteral("citeauthor") << QStringLiteral("citeauthor*") << QStringLiteral("citeyear") << QStringLiteral("citeyearpar") << QStringLiteral("shortcite") << QStringLiteral("citet") << QStringLiteral("citet*") << QStringLiteral("citep") << QStringLiteral("citep*"); // TODO more
-        foreach (const QString &citeCommand, citeCommands) {
+        for (const QString &citeCommand : citeCommands) {
             itim->addItem(citeCmdToLabel.arg(citeCommand), citeCommand);
         }
         comboBoxCopyReferenceCmd->setModel(itim);

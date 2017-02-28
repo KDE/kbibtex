@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -91,10 +91,10 @@ void NotificationHub::publishEvent(int eventId)
         qCDebug(LOG_KBIBTEX_CONFIG) << "Notifying about event" << eventId;
 
         QSet< NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
-        foreach (NotificationListener *listener, d->allListeners) {
+        for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(d->allListeners)) {
             set.insert(listener);
         }
-        foreach (NotificationListener *listener, set) {
+        for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(set)) {
             listener->notificationEvent(eventId);
         }
     }

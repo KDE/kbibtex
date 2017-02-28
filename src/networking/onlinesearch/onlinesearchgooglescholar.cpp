@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -128,15 +128,18 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     emit progress(curStep = 0, numSteps = numResults + 4);
 
     QStringList queryFragments;
-    foreach (const QString & queryFragment, splitRespectingQuotationMarks(query[queryKeyFreeText])) {
+    const auto respectingQuotationMarksFreeText = splitRespectingQuotationMarks(query[queryKeyFreeText]);
+    for (const QString &queryFragment : respectingQuotationMarksFreeText) {
         queryFragments.append(encodeURL(queryFragment));
     }
-    foreach (const QString & queryFragment, splitRespectingQuotationMarks(query[queryKeyTitle])) {
+    const auto respectingQuotationMarksTitle = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    for (const QString &queryFragment : respectingQuotationMarksTitle) {
         queryFragments.append(encodeURL(queryFragment));
     }
     d->queryFreetext = queryFragments.join(QStringLiteral("+"));
     queryFragments.clear();
-    foreach (const QString & queryFragment, splitRespectingQuotationMarks(query[queryKeyAuthor])) {
+    const auto respectingQuotationMarksAuthor = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    for (const QString &queryFragment : respectingQuotationMarksAuthor) {
         queryFragments.append(encodeURL(queryFragment));
     }
     d->queryAuthor = queryFragments.join(QStringLiteral("+"));

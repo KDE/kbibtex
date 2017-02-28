@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -165,7 +165,8 @@ bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QStri
 
         if (postscriptFile.open(QFile::WriteOnly)) {
             QTextStream ts(&postscriptFile);
-            foreach (const QString & line, lines) ts << line << endl;
+            for (const QString &line : const_cast<const QStringList &>(lines))
+                ts << line << endl;
             postscriptFile.close();
         } else
             return false;

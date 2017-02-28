@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -74,22 +74,22 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     q.addQueryItem(QStringLiteral("jo"), QStringLiteral("")); /// no specific journal
     q.addQueryItem(QStringLiteral("hp"), QString::number(numResults)); /// hits per page
     int queryNumber = 0;
-    QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
-    foreach (const QString &element, elements) {
+    const QStringList elementsTitle = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    for (const QString &element : elementsTitle) {
         if (queryNumber > 0) q.addQueryItem(QString(QStringLiteral("c%1")).arg(queryNumber), QStringLiteral("AND")); ///< join search terms with an AND operation
         q.addQueryItem(QString(QStringLiteral("f%1")).arg(queryNumber), QStringLiteral("ti"));
         q.addQueryItem(QString(QStringLiteral("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
-    elements = splitRespectingQuotationMarks(query[queryKeyAuthor]);
-    foreach (const QString &element, elements) {
+    const QStringList elementsAuthor = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    for (const QString &element : elementsAuthor) {
         if (queryNumber > 0) q.addQueryItem(QString(QStringLiteral("c%1")).arg(queryNumber), QStringLiteral("AND")); ///< join search terms with an AND operation
         q.addQueryItem(QString(QStringLiteral("f%1")).arg(queryNumber), QStringLiteral("au"));
         q.addQueryItem(QString(QStringLiteral("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
-    elements = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    foreach (const QString &element, elements) {
+    const QStringList elementsFreeText = splitRespectingQuotationMarks(query[queryKeyFreeText]);
+    for (const QString &element : elementsFreeText) {
         if (queryNumber > 0) q.addQueryItem(QString(QStringLiteral("c%1")).arg(queryNumber), QStringLiteral("AND")); ///< join search terms with an AND operation
         q.addQueryItem(QString(QStringLiteral("f%1")).arg(queryNumber), QStringLiteral("all"));
         q.addQueryItem(QString(QStringLiteral("q%1")).arg(queryNumber), element);

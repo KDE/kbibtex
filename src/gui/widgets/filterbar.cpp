@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -108,7 +108,7 @@ public:
         /// Sort locale-aware
         QList<QString> keys = fielddescs.keys();
         std::sort(keys.begin(), keys.end(), sortStringsLocaleAware);
-        foreach(const QString &key, keys) {
+        for (const QString &key : const_cast<const QList<QString> &>(keys)) {
             const QString &value = fielddescs[key];
             comboBoxField->addItem(key, value);
         }

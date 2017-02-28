@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -228,7 +228,7 @@ QStringList Entry::authorsLastName(const Entry &entry)
 
     QStringList result;
     int maxAuthors = 16; ///< limit the number of authors considered
-    foreach (const QSharedPointer<const ValueItem> &item, value) {
+    for (const QSharedPointer<const ValueItem> &item : const_cast<const Value &>(value)) {
         QSharedPointer<const Person> person = item.dynamicCast<const Person>();
         if (!person.isNull()) {
             const QString lastName = person->lastName();

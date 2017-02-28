@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -214,7 +214,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             flagListItems << i18n("Modified");
         if (!flagListItems.empty()) {
             htmlText.append(QStringLiteral("<ul>"));
-            Q_FOREACH(const QString & flagListItem, flagListItems) {
+            for (const QString &flagListItem : const_cast<const QStringList &>(flagListItems)) {
                 htmlText.append(QString(QStringLiteral("<li>%1</li>")).arg(flagListItem));
             }
             htmlText.append(QStringLiteral("</ul>"));
@@ -364,14 +364,14 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
     if (d->actionRemFromFav != NULL)
         d->actionRemFromFav->setEnabled(hasCurrent && isFavorite);
 
-    foreach (QAction *action, d->openMenuActions) {
+    for (QAction *action : const_cast<const QList<QAction *> &>(d->openMenuActions)) {
         d->actionOpenMenu->removeAction(action);
     }
     d->openMenuServices.clear();
     if (ofi != NULL) {
         d->openMenuServices = ofi->listOfServices();
         int i = 0;
-        foreach (KService::Ptr servicePtr, d->openMenuServices) {
+        for (KService::Ptr servicePtr : const_cast<const KService::List &>(d->openMenuServices)) {
             QAction *menuItem = new QAction(QIcon::fromTheme(servicePtr->icon()), servicePtr->name(), this);
             d->actionOpenMenu->addAction(menuItem);
             d->openMenuActions << menuItem;

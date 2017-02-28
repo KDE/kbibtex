@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -209,9 +209,9 @@ void FileView::selectionChanged(const QItemSelection &selected, const QItemSelec
 
 void FileView::selectionDelete()
 {
-    QModelIndexList mil = selectionModel()->selectedRows();
+    const QModelIndexList mil = selectionModel()->selectedRows();
     QList<int> rows;
-    foreach (const QModelIndex &idx, mil)
+    for (const QModelIndex &idx : mil)
         rows << sortFilterProxyModel()->mapToSource(idx).row();
 
     fileModel()->removeRowList(rows);

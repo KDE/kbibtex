@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
     if (!urls.isEmpty())
     {
         const QRegExp withProtocolChecker(QStringLiteral("^[a-zA-Z]+:"));
-        foreach (const QString &url, urls) {
+        for (const QString &url : urls) {
             const QUrl u = (withProtocolChecker.indexIn(url) == 0) ? QUrl::fromUserInput(url) : QUrl::fromLocalFile(url);
             mainWindow->openDocument(u);
         }

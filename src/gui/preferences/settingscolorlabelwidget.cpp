@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -222,7 +222,7 @@ void ColorLabelSettingsModel::loadState()
 void ColorLabelSettingsModel::saveState()
 {
     QStringList colorCodes, colorLabels;
-    foreach (const ColorLabelPair &clp, colorLabelPairs) {
+    for (const ColorLabelPair &clp : const_cast<const QList<ColorLabelPair> &>(colorLabelPairs)) {
         colorCodes << clp.color.name();
         colorLabels << clp.label;
     }
@@ -527,8 +527,8 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "FileModel *model is NULL");
 
     /// Apply color change to all selected rows
-    QModelIndexList list = d->fileView->selectionModel()->selectedIndexes();
-    foreach (const QModelIndex &index, list) {
+    const QModelIndexList list = d->fileView->selectionModel()->selectedIndexes();
+    for (const QModelIndex &index : list) {
         const QModelIndex mappedIndex = sfbfm->mapToSource(index);
         /// Selection may span over multiple columns;
         /// to avoid duplicate assignments, consider only column 1

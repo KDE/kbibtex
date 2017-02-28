@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -53,8 +53,8 @@ public:
         QStringList queryText;
 
         /// Free text
-        QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach (const QString &freeTextFragment, freeTextFragments) {
+        const QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        for (const QString &freeTextFragment : freeTextFragments) {
             queryText << QString(QStringLiteral("\"%1\"")).arg(freeTextFragment);
         }
 
@@ -63,8 +63,8 @@ public:
             queryText << QString(QStringLiteral("\"Document Title\":\"%1\"")).arg(query[queryKeyTitle]);
 
         /// Author
-        QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach (const QString &author, authors) {
+        const QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        for (const QString &author : authors) {
             queryText << QString(QStringLiteral("Author:\"%1\"")).arg(author);
         }
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -195,8 +195,9 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
             }
 
         /// Test associated PDF files
-        if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) ///< not filtering for any specific field
-            foreach (const QUrl &url, FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes)) {
+        if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) {///< not filtering for any specific field
+            const auto entryUrlList = FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes);
+            for (const QUrl &url : entryUrlList) {
                 if (url.isLocalFile() && url.fileName().endsWith(QStringLiteral(".pdf"))) {
                     // FIXME if you have a large collection of PDF files and the text version
                     // has not been generated yet, this will freeze KBibTeX for some time
@@ -206,6 +207,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
                         eachTerm[i] |= (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);
                 }
             }
+        }
 
         int i = 0;
         if (m_filterQuery.field.isEmpty())

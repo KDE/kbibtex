@@ -1,5 +1,5 @@
 /****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>  *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>  *
  *   Copyright (C) 2013 Yngve I. Levinsen <yngve.inntjore.levinsen@cern.ch> *
  *                                                                          *
  *   This program is free software; you can redistribute it and/or modify   *
@@ -69,8 +69,8 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     int argumentCount = 0;
 
     /// add words from "free text" field
-    QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    foreach (const QString &word, freeTextWords) {
+    const QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
+    for (const QString &word : freeTextWords) {
         ++argumentCount;
         q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
         q.addQueryItem(QString(QStringLiteral("m%1")).arg(argumentCount), QStringLiteral("a"));
@@ -79,8 +79,8 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     }
 
     /// add words from "author" field
-    QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
-    foreach (const QString &word, authorWords) {
+    const QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    for (const QString &word : authorWords) {
         ++argumentCount;
         q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
         q.addQueryItem(QString(QStringLiteral("m%1")).arg(argumentCount), QStringLiteral("a"));
@@ -89,8 +89,8 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     }
 
     /// add words from "title" field
-    QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
-    foreach (const QString &word, titleWords) {
+    const QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    for (const QString &word : titleWords) {
         ++argumentCount;
         q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
         q.addQueryItem(QString(QStringLiteral("m%1")).arg(argumentCount), QStringLiteral("a"));

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -73,24 +73,24 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
     int index = 1;
 
     const QString freeText = query[queryKeyFreeText];
-    QStringList elements = splitRespectingQuotationMarks(freeText);
-    foreach (const QString &element, elements) {
+    const QStringList elementsFreeText = splitRespectingQuotationMarks(freeText);
+    for (const QString &element : elementsFreeText) {
         d->queryParameters.insert(QString(QStringLiteral("pg%1")).arg(index), QStringLiteral("ALLF"));
         d->queryParameters.insert(QString(QStringLiteral("s%1")).arg(index), element);
         ++index;
     }
 
     const QString title = query[queryKeyTitle];
-    elements = splitRespectingQuotationMarks(title);
-    foreach (const QString &element, elements) {
+    const QStringList elementsTitle = splitRespectingQuotationMarks(title);
+    for (const QString &element : elementsTitle) {
         d->queryParameters.insert(QString(QStringLiteral("pg%1")).arg(index), QStringLiteral("TI"));
         d->queryParameters.insert(QString(QStringLiteral("s%1")).arg(index), element);
         ++index;
     }
 
     const QString authors = query[queryKeyAuthor];
-    elements = splitRespectingQuotationMarks(authors);
-    foreach (const QString &element, elements) {
+    const QStringList elementsAuthor = splitRespectingQuotationMarks(authors);
+    for (const QString &element : elementsAuthor) {
         d->queryParameters.insert(QString(QStringLiteral("pg%1")).arg(index), QStringLiteral("ICN"));
         d->queryParameters.insert(QString(QStringLiteral("s%1")).arg(index), element);
         ++index;
@@ -175,8 +175,8 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         /// build url by appending parameters
         QUrl url(OnlineSearchMathSciNetPrivate::queryUrlStem);
         QUrlQuery query(url);
-        QStringList copyParameters = QStringList() << QStringLiteral("foo") << QStringLiteral("reqargs") << QStringLiteral("batch_title");
-        foreach (const QString &param, copyParameters) {
+        const QStringList copyParameters = QStringList() << QStringLiteral("foo") << QStringLiteral("reqargs") << QStringLiteral("batch_title");
+        for (const QString &param : copyParameters) {
             query.addQueryItem(param, formParams[param]);
         }
         query.addQueryItem(QStringLiteral("fmt"), QStringLiteral("bibtex"));

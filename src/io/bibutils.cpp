@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -66,7 +66,7 @@ bool BibUtils::available() {
         /// Test a number of known BibUtils programs
         static const QStringList programs = QStringList() << QStringLiteral("bib2xml") << QStringLiteral("isi2xml") << QStringLiteral("ris2xml") << QStringLiteral("end2xml");
         state = avail;
-        foreach (const QString &program, programs) {
+        for (const QString &program : programs) {
             const QString fullPath = QStandardPaths::findExecutable(program);
             if (fullPath.isEmpty()) {
                 state = unavail; ///< missing a single program is reason to assume that BibUtils is not correctly installed

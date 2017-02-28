@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -176,7 +176,7 @@ BibliographyService::~BibliographyService()
 
 void BibliographyService::setKBibTeXasDefault() {
     /// Go through all supported mime types
-    foreach (const QString &mimeType, d->textBasedMimeTypes) {
+    for (const QString &mimeType : d->textBasedMimeTypes) {
         d->setKBibTeXforMimeType(mimeType, true);
     }
 
@@ -188,7 +188,7 @@ void BibliographyService::setKBibTeXasDefault() {
 
 bool BibliographyService::isKBibTeXdefault() const {
     /// Go through all supported mime types
-    foreach (const QString &mimeType, d->textBasedMimeTypes) {
+    for (const QString &mimeType : d->textBasedMimeTypes) {
         /// Test if KBibTeX is default handler for mime type
         if (!d->isKBibTeXdefaultForMimeType(mimeType))
             return false; ///< Failing any test means KBibTeX is not default application/part

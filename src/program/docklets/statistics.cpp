@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -131,8 +131,9 @@ public:
 
         if (selectionModel != NULL && selectionModel->selectedRows().count() > 1) {
             /// Use selected items for statistics if selection contains at least two elements
-            numElements = selectionModel->selectedRows().count();
-            foreach (const QModelIndex &index, selectionModel->selectedRows()) {
+            const auto selectedRows = selectionModel->selectedRows();
+            numElements = selectedRows.count();
+            for (const QModelIndex &index : selectedRows) {
                 const int row = index.row();
                 if (row >= 0 && row < file->count())
                     countElement(file->at(row), numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);

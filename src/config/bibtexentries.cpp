@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -84,7 +84,7 @@ public:
 
     void save() {
         int typeCount = 0;
-        foreach (const EntryDescription &ed, *p) {
+        for (const EntryDescription &ed : const_cast<const BibTeXEntries &>(*p)) {
             ++typeCount;
             QString groupName = QString(QStringLiteral("EntryType%1")).arg(typeCount);
             KConfigGroup configGroup(layoutConfig, groupName);

@@ -55,7 +55,7 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
     const EncoderLaTeX &encoder = EncoderLaTeX::instance();
 
     const Value v = entry[Entry::ftAuthor];
-    foreach (const QSharedPointer<ValueItem> &vi, v) {
+    for (const QSharedPointer<ValueItem> &vi : v) {
         QSharedPointer<const Person> p = vi.dynamicCast<const Person>();
         if (!p.isNull())
             result.append(encoder.convertToPlainAscii(p->lastName()));
@@ -78,7 +78,7 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     const QString fileNameStem = cacheDirectory + QString(favIconUrl()).remove(invalidChars);
     const QStringList fileNameExtensions = QStringList() << QStringLiteral(".ico") << QStringLiteral(".png") << QString();
 
-    foreach (const QString &extension, fileNameExtensions) {
+    for (const QString &extension : fileNameExtensions) {
         const QString fileName = fileNameStem + extension;
         if (QFileInfo::exists(fileName))
             return QIcon(fileName);

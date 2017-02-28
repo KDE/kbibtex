@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -320,7 +320,7 @@ bool FileModel::removeRowList(const QList<int> &rows)
     std::sort(internalRows.begin(), internalRows.end(), std::greater<int>());
 
     beginRemoveRows(QModelIndex(), internalRows.last(), internalRows.first());
-    foreach (int row, internalRows) {
+    for (int row : const_cast<const QList<int> &>(internalRows)) {
         if (row < 0 || row >= rowCount() || row >= m_file->count())
             return false;
         m_file->removeAt(row);

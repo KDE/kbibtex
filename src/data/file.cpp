@@ -174,8 +174,9 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
         const QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
         if (!entry.isNull())
             for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it)
-                if (it.key().toLower() == lcFieldName)
-                    foreach (const QSharedPointer<ValueItem> &valueItem, it.value()) {
+                if (it.key().toLower() == lcFieldName) {
+                    const auto itValue = it.value();
+                    for (const QSharedPointer<ValueItem> &valueItem : itValue) {
                         /// Check if ValueItem to process points to a person
                         const QSharedPointer<Person> person = valueItem.dynamicCast<Person>();
                         if (!person.isNull()) {
@@ -193,7 +194,7 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
                                     personNameFormattingList << personNameFormatting;
                             }
                             /// Add person's name formatted using each of the templates assembled above
-                            foreach (const QString &personNameFormatting, personNameFormattingList) {
+                            for (const QString &personNameFormatting : const_cast<const QStringList &>(personNameFormattingList)) {
                                 valueSet.insert(Person::transcribePersonName(person.data(), personNameFormatting));
                             }
                         } else {
@@ -202,6 +203,7 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
                             valueSet.insert(PlainTextValue::text(*valueItem));
                         }
                     }
+                }
     }
 
     return valueSet;

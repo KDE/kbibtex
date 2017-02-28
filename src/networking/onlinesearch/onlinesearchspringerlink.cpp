@@ -162,18 +162,18 @@ public:
 
         QString queryString = form->lineEditFreeText->text();
 
-        QStringList titleChunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
-        foreach (const QString &titleChunk, titleChunks) {
+        const QStringList titleChunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
+        for (const QString &titleChunk : titleChunks) {
             queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
         }
 
-        titleChunks = p->splitRespectingQuotationMarks(form->lineEditBookTitle->text());
-        foreach (const QString &titleChunk, titleChunks) {
+        const QStringList bookTitleChunks = p->splitRespectingQuotationMarks(form->lineEditBookTitle->text());
+        for (const QString &titleChunk : bookTitleChunks) {
             queryString += QString(QStringLiteral(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
         }
 
-        QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
-        foreach (const QString &author, authors) {
+        const QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
+        for (const QString &author : authors) {
             queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(author));
         }
 
@@ -194,13 +194,13 @@ public:
 
         QString queryString = query[queryKeyFreeText];
 
-        QStringList titleChunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
-        foreach (const QString &titleChunk, titleChunks) {
+        const QStringList titleChunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
+        for (const QString &titleChunk : titleChunks) {
             queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
         }
 
-        QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach (const QString &author, authors) {
+        const QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        for (const QString &author : authors) {
             queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(author));
         }
 
@@ -300,11 +300,11 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
             stopSearch(resultInvalidArguments);
         } else {
             FileImporterBibTeX importer;
-            File *bibtexFile = importer.fromString(bibTeXcode);
+            const File *bibtexFile = importer.fromString(bibTeXcode);
 
             bool hasEntries = false;
             if (bibtexFile != NULL) {
-                foreach (const QSharedPointer<Element> &element, *bibtexFile) {
+                for (const QSharedPointer<Element> &element : *bibtexFile) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     hasEntries |= publishEntry(entry);
                 }

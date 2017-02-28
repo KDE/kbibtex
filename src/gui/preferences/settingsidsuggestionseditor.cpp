@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -587,8 +587,8 @@ public:
         while (!widgetList.isEmpty())
             delete widgetList.takeFirst();
 
-        QStringList tokenList = formatString.split(QStringLiteral("|"), QString::SkipEmptyParts);
-        foreach (const QString &token, tokenList) {
+        const QStringList tokenList = formatString.split(QStringLiteral("|"), QString::SkipEmptyParts);
+        for (const QString &token : tokenList) {
             TokenWidget *tokenWidget = NULL;
 
             if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
@@ -645,9 +645,8 @@ public:
     QString apply() {
         QStringList result;
 
-        foreach (TokenWidget *widget, widgetList) {
+        for (TokenWidget *widget : const_cast<const QList<TokenWidget *> &>(widgetList))
             result << widget->toString();
-        }
 
         return result.join(QStringLiteral("|"));
     }

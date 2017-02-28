@@ -126,7 +126,7 @@ public:
                 const QStringList nameComponents = author.split(QStringLiteral(" "), QString::SkipEmptyParts);
                 QStringList newNameComponents;
                 /// Camel-case each name component
-                foreach (const QString &nameComponent, nameComponents) {
+                for (const QString &nameComponent : nameComponents) {
                     newNameComponents.append(nameComponent[0].toUpper() + nameComponent.mid(1));
                 }
                 /// Re-assemble name from camel-cased components
@@ -286,8 +286,8 @@ IdSuggestions::~IdSuggestions()
 QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr) const
 {
     QString id;
-    QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
-    foreach (const QString &token, tokenList) {
+    const QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
+    for (const QString &token : tokenList) {
         id.append(d->translateToken(entry, token));
     }
 
@@ -318,7 +318,7 @@ QStringList IdSuggestions::formatIdList(const Entry &entry) const
 {
     const QStringList formatStrings = d->formatStringList();
     QStringList result;
-    foreach (const QString &formatString, formatStrings) {
+    for (const QString &formatString : formatStrings) {
         result << formatId(entry, formatString);
     }
     return result;
@@ -327,8 +327,8 @@ QStringList IdSuggestions::formatIdList(const Entry &entry) const
 QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
 {
     QStringList result;
-    QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
-    foreach (const QString &token, tokenList) {
+    const QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
+    for (const QString &token : tokenList) {
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));

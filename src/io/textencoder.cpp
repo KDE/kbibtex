@@ -47,7 +47,7 @@ QByteArray TextEncoder::encode(const QString &input, const QTextCodec *destinati
     QByteArray result;
     const Encoder &laTeXEncoder = EncoderLaTeX::instance();
     /// Build result, character by character
-    foreach (const QChar & c, ninput) {
+    for (const QChar &c : ninput) {
         /// Get byte sequence representing current character in chosen codec
         const QByteArray cba = destinationCodec->fromUnicode(c);
         if (destinationCodec->canEncode(c) && (c == QChar(0x003f /** question mark */) || cba.size() != 1 || cba[0] != 0x3f /** question mark */)) {

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -197,7 +197,7 @@ void EntryConfiguredWidget::createGUI()
     listOfLabeledFieldInput = new LabeledFieldInput*[fieldInputCount];
 
     int i = 0;
-    foreach (const SingleFieldLayout &sfl, etl->singleFieldLayouts) {
+    for (const SingleFieldLayout &sfl : const_cast<const QList<SingleFieldLayout> &>(etl->singleFieldLayouts)) {
         LabeledFieldInput *labeledFieldInput = new LabeledFieldInput;
 
         /// create an editing widget for this field
@@ -509,7 +509,8 @@ void ReferenceWidget::prepareSuggestionsMenu()
     QSet<QString> knownIdSuggestion;
     const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
-    foreach (const QString &suggestionBase, idSuggestions->formatIdList(*crossrefResolvedEntry.data())) {
+    const auto formatIdList = idSuggestions->formatIdList(*crossrefResolvedEntry.data());
+    for (const QString &suggestionBase : formatIdList) {
         bool isDefault = suggestionBase == defaultSuggestion;
         QString suggestion = suggestionBase;
 

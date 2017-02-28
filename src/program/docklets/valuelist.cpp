@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -292,7 +292,8 @@ void ValueList::searchSelection()
     SortFilterFileModel::FilterQuery fq;
     fq.combination = SortFilterFileModel::EveryTerm;
     fq.field = fieldText;
-    foreach (const QModelIndex &index, d->treeviewFieldValues->selectionModel()->selectedIndexes()) {
+    const auto selectedIndexes = d->treeviewFieldValues->selectionModel()->selectedIndexes();
+    for (const QModelIndex &index : selectedIndexes) {
         if (index.column() == 0) {
             QString itemText = index.data(ValueListModel::SearchTextRole).toString();
             fq.terms << itemText;
@@ -318,7 +319,7 @@ void ValueList::assignSelection() {
 
     /// Go through all selected elements in current editor
     const QList<QSharedPointer<Element> > &selection = d->fileView->selectedElements();
-    foreach (const QSharedPointer<Element> &element, selection) {
+    for (const QSharedPointer<Element> &element : selection) {
         /// Only entries (not macros or comments) are of interest
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (!entry.isNull()) {
@@ -329,7 +330,7 @@ void ValueList::assignSelection() {
                 /// Fields for which multiple values are valid
                 bool valueItemAlreadyContained = false; ///< add only if to-be-assigned value is not yet contained
                 Value entrysValueForField = entry->value(field);
-                foreach (const QSharedPointer<ValueItem> &containedValueItem, entrysValueForField) {
+                for (const QSharedPointer<ValueItem> &containedValueItem : const_cast<const Value &>(entrysValueForField)) {
                     valueItemAlreadyContained |= PlainTextValue::text(containedValueItem) == toBeAssignedValueText;
                     if (valueItemAlreadyContained) break;
                 }
@@ -337,7 +338,7 @@ void ValueList::assignSelection() {
                 if (!valueItemAlreadyContained) {
                     /// Add each ValueItem from the to-be-assigned value to the entry's value for this field
                     entrysValueForField.reserve(toBeAssignedValue.size());
-                    foreach (const QSharedPointer<ValueItem> &newValueItem, toBeAssignedValue) {
+                    for (const QSharedPointer<ValueItem> &newValueItem : toBeAssignedValue) {
                         entrysValueForField.append(newValueItem);
                     }
                     /// "Write back" value to field in entry
@@ -377,7 +378,7 @@ void ValueList::removeSelection() {
 
     /// Go through all selected elements in current editor
     const QList<QSharedPointer<Element> > &selection = d->fileView->selectedElements();
-    foreach (const QSharedPointer<Element> &element, selection) {
+    for (const QSharedPointer<Element> &element : selection) {
         /// Only entries (not macros or comments) are of interest
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (!entry.isNull()) {

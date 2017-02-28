@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -97,7 +97,7 @@ void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperat
     }
     case AddValue: {
         QString text = PlainTextValue::text(value);
-        foreach (const Value &value, chosenValueMap[field])
+        for (const Value &value : const_cast<const QList<Value> &>(chosenValueMap[field]))
             if (PlainTextValue::text(value) == text)
                 return;
         chosenValueMap[field] << value;
@@ -127,7 +127,7 @@ void EntryClique::recalculateValueMap()
 
     /// go through each and every entry ...
     const QList<QSharedPointer<Entry> > el = entryList();
-    foreach (const QSharedPointer<Entry> &entry, el)
+    for (const QSharedPointer<Entry> &entry : el)
         if (isEntryChecked(entry)) {
 
             /// cover entry type
@@ -147,7 +147,7 @@ void EntryClique::recalculateValueMap()
                 const Value fieldValue = fieldIt.value();
 
                 if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl) {
-                    foreach (const QSharedPointer<ValueItem> &vi, fieldValue) {
+                    for (const QSharedPointer<ValueItem> &vi : fieldValue) {
                         const QString text = PlainTextValue::text(*vi);
                         Value v;
                         v << vi;
@@ -160,8 +160,8 @@ void EntryClique::recalculateValueMap()
             }
         }
 
-    QList<QString> fl = fieldList();
-    foreach (const QString &fieldName, fl)
+    const QList<QString> fl = fieldList();
+    for (const QString &fieldName : fl)
         if (valueMap[fieldName].count() < 2) {
             valueMap.remove(fieldName);
             chosenValueMap.remove(fieldName);
@@ -178,7 +178,7 @@ void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value
 
         bool alreadyContained = false;
         QList<Value> alternatives = valueMap[fieldName];
-        foreach (const Value &v, alternatives)
+        for (const Value &v : const_cast<const QList<Value> &>(alternatives))
             if (PlainTextValue::text(v) == fieldValueText) {
                 alreadyContained = true;
                 break;
@@ -498,13 +498,14 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
 {
     bool didMerge = false;
 
-    foreach (EntryClique *entryClique, entryCliques) {
+    for (EntryClique *entryClique : entryCliques) {
         /// Avoid adding fields 20 lines below
         /// which have been remove (not added) 10 lines below
         QSet<QString> coveredFields;
 
         Entry *mergedEntry = new Entry(QString(), QString());
-        foreach (const QString &field, entryClique->fieldList()) {
+        const auto fieldList = entryClique->fieldList();
+        for (const QString &field : fieldList) {
             coveredFields << field;
             if (field == QStringLiteral("^id"))
                 mergedEntry->setId(PlainTextValue::text(entryClique->chosenValue(field)));
@@ -512,7 +513,8 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
                 mergedEntry->setType(PlainTextValue::text(entryClique->chosenValue(field)));
             else {
                 Value combined;
-                foreach (const Value &v, entryClique->chosenValues(field)) {
+                const auto chosenValues = entryClique->chosenValues(field);
+                for (const Value &v : chosenValues) {
                     combined.append(v);
                 }
                 if (!combined.isEmpty())
@@ -522,7 +524,8 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
 
         bool actuallyMerged = false;
         int preferredInsertionRow = -1;
-        foreach (const QSharedPointer<Entry> &entry, entryClique->entryList()) {
+        const auto entryList = entryClique->entryList();
+        for (const QSharedPointer<Entry> &entry : entryList) {
             /// if merging entries with identical ids, the merged entry will not yet have an id (is null)
             if (mergedEntry->id().isEmpty())
                 mergedEntry->setId(entry->id());

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -136,7 +136,7 @@ void Items::finishedFetchingItems()
 
             /// Perform basic sanity checks ...
             if (bibtexFile != NULL && !bibtexFile->isEmpty()) {
-                foreach (const QSharedPointer<Element> &element, *bibtexFile) {
+                for (const QSharedPointer<Element> &element : const_cast<const File &>(*bibtexFile)) {
                     emit foundElement(element); ///< ... and publish result
                 }
             }

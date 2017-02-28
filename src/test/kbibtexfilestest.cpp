@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *   Copyright (C) 2014 by Pino Toscano <pino@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -193,24 +193,24 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
 
             for (int index = 1; index < 100; ++index) {
                 const QString field = index == 1 ? Entry::ftUrl : QString(QStringLiteral("%1%2")).arg(Entry::ftUrl).arg(index);
-                Value v = entry->value(field);
-                foreach (const QSharedPointer<ValueItem> &vi, v) {
+                const Value v = entry->value(field);
+                for (const QSharedPointer<ValueItem> &vi : v) {
                     filesUrlsDoiList << PlainTextValue::text(vi);
                 }
                 if (v.isEmpty() && index > 10) break;
             }
             for (int index = 1; index < 100; ++index) {
                 const QString field = index == 1 ? Entry::ftDOI : QString(QStringLiteral("%1%2")).arg(Entry::ftDOI).arg(index);
-                Value v = entry->value(field);
-                foreach (const QSharedPointer<ValueItem> &vi, v) {
+                const Value v = entry->value(field);
+                for (const QSharedPointer<ValueItem> &vi : v) {
                     filesUrlsDoiList << PlainTextValue::text(vi);
                 }
                 if (v.isEmpty() && index > 10) break;
             }
             for (int index = 1; index < 100; ++index) {
                 const QString field = index == 1 ? Entry::ftLocalFile : QString(QStringLiteral("%1%2")).arg(Entry::ftLocalFile).arg(index);
-                Value v = entry->value(field);
-                foreach (const QSharedPointer<ValueItem> &vi, v) {
+                const Value v = entry->value(field);
+                for (const QSharedPointer<ValueItem> &vi : v) {
                     filesUrlsDoiList << PlainTextValue::text(vi);
                 }
                 if (v.isEmpty() && index > 10) break;
@@ -225,12 +225,12 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
 
     QCryptographicHash hashAuthors(QCryptographicHash::Md4);
     lastAuthorsList.sort();
-    foreach (const QString &it, lastAuthorsList)
+    for (const QString &it : const_cast<const QStringList &>(lastAuthorsList))
         hashAuthors.addData(it.toUtf8());
     QCOMPARE(hashAuthors.result(), currentTestFile.hashAuthors);
 
     QCryptographicHash hashFilesUrlsDoi(QCryptographicHash::Md5);
-    foreach (const QString &it, filesUrlsDoiList)
+    for (const QString &it : const_cast<const QStringList &>(filesUrlsDoiList))
         hashFilesUrlsDoi.addData(it.toUtf8());
     QCOMPARE(hashFilesUrlsDoi.result(), currentTestFile.hashFilesUrlsDoi);
 

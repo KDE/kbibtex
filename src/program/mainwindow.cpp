@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -440,9 +440,9 @@ void KBibTeXMainWindow::showSearchResults()
 void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFlags)
 {
     if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed)) {
-        OpenFileInfoManager::OpenFileInfoList list = OpenFileInfoManager::instance()->filteredItems(OpenFileInfo::RecentlyUsed);
+        const OpenFileInfoManager::OpenFileInfoList list = OpenFileInfoManager::instance()->filteredItems(OpenFileInfo::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
-        foreach (OpenFileInfo *cur, list) {
+        for (OpenFileInfo *cur : list) {
             /// Fixing bug 19511: too long filenames make menu too large,
             /// therefore squeeze text if it is longer than squeezeLen.
             const int squeezeLen = 64;

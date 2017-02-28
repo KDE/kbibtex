@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -157,7 +157,7 @@ void EntryLayout::save()
         configGroup.writeEntry(QStringLiteral("columns"), (*it)->columns);
 
         int fieldCount = 0;
-        foreach (const SingleFieldLayout &sfl, (*it)->singleFieldLayouts) {
+        for (const SingleFieldLayout &sfl : const_cast<const QList<SingleFieldLayout> &>((*it)->singleFieldLayouts)) {
             ++fieldCount;
             configGroup.writeEntry(QString(QStringLiteral("bibtexLabel%1")).arg(fieldCount), sfl.bibtexLabel);
             configGroup.writeEntry(QString(QStringLiteral("uiLabel%1")).arg(fieldCount), sfl.uiLabel);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -365,7 +365,7 @@ void ValueListModel::updateValues()
 
 void ValueListModel::insertValue(const Value &value)
 {
-    foreach (const QSharedPointer<ValueItem> &item, value) {
+    for (const QSharedPointer<ValueItem> &item : value) {
         const QString text = PlainTextValue::text(*item);
         if (text.isEmpty()) continue; ///< skip empty values
 
@@ -402,7 +402,7 @@ int ValueListModel::indexOf(const QString &text)
     int i = 0;
     /// this is really slow for large data sets: O(n^2)
     /// maybe use a hash table instead?
-    foreach (const ValueLine &valueLine, values) {
+    for (const ValueLine &valueLine : const_cast<const ValueLineList &>(values)) {
         if (valueLine.text == cmpText)
             return i;
         ++i;
@@ -428,7 +428,7 @@ bool ValueListModel::searchAndReplaceValueInEntries(const QModelIndex &index, co
     }
 
     /// Go through all elements in the current file
-    foreach (const QSharedPointer<Element> &element, *file) {
+    for (const QSharedPointer<Element> &element : const_cast<const File &>(*file)) {
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {
@@ -510,7 +510,7 @@ void ValueListModel::removeValueFromEntries(const QModelIndex &index)
     }
 
     /// Go through all elements in the current file
-    foreach (const QSharedPointer<Element> &element, *file) {
+    for (const QSharedPointer<Element> &element : const_cast<const File &>(*file)) {
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {

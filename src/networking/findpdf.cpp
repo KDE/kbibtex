@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -190,7 +190,7 @@ public:
 
         /// Search for duplicate URLs
         bool containsUrl = false;
-        foreach (const ResultItem &ri, result) {
+        for (const ResultItem &ri :  const_cast<const QList<ResultItem> &>(result)) {
             containsUrl |= ri.url == url;
             /// Skip already visited URLs
             if (containsUrl) break;
@@ -278,7 +278,7 @@ bool FindPDF::search(const Entry &entry)
     QStringList urlFields = QStringList() << Entry::ftDOI << Entry::ftUrl << QStringLiteral("ee");
     for (int i = 2; i < 256; ++i)
         urlFields << QString(QStringLiteral("%1%2")).arg(Entry::ftDOI).arg(i) << QString(QStringLiteral("%1%2")).arg(Entry::ftUrl).arg(i);
-    foreach (const QString &field, urlFields) {
+    for (const QString &field : const_cast<const QStringList &>(urlFields)) {
         if (entry.contains(field)) {
             const QString fieldText = PlainTextValue::text(entry.value(field));
             int p = -1;

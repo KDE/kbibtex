@@ -642,8 +642,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
             else {
                 /// Assumption: in fields like Url or LocalFile, file names are separated by ;
                 static const QRegExp semicolonSpace = QRegExp("[;]\\s*");
-                QStringList fileList = rawText.split(semicolonSpace, QString::SkipEmptyParts);
-                foreach (const QString &filename, fileList) {
+                const QStringList fileList = rawText.split(semicolonSpace, QString::SkipEmptyParts);
+                for (const QString &filename : fileList) {
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
                 }
             }
@@ -802,7 +802,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
             /// extract keywords
             const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QStringLiteral(" "));
             /// build QList of Keyword objects from keywords
-            foreach (const QString &keyword, keywords) {
+            for (const QString &keyword : keywords) {
                 result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
             }
             /// Memorize (some) split characters for later use
@@ -968,7 +968,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
      */
     QStringList partA, partB, partC;
     int commaCount = 0;
-    foreach (const QString &token, tokens) {
+    for (const QString &token : tokens) {
         /// Position where comma was found, or -1 if no comma in token
         int p = -1;
         if (commaCount < 2) {

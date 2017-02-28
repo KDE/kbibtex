@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -97,13 +97,13 @@ public:
     }
 
     void loadState() {
-        foreach (SettingsAbstractWidget *settingsWidget, settingWidgets) {
+        for (SettingsAbstractWidget *settingsWidget : const_cast<const QSet<SettingsAbstractWidget *> &>(settingWidgets)) {
             settingsWidget->loadState();
         }
     }
 
     void saveState() {
-        foreach (SettingsAbstractWidget *settingsWidget, settingWidgets) {
+        for (SettingsAbstractWidget *settingsWidget : const_cast<const QSet<SettingsAbstractWidget *> &>(settingWidgets)) {
             settingsWidget->saveState();
         }
     }
@@ -112,7 +112,7 @@ public:
         notifyOfChanges = true;
         switch (KMessageBox::warningYesNoCancel(p, i18n("This will reset the settings to factory defaults. Should this affect only the current page or all settings?"), i18n("Reset to Defaults"), KGuiItem(i18n("All settings"), QStringLiteral("edit-undo")), KGuiItem(i18n("Only current page"), QStringLiteral("document-revert")))) {
         case KMessageBox::Yes: {
-            foreach (SettingsAbstractWidget *settingsWidget, settingWidgets) {
+            for (SettingsAbstractWidget *settingsWidget : const_cast<const QSet<SettingsAbstractWidget *> &>(settingWidgets)) {
                 settingsWidget->resetToDefaults();
             }
             break;

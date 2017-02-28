@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -332,9 +332,9 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
         if (file != NULL && !entry.isNull() && d->fieldKey == QStringLiteral("^external")) {
             /// handle "external" list differently
-            QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
+            const QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
             Value v;
-            foreach (const QUrl &url, urlList) {
+            for (const QUrl &url : urlList) {
                 v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.url(QUrl::PreferLocalFile))));
             }
             reset(v);
@@ -453,7 +453,7 @@ void PersonListEdit::slotAddNamesFromClipboard()
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
         const QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(text);
-        foreach (const QSharedPointer<Person> &person, personList) {
+        for (const QSharedPointer<Person> &person : personList) {
             Value *value = new Value();
             value->append(person);
             lineAdd(value);
@@ -671,10 +671,10 @@ void KeywordListEdit::slotAddKeywordsFromList()
     /// (recommended by Qt's documentation)
     QMap<QString, QString> forCaseInsensitiveSorting;
     /// insert all stored, global keywords
-    foreach (const QString &keyword, keywords)
+    for (const QString &keyword : const_cast<const QStringList &>(keywords))
         forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// insert all unique keywords used in this file
-    foreach (const QString &keyword, m_keywordsFromFile)
+    for (const QString &keyword : const_cast<const QSet<QString> &>(m_keywordsFromFile))
         forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// re-create string list from map's values
     keywords = forCaseInsensitiveSorting.values();
@@ -684,7 +684,7 @@ void KeywordListEdit::slotAddKeywordsFromList()
     bool ok = false;
     const QStringList newKeywordList = KInputDialog::getItemList(i18n("Add Keywords"), i18n("Select keywords to add:"), keywords, QStringList(), true, &ok, this);
     if (ok) {
-        foreach (const QString &newKeywordText, newKeywordList) {
+        for(const QString &newKeywordText : newKeywordList) {
             Value *value = new Value();
             value->append(QSharedPointer<Keyword>(new Keyword(newKeywordText)));
             lineAdd(value);
@@ -742,10 +742,10 @@ void KeywordListEdit::setCompletionItems(const QStringList &items)
     /// (recommended by Qt's documentation)
     QMap<QString, QString> forCaseInsensitiveSorting;
     /// insert all stored, global keywords
-    foreach (const QString &keyword, keywords)
+    for (const QString &keyword : const_cast<const QStringList &>(keywords))
         forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// insert all unique keywords used in this file
-    foreach (const QString &keyword, items)
+    for (const QString &keyword : const_cast<const QStringList &>(items))
         forCaseInsensitiveSorting.insert(keyword.toLower(), keyword);
     /// re-create string list from map's values
     keywords = forCaseInsensitiveSorting.values();

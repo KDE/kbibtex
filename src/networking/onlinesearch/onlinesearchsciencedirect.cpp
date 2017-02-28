@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -152,7 +152,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
 
             QUrlQuery query(url);
             static const QStringList orderOfParameters = QString(QStringLiteral("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage")).split(QStringLiteral("|"));
-            foreach (const QString &key, orderOfParameters) {
+            for (const QString &key : orderOfParameters) {
                 if (!inputMap.contains(key)) continue;
                 query.addQueryItem(key, inputMap[key]);
             }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -87,7 +87,7 @@ public:
             fd->defaultWidth = configGroup.readEntry("DefaultWidth", 10);
             fd->defaultVisible = configGroup.readEntry("Visible", true);
 
-            foreach (const QString &treeViewName, treeViewNames) {
+            for (const QString &treeViewName : treeViewNames) {
                 fd->width.insert(treeViewName, configGroup.readEntry("Width_" + treeViewName, fd->defaultWidth));
                 fd->visible.insert(treeViewName, configGroup.readEntry("Visible_" + treeViewName,  fd->defaultVisible));
             }

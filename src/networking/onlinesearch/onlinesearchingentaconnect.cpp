@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -181,8 +181,8 @@ public:
         QUrlQuery query(queryUrl);
 
         int index = 1;
-        QStringList chunks = p->splitRespectingQuotationMarks(form->lineEditFullText->text());
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksFullText = p->splitRespectingQuotationMarks(form->lineEditFullText->text());
+        for (const QString &chunk : chunksFullText) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND")); ///< join search terms with an AND operation
             query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("fulltext"));
@@ -190,8 +190,8 @@ public:
             ++index;
         }
 
-        chunks = p->splitRespectingQuotationMarks(form->lineEditAuthor->text());
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksAuthor = p->splitRespectingQuotationMarks(form->lineEditAuthor->text());
+        for (const QString &chunk : chunksAuthor) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
             query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("author"));
@@ -199,8 +199,8 @@ public:
             ++index;
         }
 
-        chunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksTitle = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
+        for (const QString &chunk : chunksTitle) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
             query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("title"));
@@ -208,8 +208,8 @@ public:
             ++index;
         }
 
-        chunks = p->splitRespectingQuotationMarks(form->lineEditPublication->text());
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksPublication = p->splitRespectingQuotationMarks(form->lineEditPublication->text());
+        for (const QString &chunk : chunksPublication) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
             query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("journalbooktitle"));
@@ -217,8 +217,8 @@ public:
             ++index;
         }
 
-        chunks = p->splitRespectingQuotationMarks(form->lineEditIssue->text());
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksIssue = p->splitRespectingQuotationMarks(form->lineEditIssue->text());
+        for (const QString &chunk : chunksIssue) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
             query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("issue"));
@@ -226,8 +226,8 @@ public:
             ++index;
         }
 
-        chunks = p->splitRespectingQuotationMarks(form->lineEditVolume->text());
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksVolume = p->splitRespectingQuotationMarks(form->lineEditVolume->text());
+        for (const QString &chunk : chunksVolume) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
             query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("volume"));
@@ -235,8 +235,8 @@ public:
             ++index;
         }
 
-        chunks = p->splitRespectingQuotationMarks(form->lineEditAbstractKeywords->text());
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksKeywords = p->splitRespectingQuotationMarks(form->lineEditAbstractKeywords->text());
+        for (const QString &chunk : chunksKeywords) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
             query.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("tka"));
@@ -259,8 +259,8 @@ public:
         QUrlQuery q(queryUrl);
 
         int index = 1;
-        QStringList chunks = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksFreeText = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        for (const QString &chunk : chunksFreeText) {
             if (index > 1)
                 q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
             q.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("fulltext"));
@@ -268,8 +268,8 @@ public:
             ++index;
         }
 
-        chunks = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksAuthor = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        for (const QString &chunk : chunksAuthor) {
             if (index > 1)
                 q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
             q.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("author"));
@@ -277,8 +277,8 @@ public:
             ++index;
         }
 
-        chunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
-        foreach (const QString &chunk, chunks) {
+        const QStringList chunksTitle = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
+        for (const QString &chunk : chunksTitle) {
             if (index > 1)
                 q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
             q.addQueryItem(QString(QStringLiteral("option%1")).arg(index), QStringLiteral("title"));

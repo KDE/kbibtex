@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -920,8 +920,8 @@ void KBibTeXPart::elementFindPDF()
 void KBibTeXPart::applyDefaultFormatString()
 {
     bool documentModified = false;
-    QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
-    foreach (const QModelIndex &index, mil) {
+    const QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
+    for (const QModelIndex &index : mil) {
         QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull()) {
             static IdSuggestions idSuggestions;

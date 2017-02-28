@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -148,8 +148,8 @@ QString LyX::guessLyXPipeLocation()
 
     /// Start with scanning the user's home directory for pipes
     QDir home = QDir::home();
-    QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
-    foreach (const QString &filename, files) {
+    const QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
+    for (const QString &filename : files) {
         QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
         if (QT_LSTAT(absoluteFilename.toLatin1(), &statBuffer) == 0 && S_ISFIFO(statBuffer.st_mode)) {
             result = absoluteFilename;
@@ -162,8 +162,8 @@ QString LyX::guessLyXPipeLocation()
         QDir home = QDir::home();
         if (home.cd(QStringLiteral(".lyx"))) {
             /// Same search again here
-            QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
-            foreach (const QString &filename, files) {
+            const QStringList files = home.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
+            for (const QString &filename : files) {
                 QString const absoluteFilename = home.absolutePath() + QDir::separator() + filename;
                 if (QT_LSTAT(absoluteFilename.toLatin1(), &statBuffer) == 0 && S_ISFIFO(statBuffer.st_mode)) {
                     result = absoluteFilename;
