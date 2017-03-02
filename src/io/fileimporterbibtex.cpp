@@ -706,9 +706,9 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
                 char splitChar;
-                QList<QSharedPointer<Keyword> > keywords = splitKeywords(text, &splitChar);
-                for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywords.constBegin(); it != keywords.constEnd(); ++it)
-                    value.append(*it);
+                const QList<QSharedPointer<Keyword> > keywords = splitKeywords(text, &splitChar);
+                for (const auto &keyword : keywords)
+                    value.append(keyword);
                 /// Memorize (some) split characters for later use
                 /// (e.g. when writing file again)
                 if (splitChar == ';')
@@ -843,9 +843,9 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
     /// Remove invalid characters such as dots or (double) daggers for footnotes
     static const QList<QChar> invalidChars = QList<QChar>() << QChar(0x00b7) << QChar(0x2020) << QChar(0x2217) << QChar(0x2021) << QChar(0x002a) << QChar(0x21d1) /** Upwards double arrow */;
-    for (QList<QChar>::ConstIterator it = invalidChars.constBegin(); it != invalidChars.constEnd(); ++it)
+    for (const auto &invalidChar : invalidChars)
         /// Replacing daggers with commas ensures that they act as persons' names separator
-        internalText = internalText.replace(*it, QChar(','));
+        internalText = internalText.replace(invalidChar, QChar(','));
     /// Remove numbers to footnotes
     static const QRegExp numberFootnoteRegExp(QStringLiteral("(\\w)\\d+\\b"));
     internalText = internalText.replace(numberFootnoteRegExp, QStringLiteral("\\1"));
@@ -859,7 +859,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     /// Split input string into tokens which are either name components (first or last name)
     /// or full names (composed of first and last name), depending on the input string's structure
     static const QRegExp split(QStringLiteral("\\s*([,]+|[,]*\\b[au]nd\\b|[;]|&|\\n|\\s{4,})\\s*"));
-    QStringList authorTokenList = internalText.split(split, QString::SkipEmptyParts);
+    const QStringList authorTokenList = internalText.split(split, QString::SkipEmptyParts);
 
     bool containsSpace = true;
     for (QStringList::ConstIterator it = authorTokenList.constBegin(); containsSpace && it != authorTokenList.constEnd(); ++it)
@@ -867,8 +867,8 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
     if (containsSpace) {
         /// Tokens look like "John Smith"
-        for (QStringList::ConstIterator it = authorTokenList.constBegin(); it != authorTokenList.constEnd(); ++it) {
-            QSharedPointer<Person> person = personFromString(*it);
+        for (const QString &authorToken : authorTokenList) {
+            QSharedPointer<Person> person = personFromString(authorToken);
             if (!person.isNull())
                 result.append(person);
         }

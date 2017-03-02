@@ -179,9 +179,9 @@ public:
                 value.append(person);
             return true;
         } else if (typeFlag == KBibTeX::tfKeyword) {
-            QList<QSharedPointer<Keyword> > keywords = FileImporterBibTeX::splitKeywords(encodedText);
-            for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywords.constBegin(); it != keywords.constEnd(); ++it)
-                value.append(*it);
+            const QList<QSharedPointer<Keyword> > keywords = FileImporterBibTeX::splitKeywords(encodedText);
+            for (const auto &keyword : keywords)
+                value.append(keyword);
             return true;
         } else if (typeFlag == KBibTeX::tfSource) {
             QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? QStringLiteral("author") : QStringLiteral("title");

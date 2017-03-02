@@ -347,8 +347,8 @@ void ValueListModel::updateValues()
     values.clear();
     if (file == NULL) return;
 
-    for (File::ConstIterator fit = file->constBegin(); fit != file->constEnd(); ++fit) {
-        QSharedPointer<const Entry> entry = (*fit).dynamicCast<const Entry>();
+    for (const auto &element : const_cast<const File &>(*file)) {
+        QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
         if (!entry.isNull()) {
             for (Entry::ConstIterator eit = entry->constBegin(); eit != entry->constEnd(); ++eit) {
                 QString key = eit.key().toLower();

@@ -155,8 +155,8 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             int month = -1;
             QString tag;
             QString content;
-            for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
-                QSharedPointer<const MacroKey> macro = (*it).dynamicCast<const MacroKey>();
+            for (const auto &valueItem : value) {
+                QSharedPointer<const MacroKey> macro = valueItem.dynamicCast<const MacroKey>();
                 if (!macro.isNull())
                     for (int i = 0; i < 12; i++) {
                         if (QString::compare(macro->text(), KBibTeX::MonthsTriple[ i ]) == 0) {
@@ -170,7 +170,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
                         }
                     }
                 else
-                    content.append(PlainTextValue::text(**it));
+                    content.append(PlainTextValue::text(valueItem));
             }
 
             if (!ok)
@@ -214,18 +214,16 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
     QString result;
     bool isFirst = true;
 
-    for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
+    for (const auto &valueItem : value) {
         if (!isFirst)
             result.append(' ');
         isFirst = false;
 
-        QSharedPointer<const ValueItem> item = *it;
-
-        QSharedPointer<const PlainText> plainText = (*it).dynamicCast<const PlainText>();
+        QSharedPointer<const PlainText> plainText = valueItem.dynamicCast<const PlainText>();
         if (!plainText.isNull())
-            result.append("<text>" +  cleanXML(EncoderXML::instance().encode(PlainTextValue::text(*item), Encoder::TargetEncodingUTF8)) + "</text>");
+            result.append("<text>" +  cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncodingUTF8)) + "</text>");
         else {
-            QSharedPointer<const Person> p = (*it).dynamicCast<const Person>();
+            QSharedPointer<const Person> p = valueItem.dynamicCast<const Person>();
             if (!p.isNull()) {
                 result.append("<person>");
                 if (!p->firstName().isEmpty())
@@ -238,7 +236,7 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
             }
             // TODO: Other data types
             else
-                result.append("<text>" + cleanXML(EncoderXML::instance().encode(PlainTextValue::text(*item), Encoder::TargetEncodingUTF8)) + "</text>");
+                result.append("<text>" + cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncodingUTF8)) + "</text>");
         }
     }
 

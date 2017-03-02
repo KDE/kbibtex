@@ -135,8 +135,8 @@ public:
     int recommendedHeight() {
         int heightHint = 0;
 
-        for (QList<FieldLineEdit *>::ConstIterator it = lineEditList.constBegin(); it != lineEditList.constEnd(); ++it)
-            heightHint += (*it)->sizeHint().height();
+        for (const auto *fieldLineEdit : const_cast<const QList<FieldLineEdit *> &>(lineEditList))
+            heightHint += fieldLineEdit->sizeHint().height();
 
         heightHint += lineEditList.count() * innerSpacing;
         heightHint += addLineButton->sizeHint().height();
@@ -235,9 +235,9 @@ FieldListEdit::~FieldListEdit()
 bool FieldListEdit::reset(const Value &value)
 {
     d->removeAllFieldLineEdits();
-    for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
+    for (const auto &valueItem : value) {
         Value v;
-        v.append(*it);
+        v.append(valueItem);
         FieldLineEdit *fieldLineEdit = addFieldLineEdit();
         fieldLineEdit->setFile(d->file);
         fieldLineEdit->reset(v);
@@ -252,11 +252,11 @@ bool FieldListEdit::apply(Value &value) const
 {
     value.clear();
 
-    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it) {
+    for (const auto *fieldLineEdit : const_cast<const QList<FieldLineEdit *> &>(d->lineEditList)) {
         Value v;
-        (*it)->apply(v);
-        for (Value::ConstIterator itv = v.constBegin(); itv != v.constEnd(); ++itv)
-            value.append(*itv);
+        fieldLineEdit->apply(v);
+        for (const auto &valueItem : const_cast<const Value &>(v))
+            value.append(valueItem);
     }
 
     return true;
@@ -270,37 +270,37 @@ void FieldListEdit::clear()
 void FieldListEdit::setReadOnly(bool isReadOnly)
 {
     d->m_isReadOnly = isReadOnly;
-    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
-        (*it)->setReadOnly(isReadOnly);
+    for (FieldLineEdit *fieldLineEdit : const_cast<const QList<FieldLineEdit *> &>(d->lineEditList))
+        fieldLineEdit->setReadOnly(isReadOnly);
     d->addLineButton->setEnabled(!isReadOnly);
 }
 
 void FieldListEdit::setFile(const File *file)
 {
     d->file = file;
-    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
-        (*it)->setFile(file);
+    for (FieldLineEdit *fieldLineEdit : const_cast<const QList<FieldLineEdit *> &>(d->lineEditList))
+        fieldLineEdit->setFile(file);
 }
 
 void FieldListEdit::setElement(const Element *element)
 {
     m_element = element;
-    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
-        (*it)->setElement(element);
+    for (FieldLineEdit *fieldLineEdit : const_cast<const QList<FieldLineEdit *> &>(d->lineEditList))
+        fieldLineEdit->setElement(element);
 }
 
 void FieldListEdit::setFieldKey(const QString &fieldKey)
 {
     d->fieldKey = fieldKey;
-    for (QList<FieldLineEdit *>::ConstIterator it = d->lineEditList.constBegin(); it != d->lineEditList.constEnd(); ++it)
-        (*it)->setFieldKey(fieldKey);
+    for (FieldLineEdit *fieldLineEdit : const_cast<const QList<FieldLineEdit *> &>(d->lineEditList))
+        fieldLineEdit->setFieldKey(fieldKey);
 }
 
 void FieldListEdit::setCompletionItems(const QStringList &items)
 {
     d->completionItems = items;
-    for (QList<FieldLineEdit *>::Iterator it = d->lineEditList.begin(); it != d->lineEditList.end(); ++it)
-        (*it)->setCompletionItems(items);
+    for (FieldLineEdit *fieldLineEdit : const_cast<const QList<FieldLineEdit *> &>(d->lineEditList))
+        fieldLineEdit->setCompletionItems(items);
 }
 
 FieldLineEdit *FieldListEdit::addFieldLineEdit()
@@ -704,9 +704,9 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
         text = clipboard->text(QClipboard::Selection);
     if (!text.isEmpty()) {
         const QList<QSharedPointer<Keyword> > keywords = FileImporterBibTeX::splitKeywords(text);
-        for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywords.constBegin(); it != keywords.constEnd(); ++it) {
+        for (const auto &keyword : keywords) {
             Value *value = new Value();
-            value->append(*it);
+            value->append(keyword);
             lineAdd(value);
             delete value;
         }

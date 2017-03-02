@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -308,9 +308,11 @@ public:
         showMessage(i18n("Refreshing...")); // krazy:exclude=qmethods
 
         /// cancel/kill all running jobs
-        for (QList<KIO::StatJob *>::ConstIterator it = runningJobs.constBegin(); it != runningJobs.constEnd(); ++it)
+        auto it = runningJobs.begin();
+        while (it != runningJobs.end()) {
             (*it)->kill();
-        runningJobs.clear();
+            it = runningJobs.erase(it);
+        }
 
         /// clear flag that memorizes if any local file was referenced
         anyLocal = false;
@@ -318,14 +320,13 @@ public:
 
         /// do not load external reference if widget is hidden
         if (isVisible()) {
-            QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistenceYes);
-
-            for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
-                bool isLocal = KBibTeX::isLocalOrRelative(*it);
+            const QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), baseUrl, FileInfo::TestExistenceYes);
+            for (const QUrl &url : urlList) {
+                bool isLocal = KBibTeX::isLocalOrRelative(url);
                 anyRemote |= !isLocal;
                 if (!onlyLocalFilesButton->isChecked() && !isLocal) continue;
 
-                KIO::StatJob *job = KIO::stat(*it, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
+                KIO::StatJob *job = KIO::stat(url, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
                 runningJobs << job;
                 KJobWidgets::setWindow(job, p);
                 connect(job, &KIO::StatJob::result, p, &DocumentPreview::statFinished);

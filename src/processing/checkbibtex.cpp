@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -65,9 +65,9 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
 
     /// include all macro definitions, in case they are referenced
     if (file != NULL)
-        for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it)
-            if (Macro::isMacro(**it))
-                dummyFile << *it;
+        for (const auto &element : const_cast<const File &>(*file))
+            if (Macro::isMacro(*element))
+                dummyFile << element;
 
     /// run special exporter to get BibTeX's output
     QStringList bibtexOuput;
@@ -97,9 +97,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     /// go line-by-line through BibTeX output and collect warnings/errors
     QStringList warnings;
     QString errorPlainText;
-    for (QStringList::ConstIterator it = bibtexOuput.constBegin(); it != bibtexOuput.constEnd(); ++it) {
-        QString line = *it;
-
+    for (const QString &line : const_cast<const QStringList &>(bibtexOuput)) {
         if (errorLine.indexIn(line) > -1) {
             buffer.open(QIODevice::ReadOnly);
             QTextStream ts(&buffer);
@@ -130,8 +128,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
                 warnings << i18n("Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry", warningSort3.cap(1), warningSort3.cap(2), warningSort3.cap(3));
             } else {
                 /// generic/unknown warning
-                line = line.mid(warningStart.length());
-                warnings << i18n("Unknown warning: %1", line);
+                warnings << i18n("Unknown warning: %1", line.mid(warningStart.length()));
             }
         }
     }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -55,10 +55,10 @@ public:
     }
 
     QString selectionToText() {
-        QModelIndexList mil = fileView->selectionModel()->selectedRows();
+        const QModelIndexList mil = fileView->selectionModel()->selectedRows();
         File *file = new File();
-        for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it)
-            file->append(fileView->fileModel()->element(fileView->sortFilterProxyModel()->mapToSource(*it).row()));
+        for (const QModelIndex &index : mil)
+            file->append(fileView->fileModel()->element(fileView->sortFilterProxyModel()->mapToSource(index).row()));
 
         FileExporterBibTeX exporter;
         exporter.setEncoding(QStringLiteral("latex"));
@@ -125,8 +125,8 @@ public:
 
                 /// Insert new elements one by one
                 const int startRow = fileModel->rowCount(); ///< Memorize row where insertion started
-                for (File::ConstIterator it = file->cbegin(); it != file->cend(); ++it)
-                    fileModel->insertRow(*it, fileView->model()->rowCount());
+                for (const auto &element : const_cast<const File &>(*file))
+                    fileModel->insertRow(element, fileView->model()->rowCount());
                 const int endRow = fileModel->rowCount() - 1; ///< Memorize row where insertion ended
 
                 /// Select newly inserted elements
@@ -199,9 +199,9 @@ void Clipboard::copy()
 void Clipboard::copyReferences()
 {
     QStringList references;
-    QModelIndexList mil = d->fileView->selectionModel()->selectedRows();
-    for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-        QSharedPointer<Entry> entry = d->fileView->fileModel()->element(d->fileView->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
+    const QModelIndexList mil = d->fileView->selectionModel()->selectedRows();
+    for (const QModelIndex &index : mil) {
+        QSharedPointer<Entry> entry = d->fileView->fileModel()->element(d->fileView->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull())
             references << entry->id();
     }

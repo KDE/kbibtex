@@ -500,8 +500,7 @@ OpenFileInfo *OpenFileInfoManager::contains(const QUrl &url) const
 {
     if (!url.isValid()) return NULL; /// can only be unnamed file
 
-    for (OpenFileInfoList::ConstIterator it = d->openFileInfoList.constBegin(); it != d->openFileInfoList.constEnd(); ++it) {
-        OpenFileInfo *ofi = *it;
+    for (auto *ofi : const_cast<const OpenFileInfoManager::OpenFileInfoList &>(d->openFileInfoList)) {
         if (ofi->url() == url)
             return ofi;
     }

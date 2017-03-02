@@ -141,8 +141,8 @@ public:
         } else {
             /// Default/fall-back: use whole file for statistics
             numElements = file->count();
-            for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it)
-                countElement(*it, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);
+            for (const auto &element : const_cast<const File &>(*file))
+                countElement(element, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);
         }
     }
 };

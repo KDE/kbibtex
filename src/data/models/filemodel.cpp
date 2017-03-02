@@ -58,8 +58,7 @@ void FileModel::notificationEvent(int eventId)
         readConfiguration();
         int column = 0;
         const BibTeXFields *bf = BibTeXFields::self();
-        for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
-            const FieldDescription *fd = *it;
+        for (const auto *fd : const_cast<const BibTeXFields &>(*bf)) {
             /// Colors may have changed
             bool columnChanged = fd->upperCamelCase.toLower() == Entry::ftColor;
             /// Person name formatting may has changed

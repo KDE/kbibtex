@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -197,11 +197,11 @@ void SearchResults::importSelected()
 
     FileModel *targetModel = d->mainEditor->fileModel();
     FileModel *sourceModel = d->resultList->fileModel();
-    QList<QModelIndex> selList = d->resultList->selectionModel()->selectedRows();
-    for (QList<QModelIndex>::ConstIterator it = selList.constBegin(); it != selList.constEnd(); ++it) {
+    const QModelIndexList selList = d->resultList->selectionModel()->selectedRows();
+    for (const QModelIndex &modelIndex : selList) {
         /// Map from visible row to 'real' row
         /// that may be hidden through sorting
-        int row = d->resultList->sortFilterProxyModel()->mapToSource(*it).row();
+        int row = d->resultList->sortFilterProxyModel()->mapToSource(modelIndex).row();
         /// Should only be an Entry,
         /// everthing else is unexpected
         QSharedPointer<Entry> entry = sourceModel->element(row).dynamicCast<Entry>();

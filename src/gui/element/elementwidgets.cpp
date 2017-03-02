@@ -80,7 +80,7 @@ void ElementWidget::gotModified()
 }
 
 
-EntryConfiguredWidget::EntryConfiguredWidget(QSharedPointer<EntryTabLayout> &entryTabLayout, QWidget *parent)
+EntryConfiguredWidget::EntryConfiguredWidget(const QSharedPointer<const EntryTabLayout> &entryTabLayout, QWidget *parent)
         : ElementWidget(parent), etl(entryTabLayout)
 {
     gridLayout = new QGridLayout(this);
@@ -235,13 +235,13 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
     if (!forceVisible && !entryType.isEmpty()) {
         const QString entryTypeLc = entryType.toLower();
         const BibTeXEntries *be = BibTeXEntries::self();
-        for (BibTeXEntries::ConstIterator bit = be->constBegin(); bit != be->constEnd(); ++bit) {
-            if (entryTypeLc == bit->upperCamelCase.toLower() || entryTypeLc == bit->upperCamelCaseAlt.toLower()) {
+        for (const auto &ed : const_cast<const BibTeXEntries &>(*be)) {
+            if (entryTypeLc == ed.upperCamelCase.toLower() || entryTypeLc == ed.upperCamelCaseAlt.toLower()) {
                 /// this ugly conversion is necessary because we have a "^" (xor) and "|" (and/or)
                 /// syntax to differentiate required items (not used yet, but will be used
                 /// later if missing required items are marked).
-                QString visible = bit->requiredItems.join(QStringLiteral(","));
-                visible += QLatin1Char(',') + bit->optionalItems.join(QStringLiteral(","));
+                QString visible = ed.requiredItems.join(QStringLiteral(","));
+                visible += QLatin1Char(',') + ed.optionalItems.join(QStringLiteral(","));
                 visible = visible.replace(QLatin1Char('|'), QLatin1Char(',')).replace(QLatin1Char('^'), QLatin1Char(','));
                 visibleItems = visible.split(QStringLiteral(","));
                 break;
@@ -376,9 +376,9 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
         int index = entryType->findData(type);
         if (index == -1) {
             const QString typeLower(type.toLower());
-            for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
-                if (typeLower == it->upperCamelCaseAlt.toLower()) {
-                    index = entryType->findData(it->upperCamelCase);
+            for (const auto &ed : const_cast<const BibTeXEntries &>(*be))
+                if (typeLower == ed.upperCamelCaseAlt.toLower()) {
+                    index = entryType->findData(ed.upperCamelCase);
                     break;
                 }
         }
@@ -471,8 +471,8 @@ void ReferenceWidget::createGUI()
     layout->addWidget(entryId);
 
     const BibTeXEntries *be = BibTeXEntries::self();
-    for (BibTeXEntries::ConstIterator it = be->constBegin(); it != be->constEnd(); ++it)
-        entryType->addItem(it->label, it->upperCamelCase);
+    for (const auto &ed : const_cast<const BibTeXEntries &>(*be))
+        entryType->addItem(ed.label, ed.upperCamelCase);
     /// Sort the combo box locale-aware. Thus we need a SortFilterProxyModel
     QSortFilterProxyModel *proxy = new QSortFilterProxyModel(entryType);
     proxy->setSortLocaleAware(true);
@@ -601,10 +601,9 @@ bool FilesWidget::apply(QSharedPointer<Element> element) const
     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
     if (entry.isNull()) return false;
 
-    for (QStringList::ConstIterator it = keyStart.constBegin(); it != keyStart.constEnd(); ++it)
+    for (const QString &keyStem : keyStart)
         for (int i = 1; i < 32; ++i) {  /// FIXME replace number by constant
-            QString key = *it;
-            if (i > 1) key.append(QString::number(i));
+            const QString key = i > 1 ? keyStem + QString::number(i) : keyStem;
             entry->remove(key);
         }
 
@@ -613,8 +612,8 @@ bool FilesWidget::apply(QSharedPointer<Element> element) const
 
     Value urlValue, doiValue, localFileValue;
 
-    for (Value::ConstIterator it = combinedValue.constBegin(); it != combinedValue.constEnd(); ++it) {
-        const QSharedPointer<VerbatimText> verbatimText = (*it).dynamicCast<VerbatimText>();
+    for (const auto &valueItem : const_cast<const Value &>(combinedValue)) {
+        const QSharedPointer<const VerbatimText> verbatimText = valueItem.dynamicCast<const VerbatimText>();
         if (!verbatimText.isNull()) {
             const QString text = verbatimText->text();
             if (KBibTeX::urlRegExp.indexIn(text) > -1) {
@@ -669,13 +668,12 @@ bool FilesWidget::reset(QSharedPointer<const Element> element)
     if (entry.isNull()) return false;
 
     Value combinedValue;
-    for (QStringList::ConstIterator it = keyStart.constBegin(); it != keyStart.constEnd(); ++it)
+    for (const QString &keyStem : keyStart)
         for (int i = 1; i < 32; ++i) {  /// FIXME replace number by constant
-            QString key = *it;
-            if (i > 1) key.append(QString::number(i));
+            const QString key = i > 1 ? keyStem + QString::number(i) : keyStem;
             const Value &value = entry->operator [](key);
-            for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it)
-                combinedValue.append(*it);
+            for (const auto &valueItem : const_cast<const Value &>(value))
+                combinedValue.append(valueItem);
         }
     fileList->setElement(element.data());
     fileList->reset(combinedValue);
@@ -733,11 +731,11 @@ bool OtherFieldsWidget::apply(QSharedPointer<Element> element) const
     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
     if (entry.isNull()) return false;
 
-    for (QStringList::ConstIterator it = deletedKeys.constBegin(); it != deletedKeys.constEnd(); ++it)
-        entry->remove(*it);
-    for (QStringList::ConstIterator it = modifiedKeys.constBegin(); it != modifiedKeys.constEnd(); ++it) {
-        entry->remove(*it);
-        entry->insert(*it, internalEntry->value(*it));
+    for (const QString &key : const_cast<const QStringList &>(deletedKeys))
+        entry->remove(key);
+    for (const QString &key : const_cast<const QStringList &>(modifiedKeys)) {
+        entry->remove(key);
+        entry->insert(key, internalEntry->value(key));
     }
 
     return true;

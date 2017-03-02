@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -218,8 +218,8 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             File *bibtexFile = importer.fromString(bibTeXcode);
 
             if (bibtexFile != NULL) {
-                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                    QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     if (!entry.isNull()) {
                         if (!downloadUrl.isEmpty()) {
                             /// There is an external document associated with this BibTeX entry

@@ -80,8 +80,8 @@ QString EncoderXML::decode(const QString &text) const
 {
     QString result = text;
 
-    for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.constBegin(); it != d->charMapping.constEnd(); ++it)
-        result.replace((*it).regExp, (*it).unicode);
+    for (const auto &item : const_cast<const QList<EncoderXMLPrivate::CharMappingItem> &>(d->charMapping))
+        result.replace(item.regExp, item.unicode);
 
     /**
      * Find and replace all characters written as hexadecimal number
@@ -128,8 +128,8 @@ QString EncoderXML::encode(const QString &text, const TargetEncoding targetEncod
 {
     QString result = text;
 
-    for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.constBegin(); it != d->charMapping.constEnd(); ++it)
-        result.replace((*it).unicode, (*it).xml);
+    for (const auto &item : const_cast<const QList<EncoderXMLPrivate::CharMappingItem> &>(d->charMapping))
+        result.replace(item.unicode, item.xml);
 
     if (targetEncoding == TargetEncodingASCII) {
         /// Replace all non-ASCII characters (code >=128) with an entity code,

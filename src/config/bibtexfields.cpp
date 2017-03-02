@@ -110,8 +110,7 @@ public:
 
         QStringList treeViewNames;
         int columnCount = 0;
-        for (BibTeXFields::ConstIterator it = p->constBegin(); it != p->constEnd(); ++it) {
-            const FieldDescription *fd = *it;
+        for (const auto *fd : const_cast<const BibTeXFields &>(*p)) {
             ++columnCount;
             QString groupName = QString(QStringLiteral("Column%1")).arg(columnCount);
             KConfigGroup configGroup(layoutConfig, groupName);
@@ -189,11 +188,11 @@ QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
         iName[0] = iName[0].toUpper();
         return iName;
     case KBibTeX::cLowerCamelCase: {
-        for (QList<FieldDescription *>::ConstIterator it = constBegin(); it != constEnd(); ++it) {
+        for (const auto *fd : const_cast<const BibTeXFields &>(*this)) {
             /// configuration file uses camel-case
-            QString itName = (*it)->upperCamelCase.toLower();
-            if (itName == iName && (*it)->upperCamelCaseAlt.isEmpty()) {
-                iName = (*it)->upperCamelCase;
+            QString itName = fd->upperCamelCase.toLower();
+            if (itName == iName && fd->upperCamelCaseAlt.isEmpty()) {
+                iName = fd->upperCamelCase;
                 break;
             }
         }
@@ -203,11 +202,11 @@ QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
         return iName;
     }
     case KBibTeX::cUpperCamelCase: {
-        for (QList<FieldDescription *>::ConstIterator it = constBegin(); it != constEnd(); ++it) {
+        for (const auto *fd : const_cast<const BibTeXFields &>(*this)) {
             /// configuration file uses camel-case
-            QString itName = (*it)->upperCamelCase.toLower();
-            if (itName == iName && (*it)->upperCamelCaseAlt.isEmpty()) {
-                iName = (*it)->upperCamelCase;
+            QString itName = fd->upperCamelCase.toLower();
+            if (itName == iName && fd->upperCamelCaseAlt.isEmpty()) {
+                iName = fd->upperCamelCase;
                 break;
             }
         }
@@ -223,9 +222,9 @@ QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
 const FieldDescription *BibTeXFields::find(const QString &name) const
 {
     const QString iName = name.toLower();
-    for (QList<FieldDescription *>::ConstIterator it = constBegin(); it != constEnd(); ++it) {
-        if ((*it)->upperCamelCase.toLower() == iName && (*it)->upperCamelCaseAlt.isEmpty())
-            return (*it);
+    for (const auto *fd : const_cast<const BibTeXFields &>(*this)) {
+        if (fd->upperCamelCase.toLower() == iName && fd->upperCamelCaseAlt.isEmpty())
+            return fd;
     }
     qCWarning(LOG_KBIBTEX_CONFIG) << "No field description for " << name << "(" << iName << ")";
     return NULL;
@@ -255,9 +254,9 @@ KBibTeX::TypeFlags BibTeXFields::typeFlagsFromString(const QString &typeFlagsStr
 {
     KBibTeX::TypeFlags result;
 
-    QStringList list = typeFlagsString.split(';');
-    for (QStringList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it)
-        result |= typeFlagFromString(*it);
+    const QStringList list = typeFlagsString.split(';');
+    for (const QString &s : list)
+        result |= typeFlagFromString(s);
 
     return result;
 }

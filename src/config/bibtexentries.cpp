@@ -138,11 +138,11 @@ QString BibTeXEntries::format(const QString &name, KBibTeX::Casing casing) const
         iName[0] = iName[0].toUpper();
         return iName;
     case KBibTeX::cLowerCamelCase: {
-        for (ConstIterator it = begin(); it != end(); ++it) {
+        for (const auto &ed : const_cast<const BibTeXEntries &>(*this)) {
             /// configuration file uses camel-case
-            QString itName = (*it).upperCamelCase.toLower();
+            QString itName = ed.upperCamelCase.toLower();
             if (itName == iName) {
-                iName = (*it).upperCamelCase;
+                iName = ed.upperCamelCase;
                 break;
             }
         }
@@ -152,11 +152,11 @@ QString BibTeXEntries::format(const QString &name, KBibTeX::Casing casing) const
         return iName;
     }
     case KBibTeX::cUpperCamelCase: {
-        for (ConstIterator it = begin(); it != end(); ++it) {
+        for (const auto &ed : const_cast<const BibTeXEntries &>(*this)) {
             /// configuration file uses camel-case
-            QString itName = (*it).upperCamelCase.toLower();
+            QString itName = ed.upperCamelCase.toLower();
             if (itName == iName) {
-                iName = (*it).upperCamelCase;
+                iName = ed.upperCamelCase;
                 break;
             }
         }
@@ -173,11 +173,11 @@ QString BibTeXEntries::label(const QString &name) const
 {
     const QString iName = name.toLower();
 
-    for (ConstIterator it = begin(); it != end(); ++it) {
+    for (const auto &ed : const_cast<const BibTeXEntries &>(*this)) {
         /// Configuration file uses camel-case, convert this to lower case for faster comparison
-        QString itName = (*it).upperCamelCase.toLower();
-        if (itName == iName || (!(itName = (*it).upperCamelCaseAlt.toLower()).isEmpty() && itName == iName))
-            return (*it).label;
+        QString itName = ed.upperCamelCase.toLower();
+        if (itName == iName || (!(itName = ed.upperCamelCaseAlt.toLower()).isEmpty() && itName == iName))
+            return ed.label;
     }
     return QString();
 }

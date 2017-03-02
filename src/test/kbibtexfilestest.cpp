@@ -157,10 +157,9 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     QStringList lastAuthorsList, filesUrlsDoiList;
     int countElements = bibTeXFile->count(), countEntries = 0;
     QString lastEntryId, lastEntryLastAuthorLastName;
-    for (File::ConstIterator fit = bibTeXFile->constBegin(); fit != bibTeXFile->constEnd(); ++fit) {
-        Element *element = (*fit).data();
-        Entry *entry = dynamic_cast<Entry *>(element);
-        if (entry != NULL) {
+    for (const auto &element : const_cast<const File &>(*bibTeXFile)) {
+        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+        if (!entry.isNull()) {
             ++countEntries;
             lastEntryId = entry->id();
 
@@ -225,13 +224,13 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
 
     QCryptographicHash hashAuthors(QCryptographicHash::Md4);
     lastAuthorsList.sort();
-    for (const QString &it : const_cast<const QStringList &>(lastAuthorsList))
-        hashAuthors.addData(it.toUtf8());
+    for (const QString &lastAuthor : const_cast<const QStringList &>(lastAuthorsList))
+        hashAuthors.addData(lastAuthor.toUtf8());
     QCOMPARE(hashAuthors.result(), currentTestFile.hashAuthors);
 
     QCryptographicHash hashFilesUrlsDoi(QCryptographicHash::Md5);
-    for (const QString &it : const_cast<const QStringList &>(filesUrlsDoiList))
-        hashFilesUrlsDoi.addData(it.toUtf8());
+    for (const QString &filesUrlsDoi : const_cast<const QStringList &>(filesUrlsDoiList))
+        hashFilesUrlsDoi.addData(filesUrlsDoi.toUtf8());
     QCOMPARE(hashFilesUrlsDoi.result(), currentTestFile.hashFilesUrlsDoi);
 
     delete importer;

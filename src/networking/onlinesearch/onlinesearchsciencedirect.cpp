@@ -280,8 +280,8 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
 
         bool hasEntry = false;
         if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+            for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 hasEntry |= publishEntry(entry);
             }
             delete bibtexFile;

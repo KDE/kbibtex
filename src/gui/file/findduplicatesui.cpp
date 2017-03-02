@@ -292,9 +292,9 @@ public:
                             else {
                                 QSharedPointer<Keyword> kw = old.first().dynamicCast<Keyword>();
                                 if (!kw.isNull()) {
-                                    QList<QSharedPointer<Keyword> > keywordList = FileImporterBibTeX::splitKeywords(text);
-                                    for (QList<QSharedPointer<Keyword> >::ConstIterator it = keywordList.constBegin(); it != keywordList.constEnd(); ++it)
-                                        v.append(*it);
+                                    const QList<QSharedPointer<Keyword> > keywordList = FileImporterBibTeX::splitKeywords(text);
+                                    for (const auto &keyword : keywordList)
+                                        v.append(keyword);
                                 } else {
                                     qCDebug(LOG_KBIBTEX_GUI) << "Not know how to set this text:" << text;
                                 }
@@ -675,9 +675,9 @@ void FindDuplicatesUI::slotFindDuplicates()
         for (int i = 0; i < d->view->fileModel()->rowCount(); ++i)
             file->append(d->view->fileModel()->element(i));
     } else {
-        QModelIndexList mil = d->view->selectionModel()->selectedRows();
-        for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it)
-            file->append(d->view->fileModel()->element(d->view->sortFilterProxyModel()->mapToSource(*it).row()));
+        const QModelIndexList mil = d->view->selectionModel()->selectedRows();
+        for (const QModelIndex &index : mil)
+            file->append(d->view->fileModel()->element(d->view->sortFilterProxyModel()->mapToSource(index).row()));
     }
 
     QList<EntryClique *> cliques;

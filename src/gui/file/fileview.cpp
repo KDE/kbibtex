@@ -190,18 +190,18 @@ void FileView::selectionChanged(const QItemSelection &selected, const QItemSelec
 {
     QTreeView::selectionChanged(selected, deselected);
 
-    QModelIndexList set = selected.indexes();
-    for (QModelIndexList::ConstIterator it = set.constBegin(); it != set.constEnd(); ++it) {
-        if ((*it).column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
-        m_selection.append(elementAt(*it));
+    const QModelIndexList selectedSet = selected.indexes();
+    for (const QModelIndex &index : selectedSet) {
+        if (index.column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
+        m_selection.append(elementAt(index));
     }
-    if (m_current == NULL && !set.isEmpty())
-        m_current = elementAt(set.first());
+    if (m_current == NULL && !selectedSet.isEmpty())
+        m_current = elementAt(selectedSet.first());
 
-    set = deselected.indexes();
-    for (QModelIndexList::ConstIterator it = set.constBegin(); it != set.constEnd(); ++it) {
-        if ((*it).column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
-        m_selection.removeOne(elementAt(*it));
+    const QModelIndexList deselectedSet = deselected.indexes();
+    for (const QModelIndex &index : deselectedSet) {
+        if (index.column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
+        m_selection.removeOne(elementAt(index));
     }
 
     emit selectedElementsChanged();

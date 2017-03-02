@@ -137,8 +137,8 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
 
                 bool hasEntries = false;
                 if (bibtexFile != NULL) {
-                    for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                        QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                    for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                         hasEntries |= publishEntry(entry);
                     }
 
@@ -181,12 +181,12 @@ void OnlineSearchIEEEXplore::sanitizeEntry(QSharedPointer<Entry> entry)
     if (!entry->contains(Entry::ftAuthor) && entry->contains(ftXAuthor)) {
         const Value xAuthorValue = entry->value(ftXAuthor);
         Value authorValue;
-        for (Value::ConstIterator it = xAuthorValue.constBegin(); it != xAuthorValue.constEnd(); ++it) {
-            QSharedPointer<PlainText> pt = it->dynamicCast<PlainText>();
+        for (const auto &xAuthorValueItem : xAuthorValue) {
+            const QSharedPointer<const PlainText> pt = xAuthorValueItem.dynamicCast<const PlainText>();
             if (!pt.isNull()) {
                 const QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(pt->text());
-                for (QList<QSharedPointer<Person> >::ConstIterator pit = personList.constBegin(); pit != personList.constEnd(); ++pit)
-                    authorValue << *pit;
+                for (const auto &person : personList)
+                    authorValue << person;
             }
         }
 

@@ -661,22 +661,22 @@ public:
         /// Test and continue if there was an Entry to retrieve
         if (!entry.isNull()) {
             /// Get list of URLs associated with this entry
-            QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
+            const QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
             if (!urlList.isEmpty()) {
                 /// Memorize first action, necessary to set menu title
                 QAction *firstAction = NULL;
                 /// First iteration: local references only
-                for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
+                for (const QUrl &url : urlList) {
                     /// First iteration: local references only
-                    if (!(*it).isLocalFile()) continue; ///< skip remote URLs
+                    if (!url.isLocalFile()) continue; ///< skip remote URLs
 
                     /// Build a nice menu item (label, icon, ...)
-                    QFileInfo fi((*it).url(QUrl::PreferLocalFile));
+                    QFileInfo fi(url.url(QUrl::PreferLocalFile));
                     const QString label = QString(QStringLiteral("%1 [%2]")).arg(fi.fileName(), fi.absolutePath());
                     QMimeDatabase db;
-                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(*it).iconName()), label, p);
-                    action->setData((*it).url(QUrl::PreferLocalFile));
-                    action->setToolTip((*it).url(QUrl::PreferLocalFile));
+                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(url).iconName()), label, p);
+                    action->setData(url.url(QUrl::PreferLocalFile));
+                    action->setToolTip(url.url(QUrl::PreferLocalFile));
                     /// Register action at signal handler to open URL when triggered
                     connect(action, &QAction::triggered, signalMapperViewDocument, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
                     signalMapperViewDocument->setMapping(action, action);
@@ -694,13 +694,13 @@ public:
 
                 firstAction = NULL; /// Now the first remote action is to be memorized
                 /// Second iteration: remote references only
-                for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it) {
-                    if ((*it).isLocalFile()) continue; ///< skip local files
+                for (const QUrl &url : urlList) {
+                    if (url.isLocalFile()) continue; ///< skip local files
 
                     /// Build a nice menu item (label, icon, ...)
-                    const QString prettyUrl = (*it).url(QUrl::PreferLocalFile);
+                    const QString prettyUrl = url.url(QUrl::PreferLocalFile);
                     QMimeDatabase db;
-                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(*it).iconName()), prettyUrl, p);
+                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(url).iconName()), prettyUrl, p);
                     action->setData(prettyUrl);
                     action->setToolTip(prettyUrl);
                     /// Register action at signal handler to open URL when triggered
@@ -867,11 +867,11 @@ void KBibTeXPart::elementViewDocument()
 {
     QUrl url;
 
-    QList<QAction *> actionList = d->viewDocumentMenu->actions();
+    const QList<QAction *> actionList = d->viewDocumentMenu->actions();
     /// Go through all actions (i.e. document URLs) for this element
-    for (QList<QAction *>::ConstIterator it = actionList.constBegin(); it != actionList.constEnd(); ++it) {
+    for (const QAction *action : actionList) {
         /// Make URL from action's data ...
-        QUrl tmpUrl = QUrl((*it)->data().toString());
+        QUrl tmpUrl = QUrl(action->data().toString());
         /// ... but skip this action if the URL is invalid
         if (!tmpUrl.isValid()) continue;
         if (tmpUrl.isLocalFile()) {
@@ -1042,9 +1042,9 @@ void KBibTeXPart::updateActions()
     /// update list of references which can be sent to LyX
     QStringList references;
     if (d->partWidget->fileView()->selectionModel() != NULL) {
-        QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
-        for (QModelIndexList::ConstIterator it = mil.constBegin(); it != mil.constEnd(); ++it) {
-            QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(*it).row()).dynamicCast<Entry>();
+        const QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
+        for (const QModelIndex &index : mil) {
+            QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
             if (!entry.isNull())
                 references << entry->id();
         }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -62,21 +62,21 @@ public:
         /// WorldCat's Open Search does not support "free" search,
         /// instead, title, keyword, subject etc are searched OR-connected
         const QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
-        for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it) {
+        for (const QString &text : freeTextWords) {
             static const QString freeWorldTemplate = QStringLiteral("(+srw.ti+all+\"%1\"+or+srw.kw+all+\"%1\"+or+srw.au+all+\"%1\"+or+srw.bn+all+\"%1\"+or+srw.su+all+\"%1\"+)");
-            queryFragments.append(freeWorldTemplate.arg(*it));
+            queryFragments.append(freeWorldTemplate.arg(text));
         }
         /// Add words from "title" field
         const QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
-        for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it) {
+        for (const QString &text : titleWords) {
             static const QString titleTemplate = QStringLiteral("srw.ti+all+\"%1\"");
-            queryFragments.append(titleTemplate.arg(*it));
+            queryFragments.append(titleTemplate.arg(text));
         }
         /// Add words from "author" field
         const QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it) {
+        for (const QString &text : authorWords) {
             static const QString authorTemplate = QStringLiteral("srw.au+all+\"%1\"");
-            queryFragments.append(authorTemplate.arg(*it));
+            queryFragments.append(authorTemplate.arg(text));
         }
 
         /// Field year cannot stand alone, therefore if no query fragments
@@ -90,9 +90,9 @@ public:
 
         /// Add words from "year" field
         const QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
-        for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it) {
+        for (const QString &text : yearWords) {
             static const QString yearTemplate = QStringLiteral("srw.yr+any+\"%1\"");
-            queryFragments.append(yearTemplate.arg(*it));
+            queryFragments.append(yearTemplate.arg(text));
         }
 
         const QString queryString = queryFragments.join(QStringLiteral("+and+"));
@@ -182,8 +182,8 @@ void OnlineSearchOCLCWorldCat::downloadDone() {
 
         bool hasEntries = false;
         if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+            for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 hasEntries |= publishEntry(entry);
             }
             delete bibtexFile;

@@ -165,11 +165,11 @@ public:
         static const QRegExp sequenceOfSpaces(QStringLiteral("\\s+"));
         QString journalName = PlainTextValue::text(entry.value(Entry::ftJournal));
         journalName = JournalAbbreviations::self()->toShortName(journalName);
-        QStringList journalWords = journalName.split(sequenceOfSpaces, QString::SkipEmptyParts);
+        const QStringList journalWords = journalName.split(sequenceOfSpaces, QString::SkipEmptyParts);
 
         QString result;
-        for (QStringList::ConstIterator it = journalWords.constBegin(); it != journalWords.constEnd(); ++it) {
-            QString journalComponent = normalizeText(*it);
+        for (const QString &word : journalWords) {
+            QString journalComponent = normalizeText(word);
 
             /// Try to keep sequences of capital letters at the start of the journal name,
             /// those may already be abbreviations.

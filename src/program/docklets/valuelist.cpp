@@ -154,8 +154,7 @@ public:
 
         lineeditFilter->clear();
         comboboxFieldNames->clear();
-        for (BibTeXFields::ConstIterator it = bibtexFields->constBegin(); it != bibtexFields->constEnd(); ++it) {
-            const FieldDescription *fd = *it;
+        for (const auto *fd : const_cast<const BibTeXFields &>(*bibtexFields)) {
             if (!fd->upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
             if (fd->upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
             comboboxFieldNames->addItem(fd->label, fd->upperCamelCase);
@@ -319,7 +318,7 @@ void ValueList::assignSelection() {
 
     /// Go through all selected elements in current editor
     const QList<QSharedPointer<Element> > &selection = d->fileView->selectedElements();
-    for (const QSharedPointer<Element> &element : selection) {
+    for (const auto &element : selection) {
         /// Only entries (not macros or comments) are of interest
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (!entry.isNull()) {
@@ -330,7 +329,7 @@ void ValueList::assignSelection() {
                 /// Fields for which multiple values are valid
                 bool valueItemAlreadyContained = false; ///< add only if to-be-assigned value is not yet contained
                 Value entrysValueForField = entry->value(field);
-                for (const QSharedPointer<ValueItem> &containedValueItem : const_cast<const Value &>(entrysValueForField)) {
+                for (const auto &containedValueItem : const_cast<const Value &>(entrysValueForField)) {
                     valueItemAlreadyContained |= PlainTextValue::text(containedValueItem) == toBeAssignedValueText;
                     if (valueItemAlreadyContained) break;
                 }
@@ -338,7 +337,7 @@ void ValueList::assignSelection() {
                 if (!valueItemAlreadyContained) {
                     /// Add each ValueItem from the to-be-assigned value to the entry's value for this field
                     entrysValueForField.reserve(toBeAssignedValue.size());
-                    for (const QSharedPointer<ValueItem> &newValueItem : toBeAssignedValue) {
+                    for (const auto &newValueItem : toBeAssignedValue) {
                         entrysValueForField.append(newValueItem);
                     }
                     /// "Write back" value to field in entry
@@ -378,7 +377,7 @@ void ValueList::removeSelection() {
 
     /// Go through all selected elements in current editor
     const QList<QSharedPointer<Element> > &selection = d->fileView->selectedElements();
-    for (const QSharedPointer<Element> &element : selection) {
+    for (const auto &element : selection) {
         /// Only entries (not macros or comments) are of interest
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (!entry.isNull()) {

@@ -125,9 +125,11 @@ public:
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         /// format search terms
         QStringList queryFragments;
-        for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it)
-            foreach (const QString &queryFragment, p->splitRespectingQuotationMarks(it.value()))
+        for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
+            const auto respectingQuotationMarks = p->splitRespectingQuotationMarks(it.value());
+            for (const auto &queryFragment : respectingQuotationMarks)
                 queryFragments.append(p->encodeURL(queryFragment));
+        }
         return QUrl(QString(QStringLiteral("%1search_query=all:\"%3\"&start=0&max_results=%2")).arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join(QStringLiteral("\"+AND+all:\"")))); ///< join search terms with an AND operation
     }
 
@@ -679,8 +681,8 @@ void OnlineSearchArXiv::downloadDone()
 
             bool hasEntries = false;
             if (bibtexFile != NULL) {
-                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                    QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     hasEntries |= publishEntry(entry);
                 }
 

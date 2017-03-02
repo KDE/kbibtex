@@ -100,11 +100,9 @@ public:
         const BibTeXFields *bf = BibTeXFields::self();
         /// Use a hash map to get an alphabetically sorted list
         QHash<QString, QString> fielddescs;
-        for (BibTeXFields::ConstIterator it = bf->constBegin(); it != bf->constEnd(); ++it) {
-            const FieldDescription *fd = *it;
+        for (const auto *fd : const_cast<const BibTeXFields &>(*bf))
             if (fd->upperCamelCaseAlt.isEmpty())
                 fielddescs.insert(fd->label, fd->upperCamelCase);
-        }
         /// Sort locale-aware
         QList<QString> keys = fielddescs.keys();
         std::sort(keys.begin(), keys.end(), sortStringsLocaleAware);

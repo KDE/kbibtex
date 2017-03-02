@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                 2014 Pavel Zorin-Kranich <pzorin@math.uni-bonn.de>      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -103,8 +103,8 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
 
         bool hasEntry = false;
         if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+            for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                const QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 hasEntry |= publishEntry(entry);
             }
             delete bibtexFile;

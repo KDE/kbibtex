@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -60,32 +60,25 @@ public:
         QStringList queryFragments;
 
         /// add words from "free text" field, but auto-detect PMIDs
-        QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
-        for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it) {
-            QString text = *it;
+        const QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        for (const QString &text : freeTextWords)
             queryFragments.append(text + (pmidRegExp.indexIn(text) >= 0 ? QStringLiteral("") : QStringLiteral("[All Fields]")));
-        }
+
 
         /// add words from "year" field
-        QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
-        for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it) {
-            QString text = *it;
+        const QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
+        for (const QString &text : yearWords)
             queryFragments.append(text);
-        }
 
         /// add words from "title" field
-        QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
-        for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it) {
-            QString text = *it;
+        const QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
+        for (const QString &text : titleWords)
             queryFragments.append(text + QStringLiteral("[Title]"));
-        }
 
         /// add words from "author" field
-        QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it) {
-            QString text = *it;
+        const QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        for (const QString &text : authorWords)
             queryFragments.append(text + QStringLiteral("[Author]"));
-        }
 
         /// Join all search terms with an AND operation
         url.append(queryFragments.join(QStringLiteral("+AND+")));
@@ -218,8 +211,8 @@ void OnlineSearchPubMed::eFetchDone()
 
             if (bibtexFile != NULL) {
                 bool hasEntry = false;
-                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                    QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     hasEntry |= publishEntry(entry);
                 }
 

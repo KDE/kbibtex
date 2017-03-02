@@ -208,8 +208,8 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         File *bibtexFile = importer.fromString(bibTeXcode);
         int numFoundResults = 0;
         if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+            for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 if (publishEntry(entry))
                     ++numFoundResults;
 

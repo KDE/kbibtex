@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -109,8 +109,8 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
     }
 
     const QStringList fileList = internalText.split(KBibTeX::fileListSeparatorRegExp, QString::SkipEmptyParts);
-    for (QStringList::ConstIterator filesIt = fileList.constBegin(); filesIt != fileList.constEnd(); ++filesIt) {
-        internalText = *filesIt;
+    for (const QString &text : fileList) {
+        internalText = text;
 
         /// If testing for the actual existence of a filename found in the text ...
         if (testExistence == TestExistenceYes) {
@@ -222,10 +222,9 @@ QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestE
         /// that are mistaken for URLs
         if (it.key().toLower() == Entry::ftAbstract) continue;
 
-        Value v = it.value();
-
-        for (Value::ConstIterator vit = v.constBegin(); vit != v.constEnd(); ++vit) {
-            QString plainText = PlainTextValue::text(*(*vit));
+        const Value v = it.value();
+        for (const auto &valueItem : v) {
+            QString plainText = PlainTextValue::text(*valueItem);
 
             int pos = -1;
             while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
@@ -241,8 +240,8 @@ QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestE
 
         /// check if in the same directory as the BibTeX file
         /// a PDF file exists which filename is based on the entry's id
-        for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {
-            const QFileInfo fi(baseDirectory + QDir::separator() + entry->id() + *extensionIt);
+        for (const QString &extension : documentFileExtensions) {
+            const QFileInfo fi(baseDirectory + QDir::separator() + entry->id() + extension);
             if (fi.exists()) {
                 const QUrl url = QUrl::fromLocalFile(fi.canonicalFilePath());
                 if (!result.contains(url))
@@ -255,8 +254,8 @@ QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestE
         /// which filename is based on the entry's id
         QString basename = bibTeXUrl.fileName().remove(QRegExp("\\.[^.]{2,5}$"));
         QString directory = baseDirectory + QDir::separator() + basename;
-        for (QStringList::ConstIterator extensionIt = documentFileExtensions.constBegin(); extensionIt != documentFileExtensions.constEnd(); ++extensionIt) {
-            const QFileInfo fi(directory + QDir::separator() + entry->id() + *extensionIt);
+        for (const QString &extension : documentFileExtensions) {
+            const QFileInfo fi(directory + QDir::separator() + entry->id() + extension);
             if (fi.exists()) {
                 const QUrl url = QUrl::fromLocalFile(fi.canonicalFilePath());
                 if (!result.contains(url))

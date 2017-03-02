@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -52,24 +52,24 @@ QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
     QStringList queryFragments;
 
     /// add words from "free text" field
-    QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    for (QStringList::ConstIterator it = freeTextWords.constBegin(); it != freeTextWords.constEnd(); ++it)
-        queryFragments.append(globalSearch.arg(*it));
+    const QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
+    for (const QString &word : freeTextWords)
+        queryFragments.append(globalSearch.arg(word));
 
     /// add words from "year" field
-    QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
-    for (QStringList::ConstIterator it = yearWords.constBegin(); it != yearWords.constEnd(); ++it)
-        queryFragments.append(*it); ///< no quotation marks around years
+    const QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
+    for (const QString &word : yearWords)
+        queryFragments.append(word); ///< no quotation marks around years
 
     /// add words from "title" field
-    QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
-    for (QStringList::ConstIterator it = titleWords.constBegin(); it != titleWords.constEnd(); ++it)
-        queryFragments.append(rangeSearch.arg(QStringLiteral("intitle"), *it));
+    const QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    for (const QString &word : titleWords)
+        queryFragments.append(rangeSearch.arg(QStringLiteral("intitle"), word));
 
     /// add words from "author" field
-    QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
-    for (QStringList::ConstIterator it = authorWords.constBegin(); it != authorWords.constEnd(); ++it)
-        queryFragments.append(rangeSearch.arg(QStringLiteral("author"), *it));
+    const QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    for (const QString &word : authorWords)
+        queryFragments.append(rangeSearch.arg(QStringLiteral("author"), word));
 
     /// Build URL
     QString urlText = QStringLiteral("http://adsabs.harvard.edu/cgi-bin/basic_connect?version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&qsearch=");

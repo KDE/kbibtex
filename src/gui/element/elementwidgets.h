@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -93,14 +93,14 @@ private:
     int fieldInputCount, numCols;
     QGridLayout *gridLayout;
 
-    QSharedPointer<EntryTabLayout> etl;
+    const QSharedPointer<const EntryTabLayout> etl;
     QMap<QString, FieldInput *> bibtexKeyToWidget;
 
     void createGUI();
     void layoutGUI(bool forceVisible, const QString &entryType = QString());
 
 public:
-    EntryConfiguredWidget(QSharedPointer<EntryTabLayout> &entryTabLayout, QWidget *parent);
+    EntryConfiguredWidget(const QSharedPointer<const EntryTabLayout> &entryTabLayout, QWidget *parent);
     virtual ~EntryConfiguredWidget();
 
     bool apply(QSharedPointer<Element> element) const;

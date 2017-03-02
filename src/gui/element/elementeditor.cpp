@@ -102,9 +102,8 @@ public:
     }
 
     void addTabWidgets() {
-        EntryLayout *el = EntryLayout::self();
-        for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit) {
-            QSharedPointer<EntryTabLayout> etl = *elit;
+        const EntryLayout *el = EntryLayout::self();
+        for (const auto &etl : const_cast<const EntryLayout &>(*el)) {
             ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
             connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
             widgets << widget;
@@ -135,9 +134,9 @@ public:
         QStringList blacklistedFields;
 
         /// blacklist fields covered by EntryConfiguredWidget
-        for (EntryLayout::ConstIterator elit = el->constBegin(); elit != el->constEnd(); ++elit)
-            for (QList<SingleFieldLayout>::ConstIterator sflit = (*elit)->singleFieldLayouts.constBegin(); sflit != (*elit)->singleFieldLayouts.constEnd(); ++sflit)
-                blacklistedFields << (*sflit).bibtexLabel;
+        for (const auto &etl : const_cast<const EntryLayout &>(*el))
+            for (const auto &sfl : const_cast<const QList<SingleFieldLayout> &>(etl->singleFieldLayouts))
+                blacklistedFields << sfl.bibtexLabel;
 
         /// blacklist fields covered by FilesWidget
         blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftDOI) << QStringLiteral("ee") << QStringLiteral("biburl") << QStringLiteral("postscript");
@@ -224,8 +223,7 @@ public:
             p->setEnabled(true);
             int firstEnabledTab = 1024;
 
-            for (WidgetList::ConstIterator it = widgets.constBegin(); it != widgets.constEnd(); ++it) {
-                ElementWidget *widget = *it;
+            for (ElementWidget *widget : const_cast<const WidgetList &>(widgets)) {
                 const int index = tab->indexOf(widget);
                 const bool canEdit = widget->canEdit(element.data());
 

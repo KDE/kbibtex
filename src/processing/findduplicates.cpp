@@ -127,7 +127,7 @@ void EntryClique::recalculateValueMap()
 
     /// go through each and every entry ...
     const QList<QSharedPointer<Entry> > el = entryList();
-    for (const QSharedPointer<Entry> &entry : el)
+    for (const auto &entry : el)
         if (isEntryChecked(entry)) {
 
             /// cover entry type
@@ -147,7 +147,7 @@ void EntryClique::recalculateValueMap()
                 const Value fieldValue = fieldIt.value();
 
                 if (fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl) {
-                    for (const QSharedPointer<ValueItem> &vi : fieldValue) {
+                    for (const auto &vi : fieldValue) {
                         const QString text = PlainTextValue::text(*vi);
                         Value v;
                         v << vi;
@@ -383,8 +383,8 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
 
     /// assemble list of entries only (ignoring comments, macros, ...)
     QList<QSharedPointer<Entry> > listOfEntries;
-    for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it) {
-        QSharedPointer<Entry> e = (*it).dynamicCast<Entry>();
+    for (const auto &element : const_cast<const File &>(*file)) {
+        QSharedPointer<Entry> e = element.dynamicCast<Entry>();
         if (!e.isNull() && !e->isEmpty())
             listOfEntries << e;
     }
@@ -405,7 +405,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     emit maximumProgress(maxProgress);
 
     /// go through all entries ...
-    for (QList<QSharedPointer<Entry> >::ConstIterator eit = listOfEntries.constBegin(); eit != listOfEntries.constEnd(); ++eit) {
+    for (const auto &entry : const_cast<const QList<QSharedPointer<Entry> > &>(listOfEntries)) {
         QApplication::instance()->processEvents();
         if (progressDlg->wasCanceled()) {
             entryCliqueList.clear();
@@ -422,10 +422,10 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
         /// go through all existing cliques
         for (QList<EntryClique *>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end(); ++cit) {
             /// check distance between current entry and clique's first entry
-            if (d->entryDistance((*eit).data(), (*cit)->entryList().first().data()) < d->sensitivity) {
+            if (d->entryDistance(entry.data(), (*cit)->entryList().first().data()) < d->sensitivity) {
                 /// if distance is below sensitivity, add current entry to clique
                 foundClique = true;
-                (*cit)->addEntry(*eit);
+                (*cit)->addEntry(entry);
                 break;
             }
 
@@ -440,7 +440,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
             /// no clique matched to current entry, so create and add new clique
             /// consisting only of the current entry
             EntryClique *newClique = new EntryClique();
-            newClique->addEntry(*eit);
+            newClique->addEntry(entry);
             entryCliqueList << newClique;
         }
 
@@ -505,7 +505,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
 
         Entry *mergedEntry = new Entry(QString(), QString());
         const auto fieldList = entryClique->fieldList();
-        for (const QString &field : fieldList) {
+        for (const auto &field : fieldList) {
             coveredFields << field;
             if (field == QStringLiteral("^id"))
                 mergedEntry->setId(PlainTextValue::text(entryClique->chosenValue(field)));
@@ -525,7 +525,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
         bool actuallyMerged = false;
         int preferredInsertionRow = -1;
         const auto entryList = entryClique->entryList();
-        for (const QSharedPointer<Entry> &entry : entryList) {
+        for (const auto &entry : entryList) {
             /// if merging entries with identical ids, the merged entry will not yet have an id (is null)
             if (mergedEntry->id().isEmpty())
                 mergedEntry->setId(entry->id());

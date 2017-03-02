@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -239,12 +239,12 @@ void OnlineSearchBibsonomy::downloadDone()
 
         if (!bibTeXcode.isEmpty()) {
             FileImporterBibTeX importer;
-            File *bibtexFile = importer.fromString(bibTeXcode);
+            const File *bibtexFile = importer.fromString(bibTeXcode);
 
             bool hasEntries = false;
             if (bibtexFile != NULL) {
-                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                    QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+                for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     hasEntries |= publishEntry(entry);
                 }
 

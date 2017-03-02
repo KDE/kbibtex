@@ -222,12 +222,12 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
         }
 
         FileImporterBibTeX importer;
-        File *bibtexFile = importer.fromString(bibtexCode);
+        const File *bibtexFile = importer.fromString(bibtexCode);
 
         bool hasEntry = false;
         if (bibtexFile != NULL) {
-            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
-                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
+            for (const auto &element : *bibtexFile) {
+                QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 hasEntry |= publishEntry(entry);
 
             }

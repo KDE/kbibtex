@@ -147,17 +147,17 @@ void EntryLayout::load()
 void EntryLayout::save()
 {
     int tabCount = 0;
-    for (QVector<QSharedPointer<EntryTabLayout> >::ConstIterator it = constBegin(); it != constEnd(); ++it) {
+    for (const auto &etl : const_cast<const EntryLayout &>(*this)) {
         ++tabCount;
         QString groupName = QString(QStringLiteral("EntryLayoutTab%1")).arg(tabCount);
         KConfigGroup configGroup(d->layoutConfig, groupName);
 
-        configGroup.writeEntry(QStringLiteral("uiCaption"), (*it)->uiCaption);
-        configGroup.writeEntry(QStringLiteral("iconName"), (*it)->iconName);
-        configGroup.writeEntry(QStringLiteral("columns"), (*it)->columns);
+        configGroup.writeEntry(QStringLiteral("uiCaption"), etl->uiCaption);
+        configGroup.writeEntry(QStringLiteral("iconName"), etl->iconName);
+        configGroup.writeEntry(QStringLiteral("columns"), etl->columns);
 
         int fieldCount = 0;
-        for (const SingleFieldLayout &sfl : const_cast<const QList<SingleFieldLayout> &>((*it)->singleFieldLayouts)) {
+        for (const SingleFieldLayout &sfl : const_cast<const QList<SingleFieldLayout> &>(etl->singleFieldLayouts)) {
             ++fieldCount;
             configGroup.writeEntry(QString(QStringLiteral("bibtexLabel%1")).arg(fieldCount), sfl.bibtexLabel);
             configGroup.writeEntry(QString(QStringLiteral("uiLabel%1")).arg(fieldCount), sfl.uiLabel);

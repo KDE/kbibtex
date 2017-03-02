@@ -1114,8 +1114,8 @@ bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)
     /// Perform Canonical Decomposition followed by Canonical Composition
     const QString text = ntext.normalized(QString::NormalizationForm_C);
 
-    for (QString::ConstIterator it = text.constBegin(); it != text.constEnd(); ++it)
-        if (it->unicode() > 127) return false;
+    for (const QChar &c : text)
+        if (c.unicode() > 127) return false;
     return true;
 }
 

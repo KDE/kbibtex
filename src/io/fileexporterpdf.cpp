@@ -165,8 +165,8 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         ts << "\\begin{document}" << endl;
 
         if (!m_embeddedFileList.isEmpty())
-            for (QStringList::ConstIterator it = m_embeddedFileList.constBegin(); it != m_embeddedFileList.constEnd(); ++it) {
-                QStringList param = (*it).split(QStringLiteral("|"));
+            for (const QString &embeddedFile : const_cast<const QStringList &>(m_embeddedFileList)) {
+                const QStringList param = embeddedFile.split(QStringLiteral("|"));
                 QFile file(param[1]);
                 if (file.exists())
                     ts << "\\embedfile[desc={" << param[0] << "}";
@@ -189,8 +189,8 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
 
 void FileExporterPDF::fillEmbeddedFileList(const File *bibtexfile)
 {
-    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd(); ++it)
-        fillEmbeddedFileList(*it, bibtexfile);
+    for (const auto &element : const_cast<const File &>(*bibtexfile))
+        fillEmbeddedFileList(element, bibtexfile);
 }
 
 void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> element, const File *bibtexfile)

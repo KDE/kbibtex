@@ -308,13 +308,13 @@ void KBibTeXMainWindow::dropEvent(QDropEvent *event)
     QList<QUrl> urlList = event->mimeData()->urls();
 
     if (urlList.isEmpty()) {
-        QUrl url(event->mimeData()->text());
+        const QUrl url(event->mimeData()->text());
         if (url.isValid()) urlList << url;
     }
 
     if (!urlList.isEmpty())
-        for (QList<QUrl>::ConstIterator it = urlList.constBegin(); it != urlList.constEnd(); ++it)
-            openDocument(*it);
+        for (const QUrl &url : const_cast<const QList<QUrl> &>(urlList))
+            openDocument(url);
 }
 
 void KBibTeXMainWindow::newDocument()

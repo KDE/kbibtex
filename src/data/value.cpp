@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -356,8 +356,8 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
         /// Read data from config file
         KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
         KConfigGroup configGroup(config, Preferences::groupColor);
-        QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-        QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultColorLabels);
+        const QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
+        const QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultColorLabels);
 
         /// Translate data from config file into internal mapping
         for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
@@ -373,8 +373,10 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
         /// Only if simple text match failed, check color labels
         /// For a match, the user's pattern has to be the start of the color label
         /// and this verbatim text has to contain the color as hex string
-        for (QList<ColorLabelPair>::ConstIterator it = colorLabelPairs.constBegin(); !contained && it != colorLabelPairs.constEnd(); ++it)
-            contained = text.compare(it->hexColor, Qt::CaseInsensitive) == 0 && it->label.contains(pattern, Qt::CaseInsensitive);
+        for (const auto &clp : const_cast<const QList<ColorLabelPair> &>(colorLabelPairs)) {
+            contained = text.compare(clp.hexColor, Qt::CaseInsensitive) == 0 && clp.label.contains(pattern, Qt::CaseInsensitive);
+            if (contained) break;
+        }
     }
 
     return contained;
@@ -426,8 +428,9 @@ void Value::replace(const QString &before, const QString &after, ValueItem::Repl
         (*it)->replace(before, after, replaceMode);
 
         bool containedInUnique = false;
-        for (QSet<QSharedPointer<ValueItem> >::ConstIterator uit = unique.constBegin(); !containedInUnique && uit != unique.constEnd(); ++uit) {
-            containedInUnique = *(*uit).data() == *(*it).data();
+        for (const auto &valueItem : const_cast<const QSet<QSharedPointer<ValueItem> > &>(unique)) {
+            containedInUnique = *valueItem.data() == *(*it).data();
+            if (containedInUnique) break;
         }
 
         if (containedInUnique)
@@ -486,17 +489,17 @@ void Value::replace(const QString &before, const QSharedPointer<ValueItem> &afte
 
 bool Value::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
 {
-    bool result = false;
-    for (Value::ConstIterator it = constBegin(); !result && it != constEnd(); ++it) {
-        result |= (*it)->containsPattern(pattern, caseSensitive);
+    for (const auto &valueItem : const_cast<const Value &>(*this)) {
+        if (valueItem->containsPattern(pattern, caseSensitive))
+            return true;
     }
-    return result;
+    return false;
 }
 
 bool Value::contains(const ValueItem &item) const
 {
-    for (Value::ConstIterator it = constBegin(); it != constEnd(); ++it)
-        if ((*it)->operator==(item))
+    for (const auto &valueItem : const_cast<const Value &>(*this))
+        if (valueItem->operator==(item))
             return true;
     return false;
 }
@@ -517,8 +520,8 @@ QString PlainTextValue::text(const Value &value)
     ValueItemType lastVit = VITOther;
 
     QString result;
-    for (Value::ConstIterator it = value.constBegin(); it != value.constEnd(); ++it) {
-        QString nextText = text(**it, vit);
+    for (const auto &valueItem : value) {
+        QString nextText = text(*valueItem, vit);
         if (!nextText.isEmpty()) {
             if (lastVit == VITPerson && vit == VITPerson)
                 result.append(i18n(" and ")); // TODO proper list of authors/editors, not just joined by "and"
