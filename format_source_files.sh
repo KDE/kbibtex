@@ -96,11 +96,19 @@ while read filename ; do
 	elif [[ "${filename}" != "${filename/%.cpp/}" ]] ; then
 		sed -i -e  's/^\([ ]*\)\(:[ ][a-zA-Z]\)/\1    \2/g;s/\(foreach([^)]*\) \([&*]\) /\1 \2/g' ${TEMPFILE}
 	fi
-	
+
+	# In const_cast operations, ensure space before ampersand
+	sed -i -r 's!( : const_cast<[^(;]+[^ ])&>[(]!\1 \&>(!g' ${TEMPFILE}
+
 	# Remove superfluous empty lines at file's end
 	#  http://unix.stackexchange.com/a/81687
         #  http://sed.sourceforge.net/sed1line.txt
 	sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' ${TEMPFILE}
+
+	# Check if copyright year is up to date
+	head -n 5 ${TEMPFILE} | grep -Eo --color=NEVER '20[0-9][0-9] by ' | head -n 1 | while read year rest ; do
+		[ "${year}" = $(date '+%Y') ] || echo "File '${filename}' has an outdated copyright year: ${year}"
+	done
 
 	# only change/touch original file if it has been changed
 	diff -q ${TEMPFILE} "${filename}" >/dev/null || { echo "Updating \"${filename}\"" ; cp -p ${TEMPFILE} "${filename}" || echo "Cannot copy \"${TEMPFILE}\" \"${filename}\"" ; }
