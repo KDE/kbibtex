@@ -166,6 +166,22 @@ public:
         }
     }
 
+    void processACMDigitalLibrary(QNetworkReply *reply, const QString &text)
+    {
+        static const QRegExp downloadPDFlink(QStringLiteral("href=\"(ft_gateway.cfm\\?id=\\d+&ftid=\\d+&dwn=1&CFID=\\d+&CFTOKEN=\\d+)\""));
+
+        qCDebug(LOG_KBIBTEX_NETWORKING) << "processACMDigitalLibrary  " << downloadPDFlink.pattern();
+        if (downloadPDFlink.indexIn(text) > 0) {
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "processACMDigitalLibrary  " << downloadPDFlink.cap(1);
+            bool ok = false;
+            int depth = reply->property(depthProperty).toInt(&ok);
+            if (!ok) depth = 0;
+
+            QUrl url(QUrl::fromEncoded(QString(QStringLiteral("https://dl.acm.org/") + downloadPDFlink.cap(1)).toLatin1()));
+            queueUrl(reply->url().resolved(url), QString(), QStringLiteral("acmdl"), depth - 1);
+        }
+    }
+
     bool processPDF(QNetworkReply *reply, const QByteArray &data)
     {
         bool progress = false;
@@ -283,7 +299,7 @@ bool FindPDF::search(const Entry &entry)
     }
 
     if (!searchWords.isEmpty()) {
-        /// Search in Google Scholar
+        /// Search in Google
         QUrl googleUrl(QStringLiteral("https://www.google.com/search?hl=en&sa=G"));
         QUrlQuery query(googleUrl);
         query.addQueryItem(QStringLiteral("q"), searchWords + QStringLiteral(" filetype:pdf"));
@@ -358,7 +374,7 @@ void FindPDF::abort() {
 
 void FindPDF::downloadFinished()
 {
-    static const char *htmlHead1 = "<html", *htmlHead2 = "<HTML";
+    static const char *htmlHead1 = "<html", *htmlHead2 = "<HTML", *htmlHead3 = "<!doctype html>" /** ACM Digital Library */;
     static const char *pdfHead = "%PDF-";
 
     --d->aliveCounter;
@@ -381,7 +397,7 @@ void FindPDF::downloadFinished()
 
         if (!redirUrl.isEmpty())
             d->queueUrl(redirUrl, term, origin, depth - 1);
-        else if (data.contains(htmlHead1) || data.contains(htmlHead2)) {
+        else if (data.contains(htmlHead1) || data.contains(htmlHead2) || data.contains(htmlHead3)) {
             /// returned data is a HTML file, i.e. contains "<html"
 
             /// check for limited depth before continuing
@@ -396,6 +412,8 @@ void FindPDF::downloadFinished()
                 static const QRegExp springerLinkTitleRegExp(QStringLiteral("<title>[^>]* - Springer - [^>]*</title>"));
                 /// regular expression to check if this is a CiteSeerX page
                 static const QRegExp citeseerxTitleRegExp(QStringLiteral("<title>CiteSeerX &mdash; [^>]*</title>"));
+                /// regular expression to check if this is a ACM Digital Library page
+                static const QString acmDigitalLibraryString(QStringLiteral("The ACM Digital Library is published by the Association for Computing Machinery"));
 
                 if (text.indexOf(googleScholarTitleRegExp) > 0)
                     d->processGoogleResult(reply, text);
@@ -403,6 +421,8 @@ void FindPDF::downloadFinished()
                     d->processSpringerLink(reply, text);
                 else if (text.indexOf(citeseerxTitleRegExp) > 0)
                     d->processCiteSeerX(reply, text);
+                else if (text.contains(acmDigitalLibraryString))
+                    d->processACMDigitalLibrary(reply, text);
                 else {
                     /// regular expression to extract title
                     static QRegExp titleRegExp(QStringLiteral("<title>(.*)</title>"));
