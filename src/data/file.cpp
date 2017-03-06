@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -61,24 +61,29 @@ public:
 
     FilePrivate(File */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter) {
-        qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId;
+        const bool isValid = checkValidity();
+        qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
         loadConfiguration();
     }
 
     FilePrivate(File */* UNUSED parent*/, const File &other)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
-        qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId;
+        const bool isValid = checkValidity();
+        qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
         loadConfiguration();
     }
 
     ~FilePrivate() {
-        qCDebug(LOG_KBIBTEX_DATA) << "Deleting File instance" << internalId;
+        const bool isValid = checkValidity();
+        qCDebug(LOG_KBIBTEX_DATA) << "Deleting File instance" << internalId << "  Valid?" << isValid;
         validInvalidField = invalid;
     }
 
     FilePrivate &operator= (const FilePrivate &other) {
         validInvalidField = other.validInvalidField;
         properties = other.properties;
+        const bool isValid = checkValidity();
+        qCDebug(LOG_KBIBTEX_DATA) << "Assigning File instance" << other.internalId << "to" << internalId << "  Is other valid?" << other.checkValidity() << "  Self valid?" << isValid;
         return *this;
     }
 
@@ -94,8 +99,10 @@ public:
         properties.insert(File::ListSeparator, configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator));
     }
 
-    bool checkValidity() {
-        return validInvalidField == valid;
+    bool checkValidity() const {
+        return validInvalidField == valid ///< 'validInvalidField' must contain the know 'valid' value
+                && internalId >= 100000 ///< internal id counter starts at 100000
+                && internalId < 200000; ///< reasonable assumption: not more that 100000 ids used
     }
 };
 
