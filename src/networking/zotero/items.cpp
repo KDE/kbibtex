@@ -128,8 +128,8 @@ void Items::finishedFetchingItems()
 
             /// Perform basic sanity checks ...
             if (bibtexFile != NULL && !bibtexFile->isEmpty()) {
-                foreach(const QSharedPointer<Element> &element, *bibtexFile) {
-                    emit foundElement(element); ///< ... and publish result
+                for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                    emit foundElement(*it); ///< ... and publish result
                 }
             }
 

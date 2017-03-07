@@ -426,8 +426,8 @@ bool ValueListModel::searchAndReplaceValueInEntries(const QModelIndex &index, co
     }
 
     /// Go through all elements in the current file
-    foreach(const QSharedPointer<Element> &element, *file) {
-        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it) {
+        QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {
             /// Go through every key-value pair in entry (author, title, ...)
@@ -508,8 +508,8 @@ void ValueListModel::removeValueFromEntries(const QModelIndex &index)
     }
 
     /// Go through all elements in the current file
-    foreach(const QSharedPointer<Element> &element, *file) {
-        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    for (File::ConstIterator it = file->constBegin(); it != file->constEnd(); ++it) {
+        QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
         /// Process only Entry objects
         if (!entry.isNull()) {
             /// Go through every key-value pair in entry (author, title, ...)
