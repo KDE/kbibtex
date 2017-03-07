@@ -317,8 +317,8 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
 
         bool hasEntries = false;
         if (bibtexFile != NULL) {
-            foreach (const QSharedPointer<Element> &element, *bibtexFile) {
-                QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+            for (File::ConstIterator it = bibtexFile->constBegin(); it != bibtexFile->constEnd(); ++it) {
+                QSharedPointer<Entry> entry = (*it).dynamicCast<Entry>();
                 hasEntries |= publishEntry(entry);
             }
 
