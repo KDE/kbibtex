@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,7 +39,7 @@ public:
 
     Private(RequestScope requestScope, int prefix, const QString &_apiKey, Zotero::API */* UNUSED parent*/)
         : // UNUSED p(parent),
-        apiBaseUrl(KUrl(QString(QLatin1String("https://api.zotero.org/%1/%2")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix))),
+        apiBaseUrl(KUrl(QString(QLatin1String("https://api.zotero.org/%1/%2%3")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix).arg(_apiKey.isEmpty() ? QString() : QString(QLatin1String("?key=%1")).arg(_apiKey)))),
         userOrGroupPrefix(prefix),
         apiKey(_apiKey), backoffElapseTime(QDateTime::currentDateTime().addSecs(-5)) {
         /// nothing
@@ -64,6 +64,15 @@ void API::addLimitToUrl(KUrl &url) const
     static const QString limitKey = QLatin1String("limit");
     url.removeQueryItem(limitKey);
     url.addQueryItem(limitKey, QString::number(Zotero::API::limit));
+}
+
+void API::addKeyToUrl(KUrl &url) const
+{
+    if (!d->apiKey.isEmpty()) {
+        static const QString keyKey = QLatin1String("key");
+        url.removeQueryItem(keyKey);
+        url.addQueryItem(keyKey, d->apiKey);
+    }
 }
 
 KUrl API::baseUrl() const
