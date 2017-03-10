@@ -99,7 +99,7 @@ void Tags::finishedFetchingTags()
                     else if (tt == QXmlStreamReader::StartElement && xmlReader.name() == QLatin1String("numItems")) {
                         bool ok = false;
                         count = xmlReader.readElementText(QXmlStreamReader::IncludeChildElements).toInt(&ok);
-                        if (count < 1) count = -1;
+                        if (!ok || count < 1) count = -1;
                     } else if (tt == QXmlStreamReader::EndElement && xmlReader.name() == QLatin1String("entry"))
                         break;
                 }
