@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -190,6 +190,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(QWidget *parent)
     addDockWidget(Qt::LeftDockWidgetArea, d->dockZotero);
     d->zotero = new ZoteroBrowser(d->searchResults, d->dockZotero);
     connect(d->dockZotero, SIGNAL(visibilityChanged(bool)), d->zotero, SLOT(visibiltyChanged(bool)));
+    connect(d->zotero, SIGNAL(itemToShow()), this, SLOT(showSearchResults()));
     d->dockZotero->setWidget(d->zotero);
     d->dockZotero->setObjectName("dockZotero");
     d->dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
