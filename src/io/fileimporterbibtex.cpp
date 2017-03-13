@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -157,7 +157,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 bool FileImporterBibTeX::guessCanDecode(const QString &rawText)
 {
     static const QRegExp bibtexLikeText("@\\w+\\{.+\\}");
-    QString text = EncoderLaTeX::instance()->decode(rawText);
+    QString text = EncoderLaTeX::instance().decode(rawText);
     return text.indexOf(bibtexLikeText) >= 0;
 }
 
@@ -209,18 +209,18 @@ Comment *FileImporterBibTeX::readCommentElement()
 {
     if (!readCharUntil(QStringLiteral("{(")))
         return NULL;
-    return new Comment(EncoderLaTeX::instance()->decode(readBracketString()));
+    return new Comment(EncoderLaTeX::instance().decode(readBracketString()));
 }
 
 Comment *FileImporterBibTeX::readPlainCommentElement(const QString &prefix)
 {
-    QString result = EncoderLaTeX::instance()->decode(prefix + readLine());
+    QString result = EncoderLaTeX::instance().decode(prefix + readLine());
     while (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r')) readChar();
     while (!m_nextChar.isNull() && m_nextChar != QLatin1Char('@')) {
         const QChar nextChar = m_nextChar;
         const QString line = readLine();
         while (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r')) readChar();
-        result.append(EncoderLaTeX::instance()->decode((nextChar == QLatin1Char('%') ? QString() : QString(nextChar)) + line));
+        result.append(EncoderLaTeX::instance().decode((nextChar == QLatin1Char('%') ? QString() : QString(nextChar)) + line));
     }
 
     if (result.startsWith(QStringLiteral("x-kbibtex"))) {
@@ -251,8 +251,8 @@ Macro *FileImporterBibTeX::readMacroElement()
         key = QStringLiteral("EmptyId");
     } else if (!EncoderLaTeX::containsOnlyAscii(key)) {
         /// Try to avoid non-ascii characters in ids
-        EncoderLaTeX *encoder = EncoderLaTeX::instance();
-        const QString newKey = encoder->convertToPlainAscii(key);
+        const EncoderLaTeX &encoder = EncoderLaTeX::instance();
+        const QString newKey = encoder.convertToPlainAscii(key);
         qCWarning(LOG_KBIBTEX_IO) << "Macro key" << key << "contains non-ASCII characters, converted to" << newKey;
         key = newKey;
     }
@@ -277,7 +277,7 @@ Macro *FileImporterBibTeX::readMacroElement()
     Macro *macro = new Macro(key);
     do {
         bool isStringKey = false;
-        QString text = EncoderLaTeX::instance()->decode(bibtexAwareSimplify(readString(isStringKey)));
+        QString text = EncoderLaTeX::instance().decode(bibtexAwareSimplify(readString(isStringKey)));
         if (isStringKey)
             macro->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
@@ -321,7 +321,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 {
     const BibTeXEntries *be = BibTeXEntries::self();
     const BibTeXFields *bf = BibTeXFields::self();
-    EncoderLaTeX *encoder = EncoderLaTeX::instance();
+    const EncoderLaTeX &encoder = EncoderLaTeX::instance();
 
     Token token = nextToken();
     while (token != tBracketOpen) {
@@ -339,7 +339,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         id = QStringLiteral("EmptyId");
     } else if (!EncoderLaTeX::containsOnlyAscii(id)) {
         /// Try to avoid non-ascii characters in ids
-        const QString newId = encoder->convertToPlainAscii(id);
+        const QString newId = encoder.convertToPlainAscii(id);
         qCWarning(LOG_KBIBTEX_IO) << "Entry id" << id << "contains non-ASCII characters, converted to" << newId;
         id = newId;
     }
@@ -390,7 +390,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             }
         }
         /// Try to avoid non-ascii characters in keys
-        keyName = encoder->convertToPlainAscii(keyName);
+        keyName = encoder.convertToPlainAscii(keyName);
 
         token = nextToken();
         if (token != tAssign) {
@@ -598,7 +598,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
     do {
         bool isStringKey = false;
         const QString rawText = readString(isStringKey);
-        QString text = EncoderLaTeX::instance()->decode(rawText);
+        QString text = EncoderLaTeX::instance().decode(rawText);
         /// for all entries except for abstracts ...
         if (iKey != Entry::ftAbstract && !(iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) && !iKey.startsWith(Entry::ftLocalFile) && !iKey.startsWith(Entry::ftFile)) {
             /// ... remove redundant spaces including newlines

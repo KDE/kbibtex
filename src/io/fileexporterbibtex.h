@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -65,6 +65,7 @@ private:
     class FileExporterBibTeXPrivate;
     FileExporterBibTeXPrivate *d;
 
+    inline QString applyEncoder(const QString &input, UseLaTeXEncoding useLaTeXEncoding) const;
     QString internalValueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
 
     static FileExporterBibTeX *staticFileExporterBibTeX;

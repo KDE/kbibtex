@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -120,7 +120,7 @@ bool FileExporterXML::write(QTextStream &stream, const Element *element, const F
 
 bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
 {
-    stream << " <entry id=\"" << EncoderXML::currentEncoderXML() ->encode(entry->id()) << "\" type=\"" << entry->type().toLower() << "\">" << endl;
+    stream << " <entry id=\"" << EncoderXML::instance().encode(entry->id(), Encoder::TargetEncodingUTF8) << "\" type=\"" << entry->type().toLower() << "\">" << endl;
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         const QString key = it.key().toLower();
         const Value value = it.value();
@@ -203,7 +203,7 @@ bool FileExporterXML::writeMacro(QTextStream &stream, const Macro *macro)
 bool FileExporterXML::writeComment(QTextStream &stream, const Comment *comment)
 {
     stream << " <comment>" ;
-    stream << EncoderXML::currentEncoderXML() ->encode(comment->text());
+    stream << EncoderXML::instance().encode(comment->text(), Encoder::TargetEncodingUTF8);
     stream << "</comment>" << endl;
 
     return true;
@@ -223,22 +223,22 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
 
         QSharedPointer<const PlainText> plainText = (*it).dynamicCast<const PlainText>();
         if (!plainText.isNull())
-            result.append("<text>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(PlainTextValue::text(*item))) + "</text>");
+            result.append("<text>" +  cleanXML(EncoderXML::instance().encode(PlainTextValue::text(*item), Encoder::TargetEncodingUTF8)) + "</text>");
         else {
             QSharedPointer<const Person> p = (*it).dynamicCast<const Person>();
             if (!p.isNull()) {
                 result.append("<person>");
                 if (!p->firstName().isEmpty())
-                    result.append("<firstname>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->firstName())) + "</firstname>");
+                    result.append("<firstname>" +  cleanXML(EncoderXML::instance().encode(p->firstName(), Encoder::TargetEncodingUTF8)) + "</firstname>");
                 if (!p->lastName().isEmpty())
-                    result.append("<lastname>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->lastName())) + "</lastname>");
+                    result.append("<lastname>" +  cleanXML(EncoderXML::instance().encode(p->lastName(), Encoder::TargetEncodingUTF8)) + "</lastname>");
                 if (!p->suffix().isEmpty())
-                    result.append("<suffix>" +  cleanXML(EncoderXML::currentEncoderXML() ->encode(p->suffix())) + "</suffix>");
+                    result.append("<suffix>" +  cleanXML(EncoderXML::instance().encode(p->suffix(), Encoder::TargetEncodingUTF8)) + "</suffix>");
                 result.append("</person>");
             }
             // TODO: Other data types
             else
-                result.append("<text>" + cleanXML(EncoderXML::currentEncoderXML() ->encode(PlainTextValue::text(*item))) + "</text>");
+                result.append("<text>" + cleanXML(EncoderXML::instance().encode(PlainTextValue::text(*item), Encoder::TargetEncodingUTF8)) + "</text>");
         }
     }
 

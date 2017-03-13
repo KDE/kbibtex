@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -45,7 +45,7 @@ QByteArray TextEncoder::encode(const QString &input, const QTextCodec *destinati
     const QString ninput = input.normalized(QString::NormalizationForm_C);
 
     QByteArray result;
-    Encoder *laTeXEncoder = EncoderLaTeX::instance();
+    const Encoder &laTeXEncoder = EncoderLaTeX::instance();
     /// Build result, character by character
     foreach (const QChar & c, ninput) {
         /// Get byte sequence representing current character in chosen codec
@@ -61,7 +61,7 @@ QByteArray TextEncoder::encode(const QString &input, const QTextCodec *destinati
             /// 'LaTeX encoder', which may translate 0x00c5 (A with ring above) into
             /// '\AA'. LaTeX encoder returns UTF-8 representation if given character
             /// cannot be encoded
-            result.append(laTeXEncoder->encode(QString(c)).toUtf8());
+            result.append(laTeXEncoder.encode(QString(c), Encoder::TargetEncodingASCII).toUtf8());
         }
     }
 

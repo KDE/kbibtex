@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,8 +35,6 @@ inline bool isAsciiLetter(const char c) {
  * General documentation on this topic:
  *   http://www.tex.ac.uk/CTAN/macros/latex/doc/encguide.pdf
  */
-
-EncoderLaTeX *EncoderLaTeX::self = NULL;
 
 /**
  * This structure contains information how escaped characters
@@ -951,7 +949,7 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
     return copyBytesCount > 0;
 }
 
-QString EncoderLaTeX::encode(const QString &ninput) const
+QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetEncoding) const
 {
     /// Perform Canonical Decomposition followed by Canonical Composition
     const QString input = ninput.normalized(QString::NormalizationForm_C);
@@ -965,7 +963,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
     for (int i = 0; i < len; ++i) {
         /**
          * Repeatedly check if input data contains a verbatim command
-         * like \url{...}, copy it to output, and update i to point
+         * like \url{...}, append it to output, and update i to point
          * to the next character after the verbatim command.
          */
         while (testAndCopyVerbatimCommands(input, i, output));
@@ -973,7 +971,7 @@ QString EncoderLaTeX::encode(const QString &ninput) const
 
         const QChar c = input[i];
 
-        if (c.unicode() > 127) {
+        if (targetEncoding == TargetEncodingASCII && c.unicode() > 127) {
             /// If current char is outside ASCII boundaries ...
             bool found = false;
 
@@ -1045,6 +1043,8 @@ QString EncoderLaTeX::encode(const QString &ninput) const
             }
         } else {
             /// Current character is normal ASCII
+            /// and targetEncoding was set to accept only ASCII characters
+            /// -- or -- targetEncoding was set to accept UTF-8 characters
 
             /// Still, some characters have special meaning
             /// in TeX and have to be preceded with a backslash
@@ -1136,9 +1136,8 @@ QString EncoderLaTeX::readAlphaCharacters(const QString &base, int startFrom) co
     return base.mid(startFrom);
 }
 
-EncoderLaTeX *EncoderLaTeX::instance()
+const EncoderLaTeX &EncoderLaTeX::instance()
 {
-    if (self == NULL)
-        self = new EncoderLaTeX();
+    static const EncoderLaTeX self;
     return self;
 }

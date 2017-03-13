@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -164,17 +164,17 @@ public:
 
         QStringList titleChunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
         foreach (const QString &titleChunk, titleChunks) {
-            queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
+            queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
         }
 
         titleChunks = p->splitRespectingQuotationMarks(form->lineEditBookTitle->text());
         foreach (const QString &titleChunk, titleChunks) {
-            queryString += QString(QStringLiteral(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
+            queryString += QString(QStringLiteral(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
         }
 
         QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
         foreach (const QString &author, authors) {
-            queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
+            queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(author));
         }
 
         const QString year = form->lineEditYear->text();
@@ -196,12 +196,12 @@ public:
 
         QStringList titleChunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         foreach (const QString &titleChunk, titleChunks) {
-            queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(titleChunk));
+            queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
         }
 
         QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         foreach (const QString &author, authors) {
-            queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance()->convertToPlainAscii(author));
+            queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(author));
         }
 
         QString year = query[queryKeyYear];

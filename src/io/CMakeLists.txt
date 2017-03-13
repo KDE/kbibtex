@@ -4,7 +4,6 @@ set(
     kbibtexio_LIB_SRCS
     encoder.cpp
     encoderlatex.cpp
-    encoderutf8.cpp
     encoderxml.cpp
     fileexporterbibtex2html.cpp
     fileexporterbibtex.cpp
@@ -36,7 +35,6 @@ set(
     kbibtexio_HDRS
     encoder.h
     encoderlatex.h
-    encoderutf8.h
     encoderxml.h
     fileexporterbibtex2html.h
     fileexporterbibtex.h

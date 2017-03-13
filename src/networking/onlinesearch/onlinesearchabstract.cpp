@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -52,13 +52,13 @@ const char *OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 {
     QStringList result;
-    EncoderLaTeX *encoder = EncoderLaTeX::instance();
+    const EncoderLaTeX &encoder = EncoderLaTeX::instance();
 
     const Value v = entry[Entry::ftAuthor];
     foreach (const QSharedPointer<ValueItem> &vi, v) {
         QSharedPointer<const Person> p = vi.dynamicCast<const Person>();
         if (!p.isNull())
-            result.append(encoder->convertToPlainAscii(p->lastName()));
+            result.append(encoder.convertToPlainAscii(p->lastName()));
     }
 
     return result;

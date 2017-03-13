@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -33,15 +33,19 @@ class QRegExp;
 class KBIBTEXIO_EXPORT EncoderXML : public Encoder
 {
 public:
-    EncoderXML();
     ~EncoderXML();
 
     QString decode(const QString &text) const;
-    QString encode(const QString &text) const;
+    QString encode(const QString &text, const TargetEncoding targetEncoding) const;
 
-    static EncoderXML *currentEncoderXML();
+    static const EncoderXML &instance();
+
+protected:
+    EncoderXML();
 
 private:
+    Q_DISABLE_COPY(EncoderXML)
+
     class EncoderXMLPrivate;
     EncoderXMLPrivate *const d;
 };

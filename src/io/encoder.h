@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,8 +28,10 @@
 class Encoder
 {
 public:
+    enum TargetEncoding {TargetEncodingASCII = 0, TargetEncodingUTF8 = 1};
+
     virtual ~Encoder() {
-        /* nothing */
+        /** nothing */
     }
 
     /**
@@ -41,10 +43,15 @@ public:
 
     /**
      * Encode from internal (UTF-8) representation to external textual representation.
+     * Output may be restricted to ASCII (non-ASCII characters will be rewritten depending
+     * on concrete Encoder class, for example as '&#228;' as XML or '\"a' for LaTeX)
+     * or UTF-8 (all characters allowed, only 'special ones' rewritten, for example
+     * '&amp;' for XML and '\&' for LaTeX).
      * @param text in internal (UTF-8) representation
+     * @param targetEncoding allow either only ASCII output or UTF-8 output.
      * @return text text in external textual representation
      */
-    virtual QString encode(const QString &text) const;
+    virtual QString encode(const QString &text, const TargetEncoding targetEncoding) const;
 };
 
 #endif

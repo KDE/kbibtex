@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -162,8 +162,8 @@ public:
         /// Exception: source and verbatim content is kept unmodified
         const QString text = typeFlag == KBibTeX::tfSource || typeFlag == KBibTeX::tfVerbatim ? parent->text() : parent->text().simplified();
 
-        EncoderLaTeX *encoder = EncoderLaTeX::instance();
-        const QString encodedText = encoder->decode(text);
+        const EncoderLaTeX &encoder = EncoderLaTeX::instance();
+        const QString encodedText = encoder.decode(text);
 
         if (encodedText.isEmpty())
             return true;
@@ -317,13 +317,13 @@ public:
         if (destType == KBibTeX::tfSource) return true; /// simple case
 
         bool result = true;
-        EncoderLaTeX *enc = EncoderLaTeX::instance();
+        const EncoderLaTeX &encoder = EncoderLaTeX::instance();
         QString rawText;
         const QSharedPointer<ValueItem> first = value.first();
 
         const QSharedPointer<PlainText> plainText = first.dynamicCast<PlainText>();
         if (!plainText.isNull())
-            rawText = enc->encode(plainText->text());
+            rawText = encoder.encode(plainText->text(), Encoder::TargetEncodingASCII);
         else {
             const QSharedPointer<VerbatimText> verbatimText = first.dynamicCast<VerbatimText>();
             if (!verbatimText.isNull())
@@ -335,11 +335,11 @@ public:
                 else {
                     const QSharedPointer<Person> person = first.dynamicCast<Person>();
                     if (!person.isNull())
-                        rawText = enc->encode(QString(QStringLiteral("%1 %2")).arg(person->firstName(), person->lastName())); // FIXME proper name conversion
+                        rawText = encoder.encode(QString(QStringLiteral("%1 %2")).arg(person->firstName(), person->lastName()), Encoder::TargetEncodingASCII); // FIXME proper name conversion
                     else {
                         const QSharedPointer<Keyword> keyword = first.dynamicCast<Keyword>();
                         if (!keyword.isNull())
-                            rawText = enc->encode(keyword->text());
+                            rawText = encoder.encode(keyword->text(), Encoder::TargetEncodingASCII);
                         else {
                             // TODO case missed?
                             result = false;
@@ -352,7 +352,7 @@ public:
         switch (destType) {
         case KBibTeX::tfPlainText:
             value.clear();
-            value.append(QSharedPointer<PlainText>(new PlainText(enc->decode(rawText))));
+            value.append(QSharedPointer<PlainText>(new PlainText(encoder.decode(rawText))));
             break;
         case KBibTeX::tfVerbatim:
             value.clear();
@@ -360,7 +360,7 @@ public:
             break;
         case KBibTeX::tfPerson:
             value.clear();
-            value.append(QSharedPointer<Person>(FileImporterBibTeX::splitName(enc->decode(rawText))));
+            value.append(QSharedPointer<Person>(FileImporterBibTeX::splitName(encoder.decode(rawText))));
             break;
         case KBibTeX::tfReference: {
             MacroKey *macroKey = new MacroKey(rawText);
@@ -375,7 +375,7 @@ public:
         break;
         case KBibTeX::tfKeyword:
             value.clear();
-            value.append(QSharedPointer<Keyword>(new Keyword(enc->decode(rawText))));
+            value.append(QSharedPointer<Keyword>(new Keyword(encoder.decode(rawText))));
             break;
         default: {
             // TODO

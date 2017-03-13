@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,8 +20,6 @@
 #include <QStringList>
 #include <QRegExp>
 #include <QList>
-
-EncoderXML *encoderXML = NULL;
 
 static const struct EncoderXMLCharMapping {
     const char *regexp;
@@ -115,9 +113,9 @@ QString EncoderXML::decode(const QString &text) const
     foreach (const QString &backslashSymbol, EncoderXMLPrivate::backslashSymbols) {
         int p = -1;
         while ((p = result.indexOf(backslashSymbol[1], p + 1)) >= 0) {
-            if (p == 0 || result[p - 1] != QChar('\\')) {
+            if (p == 0 || result[p - 1] != QLatin1Char('\\')) {
                 /// replace only symbols which have no backslash on their right
-                result = result.left(p) + QChar('\\') + result.mid(p);
+                result = result.left(p) + QLatin1Char('\\') + result.mid(p);
                 ++p;
             }
         }
@@ -126,12 +124,22 @@ QString EncoderXML::decode(const QString &text) const
     return result;
 }
 
-QString EncoderXML::encode(const QString &text) const
+QString EncoderXML::encode(const QString &text, const TargetEncoding targetEncoding) const
 {
     QString result = text;
 
     for (QList<EncoderXMLPrivate::CharMappingItem>::ConstIterator it = d->charMapping.constBegin(); it != d->charMapping.constEnd(); ++it)
         result.replace((*it).unicode, (*it).xml);
+
+    if (targetEncoding == TargetEncodingASCII) {
+        /// Replace all non-ASCII characters (code >=128) with an entity code,
+        /// for example a-umlaut becomes '&#228;'.
+        for (int i = result.length() - 1; i >= 0; --i) {
+            const auto code = result[i].unicode();
+            if (code > 127)
+                result = result.left(i) + QStringLiteral("&#") + QString::number(code) + QStringLiteral(";") + result.mid(i + 1);
+        }
+    }
 
     /// Replace backlash-encoded symbols with plain text (\& --> &)
     foreach (const QString &backslashSymbol, EncoderXMLPrivate::backslashSymbols) {
@@ -141,10 +149,8 @@ QString EncoderXML::encode(const QString &text) const
     return result;
 }
 
-EncoderXML *EncoderXML::currentEncoderXML()
+const EncoderXML &EncoderXML::instance()
 {
-    if (encoderXML == NULL)
-        encoderXML = new EncoderXML();
-
-    return encoderXML;
+    static const EncoderXML self;
+    return self;
 }

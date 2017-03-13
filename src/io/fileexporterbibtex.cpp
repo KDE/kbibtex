@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,6 @@
 #include "value.h"
 #include "comment.h"
 #include "encoderlatex.h"
-#include "encoderutf8.h"
 #include "bibtexentries.h"
 #include "bibtexfields.h"
 #include "textencoder.h"
@@ -125,13 +124,13 @@ public:
     bool writeEntry(QIODevice *iodevice, const Entry &entry) {
         const BibTeXEntries *be = BibTeXEntries::self();
         const BibTeXFields *bf = BibTeXFields::self();
-        EncoderLaTeX *laTeXEncoder = EncoderLaTeX::instance();
+        const EncoderLaTeX &laTeXEncoder = EncoderLaTeX::instance();
 
         /// write start of a entry (entry type and id) in plain ASCII
         iodevice->putChar('@');
         iodevice->write(be->format(entry.type(), keywordCasing).toLatin1().data());
         iodevice->putChar('{');
-        iodevice->write(laTeXEncoder->convertToPlainAscii(entry.id()).toLatin1());
+        iodevice->write(laTeXEncoder.convertToPlainAscii(entry.id()).toLatin1());
 
         for (Entry::ConstIterator it = entry.constBegin(); it != entry.constEnd(); ++it) {
             const QString key = it.key();
@@ -157,7 +156,7 @@ public:
             iodevice->putChar(',');
             iodevice->putChar('\n');
             iodevice->putChar('\t');
-            iodevice->write(laTeXEncoder->convertToPlainAscii(bf->format(key, keywordCasing)).toLatin1());
+            iodevice->write(laTeXEncoder.convertToPlainAscii(bf->format(key, keywordCasing)).toLatin1());
             iodevice->putChar(' ');
             iodevice->putChar('=');
             iodevice->putChar(' ');
@@ -505,12 +504,18 @@ QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key
     return staticFileExporterBibTeX->internalValueToBibTeX(value, key, useLaTeXEncoding);
 }
 
+QString FileExporterBibTeX::applyEncoder(const QString &input, UseLaTeXEncoding useLaTeXEncoding) const {
+    switch (useLaTeXEncoding) {
+    case leLaTeX: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncodingASCII);
+    case leUTF8: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncodingUTF8);
+    default: return input;
+    }
+}
+
 QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
 {
     if (value.isEmpty())
         return QString();
-
-    EncoderLaTeX *encoder = useLaTeXEncoding == leLaTeX ? EncoderLaTeX::instance() : (useLaTeXEncoding == leUTF8 ? EncoderUTF8::instance() : NULL);
 
     QString result;
     bool isOpen = false;
@@ -526,7 +531,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
         } else {
             QSharedPointer<const PlainText> plainText = (*it).dynamicCast<const PlainText>();
             if (!plainText.isNull()) {
-                QString textBody = encodercheck(encoder, plainText->text());
+                QString textBody = applyEncoder(plainText->text(), useLaTeXEncoding);
                 if (!isOpen) {
                     if (!result.isEmpty()) result.append(" # ");
                     result.append(d->stringOpenDelimiter);
@@ -585,7 +590,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                         /// if name contains a suffix like "Jr."
                         /// Otherwise name could not be parsed again reliable
                         const QString pnf = suffix.isEmpty() ? d->personNameFormatting : Preferences::personNameFormatLastFirst;
-                        QString thisName = encodercheck(encoder, Person::transcribePersonName(pnf, firstName, lastName, suffix));
+                        QString thisName = applyEncoder(Person::transcribePersonName(pnf, firstName, lastName, suffix), useLaTeXEncoding);
 
                         if (!isOpen) {
                             if (!result.isEmpty()) result.append(" # ");
@@ -604,7 +609,7 @@ QString FileExporterBibTeX::internalValueToBibTeX(const Value &value, const QStr
                     } else {
                         QSharedPointer<const Keyword> keyword = (*it).dynamicCast<const Keyword>();
                         if (!keyword.isNull()) {
-                            QString textBody = encodercheck(encoder, keyword->text());
+                            QString textBody = applyEncoder(keyword->text(), useLaTeXEncoding);
                             if (!isOpen) {
                                 if (!result.isEmpty()) result.append(" # ");
                                 result.append(d->stringOpenDelimiter);
