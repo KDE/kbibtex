@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -168,7 +168,7 @@ void FileSettingsWidget::setupGUI()
     layout->addRow(i18n("Person Names Formatting:"), m_comboBoxPersonNameFormatting);
     connect(m_comboBoxPersonNameFormatting, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
-    ItalicTextItemModel *itim = new ItalicTextItemModel();
+    ItalicTextItemModel *itim = new ItalicTextItemModel(this);
     itim->addItem(i18n("Use global settings"), QString(QStringLiteral("")));
     itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatFirstLast), Preferences::personNameFormatFirstLast);
     itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatLastFirst), Preferences::personNameFormatLastFirst);
