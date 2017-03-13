@@ -537,7 +537,7 @@ QString PlainTextValue::text(const Value &value)
     return result;
 }
 
-QString PlainTextValue::text(const QSharedPointer<ValueItem> &valueItem)
+QString PlainTextValue::text(const QSharedPointer<const ValueItem> &valueItem)
 {
     const ValueItem *p = valueItem.data();
     return text(*p);

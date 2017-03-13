@@ -259,7 +259,7 @@ class KBIBTEXDATA_EXPORT PlainTextValue: private NotificationListener
 public:
     static QString text(const Value &value);
     static QString text(const ValueItem &valueItem);
-    static QString text(const QSharedPointer<ValueItem> &valueItem);
+    static QString text(const QSharedPointer<const ValueItem> &valueItem);
 
     void notificationEvent(int eventId);
 

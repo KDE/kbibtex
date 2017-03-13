@@ -55,10 +55,11 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
     EncoderLaTeX *encoder = EncoderLaTeX::instance();
 
     const Value v = entry[Entry::ftAuthor];
-    QSharedPointer<Person> p;
-    foreach (const QSharedPointer<ValueItem> &vi, v)
-        if (!(p = vi.dynamicCast<Person>()).isNull())
+    foreach (const QSharedPointer<ValueItem> &vi, v) {
+        QSharedPointer<const Person> p = vi.dynamicCast<const Person>();
+        if (!p.isNull())
             result.append(encoder->convertToPlainAscii(p->lastName()));
+    }
 
     return result;
 }
