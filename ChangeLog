@@ -1,5 +1,10 @@
 ChangeLog
 
+Diff 0.6.1 to 0.6.2
+
+- KDE Bug 377401: https://bugs.kde.org/show_bug.cgi?id=377401
+  KBibTeX fails to load zotero bibliography
+
 Diff 0.6 to 0.6.1
 
 - KDE Bug 351455: https://bugs.kde.org/show_bug.cgi?id=351455
