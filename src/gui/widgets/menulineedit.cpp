@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -49,7 +49,7 @@ public:
     KTextEdit *m_multiLineEditText;
 
     MenuLineEditPrivate(bool isMultiLine, MenuLineEdit *parent)
-            : p(parent), m_isReadOnly(false), makeInnerWidgetsTransparent(false), m_singleLineEditText(NULL), m_multiLineEditText(NULL) {
+            : p(parent), m_isReadOnly(false), makeInnerWidgetsTransparent(false), m_singleLineEditText(nullptr), m_multiLineEditText(nullptr) {
         this->isMultiLine = isMultiLine;
         /// listen to configuration change events specifically concerning a MenuLineEdit widget
         NotificationHub::registerNotificationListener(this, MenuLineEdit::MenuLineConfigurationChangedEvent);
@@ -75,7 +75,7 @@ public:
             /// check each widget inside MenuLineEdit
             for (int i = hLayout->count() - 1; i >= 0; --i) {
                 QWidget *w = hLayout->itemAt(i)->widget();
-                if (w != NULL && w != m_singleLineEditText && w != m_multiLineEditText) {
+                if (w != nullptr && w != m_singleLineEditText && w != m_multiLineEditText) {
                     /// for all widgets except the main editing widget: change tab focus policy
                     w->setFocusPolicy(limitKeyboardTabStops ? Qt::ClickFocus : Qt::StrongFocus);
                 }
@@ -135,7 +135,7 @@ public:
     }
 
     void fixTabOrder() {
-        QWidget *cur = NULL;
+        QWidget *cur = nullptr;
         if (hLayout->count() > 0)
             p->setTabOrder(p, (cur = hLayout->itemAt(0)->widget()));
         for (int i = 1; i < hLayout->count(); ++i) {
@@ -152,7 +152,7 @@ public:
         /// check each widget inside MenuLineEdit
         for (int i = hLayout->count() - 1; i >= 0; --i) {
             QWidget *w = hLayout->itemAt(i)->widget();
-            if (w != NULL && w != m_singleLineEditText && w != m_multiLineEditText) {
+            if (w != nullptr && w != m_singleLineEditText && w != m_multiLineEditText) {
                 /// for all widgets except the main editing widget: change tab focus policy
                 QSizePolicy sp = w->sizePolicy();
                 w->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
@@ -164,7 +164,7 @@ public:
         this->makeInnerWidgetsTransparent = makeInnerWidgetsTransparent;
         for (int i = hLayout->count() - 1; i >= 0; --i) {
             QWidget *w = hLayout->itemAt(i)->widget();
-            if (w != NULL)
+            if (w != nullptr)
                 w->setStyleSheet(makeInnerWidgetsTransparent ? transparentStyleSheet : normalStyleSheet);
         }
     }
@@ -193,7 +193,7 @@ const QString MenuLineEdit::MenuLineEditPrivate::normalStyleSheet = QStringLiter
 MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
         : QFrame(parent), d(new MenuLineEditPrivate(isMultiLine, this))
 {
-    if (d->m_singleLineEditText != NULL) {
+    if (d->m_singleLineEditText != nullptr) {
         /// Only for single-line variants stretch buttons vertically
         QTimer::singleShot(250, this, &MenuLineEdit::slotVerticallyStretchButtons);
     }
@@ -216,19 +216,19 @@ void MenuLineEdit::setReadOnly(bool readOnly)
 
 QString MenuLineEdit::text() const
 {
-    if (d->m_singleLineEditText != NULL)
+    if (d->m_singleLineEditText != nullptr)
         return d->m_singleLineEditText->text();
-    if (d->m_multiLineEditText != NULL)
+    if (d->m_multiLineEditText != nullptr)
         return d->m_multiLineEditText->document()->toPlainText();
     return QStringLiteral("");
 }
 
 void MenuLineEdit::setText(const QString &text)
 {
-    if (d->m_singleLineEditText != NULL) {
+    if (d->m_singleLineEditText != nullptr) {
         d->m_singleLineEditText->setText(text);
         d->m_singleLineEditText->setCursorPosition(0);
-    } else if (d->m_multiLineEditText != NULL) {
+    } else if (d->m_multiLineEditText != nullptr) {
         d->m_multiLineEditText->document()->setPlainText(text);
         QTextCursor tc = d->m_multiLineEditText->textCursor();
         tc.setPosition(0);
@@ -243,9 +243,9 @@ void MenuLineEdit::setIcon(const QIcon &icon)
 
 void MenuLineEdit::setFont(const QFont &font)
 {
-    if (d->m_singleLineEditText != NULL)
+    if (d->m_singleLineEditText != nullptr)
         d->m_singleLineEditText->setFont(font);
-    if (d->m_multiLineEditText != NULL)
+    if (d->m_multiLineEditText != nullptr)
         d->m_multiLineEditText->document()->setDefaultFont(font);
 }
 
@@ -256,19 +256,19 @@ void MenuLineEdit::setButtonToolTip(const QString &text)
 
 void MenuLineEdit::setChildAcceptDrops(bool acceptDrops)
 {
-    if (d->m_singleLineEditText != NULL)
+    if (d->m_singleLineEditText != nullptr)
         d->m_singleLineEditText->setAcceptDrops(acceptDrops);
-    if (d->m_multiLineEditText != NULL)
+    if (d->m_multiLineEditText != nullptr)
         d->m_multiLineEditText->setAcceptDrops(acceptDrops);
 }
 
 QWidget *MenuLineEdit::buddy()
 {
-    if (d->m_singleLineEditText != NULL)
+    if (d->m_singleLineEditText != nullptr)
         return d->m_singleLineEditText;
-    if (d->m_multiLineEditText != NULL)
+    if (d->m_multiLineEditText != nullptr)
         return d->m_multiLineEditText;
-    return NULL;
+    return nullptr;
 }
 
 void MenuLineEdit::prependWidget(QWidget *widget)
@@ -288,30 +288,30 @@ void MenuLineEdit::setInnerWidgetsTransparency(bool makeInnerWidgetsTransparent)
 
 bool MenuLineEdit::isModified() const
 {
-    if (d->m_singleLineEditText != NULL)
+    if (d->m_singleLineEditText != nullptr)
         return d->m_singleLineEditText->isModified();
-    if (d->m_multiLineEditText != NULL)
+    if (d->m_multiLineEditText != nullptr)
         return d->m_multiLineEditText->document()->isModified();
     return false;
 }
 
 void MenuLineEdit::setCompletionItems(const QStringList &items)
 {
-    if (d->m_singleLineEditText != NULL)
+    if (d->m_singleLineEditText != nullptr)
         d->m_singleLineEditText->completionObject()->setItems(items);
 }
 
 void MenuLineEdit::focusInEvent(QFocusEvent *)
 {
-    if (d->m_singleLineEditText != NULL)
+    if (d->m_singleLineEditText != nullptr)
         d->m_singleLineEditText->setFocus();
-    else if (d->m_multiLineEditText != NULL)
+    else if (d->m_multiLineEditText != nullptr)
         d->m_multiLineEditText->setFocus();
 }
 
 void MenuLineEdit::slotTextChanged()
 {
-    Q_ASSERT_X(d->m_multiLineEditText != NULL, "MenuLineEdit::slotTextChanged", "d->m_multiLineEditText is NULL");
+    Q_ASSERT_X(d->m_multiLineEditText != nullptr, "MenuLineEdit::slotTextChanged", "d->m_multiLineEditText is NULL");
     emit textChanged(d->m_multiLineEditText->toPlainText());
 }
 

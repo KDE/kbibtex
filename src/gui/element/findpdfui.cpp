@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -71,7 +71,7 @@ PDFItemDelegate::PDFItemDelegate(QListView *itemView, QObject *parent)
 void PDFItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyle *style = QApplication::style();
-    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, 0);
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, nullptr);
 
     painter->save();
 
@@ -149,7 +149,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     if (!index.isValid()) return;
 
     const PDFListModel *model = qobject_cast<const PDFListModel *>(index.model());
-    if (model == NULL) {
+    if (model == nullptr) {
         qCDebug(LOG_KBIBTEX_GUI) << "WARNING - INVALID MODEL!";
         return;
     }
@@ -167,7 +167,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
 
     /// setup label which will show the PDF file's URL
     KSqueezedTextLabel *label = qobject_cast<KSqueezedTextLabel *>(widgets[posLabelUrl]);
-    if (label != NULL) {
+    if (label != nullptr) {
         const QString text = index.data(URLRole).toUrl().toDisplayString();
         label->setText(text);
         label->setToolTip(text);
@@ -177,7 +177,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
 
     /// setup label which will show the PDF's title or textual beginning
     QLabel *previewLabel = qobject_cast<QLabel *>(widgets[posLabelPreview]);
-    if (previewLabel != NULL) {
+    if (previewLabel != nullptr) {
         previewLabel->setText(index.data(TextualPreviewRole).toString());
         previewLabel->move(margin * 2 + KIconLoader::SizeMedium, margin * 2 + labelHeight);
         previewLabel->resize(labelWidth, labelHeight);
@@ -185,7 +185,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
 
     /// setup the view button
     QPushButton *viewButton = qobject_cast<QPushButton *>(widgets[posViewButton]);
-    if (viewButton != NULL) {
+    if (viewButton != nullptr) {
         const QSize hint = viewButton->sizeHint();
         const int h = hint.isValid() ? qMin(buttonHeight, hint.height()) : buttonHeight;
         viewButton->move(margin * 2 + KIconLoader::SizeMedium, option.rect.height() - margin - h);
@@ -195,7 +195,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     /// setup each of the three radio buttons
     for (int i = 0; i < 3; ++i) {
         QRadioButton *radioButton = qobject_cast<QRadioButton *>(widgets[posRadioNoDownload + i]);
-        if (radioButton != NULL) {
+        if (radioButton != nullptr) {
             const QSize hint = radioButton->sizeHint();
             const int h = hint.isValid() ? qMin(buttonHeight, hint.height()) : buttonHeight;
             radioButton->move(option.rect.width() - margin - (3 - i) * (buttonWidth + margin), option.rect.height() - margin - h);
@@ -232,13 +232,13 @@ void PDFItemDelegate::slotViewPDF()
             QMimeType mimeType = FileInfo::mimeTypeForUrl(tempUrl);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
-            KRun::runUrl(tempUrl, mimeTypeName, NULL, false, false, url.toDisplayString());
+            KRun::runUrl(tempUrl, mimeTypeName, nullptr, false, false, url.toDisplayString());
         } else if (url.isValid()) {
             /// Guess mime type for url to open
             QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
-            KRun::runUrl(url, mimeTypeName, NULL, false, false);
+            KRun::runUrl(url, mimeTypeName, nullptr, false, false);
         }
     }
 }
@@ -304,7 +304,7 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
         else if (role == Qt::ToolTipRole)
             return  QStringLiteral("<qt>") + m_resultList[index.row()].textPreview + QStringLiteral("</qt>"); ///<  'qt' tags required for word wrap
         else if (role == TempFileNameRole) {
-            if (m_resultList[index.row()].tempFilename != NULL)
+            if (m_resultList[index.row()].tempFilename != nullptr)
                 return m_resultList[index.row()].tempFilename->fileName();
             else
                 return QVariant();

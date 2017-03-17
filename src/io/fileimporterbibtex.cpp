@@ -40,7 +40,7 @@
 const char *FileImporterBibTeX::defaultCodecName = "utf-8";
 
 FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
-        : FileImporter(), m_cancelFlag(false), m_textStream(NULL), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing), m_lineNo(1)
+        : FileImporter(), m_cancelFlag(false), m_textStream(nullptr), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing), m_lineNo(1)
 {
     m_keysForPersonDetection.append(Entry::ftAuthor);
     m_keysForPersonDetection.append(Entry::ftEditor);
@@ -57,7 +57,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
         qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
-        return NULL;
+        return nullptr;
     }
 
     File *result = new File();
@@ -112,7 +112,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         emit progress(m_textStream->pos(), rawText.length());
         Element *element = nextElement();
 
-        if (element != NULL) {
+        if (element != nullptr) {
             if (!m_ignoreComments || !Comment::isComment(*element))
                 result->append(QSharedPointer<Element>(element));
             else
@@ -124,12 +124,12 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     if (m_cancelFlag) {
         qCWarning(LOG_KBIBTEX_IO) << "Loading file has been canceled";
         delete result;
-        result = NULL;
+        result = nullptr;
     }
 
     delete m_textStream;
 
-    if (result != NULL) {
+    if (result != nullptr) {
         /// Set the file's preferences for string delimiters
         /// deduced from statistics built while parsing the file
         result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QStringLiteral("\"\"") : QStringLiteral("{}"));
@@ -182,12 +182,12 @@ Element *FileImporterBibTeX::nextElement()
             return readPreambleElement();
         else if (elementType.toLower() == QStringLiteral("import")) {
             qCDebug(LOG_KBIBTEX_IO) << "Skipping potential HTML/JavaScript @import statement";
-            return NULL;
+            return nullptr;
         } else if (!elementType.isEmpty())
             return readEntryElement(elementType);
         else {
             qCWarning(LOG_KBIBTEX_IO) << "ElementType is empty";
-            return NULL;
+            return nullptr;
         }
     } else if (token == tUnknown && m_nextChar == QLatin1Char('%')) {
         /// do not complain about LaTeX-like comments, just eat them
@@ -202,13 +202,13 @@ Element *FileImporterBibTeX::nextElement()
     if (token != tEOF)
         qCWarning(LOG_KBIBTEX_IO) << "Don't know how to parse next token of type " << tokenidToString(token) << " in line " << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << endl;
 
-    return NULL;
+    return nullptr;
 }
 
 Comment *FileImporterBibTeX::readCommentElement()
 {
     if (!readCharUntil(QStringLiteral("{(")))
-        return NULL;
+        return nullptr;
     return new Comment(EncoderLaTeX::instance().decode(readBracketString()));
 }
 
@@ -226,7 +226,7 @@ Comment *FileImporterBibTeX::readPlainCommentElement(const QString &prefix)
     if (result.startsWith(QStringLiteral("x-kbibtex"))) {
         qCWarning(LOG_KBIBTEX_IO) << "Plain comment element starts with \"x-kbibtex\", this should not happen";
         /// ignore special comments
-        return NULL;
+        return nullptr;
     }
 
     return new Comment(result);
@@ -238,7 +238,7 @@ Macro *FileImporterBibTeX::readMacroElement()
     while (token != tBracketOpen) {
         if (token == tEOF) {
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing unknown macro' (near line " << m_lineNo << ":" << m_prevLine << endl << m_currentLine <<  "): Opening curly brace ({) expected";
-            return NULL;
+            return nullptr;
         }
         token = nextToken();
     }
@@ -271,7 +271,7 @@ Macro *FileImporterBibTeX::readMacroElement()
 
     if (nextToken() != tAssign) {
         qCCritical(LOG_KBIBTEX_IO) << "Error in parsing macro '" << key << "'' (near line " << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Assign symbol (=) expected";
-        return NULL;
+        return nullptr;
     }
 
     Macro *macro = new Macro(key);
@@ -295,7 +295,7 @@ Preamble *FileImporterBibTeX::readPreambleElement()
     while (token != tBracketOpen) {
         if (token == tEOF) {
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing unknown preamble' (near line " << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Opening curly brace ({) expected";
-            return NULL;
+            return nullptr;
         }
         token = nextToken();
     }
@@ -327,7 +327,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
     while (token != tBracketOpen) {
         if (token == tEOF) {
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing unknown entry (near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Opening curly brace '{' expected";
-            return NULL;
+            return nullptr;
         }
         token = nextToken();
     }
@@ -370,7 +370,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             else
                 qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
             delete entry;
-            return NULL;
+            return nullptr;
         }
 
         QString keyName = bf->format(readSimpleString(), m_keywordCasing);
@@ -386,7 +386,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
                 /// Something looks terribly wrong
                 qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Closing curly bracket expected, but found" << tokenidToString(token);
                 delete entry;
-                return NULL;
+                return nullptr;
             }
         }
         /// Try to avoid non-ascii characters in keys
@@ -396,7 +396,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         if (token != tAssign) {
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << ", key" << keyName << " (near line " << m_lineNo  << ":" << m_prevLine << endl << m_currentLine << "): Assign symbol (=) expected after field name" << keyName;
             delete entry;
-            return NULL;
+            return nullptr;
         }
 
         Value value;
@@ -791,7 +791,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
     char *curSplitChar = splitChars;
     static const QRegExp unneccessarySpacing(QStringLiteral("[ \n\r\t]+"));
     int index = 0;
-    if (usedSplitChar != 0)
+    if (usedSplitChar != nullptr)
         *usedSplitChar = '\0';
 
     /// for each char in list ...
@@ -807,7 +807,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
             }
             /// Memorize (some) split characters for later use
             /// (e.g. when writing file again)
-            if (usedSplitChar != 0)
+            if (usedSplitChar != nullptr)
                 *usedSplitChar = *curSplitChar;
             /// no more splits necessary
             break;
@@ -893,7 +893,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
 void FileImporterBibTeX::parsePersonList(const QString &text, Value &value)
 {
-    parsePersonList(text, value, NULL);
+    parsePersonList(text, value, nullptr);
 }
 
 void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, CommaContainment *comma)
@@ -940,7 +940,7 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
 
 QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name)
 {
-    return personFromString(name, NULL);
+    return personFromString(name, nullptr);
 }
 
 QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name, CommaContainment *comma)
@@ -952,7 +952,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name,
 
 QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList &tokens, CommaContainment *comma)
 {
-    if (comma != NULL) *comma = ccNoComma;
+    if (comma != nullptr) *comma = ccNoComma;
 
     /// Simple case: provided list of tokens is empty, return invalid Person
     if (tokens.isEmpty())
@@ -1009,7 +1009,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
             partC.append(token);
     }
     if (commaCount > 0) {
-        if (comma != NULL) *comma = ccContainsComma;
+        if (comma != nullptr) *comma = ccContainsComma;
         return QSharedPointer<Person>(new Person(partC.isEmpty() ? partB.join(QChar(' ')) : partC.join(QChar(' ')), partA.join(QChar(' ')), partC.isEmpty() ? QString() : partB.join(QChar(' '))));
     }
 

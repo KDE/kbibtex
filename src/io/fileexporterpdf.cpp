@@ -89,7 +89,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     if (result)
         result = generatePDF(iodevice, errorLog);
 
-    if (errorLog != NULL)
+    if (errorLog != nullptr)
         qCDebug(LOG_KBIBTEX_IO) << "errorLog" << errorLog->join(QStringLiteral(";"));
 
     iodevice->close();
@@ -195,7 +195,7 @@ void FileExporterPDF::fillEmbeddedFileList(const File *bibtexfile)
 
 void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> element, const File *bibtexfile)
 {
-    if (bibtexfile == NULL || !bibtexfile->hasProperty(File::Url)) {
+    if (bibtexfile == nullptr || !bibtexfile->hasProperty(File::Url)) {
         /// If no valid File was provided or File is not saved, do not append files
         return;
     }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -60,7 +60,7 @@ public:
         }
     }
 
-    HTTPEquivCookieJar(QObject *parent = NULL)
+    HTTPEquivCookieJar(QObject *parent = nullptr)
             : QNetworkCookieJar(parent) {
         // nothing
     }
@@ -68,7 +68,7 @@ public:
 
 
 QString InternalNetworkAccessManager::userAgentString;
-InternalNetworkAccessManager *InternalNetworkAccessManager::instance = NULL;
+InternalNetworkAccessManager *InternalNetworkAccessManager::instance = nullptr;
 
 InternalNetworkAccessManager::InternalNetworkAccessManager(QObject *parent)
         : QNetworkAccessManager(parent)
@@ -79,14 +79,14 @@ InternalNetworkAccessManager::InternalNetworkAccessManager(QObject *parent)
 
 void InternalNetworkAccessManager::mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url)
 {
-    Q_ASSERT_X(cookieJar != NULL, "void InternalNetworkAccessManager::mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url)", "cookieJar is invalid");
+    Q_ASSERT_X(cookieJar != nullptr, "void InternalNetworkAccessManager::mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url)", "cookieJar is invalid");
     cookieJar->mergeHtmlHeadCookies(htmlCode, url);
     setCookieJar(cookieJar);
 }
 
 InternalNetworkAccessManager *InternalNetworkAccessManager::self()
 {
-    if (instance == NULL) {
+    if (instance == nullptr) {
         instance = new InternalNetworkAccessManager(QApplication::instance());
     }
 
@@ -129,7 +129,7 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
 
 QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const QNetworkReply *oldReply)
 {
-    return get(request, oldReply == NULL ? QUrl() : oldReply->url());
+    return get(request, oldReply == nullptr ? QUrl() : oldReply->url());
 }
 
 QString InternalNetworkAccessManager::userAgent()
@@ -170,7 +170,7 @@ QString InternalNetworkAccessManager::userAgent()
             << QStringLiteral("Mozilla/5.0 (Windows; U; Windows NT 6.0; en-US) AppleWebKit/534.16 (KHTML, like Gecko) Chrome/10.0.648.133 Safari/534.16");
 
     if (userAgentString.isEmpty()) {
-        qsrand(time(NULL));
+        qsrand(time(nullptr));
         userAgentString = userAgentList[qrand() % userAgentList.length()];
     }
     return userAgentString;
@@ -190,7 +190,7 @@ void InternalNetworkAccessManager::networkReplyTimeout()
     QTimer *timer = static_cast<QTimer *>(sender());
     timer->stop();
     QNetworkReply *reply = m_mapTimerToReply[timer];
-    if (reply != NULL) {
+    if (reply != nullptr) {
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Timeout on reply to " << reply->url().toDisplayString();
         reply->close();
         m_mapTimerToReply.remove(timer);
@@ -199,8 +199,8 @@ void InternalNetworkAccessManager::networkReplyTimeout()
 void InternalNetworkAccessManager::networkReplyFinished()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    QTimer *timer = m_mapTimerToReply.key(reply, NULL);
-    if (timer != NULL) {
+    QTimer *timer = m_mapTimerToReply.key(reply, nullptr);
+    if (timer != nullptr) {
         disconnect(timer, &QTimer::timeout, this, &InternalNetworkAccessManager::networkReplyTimeout);
         timer->stop();
         m_mapTimerToReply.remove(timer);

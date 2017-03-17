@@ -89,12 +89,12 @@ public:
     OnlineSearchQueryFormDOI *form;
 
     OnlineSearchDOIPrivate(OnlineSearchDOI */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ form(NULL) {
+        : /* UNUSED p(parent),*/ form(nullptr) {
         // nothing
     }
 
     QUrl buildQueryUrl() {
-        if (form == NULL) {
+        if (form == nullptr) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot build query url if no form is specified";
             return QUrl();
         }
@@ -166,7 +166,7 @@ QString OnlineSearchDOI::label() const
 
 OnlineSearchQueryFormAbstract *OnlineSearchDOI::customWidget(QWidget *parent)
 {
-    if (d->form == NULL)
+    if (d->form == nullptr)
         d->form = new OnlineSearchDOI::OnlineSearchQueryFormDOI(parent);
     return d->form;
 }
@@ -205,7 +205,7 @@ void OnlineSearchDOI::downloadDone()
                 File *bibtexFile = importer.fromString(bibTeXcode);
 
                 bool hasEntries = false;
-                if (bibtexFile != NULL) {
+                if (bibtexFile != nullptr) {
                     for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                         hasEntries |= publishEntry(entry);

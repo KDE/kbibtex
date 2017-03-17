@@ -39,12 +39,12 @@ HidingTabWidget::HidingTabWidget(QWidget *parent)
 
 QWidget *HidingTabWidget::hideTab(int index)
 {
-    if (index < 0 || index >= count()) return NULL;
+    if (index < 0 || index >= count()) return nullptr;
 
     HiddenTabInfo hti;
     hti.widget = widget(index);
-    hti.leftNeighborWidget = index > 0 ? widget(index - 1) : NULL;
-    hti.rightNeighborWidget = index < count() - 1 ? widget(index + 1) : NULL;
+    hti.leftNeighborWidget = index > 0 ? widget(index - 1) : nullptr;
+    hti.rightNeighborWidget = index < count() - 1 ? widget(index + 1) : nullptr;
     hti.label = tabText(index);
     hti.icon = tabIcon(index);
     hti.enabled = isTabEnabled(index);

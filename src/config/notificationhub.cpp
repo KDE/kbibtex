@@ -56,7 +56,7 @@ NotificationHub::~NotificationHub()
 
 NotificationHub *NotificationHub::getHub()
 {
-    if (NotificationHub::NotificationHubPrivate::singleton == NULL)
+    if (NotificationHub::NotificationHubPrivate::singleton == nullptr)
         NotificationHub::NotificationHubPrivate::singleton = new NotificationHub();
     return NotificationHub::NotificationHubPrivate::singleton;
 }
@@ -103,4 +103,4 @@ void NotificationHub::publishEvent(int eventId)
 const int NotificationHub::EventAny = -1;
 const int NotificationHub::EventConfigurationChanged = 0;
 const int NotificationHub::EventUserDefined = 1024;
-NotificationHub *NotificationHub::NotificationHubPrivate::singleton = NULL;
+NotificationHub *NotificationHub::NotificationHubPrivate::singleton = nullptr;

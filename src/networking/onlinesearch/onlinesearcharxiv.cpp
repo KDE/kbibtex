@@ -107,7 +107,7 @@ public:
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
             : p(parent),
           xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/arxiv2bibtex.xsl"))),
-          form(NULL), arXivQueryBaseUrl(QStringLiteral("http://export.arxiv.org/api/query?"))
+          form(nullptr), arXivQueryBaseUrl(QStringLiteral("http://export.arxiv.org/api/query?"))
     {
         /// nothing
     }
@@ -649,7 +649,7 @@ QString OnlineSearchArXiv::favIconUrl() const
 
 OnlineSearchQueryFormAbstract *OnlineSearchArXiv::customWidget(QWidget *parent)
 {
-    if (d->form == NULL)
+    if (d->form == nullptr)
         d->form = new OnlineSearchArXiv::OnlineSearchQueryFormArXiv(parent);
     return d->form;
 }
@@ -680,7 +680,7 @@ void OnlineSearchArXiv::downloadDone()
             File *bibtexFile = importer.fromString(bibTeXcode);
 
             bool hasEntries = false;
-            if (bibtexFile != NULL) {
+            if (bibtexFile != nullptr) {
                 for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     hasEntries |= publishEntry(entry);

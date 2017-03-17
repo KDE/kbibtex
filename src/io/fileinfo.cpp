@@ -184,7 +184,7 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
 QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestExistence testExistence)
 {
     QList<QUrl> result;
-    if (entry == NULL || entry->isEmpty())
+    if (entry == nullptr || entry->isEmpty())
         return result;
 
     if (entry->contains(Entry::ftDOI)) {

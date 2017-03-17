@@ -312,7 +312,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             File *bibtexFile = d->importer.fromString(rawText);
 
             bool hasEntry = false;
-            if (bibtexFile != NULL) {
+            if (bibtexFile != nullptr) {
                 for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     if (!entry.isNull()) {

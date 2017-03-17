@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -52,7 +52,7 @@ File *FileImporterBibUtils::load(QIODevice *iodevice)
 {
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
         qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
-        return NULL;
+        return nullptr;
     }
 
     QBuffer buffer;
@@ -62,5 +62,5 @@ File *FileImporterBibUtils::load(QIODevice *iodevice)
     if (result)
         return d->bibtexImporter.load(&buffer);
     else
-        return NULL;
+        return nullptr;
 }

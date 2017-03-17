@@ -46,7 +46,7 @@ public:
     const KConfigGroup group;
 
     LyXPrivate(LyX */* UNUSED parent*/, QWidget *widget)
-        : /* UNUSED p(parent),*/ action(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), group(config, LyX::configGroupName) {
+        : /* UNUSED p(parent),*/ action(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), group(config, LyX::configGroupName) {
         this->widget = widget;
     }
 
@@ -104,7 +104,7 @@ LyX::~LyX()
 void LyX::setReferences(const QStringList &references)
 {
     d->references = references;
-    d->action->setEnabled(d->widget != NULL && !d->references.isEmpty());
+    d->action->setEnabled(d->widget != nullptr && !d->references.isEmpty());
 }
 
 void LyX::sendReferenceToLyX()

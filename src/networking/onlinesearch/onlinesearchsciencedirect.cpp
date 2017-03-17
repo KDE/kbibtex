@@ -279,7 +279,7 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
         File *bibtexFile = importer.fromString(bibTeXcode);
 
         bool hasEntry = false;
-        if (bibtexFile != NULL) {
+        if (bibtexFile != nullptr) {
             for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                 QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 hasEntry |= publishEntry(entry);

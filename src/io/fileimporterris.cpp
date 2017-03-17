@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -94,7 +94,7 @@ public:
     Element *nextElement(QTextStream &textStream) {
         RISitemList list = readElement(textStream);
         if (list.empty())
-            return NULL;
+            return nullptr;
 
         QString entryType = Entry::etMisc;
         Entry *entry = new Entry(entryType, QString(QStringLiteral("RIS_%1")).arg(referenceCounter++));
@@ -255,7 +255,7 @@ File *FileImporterRIS::load(QIODevice *iodevice)
 {
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
         qCDebug(LOG_KBIBTEX_IO) << "Input device not readable";
-        return NULL;
+        return nullptr;
     }
 
     d->cancelFlag = false;
@@ -267,7 +267,7 @@ File *FileImporterRIS::load(QIODevice *iodevice)
         emit progress(textStream.pos(), iodevice->size());
         QCoreApplication::instance()->processEvents();
         Element *element = d->nextElement(textStream);
-        if (element != NULL)
+        if (element != nullptr)
             result->append(QSharedPointer<Element>(element));
         QCoreApplication::instance()->processEvents();
     }
@@ -275,7 +275,7 @@ File *FileImporterRIS::load(QIODevice *iodevice)
 
     if (d->cancelFlag) {
         delete result;
-        result = NULL;
+        result = nullptr;
     }
 
     iodevice->close();

@@ -511,7 +511,7 @@ public:
     }
 
     void addManagementButtons(TokenWidget *tokenWidget) {
-        if (tokenWidget != NULL) {
+        if (tokenWidget != nullptr) {
             QPushButton *buttonUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QStringLiteral(""), tokenWidget);
             QPushButton *buttonDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QStringLiteral(""), tokenWidget);
             QPushButton *buttonRemove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), QStringLiteral(""), tokenWidget);
@@ -589,7 +589,7 @@ public:
 
         const QStringList tokenList = formatString.split(QStringLiteral("|"), QString::SkipEmptyParts);
         for (const QString &token : tokenList) {
-            TokenWidget *tokenWidget = NULL;
+            TokenWidget *tokenWidget = nullptr;
 
             if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));

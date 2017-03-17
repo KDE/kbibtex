@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -84,7 +84,7 @@ QString AssociatedFiles::absoluteFilename(const QUrl &documentUrl, const QUrl &b
 }
 
 QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun) {
-    Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
+    Q_ASSERT(bibTeXFile != nullptr); // FIXME more graceful?
 
     const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
     if (baseUrl.isEmpty() && pathType == ptRelative) {
@@ -117,7 +117,7 @@ QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPoint
 }
 
 QString AssociatedFiles::associateDocumentURL(const QUrl &document, const File *bibTeXFile, PathType pathType) {
-    Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
+    Q_ASSERT(bibTeXFile != nullptr); // FIXME more graceful?
 
     const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
     if (baseUrl.isEmpty() && pathType == ptRelative) {
@@ -132,7 +132,7 @@ QString AssociatedFiles::associateDocumentURL(const QUrl &document, const File *
 }
 
 QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const QString &userDefinedFilename, const bool dryRun) {
-    Q_ASSERT(bibTeXFile != NULL); // FIXME more graceful?
+    Q_ASSERT(bibTeXFile != nullptr); // FIXME more graceful?
 
     if (moveCopyOperation == mcoNoCopyMove)
         return sourceUrl; /// nothing to do if no move or copy requested

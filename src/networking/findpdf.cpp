@@ -209,13 +209,13 @@ public:
                     /// Failed to write to temporary file
                     qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to write to temporary file for filename" << resultItem.tempFilename->fileName();
                     delete resultItem.tempFilename;
-                    resultItem.tempFilename = NULL;
+                    resultItem.tempFilename = nullptr;
                 }
             } else {
                 /// Failed to create temporary file
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to create temporary file for templaet" << resultItem.tempFilename->fileTemplate();
                 delete resultItem.tempFilename;
-                resultItem.tempFilename = NULL;
+                resultItem.tempFilename = nullptr;
             }
             resultItem.url = url;
             resultItem.textPreview = doc->info(QStringLiteral("Title")).simplified();

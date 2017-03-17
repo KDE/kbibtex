@@ -210,8 +210,8 @@ public:
     QWidget *widget;
 
     FindDuplicatesPrivate(int sens, QWidget *w)
-            : maxDistance(10000), sensitivity(sens), widget(w == NULL ? qApp->activeWindow() : w) {
-        d = new int*[dsize];
+            : maxDistance(10000), sensitivity(sens), widget(w == nullptr ? qApp->activeWindow() : w) {
+        d = new int *[dsize];
         for (int i = 0; i < dsize; ++i)
             d[i] = new int[dsize];
     }

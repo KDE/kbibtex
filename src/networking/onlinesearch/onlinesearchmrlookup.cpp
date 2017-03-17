@@ -102,7 +102,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
         File *bibtexFile = importer.fromString(bibtexCode);
 
         bool hasEntry = false;
-        if (bibtexFile != NULL) {
+        if (bibtexFile != nullptr) {
             for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                 const QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 hasEntry |= publishEntry(entry);

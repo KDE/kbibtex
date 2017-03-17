@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -81,19 +81,19 @@ public:
     static const QString walletFolderOAuth, walletEntryKBibTeXZotero, walletKeyZoteroId, walletKeyZoteroApiKey;
 
     Private(SearchResults *sr, ZoteroBrowser *parent)
-            : p(parent), items(NULL), groups(NULL), tags(NULL), tagModel(NULL), collection(NULL), collectionModel(NULL), needToApplyCredentials(true), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()), wallet(NULL) {
+            : p(parent), items(nullptr), groups(nullptr), tags(nullptr), tagModel(nullptr), collection(nullptr), collectionModel(nullptr), needToApplyCredentials(true), searchResults(sr), comboBoxGroupListInitialized(false), nonBusyCursor(p->cursor()), wallet(nullptr) {
         setupGUI();
     }
 
     ~Private() {
-        if (wallet != NULL)
+        if (wallet != nullptr)
             delete wallet;
-        if (items != NULL) delete items;
-        if (groups != NULL) delete groups;
-        if (tags != NULL) delete tags;
-        if (tagModel != NULL) delete tagModel;
-        if (collection != NULL) delete collection;
-        if (collectionModel != NULL) delete collectionModel;
+        if (items != nullptr) delete items;
+        if (groups != nullptr) delete groups;
+        if (tags != nullptr) delete tags;
+        if (tagModel != nullptr) delete tagModel;
+        if (collection != nullptr) delete collection;
+        if (collectionModel != nullptr) delete collectionModel;
         api.clear();
     }
 
@@ -169,11 +169,11 @@ public:
     }
 
     void queueReadOAuthCredentials() {
-        if (wallet != NULL && wallet->isOpen())
+        if (wallet != nullptr && wallet->isOpen())
             p->readOAuthCredentials(true);
         else {
             /// Wallet is closed or not initialized
-            if (wallet != NULL)
+            if (wallet != nullptr)
                 /// Delete existing but closed wallet, will be replaced by new, open wallet soon
                 delete wallet;
             p->setEnabled(false);
@@ -184,11 +184,11 @@ public:
     }
 
     void queueWriteOAuthCredentials() {
-        if (wallet != NULL && wallet->isOpen())
+        if (wallet != nullptr && wallet->isOpen())
             p->writeOAuthCredentials(true);
         else {
             /// Wallet is closed or not initialized
-            if (wallet != NULL)
+            if (wallet != nullptr)
                 /// Delete existing but closed wallet, will be replaced by new, open wallet soon
                 delete wallet;
             p->setEnabled(false);

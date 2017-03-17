@@ -57,7 +57,7 @@ static const unsigned int interColumnSpace = 16;
 static const char *PropertyIdSuggestion = "PropertyIdSuggestion";
 
 ElementWidget::ElementWidget(QWidget *parent)
-        : QWidget(parent), isReadOnly(false), m_file(NULL), m_isModified(false)
+        : QWidget(parent), isReadOnly(false), m_file(nullptr), m_isModified(false)
 {
     // nothing
 };
@@ -165,7 +165,7 @@ void EntryConfiguredWidget::setFile(const File *file)
 {
     for (QMap<QString, FieldInput *>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
         it.value()->setFile(file);
-        if (file != NULL) {
+        if (file != nullptr) {
             /// list of unique values for same field
             QStringList list = file->uniqueEntryValuesList(it.key());
             /// for crossref fields, add all entries' ids
@@ -202,8 +202,8 @@ void EntryConfiguredWidget::createGUI()
 
         /// create an editing widget for this field
         const FieldDescription *fd = bf->find(sfl.bibtexLabel);
-        KBibTeX::TypeFlags typeFlags = fd == NULL ? KBibTeX::tfSource : fd->typeFlags;
-        KBibTeX::TypeFlag preferredTypeFlag = fd == NULL ? KBibTeX::tfSource : fd->preferredTypeFlag;
+        KBibTeX::TypeFlags typeFlags = fd == nullptr ? KBibTeX::tfSource : fd->typeFlags;
+        KBibTeX::TypeFlag preferredTypeFlag = fd == nullptr ? KBibTeX::tfSource : fd->preferredTypeFlag;
         labeledFieldInput->fieldInput = new FieldInput(sfl.fieldInputLayout, preferredTypeFlag, typeFlags, this);
         labeledFieldInput->fieldInput->setFieldKey(sfl.bibtexLabel);
         bibtexKeyToWidget.insert(sfl.bibtexLabel, labeledFieldInput->fieldInput);
@@ -266,7 +266,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 
         const QString key = bibtexKeyToWidget.key(listOfLabeledFieldInput[i]->fieldInput).toLower();
         const FieldDescription *fd = bf->find(key);
-        bool typeIndependent = fd == NULL ? false : fd->typeIndependent;
+        bool typeIndependent = fd == nullptr ? false : fd->typeIndependent;
         Value value;
         listOfLabeledFieldInput[i]->fieldInput->apply(value);
         /// Hide non-required and non-optional type-dependent fields,
@@ -326,7 +326,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 }
 
 ReferenceWidget::ReferenceWidget(QWidget *parent)
-        : ElementWidget(parent), m_applyElement(NULL), m_entryIdManuallySet(false), m_element(QSharedPointer<Element>())
+        : ElementWidget(parent), m_applyElement(nullptr), m_entryIdManuallySet(false), m_element(QSharedPointer<Element>())
 {
     createGUI();
 }
@@ -515,7 +515,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
         QString suggestion = suggestionBase;
 
         /// Test for duplicate ids, use fallback ids with numeric suffix
-        if (m_file != NULL && m_file->containsKey(suggestion)) {
+        if (m_file != nullptr && m_file->containsKey(suggestion)) {
             int suffix = 2;
             while (m_file->containsKey(suggestion = suggestionBase + QChar('_') + QString::number(suffix)))
                 ++suffix;
@@ -540,7 +540,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
 void ReferenceWidget::insertSuggestionFromAction()
 {
     QAction *action = qobject_cast<QAction *>(sender());
-    if (action != NULL) {
+    if (action != nullptr) {
         const QString suggestion = action->property(PropertyIdSuggestion).toString();
         entryId->setText(suggestion);
     }
@@ -794,7 +794,7 @@ void OtherFieldsWidget::listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetIte
 {
     Q_UNUSED(previous)
     bool validUrl = false;
-    bool somethingSelected = item != NULL;
+    bool somethingSelected = item != nullptr;
     buttonDelete->setEnabled(somethingSelected && !isReadOnly);
     if (somethingSelected) {
         currentUrl = QUrl(item->text(1));
@@ -837,14 +837,14 @@ void OtherFieldsWidget::actionDelete()
 {
     if (isReadOnly) return; /// never modify anything if in read-only mode
 
-    Q_ASSERT_X(otherFieldsList->currentItem() != NULL, "OtherFieldsWidget::actionDelete", "otherFieldsList->currentItem() is NULL");
+    Q_ASSERT_X(otherFieldsList->currentItem() != nullptr, "OtherFieldsWidget::actionDelete", "otherFieldsList->currentItem() is NULL");
     QString key = otherFieldsList->currentItem()->text(0);
     if (!deletedKeys.contains(key)) deletedKeys << key;
 
     internalEntry->remove(key);
     updateList();
     updateGUI();
-    listCurrentChanged(otherFieldsList->currentItem(), NULL);
+    listCurrentChanged(otherFieldsList->currentItem(), nullptr);
 
     gotModified();
 }
@@ -921,7 +921,7 @@ void OtherFieldsWidget::createGUI()
 void OtherFieldsWidget::updateList()
 {
     const QString selText = otherFieldsList->selectedItems().isEmpty() ? QString() : otherFieldsList->selectedItems().first()->text(0);
-    const QString curText = otherFieldsList->currentItem() == NULL ? QString() : otherFieldsList->currentItem()->text(0);
+    const QString curText = otherFieldsList->currentItem() == nullptr ? QString() : otherFieldsList->currentItem()->text(0);
     otherFieldsList->clear();
 
     for (Entry::ConstIterator it = internalEntry->constBegin(); it != internalEntry->constEnd(); ++it)
@@ -1099,7 +1099,7 @@ protected:
         FileImporterBibTeX importer;
         FileExporterBibTeX exporter;
         const File *file = importer.fromString(event->mimeData()->text());
-        if (file != NULL && file->count() == 1)
+        if (file != nullptr && file->count() == 1)
             document()->setPlainText(exporter.toString(file->first(), file));
         else
             KTextEdit::dropEvent(event);
@@ -1124,7 +1124,7 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
     const QString text = sourceEdit->document()->toPlainText();
     FileImporterBibTeX importer;
     File *file = importer.fromString(text);
-    if (file == NULL) return false;
+    if (file == nullptr) return false;
 
     bool result = false;
     if (file->count() == 1) {

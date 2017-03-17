@@ -61,7 +61,7 @@ void ValueListDelegate::setEditorData(QWidget *editor, const QModelIndex &index)
 {
     if (index.column() == 0) {
         FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(editor);
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             fieldLineEdit->reset(index.model()->data(index, Qt::EditRole).value<Value>());
     }
 }
@@ -69,7 +69,7 @@ void ValueListDelegate::setEditorData(QWidget *editor, const QModelIndex &index)
 void ValueListDelegate::setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
 {
     FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(editor);
-    if (fieldLineEdit != NULL) {
+    if (fieldLineEdit != nullptr) {
         Value v;
         fieldLineEdit->apply(v);
         if (v.count() == 1) /// field should contain exactly one value item (no zero, not two or more)
@@ -248,7 +248,7 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
 
 bool ValueListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    Q_ASSERT_X(file != NULL, "ValueListModel::setData", "You cannot set data if there is no BibTeX file associated with this value list.");
+    Q_ASSERT_X(file != nullptr, "ValueListModel::setData", "You cannot set data if there is no BibTeX file associated with this value list.");
 
     /// Continue only if in edit role and first column is to be changed
     if (role == Qt::EditRole && index.column() == 0) {
@@ -345,7 +345,7 @@ void ValueListModel::readConfiguration()
 void ValueListModel::updateValues()
 {
     values.clear();
-    if (file == NULL) return;
+    if (file == nullptr) return;
 
     for (const auto &element : const_cast<const File &>(*file)) {
         QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();

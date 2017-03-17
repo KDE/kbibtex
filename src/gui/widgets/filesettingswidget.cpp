@@ -33,7 +33,7 @@
 #define createDelimiterString(a, b) (QString(QStringLiteral("%1%2%3")).arg(a).arg(QChar(8230)).arg(b))
 
 FileSettingsWidget::FileSettingsWidget(QWidget *parent)
-        : QWidget(parent), dummyPerson(Person(i18n("John"), i18n("Doe"), i18n("Jr."))), m_file(NULL)
+        : QWidget(parent), dummyPerson(Person(i18n("John"), i18n("Doe"), i18n("Jr."))), m_file(nullptr)
 {
     setupGUI();
 }
@@ -46,7 +46,7 @@ void FileSettingsWidget::resetToLoadedProperties()
 void FileSettingsWidget::loadProperties(File *file)
 {
     m_file = file;
-    if (m_file == NULL) return; /// Nothing to do
+    if (m_file == nullptr) return; /// Nothing to do
 
     if (file->hasProperty(File::Encoding)) {
         m_comboBoxEncodings->blockSignals(true);
@@ -100,7 +100,7 @@ void FileSettingsWidget::applyProperties()
 void FileSettingsWidget::saveProperties(File *file)
 {
     m_file = file;
-    if (m_file == NULL) return;
+    if (m_file == nullptr) return;
 
     file->setProperty(File::Encoding, m_comboBoxEncodings->currentText());
     QString stringDelimiter = m_comboBoxStringDelimiters->currentText();
@@ -116,7 +116,7 @@ void FileSettingsWidget::saveProperties(File *file)
 
 void FileSettingsWidget::resetToDefaults()
 {
-    if (m_file != NULL) {
+    if (m_file != nullptr) {
         m_file->setPropertiesToDefault();
         loadProperties(m_file);
     }

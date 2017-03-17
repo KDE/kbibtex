@@ -225,7 +225,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
         const File *bibtexFile = importer.fromString(bibtexCode);
 
         bool hasEntry = false;
-        if (bibtexFile != NULL) {
+        if (bibtexFile != nullptr) {
             for (const auto &element : *bibtexFile) {
                 QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 hasEntry |= publishEntry(entry);

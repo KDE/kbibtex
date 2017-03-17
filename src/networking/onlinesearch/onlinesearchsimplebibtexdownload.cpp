@@ -81,7 +81,7 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
             File *bibtexFile = importer.fromString(bibTeXcode);
 
             bool hasEntries = false;
-            if (bibtexFile != NULL) {
+            if (bibtexFile != nullptr) {
                 for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     hasEntries |= publishEntry(entry);

@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -34,7 +34,7 @@
 #include "openfileinfo.h"
 
 FileSettings::FileSettings(QWidget *parent)
-        : FileSettingsWidget(parent), m_fileView(NULL)
+        : FileSettingsWidget(parent), m_fileView(nullptr)
 {
     setEnabled(false);
 
@@ -55,8 +55,8 @@ void FileSettings::setFileView(FileView *fileView)
 
 void FileSettings::widgetsChangedSlot()
 {
-    File *file = m_fileView != NULL && m_fileView->fileModel() != NULL ? m_fileView->fileModel()->bibliographyFile() : NULL;
-    if (file != NULL) {
+    File *file = m_fileView != nullptr && m_fileView->fileModel() != nullptr ? m_fileView->fileModel()->bibliographyFile() : nullptr;
+    if (file != nullptr) {
         saveProperties(file);
         /// Notify main view about change it its data
         m_fileView->externalModification();
@@ -64,7 +64,7 @@ void FileSettings::widgetsChangedSlot()
 }
 
 void FileSettings::currentFileChangedSlot() {
-    File *file = m_fileView != NULL && m_fileView->fileModel() != NULL ? m_fileView->fileModel()->bibliographyFile() : NULL;
+    File *file = m_fileView != nullptr && m_fileView->fileModel() != nullptr ? m_fileView->fileModel()->bibliographyFile() : nullptr;
     loadProperties(file);
-    setEnabled(file != NULL);
+    setEnabled(file != nullptr);
 }

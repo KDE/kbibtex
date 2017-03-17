@@ -88,7 +88,7 @@ public:
     }
 };
 
-EntryLayout *EntryLayout::EntryLayoutPrivate::singleton = NULL;
+EntryLayout *EntryLayout::EntryLayoutPrivate::singleton = nullptr;
 
 EntryLayout::EntryLayout()
         : QVector<QSharedPointer<EntryTabLayout> >(), d(new EntryLayoutPrivate(this))
@@ -103,7 +103,7 @@ EntryLayout::~EntryLayout()
 
 EntryLayout *EntryLayout::self()
 {
-    if (EntryLayoutPrivate::singleton == NULL)
+    if (EntryLayoutPrivate::singleton == nullptr)
         EntryLayoutPrivate::singleton  = new EntryLayout();
     return EntryLayoutPrivate::singleton;
 }

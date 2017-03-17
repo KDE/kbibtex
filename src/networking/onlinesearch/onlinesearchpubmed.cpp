@@ -209,7 +209,7 @@ void OnlineSearchPubMed::eFetchDone()
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);
 
-            if (bibtexFile != NULL) {
+            if (bibtexFile != nullptr) {
                 bool hasEntry = false;
                 for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();

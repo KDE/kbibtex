@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,8 +38,8 @@ public:
     FileExporterXML();
     ~FileExporterXML();
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
 
     static QString valueToXML(const Value &value, const QString &fieldType = QString());
 
@@ -49,7 +49,7 @@ public slots:
 private:
     bool m_cancelFlag;
 
-    bool write(QTextStream &stream, const Element *element, const File *bibtexfile = NULL);
+    bool write(QTextStream &stream, const Element *element, const File *bibtexfile = nullptr);
     bool writeEntry(QTextStream &stream, const Entry *entry);
     bool writeMacro(QTextStream &stream, const Macro *macro);
     bool writeComment(QTextStream &stream, const Comment *comment);

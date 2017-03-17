@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -32,7 +32,7 @@ class KBIBTEXGUI_EXPORT ColorLabelWidget : public KComboBox
     Q_OBJECT
 
 public:
-    explicit ColorLabelWidget(QWidget *parent = NULL);
+    explicit ColorLabelWidget(QWidget *parent = nullptr);
     ~ColorLabelWidget();
 
     void clear();

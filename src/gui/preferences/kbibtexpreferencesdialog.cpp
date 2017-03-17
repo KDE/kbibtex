@@ -119,7 +119,7 @@ public:
         }
         case KMessageBox::No: {
             SettingsAbstractWidget *widget = qobject_cast<SettingsAbstractWidget *>(p->currentPage()->widget());
-            if (widget != NULL)
+            if (widget != nullptr)
                 widget->resetToDefaults();
             break;
         }

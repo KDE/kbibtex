@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -40,7 +40,7 @@ class KBIBTEXNETWORKING_EXPORT TagModel : public QAbstractItemModel
 public:
     enum Roles { TagRole = Qt::UserRole + 6685, TagCountRole = Qt::UserRole + 6686 };
 
-    explicit TagModel(Zotero::Tags *tags, QObject *parent = NULL);
+    explicit TagModel(Zotero::Tags *tags, QObject *parent = nullptr);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     QModelIndex index(int row, int column, const QModelIndex &) const;
     QModelIndex parent(const QModelIndex &) const;

@@ -80,7 +80,7 @@ void DocumentListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
     int height = option.rect.height();
 
     QStyle *style = QApplication::style();
-    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, 0);
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, nullptr);
 
     painter->save();
 
@@ -192,7 +192,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             overlays << QStringLiteral("document-save");
         else
             overlays << QStringLiteral("");
-        return KDE::icon(iconName, overlays, 0);
+        return KDE::icon(iconName, overlays, nullptr);
     }
     case Qt::ToolTipRole: {
         QString htmlText(QString(QStringLiteral("<qt><img src=\"%1\"> <b>%2</b>")).arg(KIconLoader::global()->iconPath(iconName, KIconLoader::Small), openFileInfo->shortCaption()));
@@ -257,7 +257,7 @@ public:
     QSignalMapper openMenuSignalMapper;
 
     DocumentListViewPrivate(DocumentListView *parent)
-            : p(parent), ofim(OpenFileInfoManager::instance()), actionAddToFav(NULL), actionRemFromFav(NULL), actionCloseFile(NULL), actionOpenFile(NULL), actionOpenMenu(NULL) {
+            : p(parent), ofim(OpenFileInfoManager::instance()), actionAddToFav(nullptr), actionRemFromFav(nullptr), actionCloseFile(nullptr), actionOpenFile(nullptr), actionOpenMenu(nullptr) {
         connect(&openMenuSignalMapper, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &DocumentListView::openFileWithService);
     }
 };
@@ -350,25 +350,25 @@ void DocumentListView::closeFile()
 void DocumentListView::currentChanged(const QModelIndex &current, const QModelIndex &)
 {
     bool hasCurrent = current != QModelIndex();
-    OpenFileInfo *ofi = hasCurrent ? qvariant_cast<OpenFileInfo *>(current.data(Qt::UserRole)) : NULL;
+    OpenFileInfo *ofi = hasCurrent ? qvariant_cast<OpenFileInfo *>(current.data(Qt::UserRole)) : nullptr;
     bool isOpen = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::Open) : false;
     bool isFavorite = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::Favorite) : false;
     bool hasName = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::HasName) : false;
 
-    if (d->actionOpenFile != NULL)
+    if (d->actionOpenFile != nullptr)
         d->actionOpenFile->setEnabled(hasCurrent && !isOpen);
-    if (d->actionCloseFile != NULL)
+    if (d->actionCloseFile != nullptr)
         d->actionCloseFile->setEnabled(hasCurrent && isOpen);
-    if (d->actionAddToFav != NULL)
+    if (d->actionAddToFav != nullptr)
         d->actionAddToFav->setEnabled(hasCurrent && !isFavorite && hasName);
-    if (d->actionRemFromFav != NULL)
+    if (d->actionRemFromFav != nullptr)
         d->actionRemFromFav->setEnabled(hasCurrent && isFavorite);
 
     for (QAction *action : const_cast<const QList<QAction *> &>(d->openMenuActions)) {
         d->actionOpenMenu->removeAction(action);
     }
     d->openMenuServices.clear();
-    if (ofi != NULL) {
+    if (ofi != nullptr) {
         d->openMenuServices = ofi->listOfServices();
         int i = 0;
         for (KService::Ptr servicePtr : const_cast<const KService::List &>(d->openMenuServices)) {

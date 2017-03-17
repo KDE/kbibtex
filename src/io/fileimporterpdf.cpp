@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,18 +41,18 @@ File *FileImporterPDF::load(QIODevice *iodevice)
 {
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
         qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
-        return NULL;
+        return nullptr;
     }
 
     m_cancelFlag = false;
-    File *result = NULL;
+    File *result = nullptr;
     QByteArray buffer = iodevice->readAll();
 
     Poppler::Document *doc = Poppler::Document::loadFromData(buffer);
-    if (doc == NULL) {
+    if (doc == nullptr) {
         qCWarning(LOG_KBIBTEX_IO) << "Could not load PDF document";
         iodevice->close();
-        return NULL;
+        return nullptr;
     }
 
     /// Iterate through all files embedded in this PDF file (if any),
@@ -79,7 +79,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
                     else {
                         /// ... otherwise delete empty bibliography object
                         delete result;
-                        result = NULL;
+                        result = nullptr;
                     }
                 } else
                     qCDebug(LOG_KBIBTEX_IO) << "Create bibliography file from embedded file" << file->name() << "failed";

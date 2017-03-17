@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -52,9 +52,9 @@ public slots:
 protected:
     QTemporaryDir tempDir;
 
-    bool runProcesses(const QStringList &progs, QStringList *errorLog = NULL);
-    bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = NULL);
-    bool writeFileToIODevice(const QString &filename, QIODevice *device, QStringList *errorLog = NULL);
+    bool runProcesses(const QStringList &progs, QStringList *errorLog = nullptr);
+    bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = nullptr);
+    bool writeFileToIODevice(const QString &filename, QIODevice *device, QStringList *errorLog = nullptr);
 
 private:
     QProcess *m_process;

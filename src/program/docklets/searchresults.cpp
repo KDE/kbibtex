@@ -49,7 +49,7 @@ public:
     QAction *actionViewCurrent, *actionImportSelected, *actionCopySelected;
 
     SearchResultsPrivate(MDIWidget *mdiWidget, SearchResults *parent)
-        : /* UNUSED p(parent),*/ m(mdiWidget), file(new File()), mainEditor(NULL) {
+        : /* UNUSED p(parent),*/ m(mdiWidget), file(new File()), mainEditor(nullptr) {
         QGridLayout *layout = new QGridLayout(parent);
         layout->setMargin(0);
         layout->setColumnStretch(0, 1);
@@ -141,13 +141,13 @@ public:
 
     void updateCannotImportMessage() {
         const bool isEmpty = resultList->model()->rowCount() == 0;
-        if (mainEditor == NULL && isEmpty)
+        if (mainEditor == nullptr && isEmpty)
             labelCannotImportMsg->setText(i18n("No results to import and no bibliography open to import to."));
-        else if (mainEditor == NULL)
+        else if (mainEditor == nullptr)
             labelCannotImportMsg->setText(i18n("No bibliography open to import to."));
         else if (isEmpty)
             labelCannotImportMsg->setText(i18n("No results to import."));
-        widgetCannotImport->setVisible(mainEditor == NULL || isEmpty);
+        widgetCannotImport->setVisible(mainEditor == nullptr || isEmpty);
     }
 };
 
@@ -185,15 +185,15 @@ void SearchResults::documentSwitched(FileView *oldEditor, FileView *newEditor)
 void SearchResults::updateGUI()
 {
     d->updateCannotImportMessage();
-    d->buttonImport->setEnabled(d->mainEditor != NULL && !d->resultList->selectedElements().isEmpty());
+    d->buttonImport->setEnabled(d->mainEditor != nullptr && !d->resultList->selectedElements().isEmpty());
     d->actionImportSelected->setEnabled(d->buttonImport->isEnabled());
     d->actionCopySelected->setEnabled(!d->resultList->selectedElements().isEmpty());
-    d->actionViewCurrent->setEnabled(d->resultList->currentElement() != NULL);
+    d->actionViewCurrent->setEnabled(d->resultList->currentElement() != nullptr);
 }
 
 void SearchResults::importSelected()
 {
-    Q_ASSERT_X(d->mainEditor != NULL, "SearchResults::importSelected", "d->mainEditor is NULL");
+    Q_ASSERT_X(d->mainEditor != nullptr, "SearchResults::importSelected", "d->mainEditor is NULL");
 
     FileModel *targetModel = d->mainEditor->fileModel();
     FileModel *sourceModel = d->resultList->fileModel();

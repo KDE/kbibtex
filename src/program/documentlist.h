@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,7 +39,7 @@ private:
     OpenFileInfoManager *ofim;
 
 public:
-    explicit DocumentListDelegate(QObject *parent = NULL);
+    explicit DocumentListDelegate(QObject *parent = nullptr);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
@@ -51,7 +51,7 @@ class DocumentListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObject *parent = NULL);
+    explicit DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObject *parent = nullptr);
     ~DocumentListModel();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -96,7 +96,7 @@ class DocumentList : public QTabWidget
 public:
     enum Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
 
-    explicit DocumentList(QWidget *parent = NULL);
+    explicit DocumentList(QWidget *parent = nullptr);
 
 signals:
     void openFile(const QUrl &url);

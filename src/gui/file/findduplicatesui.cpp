@@ -72,7 +72,7 @@ public:
     enum SelectionType {SelectionTypeNone, SelectionTypeRadio, SelectionTypeCheck};
 
     AlternativesItemModel(QTreeView *parent)
-            : QAbstractItemModel(parent), p(parent), currentClique(NULL) {
+            : QAbstractItemModel(parent), p(parent), currentClique(nullptr) {
         // nothing
     }
 
@@ -104,7 +104,7 @@ public:
     }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const {
-        if (currentClique == NULL)
+        if (currentClique == nullptr)
             return 0;
 
         if (parent == QModelIndex()) {
@@ -362,7 +362,7 @@ public:
             lineEdit->setStyleSheet(QStringLiteral("border: none;"));
             return lineEdit;
         }
-        return NULL;
+        return nullptr;
     }
 
     virtual void setEditorData(QWidget *editor, const QModelIndex &index) const {
@@ -411,7 +411,7 @@ private:
     QTreeView *tv;
 
 public:
-    CheckableFileModel(QList<EntryClique *> &cliqueList, QTreeView *treeView, QObject *parent = NULL)
+    CheckableFileModel(QList<EntryClique *> &cliqueList, QTreeView *treeView, QObject *parent = nullptr)
             : FileModel(parent), cl(cliqueList), currentClique(0), tv(treeView) {
         // nothing
     }
@@ -475,13 +475,13 @@ private:
     EntryClique *currentClique;
 
 public:
-    FilterIdFileModel(QObject *parent = NULL)
-            : QSortFilterProxyModel(parent), internalModel(NULL), currentClique(NULL) {
+    FilterIdFileModel(QObject *parent = nullptr)
+            : QSortFilterProxyModel(parent), internalModel(nullptr), currentClique(nullptr) {
         // nothing
     }
 
     void setCurrentClique(EntryClique *currentClique) {
-        Q_ASSERT_X(internalModel != NULL, "FilterIdFileModel::setCurrentClique(EntryClique *currentClique)", "internalModel is NULL");
+        Q_ASSERT_X(internalModel != nullptr, "FilterIdFileModel::setCurrentClique(EntryClique *currentClique)", "internalModel is NULL");
         internalModel->setCurrentClique(currentClique);
         this->currentClique = currentClique;
         invalidate();
@@ -490,13 +490,13 @@ public:
     void setSourceModel(QAbstractItemModel *model) {
         QSortFilterProxyModel::setSourceModel(model);
         internalModel = dynamic_cast<CheckableFileModel *>(model);
-        Q_ASSERT_X(internalModel != NULL, "FilterIdFileModel::setSourceModel(QAbstractItemModel *model)", "internalModel is NULL");
+        Q_ASSERT_X(internalModel != nullptr, "FilterIdFileModel::setSourceModel(QAbstractItemModel *model)", "internalModel is NULL");
     }
 
     bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
         Q_UNUSED(source_parent)
 
-        if (internalModel != NULL && currentClique != NULL) {
+        if (internalModel != nullptr && currentClique != nullptr) {
             QSharedPointer<Entry> entry = internalModel->element(source_row).dynamicCast<Entry>();
             if (!entry.isNull()) {
                 QList<QSharedPointer<Entry> > entryList = currentClique->entryList();

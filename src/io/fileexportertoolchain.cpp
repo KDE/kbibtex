@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -33,7 +33,7 @@ const QString FileExporterToolchain::keyBibliographyStyle = QStringLiteral("bibl
 const QString FileExporterToolchain::defaultBibliographyStyle = QStringLiteral("plain");
 
 FileExporterToolchain::FileExporterToolchain()
-        : FileExporter(), m_process(NULL), m_errorLog(NULL)
+        : FileExporter(), m_process(nullptr), m_errorLog(nullptr)
 {
     tempDir.setAutoRemove(true);
 }
@@ -70,12 +70,12 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     m_process->setProcessEnvironment(processEnvironment);
     m_process->setWorkingDirectory(tempDir.path());
 
-    if (m_errorLog != NULL) {
+    if (m_errorLog != nullptr) {
         connect(m_process, &QProcess::readyReadStandardOutput, this, &FileExporterToolchain::slotReadProcessStandardOutput);
         connect(m_process, &QProcess::readyReadStandardError, this, &FileExporterToolchain::slotReadProcessErrorOutput);
     }
 
-    if (errorLog != NULL)
+    if (errorLog != nullptr)
         errorLog->append(i18n("Running process '%1' using working directory '%2'", (cmd + QLatin1Char(' ') + args.join(QStringLiteral(" "))), m_process->workingDirectory()));
     m_process->start(cmd, args);
     m_errorLog = errorLog;
@@ -88,10 +88,10 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     } else
         result = false;
 
-    if (!result && errorLog != NULL)
+    if (!result && errorLog != nullptr)
         errorLog->append(i18n("Process '%1' failed", (cmd + QLatin1Char(' ') + args.join(QStringLiteral(" ")))));
 
-    if (errorLog != NULL) {
+    if (errorLog != nullptr) {
         QTextStream tsStdOut(m_process->readAllStandardOutput());
         QString line;
         while (!(line = tsStdOut.readLine()).isNull())
@@ -104,7 +104,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     }
 
     delete(m_process);
-    m_process = NULL;
+    m_process = nullptr;
 
     return result;
 }
@@ -124,19 +124,19 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
         file.close();
         delete[] buffer;
 
-        if (errorLog != NULL)
+        if (errorLog != nullptr)
             errorLog->append(i18n("Writing to file '%1' succeeded", filename));
         return result;
     }
 
-    if (errorLog != NULL)
+    if (errorLog != nullptr)
         errorLog->append(i18n("Writing to file '%1' failed", filename));
     return false;
 }
 
 void FileExporterToolchain::cancel()
 {
-    if (m_process != NULL) {
+    if (m_process != nullptr) {
         qWarning("Canceling process");
         m_process->terminate();
         m_process->kill();

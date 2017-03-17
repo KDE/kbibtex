@@ -60,7 +60,7 @@ public:
     QUrl url;
 
     OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const QUrl &url, const QString &mimeType, OpenFileInfo *p)
-        :  m_counter(-1), p(p), part(NULL), internalServicePtr(KService::Ptr()), internalWidgetParent(NULL), flags(0) {
+        :  m_counter(-1), p(p), part(nullptr), internalServicePtr(KService::Ptr()), internalWidgetParent(nullptr), flags(nullptr) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
         if (this->url.isValid() && this->url.scheme().isEmpty())
@@ -69,9 +69,9 @@ public:
     }
 
     ~OpenFileInfoPrivate() {
-        if (part != NULL) {
+        if (part != nullptr) {
             KParts::ReadWritePart *rwp = qobject_cast<KParts::ReadWritePart *>(part);
-            if (rwp != NULL)
+            if (rwp != nullptr)
                 rwp->closeUrl(true);
             delete part;
         }
@@ -80,26 +80,26 @@ public:
     KParts::ReadOnlyPart *createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr()) {
         if (!p->flags().testFlag(OpenFileInfo::Open)) {
             qCWarning(LOG_KBIBTEX_PROGRAM) << "Cannot create part for a file which is not open";
-            return NULL;
+            return nullptr;
         }
 
-        Q_ASSERT_X(internalWidgetParent == NULL || internalWidgetParent == newWidgetParent, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "internal widget should be either NULL or the same one as supplied as \"newWidgetParent\"");
+        Q_ASSERT_X(internalWidgetParent == nullptr || internalWidgetParent == newWidgetParent, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "internal widget should be either NULL or the same one as supplied as \"newWidgetParent\"");
 
         /** use cached part for this parent if possible */
         if (internalWidgetParent == newWidgetParent && (newServicePtr == KService::Ptr() || internalServicePtr == newServicePtr)) {
-            Q_ASSERT_X(part != NULL, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "Part is NULL");
+            Q_ASSERT_X(part != nullptr, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "Part is NULL");
             return part;
-        } else if (part != NULL) {
+        } else if (part != nullptr) {
             KParts::ReadWritePart *rwp = qobject_cast<KParts::ReadWritePart *>(part);
-            if (rwp != NULL)
+            if (rwp != nullptr)
                 rwp->closeUrl(true);
             part->deleteLater();
-            part = NULL;
+            part = nullptr;
         }
 
         /// reset to invalid values in case something goes wrong
         internalServicePtr = KService::Ptr();
-        internalWidgetParent = NULL;
+        internalWidgetParent = nullptr;
 
         if (!newServicePtr) {
             /// no valid KService has been passed
@@ -108,20 +108,20 @@ public:
         }
         if (!newServicePtr) {
             qCCritical(LOG_KBIBTEX_PROGRAM) << "Cannot find service to handle mimetype " << mimeType << endl;
-            return NULL;
+            return nullptr;
         }
 
         QString errorString;
         part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
-        if (part == NULL) {
+        if (part == nullptr) {
             qCDebug(LOG_KBIBTEX_PROGRAM) << "Could not instantiate read-write part for service" << newServicePtr->name() << "(mimeType=" << mimeType << ", library=" << newServicePtr->library() << ", error msg=" << errorString << ")";
             /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
             part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
         }
-        if (part == NULL) {
+        if (part == nullptr) {
             /// still cannot create part, must be error
             qCCritical(LOG_KBIBTEX_PROGRAM) << "Could not instantiate part for service" << newServicePtr->name() << "(mimeType=" << mimeType << ", library=" << newServicePtr->library() << ", error msg=" << errorString << ")";
-            return NULL;
+            return nullptr;
         }
 
         if (url.isValid()) {
@@ -139,7 +139,7 @@ public:
         internalServicePtr = newServicePtr;
         internalWidgetParent = newWidgetParent;
 
-        Q_ASSERT_X(part != NULL, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "Creation of part failed, is NULL"); /// test should not be necessary, but just to be save ...
+        Q_ASSERT_X(part != nullptr, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "Creation of part failed, is NULL"); /// test should not be necessary, but just to be save ...
         return part;
     }
 
@@ -193,7 +193,7 @@ QUrl OpenFileInfo::url() const
 bool OpenFileInfo::isModified() const
 {
     KParts::ReadWritePart *rwPart = qobject_cast< KParts::ReadWritePart *>(d->part);
-    if (rwPart == NULL)
+    if (rwPart == nullptr)
         return false;
     else
         return rwPart->isModified();
@@ -202,7 +202,7 @@ bool OpenFileInfo::isModified() const
 bool OpenFileInfo::save()
 {
     KParts::ReadWritePart *rwPart = qobject_cast< KParts::ReadWritePart *>(d->part);
-    if (rwPart == NULL)
+    if (rwPart == nullptr)
         return true;
     else
         return rwPart->save();
@@ -210,16 +210,16 @@ bool OpenFileInfo::save()
 
 bool OpenFileInfo::close()
 {
-    if (d->part == NULL) {
+    if (d->part == nullptr) {
         /// if there is no part, closing always "succeeds"
         return true;
     }
 
     KParts::ReadWritePart *rwp = qobject_cast<KParts::ReadWritePart *>(d->part);
-    if (rwp == NULL || rwp->closeUrl(true)) {
+    if (rwp == nullptr || rwp->closeUrl(true)) {
         d->part->deleteLater();
-        d->part = NULL;
-        d->internalWidgetParent = NULL;
+        d->part = nullptr;
+        d->internalWidgetParent = nullptr;
         return true;
     }
     return false;
@@ -363,7 +363,7 @@ public:
     OpenFileInfo *currentFileInfo;
 
     OpenFileInfoManagerPrivate(OpenFileInfoManager *parent)
-            : p(parent), currentFileInfo(NULL) {
+            : p(parent), currentFileInfo(nullptr) {
         // nothing
     }
 
@@ -412,7 +412,7 @@ public:
             }
 
             OpenFileInfo *ofi = p->contains(fileUrl);
-            if (ofi == NULL) {
+            if (ofi == nullptr) {
                 ofi = p->open(fileUrl);
             }
             ofi->addFlags(statusFlag);
@@ -453,7 +453,7 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFavoriteFiles =
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFiles = 8;
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 
-OpenFileInfoManager *OpenFileInfoManager::singleton = NULL;
+OpenFileInfoManager *OpenFileInfoManager::singleton = nullptr;
 
 OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
         : QObject(parent), d(new OpenFileInfoManagerPrivate(this))
@@ -462,7 +462,7 @@ OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
 }
 
 OpenFileInfoManager *OpenFileInfoManager::instance() {
-    if (singleton == NULL)
+    if (singleton == nullptr)
         singleton = new OpenFileInfoManager(QCoreApplication::instance());
     return singleton;
 }
@@ -486,7 +486,7 @@ OpenFileInfo *OpenFileInfoManager::open(const QUrl &url)
     Q_ASSERT_X(url.isValid(), "OpenFileInfo *OpenFileInfoManager::open(const QUrl&)", "URL is not valid");
 
     OpenFileInfo *result = contains(url);
-    if (result == NULL) {
+    if (result == nullptr) {
         /// file not yet open
         result = new OpenFileInfo(this, url);
         connect(result, &OpenFileInfo::flagsChanged, this, &OpenFileInfoManager::flagsChanged);
@@ -498,13 +498,13 @@ OpenFileInfo *OpenFileInfoManager::open(const QUrl &url)
 
 OpenFileInfo *OpenFileInfoManager::contains(const QUrl &url) const
 {
-    if (!url.isValid()) return NULL; /// can only be unnamed file
+    if (!url.isValid()) return nullptr; /// can only be unnamed file
 
     for (auto *ofi : const_cast<const OpenFileInfoManager::OpenFileInfoList &>(d->openFileInfoList)) {
         if (ofi->url() == url)
             return ofi;
     }
-    return NULL;
+    return nullptr;
 }
 
 bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
@@ -512,7 +512,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
     OpenFileInfo *previouslyContained = contains(url);
 
     /// check if old url differs from new url and old url is valid
-    if (previouslyContained != NULL && previouslyContained->flags().testFlag(OpenFileInfo::Open) && previouslyContained != openFileInfo) {
+    if (previouslyContained != nullptr && previouslyContained->flags().testFlag(OpenFileInfo::Open) && previouslyContained != openFileInfo) {
         qCWarning(LOG_KBIBTEX_PROGRAM) << "Open file with same URL already exists, forcefully closing it" << endl;
         close(previouslyContained);
     }
@@ -527,7 +527,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
         OpenFileInfo::StatusFlags statusFlags = (openFileInfo->flags() & (~OpenFileInfo::Open)) | OpenFileInfo::RecentlyUsed;
         ofi->setFlags(statusFlags);
     }
-    if (previouslyContained != NULL) {
+    if (previouslyContained != nullptr) {
         /// keep Favorite flag if set in file that have previously same URL
         if (previouslyContained->flags().testFlag(OpenFileInfo::Favorite))
             openFileInfo->setFlags(openFileInfo->flags() | OpenFileInfo::Favorite);
@@ -550,7 +550,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
 
 bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 {
-    if (openFileInfo == NULL) {
+    if (openFileInfo == nullptr) {
         qCWarning(LOG_KBIBTEX_PROGRAM) << "void OpenFileInfoManager::close(OpenFileInfo *openFileInfo): Cannot close openFileInfo which is NULL";
         return false;
     }
@@ -559,7 +559,7 @@ bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
     openFileInfo->setLastAccess();
 
     /// remove flag "open" from file to be closed and determine which file to show instead
-    OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
+    OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? nullptr : d->currentFileInfo;
     for (OpenFileInfo *ofi : const_cast<const OpenFileInfoManager::OpenFileInfoList &>(d->openFileInfoList)) {
         if (!isClosing && ofi == openFileInfo && openFileInfo->close()) {
             isClosing = true;
@@ -568,7 +568,7 @@ bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
             /// If file has a filename, remember as recently used
             if (openFileInfo->flags().testFlag(OpenFileInfo::HasName))
                 openFileInfo->addFlags(OpenFileInfo::RecentlyUsed);
-        } else if (nextCurrent == NULL && ofi->flags().testFlag(OpenFileInfo::Open))
+        } else if (nextCurrent == nullptr && ofi->flags().testFlag(OpenFileInfo::Open))
             nextCurrent = ofi;
     }
 
@@ -636,14 +636,14 @@ void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo, KService::P
     OpenFileInfo *previous = d->currentFileInfo;
     d->currentFileInfo = openFileInfo;
 
-    if (d->currentFileInfo != NULL) {
+    if (d->currentFileInfo != nullptr) {
         d->currentFileInfo->addFlags(OpenFileInfo::Open);
         d->currentFileInfo->setLastAccess();
     }
     if (hasChanged) {
-        if (previous != NULL) previous->setLastAccess();
+        if (previous != nullptr) previous->setLastAccess();
         emit currentChanged(openFileInfo, servicePtr);
-    } else if (openFileInfo != NULL && servicePtr != openFileInfo->currentService())
+    } else if (openFileInfo != nullptr && servicePtr != openFileInfo->currentService())
         emit currentChanged(openFileInfo, servicePtr);
 }
 

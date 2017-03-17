@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                              and contributors                           *
  *                                                                         *
  *   Contributions to this file were made by                               *
@@ -104,7 +104,7 @@ public:
 
     ReferencePreviewPrivate(ReferencePreview *parent)
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("Reference Preview Docklet")),
-          configKeyName(QStringLiteral("Style")), file(NULL), fileView(NULL),
+          configKeyName(QStringLiteral("Style")), file(nullptr), fileView(nullptr),
           textColor(QApplication::palette().text().color()),
           defaultFontSize(QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize()),
           htmlStart("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: " + textColor.name() + "; font-size: " + QString::number(defaultFontSize) + "pt; font-family: '" + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + "'; background-color: '" + QApplication::palette().base().color().name(QColor::HexRgb) + "'\">"),
@@ -248,7 +248,7 @@ void ReferencePreview::renderHTML()
 
     QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    FileExporter *exporter = NULL;
+    FileExporter *exporter = nullptr;
 
     const PreviewStyles previewStyle = d->comboBox->itemData(d->comboBox->currentIndex()).value<PreviewStyles>();
 
@@ -275,7 +275,7 @@ void ReferencePreview::renderHTML()
     } else
         qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output type " << previewStyle.type;
 
-    if (exporter != NULL) {
+    if (exporter != nullptr) {
         QBuffer buffer(this);
         buffer.open(QBuffer::WriteOnly);
 
@@ -399,7 +399,7 @@ void ReferencePreview::linkClicked(const QUrl &url)
     QString text = url.toDisplayString();
     if (text.startsWith(QStringLiteral("kbibtex:filter:"))) {
         text = text.mid(15);
-        if (d->fileView != NULL) {
+        if (d->fileView != nullptr) {
             int p = text.indexOf(QStringLiteral("="));
             SortFilterFileModel::FilterQuery fq;
             fq.terms << text.mid(p + 1);

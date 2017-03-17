@@ -75,7 +75,7 @@ public:
     QStringList completionItems;
 
     FieldListEditProtected(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
-            : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(NULL), m_isReadOnly(false) {
+            : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(nullptr), m_isReadOnly(false) {
         smRemove = new QSignalMapper(parent);
         smGoUp = new QSignalMapper(parent);
         smGoDown = new QSignalMapper(parent);
@@ -324,13 +324,13 @@ void FieldListEdit::dropEvent(QDropEvent *event)
     const QString clipboardText = event->mimeData()->text();
     if (clipboardText.isEmpty()) return;
 
-    const File *file = NULL;
+    const File *file = nullptr;
     if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QStringLiteral("@"))) {
         FileImporterBibTeX importer;
         file = importer.fromString(clipboardText);
-        const QSharedPointer<Entry> entry = (file != NULL && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
+        const QSharedPointer<Entry> entry = (file != nullptr && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
 
-        if (file != NULL && !entry.isNull() && d->fieldKey == QStringLiteral("^external")) {
+        if (file != nullptr && !entry.isNull() && d->fieldKey == QStringLiteral("^external")) {
             /// handle "external" list differently
             const QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
             Value v;
@@ -348,7 +348,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
         }
     }
 
-    if (file == NULL || file->count() == 0) {
+    if (file == nullptr || file->count() == 0) {
         /// fall-back case: single field line edit with text
         d->removeAllFieldLineEdits();
         FieldLineEdit *fle = addFieldLineEdit();
@@ -361,7 +361,7 @@ void FieldListEdit::lineAdd(Value *value)
 {
     FieldLineEdit *le = addFieldLineEdit();
     le->setCompletionItems(d->completionItems);
-    if (value != NULL)
+    if (value != nullptr)
         le->reset(*value);
 }
 
@@ -491,7 +491,7 @@ UrlListEdit::~UrlListEdit()
 
 void UrlListEdit::slotAddReference()
 {
-    QUrl bibtexUrl(d->file != NULL ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
+    QUrl bibtexUrl(d->file != nullptr ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
     if (!bibtexUrl.isEmpty()) {
         const QFileInfo fi(bibtexUrl.path());
         bibtexUrl.setPath(fi.absolutePath());
@@ -510,7 +510,7 @@ void UrlListEdit::slotAddReferenceFromClipboard()
 
 void UrlListEdit::addReference(const QUrl &url) {
     const Entry *entry = dynamic_cast<const Entry *>(m_element);
-    const QString entryId = entry != NULL ? entry->id() : QString();
+    const QString entryId = entry != nullptr ? entry->id() : QString();
     const QString visibleFilename = AssociatedFilesUI::associateUrl(url, entryId, d->file, this);
     if (!visibleFilename.isEmpty()) {
         Value *value = new Value();
@@ -533,7 +533,7 @@ void UrlListEdit::slotSaveLocally(QWidget *widget)
         /// Get filename from url (without any path/directory part)
         QString filename = url.fileName();
         /// Build QFileInfo from current BibTeX file if available
-        QFileInfo bibFileinfo = d->file != NULL ? QFileInfo(d->file->property(File::Url).toUrl().path()) : QFileInfo();
+        QFileInfo bibFileinfo = d->file != nullptr ? QFileInfo(d->file->property(File::Url).toUrl().path()) : QFileInfo();
         /// Build proposal to a local filename for remote file
         filename = bibFileinfo.isFile() ? bibFileinfo.absolutePath() + QDir::separator() + filename : filename;
         /// Ask user for actual local filename to save remote file to
@@ -576,11 +576,11 @@ void UrlListEdit::textChanged(QWidget *widget)
 {
     /// Determine associated QPushButton "Save locally"
     QPushButton *buttonSaveLocally = qobject_cast<QPushButton *>(widget);
-    if (buttonSaveLocally == NULL) return; ///< should never happen!
+    if (buttonSaveLocally == nullptr) return; ///< should never happen!
 
     /// Assume a FieldLineEdit was the sender of this signal
     FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(m_signalMapperFieldLineEditTextChanged->mapping(widget));
-    if (fieldLineEdit == NULL) return; ///< should never happen!
+    if (fieldLineEdit == nullptr) return; ///< should never happen!
 
     /// Create URL from new text to make some tests on it
     /// Only remote URLs are of interest, therefore no tests
@@ -724,7 +724,7 @@ void KeywordListEdit::setReadOnly(bool isReadOnly)
 
 void KeywordListEdit::setFile(const File *file)
 {
-    if (file == NULL)
+    if (file == nullptr)
         m_keywordsFromFile.clear();
     else
         m_keywordsFromFile = file->uniqueEntryValuesSet(Entry::ftKeywords);

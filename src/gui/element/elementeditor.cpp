@@ -73,7 +73,7 @@ public:
     bool elementChanged, elementUnapplied;
 
     ElementEditorPrivate(bool scrollable, ElementEditor *parent)
-            : file(NULL), p(parent), previousWidget(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
+            : file(nullptr), p(parent), previousWidget(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
         internalEntry = QSharedPointer<Entry>();
         internalMacro = QSharedPointer<Macro>();
         internalComment = QSharedPointer<Comment>();
@@ -107,7 +107,7 @@ public:
             ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
             connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
             widgets << widget;
-            if (previousWidget == NULL)
+            if (previousWidget == nullptr)
                 previousWidget = widget; ///< memorize the first tab
             int index = tab->addTab(widget, widget->icon(), widget->label());
             tab->hideTab(index);
@@ -245,7 +245,7 @@ public:
     }
 
     bool hasDuplicateId() const {
-        return referenceWidget != NULL && referenceWidget->isDuplicateId();
+        return referenceWidget != nullptr && referenceWidget->isDuplicateId();
     }
 
     void apply() {
@@ -285,12 +285,12 @@ public:
 
             /// The internal element may be outdated (only updated on tab switch),
             /// so apply the reference widget's data on the output element
-            if (referenceWidget != NULL)
+            if (referenceWidget != nullptr)
                 referenceWidget->apply(element);
             /// The internal element may be outdated (only updated on tab switch),
             /// so apply the current widget's data on the output element
             ElementWidget *currentElementWidget = qobject_cast<ElementWidget *>(tab->currentWidget());
-            if (currentElementWidget != NULL)
+            if (currentElementWidget != nullptr)
                 currentElementWidget->apply(element);
         }
     }
@@ -384,7 +384,7 @@ public:
         /// Interprete future widget as an ElementWidget
         ElementWidget *futureWidget = qobject_cast<ElementWidget *>(futureTab);
         /// Past and future ElementWidget values are valid?
-        if (previousWidget != NULL && futureWidget != NULL) {
+        if (previousWidget != nullptr && futureWidget != nullptr) {
             /// Assign to temp wihch internal variable holds current state
             QSharedPointer<Element> temp;
             if (!internalEntry.isNull())
@@ -400,11 +400,11 @@ public:
             /// Past widget writes its state to the internal state
             previousWidget->apply(temp);
             /// Before switching to source widget, store internally reference widget's state
-            if (isToSourceWidget && referenceWidget != NULL) referenceWidget->apply(temp);
+            if (isToSourceWidget && referenceWidget != nullptr) referenceWidget->apply(temp);
             /// Tell future widget to initialize itself based on internal state
             futureWidget->reset(temp);
             /// When switchin from source widget to another widget, initialize reference widget
-            if (isFromSourceWidget && referenceWidget != NULL)
+            if (isFromSourceWidget && referenceWidget != nullptr)
                 referenceWidget->reset(temp);
         }
         previousWidget = futureWidget;
@@ -514,7 +514,7 @@ void ElementEditor::setElement(QSharedPointer<const Element> element, const File
                 if (!comment.isNull())
                     clone = QSharedPointer<Comment>(new Comment(*comment.data()));
                 else
-                    Q_ASSERT_X(element == NULL, "ElementEditor::ElementEditor(const Element *element, QWidget *parent)", "element is not NULL but could not be cast on a valid Element sub-class");
+                    Q_ASSERT_X(element == nullptr, "ElementEditor::ElementEditor(const Element *element, QWidget *parent)", "element is not NULL but could not be cast on a valid Element sub-class");
             }
         }
     }

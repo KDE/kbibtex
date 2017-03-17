@@ -193,7 +193,7 @@ Entry *Entry::resolveCrossref(const Entry &original, const File *bibTeXfile)
 {
     Entry *result = new Entry(original);
 
-    if (bibTeXfile == NULL)
+    if (bibTeXfile == nullptr)
         return result;
 
     const QString crossRef = PlainTextValue::text(original.value(ftCrossRef));

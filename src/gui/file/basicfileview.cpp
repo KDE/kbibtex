@@ -64,7 +64,7 @@ public:
           config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
           configGroupName(QStringLiteral("BibliographyView")),
           configHeaderState(QStringLiteral("HeaderState_%1")),
-          fileModel(NULL), sortFilterProxyModel(NULL) {
+          fileModel(nullptr), sortFilterProxyModel(nullptr) {
         /// Allocate memory for headerProperty structure
         headerProperty = (struct HeaderProperty *)calloc(1, sizeof(struct HeaderProperty));
         headerProperty->columnCount = BibTeXFields::self()->count();
@@ -186,7 +186,7 @@ public:
                 headerProperty->sumWidths += headerProperty->columns[col].width;
             ++col;
         }
-        if (headerProperty->sumWidths <= 0){
+        if (headerProperty->sumWidths <= 0) {
             qCWarning(LOG_KBIBTEX_GUI) << "Sum of column widths over visible columns is zero, resetting configuration";
             resetHeaderProperties();
         }
@@ -318,14 +318,14 @@ BasicFileView::~BasicFileView()
 
 void BasicFileView::setModel(QAbstractItemModel *model)
 {
-    d->sortFilterProxyModel = NULL;
+    d->sortFilterProxyModel = nullptr;
     d->fileModel = dynamic_cast<FileModel *>(model);
-    if (d->fileModel == NULL) {
+    if (d->fileModel == nullptr) {
         d->sortFilterProxyModel = qobject_cast<QSortFilterProxyModel *>(model);
-        Q_ASSERT_X(d->sortFilterProxyModel != NULL, "BasicFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
+        Q_ASSERT_X(d->sortFilterProxyModel != nullptr, "BasicFileView::setModel(QAbstractItemModel *model)", "d->sortFilterProxyModel is NULL");
         d->fileModel = dynamic_cast<FileModel *>(d->sortFilterProxyModel->sourceModel());
     }
-    if (d->fileModel == NULL)
+    if (d->fileModel == nullptr)
         qCWarning(LOG_KBIBTEX_GUI) << "Failed to dynamically cast model to FileModel*";
     QTreeView::setModel(model);
 
@@ -333,7 +333,7 @@ void BasicFileView::setModel(QAbstractItemModel *model)
     if (header()->isSortIndicatorShown())
         sort(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
 
-    Q_ASSERT_X(d->fileModel != NULL, "BasicFileView::setModel(QAbstractItemModel *model)", "d->fileModel is NULL");
+    Q_ASSERT_X(d->fileModel != nullptr, "BasicFileView::setModel(QAbstractItemModel *model)", "d->fileModel is NULL");
 }
 
 FileModel *BasicFileView::fileModel()
@@ -394,7 +394,7 @@ void BasicFileView::headerResetToDefaults()
 void BasicFileView::sort(int t, Qt::SortOrder s)
 {
     SortFilterFileModel *sortedModel = qobject_cast<SortFilterFileModel *>(model());
-    if (sortedModel != NULL) {
+    if (sortedModel != nullptr) {
         sortedModel->sort(t, s);
         /// Store sorting column and order in configuration data struct
         d->headerProperty->sortedColumn = header()->sortIndicatorSection();
@@ -405,7 +405,7 @@ void BasicFileView::sort(int t, Qt::SortOrder s)
 void BasicFileView::noSorting()
 {
     SortFilterFileModel *sortedModel = qobject_cast<SortFilterFileModel *>(model());
-    if (sortedModel != NULL) {
+    if (sortedModel != nullptr) {
         sortedModel->sort(-1);
         header()->setSortIndicator(-1, Qt::AscendingOrder);
         /// Store sorting column and order in configuration data struct

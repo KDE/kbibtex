@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -53,7 +53,7 @@ public:
     static const int URLRole = Qt::UserRole + 235;
     static const int SortRole = Qt::UserRole + 236;
 
-    LRUItemModel(OpenFileInfoManager *openFileInfoManager, QObject *parent = NULL)
+    LRUItemModel(OpenFileInfoManager *openFileInfoManager, QObject *parent = nullptr)
             : QAbstractItemModel(parent), ofim(openFileInfoManager) {
         // nothing
     }
@@ -194,7 +194,7 @@ public:
     KSharedConfigPtr config;
 
     MDIWidgetPrivate(MDIWidget *parent)
-            : p(parent), ofim(OpenFileInfoManager::instance()), currentFile(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
+            : p(parent), ofim(OpenFileInfoManager::instance()), currentFile(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
         createWelcomeWidget();
 
         modelLRU = new LRUItemModel(ofim, listLRU);
@@ -240,14 +240,14 @@ MDIWidget::~MDIWidget()
 
 void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 {
-    KParts::Part *part = openFileInfo == NULL ? NULL : openFileInfo->part(this, servicePtr);
+    KParts::Part *part = openFileInfo == nullptr ? nullptr : openFileInfo->part(this, servicePtr);
     /// 'part' will only be NULL if no OpenFileInfo object was given,
     /// or if the OpenFileInfo could not locate a KPart
     QWidget *widget = d->welcomeWidget; ///< by default use Welcome widget
-    if (part != NULL) {
+    if (part != nullptr) {
         /// KPart object was located, use its object (instead of Welcome widget)
         widget = part->widget();
-    } else if (openFileInfo != NULL) {
+    } else if (openFileInfo != nullptr) {
         /// A valid OpenFileInfo was given, but no KPart could be located
 
         d->ofim->close(openFileInfo); // FIXME does not close correctly if file is new
@@ -259,17 +259,17 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         return;
     }
 
-    FileView *oldEditor = NULL;
+    FileView *oldEditor = nullptr;
     bool hasChanged = true;
     if (indexOf(widget) >= 0) {
         /// Chosen widget is already known (Welcome widget or a previously used KPart)
 
         /// In case previous (still current) widget was a KBibTeX Part, remember its editor
         PartWidget *currentPartWidget = qobject_cast<PartWidget *>(currentWidget());
-        oldEditor = currentPartWidget == NULL ? NULL : currentPartWidget->fileView();
+        oldEditor = currentPartWidget == nullptr ? nullptr : currentPartWidget->fileView();
         /// Record if set widget is different from previous (still current) widget
         hasChanged = widget != currentWidget();
-    } else if (openFileInfo != NULL) {
+    } else if (openFileInfo != nullptr) {
         /// Widget was not known previously, but a valid (new?) OpenFileInfo was given
         addWidget(widget);
         d->addToMapper(openFileInfo);
@@ -282,14 +282,14 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
         emit activePartChanged(part);
         /// If new widget comes from a KBibTeX Part, retrieve its editor
         PartWidget *newPartWidget = qobject_cast<PartWidget *>(widget);
-        FileView *newEditor = newPartWidget == NULL ? NULL : newPartWidget->fileView();
+        FileView *newEditor = newPartWidget == nullptr ? nullptr : newPartWidget->fileView();
         emit documentSwitched(oldEditor, newEditor);
     }
 
     /// Notify main window about a change of current file,
     /// so that the title may contain the current file's URL.
     /// This signal will be connected to KMainWindow::setCaption.
-    if (openFileInfo != NULL) {
+    if (openFileInfo != nullptr) {
         QUrl url = openFileInfo->url();
         if (url.isValid())
             emit setCaption(QString(QStringLiteral("%1 [%2]")).arg(openFileInfo->shortCaption(), squeeze_text(openFileInfo->fullCaption(), 64)));

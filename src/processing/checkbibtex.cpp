@@ -54,7 +54,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     /// fetch and inser crossref'ed entry
     QString crossRefStr;
     Value crossRefVal = entry->value(Entry::ftCrossRef);
-    if (!crossRefVal.isEmpty() && file != NULL) {
+    if (!crossRefVal.isEmpty() && file != nullptr) {
         crossRefStr = PlainTextValue::text(crossRefVal);
         QSharedPointer<Entry> crossRefDest = file->containsKey(crossRefStr, File::etEntry).dynamicCast<Entry>();
         if (!crossRefDest.isNull())
@@ -64,7 +64,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     }
 
     /// include all macro definitions, in case they are referenced
-    if (file != NULL)
+    if (file != nullptr)
         for (const auto &element : const_cast<const File &>(*file))
             if (Macro::isMacro(*element))
                 dummyFile << element;

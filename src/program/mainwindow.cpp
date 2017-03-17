@@ -331,10 +331,10 @@ void KBibTeXMainWindow::newDocument()
 void KBibTeXMainWindow::openDocumentDialog()
 {
     OpenFileInfo *currFile = OpenFileInfoManager::instance()->currentFile();
-    QUrl currFileUrl = currFile == NULL ? QUrl() : currFile->url();
+    QUrl currFileUrl = currFile == nullptr ? QUrl() : currFile->url();
     QString startDir = currFileUrl.isValid() ? QUrl(currFileUrl.url()).path() : QString();
     OpenFileInfo *ofi = OpenFileInfoManager::instance()->currentFile();
-    if (ofi != NULL) {
+    if (ofi != nullptr) {
         QUrl url = ofi->url();
         if (url.isValid()) startDir = url.path();
     }
@@ -391,16 +391,16 @@ void KBibTeXMainWindow::showPreferences()
 void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFileView)
 {
     OpenFileInfo *openFileInfo = d->mdiWidget->currentFile();
-    bool validFile = openFileInfo != NULL;
+    bool validFile = openFileInfo != nullptr;
     d->actionClose->setEnabled(validFile);
 
     setCaption(validFile ? i18n("%1 - KBibTeX", openFileInfo->shortCaption()) : i18n("KBibTeX"));
 
-    d->fileSettings->setEnabled(newFileView != NULL);
-    d->referencePreview->setEnabled(newFileView != NULL);
-    d->elementForm->setEnabled(newFileView != NULL);
-    d->documentPreview->setEnabled(newFileView != NULL);
-    if (oldFileView != NULL) {
+    d->fileSettings->setEnabled(newFileView != nullptr);
+    d->referencePreview->setEnabled(newFileView != nullptr);
+    d->elementForm->setEnabled(newFileView != nullptr);
+    d->documentPreview->setEnabled(newFileView != nullptr);
+    if (oldFileView != nullptr) {
         disconnect(newFileView, &FileView::currentElementChanged, d->referencePreview, &ReferencePreview::setElement);
         disconnect(newFileView, &FileView::currentElementChanged, d->elementForm, &ElementForm::setElement);
         disconnect(newFileView, &FileView::currentElementChanged, d->documentPreview, &DocumentPreview::setElement);
@@ -410,7 +410,7 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
         // FIXME disconnect(oldEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
         disconnect(d->elementForm, &ElementForm::elementModified, newFileView, &FileView::externalModification);
     }
-    if (newFileView != NULL) {
+    if (newFileView != nullptr) {
         connect(newFileView, &FileView::currentElementChanged, d->referencePreview, &ReferencePreview::setElement);
         connect(newFileView, &FileView::currentElementChanged, d->elementForm, &ElementForm::setElement);
         connect(newFileView, &FileView::currentElementChanged, d->documentPreview, &DocumentPreview::setElement);
@@ -423,9 +423,9 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
     }
 
     d->documentPreview->setBibTeXUrl(validFile ? openFileInfo->url() : QUrl());
-    d->referencePreview->setElement(QSharedPointer<Element>(), NULL);
-    d->elementForm->setElement(QSharedPointer<Element>(), NULL);
-    d->documentPreview->setElement(QSharedPointer<Element>(), NULL);
+    d->referencePreview->setElement(QSharedPointer<Element>(), nullptr);
+    d->elementForm->setElement(QSharedPointer<Element>(), nullptr);
+    d->documentPreview->setElement(QSharedPointer<Element>(), nullptr);
     d->valueList->setFileView(newFileView);
     d->fileSettings->setFileView(newFileView);
     d->statistics->setFileView(newFileView);
@@ -474,9 +474,9 @@ void KBibTeXMainWindow::delayed() {
     /// Static variable, memorizes the dynamically created
     /// BibliographyService instance and allows to tell if
     /// this slot was called for the first or second time.
-    static BibliographyService *bs = NULL;
+    static BibliographyService *bs = nullptr;
 
-    if (bs == NULL) {
+    if (bs == nullptr) {
         /// First call to this slot
         bs = new BibliographyService(this);
         if (!bs->isKBibTeXdefault() && KMessageBox::questionYesNo(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::Yes) {
@@ -488,11 +488,11 @@ void KBibTeXMainWindow::delayed() {
             /// KBibTeX is default application or user doesn't care,
             /// therefore clean up memory
             delete bs;
-            bs = NULL;
+            bs = nullptr;
         }
     } else {
         /// Second call to this slot. This time, clean up memory.
         bs->deleteLater();
-        bs = NULL;
+        bs = nullptr;
     }
 }

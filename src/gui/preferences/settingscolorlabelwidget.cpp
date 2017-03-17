@@ -44,7 +44,7 @@ class ColorLabelSettingsDelegate : public QStyledItemDelegate
     Q_OBJECT
 
 public:
-    ColorLabelSettingsDelegate(QWidget *parent = NULL)
+    ColorLabelSettingsDelegate(QWidget *parent = nullptr)
             : QStyledItemDelegate(parent) {
         /// nothing
     }
@@ -301,26 +301,26 @@ public:
     QTreeView *view;
 
     Private(SettingsColorLabelWidget *parent)
-            : p(parent), delegate(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
-          model(NULL), buttonRemove(NULL), view(NULL) {
+            : p(parent), delegate(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
+          model(nullptr), buttonRemove(nullptr), view(nullptr) {
         /// nothing
     }
 
     void loadState() {
         /// Delegate state maintenance to model
-        if (model != NULL)
+        if (model != nullptr)
             model->loadState();
     }
 
     void saveState() {
         /// Delegate state maintenance to model
-        if (model != NULL)
+        if (model != nullptr)
             model->saveState();
     }
 
     void resetToDefaults() {
         /// Delegate state maintenance to model
-        if (model != NULL)
+        if (model != nullptr)
             model->resetToDefaults();
     }
 
@@ -365,7 +365,7 @@ SettingsColorLabelWidget::SettingsColorLabelWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new Private(this))
 {
     /// Seed random number generator
-    qsrand(time(NULL));
+    qsrand(time(nullptr));
 
     /// Setup GUI elements
     d->setupGUI();
@@ -522,9 +522,9 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     /// selected item in the tree view
 
     SortFilterFileModel *sfbfm = qobject_cast<SortFilterFileModel *>(d->fileView->model());
-    Q_ASSERT_X(sfbfm != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterFileModel *sfbfm is NULL");
+    Q_ASSERT_X(sfbfm != nullptr, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterFileModel *sfbfm is NULL");
     FileModel *model = sfbfm->fileSourceModel();
-    Q_ASSERT_X(model != NULL, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "FileModel *model is NULL");
+    Q_ASSERT_X(model != nullptr, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "FileModel *model is NULL");
 
     /// Apply color change to all selected rows
     const QModelIndexList list = d->fileView->selectionModel()->selectedIndexes();

@@ -167,12 +167,12 @@ public:
     OnlineSearchQueryFormIngentaConnect *form;
 
     OnlineSearchIngentaConnectPrivate(OnlineSearchIngentaConnect *parent)
-            : p(parent), ingentaConnectBaseUrl(QStringLiteral("http://www.ingentaconnect.com/search?format=bib")), form(NULL) {
+            : p(parent), ingentaConnectBaseUrl(QStringLiteral("http://www.ingentaconnect.com/search?format=bib")), form(nullptr) {
         // nothing
     }
 
     QUrl buildQueryUrl() {
-        if (form == NULL) {
+        if (form == nullptr) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot build query url if no form is specified";
             return QUrl();
         }
@@ -346,7 +346,7 @@ QString OnlineSearchIngentaConnect::favIconUrl() const
 
 OnlineSearchQueryFormAbstract *OnlineSearchIngentaConnect::customWidget(QWidget *parent)
 {
-    if (d->form == NULL)
+    if (d->form == nullptr)
         d->form = new OnlineSearchIngentaConnect::OnlineSearchQueryFormIngentaConnect(parent);
     return d->form;
 }
@@ -371,7 +371,7 @@ void OnlineSearchIngentaConnect::downloadDone()
             File *bibtexFile = importer.fromString(bibTeXcode);
 
             bool hasEntries = false;
-            if (bibtexFile != NULL) {
+            if (bibtexFile != nullptr) {
                 for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     hasEntries |= publishEntry(entry);

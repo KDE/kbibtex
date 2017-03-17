@@ -135,7 +135,7 @@ void Items::finishedFetchingItems()
             File *bibtexFile = importer.fromString(bibTeXcode);
 
             /// Perform basic sanity checks ...
-            if (bibtexFile != NULL && !bibtexFile->isEmpty()) {
+            if (bibtexFile != nullptr && !bibtexFile->isEmpty()) {
                 for (const QSharedPointer<Element> &element : const_cast<const File &>(*bibtexFile)) {
                     emit foundElement(element); ///< ... and publish result
                 }

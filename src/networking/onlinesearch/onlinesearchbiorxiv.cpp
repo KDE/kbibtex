@@ -154,7 +154,7 @@ void OnlineSearchBioRxiv::bibTeXDownloadDone() {
             FileImporterBibTeX importer;
             File *bibtexFile = importer.fromString(bibTeXcode);
 
-            if (bibtexFile != NULL) {
+            if (bibtexFile != nullptr) {
                 for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     publishEntry(entry);

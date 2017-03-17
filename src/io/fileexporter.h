@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -45,11 +45,11 @@ public:
     FileExporter();
     ~FileExporter();
 
-    QString toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = NULL);
-    QString toString(const File *bibtexfile, QStringList *errorLog = NULL);
+    QString toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    QString toString(const File *bibtexfile, QStringList *errorLog = nullptr);
 
-    virtual bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL) = 0;
-    virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = NULL) = 0;
+    virtual bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) = 0;
+    virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) = 0;
 
 signals:
     void progress(int current, int total);

@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -53,7 +53,7 @@ public:
      * @param maxNumberOfStars number of stars (recommended value is 8)
      * @param parent parent widget
      */
-    explicit StarRating(int maxNumberOfStars, QWidget *parent = NULL);
+    explicit StarRating(int maxNumberOfStars, QWidget *parent = nullptr);
 
     /**
      * Get the current rating in percent (i.e >=0.0 and <=100.0).
@@ -125,7 +125,7 @@ class KBIBTEXGUI_EXPORT StarRatingFieldInput : public StarRating
     Q_OBJECT
 
 public:
-    explicit StarRatingFieldInput(int maxNumberOfStars, QWidget *parent = NULL)
+    explicit StarRatingFieldInput(int maxNumberOfStars, QWidget *parent = nullptr)
             : StarRating(maxNumberOfStars, parent) {
         /* nothing */
     }

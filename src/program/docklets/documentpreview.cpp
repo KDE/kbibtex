@@ -152,11 +152,11 @@ public:
             connect(part, static_cast<void(KParts::ReadOnlyPart::*)()>(&KParts::ReadOnlyPart::completed), p, &DocumentPreview::loadingFinished);
             return part;
         } else
-            return NULL;
+            return nullptr;
     }
 
     DocumentPreviewPrivate(DocumentPreview *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), anyLocal(false), entry(NULL), anyRemote(false) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), anyLocal(false), entry(nullptr), anyRemote(false) {
         setupGUI();
     }
 
@@ -219,8 +219,8 @@ public:
 
         /// add parts to stackedWidget
         okularPart = locatePart(QStringLiteral("application/pdf"), stackedWidget);
-        swpOkular = (okularPart == NULL) ? -1 : stackedWidget->addWidget(okularPart->widget());
-        if (okularPart == NULL || swpOkular < 0) {
+        swpOkular = (okularPart == nullptr) ? -1 : stackedWidget->addWidget(okularPart->widget());
+        if (okularPart == nullptr || swpOkular < 0) {
             qCWarning(LOG_KBIBTEX_PROGRAM) << "No Okular part for PDF or PostScript document preview available.";
         }
 #ifdef HAVE_WEBENGINEWIDGETS
@@ -236,7 +236,7 @@ public:
         connect(htmlWidget, &QWebView::loadFinished, p, &DocumentPreview::loadingFinished);
 #else // HAVE_WEBKITWIDGETS
         htmlPart = locatePart(QStringLiteral("text/html"), stackedWidget);
-        if (htmlPart != NULL) {
+        if (htmlPart != nullptr) {
             qCDebug(LOG_KBIBTEX_PROGRAM) << "HTML KPart is available, using it instead of WebEngine or WebKit (neither available) for HTML/Web preview.";
             swpHTML = stackedWidget->addWidget(htmlPart->widget());
         } else {
@@ -289,7 +289,7 @@ public:
         p->setCursor(Qt::WaitCursor);
 
         /// reset and clear all controls
-        if (swpOkular >= 0 && okularPart != NULL)
+        if (swpOkular >= 0 && okularPart != nullptr)
             okularPart->closeUrl();
 #ifdef HAVE_WEBENGINEWIDGETS
         htmlWidget->stop();
@@ -297,7 +297,7 @@ public:
 #ifdef HAVE_WEBKITWIDGETS
         htmlWidget->stop();
 #else // HAVE_WEBKITWIDGETS
-        if (swpHTML >= 0 && htmlPart != NULL)
+        if (swpHTML >= 0 && htmlPart != nullptr)
             htmlPart->closeUrl();
 #endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
@@ -427,7 +427,7 @@ public:
                     const QString actionName = actionNode.attributes().namedItem(QStringLiteral("name")).toAttr().nodeValue();
                     const QString actionShortcut = actionNode.attributes().namedItem(QStringLiteral("shortcut")).toAttr().value();
                     QAction *action = part->actionCollection()->action(actionName);
-                    if (action != NULL) {
+                    if (action != nullptr) {
                         action->setShortcut(QKeySequence(actionShortcut));
                     }
                 }
@@ -445,7 +445,7 @@ public:
         menuBar->clear();
         toolBar->clear();
 
-        if (okularPart != NULL && part == okularPart && swpOkular >= 0) {
+        if (okularPart != nullptr && part == okularPart && swpOkular >= 0) {
             stackedWidget->setCurrentIndex(swpOkular);
             stackedWidget->widget(swpOkular)->setEnabled(true);
             setupToolMenuBarForPart(okularPart);
@@ -459,7 +459,7 @@ public:
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
 #else // HAVE_WEBKITWIDGETS
-        } else if (htmlPart != NULL && part == htmlPart && swpHTML >= 0) {
+        } else if (htmlPart != nullptr && part == htmlPart && swpHTML >= 0) {
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
             setupToolMenuBarForPart(htmlPart);
@@ -478,7 +478,7 @@ public:
 
         if (swpHTML >= 0)
             stackedWidget->widget(swpHTML)->setEnabled(false);
-        if (swpOkular >= 0 && okularPart != NULL) {
+        if (swpOkular >= 0 && okularPart != nullptr) {
             stackedWidget->widget(swpOkular)->setEnabled(false);
             okularPart->closeUrl();
         }
@@ -488,12 +488,12 @@ public:
 #ifdef HAVE_WEBKITWIDGETS
         htmlWidget->stop();
 #else // HAVE_WEBKITWIDGETS
-        if (swpHTML >= 0 && htmlPart != NULL)
+        if (swpHTML >= 0 && htmlPart != nullptr)
             htmlPart->closeUrl();
 #endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
 
-        if (swpOkular >= 0 && okularPart != NULL && okularMimetypes.contains(urlInfo.mimeType)) {
+        if (swpOkular >= 0 && okularPart != nullptr && okularMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             showMessage(i18n("Loading...")); // krazy:exclude=qmethods
             return okularPart->openUrl(urlInfo.url);
@@ -508,13 +508,13 @@ public:
             htmlWidget->load(urlInfo.url);
             return true;
 #else // HAVE_WEBKITWIDGETS
-            return (swpHTML >= 0 && htmlPart != NULL) ? htmlPart->openUrl(urlInfo.url) : false;
+            return (swpHTML >= 0 && htmlPart != nullptr) ? htmlPart->openUrl(urlInfo.url) : false;
 #endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
         } else if (imageMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
             message->setPixmap(QPixmap(urlInfo.url.url(QUrl::PreferLocalFile)));
-            showPart(NULL, message);
+            showPart(nullptr, message);
             p->unsetCursor();
             return true;
         } else {
@@ -584,7 +584,7 @@ public:
         /// get dock where this widget is inside
         /// static cast is save as constructor requires parent to be QDockWidget
         QDockWidget *pp = static_cast<QDockWidget *>(p->parent());
-        return pp != NULL && !pp->isHidden();
+        return pp != nullptr && !pp->isHidden();
     }
 
     void loadState() {

@@ -524,7 +524,7 @@ EncoderLaTeX::EncoderLaTeX()
     m_trans = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
 
     /// Initialize lookup table with NULL pointers
-    for (int i = 0; i < lookupTableNumModifiers; ++i) lookupTable[i] = NULL;
+    for (int i = 0; i < lookupTableNumModifiers; ++i) lookupTable[i] = nullptr;
 
     int lookupTableCount = 0;
     /// Go through all table rows of encoderLaTeXEscapedCharacters
@@ -565,10 +565,10 @@ EncoderLaTeX::~EncoderLaTeX()
 {
     /// Clean-up memory
     for (int i = lookupTableNumModifiers - 1; i >= 0; --i)
-        if (lookupTable[i] != NULL)
+        if (lookupTable[i] != nullptr)
             delete lookupTable[i];
 
-    if (m_trans != NULL)
+    if (m_trans != nullptr)
         delete m_trans;
 }
 
@@ -1121,7 +1121,7 @@ bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)
 
 int EncoderLaTeX::modifierInLookupTable(const char latinModifier) const
 {
-    for (int m = 0; m < lookupTableNumModifiers && lookupTable[m] != NULL; ++m)
+    for (int m = 0; m < lookupTableNumModifiers && lookupTable[m] != nullptr; ++m)
         if (lookupTable[m]->modifier == latinModifier) return m;
     return -1;
 }

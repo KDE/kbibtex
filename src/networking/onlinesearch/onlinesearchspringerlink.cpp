@@ -150,13 +150,13 @@ public:
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
             : p(parent), springerMetadataKey(QStringLiteral("7pphfmtb9rtwt3dw3e4hm7av")),
           xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pam2bibtex.xsl"))),
-          form(NULL)
+          form(nullptr)
     {
         /// nothing
     }
 
     QUrl buildQueryUrl() {
-        if (form == NULL) return QUrl();
+        if (form == nullptr) return QUrl();
 
         QUrl queryUrl = QUrl(QString(QStringLiteral("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
@@ -246,7 +246,7 @@ void OnlineSearchSpringerLink::startSearchFromForm()
     InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchSpringerLink::doneFetchingPAM);
 
-    if (d->form != NULL) d->form->saveState();
+    if (d->form != nullptr) d->form->saveState();
 }
 
 void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
@@ -277,7 +277,7 @@ QString OnlineSearchSpringerLink::favIconUrl() const
 
 OnlineSearchQueryFormAbstract *OnlineSearchSpringerLink::customWidget(QWidget *parent)
 {
-    if (d->form == NULL)
+    if (d->form == nullptr)
         d->form = new OnlineSearchQueryFormSpringerLink(parent);
     return d->form;
 }
@@ -303,7 +303,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
             const File *bibtexFile = importer.fromString(bibTeXcode);
 
             bool hasEntries = false;
-            if (bibtexFile != NULL) {
+            if (bibtexFile != nullptr) {
                 for (const QSharedPointer<Element> &element : *bibtexFile) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     hasEntries |= publishEntry(entry);

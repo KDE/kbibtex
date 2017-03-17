@@ -87,14 +87,14 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     QNetworkRequest request(favIconUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
     reply->setObjectName(fileNameStem);
-    if (listWidgetItem != NULL)
+    if (listWidgetItem != nullptr)
         m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchAbstract::iconDownloadFinished);
     return QIcon::fromTheme(QStringLiteral("applications-internet"));
 }
 
 OnlineSearchQueryFormAbstract *OnlineSearchAbstract::customWidget(QWidget *) {
-    return NULL;
+    return nullptr;
 }
 
 void OnlineSearchAbstract::startSearchFromForm()
@@ -199,7 +199,7 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
 
     // check if service already exists on plugin instantiation
     QDBusConnectionInterface *interface = QDBusConnection::sessionBus().interface();
-    if (interface == NULL || !interface->isServiceRegistered(dbusServiceName)) {
+    if (interface == nullptr || !interface->isServiceRegistered(dbusServiceName)) {
         return;
     }
 
@@ -348,9 +348,9 @@ void OnlineSearchAbstract::iconDownloadFinished()
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
             newReply->setObjectName(reply->objectName());
-            QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, NULL);
+            QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, nullptr);
             m_iconReplyToListWidgetItem.remove(reply);
-            if (listWidgetItem != NULL)
+            if (listWidgetItem != nullptr)
                 m_iconReplyToListWidgetItem.insert(newReply, listWidgetItem);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAbstract::iconDownloadFinished);
             return;
@@ -388,8 +388,8 @@ void OnlineSearchAbstract::iconDownloadFinished()
             iconFile.write(iconData);
             iconFile.close();
 
-            QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, NULL);
-            if (listWidgetItem != NULL)
+            QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, nullptr);
+            if (listWidgetItem != nullptr)
                 listWidgetItem->setIcon(QIcon(filename));
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not save icon data from URL" << reply->url().toDisplayString() << "to file" << filename;

@@ -60,7 +60,7 @@ private:
 
 public:
     ElementEditorDialog(QWidget *parent)
-            : QDialog(parent), elementEditor(NULL) {
+            : QDialog(parent), elementEditor(nullptr) {
         /// restore window size
         KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
         configGroup = KConfigGroup(config, configGroupNameWindowSize);
@@ -100,7 +100,7 @@ private:
 const QString ElementEditorDialog::configGroupNameWindowSize = QStringLiteral("ElementEditorDialog");
 
 FileView::FileView(const QString &name, QWidget *parent)
-        : BasicFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(NULL), m_lastEditorPage(NULL), m_elementEditorDialog(NULL), m_elementEditor(NULL), m_dbb(NULL)
+        : BasicFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(nullptr), m_lastEditorPage(nullptr), m_elementEditorDialog(nullptr), m_elementEditor(nullptr), m_dbb(nullptr)
 {
     connect(this, &FileView::doubleClicked, this, &FileView::itemActivated);
 }
@@ -195,7 +195,7 @@ void FileView::selectionChanged(const QItemSelection &selected, const QItemSelec
         if (index.column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
         m_selection.append(elementAt(index));
     }
-    if (m_current == NULL && !selectedSet.isEmpty())
+    if (m_current == nullptr && !selectedSet.isEmpty())
         m_current = elementAt(selectedSet.first());
 
     const QModelIndexList deselectedSet = deselected.indexes();
@@ -238,14 +238,14 @@ bool FileView::isReadOnly() const
 ValueListModel *FileView::valueListModel(const QString &field)
 {
     FileModel *model = fileModel();
-    if (model != NULL) {
+    if (model != nullptr) {
         ValueListModel *result = new ValueListModel(model->bibliographyFile(), field, this);
         /// Keep track of external changes through modifications in this ValueListModel instance
         connect(result, &ValueListModel::dataChanged, this, &FileView::externalModification);
         return result;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void FileView::setFilterBar(FilterBar *filterBar)
@@ -255,7 +255,7 @@ void FileView::setFilterBar(FilterBar *filterBar)
 
 void FileView::setFilterBarFilter(const SortFilterFileModel::FilterQuery &fq)
 {
-    if (m_filterBar != NULL)
+    if (m_filterBar != nullptr)
         m_filterBar->setFilter(fq);
 }
 
@@ -293,15 +293,15 @@ void FileView::prepareEditorDialog(DialogType dialogType)
     }
 
     /// Create both the dialog window and the editing widget only once
-    if (m_elementEditorDialog == NULL)
+    if (m_elementEditorDialog == nullptr)
         m_elementEditorDialog = new ElementEditorDialog(this);
-    if (m_elementEditor == NULL) {
+    if (m_elementEditor == nullptr) {
         m_elementEditor = new ElementEditor(false, m_elementEditorDialog);
         m_elementEditorDialog->setElementEditor(m_elementEditor);
     }
-    if (m_dbb != NULL) {
+    if (m_dbb != nullptr) {
         delete m_dbb;
-        m_dbb = NULL;
+        m_dbb = nullptr;
     }
 
     if (dialogType == DialogTypeView) {

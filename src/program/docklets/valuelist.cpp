@@ -68,7 +68,7 @@ public:
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("Value List Docklet")),
           configKeyFieldName(QStringLiteral("FieldName")), configKeyShowCountColumn(QStringLiteral("ShowCountColumn")),
           configKeySortByCountAction(QStringLiteral("SortByCountAction")), configKeyHeaderState(QStringLiteral("HeaderState")),
-          fileView(NULL), model(NULL), sortingModel(NULL), countWidth(8 + parent->fontMetrics().width(i18n("Count"))) {
+          fileView(nullptr), model(nullptr), sortingModel(nullptr), countWidth(8 + parent->fontMetrics().width(i18n("Count"))) {
         setupGUI();
         initialize();
     }
@@ -188,13 +188,13 @@ public:
         if (text.isEmpty()) text = comboboxFieldNames->currentText();
 
         delegate->setFieldName(text);
-        model = fileView == NULL ? NULL : fileView->valueListModel(text);
+        model = fileView == nullptr ? nullptr : fileView->valueListModel(text);
         QAbstractItemModel *usedModel = model;
-        if (usedModel != NULL) {
+        if (usedModel != nullptr) {
             model->setShowCountColumn(showCountColumnAction->isChecked());
             model->setSortBy(sortByCountAction->isChecked() ? ValueListModel::SortByCount : ValueListModel::SortByText);
 
-            if (sortingModel != NULL) delete sortingModel;
+            if (sortingModel != nullptr) delete sortingModel;
             sortingModel = new QSortFilterProxyModel(p);
             sortingModel->setSourceModel(model);
             if (treeviewFieldValues->header()->isSortIndicatorShown())
@@ -239,22 +239,22 @@ ValueList::~ValueList()
 
 void ValueList::setFileView(FileView *fileView)
 {
-    if (d->fileView != NULL)
+    if (d->fileView != nullptr)
         disconnect(d->fileView, &FileView::selectedElementsChanged, this, &ValueList::editorSelectionChanged);
     d->fileView = fileView;
-    if (d->fileView != NULL) {
+    if (d->fileView != nullptr) {
         connect(d->fileView, &FileView::selectedElementsChanged, this, &ValueList::editorSelectionChanged);
         connect(d->fileView, &FileView::destroyed, this, &ValueList::editorDestroyed);
     }
     editorSelectionChanged();
     update();
-    resizeEvent(NULL);
+    resizeEvent(nullptr);
 }
 
 void ValueList::update()
 {
     d->update();
-    setEnabled(d->fileView != NULL);
+    setEnabled(d->fileView != nullptr);
 }
 
 void ValueList::resizeEvent(QResizeEvent *)
@@ -430,10 +430,10 @@ void ValueList::deleteAllOccurrences()
 
 void ValueList::showCountColumnToggled()
 {
-    if (d->model != NULL)
+    if (d->model != nullptr)
         d->model->setShowCountColumn(d->showCountColumnAction->isChecked());
     if (d->showCountColumnAction->isChecked())
-        resizeEvent(NULL);
+        resizeEvent(nullptr);
 
     d->sortByCountAction->setEnabled(!d->showCountColumnAction->isChecked());
 
@@ -444,7 +444,7 @@ void ValueList::showCountColumnToggled()
 
 void ValueList::sortByCountToggled()
 {
-    if (d->model != NULL)
+    if (d->model != nullptr)
         d->model->setSortBy(d->sortByCountAction->isChecked() ? ValueListModel::SortByCount : ValueListModel::SortByText);
 
     KConfigGroup configGroup(d->config, d->configGroupName);
@@ -454,7 +454,7 @@ void ValueList::sortByCountToggled()
 
 void ValueList::delayedResize()
 {
-    resizeEvent(NULL);
+    resizeEvent(nullptr);
 }
 
 void ValueList::columnsChanged()
@@ -464,11 +464,11 @@ void ValueList::columnsChanged()
     configGroup.writeEntry(d->configKeyHeaderState, headerState);
     d->config->sync();
 
-    resizeEvent(NULL);
+    resizeEvent(nullptr);
 }
 
 void ValueList::editorSelectionChanged() {
-    const bool selectedElements = d->fileView == NULL ? false : d->fileView->selectedElements().count() > 0;
+    const bool selectedElements = d->fileView == nullptr ? false : d->fileView->selectedElements().count() > 0;
     d->assignSelectionAction->setEnabled(selectedElements);
     d->removeSelectionAction->setEnabled(selectedElements);
 }
@@ -476,7 +476,7 @@ void ValueList::editorSelectionChanged() {
 void ValueList::editorDestroyed() {
     /// Reset internal variable to NULL to avoid
     /// accessing invalid pointer/data later
-    d->fileView = NULL;
+    d->fileView = nullptr;
     editorSelectionChanged();
 }
 

@@ -72,7 +72,7 @@ public:
     QString fieldKey;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
-            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupNameGeneral(QStringLiteral("General")), file(NULL) {
+            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupNameGeneral(QStringLiteral("General")), file(nullptr) {
         menuTypes = new QMenu(parent);
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
@@ -190,7 +190,7 @@ public:
 
             File *file = importer.fromString(fakeBibTeXFile);
             QSharedPointer<Entry> entry;
-            if (file != NULL) {
+            if (file != nullptr) {
                 if (!file->isEmpty() && !(entry = (file->first().dynamicCast<Entry>())).isNull())
                     value = entry->value(key);
                 delete file;
@@ -388,7 +388,7 @@ public:
 
     void updateURL(const QString &text) {
         QList<QUrl> urls;
-        FileInfo::urlsInText(text, FileInfo::TestExistenceYes, file != NULL && file->property(File::Url).toUrl().isValid() ? QUrl(file->property(File::Url).toUrl()).path() : QString(), urls);
+        FileInfo::urlsInText(text, FileInfo::TestExistenceYes, file != nullptr && file->property(File::Url).toUrl().isValid() ? QUrl(file->property(File::Url).toUrl()).path() : QString(), urls);
         if (!urls.isEmpty() && urls.first().isValid())
             urlToOpen = urls.first();
         else
@@ -484,11 +484,11 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
     const QString clipboardText = event->mimeData()->text();
     if (clipboardText.isEmpty()) return;
 
-    const File *file = NULL;
+    const File *file = nullptr;
     if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QStringLiteral("@"))) {
         FileImporterBibTeX importer;
         file = importer.fromString(clipboardText);
-        const QSharedPointer<Entry> entry = (file != NULL && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
+        const QSharedPointer<Entry> entry = (file != nullptr && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull() && d->fieldKey == Entry::ftCrossRef) {
             /// handle drop on crossref line differently (use dropped entry's id)
             Value v;
@@ -504,7 +504,7 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
         }
     }
 
-    if (file == NULL || file->count() == 0) {
+    if (file == nullptr || file->count() == 0) {
         /// fall-back case: just copy whole text into edit widget
         setText(clipboardText);
         emit textChanged(clipboardText);

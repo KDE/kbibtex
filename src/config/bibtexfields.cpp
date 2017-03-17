@@ -147,7 +147,7 @@ public:
     }
 };
 
-BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = NULL;
+BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = nullptr;
 
 BibTeXFields::BibTeXFields()
         : QList<FieldDescription *>(), d(new BibTeXFieldsPrivate(this))
@@ -162,7 +162,7 @@ BibTeXFields::~BibTeXFields()
 
 const BibTeXFields *BibTeXFields::self()
 {
-    if (BibTeXFieldsPrivate::singleton == NULL)
+    if (BibTeXFieldsPrivate::singleton == nullptr)
         BibTeXFieldsPrivate::singleton = new BibTeXFields();
     return BibTeXFieldsPrivate::singleton;
 }
@@ -227,7 +227,7 @@ const FieldDescription *BibTeXFields::find(const QString &name) const
             return fd;
     }
     qCWarning(LOG_KBIBTEX_CONFIG) << "No field description for " << name << "(" << iName << ")";
-    return NULL;
+    return nullptr;
 }
 
 KBibTeX::TypeFlag BibTeXFields::typeFlagFromString(const QString &typeFlagString)

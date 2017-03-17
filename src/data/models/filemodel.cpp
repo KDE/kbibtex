@@ -46,7 +46,7 @@ const bool FileModel::defaultShowMacros = true;
 
 
 FileModel::FileModel(QObject *parent)
-        : QAbstractTableModel(parent), m_file(NULL)
+        : QAbstractTableModel(parent), m_file(nullptr)
 {
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     readConfiguration();
@@ -162,7 +162,7 @@ bool FileModel::hasChildren(const QModelIndex &parent) const
 
 int FileModel::rowCount(const QModelIndex & /*parent*/) const
 {
-    return m_file != NULL ? m_file->count() : 0;
+    return m_file != nullptr ? m_file->count() : 0;
 }
 
 int FileModel::columnCount(const QModelIndex & /*parent*/) const
@@ -177,7 +177,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     /// check backend storage (File object)
-    if (m_file == NULL)
+    if (m_file == nullptr)
         return QVariant();
 
     /// for now, only display data (no editing or icons etc)
@@ -299,7 +299,7 @@ void FileModel::clear() {
 
 bool FileModel::removeRow(int row, const QModelIndex &parent)
 {
-    if (row < 0 || m_file == NULL || row >= rowCount() || row >= m_file->count())
+    if (row < 0 || m_file == nullptr || row >= rowCount() || row >= m_file->count())
         return false;
     if (parent != QModelIndex())
         return false;
@@ -313,7 +313,7 @@ bool FileModel::removeRow(int row, const QModelIndex &parent)
 
 bool FileModel::removeRowList(const QList<int> &rows)
 {
-    if (m_file == NULL) return false;
+    if (m_file == nullptr) return false;
 
     QList<int> internalRows = rows;
     std::sort(internalRows.begin(), internalRows.end(), std::greater<int>());
@@ -331,7 +331,7 @@ bool FileModel::removeRowList(const QList<int> &rows)
 
 bool FileModel::insertRow(QSharedPointer<Element> element, int row, const QModelIndex &parent)
 {
-    if (m_file == NULL || row < 0 || row > rowCount() || parent != QModelIndex())
+    if (m_file == nullptr || row < 0 || row > rowCount() || parent != QModelIndex())
         return false;
 
     /// Check for duplicate ids or keys when inserting a new element
@@ -386,14 +386,14 @@ bool FileModel::insertRow(QSharedPointer<Element> element, int row, const QModel
 
 QSharedPointer<Element> FileModel::element(int row) const
 {
-    if (m_file == NULL || row < 0 || row >= m_file->count()) return QSharedPointer<Element>();
+    if (m_file == nullptr || row < 0 || row >= m_file->count()) return QSharedPointer<Element>();
 
     return (*m_file)[row];
 }
 
 int FileModel::row(QSharedPointer<Element> element) const
 {
-    if (m_file == NULL) return -1;
+    if (m_file == nullptr) return -1;
     return m_file->indexOf(element);
 }
 

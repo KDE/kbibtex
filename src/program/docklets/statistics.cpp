@@ -43,7 +43,7 @@ public:
     const QItemSelectionModel *selectionModel;
 
     StatisticsPrivate(Statistics *parent)
-        : /* UNUSED p(parent),*/ fileView(NULL), file(NULL), selectionModel(NULL) {
+        : /* UNUSED p(parent),*/ fileView(nullptr), file(nullptr), selectionModel(nullptr) {
         QFormLayout *layout = new QFormLayout(parent);
 
         labelNumberOfElements = new QLabel(parent);
@@ -82,10 +82,10 @@ public:
     }
 
     void update() {
-        file = fileView != NULL && fileView->fileModel() != NULL ? fileView->fileModel()->bibliographyFile() : NULL;
-        selectionModel = fileView != NULL ? fileView->selectionModel() : NULL;
+        file = fileView != nullptr && fileView->fileModel() != nullptr ? fileView->fileModel()->bibliographyFile() : nullptr;
+        selectionModel = fileView != nullptr ? fileView->selectionModel() : nullptr;
 
-        if (file != NULL) {
+        if (file != nullptr) {
             int numElements, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros;
             countElementTypes(numElements, numEntries, numJournalArticles, numConferencePublications, numBooks, numComments, numMacros);
 
@@ -127,9 +127,9 @@ public:
 
     void countElementTypes(int &numElements, int &numEntries, int &numJournalArticles, int &numConferencePublications, int &numBooks, int &numComments, int &numMacros) {
         numElements = numEntries = numJournalArticles = numConferencePublications = numBooks = numComments = numMacros = 0;
-        Q_ASSERT_X(file != NULL, "Statistics::StatisticsPrivate::countElementTypes(..)", "Function was called with file==NULL");
+        Q_ASSERT_X(file != nullptr, "Statistics::StatisticsPrivate::countElementTypes(..)", "Function was called with file==NULL");
 
-        if (selectionModel != NULL && selectionModel->selectedRows().count() > 1) {
+        if (selectionModel != nullptr && selectionModel->selectedRows().count() > 1) {
             /// Use selected items for statistics if selection contains at least two elements
             const auto selectedRows = selectionModel->selectedRows();
             numElements = selectedRows.count();
@@ -161,10 +161,10 @@ Statistics::~Statistics()
 
 void Statistics::setFileView(FileView *fileView)
 {
-    if (d->fileView != NULL)
+    if (d->fileView != nullptr)
         disconnect(d->fileView, &FileView::selectedElementsChanged, this, &Statistics::update);
     d->fileView = fileView;
-    if (d->fileView != NULL)
+    if (d->fileView != nullptr)
         connect(d->fileView, &FileView::selectedElementsChanged, this, &Statistics::update);
     d->update();
 }

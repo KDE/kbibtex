@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -40,7 +40,7 @@ File *FileImporter::fromString(const QString &text)
 {
     if (text.isEmpty()) {
         qCWarning(LOG_KBIBTEX_IO) << "Cannot create File object from empty string";
-        return NULL;
+        return nullptr;
     }
 
     QBuffer buffer;
@@ -52,7 +52,7 @@ File *FileImporter::fromString(const QString &text)
 
     buffer.open(QIODevice::ReadOnly);
     File *result = load(&buffer);
-    if (result == NULL)
+    if (result == nullptr)
         qCWarning(LOG_KBIBTEX_IO) << "Creating File object from" << buffer.size() << "Bytes of data failed";
     buffer.close();
 
@@ -68,7 +68,7 @@ Person *FileImporter::splitName(const QString &name)
     QString lastName;
 
     if (segments.isEmpty())
-        return NULL;
+        return nullptr;
 
     if (!containsComma) {
         /** PubMed uses a special writing style for names, where the last name is followed by single capital letter,

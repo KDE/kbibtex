@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -66,7 +66,7 @@ class PDFListModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit PDFListModel(QList<FindPDF::ResultItem> &resultList, QObject *parent = NULL);
+    explicit PDFListModel(QList<FindPDF::ResultItem> &resultList, QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

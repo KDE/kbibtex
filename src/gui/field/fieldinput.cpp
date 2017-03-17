@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -52,15 +52,15 @@ public:
     const Element *element;
 
     FieldInputPrivate(FieldInput *parent)
-            : p(parent), colorWidget(NULL), starRatingWidget(NULL), fieldLineEdit(NULL), fieldListEdit(NULL), fieldInputType(KBibTeX::SingleLine), preferredTypeFlag(KBibTeX::tfSource), bibtexFile(NULL), element(NULL) {
+            : p(parent), colorWidget(nullptr), starRatingWidget(nullptr), fieldLineEdit(nullptr), fieldListEdit(nullptr), fieldInputType(KBibTeX::SingleLine), preferredTypeFlag(KBibTeX::tfSource), bibtexFile(nullptr), element(nullptr) {
         /// nothing
     }
 
     ~FieldInputPrivate() {
-        if (colorWidget != NULL) delete colorWidget;
-        else if (starRatingWidget != NULL) delete starRatingWidget;
-        else if (fieldLineEdit != NULL) delete fieldLineEdit;
-        else if (fieldListEdit != NULL) delete fieldListEdit;
+        if (colorWidget != nullptr) delete colorWidget;
+        else if (starRatingWidget != nullptr) delete starRatingWidget;
+        else if (fieldLineEdit != nullptr) delete fieldLineEdit;
+        else if (fieldListEdit != nullptr) delete fieldListEdit;
     }
 
     void createGUI() {
@@ -134,13 +134,13 @@ public:
 
     void clear() {
         disableModifiedSignal();
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             fieldLineEdit->setText(QStringLiteral(""));
-        else if (fieldListEdit != NULL)
+        else if (fieldListEdit != nullptr)
             fieldListEdit->clear();
-        else if (colorWidget != NULL)
+        else if (colorWidget != nullptr)
             colorWidget->clear();
-        else if (starRatingWidget != NULL)
+        else if (starRatingWidget != nullptr)
             starRatingWidget->unsetValue();
         enableModifiedSignal();
     }
@@ -151,13 +151,13 @@ public:
         disableModifiedSignal();
 
         bool result = false;
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             result = fieldLineEdit->reset(value);
-        else if (fieldListEdit != NULL)
+        else if (fieldListEdit != nullptr)
             result = fieldListEdit->reset(value);
-        else if (colorWidget != NULL)
+        else if (colorWidget != nullptr)
             result = colorWidget->reset(value);
-        else if (starRatingWidget != NULL)
+        else if (starRatingWidget != nullptr)
             result = starRatingWidget->reset(value);
 
         enableModifiedSignal();
@@ -166,61 +166,61 @@ public:
 
     bool apply(Value &value) const {
         bool result = false;
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             result = fieldLineEdit->apply(value);
-        else if (fieldListEdit != NULL)
+        else if (fieldListEdit != nullptr)
             result = fieldListEdit->apply(value);
-        else if (colorWidget != NULL)
+        else if (colorWidget != nullptr)
             result = colorWidget->apply(value);
-        else if (starRatingWidget != NULL)
+        else if (starRatingWidget != nullptr)
             result = starRatingWidget->apply(value);
         return result;
     }
 
     void setReadOnly(bool isReadOnly) {
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             fieldLineEdit->setReadOnly(isReadOnly);
-        else if (fieldListEdit != NULL)
+        else if (fieldListEdit != nullptr)
             fieldListEdit->setReadOnly(isReadOnly);
-        else if (colorWidget != NULL)
+        else if (colorWidget != nullptr)
             colorWidget->setReadOnly(isReadOnly);
-        else if (starRatingWidget != NULL)
+        else if (starRatingWidget != nullptr)
             starRatingWidget->setReadOnly(isReadOnly);
     }
 
     void setFile(const File *file) {
         bibtexFile = file;
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             fieldLineEdit->setFile(file);
-        if (fieldListEdit != NULL)
+        if (fieldListEdit != nullptr)
             fieldListEdit->setFile(file);
     }
 
     void setElement(const Element *element) {
         this->element = element;
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             fieldLineEdit->setElement(element);
-        if (fieldListEdit != NULL)
+        if (fieldListEdit != nullptr)
             fieldListEdit->setElement(element);
     }
 
     void setFieldKey(const QString &fieldKey) {
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             fieldLineEdit->setFieldKey(fieldKey);
-        if (fieldListEdit != NULL)
+        if (fieldListEdit != nullptr)
             fieldListEdit->setFieldKey(fieldKey);
     }
 
     void setCompletionItems(const QStringList &items) {
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             fieldLineEdit->setCompletionItems(items);
-        if (fieldListEdit != NULL)
+        if (fieldListEdit != nullptr)
             fieldListEdit->setCompletionItems(items);
     }
 
     bool selectCrossRef() {
-        Q_ASSERT_X(fieldLineEdit != NULL, "void FieldInput::FieldInputPrivate::selectCrossRef()", "fieldLineEdit is invalid");
-        if (bibtexFile == NULL) return false;
+        Q_ASSERT_X(fieldLineEdit != nullptr, "void FieldInput::FieldInputPrivate::selectCrossRef()", "fieldLineEdit is invalid");
+        if (bibtexFile == nullptr) return false;
 
         /// create a standard input dialog with a list of all keys (ids of entries)
         bool ok = false;
@@ -229,7 +229,7 @@ public:
 
         /// remove own id
         const Entry *entry = dynamic_cast<const Entry *>(element);
-        if (entry != NULL) list.removeOne(entry->id());
+        if (entry != nullptr) list.removeOne(entry->id());
 
         QString crossRef = QInputDialog::getItem(p, i18n("Select Cross Reference"), i18n("Select the cross reference to another entry:"), list, 0, false, &ok);
 
@@ -244,24 +244,24 @@ public:
     }
 
     void enableModifiedSignal() {
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
-        if (fieldListEdit != NULL)
+        if (fieldListEdit != nullptr)
             connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
-        if (colorWidget != NULL)
+        if (colorWidget != nullptr)
             connect(colorWidget, &ColorLabelWidget::modified, p, &FieldInput::modified);
-        if (starRatingWidget != NULL)
+        if (starRatingWidget != nullptr)
             connect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
     }
 
     void disableModifiedSignal() {
-        if (fieldLineEdit != NULL)
+        if (fieldLineEdit != nullptr)
             disconnect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
-        if (fieldListEdit != NULL)
+        if (fieldListEdit != nullptr)
             disconnect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
-        if (colorWidget != NULL)
+        if (colorWidget != nullptr)
             disconnect(colorWidget, &ColorLabelWidget::modified, p, &FieldInput::modified);
-        if (starRatingWidget != NULL)
+        if (starRatingWidget != nullptr)
             disconnect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
     }
 };
@@ -322,14 +322,14 @@ void FieldInput::setCompletionItems(const QStringList &items)
 
 QWidget *FieldInput::buddy()
 {
-    if (d->fieldLineEdit != NULL)
+    if (d->fieldLineEdit != nullptr)
         return d->fieldLineEdit->buddy();
     // TODO fieldListEdit
-    else if (d->colorWidget != NULL)
+    else if (d->colorWidget != nullptr)
         return d->colorWidget;
-    else if (d->starRatingWidget != NULL)
+    else if (d->starRatingWidget != nullptr)
         return d->starRatingWidget;
-    return NULL;
+    return nullptr;
 }
 
 void FieldInput::setMonth(int month)

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -46,7 +46,7 @@ private:
     static QSharedPointer<const Entry> exampleBibTeXEntry;
 
 public:
-    IdSuggestionsModel(QObject *parent = NULL)
+    IdSuggestionsModel(QObject *parent = nullptr)
             : QAbstractListModel(parent) {
         m_idSuggestions = new IdSuggestions();
         m_defaultFormatStringRow = -1;
@@ -54,7 +54,7 @@ public:
         if (exampleBibTeXEntry.isNull()) {
             static FileImporterBibTeX fileImporterBibTeX;
             File *file = fileImporterBibTeX.fromString(exampleBibTeXEntryString);
-            if (file != NULL) {
+            if (file != nullptr) {
                 if (!file->isEmpty())
                     exampleBibTeXEntry = file->first().dynamicCast<const Entry>();
                 delete file;

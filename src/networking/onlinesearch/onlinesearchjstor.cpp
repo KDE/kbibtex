@@ -207,7 +207,7 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         FileImporterBibTeX importer;
         File *bibtexFile = importer.fromString(bibTeXcode);
         int numFoundResults = 0;
-        if (bibtexFile != NULL) {
+        if (bibtexFile != nullptr) {
             for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                 QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 if (publishEntry(entry))

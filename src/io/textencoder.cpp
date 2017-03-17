@@ -38,7 +38,7 @@ QByteArray TextEncoder::encode(const QString &input, const QString &destinationE
 QByteArray TextEncoder::encode(const QString &input, const QTextCodec *destinationCodec)
 {
     /// Invalid codec? Cannot do anything
-    if (destinationCodec == NULL)
+    if (destinationCodec == nullptr)
         return QByteArray();
 
     /// Perform Canonical Decomposition followed by Canonical Composition

@@ -118,12 +118,12 @@ public:
     OnlineSearchQueryFormBibsonomy *form;
 
     OnlineSearchBibsonomyPrivate(OnlineSearchBibsonomy *parent)
-            : p(parent), form(NULL) {
+            : p(parent), form(nullptr) {
         // nothing
     }
 
     QUrl buildQueryUrl() {
-        if (form == NULL) {
+        if (form == nullptr) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot build query url if no form is specified";
             return QUrl();
         }
@@ -217,7 +217,7 @@ QString OnlineSearchBibsonomy::favIconUrl() const
 
 OnlineSearchQueryFormAbstract *OnlineSearchBibsonomy::customWidget(QWidget *parent)
 {
-    if (d->form == NULL)
+    if (d->form == nullptr)
         d->form = new OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy(parent);
     return d->form;
 }
@@ -242,7 +242,7 @@ void OnlineSearchBibsonomy::downloadDone()
             const File *bibtexFile = importer.fromString(bibTeXcode);
 
             bool hasEntries = false;
-            if (bibtexFile != NULL) {
+            if (bibtexFile != nullptr) {
                 for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                     hasEntries |= publishEntry(entry);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -45,7 +45,7 @@ class FieldListEdit : public QWidget
     Q_OBJECT
 
 public:
-    FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
+    FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = nullptr);
     ~FieldListEdit();
 
     virtual bool reset(const Value &value);
@@ -92,7 +92,7 @@ class PersonListEdit : public FieldListEdit
     Q_OBJECT
 
 public:
-    PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = NULL);
+    PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = nullptr);
 
     virtual bool reset(const Value &value);
     virtual bool apply(Value &value) const;
@@ -116,7 +116,7 @@ class UrlListEdit : public FieldListEdit
     Q_OBJECT
 
 public:
-    explicit UrlListEdit(QWidget *parent = NULL);
+    explicit UrlListEdit(QWidget *parent = nullptr);
     ~UrlListEdit();
 
     virtual void setReadOnly(bool isReadOnly);
@@ -157,7 +157,7 @@ class KeywordListEdit : public FieldListEdit
 public:
     static const QString keyGlobalKeywordList;
 
-    explicit KeywordListEdit(QWidget *parent = NULL);
+    explicit KeywordListEdit(QWidget *parent = nullptr);
 
     virtual void setReadOnly(bool isReadOnly);
     virtual void setFile(const File *file);

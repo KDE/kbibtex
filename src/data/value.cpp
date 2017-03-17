@@ -94,7 +94,7 @@ bool Keyword::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSe
 bool Keyword::operator==(const ValueItem &other) const
 {
     const Keyword *otherKeyword = dynamic_cast<const Keyword *>(&other);
-    if (otherKeyword != NULL) {
+    if (otherKeyword != nullptr) {
         return otherKeyword->text() == text();
     } else
         return false;
@@ -160,7 +160,7 @@ bool Person::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSen
 bool Person::operator==(const ValueItem &other) const
 {
     const Person *otherPerson = dynamic_cast<const Person *>(&other);
-    if (otherPerson != NULL) {
+    if (otherPerson != nullptr) {
         return otherPerson->firstName() == firstName() && otherPerson->lastName() == lastName();
     } else
         return false;
@@ -250,7 +250,7 @@ bool MacroKey::containsPattern(const QString &pattern, Qt::CaseSensitivity caseS
 bool MacroKey::operator==(const ValueItem &other) const
 {
     const MacroKey *otherMacroKey = dynamic_cast<const MacroKey *>(&other);
-    if (otherMacroKey != NULL) {
+    if (otherMacroKey != nullptr) {
         return otherMacroKey->text() == text();
     } else
         return false;
@@ -300,7 +300,7 @@ bool PlainText::containsPattern(const QString &pattern, Qt::CaseSensitivity case
 bool PlainText::operator==(const ValueItem &other) const
 {
     const PlainText *otherPlainText = dynamic_cast<const PlainText *>(&other);
-    if (otherPlainText != NULL) {
+    if (otherPlainText != nullptr) {
         return otherPlainText->text() == text();
     } else
         return false;
@@ -385,7 +385,7 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
 bool VerbatimText::operator==(const ValueItem &other) const
 {
     const VerbatimText *otherVerbatimText = dynamic_cast<const VerbatimText *>(&other);
-    if (otherVerbatimText != NULL) {
+    if (otherVerbatimText != nullptr) {
         return otherVerbatimText->text() == text();
     } else
         return false;
@@ -557,29 +557,29 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
     QString result;
     vit = VITOther;
 
-    if (notificationListener == NULL)
+    if (notificationListener == nullptr)
         notificationListener = new PlainTextValue();
 
     const PlainText *plainText = dynamic_cast<const PlainText *>(&valueItem);
-    if (plainText != NULL) {
+    if (plainText != nullptr) {
         result = plainText->text();
     } else {
         const MacroKey *macroKey = dynamic_cast<const MacroKey *>(&valueItem);
-        if (macroKey != NULL) {
+        if (macroKey != nullptr) {
             result = macroKey->text(); // TODO Use File to resolve key to full text
         } else {
             const Person *person = dynamic_cast<const Person *>(&valueItem);
-            if (person != NULL) {
+            if (person != nullptr) {
                 result = Person::transcribePersonName(person, personNameFormatting);
                 vit = VITPerson;
             } else {
                 const Keyword *keyword = dynamic_cast<const Keyword *>(&valueItem);
-                if (keyword != NULL) {
+                if (keyword != nullptr) {
                     result = keyword->text();
                     vit = VITKeyword;
                 } else {
                     const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(&valueItem);
-                    if (verbatimText != NULL) {
+                    if (verbatimText != nullptr) {
                         result = verbatimText->text();
                     }
                 }
@@ -638,4 +638,4 @@ void PlainTextValue::readConfiguration()
 }
 
 QString PlainTextValue::personNameFormatting;
-PlainTextValue *PlainTextValue::notificationListener = NULL;
+PlainTextValue *PlainTextValue::notificationListener = nullptr;

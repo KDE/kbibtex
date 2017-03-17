@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -121,7 +121,7 @@ public:
 
     static QString editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent);
 protected:
-    explicit IdSuggestionsEditDialog(QWidget *parent = 0, Qt::WindowFlags flags = 0);
+    explicit IdSuggestionsEditDialog(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
 };
 
 class IdSuggestionsEditWidget : public QWidget, public IdSuggestions
@@ -129,7 +129,7 @@ class IdSuggestionsEditWidget : public QWidget, public IdSuggestions
     Q_OBJECT
 
 public:
-    explicit IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent = 0, Qt::WindowFlags f = 0);
+    explicit IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent = nullptr, Qt::WindowFlags f = 0);
     virtual ~IdSuggestionsEditWidget();
 
     void setFormatString(const QString &formatString);

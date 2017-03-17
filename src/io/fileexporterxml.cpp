@@ -95,19 +95,19 @@ bool FileExporterXML::write(QTextStream &stream, const Element *element, const F
     bool result = false;
 
     const Entry *entry = dynamic_cast<const Entry *>(element);
-    if (entry != NULL) {
-        if (bibtexfile != NULL)
+    if (entry != nullptr) {
+        if (bibtexfile != nullptr)
             entry = entry->resolveCrossref(bibtexfile);
         result |= writeEntry(stream, entry);
-        if (bibtexfile != NULL)
+        if (bibtexfile != nullptr)
             delete entry; /// delete artificially created Entry from resolveCrossref(..)
     } else {
         const Macro *macro = dynamic_cast<const Macro *>(element);
-        if (macro != NULL)
+        if (macro != nullptr)
             result |= writeMacro(stream, macro);
         else {
             const Comment *comment = dynamic_cast<const Comment *>(element);
-            if (comment != NULL)
+            if (comment != nullptr)
                 result |= writeComment(stream, comment);
             else {
                 // preambles are ignored, make no sense in XML files

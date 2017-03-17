@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,7 @@ private:
     QTreeView *m_parent;
 
 public:
-    explicit ValueListDelegate(QTreeView *parent = NULL)
+    explicit ValueListDelegate(QTreeView *parent = nullptr)
             : QStyledItemDelegate(parent), m_fieldName(QString()), m_parent(parent) {}
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const;

@@ -43,7 +43,7 @@
 
 #define encodercheck(encoder, text) ((encoder)?(encoder)->encode((text)):(text))
 
-FileExporterBibTeX *FileExporterBibTeX::staticFileExporterBibTeX = NULL;
+FileExporterBibTeX *FileExporterBibTeX::staticFileExporterBibTeX = nullptr;
 
 class FileExporterBibTeX::FileExporterBibTeXPrivate
 {
@@ -65,7 +65,7 @@ public:
     const QString configGroupName, configGroupNameGeneral;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(Qt::PartiallyChecked), cancelFlag(false), destinationCodec(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), configGroupNameGeneral(QStringLiteral("General")) {
+            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(Qt::PartiallyChecked), cancelFlag(false), destinationCodec(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), configGroupNameGeneral(QStringLiteral("General")) {
         // nothing
     }
 
@@ -91,7 +91,7 @@ public:
     }
 
     void loadStateFromFile(const File *bibtexfile) {
-        if (bibtexfile == NULL) return;
+        if (bibtexfile == nullptr) return;
 
         if (bibtexfile->hasProperty(File::Encoding))
             encoding = bibtexfile->property(File::Encoding).toString();
@@ -497,7 +497,7 @@ void FileExporterBibTeX::cancel()
 
 QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
 {
-    if (staticFileExporterBibTeX == NULL) {
+    if (staticFileExporterBibTeX == nullptr) {
         staticFileExporterBibTeX = new FileExporterBibTeX();
         staticFileExporterBibTeX->d->loadState();
     }

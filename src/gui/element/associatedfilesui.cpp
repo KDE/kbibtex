@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -54,7 +54,7 @@ public:
     const File *bibTeXfile;
 
     Private(AssociatedFilesUI *parent)
-            : p(parent), entry(QSharedPointer<Entry>()), bibTeXfile(NULL) {
+            : p(parent), entry(QSharedPointer<Entry>()), bibTeXfile(nullptr) {
         setupGUI();
     }
 
@@ -256,7 +256,7 @@ void AssociatedFilesUI::updateUIandPreview() {
         d->radioKeepFilename->setChecked(true);
     } else
         d->radioRenameToEntryId->setEnabled(true);
-    if (d->bibTeXfile == NULL || !d->bibTeXfile->hasProperty(File::Url)) {
+    if (d->bibTeXfile == nullptr || !d->bibTeXfile->hasProperty(File::Url)) {
         d->radioRelativePath->setEnabled(false);
         d->radioAbsolutePath->setChecked(true);
         d->labelMoveCopyLocation->hide();
@@ -268,8 +268,8 @@ void AssociatedFilesUI::updateUIandPreview() {
         d->lineMoveCopyLocation->setText(d->bibTeXfile->property(File::Url).toUrl().path());
     }
 
-    if (d->bibTeXfile != NULL && !d->sourceUrl.isEmpty() && !entryId.isEmpty()) {
-        const QUrl newUrl = AssociatedFiles::copyDocument(d->sourceUrl, entryId, d->bibTeXfile, renameOperation(), moveCopyOperation(), NULL, d->lineEditUserDefinedName->text(), true);
+    if (d->bibTeXfile != nullptr && !d->sourceUrl.isEmpty() && !entryId.isEmpty()) {
+        const QUrl newUrl = AssociatedFiles::copyDocument(d->sourceUrl, entryId, d->bibTeXfile, renameOperation(), moveCopyOperation(), nullptr, d->lineEditUserDefinedName->text(), true);
         if (!newUrl.isEmpty())
             preview = AssociatedFiles::associateDocumentURL(newUrl,  d->bibTeXfile, pathType());
     }

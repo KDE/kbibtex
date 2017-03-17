@@ -115,7 +115,7 @@ void KBibTeXFilesTest::testFiles()
     QVERIFY(QFileInfo::exists(absoluteFilename));
 
     /// First load the file ...
-    File *file = NULL;
+    File *file = nullptr;
     loadFile(absoluteFilename, testFile, &file);
     QVERIFY(file);
 
@@ -125,7 +125,7 @@ void KBibTeXFilesTest::testFiles()
     QVERIFY(!tempFileName.isEmpty());
 
     /// ... and finally try to load again the newly saved version
-    File *file2 = NULL;
+    File *file2 = nullptr;
     loadFile(tempFileName, testFile, &file2);
     QVERIFY(file2);
 
@@ -136,9 +136,9 @@ void KBibTeXFilesTest::testFiles()
 
 void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile &currentTestFile, File **outFile)
 {
-    *outFile = NULL;
+    *outFile = nullptr;
 
-    FileImporter *importer = NULL;
+    FileImporter *importer = nullptr;
     if (currentTestFile.filename.endsWith(QStringLiteral(".bib"))) {
         importer = new FileImporterBibTeX(false);
     } else {
@@ -146,7 +146,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     }
 
     QFile file(absoluteFilename);
-    File *bibTeXFile = NULL;
+    File *bibTeXFile = nullptr;
     QVERIFY(file.open(QFile::ReadOnly));
     bibTeXFile = importer->load(&file);
     file.close();
@@ -167,7 +167,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
             if (!authors.isEmpty()) {
                 ValueItem *vi = authors.last().data();
                 Person *p = dynamic_cast<Person *>(vi);
-                if (p != NULL) {
+                if (p != nullptr) {
                     lastEntryLastAuthorLastName = p->lastName();
                 } else
                     lastEntryLastAuthorLastName.clear();
@@ -176,7 +176,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
                 if (!editors.isEmpty()) {
                     ValueItem *vi = editors.last().data();
                     Person *p = dynamic_cast<Person *>(vi);
-                    if (p != NULL) {
+                    if (p != nullptr) {
                         lastEntryLastAuthorLastName = p->lastName();
                     } else
                         lastEntryLastAuthorLastName.clear();
@@ -242,7 +242,7 @@ void KBibTeXFilesTest::saveFile(File *file, const TestFile &currentTestFile, QSt
 {
     *outFile = QString();
 
-    FileExporter *exporter = NULL;
+    FileExporter *exporter = nullptr;
     if (currentTestFile.filename.endsWith(QStringLiteral(".bib"))) {
         FileExporterBibTeX *bibTeXExporter = new FileExporterBibTeX();
         bibTeXExporter->setEncoding(QStringLiteral("utf-8"));

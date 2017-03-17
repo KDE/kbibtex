@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -79,7 +79,7 @@ public:
      * @return A list of Keyword object containing the keywords
       * @see Keyword
      */
-    static QList<QSharedPointer<Keyword> > splitKeywords(const QString &text, char *usedSplitChar = 0);
+    static QList<QSharedPointer<Keyword> > splitKeywords(const QString &text, char *usedSplitChar = nullptr);
 
     /**
      * Split a list of names into single Person objects.
@@ -151,7 +151,7 @@ private:
     Token readValue(Value &value, const QString &fieldType);
 
     static QSharedPointer<Person> personFromString(const QString &name, CommaContainment *comma);
-    static QSharedPointer<Person> personFromTokenList(const QStringList &tokens, CommaContainment *comma = NULL);
+    static QSharedPointer<Person> personFromTokenList(const QStringList &tokens, CommaContainment *comma = nullptr);
     static void parsePersonList(const QString &text, Value &value, CommaContainment *comma);
 
     /**

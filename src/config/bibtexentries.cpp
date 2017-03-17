@@ -106,7 +106,7 @@ public:
 
 };
 
-BibTeXEntries *BibTeXEntries::BibTeXEntriesPrivate::singleton = NULL;
+BibTeXEntries *BibTeXEntries::BibTeXEntriesPrivate::singleton = nullptr;
 
 
 BibTeXEntries::BibTeXEntries()
@@ -122,7 +122,7 @@ BibTeXEntries::~BibTeXEntries()
 
 const BibTeXEntries *BibTeXEntries::self()
 {
-    if (BibTeXEntriesPrivate::singleton == NULL)
+    if (BibTeXEntriesPrivate::singleton == nullptr)
         BibTeXEntriesPrivate::singleton = new BibTeXEntries();
     return BibTeXEntriesPrivate::singleton;
 }

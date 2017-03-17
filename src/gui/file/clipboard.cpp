@@ -118,7 +118,7 @@ public:
         /// use BibTeX importer to generate representation from plain text
         FileImporterBibTeX importer;
         File *file = importer.fromString(text);
-        if (file != NULL) {
+        if (file != nullptr) {
             if (!file->isEmpty()) {
                 FileModel *fileModel = fileView->fileModel();
                 QSortFilterProxyModel *sfpModel = fileView->sortFilterProxyModel();

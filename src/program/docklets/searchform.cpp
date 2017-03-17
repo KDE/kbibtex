@@ -106,14 +106,14 @@ public:
     QMap<OnlineSearchQueryFormAbstract *, QScrollArea *> formToScrollArea;
 
     SearchFormPrivate(SearchResults *searchResults, SearchForm *parent)
-            : p(parent), whichEnginesLabel(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
-          configGroupName(QStringLiteral("Search Engines Docklet")), sr(searchResults), searchButton(NULL), useEntryButton(NULL), currentEntry(NULL) {
+            : p(parent), whichEnginesLabel(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
+          configGroupName(QStringLiteral("Search Engines Docklet")), sr(searchResults), searchButton(nullptr), useEntryButton(nullptr), currentEntry(nullptr) {
         createGUI();
     }
 
     OnlineSearchQueryFormAbstract *currentQueryForm() {
         QScrollArea *area = qobject_cast<QScrollArea *>(queryTermsStack->currentWidget());
-        return formToScrollArea.key(area, NULL);
+        return formToScrollArea.key(area, nullptr);
     }
 
     QScrollArea *wrapInScrollArea(OnlineSearchQueryFormAbstract *form, QWidget *parent) {
@@ -150,7 +150,7 @@ public:
         return container;
     }
 
-    OnlineSearchQueryFormAbstract *createGeneralQueryTermsForm(QWidget *parent = NULL) {
+    OnlineSearchQueryFormAbstract *createGeneralQueryTermsForm(QWidget *parent = nullptr) {
         generalQueryTermsForm = new OnlineSearchQueryFormGeneral(parent);
         return generalQueryTermsForm;
     }
@@ -236,7 +236,7 @@ public:
         addEngine(new OnlineSearchIDEASRePEc(p));
         addEngine(new OnlineSearchDOI(p));
 
-        p->itemCheckChanged(NULL);
+        p->itemCheckChanged(nullptr);
         updateGUI();
     }
 
@@ -252,7 +252,7 @@ public:
 
         OnlineSearchQueryFormAbstract *widget = engine->customWidget(queryTermsStack);
         item->setData(WidgetRole, QVariant::fromValue<OnlineSearchQueryFormAbstract *>(widget));
-        if (widget != NULL) {
+        if (widget != nullptr) {
             connect(widget, &OnlineSearchQueryFormAbstract::returnPressed, searchButton, &QPushButton::click);
             QScrollArea *scrollArea = wrapInScrollArea(widget, queryTermsStack);
             queryTermsStack->addWidget(scrollArea);
@@ -293,10 +293,10 @@ public:
     }
 
     void updateGUI() {
-        if (whichEnginesLabel == NULL) return;
+        if (whichEnginesLabel == nullptr) return;
 
         QStringList checkedEngines;
-        QListWidgetItem *cursor = NULL;
+        QListWidgetItem *cursor = nullptr;
         for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {
                 checkedEngines << it.key()->text();
@@ -311,22 +311,22 @@ public:
         default: whichEnginesLabel->setText(i18n("Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href=\"changeEngine\">change</a>).", checkedEngines.first(), checkedEngines.at(1))); break;
         }
 
-        OnlineSearchQueryFormAbstract *currentQueryWidget = NULL;
-        if (cursor != NULL && checkedEngines.size() == 1)
+        OnlineSearchQueryFormAbstract *currentQueryWidget = nullptr;
+        if (cursor != nullptr && checkedEngines.size() == 1)
             currentQueryWidget = cursor->data(WidgetRole).value<OnlineSearchQueryFormAbstract *>();
-        if (currentQueryWidget == NULL)
+        if (currentQueryWidget == nullptr)
             currentQueryWidget = generalQueryTermsForm;
-        QScrollArea *area = formToScrollArea.value(currentQueryWidget, NULL);
-        if (area != NULL)
+        QScrollArea *area = formToScrollArea.value(currentQueryWidget, nullptr);
+        if (area != nullptr)
             queryTermsStack->setCurrentWidget(area);
 
-        if (useEntryButton != NULL)
+        if (useEntryButton != nullptr)
             useEntryButton->setEnabled(!currentEntry.isNull() && tabWidget->currentIndex() == 0);
     }
 
     void openHomepage() {
         QListWidgetItem *item = enginesList->currentItem();
-        if (item != NULL) {
+        if (item != nullptr) {
             QUrl url = item->data(HomepageRole).toUrl();
             /// Guess mime type for url to open
             QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
@@ -337,7 +337,7 @@ public:
     }
 
     void enginesListCurrentChanged(QListWidgetItem *current) {
-        actionOpenHomepage->setEnabled(current != NULL);
+        actionOpenHomepage->setEnabled(current != nullptr);
     }
 };
 
@@ -457,7 +457,7 @@ void SearchForm::itemCheckChanged(QListWidgetItem *item)
 
     d->searchButton->setEnabled(numCheckedEngines > 0);
 
-    if (item != NULL) {
+    if (item != nullptr) {
         KConfigGroup configGroup(d->config, d->configGroupName);
         QString name = item->data(NameRole).toString();
         configGroup.writeEntry(name, item->checkState() == Qt::Checked);

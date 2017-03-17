@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -56,7 +56,7 @@ public:
     static const QString configKeyAutoApply;
 
     ElementFormPrivate(MDIWidget *_mdiWidget, ElementForm *parent)
-            : p(parent), file(NULL), mdiWidget(_mdiWidget), gotModified(false), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
+            : p(parent), file(nullptr), mdiWidget(_mdiWidget), gotModified(false), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
         KConfigGroup configGroup(config, configGroupName);
 
         layout = new QGridLayout(p);
@@ -139,7 +139,7 @@ public:
         /// get dock where this widget is inside
         /// static cast is save as constructor requires parent to be QDockWidget
         QDockWidget *pp = static_cast<QDockWidget *>(p->parent());
-        return pp != NULL && !pp->isHidden();
+        return pp != nullptr && !pp->isHidden();
     }
 
     void apply() {

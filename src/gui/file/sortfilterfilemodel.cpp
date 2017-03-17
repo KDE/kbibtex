@@ -30,7 +30,7 @@
 const QString SortFilterFileModel::configGroupName = QStringLiteral("User Interface");
 
 SortFilterFileModel::SortFilterFileModel(QObject *parent)
-        : QSortFilterProxyModel(parent), m_internalModel(NULL), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")))
+        : QSortFilterProxyModel(parent), m_internalModel(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")))
 {
     m_filterQuery.combination = AnyTerm;
     loadState();

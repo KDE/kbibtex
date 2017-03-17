@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,7 @@ class KBIBTEXNETWORKING_EXPORT Groups : public QObject
 {
     Q_OBJECT
 public:
-    explicit Groups(QSharedPointer<Zotero::API> api, QObject *parent = NULL);
+    explicit Groups(QSharedPointer<Zotero::API> api, QObject *parent = nullptr);
     ~Groups();
 
     bool initialized() const;

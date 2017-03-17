@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -42,7 +42,7 @@ public:
         IdentifierRole = Qt::UserRole + 9672
     };
 
-    explicit ItalicTextItemModel(QObject *parent = NULL);
+    explicit ItalicTextItemModel(QObject *parent = nullptr);
     ~ItalicTextItemModel();
 
     /**

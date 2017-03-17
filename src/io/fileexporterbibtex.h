@@ -46,8 +46,8 @@ public:
 
     void setEncoding(const QString &encoding);
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = NULL);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = NULL);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
 
     static QString valueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
 

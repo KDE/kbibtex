@@ -140,7 +140,7 @@ public:
     QFileSystemWatcher fileSystemWatcher;
 
     KBibTeXPartPrivate(QWidget *parentWidget, KBibTeXPart *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), bibTeXFile(NULL), model(NULL), sortFilterProxyModel(NULL), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), bibTeXFile(nullptr), model(nullptr), sortFilterProxyModel(nullptr), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
         connect(signalMapperViewDocument, static_cast<void(QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), p, &KBibTeXPart::elementViewDocumentMenu);
         connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged, p, &KBibTeXPart::fileExternallyChange);
 
@@ -333,7 +333,7 @@ public:
         model = new FileModel();
         model->setBibliographyFile(bibTeXFile);
 
-        if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
+        if (sortFilterProxyModel != nullptr) delete sortFilterProxyModel;
         sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
         partWidget->fileView()->setModel(sortFilterProxyModel);
@@ -346,7 +346,7 @@ public:
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 
-        if (bibTeXFile != NULL) {
+        if (bibTeXFile != nullptr) {
             const QUrl oldUrl = bibTeXFile->property(File::Url, QUrl()).toUrl();
             if (oldUrl.isValid() && oldUrl.isLocalFile()) {
                 const QString path = oldUrl.toDisplayString();
@@ -374,7 +374,7 @@ public:
         inputfile.close();
         delete importer;
 
-        if (bibTeXFile == NULL) {
+        if (bibTeXFile == nullptr) {
             qCWarning(LOG_KBIBTEX_PARTS) << "Opening file failed, creating new one instead:" << url.url(QUrl::PreferLocalFile);
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
@@ -385,7 +385,7 @@ public:
         bibTeXFile->setProperty(File::Url, QUrl(url));
 
         model->setBibliographyFile(bibTeXFile);
-        if (sortFilterProxyModel != NULL) delete sortFilterProxyModel;
+        if (sortFilterProxyModel != nullptr) delete sortFilterProxyModel;
         sortFilterProxyModel = new SortFilterFileModel(p);
         sortFilterProxyModel->setSourceModel(model);
         partWidget->fileView()->setModel(sortFilterProxyModel);
@@ -436,7 +436,7 @@ public:
             statJob = KIO::stat(newerBackupUrl, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
             KJobWidgets::setWindow(statJob, p->widget());
             if (statJob->exec() && statJob->error() == KIO::Job::NoError) {
-                KIO::CopyJob *moveJob = NULL; ///< guaranteed to be initialized in either branch of the following code
+                KIO::CopyJob *moveJob = nullptr; ///< guaranteed to be initialized in either branch of the following code
                 /**
                  * The following 'if' block is necessary to handle the
                  * following situation: User opens, modifies, and saves
@@ -467,7 +467,7 @@ public:
                         moveJob = KIO::copy(newerBackupUrl, olderBackupUrl, KIO::HideProgressInfo | KIO::Overwrite);
                     }
                 }
-                if (moveJob == NULL) ///< implicit 'else' section, see longer comment above
+                if (moveJob == nullptr) ///< implicit 'else' section, see longer comment above
                     moveJob = KIO::move(newerBackupUrl, olderBackupUrl, KIO::HideProgressInfo | KIO::Overwrite);
                 KJobWidgets::setWindow(moveJob, p->widget());
                 copySucceeded = moveJob->exec();
@@ -513,7 +513,7 @@ public:
 
         if (isSaveAsOperation) {
             /// only show export dialog at SaveAs or SaveCopyAs operations
-            FileExporterToolchain *fet = NULL;
+            FileExporterToolchain *fet = nullptr;
 
             if (FileExporterBibTeX::isFileExporterBibTeX(*exporter)) {
                 QPointer<QDialog> dlg = new QDialog(p->widget());
@@ -533,7 +533,7 @@ public:
                 if (dlg->exec() == QDialog::Accepted)
                     settingsWidget->saveProperties(bibTeXFile);
                 delete dlg;
-            } else if ((fet = qobject_cast<FileExporterToolchain *>(exporter)) != NULL) {
+            } else if ((fet = qobject_cast<FileExporterToolchain *>(exporter)) != nullptr) {
                 QPointer<QDialog> dlg = new QDialog(p->widget());
                 dlg->setWindowTitle(i18n("PDF/PostScript File Settings"));
                 QBoxLayout *layout = new QVBoxLayout(dlg);
@@ -556,9 +556,9 @@ public:
         return exporter;
     }
 
-    bool saveFile(QFile &file, FileExporter *exporter, QStringList *errorLog = NULL) {
+    bool saveFile(QFile &file, FileExporter *exporter, QStringList *errorLog = nullptr) {
         SortFilterFileModel *model = qobject_cast<SortFilterFileModel *>(partWidget->fileView()->model());
-        Q_ASSERT_X(model != NULL, "FileExporter *KBibTeXPart::KBibTeXPartPrivate:saveFile(...)", "SortFilterFileModel *model from editor->model() is invalid");
+        Q_ASSERT_X(model != nullptr, "FileExporter *KBibTeXPart::KBibTeXPartPrivate:saveFile(...)", "SortFilterFileModel *model from editor->model() is invalid");
 
         return exporter->save(&file, model->fileSourceModel()->bibliographyFile(), errorLog);
     }
@@ -664,7 +664,7 @@ public:
             const QList<QUrl> urlList = FileInfo::entryUrls(entry.data(), partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
             if (!urlList.isEmpty()) {
                 /// Memorize first action, necessary to set menu title
-                QAction *firstAction = NULL;
+                QAction *firstAction = nullptr;
                 /// First iteration: local references only
                 for (const QUrl &url : urlList) {
                     /// First iteration: local references only
@@ -683,16 +683,16 @@ public:
                     signalMapperViewDocumentSenders.insert(action);
                     viewDocumentMenu->addAction(action);
                     /// Memorize first action
-                    if (firstAction == NULL) firstAction = action;
+                    if (firstAction == nullptr) firstAction = action;
                 }
-                if (firstAction != NULL) {
+                if (firstAction != nullptr) {
                     /// If there is 'first action', then there must be
                     /// local URLs (i.e. local files) and firstAction
                     /// is the first one where a title can be set above
                     viewDocumentMenu->insertSection(firstAction, i18n("Local Files"));
                 }
 
-                firstAction = NULL; /// Now the first remote action is to be memorized
+                firstAction = nullptr; /// Now the first remote action is to be memorized
                 /// Second iteration: remote references only
                 for (const QUrl &url : urlList) {
                     if (url.isLocalFile()) continue; ///< skip local files
@@ -709,9 +709,9 @@ public:
                     signalMapperViewDocumentSenders.insert(action);
                     viewDocumentMenu->addAction(action);
                     /// Memorize first action
-                    if (firstAction == NULL) firstAction = action;
+                    if (firstAction == nullptr) firstAction = action;
                 }
-                if (firstAction != NULL) {
+                if (firstAction != nullptr) {
                     /// If there is 'first action', then there must be
                     /// some remote URLs and firstAction is the first
                     /// one where a title can be set above
@@ -1036,12 +1036,12 @@ void KBibTeXPart::updateActions()
     /// enable menu item only if there is at least one document to view
     d->elementViewDocumentAction->setEnabled(!emptySelection && numDocumentsToView > 0);
     /// activate sub-menu only if there are at least two documents to view
-    d->elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? d->viewDocumentMenu : NULL);
+    d->elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? d->viewDocumentMenu : nullptr);
     d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? (*d->viewDocumentMenu->actions().constBegin())->text() : QStringLiteral(""));
 
     /// update list of references which can be sent to LyX
     QStringList references;
-    if (d->partWidget->fileView()->selectionModel() != NULL) {
+    if (d->partWidget->fileView()->selectionModel() != nullptr) {
         const QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
         for (const QModelIndex &index : mil) {
             QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
