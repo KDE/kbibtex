@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -156,9 +156,15 @@ public:
         QBoxLayout *containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);
         containerButtonLayout->setMargin(0);
+#ifdef HAVE_QTOAUTH // krazy:exclude=cpp
         QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme(QLatin1String("preferences-web-browser-identification")), i18n("Get New Credentials"), container);
         containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
         connect(buttonGetOAuthCredentials, SIGNAL(clicked()), p, SLOT(getOAuthCredentials()));
+#else // not HAVE_QTOAUTH
+        QPushButton *buttonApplyManuallyEnteredCredentials = new QPushButton(QIcon::fromTheme(QLatin1String("preferences-web-browser-identification")), i18n("Apply Credentials"), container);
+        containerButtonLayout->addWidget(buttonApplyManuallyEnteredCredentials, 0);
+        connect(buttonApplyManuallyEnteredCredentials, SIGNAL(clicked()), p, SLOT(applyManuallyEnteredCredentials()));
+#endif // not HAVE_QTOAUTH
         containerButtonLayout->addStretch(1);
 
         /// Collection browser
@@ -404,6 +410,21 @@ void ZoteroBrowser::getOAuthCredentials()
     }
     delete wizard;
 }
+#else // HAVE_QTOAUTH
+void ZoteroBrowser::applyManuallyEnteredCredentials()
+{
+    bool userIdOk = false;
+    const int userId = d->lineEditNumericUserId->text().toInt(&userIdOk);
+    const QString apiKey = d->lineEditApiKey->text();
+    static const QRegExp apiKeyRegExp(QLatin1String("[a-zA-Z0-9]{24}$"));
+    if (userIdOk && userId > 0 && !apiKey.isEmpty() && apiKeyRegExp.indexIn(apiKey) == 0) {
+        d->queueWriteOAuthCredentials();
+        updateButtons();
+        retrieveGroupList();
+    } else
+        KMessageBox::error(this, i18n("<qt>The provided Zotero credentials are incomplete:<ul><li>The numeric user id must be a positive number.</li><li>The API key must be a string of 24 alpha-numeric characters.<br/>It is not your Zotero password.</li></ul></qt>"), i18n("Incomplete Zotero credentials"));
+}
+
 #endif // HAVE_QTOAUTH
 
 void ZoteroBrowser::readOAuthCredentials(bool ok) {
