@@ -37,7 +37,7 @@ class KBIBTEXNETWORKING_EXPORT Groups : public QObject
     Q_OBJECT
 public:
     explicit Groups(QSharedPointer<Zotero::API> api, QObject *parent = nullptr);
-    ~Groups();
+    ~Groups() override;
 
     bool initialized() const;
     bool busy() const;

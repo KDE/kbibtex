@@ -33,13 +33,13 @@
 class KBIBTEXIO_EXPORT EncoderLaTeX: public Encoder
 {
 public:
-    virtual QString decode(const QString &text) const;
-    virtual QString encode(const QString &text, const TargetEncoding targetEncoding) const;
+    QString decode(const QString &text) const override;
+    QString encode(const QString &text, const TargetEncoding targetEncoding) const override;
     QString convertToPlainAscii(const QString &input) const;
     static bool containsOnlyAscii(const QString &text);
 
     static const EncoderLaTeX &instance();
-    ~EncoderLaTeX();
+    ~EncoderLaTeX() override;
 
 protected:
     EncoderLaTeX();

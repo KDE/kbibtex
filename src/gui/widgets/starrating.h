@@ -98,11 +98,11 @@ signals:
     void modified();
 
 protected:
-    void paintEvent(QPaintEvent *);
-    void mouseReleaseEvent(QMouseEvent *);
-    void mouseMoveEvent(QMouseEvent *);
-    void leaveEvent(QEvent *);
-    bool eventFilter(QObject *obj, QEvent *event);
+    void paintEvent(QPaintEvent *) override;
+    void mouseReleaseEvent(QMouseEvent *) override;
+    void mouseMoveEvent(QMouseEvent *) override;
+    void leaveEvent(QEvent *) override;
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 private slots:
     void clear();

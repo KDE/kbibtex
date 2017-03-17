@@ -40,7 +40,7 @@ class KBIBTEXNETWORKING_EXPORT Items : public QObject
     Q_OBJECT
 public:
     explicit Items(QSharedPointer<Zotero::API> api, QObject *parent = nullptr);
-    ~Items();
+    ~Items() override;
 
     void retrieveItemsByCollection(const QString &collectionId);
     void retrieveItemsByTag(const QString &tag);

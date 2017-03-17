@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,7 +39,7 @@ class KBIBTEXNETWORKING_EXPORT Collection : public QObject
     Q_OBJECT
 public:
     Collection(QSharedPointer<Zotero::API> api, QObject *parent);
-    ~Collection();
+    ~Collection() override;
 
     bool initialized() const;
     bool busy() const;

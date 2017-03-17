@@ -1095,7 +1095,7 @@ public:
     }
 
 protected:
-    virtual void dropEvent(QDropEvent *event) {
+    void dropEvent(QDropEvent *event) override {
         FileImporterBibTeX importer;
         FileExporterBibTeX exporter;
         const File *file = importer.fromString(event->mimeData()->text());

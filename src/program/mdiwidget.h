@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,7 +41,7 @@ class MDIWidget : public QStackedWidget
 
 public:
     explicit MDIWidget(QWidget *parent);
-    ~MDIWidget();
+    ~MDIWidget() override;
 
     FileView *fileView();
     OpenFileInfo *currentFile();

@@ -36,15 +36,15 @@ class KBIBTEXIO_EXPORT FileExporterXSLT : public FileExporter
 
 public:
     explicit FileExporterXSLT(const QString &xsltFilename = QString());
-    ~FileExporterXSLT();
+    ~FileExporterXSLT() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
     void setXSLTFilename(const QString &xsltFilename);
 
 public slots:
-    void cancel();
+    void cancel() override;
 
 private:
     bool m_cancelFlag;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -40,16 +40,16 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchSpringerLink : public OnlineSearchAbs
 
 public:
     explicit OnlineSearchSpringerLink(QWidget *parent);
-    ~OnlineSearchSpringerLink();
+    ~OnlineSearchSpringerLink() override;
 
-    virtual void startSearchFromForm();
-    virtual void startSearch(const QMap<QString, QString> &query, int numResults);
-    virtual QString label() const;
-    virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
-    virtual QUrl homepage() const;
+    void startSearchFromForm() override;
+    void startSearch(const QMap<QString, QString> &query, int numResults) override;
+    QString label() const override;
+    OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) override;
+    QUrl homepage() const override;
 
 protected:
-    virtual QString favIconUrl() const;
+    QString favIconUrl() const override;
 
 private slots:
     void doneFetchingPAM();

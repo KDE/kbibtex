@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,15 +29,15 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchIEEEXplore : public OnlineSearchAbstr
 
 public:
     explicit OnlineSearchIEEEXplore(QWidget *parent);
-    ~OnlineSearchIEEEXplore();
+    ~OnlineSearchIEEEXplore() override;
 
-    virtual void startSearch(const QMap<QString, QString> &query, int numResults);
-    virtual QString label() const;
-    virtual QUrl homepage() const;
+    void startSearch(const QMap<QString, QString> &query, int numResults) override;
+    QString label() const override;
+    QUrl homepage() const override;
 
 protected:
-    virtual QString favIconUrl() const;
-    virtual void sanitizeEntry(QSharedPointer<Entry> entry);
+    QString favIconUrl() const override;
+    void sanitizeEntry(QSharedPointer<Entry> entry) override;
 
 private slots:
     void doneFetchingXML();

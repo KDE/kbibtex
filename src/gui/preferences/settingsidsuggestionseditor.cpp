@@ -174,7 +174,7 @@ public:
         connect(comboBoxDigits, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
-    QString toString() const {
+    QString toString() const override {
         const int year = comboBoxDigits->itemData(comboBoxDigits->currentIndex()).toInt();
         QString result = year == 4 ? QStringLiteral("Y") : QStringLiteral("y");
 
@@ -199,7 +199,7 @@ public:
         formLayout->addRow(i18n("Volume:"), labelCheckmark);
     }
 
-    QString toString() const {
+    QString toString() const override {
         return QStringLiteral("v");
     }
 };
@@ -221,7 +221,7 @@ public:
         formLayout->addRow(i18n("First page's number:"), labelCheckmark);
     }
 
-    QString toString() const {
+    QString toString() const override {
         return QStringLiteral("p");
     }
 };
@@ -372,7 +372,7 @@ public:
         connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
-    QString toString() const
+    QString toString() const override
     {
         QString result = QStringLiteral("j");
 
@@ -410,7 +410,7 @@ public:
         connect(lineEditText, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
-    QString toString() const {
+    QString toString() const override {
         QString result = QStringLiteral("\"") + lineEditText->text();
         return result;
     }

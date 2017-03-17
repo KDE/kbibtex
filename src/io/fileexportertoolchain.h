@@ -47,7 +47,7 @@ public:
     static bool kpsewhich(const QString &filename);
 
 public slots:
-    void cancel();
+    void cancel() override;
 
 protected:
     QTemporaryDir tempDir;

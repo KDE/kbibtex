@@ -33,10 +33,10 @@ class KBIBTEXGUI_EXPORT KBibTeXPreferencesDialog : public KPageDialog
 
 public:
     explicit KBibTeXPreferencesDialog(QWidget *parent, Qt::WindowFlags flags = 0);
-    ~KBibTeXPreferencesDialog();
+    ~KBibTeXPreferencesDialog() override;
 
 protected:
-    virtual void hideEvent(QHideEvent *e);
+    void hideEvent(QHideEvent *e) override;
 
 private:
     class KBibTeXPreferencesDialogPrivate;

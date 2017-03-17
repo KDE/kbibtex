@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -86,9 +86,9 @@ public:
     void setText(const QString &text);
     QString text() const;
 
-    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
-    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-    bool operator==(const ValueItem &other) const;
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode) override;
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const override;
+    bool operator==(const ValueItem &other) const override;
 
     /**
      * Cheap and fast test if another ValueItem is a Keyword object.
@@ -120,9 +120,9 @@ public:
     QString lastName() const;
     QString suffix() const;
 
-    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
-    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-    bool operator==(const ValueItem &other) const;
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode) override;
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const override;
+    bool operator==(const ValueItem &other) const override;
 
     static QString transcribePersonName(const QString &formatting, const QString &firstName, const QString &lastName, const QString &suffix = QString());
     static QString transcribePersonName(const Person *person, const QString &formatting);
@@ -151,9 +151,9 @@ public:
     QString text() const;
     bool isValid();
 
-    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
-    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-    bool operator==(const ValueItem &other) const;
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode) override;
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const override;
+    bool operator==(const ValueItem &other) const override;
 
     /**
      * Cheap and fast test if another ValueItem is a MacroKey object.
@@ -176,9 +176,9 @@ public:
     void setText(const QString &text);
     QString text() const;
 
-    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
-    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-    bool operator==(const ValueItem &other) const;
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode) override;
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const override;
+    bool operator==(const ValueItem &other) const override;
 
     /**
      * Cheap and fast test if another ValueItem is a PlainText object.
@@ -200,9 +200,9 @@ public:
     void setText(const QString &text);
     QString text() const;
 
-    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode);
-    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const;
-    bool operator==(const ValueItem &other) const;
+    void replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode) override;
+    bool containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive = Qt::CaseInsensitive) const override;
+    bool operator==(const ValueItem &other) const override;
 
     /**
      * Cheap and fast test if another ValueItem is a VerbatimText object.
@@ -261,7 +261,7 @@ public:
     static QString text(const ValueItem &valueItem);
     static QString text(const QSharedPointer<const ValueItem> &valueItem);
 
-    void notificationEvent(int eventId);
+    void notificationEvent(int eventId) override;
 
 private:
     enum ValueItemType { VITOther = 0, VITPerson, VITKeyword};

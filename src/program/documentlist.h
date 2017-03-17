@@ -41,8 +41,8 @@ private:
 public:
     explicit DocumentListDelegate(QObject *parent = nullptr);
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 };
 
@@ -52,11 +52,11 @@ class DocumentListModel : public QAbstractListModel
 
 public:
     explicit DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObject *parent = nullptr);
-    ~DocumentListModel();
+    ~DocumentListModel() override;
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
 private:
     class DocumentListModelPrivate;
@@ -72,7 +72,7 @@ class DocumentListView : public QListView
 
 public:
     DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget *parent);
-    ~DocumentListView();
+    ~DocumentListView() override;
 
 private slots:
     void addToFavorites();
@@ -82,7 +82,7 @@ private slots:
     void closeFile();
 
 protected:
-    void currentChanged(const QModelIndex &current, const QModelIndex &previous);
+    void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
 
 private:
     class DocumentListViewPrivate;

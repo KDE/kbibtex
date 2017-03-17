@@ -37,7 +37,7 @@ class KBIBTEXNETWORKING_EXPORT Tags : public QObject
     Q_OBJECT
 public:
     explicit Tags(QSharedPointer<Zotero::API> api, QObject *parent = nullptr);
-    ~Tags();
+    ~Tags() override;
 
     bool initialized() const;
     bool busy() const;

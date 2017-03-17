@@ -48,7 +48,7 @@ public:
     };
     Q_DECLARE_FLAGS(StatusFlags, StatusFlag)
 
-    ~OpenFileInfo();
+    ~OpenFileInfo() override;
 
     KParts::ReadOnlyPart *part(QWidget *parent, KService::Ptr servicePtr = KService::Ptr());
 
@@ -106,7 +106,7 @@ public:
     typedef QVector<OpenFileInfo *> OpenFileInfoList;
 
     static OpenFileInfoManager *instance();
-    ~OpenFileInfoManager();
+    ~OpenFileInfoManager() override;
 
     OpenFileInfo *createNew(const QString &mimeType = FileInfo::mimetypeBibTeX);
 

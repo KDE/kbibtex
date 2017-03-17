@@ -82,7 +82,7 @@ public:
         createGUI(scrollable);
     }
 
-    ~ElementEditorPrivate() {
+    ~ElementEditorPrivate() override {
         clearWidgets();
     }
 
@@ -254,7 +254,7 @@ public:
         apply(element);
     }
 
-    void apply(QSharedPointer<Element> element) {
+    void apply(QSharedPointer<Element> element) override {
         if (tab->currentWidget() == sourceWidget) {
             /// Very simple if source view is active: BibTeX code contains
             /// all necessary data

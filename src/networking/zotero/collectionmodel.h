@@ -41,12 +41,12 @@ public:
     static const int CollectionIdRole;
 
     explicit CollectionModel(Zotero::Collection *collection, QObject *parent = nullptr);
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QModelIndex index(int row, int column, const QModelIndex &) const;
-    QModelIndex parent(const QModelIndex &) const;
-    int rowCount(const QModelIndex &) const;
-    int columnCount(const QModelIndex &) const;
-    bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QModelIndex index(int row, int column, const QModelIndex &) const override;
+    QModelIndex parent(const QModelIndex &) const override;
+    int rowCount(const QModelIndex &) const override;
+    int columnCount(const QModelIndex &) const override;
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
 private slots:
     void fetchingDone();

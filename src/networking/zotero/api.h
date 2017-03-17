@@ -57,7 +57,7 @@ public:
      */
     explicit API(RequestScope requestScope, int userOrGroupPrefix, const QString &apiKey, QObject *parent = nullptr);
 
-    ~API();
+    ~API() override;
 
     /**
      * Add a limit parameter to a given Zotero URL.

@@ -59,7 +59,7 @@ public:
      *     as all HTML content you be treated as comments otherwise.
      */
     explicit FileImporterBibTeX(bool ignoreComments = true, KBibTeX::Casing keywordCasing = KBibTeX::cLowerCase);
-    ~FileImporterBibTeX();
+    ~FileImporterBibTeX() override;
 
     /**
      * Read data from the given device and construct a File object holding
@@ -67,7 +67,7 @@ public:
      * @param iodevice opened QIODevice instance ready to read from
      * @return @c valid File object with elements, @c NULL if reading failed for some reason
      */
-    File *load(QIODevice *iodevice);
+    File *load(QIODevice *iodevice) override;
 
     /** TODO
      */
@@ -104,7 +104,7 @@ public:
     static void parsePersonList(const QString &text, Value &value);
 
 public slots:
-    void cancel();
+    void cancel() override;
 
 private:
     enum Token {

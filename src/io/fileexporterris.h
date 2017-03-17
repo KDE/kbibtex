@@ -31,13 +31,13 @@ class KBIBTEXIO_EXPORT FileExporterRIS : public FileExporter
 
 public:
     FileExporterRIS();
-    ~FileExporterRIS();
+    ~FileExporterRIS() override;
 
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
 public slots:
-    void cancel();
+    void cancel() override;
 
 private:
     bool m_cancelFlag;

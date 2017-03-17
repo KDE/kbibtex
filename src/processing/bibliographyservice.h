@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,7 @@ class KBIBTEXPROC_EXPORT BibliographyService : public QObject
 
 public:
     explicit BibliographyService(QWidget *parentWidget);
-    ~BibliographyService();
+    ~BibliographyService() override;
 
     /**
      * Set KBibTeX as default editor for supported

@@ -52,7 +52,7 @@ public:
         NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     }
 
-    void notificationEvent(int eventId) {
+    void notificationEvent(int eventId) override {
         if (eventId == NotificationHub::EventConfigurationChanged)
             readConfiguration();
     }
@@ -71,23 +71,23 @@ public:
         }
     }
 
-    QModelIndex index(int row, int column, const QModelIndex &) const {
+    QModelIndex index(int row, int column, const QModelIndex &) const override {
         return createIndex(row, column);
     }
 
-    QModelIndex parent(const QModelIndex & = QModelIndex()) const {
+    QModelIndex parent(const QModelIndex & = QModelIndex()) const override {
         return QModelIndex();
     }
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const {
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override {
         return parent == QModelIndex() ? 2 + colorLabelPairs.count() : 0;
     }
 
-    virtual int columnCount(const QModelIndex & = QModelIndex()) const {
+    int columnCount(const QModelIndex & = QModelIndex()) const override {
         return 1;
     }
 
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
         if (role == ColorRole) {
             if (index.row() == 0)
                 return QColor(Qt::black);
@@ -113,7 +113,7 @@ public:
             return QVariant();
     }
 
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const {
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override {
         if (section != 0 || orientation != Qt::Horizontal || role != Qt::DisplayRole)
             return QVariant();
 

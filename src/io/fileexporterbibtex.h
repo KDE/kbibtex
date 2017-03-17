@@ -42,12 +42,12 @@ public:
     enum UseLaTeXEncoding {leUTF8, leLaTeX, leRaw};
 
     FileExporterBibTeX();
-    ~FileExporterBibTeX();
+    ~FileExporterBibTeX() override;
 
     void setEncoding(const QString &encoding);
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
     static QString valueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
 
@@ -59,7 +59,7 @@ public:
     static bool isFileExporterBibTeX(const FileExporter &other);
 
 public slots:
-    void cancel();
+    void cancel() override;
 
 private:
     class FileExporterBibTeXPrivate;

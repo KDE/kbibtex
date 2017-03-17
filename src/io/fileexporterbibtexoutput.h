@@ -31,12 +31,12 @@ class KBIBTEXIO_EXPORT FileExporterBibTeXOutput : public FileExporterToolchain
 public:
     enum OutputType {BibTeXLogFile, BibTeXBlockList};
     explicit FileExporterBibTeXOutput(OutputType outputType);
-    ~FileExporterBibTeXOutput();
+    ~FileExporterBibTeXOutput() override;
 
-    void reloadConfig();
+    void reloadConfig() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
     void setLaTeXLanguage(const QString &language);
     void setLaTeXBibliographyStyle(const QString &bibStyle);

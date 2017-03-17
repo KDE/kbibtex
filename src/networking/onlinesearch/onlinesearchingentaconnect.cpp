@@ -118,11 +118,11 @@ public:
         numResultsField->setValue(10);
     }
 
-    bool readyToStart() const {
+    bool readyToStart() const override {
         return !(lineEditFullText->text().isEmpty() && lineEditTitle->text().isEmpty() && lineEditAuthor->text().isEmpty() && lineEditAbstractKeywords->text().isEmpty() && lineEditPublication->text().isEmpty() && lineEditISSNDOIISBN->text().isEmpty() && lineEditVolume->text().isEmpty() && lineEditIssue->text().isEmpty());
     }
 
-    void copyFromEntry(const Entry &entry) {
+    void copyFromEntry(const Entry &entry) override {
         lineEditTitle->setText(PlainTextValue::text(entry[Entry::ftTitle]));
         lineEditAuthor->setText(authorLastNames(entry).join(QStringLiteral(" ")));
         lineEditVolume->setText(PlainTextValue::text(entry[Entry::ftVolume]));

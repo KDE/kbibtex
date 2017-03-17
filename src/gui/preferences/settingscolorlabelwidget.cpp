@@ -49,7 +49,7 @@ public:
         /// nothing
     }
 
-    virtual QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const {
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const override {
         if (index.column() == 0)
             /// Colors are to be edited in a color button
             return new KColorButton(parent);
@@ -58,7 +58,7 @@ public:
             return new KLineEdit(parent);
     }
 
-    void setEditorData(QWidget *editor, const QModelIndex &index) const {
+    void setEditorData(QWidget *editor, const QModelIndex &index) const override {
         if (index.column() == 0) {
             KColorButton *colorButton = qobject_cast<KColorButton *>(editor);
             /// Initialized color button with row's current color
@@ -70,7 +70,7 @@ public:
         }
     }
 
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override {
         if (index.column() == 0) {
             KColorButton *colorButton = qobject_cast<KColorButton *>(editor);
             if (colorButton->color() != Qt::black)
@@ -84,7 +84,7 @@ public:
         }
     }
 
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override {
         QSize hint = QStyledItemDelegate::sizeHint(option, index);
         QFontMetrics fm = QFontMetrics(QFont());
         /// Enforce minimum height of 4 times x-height

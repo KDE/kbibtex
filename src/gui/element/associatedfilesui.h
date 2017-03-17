@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,7 +34,7 @@ class KBIBTEXGUI_EXPORT AssociatedFilesUI: public QWidget
     Q_OBJECT
 
 public:
-    ~AssociatedFilesUI();
+    ~AssociatedFilesUI() override;
 
     static bool associateUrl(const QUrl &url, QSharedPointer<Entry> &entry, const File *bibTeXfile, QWidget *parent);
     static QString associateUrl(const QUrl &url, const QString &entryId, const File *bibTeXfile, QWidget *parent);

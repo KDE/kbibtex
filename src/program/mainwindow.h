@@ -37,15 +37,15 @@ class KBibTeXMainWindow : public KParts::MainWindow
 
 public:
     explicit KBibTeXMainWindow(QWidget *parent = nullptr);
-    virtual ~KBibTeXMainWindow();
+    ~KBibTeXMainWindow() override;
 
 public slots:
     void openDocument(const QUrl &url);
 
 protected: // KMainWindow API
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *event);
-    void closeEvent(QCloseEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void closeEvent(QCloseEvent *event) override;
 
 protected:
     void setupControllers();

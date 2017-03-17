@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,16 +34,16 @@ class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
     friend class KBibTeXBrowserExtension;
 
 public:
-    KBibTeXPart(QWidget *parentWidget, QObject *parent, const QVariantList& args);
-    virtual ~KBibTeXPart();
+    KBibTeXPart(QWidget *parentWidget, QObject *parent, const QVariantList &args);
+    ~KBibTeXPart() override;
 
-    void setModified(bool modified);
+    void setModified(bool modified) override;
 
-    virtual void notificationEvent(int eventId);
+    void notificationEvent(int eventId) override;
 
 protected:
-    virtual bool openFile();
-    virtual bool saveFile();
+    bool openFile() override;
+    bool saveFile() override;
 
 protected:
     void setupActions();

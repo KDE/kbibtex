@@ -30,12 +30,12 @@ class KBIBTEXIO_EXPORT FileExporterPS : public FileExporterToolchain
 
 public:
     FileExporterPS();
-    ~FileExporterPS();
+    ~FileExporterPS() override;
 
-    void reloadConfig();
+    void reloadConfig() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
 private:
     QString m_fileBasename;

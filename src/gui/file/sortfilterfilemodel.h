@@ -42,15 +42,15 @@ public:
 
     explicit SortFilterFileModel(QObject *parent = nullptr);
 
-    virtual void setSourceModel(QAbstractItemModel *model);
+    void setSourceModel(QAbstractItemModel *model) override;
     FileModel *fileSourceModel() const;
 
 public slots:
     void updateFilter(const SortFilterFileModel::FilterQuery &);
 
 protected:
-    virtual bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
 private:
     FileModel *m_internalModel;

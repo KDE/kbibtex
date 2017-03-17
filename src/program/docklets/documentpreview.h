@@ -45,7 +45,7 @@ public:
     void setPixmap(const QPixmap &pixmap);
 
 protected:
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
 
 private:
     QPixmap m_pixmap;
@@ -56,7 +56,7 @@ class DocumentPreview : public QWidget
     Q_OBJECT
 public:
     explicit DocumentPreview(QDockWidget *parent);
-    ~DocumentPreview();
+    ~DocumentPreview() override;
 
 public slots:
     void setElement(QSharedPointer<Element>, const File *);

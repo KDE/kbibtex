@@ -46,7 +46,7 @@ class FieldListEdit : public QWidget
 
 public:
     FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = nullptr);
-    ~FieldListEdit();
+    ~FieldListEdit() override;
 
     virtual bool reset(const Value &value);
     virtual bool apply(Value &value) const;
@@ -67,8 +67,8 @@ protected:
     virtual FieldLineEdit *addFieldLineEdit();
     void addButton(QPushButton *button);
     void lineAdd(Value *value);
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *);
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *) override;
 
     const Element *m_element;
 
@@ -94,10 +94,10 @@ class PersonListEdit : public FieldListEdit
 public:
     PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent = nullptr);
 
-    virtual bool reset(const Value &value);
-    virtual bool apply(Value &value) const;
+    bool reset(const Value &value) override;
+    bool apply(Value &value) const override;
 
-    virtual void setReadOnly(bool isReadOnly);
+    void setReadOnly(bool isReadOnly) override;
 
 private slots:
     void slotAddNamesFromClipboard();
@@ -117,9 +117,9 @@ class UrlListEdit : public FieldListEdit
 
 public:
     explicit UrlListEdit(QWidget *parent = nullptr);
-    ~UrlListEdit();
+    ~UrlListEdit() override;
 
-    virtual void setReadOnly(bool isReadOnly);
+    void setReadOnly(bool isReadOnly) override;
 
     static QString askRelativeOrStaticFilename(QWidget *parent, const QString &filename, const QUrl &baseUrl);
 
@@ -127,7 +127,7 @@ public:
     static bool urlIsLocal(const QUrl &url);
 
 protected:
-    virtual FieldLineEdit *addFieldLineEdit();
+    FieldLineEdit *addFieldLineEdit() override;
 
 private slots:
     void slotAddReference();
@@ -159,9 +159,9 @@ public:
 
     explicit KeywordListEdit(QWidget *parent = nullptr);
 
-    virtual void setReadOnly(bool isReadOnly);
-    virtual void setFile(const File *file);
-    virtual void setCompletionItems(const QStringList &items);
+    void setReadOnly(bool isReadOnly) override;
+    void setFile(const File *file) override;
+    void setCompletionItems(const QStringList &items) override;
 
 private slots:
     void slotAddKeywordsFromList();

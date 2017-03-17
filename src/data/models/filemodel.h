@@ -52,13 +52,13 @@ public:
     File *bibliographyFile() const;
     virtual void setBibliographyFile(File *file);
 
-    virtual QModelIndex parent(const QModelIndex &index) const;
-    virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    QModelIndex parent(const QModelIndex &index) const override;
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     void clear();
     virtual bool removeRow(int row, const QModelIndex &parent = QModelIndex());
@@ -70,7 +70,7 @@ public:
     /// Notifies the model that a given element has been modifed
     void elementChanged(int row);
 
-    void notificationEvent(int eventId);
+    void notificationEvent(int eventId) override;
 
 private:
     File *m_file;

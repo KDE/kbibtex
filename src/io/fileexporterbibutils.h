@@ -30,10 +30,10 @@ class KBIBTEXIO_EXPORT FileExporterBibUtils : public FileExporter, public BibUti
 
 public:
     explicit FileExporterBibUtils();
-    ~FileExporterBibUtils();
+    ~FileExporterBibUtils() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
 private:
     class Private;

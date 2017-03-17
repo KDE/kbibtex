@@ -32,7 +32,7 @@ public:
         /* nothing */
     }
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
 
 #endif // KBIBTEX_GUI_FILEDELEGATE_H

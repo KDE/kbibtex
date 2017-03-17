@@ -62,7 +62,7 @@ public:
         }
     }
 
-    ~IdSuggestionsModel() {
+    ~IdSuggestionsModel() override {
         delete m_idSuggestions;
     }
 
@@ -88,14 +88,14 @@ public:
             return QString();
     }
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const {
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override {
         if (parent == QModelIndex())
             return m_formatStringList.count();
         else
             return 0;
     }
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
         if (index.row() < 0 || index.row() >= m_formatStringList.count())
             return QVariant();
 
@@ -125,7 +125,7 @@ public:
         }
     }
 
-    bool setData(const QModelIndex &idx, const QVariant &value, int role) {
+    bool setData(const QModelIndex &idx, const QVariant &value, int role) override {
         if (idx.row() < 0 || idx.row() >= m_formatStringList.count())
             return false;
 
@@ -162,7 +162,7 @@ public:
         return true;
     }
 
-    QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const {
+    QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const override {
         if (role == Qt::DisplayRole && section == 0)
             return i18n("Id Suggestions");
 

@@ -48,7 +48,7 @@ public:
         // nothing
     }
 
-    virtual ~OnlineSearchQueryFormAbstract() {
+    ~OnlineSearchQueryFormAbstract() override {
         /// nothing
     }
 

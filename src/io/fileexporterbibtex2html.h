@@ -28,12 +28,12 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX2HTML: public FileExporterToolchain
 
 public:
     FileExporterBibTeX2HTML();
-    ~FileExporterBibTeX2HTML();
+    ~FileExporterBibTeX2HTML() override;
 
-    void reloadConfig();
+    void reloadConfig() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
     void setLaTeXBibliographyStyle(const QString &bibStyle);
 

@@ -81,7 +81,7 @@ private slots:
 public:
     AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestionsEditWidget *isew, QWidget *parent);
 
-    QString toString() const;
+    QString toString() const override;
 };
 
 /**
@@ -105,7 +105,7 @@ private slots:
 public:
     TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, bool removeSmallWords, IdSuggestionsEditWidget *isew, QWidget *parent);
 
-    QString toString() const;
+    QString toString() const override;
 };
 
 
@@ -117,7 +117,7 @@ class KBIBTEXGUI_EXPORT IdSuggestionsEditDialog : public QDialog
     Q_OBJECT
 
 public:
-    virtual ~IdSuggestionsEditDialog();
+    ~IdSuggestionsEditDialog() override;
 
     static QString editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent);
 protected:
@@ -130,7 +130,7 @@ class IdSuggestionsEditWidget : public QWidget, public IdSuggestions
 
 public:
     explicit IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent = nullptr, Qt::WindowFlags f = 0);
-    virtual ~IdSuggestionsEditWidget();
+    ~IdSuggestionsEditWidget() override;
 
     void setFormatString(const QString &formatString);
     QString formatString() const;

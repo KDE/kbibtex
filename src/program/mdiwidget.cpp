@@ -63,11 +63,11 @@ public:
         endResetModel();
     }
 
-    int columnCount(const QModelIndex &) const {
+    int columnCount(const QModelIndex &) const override {
         return 3;
     }
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
         OpenFileInfoManager::OpenFileInfoList ofiList = ofim->filteredItems(OpenFileInfo::RecentlyUsed);
         if (index.row() < ofiList.count()) {
             OpenFileInfo *ofiItem = ofiList[index.row()];
@@ -96,22 +96,22 @@ public:
         return QVariant();
     }
 
-    QVariant headerData(int section, Qt::Orientation , int role = Qt::DisplayRole) const {
+    QVariant headerData(int section, Qt::Orientation , int role = Qt::DisplayRole) const override {
         if (role != Qt::DisplayRole || section > 2) return QVariant();
         else if (section == 0) return i18n("Filename");
         else if (section == 1) return i18n("Date/time of last use");
         else return i18n("Full filename");
     }
 
-    QModelIndex index(int row, int column, const QModelIndex &) const {
+    QModelIndex index(int row, int column, const QModelIndex &) const override {
         return createIndex(row, column, row);
     }
 
-    QModelIndex parent(const QModelIndex &) const {
+    QModelIndex parent(const QModelIndex &) const override {
         return QModelIndex();
     }
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const {
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override {
         if (parent == QModelIndex())
             return ofim->filteredItems(OpenFileInfo::RecentlyUsed).count();
         else

@@ -43,7 +43,7 @@ public:
     };
 
     explicit ItalicTextItemModel(QObject *parent = nullptr);
-    ~ItalicTextItemModel();
+    ~ItalicTextItemModel() override;
 
     /**
      * Add a new entry (pair of shown text and identifier) to this model.
@@ -52,11 +52,11 @@ public:
      */
     void addItem(const QString &shownText, const QString &identifier);
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    QModelIndex index(int row, int column, const QModelIndex &) const;
-    QModelIndex parent(const QModelIndex &) const;
-    int rowCount(const QModelIndex &) const;
-    int columnCount(const QModelIndex &) const;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QModelIndex index(int row, int column, const QModelIndex &) const override;
+    QModelIndex parent(const QModelIndex &) const override;
+    int rowCount(const QModelIndex &) const override;
+    int columnCount(const QModelIndex &) const override;
 
 private:
     class Private;

@@ -79,7 +79,7 @@ public:
     }
 
 protected:
-    virtual void closeEvent(QCloseEvent *e) {
+    void closeEvent(QCloseEvent *e) override {
         /// strangely enough, close events have always to be rejected ...
         e->setAccepted(false);
         QDialog::closeEvent(e);

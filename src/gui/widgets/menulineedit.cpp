@@ -57,14 +57,14 @@ public:
         setupUI();
     }
 
-    ~MenuLineEditPrivate() {
+    ~MenuLineEditPrivate() override {
         for (int i = hLayout->count() - 1; i >= 0; --i) {
             QWidget *w = hLayout->itemAt(i)->widget();
             w->deleteLater();
         }
     }
 
-    virtual void notificationEvent(int eventId) {
+    void notificationEvent(int eventId) override {
         if (eventId == MenuLineEdit::MenuLineConfigurationChangedEvent) {
             /// load setting limitKeyboardTabStops
             KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));

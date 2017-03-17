@@ -31,12 +31,12 @@ class KBIBTEXIO_EXPORT FileExporterPDF : public FileExporterToolchain
 public:
     enum FileEmbedding { NoFileEmbedding = 0, EmbedBibTeXFile = 1, EmbedReferences = 2, EmbedBibTeXFileAndReferences = EmbedBibTeXFile | EmbedReferences};
     explicit FileExporterPDF(FileEmbedding fileEmbedding = FileExporterPDF::EmbedBibTeXFileAndReferences);
-    ~FileExporterPDF();
+    ~FileExporterPDF() override;
 
-    void reloadConfig();
+    void reloadConfig() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
     void setDocumentSearchPaths(const QStringList &searchPaths);
 

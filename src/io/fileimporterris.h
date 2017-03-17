@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,13 +29,13 @@ class KBIBTEXIO_EXPORT FileImporterRIS : public FileImporter
 
 public:
     FileImporterRIS();
-    ~FileImporterRIS();
+    ~FileImporterRIS() override;
 
-    File *load(QIODevice *iodevice);
+    File *load(QIODevice *iodevice) override;
     static bool guessCanDecode(const QString &text);
 
 public slots:
-    void cancel();
+    void cancel() override;
 
 private:
     class FileImporterRISPrivate;

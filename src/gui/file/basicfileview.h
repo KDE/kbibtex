@@ -33,9 +33,9 @@ class KBIBTEXGUI_EXPORT BasicFileView : public QTreeView
     Q_OBJECT
 public:
     explicit BasicFileView(const QString &name, QWidget *parent = nullptr);
-    ~BasicFileView();
+    ~BasicFileView() override;
 
-    virtual void setModel(QAbstractItemModel *model);
+    void setModel(QAbstractItemModel *model) override;
     FileModel *fileModel();
     QSortFilterProxyModel *sortFilterProxyModel();
 
@@ -43,8 +43,8 @@ signals:
     void searchFor(const QString &);
 
 protected:
-    virtual void keyPressEvent(QKeyEvent *event);
-    virtual void resizeEvent(QResizeEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 protected slots:
     void columnMoved();

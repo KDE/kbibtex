@@ -39,19 +39,19 @@ class KBIBTEXGUI_EXPORT FieldLineEdit : public MenuLineEdit
 
 public:
     FieldLineEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, bool isMultiLine = false, QWidget *parent = nullptr);
-    ~FieldLineEdit();
+    ~FieldLineEdit() override;
 
     bool reset(const Value &value);
     bool apply(Value &value) const;
-    virtual void setReadOnly(bool);
+    void setReadOnly(bool) override;
 
     void setFile(const File *file);
     void setElement(const Element *element);
     void setFieldKey(const QString &fieldKey);
 
 protected:
-    void dragEnterEvent(QDragEnterEvent *event);
-    void dropEvent(QDropEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 
 private:
     bool m_incompleteRepresentation;

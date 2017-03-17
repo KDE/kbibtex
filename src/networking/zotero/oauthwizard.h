@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,17 +34,17 @@ class KBIBTEXNETWORKING_EXPORT OAuthWizard : public QWizard
 
 public:
     explicit OAuthWizard(QWidget *parent);
-    ~OAuthWizard();
+    ~OAuthWizard() override;
 
-    virtual int exec();
+    int exec() override;
 
     int userId() const;
     QString apiKey() const;
     QString username() const;
 
 protected:
-    virtual void initializePage(int id);
-    virtual void accept();
+    void initializePage(int id) override;
+    void accept() override;
 
 private slots:
     void copyAuthorizationUrl();

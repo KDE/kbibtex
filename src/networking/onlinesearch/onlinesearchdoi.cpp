@@ -64,11 +64,11 @@ public:
         loadState();
     }
 
-    bool readyToStart() const {
+    bool readyToStart() const override {
         return !lineEditDoiNumber->text().isEmpty();
     }
 
-    void copyFromEntry(const Entry &entry) {
+    void copyFromEntry(const Entry &entry) override {
         lineEditDoiNumber->setText(PlainTextValue::text(entry[Entry::ftDOI]));
     }
 

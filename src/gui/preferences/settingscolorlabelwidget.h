@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,15 +38,15 @@ class KBIBTEXGUI_EXPORT SettingsColorLabelWidget : public SettingsAbstractWidget
 
 public:
     explicit SettingsColorLabelWidget(QWidget *parent);
-    ~SettingsColorLabelWidget();
+    ~SettingsColorLabelWidget() override;
 
-    virtual QString label() const;
-    virtual QIcon icon() const;
+    QString label() const override;
+    QIcon icon() const override;
 
 public slots:
-    void loadState();
-    void saveState();
-    void resetToDefaults();
+    void loadState() override;
+    void saveState() override;
+    void resetToDefaults() override;
 
 private slots:
     void addColor();
@@ -67,12 +67,12 @@ class KBIBTEXGUI_EXPORT ColorLabelContextMenu : public QObject, private Notifica
 
 public:
     explicit ColorLabelContextMenu(FileView *widget);
-    ~ColorLabelContextMenu();
+    ~ColorLabelContextMenu() override;
 
     KActionMenu *menuAction();
     void setEnabled(bool);
 
-    void notificationEvent(int eventId);
+    void notificationEvent(int eventId) override;
 
 private slots:
     void colorActivated(const QString &colorString);

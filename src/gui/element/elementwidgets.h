@@ -101,18 +101,18 @@ private:
 
 public:
     EntryConfiguredWidget(const QSharedPointer<const EntryTabLayout> &entryTabLayout, QWidget *parent);
-    virtual ~EntryConfiguredWidget();
+    ~EntryConfiguredWidget() override;
 
-    bool apply(QSharedPointer<Element> element) const;
-    bool reset(QSharedPointer<const Element> element);
-    void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool forceVisible, const QString &entryType);
-    QString label();
-    QIcon icon();
+    bool apply(QSharedPointer<Element> element) const override;
+    bool reset(QSharedPointer<const Element> element) override;
+    void setReadOnly(bool isReadOnly) override;
+    void showReqOptWidgets(bool forceVisible, const QString &entryType) override;
+    QString label() override;
+    QIcon icon() override;
 
-    virtual void setFile(const File *file);
+    void setFile(const File *file) override;
 
-    bool canEdit(const Element *element);
+    bool canEdit(const Element *element) override;
 };
 
 class ReferenceWidget : public ElementWidget
@@ -129,10 +129,10 @@ private:
 public:
     explicit ReferenceWidget(QWidget *parent);
 
-    bool apply(QSharedPointer<Element> element) const;
-    bool reset(QSharedPointer<const Element> element);
-    void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {}
+    bool apply(QSharedPointer<Element> element) const override;
+    bool reset(QSharedPointer<const Element> element) override;
+    void setReadOnly(bool isReadOnly) override;
+    void showReqOptWidgets(bool, const QString &) override {}
     void setApplyElementInterface(ElementEditor::ApplyElementInterface *applyElement) {
         m_applyElement = applyElement;
     }
@@ -140,10 +140,10 @@ public:
     void setOriginalElement(const QSharedPointer<Element> &orig);
     bool isDuplicateId() const;
 
-    QString label();
-    QIcon icon();
+    QString label() override;
+    QIcon icon() override;
 
-    bool canEdit(const Element *element);
+    bool canEdit(const Element *element) override;
 
 public slots:
     void setEntryIdByDefault();
@@ -172,17 +172,17 @@ private:
 public:
     explicit FilesWidget(QWidget *parent);
 
-    bool apply(QSharedPointer<Element> element) const;
-    bool reset(QSharedPointer<const Element> element);
-    void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {}
+    bool apply(QSharedPointer<Element> element) const override;
+    bool reset(QSharedPointer<const Element> element) override;
+    void setReadOnly(bool isReadOnly) override;
+    void showReqOptWidgets(bool, const QString &) override {}
 
-    QString label();
-    QIcon icon();
+    QString label() override;
+    QIcon icon() override;
 
-    virtual void setFile(const File *file);
+    void setFile(const File *file) override;
 
-    bool canEdit(const Element *element);
+    bool canEdit(const Element *element) override;
 
 private:
     static const QStringList keyStart;
@@ -210,16 +210,16 @@ private:
 
 public:
     OtherFieldsWidget(const QStringList &blacklistedFields, QWidget *parent);
-    ~OtherFieldsWidget();
+    ~OtherFieldsWidget() override;
 
-    bool apply(QSharedPointer<Element> element) const;
-    bool reset(QSharedPointer<const Element> element);
-    void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {}
-    QString label();
-    QIcon icon();
+    bool apply(QSharedPointer<Element> element) const override;
+    bool reset(QSharedPointer<const Element> element) override;
+    void setReadOnly(bool isReadOnly) override;
+    void showReqOptWidgets(bool, const QString &) override {}
+    QString label() override;
+    QIcon icon() override;
 
-    bool canEdit(const Element *element);
+    bool canEdit(const Element *element) override;
 
 private slots:
     void listElementExecuted(QTreeWidgetItem *item, int column);
@@ -241,16 +241,16 @@ private:
 
 public:
     explicit MacroWidget(QWidget *parent);
-    ~MacroWidget();
+    ~MacroWidget() override;
 
-    bool apply(QSharedPointer<Element> element) const;
-    bool reset(QSharedPointer<const Element> element);
-    void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {}
-    QString label();
-    QIcon icon();
+    bool apply(QSharedPointer<Element> element) const override;
+    bool reset(QSharedPointer<const Element> element) override;
+    void setReadOnly(bool isReadOnly) override;
+    void showReqOptWidgets(bool, const QString &) override {}
+    QString label() override;
+    QIcon icon() override;
 
-    bool canEdit(const Element *element);
+    bool canEdit(const Element *element) override;
 };
 
 class PreambleWidget : public ElementWidget
@@ -265,14 +265,14 @@ private:
 public:
     explicit PreambleWidget(QWidget *parent);
 
-    bool apply(QSharedPointer<Element> element) const;
-    bool reset(QSharedPointer<const Element> element);
-    void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {}
-    QString label();
-    QIcon icon();
+    bool apply(QSharedPointer<Element> element) const override;
+    bool reset(QSharedPointer<const Element> element) override;
+    void setReadOnly(bool isReadOnly) override;
+    void showReqOptWidgets(bool, const QString &) override {}
+    QString label() override;
+    QIcon icon() override;
 
-    bool canEdit(const Element *element);
+    bool canEdit(const Element *element) override;
 };
 
 class SourceWidget : public ElementWidget
@@ -288,16 +288,16 @@ private:
 
 public:
     explicit SourceWidget(QWidget *parent);
-    ~SourceWidget();
+    ~SourceWidget() override;
 
-    bool apply(QSharedPointer<Element> element) const;
-    bool reset(QSharedPointer<const Element> element);
-    void setReadOnly(bool isReadOnly);
-    void showReqOptWidgets(bool, const QString &) {}
-    QString label();
-    QIcon icon();
+    bool apply(QSharedPointer<Element> element) const override;
+    bool reset(QSharedPointer<const Element> element) override;
+    void setReadOnly(bool isReadOnly) override;
+    void showReqOptWidgets(bool, const QString &) override {}
+    QString label() override;
+    QIcon icon() override;
 
-    bool canEdit(const Element *element);
+    bool canEdit(const Element *element) override;
 
 private slots:
     void reset();

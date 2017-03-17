@@ -91,11 +91,11 @@ public:
         loadState();
     }
 
-    bool readyToStart() const {
+    bool readyToStart() const override {
         return !lineEditSearchTerm->text().isEmpty();
     }
 
-    void copyFromEntry(const Entry &entry) {
+    void copyFromEntry(const Entry &entry) override {
         comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
         lineEditSearchTerm->setText(authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
     }

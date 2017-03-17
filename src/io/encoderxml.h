@@ -33,10 +33,10 @@ class QRegExp;
 class KBIBTEXIO_EXPORT EncoderXML : public Encoder
 {
 public:
-    ~EncoderXML();
+    ~EncoderXML() override;
 
-    QString decode(const QString &text) const;
-    QString encode(const QString &text, const TargetEncoding targetEncoding) const;
+    QString decode(const QString &text) const override;
+    QString encode(const QString &text, const TargetEncoding targetEncoding) const override;
 
     static const EncoderXML &instance();
 

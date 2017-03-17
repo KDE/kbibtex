@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,12 +30,12 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchInspireHep : public OnlineSearchSimpl
 public:
     explicit OnlineSearchInspireHep(QWidget *parent);
 
-    virtual QString label() const;
-    virtual QUrl homepage() const;
+    QString label() const override;
+    QUrl homepage() const override;
 
 protected:
-    virtual QString favIconUrl() const;
-    virtual QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults);
+    QString favIconUrl() const override;
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) override;
 };
 
 #endif // KBIBTEX_ONLINESEARCH_INSPIREHEP_H

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de>      *
+ *   Copyright (C) 2016-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,14 +29,14 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchBioRxiv : public OnlineSearchAbstract
 
 public:
     explicit OnlineSearchBioRxiv(QWidget *parent);
-    ~OnlineSearchBioRxiv();
+    ~OnlineSearchBioRxiv() override;
 
-    virtual void startSearch(const QMap<QString, QString> &query, int numResults);
-    virtual QString label() const;
-    virtual QUrl homepage() const;
+    void startSearch(const QMap<QString, QString> &query, int numResults) override;
+    QString label() const override;
+    QUrl homepage() const override;
 
 protected:
-    virtual QString favIconUrl() const;
+    QString favIconUrl() const override;
 
 private slots:
     void resultsPageDone();

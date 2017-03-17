@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -45,7 +45,7 @@ class KBIBTEXGUI_EXPORT MergeWidget : public QWidget
 
 public:
     MergeWidget(File *file, QList<EntryClique *> &cliques, QWidget *parent);
-    ~MergeWidget();
+    ~MergeWidget() override;
 
     void showCurrentClique();
 
@@ -68,7 +68,7 @@ class KBIBTEXGUI_EXPORT FindDuplicatesUI : public QObject
 
 public:
     FindDuplicatesUI(KParts::Part *part, FileView *fileView);
-    ~FindDuplicatesUI();
+    ~FindDuplicatesUI() override;
 
 private slots:
     void slotFindDuplicates();

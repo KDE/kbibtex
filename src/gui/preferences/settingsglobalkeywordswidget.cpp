@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -33,7 +33,7 @@ class DisallowEmptyStringListModel : public QStringListModel
     Q_OBJECT
 
 public:
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) {
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override {
         if (role == Qt::EditRole && value.canConvert<QString>() && value.toString().isEmpty())
             return false; /// do not accept values that are empty
         else

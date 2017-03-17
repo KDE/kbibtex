@@ -112,11 +112,11 @@ public:
         loadState();
     }
 
-    bool readyToStart() const {
+    bool readyToStart() const override {
         return !(lineEditFreeText->text().isEmpty() && lineEditTitle->text().isEmpty() && lineEditBookTitle->text().isEmpty() && lineEditAuthorEditor->text().isEmpty());
     }
 
-    void copyFromEntry(const Entry &entry) {
+    void copyFromEntry(const Entry &entry) override {
         lineEditTitle->setText(PlainTextValue::text(entry[Entry::ftTitle]));
         QString bookTitle = PlainTextValue::text(entry[Entry::ftBookTitle]);
         if (bookTitle.isEmpty())

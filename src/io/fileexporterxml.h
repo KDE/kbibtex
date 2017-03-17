@@ -36,15 +36,15 @@ class KBIBTEXIO_EXPORT FileExporterXML : public FileExporter
 
 public:
     FileExporterXML();
-    ~FileExporterXML();
+    ~FileExporterXML() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr);
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
     static QString valueToXML(const Value &value, const QString &fieldType = QString());
 
 public slots:
-    void cancel();
+    void cancel() override;
 
 private:
     bool m_cancelFlag;

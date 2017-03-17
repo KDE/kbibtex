@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,9 +34,9 @@ class RadioButtonItemDelegate : public QStyledItemDelegate
 public:
     explicit RadioButtonItemDelegate(QObject *p);
 
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    virtual QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
 
 
@@ -68,8 +68,8 @@ public:
     explicit RadioButtonTreeView(QWidget *parent);
 
 protected:
-    void mouseReleaseEvent(QMouseEvent *event);
-    void keyReleaseEvent(QKeyEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
 
 private:
     void switchRadioFlag(QModelIndex &index);

@@ -88,7 +88,7 @@ public:
         this->currentClique = currentClique;
     }
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const {
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override {
         if (parent == QModelIndex())
             return createIndex(row, column, noParentInternalId);
         else if (parent.parent() == QModelIndex())
@@ -96,14 +96,14 @@ public:
         return QModelIndex();
     }
 
-    QModelIndex parent(const QModelIndex &index) const {
+    QModelIndex parent(const QModelIndex &index) const override {
         if (index.internalId() >= noParentInternalId)
             return QModelIndex();
         else
             return createIndex(index.internalId(), 0, noParentInternalId);
     }
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const {
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override {
         if (currentClique == nullptr)
             return 0;
 
@@ -122,12 +122,12 @@ public:
         return 0;
     }
 
-    int columnCount(const QModelIndex &) const {
+    int columnCount(const QModelIndex &) const override {
         /// only one column in use
         return 1;
     }
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const {
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override {
         Q_UNUSED(section)
         Q_UNUSED(orientation)
 
@@ -136,7 +136,7 @@ public:
         return QVariant();
     }
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
         if (index.parent() == QModelIndex()) {
             /// top-level elements showing field names like "Title", "Authors", etc
             const QString fieldName = currentClique->fieldList().at(index.row()).toLower();
@@ -232,7 +232,7 @@ public:
         return QVariant();
     }
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = RadioButtonTreeView::RadioSelectedRole) {
+    bool setData(const QModelIndex &index, const QVariant &value, int role = RadioButtonTreeView::RadioSelectedRole) override {
         if (index.parent() != QModelIndex()) {
             bool isInt;
             int checkState = value.toInt(&isInt);
@@ -316,12 +316,12 @@ public:
         return false;
     }
 
-    bool hasChildren(const QModelIndex &parent = QModelIndex()) const {
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override {
         /// depth-two tree
         return parent == QModelIndex() || parent.parent() == QModelIndex();
     }
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const {
+    Qt::ItemFlags flags(const QModelIndex &index) const override {
         Qt::ItemFlags f = QAbstractItemModel::flags(index);
         if (index.parent() != QModelIndex()) {
             QString fieldName = index.parent().data(FieldNameRole).toString();
@@ -353,7 +353,7 @@ public:
         // nothing
     }
 
-    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const {
+    QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const override {
         if (index.parent() != QModelIndex()) {
             /// Only second-level indices in the model can be edited
             /// (those are the actual values).
@@ -365,14 +365,14 @@ public:
         return nullptr;
     }
 
-    virtual void setEditorData(QWidget *editor, const QModelIndex &index) const {
+    void setEditorData(QWidget *editor, const QModelIndex &index) const override {
         if (KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor)) {
             /// Set line edit's default value to string fetched from model
             lineEdit->setText(index.data(Qt::EditRole).toString());
         }
     }
 
-    virtual void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
+    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override {
         if (KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor)) {
             /// Set user-entered text to model (and underlying value)
             model->setData(index, lineEdit->text(), UserInputRole);
@@ -388,7 +388,7 @@ public:
         }
     }
 
-    virtual void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &) const {
+    void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &) const override {
         QRect rect = option.rect;
 
         // TODO better placement of editing widget?
@@ -420,7 +420,7 @@ public:
         this->currentClique = cl.indexOf(currentClique);
     }
 
-    virtual QVariant data(const QModelIndex &index, int role) const {
+    QVariant data(const QModelIndex &index, int role) const override {
         if (role == Qt::CheckStateRole && index.column() == 1) {
             QSharedPointer<Entry> entry = element(index.row()).dynamicCast<Entry>();
             Q_ASSERT_X(!entry.isNull(), "CheckableFileModel::data", "entry is NULL");
@@ -434,7 +434,7 @@ public:
         return FileModel::data(index, role);
     }
 
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) {
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override {
         bool ok;
         int checkState = value.toInt(&ok);
         Q_ASSERT_X(ok, "CheckableFileModel::setData", QString("Could not convert value " + value.toString()).toLatin1());
@@ -457,7 +457,7 @@ public:
         return false;
     }
 
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const {
+    Qt::ItemFlags flags(const QModelIndex &index) const override {
         Qt::ItemFlags f = FileModel::flags(index);
         if (index.column() == 1)
             f |= Qt::ItemIsUserCheckable;
@@ -487,13 +487,13 @@ public:
         invalidate();
     }
 
-    void setSourceModel(QAbstractItemModel *model) {
+    void setSourceModel(QAbstractItemModel *model) override {
         QSortFilterProxyModel::setSourceModel(model);
         internalModel = dynamic_cast<CheckableFileModel *>(model);
         Q_ASSERT_X(internalModel != nullptr, "FilterIdFileModel::setSourceModel(QAbstractItemModel *model)", "internalModel is NULL");
     }
 
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override {
         Q_UNUSED(source_parent)
 
         if (internalModel != nullptr && currentClique != nullptr) {

@@ -78,11 +78,11 @@ public:
         loadState();
     }
 
-    bool readyToStart() const {
+    bool readyToStart() const override {
         return !lineEditFreeText->text().isEmpty();
     }
 
-    void copyFromEntry(const Entry &entry) {
+    void copyFromEntry(const Entry &entry) override {
         lineEditFreeText->setText(authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
