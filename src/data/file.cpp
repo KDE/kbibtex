@@ -65,6 +65,17 @@ public:
         loadConfiguration();
     }
 
+    FilePrivate(const File &other, File */* UNUSED parent*/)
+        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter) {
+        const bool isValid = checkValidity();
+        kDebug() << "Creating File instance" << internalId << "  Valid?" << isValid;
+
+        /// Copy properties from other File object
+        static const QStringList propertyKeys = QStringList() << File::Encoding << File::StringDelimiter << File::QuoteComment << File::KeywordCasing << File::NameFormatting << File::ProtectCasing << File::ListSeparator;
+        foreach(const QString &propertyKey, propertyKeys)
+            properties.insert(propertyKey, other.d->properties[propertyKey]);
+    }
+
     FilePrivate(File */* UNUSED parent*/, const File &other)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QLatin1String("kbibtexrc"))), configGroupName(QLatin1String("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
         kDebug() << "Creating File instance" << internalId;
@@ -105,6 +116,11 @@ File::File()
         : QList<QSharedPointer<Element> >(), d(new FilePrivate(this))
 {
     // nothing
+}
+
+File::File(const File &other)
+        : QList<QSharedPointer<Element> >(other), d(new FilePrivate(other, this)) {
+    /// nothing
 }
 
 File::~File()
