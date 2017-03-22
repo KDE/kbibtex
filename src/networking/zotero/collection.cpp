@@ -72,7 +72,13 @@ public:
             QUrl url = api->baseUrl();
             url = url.adjusted(QUrl::StripTrailingSlash);
             url.setPath(url.path() + QString(QStringLiteral("/collections/%1/collections")).arg(head));
-            requestZoteroUrl(url);
+            if (api->inBackoffMode())
+                /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
+                QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+                    requestZoteroUrl(url);
+                });
+            else
+                requestZoteroUrl(url);
         } else {
             initialized = true;
             p->emitFinishedLoading();
@@ -91,6 +97,7 @@ Collection::Collection(QSharedPointer<Zotero::API> api, QObject *parent)
     url = url.adjusted(QUrl::StripTrailingSlash);
     url.setPath(url.path() + QStringLiteral("/collections/top"));
     if (api->inBackoffMode())
+        /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
         QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
         d->requestZoteroUrl(url);
     });
@@ -163,10 +170,17 @@ void Collection::finishedFetchingCollection()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     QString parentId = Private::top;
 
-    if (reply->hasRawHeader("Backoff"))
-        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt());
-    else if (reply->hasRawHeader("Retry-After"))
-        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt());
+    if (reply->hasRawHeader("Backoff")) {
+        bool ok = false;
+        int time = QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt(&ok);
+        if (!ok) time = 10; ///< parsing argument of raw header 'Backoff' failed? 10 seconds is fallback
+        d->api->startBackoff(time);
+    } else if (reply->hasRawHeader("Retry-After")) {
+        bool ok = false;
+        int time = QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt(&ok);
+        if (!ok) time = 10; ///< parsing argument of raw header 'Retry-After' failed? 10 seconds is fallback
+        d->api->startBackoff(time);
+    }
 
     if (reply->error() == QNetworkReply::NoError) {
         QString nextPage;
@@ -214,7 +228,13 @@ void Collection::finishedFetchingCollection()
         }
 
         if (!nextPage.isEmpty()) {
-            d->requestZoteroUrl(nextPage);
+            if (d->api->inBackoffMode())
+                /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
+                QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+                    d->requestZoteroUrl(nextPage);
+                });
+            else
+                d->requestZoteroUrl(nextPage);
         } else
             d->runNextInDownloadQueue();
     } else {

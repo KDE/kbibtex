@@ -62,7 +62,13 @@ public:
         query.addQueryItem(queryItemStart, QString::number(start));
         internalUrl.setQuery(query);
 
-        requestZoteroUrl(internalUrl);
+        if (api->inBackoffMode())
+            /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
+            QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+                requestZoteroUrl(internalUrl);
+            });
+        else
+            requestZoteroUrl(internalUrl);
     }
 };
 
@@ -89,6 +95,7 @@ void Items::retrieveItemsByCollection(const QString &collection)
     url.setQuery(query);
 
     if (d->api->inBackoffMode())
+        /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
         QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
             d->retrieveItems(url, 0);
         });
@@ -107,6 +114,7 @@ void  Items::retrieveItemsByTag(const QString &tag)
     url.setQuery(query);
 
     if (d->api->inBackoffMode())
+        /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
         QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
             d->retrieveItems(url, 0);
         });
@@ -121,10 +129,17 @@ void Items::finishedFetchingItems()
     bool ok = false;
     const int start = QUrlQuery(reply->url()).queryItemValue(queryItemStart).toInt(&ok);
 
-    if (reply->hasRawHeader("Backoff"))
-        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt());
-    else if (reply->hasRawHeader("Retry-After"))
-        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt());
+    if (reply->hasRawHeader("Backoff")) {
+        bool ok = false;
+        int time = QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt(&ok);
+        if (!ok) time = 10; ///< parsing argument of raw header 'Backoff' failed? 10 seconds is fallback
+        d->api->startBackoff(time);
+    } else if (reply->hasRawHeader("Retry-After")) {
+        bool ok = false;
+        int time = QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt(&ok);
+        if (!ok) time = 10; ///< parsing argument of raw header 'Retry-After' failed? 10 seconds is fallback
+        d->api->startBackoff(time);
+    }
 
     if (reply->error() == QNetworkReply::NoError && ok) {
         const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
