@@ -173,6 +173,7 @@ public:
         p->addDockWidget(Qt::LeftDockWidgetArea, dockZotero);
         zotero = new ZoteroBrowser(searchResults, dockZotero);
         connect(dockZotero, &QDockWidget::visibilityChanged, zotero, &ZoteroBrowser::visibiltyChanged);
+        connect(zotero, &ZoteroBrowser::itemToShow, p, &KBibTeXMainWindow::showSearchResults);
         dockZotero->setWidget(zotero);
         dockZotero->setObjectName(QStringLiteral("dockZotero"));
         dockZotero->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);

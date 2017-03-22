@@ -261,6 +261,7 @@ void ZoteroBrowser::tagDoubleClicked(const QModelIndex &index)
 void ZoteroBrowser::showItem(QSharedPointer<Element> e)
 {
     d->searchResults->insertElement(e);
+    emit itemToShow();
 }
 
 void ZoteroBrowser::reenableWidget()

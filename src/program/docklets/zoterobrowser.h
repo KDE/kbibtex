@@ -38,6 +38,9 @@ public:
 public slots:
     void visibiltyChanged(bool);
 
+signals:
+    void itemToShow();
+
 private:
     class Private;
     Private *const d;
