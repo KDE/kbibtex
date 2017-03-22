@@ -1096,8 +1096,8 @@ public:
 
 protected:
     void dropEvent(QDropEvent *event) override {
-        FileImporterBibTeX importer;
-        FileExporterBibTeX exporter;
+        FileImporterBibTeX importer(this);
+        FileExporterBibTeX exporter(this);
         const File *file = importer.fromString(event->mimeData()->text());
         if (file != nullptr && file->count() == 1)
             document()->setPlainText(exporter.toString(file->first(), file));
@@ -1106,8 +1106,20 @@ protected:
     }
 };
 
+class SourceWidget::Private
+{
+public:
+    QPushButton *buttonRestore;
+    FileImporterBibTeX *importerBibTeX;
+
+    Private(SourceWidget *parent)
+            : buttonRestore(nullptr), importerBibTeX(new FileImporterBibTeX(parent)) {
+        /// nothing
+    }
+};
+
 SourceWidget::SourceWidget(QWidget *parent)
-        : ElementWidget(parent)
+        : ElementWidget(parent), d(new SourceWidget::Private(this))
 {
     createGUI();
 }
@@ -1115,6 +1127,7 @@ SourceWidget::SourceWidget(QWidget *parent)
 SourceWidget::~SourceWidget()
 {
     delete sourceEdit;
+    delete d;
 }
 
 bool SourceWidget::apply(QSharedPointer<Element> element) const
@@ -1122,8 +1135,7 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
     if (isReadOnly) return false; ///< never save data if in read-only mode
 
     const QString text = sourceEdit->document()->toPlainText();
-    FileImporterBibTeX importer;
-    File *file = importer.fromString(text);
+    File *file = d->importerBibTeX->fromString(text);
     if (file == nullptr) return false;
 
     bool result = false;
@@ -1161,7 +1173,7 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
     /// resetting the widget's value
     disconnect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
 
-    FileExporterBibTeX exporter;
+    FileExporterBibTeX exporter(this);
     exporter.setEncoding(QStringLiteral("utf-8"));
     const QString exportedText = exporter.toString(element, m_file);
     if (!exportedText.isEmpty()) {
@@ -1178,7 +1190,7 @@ void SourceWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);
 
-    m_buttonRestore->setEnabled(!isReadOnly);
+    d->buttonRestore->setEnabled(!isReadOnly);
     sourceEdit->setReadOnly(isReadOnly);
 }
 
@@ -1211,10 +1223,10 @@ void SourceWidget::createGUI()
     sourceEdit->document()->setDefaultFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
 
-    m_buttonRestore = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Restore"), this);
-    layout->addWidget(m_buttonRestore, 1, 1, 1, 1);
-    // FIXME connect(m_buttonRestore, &QPushButton::clicked, this, &SourceWidget::reset);
-    connect(m_buttonRestore, SIGNAL(clicked(bool)), this, SLOT(reset()));
+    d->buttonRestore = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Restore"), this);
+    layout->addWidget(d->buttonRestore, 1, 1, 1, 1);
+    // FIXME connect(d->buttonRestore, &QPushButton::clicked, this, &SourceWidget::reset);
+    connect(d->buttonRestore, SIGNAL(clicked(bool)), this, SLOT(reset()));
 
     connect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
 }

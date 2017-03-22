@@ -254,24 +254,22 @@ void ReferencePreview::renderHTML()
 
     if (previewStyle.type == QStringLiteral("exporter")) {
         if (previewStyle.style == QStringLiteral("bibtex")) {
-            FileExporterBibTeX *exporterBibTeX = new FileExporterBibTeX();
+            FileExporterBibTeX *exporterBibTeX = new FileExporterBibTeX(this);
             exporterBibTeX->setEncoding(QStringLiteral("utf-8"));
             exporter = exporterBibTeX;
         } else if (previewStyle.style == QStringLiteral("ris"))
-            exporter = new FileExporterRIS();
+            exporter = new FileExporterRIS(this);
         else
             qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output style " << previewStyle.style << " for type " << previewStyle.type;
     } else if (previewStyle.type == QStringLiteral("bibtex2html")) {
         crossRefHandling = merge;
-        FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML();
+        FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML(this);
         exporterHTML->setLaTeXBibliographyStyle(previewStyle.style);
         exporter = exporterHTML;
     } else if (previewStyle.type == QStringLiteral("xml") || previewStyle.type.endsWith(QStringLiteral("_xml"))) {
         crossRefHandling = merge;
-        FileExporterXSLT *exporterXSLT = new FileExporterXSLT();
-        QString filename = previewStyle.style + ".xsl";
-        exporterXSLT->setXSLTFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/") + filename));
-        exporter = exporterXSLT;
+        const QString filename = previewStyle.style + ".xsl";
+        exporter = new FileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/") + filename), this);
     } else
         qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output type " << previewStyle.type;
 

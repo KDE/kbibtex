@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,8 +30,8 @@
 #include "kbibtex.h"
 #include "logging_io.h"
 
-FileExporterRTF::FileExporterRTF()
-        : FileExporterToolchain()
+FileExporterRTF::FileExporterRTF(QObject *parent)
+        : FileExporterToolchain(parent)
 {
     m_fileBasename = QStringLiteral("bibtex-to-rtf");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
@@ -66,11 +66,10 @@ bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter->save(&output, bibtexfile, errorLog);
+        FileExporterBibTeX bibtexExporter(this);
+        bibtexExporter.setEncoding(QStringLiteral("latex"));
+        result = bibtexExporter.save(&output, bibtexfile, errorLog);
         output.close();
-        delete bibtexExporter;
     }
 
     if (result)
@@ -91,11 +90,10 @@ bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter->save(&output, element, bibtexfile, errorLog);
+        FileExporterBibTeX bibtexExporter(this);
+        bibtexExporter.setEncoding(QStringLiteral("latex"));
+        result = bibtexExporter.save(&output, element, bibtexfile, errorLog);
         output.close();
-        delete bibtexExporter;
     }
 
     if (result)

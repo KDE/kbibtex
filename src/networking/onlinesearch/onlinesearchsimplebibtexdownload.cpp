@@ -77,7 +77,7 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
         }
 
         if (!bibTeXcode.isEmpty()) {
-            FileImporterBibTeX importer;
+            FileImporterBibTeX importer(this);
             File *bibtexFile = importer.fromString(bibTeXcode);
 
             bool hasEntries = false;

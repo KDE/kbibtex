@@ -206,7 +206,7 @@ void OnlineSearchPubMed::eFetchDone()
             if (bibTeXcode[0] == '<')
                 bibTeXcode = bibTeXcode.mid(bibTeXcode.indexOf(QStringLiteral(">")) + 1);
 
-            FileImporterBibTeX importer;
+            FileImporterBibTeX importer(this);
             File *bibtexFile = importer.fromString(bibTeXcode);
 
             if (bibtexFile != nullptr) {

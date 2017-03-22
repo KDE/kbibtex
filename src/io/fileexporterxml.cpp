@@ -28,8 +28,8 @@
 #include "encoderxml.h"
 #include "logging_io.h"
 
-FileExporterXML::FileExporterXML()
-        : FileExporter(), m_cancelFlag(false)
+FileExporterXML::FileExporterXML(QObject *parent)
+        : FileExporter(parent), m_cancelFlag(false)
 {
     /// nothing
 }

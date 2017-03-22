@@ -60,7 +60,7 @@ public:
         for (const QModelIndex &index : mil)
             file->append(fileView->fileModel()->element(fileView->sortFilterProxyModel()->mapToSource(index).row()));
 
-        FileExporterBibTeX exporter;
+        FileExporterBibTeX exporter(fileView);
         exporter.setEncoding(QStringLiteral("latex"));
         QBuffer buffer(fileView);
         buffer.open(QBuffer::WriteOnly);
@@ -116,7 +116,7 @@ public:
 
         /// Assumption: user dropped a piece of BibTeX code,
         /// use BibTeX importer to generate representation from plain text
-        FileImporterBibTeX importer;
+        FileImporterBibTeX importer(fileView);
         File *file = importer.fromString(text);
         if (file != nullptr) {
             if (!file->isEmpty()) {

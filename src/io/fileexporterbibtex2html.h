@@ -27,7 +27,7 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX2HTML: public FileExporterToolchain
     Q_OBJECT
 
 public:
-    FileExporterBibTeX2HTML();
+    FileExporterBibTeX2HTML(QObject *parent);
     ~FileExporterBibTeX2HTML() override;
 
     void reloadConfig() override;

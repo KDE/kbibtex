@@ -303,7 +303,8 @@ private slots:
     void reset();
 
 private:
-    QPushButton *m_buttonRestore;
+    class Private;
+    Private *const d;
 };
 
 #endif // KBIBTEX_GUI_ELEMENTWIDGETS_H

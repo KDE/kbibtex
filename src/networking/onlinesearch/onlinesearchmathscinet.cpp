@@ -221,7 +221,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
             bibtexCode += QLatin1Char('\n');
         }
 
-        FileImporterBibTeX importer;
+        FileImporterBibTeX importer(this);
         const File *bibtexFile = importer.fromString(bibtexCode);
 
         bool hasEntry = false;

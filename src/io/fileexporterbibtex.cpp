@@ -340,8 +340,8 @@ public:
 };
 
 
-FileExporterBibTeX::FileExporterBibTeX()
-        : FileExporter(), d(new FileExporterBibTeXPrivate(this))
+FileExporterBibTeX::FileExporterBibTeX(QObject *parent)
+        : FileExporter(parent), d(new FileExporterBibTeXPrivate(this))
 {
     // nothing
 }
@@ -498,7 +498,7 @@ void FileExporterBibTeX::cancel()
 QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
 {
     if (staticFileExporterBibTeX == nullptr) {
-        staticFileExporterBibTeX = new FileExporterBibTeX();
+        staticFileExporterBibTeX = new FileExporterBibTeX(nullptr);
         staticFileExporterBibTeX->d->loadState();
     }
     return staticFileExporterBibTeX->internalValueToBibTeX(value, key, useLaTeXEncoding);

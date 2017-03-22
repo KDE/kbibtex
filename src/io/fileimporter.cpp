@@ -25,8 +25,8 @@
 #include "value.h"
 #include "logging_io.h"
 
-FileImporter::FileImporter()
-        : QObject()
+FileImporter::FileImporter(QObject *parent)
+        : QObject(parent)
 {
     // nothing
 }

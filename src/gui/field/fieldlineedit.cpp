@@ -109,7 +109,7 @@ public:
         if (!value.isEmpty()) {
             if (typeFlag == KBibTeX::tfSource) {
                 /// simple case: field's value is to be shown as BibTeX code, including surrounding curly braces
-                FileExporterBibTeX exporter;
+                FileExporterBibTeX exporter(parent);
                 text = exporter.valueToBibTeX(value);
                 result = true;
             } else {
@@ -185,7 +185,7 @@ public:
             return true;
         } else if (typeFlag == KBibTeX::tfSource) {
             QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? QStringLiteral("author") : QStringLiteral("title");
-            FileImporterBibTeX importer;
+            FileImporterBibTeX importer(parent);
             QString fakeBibTeXFile = QString(QStringLiteral("@article{dummy, %1=%2}")).arg(key, encodedText);
 
             File *file = importer.fromString(fakeBibTeXFile);
@@ -486,7 +486,7 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
 
     const File *file = nullptr;
     if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QStringLiteral("@"))) {
-        FileImporterBibTeX importer;
+        FileImporterBibTeX importer(this);
         file = importer.fromString(clipboardText);
         const QSharedPointer<Entry> entry = (file != nullptr && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull() && d->fieldKey == Entry::ftCrossRef) {

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,17 +28,22 @@ private:
     // UNUSED FileExporterBibUtils *p;
 
 public:
-    FileExporterBibTeX bibtexExporter;
+    FileExporterBibTeX *bibtexExporter;
 
-    Private(FileExporterBibUtils */* UNUSED parent*/)
+    Private(FileExporterBibUtils *parent)
     // UNUSED : p(parent)
     {
-        bibtexExporter.setEncoding(QStringLiteral("utf-8"));
+        bibtexExporter = new FileExporterBibTeX(parent);
+        bibtexExporter->setEncoding(QStringLiteral("utf-8"));
+    }
+
+    ~Private() {
+        delete bibtexExporter;
     }
 };
 
-FileExporterBibUtils::FileExporterBibUtils()
-        : FileExporter(), BibUtils(), d(new FileExporterBibUtils::Private(this))
+FileExporterBibUtils::FileExporterBibUtils(QObject *parent)
+        : FileExporter(parent), BibUtils(), d(new FileExporterBibUtils::Private(this))
 {
     // TODO
 }
@@ -56,7 +61,7 @@ bool FileExporterBibUtils::save(QIODevice *iodevice, const File *bibtexfile, QSt
     }
 
     QBuffer buffer;
-    bool result = d->bibtexExporter.save(&buffer, bibtexfile, errorLog);
+    bool result = d->bibtexExporter->save(&buffer, bibtexfile, errorLog);
     if (result)
         result = convert(buffer, BibUtils::BibTeX, *iodevice, format());
 
@@ -70,7 +75,7 @@ bool FileExporterBibUtils::save(QIODevice *iodevice, const QSharedPointer<const 
         return false;
 
     QBuffer buffer;
-    bool result = d->bibtexExporter.save(&buffer, element, bibtexfile, errorLog);
+    bool result = d->bibtexExporter->save(&buffer, element, bibtexfile, errorLog);
     if (result)
         result = convert(buffer, BibUtils::BibTeX, *iodevice, format());
 

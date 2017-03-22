@@ -326,7 +326,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
     const File *file = nullptr;
     if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QStringLiteral("@"))) {
-        FileImporterBibTeX importer;
+        FileImporterBibTeX importer(this);
         file = importer.fromString(clipboardText);
         const QSharedPointer<Entry> entry = (file != nullptr && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
 

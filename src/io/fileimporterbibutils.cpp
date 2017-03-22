@@ -28,17 +28,21 @@ private:
     // UNUSED FileImporterBibUtils *p;
 
 public:
-    FileImporterBibTeX bibtexImporter;
+    FileImporterBibTeX *bibtexImporter;
 
-    Private(FileImporterBibUtils */* UNUSED parent*/)
+    Private(FileImporterBibUtils *parent)
     // UNUSED : p(parent)
     {
-        /// nothing
+        bibtexImporter = new FileImporterBibTeX(parent);
+    }
+
+    ~Private() {
+        delete bibtexImporter;
     }
 };
 
-FileImporterBibUtils::FileImporterBibUtils()
-        : FileImporter(), BibUtils(), d(new FileImporterBibUtils::Private(this))
+FileImporterBibUtils::FileImporterBibUtils(QObject *parent)
+        : FileImporter(parent), BibUtils(), d(new FileImporterBibUtils::Private(this))
 {
     /// nothing
 }
@@ -60,7 +64,7 @@ File *FileImporterBibUtils::load(QIODevice *iodevice)
     iodevice->close();
 
     if (result)
-        return d->bibtexImporter.load(&buffer);
+        return d->bibtexImporter->load(&buffer);
     else
         return nullptr;
 }

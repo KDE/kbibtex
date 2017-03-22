@@ -42,7 +42,7 @@ public:
     static const QString keyFont;
     static const QString defaultFont;
 
-    FileExporter();
+    FileExporter(QObject *parent);
     ~FileExporter() override;
 
     QString toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);

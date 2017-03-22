@@ -32,8 +32,8 @@ const QString FileExporterToolchain::defaultBabelLanguage = QStringLiteral("engl
 const QString FileExporterToolchain::keyBibliographyStyle = QStringLiteral("bibliographyStyle");
 const QString FileExporterToolchain::defaultBibliographyStyle = QStringLiteral("plain");
 
-FileExporterToolchain::FileExporterToolchain()
-        : FileExporter(), m_process(nullptr), m_errorLog(nullptr)
+FileExporterToolchain::FileExporterToolchain(QObject *parent)
+        : FileExporter(parent), m_process(nullptr), m_errorLog(nullptr)
 {
     tempDir.setAutoRemove(true);
 }

@@ -39,8 +39,8 @@
 
 const char *FileImporterBibTeX::defaultCodecName = "utf-8";
 
-FileImporterBibTeX::FileImporterBibTeX(bool ignoreComments, KBibTeX::Casing keywordCasing)
-        : FileImporter(), m_cancelFlag(false), m_textStream(nullptr), m_ignoreComments(ignoreComments), m_keywordCasing(keywordCasing), m_lineNo(1)
+FileImporterBibTeX::FileImporterBibTeX(QObject *parent)
+        : FileImporter(parent), m_cancelFlag(false), m_textStream(nullptr), m_commentHandling(IgnoreComments), m_keywordCasing(KBibTeX::cLowerCase), m_lineNo(1)
 {
     m_keysForPersonDetection.append(Entry::ftAuthor);
     m_keysForPersonDetection.append(Entry::ftEditor);
@@ -113,7 +113,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         Element *element = nextElement();
 
         if (element != nullptr) {
-            if (!m_ignoreComments || !Comment::isComment(*element))
+            if (m_commentHandling == KeepComments || !Comment::isComment(*element))
                 result->append(QSharedPointer<Element>(element));
             else
                 delete element;
@@ -1163,4 +1163,8 @@ QString FileImporterBibTeX::tokenidToString(Token token)
     case tUnknown: return QString(QStringLiteral("Unknown"));
     default: return QString(QStringLiteral("<Unknown>"));
     }
+}
+
+void FileImporterBibTeX::setCommentHandling(CommentHandling commentHandling) {
+    m_commentHandling = commentHandling;
 }

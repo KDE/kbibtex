@@ -204,7 +204,7 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         /// ensure proper treatment of UTF-8 characters
         const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
-        FileImporterBibTeX importer;
+        FileImporterBibTeX importer(this);
         File *bibtexFile = importer.fromString(bibTeXcode);
         int numFoundResults = 0;
         if (bibtexFile != nullptr) {

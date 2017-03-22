@@ -35,13 +35,12 @@ class KBIBTEXIO_EXPORT FileExporterXSLT : public FileExporter
     Q_OBJECT
 
 public:
-    explicit FileExporterXSLT(const QString &xsltFilename = QString());
+    explicit FileExporterXSLT(const QString &xsltFilename, QObject *parent);
     ~FileExporterXSLT() override;
 
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
-    void setXSLTFilename(const QString &xsltFilename);
 
 public slots:
     void cancel() override;
@@ -51,4 +50,14 @@ private:
     QString m_xsltFilename;
 };
 
+
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class KBIBTEXIO_EXPORT FileExporterHTML : public FileExporterXSLT
+{
+    Q_OBJECT
+public:
+    explicit FileExporterHTML(QObject *parent);
+};
 #endif

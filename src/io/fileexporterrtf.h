@@ -29,7 +29,7 @@ class KBIBTEXIO_EXPORT FileExporterRTF : public FileExporterToolchain
     Q_OBJECT
 
 public:
-    FileExporterRTF();
+    FileExporterRTF(QObject *parent);
     ~FileExporterRTF() override;
 
     void reloadConfig() override;

@@ -275,7 +275,7 @@ void OnlineSearchScienceDirect::doneFetchingBibTeX()
         QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
         d->sanitizeBibTeXCode(bibTeXcode);
 
-        FileImporterBibTeX importer;
+        FileImporterBibTeX importer(this);
         File *bibtexFile = importer.fromString(bibTeXcode);
 
         bool hasEntry = false;

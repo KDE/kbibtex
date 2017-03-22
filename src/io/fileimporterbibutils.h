@@ -29,7 +29,7 @@ class KBIBTEXIO_EXPORT FileImporterBibUtils : public FileImporter, public BibUti
     Q_OBJECT
 
 public:
-    explicit FileImporterBibUtils();
+    explicit FileImporterBibUtils(QObject *parent);
     ~FileImporterBibUtils() override;
 
     File *load(QIODevice *iodevice) override;

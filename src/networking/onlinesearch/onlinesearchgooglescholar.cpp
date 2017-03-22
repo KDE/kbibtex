@@ -48,15 +48,20 @@ public:
     QString configPageUrl;
     QString setConfigPageUrl;
     QString queryPageUrl;
-    FileImporterBibTeX importer;
+    FileImporterBibTeX *importer;
 
-    OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar */* UNUSED parent*/)
+    OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar *parent)
         : /* UNUSED p(parent), */ numResults(0)
     {
+        importer = new FileImporterBibTeX(parent);
         startPageUrl = QStringLiteral("https://scholar.google.com/");
         configPageUrl = QStringLiteral("https://%1/scholar_settings");
         setConfigPageUrl = QStringLiteral("https://%1/scholar_setprefs");
         queryPageUrl = QStringLiteral("https://%1/scholar");
+    }
+
+    ~OnlineSearchGoogleScholarPrivate() {
+        delete importer;
     }
 
     QString documentUrlForBibTeXEntry(const QString &htmlText, int bibLinkPos) {
@@ -309,7 +314,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         } else {
             /// ensure proper treatment of UTF-8 characters
             QString rawText = QString::fromUtf8(reply->readAll().constData());
-            File *bibtexFile = d->importer.fromString(rawText);
+            File *bibtexFile = d->importer->fromString(rawText);
 
             bool hasEntry = false;
             if (bibtexFile != nullptr) {

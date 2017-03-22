@@ -241,7 +241,7 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
         /// ensure proper treatment of UTF-8 characters
         QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
 
-        FileImporterBibTeX importer;
+        FileImporterBibTeX importer(this);
         d->sanitizeBibTeXCode(bibTeXcode);
         File *bibtexFile = importer.fromString(bibTeXcode);
 

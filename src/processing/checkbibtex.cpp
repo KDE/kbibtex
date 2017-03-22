@@ -74,7 +74,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     QByteArray ba;
     QBuffer buffer(&ba);
     buffer.open(QIODevice::WriteOnly);
-    FileExporterBibTeXOutput exporter(FileExporterBibTeXOutput::BibTeXLogFile);
+    FileExporterBibTeXOutput exporter(FileExporterBibTeXOutput::BibTeXLogFile, parent);
     bool exporterResult = exporter.save(&buffer, &dummyFile, &bibtexOuput);
     buffer.close();
 

@@ -239,8 +239,8 @@ public:
 
 };
 
-FileImporterRIS::FileImporterRIS()
-        : FileImporter(), d(new FileImporterRISPrivate(this))
+FileImporterRIS::FileImporterRIS(QObject *parent)
+        : FileImporter(parent), d(new FileImporterRISPrivate(this))
 {
 // nothing
 }

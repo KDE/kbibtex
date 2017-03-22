@@ -29,7 +29,7 @@ class KBIBTEXIO_EXPORT FileExporterBibUtils : public FileExporter, public BibUti
     Q_OBJECT
 
 public:
-    explicit FileExporterBibUtils();
+    explicit FileExporterBibUtils(QObject *parent);
     ~FileExporterBibUtils() override;
 
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;

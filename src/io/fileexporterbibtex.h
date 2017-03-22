@@ -41,7 +41,7 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
 public:
     enum UseLaTeXEncoding {leUTF8, leLaTeX, leRaw};
 
-    FileExporterBibTeX();
+    FileExporterBibTeX(QObject *parent);
     ~FileExporterBibTeX() override;
 
     void setEncoding(const QString &encoding);

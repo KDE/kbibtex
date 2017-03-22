@@ -30,7 +30,7 @@ class KBIBTEXIO_EXPORT FileExporterBibTeXOutput : public FileExporterToolchain
 
 public:
     enum OutputType {BibTeXLogFile, BibTeXBlockList};
-    explicit FileExporterBibTeXOutput(OutputType outputType);
+    explicit FileExporterBibTeXOutput(OutputType outputType, QObject *parent);
     ~FileExporterBibTeXOutput() override;
 
     void reloadConfig() override;

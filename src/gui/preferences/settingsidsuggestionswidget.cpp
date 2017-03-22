@@ -52,7 +52,7 @@ public:
         m_defaultFormatStringRow = -1;
 
         if (exampleBibTeXEntry.isNull()) {
-            static FileImporterBibTeX fileImporterBibTeX;
+            static FileImporterBibTeX fileImporterBibTeX(this);
             File *file = fileImporterBibTeX.fromString(exampleBibTeXEntryString);
             if (file != nullptr) {
                 if (!file->isEmpty())

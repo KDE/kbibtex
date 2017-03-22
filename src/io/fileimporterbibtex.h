@@ -48,17 +48,12 @@ class KBIBTEXIO_EXPORT FileImporterBibTeX : public FileImporter
 public:
     static const char *defaultCodecName;
 
+    enum CommentHandling {IgnoreComments = 0, KeepComments = 1};
+
     /**
      * Creates an importer class to read a BibTeX file.
-     * @param encoding the file's encoding.
-     *     Supports all of iconv's encodings plus "latex",
-     *     which performs no encoding but relies on that
-     *     this file is pure ASCII only.
-     * @param ignoreComments ignore comments in file.
-     *     Useful if you for example read from an HTML file,
-     *     as all HTML content you be treated as comments otherwise.
      */
-    explicit FileImporterBibTeX(bool ignoreComments = true, KBibTeX::Casing keywordCasing = KBibTeX::cLowerCase);
+    explicit FileImporterBibTeX(QObject *parent);
     ~FileImporterBibTeX() override;
 
     /**
@@ -103,6 +98,8 @@ public:
 
     static void parsePersonList(const QString &text, Value &value);
 
+    void setCommentHandling(CommentHandling commentHandling);
+
 public slots:
     void cancel() override;
 
@@ -122,7 +119,7 @@ private:
 
     bool m_cancelFlag;
     QTextStream *m_textStream;
-    bool m_ignoreComments;
+    CommentHandling m_commentHandling;
     KBibTeX::Casing m_keywordCasing;
     QStringList m_keysForPersonDetection;
     QSet<QString> m_knownElementIds;

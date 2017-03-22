@@ -138,9 +138,10 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
 {
     *outFile = nullptr;
 
-    FileImporter *importer = nullptr;
+    FileImporterBibTeX *importer = nullptr;
     if (currentTestFile.filename.endsWith(QStringLiteral(".bib"))) {
-        importer = new FileImporterBibTeX(false);
+        importer = new FileImporterBibTeX(this);
+        importer->setCommentHandling(FileImporterBibTeX::KeepComments);
     } else {
         QFAIL(qPrintable(QString::fromLatin1("Don't know format of '%1'").arg(currentTestFile.filename)));
     }
@@ -244,7 +245,7 @@ void KBibTeXFilesTest::saveFile(File *file, const TestFile &currentTestFile, QSt
 
     FileExporter *exporter = nullptr;
     if (currentTestFile.filename.endsWith(QStringLiteral(".bib"))) {
-        FileExporterBibTeX *bibTeXExporter = new FileExporterBibTeX();
+        FileExporterBibTeX *bibTeXExporter = new FileExporterBibTeX(this);
         bibTeXExporter->setEncoding(QStringLiteral("utf-8"));
         exporter = bibTeXExporter;
     } else {

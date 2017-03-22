@@ -275,45 +275,47 @@ public:
 
     FileImporter *fileImporterFactory(const QUrl &url) {
         QString ending = url.path().toLower();
-        int p = ending.lastIndexOf(QStringLiteral("."));
-        ending = ending.mid(p + 1);
+        const auto pos = ending.lastIndexOf(QStringLiteral("."));
+        ending = ending.mid(pos + 1);
 
         if (ending == QStringLiteral("pdf")) {
-            return new FileImporterPDF();
+            return new FileImporterPDF(p);
         } else if (ending == QStringLiteral("ris")) {
-            return new FileImporterRIS();
+            return new FileImporterRIS(p);
         } else if (BibUtils::available() && ending == QStringLiteral("isi")) {
-            FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils();
+            FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils(p);
             fileImporterBibUtils->setFormat(BibUtils::ISI);
             return fileImporterBibUtils;
         } else {
-            return new FileImporterBibTeX(false);
+            FileImporterBibTeX *fileImporterBibTeX = new FileImporterBibTeX(p);
+            fileImporterBibTeX->setCommentHandling(FileImporterBibTeX::KeepComments);
+            return fileImporterBibTeX;
         }
     }
 
     FileExporter *fileExporterFactory(const QString &ending) {
         if (ending == QStringLiteral("html")) {
-            return new FileExporterXSLT();
+            return new FileExporterHTML(p);
         } else if (ending == QStringLiteral("xml")) {
-            return new FileExporterXML();
+            return new FileExporterXML(p);
         } else if (ending == QStringLiteral("ris")) {
-            return new FileExporterRIS();
+            return new FileExporterRIS(p);
         } else if (ending == QStringLiteral("pdf")) {
-            return new FileExporterPDF();
+            return new FileExporterPDF(p);
         } else if (ending == QStringLiteral("ps")) {
-            return new FileExporterPS();
+            return new FileExporterPS(p);
         } else if (BibUtils::available() && ending == QStringLiteral("isi")) {
-            FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils();
+            FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils(p);
             fileExporterBibUtils->setFormat(BibUtils::ISI);
             return fileExporterBibUtils;
         } else if (ending == QStringLiteral("rtf")) {
-            return new FileExporterRTF();
+            return new FileExporterRTF(p);
         } else if (ending == QStringLiteral("html") || ending == QStringLiteral("htm")) {
-            return new FileExporterBibTeX2HTML();
+            return new FileExporterBibTeX2HTML(p);
         } else if (ending == QStringLiteral("bbl")) {
-            return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::BibTeXBlockList);
+            return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::BibTeXBlockList, p);
         } else {
-            return new FileExporterBibTeX();
+            return new FileExporterBibTeX(p);
         }
     }
 

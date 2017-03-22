@@ -26,10 +26,10 @@
 #include "fileimporterbibtex.h"
 #include "logging_io.h"
 
-FileImporterPDF::FileImporterPDF()
-        : FileImporter(), m_cancelFlag(false)
+FileImporterPDF::FileImporterPDF(QObject *parent)
+        : FileImporter(parent), m_cancelFlag(false)
 {
-    m_bibTeXimporter = new FileImporterBibTeX();
+    m_bibTeXimporter = new FileImporterBibTeX(this);
 }
 
 FileImporterPDF::~FileImporterPDF()
@@ -66,7 +66,7 @@ File *FileImporterPDF::load(QIODevice *iodevice)
                 // Poppler::EmbeddedFile to operate on const objects?
                 QByteArray data(file->data());
                 QBuffer buffer(&data);
-                FileImporterBibTeX bibTeXimporter;
+                FileImporterBibTeX bibTeXimporter(this);
                 connect(&bibTeXimporter, &FileImporter::progress, this, &FileImporter::progress);
                 buffer.open(QIODevice::ReadOnly);
                 result = bibTeXimporter.load(&buffer);

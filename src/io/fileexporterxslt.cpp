@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -33,13 +33,11 @@
 #include "xsltransform.h"
 #include "logging_io.h"
 
-FileExporterXSLT::FileExporterXSLT(const QString &xsltFilename)
-        : FileExporter(), m_cancelFlag(false)
+FileExporterXSLT::FileExporterXSLT(const QString &xsltFilename, QObject *parent)
+        : FileExporter(parent), m_cancelFlag(false), m_xsltFilename(xsltFilename)
 {
     if (xsltFilename.isEmpty() || !QFile(xsltFilename).exists())
-        setXSLTFilename(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/standard.xsl")));
-    else
-        setXSLTFilename(xsltFilename);
+        qCWarning(LOG_KBIBTEX_IO) << "Invalid XSLT filename: " << xsltFilename;
 }
 
 
@@ -53,11 +51,14 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QString
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
+    } else if (m_xsltFilename.isEmpty() || !QFile(m_xsltFilename).exists()) {
+        qCWarning(LOG_KBIBTEX_IO) << "Invalid XSLT filename: " << m_xsltFilename;
+        return false;
     }
 
     m_cancelFlag = false;
     XSLTransform xsltransformer(m_xsltFilename);
-    FileExporterXML xmlExporter;
+    FileExporterXML xmlExporter(this);
 
     QBuffer buffer;
     buffer.open(QIODevice::WriteOnly);
@@ -84,11 +85,14 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Elem
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
+    } else if (m_xsltFilename.isEmpty() || !QFile(m_xsltFilename).exists()) {
+        qCWarning(LOG_KBIBTEX_IO) << "Invalid XSLT filename: " << m_xsltFilename;
+        return false;
     }
 
     m_cancelFlag = false;
     XSLTransform xsltransformer(m_xsltFilename);
-    FileExporterXML xmlExporter;
+    FileExporterXML xmlExporter(this);
 
     QBuffer buffer;
     buffer.open(QIODevice::WriteOnly);
@@ -110,12 +114,13 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Elem
     return false;
 }
 
-void FileExporterXSLT::setXSLTFilename(const QString &xsltFilename)
-{
-    m_xsltFilename = xsltFilename;
-}
-
 void FileExporterXSLT::cancel()
 {
     m_cancelFlag = true;
+}
+
+FileExporterHTML::FileExporterHTML(QObject *parent)
+        : FileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/standard.xsl")), parent)
+{
+    /// nothing
 }

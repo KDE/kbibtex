@@ -132,7 +132,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
                 stopSearch(resultInvalidArguments);
             } else {
-                FileImporterBibTeX importer;
+                FileImporterBibTeX importer(this);
                 File *bibtexFile = importer.fromString(bibTeXcode);
 
                 bool hasEntries = false;

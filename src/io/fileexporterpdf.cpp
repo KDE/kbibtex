@@ -33,15 +33,13 @@
 #include "kbibtex.h"
 #include "logging_io.h"
 
-FileExporterPDF::FileExporterPDF(FileEmbedding fileEmbedding)
-        : FileExporterToolchain(), m_fileEmbedding(fileEmbedding)
+FileExporterPDF::FileExporterPDF(QObject *parent)
+        : FileExporterToolchain(parent)
 {
     m_fileBasename = QStringLiteral("bibtex-to-pdf");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 
-    /// If there is not embedfile.sty file, disable embedding
-    /// irrespective of user's wishes
-    if (!kpsewhich(QStringLiteral("embedfile.sty"))) m_fileEmbedding = NoFileEmbedding;
+    setFileEmbedding(FileExporterPDF::EmbedBibTeXFileAndReferences);
 
     reloadConfig();
 }
@@ -79,11 +77,10 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter->save(&output, bibtexfile, errorLog);
+        FileExporterBibTeX bibtexExporter(this);
+        bibtexExporter.setEncoding(QStringLiteral("latex"));
+        result = bibtexExporter.save(&output, bibtexfile, errorLog);
         output.close();
-        delete bibtexExporter;
     }
 
     if (result)
@@ -110,11 +107,10 @@ bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter->save(&output, element, bibtexfile, errorLog);
+        FileExporterBibTeX bibtexExporter(this);
+        bibtexExporter.setEncoding(QStringLiteral("latex"));
+        result = bibtexExporter.save(&output, element, bibtexfile, errorLog);
         output.close();
-        delete bibtexExporter;
     }
 
     if (result)
@@ -127,6 +123,15 @@ bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 void FileExporterPDF::setDocumentSearchPaths(const QStringList &searchPaths)
 {
     m_searchPaths = searchPaths;
+}
+
+void FileExporterPDF::setFileEmbedding(FileEmbedding fileEmbedding) {
+    /// If there is not embedfile.sty file, disable embedding
+    /// irrespective of user's wishes
+    if (!kpsewhich(QStringLiteral("embedfile.sty")))
+        m_fileEmbedding = NoFileEmbedding;
+    else
+        m_fileEmbedding = fileEmbedding;
 }
 
 bool FileExporterPDF::generatePDF(QIODevice *iodevice, QStringList *errorLog)

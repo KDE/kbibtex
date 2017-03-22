@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,8 +30,8 @@
 #include "kbibtex.h"
 #include "logging_io.h"
 
-FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType)
-        : FileExporterToolchain(), m_outputType(outputType), m_latexLanguage(QStringLiteral("english")), m_latexBibStyle(QStringLiteral("plain"))
+FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType, QObject *parent)
+        : FileExporterToolchain(parent), m_outputType(outputType), m_latexLanguage(QStringLiteral("english")), m_latexBibStyle(QStringLiteral("plain"))
 {
     m_fileBasename = QStringLiteral("bibtex-to-output");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
@@ -58,11 +58,10 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile,
 
     QBuffer buffer(this);
     if (buffer.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QStringLiteral("utf-8"));
-        result = bibtexExporter->save(&buffer, bibtexfile, errorLog);
+        FileExporterBibTeX bibtexExporter(this);
+        bibtexExporter.setEncoding(QStringLiteral("utf-8"));
+        result = bibtexExporter.save(&buffer, bibtexfile, errorLog);
         buffer.close();
-        delete bibtexExporter;
     }
 
     if (result)
@@ -86,11 +85,10 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<co
 
     QBuffer buffer(this);
     if (buffer.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QStringLiteral("utf-8"));
-        result = bibtexExporter->save(&buffer, element, bibtexfile, errorLog);
+        FileExporterBibTeX bibtexExporter(this);
+        bibtexExporter.setEncoding(QStringLiteral("utf-8"));
+        result = bibtexExporter.save(&buffer, element, bibtexfile, errorLog);
         buffer.close();
-        delete bibtexExporter;
     }
 
     if (result)

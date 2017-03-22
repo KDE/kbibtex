@@ -30,8 +30,8 @@
 #include "kbibtex.h"
 #include "logging_io.h"
 
-FileExporterPS::FileExporterPS()
-        : FileExporterToolchain()
+FileExporterPS::FileExporterPS(QObject *parent)
+        : FileExporterToolchain(parent)
 {
     m_fileBasename = QStringLiteral("bibtex-to-ps");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
@@ -67,11 +67,10 @@ bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile, QStringLi
 
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter->save(&output, bibtexfile, errorLog);
+        FileExporterBibTeX bibtexExporter(this);
+        bibtexExporter.setEncoding(QStringLiteral("latex"));
+        result = bibtexExporter.save(&output, bibtexfile, errorLog);
         output.close();
-        delete bibtexExporter;
     }
 
     if (result)
@@ -92,11 +91,10 @@ bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Elemen
 
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
     if (output.open(QIODevice::WriteOnly)) {
-        FileExporterBibTeX *bibtexExporter = new FileExporterBibTeX();
-        bibtexExporter->setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter->save(&output, element, bibtexfile, errorLog);
+        FileExporterBibTeX bibtexExporter(this);
+        bibtexExporter.setEncoding(QStringLiteral("latex"));
+        result = bibtexExporter.save(&output, element, bibtexfile, errorLog);
         output.close();
-        delete bibtexExporter;
     }
 
     if (result)

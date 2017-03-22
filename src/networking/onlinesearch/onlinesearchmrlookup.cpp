@@ -98,7 +98,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
             bibtexCode += QLatin1Char('\n');
         }
 
-        FileImporterBibTeX importer;
+        FileImporterBibTeX importer(this);
         File *bibtexFile = importer.fromString(bibtexCode);
 
         bool hasEntry = false;
