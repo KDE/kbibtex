@@ -59,6 +59,7 @@
 #include <KActionCollection>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <kio_version.h>
 
 #include "kbibtex.h"
 #include "element.h"
@@ -533,7 +534,11 @@ public:
         QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x051f00 // < 5.31.0
         KRun::runUrl(url, mimeTypeName, p, false, false);
+#else // KIO_VERSION < 0x051f00 // >= 5.31.0
+        KRun::runUrl(url, mimeTypeName, p, KRun::RunFlags());
+#endif // KIO_VERSION < 0x051f00
     }
 
     UrlInfo urlMetaInfo(const QUrl &url) {
@@ -694,7 +699,11 @@ void DocumentPreview::linkActivated(const QString &link)
             QMimeType mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x051f00 // < 5.31.0
             KRun::runUrl(urlToOpen, mimeTypeName, this, false, false);
+#else // KIO_VERSION < 0x051f00 // >= 5.31.0
+            KRun::runUrl(urlToOpen, mimeTypeName, this, KRun::RunFlags());
+#endif // KIO_VERSION < 0x051f00
         }
     }
 }

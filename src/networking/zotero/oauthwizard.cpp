@@ -30,6 +30,7 @@
 #include <KLocalizedString>
 #include <KLineEdit>
 #include <KRun>
+#include <kio_version.h>
 
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
@@ -296,7 +297,11 @@ void OAuthWizard::copyAuthorizationUrl()
 
 void OAuthWizard::openAuthorizationUrl()
 {
-    KRun::runUrl(QUrl(d->lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), this);
+#if KIO_VERSION < 0x051f00 // < 5.31.0
+    KRun::runUrl(QUrl(d->lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), this, false, false);
+#else // KIO_VERSION < 0x051f00 // >= 5.31.0
+    KRun::runUrl(QUrl(d->lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), this, KRun::RunFlags());
+#endif // KIO_VERSION < 0x051f00
 }
 
 #include "oauthwizard.moc"

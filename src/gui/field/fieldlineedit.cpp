@@ -38,6 +38,7 @@
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <kio_version.h>
 
 #include "fileinfo.h"
 #include "file.h"
@@ -308,7 +309,11 @@ public:
             QMimeType mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x051f00 // < 5.31.0
             KRun::runUrl(urlToOpen, mimeTypeName, parent, false, false);
+#else // KIO_VERSION < 0x051f00 // >= 5.31.0
+            KRun::runUrl(urlToOpen, mimeTypeName, parent, KRun::RunFlags());
+#endif // KIO_VERSION < 0x051f00
         }
     }
 

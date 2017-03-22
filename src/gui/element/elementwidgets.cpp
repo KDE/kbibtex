@@ -37,6 +37,7 @@
 #include <KComboBox>
 #include <KRun>
 #include <KTextEdit>
+#include <kio_version.h>
 
 #include "idsuggestions.h"
 #include "fileinfo.h"
@@ -856,7 +857,11 @@ void OtherFieldsWidget::actionOpen()
         QMimeType mimeType = FileInfo::mimeTypeForUrl(currentUrl);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x051f00 // < 5.31.0
         KRun::runUrl(currentUrl, mimeTypeName, this, false, false);
+#else // KIO_VERSION < 0x051f00 // >= 5.31.0
+        KRun::runUrl(currentUrl, mimeTypeName, this, KRun::RunFlags());
+#endif // KIO_VERSION < 0x051f00
     }
 }
 

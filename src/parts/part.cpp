@@ -51,6 +51,7 @@
 #include <KIO/CopyJob>
 #include <KIO/Job>
 #include <KJobWidgets>
+#include <kio_version.h>
 
 #include "file.h"
 #include "macro.h"
@@ -893,7 +894,11 @@ void KBibTeXPart::elementViewDocument()
         QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x051f00 // < 5.31.0
         KRun::runUrl(url, mimeTypeName, widget(), false, false);
+#else // KIO_VERSION < 0x051f00 // >= 5.31.0
+        KRun::runUrl(url, mimeTypeName, widget(), KRun::RunFlags());
+#endif // KIO_VERSION < 0x051f00
     }
 }
 
@@ -906,7 +911,11 @@ void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
     QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
     const QString mimeTypeName = mimeType.name();
     /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x051f00 // < 5.31.0
     KRun::runUrl(url, mimeTypeName, widget(), false, false);
+#else // KIO_VERSION < 0x051f00 // >= 5.31.0
+    KRun::runUrl(url, mimeTypeName, widget(), KRun::RunFlags());
+#endif // KIO_VERSION < 0x051f00
 }
 
 void KBibTeXPart::elementFindPDF()

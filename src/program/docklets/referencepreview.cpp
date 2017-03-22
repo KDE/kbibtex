@@ -44,6 +44,7 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KTextEdit>
+#include <kio_version.h>
 
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtex2html.h"
@@ -382,7 +383,11 @@ void ReferencePreview::openAsHTML()
 
     /// Ask KDE subsystem to open url in viewer matching mime type
     QUrl url(file.fileName());
+#if KIO_VERSION < 0x051f00 // < 5.31.0
     KRun::runUrl(url, QStringLiteral("text/html"), this, false, false);
+#else // KIO_VERSION < 0x051f00 // >= 5.31.0
+    KRun::runUrl(url, QStringLiteral("text/html"), this, KRun::RunFlags());
+#endif // KIO_VERSION < 0x051f00
 }
 
 void ReferencePreview::saveAsHTML()
