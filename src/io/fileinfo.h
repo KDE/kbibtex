@@ -98,6 +98,9 @@ public:
 
 protected:
     FileInfo();
+
+private:
+    static void extractPDFTextToCache(const QString &pdfFilename, const QString &cacheFilename);
 };
 
 #endif // KBIBTEX_IO_FILEINFO_H
