@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +22,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QTextStream>
+#include <QtConcurrentRun>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -267,42 +268,58 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
     static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
     QString textFilename = QString(pdfFilename).remove(invalidChars).append(QLatin1String(".txt")).prepend(KStandardDirs::locateLocal("cache", "pdftotext/"));
 
-    /// Initialize return value
-    QString text;
-
     /// First, check if there is a cache text file
     if (QFileInfo(textFilename).exists()) {
         /// Load text from cache file
         QFile f(textFilename);
         if (f.open(QFile::ReadOnly)) {
             QTextStream ts(&f);
-            text = ts.readAll();
+            const QString text = ts.readAll();
             f.close();
+            return text;
         }
+    } else
+        /// No cache text exists, so run text extraction in another thread
+        QtConcurrent::run(extractPDFTextToCache, pdfFilename, textFilename);
+
+    return QString();
+}
+
+void FileInfo::extractPDFTextToCache(const QString &pdfFilename, const QString &cacheFilename) {
+    /// In case of multiple calls, skip text extraction if cache file already exists
+    if (QFile(cacheFilename).exists()) return;
+
+    QString text;
+    QStringList msgList;
+
+    /// Load PDF file through Poppler
+    Poppler::Document *doc = Poppler::Document::load(pdfFilename);
+    if (doc != NULL) {
+        static const int maxPages = 64;
+        /// Build text by appending each page's text
+        for (int i = 0; i < qMin(maxPages, doc->numPages()); ++i)
+            text.append(doc->page(i)->text(QRect())).append(QLatin1String("\n\n"));
+        if (doc->numPages() > maxPages)
+            msgList << QString(QLatin1String("### Skipped %1 pages as PDF file contained too many pages (limit is %2 pages) ###")).arg(doc->numPages() - maxPages).arg(maxPages);
+        delete doc;
+    } else
+        msgList << QLatin1String("### Skipped as file could not be opened as PDF file ###");
+
+    /// Save text in cache file
+    QFile f(cacheFilename);
+    if (f.open(QFile::WriteOnly)) {
+        static const int maxCharacters = 1 << 18;
+        QTextStream ts(&f);
+        ts << text.left(maxCharacters); ///< keep only the first 2^18 many characters
+
+        if (text.length() > maxCharacters)
+            msgList << QString(QLatin1String("### Text too long, skipping %1 characters ###")).arg(text.length() - maxCharacters);
+        /// Write all messages (warnings) to end of text file
+        foreach(const QString &msg, msgList)
+           ts << endl << msg;
+
+        f.close();
     }
-
-    /// Either no cache text file existed or could not load text from it
-    if (text.isEmpty()) {
-        /// Load PDF file through Poppler
-        Poppler::Document *doc = Poppler::Document::load(pdfFilename);
-        if (doc != NULL) {
-            /// Build text by appending each page's text
-            text = QLatin1String("");
-            for (int i = 0; i < doc->numPages(); ++i)
-                text.append(doc->page(i)->text(QRect())).append(QLatin1String("\n\n"));
-            delete doc;
-
-            /// Save text in cache file
-            QFile f(textFilename);
-            if (f.open(QFile::WriteOnly)) {
-                QTextStream ts(&f);
-                ts << text;
-                f.close();
-            }
-        }
-    }
-
-    return text;
 }
 
 QString FileInfo::doiUrlPrefix()
