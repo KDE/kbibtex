@@ -284,8 +284,12 @@ QList<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const 
 QString FileInfo::pdfToText(const QString &pdfFilename)
 {
     /// Build filename for text file where PDF file's plain text is cached
-    static const QRegExp invalidChars("[^-a-z0-9_]", Qt::CaseInsensitive);
-    QString textFilename = QString(pdfFilename).remove(invalidChars).append(QStringLiteral(".txt")).prepend(QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QLatin1Char('/') + "pdftotext/");
+    static const QRegExp invalidChars(QStringLiteral("[^-a-z0-9_]"), Qt::CaseInsensitive);
+    const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/pdftotext");
+    if (!QDir(cacheDirectory).exists() && !QDir::home().mkdir(cacheDirectory))
+        /// Could not create cache directory
+        return QString();
+    const QString textFilename = QString(pdfFilename).remove(invalidChars).append(QStringLiteral(".txt")).prepend(QStringLiteral("/")).prepend(cacheDirectory);
 
     /// First, check if there is a cache text file
     if (QFileInfo::exists(textFilename)) {
