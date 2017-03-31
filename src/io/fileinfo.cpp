@@ -107,7 +107,19 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
         if (url.isValid() && !result.contains(url))
             result << url;
         /// remove match from internal text to avoid duplicates
-        internalText = internalText.left(pos) + internalText.mid(pos + match.length());
+
+        /// Cut away any URL that may be right before found DOI number:
+        /// For example, if DOI '10.1000/38-abc' was found in
+        ///   'Lore ipsum http://doi.example.org/10.1000/38-abc Lore ipsum'
+        /// also remove 'http://doi.example.org/' from the text, keeping only
+        ///   'Lore ipsum  Lore ipsum'
+        static const QRegExp genericDoiUrlPrefix(QStringLiteral("http[s]?://[a-z0-9./]+/")); ///< looks like an URL
+        const int urlStartPos = genericDoiUrlPrefix.lastIndexIn(internalText, pos);
+        if (urlStartPos >= 0 && genericDoiUrlPrefix.cap(0).length() > pos - urlStartPos)
+            /// genericDoiUrlPrefix.cap(0) may contain (parts of) DOI
+            internalText = internalText.left(urlStartPos) + internalText.mid(pos + match.length());
+        else
+            internalText = internalText.left(pos) + internalText.mid(pos + match.length());
     }
 
     const QStringList fileList = internalText.split(KBibTeX::fileListSeparatorRegExp, QString::SkipEmptyParts);
