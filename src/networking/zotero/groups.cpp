@@ -67,6 +67,7 @@ Groups::Groups(QSharedPointer<Zotero::API> api, QObject *parent)
     Q_ASSERT_X(url.path().contains(QLatin1String("users/")), "Groups::Groups(QSharedPointer<Zotero::API> api, QObject *parent)", "Provided base URL does not contain 'users/' as expected");
     url.addPath(QLatin1String("/groups"));
     if (d->api->inBackoffMode() && d->queuedRequestZoteroUrl.isEmpty()) {
+        /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
         d->queuedRequestZoteroUrl = url;
         QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, SLOT(singleShotRequestZoteroUrl()));
     } else
@@ -97,10 +98,17 @@ void Groups::finishedFetchingGroups()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (reply->hasRawHeader("Backoff"))
-        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt());
-    else if (reply->hasRawHeader("Retry-After"))
-        d->api->startBackoff(QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt());
+    if (reply->hasRawHeader("Backoff")) {
+        bool ok = false;
+        int time = QString::fromLatin1(reply->rawHeader("Backoff").constData()).toInt(&ok);
+        if (!ok) time = 10; ///< parsing argument of raw header 'Backoff' failed? 10 seconds is fallback
+        d->api->startBackoff(time);
+    } else if (reply->hasRawHeader("Retry-After")) {
+        bool ok = false;
+        int time = QString::fromLatin1(reply->rawHeader("Retry-After").constData()).toInt(&ok);
+        if (!ok) time = 10; ///< parsing argument of raw header 'Retry-After' failed? 10 seconds is fallback
+        d->api->startBackoff(time);
+    }
 
     if (reply->error() == QNetworkReply::NoError) {
         QString nextPage;
@@ -133,7 +141,12 @@ void Groups::finishedFetchingGroups()
         }
 
         if (!nextPage.isEmpty())
-            d->requestZoteroUrl(nextPage);
+            if (d->api->inBackoffMode() && d->queuedRequestZoteroUrl.isEmpty()) {
+                /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
+                d->queuedRequestZoteroUrl = nextPage;
+                QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, SLOT(singleShotRequestZoteroUrl()));
+            } else
+                d->requestZoteroUrl(nextPage);
         else {
             d->busy = false;
             d->initialized = true;

@@ -95,7 +95,7 @@ QNetworkRequest API::request(const KUrl &url) const
 }
 
 void API::startBackoff(int duration) {
-    if (duration > 0) {
+    if (duration > 0 && !inBackoffMode()) {
         d->backoffElapseTime = QDateTime::currentDateTime().addSecs(duration + 1);
         emit backoffModeStart();
         /// Use single-shot timer and functor to emit signal
