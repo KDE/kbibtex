@@ -374,8 +374,8 @@ void OnlineSearchAbstract::iconDownloadFinished()
             extension = QStringLiteral(".ico");
         } else if (iconData[0] == '<') {
             /// HTML or XML code
-            QString htmlCode = QString::fromUtf8(iconData);
-            qCDebug(LOG_KBIBTEX_NETWORKING) << "Favicon HTML code for URL " << reply->url().toDisplayString() << ": " << htmlCode;
+            const QString htmlCode = QString::fromUtf8(iconData);
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "Received XML or HTML data from " << reply->url().toDisplayString() << ": " << htmlCode.left(128);
             return;
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << reply->url().toDisplayString();
