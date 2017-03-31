@@ -328,7 +328,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
         if (iconData.size() < 10) {
             /// Unlikely that an icon's data is less than 10 bytes,
             /// must be an error.
-            qWarning() << "Received invalid icon data from " << reply->url().toString();
+            kWarning() << "Received invalid icon data from " << reply->url().toString();
             return;
         }
 
@@ -340,6 +340,14 @@ void OnlineSearchAbstract::iconDownloadFinished()
             /// Microsoft Icon have first two bytes always 0x0000,
             /// third and fourth byte is 0x0001 (for .ico)
             extension = QLatin1String(".ico");
+        } else if (iconData[0] == '<') {
+            /// HTML or XML code
+            const QString htmlCode = QString::fromUtf8(iconData);
+            kDebug() << "Received XML or HTML data from " << reply->url().toString() << ": " << htmlCode.left(128);
+            return;
+        } else {
+            kWarning() << "Favicon is of unknown format: " << reply->url().toString();
+            return;
         }
         const QString filename = reply->objectName() + extension;
 
