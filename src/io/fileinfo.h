@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QSharedPointer>
 
 class Entry;
 
@@ -82,7 +83,7 @@ public:
      * @param testExistence shall be tested for file existence?
      * @return list of found URLs/filenames (duplicates are avoided)
      */
-    static QList<QUrl> entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestExistence testExistence);
+    static QList<QUrl> entryUrls(const QSharedPointer<const Entry> &entry, const QUrl &bibTeXUrl, TestExistence testExistence);
 
     /**
      * Load the given PDF file and return the contained plain text.

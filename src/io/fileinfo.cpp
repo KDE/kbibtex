@@ -181,10 +181,10 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
     }
 }
 
-QList<QUrl> FileInfo::entryUrls(const Entry *entry, const QUrl &bibTeXUrl, TestExistence testExistence)
+QList<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const QUrl &bibTeXUrl, TestExistence testExistence)
 {
     QList<QUrl> result;
-    if (entry == nullptr || entry->isEmpty())
+    if (entry.isNull() || entry->isEmpty())
         return result;
 
     if (entry->contains(Entry::ftDOI)) {

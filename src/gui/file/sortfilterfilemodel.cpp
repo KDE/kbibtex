@@ -196,7 +196,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
 
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) {///< not filtering for any specific field
-            const auto entryUrlList = FileInfo::entryUrls(entry.data(), fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes);
+            const auto entryUrlList = FileInfo::entryUrls(entry, fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes);
             for (const QUrl &url : entryUrlList) {
                 if (url.isLocalFile() && url.fileName().endsWith(QStringLiteral(".pdf"))) {
                     // FIXME if you have a large collection of PDF files and the text version
