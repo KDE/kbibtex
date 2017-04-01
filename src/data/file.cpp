@@ -62,14 +62,14 @@ public:
     FilePrivate(File */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter) {
         const bool isValid = checkValidity();
-        qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
+        if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
         loadConfiguration();
     }
 
     FilePrivate(const File &other, File */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter) {
         const bool isValid = checkValidity();
-        qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
+        if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
 
         /// Copy properties from other File object
         static const QStringList propertyKeys = QStringList() << File::Encoding << File::StringDelimiter << File::QuoteComment << File::KeywordCasing << File::NameFormatting << File::ProtectCasing << File::ListSeparator;
@@ -80,13 +80,13 @@ public:
     FilePrivate(File */* UNUSED parent*/, const File &other)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
         const bool isValid = checkValidity();
-        qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
+        if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
         loadConfiguration();
     }
 
     ~FilePrivate() {
         const bool isValid = checkValidity();
-        qCDebug(LOG_KBIBTEX_DATA) << "Deleting File instance" << internalId << "  Valid?" << isValid;
+        if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Deleting File instance" << internalId << "  Valid?" << isValid;
         validInvalidField = invalid;
     }
 
@@ -94,7 +94,7 @@ public:
         validInvalidField = other.validInvalidField;
         properties = other.properties;
         const bool isValid = checkValidity();
-        qCDebug(LOG_KBIBTEX_DATA) << "Assigning File instance" << other.internalId << "to" << internalId << "  Is other valid?" << other.checkValidity() << "  Self valid?" << isValid;
+        if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Assigning File instance" << other.internalId << "to" << internalId << "  Is other valid?" << other.checkValidity() << "  Self valid?" << isValid;
         return *this;
     }
 
