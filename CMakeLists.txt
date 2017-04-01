@@ -4,15 +4,15 @@ project(
 
 cmake_minimum_required(
     VERSION
-    2.8.12
+    3.4.0
     FATAL_ERROR
 )
 
 set(
-    QT_MIN_VERSION "5.3.0"
+    QT_MIN_VERSION "5.6.0"
 )
 set(
-    KF5_MIN_VERSION "5.6.0"
+    KF5_MIN_VERSION "5.26.0"
 )
 
 find_package(ECM 1.7.0 REQUIRED NO_MODULE)
