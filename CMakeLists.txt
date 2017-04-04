@@ -42,8 +42,19 @@ find_package(
     Core
     Widgets
     Network
-    Test
     XmlPatterns
+)
+
+if(
+    BUILD_TESTING
+)
+    find_package(
+        Qt5Test ${QT_MIN_VERSION}
+        CONFIG
+        REQUIRED
+    )
+endif(
+    BUILD_TESTING
 )
 
 #FIXME this code fragment is intended to test for optional

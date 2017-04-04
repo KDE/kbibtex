@@ -68,8 +68,14 @@ add_subdirectory(
 add_subdirectory(
     parts
 )
-add_subdirectory(
-    test
+if(
+    BUILD_TESTING
+)
+    add_subdirectory(
+        test
+    )
+endif(
+    BUILD_TESTING
 )
 
 # install(
