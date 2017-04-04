@@ -57,18 +57,17 @@ endif(
     BUILD_TESTING
 )
 
-#FIXME this code fragment is intended to test for optional
-# components (WebEngineWidgets and WebKitWidgets) but fails
-# with warnings about missing 'Qt5' if either component
-# is not installed.
-#find_package(
-#    Qt5 ${QT_MIN_VERSION}
-#    QUIET
-#    CONFIG
-#    COMPONENTS
-#    WebEngineWidgets
-#    WebKitWidgets
-#)
+find_package(
+    Qt5WebEngineWidgets ${QT_MIN_VERSION}
+    QUIET
+    CONFIG
+)
+
+find_package(
+    Qt5WebKitWidgets ${QT_MIN_VERSION}
+    QUIET
+    CONFIG
+)
 
 find_package(
     KF5 ${KF5_MIN_VERSION}
