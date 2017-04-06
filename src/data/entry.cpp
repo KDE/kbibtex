@@ -19,6 +19,8 @@
 
 #include <typeinfo>
 
+#include <QDebug>
+
 #include "file.h"
 
 // FIXME: Check if using those constants in the program is really necessary
@@ -248,4 +250,9 @@ QStringList Entry::authorsLastName() const
 
 bool Entry::isEntry(const Element &other) {
     return typeid(other) == typeid(Entry);
+}
+
+QDebug operator<<(QDebug dbg, const Entry &entry) {
+    dbg.nospace() << "Entry " << entry.id() << " (uniqueId=" << entry.uniqueId() << "), has " << entry.count() << " key-value pairs";
+    return dbg;
 }

@@ -268,3 +268,8 @@ bool File::checkValidity() const
 {
     return d->checkValidity();
 }
+
+QDebug operator<<(QDebug dbg, const File &file) {
+    dbg.nospace() << "File is " << (file.checkValidity() ? "" : "NOT ") << "valid and has " << file.count() << " members";
+    return dbg;
+}

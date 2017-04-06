@@ -215,6 +215,8 @@ private:
     EntryPrivate *const d;
 };
 
+QDebug operator<<(QDebug dbg, const Entry &Entry);
+
 /**
  * Comparison operator, necessary for QMap operations.
  */

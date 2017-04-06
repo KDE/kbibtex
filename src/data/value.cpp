@@ -22,6 +22,7 @@
 #include <QSet>
 #include <QString>
 #include <QStringList>
+#include <QDebug>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -201,6 +202,11 @@ bool Person::isPerson(const ValueItem &other) {
     return typeid(other) == typeid(Person);
 }
 
+QDebug operator<<(QDebug dbg, const Person &person) {
+    dbg.nospace() << "Person " << Person::transcribePersonName(&person, Preferences::defaultPersonNameFormatting);
+    return dbg;
+}
+
 
 const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);
 
@@ -260,6 +266,11 @@ bool MacroKey::isMacroKey(const ValueItem &other) {
     return typeid(other) == typeid(MacroKey);
 }
 
+QDebug operator<<(QDebug dbg, const MacroKey &macrokey) {
+    dbg.nospace() << "MacroKey " << macrokey.text();
+    return dbg;
+}
+
 
 PlainText::PlainText(const PlainText &other)
         : m_text(other.text())
@@ -308,6 +319,11 @@ bool PlainText::operator==(const ValueItem &other) const
 
 bool PlainText::isPlainText(const ValueItem &other) {
     return typeid(other) == typeid(PlainText);
+}
+
+QDebug operator<<(QDebug dbg, const PlainText &plainText) {
+    dbg.nospace() << "PlainText " << plainText.text();
+    return dbg;
 }
 
 
@@ -393,6 +409,11 @@ bool VerbatimText::operator==(const ValueItem &other) const
 
 bool VerbatimText::isVerbatimText(const ValueItem &other) {
     return typeid(other) == typeid(VerbatimText);
+}
+
+QDebug operator<<(QDebug dbg, const VerbatimText &verbatimText) {
+    dbg.nospace() << "VerbatimText " << verbatimText.text();
+    return dbg;
 }
 
 
@@ -513,6 +534,16 @@ Value &Value::operator=(Value && rhs)
 {
     return static_cast<Value &>(QVector<QSharedPointer<ValueItem> >::operator =((rhs)));
 }
+
+QDebug operator<<(QDebug dbg, const Value &value) {
+    dbg.nospace() << "Value";
+    if (value.isEmpty())
+        dbg << " is empty";
+    else
+        dbg.nospace() << ": " << PlainTextValue::text(value);
+    return dbg;
+}
+
 
 QString PlainTextValue::text(const Value &value)
 {

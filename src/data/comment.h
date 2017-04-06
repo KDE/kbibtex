@@ -89,4 +89,6 @@ private:
     CommentPrivate *const d;
 };
 
+QDebug operator<<(QDebug dbg, const Comment &comment);
+
 #endif // KBIBTEX_IO_COMMENT_H

@@ -58,4 +58,6 @@ private:
     PreamblePrivate *const d;
 };
 
+QDebug operator<<(QDebug dbg, const Preamble &preamble);
+
 #endif // KBIBTEX_IO_PREAMBLE_H

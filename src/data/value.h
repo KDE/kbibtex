@@ -141,6 +141,9 @@ private:
 
 };
 
+QDebug operator<<(QDebug dbg, const Person &person);
+
+
 class KBIBTEXDATA_EXPORT MacroKey: public ValueItem
 {
 public:
@@ -167,6 +170,9 @@ protected:
     static const QRegExp validMacroKey;
 };
 
+QDebug operator<<(QDebug dbg, const MacroKey &macrokey);
+
+
 class KBIBTEXDATA_EXPORT PlainText: public ValueItem
 {
 public:
@@ -190,6 +196,9 @@ public:
 protected:
     QString m_text;
 };
+
+QDebug operator<<(QDebug dbg, const PlainText &plainText);
+
 
 class KBIBTEXDATA_EXPORT VerbatimText: public ValueItem
 {
@@ -224,6 +233,9 @@ private:
     static bool colorLabelPairsInitialized;
 };
 
+QDebug operator<<(QDebug dbg, const VerbatimText &verbatimText);
+
+
 /**
  * Container class to hold values of BibTeX entry fields and similar value types in BibTeX file.
  * A Value object is built from a list of @see ValueItem objects.
@@ -253,6 +265,9 @@ public:
     Value &operator=(const Value &rhs);
     Value &operator=(Value && rhs);
 };
+
+QDebug operator<<(QDebug dbg, const Value &value);
+
 
 class KBIBTEXDATA_EXPORT PlainTextValue: private NotificationListener
 {

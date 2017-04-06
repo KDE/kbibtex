@@ -115,4 +115,6 @@ private:
     FilePrivate *d;
 };
 
+QDebug operator<<(QDebug dbg, const File &file);
+
 #endif // KBIBTEX_IO_FILE_H
