@@ -264,12 +264,7 @@ void File::setPropertiesToDefault()
     d->loadConfiguration();
 }
 
-quint64 File::id() const
-{
-    return d->internalId;
-}
-
-bool File::isMemoryValid() const
+bool File::checkValidity() const
 {
     return d->checkValidity();
 }

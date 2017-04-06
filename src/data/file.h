@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -103,18 +103,12 @@ public:
     void setPropertiesToDefault();
 
     /**
-     * Unique numeric identifier for every File instance.
-     * @return Unique numeric identifier
+     * Check if this File object is valid by its own assessment.
+     * No high-level checks, such as on the File instance's content,
+     * are performed.
+     * @return True if validity checks succeed, false otherwise
      */
-    quint64 id() const;
-
-    /**
-     * Performs a simple check if the memory of this File
-     * instance is properly allocate. No high-level checks,
-     * such as on the File instance's content, are performed.
-     * @return True if instance's memory is properly allocated
-     */
-    bool isMemoryValid() const;
+    bool checkValidity() const;
 
 private:
     class FilePrivate;
