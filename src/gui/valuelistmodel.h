@@ -60,7 +60,9 @@ class KBIBTEXGUI_EXPORT ValueListModel : public QAbstractTableModel, private Not
 
 public:
     enum ValueListModelRole {
-        /// Role to sort values
+        /// How many occurrences a value has
+        CountRole = Qt::UserRole + 112,
+        /// Role to sort values by
         SortRole = Qt::UserRole + 113,
         /// Role to get text to filter for
         SearchTextRole = Qt::UserRole + 114

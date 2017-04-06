@@ -29,13 +29,16 @@
 #include "notificationhub.h"
 #include "preferences.h"
 
-const int ColorRole = Qt::UserRole + 521;
-
 class ColorLabelComboBoxModel : public QAbstractItemModel, private NotificationListener
 {
     Q_OBJECT
 
 public:
+    enum ColorLabelComboBoxModelRole {
+        /// Color of a color-label pair
+        ColorRole = Qt::UserRole + 1721
+    };
+
     struct ColorLabelPair {
         QColor color;
         QString label;
@@ -169,7 +172,7 @@ bool ColorLabelWidget::reset(const Value &value)
         int i = 0;
         const QColor color = QColor(verbatimText->text());
         for (; i < d->model->rowCount(); ++i)
-            if (d->model->data(d->model->index(i, 0, QModelIndex()), ColorRole).value<QColor>() == color)
+            if (d->model->data(d->model->index(i, 0, QModelIndex()), ColorLabelComboBoxModel::ColorRole).value<QColor>() == color)
                 break;
 
         if (i >= d->model->rowCount()) {
@@ -188,7 +191,7 @@ bool ColorLabelWidget::reset(const Value &value)
 
 bool ColorLabelWidget::apply(Value &value) const
 {
-    QColor color = d->model->data(d->model->index(currentIndex(), 0, QModelIndex()), ColorRole).value<QColor>();
+    QColor color = d->model->data(d->model->index(currentIndex(), 0, QModelIndex()), ColorLabelComboBoxModel::ColorRole).value<QColor>();
     value.clear();
     if (color != Qt::black)
         value.append(QSharedPointer<VerbatimText>(new VerbatimText(color.name())));

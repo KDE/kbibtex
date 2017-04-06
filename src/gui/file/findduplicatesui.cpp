@@ -49,9 +49,6 @@
 #include "findduplicates.h"
 #include "logging_gui.h"
 
-const int FieldNameRole = Qt::UserRole + 101;
-const int UserInputRole = Qt::UserRole + 103;
-
 /**
  * Model to hold alternative values as visualized in the RadioTreeView
  */
@@ -70,6 +67,13 @@ private:
 
 public:
     enum SelectionType {SelectionTypeNone, SelectionTypeRadio, SelectionTypeCheck};
+
+    enum AlternativesItemModelRole {
+        /// Raw, all-lowercase field name
+        FieldNameRole = Qt::UserRole + 101,
+        /// Text used for inline editing of values
+        UserInputRole = Qt::UserRole + 103
+    };
 
     AlternativesItemModel(QTreeView *parent)
             : QAbstractItemModel(parent), p(parent), currentClique(nullptr) {
@@ -375,12 +379,12 @@ public:
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override {
         if (KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor)) {
             /// Set user-entered text to model (and underlying value)
-            model->setData(index, lineEdit->text(), UserInputRole);
+            model->setData(index, lineEdit->text(), AlternativesItemModel::UserInputRole);
 
             /// Ensure that the edited value is checked if it is
             /// a checkbox-checkable value, or gets a "dot" in its
             /// radio button if it is radio-checkable.
-            const QString fieldName = index.parent().data(FieldNameRole).toString();
+            const QString fieldName = index.parent().data(AlternativesItemModel::FieldNameRole).toString();
             if (AlternativesItemModel::selectionType(fieldName) == AlternativesItemModel::SelectionTypeCheck)
                 model->setData(index, Qt::Checked, Qt::CheckStateRole);
             else if (AlternativesItemModel::selectionType(fieldName) == AlternativesItemModel::SelectionTypeRadio)

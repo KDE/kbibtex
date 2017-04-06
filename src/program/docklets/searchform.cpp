@@ -76,10 +76,6 @@
 #include "searchresults.h"
 #include "logging_program.h"
 
-const int HomepageRole = Qt::UserRole + 5;
-const int WidgetRole = Qt::UserRole + 6;
-const int NameRole = Qt::UserRole + 7;
-
 class SearchForm::SearchFormPrivate
 {
 private:
@@ -105,6 +101,15 @@ public:
     QProgressBar *progressBar;
     QMap<OnlineSearchAbstract *, int> progressMap;
     QMap<OnlineSearchQueryFormAbstract *, QScrollArea *> formToScrollArea;
+
+    enum SearchFormPrivateRole {
+        /// Homepage of a search engine
+        HomepageRole = Qt::UserRole + 5,
+        /// Special widget for a search engine
+        WidgetRole = Qt::UserRole + 6,
+        /// Name of a search engine
+        NameRole = Qt::UserRole + 7
+    };
 
     SearchFormPrivate(SearchResults *searchResults, SearchForm *parent)
             : p(parent), whichEnginesLabel(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
@@ -464,7 +469,7 @@ void SearchForm::itemCheckChanged(QListWidgetItem *item)
 
     if (item != nullptr) {
         KConfigGroup configGroup(d->config, d->configGroupName);
-        QString name = item->data(NameRole).toString();
+        QString name = item->data(SearchForm::SearchFormPrivate::NameRole).toString();
         configGroup.writeEntry(name, item->checkState() == Qt::Checked);
         d->config->sync();
     }

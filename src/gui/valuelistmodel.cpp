@@ -44,8 +44,6 @@
 #include "models/filemodel.h"
 #include "logging_gui.h"
 
-const int CountRole = Qt::UserRole + 611;
-
 QWidget *ValueListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &sovi, const QModelIndex &index) const
 {
     if (index.column() == 0) {
@@ -130,7 +128,7 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
     }
 
     /// count will be empty unless only one column is shown
-    const QString count = index.column() == 0 && index.model()->columnCount() == 1 ? QString(QStringLiteral(" (%1)")).arg(index.data(CountRole).toInt()) : QStringLiteral("");
+    const QString count = index.column() == 0 && index.model()->columnCount() == 1 ? QString(QStringLiteral(" (%1)")).arg(index.data(ValueListModel::CountRole).toInt()) : QStringLiteral("");
 
     /// squeeze the folder text if it is to big and calculate the rectangles
     /// where the folder text and the unread count will be drawn to

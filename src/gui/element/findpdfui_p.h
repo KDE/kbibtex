@@ -68,6 +68,18 @@ class PDFListModel : public QAbstractListModel
 public:
     explicit PDFListModel(QList<FindPDF::ResultItem> &resultList, QObject *parent = nullptr);
 
+    enum PDFListModelRole {
+        /// URL of a PDF file
+        URLRole = Qt::UserRole + 1234,
+        /// A textual representation, e.g. text extracted from the PDF file
+        TextualPreviewRole = Qt::UserRole + 1237,
+        /// Local, temporal copy of a remote PDF file
+        TempFileNameRole = Qt::UserRole + 1236,
+        /// Returns a FindPDF::DownloadMode, may be either
+        /// 'NoDownload', 'Download', or 'URLonly'
+        DownloadModeRole = Qt::UserRole + 1235
+    };
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;

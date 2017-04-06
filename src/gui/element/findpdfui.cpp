@@ -57,11 +57,6 @@ const int posRadioNoDownload = 3;
 const int posRadioDownload = 4;
 const int posRadioURLonly = 5;
 
-const int URLRole = Qt::UserRole + 1234;
-const int TextualPreviewRole = Qt::UserRole + 1237;
-const int TempFileNameRole = Qt::UserRole + 1236;
-const int DownloadModeRole = Qt::UserRole + 1235;
-
 /// inspired by KNewStuff3's ItemsViewDelegate
 PDFItemDelegate::PDFItemDelegate(QListView *itemView, QObject *parent)
         : KWidgetItemDelegate(itemView, parent), m_parent(itemView)
@@ -169,7 +164,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     /// setup label which will show the PDF file's URL
     KSqueezedTextLabel *label = qobject_cast<KSqueezedTextLabel *>(widgets[posLabelUrl]);
     if (label != nullptr) {
-        const QString text = index.data(URLRole).toUrl().toDisplayString();
+        const QString text = index.data(PDFListModel::URLRole).toUrl().toDisplayString();
         label->setText(text);
         label->setToolTip(text);
         label->move(margin * 2 + KIconLoader::SizeMedium, margin);
@@ -179,7 +174,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     /// setup label which will show the PDF's title or textual beginning
     QLabel *previewLabel = qobject_cast<QLabel *>(widgets[posLabelPreview]);
     if (previewLabel != nullptr) {
-        previewLabel->setText(index.data(TextualPreviewRole).toString());
+        previewLabel->setText(index.data(PDFListModel::TextualPreviewRole).toString());
         previewLabel->move(margin * 2 + KIconLoader::SizeMedium, margin * 2 + labelHeight);
         previewLabel->resize(labelWidth, labelHeight);
     }
@@ -202,7 +197,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
             radioButton->move(option.rect.width() - margin - (3 - i) * (buttonWidth + margin), option.rect.height() - margin - h);
             radioButton->resize(buttonWidth, h);
             bool ok = false;
-            radioButton->setChecked(i + FindPDF::NoDownload == index.data(DownloadModeRole).toInt(&ok) && ok);
+            radioButton->setChecked(i + FindPDF::NoDownload == index.data(PDFListModel::DownloadModeRole).toInt(&ok) && ok);
         }
     }
 }
@@ -225,8 +220,8 @@ void PDFItemDelegate::slotViewPDF()
     QModelIndex index = focusedIndex();
 
     if (index.isValid()) {
-        const QString tempfileName = index.data(TempFileNameRole).toString();
-        const QUrl url = index.data(URLRole).toUrl();
+        const QString tempfileName = index.data(PDFListModel::TempFileNameRole).toString();
+        const QUrl url = index.data(PDFListModel::URLRole).toUrl();
         if (!tempfileName.isEmpty()) {
             /// Guess mime type for url to open
             QUrl tempUrl(tempfileName);
@@ -260,7 +255,7 @@ void PDFItemDelegate::slotRadioNoDownloadToggled(bool checked)
     QModelIndex index = focusedIndex();
 
     if (index.isValid() && checked) {
-        m_parent->model()->setData(index, FindPDF::NoDownload, DownloadModeRole);
+        m_parent->model()->setData(index, FindPDF::NoDownload, PDFListModel::DownloadModeRole);
     }
 }
 
@@ -272,7 +267,7 @@ void PDFItemDelegate::slotRadioDownloadToggled(bool checked)
     QModelIndex index = focusedIndex();
 
     if (index.isValid() && checked) {
-        m_parent->model()->setData(index, FindPDF::Download, DownloadModeRole);
+        m_parent->model()->setData(index, FindPDF::Download, PDFListModel::DownloadModeRole);
     }
 }
 
@@ -284,7 +279,7 @@ void PDFItemDelegate::slotRadioURLonlyToggled(bool checked)
     QModelIndex index = focusedIndex();
 
     if (index.isValid() && checked) {
-        m_parent->model()->setData(index, FindPDF::URLonly, DownloadModeRole);
+        m_parent->model()->setData(index, FindPDF::URLonly, PDFListModel::DownloadModeRole);
     }
 }
 
@@ -443,14 +438,14 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
     QAbstractItemModel *model = d->listViewResult->model();
     for (int i = 0; i < model->rowCount(); ++i) {
         bool ok = false;
-        FindPDF::DownloadMode downloadMode = (FindPDF::DownloadMode)model->data(model->index(i, 0), DownloadModeRole).toInt(&ok);
+        FindPDF::DownloadMode downloadMode = (FindPDF::DownloadMode)model->data(model->index(i, 0), PDFListModel::DownloadModeRole).toInt(&ok);
         if (!ok) {
             qCDebug(LOG_KBIBTEX_GUI) << "Could not interprete download mode";
             downloadMode = FindPDF::NoDownload;
         }
 
-        QUrl url = model->data(model->index(i, 0), URLRole).toUrl();
-        QString tempfileName = model->data(model->index(i, 0), TempFileNameRole).toString();
+        QUrl url = model->data(model->index(i, 0), PDFListModel::URLRole).toUrl();
+        QString tempfileName = model->data(model->index(i, 0), PDFListModel::TempFileNameRole).toString();
 
         if (downloadMode == FindPDF::URLonly && url.isValid()) {
             bool alreadyContained = false;

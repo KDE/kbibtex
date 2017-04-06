@@ -31,9 +31,6 @@
 #include "idsuggestions.h"
 #include "settingsidsuggestionseditor.h"
 
-const int FormatStringRole = Qt::UserRole + 7811;
-const int IsDefaultFormatStringRole = Qt::UserRole + 7812;
-
 class IdSuggestionsModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -65,6 +62,13 @@ public:
     ~IdSuggestionsModel() override {
         delete m_idSuggestions;
     }
+
+    enum IdSuggestionsModelRole {
+        /// Raw format string as QString
+        FormatStringRole = Qt::UserRole + 7811,
+        /// Flag whether current index is the default one; boolean value
+        IsDefaultFormatStringRole = Qt::UserRole + 7812
+    };
 
     QSharedPointer<const Entry> previewEntry() {
         return exampleBibTeXEntry;
@@ -336,7 +340,7 @@ void SettingsIdSuggestionsWidget::buttonClicked()
         if (!newSuggestion.isEmpty() && d->idSuggestionsModel->insertRow(row)) {
             QModelIndex index = d->idSuggestionsModel->index(row, 0, QModelIndex());
             d->treeViewSuggestions->setCurrentIndex(index);
-            if (d->idSuggestionsModel->setData(index, newSuggestion, FormatStringRole))
+            if (d->idSuggestionsModel->setData(index, newSuggestion, IdSuggestionsModel::FormatStringRole))
                 emit changed();
         }
     } else if (button == d->buttonEditSuggestion) {
@@ -373,14 +377,14 @@ void SettingsIdSuggestionsWidget::itemChanged(const QModelIndex &index)
 void SettingsIdSuggestionsWidget::editItem(const QModelIndex &index)
 {
     QString suggestion;
-    if (index != QModelIndex() && !(suggestion = index.data(FormatStringRole).toString()).isEmpty()) {
+    if (index != QModelIndex() && !(suggestion = index.data(IdSuggestionsModel::FormatStringRole).toString()).isEmpty()) {
         const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), suggestion, this);
         if (newSuggestion.isEmpty()) {
             if (KMessageBox::questionYesNo(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), QIcon::fromTheme(QStringLiteral("list-remove"))), KGuiItem(i18n("Revert changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Yes && d->idSuggestionsModel->remove(index)) {
                 emit changed();
             }
         } else if (newSuggestion != suggestion) {
-            if (d->idSuggestionsModel->setData(index, newSuggestion, FormatStringRole))
+            if (d->idSuggestionsModel->setData(index, newSuggestion, IdSuggestionsModel::FormatStringRole))
                 emit changed();
         }
     }
@@ -390,8 +394,8 @@ void SettingsIdSuggestionsWidget::editItem(const QModelIndex &index)
 void SettingsIdSuggestionsWidget::toggleDefault()
 {
     QModelIndex curIndex = d->treeViewSuggestions->currentIndex();
-    bool current = d->idSuggestionsModel->data(curIndex, IsDefaultFormatStringRole).toBool();
-    d->idSuggestionsModel->setData(curIndex, !current, IsDefaultFormatStringRole);
+    bool current = d->idSuggestionsModel->data(curIndex, IdSuggestionsModel::IsDefaultFormatStringRole).toBool();
+    d->idSuggestionsModel->setData(curIndex, !current, IdSuggestionsModel::IsDefaultFormatStringRole);
     emit changed();
 }
 
