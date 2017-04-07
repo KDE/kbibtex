@@ -34,7 +34,7 @@ public:
      * Create a new instance of a transformer.
      * @param xsltFilename file name of the XSL file
      */
-    XSLTransform(const QString &xsltFilename);
+    explicit XSLTransform(const QString &xsltFilename);
     ~XSLTransform();
 
     XSLTransform(const XSLTransform &other) = delete;

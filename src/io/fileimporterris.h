@@ -28,7 +28,7 @@ class KBIBTEXIO_EXPORT FileImporterRIS : public FileImporter
     Q_OBJECT
 
 public:
-    FileImporterRIS(QObject *parent);
+    explicit FileImporterRIS(QObject *parent);
     ~FileImporterRIS() override;
 
     File *load(QIODevice *iodevice) override;

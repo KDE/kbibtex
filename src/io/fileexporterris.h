@@ -30,7 +30,7 @@ class KBIBTEXIO_EXPORT FileExporterRIS : public FileExporter
     Q_OBJECT
 
 public:
-    FileExporterRIS(QObject *parent);
+    explicit FileExporterRIS(QObject *parent);
     ~FileExporterRIS() override;
 
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;

@@ -29,7 +29,7 @@ class KBIBTEXIO_EXPORT FileExporterPS : public FileExporterToolchain
     Q_OBJECT
 
 public:
-    FileExporterPS(QObject *parent);
+    explicit FileExporterPS(QObject *parent);
     ~FileExporterPS() override;
 
     void reloadConfig() override;

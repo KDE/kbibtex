@@ -33,7 +33,7 @@ class KBIBTEXIO_EXPORT FileImporterPDF : public FileImporter
     Q_OBJECT
 
 public:
-    FileImporterPDF(QObject *parent);
+    explicit FileImporterPDF(QObject *parent);
     ~FileImporterPDF() override;
 
     File *load(QIODevice *iodevice) override;

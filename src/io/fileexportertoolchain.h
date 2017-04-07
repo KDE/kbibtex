@@ -40,7 +40,7 @@ public:
     static const QString keyBibliographyStyle;
     static const QString defaultBibliographyStyle;
 
-    FileExporterToolchain(QObject *parent);
+    explicit FileExporterToolchain(QObject *parent);
 
     virtual void reloadConfig() = 0;
 

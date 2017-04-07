@@ -34,7 +34,7 @@ class KBIBTEXIO_EXPORT FileImporter : public QObject
     Q_OBJECT
 
 public:
-    FileImporter(QObject *parent);
+    explicit FileImporter(QObject *parent);
     ~FileImporter() override;
 
     File *fromString(const QString &text);

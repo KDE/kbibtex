@@ -35,7 +35,7 @@ class KBIBTEXIO_EXPORT FileExporterXML : public FileExporter
     Q_OBJECT
 
 public:
-    FileExporterXML(QObject *parent);
+    explicit FileExporterXML(QObject *parent);
     ~FileExporterXML() override;
 
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
