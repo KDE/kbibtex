@@ -22,7 +22,6 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <QStringList>
-#include <QTextCodec>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
