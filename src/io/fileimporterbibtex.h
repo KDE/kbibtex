@@ -54,7 +54,6 @@ public:
      * Creates an importer class to read a BibTeX file.
      */
     explicit FileImporterBibTeX(QObject *parent);
-    ~FileImporterBibTeX() override;
 
     /**
      * Read data from the given device and construct a File object holding

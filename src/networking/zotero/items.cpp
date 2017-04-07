@@ -145,7 +145,7 @@ void Items::finishedFetchingItems()
         const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
         /// Non-empty result?
         if (!bibTeXcode.isEmpty()) {
-            static FileImporterBibTeX importer(this);
+            FileImporterBibTeX importer(this);
             /// Parse text into bibliography object
             File *bibtexFile = importer.fromString(bibTeXcode);
 

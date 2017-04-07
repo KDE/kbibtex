@@ -47,10 +47,6 @@ FileImporterBibTeX::FileImporterBibTeX(QObject *parent)
     m_keysForPersonDetection.append(QStringLiteral("bookauthor")); /// used by JSTOR
 }
 
-FileImporterBibTeX::~FileImporterBibTeX()
-{
-}
-
 File *FileImporterBibTeX::load(QIODevice *iodevice)
 {
     m_cancelFlag = false;
