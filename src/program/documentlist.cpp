@@ -201,7 +201,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             QString path(QFileInfo(url.path()).path());
             if (!path.endsWith(QLatin1Char('/')))
                 path.append(QLatin1Char('/'));
-            htmlText.append(i18n("<br/><small>located in <b>%1</b></small>").arg(path));
+            htmlText.append(i18n("<br/><small>located in <b>%1</b></small>", path));
         }
         QStringList flagListItems;
         if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
