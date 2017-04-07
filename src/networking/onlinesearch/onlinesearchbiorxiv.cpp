@@ -69,8 +69,8 @@ void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int n
         urlText.append(QString(QStringLiteral(" title:%1")).arg(title));
 
     QNetworkRequest request(QUrl::fromUserInput(urlText));
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultsPageDone);
 }
 
@@ -107,8 +107,8 @@ void OnlineSearchBioRxiv::resultsPageDone() {
             const QUrl firstUrl = *d->resultPageUrls.constBegin();
             d->resultPageUrls.remove(firstUrl);
             QNetworkRequest request(firstUrl);
-            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+            QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
         }
     }
@@ -126,15 +126,15 @@ void OnlineSearchBioRxiv::resultPageDone() {
         if (highwireRegExp.indexIn(htmlCode) > 0) {
             const QUrl url = QUrl(QStringLiteral("http://biorxiv.org") + highwireRegExp.cap(0));
             QNetworkRequest request(url);
-            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+            QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::bibTeXDownloadDone);
         } else if (!d->resultPageUrls.isEmpty()) {
             const QUrl firstUrl = *d->resultPageUrls.constBegin();
             d->resultPageUrls.remove(firstUrl);
             QNetworkRequest request(firstUrl);
-            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+            QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
         } else
             stopSearch(resultNoError);
@@ -173,8 +173,8 @@ void OnlineSearchBioRxiv::bibTeXDownloadDone() {
         const QUrl firstUrl = *d->resultPageUrls.constBegin();
         d->resultPageUrls.remove(firstUrl);
         QNetworkRequest request(firstUrl);
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+        QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
     }
 }

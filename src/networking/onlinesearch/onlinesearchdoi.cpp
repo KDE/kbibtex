@@ -134,8 +134,8 @@ void OnlineSearchDOI::startSearchFromForm()
     if (url.isValid()) {
         QNetworkRequest request(url);
         request.setRawHeader(QByteArray("Accept"), QByteArray("text/bibliography; style=bibtex"));
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+        QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchDOI::downloadDone);
 
         d->form->saveState();
@@ -152,8 +152,8 @@ void OnlineSearchDOI::startSearch(const QMap<QString, QString> &query, int numRe
     if (url.isValid()) {
         QNetworkRequest request(url);
         request.setRawHeader(QByteArray("Accept"), QByteArray("text/bibliography; style=bibtex"));
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+        QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchDOI::downloadDone);
     } else
         delayedStoppedSearch(resultNoError);
@@ -194,8 +194,8 @@ void OnlineSearchDOI::downloadDone()
 
             QNetworkRequest request(redirUrl);
             request.setRawHeader(QByteArray("Accept"), QByteArray("text/bibliography; style=bibtex"));
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchDOI::downloadDone);
         } else {  /// ensure proper treatment of UTF-8 characters
             const QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());

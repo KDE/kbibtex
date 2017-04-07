@@ -85,7 +85,7 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     }
 
     QNetworkRequest request(favIconUrl());
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     reply->setObjectName(fileNameStem);
     if (listWidgetItem != nullptr)
         m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
@@ -346,7 +346,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
         const QUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
         if (redirUrl.isValid()) {
             QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request);
             newReply->setObjectName(reply->objectName());
             QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, nullptr);
             m_iconReplyToListWidgetItem.remove(reply);

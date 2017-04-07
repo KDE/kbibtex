@@ -61,8 +61,8 @@ void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
 
     url.setQuery(q);
     QNetworkRequest request(url);
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchMRLookup::doneFetchingResultPage);
 }
 

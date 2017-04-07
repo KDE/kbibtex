@@ -90,8 +90,8 @@ void OnlineSearchIsbnDB::startSearch(const QMap<QString, QString> &query, int nu
     emit progress(curStep = 0, numSteps = (numResults + 9) / 10);
 
     QNetworkRequest request(d->buildBooksUrl(query));
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIsbnDB::downloadDone);
 }
 
@@ -147,8 +147,8 @@ void OnlineSearchIsbnDB::downloadDone()
                     query.addQueryItem(QStringLiteral("page_number"), QString::number(curStep /** FIXME? + 1 */));
                     nextUrl.setQuery(query);
                     QNetworkRequest request(nextUrl);
-                    QNetworkReply *nextReply = InternalNetworkAccessManager::self()->get(request);
-                    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(nextReply);
+                    QNetworkReply *nextReply = InternalNetworkAccessManager::instance().get(request);
+                    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(nextReply);
                     connect(nextReply, &QNetworkReply::finished, this, &OnlineSearchIsbnDB::downloadDone);
                     return;
                 }

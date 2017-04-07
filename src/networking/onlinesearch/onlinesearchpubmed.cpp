@@ -122,8 +122,8 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     }
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchPubMed::eSearchDone);
 }
 
@@ -173,8 +173,8 @@ void OnlineSearchPubMed::eSearchDone()
             } else {
                 /// fetch full bibliographic details for found PubMed ids
                 QNetworkRequest request(d->buildFetchIdUrl(idList));
-                QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
                 connect(newReply, &QNetworkReply::finished, this, &OnlineSearchPubMed::eFetchDone);
             }
         } else {

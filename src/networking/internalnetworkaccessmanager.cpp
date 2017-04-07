@@ -68,7 +68,6 @@ public:
 
 
 QString InternalNetworkAccessManager::userAgentString;
-InternalNetworkAccessManager *InternalNetworkAccessManager::instance = nullptr;
 
 InternalNetworkAccessManager::InternalNetworkAccessManager(QObject *parent)
         : QNetworkAccessManager(parent)
@@ -84,13 +83,10 @@ void InternalNetworkAccessManager::mergeHtmlHeadCookies(const QString &htmlCode,
     setCookieJar(cookieJar);
 }
 
-InternalNetworkAccessManager *InternalNetworkAccessManager::self()
+InternalNetworkAccessManager &InternalNetworkAccessManager::instance()
 {
-    if (instance == nullptr) {
-        instance = new InternalNetworkAccessManager(QApplication::instance());
-    }
-
-    return instance;
+    static InternalNetworkAccessManager self(QApplication::instance());
+    return self;
 }
 
 QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const QUrl &oldUrl)

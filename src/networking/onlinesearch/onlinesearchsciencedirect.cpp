@@ -96,8 +96,8 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
 
     ++d->runningJobs;
     QNetworkRequest request(QStringLiteral("http://www.sciencedirect.com/science/search"));
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingStartPage);
 }
 
@@ -135,11 +135,11 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
 
             /// redirection to another url
             QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply->url());
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingStartPage);
         } else {
-            InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
+            InternalNetworkAccessManager::instance().mergeHtmlHeadCookies(htmlText, reply->url());
 
             QUrl url(QStringLiteral("http://www.sciencedirect.com/science"));
             QMap<QString, QString> inputMap = formParameters(htmlText, QStringLiteral("<form id=\"quickSearch\" name=\"qkSrch\" metho"));
@@ -160,9 +160,9 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
 
             ++d->runningJobs;
             QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingResultPage);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -180,14 +180,14 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
         if (!redirUrl.isEmpty()) {
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingResultPage);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++curStep, numSteps);
 
             const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-            InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
+            InternalNetworkAccessManager::instance().mergeHtmlHeadCookies(htmlText, reply->url());
 
             QSet<QString> knownUrls;
             int p = -1, p2 = -1;
@@ -201,8 +201,8 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
                     ++d->runningJobs;
                     QUrl url(urlText);
                     QNetworkRequest request(url);
-                    QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-                    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+                    QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+                    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
                     connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingAbstractPage);
                 }
             }
@@ -228,14 +228,14 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
         if (!redirUrl.isEmpty()) {
             ++d->runningJobs;
             QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingAbstractPage);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         } else {
             emit progress(++curStep, numSteps);
 
             const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-            InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
+            InternalNetworkAccessManager::instance().mergeHtmlHeadCookies(htmlText, reply->url());
 
             int p1 = -1, p2 = -1;
             if ((p1 = htmlText.indexOf(QStringLiteral("/science?_ob=DownloadURL&"))) >= 0 && (p2 = htmlText.indexOf(QRegExp("[ \"<>]"), p1 + 1)) >= 0) {
@@ -247,9 +247,9 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
                 url.setQuery(query);
                 ++d->runningJobs;
                 QNetworkRequest request(url);
-                QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
                 connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingBibTeX);
-                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             }
         }
 

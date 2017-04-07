@@ -38,7 +38,8 @@ class KBIBTEXNETWORKING_EXPORT InternalNetworkAccessManager : public QNetworkAcc
     Q_OBJECT
 
 public:
-    static InternalNetworkAccessManager *self();
+    static InternalNetworkAccessManager &instance();
+
     QNetworkReply *get(QNetworkRequest &request, const QUrl &oldUrl);
     QNetworkReply *get(QNetworkRequest &request, const QNetworkReply *oldReply = nullptr);
 
@@ -54,7 +55,6 @@ protected:
 private:
     QMap<QTimer *, QNetworkReply *> m_mapTimerToReply;
 
-    static InternalNetworkAccessManager *instance;
     static QString userAgentString;
 
     static QString userAgent();

@@ -36,8 +36,8 @@ void OnlineSearchSimpleBibTeXDownload::startSearch(const QMap<QString, QString> 
     emit progress(curStep = 0, numSteps = 2);
 
     QNetworkRequest request(buildQueryUrl(query, numResults));
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchSimpleBibTeXDownload::downloadDone);
 }
 

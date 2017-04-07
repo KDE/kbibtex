@@ -51,7 +51,7 @@ public:
         QUrl internalUrl = url;
         api->addLimitToUrl(internalUrl);
         QNetworkRequest request = api->request(internalUrl);
-        QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
+        QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
         connect(reply, &QNetworkReply::finished, p, &Zotero::Groups::finishedFetchingGroups);
         return reply;
     }

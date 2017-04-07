@@ -92,8 +92,8 @@ void OnlineSearchIDEASRePEc::startSearch(const QMap<QString, QString> &query, in
     m_hasBeenCanceled = false;
 
     QNetworkRequest request(url);
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadListDone);
 }
 
@@ -126,8 +126,8 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             ++numSteps;
 
             QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadListDone);
         } else {
             /// ensure proper treatment of UTF-8 characters
@@ -152,8 +152,8 @@ void OnlineSearchIDEASRePEc::downloadListDone()
                 const QString publicationLink = *it;
                 d->publicationLinks.erase(it);
                 QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
-                reply = InternalNetworkAccessManager::self()->get(request, reply);
-                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+                reply = InternalNetworkAccessManager::instance().get(request, reply);
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
                 connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadPublicationDone);
             }
         }
@@ -193,9 +193,9 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         const QUrl url = QUrl(QStringLiteral("https://ideas.repec.org/cgi-bin/refs.cgi"));
         QNetworkRequest request(url);
         request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-        reply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
+        reply = InternalNetworkAccessManager::instance().post(request, body.toUtf8());
         reply->setProperty("downloadurl", QVariant::fromValue<QString>(downloadUrl));
-        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadBibTeXDone);
 
     } else
@@ -248,8 +248,8 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             const QString publicationLink = *it;
             d->publicationLinks.erase(it);
             QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
-            reply = InternalNetworkAccessManager::self()->get(request, reply);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+            reply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadPublicationDone);
         }
     } else

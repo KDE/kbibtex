@@ -97,8 +97,8 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
     d->numExpectedResults = numResults;
 
     QNetworkRequest request(d->acmPortalBaseUrl);
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingStartPage);
 }
 
@@ -134,8 +134,8 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             QUrl url(reply->url().resolved(QUrl(action + QStringLiteral("&") + body)));
 
             QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingSearchPage);
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed.";
@@ -169,13 +169,13 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             url.setQuery(query);
 
             QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingSearchPage);
         } else if (!d->citationUrls.isEmpty()) {
             QNetworkRequest request(d->citationUrls.first());
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingCitation);
             d->citationUrls.removeFirst();
         } else {
@@ -215,8 +215,8 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
     if (bibTeXUrl.isEmpty()) {
         if (!d->citationUrls.isEmpty()) {
             QNetworkRequest request(d->citationUrls.first());
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingCitation);
             d->citationUrls.removeFirst();
         } else {
@@ -225,8 +225,8 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
         }
     } else {
         QNetworkRequest request(bibTeXUrl);
-        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+        QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingBibTeX);
     }
 }
@@ -256,8 +256,8 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
 
         if (!d->citationUrls.isEmpty() && d->numFoundResults < d->numExpectedResults) {
             QNetworkRequest request(d->citationUrls.first());
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingCitation);
             d->citationUrls.removeFirst();
         } else {

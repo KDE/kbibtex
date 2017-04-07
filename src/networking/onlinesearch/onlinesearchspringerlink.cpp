@@ -242,8 +242,8 @@ void OnlineSearchSpringerLink::startSearchFromForm()
     QUrl springerLinkSearchUrl = d->buildQueryUrl();
 
     QNetworkRequest request(springerLinkSearchUrl);
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchSpringerLink::doneFetchingPAM);
 
     if (d->form != nullptr) d->form->saveState();
@@ -260,8 +260,8 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
 
     emit progress(curStep = 0, numSteps = 1);
     QNetworkRequest request(springerLinkSearchUrl);
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchSpringerLink::doneFetchingPAM);
 }
 

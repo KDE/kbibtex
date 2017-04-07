@@ -107,8 +107,8 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
 
     /// issue request for start page
     QNetworkRequest request(OnlineSearchMathSciNetPrivate::queryFormUrl);
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingQueryForm);
 }
 
@@ -153,8 +153,8 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
 
         /// issue request for result page
         QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+        QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingResultPage);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -192,8 +192,8 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         if (count > 0) {
             /// issue request for bibtex code
             QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingBibTeXcode);
         } else {
             /// nothing found

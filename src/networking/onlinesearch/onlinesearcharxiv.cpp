@@ -619,8 +619,8 @@ void OnlineSearchArXiv::startSearchFromForm()
     emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl());
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchArXiv::downloadDone);
 
     d->form->saveState();
@@ -632,8 +632,8 @@ void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int num
     emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchArXiv::downloadDone);
 }
 

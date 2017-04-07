@@ -63,8 +63,8 @@ public:
         if (!knownUrls.contains(url) && depth > 0) {
             knownUrls.insert(url);
             QNetworkRequest request = QNetworkRequest(url);
-            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply, 15); ///< set a timeout on network connections
+            QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply, 15); ///< set a timeout on network connections
             reply->setProperty(depthProperty, QVariant::fromValue<int>(depth));
             reply->setProperty(termProperty, term);
             reply->setProperty(originProperty, origin);

@@ -102,8 +102,8 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     d->queryUrl.setQuery(q);
 
     QNetworkRequest request(OnlineSearchJStorPrivate::jstorBaseUrl);
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingStartPage);
 }
 
@@ -135,13 +135,13 @@ void OnlineSearchJStor::doneFetchingStartPage()
 
             /// redirection to another url
             QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply->url());
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingStartPage);
         } else {
             QNetworkRequest request(d->queryUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingResultPage);
         }
     } else
@@ -186,8 +186,8 @@ void OnlineSearchJStor::doneFetchingResultPage()
             bibTeXUrl.setPath(QStringLiteral("/citation/bulk/text"));
             QNetworkRequest request(bibTeXUrl);
             request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->post(request, body.toUtf8());
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().post(request, body.toUtf8());
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingBibTeXCode);
         }
     } else

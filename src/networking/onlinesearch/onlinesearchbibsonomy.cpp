@@ -187,8 +187,8 @@ void OnlineSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int
     emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
 }
 
@@ -198,8 +198,8 @@ void OnlineSearchBibsonomy::startSearchFromForm()
     emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl());
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
 
     emit progress(0, numSteps);

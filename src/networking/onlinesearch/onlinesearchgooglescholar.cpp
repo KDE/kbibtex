@@ -152,8 +152,8 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
 
     QUrl url(d->startPageUrl);
     QNetworkRequest request(url);
-    QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-    InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingStartPage);
 }
 
@@ -169,8 +169,8 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             /// following redirection to country-specific domain
             ++numSteps;
             QNetworkRequest request(newDomainUrl);
-            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+            QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingStartPage);
         } else {
             /// landed on country-specific domain
@@ -181,8 +181,8 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             url.setQuery(query);
 
             QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply->url());
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingConfigPage);
         }
     } else
@@ -211,8 +211,8 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         url.setQuery(query);
 
         QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+        QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -237,8 +237,8 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
         url.setQuery(query);
 
         QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-        InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+        QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
@@ -273,7 +273,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             const QString primaryUrl = urls.first();
             const QString documentUrl = urls.last();
             QNetworkRequest request(bibtexUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
             if (!primaryUrl.isEmpty()) {
                 /// Store primary URL as a property of the request/reply
                 newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
@@ -282,7 +282,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                 /// Store URL to document as a property of the request/reply
                 newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
             }
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
             d->listBibTeXurls.erase(d->listBibTeXurls.begin());
         } else {
@@ -308,8 +308,8 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             /// following redirection to country-specific domain
             ++numSteps;
             QNetworkRequest request(newDomainUrl);
-            QNetworkReply *reply = InternalNetworkAccessManager::self()->get(request);
-            InternalNetworkAccessManager::self()->setNetworkReplyTimeout(reply);
+            QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
         } else {
             /// ensure proper treatment of UTF-8 characters
@@ -356,8 +356,8 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                 const QString primaryUrl = urls.first();
                 const QString documentUrl = urls.last();
                 QNetworkRequest request(bibtexUrl);
-                QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
-                InternalNetworkAccessManager::self()->setNetworkReplyTimeout(newReply);
+                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
                 if (!primaryUrl.isEmpty()) {
                     /// Store primary URL as a property of the request/reply
                     newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
