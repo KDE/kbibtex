@@ -26,7 +26,7 @@
 #include <QStandardPaths>
 #include <QDir>
 
-#include <poppler/qt5/poppler-qt5.h>
+#include <poppler-qt5.h>
 
 #include "kbibtex.h"
 #include "internalnetworkaccessmanager.h"
