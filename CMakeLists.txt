@@ -15,7 +15,7 @@ set(
     KF5_MIN_VERSION "5.26.0"
 )
 
-find_package(ECM 1.7.0 REQUIRED NO_MODULE)
+find_package(ECM 5.19 REQUIRED NO_MODULE)
 
 add_definitions(-DTRANSLATION_DOMAIN="kbibtex")
 
@@ -142,6 +142,8 @@ endif(UNITY_BUILD)
 find_package(
     Poppler
     REQUIRED
+    COMPONENTS
+    Qt5
 )
 
 find_package(
