@@ -22,6 +22,7 @@
 #include <QFile>
 #include <QDir>
 #include <QRegExp>
+#include <QHash>
 #include <QTextStream>
 #include <QProcess>
 #include <QProcessEnvironment>
@@ -140,20 +141,19 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
 
 bool FileExporterToolchain::kpsewhich(const QString &filename)
 {
+    static QHash<QString, bool> kpsewhichMap;
+    if (kpsewhichMap.contains(filename))
+        return kpsewhichMap.value(filename, false);
+
     bool result = false;
-
     QProcess kpsewhich;
-    QStringList param;
-    param << filename;
+    const QStringList param = QStringList() << filename;
     kpsewhich.start(QStringLiteral("kpsewhich"), param);
-
-    if (kpsewhich.waitForStarted(3000)) {
-        if (kpsewhich.waitForFinished(30000))
-            result = kpsewhich.exitStatus() == QProcess::NormalExit;
-        else
-            result = false;
-    } else
-        result = false;
+    if (kpsewhich.waitForStarted(3000) && kpsewhich.waitForFinished(30000)) {
+        const QString standardOut = QString::fromUtf8(kpsewhich.readAllStandardOutput());
+        result = kpsewhich.exitStatus() == QProcess::NormalExit && kpsewhich.exitCode() == 0 && standardOut.endsWith(QDir::separator() + filename + QChar('\n'));
+        kpsewhichMap.insert(filename, result);
+    }
 
     return result;
 }
