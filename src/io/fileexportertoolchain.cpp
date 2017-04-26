@@ -23,6 +23,7 @@
 #include <QDir>
 #include <QRegExp>
 #include <QTextStream>
+#include <QProcess>
 #include <QProcessEnvironment>
 
 #include <KLocalizedString>
@@ -33,7 +34,7 @@ const QString FileExporterToolchain::keyBibliographyStyle = QStringLiteral("bibl
 const QString FileExporterToolchain::defaultBibliographyStyle = QStringLiteral("plain");
 
 FileExporterToolchain::FileExporterToolchain(QObject *parent)
-        : FileExporter(parent), m_process(nullptr), m_errorLog(nullptr)
+        : FileExporter(parent)
 {
     tempDir.setAutoRemove(true);
 }
@@ -58,53 +59,56 @@ bool FileExporterToolchain::runProcesses(const QStringList &progs, QStringList *
 
 bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog)
 {
-    bool result = false;
-
-    m_process = new QProcess();
+    QProcess process(this);
     QProcessEnvironment processEnvironment = QProcessEnvironment::systemEnvironment();
     /// Avoid some paranoid security settings in BibTeX
     processEnvironment.insert(QStringLiteral("openout_any"), QStringLiteral("r"));
     /// Make applications use working directory as temporary directory
     processEnvironment.insert(QStringLiteral("TMPDIR"), tempDir.path());
     processEnvironment.insert(QStringLiteral("TEMPDIR"), tempDir.path());
-    m_process->setProcessEnvironment(processEnvironment);
-    m_process->setWorkingDirectory(tempDir.path());
-
-    if (m_errorLog != nullptr) {
-        connect(m_process, &QProcess::readyReadStandardOutput, this, &FileExporterToolchain::slotReadProcessStandardOutput);
-        connect(m_process, &QProcess::readyReadStandardError, this, &FileExporterToolchain::slotReadProcessErrorOutput);
-    }
+    process.setProcessEnvironment(processEnvironment);
+    process.setWorkingDirectory(tempDir.path());
+    /// Assemble the full command line (program name + arguments)
+    /// for use in log messages and debug output
+    const QString fullCommandLine = cmd + QLatin1Char(' ') + args.join(QStringLiteral(" "));
 
     if (errorLog != nullptr)
-        errorLog->append(i18n("Running process '%1' using working directory '%2'", (cmd + QLatin1Char(' ') + args.join(QStringLiteral(" "))), m_process->workingDirectory()));
-    m_process->start(cmd, args);
-    m_errorLog = errorLog;
-
-    if (m_process->waitForStarted(3000)) {
-        if (m_process->waitForFinished(30000))
-            result = m_process->exitStatus() == QProcess::NormalExit && m_process->exitCode() == 0;
-        else
-            result = false;
-    } else
-        result = false;
-
-    if (!result && errorLog != nullptr)
-        errorLog->append(i18n("Process '%1' failed", (cmd + QLatin1Char(' ') + args.join(QStringLiteral(" ")))));
+        errorLog->append(i18n("Running command '%1' using working directory '%2'", fullCommandLine, process.workingDirectory()));
+    process.start(cmd, args);
 
     if (errorLog != nullptr) {
-        QTextStream tsStdOut(m_process->readAllStandardOutput());
-        QString line;
-        while (!(line = tsStdOut.readLine()).isNull())
-            m_errorLog->append(line);
-        QTextStream tsStdErr(m_process->readAllStandardError());
-        while (!(line = tsStdErr.readLine()).isNull())
-            m_errorLog->append(line);
-
-        errorLog->append(i18n("Stopped process '%1' with exit code %2", (cmd + QLatin1Char(' ') + args.join(QStringLiteral(" "))), m_process->exitCode()));
+        /// Redirect any standard output from process into errorLog
+        connect(&process, &QProcess::readyReadStandardOutput, [errorLog, &process] {
+            QByteArray stdout = process.readAllStandardOutput();
+            QTextStream ts(&stdout);
+            while (!ts.atEnd())
+                errorLog->append(ts.readLine());
+        });
+        /// Redirect any standard error from process into errorLog
+        connect(&process, &QProcess::readyReadStandardError, [errorLog, &process] {
+            QByteArray stderr = process.readAllStandardError();
+            QTextStream ts(&stderr);
+            while (!ts.atEnd())
+                errorLog->append(ts.readLine());
+        });
     }
 
-    delete(m_process);
-    m_process = nullptr;
+    bool result = process.waitForStarted(3000);
+    if (!result) {
+        if (errorLog != nullptr)
+            errorLog->append(i18n("Starting command '%1' failed: %2", fullCommandLine, process.errorString()));
+        return false;
+    }
+
+    if (process.waitForFinished(30000))
+        result = process.exitStatus() == QProcess::NormalExit && process.exitCode() == 0;
+
+    if (errorLog != nullptr) {
+        if (result)
+            errorLog->append(i18n("Command '%1' succeeded", fullCommandLine));
+        else
+            errorLog->append(i18n("Command '%1' failed with exit code %2: %3", fullCommandLine, process.exitCode(), process.errorString()));
+    }
 
     return result;
 }
@@ -132,35 +136,6 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
     if (errorLog != nullptr)
         errorLog->append(i18n("Writing to file '%1' failed", filename));
     return false;
-}
-
-void FileExporterToolchain::cancel()
-{
-    if (m_process != nullptr) {
-        qWarning("Canceling process");
-        m_process->terminate();
-        m_process->kill();
-    }
-}
-
-void FileExporterToolchain::slotReadProcessStandardOutput()
-{
-    if (m_process) {
-        QTextStream ts(m_process->readAllStandardOutput());
-        QString line;
-        while (!(line = ts.readLine()).isNull())
-            m_errorLog->append(line);
-    }
-}
-
-void FileExporterToolchain::slotReadProcessErrorOutput()
-{
-    if (m_process) {
-        QTextStream ts(m_process->readAllStandardError());
-        QString line;
-        while (!(line = ts.readLine()).isNull())
-            m_errorLog->append(line);
-    }
 }
 
 bool FileExporterToolchain::kpsewhich(const QString &filename)

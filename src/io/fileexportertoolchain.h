@@ -14,17 +14,15 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef BIBTEXFILEEXPORTERTOOLCHAIN_H
 #define BIBTEXFILEEXPORTERTOOLCHAIN_H
-
-#include <QProcess>
 
 #include <QTemporaryDir>
 
 #include "fileexporter.h"
 
 class QString;
-class QStringList;
 
 /**
 @author Thomas Fischer
@@ -46,24 +44,12 @@ public:
 
     static bool kpsewhich(const QString &filename);
 
-public slots:
-    void cancel() override;
-
 protected:
     QTemporaryDir tempDir;
 
     bool runProcesses(const QStringList &progs, QStringList *errorLog = nullptr);
     bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = nullptr);
     bool writeFileToIODevice(const QString &filename, QIODevice *device, QStringList *errorLog = nullptr);
-
-private:
-    QProcess *m_process;
-    QStringList *m_errorLog;
-
-private slots:
-    void slotReadProcessStandardOutput();
-    void slotReadProcessErrorOutput();
-
 };
 
 #endif
