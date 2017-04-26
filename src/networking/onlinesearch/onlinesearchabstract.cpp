@@ -465,7 +465,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
         /// Fix strigns for months: "September" -> "sep"
         const QString monthStr = PlainTextValue::text(entry->value(Entry::ftMonth));
 
-        static const QRegExp longMonth = QRegExp(QStringLiteral("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]+"), Qt::CaseInsensitive);
+        static const QRegExp longMonth = QRegExp(QStringLiteral("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*"), Qt::CaseInsensitive);
         if (monthStr.indexOf(longMonth) == 0 && monthStr == longMonth.cap(0)) {
             /// String used for month is actually a full name, therefore replace it
             entry->remove(Entry::ftMonth);
