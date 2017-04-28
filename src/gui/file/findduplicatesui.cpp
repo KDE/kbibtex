@@ -145,7 +145,7 @@ public:
             /// top-level elements showing field names like "Title", "Authors", etc
             const QString fieldName = currentClique->fieldList().at(index.row()).toLower();
             switch (role) {
-            case FieldNameRole:
+            case AlternativesItemModelRole::FieldNameRole:
                 /// plain-and-simple field name (all lower case)
                 return fieldName;
             case Qt::ToolTipRole:
