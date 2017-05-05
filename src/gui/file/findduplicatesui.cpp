@@ -532,7 +532,7 @@ public:
     AlternativesItemDelegate *alternativesItemDelegate;
 
     int currentClique;
-    QList<EntryClique *> cl;
+    QList<EntryClique *> &cl;
 
     MergeWidgetPrivate(MergeWidget *parent, File *bibTeXFile, QList<EntryClique *> &cliqueList)
             : p(parent), file(bibTeXFile), currentClique(0), cl(cliqueList) {
@@ -651,7 +651,7 @@ FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
 {
     QAction *newAction = new QAction(QIcon::fromTheme(QStringLiteral("tab-duplicate")), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QStringLiteral("findduplicates"), newAction);
-    connect(newAction, &QAction::triggered, this, &FindDuplicatesUI::slotFindDuplicates);
+    connect(newAction, &QAction::triggered, this, &FindDuplicatesUI::startDuplicatesSearch);
 }
 
 FindDuplicatesUI::~FindDuplicatesUI()
@@ -659,7 +659,7 @@ FindDuplicatesUI::~FindDuplicatesUI()
     delete d;
 }
 
-void FindDuplicatesUI::slotFindDuplicates()
+void FindDuplicatesUI::startDuplicatesSearch()
 {
     // FIXME move to settings
     //bool ok = false;
@@ -667,36 +667,48 @@ void FindDuplicatesUI::slotFindDuplicates()
     //if (!ok) sensitivity = 4000;
     int sensitivity = 4000;
 
-    FindDuplicates fd(d->part->widget(), sensitivity);
-    /// File to be used to find duplicate in,
-    /// may be only a subset of the original one if selection is used (see below)
-    File *file = new File();
     /// Full file, used to remove merged elements from
     /// Stays the same even when merging is restricted to selected elements
+    File *originalFile = d->view->fileModel()->bibliographyFile();
+    /// File to be used to find duplicate in,
+    /// may be only a subset of the original one if selection is used
+    File *workingSetFile = originalFile;
 
-    const int rowCount = d->view->selectedElements().count();
-    if (rowCount <= 1 || rowCount == d->view->sortFilterProxyModel()->sourceModel()->rowCount() || KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::No) {
-        for (int i = 0; i < d->view->fileModel()->rowCount(); ++i)
-            file->append(d->view->fileModel()->element(i));
-    } else {
+    /// If more than one element but not all are selected in the main list view,
+    /// ask the user if duplicates are to be searched only within the selection
+    const int selectedRowsCount = d->view->selectedElements().count();
+    if (selectedRowsCount > 1 && selectedRowsCount < d->view->sortFilterProxyModel()->sourceModel()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
+        /// Yes, do only search for duplicates within selection, so copy all
+        /// selected elements to a temporary new File object
+        workingSetFile = new File();
         const QModelIndexList mil = d->view->selectionModel()->selectedRows();
         for (const QModelIndex &index : mil)
-            file->append(d->view->fileModel()->element(d->view->sortFilterProxyModel()->mapToSource(index).row()));
+            workingSetFile->append(d->view->fileModel()->element(d->view->sortFilterProxyModel()->mapToSource(index).row()));
     }
 
+    /// Actual duplicate finder, can be given a widget that will be the
+    /// parent of a progress bar window and sensitivity value when to
+    /// recognize two entries as being duplicates of each other
+    FindDuplicates fd(d->part->widget(), sensitivity);
     QList<EntryClique *> cliques;
-    bool gotCanceled = fd.findDuplicateEntries(file, cliques);
+    bool gotCanceled = fd.findDuplicateEntries(workingSetFile, cliques);
     if (gotCanceled) {
-        delete file;
+        /// Duplicate search was cancelled, e.g. by pressing the Cancel
+        /// button on the progress bar window
+        if (workingSetFile != originalFile) delete workingSetFile;
         return;
     }
 
-    if (cliques.isEmpty()) {
+    if (cliques.isEmpty())
         KMessageBox::information(d->part->widget(), i18n("No duplicates were found."), i18n("No duplicates found"));
-    } else {
+    else {
+        /// Duplicates have been found, so let user choose how to handle duplicate fields
+
+        /// Why is a QPointer used here you may wonder? Check here in case the link still works:
+        ///   https://blogs.kde.org/2009/03/26/how-crash-almost-every-qtkde-application-and-how-fix-it-0
         QPointer<QDialog> dlg = new QDialog(d->part->widget());
         dlg->setWindowTitle(i18n("Merge Duplicates"));
-        QPointer<MergeWidget> mw = new MergeWidget(file, cliques, dlg);
+        MergeWidget *mw = new MergeWidget(workingSetFile, cliques, dlg);
         mw->layout()->setMargin(0);
         QBoxLayout *layout = new QVBoxLayout(dlg);
         layout->addWidget(mw);
@@ -706,22 +718,24 @@ void FindDuplicatesUI::slotFindDuplicates()
         connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
         connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
 
-        if (dlg->exec() == QDialog::Accepted) {
-            MergeDuplicates md(dlg);
-            md.mergeDuplicateEntries(cliques, d->view->fileModel());
+        if (dlg->exec() == QDialog::Accepted && MergeDuplicates::mergeDuplicateEntries(cliques, d->view->fileModel())) {
+            /// If the user made selections on what to merge how
+            /// AND the requested changes could be applied on the
+            /// 'original' file (not the working set file), then
+            /// notify the world that things have changed
+            d->view->externalModification();
         }
 
+        /// Clean memory
         while (!cliques.isEmpty()) {
             EntryClique *ec = cliques.first();
             cliques.removeFirst();
             delete ec;
         }
-
-        delete mw;
         delete dlg;
     }
 
-    delete file;
+    if (workingSetFile != originalFile) delete workingSetFile;
 }
 
 #include "findduplicatesui.moc"

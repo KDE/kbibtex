@@ -472,26 +472,9 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
 }
 
 
-class MergeDuplicates::MergeDuplicatesPrivate
-{
-public:
-    QWidget *widget;
-
-    MergeDuplicatesPrivate(QWidget *w)
-            : widget(w) {
-        /// nothing
-    }
-};
-
-MergeDuplicates::MergeDuplicates(QWidget *parent)
-        : d(new MergeDuplicatesPrivate(parent))
+MergeDuplicates::MergeDuplicates()
 {
     /// nothing
-}
-
-MergeDuplicates::~MergeDuplicates()
-{
-    delete d;
 }
 
 bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, FileModel *fileModel)

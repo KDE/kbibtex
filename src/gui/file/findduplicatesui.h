@@ -71,7 +71,7 @@ public:
     ~FindDuplicatesUI() override;
 
 private slots:
-    void slotFindDuplicates();
+    void startDuplicatesSearch();
 
 private:
     class FindDuplicatesUIPrivate;

@@ -97,18 +97,10 @@ private:
 class KBIBTEXPROC_EXPORT MergeDuplicates
 {
 public:
-    enum MergePriority { None = 0, ISODateEarlier = 1, ISODateLater = 2, NumericHigher = 3, NumericLower = 4, LexicallyEarlier = 5, LexicallyLater = 6, LexicallyEarlierCaseInsensitive = 7, LexicallyLaterCaseInsensitive = 8 };
-
-    explicit MergeDuplicates(QWidget *parent);
-    MergeDuplicates(const MergeDuplicates &other) = delete;
-    MergeDuplicates &operator= (const MergeDuplicates &other) = delete;
-    ~MergeDuplicates();
-
-    bool mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, FileModel *fileModel);
+    static bool mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, FileModel *fileModel);
 
 private:
-    class MergeDuplicatesPrivate;
-    MergeDuplicatesPrivate *d;
+    explicit MergeDuplicates();
 };
 
 #endif // KBIBTEX_PROC_FINDDUPLICATES_H
