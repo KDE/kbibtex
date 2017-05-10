@@ -117,7 +117,6 @@ class UrlListEdit : public FieldListEdit
 
 public:
     explicit UrlListEdit(QWidget *parent = nullptr);
-    ~UrlListEdit() override;
 
     void setReadOnly(bool isReadOnly) override;
 

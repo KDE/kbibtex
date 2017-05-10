@@ -85,12 +85,6 @@ public:
     FieldListEditProtected(const FieldListEditProtected &other) = delete;
     FieldListEditProtected &operator= (const FieldListEditProtected &other) = delete;
 
-    ~FieldListEditProtected() {
-        delete smRemove;
-        delete smGoUp;
-        delete smGoDown;
-    }
-
     void setupGUI() {
         QBoxLayout *outerLayout = new QVBoxLayout(p);
         outerLayout->setMargin(0);
@@ -481,12 +475,6 @@ UrlListEdit::UrlListEdit(QWidget *parent)
 
     menuAddFile->addAction(QIcon::fromTheme(QStringLiteral("emblem-symbolic-link")), i18n("Add reference ..."), this, SLOT(slotAddReference()));
     menuAddFile->addAction(QIcon::fromTheme(QStringLiteral("emblem-symbolic-link")), i18n("Add reference from clipboard"), this, SLOT(slotAddReferenceFromClipboard()));
-}
-
-UrlListEdit::~UrlListEdit()
-{
-    delete m_signalMapperSaveLocallyButtonClicked;
-    delete m_signalMapperFieldLineEditTextChanged;
 }
 
 void UrlListEdit::slotAddReference()

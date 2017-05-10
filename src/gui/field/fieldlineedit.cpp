@@ -95,12 +95,6 @@ public:
         personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
     }
 
-    ~FieldLineEditPrivate() {
-        delete menuTypes;
-        delete menuTypesSignalMapper;
-        delete buttonOpenUrl;
-    }
-
     bool reset(const Value &value) {
         bool result = false;
         QString text;
