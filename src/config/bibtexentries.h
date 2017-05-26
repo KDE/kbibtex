@@ -21,6 +21,7 @@
 #include "kbibtexconfig_export.h"
 
 #include <QStringList>
+#include <QVector>
 
 #include "kbibtex.h"
 
@@ -38,7 +39,7 @@ uint qHash(const EntryDescription &a);
 /**
 @author Thomas Fischer
  */
-class KBIBTEXCONFIG_EXPORT BibTeXEntries : public QList<EntryDescription>
+class KBIBTEXCONFIG_EXPORT BibTeXEntries : public QVector<EntryDescription>
 {
 public:
     virtual ~BibTeXEntries();
@@ -69,11 +70,9 @@ public:
      */
     QString label(const QString &name) const;
 
-protected:
-    BibTeXEntries();
-    void load();
-
 private:
+    BibTeXEntries(const QVector<EntryDescription> &other);
+
     class BibTeXEntriesPrivate;
     BibTeXEntriesPrivate *d;
 };
