@@ -183,7 +183,7 @@ void BibliographyService::setKBibTeXasDefault() {
     /// kbuildsycoca5 has to be run to update the mime type associations
     QProcess *kbuildsycoca5Process = new QProcess(d->parentWidget);
     connect(kbuildsycoca5Process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &BibliographyService::kbuildsycoca5finished);
-    kbuildsycoca5Process->start(QStringLiteral("kbuildsycoca5"));
+    kbuildsycoca5Process->start(QStringLiteral("kbuildsycoca5"), QStringList());
 }
 
 bool BibliographyService::isKBibTeXdefault() const {
