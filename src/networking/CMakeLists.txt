@@ -31,10 +31,10 @@ set(
     logging_networking.cpp
 )
 
-if(NOT WIN32)
-    set(
+if(BUILD_ZOTERO)
+    list(
+        APPEND
         kbibtexnetworking_LIB_SRCS
-        ${kbibtexnetworking_LIB_SRCS}
         zotero/api.cpp
         zotero/collectionmodel.cpp
         zotero/collection.cpp
@@ -46,7 +46,7 @@ if(NOT WIN32)
         # QOAuth for Qt5 from Git
         ../3rdparty/qoauth/src/interface.cpp
         )
-endif(NOT WIN32)
+endif(BUILD_ZOTERO)
 
 set(
     kbibtexnetworking_HDRS
@@ -124,9 +124,16 @@ target_link_libraries(
     kbibtexconfig
     kbibtexdata
     kbibtexio
-    qca-qt5
     Poppler::Qt5
 )
+
+if(BUILD_ZOTERO)
+    target_link_libraries(
+        kbibtexnetworking
+        qca-qt5
+    )
+endif(BUILD_ZOTERO)
+
 
 set_target_properties(
     kbibtexnetworking

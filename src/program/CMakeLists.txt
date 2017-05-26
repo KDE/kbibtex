@@ -23,14 +23,13 @@ set(
     logging_program.cpp
 )
 
-if(NOT WIN32)
-    set(
+if(BUILD_ZOTERO)
+    list(
+        APPEND
         kbibtex_SRCS
-        ${kbibtex_SRCS}
         docklets/zoterobrowser.cpp
         )
-    add_definitions(-DHAVE_ZOTERO=1)
-endif(NOT WIN32)
+endif(BUILD_ZOTERO)
 
 
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows

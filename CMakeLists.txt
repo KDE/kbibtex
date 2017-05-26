@@ -166,8 +166,15 @@ endif(
 
 find_package(
     Qca-qt5 "2.1.0"
-    REQUIRED
 )
+if (Qca-qt5_FOUND)
+    message(STATUS "Found Qca-qt5 " ${Qca-qt5_VERSION})
+    add_definitions(-DHAVE_ZOTERO=1)
+    set(BUILD_ZOTERO ON)
+else(Qca-qt5_FOUND)
+    message(STATUS "No Qca-qt5, disabling certain functionality")
+    set(BUILD_ZOTERO OFF)
+endif(Qca-qt5_FOUND)
 
 # Make an educated guess where to find headers for QCA-Qt5
 # TODO isn't there an "official" way to determine this directory?
