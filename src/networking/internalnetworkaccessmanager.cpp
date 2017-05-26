@@ -85,7 +85,7 @@ void InternalNetworkAccessManager::mergeHtmlHeadCookies(const QString &htmlCode,
 
 InternalNetworkAccessManager &InternalNetworkAccessManager::instance()
 {
-    static InternalNetworkAccessManager self(QApplication::instance());
+    static InternalNetworkAccessManager self;
     return self;
 }
 
