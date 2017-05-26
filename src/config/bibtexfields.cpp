@@ -285,7 +285,7 @@ BibTeXFields::~BibTeXFields()
     delete d;
 }
 
-const BibTeXFields *BibTeXFields::self()
+BibTeXFields *BibTeXFields::self()
 {
     if (BibTeXFieldsPrivate::singleton == nullptr) {
         KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));

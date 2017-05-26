@@ -46,10 +46,6 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
 
-protected slots:
-    void columnMoved();
-    void columnResized(int column, int oldSize, int newSize);
-
 private:
     class Private;
     Private *d;

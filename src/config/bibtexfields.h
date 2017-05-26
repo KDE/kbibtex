@@ -54,7 +54,7 @@ public:
      * Only one instance of this class has to be used
      * @return the class's singleton
      */
-    static const BibTeXFields *self();
+    static BibTeXFields *self();
 
 #ifdef HAVE_KF5
     void save();
