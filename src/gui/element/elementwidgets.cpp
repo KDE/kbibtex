@@ -385,8 +385,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
         }
         entryType->setCurrentIndex(index);
         if (index == -1) {
-             /// A customized value not known to KBibTeX
-             entryType->lineEdit()->setText(type);
+            /// A customized value not known to KBibTeX
+            entryType->lineEdit()->setText(type);
         }
 
         entryId->setText(entry->id());
