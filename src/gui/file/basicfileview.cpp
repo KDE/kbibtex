@@ -178,7 +178,7 @@ public:
         headerProperty->sumWidths = 0;
         int col = 0;
         const BibTeXFields *bf = BibTeXFields::self();
-        for (const auto *fd : const_cast<const BibTeXFields &>(*bf)) {
+        for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
             headerProperty->columns[col].isHidden = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("IsHidden")), !fd->defaultVisible);
             headerProperty->columns[col].width = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("Width")), fd->defaultWidth);
             headerProperty->columns[col].visualIndex = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("VisualIndex")), col);
@@ -271,7 +271,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     /// build context menu for header to show/hide single columns
     int col = 0;
     const BibTeXFields *bf = BibTeXFields::self();
-    for (const auto *fd : const_cast<const BibTeXFields &>(*bf)) {
+    for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
         QAction *action = new QAction(fd->label, header());
         action->setData(col);
         action->setCheckable(true);

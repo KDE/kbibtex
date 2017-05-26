@@ -21,31 +21,21 @@
 #include "kbibtexconfig_export.h"
 
 #include <QString>
-#include <QList>
+#include <QVector>
 
 #include "kbibtex.h"
 
-struct FieldDescription {
+typedef struct {
     QString upperCamelCase;
     QString upperCamelCaseAlt;
     QString label;
-    KBibTeX::TypeFlags typeFlags;
     KBibTeX::TypeFlag preferredTypeFlag;
-    QMap<QString, int> width;
+    KBibTeX::TypeFlags typeFlags;
     int defaultWidth;
     QMap<QString, bool> visible;
     bool defaultVisible;
     bool typeIndependent;
-
-    FieldDescription()
-            : upperCamelCase(QString()), upperCamelCaseAlt(QString()), label(QString()), preferredTypeFlag(KBibTeX::tfSource), defaultWidth(0), defaultVisible(true), typeIndependent(false) {
-        /* nothing */
-    }
-
-    bool isNull() const {
-        return upperCamelCase.isEmpty() && label.isEmpty();
-    }
-};
+} FieldDescription;
 
 bool operator==(const FieldDescription &a, const FieldDescription &b);
 uint qHash(const FieldDescription &a);
@@ -53,7 +43,7 @@ uint qHash(const FieldDescription &a);
 /**
 @author Thomas Fischer
  */
-class KBIBTEXCONFIG_EXPORT BibTeXFields : public QList<FieldDescription *>
+class KBIBTEXCONFIG_EXPORT BibTeXFields : public QVector<FieldDescription*>
 {
 public:
     BibTeXFields(const BibTeXFields &other) = delete;

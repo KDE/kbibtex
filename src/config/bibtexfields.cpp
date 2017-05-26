@@ -94,10 +94,8 @@ public:
             fd->defaultWidth = configGroup.readEntry("DefaultWidth", 10);
             fd->defaultVisible = configGroup.readEntry("Visible", true);
 
-            for (const QString &treeViewName : treeViewNames) {
-                fd->width.insert(treeViewName, configGroup.readEntry("Width_" + treeViewName, fd->defaultWidth));
+            for (const QString &treeViewName : treeViewNames)
                 fd->visible.insert(treeViewName, configGroup.readEntry("Visible_" + treeViewName,  fd->defaultVisible));
-            }
 
             QString typeFlags = configGroup.readEntry("TypeFlags", "Source");
             fd->typeFlags = typeFlagsFromString(typeFlags);
@@ -122,17 +120,15 @@ public:
             QString groupName = QString(QStringLiteral("Column%1")).arg(columnCount);
             KConfigGroup configGroup(layoutConfig, groupName);
 
-            for (QMap<QString, int>::ConstIterator it = fd->width.constBegin(); it != fd->width.constEnd(); ++it) {
-                configGroup.writeEntry("Width_" + it.key(), it.value());
+            for (QMap<QString, bool>::ConstIterator it = fd->visible.constBegin(); it != fd->visible.constEnd(); ++it)
                 configGroup.writeEntry("Visible_" +  it.key(), it.value());
-            }
             QString typeFlagsString = fd->typeFlags == fd->preferredTypeFlag ? QString() : QLatin1Char(';') + typeFlagsToString(fd->typeFlags);
             typeFlagsString.prepend(typeFlagToString(fd->preferredTypeFlag));
             configGroup.writeEntry("TypeFlags", typeFlagsString);
             configGroup.writeEntry("TypeIndependent", fd->typeIndependent);
 
             if (treeViewNames.isEmpty())
-                treeViewNames.append(fd->width.keys());
+                treeViewNames.append(fd->visible.keys());
         }
 
         QString groupName = QStringLiteral("Column");
@@ -158,7 +154,7 @@ public:
 BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = nullptr;
 
 BibTeXFields::BibTeXFields()
-        : QList<FieldDescription *>(), d(new BibTeXFieldsPrivate(this))
+        : QVector<FieldDescription*>(), d(new BibTeXFieldsPrivate(this))
 {
 #ifdef HAVE_KF5
     d->load();
@@ -239,7 +235,7 @@ const FieldDescription *BibTeXFields::find(const QString &name) const
             return fd;
     }
     qCWarning(LOG_KBIBTEX_CONFIG) << "No field description for " << name << "(" << iName << ")";
-    return nullptr;
+    return new FieldDescription {QString(), QString(), QString(), KBibTeX::tfSource, KBibTeX::tfSource, 0, {}, false, false};
 }
 
 KBibTeX::TypeFlag BibTeXFields::typeFlagFromString(const QString &typeFlagString)

@@ -203,9 +203,7 @@ void EntryConfiguredWidget::createGUI()
 
         /// create an editing widget for this field
         const FieldDescription *fd = bf->find(sfl.bibtexLabel);
-        KBibTeX::TypeFlags typeFlags = fd == nullptr ? KBibTeX::tfSource : fd->typeFlags;
-        KBibTeX::TypeFlag preferredTypeFlag = fd == nullptr ? KBibTeX::tfSource : fd->preferredTypeFlag;
-        labeledFieldInput->fieldInput = new FieldInput(sfl.fieldInputLayout, preferredTypeFlag, typeFlags, this);
+        labeledFieldInput->fieldInput = new FieldInput(sfl.fieldInputLayout, fd->preferredTypeFlag, fd->typeFlags, this);
         labeledFieldInput->fieldInput->setFieldKey(sfl.bibtexLabel);
         bibtexKeyToWidget.insert(sfl.bibtexLabel, labeledFieldInput->fieldInput);
         connect(labeledFieldInput->fieldInput, &FieldInput::modified, this, &EntryConfiguredWidget::gotModified);
@@ -267,12 +265,11 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 
         const QString key = bibtexKeyToWidget.key(listOfLabeledFieldInput[i]->fieldInput).toLower();
         const FieldDescription *fd = bf->find(key);
-        bool typeIndependent = fd == nullptr ? false : fd->typeIndependent;
         Value value;
         listOfLabeledFieldInput[i]->fieldInput->apply(value);
         /// Hide non-required and non-optional type-dependent fields,
         /// except if the field has content
-        visible[i] = forceVisible || typeIndependent || !value.isEmpty() || visibleItems.contains(key);
+        visible[i] = forceVisible || fd->typeIndependent || !value.isEmpty() || visibleItems.contains(key);
 
         if (visible[i]) {
             ++countVisible;
