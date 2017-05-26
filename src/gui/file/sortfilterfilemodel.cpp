@@ -72,9 +72,9 @@ bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &r
     Q_ASSERT_X(left.column() == right.column(), "bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const", "Not comparing items in same column"); ///< assume that we only sort by column
 
     const BibTeXFields *bibtexFields = BibTeXFields::self();
-    const FieldDescription *fd = bibtexFields->at(column);
+    const FieldDescription &fd = bibtexFields->at(column);
 
-    if (column == right.column() && (fd->upperCamelCase == QStringLiteral("Author") || fd->upperCamelCase == QStringLiteral("Editor"))) {
+    if (column == right.column() && (fd.upperCamelCase == QStringLiteral("Author") || fd.upperCamelCase == QStringLiteral("Editor"))) {
         /// special sorting for authors or editors: check all names,
         /// compare last and then first names
 
@@ -85,12 +85,12 @@ bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &r
             return simpleLessThan(left, right);
 
         /// retrieve values of both cells
-        Value valueA = entryA->value(fd->upperCamelCase);
-        Value valueB = entryB->value(fd->upperCamelCase);
+        Value valueA = entryA->value(fd.upperCamelCase);
+        Value valueB = entryB->value(fd.upperCamelCase);
         if (valueA.isEmpty())
-            valueA = entryA->value(fd->upperCamelCaseAlt);
+            valueA = entryA->value(fd.upperCamelCaseAlt);
         if (valueB.isEmpty())
-            valueB = entryB->value(fd->upperCamelCaseAlt);
+            valueB = entryB->value(fd.upperCamelCaseAlt);
 
         /// if either value is empty, use default implementation
         if (valueA.isEmpty() || valueB.isEmpty())

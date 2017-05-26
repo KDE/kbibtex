@@ -58,12 +58,12 @@ void FileModel::notificationEvent(int eventId)
         readConfiguration();
         int column = 0;
         const BibTeXFields *bf = BibTeXFields::self();
-        for (const auto *fd : const_cast<const BibTeXFields &>(*bf)) {
+        for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
             /// Colors may have changed
-            bool columnChanged = fd->upperCamelCase.toLower() == Entry::ftColor;
+            bool columnChanged = fd.upperCamelCase.toLower() == Entry::ftColor;
             /// Person name formatting may has changed
-            columnChanged |= fd->upperCamelCase.toLower() == Entry::ftAuthor || fd->upperCamelCase.toLower() == Entry::ftEditor;
-            columnChanged |= fd->upperCamelCaseAlt.toLower() == Entry::ftAuthor || fd->upperCamelCaseAlt.toLower() == Entry::ftEditor;
+            columnChanged |= fd.upperCamelCase.toLower() == Entry::ftAuthor || fd.upperCamelCase.toLower() == Entry::ftEditor;
+            columnChanged |= fd.upperCamelCaseAlt.toLower() == Entry::ftAuthor || fd.upperCamelCaseAlt.toLower() == Entry::ftEditor;
             /// Changes necessary for this column? Publish update
             if (columnChanged)
                 emit dataChanged(index(0, column), index(rowCount() - 1, column));
@@ -186,9 +186,9 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
 
     const BibTeXFields *bibtexFields = BibTeXFields::self();
     if (index.row() < m_file->count() && index.column() < bibtexFields->count()) {
-        const FieldDescription *fd = bibtexFields->at(index.column());
-        QString raw = fd->upperCamelCase;
-        QString rawAlt = fd->upperCamelCaseAlt;
+        const FieldDescription &fd = bibtexFields->at(index.column());
+        QString raw = fd.upperCamelCase;
+        QString rawAlt = fd.upperCamelCaseAlt;
         QSharedPointer<Element> element = (*m_file)[index.row()];
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
 
@@ -282,7 +282,7 @@ QVariant FileModel::headerData(int section, Qt::Orientation orientation, int rol
     const BibTeXFields *bibtexFields = BibTeXFields::self();
     if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section < 0 || section >= bibtexFields->count())
         return QVariant();
-    return bibtexFields->at(section)->label;
+    return bibtexFields->at(section).label;
 }
 
 Qt::ItemFlags FileModel::flags(const QModelIndex &index) const

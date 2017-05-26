@@ -43,7 +43,7 @@ uint qHash(const FieldDescription &a);
 /**
 @author Thomas Fischer
  */
-class KBIBTEXCONFIG_EXPORT BibTeXFields : public QVector<FieldDescription*>
+class KBIBTEXCONFIG_EXPORT BibTeXFields : public QVector<FieldDescription>
 {
 public:
     BibTeXFields(const BibTeXFields &other) = delete;
@@ -71,12 +71,11 @@ public:
     static QString typeFlagToString(KBibTeX::TypeFlag typeFlag);
     static QString typeFlagsToString(KBibTeX::TypeFlags typeFlags);
 
-    const FieldDescription *find(const QString &name) const;
-
-protected:
-    BibTeXFields();
+    const FieldDescription find(const QString &name) const;
 
 private:
+    BibTeXFields(const QVector<FieldDescription> &other);
+
     class BibTeXFieldsPrivate;
     BibTeXFieldsPrivate *d;
 };

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -32,8 +32,8 @@ void FileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     double percent = index.data(FileModel::NumberRole).toDouble(&ok);
     if (ok) {
         const BibTeXFields *bibtexFields = BibTeXFields::self();
-        const FieldDescription *fd = bibtexFields->at(index.column());
-        if (fd->upperCamelCase.toLower() == Entry::ftStarRating)
+        const FieldDescription &fd = bibtexFields->at(index.column());
+        if (fd.upperCamelCase.toLower() == Entry::ftStarRating)
             StarRating::paintStars(painter, KIconLoader::DefaultState, numTotalStars, percent, option.rect);
     }
 }

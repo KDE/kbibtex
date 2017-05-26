@@ -90,12 +90,13 @@ public:
         headerProperty->sortedColumn = -1;
         int col = 0;
         const BibTeXFields *bf = BibTeXFields::self();
-        for (const auto *fd : const_cast<const BibTeXFields &>(*bf)) {
-            headerProperty->columns[col].isHidden = !fd->defaultVisible;
-            headerProperty->columns[col].width = fd->defaultWidth;
+        for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
+            qCDebug(LOG_KBIBTEX_GUI) << fd.label << "  " << fd.defaultVisible;
+            headerProperty->columns[col].isHidden = !fd.defaultVisible;
+            headerProperty->columns[col].width = fd.defaultWidth;
             headerProperty->columns[col].visualIndex = col;
             if (!headerProperty->columns[col].isHidden)
-                headerProperty->sumWidths += fd->defaultWidth;
+                headerProperty->sumWidths += fd.defaultWidth;
             ++col;
         }
         Q_ASSERT(col == headerProperty->columnCount);
@@ -179,8 +180,8 @@ public:
         int col = 0;
         const BibTeXFields *bf = BibTeXFields::self();
         for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
-            headerProperty->columns[col].isHidden = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("IsHidden")), !fd->defaultVisible);
-            headerProperty->columns[col].width = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("Width")), fd->defaultWidth);
+            headerProperty->columns[col].isHidden = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("IsHidden")), !fd.defaultVisible);
+            headerProperty->columns[col].width = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("Width")), fd.defaultWidth);
             headerProperty->columns[col].visualIndex = configGroup.readEntry(configHeaderState.arg(name).append(QString::number(col)).append(QStringLiteral("VisualIndex")), col);
             if (!headerProperty->columns[col].isHidden)
                 headerProperty->sumWidths += headerProperty->columns[col].width;
@@ -272,7 +273,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     int col = 0;
     const BibTeXFields *bf = BibTeXFields::self();
     for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
-        QAction *action = new QAction(fd->label, header());
+        QAction *action = new QAction(fd.label, header());
         action->setData(col);
         action->setCheckable(true);
         action->setChecked(!isColumnHidden(col));

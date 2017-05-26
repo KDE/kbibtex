@@ -154,10 +154,10 @@ public:
 
         lineeditFilter->clear();
         comboboxFieldNames->clear();
-        for (const auto *fd : const_cast<const BibTeXFields &>(*bibtexFields)) {
-            if (!fd->upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
-            if (fd->upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
-            comboboxFieldNames->addItem(fd->label, fd->upperCamelCase);
+        for (const auto &fd : const_cast<const BibTeXFields &>(*bibtexFields)) {
+            if (!fd.upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
+            if (fd.upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
+            comboboxFieldNames->addItem(fd.label, fd.upperCamelCase);
         }
         /// Sort the combo box locale-aware. Thus we need a SortFilterProxyModel
         QSortFilterProxyModel *proxy = new QSortFilterProxyModel(comboboxFieldNames);
