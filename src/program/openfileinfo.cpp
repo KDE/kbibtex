@@ -310,9 +310,9 @@ KService::List OpenFileInfo::listOfServices()
     /// First, check if KBibTeX part is already in list as returned by
     /// KMimeTypeTrader::self()->query(..)
     bool listIncludesKBibTeXPart = false;
-    for (KService::List::ConstIterator it = result.constBegin(); !listIncludesKBibTeXPart && it != result.constEnd(); ++it) {
+    for (KService::List::ConstIterator it = result.constBegin(); it != result.constEnd(); ++it) {
         qCDebug(LOG_KBIBTEX_PROGRAM) << "Found library for" << mt << ":" << (*it)->library();
-        listIncludesKBibTeXPart = (*it)->library() == QStringLiteral("kbibtexpart");
+        listIncludesKBibTeXPart |= (*it)->library() == QStringLiteral("kbibtexpart");
     }
     /// If KBibTeX part not in list, add it manually
     if (!listIncludesKBibTeXPart) {
