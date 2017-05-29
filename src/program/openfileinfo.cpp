@@ -325,21 +325,25 @@ KService::List OpenFileInfo::listOfServices()
 
 KService::Ptr OpenFileInfo::defaultService()
 {
-    QString mt = mimeType();
-    if (mt == QStringLiteral("application/pdf")) {
+    const QString mt = mimeType();
+    KService::Ptr result;
+    if (mt == QStringLiteral("application/pdf") || mt == QStringLiteral("text/x-bibtex")) {
+        /// If either a BibTeX file or a PDF file is to be opened, enforce using
+        /// KBibTeX's part over anything else.
         /// KBibTeX has a FileImporterPDF which allows it to load .pdf file
         /// that got generated with KBibTeX and contain the original
         /// .bib file as an 'attachment'.
         /// This importer does not work with any other .pdf files!!!
-        mt = QStringLiteral("text/x-bibtex");
+        result = KService::serviceByDesktopName(QStringLiteral("kbibtexpart"));
     }
-    KService::Ptr result = KMimeTypeTrader::self()->preferredService(mt, QStringLiteral("KParts/ReadWritePart"));
+    if (!result)
+        result = KMimeTypeTrader::self()->preferredService(mt, QStringLiteral("KParts/ReadWritePart"));
     if (!result)
         result = KMimeTypeTrader::self()->preferredService(mt, QStringLiteral("KParts/ReadOnlyPart"));
     if (result)
-        qCDebug(LOG_KBIBTEX_PROGRAM) << "Using service" << result->name() << "(" << result->comment() << ") for mime type" << mimeType() << "through library" << result->library();
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "Using service" << result->name() << "(" << result->comment() << ") for mime type" << mt << "through library" << result->library();
     else
-        qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not find service for mime type" << mimeType();
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not find service for mime type" << mt;
     return result;
 }
 
