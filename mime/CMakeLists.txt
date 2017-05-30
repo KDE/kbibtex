@@ -7,8 +7,8 @@ install(
     FILES
     bibliography.xml
     DESTINATION
-    ${XDG_MIME_INSTALL_DIR}
+    ${KDE_INSTALL_MIMEDIR}
 )
 update_xdg_mimetypes(
-    ${XDG_MIME_INSTALL_DIR}
+    ${KDE_INSTALL_MIMEDIR}
 )

@@ -11,5 +11,5 @@ install(
     wikipedia-cite.xsl
     worldcatdc2bibtex.xsl
     DESTINATION
-    ${DATA_INSTALL_DIR}/kbibtex
+    ${KDE_INSTALL_DATADIR}/kbibtex
 )

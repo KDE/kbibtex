@@ -144,13 +144,13 @@ install(
     PROGRAMS
     org.kde.kbibtex.desktop
     DESTINATION
-    ${XDG_APPS_INSTALL_DIR}
+    ${KDE_INSTALL_APPDIR}
 )
 install(
     FILES
     kbibtexui.rc
     DESTINATION
-    ${KXMLGUI_INSTALL_DIR}/kbibtex
+    ${KDE_INSTALL_KXMLGUI5DIR}/kbibtex
 )
 install(
     FILES
@@ -167,5 +167,5 @@ ecm_install_icons(
     ${CMAKE_SOURCE_DIR}/icons/32-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/48-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/64-apps-kbibtex.png
-    DESTINATION ${ICON_INSTALL_DIR}
+    DESTINATION ${KDE_INSTALL_ICONDIR}
 )

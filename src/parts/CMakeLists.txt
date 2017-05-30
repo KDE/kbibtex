@@ -87,5 +87,5 @@ install(
     FILES
     kbibtexpartui.rc
     DESTINATION
-    ${KXMLGUI_INSTALL_DIR}/kbibtexpart
+    ${KDE_INSTALL_KXMLGUI5DIR}/kbibtexpart
 )
