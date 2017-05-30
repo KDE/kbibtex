@@ -15,60 +15,46 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PART_PART_H
-#define KBIBTEX_PART_PART_H
+#include "partfactory.h"
 
-#include <QObject>
+#include <QDebug>
 
-#include <KParts/Part>
-#include <KParts/ReadWritePart>
 #include <KAboutData>
+#include <KLocalizedString>
 
-#include "notificationhub.h"
-#include "partwidget.h"
+#include "part.h"
+#include "version.h"
+#include "logging_parts.h"
 
-class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
+class KBibTeXPartFactory::Private
 {
-    Q_OBJECT
-
-    friend class KBibTeXBrowserExtension;
-
 public:
-    KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutData &componentData);
-    ~KBibTeXPart() override;
+    KAboutData aboutData;
 
-    void setModified(bool modified) override;
-
-    void notificationEvent(int eventId) override;
-
-protected:
-    bool openFile() override;
-    bool saveFile() override;
-
-protected:
-    void setupActions();
-
-protected slots:
-    bool documentSave();
-    bool documentSaveAs();
-    bool documentSaveCopyAs();
-    void elementViewDocument();
-    void elementViewDocumentMenu(QObject *);
-    void elementFindPDF();
-    void applyDefaultFormatString();
-
-private slots:
-    void newElementTriggered(int event);
-    void newEntryTriggered();
-    void newMacroTriggered();
-    void newCommentTriggered();
-    void newPreambleTriggered();
-    void updateActions();
-    void fileExternallyChange(const QString &path);
-
-private:
-    class KBibTeXPartPrivate;
-    KBibTeXPartPrivate *const d;
+    Private()
+            : aboutData(QStringLiteral("kbibtexpart"), i18n("KBibTeXPart"), QLatin1String(versionNumber), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2017 Thomas Fischer"), QString(), QStringLiteral("http://home.gna.org/kbibtex/"))
+    {
+        aboutData.setOrganizationDomain(QByteArray("kde.org"));
+        aboutData.setDesktopFileName(QStringLiteral("org.kde.kbibtex"));
+        aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QStringLiteral("fischer@unix-ag.uni-kl.de"));
+    }
 };
 
-#endif // KBIBTEX_PART_PART_H
+KBibTeXPartFactory::KBibTeXPartFactory()
+        : KPluginFactory(), d(new KBibTeXPartFactory::Private())
+{
+    /// nothing
+}
+
+KBibTeXPartFactory::~KBibTeXPartFactory() {
+    delete d;
+}
+
+QObject *KBibTeXPartFactory::create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword) {
+    Q_UNUSED(iface);
+    Q_UNUSED(args)
+    Q_UNUSED(keyword);
+
+    KBibTeXPart *part = new KBibTeXPart(parentWidget, parent, d->aboutData);
+    return part;
+}

@@ -3,6 +3,7 @@
 set(
     kbibtexpart_SRCS
     part.cpp
+    partfactory.cpp
     browserextension.cpp
     ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
     logging_parts.cpp
@@ -77,6 +78,7 @@ install(
     DESTINATION
     ${KDE_INSTALL_PLUGINDIR}
 )
+kcoreaddons_desktop_to_json(kbibtexpart kbibtexpart.desktop SERVICE_TYPES kpart.desktop)
 install(
     FILES
     kbibtexpart.desktop

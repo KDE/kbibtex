@@ -88,9 +88,6 @@
 #include "browserextension.h"
 #include "logging_parts.h"
 
-K_PLUGIN_FACTORY(KBibTeXPartFactory, registerPlugin<KBibTeXPart>();)
-// FIXME K_EXPORT_PLUGIN(KBibTeXPartFactory("KBibTeXPart"))
-
 static const char RCFileName[] = "kbibtexpartui.rc";
 static const int smEntry = 1;
 static const int smComment = 2;
@@ -745,11 +742,10 @@ public:
     }
 };
 
-KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const QVariantList &args)
+KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutData &componentData)
         : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(parentWidget, this))
 {
-    Q_UNUSED(args)
-    // FIXME setComponentData(KBibTeXPartFactory::componentData(), false);
+    setComponentData(componentData);
 
     setWidget(d->partWidget);
     updateActions();

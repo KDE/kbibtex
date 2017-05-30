@@ -15,60 +15,34 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PART_PART_H
-#define KBIBTEX_PART_PART_H
+#ifndef KBIBTEX_PART_PARTFACTORY_H
+#define KBIBTEX_PART_PARTFACTORY_H
 
-#include <QObject>
+#include <KPluginFactory>
 
-#include <KParts/Part>
-#include <KParts/ReadWritePart>
-#include <KAboutData>
-
-#include "notificationhub.h"
-#include "partwidget.h"
-
-class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
+class KBibTeXPartFactory : public KPluginFactory
 {
     Q_OBJECT
-
-    friend class KBibTeXBrowserExtension;
+    Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "kbibtexpart.json")
+    Q_INTERFACES(KPluginFactory)
 
 public:
-    KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutData &componentData);
-    ~KBibTeXPart() override;
-
-    void setModified(bool modified) override;
-
-    void notificationEvent(int eventId) override;
+    KBibTeXPartFactory();
+    ~KBibTeXPartFactory() override;
 
 protected:
-    bool openFile() override;
-    bool saveFile() override;
 
-protected:
-    void setupActions();
-
-protected slots:
-    bool documentSave();
-    bool documentSaveAs();
-    bool documentSaveCopyAs();
-    void elementViewDocument();
-    void elementViewDocumentMenu(QObject *);
-    void elementFindPDF();
-    void applyDefaultFormatString();
-
-private slots:
-    void newElementTriggered(int event);
-    void newEntryTriggered();
-    void newMacroTriggered();
-    void newCommentTriggered();
-    void newPreambleTriggered();
-    void updateActions();
-    void fileExternallyChange(const QString &path);
+    /**
+     * From KPluginFactory's documentation: "You may reimplement it to
+     * provide a very flexible factory. This is especially useful to
+     * provide generic factories for plugins implemeted using a scripting
+     * language."
+     */
+    virtual QObject *create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword);
 
 private:
-    class KBibTeXPartPrivate;
-    KBibTeXPartPrivate *const d;
+    class Private;
+    Private *const d;
 };
 
-#endif // KBIBTEX_PART_PART_H
+#endif // KBIBTEX_PART_PARTFACTORY_H
