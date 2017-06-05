@@ -199,7 +199,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
             const auto entryUrlList = FileInfo::entryUrls(entry, fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes);
             for (const QUrl &url : entryUrlList) {
                 if (url.isLocalFile() && url.fileName().endsWith(QStringLiteral(".pdf"))) {
-                    const QString text = FileInfo::pdfToText(url.url(QUrl::PreferLocalFile));
+                    const QString text = FileInfo::pdfToText(url.toLocalFile());
                     int i = 0;
                     for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
                         eachTerm[i] |= (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);

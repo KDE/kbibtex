@@ -411,7 +411,7 @@ public:
 
             /// For local files, test if they exist; ignore local files that do not exist
             if (fileUrl.isLocalFile()) {
-                if (!QFileInfo::exists(fileUrl.url(QUrl::PreferLocalFile)))
+                if (!QFileInfo::exists(fileUrl.toLocalFile()))
                     continue;
             }
 

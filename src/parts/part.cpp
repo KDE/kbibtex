@@ -344,27 +344,26 @@ public:
     }
 
     bool openFile(const QUrl &url, const QString &localFilePath) {
-        p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.url(QUrl::PreferLocalFile));
-
+        p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.toDisplayString() + " aka " + localFilePath);
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 
         if (bibTeXFile != nullptr) {
             const QUrl oldUrl = bibTeXFile->property(File::Url, QUrl()).toUrl();
             if (oldUrl.isValid() && oldUrl.isLocalFile()) {
-                const QString path = oldUrl.toDisplayString();
+                const QString path = oldUrl.toLocalFile();
                 if (!path.isEmpty())
                     fileSystemWatcher.removePath(path);
                 else
                     qCWarning(LOG_KBIBTEX_PARTS) << "No filename to stop watching";
-            } else
-                qCWarning(LOG_KBIBTEX_PARTS) << "Not removing" << oldUrl.toDisplayString() << "from fileSystemWatcher";
+            }
             delete bibTeXFile;
+            bibTeXFile = nullptr;
         }
 
         QFile inputfile(localFilePath);
         if (!inputfile.open(QIODevice::ReadOnly)) {
-            qCWarning(LOG_KBIBTEX_PARTS) << "Opening file failed, creating new one instead:" << localFilePath;
+            qCWarning(LOG_KBIBTEX_PARTS) << "Opening file failed, creating new one instead:" << url.toDisplayString() << "aka" << localFilePath;
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -378,7 +377,7 @@ public:
         delete importer;
 
         if (bibTeXFile == nullptr) {
-            qCWarning(LOG_KBIBTEX_PARTS) << "Opening file failed, creating new one instead:" << url.url(QUrl::PreferLocalFile);
+            qCWarning(LOG_KBIBTEX_PARTS) << "Opening file failed, creating new one instead:" << url.toDisplayString() << "aka" << localFilePath;
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -395,7 +394,7 @@ public:
         connect(partWidget->filterBar(), &FilterBar::filterChanged, sortFilterProxyModel, &SortFilterFileModel::updateFilter);
 
         if (url.isLocalFile())
-            fileSystemWatcher.addPath(url.url(QUrl::PreferLocalFile));
+            fileSystemWatcher.addPath(url.toLocalFile());
 
         qApp->restoreOverrideCursor();
 
@@ -572,7 +571,7 @@ public:
 
         /// Extract filename extension (e.g. 'bib') to determine which FileExporter to use
         static const QRegExp suffixRegExp("\\.([^.]{1,4})$");
-        const QString ending = suffixRegExp.indexIn(url.url(QUrl::PreferLocalFile)) > 0 ? suffixRegExp.cap(1) : QLatin1String("bib");
+        const QString ending = suffixRegExp.indexIn(url.fileName()) > 0 ? suffixRegExp.cap(1) : QLatin1String("bib");
         FileExporter *exporter = saveFileExporter(ending);
 
         /// String list to collect error message from FileExporer
@@ -581,7 +580,7 @@ public:
 
         if (url.isLocalFile()) {
             /// Take precautions for local files
-            QFileInfo fileInfo(url.url(QUrl::PreferLocalFile));
+            QFileInfo fileInfo(url.toLocalFile());
             /// Do not overwrite symbolic link, but linked file instead
             QString filename = fileInfo.absoluteFilePath();
             while (fileInfo.isSymLink()) {
@@ -627,7 +626,7 @@ public:
         delete exporter;
 
         if (!result) {
-            QString msg = i18n("Saving the bibliography to file '%1' failed.", url.url(QUrl::PreferLocalFile));
+            QString msg = i18n("Saving the bibliography to file '%1' failed.", url.toDisplayString());
             if (errorLog.isEmpty())
                 KMessageBox::error(p->widget(), msg, i18n("Saving bibliography failed"));
             else {
@@ -674,12 +673,12 @@ public:
                     if (!url.isLocalFile()) continue; ///< skip remote URLs
 
                     /// Build a nice menu item (label, icon, ...)
-                    QFileInfo fi(url.url(QUrl::PreferLocalFile));
+                    const QFileInfo fi(url.toLocalFile());
                     const QString label = QString(QStringLiteral("%1 [%2]")).arg(fi.fileName(), fi.absolutePath());
                     QMimeDatabase db;
                     QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(url).iconName()), label, p);
-                    action->setData(url.url(QUrl::PreferLocalFile));
-                    action->setToolTip(url.url(QUrl::PreferLocalFile));
+                    action->setData(fi.absoluteFilePath());
+                    action->setToolTip(fi.absoluteFilePath());
                     /// Register action at signal handler to open URL when triggered
                     connect(action, &QAction::triggered, signalMapperViewDocument, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
                     signalMapperViewDocument->setMapping(action, action);
@@ -701,7 +700,7 @@ public:
                     if (url.isLocalFile()) continue; ///< skip local files
 
                     /// Build a nice menu item (label, icon, ...)
-                    const QString prettyUrl = url.url(QUrl::PreferLocalFile);
+                    const QString prettyUrl = url.toDisplayString();
                     QMimeDatabase db;
                     QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(url).iconName()), prettyUrl, p);
                     action->setData(prettyUrl);
@@ -795,7 +794,7 @@ bool KBibTeXPart::saveFile()
 
     /// If the current file is "watchable" (i.e. a local file),
     /// memorize local filename for future reference
-    const QString watchableFilename = url().isValid() && url().isLocalFile() ? url().url(QUrl::PreferLocalFile) : QString();
+    const QString watchableFilename = url().isValid() && url().isLocalFile() ? url().toLocalFile() : QString();
     /// Stop watching local file that will be written to
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.removePath(watchableFilename);
@@ -811,7 +810,7 @@ bool KBibTeXPart::saveFile()
         qCWarning(LOG_KBIBTEX_PARTS) << "watchableFilename is Empty";
 
     if (!saveOperationSuccess) {
-        KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().url(QUrl::PreferLocalFile)));
+        KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().toDisplayString()));
         return false;
     }
 
@@ -838,7 +837,7 @@ bool KBibTeXPart::documentSaveAs()
 
     /// Remove old URL from file system watcher
     if (url().isValid() && url().isLocalFile()) {
-        const QString path = url().url(QUrl::PreferLocalFile);
+        const QString path = url().toLocalFile();
         if (!path.isEmpty())
             d->fileSystemWatcher.removePath(path);
         else
@@ -1069,8 +1068,8 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     if (!url().isValid() || !url().isLocalFile())
         return;
     /// Should never happen: triggering this slot for filenames not being the opened file
-    if (path != url().url(QUrl::PreferLocalFile)) {
-        qCWarning(LOG_KBIBTEX_PARTS) << "Got file modification warning for wrong file: " << path << "!=" << url().url(QUrl::PreferLocalFile);
+    if (path != url().toLocalFile()) {
+        qCWarning(LOG_KBIBTEX_PARTS) << "Got file modification warning for wrong file: " << path << "!=" << url().toLocalFile();
         return;
     }
 
