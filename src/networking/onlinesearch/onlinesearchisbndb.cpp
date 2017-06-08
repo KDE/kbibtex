@@ -102,7 +102,7 @@ QString OnlineSearchIsbnDB::label() const
 
 QString OnlineSearchIsbnDB::favIconUrl() const
 {
-    return QStringLiteral("https://isbndb.com/favicon.ico");
+    return QStringLiteral("http://isbndb.com/favicon.ico");
 }
 
 QUrl OnlineSearchIsbnDB::homepage() const
