@@ -307,7 +307,6 @@ public:
     void applyEncoding(QString &encoding) {
         encoding = encoding.isEmpty() ? QStringLiteral("latex") : encoding.toLower();
         destinationCodec = QTextCodec::codecForName(encoding == QStringLiteral("latex") ? "us-ascii" : encoding.toLatin1());
-        qCWarning(LOG_KBIBTEX_IO) << "destinationCodec=" << destinationCodec->name();
     }
 
     bool requiresPersonQuoting(const QString &text, bool isLastName) {
