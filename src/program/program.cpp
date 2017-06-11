@@ -24,6 +24,7 @@
 #include <KAboutData>
 #include <KLocalizedString>
 #include <KMessageBox>
+#include <KCrash>
 
 #include "mainwindow.h"
 #include "logging_program.h"
@@ -37,6 +38,8 @@ int main(int argc, char *argv[])
     }
 
     QApplication programCore(argc, argv);
+
+    KCrash::initialize();
 
     KLocalizedString::setApplicationDomain("kbibtex");
 

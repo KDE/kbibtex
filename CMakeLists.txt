@@ -82,6 +82,7 @@ find_package(
     CoreAddons
     Service
     Wallet
+    Crash
 )
 
 find_package(KF5DocTools)
