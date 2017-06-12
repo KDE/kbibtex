@@ -122,7 +122,7 @@ void OnlineSearchBioRxiv::resultPageDone() {
         /// ensure proper treatment of UTF-8 characters
         const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
 
-        static const QRegExp highwireRegExp(QStringLiteral("/highwire/citation/\\d+/bibtex"));
+        static const QRegExp highwireRegExp(QStringLiteral("/highwire/citation/\\d+/bibtext"));
         if (highwireRegExp.indexIn(htmlCode) > 0) {
             const QUrl url = QUrl(QStringLiteral("http://biorxiv.org") + highwireRegExp.cap(0));
             QNetworkRequest request(url);
