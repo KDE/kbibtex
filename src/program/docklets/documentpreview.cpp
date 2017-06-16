@@ -222,7 +222,7 @@ public:
         okularPart = locatePart(QStringLiteral("application/pdf"), stackedWidget);
         swpOkular = (okularPart == nullptr) ? -1 : stackedWidget->addWidget(okularPart->widget());
         if (okularPart == nullptr || swpOkular < 0) {
-            qCWarning(LOG_KBIBTEX_PROGRAM) << "No Okular part for PDF or PostScript document preview available.";
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "No 'KDE Framworks 5'-based Okular part for PDF or PostScript document preview available.";
         }
 #ifdef HAVE_WEBENGINEWIDGETS
         qCDebug(LOG_KBIBTEX_PROGRAM) << "WebEngine is available, using it instead of WebKit or HTML KPart (both neither considered nor tested for) for HTML/Web preview.";
@@ -521,7 +521,7 @@ public:
         } else {
             QString additionalInformation;
             if (urlInfo.mimeType == QStringLiteral("application/pdf"))
-                additionalInformation = i18nc("Additional information in case there is not KPart available for mime type 'application/pdf'", "<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular\">Okular</a> to make use of its PDF viewing component.");
+                additionalInformation = i18nc("Additional information in case there is not KPart available for mime type 'application/pdf'", "<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular\">Okular</a> for KDE Frameworks&nbsp;5 to make use of its PDF viewing component.<br/>Okular for KDE&nbsp;4 will not work.");
             showMessage(i18nc("First parameter is mime type, second parameter is optional information (may be empty)", "<qt>Don't know how to show mimetype '%1'.%2</qt>", urlInfo.mimeType, additionalInformation)); // krazy:exclude=qmethods
         }
 
