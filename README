@@ -1,7 +1,7 @@
 KBibTeX
 =======
 
-Copyright: 2004-2015 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+Copyright: 2004-2017 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
 Author/Maintainer: Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
@@ -15,7 +15,7 @@ purpose is to provide a user-friendly interface to BibTeX files.
 Homepage
 --------
 
-Visit  http://home.gna.org/kbibtex/  for more information.
+Visit  https://userbase.kde.org/KBibTeX  for more information.
 
 
 Dependencies

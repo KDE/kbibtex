@@ -135,7 +135,7 @@ bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
         if (kpsewhich(QStringLiteral("babel.sty")))
             ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
         if (kpsewhich(QStringLiteral("hyperref.sty")))
-            ts << "\\usepackage[pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}\n";
+            ts << "\\usepackage[pdfproducer={KBibTeX: https://userbase.kde.org/KBibTeX},pdftex]{hyperref}\n";
         else if (kpsewhich(QStringLiteral("url.sty")))
             ts << "\\usepackage{url}\n";
         if (m_latexBibStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))

@@ -155,7 +155,7 @@ bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QStri
             if (i < 32 && line.startsWith(QStringLiteral("%%Title:")))
                 line = "%%Title: " + title;
             else if (i < 32 && line.startsWith(QStringLiteral("%%Creator:")))
-                line += QStringLiteral("; exported from within KBibTeX: http://home.gna.org/kbibtex/");
+                line += QStringLiteral("; exported from within KBibTeX: https://userbase.kde.org/KBibTeX");
             lines += line;
             ++i;
         }

@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 
     KLocalizedString::setApplicationDomain("kbibtex");
 
-    KAboutData aboutData(QStringLiteral("kbibtex"), i18n("KBibTeX"), QLatin1String(versionNumber), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2017 Thomas Fischer"), QString(), QStringLiteral("http://home.gna.org/kbibtex/"));
+    KAboutData aboutData(QStringLiteral("kbibtex"), i18n("KBibTeX"), QLatin1String(versionNumber), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2017 Thomas Fischer"), QString(), QStringLiteral("https://userbase.kde.org/KBibTeX"));
 
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setDesktopFileName(QStringLiteral("org.kde.kbibtex"));

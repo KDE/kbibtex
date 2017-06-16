@@ -217,12 +217,12 @@
       <li xml:lang="x-test">xxImport your Zotero library.xx</li>
     </ul>
   </description>
-  <url type="homepage">http://home.gna.org/kbibtex/</url>
+  <url type="homepage">https://userbase.kde.org/KBibTeX</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kbibtex</url>
   <url type="help">http://docs.kde.org/development/en/extragear-office/kbibtex/index.html</url>
   <screenshots>
     <screenshot type="default">
-      <image>http://home.gna.org/kbibtex/screenshots/kbibtex-20110213.png</image>
+      <image>https://userbase.kde.org/images.userbase/7/7f/20150602-kbibtex-kf5.png</image>
     </screenshot>
   </screenshots>
   <project_group>KDE</project_group>
