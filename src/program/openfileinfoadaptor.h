@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                      2015 by Shunsuke Shimizu <grafi@grafi.jp>          *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -31,7 +31,7 @@ class MDIWidget;
 class OpenFileInfoAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.gna.KBibTeX.FileManager.FileInfo")
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KBibTeX.FileManager.FileInfo")
 
 public:
     explicit OpenFileInfoAdaptor(OpenFileInfo *p, OpenFileInfoManager *pm);
@@ -55,7 +55,7 @@ private:
 class OpenFileInfoManagerAdaptor : public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.gna.KBibTeX.FileManager")
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KBibTeX.FileManager")
 
 public:
     explicit OpenFileInfoManagerAdaptor(OpenFileInfoManager *p);

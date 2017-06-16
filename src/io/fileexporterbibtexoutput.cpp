@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -139,7 +139,7 @@ bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
         if (kpsewhich("babel.sty"))
             ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
         if (kpsewhich("hyperref.sty"))
-            ts << "\\usepackage[pdfproducer={KBibTeX: http://home.gna.org/kbibtex/},pdftex]{hyperref}\n";
+            ts << "\\usepackage[pdfproducer={KBibTeX: https://userbase.kde.org/KBibTeX},pdftex]{hyperref}\n";
         else if (kpsewhich("url.sty"))
             ts << "\\usepackage{url}\n";
         if (m_latexBibStyle.startsWith(QLatin1String("apacite")) && kpsewhich("apacite.sty"))

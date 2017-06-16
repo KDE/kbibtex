@@ -21,7 +21,7 @@ bus = dbus.SessionBus()
 info("Searching KBibTeX process")
 names = bus.list_names()
 try:
-	kbibtex_name = next(filter(lambda name: re.match(r"\Aorg.gna.kbibtex-\d+\Z", name), names))
+	kbibtex_name = next(filter(lambda name: re.match(r"\Aorg.kde.kbibtex-\d+\Z", name), names))
 except StopIteration:
 	error(1, "KBibTeX not found on DBus session bus")
 info("KBibTeX's name in DBus session bus: " + kbibtex_name)
@@ -31,7 +31,7 @@ info("KBibTeX's name in DBus session bus: " + kbibtex_name)
 file_manager = bus.get_object(kbibtex_name, '/FileManager')
 # Create an object representing the file manager that allows calling functions
 # TODO check for errors
-file_manager_interface = dbus.Interface(file_manager, dbus_interface = 'org.gna.KBibTeX.FileManager')
+file_manager_interface = dbus.Interface(file_manager, dbus_interface = 'org.kde.KBibTeX.FileManager')
 
 # TODO file to open should be argument passed to this script?
 # TODO check for errors
@@ -52,7 +52,7 @@ assert opened_file_id == current_file_id
 info("Retrieving the document for current file")
 # TODO check for errors
 current_file = bus.get_object(kbibtex_name, '/FileManager/' + str(current_file_id))
-current_file_interface = dbus.Interface(current_file, dbus_interface = 'org.gna.KBibTeX.FileManager.FileInfo')
+current_file_interface = dbus.Interface(current_file, dbus_interface = 'org.kde.KBibTeX.FileManager.FileInfo')
 current_url = str(current_file_interface.url())
 info("Current url: " + current_url)
 assert file_url == current_url
@@ -65,7 +65,7 @@ info("Current document id: " + str(current_document_id))
 # TODO check for errors
 info("Adding example entries to the current document")
 current_document = bus.get_object(kbibtex_name, '/KBibTeX/Documents/' + str(current_document_id))
-current_document_interface = dbus.Interface(current_document, dbus_interface = 'org.gna.KBibTeX.Document')
+current_document_interface = dbus.Interface(current_document, dbus_interface = 'org.kde.KBibTeX.Document')
 
 # TODO check for errors
 indices = current_document_interface.insertEntries("""\

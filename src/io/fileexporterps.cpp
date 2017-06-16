@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -157,7 +157,7 @@ bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QStri
             if (i < 32 && line.startsWith(QLatin1String("%%Title:")))
                 line = QLatin1String("%%Title: ") + title;
             else if (i < 32 && line.startsWith(QLatin1String("%%Creator:")))
-                line += QLatin1String("; exported from within KBibTeX: http://home.gna.org/kbibtex/");
+                line += QLatin1String("; exported from within KBibTeX: https://userbase.kde.org/KBibTeX");
             lines += line;
             ++i;
         }

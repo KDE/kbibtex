@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,17 +24,17 @@
 #include "kbibtextest.h"
 
 const char *description = I18N_NOOP("A BibTeX editor for KDE");
-const char *programHomepage = "http://home.gna.org/kbibtex/";
-const char *bugTrackerHomepage = "https://gna.org/bugs/?group=kbibtex";
+const char *programHomepage = "https://userbase.kde.org/KBibTeX";
+const char *bugTrackerHomepage = "https://bugs.kde.org/enter_bug.cgi?product=KBibTeX";
 
 int main(int argc, char *argv[])
 {
     KAboutData aboutData("kbibtextest", 0, ki18n("KBibTeX Test"), "XXX",
                          ki18n(description), KAboutData::License_GPL_V2,
-                         ki18n("Copyright 2004-2014 Thomas Fischer"), KLocalizedString(),
+                         ki18n("Copyright 2004-2017 Thomas Fischer"), KLocalizedString(),
                          programHomepage, bugTrackerHomepage);
     aboutData.addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
-    aboutData.setCustomAuthorText(ki18n("Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"), ki18n("Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna.org/bugs/?group=kbibtex</a> to report bugs.\n"));
+    aboutData.setCustomAuthorText(ki18n("Please use https://bugs.kde.org/enter_bug.cgi?product=KBibTeX to report bugs.\n"), ki18n("Please use <a href=\"https://bugs.kde.org/enter_bug.cgi?product=KBibTeX\">https://bugs.kde.org/enter_bug.cgi?product=KBibTeX</a> to report bugs.\n"));
 
     KCmdLineArgs::init(argc, argv, &aboutData);
     KApplication programCore;

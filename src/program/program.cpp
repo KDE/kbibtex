@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,13 +25,13 @@
 #include "version.h"
 
 const char *description = I18N_NOOP("A BibTeX editor for KDE");
-const char *programHomepage = "http://home.gna.org/kbibtex/";
+const char *programHomepage = "https://userbase.kde.org/KBibTeX";
 
 int main(int argc, char *argv[])
 {
     KAboutData aboutData("kbibtex", 0, ki18n("KBibTeX"), versionNumber,
                          ki18n(description), KAboutData::License_GPL_V2,
-                         ki18n("Copyright 2004-2015 Thomas Fischer"), KLocalizedString(),
+                         ki18n("Copyright 2004-2017 Thomas Fischer"), KLocalizedString(),
                          programHomepage);
     aboutData.addAuthor(ki18n("Thomas Fischer"), ki18n("Maintainer"), "fischer@unix-ag.uni-kl.de", "http://www.t-fischer.net/");
 
