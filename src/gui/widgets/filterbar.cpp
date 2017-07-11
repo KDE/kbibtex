@@ -106,7 +106,7 @@ public:
         /// Sort locale-aware
         QList<QString> keys = fielddescs.keys();
         qSort(keys.begin(), keys.end(), sortStringsLocaleAware);
-        foreach(const QString &key, keys) {
+        foreach (const QString &key, keys) {
             const QString &value = fielddescs[key];
             comboBoxField->addItem(key, value);
         }

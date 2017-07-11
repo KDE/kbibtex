@@ -114,7 +114,7 @@ public:
         ItalicTextItemModel *itim = new ItalicTextItemModel();
         itim->addItem(i18n("No command"), QString());
         const QStringList citeCommands = QStringList() << QLatin1String("cite") << QLatin1String("citealt") << QLatin1String("citeauthor") << QLatin1String("citeauthor*") << QLatin1String("citeyear") << QLatin1String("citeyearpar") << QLatin1String("shortcite") << QLatin1String("citet") << QLatin1String("citet*") << QLatin1String("citep") << QLatin1String("citep*"); // TODO more
-        foreach(const QString &citeCommand, citeCommands) {
+        foreach (const QString &citeCommand, citeCommands) {
             itim->addItem(citeCmdToLabel.arg(citeCommand), citeCommand);
         }
         comboBoxCopyReferenceCmd->setModel(itim);

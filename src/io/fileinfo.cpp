@@ -327,8 +327,8 @@ void FileInfo::extractPDFTextToCache(const QString &pdfFilename, const QString &
         if (text.length() > maxCharacters)
             msgList << QString(QLatin1String("### Text too long, skipping %1 characters ###")).arg(text.length() - maxCharacters);
         /// Write all messages (warnings) to end of text file
-        foreach(const QString &msg, msgList)
-           ts << endl << msg;
+        foreach (const QString &msg, msgList)
+            ts << endl << msg;
 
         f.close();
     }

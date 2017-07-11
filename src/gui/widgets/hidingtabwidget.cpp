@@ -61,7 +61,7 @@ QWidget *HidingTabWidget::hideTab(int index)
 
 int HidingTabWidget::showTab(QWidget *page)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page)
             return showTab(hti);
     }
@@ -94,7 +94,7 @@ void HidingTabWidget::removeTab(int index)
 {
     if (index >= 0 && index < count()) {
         QWidget *page = widget(index);
-        foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+        foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
             if (hti.widget == page) {
                 m_hiddenTabInfo.remove(hti);
                 break;
@@ -106,7 +106,7 @@ void HidingTabWidget::removeTab(int index)
 
 int HidingTabWidget::addTab(QWidget *page, const QString &label)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page) {
             int pos = showTab(hti);
             setTabText(pos, label);
@@ -119,7 +119,7 @@ int HidingTabWidget::addTab(QWidget *page, const QString &label)
 
 int HidingTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page) {
             int pos = showTab(hti);
             setTabIcon(pos, icon);
@@ -133,7 +133,7 @@ int HidingTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &lab
 
 int HidingTabWidget::insertTab(int index, QWidget *page, const QString &label)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page) {
             int pos = showTab(hti, index);
             setTabText(pos, label);
@@ -146,7 +146,7 @@ int HidingTabWidget::insertTab(int index, QWidget *page, const QString &label)
 
 int HidingTabWidget::insertTab(int index, QWidget *page, const QIcon &icon, const QString &label)
 {
-    foreach(const HiddenTabInfo &hti, m_hiddenTabInfo) {
+    foreach (const HiddenTabInfo &hti, m_hiddenTabInfo) {
         if (hti.widget == page) {
             index = showTab(hti, index);
             setTabIcon(index, icon);

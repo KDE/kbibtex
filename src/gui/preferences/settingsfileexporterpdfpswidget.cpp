@@ -96,7 +96,7 @@ public:
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
         QStringList paperSizeLabelToNameKeys = paperSizeLabelToName.keys();
         paperSizeLabelToNameKeys.sort();
-        foreach(const QString &labelText, paperSizeLabelToNameKeys) {
+        foreach (const QString &labelText, paperSizeLabelToNameKeys) {
             comboBoxPaperSize->addItem(labelText, paperSizeLabelToName[labelText]);
         }
         connect(comboBoxPaperSize, SIGNAL(currentIndexChanged(int)), p, SIGNAL(changed()));
@@ -112,7 +112,7 @@ public:
         comboBoxBibliographyStyle = new KComboBox(true, p);
         comboBoxBibliographyStyle->setObjectName("comboBoxBibliographyStyle");
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
-        foreach(const QString &style, QStringList() << QLatin1String("abbrv") << QLatin1String("alpha") << QLatin1String("plain") << QLatin1String("agsm") << QLatin1String("dcu") << QLatin1String("jmr") << QLatin1String("jphysicsB") << QLatin1String("kluwer") << QLatin1String("nederlands")) {
+        foreach (const QString &style, QStringList() << QLatin1String("abbrv") << QLatin1String("alpha") << QLatin1String("plain") << QLatin1String("agsm") << QLatin1String("dcu") << QLatin1String("jmr") << QLatin1String("jphysicsB") << QLatin1String("kluwer") << QLatin1String("nederlands")) {
             comboBoxBibliographyStyle->addItem(style);
         }
         connect(comboBoxBibliographyStyle->lineEdit(), SIGNAL(textChanged(QString)), p, SIGNAL(changed()));

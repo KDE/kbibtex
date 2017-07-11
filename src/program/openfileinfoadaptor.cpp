@@ -27,7 +27,7 @@
 
 
 OpenFileInfoAdaptor::OpenFileInfoAdaptor(OpenFileInfo *p, OpenFileInfoManager *pm)
-    : QDBusAbstractAdaptor(p), ofi(p), mdi(qobject_cast<MDIWidget *>(pm->parent()))
+        : QDBusAbstractAdaptor(p), ofi(p), mdi(qobject_cast<MDIWidget *>(pm->parent()))
 {
     QString objectPath = QLatin1String("/FileManager/") + QString::number(OpenFileInfoManagerAdaptor::openFileInfoToFileId(ofi));
     bool registerObjectResult = QDBusConnection::sessionBus().registerObject(objectPath, ofi);
@@ -71,7 +71,7 @@ int OpenFileInfoAdaptor::documentId()
 
 
 OpenFileInfoManagerAdaptor::OpenFileInfoManagerAdaptor(OpenFileInfoManager *p)
-    : QDBusAbstractAdaptor(p), ofim(p)
+        : QDBusAbstractAdaptor(p), ofim(p)
 {
     QString objectPath = QLatin1String("/FileManager");
     bool registerObjectResult = QDBusConnection::sessionBus().registerObject(objectPath, ofim);

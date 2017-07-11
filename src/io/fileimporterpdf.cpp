@@ -57,23 +57,23 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     }
 
     if (doc->hasEmbeddedFiles()) {
-        foreach(Poppler::EmbeddedFile *file, doc->embeddedFiles())
-        if (file->name().endsWith(QLatin1String(".bib"))) {
-            kDebug() << "filename is " << file->name();
-            QByteArray data = file->data();
-            QBuffer buffer(&data);
-            FileImporterBibTeX bibTeXimporter;
-            connect(&bibTeXimporter, SIGNAL(progress(int,int)), this, SIGNAL(progress(int,int)));
-            buffer.open(QIODevice::ReadOnly);
-            result = bibTeXimporter.load(&buffer);
-            buffer.close();
+        foreach (Poppler::EmbeddedFile *file, doc->embeddedFiles())
+            if (file->name().endsWith(QLatin1String(".bib"))) {
+                kDebug() << "filename is " << file->name();
+                QByteArray data = file->data();
+                QBuffer buffer(&data);
+                FileImporterBibTeX bibTeXimporter;
+                connect(&bibTeXimporter, SIGNAL(progress(int,int)), this, SIGNAL(progress(int,int)));
+                buffer.open(QIODevice::ReadOnly);
+                result = bibTeXimporter.load(&buffer);
+                buffer.close();
 
-            if (result)
-                kDebug() << "result = " << result->count() << "  " << data.size() << "  " << buffer.size();
-            else
-                kDebug() << "result is empty";
-            break;
-        }
+                if (result)
+                    kDebug() << "result = " << result->count() << "  " << data.size() << "  " << buffer.size();
+                else
+                    kDebug() << "result is empty";
+                break;
+            }
     }
 
     delete doc;

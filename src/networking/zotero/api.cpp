@@ -39,9 +39,9 @@ public:
 
     Private(RequestScope requestScope, int prefix, const QString &_apiKey, Zotero::API */* UNUSED parent*/)
         : // UNUSED p(parent),
-        apiBaseUrl(KUrl(QString(QLatin1String("https://api.zotero.org/%1/%2%3")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix).arg(_apiKey.isEmpty() ? QString() : QString(QLatin1String("?key=%1")).arg(_apiKey)))),
-        userOrGroupPrefix(prefix),
-        apiKey(_apiKey), backoffElapseTime(QDateTime::currentDateTime().addSecs(-5)) {
+          apiBaseUrl(KUrl(QString(QLatin1String("https://api.zotero.org/%1/%2%3")).arg(requestScope == GroupRequest ? QLatin1String("groups") : QLatin1String("users")).arg(prefix).arg(_apiKey.isEmpty() ? QString() : QString(QLatin1String("?key=%1")).arg(_apiKey)))),
+          userOrGroupPrefix(prefix),
+          apiKey(_apiKey), backoffElapseTime(QDateTime::currentDateTime().addSecs(-5)) {
         /// nothing
     }
 };

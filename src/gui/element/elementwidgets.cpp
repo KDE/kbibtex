@@ -195,7 +195,7 @@ void EntryConfiguredWidget::createGUI()
     listOfLabeledFieldInput = new LabeledFieldInput*[fieldInputCount];
 
     int i = 0;
-    foreach(const SingleFieldLayout &sfl, etl->singleFieldLayouts) {
+    foreach (const SingleFieldLayout &sfl, etl->singleFieldLayouts) {
         LabeledFieldInput *labeledFieldInput = new LabeledFieldInput;
 
         /// create an editing widget for this field
@@ -381,8 +381,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
         }
         entryType->setCurrentIndex(index);
         if (index == -1) {
-             /// A customized value not known to KBibTeX
-             entryType->lineEdit()->setText(type);
+            /// A customized value not known to KBibTeX
+            entryType->lineEdit()->setText(type);
         }
 
         entryId->setText(entry->id());
@@ -507,7 +507,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
     QSet<QString> knownIdSuggestion;
     const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
-    foreach(const QString &suggestionBase, idSuggestions->formatIdList(*crossrefResolvedEntry.data())) {
+    foreach (const QString &suggestionBase, idSuggestions->formatIdList(*crossrefResolvedEntry.data())) {
         bool isDefault = suggestionBase == defaultSuggestion;
         QString suggestion = suggestionBase;
 

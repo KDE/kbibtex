@@ -363,7 +363,7 @@ void ValueListModel::updateValues()
 
 void ValueListModel::insertValue(const Value &value)
 {
-    foreach(const QSharedPointer<ValueItem> &item, value) {
+    foreach (const QSharedPointer<ValueItem> &item, value) {
         const QString text = PlainTextValue::text(*item);
         if (text.isEmpty()) continue; ///< skip empty values
 
@@ -400,7 +400,7 @@ int ValueListModel::indexOf(const QString &text)
     int i = 0;
     /// this is really slow for large data sets: O(n^2)
     /// maybe use a hash table instead?
-    foreach(const ValueLine &valueLine, values) {
+    foreach (const ValueLine &valueLine, values) {
         if (valueLine.text == cmpText)
             return i;
         ++i;

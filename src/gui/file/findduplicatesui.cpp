@@ -198,7 +198,7 @@ public:
 
                 QList<Value> chosenValues = currentClique->chosenValues(fieldName);
                 QString text = PlainTextValue::text(values.at(index.row()));
-                foreach(const Value &value, chosenValues) {
+                foreach (const Value &value, chosenValues) {
                     if (PlainTextValue::text(value) == text)
                         return Qt::Checked;
                 }
@@ -675,7 +675,7 @@ void FindDuplicatesUI::startDuplicatesSearch()
     }
 
     /// Actual duplicate finder, can be given a widget that will be the
-/// parent of a progress bar window and sensitivity value when to
+    /// parent of a progress bar window and sensitivity value when to
     /// recognize two entries as being duplicates of each other
     FindDuplicates fd(d->part->widget(), sensitivity);
     QList<EntryClique *> cliques;

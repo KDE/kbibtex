@@ -103,7 +103,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
         errorLog->append(i18n("Stopped process '%1' with exit code %2", (cmd + QLatin1Char(' ') + args.join(QLatin1String(" "))), m_process->exitCode()));
     }
 
-    delete(m_process);
+    delete m_process;
     m_process = NULL;
 
     return result;

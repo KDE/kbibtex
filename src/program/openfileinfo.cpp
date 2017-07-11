@@ -530,7 +530,7 @@ bool OpenFileInfoManager::close(OpenFileInfo *openFileInfo)
 
     /// remove flag "open" from file to be closed and determine which file to show instead
     OpenFileInfo *nextCurrent = (d->currentFileInfo == openFileInfo) ? NULL : d->currentFileInfo;
-    foreach(OpenFileInfo *ofi, d->openFileInfoList) {
+    foreach (OpenFileInfo *ofi, d->openFileInfoList) {
         if (!isClosing && ofi == openFileInfo && openFileInfo->close()) {
             isClosing = true;
             /// Mark file as closed (i.e. not open)
@@ -558,7 +558,7 @@ bool OpenFileInfoManager::queryCloseAll()
     OpenFileInfoList restoreLaterList;
 
     /// For each file known ...
-    foreach(OpenFileInfo *openFileInfo, d->openFileInfoList) {
+    foreach (OpenFileInfo *openFileInfo, d->openFileInfoList) {
         /// Check only open file (ignore recently used, favorites, ...)
         if (openFileInfo->flags().testFlag(OpenFileInfo::Open)) {
             if (openFileInfo->close()) {
@@ -585,7 +585,7 @@ bool OpenFileInfoManager::queryCloseAll()
         /// This makes the files to be reopened when KBibTeX is
         /// restarted again (assuming that this function was
         /// called when KBibTeX is exiting).
-        foreach(OpenFileInfo *openFileInfo, restoreLaterList) {
+        foreach (OpenFileInfo *openFileInfo, restoreLaterList) {
             openFileInfo->addFlags(OpenFileInfo::Open);
         }
 

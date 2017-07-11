@@ -128,7 +128,7 @@ public:
                     p->header()->moveSection(fromVI, toVI);
             }
 
-            foreach(QAction *action, p->header()->actions()) {
+            foreach (QAction *action, p->header()->actions()) {
                 bool ok = false;
                 int ac = (int)action->data().toInt(&ok);
                 if (ok && ac == col) {
@@ -186,7 +186,7 @@ public:
                 headerProperty->sumWidths += headerProperty->columns[col].width;
             ++col;
         }
-        if (headerProperty->sumWidths <= 0){
+        if (headerProperty->sumWidths <= 0) {
             kDebug() << "Sum of column widths over visible columns is zero, resetting configuration";
             resetHeaderProperties();
         }

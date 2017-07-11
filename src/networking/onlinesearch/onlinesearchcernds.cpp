@@ -72,7 +72,7 @@ KUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
 
     /// add words from "free text" field
     QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    foreach(const QString &word, freeTextWords) {
+    foreach (const QString &word, freeTextWords) {
         ++argumentCount;
         url.addQueryItem(QString(QLatin1String("p%1")).arg(argumentCount), word);
         url.addQueryItem(QString(QLatin1String("m%1")).arg(argumentCount), QLatin1String("a"));
@@ -82,7 +82,7 @@ KUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
 
     /// add words from "author" field
     QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
-    foreach(const QString &word, authorWords) {
+    foreach (const QString &word, authorWords) {
         ++argumentCount;
         url.addQueryItem(QString(QLatin1String("p%1")).arg(argumentCount), word);
         url.addQueryItem(QString(QLatin1String("m%1")).arg(argumentCount), QLatin1String("a"));
@@ -92,7 +92,7 @@ KUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
 
     /// add words from "title" field
     QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
-    foreach(const QString &word, titleWords) {
+    foreach (const QString &word, titleWords) {
         ++argumentCount;
         url.addQueryItem(QString(QLatin1String("p%1")).arg(argumentCount), word);
         url.addQueryItem(QString(QLatin1String("m%1")).arg(argumentCount), QLatin1String("a"));

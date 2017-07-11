@@ -201,7 +201,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             emit stoppedSearch(resultNoError);
             emit progress(d->numSteps, d->numSteps);
         }
-    }  else
+    } else
         kWarning() << "url was" << reply->url().toString();
 }
 
@@ -228,7 +228,7 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
             emit progress(d->numSteps, d->numSteps);
             return;
         }
-    }  else
+    } else
         kDebug() << "url was" << reply->url().toString();
 
     if (bibTeXUrl.isEmpty()) {

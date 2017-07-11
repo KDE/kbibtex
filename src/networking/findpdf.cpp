@@ -174,7 +174,7 @@ public:
 
         /// search for duplicate URLs
         bool containsUrl = false;
-        foreach(const ResultItem &ri, result) {
+        foreach (const ResultItem &ri, result) {
             containsUrl |= ri.url == url;
             if (containsUrl) break;
         }

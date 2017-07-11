@@ -57,9 +57,9 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 
     const Value v = entry[Entry::ftAuthor];
     QSharedPointer<Person> p;
-    foreach(const QSharedPointer<ValueItem> &vi, v)
-    if (!(p = vi.dynamicCast<Person>()).isNull())
-        result.append(encoder->convertToPlainAscii(p->lastName()));
+    foreach (const QSharedPointer<ValueItem> &vi, v)
+        if (!(p = vi.dynamicCast<Person>()).isNull())
+            result.append(encoder->convertToPlainAscii(p->lastName()));
 
     return result;
 }
@@ -76,7 +76,7 @@ KIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     const QString fileNameStem = KStandardDirs::locateLocal("cache", QLatin1String("favicons/")) + QString(favIconUrl()).remove(invalidChars);
     const QStringList fileNameExtensions = QStringList() << QLatin1String(".ico") << QLatin1String(".png") << QString();
 
-    foreach(const QString &extension, fileNameExtensions) {
+    foreach (const QString &extension, fileNameExtensions) {
         const QString fileName = fileNameStem + extension;
         if (QFileInfo(fileName).exists())
             return KIcon(fileName);

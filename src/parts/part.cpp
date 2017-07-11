@@ -866,7 +866,7 @@ void KBibTeXPart::elementFindPDF()
 void KBibTeXPart::applyDefaultFormatString()
 {
     QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
-    foreach(const QModelIndex &index, mil) {
+    foreach (const QModelIndex &index, mil) {
         QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull()) {
             static IdSuggestions idSuggestions;

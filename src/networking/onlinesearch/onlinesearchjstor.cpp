@@ -75,21 +75,21 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     d->queryUrl.addQueryItem("hp", QString::number(numResults)); /// hits per page
     int queryNumber = 0;
     QStringList elements = splitRespectingQuotationMarks(query[queryKeyTitle]);
-    foreach(const QString &element, elements) {
+    foreach (const QString &element, elements) {
         if (queryNumber > 0) d->queryUrl.addQueryItem(QString(QLatin1String("c%1")).arg(queryNumber), "AND"); ///< join search terms with an AND operation
         d->queryUrl.addQueryItem(QString(QLatin1String("f%1")).arg(queryNumber), "ti");
         d->queryUrl.addQueryItem(QString(QLatin1String("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyAuthor]);
-    foreach(const QString &element, elements) {
+    foreach (const QString &element, elements) {
         if (queryNumber > 0) d->queryUrl.addQueryItem(QString(QLatin1String("c%1")).arg(queryNumber), "AND"); ///< join search terms with an AND operation
         d->queryUrl.addQueryItem(QString(QLatin1String("f%1")).arg(queryNumber), "au");
         d->queryUrl.addQueryItem(QString(QLatin1String("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
     elements = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    foreach(const QString &element, elements) {
+    foreach (const QString &element, elements) {
         if (queryNumber > 0) d->queryUrl.addQueryItem(QString(QLatin1String("c%1")).arg(queryNumber), "AND"); ///< join search terms with an AND operation
         d->queryUrl.addQueryItem(QString(QLatin1String("f%1")).arg(queryNumber), "all");
         d->queryUrl.addQueryItem(QString(QLatin1String("q%1")).arg(queryNumber), element);

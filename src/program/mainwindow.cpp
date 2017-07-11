@@ -417,7 +417,7 @@ void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFla
     if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed)) {
         OpenFileInfoManager::OpenFileInfoList list = d->mdiWidget->getOpenFileInfoManager()->filteredItems(OpenFileInfo::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
-        foreach(OpenFileInfo *cur, list) {
+        foreach (OpenFileInfo *cur, list) {
             /// Fixing bug 19511: too long filenames make menu too large,
             /// therefore squeeze text if it is longer than squeezeLen.
             const int squeezeLen = 64;

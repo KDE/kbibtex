@@ -432,7 +432,7 @@ void SearchForm::stoppedSearch(int resultCode)
             QTimer::singleShot(1100, d->useEntryButton, SLOT(show()));
         } else {
             QStringList remainingEngines;
-            foreach(OnlineSearchAbstract *running, d->runningSearches) {
+            foreach (OnlineSearchAbstract *running, d->runningSearches) {
                 remainingEngines.append(running->label());
             }
             if (!remainingEngines.isEmpty())

@@ -218,7 +218,7 @@ void ColorLabelSettingsModel::loadState()
 void ColorLabelSettingsModel::saveState()
 {
     QStringList colorCodes, colorLabels;
-    foreach(const ColorLabelPair &clp, colorLabelPairs) {
+    foreach (const ColorLabelPair &clp, colorLabelPairs) {
         colorCodes << clp.color.name();
         colorLabels << clp.label;
     }
@@ -528,7 +528,7 @@ void ColorLabelContextMenu::colorActivated(const QString &colorString)
     bool modifying = false;
     /// Apply color change to all selected rows
     QModelIndexList list = d->fileView->selectionModel()->selectedIndexes();
-    foreach(const QModelIndex &index, list) {
+    foreach (const QModelIndex &index, list) {
         const QModelIndex mappedIndex = sfbfm->mapToSource(index);
         /// Selection may span over multiple columns;
         /// to avoid duplicate assignments, consider only column 1

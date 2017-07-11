@@ -71,7 +71,7 @@ public:
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
         const QStringList formattingOptions = QStringList() << Preferences::personNameFormatFirstLast << Preferences::personNameFormatLastFirst;
-        foreach(const QString &formattingOption, formattingOptions) {
+        foreach (const QString &formattingOption, formattingOptions) {
             comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(&dummyPerson, formattingOption), formattingOption);
         }
         comboBoxPersonNameFormatting->setToolTip(restartRequiredMsg);
