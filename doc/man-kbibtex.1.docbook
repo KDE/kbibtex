@@ -10,7 +10,7 @@
 <contrib>KBibTeX man page.</contrib>
 <email>fischer@unix-ag.uni-kl.de</email></author>
 <date>2016-06-29</date>
-<!--FIXME <releaseinfo>KBibTeX </releaseinfo>-->
+<productname>KBibTeX</productname>
 </refentryinfo>
 
 <refmeta>
