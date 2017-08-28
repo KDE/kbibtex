@@ -157,7 +157,7 @@ void OnlineSearchPubMed::eSearchDone()
         if (!result.contains(QStringLiteral("<Count>0</Count>"))) {
             /// without parsing XML text correctly, just extract all PubMed ids
             QStringList idList;
-            int p1, p2;
+            int p1, p2 = 0;
             /// All IDs are within <IdList>...</IdList>
             if ((p1 = result.indexOf(QStringLiteral("<IdList>"))) > 0 && (p2 = result.indexOf(QStringLiteral("</IdList>"), p1)) > 0) {
                 int p3, p4 = p1;
