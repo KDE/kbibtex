@@ -51,7 +51,7 @@ void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int n
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = numResults * 2 + 1);
 
-    QString urlText(QString(QStringLiteral("http://biorxiv.org/search/numresults:%1 sort:relevance-rank title_flags:match-phrase format_result:standard ")).arg(numResults));
+    QString urlText(QString(QStringLiteral("http://www.biorxiv.org/search/numresults:%1 sort:relevance-rank title_flags:match-phrase format_result:standard ")).arg(numResults));
     urlText.append(query[queryKeyFreeText]);
 
     bool ok = false;
@@ -79,11 +79,11 @@ QString OnlineSearchBioRxiv::label() const {
 }
 
 QUrl OnlineSearchBioRxiv::homepage() const {
-    return QUrl(QStringLiteral("http://biorxiv.org/"));
+    return QUrl(QStringLiteral("http://www.biorxiv.org/"));
 }
 
 QString OnlineSearchBioRxiv::favIconUrl() const {
-    return QStringLiteral("http://d2538ggaoe6cji.cloudfront.net/sites/default/files/images/favicon.ico");
+    return QStringLiteral("http://www.biorxiv.org/sites/default/files/images/favicon.ico");
 }
 
 void OnlineSearchBioRxiv::resultsPageDone() {
@@ -97,7 +97,7 @@ void OnlineSearchBioRxiv::resultsPageDone() {
         static const QRegExp contentRegExp(QStringLiteral("/content/early/[12]\\d{3}/[01]\\d/\\d{2}/\\d+"));
         int p = -1;
         while ((p = contentRegExp.indexIn(htmlCode, p + 1)) > 0) {
-            const QUrl url = QUrl(QStringLiteral("http://biorxiv.org") + contentRegExp.cap(0));
+            const QUrl url = QUrl(QStringLiteral("http://www.biorxiv.org") + contentRegExp.cap(0));
             d->resultPageUrls.insert(url);
         }
 
@@ -124,7 +124,7 @@ void OnlineSearchBioRxiv::resultPageDone() {
 
         static const QRegExp highwireRegExp(QStringLiteral("/highwire/citation/\\d+/bibtext"));
         if (highwireRegExp.indexIn(htmlCode) > 0) {
-            const QUrl url = QUrl(QStringLiteral("http://biorxiv.org") + highwireRegExp.cap(0));
+            const QUrl url = QUrl(QStringLiteral("http://www.biorxiv.org") + highwireRegExp.cap(0));
             QNetworkRequest request(url);
             QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,34 +20,64 @@
 #include <QFileInfo>
 #include <QXmlQuery>
 #include <QBuffer>
+#include <QDebug>
 
 #include "logging_io.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-XSLTransform::XSLTransform(const QString &_xsltFilename)
-        : xsltFilename(_xsltFilename), query(new QXmlQuery(QXmlQuery::XSLT20))
+XSLTransform::XSLTransform(const QString &xsltFilename)
+        : xsltData(nullptr)
 {
-    /// nothing
+    if (!xsltFilename.isEmpty()) {
+        QFile xsltFile(xsltFilename);
+        if (xsltFile.open(QFile::ReadOnly)) {
+            xsltData = new QByteArray(xsltFile.readAll());
+            xsltFile.close();
+            if (xsltData->size() == 0) {
+                qWarning() << "Read only 0 Bytes from file" << xsltFilename;
+                delete xsltData;
+                xsltData = nullptr;
+            }
+        } else
+            qWarning() << "Opening XSLT file" << xsltFilename << "failed";
+    } else
+        qWarning() << "Empty filename for XSLT";
 }
 
 XSLTransform::~XSLTransform() {
-    delete query;
+    if (xsltData != nullptr) delete xsltData;
 }
 
 QString XSLTransform::transform(const QString &xmlText) const
 {
-    /// Create QBuffer from QString, set as XML data via setFocus(..)
-    QByteArray xmlData(xmlText.toUtf8());
-    QBuffer xmlBuffer(&xmlData);
-    xmlBuffer.open(QIODevice::ReadOnly);
-    query->setFocus(&xmlBuffer);
-    query->setQuery(QUrl::fromLocalFile(xsltFilename));
+    if (xsltData == nullptr) {
+        qWarning() << "Empty XSL transformation cannot transform";
+        return QString();
+    }
+
+    QXmlQuery query(QXmlQuery::XSLT20);
+
+    if (!query.setFocus(xmlText)) {
+        qWarning() << "Invoking QXmlQuery::setFocus(" << xmlText.left(32) << "...) failed";
+        return QString();
+    }
+
+    QBuffer xsltBuffer(xsltData);
+    xsltBuffer.open(QBuffer::ReadOnly);
+    query.setQuery(&xsltBuffer);
+
+    if (!query.isValid()) {
+        qWarning() << "QXmlQuery::isValid got negative result";
+        return QString();
+    }
 
     QString result;
-    if (query->evaluateTo(&result))
+    if (query.evaluateTo(&result)) {
         return result;
-    else
+    } else {
+        qWarning() << "Invoking QXmlQuery::evaluateTo(...) failed";
         return QString();
+    }
 }

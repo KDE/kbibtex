@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,6 +23,7 @@
 #include <QString>
 
 class QXmlQuery;
+class QByteArray;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -49,8 +50,7 @@ public:
     QString transform(const QString &xmlText) const;
 
 private:
-    const QString xsltFilename;
-    QXmlQuery *query;
+    QByteArray *xsltData;
 };
 
 #endif // KBIBTEX_XSLTRANSFORM_H
