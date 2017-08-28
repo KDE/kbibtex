@@ -17,22 +17,29 @@
 
 #include "onlinesearcharxiv.h"
 
+#include <QNetworkReply>
+#ifdef HAVE_QTWIDGETS
 #include <QGridLayout>
 #include <QLabel>
 #include <QSpinBox>
-#include <QNetworkReply>
+#include <QTextStream>
+#endif // HAVE_QTWIDGETS
+#include <QFile>
 #include <QStandardPaths>
 
+#ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
-#include <KLocalizedString>
 #include <KMessageBox>
 #include <KConfigGroup>
+#endif // HAVE_QTWIDGETS
+#include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 
+#ifdef HAVE_QTWIDGETS
 class OnlineSearchArXiv::OnlineSearchQueryFormArXiv : public OnlineSearchQueryFormAbstract
 {
     Q_OBJECT
@@ -93,6 +100,7 @@ public:
         config->sync();
     }
 };
+#endif // HAVE_QTWIDGETS
 
 class OnlineSearchArXiv::OnlineSearchArXivPrivate
 {
@@ -101,17 +109,23 @@ private:
 
 public:
     XSLTransform xslt;
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormArXiv *form;
+#endif // HAVE_QTWIDGETS
     const QString arXivQueryBaseUrl;
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
             : p(parent),
           xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/arxiv2bibtex.xsl"))),
-          form(nullptr), arXivQueryBaseUrl(QStringLiteral("http://export.arxiv.org/api/query?"))
+#ifdef HAVE_QTWIDGETS
+          form(nullptr),
+#endif // HAVE_QTWIDGETS
+          arXivQueryBaseUrl(QStringLiteral("http://export.arxiv.org/api/query?"))
     {
         /// nothing
     }
 
+#ifdef HAVE_QTWIDGETS
     QUrl buildQueryUrl() {
         /// format search terms
         QStringList queryFragments;
@@ -121,6 +135,7 @@ public:
             queryFragments.append(p->encodeURL(queryFragment));
         return QUrl(QString(QStringLiteral("%1search_query=all:\"%3\"&start=0&max_results=%2")).arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join(QStringLiteral("\"+AND+all:\"")))); ///< join search terms with an AND operation
     }
+#endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         /// format search terms
@@ -602,7 +617,7 @@ public:
     }
 };
 
-OnlineSearchArXiv::OnlineSearchArXiv(QWidget *parent)
+OnlineSearchArXiv::OnlineSearchArXiv(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchArXiv::OnlineSearchArXivPrivate(this))
 {
     // nothing
@@ -613,6 +628,7 @@ OnlineSearchArXiv::~OnlineSearchArXiv()
     delete d;
 }
 
+#ifdef HAVE_QTWIDGETS
 void OnlineSearchArXiv::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
@@ -625,6 +641,7 @@ void OnlineSearchArXiv::startSearchFromForm()
 
     d->form->saveState();
 }
+#endif // HAVE_QTWIDGETS
 
 void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
 {
@@ -647,12 +664,14 @@ QString OnlineSearchArXiv::favIconUrl() const
     return QStringLiteral("https://arxiv.org/favicon.ico");
 }
 
+#ifdef HAVE_QTWIDGETS
 OnlineSearchQueryFormAbstract *OnlineSearchArXiv::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
         d->form = new OnlineSearchArXiv::OnlineSearchQueryFormArXiv(parent);
     return d->form;
 }
+#endif // HAVE_QTWIDGETS
 
 QUrl OnlineSearchArXiv::homepage() const
 {

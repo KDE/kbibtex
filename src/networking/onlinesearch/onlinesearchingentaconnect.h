@@ -22,10 +22,11 @@
 
 #include "onlinesearchabstract.h"
 
+#ifdef HAVE_QTWIDGETS
 class QSpinBox;
 class KComboBox;
 class KLineEdit;
-
+#endif // HAVE_QTWIDGETS
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -35,20 +36,26 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchIngentaConnect : public OnlineSearchA
     Q_OBJECT
 
 public:
-    explicit OnlineSearchIngentaConnect(QWidget *parent);
+    explicit OnlineSearchIngentaConnect(QObject *parent);
     ~OnlineSearchIngentaConnect() override;
 
+#ifdef HAVE_QTWIDGETS
     void startSearchFromForm() override;
+#endif // HAVE_QTWIDGETS
     void startSearch(const QMap<QString, QString> &query, int numResults) override;
     QString label() const override;
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) override;
+#endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
 
 protected:
     QString favIconUrl() const override;
 
 private:
+#ifdef HAVE_QTWIDGETS
     class OnlineSearchQueryFormIngentaConnect;
+#endif // HAVE_QTWIDGETS
     class OnlineSearchIngentaConnectPrivate;
     OnlineSearchIngentaConnectPrivate *d;
 

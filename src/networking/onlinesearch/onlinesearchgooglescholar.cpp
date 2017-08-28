@@ -115,7 +115,7 @@ public:
     }
 };
 
-OnlineSearchGoogleScholar::OnlineSearchGoogleScholar(QWidget *parent)
+OnlineSearchGoogleScholar::OnlineSearchGoogleScholar(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchGoogleScholar::OnlineSearchGoogleScholarPrivate(this))
 {
     // nothing

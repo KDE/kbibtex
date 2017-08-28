@@ -70,7 +70,7 @@ public:
     }
 };
 
-OnlineSearchScienceDirect::OnlineSearchScienceDirect(QWidget *parent)
+OnlineSearchScienceDirect::OnlineSearchScienceDirect(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchScienceDirectPrivate(this))
 {
     // nothing

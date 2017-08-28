@@ -27,13 +27,17 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchArXiv : public OnlineSearchAbstract
     Q_OBJECT
 
 public:
-    explicit OnlineSearchArXiv(QWidget *parent);
+    explicit OnlineSearchArXiv(QObject *parent);
     ~OnlineSearchArXiv() override;
 
+#ifdef HAVE_QTWIDGETS
     void startSearchFromForm() override;
+#endif // HAVE_QTWIDGETS
     void startSearch(const QMap<QString, QString> &query, int numResults) override;
     QString label() const override;
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) override;
+#endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
 
 protected:
@@ -41,7 +45,9 @@ protected:
     void sanitizeEntry(QSharedPointer<Entry> entry) override;
 
 private:
+#ifdef HAVE_QTWIDGETS
     class OnlineSearchQueryFormArXiv;
+#endif // HAVE_QTWIDGETS
     class OnlineSearchArXivPrivate;
     OnlineSearchArXivPrivate *d;
 

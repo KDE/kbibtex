@@ -32,20 +32,26 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchBibsonomy : public OnlineSearchAbstra
     Q_OBJECT
 
 public:
-    explicit OnlineSearchBibsonomy(QWidget *parent);
+    explicit OnlineSearchBibsonomy(QObject *parent);
     ~OnlineSearchBibsonomy() override;
 
+#ifdef HAVE_QTWIDGETS
     void startSearchFromForm() override;
+#endif // HAVE_QTWIDGETS
     void startSearch(const QMap<QString, QString> &query, int numResults) override;
     QString label() const override;
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) override;
+#endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
 
 protected:
     QString favIconUrl() const override;
 
 private:
+#ifdef HAVE_QTWIDGETS
     class OnlineSearchQueryFormBibsonomy;
+#endif // HAVE_QTWIDGETS
     class OnlineSearchBibsonomyPrivate;
     OnlineSearchBibsonomyPrivate *d;
 

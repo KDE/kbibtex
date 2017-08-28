@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,6 +17,7 @@
 
 #include "onlinesearchgeneral.h"
 
+#ifdef HAVE_QTWIDGETS
 #include <QFormLayout>
 #include <QLabel>
 #include <QSpinBox>
@@ -131,3 +132,4 @@ void OnlineSearchQueryFormGeneral::saveState()
     configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
     config->sync();
 }
+#endif // HAVE_QTWIDGETS

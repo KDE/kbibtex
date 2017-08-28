@@ -32,10 +32,14 @@ public:
     explicit OnlineSearchDOI(QWidget *parent);
     ~OnlineSearchDOI() override;
 
+#ifdef HAVE_QTWIDGETS
     void startSearchFromForm() override;
+#endif // HAVE_QTWIDGETS
     void startSearch(const QMap<QString, QString> &query, int numResults) override;
     QString label() const override;
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) override;
+#endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
 
 protected:

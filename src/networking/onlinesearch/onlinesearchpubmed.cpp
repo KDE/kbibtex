@@ -96,7 +96,7 @@ public:
     }
 };
 
-OnlineSearchPubMed::OnlineSearchPubMed(QWidget *parent)
+OnlineSearchPubMed::OnlineSearchPubMed(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchPubMed::OnlineSearchPubMedPrivate(this))
 {
     // nothing

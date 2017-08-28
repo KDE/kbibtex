@@ -18,17 +18,21 @@
 #include "onlinesearchbibsonomy.h"
 
 #include <QBuffer>
+#ifdef HAVE_QTWIDGETS
 #include <QLayout>
 #include <QSpinBox>
 #include <QLabel>
-#include <QNetworkReply>
 #include <QIcon>
+#endif // HAVE_QTWIDGETS
+#include <QNetworkReply>
 
 #include <KLocalizedString>
+#ifdef HAVE_QTWIDGETS
 #include <KComboBox>
 #include <KMessageBox>
-#include <KConfigGroup>
 #include <KLineEdit>
+#include <KConfigGroup>
+#endif // HAVE_QTWIDGETS
 
 #include "fileimporterbibtex.h"
 #include "file.h"
@@ -36,6 +40,7 @@
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 
+#ifdef HAVE_QTWIDGETS
 class OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy : public OnlineSearchQueryFormAbstract
 {
     Q_OBJECT
@@ -108,6 +113,7 @@ public:
         config->sync();
     }
 };
+#endif // HAVE_QTWIDGETS
 
 class OnlineSearchBibsonomy::OnlineSearchBibsonomyPrivate
 {
@@ -115,13 +121,20 @@ private:
     OnlineSearchBibsonomy *p;
 
 public:
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormBibsonomy *form;
+#endif // HAVE_QTWIDGETS
 
     OnlineSearchBibsonomyPrivate(OnlineSearchBibsonomy *parent)
-            : p(parent), form(nullptr) {
+            : p(parent)
+#ifdef HAVE_QTWIDGETS
+        , form(nullptr)
+#endif // HAVE_QTWIDGETS
+    {
         // nothing
     }
 
+#ifdef HAVE_QTWIDGETS
     QUrl buildQueryUrl() {
         if (form == nullptr) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot build query url if no form is specified";
@@ -131,6 +144,7 @@ public:
         QString queryString = p->encodeURL(form->lineEditSearchTerm->text());
         return QUrl(QStringLiteral("http://www.bibsonomy.org/bib/") + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString(QStringLiteral("?items=%1")).arg(form->numResultsField->value()));
     }
+#endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QString url = QStringLiteral("http://www.bibsonomy.org/bib/");
@@ -170,7 +184,7 @@ public:
     }
 };
 
-OnlineSearchBibsonomy::OnlineSearchBibsonomy(QWidget *parent)
+OnlineSearchBibsonomy::OnlineSearchBibsonomy(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchBibsonomyPrivate(this))
 {
     // nothing
@@ -192,6 +206,7 @@ void OnlineSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
 }
 
+#ifdef HAVE_QTWIDGETS
 void OnlineSearchBibsonomy::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
@@ -204,6 +219,7 @@ void OnlineSearchBibsonomy::startSearchFromForm()
 
     emit progress(0, numSteps);
 }
+#endif // HAVE_QTWIDGETS
 
 QString OnlineSearchBibsonomy::label() const
 {
@@ -215,12 +231,14 @@ QString OnlineSearchBibsonomy::favIconUrl() const
     return QStringLiteral("http://www.bibsonomy.org/resources/image/favicon.png");
 }
 
+#ifdef HAVE_QTWIDGETS
 OnlineSearchQueryFormAbstract *OnlineSearchBibsonomy::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
         d->form = new OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy(parent);
     return d->form;
 }
+#endif // HAVE_QTWIDGETS
 
 QUrl OnlineSearchBibsonomy::homepage() const
 {

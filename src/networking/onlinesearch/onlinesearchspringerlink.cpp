@@ -17,9 +17,11 @@
 
 #include "onlinesearchspringerlink.h"
 
+#ifdef HAVE_QTWIDGETS
 #include <QFormLayout>
 #include <QSpinBox>
 #include <QLabel>
+#endif // HAVE_QTWIDGETS
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -27,8 +29,10 @@
 #include <QUrlQuery>
 
 #include <KLocalizedString>
+#ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
 #include <KConfigGroup>
+#endif // HAVE_QTWIDGETS
 
 #include "internalnetworkaccessmanager.h"
 #include "encoderlatex.h"
@@ -36,6 +40,7 @@
 #include "xsltransform.h"
 #include "logging_networking.h"
 
+#ifdef HAVE_QTWIDGETS
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -136,6 +141,7 @@ public:
         config->sync();
     }
 };
+#endif // HAVE_QTWIDGETS
 
 class OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate
 {
@@ -144,17 +150,22 @@ private:
 
 public:
     const QString springerMetadataKey;
-    XSLTransform xslt;
+    const XSLTransform xslt;
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormSpringerLink *form;
+#endif // HAVE_QTWIDGETS
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
             : p(parent), springerMetadataKey(QStringLiteral("7pphfmtb9rtwt3dw3e4hm7av")),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pam2bibtex.xsl"))),
-          form(nullptr)
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pam2bibtex.xsl")))
+#ifdef HAVE_QTWIDGETS
+        , form(nullptr)
+#endif // HAVE_QTWIDGETS
     {
         /// nothing
     }
 
+#ifdef HAVE_QTWIDGETS
     QUrl buildQueryUrl() {
         if (form == nullptr) return QUrl();
 
@@ -188,6 +199,7 @@ public:
 
         return queryUrl;
     }
+#endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query) {
         QUrl queryUrl = QUrl(QString(QStringLiteral("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
@@ -223,7 +235,7 @@ public:
 };
 
 
-OnlineSearchSpringerLink::OnlineSearchSpringerLink(QWidget *parent)
+OnlineSearchSpringerLink::OnlineSearchSpringerLink(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate(this))
 {
     // nothing
@@ -234,6 +246,7 @@ OnlineSearchSpringerLink::~OnlineSearchSpringerLink()
     delete d;
 }
 
+#ifdef HAVE_QTWIDGETS
 void OnlineSearchSpringerLink::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
@@ -248,6 +261,7 @@ void OnlineSearchSpringerLink::startSearchFromForm()
 
     if (d->form != nullptr) d->form->saveState();
 }
+#endif // HAVE_QTWIDGETS
 
 void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
 {
@@ -275,12 +289,14 @@ QString OnlineSearchSpringerLink::favIconUrl() const
     return QStringLiteral("http://link.springer.com/static/0.6623/sites/link/images/favicon.ico");
 }
 
+#ifdef HAVE_QTWIDGETS
 OnlineSearchQueryFormAbstract *OnlineSearchSpringerLink::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
         d->form = new OnlineSearchQueryFormSpringerLink(parent);
     return d->form;
 }
+#endif // HAVE_QTWIDGETS
 
 QUrl OnlineSearchSpringerLink::homepage() const
 {

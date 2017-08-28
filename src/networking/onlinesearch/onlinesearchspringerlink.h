@@ -39,13 +39,17 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchSpringerLink : public OnlineSearchAbs
     Q_OBJECT
 
 public:
-    explicit OnlineSearchSpringerLink(QWidget *parent);
+    explicit OnlineSearchSpringerLink(QObject *parent);
     ~OnlineSearchSpringerLink() override;
 
+#ifdef HAVE_QTWIDGETS
     void startSearchFromForm() override;
+#endif // HAVE_QTWIDGETS
     void startSearch(const QMap<QString, QString> &query, int numResults) override;
     QString label() const override;
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) override;
+#endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
 
 protected:
@@ -55,7 +59,9 @@ private slots:
     void doneFetchingPAM();
 
 private:
+#ifdef HAVE_QTWIDGETS
     class OnlineSearchQueryFormSpringerLink;
+#endif // HAVE_QTWIDGETS
 
     class OnlineSearchSpringerLinkPrivate;
     OnlineSearchSpringerLinkPrivate *d;

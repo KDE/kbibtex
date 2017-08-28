@@ -34,7 +34,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchScienceDirect : public OnlineSearchAb
     Q_OBJECT
 
 public:
-    explicit OnlineSearchScienceDirect(QWidget *parent);
+    explicit OnlineSearchScienceDirect(QObject *parent);
     ~OnlineSearchScienceDirect() override;
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;

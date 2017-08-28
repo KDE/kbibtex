@@ -28,7 +28,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchPubMed : public OnlineSearchAbstract
     Q_OBJECT
 
 public:
-    explicit OnlineSearchPubMed(QWidget *parent);
+    explicit OnlineSearchPubMed(QObject *parent);
     ~OnlineSearchPubMed() override;
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;

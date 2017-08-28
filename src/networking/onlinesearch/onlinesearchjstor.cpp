@@ -46,7 +46,7 @@ public:
 
 const QString OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl = QStringLiteral("http://www.jstor.org/");
 
-OnlineSearchJStor::OnlineSearchJStor(QWidget *parent)
+OnlineSearchJStor::OnlineSearchJStor(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchJStorPrivate(this))
 {
     /// nothing

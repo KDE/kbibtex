@@ -49,6 +49,7 @@ const int OnlineSearchAbstract::resultInvalidArguments = 4;
 const char *OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 
 
+#ifdef HAVE_QTWIDGETS
 QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 {
     QStringList result;
@@ -63,8 +64,9 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 
     return result;
 }
+#endif // HAVE_QTWIDGETS
 
-OnlineSearchAbstract::OnlineSearchAbstract(QWidget *parent)
+OnlineSearchAbstract::OnlineSearchAbstract(QObject *parent)
         : QObject(parent), m_hasBeenCanceled(false), numSteps(0), curStep(0), m_delayedStoppedSearchReturnCode(0)
 {
     m_parent = parent;
@@ -93,6 +95,7 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     return QIcon::fromTheme(QStringLiteral("applications-internet"));
 }
 
+#ifdef HAVE_QTWIDGETS
 OnlineSearchQueryFormAbstract *OnlineSearchAbstract::customWidget(QWidget *) {
     return nullptr;
 }
@@ -103,6 +106,7 @@ void OnlineSearchAbstract::startSearchFromForm()
     curStep = numSteps = 0;
     delayedStoppedSearch(resultNoError);
 }
+#endif // HAVE_QTWIDGETS
 
 QString OnlineSearchAbstract::name()
 {

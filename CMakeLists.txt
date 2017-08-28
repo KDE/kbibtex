@@ -17,7 +17,7 @@ set(
 
 find_package(ECM 5.19 REQUIRED NO_MODULE)
 
-add_definitions(-DTRANSLATION_DOMAIN="kbibtex")
+add_definitions(-DTRANSLATION_DOMAIN="kbibtex" -DHAVE_QTWIDGETS)
 
 set(
     CMAKE_MODULE_PATH

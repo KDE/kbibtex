@@ -28,7 +28,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchGoogleScholar : public OnlineSearchAb
     Q_OBJECT
 
 public:
-    explicit OnlineSearchGoogleScholar(QWidget *parent);
+    explicit OnlineSearchGoogleScholar(QObject *parent);
     ~OnlineSearchGoogleScholar() override;
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;

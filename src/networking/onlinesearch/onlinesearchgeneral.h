@@ -21,6 +21,7 @@
 
 #include "onlinesearchabstract.h"
 
+#ifdef HAVE_QTWIDGETS
 class QSpinBox;
 
 class KLineEdit;
@@ -46,5 +47,6 @@ private:
     void loadState();
     void saveState();
 };
+#endif // HAVE_QTWIDGETS
 
 #endif // KBIBTEX_ONLINESEARCH_GENERAL_H

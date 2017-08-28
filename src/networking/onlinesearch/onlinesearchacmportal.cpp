@@ -70,7 +70,7 @@ public:
     }
 };
 
-OnlineSearchAcmPortal::OnlineSearchAcmPortal(QWidget *parent)
+OnlineSearchAcmPortal::OnlineSearchAcmPortal(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchAcmPortalPrivate(this))
 {
     // nothing

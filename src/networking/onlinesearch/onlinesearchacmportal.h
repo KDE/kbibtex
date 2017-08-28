@@ -33,7 +33,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchAcmPortal : public OnlineSearchAbstra
     Q_OBJECT
 
 public:
-    explicit OnlineSearchAcmPortal(QWidget *parent);
+    explicit OnlineSearchAcmPortal(QObject *parent);
     ~OnlineSearchAcmPortal() override;
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;

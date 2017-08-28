@@ -84,7 +84,7 @@ public:
     }
 };
 
-OnlineSearchIEEEXplore::OnlineSearchIEEEXplore(QWidget *parent)
+OnlineSearchIEEEXplore::OnlineSearchIEEEXplore(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate(this))
 {
     // nothing

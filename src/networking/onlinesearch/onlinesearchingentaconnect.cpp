@@ -18,16 +18,20 @@
 #include "onlinesearchingentaconnect.h"
 
 #include <QBuffer>
+#ifdef HAVE_QTWIDGETS
 #include <QLabel>
-#include <QNetworkReply>
 #include <QFormLayout>
 #include <QSpinBox>
 #include <QIcon>
+#endif // HAVE_QTWIDGETS
+#include <QNetworkReply>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
+#ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
 #include <KConfigGroup>
+#endif // HAVE_QTWIDGETS
 
 #include "file.h"
 #include "entry.h"
@@ -35,6 +39,7 @@
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 
+#ifdef HAVE_QTWIDGETS
 class OnlineSearchIngentaConnect::OnlineSearchQueryFormIngentaConnect : public OnlineSearchQueryFormAbstract
 {
     Q_OBJECT
@@ -156,6 +161,7 @@ public:
         config->sync();
     }
 };
+#endif // HAVE_QTWIDGETS
 
 class OnlineSearchIngentaConnect::OnlineSearchIngentaConnectPrivate
 {
@@ -164,13 +170,20 @@ private:
     const QString ingentaConnectBaseUrl;
 
 public:
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormIngentaConnect *form;
+#endif // HAVE_QTWIDGETS
 
     OnlineSearchIngentaConnectPrivate(OnlineSearchIngentaConnect *parent)
-            : p(parent), ingentaConnectBaseUrl(QStringLiteral("http://www.ingentaconnect.com/search?format=bib")), form(nullptr) {
+            : p(parent), ingentaConnectBaseUrl(QStringLiteral("http://www.ingentaconnect.com/search?format=bib"))
+#ifdef HAVE_QTWIDGETS
+        , form(nullptr)
+#endif // HAVE_QTWIDGETS
+    {
         // nothing
     }
 
+#ifdef HAVE_QTWIDGETS
     QUrl buildQueryUrl() {
         if (form == nullptr) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot build query url if no form is specified";
@@ -253,6 +266,7 @@ public:
         queryUrl.setQuery(query);
         return queryUrl;
     }
+#endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QUrl queryUrl(ingentaConnectBaseUrl);
@@ -299,7 +313,7 @@ public:
     }
 };
 
-OnlineSearchIngentaConnect::OnlineSearchIngentaConnect(QWidget *parent)
+OnlineSearchIngentaConnect::OnlineSearchIngentaConnect(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIngentaConnectPrivate(this))
 {
     // nothing
@@ -321,6 +335,7 @@ void OnlineSearchIngentaConnect::startSearch(const QMap<QString, QString> &query
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIngentaConnect::downloadDone);
 }
 
+#ifdef HAVE_QTWIDGETS
 void OnlineSearchIngentaConnect::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
@@ -333,6 +348,7 @@ void OnlineSearchIngentaConnect::startSearchFromForm()
 
     d->form->saveState();
 }
+#endif // HAVE_QTWIDGETS
 
 QString OnlineSearchIngentaConnect::label() const
 {
@@ -344,12 +360,14 @@ QString OnlineSearchIngentaConnect::favIconUrl() const
     return QStringLiteral("http://www.ingentaconnect.com/favicon.ico");
 }
 
+#ifdef HAVE_QTWIDGETS
 OnlineSearchQueryFormAbstract *OnlineSearchIngentaConnect::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
         d->form = new OnlineSearchIngentaConnect::OnlineSearchQueryFormIngentaConnect(parent);
     return d->form;
 }
+#endif // HAVE_QTWIDGETS
 
 QUrl OnlineSearchIngentaConnect::homepage() const
 {

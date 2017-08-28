@@ -27,7 +27,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchJStor : public OnlineSearchAbstract
     Q_OBJECT
 
 public:
-    explicit OnlineSearchJStor(QWidget *parent);
+    explicit OnlineSearchJStor(QObject *parent);
     ~OnlineSearchJStor() override;
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;

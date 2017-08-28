@@ -22,7 +22,9 @@
 #include <QObject>
 #include <QMap>
 #include <QString>
+#ifdef HAVE_QTWIDGETS
 #include <QWidget>
+#endif // HAVE_QTWIDGETS
 #include <QMetaType>
 
 #include <QIcon>
@@ -35,6 +37,7 @@ class QNetworkReply;
 class QNetworkRequest;
 class QListWidgetItem;
 
+#ifdef HAVE_QTWIDGETS
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -66,6 +69,7 @@ signals:
 };
 
 Q_DECLARE_METATYPE(OnlineSearchQueryFormAbstract *)
+#endif // HAVE_QTWIDGETS
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -75,7 +79,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchAbstract : public QObject
     Q_OBJECT
 
 public:
-    explicit OnlineSearchAbstract(QWidget *parent);
+    explicit OnlineSearchAbstract(QObject *parent);
 
     static const QString queryKeyFreeText;
     static const QString queryKeyTitle;
@@ -89,12 +93,16 @@ public:
     static const int resultNetworkError;
     static const int resultInvalidArguments;
 
+#ifdef HAVE_QTWIDGETS
     virtual void startSearchFromForm();
+#endif // HAVE_QTWIDGETS
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
     QString name();
     virtual QIcon icon(QListWidgetItem *listWidgetItem = nullptr);
+#ifdef HAVE_QTWIDGETS
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
+#endif // HAVE_QTWIDGETS
     virtual QUrl homepage() const = 0;
     virtual bool busy() const;
 
@@ -102,7 +110,7 @@ public slots:
     void cancel();
 
 protected:
-    QWidget *m_parent;
+    QObject *m_parent;
     bool m_hasBeenCanceled;
 
     int numSteps, curStep;

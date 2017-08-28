@@ -28,7 +28,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchIEEEXplore : public OnlineSearchAbstr
     Q_OBJECT
 
 public:
-    explicit OnlineSearchIEEEXplore(QWidget *parent);
+    explicit OnlineSearchIEEEXplore(QObject *parent);
     ~OnlineSearchIEEEXplore() override;
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;

@@ -17,13 +17,17 @@
 
 #include "onlinesearchdoi.h"
 
+#ifdef HAVE_QTWIDGETS
 #include <QLabel>
 #include <QGridLayout>
+#endif // HAVE_QTWIDGETS
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
+#ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
 #include <KConfigGroup>
+#endif // HAVE_QTWIDGETS
 #include <KLocalizedString>
 
 #include "kbibtex.h"
@@ -31,6 +35,7 @@
 #include "fileimporterbibtex.h"
 #include "logging_networking.h"
 
+#ifdef HAVE_QTWIDGETS
 class OnlineSearchDOI::OnlineSearchQueryFormDOI : public OnlineSearchQueryFormAbstract
 {
     Q_OBJECT
@@ -78,6 +83,7 @@ public:
         config->sync();
     }
 };
+#endif // HAVE_QTWIDGETS
 
 
 class OnlineSearchDOI::OnlineSearchDOIPrivate
@@ -86,13 +92,19 @@ private:
     // UNUSED OnlineSearchDOI *p;
 
 public:
+#ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormDOI *form;
+#endif // HAVE_QTWIDGETS
 
     OnlineSearchDOIPrivate(OnlineSearchDOI */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ form(nullptr) {
+#ifdef HAVE_QTWIDGETS
+            : form(nullptr)
+#endif // HAVE_QTWIDGETS
+    {
         // nothing
     }
 
+#ifdef HAVE_QTWIDGETS
     QUrl buildQueryUrl() {
         if (form == nullptr) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Cannot build query url if no form is specified";
@@ -101,6 +113,7 @@ public:
 
         return QUrl(QStringLiteral("http://dx.doi.org/") + form->lineEditDoiNumber->text());
     }
+#endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         Q_UNUSED(numResults)
@@ -125,6 +138,7 @@ OnlineSearchDOI::~OnlineSearchDOI()
     delete d;
 }
 
+#ifdef HAVE_QTWIDGETS
 void OnlineSearchDOI::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
@@ -142,6 +156,7 @@ void OnlineSearchDOI::startSearchFromForm()
     } else
         delayedStoppedSearch(resultNoError);
 }
+#endif // HAVE_QTWIDGETS
 
 void OnlineSearchDOI::startSearch(const QMap<QString, QString> &query, int numResults)
 {
@@ -164,12 +179,14 @@ QString OnlineSearchDOI::label() const
     return i18n("DOI");
 }
 
+#ifdef HAVE_QTWIDGETS
 OnlineSearchQueryFormAbstract *OnlineSearchDOI::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
         d->form = new OnlineSearchDOI::OnlineSearchQueryFormDOI(parent);
     return d->form;
 }
+#endif // HAVE_QTWIDGETS
 
 QUrl OnlineSearchDOI::homepage() const
 {
