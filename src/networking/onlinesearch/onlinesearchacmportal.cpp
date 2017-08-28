@@ -181,7 +181,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             stopSearch(resultNoError);
             emit progress(curStep = numSteps, numSteps);
         }
-    }  else
+    } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
 
@@ -208,7 +208,7 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
             emit progress(curStep = numSteps, numSteps);
             return;
         }
-    }  else
+    } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 
     if (bibTeXUrl.isEmpty()) {

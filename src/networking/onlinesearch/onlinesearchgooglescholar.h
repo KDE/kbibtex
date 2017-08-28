@@ -14,11 +14,11 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H
 #define KBIBTEX_ONLINESEARCH_GOOGLESCHOLAR_H
 
 #include "onlinesearchabstract.h"
-
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
