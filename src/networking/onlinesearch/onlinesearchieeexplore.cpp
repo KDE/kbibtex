@@ -21,6 +21,7 @@
 #include <QStandardPaths>
 #include <QUrl>
 #include <QUrlQuery>
+#include <QCoreApplication>
 
 #include <KLocalizedString>
 
@@ -40,7 +41,7 @@ public:
 
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
             : p(parent), gatewayUrl(QStringLiteral("https://ieeexplore.ieee.org/gateway/ipsSearch.jsp")),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/ieeexplore2bibtex.xsl")))
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/ieeexplore2bibtex.xsl")))
     {
         /// nothing
     }

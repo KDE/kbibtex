@@ -20,6 +20,7 @@
 #include <QNetworkReply>
 #include <QStandardPaths>
 #include <QUrlQuery>
+#include <QCoreApplication>
 
 #include <KLocalizedString>
 
@@ -39,7 +40,7 @@ public:
     QUrl queryUrl;
 
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB *)
-            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/isbndb2bibtex.xsl")))
+            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/isbndb2bibtex.xsl")))
     {
         /// nothing
     }

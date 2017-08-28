@@ -21,6 +21,7 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QStandardPaths>
+#include <QCoreApplication>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -45,7 +46,7 @@ public:
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
             : p(parent), pubMedUrlPrefix(QStringLiteral("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pubmed2bibtex.xsl")))
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pubmed2bibtex.xsl")))
     {
         /// nothing
     }

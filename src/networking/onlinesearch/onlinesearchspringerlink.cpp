@@ -27,6 +27,7 @@
 #include <QNetworkReply>
 #include <QStandardPaths>
 #include <QUrlQuery>
+#include <QCoreApplication>
 
 #include <KLocalizedString>
 #ifdef HAVE_QTWIDGETS
@@ -157,7 +158,7 @@ public:
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
             : p(parent), springerMetadataKey(QStringLiteral("7pphfmtb9rtwt3dw3e4hm7av")),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/pam2bibtex.xsl")))
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pam2bibtex.xsl")))
 #ifdef HAVE_QTWIDGETS
         , form(nullptr)
 #endif // HAVE_QTWIDGETS

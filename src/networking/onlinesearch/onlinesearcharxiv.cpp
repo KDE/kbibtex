@@ -18,6 +18,7 @@
 #include "onlinesearcharxiv.h"
 
 #include <QNetworkReply>
+#include <QCoreApplication>
 #ifdef HAVE_QTWIDGETS
 #include <QGridLayout>
 #include <QLabel>
@@ -115,7 +116,7 @@ public:
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
             : p(parent),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/arxiv2bibtex.xsl"))),
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName() + QStringLiteral("/arxiv2bibtex.xsl"))),
 #ifdef HAVE_QTWIDGETS
           form(nullptr),
 #endif // HAVE_QTWIDGETS
