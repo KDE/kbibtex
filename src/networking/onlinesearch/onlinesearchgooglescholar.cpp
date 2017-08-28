@@ -17,18 +17,11 @@
 
 #include "onlinesearchgooglescholar.h"
 
-#include <QSpinBox>
-#include <QLayout>
-#include <QLabel>
-#include <QFormLayout>
 #include <QNetworkReply>
 #include <QIcon>
 #include <QUrlQuery>
 
 #include <KLocalizedString>
-#include <KMessageBox>
-#include <KConfigGroup>
-#include <KLineEdit>
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"

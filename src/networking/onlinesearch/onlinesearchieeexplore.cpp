@@ -22,8 +22,6 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-#include <KMessageBox>
-#include <KConfigGroup>
 #include <KLocalizedString>
 
 #include "internalnetworkaccessmanager.h"

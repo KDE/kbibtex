@@ -24,7 +24,6 @@
 #include <QSpinBox>
 #include <QTextStream>
 #endif // HAVE_QTWIDGETS
-#include <QFile>
 #include <QStandardPaths>
 
 #ifdef HAVE_QTWIDGETS

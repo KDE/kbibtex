@@ -18,7 +18,6 @@
 #include "onlinesearchacmportal.h"
 
 #include <QBuffer>
-#include <QLayout>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
