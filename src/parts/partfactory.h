@@ -38,7 +38,7 @@ protected:
      * provide generic factories for plugins implemeted using a scripting
      * language."
      */
-    virtual QObject *create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword);
+    QObject *create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword) override;
 
 private:
     class Private;
