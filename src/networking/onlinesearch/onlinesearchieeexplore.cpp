@@ -37,7 +37,7 @@ private:
 
 public:
     const QString gatewayUrl;
-    XSLTransform xslt;
+    const XSLTransform xslt;
 
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
             : p(parent), gatewayUrl(QStringLiteral("https://ieeexplore.ieee.org/gateway/ipsSearch.jsp")),

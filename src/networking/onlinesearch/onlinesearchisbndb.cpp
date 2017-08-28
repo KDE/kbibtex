@@ -36,7 +36,7 @@ private:
     static const QString booksUrl, authorsUrl;
 
 public:
-    XSLTransform xslt;
+    const XSLTransform xslt;
     QUrl queryUrl;
 
     OnlineSearchIsbnDBPrivate(OnlineSearchIsbnDB *)

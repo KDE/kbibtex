@@ -42,7 +42,7 @@ private:
     const QString pubMedUrlPrefix;
 
 public:
-    XSLTransform xslt;
+    const XSLTransform xslt;
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
             : p(parent), pubMedUrlPrefix(QStringLiteral("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),

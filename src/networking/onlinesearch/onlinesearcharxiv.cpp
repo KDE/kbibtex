@@ -108,7 +108,7 @@ private:
     OnlineSearchArXiv *p;
 
 public:
-    XSLTransform xslt;
+    const XSLTransform xslt;
 #ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormArXiv *form;
 #endif // HAVE_QTWIDGETS
