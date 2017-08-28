@@ -45,7 +45,7 @@ public:
 
     OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ numExpectedResults(0), numFoundResults(0),
-          acmPortalBaseUrl(QStringLiteral("http://dl.acm.org/")), currentSearchPosition(0) {
+          acmPortalBaseUrl(QStringLiteral("https://dl.acm.org/")), currentSearchPosition(0) {
         // nothing
     }
 
@@ -108,12 +108,12 @@ QString OnlineSearchAcmPortal::label() const
 
 QString OnlineSearchAcmPortal::favIconUrl() const
 {
-    return QStringLiteral("http://dl.acm.org/favicon.ico");
+    return QStringLiteral("https://dl.acm.org/favicon.ico");
 }
 
 QUrl OnlineSearchAcmPortal::homepage() const
 {
-    return QUrl(QStringLiteral("http://dl.acm.org/"));
+    return QUrl(QStringLiteral("https://dl.acm.org/"));
 }
 
 void OnlineSearchAcmPortal::doneFetchingStartPage()

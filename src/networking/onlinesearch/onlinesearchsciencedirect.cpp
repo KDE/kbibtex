@@ -108,7 +108,7 @@ QString OnlineSearchScienceDirect::label() const
 
 QString OnlineSearchScienceDirect::favIconUrl() const
 {
-    return QStringLiteral("http://www.sciencedirect.com/scidirimg/faviconSD.ico");
+    return QStringLiteral("http://cdn.els-cdn.com/sd/favSD.ico");
 }
 
 QUrl OnlineSearchScienceDirect::homepage() const

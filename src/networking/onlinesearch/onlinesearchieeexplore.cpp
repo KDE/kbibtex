@@ -162,7 +162,7 @@ QString OnlineSearchIEEEXplore::label() const
 
 QString OnlineSearchIEEEXplore::favIconUrl() const
 {
-    return QStringLiteral("https://ieeexplore.ieee.org/favicon.ico");
+    return QStringLiteral("http://ieeexplore.ieee.org/favicon.ico");
 }
 
 QUrl OnlineSearchIEEEXplore::homepage() const
