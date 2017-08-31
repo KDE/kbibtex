@@ -530,7 +530,7 @@ Value &Value::operator=(const Value &rhs)
     return static_cast<Value &>(QVector<QSharedPointer<ValueItem> >::operator =((rhs)));
 }
 
-Value &Value::operator=(Value && rhs)
+Value &Value::operator=(Value &&rhs)
 {
     return static_cast<Value &>(QVector<QSharedPointer<ValueItem> >::operator =((rhs)));
 }

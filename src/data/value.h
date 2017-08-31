@@ -14,6 +14,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef BIBTEXVALUE_H
 #define BIBTEXVALUE_H
 
@@ -263,7 +264,7 @@ public:
     bool contains(const ValueItem &item) const;
 
     Value &operator=(const Value &rhs);
-    Value &operator=(Value && rhs);
+    Value &operator=(Value &&rhs);
 };
 
 QDebug operator<<(QDebug dbg, const Value &value);

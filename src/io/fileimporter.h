@@ -14,6 +14,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_IO_FILEIMPORTER_H
 #define KBIBTEX_IO_FILEIMPORTER_H
 
@@ -61,7 +62,7 @@ public:
 
     static bool guessCanDecode(const QString &) {
         return false;
-    };
+    }
 
     /**
       * Split a person's name into its parts and construct a Person object from them.
@@ -80,7 +81,7 @@ signals:
 public slots:
     virtual void cancel() {
         // nothing
-    };
+    }
 };
 
 #endif // KBIBTEX_IO_FILEIMPORTER_H

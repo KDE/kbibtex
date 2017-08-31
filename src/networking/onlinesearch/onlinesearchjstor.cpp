@@ -212,7 +212,6 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
                 QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
                 if (publishEntry(entry))
                     ++numFoundResults;
-
             }
             delete bibtexFile;
         }

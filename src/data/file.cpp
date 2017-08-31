@@ -112,8 +112,8 @@ public:
 
     bool checkValidity() const {
         return validInvalidField == valid ///< 'validInvalidField' must contain the know 'valid' value
-                && internalId >= 100000 ///< internal id counter starts at 100000
-                && internalId < 200000; ///< reasonable assumption: not more that 100000 ids used
+               && internalId >= 100000 ///< internal id counter starts at 100000
+               && internalId < 200000; ///< reasonable assumption: not more that 100000 ids used
     }
 };
 
@@ -126,7 +126,8 @@ File::File()
 }
 
 File::File(const File &other)
-        : QList<QSharedPointer<Element> >(other), d(new FilePrivate(other, this)) {
+        : QList<QSharedPointer<Element> >(other), d(new FilePrivate(other, this))
+{
     /// nothing
 }
 

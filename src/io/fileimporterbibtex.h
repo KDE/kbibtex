@@ -14,6 +14,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_IO_FILEIMPORTERBIBTEX_H
 #define KBIBTEX_IO_FILEIMPORTERBIBTEX_H
 

@@ -30,8 +30,8 @@
 #ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
 #include <KMessageBox>
-#include <KConfigGroup>
 #endif // HAVE_QTWIDGETS
+#include <KConfigGroup>
 #include <KLocalizedString>
 
 #include "fileimporterbibtex.h"
