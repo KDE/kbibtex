@@ -56,8 +56,7 @@ public:
     const static QString NameFormatting;
     const static QString ListSeparator;
 
-    File();
-    File(const File &other);
+    explicit File();
     ~File();
 
     /**

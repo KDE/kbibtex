@@ -59,26 +59,8 @@ public:
     const quint64 internalId;
     QHash<QString, QVariant> properties;
 
-    FilePrivate(File */* UNUSED parent*/)
+    explicit FilePrivate(File */* UNUSED parent*/)
         : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter) {
-        const bool isValid = checkValidity();
-        if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
-        loadConfiguration();
-    }
-
-    FilePrivate(const File &other, File */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter) {
-        const bool isValid = checkValidity();
-        if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
-
-        /// Copy properties from other File object
-        static const QStringList propertyKeys = QStringList() << File::Encoding << File::StringDelimiter << File::QuoteComment << File::KeywordCasing << File::NameFormatting << File::ProtectCasing << File::ListSeparator;
-        for (const QString &propertyKey : propertyKeys)
-            properties.insert(propertyKey, other.d->properties[propertyKey]);
-    }
-
-    FilePrivate(File */* UNUSED parent*/, const File &other)
-        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter), properties(other.d->properties) {
         const bool isValid = checkValidity();
         if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
         loadConfiguration();
@@ -123,12 +105,6 @@ File::File()
         : QList<QSharedPointer<Element> >(), d(new FilePrivate(this))
 {
     // nothing
-}
-
-File::File(const File &other)
-        : QList<QSharedPointer<Element> >(other), d(new FilePrivate(other, this))
-{
-    /// nothing
 }
 
 File::~File()
