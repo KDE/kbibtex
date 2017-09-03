@@ -163,11 +163,9 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     newUrl = QUrl();
     if (m_hasBeenCanceled) {
         stopSearch(resultCancelled);
-        curStep = numSteps = 0;
         return false;
     } else if (reply->error() != QNetworkReply::NoError) {
         m_hasBeenCanceled = true;
-        curStep = numSteps = 0;
         const QString errorString = reply->errorString();
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
 #ifdef HAVE_KF5
