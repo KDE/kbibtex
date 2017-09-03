@@ -31,8 +31,11 @@
 #include <KLineEdit>
 #include <KMessageBox>
 #endif // HAVE_QTWIDGETS
+
+#ifdef HAVE_KF5
 #include <KConfigGroup>
 #include <KLocalizedString>
+#endif // HAVE_KF5
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"

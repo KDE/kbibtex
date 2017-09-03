@@ -19,9 +19,11 @@
 
 #include <QStandardPaths>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#endif // HAVE_KF5
 
 #include "logging_config.h"
 
@@ -41,20 +43,25 @@ class BibTeXEntries::BibTeXEntriesPrivate
 public:
     BibTeXEntries *p;
 
+#ifdef HAVE_KF5
     KSharedConfigPtr layoutConfig;
+#endif // HAVE_KF5
 
     static BibTeXEntries *singleton;
 
     BibTeXEntriesPrivate(BibTeXEntries *parent)
             : p(parent) {
+#ifdef HAVE_KF5
         KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
         KConfigGroup configGroup(config, QStringLiteral("User Interface"));
         const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle");
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
         if (layoutConfig->groupList().isEmpty())
             qCWarning(LOG_KBIBTEX_CONFIG) << "The configuration file for BibTeX fields could not be located or is empty:" << stylefile;
+#endif // HAVE_KF5
     }
 
+#ifdef HAVE_KF5
     void load() {
         p->clear();
 
@@ -103,7 +110,7 @@ public:
 
         layoutConfig->sync();
     }
-
+#endif // HAVE_KF5
 };
 
 BibTeXEntries *BibTeXEntries::BibTeXEntriesPrivate::singleton = nullptr;
@@ -112,7 +119,9 @@ BibTeXEntries *BibTeXEntries::BibTeXEntriesPrivate::singleton = nullptr;
 BibTeXEntries::BibTeXEntries()
         : QList<EntryDescription>(), d(new BibTeXEntriesPrivate(this))
 {
+#ifdef HAVE_KF5
     d->load();
+#endif // HAVE_KF5
 }
 
 BibTeXEntries::~BibTeXEntries()

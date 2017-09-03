@@ -24,9 +24,11 @@
 #include <QStringList>
 #include <QDebug>
 
+#ifdef HAVE_KF5
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+#endif // HAVE_KF5
 
 #include "file.h"
 #include "preferences.h"
@@ -327,8 +329,10 @@ QDebug operator<<(QDebug dbg, const PlainText &plainText) {
 }
 
 
+#ifdef HAVE_KF5
 bool VerbatimText::colorLabelPairsInitialized = false;
 QList<VerbatimText::ColorLabelPair> VerbatimText::colorLabelPairs = QList<VerbatimText::ColorLabelPair>();
+#endif // HAVE_KF5
 
 VerbatimText::VerbatimText(const VerbatimText &other)
         : m_text(other.text())
@@ -364,6 +368,7 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
 {
     const QString text = QString(m_text).remove(ignoredInSorting);
 
+#ifdef HAVE_KF5
     /// Initialize map of labels to color (hex string) only once
     // FIXME if user changes colors/labels later, it will not be updated here
     if (!colorLabelPairsInitialized) {
@@ -383,8 +388,10 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
             colorLabelPairs << clp;
         }
     }
+#endif //  HAVE_KF5
 
     bool contained = text.contains(pattern, caseSensitive);
+#ifdef HAVE_KF5
     if (!contained) {
         /// Only if simple text match failed, check color labels
         /// For a match, the user's pattern has to be the start of the color label
@@ -394,6 +401,7 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
             if (contained) break;
         }
     }
+#endif // HAVE_KF5
 
     return contained;
 }
@@ -588,8 +596,10 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
     QString result;
     vit = VITOther;
 
+#ifdef HAVE_KF5
     if (notificationListener == nullptr)
         notificationListener = new PlainTextValue();
+#endif // HAVE_KF5
 
     const PlainText *plainText = dynamic_cast<const PlainText *>(&valueItem);
     if (plainText != nullptr) {
@@ -649,6 +659,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
     return result;
 }
 
+#ifdef HAVE_KF5
 PlainTextValue::PlainTextValue()
 {
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
@@ -668,5 +679,8 @@ void PlainTextValue::readConfiguration()
     personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
 }
 
-QString PlainTextValue::personNameFormatting;
 PlainTextValue *PlainTextValue::notificationListener = nullptr;
+QString PlainTextValue::personNameFormatting;
+#else // HAVE_KF5
+const QString PlainTextValue::personNameFormatting = QStringLiteral("<%l><, %s><, %f>");
+#endif // HAVE_KF5

@@ -29,7 +29,9 @@
 #include <QUrlQuery>
 #include <QCoreApplication>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
+#endif // HAVE_KF5
 #ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
 #include <KConfigGroup>

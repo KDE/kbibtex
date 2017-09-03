@@ -30,7 +30,10 @@
 
 #include <QIcon>
 #include <QUrl>
+
+#ifdef HAVE_KF5
 #include <KSharedConfig>
+#endif // HAVE_KF5
 
 #include "entry.h"
 
@@ -186,7 +189,9 @@ private:
     QMap<QNetworkReply *, QListWidgetItem *> m_iconReplyToListWidgetItem;
     int m_delayedStoppedSearchReturnCode;
 
+#ifdef HAVE_KF5
     void sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout);
+#endif // HAVE_KF5
 
 private slots:
     void iconDownloadFinished();

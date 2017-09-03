@@ -23,8 +23,10 @@
 #include <QStringList>
 #include <QRegExp>
 
+#ifdef HAVE_KF5
 #include <KSharedConfig>
 #include <KConfigGroup>
+#endif // HAVE_KF5
 
 #include "preferences.h"
 #include "entry.h"
@@ -52,18 +54,26 @@ private:
     quint64 validInvalidField;
     static quint64 internalIdCounter;
 
+#ifdef HAVE_KF5
     KSharedConfigPtr config;
     const QString configGroupName;
+#endif // HAVE_KF5
 
 public:
     const quint64 internalId;
     QHash<QString, QVariant> properties;
 
     explicit FilePrivate(File */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ validInvalidField(valid), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), internalId(++internalIdCounter) {
+        : /* UNUSED p(parent),*/ validInvalidField(valid),
+#ifdef HAVE_KF5
+        config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")),
+#endif // HAVE_KF5
+        internalId(++internalIdCounter) {
         const bool isValid = checkValidity();
         if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
+#ifdef HAVE_KF5
         loadConfiguration();
+#endif // HAVE_KF5
     }
 
     ~FilePrivate() {
@@ -80,6 +90,7 @@ public:
         return *this;
     }
 
+#ifdef HAVE_KF5
     void loadConfiguration() {
         /// Load and set configuration as stored in settings
         KConfigGroup configGroup(config, configGroupName);
@@ -91,6 +102,7 @@ public:
         properties.insert(File::ProtectCasing, configGroup.readEntry(Preferences::keyProtectCasing, (int)Preferences::defaultProtectCasing));
         properties.insert(File::ListSeparator, configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator));
     }
+#endif // HAVE_KF5
 
     bool checkValidity() const {
         return validInvalidField == valid ///< 'validInvalidField' must contain the know 'valid' value
@@ -177,6 +189,7 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
                             static QStringList personNameFormattingList; ///< use static to do pattern assembly only once
                             if (personNameFormattingList.isEmpty()) {
                                 /// Use the two default patterns last-name-first and first-name-first
+#ifdef HAVE_KF5
                                 personNameFormattingList << Preferences::personNameFormatLastFirst << Preferences::personNameFormatFirstLast;
                                 /// Check configuration if user-specified formatting template is different
                                 KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
@@ -185,6 +198,9 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
                                 /// Add user's template if it differs from the two specified above
                                 if (!personNameFormattingList.contains(personNameFormatting))
                                     personNameFormattingList << personNameFormatting;
+#else // HAVE_KF5
+                                personNameFormattingList << QStringLiteral("<%l><, %s><, %f>") << QStringLiteral("<%f ><%l>< %s>");
+#endif // HAVE_KF5
                             }
                             /// Add person's name formatted using each of the templates assembled above
                             for (const QString &personNameFormatting : const_cast<const QStringList &>(personNameFormattingList)) {
@@ -235,11 +251,13 @@ bool File::hasProperty(const QString &key) const
     return d->properties.contains(key);
 }
 
+#ifdef HAVE_KF5
 void File::setPropertiesToDefault()
 {
     Q_ASSERT_X(d->checkValidity(), "void File::setPropertiesToDefault()", "This File object is not valid");
     d->loadConfiguration();
 }
+#endif // HAVE_KF5
 
 bool File::checkValidity() const
 {

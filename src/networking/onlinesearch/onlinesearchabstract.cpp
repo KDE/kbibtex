@@ -21,13 +21,17 @@
 #include <QNetworkReply>
 #include <QDir>
 #include <QTimer>
-#include <QListWidgetItem>
 #include <QStandardPaths>
+#ifdef HAVE_QTWIDGETS
+#include <QListWidgetItem>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#endif // HAVE_QTWIDGETS
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
 #include <KMessageBox>
+#endif // HAVE_KF5
 
 #include "encoderlatex.h"
 #include "internalnetworkaccessmanager.h"
@@ -165,7 +169,9 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
         curStep = numSteps = 0;
         const QString errorString = reply->errorString();
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
+#ifdef HAVE_KF5
         sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), errorString), label(), QStringLiteral("kbibtex"), 7 * 1000);
+#endif // HAVE_KF5
 
         int resultCode = resultUnspecifiedError;
         if (reply->error() == QNetworkReply::AuthenticationRequiredError || reply->error() == QNetworkReply::ProxyAuthenticationRequiredError)
@@ -191,6 +197,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     return true;
 }
 
+#ifdef HAVE_KF5
 /**
  * Display a passive notification popup using the D-Bus interface.
  * Copied from KDialog with modifications.
@@ -231,6 +238,7 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
         //qCDebug(LOG_KBIBTEX_NETWORKING) << "Unexpected reply type";
     }
 }
+#endif // HAVE_KF5
 
 QString OnlineSearchAbstract::encodeURL(QString rawText)
 {

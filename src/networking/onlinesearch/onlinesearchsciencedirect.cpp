@@ -20,7 +20,9 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
+#endif // HAVE_KF5
 
 #include "encoderlatex.h"
 #include "fileimporterbibtex.h"

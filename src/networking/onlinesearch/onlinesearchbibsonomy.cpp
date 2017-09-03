@@ -26,12 +26,14 @@
 #endif // HAVE_QTWIDGETS
 #include <QNetworkReply>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
+#include <KConfigGroup>
+#endif // HAVE_KF5
 #ifdef HAVE_QTWIDGETS
 #include <KComboBox>
 #include <KMessageBox>
 #include <KLineEdit>
-#include <KConfigGroup>
 #endif // HAVE_QTWIDGETS
 
 #include "fileimporterbibtex.h"

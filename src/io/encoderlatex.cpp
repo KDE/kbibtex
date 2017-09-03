@@ -518,10 +518,12 @@ static const int encoderLaTeXSymbolSequencesLen = sizeof(encoderLaTeXSymbolSeque
 
 EncoderLaTeX::EncoderLaTeX()
 {
+#ifdef HAVE_ICU
     /// Create an ICO Transliterator, configured to
     /// transliterate virtually anything into plain ASCII
     UErrorCode uec = U_ZERO_ERROR;
     m_trans = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
+#endif // HAVE_ICU
 
     /// Initialize lookup table with NULL pointers
     for (int i = 0; i < lookupTableNumModifiers; ++i) lookupTable[i] = nullptr;
@@ -568,8 +570,10 @@ EncoderLaTeX::~EncoderLaTeX()
         if (lookupTable[i] != nullptr)
             delete lookupTable[i];
 
+#ifdef HAVE_ICU
     if (m_trans != nullptr)
         delete m_trans;
+#endif // HAVE_ICU
 }
 
 QString EncoderLaTeX::decode(const QString &input) const
@@ -1078,6 +1082,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
     return output;
 }
 
+#ifdef HAVE_ICU
 QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
 {
     /// Previously, iconv's //TRANSLIT feature had been used here.
@@ -1108,6 +1113,7 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
     /// should work as cppString contains only ASCII text
     return QString::fromStdString(cppString);
 }
+#endif // HAVE_ICU
 
 bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)
 {

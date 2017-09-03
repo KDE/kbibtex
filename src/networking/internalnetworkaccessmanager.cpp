@@ -91,6 +91,7 @@ InternalNetworkAccessManager &InternalNetworkAccessManager::instance()
 
 QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const QUrl &oldUrl)
 {
+#ifdef HAVE_KF5
     /// Query the KDE subsystem if a proxy has to be used
     /// for the host of a given URL
     QString proxyHostName = KProtocolManager::proxyForUrl(request.url());
@@ -111,6 +112,9 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
         /// No proxy to be used, clear previous settings
         setProxy(QNetworkProxy());
     }
+#else // HAVE_KF5
+    setProxy(QNetworkProxy());
+#endif // HAVE_KF5
 
     if (!request.hasRawHeader(QByteArray("Accept")))
         request.setRawHeader(QByteArray("Accept"), QByteArray("text/*, */*;q=0.7"));

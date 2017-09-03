@@ -21,7 +21,9 @@
 #include <QIcon>
 #include <QUrlQuery>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
+#endif // HAVE_KF5
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"

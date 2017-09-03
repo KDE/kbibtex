@@ -23,7 +23,9 @@
 #include <QUrlQuery>
 #include <QCoreApplication>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
+#endif // HAVE_KF5
 
 #include "internalnetworkaccessmanager.h"
 #include "xsltransform.h"

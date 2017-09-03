@@ -23,7 +23,9 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
+#endif // HAVE_KF5
 
 #include "file.h"
 #include "entry.h"

@@ -66,8 +66,10 @@ public:
      */
     static const BibTeXFields *self();
 
+#ifdef HAVE_KF5
     void save();
     void resetToDefaults(const QString &treeViewName);
+#endif // HAVE_KF5
 
     /**
      * Change the casing of a given field name to one of the predefine formats.

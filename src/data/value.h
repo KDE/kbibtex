@@ -25,7 +25,9 @@
 
 #include "kbibtexdata_export.h"
 
+#ifdef HAVE_KF5
 #include "notificationhub.h"
+#endif // HAVE_KF5
 
 class File;
 
@@ -225,6 +227,7 @@ protected:
     QString m_text;
 
 private:
+#ifdef HAVE_KF5
     struct ColorLabelPair {
         QString hexColor;
         QString label;
@@ -232,6 +235,7 @@ private:
 
     static QList<ColorLabelPair> colorLabelPairs;
     static bool colorLabelPairsInitialized;
+#endif // HAVE_KF5
 };
 
 QDebug operator<<(QDebug dbg, const VerbatimText &verbatimText);
@@ -270,22 +274,31 @@ public:
 QDebug operator<<(QDebug dbg, const Value &value);
 
 
-class KBIBTEXDATA_EXPORT PlainTextValue: private NotificationListener
+class KBIBTEXDATA_EXPORT PlainTextValue
+#ifdef HAVE_KF5
+  : private NotificationListener
+#endif // HAVE_KF5
 {
 public:
     static QString text(const Value &value);
     static QString text(const ValueItem &valueItem);
     static QString text(const QSharedPointer<const ValueItem> &valueItem);
 
+#ifdef HAVE_KF5
     void notificationEvent(int eventId) override;
+#endif // HAVE_KF5
 
 private:
     enum ValueItemType { VITOther = 0, VITPerson, VITKeyword};
 
+#ifdef HAVE_KF5
     PlainTextValue();
     void readConfiguration();
     static PlainTextValue *notificationListener;
     static QString personNameFormatting;
+#else // HAVE_KF5
+    static const QString personNameFormatting;
+#endif // HAVE_KF5
 
     static QString text(const ValueItem &valueItem, ValueItemType &vit);
 

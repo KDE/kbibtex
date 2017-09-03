@@ -27,10 +27,12 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
+#include <KConfigGroup>
+#endif // HAVE_KF5
 #ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
-#include <KConfigGroup>
 #endif // HAVE_QTWIDGETS
 
 #include "file.h"

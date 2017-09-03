@@ -20,9 +20,11 @@
 #include <QExplicitlySharedDataPointer>
 #include <QStandardPaths>
 
+#ifdef HAVE_KF5
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+#endif // HAVE KF5
 
 #include "logging_config.h"
 
@@ -42,20 +44,25 @@ class BibTeXFields::BibTeXFieldsPrivate
 public:
     BibTeXFields *p;
 
+#ifdef HAVE_KF5
     KSharedConfigPtr layoutConfig;
+#endif // HAVE_KF5
 
     static BibTeXFields *singleton;
 
     BibTeXFieldsPrivate(BibTeXFields *parent)
             : p(parent) {
+#ifdef HAVE_KF5
         KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
         KConfigGroup configGroup(config, QStringLiteral("User Interface"));
         const QString stylefile = configGroup.readEntry(QStringLiteral("CurrentStyle"), QString(QStringLiteral("bibtex"))).append(QStringLiteral(".kbstyle"));
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
         if (layoutConfig->groupList().isEmpty())
             qCWarning(LOG_KBIBTEX_CONFIG) << "The configuration file for BibTeX fields could not be located or is empty:" << stylefile;
+#endif // HAVE_KF5
     }
 
+#ifdef HAVE_KF5
     void load() {
         p->clear();
 
@@ -145,6 +152,7 @@ public:
         }
         load();
     }
+#endif // HAVE_KF5
 };
 
 BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = nullptr;
@@ -152,7 +160,9 @@ BibTeXFields *BibTeXFields::BibTeXFieldsPrivate::singleton = nullptr;
 BibTeXFields::BibTeXFields()
         : QList<FieldDescription *>(), d(new BibTeXFieldsPrivate(this))
 {
+#ifdef HAVE_KF5
     d->load();
+#endif // HAVE_KF5
 }
 
 BibTeXFields::~BibTeXFields()
@@ -167,6 +177,7 @@ const BibTeXFields *BibTeXFields::self()
     return BibTeXFieldsPrivate::singleton;
 }
 
+#ifdef HAVE_KF5
 void BibTeXFields::save()
 {
     d->save();
@@ -176,6 +187,7 @@ void BibTeXFields::resetToDefaults(const QString &treeViewName)
 {
     d->resetToDefaults(treeViewName);
 }
+#endif // HAVE_KF5
 
 QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
 {

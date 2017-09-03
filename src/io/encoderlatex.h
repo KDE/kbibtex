@@ -20,7 +20,9 @@
 
 #include "kbibtexio_export.h"
 
+#ifdef HAVE_ICU
 #include <unicode/translit.h>
+#endif // HAVE_ICU
 
 #include "encoder.h"
 
@@ -35,7 +37,12 @@ class KBIBTEXIO_EXPORT EncoderLaTeX: public Encoder
 public:
     QString decode(const QString &text) const override;
     QString encode(const QString &text, const TargetEncoding targetEncoding) const override;
+#ifdef HAVE_ICU
     QString convertToPlainAscii(const QString &input) const;
+#else // HAVE_ICU
+    /// Dummy implementation without ICU
+    inline QString convertToPlainAscii(const QString &input) const { return input; }
+#endif // HAVE_ICU
     static bool containsOnlyAscii(const QString &text);
 
     static const EncoderLaTeX &instance();
@@ -88,7 +95,9 @@ private:
      */
     QString readAlphaCharacters(const QString &base, int startFrom) const;
 
+#ifdef HAVE_ICU
     icu::Transliterator *m_trans;
+#endif // HAVE_ICU
 };
 
 #endif // ENCODERLATEX_H

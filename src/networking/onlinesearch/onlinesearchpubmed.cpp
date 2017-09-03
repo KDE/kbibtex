@@ -23,8 +23,10 @@
 #include <QStandardPaths>
 #include <QCoreApplication>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
 #include <KMessageBox>
+#endif // HAVE_KF5
 
 #include "xsltransform.h"
 #include "fileimporterbibtex.h"

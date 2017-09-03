@@ -23,8 +23,10 @@
 #include <QTextStream>
 #include <QStringList>
 
+#ifdef HAVE_KF5
 #include <KSharedConfig>
 #include <KConfigGroup>
+#endif // HAVE_KF5
 
 #include "preferences.h"
 #include "file.h"
@@ -60,8 +62,10 @@ public:
     QString listSeparator;
     bool cancelFlag;
     QTextCodec *destinationCodec;
+#ifdef HAVE_KF5
     KSharedConfigPtr config;
     const QString configGroupName, configGroupNameGeneral;
+#endif // HAVE_KF5
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
             : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(Qt::PartiallyChecked), cancelFlag(false), destinationCodec(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), configGroupNameGeneral(QStringLiteral("General")) {
@@ -69,13 +73,19 @@ public:
     }
 
     void loadState() {
+#ifdef HAVE_KF5
         KConfigGroup configGroup(config, configGroupName);
         encoding = configGroup.readEntry(Preferences::keyEncoding, Preferences::defaultEncoding);
         QString stringDelimiter = configGroup.readEntry(Preferences::keyStringDelimiter, Preferences::defaultStringDelimiter);
         if (stringDelimiter.length() != 2)
             stringDelimiter = Preferences::defaultStringDelimiter;
+#else // HAVE_KF5
+        encoding = QStringLiteral("LaTeX");
+        const QString stringDelimiter = QStringLiteral("{}");
+#endif // HAVE_KF5
         stringOpenDelimiter = stringDelimiter[0];
         stringCloseDelimiter = stringDelimiter[1];
+#ifdef HAVE_KF5
         keywordCasing = (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing);
         quoteComment = (Preferences::QuoteComment)configGroup.readEntry(Preferences::keyQuoteComment, (int)Preferences::defaultQuoteComment);
         protectCasing = (Qt::CheckState)configGroup.readEntry(Preferences::keyProtectCasing, (int)Preferences::defaultProtectCasing);
@@ -87,6 +97,13 @@ public:
             KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
             personNameFormatting = configGroupGeneral.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
         }
+#else // HAVE_KF5
+        keywordCasing = KBibTeX::cLowerCase;
+        quoteComment = qcNone;
+        protectCasing = Qt::PartiallyChecked;
+        personNameFormatting = QStringLiteral("<%l><, %s><, %f>");
+        listSeparator = QStringLiteral("; ");
+#endif // HAVE_KF5
     }
 
     void loadStateFromFile(const File *bibtexfile) {
@@ -100,7 +117,11 @@ public:
         if (bibtexfile->hasProperty(File::StringDelimiter)) {
             QString stringDelimiter = bibtexfile->property(File::StringDelimiter).toString();
             if (stringDelimiter.length() != 2)
+#ifdef HAVE_KF5
                 stringDelimiter = Preferences::defaultStringDelimiter;
+#else // HAVE_KF5
+                stringDelimiter = QStringLiteral("{}");
+#endif // HAVE_KF5
             stringOpenDelimiter = stringDelimiter[0];
             stringCloseDelimiter = stringDelimiter[1];
         }
