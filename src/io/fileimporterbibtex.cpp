@@ -247,8 +247,7 @@ Macro *FileImporterBibTeX::readMacroElement()
         key = QStringLiteral("EmptyId");
     } else if (!EncoderLaTeX::containsOnlyAscii(key)) {
         /// Try to avoid non-ascii characters in ids
-        const EncoderLaTeX &encoder = EncoderLaTeX::instance();
-        const QString newKey = encoder.convertToPlainAscii(key);
+        const QString newKey = EncoderLaTeX::instance().convertToPlainAscii(key);
         qCWarning(LOG_KBIBTEX_IO) << "Macro key" << key << "contains non-ASCII characters, converted to" << newKey;
         key = newKey;
     }
@@ -317,7 +316,6 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 {
     const BibTeXEntries *be = BibTeXEntries::self();
     const BibTeXFields *bf = BibTeXFields::self();
-    const EncoderLaTeX &encoder = EncoderLaTeX::instance();
 
     Token token = nextToken();
     while (token != tBracketOpen) {
@@ -335,7 +333,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         id = QStringLiteral("EmptyId");
     } else if (!EncoderLaTeX::containsOnlyAscii(id)) {
         /// Try to avoid non-ascii characters in ids
-        const QString newId = encoder.convertToPlainAscii(id);
+        const QString newId = EncoderLaTeX::instance().convertToPlainAscii(id);
         qCWarning(LOG_KBIBTEX_IO) << "Entry id" << id << "contains non-ASCII characters, converted to" << newId;
         id = newId;
     }
@@ -386,7 +384,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             }
         }
         /// Try to avoid non-ascii characters in keys
-        keyName = encoder.convertToPlainAscii(keyName);
+        keyName = EncoderLaTeX::instance().convertToPlainAscii(keyName);
 
         token = nextToken();
         if (token != tAssign) {

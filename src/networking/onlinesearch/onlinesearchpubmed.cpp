@@ -213,10 +213,9 @@ void OnlineSearchPubMed::eFetchDone()
             File *bibtexFile = importer.fromString(bibTeXcode);
 
             if (bibtexFile != nullptr) {
-                bool hasEntry = false;
                 for (const auto &element : const_cast<const File &>(*bibtexFile)) {
                     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
-                    hasEntry |= publishEntry(entry);
+                    publishEntry(entry);
                 }
 
                 stopSearch(resultNoError);
