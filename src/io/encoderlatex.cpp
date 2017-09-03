@@ -17,8 +17,6 @@
 
 #include "encoderlatex.h"
 
-#include <unicode/translit.h>
-
 #include <QString>
 
 #include "logging_io.h"

@@ -42,8 +42,6 @@
 #include "textencoder.h"
 #include "logging_io.h"
 
-#define encodercheck(encoder, text) ((encoder)?(encoder)->encode((text)):(text))
-
 FileExporterBibTeX *FileExporterBibTeX::staticFileExporterBibTeX = nullptr;
 
 class FileExporterBibTeX::FileExporterBibTeXPrivate

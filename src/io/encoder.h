@@ -32,7 +32,7 @@ public:
     enum TargetEncoding {TargetEncodingASCII = 0, TargetEncodingUTF8 = 1};
 
     virtual ~Encoder() {
-        /** nothing */
+        /// nothing
     }
 
     /**

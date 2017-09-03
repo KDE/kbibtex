@@ -27,7 +27,6 @@
 #include <QWidget>
 #endif // HAVE_QTWIDGETS
 #include <QMetaType>
-
 #include <QIcon>
 #include <QUrl>
 
