@@ -622,7 +622,8 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
                     const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(&valueItem);
                     if (verbatimText != nullptr) {
                         result = verbatimText->text();
-                    }
+                    } else
+                        qWarning() << "Cannot interpret ValueItem to one of its descendants";
                 }
             }
         }
