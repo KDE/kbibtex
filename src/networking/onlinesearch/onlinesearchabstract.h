@@ -182,7 +182,19 @@ protected:
 
     void stopSearch(int errorCode);
 
+    /**
+     * Allows an online search to notify about a change of its busy state,
+     * i.e. that the public function @see busy may return a different value
+     * than before. If the actual busy state has changed compared to previous
+     * invocations of this function, the signal @see busyChanged will be
+     * emitted.
+     * This function here may be called both on changes from active to
+     * inactive as well as vice versa.
+     */
+    void refreshBusyProperty();
+
 private:
+    bool m_previousBusyState;
     QString m_name;
     static const char *httpUnsafeChars;
     QMap<QNetworkReply *, QListWidgetItem *> m_iconReplyToListWidgetItem;
@@ -200,6 +212,7 @@ signals:
     void foundEntry(QSharedPointer<Entry>);
     void stoppedSearch(int);
     void progress(int, int);
+    void busyChanged();
 };
 
 #endif // KBIBTEX_ONLINESEARCH_ABSTRACT_H

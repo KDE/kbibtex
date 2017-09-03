@@ -71,7 +71,7 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 #endif // HAVE_QTWIDGETS
 
 OnlineSearchAbstract::OnlineSearchAbstract(QObject *parent)
-        : QObject(parent), m_hasBeenCanceled(false), numSteps(0), curStep(0), m_delayedStoppedSearchReturnCode(0)
+        : QObject(parent), m_hasBeenCanceled(false), numSteps(0), curStep(0), m_previousBusyState(false), m_delayedStoppedSearchReturnCode(0)
 {
     m_parent = parent;
 }
@@ -130,6 +130,7 @@ void OnlineSearchAbstract::cancel()
     m_hasBeenCanceled = true;
 
     curStep = numSteps = 0;
+    refreshBusyProperty();
 }
 
 QStringList OnlineSearchAbstract::splitRespectingQuotationMarks(const QString &text)
@@ -517,4 +518,12 @@ void OnlineSearchAbstract::stopSearch(int errorCode) {
     else
         curStep = numSteps = 0;
     emit stoppedSearch(errorCode);
+}
+
+void OnlineSearchAbstract::refreshBusyProperty() {
+    const bool newBusyState = busy();
+    if (newBusyState != m_previousBusyState) {
+        m_previousBusyState = newBusyState;
+        emit busyChanged();
+    }
 }
