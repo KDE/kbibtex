@@ -138,18 +138,18 @@ public:
                 if (idx.row() != m_defaultFormatStringRow) {
                     QModelIndex oldDefaultIndex = index(m_defaultFormatStringRow, 0);
                     m_defaultFormatStringRow = idx.row();
-                    dataChanged(oldDefaultIndex, oldDefaultIndex);
-                    dataChanged(idx, idx);
+                    emit dataChanged(oldDefaultIndex, oldDefaultIndex);
+                    emit dataChanged(idx, idx);
                 }
             } else {
                 m_defaultFormatStringRow = -1;
-                dataChanged(idx, idx);
+                emit dataChanged(idx, idx);
             }
 
             return true;
         } else if (role == FormatStringRole && value.canConvert<QString>()) {
             m_formatStringList[idx.row()] = value.toString();
-            dataChanged(idx, idx);
+            emit dataChanged(idx, idx);
             return true;
         }
 
