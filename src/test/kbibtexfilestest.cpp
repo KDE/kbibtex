@@ -156,6 +156,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     QVERIFY(!bibTeXFile->isEmpty());
 
     QStringList lastAuthorsList, filesUrlsDoiList;
+    lastAuthorsList.reserve(bibTeXFile->size());
     int countElements = bibTeXFile->count(), countEntries = 0;
     QString lastEntryId, lastEntryLastAuthorLastName;
     for (const auto &element : const_cast<const File &>(*bibTeXFile)) {

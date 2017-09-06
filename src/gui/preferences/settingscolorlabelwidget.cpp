@@ -222,6 +222,8 @@ void ColorLabelSettingsModel::loadState()
 void ColorLabelSettingsModel::saveState()
 {
     QStringList colorCodes, colorLabels;
+    colorCodes.reserve(colorLabelPairs.size());
+    colorLabels.reserve(colorLabelPairs.size());
     for (const ColorLabelPair &clp : const_cast<const QList<ColorLabelPair> &>(colorLabelPairs)) {
         colorCodes << clp.color.name();
         colorLabels << clp.label;

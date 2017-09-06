@@ -383,6 +383,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
 
     /// assemble list of entries only (ignoring comments, macros, ...)
     QList<QSharedPointer<Entry> > listOfEntries;
+    listOfEntries.reserve(file->size());
     for (const auto &element : const_cast<const File &>(*file)) {
         QSharedPointer<Entry> e = element.dynamicCast<Entry>();
         if (!e.isNull() && !e->isEmpty())
@@ -488,6 +489,7 @@ bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCli
 
         Entry *mergedEntry = new Entry(QString(), QString());
         const auto fieldList = entryClique->fieldList();
+        coveredFields.reserve(fieldList.size());
         for (const auto &field : fieldList) {
             coveredFields << field;
             if (field == QStringLiteral("^id"))

@@ -233,6 +233,7 @@ QStringList Entry::authorsLastName(const Entry &entry)
 
     QStringList result;
     int maxAuthors = 16; ///< limit the number of authors considered
+    result.reserve(maxAuthors);
     for (const QSharedPointer<const ValueItem> &item : const_cast<const Value &>(value)) {
         QSharedPointer<const Person> person = item.dynamicCast<const Person>();
         if (!person.isNull()) {

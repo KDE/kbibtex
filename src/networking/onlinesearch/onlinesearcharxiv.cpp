@@ -131,9 +131,9 @@ public:
 #ifdef HAVE_QTWIDGETS
     QUrl buildQueryUrl() {
         /// format search terms
-        QStringList queryFragments;
-
         const auto respectingQuotationMarks = p->splitRespectingQuotationMarks(form->lineEditFreeText->text());
+        QStringList queryFragments;
+        queryFragments.reserve(respectingQuotationMarks.size());
         for (const QString &queryFragment : respectingQuotationMarks)
             queryFragments.append(p->encodeURL(queryFragment));
         return QUrl(QString(QStringLiteral("%1search_query=all:\"%3\"&start=0&max_results=%2")).arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join(QStringLiteral("\"+AND+all:\"")))); ///< join search terms with an AND operation

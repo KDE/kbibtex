@@ -48,26 +48,28 @@ QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
     // TODO
     /// http://adsabs.harvard.edu/cgi-bin/basic_connect?qsearch=Hansen&version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&nr_to_return=5
 
+    const QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
+    const QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
+    const QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    const QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+
     /// append search terms
     QStringList queryFragments;
+    queryFragments.reserve(freeTextWords.size() + yearWords.size() + titleWords.size() + authorWords.size());
 
     /// add words from "free text" field
-    const QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
     for (const QString &word : freeTextWords)
         queryFragments.append(globalSearch.arg(word));
 
     /// add words from "year" field
-    const QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
     for (const QString &word : yearWords)
         queryFragments.append(word); ///< no quotation marks around years
 
     /// add words from "title" field
-    const QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
     for (const QString &word : titleWords)
         queryFragments.append(rangeSearch.arg(QStringLiteral("intitle"), word));
 
     /// add words from "author" field
-    const QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     for (const QString &word : authorWords)
         queryFragments.append(rangeSearch.arg(QStringLiteral("author"), word));
 

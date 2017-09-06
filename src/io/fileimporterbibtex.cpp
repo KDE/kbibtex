@@ -832,7 +832,6 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     /// Case: Smith, John ;  Johnson, Tim ;  Fulkerson, Ford (IEEE Xplore)
     /// German case: Robert A. Gehring und Bernd Lutterbeck
 
-    QList<QSharedPointer<Person> > result;
     QString internalText = text;
 
     /// Remove invalid characters such as dots or (double) daggers for footnotes
@@ -859,6 +858,8 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     for (QStringList::ConstIterator it = authorTokenList.constBegin(); containsSpace && it != authorTokenList.constEnd(); ++it)
         containsSpace = (*it).contains(QChar(' '));
 
+    QList<QSharedPointer<Person> > result;
+    result.reserve(authorTokenList.size());
     if (containsSpace) {
         /// Tokens look like "John Smith"
         for (const QString &authorToken : authorTokenList) {

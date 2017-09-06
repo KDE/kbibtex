@@ -328,6 +328,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
             /// handle "external" list differently
             const QList<QUrl> urlList = FileInfo::entryUrls(entry, QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
             Value v;
+            v.reserve(urlList.size());
             for (const QUrl &url : urlList) {
                 v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.url(QUrl::PreferLocalFile))));
             }

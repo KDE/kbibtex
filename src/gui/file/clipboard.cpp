@@ -200,6 +200,7 @@ void Clipboard::copyReferences()
 {
     QStringList references;
     const QModelIndexList mil = d->fileView->selectionModel()->selectedRows();
+    references.reserve(mil.size());
     for (const QModelIndex &index : mil) {
         QSharedPointer<Entry> entry = d->fileView->fileModel()->element(d->fileView->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull())

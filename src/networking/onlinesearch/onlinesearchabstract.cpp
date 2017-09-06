@@ -56,10 +56,10 @@ const char *OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 #ifdef HAVE_QTWIDGETS
 QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 {
-    QStringList result;
     const EncoderLaTeX &encoder = EncoderLaTeX::instance();
-
     const Value v = entry[Entry::ftAuthor];
+    QStringList result;
+    result.reserve(v.size());
     for (const QSharedPointer<ValueItem> &vi : v) {
         QSharedPointer<const Person> p = vi.dynamicCast<const Person>();
         if (!p.isNull())

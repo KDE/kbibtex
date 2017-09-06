@@ -297,6 +297,7 @@ public:
                                 QSharedPointer<Keyword> kw = old.first().dynamicCast<Keyword>();
                                 if (!kw.isNull()) {
                                     const QList<QSharedPointer<Keyword> > keywordList = FileImporterBibTeX::splitKeywords(text);
+                                    v.reserve(keywordList.size());
                                     for (const auto &keyword : keywordList)
                                         v.append(keyword);
                                 } else {

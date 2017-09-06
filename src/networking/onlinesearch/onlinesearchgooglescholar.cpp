@@ -127,18 +127,20 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = numResults + 4);
 
-    QStringList queryFragments;
     const auto respectingQuotationMarksFreeText = splitRespectingQuotationMarks(query[queryKeyFreeText]);
+    const auto respectingQuotationMarksTitle = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    QStringList queryFragments;
+    queryFragments.reserve(respectingQuotationMarksFreeText.size() + respectingQuotationMarksTitle.size());
     for (const QString &queryFragment : respectingQuotationMarksFreeText) {
         queryFragments.append(encodeURL(queryFragment));
     }
-    const auto respectingQuotationMarksTitle = splitRespectingQuotationMarks(query[queryKeyTitle]);
     for (const QString &queryFragment : respectingQuotationMarksTitle) {
         queryFragments.append(encodeURL(queryFragment));
     }
     d->queryFreetext = queryFragments.join(QStringLiteral("+"));
-    queryFragments.clear();
     const auto respectingQuotationMarksAuthor = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    queryFragments.clear();
+    queryFragments.reserve(respectingQuotationMarksAuthor.size());
     for (const QString &queryFragment : respectingQuotationMarksAuthor) {
         queryFragments.append(encodeURL(queryFragment));
     }

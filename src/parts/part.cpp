@@ -1049,6 +1049,7 @@ void KBibTeXPart::updateActions()
     QStringList references;
     if (d->partWidget->fileView()->selectionModel() != nullptr) {
         const QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
+        references.reserve(mil.size());
         for (const QModelIndex &index : mil) {
             QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
             if (!entry.isNull())

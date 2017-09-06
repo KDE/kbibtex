@@ -443,6 +443,7 @@ void SearchForm::stoppedSearch(int)
             QTimer::singleShot(1100, d->useEntryButton, &QPushButton::show);
         } else {
             QStringList remainingEngines;
+            remainingEngines.reserve(d->runningSearches.size());
             for (OnlineSearchAbstract *running : const_cast<const QSet<OnlineSearchAbstract *> &>(d->runningSearches)) {
                 remainingEngines.append(running->label());
             }

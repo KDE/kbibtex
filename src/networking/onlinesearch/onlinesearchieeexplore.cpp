@@ -51,10 +51,12 @@ public:
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QUrl queryUrl = QUrl(gatewayUrl);
 
+        const QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         QStringList queryText;
+        queryText.reserve(freeTextFragments.size() + 1 + authors.size() + 1);
 
         /// Free text
-        const QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (const QString &freeTextFragment : freeTextFragments) {
             queryText << QString(QStringLiteral("\"%1\"")).arg(freeTextFragment);
         }
@@ -64,7 +66,6 @@ public:
             queryText << QString(QStringLiteral("\"Document Title\":\"%1\"")).arg(query[queryKeyTitle]);
 
         /// Author
-        const QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (const QString &author : authors) {
             queryText << QString(QStringLiteral("Author:\"%1\"")).arg(author);
         }

@@ -44,26 +44,28 @@ QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, 
 {
     static const QString typedSearch = QStringLiteral("%1 %2"); ///< no quotation marks for search term?
 
+    const QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
+    const QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
+    const QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    const QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+
     /// append search terms
     QStringList queryFragments;
+    queryFragments.reserve(freeTextWords.size() + yearWords.size() + titleWords.size() + authorWords.size());
 
     /// add words from "free text" field
-    const QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
     for (const QString &text : freeTextWords)
         queryFragments.append(typedSearch.arg(QStringLiteral("ft"), text));
 
     /// add words from "year" field
-    const QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
     for (const QString &text : yearWords)
         queryFragments.append(typedSearch.arg(QStringLiteral("d"), text));
 
     /// add words from "title" field
-    const QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
     for (const QString &text : titleWords)
         queryFragments.append(typedSearch.arg(QStringLiteral("t"), text));
 
     /// add words from "author" field
-    const QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
     for (const QString &text : authorWords)
         queryFragments.append(typedSearch.arg(QStringLiteral("a"), text));
 

@@ -125,6 +125,7 @@ public:
                 /// Get components of the author's last name
                 const QStringList nameComponents = author.split(QStringLiteral(" "), QString::SkipEmptyParts);
                 QStringList newNameComponents;
+                newNameComponents.reserve(nameComponents.size());
                 /// Camel-case each name component
                 for (const QString &nameComponent : nameComponents) {
                     newNameComponents.append(nameComponent[0].toUpper() + nameComponent.mid(1));
@@ -318,6 +319,7 @@ QStringList IdSuggestions::formatIdList(const Entry &entry) const
 {
     const QStringList formatStrings = d->formatStringList();
     QStringList result;
+    result.reserve(formatStrings.size());
     for (const QString &formatString : formatStrings) {
         result << formatId(entry, formatString);
     }

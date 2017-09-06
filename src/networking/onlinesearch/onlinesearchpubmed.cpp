@@ -59,27 +59,28 @@ public:
 
         QString url = pubMedUrlPrefix + QStringLiteral("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
 
+        const QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        const QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
+        const QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
+        const QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+
         /// append search terms
         QStringList queryFragments;
+        queryFragments.reserve(freeTextWords.size() + yearWords.size() + titleWords.size() + authorWords.size());
 
         /// add words from "free text" field, but auto-detect PMIDs
-        const QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
         for (const QString &text : freeTextWords)
             queryFragments.append(text + (pmidRegExp.indexIn(text) >= 0 ? QStringLiteral("") : QStringLiteral("[All Fields]")));
 
-
         /// add words from "year" field
-        const QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
         for (const QString &text : yearWords)
             queryFragments.append(text);
 
         /// add words from "title" field
-        const QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
         for (const QString &text : titleWords)
             queryFragments.append(text + QStringLiteral("[Title]"));
 
         /// add words from "author" field
-        const QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (const QString &text : authorWords)
             queryFragments.append(text + QStringLiteral("[Author]"));
 

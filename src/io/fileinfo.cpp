@@ -250,6 +250,7 @@ QList<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const 
     if (!baseDirectory.isEmpty()) {
         /// File types supported by "document preview"
         static const QStringList documentFileExtensions = QStringList() << QStringLiteral(".pdf") << QStringLiteral(".pdf.gz") << QStringLiteral(".pdf.bz2") << QStringLiteral(".ps") << QStringLiteral(".ps.gz") << QStringLiteral(".ps.bz2") << QStringLiteral(".eps") << QStringLiteral(".eps.gz") << QStringLiteral(".eps.bz2") << QStringLiteral(".html") << QStringLiteral(".xhtml") << QStringLiteral(".htm") << QStringLiteral(".dvi") << QStringLiteral(".djvu") << QStringLiteral(".wwf") << QStringLiteral(".jpeg") << QStringLiteral(".jpg") << QStringLiteral(".png") << QStringLiteral(".gif") << QStringLiteral(".tif") << QStringLiteral(".tiff");
+        result.reserve(result.size() + documentFileExtensions.size() * 2);
 
         /// check if in the same directory as the BibTeX file
         /// a PDF file exists which filename is based on the entry's id

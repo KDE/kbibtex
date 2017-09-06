@@ -188,7 +188,7 @@ QStringList File::allKeys(ElementTypes elementTypes) const
 {
     Q_ASSERT_X(d->checkValidity(), "QStringList File::allKeys(ElementTypes elementTypes) const", "This File object is not valid");
     QStringList result;
-
+    result.reserve(size());
     for (const auto &element : const_cast<const File &>(*this)) {
         const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull())

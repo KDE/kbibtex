@@ -644,7 +644,7 @@ public:
 
     QString apply() {
         QStringList result;
-
+        result.reserve(widgetList.size());
         for (TokenWidget *widget : const_cast<const QList<TokenWidget *> &>(widgetList))
             result << widget->toString();
 
