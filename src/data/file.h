@@ -57,12 +57,14 @@ public:
     const static QString ListSeparator;
 
     explicit File();
+    explicit File(const File &other);
+    explicit File(File &&other);
     ~File();
 
-    /**
-      * To fulfill the rule-of-three, here is a copy-assignment operator.
-      */
+    /// Copy-assignment operator.
     File &operator= (const File &other);
+    /// Move-assignment operator.
+    File &operator= (File &&other);
 
     /**
      * Check if a given key (e.g. a key for a macro or an id for an entry)

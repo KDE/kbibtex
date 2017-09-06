@@ -82,11 +82,25 @@ public:
         validInvalidField = invalid;
     }
 
+    /// Copy-assignment operator
     FilePrivate &operator= (const FilePrivate &other) {
-        validInvalidField = other.validInvalidField;
-        properties = other.properties;
-        const bool isValid = checkValidity();
-        if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Assigning File instance" << other.internalId << "to" << internalId << "  Is other valid?" << other.checkValidity() << "  Self valid?" << isValid;
+        if (this != &other) {
+            validInvalidField = other.validInvalidField;
+            properties = other.properties;
+            const bool isValid = checkValidity();
+            if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Assigning File instance" << other.internalId << "to" << internalId << "  Is other valid?" << other.checkValidity() << "  Self valid?" << isValid;
+        }
+        return *this;
+    }
+
+    /// Move-assignment operator
+    FilePrivate &operator= (FilePrivate &&other) {
+        if (this != &other) {
+            validInvalidField = std::move(other.validInvalidField);
+            properties = std::move(other.properties);
+            const bool isValid = checkValidity();
+            if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Assigning File instance" << other.internalId << "to" << internalId << "  Is other valid?" << other.checkValidity() << "  Self valid?" << isValid;
+        }
         return *this;
     }
 
@@ -119,6 +133,19 @@ File::File()
     // nothing
 }
 
+File::File(const File &other)
+        : QList<QSharedPointer<Element> >(other), d(new FilePrivate(this))
+{
+    d->operator =(*other.d);
+}
+
+File::File(File &&other)
+        : QList<QSharedPointer<Element> >(std::move(other)), d(new FilePrivate(this))
+{
+    d->operator =(std::move(*other.d));
+}
+
+
 File::~File()
 {
     Q_ASSERT_X(d->checkValidity(), "File::~File()", "This File object is not valid");
@@ -126,7 +153,14 @@ File::~File()
 }
 
 File &File::operator= (const File &other) {
-    d->operator =(*other.d);
+    if (this != &other)
+        d->operator =(*other.d);
+    return *this;
+}
+
+File &File::operator= (File &&other) {
+    if (this != &other)
+        d->operator =(std::move(*other.d));
     return *this;
 }
 
