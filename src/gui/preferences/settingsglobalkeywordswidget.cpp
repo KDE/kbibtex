@@ -33,6 +33,12 @@ class DisallowEmptyStringListModel : public QStringListModel
     Q_OBJECT
 
 public:
+    explicit DisallowEmptyStringListModel(QObject *parent)
+            : QStringListModel(parent)
+    {
+        /// nothing
+    }
+
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override {
         if (role == Qt::EditRole && value.canConvert<QString>() && value.toString().isEmpty())
             return false; /// do not accept values that are empty
@@ -56,7 +62,7 @@ public:
     static int keywordCounter;
 
     SettingsGlobalKeywordsWidgetPrivate(SettingsGlobalKeywordsWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("Global Keywords")) {
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("Global Keywords")), stringListModel(parent) {
         setupGUI();
     }
 

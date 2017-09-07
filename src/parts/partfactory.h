@@ -22,7 +22,6 @@
 
 class KBibTeXPartFactory : public KPluginFactory
 {
-    Q_OBJECT
     Q_PLUGIN_METADATA(IID KPluginFactory_iid FILE "kbibtexpart.json")
     Q_INTERFACES(KPluginFactory)
 
