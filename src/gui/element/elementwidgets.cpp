@@ -612,6 +612,9 @@ bool FilesWidget::apply(QSharedPointer<Element> element) const
     fileList->apply(combinedValue);
 
     Value urlValue, doiValue, localFileValue;
+    urlValue.reserve(combinedValue.size());
+    doiValue.reserve(combinedValue.size());
+    localFileValue.reserve(combinedValue.size());
 
     for (const auto &valueItem : const_cast<const Value &>(combinedValue)) {
         const QSharedPointer<const VerbatimText> verbatimText = valueItem.dynamicCast<const VerbatimText>();
