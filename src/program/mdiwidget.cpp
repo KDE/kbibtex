@@ -238,6 +238,8 @@ MDIWidget::~MDIWidget()
     delete d;
 }
 
+/// Clazy warns: "Missing reference on non-trivial type" for argument 'servicePtr',
+/// but type 'KService::Ptr' is actually a pointer (QExplicitlySharedDataPointer).
 void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 {
     KParts::Part *part = openFileInfo == nullptr ? nullptr : openFileInfo->part(this, servicePtr);

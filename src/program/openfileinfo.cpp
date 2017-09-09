@@ -246,6 +246,8 @@ QString OpenFileInfo::fullCaption() const
         return shortCaption();
 }
 
+/// Clazy warns: "Missing reference on non-trivial type" for argument 'servicePtr',
+/// but type 'KService::Ptr' is actually a pointer (QExplicitlySharedDataPointer).
 KParts::ReadOnlyPart *OpenFileInfo::part(QWidget *parent, KService::Ptr servicePtr)
 {
     return d->createPart(parent, servicePtr);
@@ -634,6 +636,8 @@ OpenFileInfo *OpenFileInfoManager::currentFile() const
     return d->currentFileInfo;
 }
 
+/// Clazy warns: "Missing reference on non-trivial type" for argument 'servicePtr',
+/// but type 'KService::Ptr' is actually a pointer (QExplicitlySharedDataPointer).
 void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 {
     bool hasChanged = d->currentFileInfo != openFileInfo;
