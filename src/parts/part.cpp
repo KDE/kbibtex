@@ -568,7 +568,7 @@ public:
 
         /// Extract filename extension (e.g. 'bib') to determine which FileExporter to use
         static const QRegExp suffixRegExp("\\.([^.]{1,4})$");
-        const QString ending = suffixRegExp.indexIn(url.fileName()) > 0 ? suffixRegExp.cap(1) : QLatin1String("bib");
+        const QString ending = suffixRegExp.indexIn(url.fileName()) > 0 ? suffixRegExp.cap(1) : QStringLiteral("bib");
         FileExporter *exporter = saveFileExporter(ending);
 
         /// String list to collect error message from FileExporer
