@@ -250,7 +250,7 @@ public:
         loadState();
 
         connect(externalViewerButton, &QPushButton::clicked, p, &DocumentPreview::openExternally);
-        connect(urlComboBox, static_cast<void(KComboBox::*)(int)>(&KComboBox::activated), p, &DocumentPreview::comboBoxChanged);
+        connect(urlComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), p, &DocumentPreview::comboBoxChanged);
         connect(onlyLocalFilesButton, &QPushButton::toggled, p, &DocumentPreview::onlyLocalFilesChanged);
     }
 

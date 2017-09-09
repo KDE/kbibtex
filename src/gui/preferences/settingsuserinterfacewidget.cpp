@@ -100,14 +100,14 @@ public:
         comboBoxBibliographySystem->addItem(i18n("BibTeX"), QStringLiteral("bibtex"));
         comboBoxBibliographySystem->addItem(i18n("BibLaTeX"), QStringLiteral("biblatex"));
         layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
-        connect(comboBoxBibliographySystem, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), p, &SettingsUserInterfaceWidget::changed);
+        connect(comboBoxBibliographySystem, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsUserInterfaceWidget::changed);
 
         comboBoxElementDoubleClickAction = new KComboBox(p);
         comboBoxElementDoubleClickAction->setObjectName(QStringLiteral("comboBoxElementDoubleClickAction"));
         comboBoxElementDoubleClickAction->addItem(i18n("Open Editor")); ///< ActionOpenEditor = 0
         comboBoxElementDoubleClickAction->addItem(i18n("View Document")); ///< ActionViewDocument = 1
         layout->addRow(i18n("When double-clicking an element:"), comboBoxElementDoubleClickAction);
-        connect(comboBoxElementDoubleClickAction, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), p, &SettingsUserInterfaceWidget::changed);
+        connect(comboBoxElementDoubleClickAction, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsUserInterfaceWidget::changed);
     }
 };
 

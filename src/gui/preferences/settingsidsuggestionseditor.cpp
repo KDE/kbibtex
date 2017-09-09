@@ -109,7 +109,7 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
     connect(spanSliderAuthor, &QxtSpanSlider::upperValueChanged, this, &AuthorWidget::updateRangeLabel);
     connect(checkBoxLastAuthor, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
     connect(checkBoxLastAuthor, &QCheckBox::toggled, this, &AuthorWidget::updateRangeLabel);
-    connect(comboBoxChangeCase, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
     connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
 
@@ -171,7 +171,7 @@ public:
         formLayout->addRow(i18n("Digits:"), comboBoxDigits);
         comboBoxDigits->setCurrentIndex(comboBoxDigits->findData(digits));
 
-        connect(comboBoxDigits, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(comboBoxDigits, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
     QString toString() const override {
@@ -280,7 +280,7 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
     connect(spanSliderWords, &QxtSpanSlider::lowerValueChanged, this, &TitleWidget::updateRangeLabel);
     connect(spanSliderWords, &QxtSpanSlider::upperValueChanged, this, &TitleWidget::updateRangeLabel);
     connect(checkBoxRemoveSmallWords, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(comboBoxChangeCase, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
     connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
 

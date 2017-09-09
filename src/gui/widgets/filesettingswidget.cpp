@@ -132,7 +132,7 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxEncodings->addItem(QStringLiteral("LaTeX"));
     m_comboBoxEncodings->insertSeparator(1);
     m_comboBoxEncodings->addItems(TextEncoder::encodings);
-    connect(m_comboBoxEncodings, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
+    connect(m_comboBoxEncodings, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
     m_comboBoxStringDelimiters = new KComboBox(false, this);
     m_comboBoxStringDelimiters->setObjectName(QStringLiteral("comboBoxStringDelimiters"));
@@ -140,14 +140,14 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxStringDelimiters->addItem(createDelimiterString('"', '"'));
     m_comboBoxStringDelimiters->addItem(createDelimiterString('{', '}'));
     m_comboBoxStringDelimiters->addItem(createDelimiterString('(', ')'));
-    connect(m_comboBoxStringDelimiters, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
+    connect(m_comboBoxStringDelimiters, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
     m_comboBoxQuoteComment = new KComboBox(false, this);
     layout->addRow(i18n("Comment Quoting:"), m_comboBoxQuoteComment);
     m_comboBoxQuoteComment->addItem(i18nc("Comment Quoting", "None"));
     m_comboBoxQuoteComment->addItem(i18nc("Comment Quoting", "@comment{%1}", QChar(8230)));
     m_comboBoxQuoteComment->addItem(i18nc("Comment Quoting", "%{%1}", QChar(8230)));
-    connect(m_comboBoxQuoteComment, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
+    connect(m_comboBoxQuoteComment, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
     m_comboBoxKeywordCasing = new KComboBox(false, this);
     layout->addRow(i18n("Keyword Casing:"), m_comboBoxKeywordCasing);
@@ -156,7 +156,7 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "UpperCamelCase"));
     m_comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "lowerCamelCase"));
     m_comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "UPPERCASE"));
-    connect(m_comboBoxKeywordCasing, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
+    connect(m_comboBoxKeywordCasing, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
     m_checkBoxProtectCasing = new QCheckBox(i18n("Protect Titles"), this);
     m_checkBoxProtectCasing->setTristate(true);
@@ -166,7 +166,7 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxPersonNameFormatting = new KComboBox(false, this);
     m_comboBoxPersonNameFormatting->setObjectName(QStringLiteral("comboBoxPersonNameFormatting"));
     layout->addRow(i18n("Person Names Formatting:"), m_comboBoxPersonNameFormatting);
-    connect(m_comboBoxPersonNameFormatting, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
+    connect(m_comboBoxPersonNameFormatting, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
     ItalicTextItemModel *itim = new ItalicTextItemModel(this);
     itim->addItem(i18n("Use global settings"), QString(QStringLiteral("")));
@@ -176,7 +176,7 @@ void FileSettingsWidget::setupGUI()
 
     m_comboBoxListSeparator = new KComboBox(false, this);
     layout->addRow(i18n("List Separator"), m_comboBoxListSeparator);
-    connect(m_comboBoxListSeparator, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
+    connect(m_comboBoxListSeparator, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
     m_comboBoxListSeparator->addItem(QStringLiteral(";"), QVariant::fromValue<QString>(QStringLiteral("; ")));
     m_comboBoxListSeparator->addItem(QStringLiteral(","), QVariant::fromValue<QString>(QStringLiteral(", ")));
 }

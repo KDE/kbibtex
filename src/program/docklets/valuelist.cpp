@@ -126,8 +126,8 @@ public:
 
         p->setEnabled(false);
 
-        connect(comboboxFieldNames, static_cast<void(KComboBox::*)(int)>(&KComboBox::activated), p, &ValueList::fieldNamesChanged);
-        connect(comboboxFieldNames, static_cast<void(KComboBox::*)(int)>(&KComboBox::activated), lineeditFilter, &KLineEdit::clear);
+        connect(comboboxFieldNames, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), p, &ValueList::fieldNamesChanged);
+        connect(comboboxFieldNames, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), lineeditFilter, &KLineEdit::clear);
         connect(treeviewFieldValues, &QTreeView::activated, p, &ValueList::listItemActivated);
         connect(delegate, &ValueListDelegate::closeEditor, treeviewFieldValues, &QTreeView::reset);
 

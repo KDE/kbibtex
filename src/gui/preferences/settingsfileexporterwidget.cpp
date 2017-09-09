@@ -134,7 +134,7 @@ public:
             itim->addItem(citeCmdToLabel.arg(citeCommand), citeCommand);
         }
         comboBoxCopyReferenceCmd->setModel(itim);
-        connect(comboBoxCopyReferenceCmd, static_cast<void(KComboBox::*)(int)>(&KComboBox::currentIndexChanged), p, &SettingsFileExporterWidget::changed);
+        connect(comboBoxCopyReferenceCmd, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsFileExporterWidget::changed);
 
 #ifdef QT_LSTAT
         checkboxUseAutomaticLyXPipeDetection = new QCheckBox(QStringLiteral(""), p);
