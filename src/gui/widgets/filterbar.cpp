@@ -34,7 +34,7 @@
 #include "bibtexfields.h"
 #include "delayedexecutiontimer.h"
 
-static bool sortStringsLocaleAware(const QString s1, const QString s2) {
+static bool sortStringsLocaleAware(const QString &s1, const QString &s2) {
     return QString::localeAwareCompare(s1, s2) < 0;
 }
 
