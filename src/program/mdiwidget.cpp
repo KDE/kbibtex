@@ -96,7 +96,7 @@ public:
         return QVariant();
     }
 
-    QVariant headerData(int section, Qt::Orientation , int role = Qt::DisplayRole) const override {
+    QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const override {
         if (role != Qt::DisplayRole || section > 2) return QVariant();
         else if (section == 0) return i18n("Filename");
         else if (section == 1) return i18n("Date/time of last use");
