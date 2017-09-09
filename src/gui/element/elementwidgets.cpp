@@ -1233,9 +1233,7 @@ void SourceWidget::createGUI()
 
     d->buttonRestore = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Restore"), this);
     layout->addWidget(d->buttonRestore, 1, 1, 1, 1);
-    // FIXME connect(d->buttonRestore, &QPushButton::clicked, this, &SourceWidget::reset);
-    connect(d->buttonRestore, SIGNAL(clicked(bool)), this, SLOT(reset()));
-
+    connect(d->buttonRestore, &QPushButton::clicked, this, static_cast<void(SourceWidget::*)()>(&SourceWidget::reset));
     connect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
 }
 

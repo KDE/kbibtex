@@ -291,11 +291,11 @@ bool ZoteroBrowser::applyCredentials()
         int groupId = d->comboBoxGroupList->itemData(d->comboBoxGroupList->currentIndex()).toInt(&ok);
         if (!ok) groupId = -1;
 
-        disconnect(d->tags, SIGNAL(finishedLoading()), this, SLOT(reenableWidget()));
-        disconnect(d->items, SIGNAL(stoppedSearch(int)), this, SLOT(reenableWidget()));
-        disconnect(d->items, SIGNAL(foundElement(QSharedPointer<Element>)), this, SLOT(showItem(QSharedPointer<Element>)));
-        disconnect(d->tagModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
-        disconnect(d->collectionModel, SIGNAL(modelReset()), this, SLOT(modelReset()));
+        disconnect(d->tags, &Zotero::Tags::finishedLoading, this, &ZoteroBrowser::reenableWidget);
+        disconnect(d->items, &Zotero::Items::stoppedSearch, this, &ZoteroBrowser::reenableWidget);
+        disconnect(d->items, &Zotero::Items::foundElement, this, &ZoteroBrowser::showItem);
+        disconnect(d->tagModel, &Zotero::TagModel::modelReset, this, &ZoteroBrowser::modelReset);
+        disconnect(d->collectionModel, &Zotero::CollectionModel::modelReset, this, &ZoteroBrowser::modelReset);
 
         d->collection->deleteLater();
         d->items->deleteLater();
@@ -347,7 +347,7 @@ void ZoteroBrowser::retrieveGroupList() {
         d->comboBoxGroupList->clear();
         d->comboBoxGroupListInitialized = false;
 
-        disconnect(d->groups, SIGNAL(finishedLoading()), this, SLOT(gotGroupList()));
+        disconnect(d->groups, &Zotero::Groups::finishedLoading, this, &ZoteroBrowser::gotGroupList);
         d->groups->deleteLater();
         d->api.clear();
 
