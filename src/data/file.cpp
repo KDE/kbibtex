@@ -166,7 +166,8 @@ File &File::operator= (File &&other) {
 
 const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const
 {
-    Q_ASSERT_X(d->checkValidity(), "const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const", "This File object is not valid");
+    if (!d->checkValidity())
+        qCCritical(LOG_KBIBTEX_DATA) << "const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const" << "This File object is not valid";
     for (const auto &element : const_cast<const File &>(*this)) {
         const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull()) {
@@ -186,7 +187,8 @@ const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes
 
 QStringList File::allKeys(ElementTypes elementTypes) const
 {
-    Q_ASSERT_X(d->checkValidity(), "QStringList File::allKeys(ElementTypes elementTypes) const", "This File object is not valid");
+    if (!d->checkValidity())
+        qCCritical(LOG_KBIBTEX_DATA) << "QStringList File::allKeys(ElementTypes elementTypes) const" << "This File object is not valid";
     QStringList result;
     result.reserve(size());
     for (const auto &element : const_cast<const File &>(*this)) {
@@ -205,7 +207,8 @@ QStringList File::allKeys(ElementTypes elementTypes) const
 
 QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
 {
-    Q_ASSERT_X(d->checkValidity(), "QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const", "This File object is not valid");
+    if (!d->checkValidity())
+        qCCritical(LOG_KBIBTEX_DATA) << "QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const" << "This File object is not valid";
     QSet<QString> valueSet;
     const QString lcFieldName = fieldName.toLower();
 
@@ -254,7 +257,8 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
 
 QStringList File::uniqueEntryValuesList(const QString &fieldName) const
 {
-    Q_ASSERT_X(d->checkValidity(), "QStringList File::uniqueEntryValuesList(const QString &fieldName) const", "This File object is not valid");
+    if (!d->checkValidity())
+        qCCritical(LOG_KBIBTEX_DATA) << "QStringList File::uniqueEntryValuesList(const QString &fieldName) const" << "This File object is not valid";
     QSet<QString> valueSet = uniqueEntryValuesSet(fieldName);
     QStringList list = valueSet.toList();
     list.sort();
@@ -263,32 +267,37 @@ QStringList File::uniqueEntryValuesList(const QString &fieldName) const
 
 void File::setProperty(const QString &key, const QVariant &value)
 {
-    Q_ASSERT_X(d->checkValidity(), "void File::setProperty(const QString &key, const QVariant &value)", "This File object is not valid");
+    if (!d->checkValidity())
+        qCCritical(LOG_KBIBTEX_DATA) << "void File::setProperty(const QString &key, const QVariant &value)" << "This File object is not valid";
     d->properties.insert(key, value);
 }
 
 QVariant File::property(const QString &key) const
 {
-    Q_ASSERT_X(d->checkValidity(), "QVariant File::property(const QString &key) const", "This File object is not valid");
+    if (!d->checkValidity())
+        qCCritical(LOG_KBIBTEX_DATA) << "QVariant File::property(const QString &key) const" << "This File object is not valid";
     return d->properties.contains(key) ? d->properties.value(key) : QVariant();
 }
 
 QVariant File::property(const QString &key, const QVariant &defaultValue) const
 {
-    Q_ASSERT_X(d->checkValidity(), "QVariant File::property(const QString &key, const QVariant &defaultValue) const", "This File object is not valid");
+    if (!d->checkValidity())
+        qCCritical(LOG_KBIBTEX_DATA) << "QVariant File::property(const QString &key, const QVariant &defaultValue) const" << "This File object is not valid";
     return d->properties.value(key, defaultValue);
 }
 
 bool File::hasProperty(const QString &key) const
 {
-    Q_ASSERT_X(d->checkValidity(), "bool File::hasProperty(const QString &key) const", "This File object is not valid");
+    if (!d->checkValidity())
+        qCCritical(LOG_KBIBTEX_DATA) << "bool File::hasProperty(const QString &key) const" << "This File object is not valid";
     return d->properties.contains(key);
 }
 
 #ifdef HAVE_KF5
 void File::setPropertiesToDefault()
 {
-    Q_ASSERT_X(d->checkValidity(), "void File::setPropertiesToDefault()", "This File object is not valid");
+    if (!d->checkValidity())
+        qCCritical(LOG_KBIBTEX_DATA) << "void File::setPropertiesToDefault()" << "This File object is not valid";
     d->loadConfiguration();
 }
 #endif // HAVE_KF5
