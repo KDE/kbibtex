@@ -52,6 +52,7 @@ class File::FilePrivate
 private:
     // UNUSED File *p;
     quint64 validInvalidField;
+    static const quint64 initialInternalIdCounter;
     static quint64 internalIdCounter;
 
 #ifdef HAVE_KF5
@@ -119,13 +120,25 @@ public:
 #endif // HAVE_KF5
 
     bool checkValidity() const {
-        return validInvalidField == valid ///< 'validInvalidField' must contain the know 'valid' value
-               && internalId >= 100000 ///< internal id counter starts at 100000
-               && internalId < 200000; ///< reasonable assumption: not more that 100000 ids used
+        if (validInvalidField != valid) {
+            /// 'validInvalidField' must equal to the know 'valid' value
+            qCWarning(LOG_KBIBTEX_DATA) << "Failed validity check: " << validInvalidField << "!=" << valid;
+            return false;
+        } else if (internalId <= initialInternalIdCounter) {
+            /// Internal id counter starts at initialInternalIdCounter+1
+            qCWarning(LOG_KBIBTEX_DATA) << "Failed validity check: " << internalId << "< " << (initialInternalIdCounter + 1);
+            return false;
+        } else if (internalId > 600000) {
+            /// Reasonable assumption: not more that 500000 ids used
+            qCWarning(LOG_KBIBTEX_DATA) << "Failed validity check: " << internalId << "> 600000";
+            return false;
+        }
+        return true;
     }
 };
 
-quint64 File::FilePrivate::internalIdCounter = 99999;
+const quint64 File::FilePrivate::initialInternalIdCounter = 99999;
+quint64 File::FilePrivate::internalIdCounter = File::FilePrivate::initialInternalIdCounter;
 
 File::File()
         : QList<QSharedPointer<Element> >(), d(new FilePrivate(this))
