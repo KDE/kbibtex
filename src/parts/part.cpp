@@ -155,6 +155,7 @@ public:
         delete signalMapperNewElement;
         delete viewDocumentMenu;
         delete signalMapperViewDocument;
+        delete findDuplicatesUI;
     }
 
 
@@ -764,7 +765,6 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutDat
 
 KBibTeXPart::~KBibTeXPart()
 {
-    delete d->findDuplicatesUI;
     delete d;
 }
 
