@@ -117,6 +117,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFrameStyle(QFrame::NoFrame);
     setAlternatingRowColors(true);
     setAllColumnsShowFocus(true);
