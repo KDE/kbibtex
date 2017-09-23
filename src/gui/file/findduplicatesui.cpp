@@ -654,7 +654,7 @@ void FindDuplicatesUI::slotFindDuplicates()
     int sensitivity = 4000;
 
     QPointer<KDialog> dlg = new KDialog(d->part->widget());
-    FindDuplicates fd(dlg, sensitivity);
+    FindDuplicates fd(d->part->widget(), sensitivity);
     /// File to be used to find duplicate in,
     /// may be only a subset of the original one if selection is used (see below)
     File *file = d->view->fileModel()->bibliographyFile();
