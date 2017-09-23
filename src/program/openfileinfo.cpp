@@ -107,6 +107,11 @@ public:
             newServicePtr = p->defaultService();
         }
         if (!newServicePtr) {
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "PATH=" << getenv("PATH");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "LD_LIBRARY_PATH=" << getenv("LD_LIBRARY_PATH");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "KDEDIRS=" << getenv("KDEDIRS");
             qCCritical(LOG_KBIBTEX_PROGRAM) << "Cannot find service to handle mimetype " << mimeType << endl;
             return nullptr;
         }
@@ -114,7 +119,12 @@ public:
         QString errorString;
         part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
         if (part == nullptr) {
-            qCDebug(LOG_KBIBTEX_PROGRAM) << "Could not instantiate read-write part for service" << newServicePtr->name() << "(mimeType=" << mimeType << ", library=" << newServicePtr->library() << ", error msg=" << errorString << ")";
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "PATH=" << getenv("PATH");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "LD_LIBRARY_PATH=" << getenv("LD_LIBRARY_PATH");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "KDEDIRS=" << getenv("KDEDIRS");
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not instantiate read-write part for service" << newServicePtr->name() << "(mimeType=" << mimeType << ", library=" << newServicePtr->library() << ", error msg=" << errorString << ")";
             /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
             part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
         }
