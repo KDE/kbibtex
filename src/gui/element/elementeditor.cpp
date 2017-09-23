@@ -244,8 +244,29 @@ public:
         connect(tab, &HidingTabWidget::currentChanged, p, &ElementEditor::tabChanged);
     }
 
-    bool hasDuplicateId() const {
-        return referenceWidget != nullptr && referenceWidget->isDuplicateId();
+    /**
+     * If this element editor makes use of a reference widget
+     * (e.g. where entry type and entry id/macro key can be edited),
+     * then return the current value of the entry id/macro key
+     * editing widget.
+     * Otherwise, return an empty string.
+     *
+     * @return Current value of entry id/macro key if any, otherwise empty string
+     */
+    QString currentId() const {
+        if (referenceWidget != nullptr)
+            return referenceWidget->currentId();
+        return QString();
+    }
+
+    /**
+     * Return the current File object set for this element editor.
+     * May be NULL if nothing has been set or if it has been cleared.
+     *
+     * @return Current File object, may be nullptr
+     */
+    const File *currentFile() const {
+        return file;
     }
 
     void apply() {
@@ -451,31 +472,47 @@ ElementEditor::~ElementEditor()
 
 void ElementEditor::apply()
 {
+    /// The prime problem to tackle in this function is to cope with
+    /// invalid/problematic entry ids or macro keys, respectively:
+    ///  - empty ids/keys
+    ///  - ids/keys that are duplicates of already used ids/keys
+
     QSharedPointer<Entry> entry = d->element.dynamicCast<Entry>();
     QSharedPointer<Macro> macro = d->element.dynamicCast<Macro>();
-    const bool doReplaceId = d->hasDuplicateId() && (
-                                 /// the id of the entry is already in use by another entry
-                                 (!entry.isNull() && KMessageBox::warningContinueCancel(this, i18n("The entered id '%1' is already in use for another entry.", entry->id()), i18n("Id already in use"), KGuiItem(i18n("Keep duplicate ids")), KGuiItem(i18n("Restore original id"))) == KMessageBox::Cancel)
-                                 /// the key of a macro is already in use by another macro
-                                 || (!macro.isNull() && KMessageBox::warningContinueCancel(this, i18n("The entered key '%1' is already in use for another macro.", macro->key()), i18n("Key already in use"), KGuiItem(i18n("Keep duplicate keys")), KGuiItem(i18n("Restore original key"))) == KMessageBox::Cancel)
-                             );
+    /// Determine id/key as it was set before the current editing started
+    const QString originalId = !entry.isNull() ? entry->id() : (!macro.isNull() ? macro->key() : QString());
+    /// Get the id/key as it is in the editing widget right now
+    const QString newId = d->currentId();
+    /// Keep track whether the 'original' id/key or the 'new' id/key will eventually be used
+    enum IdToUse {UseOriginalId, UseNewId};
+    IdToUse idToUse = UseNewId;
 
-    QString replacementId;
-    if (doReplaceId) {
-        if (!entry.isNull())
-            replacementId = entry->id();
-        else if (!macro.isNull())
-            replacementId = macro->key();
+    if (newId.isEmpty()) {
+        /// New id/key is empty (invalid by definition), so just notify use and revert back to original id/key
+        /// (assuming that original id/key is valid)
+        KMessageBox::sorry(this, i18n("No id was entered, so the previous id '%1' will be restored.", originalId), i18n("No id given"));
+        idToUse = UseOriginalId;
+    } else {
+        /// If new id/key is not empty, then check if it is identical to another entry/macro in the current file
+        const QSharedPointer<Element> knownElementWithSameId = d->currentFile() != nullptr ? d->currentFile()->containsKey(newId) : QSharedPointer<Element>();
+        if (!knownElementWithSameId.isNull() && d->element != knownElementWithSameId) {
+            /// Some other, different element (entry or macro) uses same id/key, so ask user how to proceed
+            const int msgBoxResult = KMessageBox::warningContinueCancel(this, i18n("The entered id '%1' is already in use for another element.\n\nKeep original id '%2' instead?", newId, originalId), i18n("Id already in use"), KGuiItem(i18n("Keep duplicate ids")), KGuiItem(i18n("Restore original id")));
+            idToUse = msgBoxResult == KMessageBox::Continue ? UseNewId : UseOriginalId;
+        }
     }
 
+    /// Apply will always set the 'new' id/key to the entry or macro, respectively
     d->apply();
 
-    if (doReplaceId) {
+    if (idToUse == UseOriginalId) {
+        /// As 'apply()' above set the 'new' id/key but the 'original' id/key is to be used,
+        /// now the entry id or macro key, respectively, has to be set again, manually
         if (!entry.isNull())
-            entry->setId(replacementId);
+            entry->setId(originalId);
         else if (!macro.isNull())
-            macro->setKey(replacementId);
-        d->reset();
+            macro->setKey(originalId);
+        d->reset(); ///< notify UI about change of id/key
     }
 
     d->setModified(false);

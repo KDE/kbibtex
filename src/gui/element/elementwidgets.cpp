@@ -439,10 +439,9 @@ void ReferenceWidget::setOriginalElement(const QSharedPointer<Element> &orig)
     m_element = orig;
 }
 
-bool ReferenceWidget::isDuplicateId()const
+QString ReferenceWidget::currentId() const
 {
-    const QSharedPointer<Element> knowElementWithSameId = m_file->containsKey(entryId->text(), File::etEntry);
-    return !knowElementWithSameId.isNull() && m_element != knowElementWithSameId;
+    return entryId->text();
 }
 
 void ReferenceWidget::createGUI()

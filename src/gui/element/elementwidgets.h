@@ -138,7 +138,13 @@ public:
     }
 
     void setOriginalElement(const QSharedPointer<Element> &orig);
-    bool isDuplicateId() const;
+
+    /**
+     * Return the current value of the entry id/macro key editing widget.
+     *
+     * @return Current value of entry id/macro key if any, otherwise empty string
+     */
+    QString currentId() const;
 
     QString label() override;
     QIcon icon() override;
