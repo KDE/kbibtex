@@ -1036,18 +1036,21 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
      * Normally, the last upper case token in a name is the last name
      * (last names consisting of multiple space-separated parts *have*
      * to be protected by {...}), but some languages have fill words
-     * in lower caps beloning to the last name as well (example: "van").
+     * in lower case belonging to the last name as well (example: "van").
+     * In addition, some languages have capital case letters as well
+     * (example: "Di Cosmo").
      * Exception: Special keywords such as "Jr." can be appended to the
-     * name, not counted as part of the last name
+     * name, not counted as part of the last name.
      */
     partA.clear(); partB.clear(); partC.clear();
+    static const QSet<QString> capitalCaseLastNameFragments = QSet<QString>() << QStringLiteral("Di");
     it = tokens.constEnd();
     while (it != tokens.constBegin()) {
         --it;
         if (partB.isEmpty() && (it->toLower().startsWith(QStringLiteral("jr")) || it->toLower().startsWith(QStringLiteral("sr")) || it->toLower().startsWith(QStringLiteral("iii"))))
             /// handle name suffices like "Jr" or "III."
             partC.prepend(*it);
-        else if (partB.isEmpty() || it->at(0).isLower())
+        else if (partB.isEmpty() || it->at(0).isLower() || capitalCaseLastNameFragments.contains(*it))
             partB.prepend(*it);
         else
             partA.prepend(*it);
