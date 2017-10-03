@@ -145,7 +145,7 @@
       <li xml:lang="et">Bibliokirjete andmete otsimine võrguandmebaasides (nt Google Scholar, ACM, IEEE, arXiv jne.).</li>
       <li xml:lang="fi">Etsiä lähdetietueiden tietoja verkon tietokannoista (Google Scholarista, ACM:stä, IEEE:stä, arXivista jne.)</li>
       <li xml:lang="fr">Rechercher des entrées bibliographiques dans des banques de données en ligne (par exemple Google Scholar, ACM, IEEE, arXiv, etc.)</li>
-      <li xml:lang="gl">Busque os datos das entradas bibliográficas en base de datos de internet (como Google Scholar, ACM, IEEE, arXiv, etc.).</li>
+      <li xml:lang="gl">Busque os datos das entradas bibliográficas en base de datos en internet (como Google Scholar, ACM, IEEE, arXiv, etc.).</li>
       <li xml:lang="it">Ricercare voci bibliografiche nei database in linea (per es., Google Scholar, ACM, IEEE, arXiv, ecc.)</li>
       <li xml:lang="nl">Zoeken naar bibliografie-items in online databases (bijv. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="pl">Wyszukiwanie wpisów bibliograficznych w bazach internetowych (np. Google Scholar, ACM, IEEE, arXiv, itp.)</li>
@@ -166,7 +166,7 @@
       <li xml:lang="et">Kohalike või võrguressursside eelvaatlus, näiteks PDF-failid, mis on lingitud BibTeXi kirjes.</li>
       <li xml:lang="fi">Esikatsella BibTeX-tietueeseen kytkettyjä paikallisia tai etäresursseja, esim. PDF-tiedostoja.</li>
       <li xml:lang="fr">Prévisualiser des ressources locales ou distantes (en ligne), par exemple des fichiers PDF ou des liens dans l'entrée BibTeX.</li>
-      <li xml:lang="gl">Obteña unha vista previa de recursos locais ou de internet, como ficheiros PDF, que estean ligados desde a entrada de BibTeX.</li>
+      <li xml:lang="gl">Obteña unha vista previa de recursos locais ou en internet, como ficheiros PDF, que estean ligados desde a entrada de BibTeX.</li>
       <li xml:lang="it">Visualizzare in anteprima risorse locali o remote (in linea), per es. file PDF, collegate nella voce BibTEX.</li>
       <li xml:lang="nl">Bekijken van lokale hulpbronnen of op afstand (online), bijv. PDF-bestanden, gekoppeld in het BibTEX-item.</li>
       <li xml:lang="pl">Podgląd lokalnych lub zdalnych (internetowych) zasobów, np. plików PDF, do których odwołuje się wpis BibTEX.</li>
