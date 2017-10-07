@@ -113,6 +113,7 @@ void KBibTeXFilesTest::testFiles_data()
     QTest::newRow("bug19362-file15701-database.bib") << createTestFile(QStringLiteral("bib/bug19362-file15701-database.bib"), 911, 911, QStringLiteral("New1"), QStringLiteral("Sunder"), QCryptographicHash::hash(bug19362file15701databaseLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(bug19362file15701databaseFilesUrlsDois, QCryptographicHash::Md5));
     QTest::newRow("digiplay.bib") << createTestFile(QStringLiteral("bib/digiplay.bib"), 3074, 3074, QStringLiteral("1180"), QStringLiteral("Huizinga"), QCryptographicHash::hash(digiplayLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(digiplayFilesUrlsDois, QCryptographicHash::Md5));
     QTest::newRow("backslash.bib") << createTestFile(QStringLiteral("bib/backslash.bib"), 1, 1, QStringLiteral("backslash-test"), QStringLiteral("Doe"), QCryptographicHash::hash(backslashLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(backslashFilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("bug21870-polito.bib") << createTestFile(QStringLiteral("bib/bug21870-polito.bib"), 736, 721, QStringLiteral("BusseNiehrWengeler:Brisante05"), QStringLiteral("Wengeler"), QCryptographicHash::hash(backslashLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(backslashFilesUrlsDois, QCryptographicHash::Md5));
 }
 
 void KBibTeXFilesTest::testFiles()
