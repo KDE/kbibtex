@@ -42,6 +42,7 @@ set(
 set(
     kbibtexfilestest_SRCS
     kbibtexfilestest.cpp
+    kbibtexfilestest-rawdata.h
 )
 
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows

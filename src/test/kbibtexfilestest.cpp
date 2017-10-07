@@ -22,6 +22,9 @@
 #include <QTemporaryFile>
 
 #include <QDebug>
+#ifdef WRITE_RAWDATAFILE
+#include <QFile>
+#endif // WRITE_RAWDATAFILE
 
 #include "entry.h"
 #include "fileimporterbibtex.h"
@@ -29,6 +32,7 @@
 #include "file.h"
 /// Provides definition of TESTSET_DIRECTORY
 #include "test-config.h"
+#include "kbibtexfilestest-rawdata.h"
 
 typedef struct {
     QString filename;
@@ -84,7 +88,11 @@ private:
      * @param hashFilesUrlsDoi The hash sum over all URLs and DOIs in bibliography
      * @return An initialized TestFile data structure
      */
-    TestFile createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &hashAuthors, const QString &hashFilesUrlsDoi);
+    TestFile createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QByteArray &hashAuthors, const QByteArray &hashFilesUrlsDoi);
+
+#ifdef WRITE_RAWDATAFILE
+    static QString rewriteNonASCII(const QString &input);
+#endif // WRITE_RAWDATAFILE
 };
 
 
@@ -97,14 +105,14 @@ void KBibTeXFilesTest::testFiles_data()
 {
     QTest::addColumn<TestFile>("testFile");
 
-    QTest::newRow("bug19489.bib") << createTestFile(QStringLiteral("bib/bug19489.bib"), 1, 1, QStringLiteral("bart:04:1242"), QStringLiteral("Ralph"), QStringLiteral("a926264c17545bf6eb9a953a8e3f0970"), QStringLiteral("544dc57e2a9908cfb35f35152462ac2e"));
-    QTest::newRow("names-with-braces.bib") << createTestFile(QStringLiteral("bib/names-with-braces.bib"), 1, 1, QStringLiteral("names1"), QStringLiteral("{{{{{LastName3A LastName3B}}}}}"), QStringLiteral("c4a6575e606ac513b79d1b8e18bca02e"), QStringLiteral("d41d8cd98f00b204e9800998ecf8427e"));
-    QTest::newRow("duplicates.bib") << createTestFile(QStringLiteral("bib/duplicates.bib"), 23, 23, QStringLiteral("books/aw/Sedgewick88"), QStringLiteral("Sedgewick"), QStringLiteral("f743ccb08afda3514a7122710e6590ba"), QStringLiteral("9ffb791547bcd10b459dec2d0022314c"));
-    QTest::newRow("minix.bib") << createTestFile(QStringLiteral("bib/minix.bib"), 163, 123, QStringLiteral("Jesshope:2006:ACS"), QStringLiteral("Egan"), QStringLiteral("c45e76eb809ba4c811f40452215bce04"), QStringLiteral("4e64d5806c9be0cf2d77a152157d044c"));
-    QTest::newRow("bug19484-refs.bib") << createTestFile(QStringLiteral("bib/bug19484-refs.bib"), 641, 641, QStringLiteral("Bagnara-etal-2002"), QStringLiteral("Hill"), QStringLiteral("a6737870e88b13fd2a6dff00b583cc5b"), QStringLiteral("71a66fb634275a6f46e5e0828fbceb83"));
-    QTest::newRow("bug19362-file15701-database.bib") << createTestFile(QStringLiteral("bib/bug19362-file15701-database.bib"), 911, 911, QStringLiteral("New1"), QStringLiteral("Sunder"), QStringLiteral("eb93fa136f4b114c3a6fc4a821b4117c"), QStringLiteral("0ac293b3abbfa56867e5514d8bb68614"));
-    QTest::newRow("digiplay.bib") << createTestFile(QStringLiteral("bib/digiplay.bib"), 3074, 3074, QStringLiteral("1180"), QStringLiteral("Huizinga"), QStringLiteral("2daf695fccb01f4b4cfbe967db62b0a8"), QStringLiteral("5d5bf8178652107ab160bc697b5b008f"));
-    QTest::newRow("backslash.bib") << createTestFile(QStringLiteral("bib/backslash.bib"), 1, 1, QStringLiteral("backslash-test"), QStringLiteral("Doe"), QStringLiteral("4f2ab90ecfa9e5e62cdfb4e55cbb0e05"), QStringLiteral("f9f35d6b95b0676751bc613d1d60aa6b"));
+    QTest::newRow("bug19489.bib") << createTestFile(QStringLiteral("bib/bug19489.bib"), 1, 1, QStringLiteral("bart:04:1242"), QStringLiteral("Ralph"), QCryptographicHash::hash(bug19489LastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(bug19489FilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("names-with-braces.bib") << createTestFile(QStringLiteral("bib/names-with-braces.bib"), 1, 1, QStringLiteral("names1"), QStringLiteral("{{{{{LastName3A LastName3B}}}}}"), QCryptographicHash::hash(nameswithbracesLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(nameswithbracesFilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("duplicates.bib") << createTestFile(QStringLiteral("bib/duplicates.bib"), 23, 23, QStringLiteral("books/aw/Sedgewick88"), QStringLiteral("Sedgewick"), QCryptographicHash::hash(duplicatesLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(duplicatesFilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("minix.bib") << createTestFile(QStringLiteral("bib/minix.bib"), 163, 123, QStringLiteral("Jesshope:2006:ACS"), QStringLiteral("Egan"), QCryptographicHash::hash(minixLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(minixFilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("bug19484-refs.bib") << createTestFile(QStringLiteral("bib/bug19484-refs.bib"), 641, 641, QStringLiteral("Bagnara-etal-2002"), QStringLiteral("Hill"), QCryptographicHash::hash(bug19484refsLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(bug19484refsFilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("bug19362-file15701-database.bib") << createTestFile(QStringLiteral("bib/bug19362-file15701-database.bib"), 911, 911, QStringLiteral("New1"), QStringLiteral("Sunder"), QCryptographicHash::hash(bug19362file15701databaseLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(bug19362file15701databaseFilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("digiplay.bib") << createTestFile(QStringLiteral("bib/digiplay.bib"), 3074, 3074, QStringLiteral("1180"), QStringLiteral("Huizinga"), QCryptographicHash::hash(digiplayLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(digiplayFilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("backslash.bib") << createTestFile(QStringLiteral("bib/backslash.bib"), 1, 1, QStringLiteral("backslash-test"), QStringLiteral("Doe"), QCryptographicHash::hash(backslashLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(backslashFilesUrlsDois, QCryptographicHash::Md5));
 }
 
 void KBibTeXFilesTest::testFiles()
@@ -119,6 +127,7 @@ void KBibTeXFilesTest::testFiles()
     loadFile(absoluteFilename, testFile, &file);
     QVERIFY(file);
 
+#ifndef WRITE_RAWDATAFILE
     /// ... then save it again to file ...
     QString tempFileName;
     saveFile(file, testFile, &tempFileName);
@@ -130,8 +139,12 @@ void KBibTeXFilesTest::testFiles()
     QVERIFY(file2);
 
     QFile::remove(tempFileName);
+#endif // WRITE_RAWDATAFILE
+
     delete file;
+#ifndef WRITE_RAWDATAFILE
     delete file2;
+#endif // WRITE_RAWDATAFILE
 }
 
 void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile &currentTestFile, File **outFile)
@@ -224,16 +237,71 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     QCOMPARE(lastEntryId, currentTestFile.lastEntryId);
     QCOMPARE(lastEntryLastAuthorLastName, currentTestFile.lastEntryLastAuthorLastName);
 
+#ifdef WRITE_RAWDATAFILE
+    static const QRegularExpression filenameStemRegExp(QStringLiteral("/?([^/]+)[.]bib$"));
+    const QString filenameStem = filenameStemRegExp.match(currentTestFile.filename).captured(1).remove(QChar('-'));
+    QFile rawDataFile("kbibtexfilestest-rawdata.h");
+    static const size_t max_len = 256;
+    size_t len;
+#endif // WRITE_RAWDATAFILE
+
     QCryptographicHash hashAuthors(QCryptographicHash::Md4);
     lastAuthorsList.sort();
-    for (const QString &lastAuthor : const_cast<const QStringList &>(lastAuthorsList))
-        hashAuthors.addData(lastAuthor.toUtf8());
+#ifdef WRITE_RAWDATAFILE
+    QString sourceCode = QStringLiteral("static const QByteArray ") + filenameStem + QStringLiteral("LastAuthors(\"");
+    len = 0;
+#endif // WRITE_RAWDATAFILE
+    for (const QString &lastAuthor : const_cast<const QStringList &>(lastAuthorsList)) {
+        const QByteArray lastAuthorUtf8 = lastAuthor.toUtf8();
+#ifdef WRITE_RAWDATAFILE
+        sourceCode += rewriteNonASCII(QString(lastAuthor));
+        len += lastAuthorUtf8.length();
+        if (len > max_len) {
+            sourceCode += QStringLiteral("\"\n        \"");
+            len = 0;
+        }
+#endif // WRITE_RAWDATAFILE
+        hashAuthors.addData(lastAuthorUtf8);
+    }
+#ifdef WRITE_RAWDATAFILE
+    sourceCode += QStringLiteral("\");\n");
+    if (rawDataFile.open(QFile::Append)) {
+        QTextStream ts(&rawDataFile);
+        ts << sourceCode;
+        rawDataFile.close();
+        sourceCode.clear();
+    }
+#else // WRITE_RAWDATAFILE
     QCOMPARE(hashAuthors.result(), currentTestFile.hashAuthors);
+#endif // WRITE_RAWDATAFILE
 
     QCryptographicHash hashFilesUrlsDoi(QCryptographicHash::Md5);
-    for (const QString &filesUrlsDoi : const_cast<const QStringList &>(filesUrlsDoiList))
-        hashFilesUrlsDoi.addData(filesUrlsDoi.toUtf8());
+#ifdef WRITE_RAWDATAFILE
+    sourceCode = QStringLiteral("static const QByteArray ") + filenameStem + QStringLiteral("FilesUrlsDois(\"");
+#endif // WRITE_RAWDATAFILE
+    for (const QString &filesUrlsDoi : const_cast<const QStringList &>(filesUrlsDoiList)) {
+        const QByteArray filesUrlsDoiUtf8 = filesUrlsDoi.toUtf8();
+#ifdef WRITE_RAWDATAFILE
+        sourceCode += rewriteNonASCII(QString(filesUrlsDoi));
+        len += filesUrlsDoiUtf8.length();
+        if (len > max_len) {
+            sourceCode += QStringLiteral("\"\n        \"");
+            len = 0;
+        }
+#endif // WRITE_RAWDATAFILE
+        hashFilesUrlsDoi.addData(filesUrlsDoiUtf8);
+    }
+#ifdef WRITE_RAWDATAFILE
+    sourceCode += QStringLiteral("\");\n");
+    if (rawDataFile.open(QFile::Append)) {
+        QTextStream ts(&rawDataFile);
+        ts << sourceCode;
+        rawDataFile.close();
+        sourceCode.clear();
+    }
+#else // WRITE_RAWDATAFILE
     QCOMPARE(hashFilesUrlsDoi.result(), currentTestFile.hashFilesUrlsDoi);
+#endif // WRITE_RAWDATAFILE
 
     delete importer;
 
@@ -262,7 +330,7 @@ void KBibTeXFilesTest::saveFile(File *file, const TestFile &currentTestFile, QSt
     *outFile = tempFile.fileName();
 }
 
-TestFile KBibTeXFilesTest::createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QString &hashAuthors, const QString &hashFilesUrlsDoi)
+TestFile KBibTeXFilesTest::createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QByteArray &hashAuthors, const QByteArray &hashFilesUrlsDoi)
 {
     TestFile r;
     r.filename = filename;
@@ -270,10 +338,35 @@ TestFile KBibTeXFilesTest::createTestFile(const QString &filename, int numElemen
     r.numEntries = numEntries;
     r.lastEntryId = lastEntryId;
     r.lastEntryLastAuthorLastName = lastEntryLastAuthorLastName;
-    r.hashAuthors = QByteArray::fromHex(hashAuthors.toLatin1());
-    r.hashFilesUrlsDoi = QByteArray::fromHex(hashFilesUrlsDoi.toLatin1());
+    r.hashAuthors = hashAuthors;
+    r.hashFilesUrlsDoi = hashFilesUrlsDoi;
     return r;
 }
+
+#ifdef WRITE_RAWDATAFILE
+QString KBibTeXFilesTest::rewriteNonASCII(const QString &input)
+{
+    QString output;
+    for (const QChar &c : input) {
+        const auto &unicode = c.unicode();
+        if (unicode < 128) {
+            if (c == QLatin1Char('\n'))
+                output.append(QStringLiteral("\\n"));
+            else if (c == QLatin1Char('\r'))
+                output.append(QStringLiteral("\\r"));
+            else if (c == QLatin1Char('\t'))
+                output.append(QStringLiteral("\\t"));
+            else {
+                if (c == QLatin1Char('\\') || c == QLatin1Char('"'))
+                    output.append(QLatin1Char('\\'));
+                output.append(c);
+            }
+        } else
+            output.append(QString(QStringLiteral("\\u%1")).arg(unicode, 4, 16, QLatin1Char('0')));
+    }
+    return output;
+}
+#endif // WRITE_RAWDATAFILE
 
 QTEST_MAIN(KBibTeXFilesTest)
 

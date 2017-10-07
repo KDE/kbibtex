@@ -58,6 +58,10 @@ if(
         CONFIG
         REQUIRED
     )
+
+    if (WRITE_RAWDATAFILE)
+        add_definitions(-DWRITE_RAWDATAFILE)
+    endif(WRITE_RAWDATAFILE)
 endif(
     BUILD_TESTING
 )
