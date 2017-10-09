@@ -113,7 +113,9 @@ void KBibTeXFilesTest::testFiles_data()
     QTest::newRow("bug19362-file15701-database.bib") << createTestFile(QStringLiteral("bib/bug19362-file15701-database.bib"), 911, 911, QStringLiteral("New1"), QStringLiteral("Sunder"), QCryptographicHash::hash(bug19362file15701databaseLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(bug19362file15701databaseFilesUrlsDois, QCryptographicHash::Md5));
     QTest::newRow("digiplay.bib") << createTestFile(QStringLiteral("bib/digiplay.bib"), 3074, 3074, QStringLiteral("1180"), QStringLiteral("Huizinga"), QCryptographicHash::hash(digiplayLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(digiplayFilesUrlsDois, QCryptographicHash::Md5));
     QTest::newRow("backslash.bib") << createTestFile(QStringLiteral("bib/backslash.bib"), 1, 1, QStringLiteral("backslash-test"), QStringLiteral("Doe"), QCryptographicHash::hash(backslashLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(backslashFilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("bug379443-attachment105313-IOPEXPORT_BIB.bib") << createTestFile(QStringLiteral("bib/bug379443-attachment105313-IOPEXPORT_BIB.bib"), 1, 1, QStringLiteral("1748-0221-3-08-S08004"), QStringLiteral("Yuldashev"), QCryptographicHash::hash(bug379443attachment105313IOPEXPORTBIBLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(bug379443attachment105313IOPEXPORTBIBFilesUrlsDois, QCryptographicHash::Md5));
     QTest::newRow("bug21870-polito.bib") << createTestFile(QStringLiteral("bib/bug21870-polito.bib"), 736, 721, QStringLiteral("BusseNiehrWengeler:Brisante05"), QStringLiteral("Wengeler"), QCryptographicHash::hash(bug21870politoLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(bug21870politoFilesUrlsDois, QCryptographicHash::Md5));
+    QTest::newRow("cloud-duplicates.bib") << createTestFile(QStringLiteral("bib/cloud-duplicates.bib"), 21, 21, QStringLiteral("rao2012survey"), QStringLiteral("Reddy"), QCryptographicHash::hash(cloudduplicatesLastAuthors, QCryptographicHash::Md4), QCryptographicHash::hash(cloudduplicatesFilesUrlsDois, QCryptographicHash::Md5));
 }
 
 void KBibTeXFilesTest::testFiles()
@@ -240,7 +242,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
 
 #ifdef WRITE_RAWDATAFILE
     static const QRegularExpression filenameStemRegExp(QStringLiteral("/?([^/]+)[.]bib$"));
-    const QString filenameStem = filenameStemRegExp.match(currentTestFile.filename).captured(1).remove(QChar('-'));
+    const QString filenameStem = filenameStemRegExp.match(currentTestFile.filename).captured(1).remove(QChar('-')).remove(QChar('_'));
     QFile rawDataFile("kbibtexfilestest-rawdata.h");
     if (!rawDataFile.exists() && rawDataFile.open(QFile::Append)) {
         QTextStream ts(&rawDataFile);
