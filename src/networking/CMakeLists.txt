@@ -43,8 +43,6 @@ if(BUILD_ZOTERO)
         zotero/oauthwizard.cpp
         zotero/tags.cpp
         zotero/tagmodel.cpp
-        # QOAuth for Qt5 from Git
-        ../3rdparty/qoauth/src/interface.cpp
         )
 endif(BUILD_ZOTERO)
 
@@ -90,7 +88,6 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src/3rdparty/qoauth/include
     ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/data
@@ -128,9 +125,13 @@ target_link_libraries(
 )
 
 if(BUILD_ZOTERO)
+    include_directories(
+        ${QTOAUTH_INCLUDE_DIR}
+    )
     target_link_libraries(
         kbibtexnetworking
         qca-qt5
+        ${QTOAUTH_LIBRARY}
     )
 endif(BUILD_ZOTERO)
 
