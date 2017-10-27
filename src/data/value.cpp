@@ -601,6 +601,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
         notificationListener = new PlainTextValue();
 #endif // HAVE_KF5
 
+    bool isVerbatim = false;
     const PlainText *plainText = dynamic_cast<const PlainText *>(&valueItem);
     if (plainText != nullptr) {
         result = plainText->text();
@@ -622,6 +623,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
                     const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(&valueItem);
                     if (verbatimText != nullptr) {
                         result = verbatimText->text();
+                        isVerbatim = true;
                     } else
                         qWarning() << "Cannot interpret ValueItem to one of its descendants";
                 }
@@ -643,8 +645,10 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
             /// place '\,' with a thin space
             result[j] = thinspace;
             ++i; ++j;
-        } else if (result[i] == tilde && (i < 1 || result[i - 1] != bs))  {
-            /// place '~' with a non-breaking space
+        } else if (!isVerbatim && result[i] == tilde && (i < 1 || result[i - 1] != bs))  {
+            /// replace '~' with a non-breaking space,
+            /// except if text was verbatim (e.g. a 'localfile' value
+            /// like '~/document.pdf' or 'document.pdf~')
             result[j] = nobreakspace;
             ++j;
         } else {
