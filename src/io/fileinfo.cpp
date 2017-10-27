@@ -129,7 +129,16 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
         if (testExistence == TestExistenceYes) {
             /// If a base directory (e.g. the location of the parent .bib file) is given
             /// and the potential filename fragment is NOT an absolute path, ...
-            if (!baseDirectory.isEmpty() &&
+            if (internalText.startsWith(QStringLiteral("~") + QDir::separator())) {
+                const QString fullFilename = QDir::homePath() + internalText.mid(1);
+                const QFileInfo fileInfo(fullFilename);
+                const QUrl url = QUrl::fromLocalFile(fileInfo.canonicalFilePath());
+                if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
+                    result << url;
+                    /// Stop searching for URLs or filenames in current internal text
+                    continue;
+                }
+            } else if (!baseDirectory.isEmpty() &&
                     // TODO the following test assumes that absolute paths start
                     // with a dir separator, which may only be true on Unix/Linux,
                     // but not Windows. May be a test for 'first character is a letter,
