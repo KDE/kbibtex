@@ -420,15 +420,16 @@ void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget
     dlg->setWindowTitle(i18n("Find PDF"));
     QBoxLayout *layout = new QVBoxLayout(dlg);
     layout->addWidget(widget);
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dlg);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Abort | QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dlg);
     layout->addWidget(buttonBox);
     dlg->setLayout(layout);
 
     buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     connect(widget.data(), &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Ok), &QWidget::setEnabled);
+    connect(widget.data(), &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Abort), &QWidget::setDisabled);
     connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
-    connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, widget.data(), &FindPDFUI::abort);
+    connect(buttonBox->button(QDialogButtonBox::Abort), &QPushButton::clicked, widget.data(), &FindPDFUI::stopSearch);
 
     if (dlg->exec() == QDialog::Accepted)
         widget->apply(entry, bibtexFile);
@@ -520,6 +521,11 @@ void FindPDFUI::searchProgress(int visitedPages, int runningJobs, int foundDocum
     d->listViewResult->hide();
     d->labelMessage->show();
     d->labelMessage->setText(i18n("<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>%2</b><br/>Number of found documents: <b>%3</b></qt>", visitedPages, runningJobs, foundDocuments));
+}
+
+void FindPDFUI::stopSearch() {
+    d->findpdf->abort();
+    searchFinished();
 }
 
 void FindPDFUI::abort() {

@@ -60,6 +60,7 @@ public slots:
     /**
      * Abort a running search.
      */
+    void stopSearch();
     void abort();
 
 protected:
