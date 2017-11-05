@@ -45,8 +45,6 @@ public:
     QString queryFreetext, queryAuthor, queryYear;
     QString startPageUrl;
     QString advancedSearchPageUrl;
-    QString configPageUrl;
-    QString setConfigPageUrl;
     QString queryPageUrl;
     FileImporterBibTeX importer;
     int numSteps, curStep;
@@ -55,8 +53,6 @@ public:
         : /* UNUSED p(parent), */ numResults(0), numSteps(0), curStep(0)
     {
         startPageUrl = QLatin1String("http://scholar.google.com/");
-        configPageUrl = QLatin1String("http://%1/scholar_settings");
-        setConfigPageUrl = QLatin1String("http://%1/scholar_setprefs");
         queryPageUrl = QLatin1String("http://%1/scholar");
     }
 
@@ -176,9 +172,17 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             connect(reply, SIGNAL(finished()), this, SLOT(doneFetchingStartPage()));
         } else {
             /// landed on country-specific domain
-            KUrl url(d->configPageUrl.arg(reply->url().host()));
+            static const QRegExp pathToSettingsPage(QLatin1String(" href=\"(/scholar_settings[^ \"]*)"));
+            const QString htmlCode = QString::fromUtf8(reply->readAll());
+            if (pathToSettingsPage.indexIn(htmlCode) < 0 || pathToSettingsPage.cap(1).isEmpty()) {
+                kWarning() << "No link to Google Scholar settings found";
+                // FIXME stopSearch(resultUnspecifiedError);
+                return;
+            }
+
+            KUrl url = reply->url().resolved(QUrl(decodeURL(pathToSettingsPage.cap(1))));
+            url.removeQueryItem("hl");
             url.addQueryItem("hl", "en");
-            url.addQueryItem("as_sdt", "0,5");
 
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply->url());
@@ -197,16 +201,25 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
     if (handleErrors(reply)) {
         const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-        QMap<QString, QString> inputMap = formParameters(htmlText, htmlText.indexOf(QLatin1String("<form "), Qt::CaseInsensitive));
+        static const QRegExp formOpeningTag(QLatin1String("<form [^>]+action=\"([^\"]*scholar_setprefs[^\"]*)"));
+        const int formOpeningTagPos = formOpeningTag.indexIn(htmlText);
+        if (formOpeningTagPos < 0) {
+            kWarning() << "Could not find opening tag for form:" << formOpeningTag.pattern();
+            // FIXME stopSearch(resultUnspecifiedError);
+            return;
+        }
+        QMap<QString, QString> inputMap = formParameters(htmlText, formOpeningTagPos);
         inputMap[QLatin1String("hl")] = QLatin1String("en");
         inputMap[QLatin1String("scis")] = QLatin1String("yes");
         inputMap[QLatin1String("scisf")] = QLatin1String("4");
         inputMap[QLatin1String("num")] = QString::number(d->numResults);
         inputMap[QLatin1String("submit")] = QLatin1String("");
 
-        KUrl url(d->setConfigPageUrl.arg(reply->url().host()));
-        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
+        KUrl url = reply->url().resolved(QUrl(decodeURL(formOpeningTag.cap(1))));
+        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it) {
+            url.removeQueryItem(it.key());
             url.addQueryItem(it.key(), it.value());
+        }
 
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::self()->get(request, reply);
