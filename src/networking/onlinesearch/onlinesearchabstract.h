@@ -151,7 +151,7 @@ protected:
 
     QString decodeURL(QString rawText);
 
-    QMap<QString, QString> formParameters(const QString &htmlText, const QString &formTagBegin);
+    QMap<QString, QString> formParameters(const QString &htmlText, int startPos);
 
     void dumpToFile(const QString &filename, const QString &text);
 

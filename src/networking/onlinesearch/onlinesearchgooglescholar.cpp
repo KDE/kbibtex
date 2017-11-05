@@ -194,7 +194,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
     if (handleErrors(reply)) {
         const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-        QMap<QString, QString> inputMap = formParameters(htmlText, QStringLiteral("<form "));
+        QMap<QString, QString> inputMap = formParameters(htmlText, htmlText.indexOf(QStringLiteral("<form "), Qt::CaseInsensitive));
         inputMap[QStringLiteral("hl")] = QStringLiteral("en");
         inputMap[QStringLiteral("scis")] = QStringLiteral("yes");
         inputMap[QStringLiteral("scisf")] = QStringLiteral("4");
