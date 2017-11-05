@@ -20,6 +20,7 @@
 #include <QNetworkReply>
 #include <QIcon>
 #include <QUrlQuery>
+#include <QRegularExpression>
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
@@ -40,8 +41,6 @@ public:
     QString queryFreetext, queryAuthor, queryYear;
     QString startPageUrl;
     QString advancedSearchPageUrl;
-    QString configPageUrl;
-    QString setConfigPageUrl;
     QString queryPageUrl;
     FileImporterBibTeX *importer;
 
@@ -49,10 +48,8 @@ public:
         : /* UNUSED p(parent), */ numResults(0)
     {
         importer = new FileImporterBibTeX(parent);
-        startPageUrl = QStringLiteral("https://scholar.google.com/");
-        configPageUrl = QStringLiteral("https://%1/scholar_settings");
-        setConfigPageUrl = QStringLiteral("https://%1/scholar_setprefs");
-        queryPageUrl = QStringLiteral("https://%1/scholar");
+        startPageUrl = QStringLiteral("http://scholar.google.com/");
+        queryPageUrl = QStringLiteral("http://%1/scholar");
     }
 
     ~OnlineSearchGoogleScholarPrivate() {
@@ -171,9 +168,20 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingStartPage);
         } else {
             /// landed on country-specific domain
-            QUrl url(d->configPageUrl.arg(reply->url().host()));
+            static const QRegularExpression pathToSettingsPage(QStringLiteral(" href=\"(/scholar_settings[^ \"]*)"));
+            const QString htmlCode = QString::fromUtf8(reply->readAll());
+            const QRegularExpressionMatch pathToSettingsPageMatch = pathToSettingsPage.match(htmlCode);
+            if (!pathToSettingsPageMatch.hasMatch() || pathToSettingsPageMatch.captured(1).isEmpty()) {
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "No link to Google Scholar settings found";
+                stopSearch(resultNoError);
+                return;
+            }
+
+            QUrl url = reply->url().resolved(QUrl(decodeURL(pathToSettingsPageMatch.captured(1))));
             QUrlQuery query(url);
+            query.removeQueryItem(QStringLiteral("hl"));
             query.addQueryItem(QStringLiteral("hl"), QStringLiteral("en"));
+            query.removeQueryItem(QStringLiteral("as_sdt"));
             query.addQueryItem(QStringLiteral("as_sdt"), QStringLiteral("0,5"));
             url.setQuery(query);
 
@@ -194,18 +202,30 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
     if (handleErrors(reply)) {
         const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-        QMap<QString, QString> inputMap = formParameters(htmlText, htmlText.indexOf(QStringLiteral("<form "), Qt::CaseInsensitive));
+        static const QRegularExpression formOpeningTag(QStringLiteral("<form [^>]+action=\"([^\"]*scholar_setprefs[^\"]*)"));
+        const QRegularExpressionMatch formOpeningTagMatch = formOpeningTag.match(htmlText);
+        const int formOpeningTagPos = formOpeningTagMatch.capturedStart(0);
+        if (formOpeningTagPos < 0) {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not find opening tag for form:" << formOpeningTag.pattern();
+            stopSearch(resultNoError);
+            return;
+        }
+
+        QMap<QString, QString> inputMap = formParameters(htmlText, formOpeningTagPos);
         inputMap[QStringLiteral("hl")] = QStringLiteral("en");
         inputMap[QStringLiteral("scis")] = QStringLiteral("yes");
         inputMap[QStringLiteral("scisf")] = QStringLiteral("4");
         inputMap[QStringLiteral("num")] = QString::number(d->numResults);
         inputMap[QStringLiteral("submit")] = QStringLiteral("");
 
-        QUrl url(d->setConfigPageUrl.arg(reply->url().host()));
+        QUrl url = reply->url().resolved(QUrl(decodeURL(formOpeningTagMatch.captured(1))));
         QUrlQuery query(url);
-        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it)
+        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it) {
+            query.removeQueryItem(it.key());
             query.addQueryItem(it.key(), it.value());
+        }
         url.setQuery(query);
+
 
         QNetworkRequest request(url);
         QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
@@ -310,7 +330,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
         } else {
             /// ensure proper treatment of UTF-8 characters
-            QString rawText = QString::fromUtf8(reply->readAll().constData());
+            const QString rawText = QString::fromUtf8(reply->readAll());
             File *bibtexFile = d->importer->fromString(rawText);
 
             bool hasEntry = false;
