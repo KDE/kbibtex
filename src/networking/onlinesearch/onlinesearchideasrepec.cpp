@@ -192,11 +192,11 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         QString downloadUrl;
         static const QString downloadFormStart = QLatin1String("<FORM METHOD=GET ACTION=\"/cgi-bin/get_doc.pl\"");
         if (htmlCode.contains(downloadFormStart)) {
-            QMap<QString, QString> form = formParameters(htmlCode, downloadFormStart);
+            QMap<QString, QString> form = formParameters(htmlCode, htmlCode.indexOf(downloadFormStart, Qt::CaseInsensitive));
             downloadUrl = form[QLatin1String("url")];
         }
 
-        QMap<QString, QString> form = formParameters(htmlCode, QLatin1String("<form method=\"post\" action=\"/cgi-bin/refs.cgi\""));
+        QMap<QString, QString> form = formParameters(htmlCode, htmlCode.indexOf(QLatin1String("<form method=\"post\" action=\"/cgi-bin/refs.cgi\""), Qt::CaseInsensitive));
         form[QLatin1String("output")] = QLatin1String("2"); ///< enforce BibTeX output
 
         QString body;

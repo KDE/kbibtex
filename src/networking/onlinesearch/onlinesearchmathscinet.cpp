@@ -185,7 +185,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         const QString htmlText = QString::fromUtf8(reply->readAll().constData());
 
         /// extract form's parameters ...
-        QMap<QString, QString> formParams = formParameters(htmlText, QLatin1String("<form name=\"batchDownload\" action="));
+        QMap<QString, QString> formParams = formParameters(htmlText, htmlText.indexOf(QLatin1String("<form name=\"batchDownload\" action="), Qt::CaseInsensitive));
 
         /// build url by appending parameters
         KUrl url(OnlineSearchMathSciNetPrivate::queryUrlStem);

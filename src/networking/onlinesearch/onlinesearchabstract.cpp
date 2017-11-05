@@ -233,7 +233,7 @@ QString OnlineSearchAbstract::decodeURL(QString rawText)
     return rawText;
 }
 
-QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, const QString &formTagBegin)
+QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, int startPos)
 {
     /// how to recognize HTML tags
     static const QString formTagEnd = QLatin1String("</form>");
@@ -254,10 +254,9 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     QMap<QString, QString> result;
 
     /// determined boundaries of (only) "form" tag
-    int startPos = htmlText.indexOf(formTagBegin, Qt::CaseInsensitive);
     int endPos = htmlText.indexOf(formTagEnd, startPos, Qt::CaseInsensitive);
     if (startPos < 0 || endPos < 0) {
-        kWarning() << "Could not locate form" << formTagBegin << "in text";
+        kWarning() << "Could not locate form in text";
         return result;
     }
 

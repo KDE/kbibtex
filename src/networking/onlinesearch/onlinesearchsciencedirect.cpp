@@ -162,7 +162,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
             InternalNetworkAccessManager::self()->mergeHtmlHeadCookies(htmlText, reply->url());
 
             KUrl url(QLatin1String("http://www.sciencedirect.com/science"));
-            QMap<QString, QString> inputMap = formParameters(htmlText, QLatin1String("<form id=\"quickSearch\" name=\"qkSrch\" metho"));
+            QMap<QString, QString> inputMap = formParameters(htmlText, htmlText.indexOf(QLatin1String("<form id=\"quickSearch\" name=\"qkSrch\" metho"), Qt::CaseInsensitive));
             inputMap[QLatin1String("qs_all")] = d->queryFreetext.simplified();
             inputMap[QLatin1String("qs_author")] = d->queryAuthor.simplified();
             inputMap[QLatin1String("resultsPerPage")] = QString::number(d->numExpectedResults);
