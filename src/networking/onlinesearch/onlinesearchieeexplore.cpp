@@ -51,7 +51,7 @@ public:
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QUrl queryUrl = QUrl(gatewayUrl);
 
-        const QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
         const QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
         QStringList queryText;
         queryText.reserve(freeTextFragments.size() + 1 + authors.size() + 1);
