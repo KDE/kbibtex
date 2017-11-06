@@ -59,7 +59,7 @@ public:
         QStringList queryText;
 
         /// Free text
-        QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
         foreach (const QString &freeTextFragment, freeTextFragments) {
             queryText << QString(QLatin1String("\"%1\"")).arg(freeTextFragment);
         }
