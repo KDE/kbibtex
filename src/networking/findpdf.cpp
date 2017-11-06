@@ -20,6 +20,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QRegExp>
+#include <QRegularExpression>
 #include <QApplication>
 #include <QTemporaryFile>
 #include <QUrlQuery>
@@ -237,6 +238,22 @@ public:
 
         return progress;
     }
+
+    QUrl ieeeDocumentUrlToDownloadUrl(const QUrl &url) {
+        /// Basic checking if provided URL is from IEEE Xplore
+        if (!url.host().contains(QStringLiteral("ieeexplore.ieee.org")))
+            return url;
+
+        /// Assuming URL looks like this:
+        ///    http://ieeexplore.ieee.org/document/8092651/
+        static const QRegularExpression documentIdRegExp(QStringLiteral("/(\\d{6,})/$"));
+        const QRegularExpressionMatch documentIdRegExpMatch = documentIdRegExp.match(url.path());
+        if (!documentIdRegExpMatch.hasMatch())
+            return url;
+
+        /// Use document id extracted above to build URL to PDF file
+        return QUrl(QStringLiteral("http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=") + documentIdRegExpMatch.captured(1));
+    }
 };
 
 FindPDF::FindPDF(QObject *parent)
@@ -395,9 +412,10 @@ void FindPDF::downloadFinished()
         redirUrl = redirUrl.isEmpty() ? QUrl() : reply->url().resolved(redirUrl);
         qCDebug(LOG_KBIBTEX_NETWORKING) << "finished Downloading " << reply->url().toDisplayString() << "   depth=" << depth  << "  d->aliveCounter=" << d->aliveCounter << "  data.size=" << data.size() << "  redirUrl=" << redirUrl.toDisplayString() << "   origin=" << origin;
 
-        if (!redirUrl.isEmpty())
+        if (!redirUrl.isEmpty()) {
+            redirUrl = d->ieeeDocumentUrlToDownloadUrl(redirUrl);
             d->queueUrl(redirUrl, term, origin, depth - 1);
-        else if (data.contains(htmlHead1) || data.contains(htmlHead2) || data.contains(htmlHead3)) {
+        } else if (data.contains(htmlHead1) || data.contains(htmlHead2) || data.contains(htmlHead3)) {
             /// returned data is a HTML file, i.e. contains "<html"
 
             /// check for limited depth before continuing
