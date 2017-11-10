@@ -43,6 +43,7 @@
   <summary xml:lang="tr">Kaynakça dosyalarını LaTeX kullanarak düzenlemek için KDE BibTeX düzenleyicisi</summary>
   <summary xml:lang="uk">Редактор BibTeX від KDE. Призначений для редагування бібліографій, що використовуються у LaTeX.</summary>
   <summary xml:lang="x-test">xxBibTeX editor by KDE to edit bibliographies used with LaTeXxx</summary>
+  <summary xml:lang="zh-CN">KDE 提供的 BibTeX 编辑器，用来编辑 LaTeX 使用的参考文献目录</summary>
   <description>
     <p>
       KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.
@@ -86,6 +87,7 @@
     <p xml:lang="tr">KBibTex aşağıdakileri yapabilir:</p>
     <p xml:lang="uk">KBibTeX може виконувати такі завдання:</p>
     <p xml:lang="x-test">xxKBibTeX can do the following things:xx</p>
+    <p xml:lang="zh-CN">KBibTeX 可以完成以下工作：</p>
     <ul>
       <li>Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
       <li xml:lang="bs">Pregled ulaza bibliografija u raznim formatima (Source(BibTeX), Source(RIS), Wikipedia, standard(XML/XSLT), fancy(XML/XSLT) i abstract-only(XML/XSLT)). Dodatni pregled stilova postaje dostupan kada je bibtex2html instaliran.</li>
@@ -228,6 +230,7 @@
       <li xml:lang="tr">Zotero kütüphanenizi İçe Aktarın.</li>
       <li xml:lang="uk">Імпортувати дані з вашої бібліотеки Zotero.</li>
       <li xml:lang="x-test">xxImport your Zotero library.xx</li>
+      <li xml:lang="zh-CN">导入您的 Zotero 仓库。</li>
     </ul>
   </description>
   <url type="homepage">https://userbase.kde.org/KBibTeX</url>
