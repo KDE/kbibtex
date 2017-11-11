@@ -292,6 +292,8 @@ bool FindPDF::search(const Entry &entry)
     for (int i = 0; i < authors.count() && searchWords.length() < 96; ++i)
         searchWords += QLatin1Char(' ') + authors[i];
 
+    searchWords.remove(QLatin1Char('{')).remove(QLatin1Char('}'));
+
     QStringList urlFields = QStringList() << Entry::ftDOI << Entry::ftUrl << QStringLiteral("ee");
     for (int i = 2; i < 256; ++i)
         urlFields << QString(QStringLiteral("%1%2")).arg(Entry::ftDOI).arg(i) << QString(QStringLiteral("%1%2")).arg(Entry::ftUrl).arg(i);
@@ -310,56 +312,33 @@ bool FindPDF::search(const Entry &entry)
 
     if (entry.contains(QStringLiteral("eprint"))) {
         /// check eprint fields as used for arXiv
-        const QString fieldText = PlainTextValue::text(entry.value(QStringLiteral("eprint")));
-        if (!fieldText.isEmpty())
-            d->queueUrl(QUrl(QString(QStringLiteral("http://arxiv.org/find/all/1/all:+%1/0/1/0/all/0/1")).arg(fieldText)), fieldText, QStringLiteral("eprint"), maxDepth);
+        const QString eprintId = PlainTextValue::text(entry.value(QStringLiteral("eprint")));
+        if (!eprintId.isEmpty()) {
+            const QUrl arxivUrl = QUrl::fromUserInput(QStringLiteral("http://arxiv.org/find/all/1/all:+") + eprintId + QStringLiteral("/0/1/0/all/0/1"));
+            d->queueUrl(arxivUrl, eprintId, QStringLiteral("eprint"), maxDepth);
+        }
     }
 
     if (!searchWords.isEmpty()) {
         /// Search in Google
-        QUrl googleUrl(QStringLiteral("https://www.google.com/search?hl=en&sa=G"));
-        QUrlQuery query(googleUrl);
-        query.addQueryItem(QStringLiteral("q"), searchWords + QStringLiteral(" filetype:pdf"));
-        googleUrl.setQuery(query);
+        const QUrl googleUrl = QUrl::fromUserInput(QStringLiteral("https://www.google.com/search?hl=en&sa=G&q=filetype:pdf ") + searchWords);
         d->queueUrl(googleUrl, searchWords, QStringLiteral("www.google"), maxDepth);
 
         /// Search in Google Scholar
-        QUrl googleScholarUrl(QStringLiteral("https://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1"));
-        query = QUrlQuery(googleScholarUrl);
-        query.addQueryItem(QStringLiteral("q"), searchWords + QStringLiteral(" filetype:pdf"));
-        googleScholarUrl.setQuery(query);
+        const QUrl googleScholarUrl = QUrl::fromUserInput(QStringLiteral("https://scholar.google.com/scholar?hl=en&btnG=Search&as_sdt=1&q=filetype:pdf ") + searchWords);
         d->queueUrl(googleScholarUrl, searchWords, QStringLiteral("scholar.google"), maxDepth);
 
         /// Search in Bing
-        QUrl bingUrl(QStringLiteral("https://www.bing.com/search?setlang=en-US"));
-        query = QUrlQuery(bingUrl);
-        query.addQueryItem(QStringLiteral("q"), searchWords + QStringLiteral(" filetype:pdf"));
-        bingUrl.setQuery(query);
+        const QUrl bingUrl = QUrl::fromUserInput(QStringLiteral("https://www.bing.com/search?setlang=en-US&q=filetype:pdf ") + searchWords);
         d->queueUrl(bingUrl, searchWords, QStringLiteral("bing"), maxDepth);
 
-        /// Search in Microsoft Academic Search
-        QUrl masUrl(QStringLiteral("http://academic.research.microsoft.com/Search"));
-        query = QUrlQuery(masUrl);
-        query.addQueryItem(QStringLiteral("query"), searchWords);
-        masUrl.setQuery(query);
-        d->queueUrl(masUrl, searchWords, QStringLiteral("academicsearch"), maxDepth);
-
         /// Search in CiteSeerX
-        QUrl citeseerXurl(QStringLiteral("http://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc"));
-        query = QUrlQuery(citeseerXurl);
-        query.addQueryItem(QStringLiteral("q"), searchWords);
-        citeseerXurl.setQuery(query);
+        const QUrl citeseerXurl = QUrl::fromUserInput(QStringLiteral("http://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc&q=") + searchWords);
         d->queueUrl(citeseerXurl, searchWords, QStringLiteral("citeseerx"), maxDepth);
 
         /// Search in StartPage
-        QUrl startPageUrl(QStringLiteral("https://www.startpage.com/do/asearch?cat=web&cmd=process_search&language=english&engine0=v1all&abp=-1&t=white&nj=1&prf=23ad6aab054a88d3da5c443280cee596&suggestOn=0"));
-        query = QUrlQuery(startPageUrl);
-        query.addQueryItem(QStringLiteral("query"), searchWords + QStringLiteral(" filetype:pdf"));
+        const QUrl startPageUrl = QUrl::fromUserInput(QStringLiteral("https://www.startpage.com/do/asearch?cat=web&cmd=process_search&language=english&engine0=v1all&abp=-1&t=white&nj=1&prf=23ad6aab054a88d3da5c443280cee596&suggestOn=0&query=filetype:pdf ") + searchWords);
         d->queueUrl(startPageUrl, searchWords, QStringLiteral("startpage"), maxDepth);
-
-        /// Search in arXiv
-        QUrl arXivUrl = QUrl::fromUserInput(QString(QStringLiteral("http://arxiv.org/find/all/1/all:+%1/0/1/0/all/0/1")).arg(searchWords));
-        d->queueUrl(arXivUrl, searchWords, QStringLiteral("arxiv"), maxDepth);
     }
 
     if (d->aliveCounter == 0) {
