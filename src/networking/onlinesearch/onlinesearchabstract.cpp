@@ -411,12 +411,13 @@ void OnlineSearchAbstract::iconDownloadFinished()
 
 void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)
 {
-    const QString usedFilename = QDir::tempPath() + QLatin1Char('/') +  filename;
+    const QString usedFilename = QDir::tempPath() + QLatin1Char('/') + filename;
 
     QFile f(usedFilename);
     if (f.open(QFile::WriteOnly)) {
         qCDebug(LOG_KBIBTEX_NETWORKING) << "Dumping text" << KBibTeX::squeezeText(text, 96) << "to" << usedFilename;
         QTextStream ts(&f);
+        ts.setCodec("UTF-8");
         ts << text;
         f.close();
     }
