@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -119,15 +119,14 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
     QFile file(filename);
     if (file.open(QIODevice::ReadOnly)) {
         bool result = true;
-        qint64 buffersize = 0x10000;
+        static const qint64 buffersize = 0x10000;
         qint64 amount = 0;
-        char *buffer = new char[ buffersize ];
+        char buffer[buffersize];
         do {
             result = ((amount = file.read(buffer, buffersize)) > -1) && (device->write(buffer, amount) > -1);
         } while (result && amount > 0);
 
         file.close();
-        delete[] buffer;
 
         if (errorLog != nullptr)
             errorLog->append(i18n("Writing to file '%1' succeeded", filename));
