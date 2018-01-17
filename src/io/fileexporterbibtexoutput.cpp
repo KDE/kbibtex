@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -56,12 +56,12 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile,
 
     bool result = false;
 
-    QBuffer buffer(this);
-    if (buffer.open(QIODevice::WriteOnly)) {
+    QFile bibTeXFile(m_fileStem + KBibTeX::extensionBibTeX);
+    if (bibTeXFile.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("utf-8"));
-        result = bibtexExporter.save(&buffer, bibtexfile, errorLog);
-        buffer.close();
+        result = bibtexExporter.save(&bibTeXFile, bibtexfile, errorLog);
+        bibTeXFile.close();
     }
 
     if (result)
@@ -83,12 +83,12 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<co
 
     bool result = false;
 
-    QBuffer buffer(this);
-    if (buffer.open(QIODevice::WriteOnly)) {
+    QFile bibTeXFile(m_fileStem + KBibTeX::extensionBibTeX);
+    if (bibTeXFile.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("utf-8"));
-        result = bibtexExporter.save(&buffer, element, bibtexfile, errorLog);
-        buffer.close();
+        result = bibtexExporter.save(&bibTeXFile, element, bibtexfile, errorLog);
+        bibTeXFile.close();
     }
 
     if (result)
