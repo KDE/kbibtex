@@ -231,8 +231,10 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
     const BibTeXFields *bf = BibTeXFields::self();
 
     QStringList visibleItems;
+    const QString entryTypeLc = entryType.toLower();
+    if (entryTypeLc == Entry::ftXData)
+        forceVisible = true;
     if (!forceVisible && !entryType.isEmpty()) {
-        const QString entryTypeLc = entryType.toLower();
         const BibTeXEntries *be = BibTeXEntries::self();
         for (const auto &ed : const_cast<const BibTeXEntries &>(*be)) {
             if (entryTypeLc == ed.upperCamelCase.toLower() || entryTypeLc == ed.upperCamelCaseAlt.toLower()) {
@@ -496,7 +498,8 @@ void ReferenceWidget::prepareSuggestionsMenu()
     /// Collect information on the current entry as it is edited
     QSharedPointer<Entry> guiDataEntry(new Entry());
     m_applyElement->apply(guiDataEntry);
-    QSharedPointer<Entry> crossrefResolvedEntry(Entry::resolveCrossref(*guiDataEntry.data(), m_file));
+    QSharedPointer<Entry> crossrefResolvedEntry(Entry::resolveCrossref(*guiDataEntry.data(), m_file,
+                                                                       BibTeXEntries::self()->xmappings(entryType->lineEdit()->text())));
 
     static const IdSuggestions *idSuggestions = new IdSuggestions();
     QMenu *suggestionsMenu = buttonSuggestId->menu();
@@ -568,7 +571,8 @@ void ReferenceWidget::setEntryIdByDefault()
         /// Collect information on the current entry as it is edited
         QSharedPointer<Entry> guiDataEntry(new Entry());
         m_applyElement->apply(guiDataEntry);
-        QSharedPointer<Entry> crossrefResolvedEntry(Entry::resolveCrossref(*guiDataEntry.data(), m_file));
+        QSharedPointer<Entry> crossrefResolvedEntry(Entry::resolveCrossref(*guiDataEntry.data(), m_file,
+                                                                           BibTeXEntries::self()->xmappings(entryType->lineEdit()->text())));
         /// Determine default suggestion based on current data
         const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 

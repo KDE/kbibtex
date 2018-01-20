@@ -23,6 +23,7 @@
 #include "kbibtex.h"
 #include "file.h"
 #include "entry.h"
+#include "bibtexentries.h"
 #include "macro.h"
 #include "comment.h"
 #include "encoderxml.h"
@@ -97,7 +98,7 @@ bool FileExporterXML::write(QTextStream &stream, const Element *element, const F
     const Entry *entry = dynamic_cast<const Entry *>(element);
     if (entry != nullptr) {
         if (bibtexfile != nullptr)
-            entry = entry->resolveCrossref(bibtexfile);
+            entry = entry->resolveCrossref(bibtexfile, BibTeXEntries::self()->xmappings(entry->type()));
         result |= writeEntry(stream, entry);
         if (bibtexfile != nullptr)
             delete entry; /// delete artificially created Entry from resolveCrossref(..)

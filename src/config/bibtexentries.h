@@ -31,6 +31,16 @@ typedef struct {
     QString label;
     QStringList requiredItems;
     QStringList optionalItems;
+    /**
+     * Mappings of fields when cross-referencing (done by biblatex/biber)
+     * syntax: type:field>field.
+     * Example: book:title>booktitle means that when a book-entry is crossref'ed,
+     *          the title field is inherited as booktitle. Multiple mappings can
+     *          be done with the & conjunction: book:author>author&bookauthor means
+     *          that author fields from crossref'ed books are mapped both to
+     *          author and bookauthor.
+     */
+    QMap<QString, QString> crossrefMappings;
 } EntryDescription;
 
 bool operator==(const EntryDescription &a, const EntryDescription &b);
@@ -69,6 +79,13 @@ public:
      * @return the label for the entry if available, else an empty string
      */
     QString label(const QString &name) const;
+
+    /**
+     * Returns the crossref mappings of the given entry.
+     * @param name entry name to look up for
+     * @return the crossref mappings for the entry if available, else an empty map
+     */
+    QMap<QString, QString> xmappings(const QString &name) const;
 
 protected:
     BibTeXEntries();

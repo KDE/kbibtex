@@ -98,6 +98,8 @@ public:
     static const QString ftVolume;
     /** Representation of the BibTeX field key "year" */
     static const QString ftYear;
+    /** Representation of the Biblatex field key "xdata" */
+    static const QString ftXData;
 
     /** Representation of the BibTeX entry type "Article" */
     static const QString etArticle;
@@ -191,8 +193,8 @@ public:
      */
     bool contains(const QString &key) const;
 
-    Entry *resolveCrossref(const File *bibTeXfile) const;
-    static Entry *resolveCrossref(const Entry &original, const File *bibTeXfile);
+    Entry *resolveCrossref(const File *bibTeXfile, QMap<QString, QString> xmaps) const;
+    static Entry *resolveCrossref(const Entry &original, const File *bibTeXfile, QMap<QString, QString> xmaps);
 
     static QStringList authorsLastName(const Entry &entry);
     QStringList authorsLastName() const;

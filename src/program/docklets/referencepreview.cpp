@@ -53,6 +53,7 @@
 #include "element.h"
 #include "file.h"
 #include "entry.h"
+#include "bibtexentries.h"
 #include "fileview.h"
 #include "logging_program.h"
 
@@ -294,7 +295,7 @@ void ReferencePreview::renderHTML()
                 exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
         } else */
         if (crossRefHandling == merge && !entry.isNull()) {
-            QSharedPointer<Entry> merged = QSharedPointer<Entry>(Entry::resolveCrossref(*entry, d->file));
+            QSharedPointer<Entry> merged = QSharedPointer<Entry>(Entry::resolveCrossref(*entry, d->file, BibTeXEntries::self()->xmappings(entry->type())));
             exporterResult = exporter->save(&buffer, merged, d->file, &errorLog);
         } else
             exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);

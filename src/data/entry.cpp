@@ -55,6 +55,7 @@ const QString Entry::ftUrl = QStringLiteral("url");
 const QString Entry::ftUrlDate = QStringLiteral("urldate");
 const QString Entry::ftVolume = QStringLiteral("volume");
 const QString Entry::ftYear = QStringLiteral("year");
+const QString Entry::ftXData = QStringLiteral("xdata");
 
 const QString Entry::etArticle = QStringLiteral("article");
 const QString Entry::etBook = QStringLiteral("book");
@@ -186,12 +187,12 @@ bool Entry::contains(const QString &key) const
     return false;
 }
 
-Entry *Entry::resolveCrossref(const File *bibTeXfile) const
+Entry *Entry::resolveCrossref(const File *bibTeXfile, QMap<QString, QString> xmaps) const
 {
-    return resolveCrossref(*this, bibTeXfile);
+    return resolveCrossref(*this, bibTeXfile, xmaps);
 }
 
-Entry *Entry::resolveCrossref(const Entry &original, const File *bibTeXfile)
+Entry *Entry::resolveCrossref(const Entry &original, const File *bibTeXfile, QMap<QString, QString> xmaps)
 {
     Entry *result = new Entry(original);
 
@@ -205,18 +206,61 @@ Entry *Entry::resolveCrossref(const Entry &original, const File *bibTeXfile)
     const QSharedPointer<Entry> crossRefEntry = bibTeXfile->containsKey(crossRef, File::etEntry).dynamicCast<Entry>();
     if (!crossRefEntry.isNull()) {
         /// copy all fields from crossref'ed entry to new entry which do not (yet) exist in the new entry
-        for (Entry::ConstIterator it = crossRefEntry->constBegin(); it != crossRefEntry->constEnd(); ++it)
-            if (!result->contains(it.key()))
-                result->insert(it.key(), Value(it.value()));
-
-        if (crossRefEntry->contains(ftTitle)) {
-            /// translate crossref's title into new entry's booktitle
-            result->insert(ftBookTitle, Value(crossRefEntry->operator [](ftTitle)));
+        for (Entry::ConstIterator it = crossRefEntry->constBegin(); it != crossRefEntry->constEnd(); ++it) {
+                QString item = it.key();
+                // check for field mappings (biblatex)
+                // search for <type>:item
+                QMap<QString, QString>::const_iterator ci = xmaps.find(crossRefEntry->type().toLower() + ":" + item);
+                if (ci != xmaps.end()) {
+                        QStringList const targets = ci.value().split("&");
+                        for (int i = 0; i < targets.size(); ++i) {
+                                item = targets.at(i);
+                                if (!result->contains(item))
+                                        result->insert(item, Value(it.value()));
+                        }
+                } else if (!result->contains(item))
+                        result->insert(item, Value(it.value()));
         }
 
         /// remove crossref field (no longer of use)
         result->remove(ftCrossRef);
     }
+
+    // Also inherit XData references (biblatex).
+    // Note that xdata fields can contain multiple (comma-separated) keys
+    // and can be infinitly nested (xdata references can refer to further xdata entries).
+    QString xData = PlainTextValue::text(result->value(ftXData));
+    // Keep track of visited keys in order to prevent infinite loops.
+    QStringList xDatasVisited;
+    // Stack multiple references for later procession
+    QStringList xDatasStack;
+    while (!xData.isEmpty()) {
+        // XData can be a comma-separated list of keys.
+        QStringList const xDatas = xData.split(",");
+        for (int i = 0; i < xDatas.size(); ++i) {
+                QString const xDataToken = xDatas.at(i);
+                if (xDatasVisited.contains(xDataToken))
+                        // We processed this one already. Skip.
+                        continue;
+                // Record that we visit this one.
+                xDatasVisited.append(xDataToken);
+                QSharedPointer<Entry> xDataEntry = bibTeXfile->containsKey(xDataToken, File::etEntry).dynamicCast<Entry>();
+                if (!xDataEntry.isNull()) {
+                        /// copy all fields from xdata entry to parent entry which do not (yet) exist in the parent entry
+                        for (Entry::ConstIterator it = xDataEntry->constBegin(); it != xDataEntry->constEnd(); ++it) {
+                                if (!result->contains(it.key()))
+                                        result->insert(it.key(), Value(it.value()));
+                                else if (it.key().toLower() == ftXData && !xDatasVisited.contains(PlainTextValue::text(it.value())))
+                                        // Stack inherited xdata references for later
+                                        xDatasStack.append(PlainTextValue::text(it.value()));
+                        }
+                }
+        }
+        xData = xDatasStack.join(",");
+        xDatasStack.clear();
+    }
+    /// remove xdata field (not needed any longer)
+    result->remove(ftXData);
 
     return result;
 }

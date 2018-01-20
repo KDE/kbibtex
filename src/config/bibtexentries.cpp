@@ -83,6 +83,11 @@ public:
             ed.label = i18n(configGroup.readEntry("Label", ed.upperCamelCase).toUtf8().constData());
             ed.requiredItems = configGroup.readEntry("RequiredItems", QStringList());
             ed.optionalItems = configGroup.readEntry("OptionalItems", QStringList());
+            QStringList const xrmap = configGroup.readEntry("CrossRefMappings", QStringList());
+            for (int i = 0; i < xrmap.size(); ++i) {
+                    if (xrmap.at(i).contains(">"))
+                        ed.crossrefMappings.insert(xrmap.at(i).section(">", 0, 0), xrmap.at(i).section(">", 1, 1));
+            }
             p->append(ed);
         }
 
@@ -101,6 +106,11 @@ public:
             configGroup.writeEntry("Label", ed.label);
             configGroup.writeEntry("RequiredItems", ed.requiredItems);
             configGroup.writeEntry("OptionalItems", ed.optionalItems);
+            QMap<QString, QString>::const_iterator ii = ed.crossrefMappings.constBegin();
+            QStringList xmappings;
+            while (ii != ed.crossrefMappings.constEnd())
+                xmappings.append(ii.key() + ">" + ii.value());
+            configGroup.writeEntry("CrossRefMappings", xmappings);
         }
 
         /// Although field "count" is deprecated, it is written for backwards compatibility
@@ -189,4 +199,17 @@ QString BibTeXEntries::label(const QString &name) const
             return ed.label;
     }
     return QString();
+}
+
+QMap<QString, QString> BibTeXEntries::xmappings(const QString &name) const
+{
+    const QString iName = name.toLower();
+
+    for (ConstIterator it = begin(); it != end(); ++it) {
+        /// Configuration file uses camel-case, convert this to lower case for faster comparison
+        QString itName = (*it).upperCamelCase.toLower();
+        if (itName == iName || (!(itName = (*it).upperCamelCaseAlt.toLower()).isEmpty() && itName == iName))
+            return (*it).crossrefMappings;
+    }
+    return QMap<QString, QString>();
 }

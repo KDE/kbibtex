@@ -6,12 +6,14 @@ UpperCamelCase=Article
 Label=Journal Article
 RequiredItems=author,title,journaltitle,year^date
 OptionalItems=translator,annotator,commentator,subtitle,titleaddon,editor,editora,editorb,editorc,journalsubtitle,issuetitle,issuesubtitle,language,origlanguage,series,volume,number,eid,issue,month,pages,version,note,issn,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=periodical:title>journaltitle,periodical:subtitle>journalsubtitle
 
 [EntryType2]
 UpperCamelCase=Book
 Label=Book
 RequiredItems=author,title,year^date
 OptionalItems=editor,editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,pagetotal,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=mvbook:title>maintitle,mvbook:subtitle>mainsubtitle,mvbook:titleaddon>maintitleaddon
 
 [EntryType3]
 UpperCamelCase=MVBook
@@ -24,18 +26,21 @@ UpperCamelCase=InBook
 Label=Part of a Book
 RequiredItems=author,title,booktitle,year^date
 OptionalItems=bookauthor,editor,editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,booksubtitle,booktitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=book:author>author&bookauthor,mvbook:author>author&bookauthor,mvbook:title>maintitle,mvbook:subtitle>mainsubtitle,mvbook:titleaddon>maintitleaddon,book:title>booktitle,book:subtitle>booksubtitle,book:titleaddon>booktitleaddon
 
 [EntryType5]
 UpperCamelCase=BookInBook
 Label=Former Monograph as Part of a Book
 RequiredItems=author,title,booktitle,year^date
 OptionalItems=bookauthor,editor,editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,booksubtitle,booktitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=book:author>author&bookauthor,mvbook:author>author&bookauthor,mvbook:title>maintitle,mvbook:subtitle>mainsubtitle,mvbook:titleaddon>maintitleaddon,book:title>booktitle,book:subtitle>booksubtitle,book:titleaddon>booktitleaddon
 
 [EntryType6]
 UpperCamelCase=SuppBook
 Label=Supplemental Material in a Book
 RequiredItems=author,title,booktitle,year^date
 OptionalItems=bookauthor,editor,editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,booksubtitle,booktitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=book:author>author&bookauthor,mvbook:author>author&bookauthor,mvbook:title>maintitle,mvbook:subtitle>mainsubtitle,mvbook:titleaddon>maintitleaddon,book:title>booktitle,book:subtitle>booksubtitle,book:titleaddon>booktitleaddon
 
 [EntryType7]
 UpperCamelCase=Booklet
@@ -48,6 +53,7 @@ UpperCamelCase=Collection
 Label=Single-volume Collection
 RequiredItems=editor,title,year^date
 OptionalItems=editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,pagetotal,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=mvcollection:title>maintitle,mvcollection:subtitle>mainsubtitle,mvcollection:titleaddon>maintitleaddon,mvreference:title>maintitle,mvreference:subtitle>mainsubtitle,mvreference:titleaddon>maintitleaddon
 
 [EntryType9]
 UpperCamelCase=MVCollection
@@ -60,12 +66,14 @@ UpperCamelCase=InCollection
 Label=Part of a Book with own Title
 RequiredItems=author,editor,title,booktitle,year^date
 OptionalItems=editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,booksubtitle,booktitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=mvcollection:title>maintitle,mvcollection:subtitle>mainsubtitle,mvcollection:titleaddon>maintitleaddon,mvreference:title>maintitle,mvreference:subtitle>mainsubtitle,mvreference:titleaddon>maintitleaddon,collection:title>booktitle,collection:subtitle>booksubtitle,collection:titleaddon>booktitleaddon,reference:title>booktitle,reference:subtitle>booksubtitle,reference:titleaddon>booktitleaddon
 
 [EntryType11]
 UpperCamelCase=SuppCollection
 Label=Supplemental Material in a Collection
 RequiredItems=author,editor,title,booktitle,year^date
 OptionalItems=editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,booksubtitle,booktitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=mvcollection:title>maintitle,mvcollection:subtitle>mainsubtitle,mvcollection:titleaddon>maintitleaddon,mvreference:title>maintitle,mvreference:subtitle>mainsubtitle,mvreference:titleaddon>maintitleaddon,collection:title>booktitle,collection:subtitle>booksubtitle,collection:titleaddon>booktitleaddon,reference:title>booktitle,reference:subtitle>booksubtitle,reference:titleaddon>booktitleaddon
 
 [EntryType12]
 UpperCamelCase=Manual
@@ -103,12 +111,14 @@ UpperCamelCase=SuppPeriodical
 Label=Supplemental Material in a Periodical
 RequiredItems=author,title,journaltitle,year^date
 OptionalItems=translator,annotator,commentator,subtitle,titleaddon,editor,editora,editorb,editorc,journalsubtitle,issuetitle,issuesubtitle,language,origlanguage,series,volume,number,eid,issue,month,pages,version,note,issn,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=periodical:title>journaltitle,periodical:subtitle:journalsubtitle
 
 [EntryType18]
 UpperCamelCase=Proceedings
 Label=Conference or Workshop Proceedings
 RequiredItems=editor,title,year^date
 OptionalItems=subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,eventtitle,eventdate,venue,language,volume,part,volumes,series,number,note,organization,publisher,location,month,isbn,chapter,pages,pagetotal,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=mvproceedings:title>maintitle,mvproceedings:subtitle>mainsubtitle,mvproceedings:titleaddon>maintitleaddon
 
 [EntryType19]
 UpperCamelCase=MVProceedings
@@ -122,12 +132,14 @@ UpperCamelCaseAlt=Conference
 Label=Publication in Conference Proceedings
 RequiredItems= author,editor,title,booktitle,year^date
 OptionalItems=subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,booksubtitle,booktitleaddon,eventtitle,eventdate,venue,language,volume,part,volumes,series,number,note,organization,publisher,location,month,isbn,chapter,pages,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=mvproceedings:title>maintitle,mvproceedings:subtitle>mainsubtitle,mvproceedings:titleaddon>maintitleaddon,proceedings:title>booktitle,proceedings:subtitle>booksubtitle,proceedings:titleaddon>booktitleaddon
 
 [EntryType21]
 UpperCamelCase=Reference
 Label=Single-volume Reference (e.g. Encyclopedia)
 RequiredItems=editor,title,year^date
 OptionalItems=editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,pagetotal,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=mvcollection:title>maintitle,mvcollection:subtitle>mainsubtitle,mvcollection:titleaddon>maintitleaddon,mvreference:title>maintitle,mvreference:subtitle>mainsubtitle,mvreference:titleaddon>maintitleaddon
 
 [EntryType22]
 UpperCamelCase=MVReference
@@ -140,6 +152,7 @@ UpperCamelCase=InReference
 Label=Part of a Reference
 RequiredItems=author,editor,title,booktitle,year^date
 OptionalItems=editora,editorb,editorc,translator,annotator,commentator,introduction,foreword,afterword,subtitle,titleaddon,maintitle,mainsubtitle,maintitleaddon,booksubtitle,booktitleaddon,language,origlanguage,volume,part,edition,volumes,series,number,note,publisher,location,isbn,chapter,pages,addendum,pubstate,doi,eprint,eprintclass,eprinttype,url,urldate
+CrossRefMappings=mvcollection:title>maintitle,mvcollection:subtitle>mainsubtitle,mvcollection:titleaddon>maintitleaddon,mvreference:title>maintitle,mvreference:subtitle>mainsubtitle,mvreference:titleaddon>maintitleaddon,,collection:title>booktitle,collection:subtitle>booksubtitle,collection:titleaddon>booktitleaddon,reference:title>booktitle,reference:subtitle>booksubtitle,reference:titleaddon>booktitleaddon
 
 [EntryType24]
 UpperCamelCase=Report
