@@ -157,6 +157,11 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
     /// check if showing macros is disabled
     if (!m_showMacros && Macro::isMacro(*rowElement))
         return false;
+    /// check if showing XData entries is disabled
+    if (!m_showXDatas && typeid(*rowElement) == typeid(Entry)
+        && !rowElement.dynamicCast<Entry>().isNull()
+        && rowElement.dynamicCast<Entry>()->type().toLower() == Entry::ftXData)
+        return false;
 
     if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query
 
@@ -279,4 +284,5 @@ void SortFilterFileModel::loadState()
     KConfigGroup configGroup(config, configGroupName);
     m_showComments = configGroup.readEntry(FileModel::keyShowComments, FileModel::defaultShowComments);
     m_showMacros = configGroup.readEntry(FileModel::keyShowMacros, FileModel::defaultShowMacros);
+    m_showXDatas = configGroup.readEntry(FileModel::keyShowXDatas, FileModel::defaultShowXDatas);
 }

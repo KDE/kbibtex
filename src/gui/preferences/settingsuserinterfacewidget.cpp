@@ -37,6 +37,7 @@ private:
 
     QCheckBox *checkBoxShowComments;
     QCheckBox *checkBoxShowMacros;
+    QCheckBox *checkBoxShowXDatas;
     KComboBox *comboBoxBibliographySystem;
     KComboBox *comboBoxElementDoubleClickAction;
 
@@ -52,6 +53,7 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         checkBoxShowComments->setChecked(configGroup.readEntry(FileModel::keyShowComments, FileModel::defaultShowComments));
         checkBoxShowMacros->setChecked(configGroup.readEntry(FileModel::keyShowMacros, FileModel::defaultShowMacros));
+        checkBoxShowXDatas->setChecked(configGroup.readEntry(FileModel::keyShowXDatas, FileModel::defaultShowXDatas));
 
         const QStringList styles = configGroup.readEntry("BibTeXStyles", QStringList());
         for (const QString &style : styles) {
@@ -71,6 +73,7 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(FileModel::keyShowComments, checkBoxShowComments->isChecked());
         configGroup.writeEntry(FileModel::keyShowMacros, checkBoxShowMacros->isChecked());
+        configGroup.writeEntry(FileModel::keyShowXDatas, checkBoxShowXDatas->isChecked());
         configGroup.writeEntry("CurrentStyle", comboBoxBibliographySystem->itemData(comboBoxBibliographySystem->currentIndex()).toString());
         configGroup.writeEntry(Preferences::keyElementDoubleClickAction, comboBoxElementDoubleClickAction->currentIndex());
         config->sync();
@@ -79,6 +82,7 @@ public:
     void resetToDefaults() {
         checkBoxShowComments->setChecked(FileModel::defaultShowComments);
         checkBoxShowMacros->setChecked(FileModel::defaultShowMacros);
+        checkBoxShowXDatas->setChecked(FileModel::defaultShowXDatas);
         comboBoxBibliographySystem->setCurrentIndex(0);
         comboBoxElementDoubleClickAction->setCurrentIndex(Preferences::defaultElementDoubleClickAction);
     }
@@ -93,6 +97,10 @@ public:
         checkBoxShowMacros = new QCheckBox(p);
         layout->addRow(i18n("Show Macros:"), checkBoxShowMacros);
         connect(checkBoxShowMacros, &QCheckBox::toggled, p, &SettingsUserInterfaceWidget::changed);
+
+        checkBoxShowXDatas = new QCheckBox(p);
+        layout->addRow(i18n("Show XData Entries:"), checkBoxShowXDatas);
+        connect(checkBoxShowXDatas, SIGNAL(toggled(bool)), p, SIGNAL(changed()));
 
         comboBoxBibliographySystem = new KComboBox(p);
         comboBoxBibliographySystem->setObjectName(QStringLiteral("comboBoxBibtexStyle"));

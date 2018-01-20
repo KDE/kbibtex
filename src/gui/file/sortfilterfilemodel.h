@@ -58,7 +58,7 @@ private:
 
     KSharedConfigPtr config;
     static const QString configGroupName;
-    bool m_showComments, m_showMacros;
+    bool m_showComments, m_showMacros, m_showXDatas;
 
     void loadState();
     bool simpleLessThan(const QModelIndex &left, const QModelIndex &right) const;

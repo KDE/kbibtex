@@ -43,6 +43,8 @@ const QString FileModel::keyShowComments = QStringLiteral("showComments");
 const bool FileModel::defaultShowComments = true;
 const QString FileModel::keyShowMacros = QStringLiteral("showMacros");
 const bool FileModel::defaultShowMacros = true;
+const QString FileModel::keyShowXDatas = QStringLiteral("showXDatas");
+const bool FileModel::defaultShowXDatas = true;
 
 
 FileModel::FileModel(QObject *parent)

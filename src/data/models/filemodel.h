@@ -46,6 +46,8 @@ public:
     static const bool defaultShowComments;
     static const QString keyShowMacros;
     static const bool defaultShowMacros;
+    static const QString keyShowXDatas;
+    static const bool defaultShowXDatas;
 
     explicit FileModel(QObject *parent = nullptr);
 
