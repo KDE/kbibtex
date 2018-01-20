@@ -93,6 +93,7 @@ static const int smEntry = 1;
 static const int smComment = 2;
 static const int smPreamble = 3;
 static const int smMacro = 4;
+static const int smXData = 5;
 
 class KBibTeXPart::KBibTeXPartPrivate
 {
@@ -199,6 +200,9 @@ public:
         QAction *newPreamble = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New preamble"));
         connect(newPreamble, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperNewElement->setMapping(newPreamble, smPreamble);
+        QAction *newXData = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New XData entry"));
+        connect(newXData, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+        signalMapperNewElement->setMapping(newXData, smXData);
         connect(signalMapperNewElement, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &KBibTeXPart::newElementTriggered);
 
         /// Action to edit an element
@@ -963,6 +967,9 @@ void KBibTeXPart::newElementTriggered(int event)
     case smPreamble:
         newPreambleTriggered();
         break;
+    case smXData:
+        newXDataTriggered();
+        break;
     default:
         newEntryTriggered();
     }
@@ -1016,6 +1023,20 @@ void KBibTeXPart::newCommentTriggered()
     d->model->insertRow(newComment, d->model->rowCount());
     d->partWidget->fileView()->setSelectedElement(newComment);
     if (d->partWidget->fileView()->editElement(newComment))
+        d->partWidget->fileView()->scrollToBottom(); // FIXME always correct behaviour?
+    else {
+        /// Editing this new element was cancelled,
+        /// therefore remove it again
+        d->model->removeRow(d->model->rowCount() - 1);
+    }
+}
+
+void KBibTeXPart::newXDataTriggered()
+{
+    QSharedPointer<Entry> newEntry = QSharedPointer<Entry>(new Entry(Entry::ftXData, d->findUnusedId()));
+    d->model->insertRow(newEntry, d->model->rowCount());
+    d->partWidget->fileView()->setSelectedElement(newEntry);
+    if (d->partWidget->fileView()->editElement(newEntry))
         d->partWidget->fileView()->scrollToBottom(); // FIXME always correct behaviour?
     else {
         /// Editing this new element was cancelled,

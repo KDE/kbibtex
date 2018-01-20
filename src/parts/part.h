@@ -63,6 +63,7 @@ private slots:
     void newMacroTriggered();
     void newCommentTriggered();
     void newPreambleTriggered();
+    void newXDataTriggered();
     void updateActions();
     void fileExternallyChange(const QString &path);
 
