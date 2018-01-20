@@ -67,6 +67,7 @@ previewStyles[] = {
     {QStringLiteral("acm"), QStringLiteral("acm"), QStringLiteral("bibtex2html")},
     {QStringLiteral("alpha"), QStringLiteral("alpha"), QStringLiteral("bibtex2html")},
     {QStringLiteral("apalike"), QStringLiteral("apalike"), QStringLiteral("bibtex2html")},
+    {QStringLiteral("JSP"), QStringLiteral("jsp4kbibtex"), QStringLiteral("bibtex2html")},
     {QStringLiteral("ieeetr"), QStringLiteral("ieeetr"), QStringLiteral("bibtex2html")},
     {QStringLiteral("plain"), QStringLiteral("plain"), QStringLiteral("bibtex2html")},
     {QStringLiteral("siam"), QStringLiteral("siam"), QStringLiteral("bibtex2html")},
