@@ -70,9 +70,11 @@ public:
      */
     QString label(const QString &name) const;
 
-private:
-    BibTeXEntries(const QVector<EntryDescription> &other);
+protected:
+    BibTeXEntries();
+    void load();
 
+private:
     class BibTeXEntriesPrivate;
     BibTeXEntriesPrivate *d;
 };

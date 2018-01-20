@@ -46,7 +46,6 @@ private:
 public:
     SettingsUserInterfaceWidgetPrivate(SettingsUserInterfaceWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
-        setupGUI();
     }
 
     void loadState() {
@@ -97,8 +96,6 @@ public:
 
         comboBoxBibliographySystem = new KComboBox(p);
         comboBoxBibliographySystem->setObjectName(QStringLiteral("comboBoxBibtexStyle"));
-        comboBoxBibliographySystem->addItem(i18n("BibTeX"), QStringLiteral("bibtex"));
-        comboBoxBibliographySystem->addItem(i18n("BibLaTeX"), QStringLiteral("biblatex"));
         layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
         connect(comboBoxBibliographySystem, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsUserInterfaceWidget::changed);
 
@@ -117,6 +114,7 @@ const QString SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate::c
 SettingsUserInterfaceWidget::SettingsUserInterfaceWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsUserInterfaceWidgetPrivate(this))
 {
+    d->setupGUI();
     d->loadState();
 }
 
