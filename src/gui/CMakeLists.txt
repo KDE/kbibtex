@@ -23,6 +23,7 @@ set(
     widgets/radiobuttontreeview.cpp
     widgets/hidingtabwidget.cpp
     widgets/starrating.cpp
+    widgets/rangewidget.cpp
     config/entrylayout.cpp
     preferences/kbibtexpreferencesdialog.cpp
     preferences/settingsgeneralwidget.cpp
@@ -101,30 +102,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/config
     ${CMAKE_SOURCE_DIR}/src/global
 )
-
-if(QXT_FOUND_QXTCORE AND QXT_FOUND_QXTGUI)
-    include_directories(
-        ${QXT_QXTGUI_INCLUDE_DIR}
-        ${QXT_QXTCORE_INCLUDE_DIR}
-    )
-    list(
-        APPEND
-        kbibtexgui_LIBS
-        ${QXT_QXTGUI_LIB_RELEASE}
-    )
-else()
-    include_directories(
-        ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui
-    )
-    list(
-        APPEND
-        kbibtexgui_LIB_SRCS
-        ${CMAKE_SOURCE_DIR}/src/3rdparty/libqxt/gui/qxtspanslider.cpp
-    )
-    add_definitions(
-        -DBUILD_QXT_GUI
-    )
-endif()
 
 add_library(
     kbibtexgui

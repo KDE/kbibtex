@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,7 +35,7 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 
-#include <qxtspanslider.h>
+#include "rangewidget.h"
 
 TokenWidget::TokenWidget(QWidget *parent)
         : QGroupBox(parent)
@@ -69,12 +69,11 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
     QBoxLayout *boxLayout = new QVBoxLayout();
     boxLayout->setMargin(0);
     formLayout->addRow(i18n("Author Range:"), boxLayout);
-    spanSliderAuthor = new QxtSpanSlider(Qt::Horizontal, this);
-    boxLayout->addWidget(spanSliderAuthor);
-    spanSliderAuthor->setRange(0, 9);
-    spanSliderAuthor->setHandleMovementMode(QxtSpanSlider::NoCrossing);
-    spanSliderAuthor->setLowerValue(info.startWord);
-    spanSliderAuthor->setUpperValue(qMin(spanSliderAuthor->maximum(), info.endWord));
+    static const QStringList authorRange = QStringList() << i18n("First author") << i18n("Second author") << i18n("Third author") << i18n("Four author") << i18n("Fifth author") << i18n("Sixth author") << i18n("Seventh author") << i18n("Eighth author") << i18n("Ninth author") << i18n("Tenth author") << i18n("|Last author");
+    rangeWidgetAuthor = new RangeWidget(authorRange, this);
+    boxLayout->addWidget(rangeWidgetAuthor);
+    rangeWidgetAuthor->setLowerValue(info.startWord);
+    rangeWidgetAuthor->setUpperValue(qMin(authorRange.size() - 1, info.endWord));
 
     checkBoxLastAuthor = new QCheckBox(i18n("... and last author"), this);
     boxLayout->addWidget(checkBoxLastAuthor);
@@ -103,10 +102,10 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
     spinBoxLength->setMaximum(9);
     spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
 
-    connect(spanSliderAuthor, &QxtSpanSlider::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(spanSliderAuthor, &QxtSpanSlider::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(spanSliderAuthor, &QxtSpanSlider::lowerValueChanged, this, &AuthorWidget::updateRangeLabel);
-    connect(spanSliderAuthor, &QxtSpanSlider::upperValueChanged, this, &AuthorWidget::updateRangeLabel);
+    connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, this, &AuthorWidget::updateRangeLabel);
+    connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, this, &AuthorWidget::updateRangeLabel);
     connect(checkBoxLastAuthor, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
     connect(checkBoxLastAuthor, &QCheckBox::toggled, this, &AuthorWidget::updateRangeLabel);
     connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
@@ -131,8 +130,8 @@ QString AuthorWidget::toString() const
     else if (caseChange == IdSuggestions::ccToCamelCase)
         result.append(QStringLiteral("c"));
 
-    if (spanSliderAuthor->lowerValue() > spanSliderAuthor->minimum() || spanSliderAuthor->upperValue() < spanSliderAuthor->maximum())
-        result.append(QString(QStringLiteral("w%1%2")).arg(spanSliderAuthor->lowerValue()).arg(spanSliderAuthor->upperValue() < spanSliderAuthor->maximum() ? QString::number(spanSliderAuthor->upperValue()) : QStringLiteral("I")));
+    if (rangeWidgetAuthor->lowerValue() > 0 || rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum())
+        result.append(QString(QStringLiteral("w%1%2")).arg(rangeWidgetAuthor->lowerValue()).arg(rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum() ? QString::number(rangeWidgetAuthor->upperValue()) : QStringLiteral("I")));
     if (checkBoxLastAuthor->isChecked())
         result.append(QStringLiteral("L"));
 
@@ -145,12 +144,11 @@ QString AuthorWidget::toString() const
 
 void AuthorWidget::updateRangeLabel()
 {
-    const int lower = spanSliderAuthor->lowerValue();
-    const int upper = spanSliderAuthor->upperValue();
-    const int min = spanSliderAuthor->minimum();
-    const int max = spanSliderAuthor->maximum();
+    const int lower = rangeWidgetAuthor->lowerValue();
+    const int upper = rangeWidgetAuthor->upperValue();
+    const int max = rangeWidgetAuthor->maximum();
 
-    labelAuthorRange->setText(IdSuggestions::formatAuthorRange(lower == min ? 0 : lower, upper == max ? 0x00ffffff : upper, checkBoxLastAuthor->isChecked()));
+    labelAuthorRange->setText(IdSuggestions::formatAuthorRange(lower, upper == max ? 0x00ffffff : upper, checkBoxLastAuthor->isChecked()));
 }
 
 class YearWidget : public TokenWidget
@@ -234,16 +232,15 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
     QBoxLayout *boxLayout = new QVBoxLayout();
     boxLayout->setMargin(0);
     formLayout->addRow(i18n("Word Range:"), boxLayout);
-    spanSliderWords = new QxtSpanSlider(Qt::Horizontal, this);
-    boxLayout->addWidget(spanSliderWords);
-    spanSliderWords->setRange(0, 9);
-    spanSliderWords->setHandleMovementMode(QxtSpanSlider::NoCrossing);
+    static const QStringList wordRange = QStringList() << i18n("First word") << i18n("Second word") << i18n("Third word") << i18n("Four word") << i18n("Fifth word") << i18n("Sixth word") << i18n("Seventh word") << i18n("Eigth word") << i18n("Ninth word") << i18n("Tenth word") << i18n("|Last word");
+    rangeWidgetAuthor = new RangeWidget(wordRange, this);
+    boxLayout->addWidget(rangeWidgetAuthor);
     if (info.startWord > 0 || info.endWord < 0xffff) {
-        spanSliderWords->setLowerValue(info.startWord);
-        spanSliderWords->setUpperValue(qMin(spanSliderWords->maximum(), info.endWord));
+        rangeWidgetAuthor->setLowerValue(info.startWord);
+        rangeWidgetAuthor->setUpperValue(qMin(rangeWidgetAuthor->maximum(), info.endWord));
     } else {
-        spanSliderWords->setLowerValue(0);
-        spanSliderWords->setUpperValue(spanSliderWords->maximum());
+        rangeWidgetAuthor->setLowerValue(0);
+        rangeWidgetAuthor->setUpperValue(rangeWidgetAuthor->maximum());
     }
 
     labelWordsRange = new QLabel(this);
@@ -275,10 +272,10 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
     spinBoxLength->setMaximum(9);
     spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
 
-    connect(spanSliderWords, &QxtSpanSlider::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(spanSliderWords, &QxtSpanSlider::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(spanSliderWords, &QxtSpanSlider::lowerValueChanged, this, &TitleWidget::updateRangeLabel);
-    connect(spanSliderWords, &QxtSpanSlider::upperValueChanged, this, &TitleWidget::updateRangeLabel);
+    connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+    connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, this, &TitleWidget::updateRangeLabel);
+    connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, this, &TitleWidget::updateRangeLabel);
     connect(checkBoxRemoveSmallWords, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
     connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
@@ -302,8 +299,8 @@ QString TitleWidget::toString() const
     else if (caseChange == IdSuggestions::ccToCamelCase)
         result.append(QStringLiteral("c"));
 
-    if (spanSliderWords->lowerValue() > spanSliderWords->minimum() || spanSliderWords->upperValue() < spanSliderWords->maximum())
-        result.append(QString(QStringLiteral("w%1%2")).arg(spanSliderWords->lowerValue()).arg(spanSliderWords->upperValue() < spanSliderWords->maximum() ? QString::number(spanSliderWords->upperValue()) : QStringLiteral("I")));
+    if (rangeWidgetAuthor->lowerValue() > 0 || rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum())
+        result.append(QString(QStringLiteral("w%1%2")).arg(rangeWidgetAuthor->lowerValue()).arg(rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum() ? QString::number(rangeWidgetAuthor->upperValue()) : QStringLiteral("I")));
 
     const QString text = lineEditTextInBetween->text();
     if (!text.isEmpty())
@@ -314,20 +311,19 @@ QString TitleWidget::toString() const
 
 void TitleWidget::updateRangeLabel()
 {
-    const int lower = spanSliderWords->lowerValue();
-    const int upper = spanSliderWords->upperValue();
-    const int min = spanSliderWords->minimum();
-    const int max = spanSliderWords->maximum();
+    const int lower = rangeWidgetAuthor->lowerValue();
+    const int upper = rangeWidgetAuthor->upperValue();
+    const int max = rangeWidgetAuthor->maximum();
 
-    if (lower == min && upper == min)
+    if (lower == 0 && upper == 0)
         labelWordsRange->setText(i18n("First word only"));
-    else if (lower == min + 1 && upper == max)
+    else if (lower == 1 && upper == max)
         labelWordsRange->setText(i18n("All but first word"));
-    else if (lower == min && upper == max)
+    else if (lower == 0 && upper == max)
         labelWordsRange->setText(i18n("From first to last word"));
-    else if (lower > min && upper == max)
+    else if (lower > 0 && upper == max)
         labelWordsRange->setText(i18n("From word %1 to last word", lower + 1));
-    else if (lower == min && upper < max)
+    else if (lower == 0 && upper < max)
         labelWordsRange->setText(i18n("From first word to word %1", upper + 1));
     else
         labelWordsRange->setText(i18n("From word %1 to word %2", lower + 1, upper + 1));
