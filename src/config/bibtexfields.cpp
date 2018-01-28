@@ -37,8 +37,6 @@ uint qHash(const FieldDescription &a)
     return qHash(a.upperCamelCase);
 }
 
-static const int bibTeXFieldsMaxColumnCount = 0x0fff;
-
 class BibTeXFields::BibTeXFieldsPrivate
 {
 public:
