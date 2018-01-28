@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -87,7 +87,8 @@ public:
             const QString groupName = QStringLiteral("Column") + fd.upperCamelCase + fd.upperCamelCaseAlt;
             KConfigGroup configGroup(layoutConfig, groupName);
 
-            for (const QString &treeViewName : fd.visible.keys()) {
+            const QList<QString> keys = fd.visible.keys();
+            for (const QString &treeViewName : keys) {
                 const QString key = QStringLiteral("Visible_") + treeViewName;
                 configGroup.writeEntry(key, fd.visible.value(treeViewName, fd.defaultVisible));
             }
