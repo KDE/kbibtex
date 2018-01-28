@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *   Copyright (C) 2014 by Pino Toscano <pino@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -262,7 +262,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     QCryptographicHash hashAuthors(QCryptographicHash::Md4);
     lastAuthorsList.sort();
 #ifdef WRITE_RAWDATAFILE
-    QString sourceCode = QStringLiteral("static const QByteArray ") + filenameStem + QStringLiteral("LastAuthors(\"");
+    QString sourceCode = QStringLiteral("static const char *") + filenameStem + QStringLiteral("LastAuthors(\"");
     len = 0;
 #endif // WRITE_RAWDATAFILE
     for (const QString &lastAuthor : const_cast<const QStringList &>(lastAuthorsList)) {
@@ -291,7 +291,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
 
     QCryptographicHash hashFilesUrlsDoi(QCryptographicHash::Md5);
 #ifdef WRITE_RAWDATAFILE
-    sourceCode = QStringLiteral("static const QByteArray ") + filenameStem + QStringLiteral("FilesUrlsDois(\"");
+    sourceCode = QStringLiteral("static const char *") + filenameStem + QStringLiteral("FilesUrlsDois(\"");
 #endif // WRITE_RAWDATAFILE
     for (const QString &filesUrlsDoi : const_cast<const QStringList &>(filesUrlsDoiList)) {
         const QByteArray filesUrlsDoiUtf8 = filesUrlsDoi.toUtf8();
