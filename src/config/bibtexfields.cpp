@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,8 +36,6 @@ uint qHash(const FieldDescription &a)
 {
     return qHash(a.upperCamelCase);
 }
-
-static const int bibTeXFieldsMaxColumnCount = 0x0fff;
 
 class BibTeXFields::BibTeXFieldsPrivate
 {
@@ -118,8 +116,11 @@ public:
             QString groupName = QString(QStringLiteral("Column%1")).arg(columnCount);
             KConfigGroup configGroup(layoutConfig, groupName);
 
-            for (QMap<QString, bool>::ConstIterator it = fd.visible.constBegin(); it != fd.visible.constEnd(); ++it)
-                configGroup.writeEntry("Visible_" +  it.key(), it.value());
+            const QList<QString> keys = fd.visible.keys();
+            for (const QString &treeViewName : keys) {
+                const QString key = QStringLiteral("Visible_") + treeViewName;
+                configGroup.writeEntry(key, fd.visible.value(treeViewName, fd.defaultVisible));
+            }
             QString typeFlagsString = fd.typeFlags == fd.preferredTypeFlag ? QString() : QLatin1Char(';') + typeFlagsToString(fd.typeFlags);
             typeFlagsString.prepend(typeFlagToString(fd.preferredTypeFlag));
             configGroup.writeEntry("TypeFlags", typeFlagsString);

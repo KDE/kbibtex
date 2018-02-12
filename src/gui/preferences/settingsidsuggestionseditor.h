@@ -37,9 +37,8 @@ class QPushButton;
 class KLineEdit;
 class KComboBox;
 
-class QxtSpanSlider;
-
 class IdSuggestionsEditWidget;
+class RangeWidget;
 
 /**
  * @author Thomas Fischer
@@ -68,7 +67,7 @@ class AuthorWidget : public TokenWidget
     Q_OBJECT
 
 private:
-    QxtSpanSlider *spanSliderAuthor;
+    RangeWidget *rangeWidgetAuthor;
     QCheckBox *checkBoxLastAuthor;
     QLabel *labelAuthorRange;
     KComboBox *comboBoxChangeCase;
@@ -92,7 +91,7 @@ class TitleWidget : public TokenWidget
     Q_OBJECT
 
 private:
-    QxtSpanSlider *spanSliderWords;
+    RangeWidget *rangeWidgetAuthor;
     QLabel *labelWordsRange;
     QCheckBox *checkBoxRemoveSmallWords;
     KComboBox *comboBoxChangeCase;

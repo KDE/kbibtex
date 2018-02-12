@@ -36,8 +36,6 @@ uint qHash(const EntryDescription &a)
     return qHash(a.upperCamelCase);
 }
 
-static const int entryTypeMaxCount = 0x0fff;
-
 class BibTeXEntries::BibTeXEntriesPrivate
 {
 public:
