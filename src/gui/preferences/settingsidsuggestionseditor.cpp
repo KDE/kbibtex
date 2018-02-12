@@ -232,7 +232,7 @@ TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info
     QBoxLayout *boxLayout = new QVBoxLayout();
     boxLayout->setMargin(0);
     formLayout->addRow(i18n("Word Range:"), boxLayout);
-    static const QStringList wordRange = QStringList() << i18n("First word") << i18n("Second word") << i18n("Third word") << i18n("Four word") << i18n("Fifth word") << i18n("Sixth word") << i18n("Seventh word") << i18n("Eigth word") << i18n("Ninth word") << i18n("Tenth word") << i18n("|Last word");
+    static const QStringList wordRange = QStringList() << i18n("First word") << i18n("Second word") << i18n("Third word") << i18n("Four word") << i18n("Fifth word") << i18n("Sixth word") << i18n("Seventh word") << i18n("Eighth word") << i18n("Ninth word") << i18n("Tenth word") << i18n("|Last word");
     rangeWidgetAuthor = new RangeWidget(wordRange, this);
     boxLayout->addWidget(rangeWidgetAuthor);
     if (info.startWord > 0 || info.endWord < 0xffff) {
