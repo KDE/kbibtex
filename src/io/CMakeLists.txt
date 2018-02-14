@@ -93,10 +93,8 @@ set_target_properties(
     kbibtexio
     PROPERTIES
     EXPORT_NAME "kbibtexio"
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
+    VERSION ${KBIBTEX_RELEASE_VERSION}
+    SOVERSION ${KBIBTEX_SOVERSION}
 )
 
 install(
