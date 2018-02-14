@@ -18,6 +18,8 @@ set(
 configure_file(test-config.h.in test-config.h @ONLY)
 
 include_directories(
+    ${CMAKE_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
@@ -50,16 +52,37 @@ if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtexfilestest kbibtexfilestest_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
+# Creates kbibtex-git-info.h containing information about the source code's Git revision
+# (if source directory is a Git clone)
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+    COMMAND
+    ${CMAKE_COMMAND}
+    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
+    -P
+    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
+)
+set_source_files_properties(
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+    PROPERTIES
+    GENERATED 1
+    HEADER_FILE_ONLY 1
+    SKIP_AUTOMOC ON
+    SKIP_AUTOUIC ON
+    SKIP_AUTOGEN ON
+)
+
 add_executable(
     kbibtextest
     ${kbibtextest_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
 )
 
 add_executable(
     kbibtexfilestest
     ${kbibtexfilestest_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
 )
 
 target_link_libraries( kbibtextest
@@ -88,35 +111,4 @@ add_test(
     kbibtexfilestest
     COMMAND
     kbibtexfilestest
-)
-
-# version.h is a generated file
-set_source_files_properties(
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
-    PROPERTIES
-    GENERATED
-    TRUE
-    HEADER_FILE_ONLY
-    TRUE
-)
-
-add_dependencies( kbibtextest
-    GITrevisionTest
-)
-
-add_dependencies( kbibtexfilestest
-    GITrevisionTest
-)
-
-# creates version.h using cmake script
-add_custom_target(
-    GITrevisionTest
-    COMMAND
-    ${CMAKE_COMMAND}
-    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
-    -P
-    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
-    COMMENT
-    "Determine Git revision"
 )

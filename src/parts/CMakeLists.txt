@@ -14,6 +14,8 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
+    ${CMAKE_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/io
@@ -27,23 +29,33 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/processing
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/global
-    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-# version.h is a generated file
+# Creates kbibtex-git-info.h containing information about the source code's Git revision
+# (if source directory is a Git clone)
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+    COMMAND
+    ${CMAKE_COMMAND}
+    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
+    -P
+    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
+)
 set_source_files_properties(
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
     PROPERTIES
-    GENERATED
-    TRUE
-    HEADER_FILE_ONLY
-    TRUE
+    GENERATED 1
+    HEADER_FILE_ONLY 1
+    SKIP_AUTOMOC ON
+    SKIP_AUTOUIC ON
+    SKIP_AUTOGEN ON
 )
 
 add_library( kbibtexpart
     MODULE
     ${kbibtexpart_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
 )
 
 target_link_libraries( kbibtexpart
@@ -53,23 +65,6 @@ target_link_libraries( kbibtexpart
     kbibtexio
     kbibtexgui
     kbibtexproc
-)
-
-add_dependencies( kbibtexpart
-    GITrevisionPart
-)
-
-# creates version.h using cmake script
-add_custom_target(
-    GITrevisionPart
-    COMMAND
-    ${CMAKE_COMMAND}
-    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
-    -P
-    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
-    COMMENT
-    "Determine Git revision"
 )
 
 install(
