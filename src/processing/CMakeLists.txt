@@ -65,13 +65,3 @@ install(
 )
 
 generate_export_header( kbibtexproc )
-
-# install(
-#     FILES
-#     ${kbibtexproc_HDRS}
-#     ${CMAKE_BINARY_DIR}/src/processing/kbibtexproc_export.h
-#     DESTINATION
-#     ${INCLUDE_INSTALL_DIR}/kbibtex/proc
-#     COMPONENT
-#     development
-# )

@@ -151,13 +151,3 @@ install(
 )
 
 generate_export_header( kbibtexnetworking )
-
-# install(
-#     FILES
-#     ${kbibtexnetworking_HDRS}
-#     ${CMAKE_BINARY_DIR}/src/networking/kbibtexnetworking_export.h
-#     DESTINATION
-#     ${INCLUDE_INSTALL_DIR}/kbibtex/networking
-#     COMPONENT
-#     development
-# )
