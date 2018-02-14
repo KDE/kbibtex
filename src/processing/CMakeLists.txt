@@ -54,10 +54,8 @@ set_target_properties(
     kbibtexproc
     PROPERTIES
     EXPORT_NAME "kbibtexproc"
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
+    VERSION ${KBIBTEX_RELEASE_VERSION}
+    SOVERSION ${KBIBTEX_SOVERSION}
 )
 
 install(

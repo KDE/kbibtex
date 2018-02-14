@@ -38,10 +38,9 @@ target_link_libraries( kbibtexconfig
 set_target_properties(
     kbibtexconfig
     PROPERTIES
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
+    EXPORT_NAME "kbibtexconfig"
+    VERSION ${KBIBTEX_RELEASE_VERSION}
+    SOVERSION ${KBIBTEX_SOVERSION}
 )
 
 install(

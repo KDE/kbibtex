@@ -125,10 +125,8 @@ set_target_properties(
     kbibtexgui
     PROPERTIES
     EXPORT_NAME "kbibtexgui"
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
+    VERSION ${KBIBTEX_RELEASE_VERSION}
+    SOVERSION ${KBIBTEX_SOVERSION}
 )
 
 install(

@@ -140,10 +140,8 @@ set_target_properties(
     kbibtexnetworking
     PROPERTIES
     EXPORT_NAME "kbibtexnetworking"
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
+    VERSION ${KBIBTEX_RELEASE_VERSION}
+    SOVERSION ${KBIBTEX_SOVERSION}
 )
 
 install(
