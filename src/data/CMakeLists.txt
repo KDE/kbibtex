@@ -51,18 +51,6 @@ target_link_libraries( kbibtexdata
     kbibtexconfig
 )
 
-# if(
-#     WIN32
-# )
-#     target_link_libraries(
-#         kbibtexdata
-#         LINK_PRIVATE
-#         iconv
-#     )
-# endif(
-#     WIN32
-# )
-
 set_target_properties(
     kbibtexdata
     PROPERTIES
@@ -78,13 +66,3 @@ install(
 )
 
 generate_export_header( kbibtexdata )
-
-# install(
-#     FILES
-#     ${kbibtexdata_HDRS}
-#     ${CMAKE_BINARY_DIR}/src/data/kbibtexdata_export.h
-#     DESTINATION
-#     ${INCLUDE_INSTALL_DIR}/kbibtex/data
-#     COMPONENT
-#     development
-# )
