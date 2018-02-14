@@ -5,7 +5,9 @@
   <project_license>GPL-2.0+</project_license>
   <name>KBibTeX</name>
   <name xml:lang="ca">KBibTeX</name>
+  <name xml:lang="ca-valencia">KBibTeX</name>
   <name xml:lang="fr">KBibTeX</name>
+  <name xml:lang="nl">KBibTeX</name>
   <name xml:lang="pt">KBibTeX</name>
   <name xml:lang="sk">KBibTeX</name>
   <name xml:lang="sv">Kbibtex</name>
@@ -14,7 +16,9 @@
   <name xml:lang="zh-CN">KBibTeX</name>
   <summary>BibTeX editor by KDE to edit bibliographies used with LaTeX</summary>
   <summary xml:lang="ca">Editor de BibTeX, creat per la comunitat KDE, per editar bibliografies emprant LaTeX</summary>
+  <summary xml:lang="ca-valencia">Editor de BibTeX, creat per la comunitat KDE, per editar bibliografies emprant LaTeX</summary>
   <summary xml:lang="fr">Éditeur BixTeX par KDE pour modifier des bibliographies utilisées avec LaTeX</summary>
+  <summary xml:lang="nl">BibTeX-bewerker door KDE om bibliografieën te bewerken met LaTeX</summary>
   <summary xml:lang="pt">O BibTeX é um editor do KDE, onde se podem editar bibliografias usadas com o LaTeX</summary>
   <summary xml:lang="sv">Bibtex-editor av KDE för att redigera bibliografier använda med Latex</summary>
   <summary xml:lang="uk">Редактор BibTeX від KDE. Призначений для редагування бібліографій, що використовуються у LaTeX.</summary>
@@ -25,14 +29,18 @@
       KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.
     </p>
     <p xml:lang="ca">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
+    <p xml:lang="ca-valencia">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
     <p xml:lang="fr">KBibTeX est une application de gestion de références qui peut être utilisée pour collecter des bibliographies TeX/LaTeX et les exporter dans divers formats.</p>
+    <p xml:lang="nl">KBibTeX is een beheertoepassing voor referenties die gebruikt kan worden om TeX/LaTeX bibliografieën te verzamelen en te exporteren in verschillende formaten.</p>
     <p xml:lang="pt">O KBibTeX é uma aplicação de gestão de referências que pode ser usada para recolher as bibliografias de TeX/LaTeX e exportá-las em vários formatos.</p>
     <p xml:lang="sv">Kbibtex är ett referenshanteringsprogram som kan användas för att samla Tex/Latex-bibliografier och exportera dem med diverse format.</p>
     <p xml:lang="uk">KBibTeX — програма для керування посиланнями, якою можна скористатися для створення бібліографій TeX/LaTeX та експортування даних бібліографій у різноманітних форматах.</p>
     <p xml:lang="x-test">xxKBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.xx</p>
     <p>KBibTeX can do the following things:</p>
     <p xml:lang="ca">KBibTeX pot fer les següents coses:</p>
+    <p xml:lang="ca-valencia">KBibTeX pot fer les següents coses:</p>
     <p xml:lang="fr">KBibTeX peut faire les choses suivantes : </p>
+    <p xml:lang="nl">KBibTeX kan het volgende doen:</p>
     <p xml:lang="pt">O KBibTeX pode fazer as seguintes coisas:</p>
     <p xml:lang="sk">KBibTeX vie robiť nasledovné veci:</p>
     <p xml:lang="sv">Kbibtex kan göra följande saker:</p>
@@ -42,49 +50,63 @@
     <ul>
       <li>Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
       <li xml:lang="ca">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
+      <li xml:lang="ca-valencia">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
       <li xml:lang="fr">Prévisualiser des entrées bibliographiques dans divers formats (Source (BibTeX), Source (RIS), Wikipédia, standard (XML/XSLT), sophistiqué (XML/XSLT), et abstrait (XML/XSLT)). Des styles d'aperçus supplémentaires sont disponibles après de l'installation de bibtex2html.</li>
+      <li xml:lang="nl">Bibliografie-items bekijken in verschillende formaten  (bron (BibTeX), bron (RIS), Wikipedia, standaard (XML/XSLT), elegant (XML/XSLT) en alleen abstract (XML/XSLT)). Additionele stijlen om te bekijken worden beschikbaar wanneer bibtex2html is geïnstalleerd.</li>
       <li xml:lang="pt">Antever os itens bibliográficos em diversos formatos (Código (BibTeX), Código (RIS), Wikipédia, normal (XML/XSLT), bonito (XML/XSLT) e apenas o resumo (XML/XSLT)). Ficam disponíveis mais estilos de antevisão quando instalar o 'bibtex2html'.</li>
       <li xml:lang="sv">Förhandsgranska bibliografier med olika format (källa (Bibtex), källa (RIS), Wikipedia, standard (XML/XSLT), snygg (XML/XSLT) och bara sammandrag (XML/XSLT)). Ytterligare förhandsgranskningsstilar är tillgängliga om bibtex2html är installerat.</li>
       <li xml:lang="uk">Виконувати попередній перегляд і зберігати записи бібліографії у різних форматах (початковий код (BibTeX), початковий код (RIS), Вікіпедія, standard (XML/XSLT), fancy (XML/XSLT) та abstract-only (XML/XSLT)). Доступ до додаткових стилів попереднього перегляду можна отримати після встановлення програми bibtex2html.</li>
       <li xml:lang="x-test">xxPreview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.xx</li>
       <li>Import data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.</li>
       <li xml:lang="ca">Importar les dades en diversos formats de fitxer per a bibliografies, tals com BibTeX, RIS i ISI (requereix «bibutils») i exporta les dades a PDF (requereix «pdflatex»), PostScript (requereix «latex»), RTF (requereix «latex2rtf»), i HTML.</li>
+      <li xml:lang="ca-valencia">Importar les dades en diversos formats de fitxer per a bibliografies, tals com BibTeX, RIS i ISI (requereix «bibutils») i exporta les dades a PDF (requereix «pdflatex»), PostScript (requereix «latex»), RTF (requereix «latex2rtf»), i HTML.</li>
       <li xml:lang="fr">Importer des données dans divers formats de fichiers bibliographiques comme BibTeX, RIS, ISI (nécessite bibutils) et exporter des données en PDF (nécessite pdflatex), PostScript (nécessite latex), RTF (nécessite latex2rtf), et HTML.</li>
+      <li xml:lang="nl">Gegevens importeren in verschillende bibliografie bestandsformaten zoals BibTeX, RIS en ISI (vereist bibutils) en exporteert gegevens naar PDF (vereist pdflatex), PostScript (vereist latex), RTF (vereist latex2rtf) en HTML.</li>
       <li xml:lang="pt">Importar os dados em diversos formatos de ficheiros bibliográficos, como o BibTeX, RIS e ISI (precisa das 'bibutils') e exportar os dados para PDF (precisa do 'pdflatex'), PostScript (precisa do 'latex'), RTF (precisa do 'latex2rtf') e HTML.</li>
       <li xml:lang="sv">Importera data med diverse bibliografi-filformat såsom Bibtex, RIS och ISI (kräver bibutils) och exportera data till PDF (kräver pdflatex), PostScript (kräver latex), RTF (kräver latex2rtf), och HTML.</li>
       <li xml:lang="uk">Імпортувати дані у різноманітних форматах файлів бібліографії, зокрема BibTeX, RIS та ISI (слід встановити bibutils) та експортувати дані до PDF (потребує встановлення pdflatex), PostScript (потребує встановлення latex), RTF (потребує встановлення latex2rtf) та HTML.</li>
       <li xml:lang="x-test">xxImport data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.xx</li>
       <li>Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="ca">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li xml:lang="ca-valencia">Busca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="fr">Rechercher des entrées bibliographiques dans des banques de données en ligne (par exemple Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li xml:lang="nl">Zoeken naar de bibliografie-items in online databases (bijv. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="pt">Procurar por dados de itens bibliográficos nas bases de dados 'online' (p.ex. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="sv">Söka efter bibliografiposternas data i databaser på nätet (t.ex. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="uk">Виконувати пошук даних записів бібліографії у базах даних у інтернеті (зокрема у Google Scholar, ACM, IEEE, arXiv тощо).</li>
       <li xml:lang="x-test">xxSearch for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)xx</li>
       <li>Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
       <li xml:lang="ca">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
+      <li xml:lang="ca-valencia">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
       <li xml:lang="fr">Prévisualiser des ressources locales ou distantes (en ligne), par exemple des fichiers PDF ou des liens dans l'entrée BibTeX.</li>
+      <li xml:lang="nl">Locale of hulpbronnen op afstand (online), bijv. PDF bestanden, gekoppeld in het BibTEX item.</li>
       <li xml:lang="pt">Fazer uma antevisão dos recursos locais ou remotos ('online'), p.ex. ficheiros PDF, associada aos itens do BibTEX.</li>
       <li xml:lang="sv">Förhandsgranska lokala eller fjärresurser (på nätet), t.ex. PDF-filer, länkade i Bibtex-posten.</li>
       <li xml:lang="uk">Попередньо переглядати локальні та інтернет-ресурси, зокрема файли PDF, пов’язані із записом бібліографії BibTeX.</li>
       <li xml:lang="x-test">xxPreview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.xx</li>
       <li>Find and merge duplicate entries in bibliography.</li>
       <li xml:lang="ca">Troba i fusiona les entrades duplicades a la bibliografia.</li>
+      <li xml:lang="ca-valencia">Troba i fusiona les entrades duplicades a la bibliografia.</li>
       <li xml:lang="fr">Trouver et fusionner des doublons dans les entrées bibliographiques.</li>
+      <li xml:lang="nl">Zoeken en mengen van dubbele items in een bibliografie.</li>
       <li xml:lang="pt">Procurar e reunir itens duplicados na bibliografia.</li>
       <li xml:lang="sv">Hitta och sammanfoga duplicerade poster i bibliografin.</li>
       <li xml:lang="uk">Шукати і об’єднувати дублікати записів у бібліографії.</li>
       <li xml:lang="x-test">xxFind and merge duplicate entries in bibliography.xx</li>
       <li>Integrate your bibliographies with LaTeX editors such as Kile and LyX.</li>
       <li xml:lang="ca">Integra les vostres bibliografies amb editors de LaTeX com Kile i LyX.</li>
+      <li xml:lang="ca-valencia">Integra les vostres bibliografies amb editors de LaTeX com Kile i LyX.</li>
       <li xml:lang="fr">Intégrer vos bibliographies avec des éditeurs LaTeX comme Kile et LyX.</li>
+      <li xml:lang="nl">Integreer uw bibliografieën met LaTeX bewerkers zoals Kile en LyX.</li>
       <li xml:lang="pt">Integrar as suas bibliografias com os editores de LaTeX, como o Kile e o LyX.</li>
       <li xml:lang="sv">Integrera bibliografierna med Latex-editorer såsom Kile och LyX</li>
       <li xml:lang="uk">Інтегрувати ваші бібліографії з редакторами LaTeX, зокрема Kile та LyX.</li>
       <li xml:lang="x-test">xxIntegrate your bibliographies with LaTeX editors such as Kile and LyX.xx</li>
       <li>Import your Zotero library.</li>
       <li xml:lang="ca">Importa la vostra biblioteca de Zotero.</li>
+      <li xml:lang="ca-valencia">Importa la vostra biblioteca de Zotero.</li>
       <li xml:lang="fr">Importer une bibliothèque Zotero.</li>
+      <li xml:lang="nl">Uw Zotero bibliotheek importeren.</li>
       <li xml:lang="pt">Importar a sua biblioteca do Zotero.</li>
       <li xml:lang="sk">Importovať vašu knižnicu Zotero.</li>
       <li xml:lang="sv">Importera ett Zotero-bibliotek.</li>
