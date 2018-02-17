@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -487,12 +487,12 @@ void ElementEditor::apply()
     enum IdToUse {UseOriginalId, UseNewId};
     IdToUse idToUse = UseNewId;
 
-    if (newId.isEmpty()) {
+    if (newId.isEmpty() && !originalId.isEmpty()) {
         /// New id/key is empty (invalid by definition), so just notify use and revert back to original id/key
         /// (assuming that original id/key is valid)
         KMessageBox::sorry(this, i18n("No id was entered, so the previous id '%1' will be restored.", originalId), i18n("No id given"));
         idToUse = UseOriginalId;
-    } else {
+    } else if (!newId.isEmpty()) {
         /// If new id/key is not empty, then check if it is identical to another entry/macro in the current file
         const QSharedPointer<Element> knownElementWithSameId = d->currentFile() != nullptr ? d->currentFile()->containsKey(newId) : QSharedPointer<Element>();
         if (!knownElementWithSameId.isNull() && d->element != knownElementWithSameId) {

@@ -156,12 +156,14 @@ public:
         /// Remove unnecessary white space from input
         /// Exception: source and verbatim content is kept unmodified
         const QString text = typeFlag == KBibTeX::tfSource || typeFlag == KBibTeX::tfVerbatim ? parent->text() : parent->text().simplified();
+        if (text.isEmpty())
+            return true;
 
         const EncoderLaTeX &encoder = EncoderLaTeX::instance();
         const QString encodedText = encoder.decode(text);
-
         if (encodedText.isEmpty())
             return true;
+
         else if (typeFlag == KBibTeX::tfPlainText) {
             value.append(QSharedPointer<PlainText>(new PlainText(encodedText)));
             return true;
@@ -179,9 +181,9 @@ public:
                 value.append(keyword);
             return true;
         } else if (typeFlag == KBibTeX::tfSource) {
-            QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? QStringLiteral("author") : QStringLiteral("title");
+            const QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? QStringLiteral("author") : QStringLiteral("title");
             FileImporterBibTeX importer(parent);
-            QString fakeBibTeXFile = QString(QStringLiteral("@article{dummy, %1=%2}")).arg(key, encodedText);
+            const QString fakeBibTeXFile = QString(QStringLiteral("@article{dummy, %1=%2}")).arg(key, encodedText);
 
             const QScopedPointer<const File> file(importer.fromString(fakeBibTeXFile));
             if (!file.isNull() && file->count() == 1) {
