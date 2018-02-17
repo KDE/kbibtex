@@ -69,7 +69,7 @@ AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &in
     QBoxLayout *boxLayout = new QVBoxLayout();
     boxLayout->setMargin(0);
     formLayout->addRow(i18n("Author Range:"), boxLayout);
-    static const QStringList authorRange = QStringList() << i18n("First author") << i18n("Second author") << i18n("Third author") << i18n("Four author") << i18n("Fifth author") << i18n("Sixth author") << i18n("Seventh author") << i18n("Eighth author") << i18n("Ninth author") << i18n("Tenth author") << i18n("|Last author");
+    static const QStringList authorRange = QStringList() << i18n("First author") << i18n("Second author") << i18n("Third author") << i18n("Fourth author") << i18n("Fifth author") << i18n("Sixth author") << i18n("Seventh author") << i18n("Eighth author") << i18n("Ninth author") << i18n("Tenth author") << i18n("|Last author");
     rangeWidgetAuthor = new RangeWidget(authorRange, this);
     boxLayout->addWidget(rangeWidgetAuthor);
     rangeWidgetAuthor->setLowerValue(info.startWord);
