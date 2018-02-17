@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -160,7 +160,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
 
     if (m_filterQuery.terms.isEmpty()) return true; /// empty filter query
 
-    bool *eachTerm = new bool[m_filterQuery.terms.count()];
+    QScopedArrayPointer<bool> eachTerm(new bool[m_filterQuery.terms.count()]);
     for (int i = m_filterQuery.terms.count() - 1; i >= 0; --i)
         eachTerm[i] = false;
 
@@ -266,7 +266,6 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
         every &= eachTerm[i];
         any |= eachTerm[i];
     }
-    delete[] eachTerm;
 
     if (m_filterQuery.combination == SortFilterFileModel::AnyTerm)
         return any;

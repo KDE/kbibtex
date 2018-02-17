@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -252,7 +252,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
 
     /// variables to keep track which and how many field inputs will be visible
     int countVisible = 0;
-    bool *visible = new bool[fieldInputCount];
+    QScopedArrayPointer<bool> visible(new bool[fieldInputCount]);
     /// ... and if any field input is vertically expaning
     /// (e.g. a list, important for layout)
     bool anyoneVerticallyExpanding = false;
@@ -319,8 +319,6 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
             gridLayout->setColumnStretch(i, 0);
         }
     }
-
-    delete[] visible;
 }
 
 ReferenceWidget::ReferenceWidget(QWidget *parent)
@@ -1103,11 +1101,11 @@ public:
 protected:
     void dropEvent(QDropEvent *event) override {
         FileImporterBibTeX importer(this);
-        FileExporterBibTeX exporter(this);
-        const File *file = importer.fromString(event->mimeData()->text());
-        if (file != nullptr && file->count() == 1)
-            document()->setPlainText(exporter.toString(file->first(), file));
-        else
+        QScopedPointer<File> file(importer.fromString(event->mimeData()->text()));
+        if (!file.isNull() && file->count() == 1) {
+            FileExporterBibTeX exporter(this);
+            document()->setPlainText(exporter.toString(file->first(), file.data()));
+        } else
             KTextEdit::dropEvent(event);
     }
 };
@@ -1141,36 +1139,33 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
     if (isReadOnly) return false; ///< never save data if in read-only mode
 
     const QString text = sourceEdit->document()->toPlainText();
-    File *file = d->importerBibTeX->fromString(text);
-    if (file == nullptr) return false;
+    const QScopedPointer<const File> file(d->importerBibTeX->fromString(text));
+    if (file.isNull() || file->count() != 1) return false;
 
-    bool result = false;
-    if (file->count() == 1) {
-        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
-        QSharedPointer<Entry> readEntry = file->first().dynamicCast<Entry>();
-        if (!readEntry.isNull() && !entry.isNull()) {
-            entry->operator =(*readEntry.data()); //entry = readEntry;
-            result = true;
+
+    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    QSharedPointer<Entry> readEntry = file->first().dynamicCast<Entry>();
+    if (!readEntry.isNull() && !entry.isNull()) {
+        entry->operator =(*readEntry.data()); //entry = readEntry;
+        return true;
+    } else {
+        QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
+        QSharedPointer<Macro> readMacro = file->first().dynamicCast<Macro>();
+        if (!readMacro.isNull() && !macro.isNull()) {
+            macro->operator =(*readMacro.data());
+            return true;
         } else {
-            QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
-            QSharedPointer<Macro> readMacro = file->first().dynamicCast<Macro>();
-            if (!readMacro.isNull() && !macro.isNull()) {
-                macro->operator =(*readMacro.data());
-                result = true;
+            QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
+            QSharedPointer<Preamble> readPreamble = file->first().dynamicCast<Preamble>();
+            if (!readPreamble.isNull() && !preamble.isNull()) {
+                preamble->operator =(*readPreamble.data());
+                return true;
             } else {
-                QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
-                QSharedPointer<Preamble> readPreamble = file->first().dynamicCast<Preamble>();
-                if (!readPreamble.isNull() && !preamble.isNull()) {
-                    preamble->operator =(*readPreamble.data());
-                    result = true;
-                } else
-                    qCWarning(LOG_KBIBTEX_GUI) << "Do not know how to apply source code";
+                qCWarning(LOG_KBIBTEX_GUI) << "Do not know how to apply source code";
+                return false;
             }
         }
     }
-
-    delete file;
-    return result;
 }
 
 bool SourceWidget::reset(QSharedPointer<const Element> element)
