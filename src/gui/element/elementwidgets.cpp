@@ -336,14 +336,7 @@ bool ReferenceWidget::apply(QSharedPointer<Element> element) const
     bool result = false;
     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
     if (!entry.isNull()) {
-        const BibTeXEntries *be = BibTeXEntries::self();
-        QString type;
-        if (entryType->currentIndex() < 0 || entryType->lineEdit()->isModified())
-            type = be->format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
-        else
-            type = entryType->itemData(entryType->currentIndex()).toString();
-        entry->setType(type);
-
+        entry->setType(computeType());
         entry->setId(entryId->text());
         result = true;
     } else {
@@ -579,6 +572,15 @@ void ReferenceWidget::setEntryIdByDefault()
             connect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
         }
     }
+}
+
+QString ReferenceWidget::computeType() const
+{
+    const BibTeXEntries *be = BibTeXEntries::self();
+    if (entryType->currentIndex() < 0 || entryType->lineEdit()->isModified())
+        return be->format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
+    else
+        return entryType->itemData(entryType->currentIndex()).toString();
 }
 
 FilesWidget::FilesWidget(QWidget *parent)
