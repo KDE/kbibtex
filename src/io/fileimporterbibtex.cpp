@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -511,6 +511,7 @@ QString FileImporterBibTeX::readSimpleString(const char until)
     }
 
     while (!m_nextChar.isNull()) {
+        const ushort nextCharUnicode = m_nextChar.unicode();
         if (until != '\0') {
             /// Variable "until" has user-defined value
             if (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r') || m_nextChar.toLatin1() == until) {
@@ -520,7 +521,7 @@ QString FileImporterBibTeX::readSimpleString(const char until)
                 /// Append read character to final result
                 result.append(m_nextChar);
             }
-        } else if (m_nextChar.isLetterOrNumber() || extraAlphaNumChars.contains(m_nextChar)) {
+        } else if ((nextCharUnicode >= (ushort)'a' && nextCharUnicode <= (ushort)'z') || (nextCharUnicode >= (ushort)'A' && nextCharUnicode <= (ushort)'Z') || (nextCharUnicode >= (ushort)'0' && nextCharUnicode <= (ushort)'9') || extraAlphaNumChars.contains(m_nextChar)) {
             /// Accept default set of alpha-numeric characters
             result.append(m_nextChar);
         } else
