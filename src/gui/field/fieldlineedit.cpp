@@ -203,6 +203,50 @@ public:
         return false;
     }
 
+    bool validate(QWidget **widgetWithIssue, QString &message) const {
+        message.clear();
+
+        /// Remove unnecessary white space from input
+        /// Exception: source and verbatim content is kept unmodified
+        const QString text = typeFlag == KBibTeX::tfSource || typeFlag == KBibTeX::tfVerbatim ? parent->text() : parent->text().simplified();
+        if (text.isEmpty())
+            return true;
+
+        const EncoderLaTeX &encoder = EncoderLaTeX::instance();
+        const QString encodedText = encoder.decode(text);
+        if (encodedText.isEmpty())
+            return true;
+
+        bool result = false;
+        if (typeFlag == KBibTeX::tfPlainText || typeFlag == KBibTeX::tfPerson || typeFlag == KBibTeX::tfKeyword) {
+            result = KBibTeX::validateCurlyBracketContext(text) == 0;
+            if (!result) message = i18n("Opening and closing curly brackets do not match.");
+        } else if (typeFlag == KBibTeX::tfReference) {
+            static const QRegularExpression validReferenceRegExp(QStringLiteral("^[-_:/a-zA-Z0-9]+$"));
+            const QRegularExpressionMatch validReferenceMatch = validReferenceRegExp.match(text);
+            result = validReferenceMatch.hasMatch() && validReferenceMatch.captured() == text;
+            if (!result) message = i18n("Reference contains characters outside of the allowed set.");
+        } else if (typeFlag == KBibTeX::tfSource) {
+            const QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? QStringLiteral("author") : QStringLiteral("title");
+            FileImporterBibTeX importer(parent);
+            const QString fakeBibTeXFile = QString(QStringLiteral("@article{dummy, %1=%2}")).arg(key, encodedText);
+
+            const QScopedPointer<const File> file(importer.fromString(fakeBibTeXFile));
+            if (file.isNull() || file->count() != 1) return false;
+            QSharedPointer<Entry> entry = file->first().dynamicCast<Entry>();
+            result = !entry.isNull() && entry->count() == 1;
+            if (!result) message = i18n("Source code could not be parsed correctly.");
+        } else if (typeFlag == KBibTeX::tfVerbatim) {
+            result = KBibTeX::validateCurlyBracketContext(text) == 0;
+            if (!result) message = i18n("Opening and closing curly brackets do not match.");
+        }
+
+        if (!result && widgetWithIssue != nullptr)
+            *widgetWithIssue = parent;
+
+        return result;
+    }
+
     KBibTeX::TypeFlag determineTypeFlag(const Value &value, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags availableTypeFlags) {
         KBibTeX::TypeFlag result = KBibTeX::tfSource;
         if (availableTypeFlags.testFlag(preferredTypeFlag) && typeFlagSupported(value, preferredTypeFlag))
@@ -429,6 +473,11 @@ bool FieldLineEdit::apply(Value &value) const
 bool FieldLineEdit::reset(const Value &value)
 {
     return d->reset(value);
+}
+
+bool FieldLineEdit::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    return d->validate(widgetWithIssue, message);
 }
 
 void FieldLineEdit::setReadOnly(bool isReadOnly)

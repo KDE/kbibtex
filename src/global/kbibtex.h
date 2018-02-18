@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -94,6 +94,7 @@ public:
 
     static QString leftSqueezeText(const QString &text, int n);
 
+    static int validateCurlyBracketContext(const QString &text);
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KBibTeX::TypeFlags)

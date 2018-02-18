@@ -50,6 +50,7 @@ public:
     explicit ElementWidget(QWidget *parent);
     virtual bool apply(QSharedPointer<Element> element) const = 0;
     virtual bool reset(QSharedPointer<const Element> element) = 0;
+    virtual bool validate(QWidget **widgetWithIssue, QString &message) const = 0;
     virtual void setReadOnly(bool isReadOnly) {
         this->isReadOnly = isReadOnly;
     }
@@ -105,6 +106,7 @@ public:
 
     bool apply(QSharedPointer<Element> element) const override;
     bool reset(QSharedPointer<const Element> element) override;
+    bool validate(QWidget **widgetWithIssue, QString &message) const override;
     void setReadOnly(bool isReadOnly) override;
     void showReqOptWidgets(bool forceVisible, const QString &entryType) override;
     QString label() override;
@@ -131,6 +133,7 @@ public:
 
     bool apply(QSharedPointer<Element> element) const override;
     bool reset(QSharedPointer<const Element> element) override;
+    bool validate(QWidget **widgetWithIssue, QString &message) const override;
     void setReadOnly(bool isReadOnly) override;
     void showReqOptWidgets(bool, const QString &) override {}
     void setApplyElementInterface(ElementEditor::ApplyElementInterface *applyElement) {
@@ -183,6 +186,7 @@ public:
 
     bool apply(QSharedPointer<Element> element) const override;
     bool reset(QSharedPointer<const Element> element) override;
+    bool validate(QWidget **widgetWithIssue, QString &message) const override;
     void setReadOnly(bool isReadOnly) override;
     void showReqOptWidgets(bool, const QString &) override {}
 
@@ -223,6 +227,7 @@ public:
 
     bool apply(QSharedPointer<Element> element) const override;
     bool reset(QSharedPointer<const Element> element) override;
+    bool validate(QWidget **widgetWithIssue, QString &message) const override;
     void setReadOnly(bool isReadOnly) override;
     void showReqOptWidgets(bool, const QString &) override {}
     QString label() override;
@@ -254,6 +259,7 @@ public:
 
     bool apply(QSharedPointer<Element> element) const override;
     bool reset(QSharedPointer<const Element> element) override;
+    bool validate(QWidget **widgetWithIssue, QString &message) const override;
     void setReadOnly(bool isReadOnly) override;
     void showReqOptWidgets(bool, const QString &) override {}
     QString label() override;
@@ -276,6 +282,7 @@ public:
 
     bool apply(QSharedPointer<Element> element) const override;
     bool reset(QSharedPointer<const Element> element) override;
+    bool validate(QWidget **widgetWithIssue, QString &message) const override;
     void setReadOnly(bool isReadOnly) override;
     void showReqOptWidgets(bool, const QString &) override {}
     QString label() override;
@@ -288,10 +295,14 @@ class SourceWidget : public ElementWidget
 {
     Q_OBJECT
 
+public:
+    enum ElementClass { elementInvalid = -1, elementEntry = 0, elementMacro, elementPreamble };
+
 private:
     class SourceWidgetTextEdit;
     SourceWidgetTextEdit *sourceEdit;
     QString originalText;
+    ElementClass elementClass;
 
     void createGUI();
 
@@ -299,8 +310,10 @@ public:
     explicit SourceWidget(QWidget *parent);
     ~SourceWidget() override;
 
+    void setElementClass(ElementClass elementClass);
     bool apply(QSharedPointer<Element> element) const override;
     bool reset(QSharedPointer<const Element> element) override;
+    bool validate(QWidget **widgetWithIssue, QString &message) const override;
     void setReadOnly(bool isReadOnly) override;
     void showReqOptWidgets(bool, const QString &) override {}
     QString label() override;

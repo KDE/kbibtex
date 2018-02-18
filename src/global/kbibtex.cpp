@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -68,3 +68,16 @@ QString KBibTeX::leftSqueezeText(const QString &text, int n)
     return text.length() <= n ? text : text.left(n) + QStringLiteral("...");
 }
 
+int KBibTeX::validateCurlyBracketContext(const QString &text)
+{
+    int openingCB = 0, closingCB = 0;
+
+    for (int i = 0; i < text.length(); ++i) {
+        if (i == 0 || text[i - 1] != QLatin1Char('\\')) {
+            if (text[i] == QLatin1Char('{')) ++openingCB;
+            else if (text[i] == QLatin1Char('}')) ++closingCB;
+        }
+    }
+
+    return openingCB - closingCB;
+}

@@ -31,6 +31,7 @@
 #include <QStyle>
 #include <QPushButton>
 #include <QFontDatabase>
+#include <QRegularExpression>
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -136,6 +137,15 @@ bool EntryConfiguredWidget::reset(QSharedPointer<const Element> element)
         }
     }
 
+    return true;
+}
+
+bool EntryConfiguredWidget::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    for (int i = fieldInputCount - 1; i >= 0; --i) {
+        const bool v = listOfLabeledFieldInput[i]->fieldInput->validate(widgetWithIssue, message);
+        if (!v) return false;
+    }
     return true;
 }
 
@@ -388,6 +398,31 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
     connect(entryType->lineEdit(), &KLineEdit::textChanged, this, &ReferenceWidget::gotModified);
 
     return result;
+}
+
+bool ReferenceWidget::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    message.clear();
+
+    static const QRegularExpression validTypeRegExp(QStringLiteral("^[a-z]+$"), QRegularExpression::CaseInsensitiveOption);
+    const QString type = computeType();
+    const QRegularExpressionMatch validTypeMatch = validTypeRegExp.match(type);
+    if (!validTypeMatch.hasMatch() || validTypeMatch.capturedLength() != type.length()) {
+        if (widgetWithIssue != nullptr) *widgetWithIssue = entryType;
+        message = i18n("Element type '%1' is invalid.", type);
+        return false;
+    }
+
+    static const QRegularExpression validIdRegExp(QStringLiteral("^[a-z][a-z0-9_:.+/$\\\"&-]*$"), QRegularExpression::CaseInsensitiveOption);
+    const QString id = entryId->text();
+    const QRegularExpressionMatch validIdMatch = validIdRegExp.match(id);
+    if (!validIdMatch.hasMatch() || validIdMatch.capturedLength() != id.length()) {
+        if (widgetWithIssue != nullptr) *widgetWithIssue = entryId;
+        message = i18n("Id '%1' is invalid", id);
+        return false;
+    }
+
+    return true;
 }
 
 void ReferenceWidget::setReadOnly(bool isReadOnly)
@@ -677,6 +712,11 @@ bool FilesWidget::reset(QSharedPointer<const Element> element)
     return true;
 }
 
+bool FilesWidget::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    return fileList->validate(widgetWithIssue, message);
+}
+
 void FilesWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);
@@ -751,6 +791,12 @@ bool OtherFieldsWidget::reset(QSharedPointer<const Element> element)
     return true;
 }
 
+bool OtherFieldsWidget::validate(QWidget **, QString &) const
+{
+    /// No checks to make here; all actual check will be conducted in actionAddApply(..)
+    return true;
+}
+
 void OtherFieldsWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);
@@ -814,8 +860,9 @@ void OtherFieldsWidget::actionAddApply()
 {
     if (isReadOnly) return; /// never modify anything if in read-only mode
 
-    QString key = fieldName->text();
+    QString key = fieldName->text(), message;
     Value value;
+    if (!fieldContent->validate(nullptr, message)) return; ///< invalid values should not get applied
     if (!fieldContent->apply(value)) return;
 
     if (internalEntry->contains(key))
@@ -983,6 +1030,11 @@ bool MacroWidget::reset(QSharedPointer<const Element> element)
     return fieldInputValue->reset(macro->value());
 }
 
+bool MacroWidget::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    return fieldInputValue->validate(widgetWithIssue, message);
+}
+
 void MacroWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);
@@ -1046,6 +1098,11 @@ bool PreambleWidget::reset(QSharedPointer<const Element> element)
     if (preamble.isNull()) return false;
 
     return fieldInputValue->reset(preamble->value());
+}
+
+bool PreambleWidget::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    return fieldInputValue->validate(widgetWithIssue, message);
 }
 
 void PreambleWidget::setReadOnly(bool isReadOnly)
@@ -1120,7 +1177,7 @@ public:
 };
 
 SourceWidget::SourceWidget(QWidget *parent)
-        : ElementWidget(parent), d(new SourceWidget::Private(this))
+        : ElementWidget(parent), elementClass(elementInvalid), d(new SourceWidget::Private(this))
 {
     createGUI();
 }
@@ -1131,6 +1188,11 @@ SourceWidget::~SourceWidget()
     delete d;
 }
 
+void SourceWidget::setElementClass(ElementClass elementClass)
+{
+    this->elementClass = elementClass;
+}
+
 bool SourceWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; ///< never save data if in read-only mode
@@ -1139,22 +1201,24 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
     const QScopedPointer<const File> file(d->importerBibTeX->fromString(text));
     if (file.isNull() || file->count() != 1) return false;
 
-
     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
     QSharedPointer<Entry> readEntry = file->first().dynamicCast<Entry>();
     if (!readEntry.isNull() && !entry.isNull()) {
+        if (elementClass != elementEntry) return false; ///< Source widget should only edit Entry objects
         entry->operator =(*readEntry.data()); //entry = readEntry;
         return true;
     } else {
         QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
         QSharedPointer<Macro> readMacro = file->first().dynamicCast<Macro>();
         if (!readMacro.isNull() && !macro.isNull()) {
+            if (elementClass != elementMacro) return false; ///< Source widget should only edit Macro objects
             macro->operator =(*readMacro.data());
             return true;
         } else {
             QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
             QSharedPointer<Preamble> readPreamble = file->first().dynamicCast<Preamble>();
             if (!readPreamble.isNull() && !preamble.isNull()) {
+                if (elementClass != elementPreamble) return false; ///< Source widget should only edit Preamble objects
                 preamble->operator =(*readPreamble.data());
                 return true;
             } else {
@@ -1182,6 +1246,48 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
     connect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
 
     return !exportedText.isEmpty();
+}
+
+bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    message.clear();
+
+    const QString text = sourceEdit->document()->toPlainText();
+    const QScopedPointer<const File> file(d->importerBibTeX->fromString(text));
+    if (file.isNull() || file->count() != 1) {
+        if (widgetWithIssue != nullptr) *widgetWithIssue = sourceEdit;
+        message = i18n("Given source code does not parse as one single BibTeX element.");
+        return false;
+    }
+
+    bool result = false;
+    switch (elementClass) {
+    case elementEntry: {
+        QSharedPointer<Entry> entry = file->first().dynamicCast<Entry>();
+        result = !entry.isNull();
+        if (!result) message = i18n("Given source code does not parse as one single BibTeX entry.");
+    }
+    break;
+    case elementMacro: {
+        QSharedPointer<Macro> macro = file->first().dynamicCast<Macro>();
+        result = !macro.isNull();
+        if (!result) message = i18n("Given source code does not parse as one single BibTeX macro.");
+    }
+    break;
+    case elementPreamble: {
+        QSharedPointer<Preamble> preamble = file->first().dynamicCast<Preamble>();
+        result = !preamble.isNull();
+        if (!result) message = i18n("Given source code does not parse as one single BibTeX preamble.");
+    }
+    break;
+    default:
+        result = false;
+    }
+
+    if (!result && widgetWithIssue != nullptr)
+        *widgetWithIssue = sourceEdit;
+
+    return result;
 }
 
 void SourceWidget::setReadOnly(bool isReadOnly)

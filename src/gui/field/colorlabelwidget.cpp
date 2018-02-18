@@ -195,6 +195,11 @@ bool ColorLabelWidget::apply(Value &value) const
     return true;
 }
 
+bool ColorLabelWidget::validate(QWidget **, QString &) const
+{
+    return true;
+}
+
 void ColorLabelWidget::setReadOnly(bool isReadOnly)
 {
     setEnabled(!isReadOnly);

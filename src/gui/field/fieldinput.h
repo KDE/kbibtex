@@ -40,6 +40,7 @@ public:
 
     bool reset(const Value &value);
     bool apply(Value &value) const;
+    bool validate(QWidget **widgetWithIssue, QString &message) const;
 
     void clear();
     void setReadOnly(bool isReadOnly);

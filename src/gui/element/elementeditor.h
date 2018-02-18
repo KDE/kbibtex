@@ -39,6 +39,7 @@ public:
             /** nothing */
         }
         virtual void apply(QSharedPointer<Element>) = 0;
+        virtual bool validate(QWidget **widgetWithIssue, QString &message) const = 0;
     };
 
     ElementEditor(bool scrollable, QWidget *parent);
@@ -49,6 +50,7 @@ public:
     void setReadOnly(bool isReadOnly = true);
     bool elementChanged();
     bool elementUnapplied();
+    bool validate(QWidget **widgetWithIssue, QString &message);
 
     QWidget *currentPage() const;
     void setCurrentPage(QWidget *tab);
@@ -59,6 +61,7 @@ signals:
 public slots:
     void apply();
     void reset();
+    bool validate();
 
 private slots:
     void tabChanged();

@@ -59,7 +59,7 @@ private:
     ElementEditor *p;
     ElementWidget *previousWidget;
     ReferenceWidget *referenceWidget;
-    ElementWidget *sourceWidget;
+    SourceWidget *sourceWidget;
     QPushButton *buttonCheckWithBibTeX;
 
     /// Settings management through a push button with menu
@@ -280,26 +280,35 @@ public:
     }
 
     void apply(QSharedPointer<Element> element) override {
+        QSharedPointer<Entry> e = element.dynamicCast<Entry>();
+        QSharedPointer<Macro> m = e.isNull() ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
+        QSharedPointer<Comment> c = e.isNull() && m.isNull() ? element.dynamicCast<Comment>() : QSharedPointer<Comment>();
+        QSharedPointer<Preamble> p = e.isNull() && m.isNull() && c.isNull() ? element.dynamicCast<Preamble>() : QSharedPointer<Preamble>();
+
         if (tab->currentWidget() == sourceWidget) {
             /// Very simple if source view is active: BibTeX code contains
             /// all necessary data
+            if (!e.isNull())
+                sourceWidget->setElementClass(SourceWidget::elementEntry);
+            else if (!m.isNull())
+                sourceWidget->setElementClass(SourceWidget::elementMacro);
+            else if (!p.isNull())
+                sourceWidget->setElementClass(SourceWidget::elementPreamble);
+            else
+                sourceWidget->setElementClass(SourceWidget::elementInvalid);
             sourceWidget->apply(element);
         } else {
             /// Start by assigning the current internal element's
             /// data to the output element
-            QSharedPointer<Entry> e = element.dynamicCast<Entry>();
             if (!e.isNull())
                 *e = *internalEntry;
             else {
-                QSharedPointer<Macro> m = element.dynamicCast<Macro>();
                 if (!m.isNull())
                     *m = *internalMacro;
                 else {
-                    QSharedPointer<Comment> c = element.dynamicCast<Comment>();
                     if (!c.isNull())
                         *c = *internalComment;
                     else {
-                        QSharedPointer<Preamble> p = element.dynamicCast<Preamble>();
                         if (!p.isNull())
                             *p = *internalPreamble;
                         else
@@ -317,6 +326,22 @@ public:
             ElementWidget *currentElementWidget = qobject_cast<ElementWidget *>(tab->currentWidget());
             if (currentElementWidget != nullptr)
                 currentElementWidget->apply(element);
+        }
+    }
+
+    bool validate(QWidget **widgetWithIssue, QString &message) const override {
+        if (tab->currentWidget() == sourceWidget) {
+            /// Source widget must check its textual content for being valid BibTeX code
+            return sourceWidget->validate(widgetWithIssue, message);
+        } else {
+            /// All widgets except for the source widget must validate their values
+            for (WidgetList::ConstIterator it = widgets.begin(); it != widgets.end(); ++it) {
+                if ((*it) == sourceWidget) continue;
+                const bool v = (*it)->validate(widgetWithIssue, message);
+                /// A single widget failing to validate lets the whole validation fail
+                if (!v) return false;
+            }
+            return true;
         }
     }
 
@@ -526,6 +551,31 @@ void ElementEditor::reset()
     emit modified(false);
 }
 
+bool ElementEditor::validate() {
+    QWidget *widgetWithIssue = nullptr;
+    QString message;
+    if (!validate(&widgetWithIssue, message)) {
+        const QString msgBoxMessage = message.isEmpty() ? i18n("Validation for the current element failed.") : i18n("Validation for the current element failed:\n%1", message);
+        KMessageBox::error(this, msgBoxMessage, i18n("Element validation failed"));
+        if (widgetWithIssue != nullptr) {
+            /// Probe if widget with issue is inside a QTabWiget; if yes, make parenting tab the current tab
+            QWidget *cur = widgetWithIssue;
+            do {
+                QTabWidget *tabWidget = cur->parent() != nullptr && cur->parent()->parent() != nullptr ? qobject_cast<QTabWidget *>(cur->parent()->parent()) : nullptr;
+                if (tabWidget != nullptr) {
+                    tabWidget->setCurrentWidget(cur);
+                    break;
+                }
+                cur = qobject_cast<QWidget *>(cur->parent());
+            } while (cur != nullptr);
+            /// Set focus to widget with issue
+            widgetWithIssue->setFocus();
+        }
+        return false;
+    }
+    return true;
+}
+
 void ElementEditor::setElement(QSharedPointer<Element> element, const File *file)
 {
     d->setElement(element, file);
@@ -574,6 +624,11 @@ bool ElementEditor::elementChanged()
 bool ElementEditor::elementUnapplied()
 {
     return d->elementUnapplied;
+}
+
+bool ElementEditor::validate(QWidget **widgetWithIssue, QString &message)
+{
+    return d->validate(widgetWithIssue, message);
 }
 
 QWidget *ElementEditor::currentPage() const

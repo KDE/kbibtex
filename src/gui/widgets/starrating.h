@@ -143,6 +143,8 @@ public:
      * @return @c true if the apply operation succeeded, @c false otherwise (should not happen)
      */
     bool apply(Value &value) const;
+
+    bool validate(QWidget **widgetWithIssue, QString &message) const;
 };
 
 #endif // KBIBTEX_GUI_STARRATING_H

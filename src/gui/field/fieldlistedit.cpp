@@ -256,6 +256,15 @@ bool FieldListEdit::apply(Value &value) const
     return true;
 }
 
+bool FieldListEdit::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    for (const auto *fieldLineEdit : const_cast<const QList<FieldLineEdit *> &>(d->lineEditList)) {
+        const bool v = fieldLineEdit->validate(widgetWithIssue, message);
+        if (!v) return false;
+    }
+    return true;
+}
+
 void FieldListEdit::clear()
 {
     d->removeAllFieldLineEdits();

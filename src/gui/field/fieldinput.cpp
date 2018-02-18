@@ -195,6 +195,18 @@ public:
         return result;
     }
 
+    bool validate(QWidget **widgetWithIssue, QString &message) const {
+        if (fieldLineEdit != nullptr)
+            return fieldLineEdit->validate(widgetWithIssue, message);
+        else if (fieldListEdit != nullptr)
+            return fieldListEdit->validate(widgetWithIssue, message);
+        else if (colorWidget != nullptr)
+            return colorWidget->validate(widgetWithIssue, message);
+        else if (starRatingWidget != nullptr)
+            return starRatingWidget->validate(widgetWithIssue, message);
+        return false;
+    }
+
     void setReadOnly(bool isReadOnly) {
         if (fieldLineEdit != nullptr)
             fieldLineEdit->setReadOnly(isReadOnly);
@@ -311,6 +323,11 @@ bool FieldInput::reset(const Value &value)
 bool FieldInput::apply(Value &value) const
 {
     return d->apply(value);
+}
+
+bool FieldInput::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    return d->validate(widgetWithIssue, message);
 }
 
 void FieldInput::setReadOnly(bool isReadOnly)

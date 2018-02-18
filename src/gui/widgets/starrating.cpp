@@ -293,3 +293,8 @@ bool StarRatingFieldInput::apply(Value &v) const
         v.append(QSharedPointer<PlainText>(new PlainText(QString::number(percent, 'f', 2))));
     return true;
 }
+
+bool StarRatingFieldInput::validate(QWidget **, QString &) const
+{
+    return true;
+}
