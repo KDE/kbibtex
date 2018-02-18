@@ -258,6 +258,11 @@ public:
         return QString();
     }
 
+    void setCurrentId(const QString &newId) {
+        if (referenceWidget != nullptr)
+            return referenceWidget->setCurrentId(newId);
+    }
+
     /**
      * Return the current File object set for this element editor.
      * May be NULL if nothing has been set or if it has been cleared.
@@ -501,18 +506,15 @@ void ElementEditor::apply()
         }
     }
 
-    /// Apply will always set the 'new' id/key to the entry or macro, respectively
-    d->apply();
-
     if (idToUse == UseOriginalId) {
         /// As 'apply()' above set the 'new' id/key but the 'original' id/key is to be used,
-        /// now the entry id or macro key, respectively, has to be set again, manually
-        if (!entry.isNull())
-            entry->setId(originalId);
-        else if (!macro.isNull())
-            macro->setKey(originalId);
-        d->reset(); ///< notify UI about change of id/key
+        /// now UI must be updated accordingly. Changes will propage to the the entry id or
+        /// macro key, respectively, when invoking apply() further down
+        d->setCurrentId(originalId);
     }
+
+    /// Apply will always set the 'new' id/key to the entry or macro, respectively
+    d->apply();
 
     d->setModified(false);
     emit modified(false);

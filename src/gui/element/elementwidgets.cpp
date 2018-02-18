@@ -423,6 +423,11 @@ QString ReferenceWidget::currentId() const
     return entryId->text();
 }
 
+void ReferenceWidget::setCurrentId(const QString &newId)
+{
+    entryId->setText(newId);
+}
+
 void ReferenceWidget::createGUI()
 {
     QHBoxLayout *layout = new QHBoxLayout(this);

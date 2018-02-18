@@ -145,6 +145,7 @@ public:
      * @return Current value of entry id/macro key if any, otherwise empty string
      */
     QString currentId() const;
+    void setCurrentId(const QString &newId);
 
     QString label() override;
     QIcon icon() override;
