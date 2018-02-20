@@ -343,11 +343,14 @@ void FileView::prepareEditorDialog(DialogType dialogType)
 void FileView::dialogButtonClicked(QAbstractButton *button) {
     switch (m_dbb->standardButton(button)) {
     case QDialogButtonBox::Ok:
-        m_elementEditor->apply();
-        m_elementEditorDialog->accept();
+        if (m_elementEditor->validate()) {
+            m_elementEditor->apply();
+            m_elementEditorDialog->accept();
+        }
         break;
     case QDialogButtonBox::Apply:
-        m_elementEditor->apply();
+        if (m_elementEditor->validate())
+            m_elementEditor->apply();
         break;
     case QDialogButtonBox::Close: ///< fall-through is intentional
     case QDialogButtonBox::Cancel:

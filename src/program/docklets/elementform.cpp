@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -98,8 +98,9 @@ public:
         buttonReset = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Reset"), p);
         layout->addWidget(buttonReset, 1, 3, 1, 1);
 
-        connect(buttonApply, &QPushButton::clicked, p, &ElementForm::elementModified);
         connect(checkBoxAutoApply, &QCheckBox::toggled, p, &ElementForm::autoApplyToggled);
+        connect(buttonApply, &QPushButton::clicked, p, &ElementForm::validateAndOnlyThenApply);
+        connect(buttonReset, &QPushButton::clicked, p, &ElementForm::reset);
     }
 
     ~ElementFormPrivate() {
@@ -131,8 +132,6 @@ public:
         buttonReset->setEnabled(false);
         widgetUnmodifiedChanges->setVisible(false);
         gotModified = false;
-        connect(buttonApply, &QPushButton::clicked, p, &ElementForm::apply);
-        connect(buttonReset, &QPushButton::clicked, p, &ElementForm::reset);
     }
 
     bool isVisible() {
@@ -205,9 +204,8 @@ void ElementForm::modified(bool gotModified)
 
     if (d->checkBoxAutoApply->isChecked()) {
         /// User wants to automatically apply changes, so do it
+        // FIXME validateAndOnlyThenApply();
         apply();
-        /// Notify rest of program (esp. main list) about changes
-        emit elementModified();
     } else {
         /// No automatic apply, therefore enable buttons where user can
         /// apply or reset changes, plus show warning label about unsaved changes
@@ -221,6 +219,18 @@ void ElementForm::modified(bool gotModified)
 void ElementForm::apply()
 {
     d->apply();
+
+    /// Notify rest of program (esp. main list) about changes
+    emit elementModified();
+
+}
+
+bool ElementForm::validateAndOnlyThenApply()
+{
+    const bool isValid = d->elementEditor->validate();
+    if (isValid)
+        apply();
+    return isValid;
 }
 
 void ElementForm::reset()
@@ -242,9 +252,7 @@ void ElementForm::autoApplyToggled(bool isChecked)
     if (isChecked) {
         /// Got toggled to check state
         if (!d->element.isNull()) {
-            /// Working on a real element, so apply changes
-            apply();
-            emit elementModified();
+            validateAndOnlyThenApply();
         } else {
             /// The following settings would happen when calling apply(),
             /// but as no valid element is edited, perform settings here instead
