@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,12 +27,13 @@
 #include <KCrash>
 
 #include "mainwindow.h"
+#include "kbibtex-version.h"
+#include "kbibtex-git-info.h"
 #include "logging_program.h"
-#include "version.h"
 
 int main(int argc, char *argv[])
 {
-    if (versionNumber[0] == 'G' && versionNumber[1] == 'i' && versionNumber[2] == 't' && versionNumber[3] == ' ') {
+    if (strlen(KBIBTEX_GIT_INFO_STRING) > 0) {
         /// In Git versions, enable debugging by default
         QLoggingCategory::setFilterRules(QStringLiteral("kbibtex.*.debug = true"));
     }
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
 
     KLocalizedString::setApplicationDomain("kbibtex");
 
-    KAboutData aboutData(QStringLiteral("kbibtex"), i18n("KBibTeX"), QLatin1String(versionNumber), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2017 Thomas Fischer"), QString(), QStringLiteral("https://userbase.kde.org/KBibTeX"));
+    KAboutData aboutData(QStringLiteral("kbibtex"), i18n("KBibTeX"), strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QLatin1String(KBIBTEX_GIT_INFO_STRING ", near " KBIBTEX_VERSION_STRING) : QLatin1String(KBIBTEX_VERSION_STRING), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2017 Thomas Fischer"), QString(), QStringLiteral("https://userbase.kde.org/KBibTeX"));
 
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setDesktopFileName(QStringLiteral("org.kde.kbibtex"));
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
     programCore.setApplicationDisplayName(aboutData.displayName());
     programCore.setWindowIcon(QIcon::fromTheme(QStringLiteral("kbibtex")));
 
-    qCDebug(LOG_KBIBTEX_PROGRAM) << "Starting KBibTeX version" << versionNumber;
+    qCInfo(LOG_KBIBTEX_PROGRAM) << "Starting KBibTeX version" << (strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QLatin1String(KBIBTEX_GIT_INFO_STRING) : QLatin1String(KBIBTEX_VERSION_STRING));
 
     QCommandLineParser cmdLineParser;
     cmdLineParser.addHelpOption();

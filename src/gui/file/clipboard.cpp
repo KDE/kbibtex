@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -56,7 +56,7 @@ public:
 
     QString selectionToText() {
         const QModelIndexList mil = fileView->selectionModel()->selectedRows();
-        File *file = new File();
+        QScopedPointer<File> file(new File());
         for (const QModelIndex &index : mil)
             file->append(fileView->fileModel()->element(fileView->sortFilterProxyModel()->mapToSource(index).row()));
 
@@ -64,20 +64,15 @@ public:
         exporter.setEncoding(QStringLiteral("latex"));
         QBuffer buffer(fileView);
         buffer.open(QBuffer::WriteOnly);
-        const bool success = exporter.save(&buffer, file);
+        const bool success = exporter.save(&buffer, file.data());
         buffer.close();
-        if (!success) {
-            delete file;
+        if (!success)
             return QString();
-        }
 
         buffer.open(QBuffer::ReadOnly);
         QTextStream ts(&buffer);
         QString text = ts.readAll();
         buffer.close();
-
-        /// clean up
-        delete file;
 
         return text;
     }

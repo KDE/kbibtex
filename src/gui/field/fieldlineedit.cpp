@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -156,12 +156,14 @@ public:
         /// Remove unnecessary white space from input
         /// Exception: source and verbatim content is kept unmodified
         const QString text = typeFlag == KBibTeX::tfSource || typeFlag == KBibTeX::tfVerbatim ? parent->text() : parent->text().simplified();
+        if (text.isEmpty())
+            return true;
 
         const EncoderLaTeX &encoder = EncoderLaTeX::instance();
         const QString encodedText = encoder.decode(text);
-
         if (encodedText.isEmpty())
             return true;
+
         else if (typeFlag == KBibTeX::tfPlainText) {
             value.append(QSharedPointer<PlainText>(new PlainText(encodedText)));
             return true;
@@ -179,20 +181,19 @@ public:
                 value.append(keyword);
             return true;
         } else if (typeFlag == KBibTeX::tfSource) {
-            QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? QStringLiteral("author") : QStringLiteral("title");
+            const QString key = typeFlags.testFlag(KBibTeX::tfPerson) ? QStringLiteral("author") : QStringLiteral("title");
             FileImporterBibTeX importer(parent);
-            QString fakeBibTeXFile = QString(QStringLiteral("@article{dummy, %1=%2}")).arg(key, encodedText);
+            const QString fakeBibTeXFile = QString(QStringLiteral("@article{dummy, %1=%2}")).arg(key, encodedText);
 
-            File *file = importer.fromString(fakeBibTeXFile);
-            QSharedPointer<Entry> entry;
-            if (file != nullptr) {
-                if (!file->isEmpty() && !(entry = (file->first().dynamicCast<Entry>())).isNull())
+            const QScopedPointer<const File> file(importer.fromString(fakeBibTeXFile));
+            if (!file.isNull() && file->count() == 1) {
+                QSharedPointer<Entry> entry = file->first().dynamicCast<Entry>();
+                if (!entry.isNull()) {
                     value = entry->value(key);
-                delete file;
+                    return !value.isEmpty();
+                } else
+                    qCWarning(LOG_KBIBTEX_GUI) << "Parsing " << fakeBibTeXFile << " did not result in valid entry";
             }
-            if (entry.isNull())
-                qCWarning(LOG_KBIBTEX_GUI) << "Parsing " << fakeBibTeXFile << " did not result in valid entry";
-            return !value.isEmpty();
         } else if (typeFlag == KBibTeX::tfVerbatim) {
             value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
             return true;
@@ -483,27 +484,27 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
     const QString clipboardText = event->mimeData()->text();
     if (clipboardText.isEmpty()) return;
 
-    const File *file = nullptr;
+    bool success = false;
     if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QStringLiteral("@"))) {
         FileImporterBibTeX importer(this);
-        file = importer.fromString(clipboardText);
-        const QSharedPointer<Entry> entry = (file != nullptr && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
+        QScopedPointer<File> file(importer.fromString(clipboardText));
+        const QSharedPointer<Entry> entry = (!file.isNull() && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull() && d->fieldKey == Entry::ftCrossRef) {
             /// handle drop on crossref line differently (use dropped entry's id)
             Value v;
             v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->id())));
             reset(v);
             emit textChanged(entry->id());
-            return;
+            success = true;
         } else if (!entry.isNull() && entry->contains(d->fieldKey)) {
             /// case for "normal" fields like for journal, pages, ...
             reset(entry->value(d->fieldKey));
             emit textChanged(text());
-            return;
+            success = true;
         }
     }
 
-    if (file == nullptr || file->count() == 0) {
+    if (!success) {
         /// fall-back case: just copy whole text into edit widget
         setText(clipboardText);
         emit textChanged(clipboardText);

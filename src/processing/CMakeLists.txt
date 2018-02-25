@@ -54,10 +54,8 @@ set_target_properties(
     kbibtexproc
     PROPERTIES
     EXPORT_NAME "kbibtexproc"
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
+    VERSION ${KBIBTEX_RELEASE_VERSION}
+    SOVERSION ${KBIBTEX_SOVERSION}
 )
 
 install(
@@ -67,13 +65,3 @@ install(
 )
 
 generate_export_header( kbibtexproc )
-
-# install(
-#     FILES
-#     ${kbibtexproc_HDRS}
-#     ${CMAKE_BINARY_DIR}/src/processing/kbibtexproc_export.h
-#     DESTINATION
-#     ${INCLUDE_INSTALL_DIR}/kbibtex/proc
-#     COMPONENT
-#     development
-# )

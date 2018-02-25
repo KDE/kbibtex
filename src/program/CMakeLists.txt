@@ -37,7 +37,8 @@ if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
 endif(UNITY_BUILD AND NOT WIN32)
 
 include_directories(
-    ${CMAKE_BINARY_DIR}/src
+    ${CMAKE_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
@@ -69,10 +70,31 @@ ecm_add_app_icon( kbibtex_SRCS
     ${CMAKE_SOURCE_DIR}/icons/64-apps-kbibtex.png
 )
 
+# Creates kbibtex-git-info.h containing information about the source code's Git revision
+# (if source directory is a Git clone)
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+    COMMAND
+    ${CMAKE_COMMAND}
+    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
+    -P
+    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
+)
+set_source_files_properties(
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+    PROPERTIES
+    GENERATED 1
+    HEADER_FILE_ONLY 1
+    SKIP_AUTOMOC ON
+    SKIP_AUTOUIC ON
+    SKIP_AUTOGEN ON
+)
+
 add_executable(
     kbibtex
     ${kbibtex_SRCS}
-    ${CMAKE_BINARY_DIR}/src/version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
 )
 
 target_link_libraries( kbibtex
@@ -105,34 +127,6 @@ else(Qt5WebEngineWidgets_FOUND)
         )
     endif(Qt5WebKitWidgets_FOUND)
 endif(Qt5WebEngineWidgets_FOUND)
-
-# creates version.h using cmake script
-add_custom_target(
-    GITrevisionProgram
-    COMMAND
-    ${CMAKE_COMMAND}
-    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_BINARY_DIR}/src
-    -P
-    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
-    COMMENT
-    "Determine Git revision"
-)
-
-# version.h is a generated file
-set_source_files_properties(
-    ${CMAKE_BINARY_DIR}/src/version.h
-    PROPERTIES
-    GENERATED
-    TRUE
-    HEADER_FILE_ONLY
-    TRUE
-)
-
-add_dependencies(
-    kbibtex
-    GITrevisionProgram
-)
 
 install(
     TARGETS

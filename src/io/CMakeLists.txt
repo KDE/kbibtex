@@ -93,10 +93,8 @@ set_target_properties(
     kbibtexio
     PROPERTIES
     EXPORT_NAME "kbibtexio"
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
+    VERSION ${KBIBTEX_RELEASE_VERSION}
+    SOVERSION ${KBIBTEX_SOVERSION}
 )
 
 install(
@@ -106,13 +104,3 @@ install(
 )
 
 generate_export_header( kbibtexio )
-
-# install(
-#     FILES
-#     ${kbibtexio_HDRS}
-#     ${CMAKE_BINARY_DIR}/src/io/kbibtexio_export.h
-#     DESTINATION
-#     ${INCLUDE_INSTALL_DIR}/kbibtex/io
-#     COMPONENT
-#     development
-# )

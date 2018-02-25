@@ -125,10 +125,8 @@ set_target_properties(
     kbibtexgui
     PROPERTIES
     EXPORT_NAME "kbibtexgui"
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
+    VERSION ${KBIBTEX_RELEASE_VERSION}
+    SOVERSION ${KBIBTEX_SOVERSION}
 )
 
 install(
@@ -138,13 +136,3 @@ install(
 )
 
 generate_export_header( kbibtexgui )
-
-# install(
-#     FILES
-#     ${kbibtexgui_HDRS}
-#     ${CMAKE_BINARY_DIR}/src/gui/kbibtexgui_export.h
-#     DESTINATION
-#     ${INCLUDE_INSTALL_DIR}/kbibtex/gui
-#     COMPONENT
-#     development
-# )

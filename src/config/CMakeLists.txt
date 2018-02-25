@@ -38,10 +38,9 @@ target_link_libraries( kbibtexconfig
 set_target_properties(
     kbibtexconfig
     PROPERTIES
-    VERSION
-    ${LIB_VERSION}
-    SOVERSION
-    ${LIB_SOVERSION}
+    EXPORT_NAME "kbibtexconfig"
+    VERSION ${KBIBTEX_RELEASE_VERSION}
+    SOVERSION ${KBIBTEX_SOVERSION}
 )
 
 install(
@@ -51,13 +50,3 @@ install(
 )
 
 generate_export_header( kbibtexconfig )
-
-# install(
-#     FILES
-#     ${kbibtexconfig_HDRS}
-#     ${CMAKE_BINARY_DIR}/src/data/kbibtexdata_export.h
-#     DESTINATION
-#     ${INCLUDE_INSTALL_DIR}/kbibtex/config
-#     COMPONENT
-#     development
-# )

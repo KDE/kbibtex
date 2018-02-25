@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,7 +23,8 @@
 #include <KLocalizedString>
 
 #include "part.h"
-#include "version.h"
+#include "kbibtex-version.h"
+#include "kbibtex-git-info.h"
 #include "logging_parts.h"
 
 class KBibTeXPartFactory::Private
@@ -32,7 +33,7 @@ public:
     KAboutData aboutData;
 
     Private()
-            : aboutData(QStringLiteral("kbibtexpart"), i18n("KBibTeXPart"), QLatin1String(versionNumber), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2017 Thomas Fischer"), QString(), QStringLiteral("https://userbase.kde.org/KBibTeX"))
+            : aboutData(QStringLiteral("kbibtexpart"), i18n("KBibTeXPart"), strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QLatin1String(KBIBTEX_GIT_INFO_STRING ", near " KBIBTEX_VERSION_STRING) : QLatin1String(KBIBTEX_VERSION_STRING), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2018 Thomas Fischer"), QString(), QStringLiteral("https://userbase.kde.org/KBibTeX"))
     {
         aboutData.setOrganizationDomain(QByteArray("kde.org"));
         aboutData.setDesktopFileName(QStringLiteral("org.kde.kbibtex"));
@@ -54,6 +55,8 @@ QObject *KBibTeXPartFactory::create(const char *iface, QWidget *parentWidget, QO
     Q_UNUSED(iface);
     Q_UNUSED(args)
     Q_UNUSED(keyword);
+
+    qCInfo(LOG_KBIBTEX_PARTS()) << "Creating KBibTeX Part of version" << (strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QLatin1String(KBIBTEX_GIT_INFO_STRING) : QLatin1String(KBIBTEX_VERSION_STRING));
 
     KBibTeXPart *part = new KBibTeXPart(parentWidget, parent, d->aboutData);
     return part;
