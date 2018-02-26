@@ -68,6 +68,12 @@ if(
     if (WRITE_RAWDATAFILE)
         add_definitions(-DWRITE_RAWDATAFILE)
     endif(WRITE_RAWDATAFILE)
+
+    set(
+        TESTSET_DIRECTORY ""
+        CACHE PATH
+        "Directory where the local checkout of Git repository 'kbibtex-testset' is located"
+    )
 endif(
     BUILD_TESTING
 )
