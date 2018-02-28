@@ -473,7 +473,7 @@ public:
     }
 
     bool showUrl(const struct UrlInfo &urlInfo) {
-        static const QStringList okularMimetypes = QStringList() << QStringLiteral("application/x-pdf") << QStringLiteral("application/pdf") << QStringLiteral("application/x-gzpdf") << QStringLiteral("application/x-bzpdf") << QStringLiteral("application/x-wwf") << QStringLiteral("image/vnd.djvu") << QStringLiteral("application/postscript") << QStringLiteral("image/x-eps") << QStringLiteral("application/x-gzpostscript") << QStringLiteral("application/x-bzpostscript") << QStringLiteral("image/x-gzeps") << QStringLiteral("image/x-bzeps");
+        static const QStringList okularMimetypes = QStringList() << QStringLiteral("application/x-pdf") << QStringLiteral("application/pdf") << QStringLiteral("application/x-gzpdf") << QStringLiteral("application/x-bzpdf") << QStringLiteral("application/x-wwf") << QStringLiteral("image/vnd.djvu") << QStringLiteral("image/vnd.djvu+multipage") << QStringLiteral("application/postscript") << QStringLiteral("image/x-eps") << QStringLiteral("application/x-gzpostscript") << QStringLiteral("application/x-bzpostscript") << QStringLiteral("image/x-gzeps") << QStringLiteral("image/x-bzeps");
         static const QStringList htmlMimetypes = QStringList() << QStringLiteral("text/html") << QStringLiteral("application/xml") << QStringLiteral("application/xhtml+xml");
         static const QStringList imageMimetypes = QStringList() << QStringLiteral("image/jpeg") << QStringLiteral("image/png") << QStringLiteral("image/gif") << QStringLiteral("image/tiff");
 
