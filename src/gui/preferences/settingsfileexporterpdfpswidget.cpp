@@ -80,7 +80,7 @@ public:
     }
 
     void resetToDefaults() {
-        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), paperSizeLabelToName[FileExporter::defaultPaperSize]);
+        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), FileExporter::defaultPaperSize);
         comboBoxPaperSize->setCurrentIndex(row);
         row = GUIHelper::selectValue(comboBoxBabelLanguage->model(), FileExporterToolchain::defaultBabelLanguage);
         comboBoxBabelLanguage->setCurrentIndex(row);
