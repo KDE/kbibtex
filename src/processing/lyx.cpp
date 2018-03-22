@@ -77,9 +77,7 @@ public:
 
 const QString LyX::keyUseAutomaticLyXPipeDetection = QStringLiteral("UseAutomaticLyXPipeDetection");
 const QString LyX::keyLyXPipePath = QStringLiteral("LyXPipePath");
-#ifdef QT_LSTAT
 const bool LyX::defaultUseAutomaticLyXPipeDetection = true;
-#endif // QT_LSTAT
 const QString LyX::defaultLyXPipePath = QString();
 const QString LyX::configGroupName = QStringLiteral("LyXPipe");
 
