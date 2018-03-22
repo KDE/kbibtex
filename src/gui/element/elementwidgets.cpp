@@ -444,7 +444,6 @@ void ReferenceWidget::createGUI()
     entryType->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     QLabel *label = new QLabel(i18n("Type:"), this);
     label->setBuddy(entryType);
-    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     layout->addWidget(label);
     layout->addWidget(entryType);
 
@@ -454,7 +453,6 @@ void ReferenceWidget::createGUI()
     entryId->setClearButtonEnabled(true);
     label = new QLabel(i18n("Id:"), this);
     label->setBuddy(entryId);
-    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
     layout->addWidget(label);
     layout->addWidget(entryId);
 
