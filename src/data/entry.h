@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,9 +34,6 @@ class File;
  */
 class KBIBTEXDATA_EXPORT Entry : public Element, public QMap<QString, Value>
 {
-    Q_PROPERTY(QString id READ id WRITE setId)
-    Q_PROPERTY(QString type READ type WRITE setType)
-
 public:
     /** Representation of the BibTeX field key "abstract" */
     static const QString ftAbstract;

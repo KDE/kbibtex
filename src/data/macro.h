@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,9 +31,6 @@ class QString;
  */
 class KBIBTEXDATA_EXPORT Macro : public Element
 {
-    Q_PROPERTY(QString key READ key WRITE setKey)
-    Q_PROPERTY(Value value READ value WRITE setValue)
-
 public:
     /**
      * Create a new macro with a given key-value pair.
