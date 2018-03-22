@@ -56,6 +56,15 @@ find_package(
     XmlPatterns
 )
 
+if (MSVC)
+    MESSAGE( STATUS "Disabling building tests when using Microsoft Visual Studio C++ compiler" )
+    # Note to any developer: Try to enable building tests and see which issues you may encounter.
+    # Examples may include: (1) char* texts which exceed the size limit supported by MSVC which
+    # is about 2^16 bytes and (2) characters in strings written in \uXXXX notation not supported
+    # in 1252 encoding as assumed by MSVC for C++ source files.
+    SET(BUILD_TESTING OFF)
+endif (MSVC)
+
 if(
     BUILD_TESTING
 )
