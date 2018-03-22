@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,9 +35,6 @@
 
 class OnlineSearchAcmPortal::OnlineSearchAcmPortalPrivate
 {
-private:
-    // UNUSED OnlineSearchAcmPortal *p;
-
 public:
     QString joinedQueryString;
     int numExpectedResults, numFoundResults;
@@ -45,10 +42,10 @@ public:
     int currentSearchPosition;
     QStringList citationUrls;
 
-    OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ numExpectedResults(0), numFoundResults(0),
+    OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal *parent)
+            : numExpectedResults(0), numFoundResults(0),
           acmPortalBaseUrl(QStringLiteral("https://dl.acm.org/")), currentSearchPosition(0) {
-        // nothing
+        Q_UNUSED(parent)
     }
 
     void sanitizeBibTeXCode(QString &code) {

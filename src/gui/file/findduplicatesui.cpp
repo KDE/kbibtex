@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -634,16 +634,13 @@ void MergeWidget::nextClique()
 
 class FindDuplicatesUI::FindDuplicatesUIPrivate
 {
-private:
-    // UNUSED FindDuplicatesUI *p;
-
 public:
     KParts::Part *part;
     FileView *view;
 
-    FindDuplicatesUIPrivate(FindDuplicatesUI */* UNUSED parent*/, KParts::Part *kpart, FileView *fileView)
-        : /* UNUSED p(parent),*/ part(kpart), view(fileView) {
-        /// nothing
+    FindDuplicatesUIPrivate(FindDuplicatesUI *parent, KParts::Part *kpart, FileView *fileView)
+            : part(kpart), view(fileView) {
+        Q_UNUSED(parent)
     }
 };
 

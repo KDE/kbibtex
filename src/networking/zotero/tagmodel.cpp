@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,13 +27,10 @@ using namespace Zotero;
 
 class Zotero::TagModel::Private
 {
-private:
-    // UNUSED Zotero::TagModel *p;
-
 public:
-    Private(Tags *t, Zotero::TagModel */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ tags(t) {
-        /// nothing
+    Private(Tags *t, Zotero::TagModel *parent)
+            : tags(t) {
+        Q_UNUSED(parent)
     }
 
     Tags *tags;

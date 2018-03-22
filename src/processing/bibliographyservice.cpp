@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,8 +27,6 @@
 class BibliographyService::Private
 {
 private:
-    // UNUSED BibliographyService *p;
-
     /// Representing configuration file "mimeapps.list"
     /// see http://www.freedesktop.org/wiki/Specifications/mime-actions-spec/
     KSharedConfig::Ptr configXDGMimeAppsList;
@@ -47,9 +45,8 @@ public:
     QWidget *parentWidget;
     const QStringList textBasedMimeTypes;
 
-    Private(QWidget *w, BibliographyService */* UNUSED parent*/)
-        : // UNUSED p(parent),
-          configXDGMimeAppsList(KSharedConfig::openConfig(QStringLiteral("mimeapps.list"), KConfig::NoGlobals, QStandardPaths::ApplicationsLocation)),
+    Private(QWidget *w, BibliographyService *parent)
+            : configXDGMimeAppsList(KSharedConfig::openConfig(QStringLiteral("mimeapps.list"), KConfig::NoGlobals, QStandardPaths::ApplicationsLocation)),
           configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
           configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
           configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
@@ -60,7 +57,7 @@ public:
                              << QStringLiteral("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
                              << QStringLiteral("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
     {
-        /// nothing
+        Q_UNUSED(parent)
     }
 
     bool setKBibTeXforMimeType(const QString &mimetype, const bool isPlainTextFormat) {

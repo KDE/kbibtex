@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -50,7 +50,6 @@ const quint64 invalid = 0x0102030405060708;
 class File::FilePrivate
 {
 private:
-    // UNUSED File *p;
     quint64 validInvalidField;
     static const quint64 initialInternalIdCounter;
     static quint64 internalIdCounter;
@@ -64,12 +63,13 @@ public:
     const quint64 internalId;
     QHash<QString, QVariant> properties;
 
-    explicit FilePrivate(File */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ validInvalidField(valid),
+    explicit FilePrivate(File *parent)
+            : validInvalidField(valid),
 #ifdef HAVE_KF5
         config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")),
 #endif // HAVE_KF5
         internalId(++internalIdCounter) {
+        Q_UNUSED(parent)
         const bool isValid = checkValidity();
         if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
 #ifdef HAVE_KF5

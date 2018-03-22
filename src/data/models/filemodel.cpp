@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -160,13 +160,15 @@ bool FileModel::hasChildren(const QModelIndex &parent) const
     return parent == QModelIndex();
 }
 
-int FileModel::rowCount(const QModelIndex & /*parent*/) const
+int FileModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return m_file != nullptr ? m_file->count() : 0;
 }
 
-int FileModel::columnCount(const QModelIndex & /*parent*/) const
+int FileModel::columnCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent)
     return BibTeXFields::self()->count();
 }
 

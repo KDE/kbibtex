@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,13 +29,10 @@ const int Zotero::CollectionModel::CollectionIdRole = Qt::UserRole + 6681;
 
 class Zotero::CollectionModel::Private
 {
-private:
-    // UNUSED Zotero::CollectionModel *p;
-
 public:
-    Private(Collection *c, Zotero::CollectionModel */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ collection(c) {
-        /// nothing
+    Private(Collection *c, Zotero::CollectionModel *parent)
+            : collection(c) {
+        Q_UNUSED(parent)
     }
 
     Collection *collection;

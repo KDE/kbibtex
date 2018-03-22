@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,16 +26,13 @@
 
 class BibUtils::Private
 {
-private:
-    // UNUSED BibUtils *p;
-
 public:
     BibUtils::Format format;
 
-    Private(BibUtils */* UNUSED parent*/)
-        : /* UNUSED p(parent),*/ format(BibUtils::MODS)
+    Private(BibUtils *parent)
+            : format(BibUtils::MODS)
     {
-        /// nothing
+        Q_UNUSED(parent)
     }
 };
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,18 +31,15 @@
 
 class OnlineSearchJStor::OnlineSearchJStorPrivate
 {
-private:
-    // UNUSED OnlineSearchJStor *p;
-
 public:
     int numExpectedResults;
     static const QString jstorBaseUrl;
     QUrl queryUrl;
 
-    OnlineSearchJStorPrivate(OnlineSearchJStor */* UNUSED parent*/)
-        : /* UNUSED p(parent), */ numExpectedResults(0)
+    OnlineSearchJStorPrivate(OnlineSearchJStor *parent)
+            : numExpectedResults(0)
     {
-        /// nothing
+        Q_UNUSED(parent)
     }
 };
 

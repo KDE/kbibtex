@@ -28,9 +28,6 @@
 
 class RangeWidget::Private
 {
-private:
-    RangeWidget *p;
-
 public:
     enum TextAlternative {LowerAlternativ, UpperAlternative};
 
@@ -39,8 +36,10 @@ public:
     QComboBox *lowerComboBox, *upperComboBox;
 
     Private(const QStringList &_values, RangeWidget *parent)
-            : p(parent), values(_values), lowerValue(0), upperValue(_values.size() - 1)
+            : values(_values), lowerValue(0), upperValue(_values.size() - 1)
     {
+        Q_UNUSED(parent)
+
         QBoxLayout *layout = new QHBoxLayout(parent);
         layout->setMargin(0);
 

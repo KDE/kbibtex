@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,8 +34,11 @@ FileExporterRIS::~FileExporterRIS()
     // nothing
 }
 
-bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File * /*bibtexfile*/, QStringList * /*errorLog*/)
+bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
+    Q_UNUSED(bibtexfile)
+    Q_UNUSED(errorLog)
+
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
         qCDebug(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
@@ -53,8 +56,10 @@ bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     return result && !m_cancelFlag;
 }
 
-bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
+bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
+    Q_UNUSED(errorLog)
+
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
         qCDebug(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;

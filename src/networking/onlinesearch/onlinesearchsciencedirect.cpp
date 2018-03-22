@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,9 +31,6 @@
 
 class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate
 {
-private:
-    // UNUSED OnlineSearchScienceDirect *p;
-
 public:
     QString queryFreetext, queryAuthor;
     int currentSearchPosition;
@@ -41,9 +38,9 @@ public:
     QStringList bibTeXUrls;
     int runningJobs;
 
-    OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect */* UNUSED parent*/)
-        : /* UNUSED p(parent), */ currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), runningJobs(0) {
-        /// nothing
+    OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect *parent)
+            : currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), runningJobs(0) {
+        Q_UNUSED(parent)
     }
 
     void sanitizeBibTeXCode(QString &code) {

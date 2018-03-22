@@ -40,18 +40,15 @@ const QString Clipboard::defaultCopyReferenceCommand = QStringLiteral("");
 
 class Clipboard::ClipboardPrivate
 {
-private:
-    // UNUSED Clipboard *parent;
-
 public:
     FileView *fileView;
     QPoint previousPosition;
     KSharedConfigPtr config;
     const QString configGroupName;
 
-    ClipboardPrivate(FileView *fv, Clipboard */* UNUSED p*/)
-        : /* UNUSED parent(p),*/ fileView(fv), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("General")) {
-        /// nothing
+    ClipboardPrivate(FileView *fv, Clipboard *parent)
+            : fileView(fv), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("General")) {
+        Q_UNUSED(parent)
     }
 
     QString selectionToText() {

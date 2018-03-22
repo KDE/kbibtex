@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -88,20 +88,17 @@ public:
 
 class OnlineSearchDOI::OnlineSearchDOIPrivate
 {
-private:
-    // UNUSED OnlineSearchDOI *p;
-
 public:
 #ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormDOI *form;
 #endif // HAVE_QTWIDGETS
 
-    OnlineSearchDOIPrivate(OnlineSearchDOI */* UNUSED parent*/)
+    OnlineSearchDOIPrivate(OnlineSearchDOI *parent)
 #ifdef HAVE_QTWIDGETS
             : form(nullptr)
 #endif // HAVE_QTWIDGETS
     {
-        // nothing
+        Q_UNUSED(parent)
     }
 
 #ifdef HAVE_QTWIDGETS

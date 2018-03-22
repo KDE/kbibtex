@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,8 +39,10 @@ FileExporterXML::~FileExporterXML()
     /// nothing
 }
 
-bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringList * /*errorLog*/)
+bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
+    Q_UNUSED(errorLog)
+
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
@@ -65,8 +67,11 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     return result && !m_cancelFlag;
 }
 
-bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File * /*bibtexfile*/, QStringList * /*errorLog*/)
+bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
+    Q_UNUSED(bibtexfile)
+    Q_UNUSED(errorLog)
+
     if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
