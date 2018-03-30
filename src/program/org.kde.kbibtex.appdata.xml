@@ -6,6 +6,7 @@
   <name>KBibTeX</name>
   <name xml:lang="ca">KBibTeX</name>
   <name xml:lang="ca-valencia">KBibTeX</name>
+  <name xml:lang="cs">KBibTeX</name>
   <name xml:lang="de">KBibTeX</name>
   <name xml:lang="en-GB">KBibTeX</name>
   <name xml:lang="es">KBibTeX</name>
@@ -156,6 +157,7 @@
       <li>Import your Zotero library.</li>
       <li xml:lang="ca">Importa la vostra biblioteca de Zotero.</li>
       <li xml:lang="ca-valencia">Importa la vostra biblioteca de Zotero.</li>
+      <li xml:lang="cs">Importovat vaši knihovnu Zotero</li>
       <li xml:lang="de">Import Ihrer Zotero-Bibliothek.</li>
       <li xml:lang="en-GB">Import your Zotero library.</li>
       <li xml:lang="es">Importa su librería Zotero.</li>
