@@ -1,6 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                 2014 Pavel Zorin-Kranich <pzorin@math.uni-bonn.de>      *
+ *                 2018 Alexander Dunlap <alexander.dunlap@gmail.com>      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
