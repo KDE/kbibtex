@@ -20,7 +20,7 @@
 #include <QHash>
 #include <QFile>
 #include <QTextStream>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStandardPaths>
 
 #include "logging_processing.h"
@@ -45,32 +45,48 @@ public:
 
         QFile journalFile(journalFilename);
         if (journalFile.open(QFile::ReadOnly)) {
-            static const QRegExp splitRegExp(QStringLiteral("\\s*[=;]\\s*"));
+            static const QRegularExpression splitRegExp(QStringLiteral("\\s*[=;]\\s*"));
 
             QTextStream ts(&journalFile);
             ts.setCodec("utf8");
 
             QString line;
-            while (!(line = ts.readLine()).isNull()) {
+            while (!(line = ts.readLine().trimmed()).isNull()) {
                 /// Skip empty lines or comments
                 if (line.isEmpty() || line.startsWith(QLatin1Char('#'))) continue;
-                QStringList columns = line.split(splitRegExp);
+                const QStringList columns = line.split(splitRegExp);
                 /// Skip lines that do not have at least two columns
                 if (columns.count() < 2) continue;
+                /// At this point, a given line like
+                ///    Accounts of Chemical Research=Acc. Chem. Res.;ACHRE4;M
+                /// may have been split into the columns of
+                ///    Accounts of Chemical Research
+                ///    Acc. Chem. Res.
+                ///    ACHRE4
+                ///    M
+                /// The last two colums are optional and are not processed here.
+                /// The first column is the journal's full name, the second column
+                /// is its abbreviation.
+                /// QHash leftToRightMap maps from full name to abbreviation,
+                /// QHash rightToLeftMap maps from abbreviation to full name.
 
                 const QString alreadyInLeftToRightMap = leftToRightMap[columns[0]];
                 if (!alreadyInLeftToRightMap.isEmpty()) {
-                    if (alreadyInLeftToRightMap.length() > columns[1].length()) {
-                        leftToRightMap.remove(columns[0]);
+                    if (alreadyInLeftToRightMap.length() > columns[1].length())
+                        /// If there is already an existing mapping from full name to
+                        /// abbreviation, replace it if the newly found abbreviation
+                        /// is longer.
                         leftToRightMap.insert(columns[0], columns[1]);
-                    }
                 } else
+                    /// Previously unknown journal full name, so add it to mapping.
                     leftToRightMap.insert(columns[0], columns[1]);
+                /// Always add/replace mapping from abbreviation to full name.
                 rightToLeftMap.insert(columns[1], columns[0]);
             }
 
             journalFile.close();
 
+            /// Success means at least one mapping has been recorded.
             return !leftToRightMap.isEmpty();
         } else {
             qCWarning(LOG_KBIBTEX_PROCESSING) << "Cannot open journal abbreviation list file at" << journalFilename;
@@ -80,13 +96,13 @@ public:
 
     QString leftToRight(const QString &left) {
         if (leftToRightMap.isEmpty())
-            loadMapping();
+            loadMapping(); ///< lazy loading of mapping, i.e. only when data gets requested the first time
         return leftToRightMap.value(left, left);
     }
 
     QString rightToLeft(const QString &right) {
         if (rightToLeftMap.isEmpty())
-            loadMapping();
+            loadMapping(); ///< lazy loading of mapping, i.e. only when data gets requested the first time
         return rightToLeftMap.value(right, right);
     }
 };
