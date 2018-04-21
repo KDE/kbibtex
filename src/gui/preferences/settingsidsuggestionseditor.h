@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -43,74 +43,6 @@ class RangeWidget;
 /**
  * @author Thomas Fischer
  */
-class TokenWidget : public QGroupBox
-{
-    Q_OBJECT
-
-protected:
-    QGridLayout *gridLayout;
-    QFormLayout *formLayout;
-
-public:
-    explicit TokenWidget(QWidget *parent);
-
-    void addButtons(QPushButton *buttonUp, QPushButton *buttonDown, QPushButton *buttonRemove);
-
-    virtual QString toString() const = 0;
-};
-
-/**
- * @author Thomas Fischer
- */
-class AuthorWidget : public TokenWidget
-{
-    Q_OBJECT
-
-private:
-    RangeWidget *rangeWidgetAuthor;
-    QCheckBox *checkBoxLastAuthor;
-    QLabel *labelAuthorRange;
-    KComboBox *comboBoxChangeCase;
-    KLineEdit *lineEditTextInBetween;
-    QSpinBox *spinBoxLength;
-
-private slots:
-    void updateRangeLabel();
-
-public:
-    AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestionsEditWidget *isew, QWidget *parent);
-
-    QString toString() const override;
-};
-
-/**
- * @author Thomas Fischer
- */
-class TitleWidget : public TokenWidget
-{
-    Q_OBJECT
-
-private:
-    RangeWidget *rangeWidgetAuthor;
-    QLabel *labelWordsRange;
-    QCheckBox *checkBoxRemoveSmallWords;
-    KComboBox *comboBoxChangeCase;
-    KLineEdit *lineEditTextInBetween;
-    QSpinBox *spinBoxLength;
-
-private slots:
-    void updateRangeLabel();
-
-public:
-    TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, bool removeSmallWords, IdSuggestionsEditWidget *isew, QWidget *parent);
-
-    QString toString() const override;
-};
-
-
-/**
- * @author Thomas Fischer
- */
 class KBIBTEXGUI_EXPORT IdSuggestionsEditDialog : public QDialog
 {
     Q_OBJECT
@@ -119,10 +51,14 @@ public:
     ~IdSuggestionsEditDialog() override;
 
     static QString editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent);
+
 protected:
     explicit IdSuggestionsEditDialog(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
 };
 
+/**
+ * @author Thomas Fischer
+ */
 class IdSuggestionsEditWidget : public QWidget, public IdSuggestions
 {
     Q_OBJECT

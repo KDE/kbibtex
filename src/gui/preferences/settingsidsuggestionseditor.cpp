@@ -37,120 +37,158 @@
 
 #include "rangewidget.h"
 
-TokenWidget::TokenWidget(QWidget *parent)
-        : QGroupBox(parent)
+
+/**
+ * @author Thomas Fischer
+ */
+class TokenWidget : public QGroupBox
 {
-    gridLayout = new QGridLayout(this);
-    formLayout = new QFormLayout();
-    gridLayout->addLayout(formLayout, 0, 0, 4, 1);
-    gridLayout->setColumnStretch(0, 100);
-}
+    Q_OBJECT
 
-void TokenWidget::addButtons(QPushButton *buttonUp, QPushButton *buttonDown, QPushButton *buttonRemove)
+protected:
+    QGridLayout *gridLayout;
+    QFormLayout *formLayout;
+
+public:
+    explicit TokenWidget(QWidget *parent)
+            : QGroupBox(parent)
+    {
+        gridLayout = new QGridLayout(this);
+        formLayout = new QFormLayout();
+        gridLayout->addLayout(formLayout, 0, 0, 4, 1);
+        gridLayout->setColumnStretch(0, 100);
+    }
+
+    void addButtons(QPushButton *buttonUp, QPushButton *buttonDown, QPushButton *buttonRemove)
+    {
+        gridLayout->setColumnMinimumWidth(1, 32);
+        gridLayout->setColumnStretch(1, 1);
+        gridLayout->setColumnStretch(2, 1);
+
+        gridLayout->addWidget(buttonUp, 0, 2, 1, 1);
+        buttonUp->setParent(this);
+        gridLayout->addWidget(buttonDown, 1, 2, 1, 1);
+        buttonDown->setParent(this);
+        gridLayout->addWidget(buttonRemove, 2, 2, 1, 1);
+        buttonRemove->setParent(this);
+    }
+
+    virtual QString toString() const = 0;
+};
+
+
+/**
+ * @author Thomas Fischer
+ */
+class AuthorWidget : public TokenWidget
 {
-    gridLayout->setColumnMinimumWidth(1, 32);
-    gridLayout->setColumnStretch(1, 1);
-    gridLayout->setColumnStretch(2, 1);
+    Q_OBJECT
 
-    gridLayout->addWidget(buttonUp, 0, 2, 1, 1);
-    buttonUp->setParent(this);
-    gridLayout->addWidget(buttonDown, 1, 2, 1, 1);
-    buttonDown->setParent(this);
-    gridLayout->addWidget(buttonRemove, 2, 2, 1, 1);
-    buttonRemove->setParent(this);
-}
+private:
+    RangeWidget *rangeWidgetAuthor;
+    QCheckBox *checkBoxLastAuthor;
+    QLabel *labelAuthorRange;
+    KComboBox *comboBoxChangeCase;
+    KLineEdit *lineEditTextInBetween;
+    QSpinBox *spinBoxLength;
+
+private slots:
+    void updateRangeLabel()
+    {
+        const int lower = rangeWidgetAuthor->lowerValue();
+        const int upper = rangeWidgetAuthor->upperValue();
+        const int max = rangeWidgetAuthor->maximum();
+
+        labelAuthorRange->setText(IdSuggestions::formatAuthorRange(lower, upper == max ? 0x00ffffff : upper, checkBoxLastAuthor->isChecked()));
+    }
+
+public:
+    AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestionsEditWidget *isew, QWidget *parent)
+            : TokenWidget(parent)
+    {
+        setTitle(i18n("Authors"));
+
+        QBoxLayout *boxLayout = new QVBoxLayout();
+        boxLayout->setMargin(0);
+        formLayout->addRow(i18n("Author Range:"), boxLayout);
+        static const QStringList authorRange = QStringList() << i18n("First author") << i18n("Second author") << i18n("Third author") << i18n("Fourth author") << i18n("Fifth author") << i18n("Sixth author") << i18n("Seventh author") << i18n("Eighth author") << i18n("Ninth author") << i18n("Tenth author") << i18n("|Last author");
+        rangeWidgetAuthor = new RangeWidget(authorRange, this);
+        boxLayout->addWidget(rangeWidgetAuthor);
+        rangeWidgetAuthor->setLowerValue(info.startWord);
+        rangeWidgetAuthor->setUpperValue(qMin(authorRange.size() - 1, info.endWord));
+
+        checkBoxLastAuthor = new QCheckBox(i18n("... and last author"), this);
+        boxLayout->addWidget(checkBoxLastAuthor);
+
+        labelAuthorRange = new QLabel(this);
+        boxLayout->addWidget(labelAuthorRange);
+        const int maxWidth = qMax(labelAuthorRange->fontMetrics().width(i18n("From first author to author %1 and last author", 88)), labelAuthorRange->fontMetrics().width(i18n("From author %1 to author %2 and last author", 88, 88)));
+        labelAuthorRange->setMinimumWidth(maxWidth);
+
+        comboBoxChangeCase = new KComboBox(false, this);
+        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
+        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
+        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
+        formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
+        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
+
+        lineEditTextInBetween = new KLineEdit(this);
+        formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
+        lineEditTextInBetween->setText(info.inBetween);
+
+        spinBoxLength = new QSpinBox(this);
+        formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
+        spinBoxLength->setSpecialValueText(i18n("No limitation"));
+        spinBoxLength->setMinimum(0);
+        spinBoxLength->setMaximum(9);
+        spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
+
+        connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, this, &AuthorWidget::updateRangeLabel);
+        connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, this, &AuthorWidget::updateRangeLabel);
+        connect(checkBoxLastAuthor, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(checkBoxLastAuthor, &QCheckBox::toggled, this, &AuthorWidget::updateRangeLabel);
+        connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+
+        updateRangeLabel();
+    }
+
+    QString toString() const override
+    {
+        QString result = QStringLiteral("A");
+
+        if (spinBoxLength->value() > 0)
+            result.append(QString::number(spinBoxLength->value()));
+
+        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+        if (caseChange == IdSuggestions::ccToLower)
+            result.append(QStringLiteral("l"));
+        else if (caseChange == IdSuggestions::ccToUpper)
+            result.append(QStringLiteral("u"));
+        else if (caseChange == IdSuggestions::ccToCamelCase)
+            result.append(QStringLiteral("c"));
+
+        if (rangeWidgetAuthor->lowerValue() > 0 || rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum())
+            result.append(QString(QStringLiteral("w%1%2")).arg(rangeWidgetAuthor->lowerValue()).arg(rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum() ? QString::number(rangeWidgetAuthor->upperValue()) : QStringLiteral("I")));
+        if (checkBoxLastAuthor->isChecked())
+            result.append(QStringLiteral("L"));
+
+        const QString text = lineEditTextInBetween->text();
+        if (!text.isEmpty())
+            result.append(QStringLiteral("\"")).append(text);
+
+        return result;
+    }
+};
 
 
-AuthorWidget::AuthorWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestionsEditWidget *isew, QWidget *parent)
-        : TokenWidget(parent)
-{
-    setTitle(i18n("Authors"));
-
-    QBoxLayout *boxLayout = new QVBoxLayout();
-    boxLayout->setMargin(0);
-    formLayout->addRow(i18n("Author Range:"), boxLayout);
-    static const QStringList authorRange = QStringList() << i18n("First author") << i18n("Second author") << i18n("Third author") << i18n("Fourth author") << i18n("Fifth author") << i18n("Sixth author") << i18n("Seventh author") << i18n("Eighth author") << i18n("Ninth author") << i18n("Tenth author") << i18n("|Last author");
-    rangeWidgetAuthor = new RangeWidget(authorRange, this);
-    boxLayout->addWidget(rangeWidgetAuthor);
-    rangeWidgetAuthor->setLowerValue(info.startWord);
-    rangeWidgetAuthor->setUpperValue(qMin(authorRange.size() - 1, info.endWord));
-
-    checkBoxLastAuthor = new QCheckBox(i18n("... and last author"), this);
-    boxLayout->addWidget(checkBoxLastAuthor);
-
-    labelAuthorRange = new QLabel(this);
-    boxLayout->addWidget(labelAuthorRange);
-    const int maxWidth = qMax(labelAuthorRange->fontMetrics().width(i18n("From first author to author %1 and last author", 88)), labelAuthorRange->fontMetrics().width(i18n("From author %1 to author %2 and last author", 88, 88)));
-    labelAuthorRange->setMinimumWidth(maxWidth);
-
-    comboBoxChangeCase = new KComboBox(false, this);
-    comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
-    comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
-    comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
-    comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
-    formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-    comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
-
-    lineEditTextInBetween = new KLineEdit(this);
-    formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
-    lineEditTextInBetween->setText(info.inBetween);
-
-    spinBoxLength = new QSpinBox(this);
-    formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
-    spinBoxLength->setSpecialValueText(i18n("No limitation"));
-    spinBoxLength->setMinimum(0);
-    spinBoxLength->setMaximum(9);
-    spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
-
-    connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, this, &AuthorWidget::updateRangeLabel);
-    connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, this, &AuthorWidget::updateRangeLabel);
-    connect(checkBoxLastAuthor, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(checkBoxLastAuthor, &QCheckBox::toggled, this, &AuthorWidget::updateRangeLabel);
-    connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
-
-    updateRangeLabel();
-}
-
-QString AuthorWidget::toString() const
-{
-    QString result = QStringLiteral("A");
-
-    if (spinBoxLength->value() > 0)
-        result.append(QString::number(spinBoxLength->value()));
-
-    IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
-    if (caseChange == IdSuggestions::ccToLower)
-        result.append(QStringLiteral("l"));
-    else if (caseChange == IdSuggestions::ccToUpper)
-        result.append(QStringLiteral("u"));
-    else if (caseChange == IdSuggestions::ccToCamelCase)
-        result.append(QStringLiteral("c"));
-
-    if (rangeWidgetAuthor->lowerValue() > 0 || rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum())
-        result.append(QString(QStringLiteral("w%1%2")).arg(rangeWidgetAuthor->lowerValue()).arg(rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum() ? QString::number(rangeWidgetAuthor->upperValue()) : QStringLiteral("I")));
-    if (checkBoxLastAuthor->isChecked())
-        result.append(QStringLiteral("L"));
-
-    const QString text = lineEditTextInBetween->text();
-    if (!text.isEmpty())
-        result.append(QStringLiteral("\"")).append(text);
-
-    return result;
-}
-
-void AuthorWidget::updateRangeLabel()
-{
-    const int lower = rangeWidgetAuthor->lowerValue();
-    const int upper = rangeWidgetAuthor->upperValue();
-    const int max = rangeWidgetAuthor->maximum();
-
-    labelAuthorRange->setText(IdSuggestions::formatAuthorRange(lower, upper == max ? 0x00ffffff : upper, checkBoxLastAuthor->isChecked()));
-}
-
+/**
+ * @author Thomas Fischer
+ */
 class YearWidget : public TokenWidget
 {
     Q_OBJECT
@@ -180,6 +218,9 @@ public:
     }
 };
 
+/**
+ * @author Thomas Fischer
+ */
 class VolumeWidget : public TokenWidget
 {
     Q_OBJECT
@@ -202,6 +243,10 @@ public:
     }
 };
 
+
+/**
+ * @author Thomas Fischer
+ */
 class PageNumberWidget : public TokenWidget
 {
     Q_OBJECT
@@ -224,110 +269,130 @@ public:
     }
 };
 
-TitleWidget::TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, bool removeSmallWords, IdSuggestionsEditWidget *isew, QWidget *parent)
-        : TokenWidget(parent)
-{
-    setTitle(i18n("Title"));
 
-    QBoxLayout *boxLayout = new QVBoxLayout();
-    boxLayout->setMargin(0);
-    formLayout->addRow(i18n("Word Range:"), boxLayout);
-    static const QStringList wordRange = QStringList() << i18n("First word") << i18n("Second word") << i18n("Third word") << i18n("Fourth word") << i18n("Fifth word") << i18n("Sixth word") << i18n("Seventh word") << i18n("Eighth word") << i18n("Ninth word") << i18n("Tenth word") << i18n("|Last word");
-    rangeWidgetAuthor = new RangeWidget(wordRange, this);
-    boxLayout->addWidget(rangeWidgetAuthor);
-    if (info.startWord > 0 || info.endWord < 0xffff) {
-        rangeWidgetAuthor->setLowerValue(info.startWord);
-        rangeWidgetAuthor->setUpperValue(qMin(rangeWidgetAuthor->maximum(), info.endWord));
-    } else {
-        rangeWidgetAuthor->setLowerValue(0);
-        rangeWidgetAuthor->setUpperValue(rangeWidgetAuthor->maximum());
+/**
+ * @author Thomas Fischer
+ */
+class TitleWidget : public TokenWidget
+{
+    Q_OBJECT
+
+private:
+    RangeWidget *rangeWidgetAuthor;
+    QLabel *labelWordsRange;
+    QCheckBox *checkBoxRemoveSmallWords;
+    KComboBox *comboBoxChangeCase;
+    KLineEdit *lineEditTextInBetween;
+    QSpinBox *spinBoxLength;
+
+private slots:
+    void updateRangeLabel()
+    {
+        const int lower = rangeWidgetAuthor->lowerValue();
+        const int upper = rangeWidgetAuthor->upperValue();
+        const int max = rangeWidgetAuthor->maximum();
+
+        if (lower == 0 && upper == 0)
+            labelWordsRange->setText(i18n("First word only"));
+        else if (lower == 1 && upper == max)
+            labelWordsRange->setText(i18n("All but first word"));
+        else if (lower == 0 && upper == max)
+            labelWordsRange->setText(i18n("From first to last word"));
+        else if (lower > 0 && upper == max)
+            labelWordsRange->setText(i18n("From word %1 to last word", lower + 1));
+        else if (lower == 0 && upper < max)
+            labelWordsRange->setText(i18n("From first word to word %1", upper + 1));
+        else
+            labelWordsRange->setText(i18n("From word %1 to word %2", lower + 1, upper + 1));
     }
 
-    labelWordsRange = new QLabel(this);
-    boxLayout->addWidget(labelWordsRange);
-    const int a = qMax(labelWordsRange->fontMetrics().width(i18n("From first to last word")), labelWordsRange->fontMetrics().width(i18n("From word %1 to last word", 88)));
-    const int b = qMax(labelWordsRange->fontMetrics().width(i18n("From first word to word %1", 88)), labelWordsRange->fontMetrics().width(i18n("From word %1 to word %2", 88, 88)));
-    labelWordsRange->setMinimumWidth(qMax(a, b));
+public:
+    TitleWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, bool removeSmallWords, IdSuggestionsEditWidget *isew, QWidget *parent)
+            : TokenWidget(parent)
+    {
+        setTitle(i18n("Title"));
 
-    checkBoxRemoveSmallWords = new QCheckBox(i18n("Remove"), this);
-    formLayout->addRow(i18n("Small words:"), checkBoxRemoveSmallWords);
-    checkBoxRemoveSmallWords->setChecked(removeSmallWords);
+        QBoxLayout *boxLayout = new QVBoxLayout();
+        boxLayout->setMargin(0);
+        formLayout->addRow(i18n("Word Range:"), boxLayout);
+        static const QStringList wordRange = QStringList() << i18n("First word") << i18n("Second word") << i18n("Third word") << i18n("Fourth word") << i18n("Fifth word") << i18n("Sixth word") << i18n("Seventh word") << i18n("Eighth word") << i18n("Ninth word") << i18n("Tenth word") << i18n("|Last word");
+        rangeWidgetAuthor = new RangeWidget(wordRange, this);
+        boxLayout->addWidget(rangeWidgetAuthor);
+        if (info.startWord > 0 || info.endWord < 0xffff) {
+            rangeWidgetAuthor->setLowerValue(info.startWord);
+            rangeWidgetAuthor->setUpperValue(qMin(rangeWidgetAuthor->maximum(), info.endWord));
+        } else {
+            rangeWidgetAuthor->setLowerValue(0);
+            rangeWidgetAuthor->setUpperValue(rangeWidgetAuthor->maximum());
+        }
 
-    comboBoxChangeCase = new KComboBox(false, this);
-    comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
-    comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
-    comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
-    comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
-    formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-    comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
+        labelWordsRange = new QLabel(this);
+        boxLayout->addWidget(labelWordsRange);
+        const int a = qMax(labelWordsRange->fontMetrics().width(i18n("From first to last word")), labelWordsRange->fontMetrics().width(i18n("From word %1 to last word", 88)));
+        const int b = qMax(labelWordsRange->fontMetrics().width(i18n("From first word to word %1", 88)), labelWordsRange->fontMetrics().width(i18n("From word %1 to word %2", 88, 88)));
+        labelWordsRange->setMinimumWidth(qMax(a, b));
 
-    lineEditTextInBetween = new KLineEdit(this);
-    formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
-    lineEditTextInBetween->setText(info.inBetween);
+        checkBoxRemoveSmallWords = new QCheckBox(i18n("Remove"), this);
+        formLayout->addRow(i18n("Small words:"), checkBoxRemoveSmallWords);
+        checkBoxRemoveSmallWords->setChecked(removeSmallWords);
 
-    spinBoxLength = new QSpinBox(this);
-    formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
-    spinBoxLength->setSpecialValueText(i18n("No limitation"));
-    spinBoxLength->setMinimum(0);
-    spinBoxLength->setMaximum(9);
-    spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
+        comboBoxChangeCase = new KComboBox(false, this);
+        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
+        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
+        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
+        formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
+        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
 
-    connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, this, &TitleWidget::updateRangeLabel);
-    connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, this, &TitleWidget::updateRangeLabel);
-    connect(checkBoxRemoveSmallWords, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
-    connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+        lineEditTextInBetween = new KLineEdit(this);
+        formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
+        lineEditTextInBetween->setText(info.inBetween);
 
-    updateRangeLabel();
-}
+        spinBoxLength = new QSpinBox(this);
+        formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
+        spinBoxLength->setSpecialValueText(i18n("No limitation"));
+        spinBoxLength->setMinimum(0);
+        spinBoxLength->setMaximum(9);
+        spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
 
-QString TitleWidget::toString() const
-{
-    QString result = checkBoxRemoveSmallWords->isChecked() ? QStringLiteral("T") : QStringLiteral("t");
+        connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(rangeWidgetAuthor, &RangeWidget::lowerValueChanged, this, &TitleWidget::updateRangeLabel);
+        connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, this, &TitleWidget::updateRangeLabel);
+        connect(checkBoxRemoveSmallWords, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
 
-    if (spinBoxLength->value() > 0)
-        result.append(QString::number(spinBoxLength->value()));
+        updateRangeLabel();
+    }
 
-    IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
-    if (caseChange == IdSuggestions::ccToLower)
-        result.append(QStringLiteral("l"));
-    else if (caseChange == IdSuggestions::ccToUpper)
-        result.append(QStringLiteral("u"));
-    else if (caseChange == IdSuggestions::ccToCamelCase)
-        result.append(QStringLiteral("c"));
+    QString toString() const override
+    {
+        QString result = checkBoxRemoveSmallWords->isChecked() ? QStringLiteral("T") : QStringLiteral("t");
 
-    if (rangeWidgetAuthor->lowerValue() > 0 || rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum())
-        result.append(QString(QStringLiteral("w%1%2")).arg(rangeWidgetAuthor->lowerValue()).arg(rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum() ? QString::number(rangeWidgetAuthor->upperValue()) : QStringLiteral("I")));
+        if (spinBoxLength->value() > 0)
+            result.append(QString::number(spinBoxLength->value()));
 
-    const QString text = lineEditTextInBetween->text();
-    if (!text.isEmpty())
-        result.append(QStringLiteral("\"")).append(text);
+        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+        if (caseChange == IdSuggestions::ccToLower)
+            result.append(QStringLiteral("l"));
+        else if (caseChange == IdSuggestions::ccToUpper)
+            result.append(QStringLiteral("u"));
+        else if (caseChange == IdSuggestions::ccToCamelCase)
+            result.append(QStringLiteral("c"));
 
-    return result;
-}
+        if (rangeWidgetAuthor->lowerValue() > 0 || rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum())
+            result.append(QString(QStringLiteral("w%1%2")).arg(rangeWidgetAuthor->lowerValue()).arg(rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum() ? QString::number(rangeWidgetAuthor->upperValue()) : QStringLiteral("I")));
 
-void TitleWidget::updateRangeLabel()
-{
-    const int lower = rangeWidgetAuthor->lowerValue();
-    const int upper = rangeWidgetAuthor->upperValue();
-    const int max = rangeWidgetAuthor->maximum();
+        const QString text = lineEditTextInBetween->text();
+        if (!text.isEmpty())
+            result.append(QStringLiteral("\"")).append(text);
 
-    if (lower == 0 && upper == 0)
-        labelWordsRange->setText(i18n("First word only"));
-    else if (lower == 1 && upper == max)
-        labelWordsRange->setText(i18n("All but first word"));
-    else if (lower == 0 && upper == max)
-        labelWordsRange->setText(i18n("From first to last word"));
-    else if (lower > 0 && upper == max)
-        labelWordsRange->setText(i18n("From word %1 to last word", lower + 1));
-    else if (lower == 0 && upper < max)
-        labelWordsRange->setText(i18n("From first word to word %1", upper + 1));
-    else
-        labelWordsRange->setText(i18n("From word %1 to word %2", lower + 1, upper + 1));
-}
+        return result;
+    }
+};
+
 
 /**
  * @author Thomas Fischer
@@ -387,6 +452,10 @@ public:
     }
 };
 
+
+/**
+ * @author Thomas Fischer
+ */
 class TextWidget : public TokenWidget
 {
     Q_OBJECT
@@ -647,6 +716,7 @@ public:
         return result.join(QStringLiteral("|"));
     }
 };
+
 
 IdSuggestionsEditWidget::IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent, Qt::WindowFlags f)
         : QWidget(parent, f), IdSuggestions(), d(new IdSuggestionsEditWidgetPrivate(previewEntry, this))
