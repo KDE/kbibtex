@@ -477,6 +477,7 @@ public:
         comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
         comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
         comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
         comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
 
@@ -503,6 +504,8 @@ public:
             result.append(QStringLiteral("l"));
         else if (caseChange == IdSuggestions::ccToUpper)
             result.append(QStringLiteral("u"));
+        else if (caseChange == IdSuggestions::ccToCamelCase)
+            result.append(QStringLiteral("c"));
 
         return result;
     }

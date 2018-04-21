@@ -201,15 +201,26 @@ public:
     }
 
     QString translateTypeToken(const Entry &entry, const struct IdSuggestionTokenInfo &eti) const {
-        QString entryType(entry.type().left(eti.len));
+        QString entryType(entry.type());
 
         switch (eti.caseChange) {
         case IdSuggestions::ccToUpper:
-            return entryType.toUpper();
+            return entryType.toUpper().left(eti.len);
         case IdSuggestions::ccToLower:
-            return entryType.toLower();
+            return entryType.toLower().left(eti.len);
+        case IdSuggestions::ccToCamelCase:
+        {
+            if (entryType.isEmpty()) return QString(); ///< empty entry type? Return immediately to avoid problems with entryType[0]
+            /// Apply some heuristic replacements to make the entry type look like CamelCase
+            entryType = entryType.toLower(); ///< start with lower case
+            /// Then, replace known words with their CamelCase variant
+            entryType = entryType.replace(QStringLiteral("report"), QStringLiteral("Report")).replace(QStringLiteral("proceedings"), QStringLiteral("Proceedings")).replace(QStringLiteral("thesis"), QStringLiteral("Thesis")).replace(QStringLiteral("book"), QStringLiteral("Book")).replace(QStringLiteral("phd"), QStringLiteral("PhD"));
+            /// Finally, guarantee that first letter is upper case
+            entryType[0] = entryType[0].toUpper();
+            return entryType.left(eti.len);
+        }
         default:
-            return entryType;
+            return entryType.left(eti.len);
         }
     }
 
@@ -441,6 +452,9 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
                 break;
             case IdSuggestions::ccToLower:
                 text.append(i18n(", in lower case"));
+                break;
+            case IdSuggestions::ccToCamelCase:
+                text.append(i18n(", in CamelCase"));
                 break;
             default:
                 break;
