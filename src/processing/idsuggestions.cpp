@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -200,6 +200,19 @@ public:
         return result;
     }
 
+    QString translateTypeToken(const Entry &entry, const struct IdSuggestionTokenInfo &eti) const {
+        QString entryType(entry.type().left(eti.len));
+
+        switch (eti.caseChange) {
+        case IdSuggestions::ccToUpper:
+            return entryType.toUpper();
+        case IdSuggestions::ccToLower:
+            return entryType.toLower();
+        default:
+            return entryType;
+        }
+    }
+
     QString translateToken(const Entry &entry, const QString &token) const {
         switch (token[0].toLatin1()) {
         case 'a': ///< deprecated but still supported case
@@ -245,6 +258,11 @@ public:
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo jti
             const struct IdSuggestionTokenInfo jti = p->evalToken(token.mid(1));
             return translateJournalToken(entry, jti);
+        }
+        case 'e': {
+            /// Evaluate the token string, store information in struct IdSuggestionTokenInfo eti
+            const struct IdSuggestionTokenInfo eti = p->evalToken(token.mid(1));
+            return translateTypeToken(entry, eti);
         }
         case 'v': {
             return normalizeText(PlainTextValue::text(entry.value(Entry::ftVolume)));
@@ -410,6 +428,21 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
                 text.append(i18n(", in CamelCase"));
                 break;
             case IdSuggestions::ccNoChange:
+                break;
+            }
+        } else if (token[0] == 'e') {
+            struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
+            text.append(i18n("Type"));
+            if (info.len < 0x00ffffff)
+                text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
+            switch (info.caseChange) {
+            case IdSuggestions::ccToUpper:
+                text.append(i18n(", in upper case"));
+                break;
+            case IdSuggestions::ccToLower:
+                text.append(i18n(", in lower case"));
+                break;
+            default:
                 break;
             }
         } else if (token[0] == 'v') {

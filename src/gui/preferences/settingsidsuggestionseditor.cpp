@@ -454,6 +454,62 @@ public:
 
 
 /**
+ * @author Erik Quaeghebeur
+ */
+class TypeWidget : public TokenWidget
+{
+    Q_OBJECT
+
+private:
+    KComboBox *comboBoxChangeCase;
+    QSpinBox *spinBoxLength;
+
+public:
+    TypeWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestionsEditWidget *isew, QWidget *parent)
+            : TokenWidget(parent)
+    {
+        setTitle(i18n("Type"));
+
+        QBoxLayout *boxLayout = new QVBoxLayout();
+        boxLayout->setMargin(0);
+
+        comboBoxChangeCase = new KComboBox(false, this);
+        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
+        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
+        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
+        formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
+        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
+
+        spinBoxLength = new QSpinBox(this);
+        formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
+        spinBoxLength->setSpecialValueText(i18n("No limitation"));
+        spinBoxLength->setMinimum(0);
+        spinBoxLength->setMaximum(9);
+        spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
+
+        connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+    }
+
+    QString toString() const override
+    {
+        QString result = QStringLiteral("e");
+
+        if (spinBoxLength->value() > 0)
+            result.append(QString::number(spinBoxLength->value()));
+
+        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+        if (caseChange == IdSuggestions::ccToLower)
+            result.append(QStringLiteral("l"));
+        else if (caseChange == IdSuggestions::ccToUpper)
+            result.append(QStringLiteral("u"));
+
+        return result;
+    }
+};
+
+
+/**
  * @author Thomas Fischer
  */
 class TextWidget : public TokenWidget
@@ -486,7 +542,7 @@ class IdSuggestionsEditWidget::IdSuggestionsEditWidgetPrivate
 private:
     IdSuggestionsEditWidget *p;
 public:
-    enum TokenType {ttTitle, ttAuthor, ttYear, ttJournal, ttText, ttVolume, ttPageNumber};
+    enum TokenType {ttTitle, ttAuthor, ttYear, ttJournal, ttType, ttText, ttVolume, ttPageNumber};
 
     QWidget *container;
     QBoxLayout *containerLayout;
@@ -539,6 +595,8 @@ public:
         signalMapperAddMenu->setMapping(action, -ttYear);
         action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, -ttJournal);
+        action = menuAddToken->addAction(i18n("Type"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+        signalMapperAddMenu->setMapping(action, -ttType);
         action = menuAddToken->addAction(i18n("Volume"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, -ttVolume);
         action = menuAddToken->addAction(i18n("Page Number"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
@@ -558,6 +616,8 @@ public:
         signalMapperAddMenu->setMapping(action, ttYear);
         action = menuAddToken->addAction(i18n("Journal"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, ttJournal);
+        action = menuAddToken->addAction(i18n("Type"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+        signalMapperAddMenu->setMapping(action, ttType);
         action = menuAddToken->addAction(i18n("Volume"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         signalMapperAddMenu->setMapping(action, ttVolume);
         action = menuAddToken->addAction(i18n("Page Number"), signalMapperAddMenu, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
@@ -629,6 +689,17 @@ public:
             tokenWidget = new JournalWidget(info, p, container);
         }
         break;
+        case ttType: {
+            struct IdSuggestions::IdSuggestionTokenInfo info;
+            info.inBetween = QString();
+            info.len = -1;
+            info.startWord = 0;
+            info.endWord = 0x00ffffff;
+            info.lastWord = false;
+            info.caseChange = IdSuggestions::ccNoChange;
+            tokenWidget = new TypeWidget(info, p, container);
+        }
+        break;
         case ttText:
             tokenWidget = new TextWidget(QString(), p, container);
             break;
@@ -684,6 +755,11 @@ public:
             } else if (token[0] == 'j') {
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
                 tokenWidget = new JournalWidget(info, p, container);
+                widgetList << tokenWidget;
+                containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
+            } else if (token[0] == 'e') {
+                struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
+                tokenWidget = new TypeWidget(info, p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'v') {
