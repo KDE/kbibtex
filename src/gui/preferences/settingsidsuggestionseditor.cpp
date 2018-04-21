@@ -768,7 +768,7 @@ public:
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 't' || token[0] == 'T') {
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
-                tokenWidget = new TitleWidget(info, token[0] == 'T', p, container);
+                tokenWidget = new TitleWidget(info, token[0].isUpper(), p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'j' || token[0] == 'J') {

@@ -73,19 +73,20 @@ public:
         const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
         int index = 0;
         for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it, ++index) {
+            const QString lowerText = normalizeText(*it).toLower();
+            if ((removeSmallWords && smallWords.contains(lowerText)) || index < tti.startWord || index > tti.endWord)
+                continue;
+
             if (first)
                 first = false;
             else
                 result.append(tti.inBetween);
 
-            QString lowerText = (*it).toLower();
-            if ((!removeSmallWords || !smallWords.contains(lowerText)) && index >= tti.startWord && index <= tti.endWord) {
-                QString titleComponent = normalizeText(*it).left(tti.len);
-                if (tti.caseChange == IdSuggestions::ccToCamelCase)
-                    titleComponent = titleComponent[0].toUpper() + titleComponent.mid(1);
+            QString titleComponent = lowerText.left(tti.len);
+            if (tti.caseChange == IdSuggestions::ccToCamelCase)
+                titleComponent = titleComponent[0].toUpper() + titleComponent.mid(1);
 
-                result.append(titleComponent);
-            }
+            result.append(titleComponent);
         }
 
         switch (tti.caseChange) {
@@ -270,7 +271,7 @@ public:
         case 'T': {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo jti
             const struct IdSuggestionTokenInfo tti = p->evalToken(token.mid(1));
-            return translateTitleToken(entry, tti, token[0].toLatin1() == 'T');
+            return translateTitleToken(entry, tti, token[0].isUpper());
         }
         case 'j':
         case 'J': {
