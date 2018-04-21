@@ -402,17 +402,23 @@ class JournalWidget : public TokenWidget
     Q_OBJECT
 
 private:
+    QCheckBox *checkBoxRemoveSmallWords;
     KComboBox *comboBoxChangeCase;
+    KLineEdit *lineEditTextInBetween;
     QSpinBox *spinBoxLength;
 
 public:
-    JournalWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, IdSuggestionsEditWidget *isew, QWidget *parent)
+    JournalWidget(const struct IdSuggestions::IdSuggestionTokenInfo &info, bool removeSmallWords, IdSuggestionsEditWidget *isew, QWidget *parent)
             : TokenWidget(parent)
     {
         setTitle(i18n("Journal"));
 
         QBoxLayout *boxLayout = new QVBoxLayout();
         boxLayout->setMargin(0);
+
+        checkBoxRemoveSmallWords = new QCheckBox(i18n("Remove"), this);
+        formLayout->addRow(i18n("Small words:"), checkBoxRemoveSmallWords);
+        checkBoxRemoveSmallWords->setChecked(removeSmallWords);
 
         comboBoxChangeCase = new KComboBox(false, this);
         comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
@@ -422,6 +428,10 @@ public:
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
         comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
 
+        lineEditTextInBetween = new KLineEdit(this);
+        formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
+        lineEditTextInBetween->setText(info.inBetween);
+
         spinBoxLength = new QSpinBox(this);
         formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
         spinBoxLength->setSpecialValueText(i18n("No limitation"));
@@ -429,13 +439,15 @@ public:
         spinBoxLength->setMaximum(9);
         spinBoxLength->setValue(info.len == 0 || info.len > 9 ? 0 : info.len);
 
+        connect(checkBoxRemoveSmallWords, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
         connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
         connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
     QString toString() const override
     {
-        QString result = QStringLiteral("j");
+        QString result = checkBoxRemoveSmallWords->isChecked() ? QStringLiteral("J") : QStringLiteral("j");
 
         if (spinBoxLength->value() > 0)
             result.append(QString::number(spinBoxLength->value()));
@@ -447,6 +459,10 @@ public:
             result.append(QStringLiteral("u"));
         else if (caseChange == IdSuggestions::ccToCamelCase)
             result.append(QStringLiteral("c"));
+
+        const QString text = lineEditTextInBetween->text();
+        if (!text.isEmpty())
+            result.append(QStringLiteral("\"")).append(text);
 
         return result;
     }
@@ -689,7 +705,7 @@ public:
             info.endWord = 0x00ffffff;
             info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
-            tokenWidget = new JournalWidget(info, p, container);
+            tokenWidget = new JournalWidget(info, true, p, container);
         }
         break;
         case ttType: {
@@ -755,9 +771,9 @@ public:
                 tokenWidget = new TitleWidget(info, token[0] == 'T', p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
-            } else if (token[0] == 'j') {
+            } else if (token[0] == 'j' || token[0] == 'J') {
                 struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
-                tokenWidget = new JournalWidget(info, p, container);
+                tokenWidget = new JournalWidget(info, token[0].isUpper(), p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'e') {

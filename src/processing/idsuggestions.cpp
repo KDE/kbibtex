@@ -32,6 +32,7 @@ private:
     IdSuggestions *p;
     KSharedConfigPtr config;
     const KConfigGroup group;
+    static const QStringList smallWords;
 
 public:
 
@@ -66,10 +67,6 @@ public:
     }
 
     QString translateTitleToken(const Entry &entry, const struct IdSuggestionTokenInfo &tti, bool removeSmallWords) const {
-        /// list of small words taken from OCLC:
-        /// http://www.oclc.org/developer/develop/web-services/worldcat-search-api/bibliographic-resource.en.html
-        static const QStringList smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QStringLiteral("|"), QString::SkipEmptyParts);
-
         QString result;
         bool first = true;
         static const QRegExp sequenceOfSpaces(QStringLiteral("\\s+"));
@@ -162,15 +159,24 @@ public:
         return result;
     }
 
-    QString translateJournalToken(const Entry &entry, const struct IdSuggestionTokenInfo &jti) const {
+    QString translateJournalToken(const Entry &entry, const struct IdSuggestionTokenInfo &jti, bool removeSmallWords) const {
         static const QRegExp sequenceOfSpaces(QStringLiteral("\\s+"));
         QString journalName = PlainTextValue::text(entry.value(Entry::ftJournal));
         journalName = JournalAbbreviations::self()->toShortName(journalName);
         const QStringList journalWords = journalName.split(sequenceOfSpaces, QString::SkipEmptyParts);
-
+        bool first = true;
+        int index = 0;
         QString result;
-        for (const QString &word : journalWords) {
-            QString journalComponent = normalizeText(word);
+        for (QStringList::ConstIterator it = journalWords.begin(); it != journalWords.end(); ++it, ++index) {
+            QString journalComponent = normalizeText(*it);
+            const QString lowerText = journalComponent.toLower();
+            if ((removeSmallWords && smallWords.contains(lowerText)) || index < jti.startWord || index > jti.endWord)
+                continue;
+
+            if (first)
+                first = false;
+            else
+                result.append(jti.inBetween);
 
             /// Try to keep sequences of capital letters at the start of the journal name,
             /// those may already be abbreviations.
@@ -180,6 +186,7 @@ public:
 
             if (jti.caseChange == IdSuggestions::ccToCamelCase)
                 journalComponent = journalComponent[0].toUpper() + journalComponent.mid(1);
+
             result.append(journalComponent);
         }
 
@@ -265,10 +272,11 @@ public:
             const struct IdSuggestionTokenInfo tti = p->evalToken(token.mid(1));
             return translateTitleToken(entry, tti, token[0].toLatin1() == 'T');
         }
-        case 'j': {
+        case 'j':
+        case 'J': {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo jti
             const struct IdSuggestionTokenInfo jti = p->evalToken(token.mid(1));
-            return translateJournalToken(entry, jti);
+            return translateJournalToken(entry, jti, token[0].isUpper());
         }
         case 'e': {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo eti
@@ -295,6 +303,11 @@ public:
         return group.readEntry(keyFormatStringList, defaultFormatStringList);
     }
 };
+
+/// List of small words taken from OCLC:
+/// https://www.oclc.org/developer/develop/web-services/worldcat-search-api/bibliographic-resource.en.html
+const QStringList IdSuggestions::IdSuggestionsPrivate::smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QStringLiteral("|"), QString::SkipEmptyParts);
+
 
 const QString IdSuggestions::keyDefaultFormatString = QStringLiteral("DefaultFormatString");
 const QString IdSuggestions::defaultDefaultFormatString = QString();
