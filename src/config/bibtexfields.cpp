@@ -50,7 +50,6 @@ public:
 #endif // HAVE_KF5
 
     static BibTeXFields *singleton;
-    static const QStringList treeViewNames;
 
     BibTeXFieldsPrivate(BibTeXFields *parent)
             : p(parent) {
@@ -73,10 +72,10 @@ public:
 
             fd.visible.clear();
             if (configGroup.exists()) {
-                for (const QString &treeViewName : treeViewNames) {
-                    const QString key = QStringLiteral("Visible_") + treeViewName;
-                    if (configGroup.hasKey(key))
-                        fd.visible.insert(treeViewName, configGroup.readEntry(key, fd.defaultVisible));
+                for (const QString &key : configGroup.keyList()) {
+                    if (!key.startsWith(QStringLiteral("Visible_"))) continue; ///< a key other than a 'visibility' key
+                    const QString treeViewName = key.mid(8);
+                    fd.visible.insert(treeViewName, configGroup.readEntry(key, fd.defaultVisible));
                 }
             }
         }
@@ -108,8 +107,6 @@ public:
     }
 #endif // HAVE_KF5
 };
-
-const QStringList BibTeXFields::BibTeXFieldsPrivate::treeViewNames = QStringList() << QStringLiteral("SearchResults") << QStringLiteral("Main") << QStringLiteral("MergeWidget") << QStringLiteral("Zotero");
 
 /// awk -F '=' 'BEGIN {TypeIndependent="false";DefaultVisible="true"} /^\[/ && DefaultWidth!="" {print "<< FieldDescription{QStringLiteral(\""UpperCamelCase"\"), QStringLiteral(\""UpperCamelCaseAlt"\"), i18n(\""Label"\"),"TypeFlags",{},"DefaultWidth",{},"DefaultVisible","TypeIndependent"}" ; DefaultWidth="" ; TypeIndependent="false" ; DefaultVisible="true"} $1=="UpperCamelCase" {UpperCamelCase=$2;UpperCamelCaseAlt=""} $1=="UpperCamelCaseAlt" {UpperCamelCaseAlt=$2} $1=="Label" {Label=$2} $1=="TypeFlags" {TypeFlags=$2} $1=="DefaultWidth" {DefaultWidth=$2} $1=="Visible" {DefaultVisible=$2} $1=="TypeIndependent" {TypeIndependent=$2}' <bibtex.kbstyle | sed -r 's!QStringLiteral\(""\)!QString()!g;s!([,;])Text\b!\1KBibTeX::tfPlainText!g;s!([,;])Reference\b!\1KBibTeX::tfReference!g;s!([,;])Person\b!\1KBibTeX::tfPerson!g;s!([,;])Keyword\b!\1KBibTeX::tfKeyword!g;s!([,;])Verbatim\b!\1KBibTeX::tfVerbatim!g;s!([,;])Source\b!\1KBibTeX::tfSource!g;s!;!|!g;s!,,!,KBibTeX::tfSource,!g;s!(,KBibTeX::tf[A-Z][A-Za-z]+)!\1\1!g'
 const QVector<FieldDescription> fieldDescriptionsBibTeX = QVector<FieldDescription>()
