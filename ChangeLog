@@ -1,5 +1,39 @@
 ChangeLog
 
+Diff 0.7 to 0.8
+
+Porting from Qt4 to Qt5, from KDE4 (kdelibs) to KDE Frameworks 5, as well as updating
+various dependencies in the process (e.g. Qt5-based poppler)
+
+- Removing old scripts and configuration files
+- Updating/adding translations
+- Removing dependency on Qxt as well as sources in src/3rdparty/libqxt
+- Refactoring various files' location
+- Various fundamental classes have only optional dependency on KDE Frameworks 5
+  (default for KDE-based builds, but allows using those classes in Qt5-only setups)
+- Various modernizations of C++ code towards C++11, including deprecation of SIGNAL/SLOT
+- Moving bibliography files that previously resided in testset/ into their own Git repository
+  (kbibtex-testset)
+- KDE Bug 393032: Updating list of journal abbreviations
+- KDE Bug 393224: LyX pipe detection (issues with Kile 3 fixed)
+- KDE Bug 391198: Preview image/vnd.djvu+multipage files
+- KDE Bug 389306: Removal of libQxt
+- KDE Bug 387638: Locating correct QtOAuth library fixed
+- KDE Bug 388688: Screenshots for appdata updated
+- KDE Bug 386226: Character '~' not recognized in localfile entry
+- KDE Bug 352517: Invalid report, but more verbose output will be logged
+- KDE Bug 384741: Wrong ID Reported in Duplicate Dialog
+- KDE Bug 381119: Do not refer to defunct Gna! anymore
+  (note: Gna! infrastructure shut down before all materials (postings) could be retrieved)
+- KDE Bug 378497: Fixing crash when closing settings dialog
+- KDE Bug 368732: More options for ID generation: volume number, first page
+- Numerous small fixes and changes, run 'git diff v0.6.2..v0.7' for details
+
+Contributing authors include: Allen Winter, Andreas Sturmlechner, Andrius Štikonas, Antonio Rojas,
+Bastien Roucaries, Burkhard Lück, Christoph Feck, Frederik Schwarzer, Joao Carreira,
+Juergen Spitzmueller, Luigi Toscano, Pino Toscano, Raymond Wooninck, Thomas Fischer, and
+Yuri Chornoivan
+
 Diff 0.6.2 to 0.7
 
 - Dependency on Qt WebKit can be disabled at compile time
