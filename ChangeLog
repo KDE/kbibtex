@@ -1,5 +1,16 @@
 ChangeLog
 
+Diff 0.6.2 to 0.7
+
+- Dependency on Qt WebKit can be disabled at compile time
+- New dependency on ICU, used to transliterate text to plain ASCII
+- Generally improved code quality as detected by code checkers such as Clazy or Coverity
+- New online search: bioRxiv
+- Various minor fixes
+- Search in Zotero is rate limited to avoid overloading server
+- Using KWallet to store Zotero credentials
+- Adding basic DBUS support to, for example, open files or paste text
+
 Diff 0.6.1 to 0.6.2
 
 - KDE Bug 377401: https://bugs.kde.org/show_bug.cgi?id=377401
