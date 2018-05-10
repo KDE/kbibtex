@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -196,6 +196,56 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     return true;
 }
 
+QString OnlineSearchAbstract::htmlAttribute(const QString &htmlCode, const int startPos, const QString &attribute) const
+{
+    const int endPos = htmlCode.indexOf(QLatin1Char('>'), startPos);
+    if (endPos < 0) return QString(); ///< no closing angle bracket found
+
+    const QString attributePattern = QString(QStringLiteral(" %1=")).arg(attribute);
+    const int attributePatternPos = htmlCode.indexOf(attributePattern, startPos, Qt::CaseInsensitive);
+    if (attributePatternPos < 0 || attributePatternPos > endPos) return QString(); ///< attribute not found within limits
+
+    const int attributePatternLen = attributePattern.length();
+    const int openingQuotationMarkPos = attributePatternPos + attributePatternLen;
+    const QChar quotationMark = htmlCode[openingQuotationMarkPos];
+    if (quotationMark != QLatin1Char('"') && quotationMark != QLatin1Char('\'')) {
+        /// No valid opening quotation mark found
+        int spacePos = openingQuotationMarkPos;
+        while (spacePos < endPos && !htmlCode[spacePos].isSpace()) ++spacePos;
+        if (spacePos > endPos) return QString(); ///< no closing space found
+        return htmlCode.mid(openingQuotationMarkPos, spacePos - openingQuotationMarkPos);
+    } else {
+        /// Attribute has either single or double quotation marks
+        const int closingQuotationMarkPos = htmlCode.indexOf(quotationMark, openingQuotationMarkPos + 1);
+        if (closingQuotationMarkPos < 0 || closingQuotationMarkPos > endPos) return QString(); ///< closing quotation mark not found within limits
+        return htmlCode.mid(openingQuotationMarkPos + 1, closingQuotationMarkPos - openingQuotationMarkPos - 1);
+    }
+}
+
+bool OnlineSearchAbstract::htmlAttributeIsSelected(const QString &htmlCode, const int startPos, const QString &attribute) const
+{
+    const int endPos = htmlCode.indexOf(QLatin1Char('>'), startPos);
+    if (endPos < 0) return false; ///< no closing angle bracket found
+
+    const QString attributePattern = QStringLiteral(" ") + attribute;
+    const int attributePatternPos = htmlCode.indexOf(attributePattern, startPos, Qt::CaseInsensitive);
+    if (attributePatternPos < 0 || attributePatternPos > endPos) return false; ///< attribute not found within limits
+
+    const int attributePatternLen = attributePattern.length();
+    const QChar nextAfterAttributePattern = htmlCode[attributePatternPos + attributePatternLen];
+    if (nextAfterAttributePattern.isSpace() || nextAfterAttributePattern == QLatin1Char('>') || nextAfterAttributePattern == QLatin1Char('/'))
+        /// No value given for attribute (old-style HTML), so assuming it means checked/selected
+        return true;
+    else if (nextAfterAttributePattern == QLatin1Char('=')) {
+        /// Expecting value to attribute, so retrieve it and check for 'selected' or 'checked'
+        const QString attributeValue = htmlAttribute(htmlCode, attributePatternPos, attribute).toLower();
+        return attributeValue == QStringLiteral("selected") || attributeValue == QStringLiteral("checked");
+    }
+
+    /// Reaching this point only if HTML code is invalid
+    return false;
+}
+
 #ifdef HAVE_KF5
 /**
  * Display a passive notification popup using the D-Bus interface.
@@ -271,14 +321,6 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     static const QString selectTagBegin = QStringLiteral("<select ");
     static const QString selectTagEnd = QStringLiteral("</select>");
     static const QString optionTagBegin = QStringLiteral("<option ");
-    /// regular expressions to test or retrieve attributes in HTML tags
-    static const QRegExp inputTypeRegExp("<input[^>]+\\btype=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
-    static const QRegExp inputNameRegExp("<input[^>]+\\bname=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
-    static const QRegExp inputValueRegExp("<input[^>]+\\bvalue=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
-    static const QRegExp inputIsCheckedRegExp("<input[^>]+\\bchecked([> \t\n]|=[\"]?checked)", Qt::CaseInsensitive);
-    static const QRegExp selectNameRegExp("<select[^>]+\\bname=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
-    static const QRegExp optionValueRegExp("<option[^>]+\\bvalue=[\"]?([^\" >\n\t]*)", Qt::CaseInsensitive);
-    static const QRegExp optionSelectedRegExp("<option[^>]* selected([> \t\n]|=[\"]?selected)", Qt::CaseInsensitive);
 
     /// initialize result map
     QMap<QString, QString> result;
@@ -294,9 +336,9 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     int p = htmlText.indexOf(inputTagBegin, startPos, Qt::CaseInsensitive);
     while (p > startPos && p < endPos) {
         /// get "type", "name", and "value" attributes
-        QString inputType = inputTypeRegExp.indexIn(htmlText, p) == p ? inputTypeRegExp.cap(1).toLower() : QString();
-        QString inputName = inputNameRegExp.indexIn(htmlText, p) == p ? inputNameRegExp.cap(1) : QString();
-        QString inputValue = inputValueRegExp.indexIn(htmlText, p) ? inputValueRegExp.cap(1) : QString();
+        const QString inputType = htmlAttribute(htmlText, p, QStringLiteral("type")).toLower();
+        const QString inputName = htmlAttribute(htmlText, p, QStringLiteral("name"));
+        const QString inputValue = htmlAttribute(htmlText, p, QStringLiteral("value"));
 
         if (!inputName.isEmpty()) {
             /// get value of input types
@@ -304,12 +346,12 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
                 result[inputName] = inputValue;
             else if (inputType == QStringLiteral("radio")) {
                 /// must be selected
-                if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
+                if (htmlAttributeIsSelected(htmlText, p, QStringLiteral("checked"))) {
                     result[inputName] = inputValue;
                 }
             } else if (inputType == QStringLiteral("checkbox")) {
                 /// must be checked
-                if (htmlText.indexOf(inputIsCheckedRegExp, p) == p) {
+                if (htmlAttributeIsSelected(htmlText, p, QStringLiteral("checked"))) {
                     /// multiple checkbox values with the same name are possible
                     result.insertMulti(inputName, inputValue);
                 }
@@ -324,17 +366,17 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     p = htmlText.indexOf(selectTagBegin, startPos, Qt::CaseInsensitive);
     while (p > startPos && p < endPos) {
         /// get "name" attribute from "select" tag
-        const QString selectName = selectNameRegExp.indexIn(htmlText, p) == p ? selectNameRegExp.cap(1) : QString();
+        const QString selectName = htmlAttribute(htmlText, p, QStringLiteral("name"));
 
         /// "select" tag contains one or several "option" tags, search all
         int popt = htmlText.indexOf(optionTagBegin, p, Qt::CaseInsensitive);
         int endSelect = htmlText.indexOf(selectTagEnd, p, Qt::CaseInsensitive);
         while (popt > p && popt < endSelect) {
             /// get "value" attribute from "option" tag
-            const QString optionValue = optionValueRegExp.indexIn(htmlText, popt) == popt ? optionValueRegExp.cap(1) : QString();
+            const QString optionValue =  htmlAttribute(htmlText, popt, QStringLiteral("value"));
             if (!selectName.isEmpty() && !optionValue.isEmpty()) {
                 /// if this "option" tag is "selected", store value
-                if (htmlText.indexOf(optionSelectedRegExp, popt) == popt) {
+                if (htmlAttributeIsSelected(htmlText, popt, QStringLiteral("selected"))) {
                     result[selectName] = optionValue;
                 }
             }
