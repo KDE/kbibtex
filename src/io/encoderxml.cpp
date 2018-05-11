@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,19 +18,17 @@
 #include "encoderxml.h"
 
 #include <QStringList>
-#include <QRegExp>
 #include <QList>
 
 static const struct EncoderXMLCharMapping {
-    const char *regexp;
     unsigned int unicode;
-    const char *latex;
+    const char *xml;
 }
 charmappingdataxml[] = {
-    {"&quot;", 0x0022, "&quot;"}, /** FIXME: is this one required? */
-    {"&amp;", 0x0026, "&amp;"},
-    {"&lt;", 0x003C, "&lt;"},
-    {"&gt;", 0x003E, "&gt;"}
+    {0x0026, "&amp;"},
+    {0x0022, "&quot;"},
+    {0x003C, "&lt;"},
+    {0x003E, "&gt;"}
 };
 static const int charmappingdataxmlcount = sizeof(charmappingdataxml) / sizeof(charmappingdataxml[ 0 ]) ;
 
@@ -44,7 +42,6 @@ public:
     static const QStringList backslashSymbols;
 
     struct CharMappingItem {
-        QRegExp regExp;
         QChar unicode;
         QString xml;
     };
@@ -54,9 +51,8 @@ public:
     void buildCharMapping() {
         for (int i = 0; i < charmappingdataxmlcount; i++) {
             CharMappingItem charMappingItem;
-            charMappingItem.regExp = QRegExp(charmappingdataxml[ i ].regexp);
             charMappingItem.unicode = QChar(charmappingdataxml[ i ].unicode);
-            charMappingItem.xml = QString(charmappingdataxml[ i ].latex);
+            charMappingItem.xml = QString::fromLatin1(charmappingdataxml[ i ].xml);
             charMapping.append(charMappingItem);
         }
     }
@@ -81,7 +77,7 @@ QString EncoderXML::decode(const QString &text) const
     QString result = text;
 
     for (const auto &item : const_cast<const QList<EncoderXMLPrivate::CharMappingItem> &>(d->charMapping))
-        result.replace(item.regExp, item.unicode);
+        result.replace(item.xml, item.unicode);
 
     /**
      * Find and replace all characters written as hexadecimal number
@@ -89,7 +85,7 @@ QString EncoderXML::decode(const QString &text) const
     int p = -1;
     while ((p = result.indexOf(QStringLiteral("&#x"), p + 1)) >= 0) {
         int p2 = result.indexOf(QStringLiteral(";"), p + 1);
-        if (p2 < 0) break;
+        if (p2 < 0 || p2 > p + 8) break;
         bool ok = false;
         int hex = result.midRef(p + 3, p2 - p - 3).toInt(&ok, 16);
         if (ok && hex > 0)
@@ -102,7 +98,7 @@ QString EncoderXML::decode(const QString &text) const
     p = -1;
     while ((p = result.indexOf(QStringLiteral("&#"), p + 1)) >= 0) {
         int p2 = result.indexOf(QStringLiteral(";"), p + 1);
-        if (p2 < 0) break;
+        if (p2 < 0 || p2 > p + 8) break;
         bool ok = false;
         int dec = result.midRef(p + 2, p2 - p - 2).toInt(&ok, 10);
         if (ok && dec > 0)
