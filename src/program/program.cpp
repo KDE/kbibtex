@@ -20,6 +20,7 @@
 #include <QtDebug>
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QRegularExpression>
 
 #include <KAboutData>
 #include <KLocalizedString>
@@ -72,12 +73,12 @@ int main(int argc, char *argv[])
     KBibTeXMainWindow *mainWindow = new KBibTeXMainWindow();
 
     const QStringList urls = cmdLineParser.positionalArguments();
-    // Process arguments
+    /// Process arguments
     if (!urls.isEmpty())
     {
-        const QRegExp withProtocolChecker(QStringLiteral("^[a-zA-Z]+:"));
+        static const QRegularExpression protocolCheckerRegExp(QStringLiteral("^[a-zA-Z]+:"));
         for (const QString &url : urls) {
-            const QUrl u = (withProtocolChecker.indexIn(url) == 0) ? QUrl::fromUserInput(url) : QUrl::fromLocalFile(url);
+            const QUrl u = protocolCheckerRegExp.match(url).hasMatch() ? QUrl::fromUserInput(url) : QUrl::fromLocalFile(url);
             mainWindow->openDocument(u);
         }
     }

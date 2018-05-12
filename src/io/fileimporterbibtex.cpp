@@ -19,7 +19,7 @@
 
 #include <QTextCodec>
 #include <QIODevice>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QCoreApplication>
 #include <QStringList>
 
@@ -152,9 +152,9 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 
 bool FileImporterBibTeX::guessCanDecode(const QString &rawText)
 {
-    static const QRegExp bibtexLikeText("@\\w+\\{.+\\}");
+    static const QRegularExpression bibtexLikeText(QStringLiteral("@\\w+\\{.+\\}"));
     QString text = EncoderLaTeX::instance().decode(rawText);
-    return text.indexOf(bibtexLikeText) >= 0;
+    return bibtexLikeText.match(text).hasMatch();
 }
 
 void FileImporterBibTeX::cancel()
@@ -625,7 +625,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                     ++m_statistics.countFirstNameFirst;
             }
         } else if (iKey == Entry::ftPages) {
-            static const QRegExp rangeInAscii("\\s*--?\\s*");
+            static const QRegularExpression rangeInAscii(QStringLiteral("\\s*--?\\s*"));
             text.replace(rangeInAscii, QChar(0x2013));
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
@@ -636,7 +636,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
                 /// Assumption: in fields like Url or LocalFile, file names are separated by ;
-                static const QRegExp semicolonSpace = QRegExp("[;]\\s*");
+                static const QRegularExpression semicolonSpace = QRegularExpression(QStringLiteral("[;]\\s*"));
                 const QStringList fileList = rawText.split(semicolonSpace, QString::SkipEmptyParts);
                 for (const QString &filename : fileList) {
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
@@ -651,15 +651,15 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 ///  :C$\backslash$:/Users/BarisEvrim/Documents/Mendeley Desktop/GeversPAMI10.pdf:pdf
                 ///  ::
                 ///  :Users/Fred/Library/Application Support/Mendeley Desktop/Downloaded/Hasselman et al. - 2011 - (Still) Growing Up What should we be a realist about in the cognitive and behavioural sciences Abstract.pdf:pdf
-                if (KBibTeX::mendeleyFileRegExp.indexIn(rawText) >= 0)    {
-                    const QString backslashLaTeX = QStringLiteral("$\\backslash$");
-                    QString filename = KBibTeX::mendeleyFileRegExp.cap(1);
-                    filename = filename.remove(backslashLaTeX);
+                const QRegularExpressionMatch match = KBibTeX::mendeleyFileRegExp.match(rawText);
+                if (match.hasMatch()) {
+                    static const QString backslashLaTeX = QStringLiteral("$\\backslash$");
+                    QString filename = match.captured(1).remove(backslashLaTeX);
                     if (filename.startsWith(QStringLiteral("home/")) || filename.startsWith(QStringLiteral("Users/"))) {
                         /// Mendeley doesn't have a slash at the beginning of absolute paths,
                         /// so, insert one
                         /// See bug 19833, comment 5: https://gna.org/bugs/index.php?19833#comment5
-                        filename.prepend(QChar('/'));
+                        filename.prepend(QLatin1Char('/'));
                     }
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
                 } else
@@ -667,8 +667,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
             }
         } else if (iKey == Entry::ftMonth) {
             if (isStringKey) {
-                static const QRegExp monthThreeChars("^[a-z]{3}", Qt::CaseInsensitive);
-                if (monthThreeChars.indexIn(text) == 0)
+                static const QRegularExpression monthThreeChars(QStringLiteral("^[a-z]{3}"), QRegularExpression::CaseInsensitiveOption);
+                if (monthThreeChars.match(text).hasMatch())
                     text = text.left(3).toLower();
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             } else
@@ -677,14 +677,16 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {
-                int p = -5;
                 /// Take care of "; " which separates multiple DOIs, but which may baffle the regexp
                 QString preprocessedText = rawText;
                 preprocessedText.replace(QStringLiteral("; "), QStringLiteral(" "));
                 /// Extract everything that looks like a DOI using a regular expression,
                 /// ignore everything else
-                while ((p = KBibTeX::doiRegExp.indexIn(preprocessedText, p + 5)) >= 0)
-                    value.append(QSharedPointer<VerbatimText>(new VerbatimText(KBibTeX::doiRegExp.cap(0))));
+                QRegularExpressionMatchIterator doiRegExpMatchIt = KBibTeX::doiRegExp.globalMatch(preprocessedText);
+                while (doiRegExpMatchIt.hasNext()) {
+                    const QRegularExpressionMatch doiRegExpMatch = doiRegExpMatchIt.next();
+                    value.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(0))));
+                }
             }
         } else if (iKey == Entry::ftColor) {
             if (isStringKey)
@@ -779,23 +781,21 @@ QString FileImporterBibTeX::readLine()
 QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString &text, char *usedSplitChar)
 {
     QList<QSharedPointer<Keyword> > result;
-    /// define a list of characters where keywords will be split along
-    /// finalize list with null character
-    static char splitChars[] = "\n;,\0";
-    static const QRegExp splitAlong[] = {QRegExp(QString("\\s*%1\\s*").arg(splitChars[0])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[1])), QRegExp(QString("\\s*%1\\s*").arg(splitChars[2])), QRegExp()};
-    char *curSplitChar = splitChars;
-    static const QRegExp unneccessarySpacing(QStringLiteral("[ \n\r\t]+"));
-    int index = 0;
+    static const QHash<char, QRegularExpression> splitAlong = {
+        {'\n', QRegularExpression(QStringLiteral("\\s*\n\\s*"))},
+        {';', QRegularExpression(QStringLiteral("\\s*;\\s*"))},
+        {',', QRegularExpression(QString("\\s*,\\s*"))}
+    };
     if (usedSplitChar != nullptr)
         *usedSplitChar = '\0';
 
-    /// for each char in list ...
-    while (*curSplitChar != '\0') {
+    for (auto it = splitAlong.constBegin(); it != splitAlong.constEnd(); ++it) {
         /// check if character is contained in text (should be cheap to test)
-        if (text.contains(*curSplitChar)) {
+        if (text.contains(QLatin1Char(it.key()))) {
             /// split text along a pattern like spaces-splitchar-spaces
             /// extract keywords
-            const QStringList keywords = text.split(splitAlong[index], QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QStringLiteral(" "));
+            static const QRegularExpression unneccessarySpacing(QStringLiteral("[ \n\r\t]+"));
+            const QStringList keywords = text.split(it.value(), QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QStringLiteral(" "));
             /// build QList of Keyword objects from keywords
             for (const QString &keyword : keywords) {
                 result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
@@ -803,13 +803,10 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
             /// Memorize (some) split characters for later use
             /// (e.g. when writing file again)
             if (usedSplitChar != nullptr)
-                *usedSplitChar = *curSplitChar;
+                *usedSplitChar = it.key();
             /// no more splits necessary
             break;
         }
-        /// no success so far, test next splitting character
-        ++curSplitChar;
-        ++index;
     }
 
     /// no split was performed, so whole text must be a single keyword
@@ -841,18 +838,18 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
         /// Replacing daggers with commas ensures that they act as persons' names separator
         internalText = internalText.replace(invalidChar, QChar(','));
     /// Remove numbers to footnotes
-    static const QRegExp numberFootnoteRegExp(QStringLiteral("(\\w)\\d+\\b"));
+    static const QRegularExpression numberFootnoteRegExp(QStringLiteral("(\\w)\\d+\\b"));
     internalText = internalText.replace(numberFootnoteRegExp, QStringLiteral("\\1"));
     /// Remove academic degrees
-    static const QRegExp academicDegreesRegExp(QStringLiteral("(,\\s*)?(MA|PhD)\\b"));
+    static const QRegularExpression academicDegreesRegExp(QStringLiteral("(,\\s*)?(MA|PhD)\\b"));
     internalText = internalText.remove(academicDegreesRegExp);
     /// Remove email addresses
-    static const QRegExp emailAddressRegExp(QLatin1String("\\b[a-zA-Z0-9][a-zA-Z0-9._-]+[a-zA-Z0-9]@[a-z0-9][a-z0-9-]*([.][a-z0-9-]+)*([.][a-z]+)+\\b"));
+    static const QRegularExpression emailAddressRegExp(QStringLiteral("\\b[a-zA-Z0-9][a-zA-Z0-9._-]+[a-zA-Z0-9]@[a-z0-9][a-z0-9-]*([.][a-z0-9-]+)*([.][a-z]+)+\\b"));
     internalText = internalText.remove(emailAddressRegExp);
 
     /// Split input string into tokens which are either name components (first or last name)
     /// or full names (composed of first and last name), depending on the input string's structure
-    static const QRegExp split(QStringLiteral("\\s*([,]+|[,]*\\b[au]nd\\b|[;]|&|\\n|\\s{4,})\\s*"));
+    static const QRegularExpression split(QStringLiteral("\\s*([,]+|[,]*\\b[au]nd\\b|[;]|&|\\n|\\s{4,})\\s*"));
     const QStringList authorTokenList = internalText.split(split, QString::SkipEmptyParts);
 
     bool containsSpace = true;

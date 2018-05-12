@@ -567,8 +567,9 @@ public:
         Q_ASSERT_X(!url.isEmpty(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url)", "url is not allowed to be empty");
 
         /// Extract filename extension (e.g. 'bib') to determine which FileExporter to use
-        static const QRegExp suffixRegExp("\\.([^.]{1,4})$");
-        const QString ending = suffixRegExp.indexIn(url.fileName()) > 0 ? suffixRegExp.cap(1) : QStringLiteral("bib");
+        static const QRegularExpression suffixRegExp(QStringLiteral("\\.([^.]{1,4})$"));
+        const QRegularExpressionMatch suffixRegExpMatch = suffixRegExp.match(url.fileName());
+        const QString ending = suffixRegExpMatch.hasMatch() ? suffixRegExpMatch.captured(1) : QStringLiteral("bib");
         FileExporter *exporter = saveFileExporter(ending);
 
         /// String list to collect error message from FileExporer

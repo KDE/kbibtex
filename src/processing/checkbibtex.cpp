@@ -20,6 +20,7 @@
 #include <QApplication>
 #include <QBuffer>
 #include <QTextStream>
+#include <QRegularExpression>
 
 #include <KLocalizedString>
 #include <KMessageBox>
@@ -86,46 +87,48 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
 
     /// define variables how to parse BibTeX's output
     static const QString warningStart = QStringLiteral("Warning--");
-    static const QRegExp warningEmptyField("empty (\\w+) in ");
-    static const QRegExp warningEmptyField2("empty (\\w+) or (\\w+) in ");
-    static const QRegExp warningThereIsBut("there's a (\\w+) but no (\\w+) in");
-    static const QRegExp warningCantUseBoth("can't use both (\\w+) and (\\w+) fields");
-    static const QRegExp warningSort2("to sort, need (\\w+) or (\\w+) in ");
-    static const QRegExp warningSort3("to sort, need (\\w+), (\\w+), or (\\w+) in ");
-    static const QRegExp errorLine("---line (\\d+)");
+    static const QRegularExpression warningEmptyField(QStringLiteral("empty (\\w+) in "));
+    static const QRegularExpression warningEmptyField2(QStringLiteral("empty (\\w+) or (\\w+) in "));
+    static const QRegularExpression warningThereIsBut(QStringLiteral("there's a (\\w+) but no (\\w+) in"));
+    static const QRegularExpression warningCantUseBoth(QStringLiteral("can't use both (\\w+) and (\\w+) fields"));
+    static const QRegularExpression warningSort2(QStringLiteral("to sort, need (\\w+) or (\\w+) in "));
+    static const QRegularExpression warningSort3(QStringLiteral("to sort, need (\\w+), (\\w+), or (\\w+) in "));
+    static const QRegularExpression errorLine(QStringLiteral("---line (\\d+)"));
 
     /// go line-by-line through BibTeX output and collect warnings/errors
     QStringList warnings;
     QString errorPlainText;
     for (const QString &line : const_cast<const QStringList &>(bibtexOuput)) {
-        if (errorLine.indexIn(line) > -1) {
+        QRegularExpressionMatch match;
+        if ((match = errorLine.match(line)).hasMatch()) {
             buffer.open(QIODevice::ReadOnly);
             QTextStream ts(&buffer);
-            for (int i = errorLine.cap(1).toInt(); i > 1; --i) {
+            bool ok = false;
+            for (int i = match.captured(1).toInt(&ok); ok && i > 1; --i) {
                 errorPlainText = ts.readLine();
                 buffer.close();
             }
         } else if (line.startsWith(QStringLiteral("Warning--"))) {
             /// is a warning ...
 
-            if (warningEmptyField.indexIn(line) > -1) {
+            if ((match = warningEmptyField.match(line)).hasMatch()) {
                 /// empty/missing field
-                warnings << i18n("Field <b>%1</b> is empty", warningEmptyField.cap(1));
-            } else if (warningEmptyField2.indexIn(line) > -1) {
+                warnings << i18n("Field <b>%1</b> is empty", match.captured(1));
+            } else if ((match = warningEmptyField2.match(line)).hasMatch()) {
                 /// two empty/missing fields
-                warnings << i18n("Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required", warningEmptyField2.cap(1), warningEmptyField2.cap(2));
-            } else if (warningThereIsBut.indexIn(line) > -1) {
+                warnings << i18n("Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required", match.captured(1), match.captured(2));
+            } else if ((match = warningThereIsBut.match(line)).hasMatch()) {
                 /// there is a field which exists but another does not exist
-                warnings << i18n("Field <b>%1</b> exists, but <b>%2</b> does not exist", warningThereIsBut.cap(1), warningThereIsBut.cap(2));
-            } else if (warningCantUseBoth.indexIn(line) > -1) {
+                warnings << i18n("Field <b>%1</b> exists, but <b>%2</b> does not exist", match.captured(1), match.captured(2));
+            } else if ((match = warningCantUseBoth.match(line)).hasMatch()) {
                 /// there are two conflicting fields, only one may be used
-                warnings << i18n("Fields <b>%1</b> and <b>%2</b> cannot be used at the same time", warningCantUseBoth.cap(1), warningCantUseBoth.cap(2));
-            } else if (warningSort2.indexIn(line) > -1) {
+                warnings << i18n("Fields <b>%1</b> and <b>%2</b> cannot be used at the same time", match.captured(1), match.captured(2));
+            } else if ((match = warningSort2.match(line)).hasMatch()) {
                 /// one out of two fields missing for sorting
-                warnings << i18n("Fields <b>%1</b> or <b>%2</b> are required to sort entry", warningSort2.cap(1), warningSort2.cap(2));
-            } else if (warningSort3.indexIn(line) > -1) {
+                warnings << i18n("Fields <b>%1</b> or <b>%2</b> are required to sort entry", match.captured(1), match.captured(2));
+            } else if ((match = warningSort3.match(line)).hasMatch()) {
                 /// one out of three fields missing for sorting
-                warnings << i18n("Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry", warningSort3.cap(1), warningSort3.cap(2), warningSort3.cap(3));
+                warnings << i18n("Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry", match.captured(1), match.captured(2), match.captured(3));
             } else {
                 /// generic/unknown warning
                 warnings << i18n("Unknown warning: %1", line.mid(warningStart.length()));

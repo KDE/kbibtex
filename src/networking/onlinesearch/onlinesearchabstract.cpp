@@ -79,7 +79,7 @@ OnlineSearchAbstract::OnlineSearchAbstract(QObject *parent)
 #ifdef HAVE_QTWIDGETS
 QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
-    static const QRegExp invalidChars(QStringLiteral("[^-a-z0-9_]"), Qt::CaseInsensitive);
+    static const QRegularExpression invalidChars(QStringLiteral("[^-a-z0-9_]"), QRegularExpression::CaseInsensitiveOption);
     const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/favicons/");
     QDir().mkpath(cacheDirectory);
     const QString fileNameStem = cacheDirectory + QString(favIconUrl()).remove(invalidChars);
@@ -114,7 +114,7 @@ void OnlineSearchAbstract::startSearchFromForm()
 
 QString OnlineSearchAbstract::name()
 {
-    static const QRegExp invalidChars("[^-a-z0-9]", Qt::CaseInsensitive);
+    static const QRegularExpression invalidChars(QStringLiteral("[^-a-z0-9]"), QRegularExpression::CaseInsensitiveOption);
     if (m_name.isEmpty())
         m_name = label().remove(invalidChars);
     return m_name;
@@ -311,12 +311,13 @@ QString OnlineSearchAbstract::encodeURL(QString rawText)
 
 QString OnlineSearchAbstract::decodeURL(QString rawText)
 {
-    static const QRegExp mimeRegExp("%([0-9A-Fa-f]{2})");
-    while (mimeRegExp.indexIn(rawText) >= 0) {
+    static const QRegularExpression mimeRegExp(QStringLiteral("%([0-9A-Fa-f]{2})"));
+    QRegularExpressionMatch mimeRegExpMatch;
+    while ((mimeRegExpMatch = mimeRegExp.match(rawText)).hasMatch()) {
         bool ok = false;
-        QChar c(mimeRegExp.cap(1).toInt(&ok, 16));
+        QChar c(mimeRegExpMatch.captured(1).toInt(&ok, 16));
         if (ok)
-            rawText = rawText.replace(mimeRegExp.cap(0), c);
+            rawText = rawText.replace(mimeRegExpMatch.captured(0), c);
     }
     rawText = rawText.replace(QStringLiteral("&amp;"), QStringLiteral("&")).replace(QLatin1Char('+'), QStringLiteral(" "));
     return rawText;
@@ -534,10 +535,11 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
         for (Value::Iterator it = monthValue.begin(); it != monthValue.end(); ++it) {
             const QString valueItem = PlainTextValue::text(*it);
 
-            static const QRegExp longMonth = QRegExp(QStringLiteral("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*"), Qt::CaseInsensitive);
-            if (valueItem.indexOf(longMonth) == 0) {
+            static const QRegularExpression longMonth = QRegularExpression(QStringLiteral("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*"), QRegularExpression::CaseInsensitiveOption);
+            const QRegularExpressionMatch longMonthMatch = longMonth.match(valueItem);
+            if (longMonthMatch.hasMatch()) {
                 it = monthValue.erase(it);
-                it = monthValue.insert(it, QSharedPointer<MacroKey>(new MacroKey(valueItem.left(3).toLower())));
+                it = monthValue.insert(it, QSharedPointer<MacroKey>(new MacroKey(longMonthMatch.captured(1).toLower())));
                 updated = true;
             }
         }
@@ -572,8 +574,9 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
         bool gotChanged = false;
         for (Value::Iterator it = v.begin(); it != v.end();) {
             const QString viText = PlainTextValue::text(*it);
-            if (KBibTeX::doiRegExp.indexIn(viText) >= 0) {
-                doiSet.insert(KBibTeX::doiRegExp.cap());
+            const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(viText);
+            if (doiRegExpMatch.hasMatch()) {
+                doiSet.insert(doiRegExpMatch.captured());
                 it = v.erase(it);
                 gotChanged = true;
             } else
@@ -589,11 +592,14 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
                 doiValue.append(QSharedPointer<PlainText>(new PlainText(doi)));
             entry->insert(Entry::ftDOI, doiValue);
         }
-    } else if (!entry->contains(Entry::ftDOI) && KBibTeX::doiRegExp.indexIn(entry->id()) >= 0) {
-        /// If entry id looks like a DOI, add a DOI field
-        Value doiValue;
-        doiValue.append(QSharedPointer<PlainText>(new PlainText(KBibTeX::doiRegExp.cap())));
-        entry->insert(Entry::ftDOI, doiValue);
+    } else if (!entry->contains(Entry::ftDOI)) {
+        const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(entry->id());
+        if (doiRegExpMatch.hasMatch()) {
+            /// If entry id looks like a DOI, add a DOI field
+            Value doiValue;
+            doiValue.append(QSharedPointer<PlainText>(new PlainText(doiRegExpMatch.captured())));
+            entry->insert(Entry::ftDOI, doiValue);
+        }
     }
 
     /// Referenced strings or entries do not exist in the search result

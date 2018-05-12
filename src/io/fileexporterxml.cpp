@@ -17,7 +17,7 @@
 
 #include "fileexporterxml.h"
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 
 #include "kbibtex.h"
@@ -148,7 +148,7 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             stream << valueToXML(internal, key) << endl;
             stream << "  </" << key << "s>" << endl;
         } else if (key == Entry::ftAbstract) {
-            static const QRegExp abstractRegExp(QStringLiteral("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*"), Qt::CaseInsensitive);
+            static const QRegularExpression abstractRegExp(QStringLiteral("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*"), QRegularExpression::CaseInsensitiveOption);
             /// clean up HTML artifacts
             QString text = valueToXML(value);
             text = text.remove(abstractRegExp);
@@ -250,8 +250,8 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
 
 QString FileExporterXML::cleanXML(const QString &text)
 {
-    static const QRegExp removal(QStringLiteral("[{}]+"));
-    static const QRegExp lineBreaksRegExp(QStringLiteral("[ \\t]*[\\n\\r]"));
+    static const QRegularExpression removal(QStringLiteral("[{}]+"));
+    static const QRegularExpression lineBreaksRegExp(QStringLiteral("[ \\t]*[\\n\\r]"));
     QString result = text;
     result = result.replace(lineBreaksRegExp, QStringLiteral("<br/>")).remove(removal).remove(QStringLiteral("\\ensuremath"));
     return result;

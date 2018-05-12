@@ -23,6 +23,7 @@
 #include <QString>
 #include <QStringList>
 #include <QDebug>
+#include <QRegularExpression>
 
 #ifdef HAVE_KF5
 #include <KSharedConfig>
@@ -40,7 +41,7 @@ uint qHash(const QSharedPointer<ValueItem> &valueItem)
     return qHash(valueItem->id());
 }
 
-const QRegExp ValueItem::ignoredInSorting = QRegExp("[{}\\\\]+");
+const QRegularExpression ValueItem::ignoredInSorting(QStringLiteral("[{}\\\\]+"));
 
 ValueItem::ValueItem()
         : internalId(++internalIdCounter)
@@ -215,8 +216,6 @@ QDebug operator<<(QDebug dbg, const Person &person) {
 }
 
 
-const QRegExp MacroKey::validMacroKey = QRegExp("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$", Qt::CaseInsensitive);
-
 MacroKey::MacroKey(const MacroKey &other)
         : m_text(other.m_text)
 {
@@ -242,8 +241,9 @@ QString MacroKey::text() const
 bool MacroKey::isValid()
 {
     const QString t = text();
-    int idx = validMacroKey.indexIn(t);
-    return idx > -1 && validMacroKey.cap(0) == t;
+    static const QRegularExpression validMacroKey(QStringLiteral("^[a-z][-.:/+_a-z0-9]*$|^[0-9]+$"), QRegularExpression::CaseInsensitiveOption);
+    const QRegularExpressionMatch match = validMacroKey.match(t);
+    return match.hasMatch() && match.captured(0) == t;
 }
 
 void MacroKey::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)

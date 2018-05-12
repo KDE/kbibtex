@@ -72,14 +72,14 @@ public:
 
     static const QString Months[], MonthsTriple[];
 
-    static const QRegExp fileListSeparatorRegExp;
-    static const QRegExp fileRegExp;
-    static const QRegExp urlRegExp;
-    static const QRegExp doiRegExp;
-    static const QRegExp mendeleyFileRegExp;
+    static const QRegularExpression fileListSeparatorRegExp;
+    static const QRegularExpression fileRegExp;
+    static const QRegularExpression urlRegExp;
+    static const QRegularExpression doiRegExp;
+    static const QRegularExpression mendeleyFileRegExp;
+    static const QRegularExpression domainNameRegExp;
+    static const QRegularExpression htmlRegExp;
     static const QString doiUrlPrefix; ///< use FileInfo::doiUrlPrefix() instead
-    static const QRegExp domainNameRegExp;
-    static const QRegExp htmlRegExp;
 
     static bool isLocalOrRelative(const QUrl &url);
 

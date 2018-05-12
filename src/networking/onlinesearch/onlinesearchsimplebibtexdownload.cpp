@@ -19,6 +19,7 @@
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QRegularExpression>
 
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
@@ -60,19 +61,24 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
 
         if (bibTeXcode.contains(QStringLiteral("<html")) || bibTeXcode.contains(QStringLiteral("<HTML"))) {
             /// Replace all linebreak-like characters, in case they occur inside the BibTeX code
-            static const QRegExp htmlLinebreakRegExp(QStringLiteral("<[/]?(br|p)[^>]*[/]?>"));
+            static const QRegularExpression htmlLinebreakRegExp(QStringLiteral("<[/]?(br|p)[^>]*[/]?>"));
             bibTeXcode = bibTeXcode.remove(htmlLinebreakRegExp);
 
             /// Find first BibTeX entry in HTML code, clip away all HTML code before that
-            static const QRegExp elementTypeRegExp(QStringLiteral("[@]\\S+\\{"));
+            static const QRegularExpression elementTypeRegExp(QStringLiteral("[@]\\S+\\{"));
             int p1 = -1;
-            /// hop over JavaScript's "@import" statements
-            while ((p1 = bibTeXcode.indexOf(elementTypeRegExp, p1 + 1)) >= 0 && elementTypeRegExp.cap(0) == QStringLiteral("@import{"));
+            QRegularExpressionMatchIterator elementTypeRegExpMatchIt = elementTypeRegExp.globalMatch(bibTeXcode);
+            while (p1 < 0 && elementTypeRegExpMatchIt.hasNext()) {
+                const QRegularExpressionMatch elementTypeRegExpMatch = elementTypeRegExpMatchIt.next();
+                /// Hop over JavaScript's "@import" statements
+                if (elementTypeRegExpMatch.captured(0) != QStringLiteral("@import{"))
+                    p1 = elementTypeRegExpMatch.capturedStart();
+            }
             if (p1 > 1)
                 bibTeXcode = bibTeXcode.mid(p1);
 
             /// Find HTML code after BibTeX code, clip that away, too
-            static const QRegExp htmlContinuationRegExp(QStringLiteral("<[/]?\\S+"));
+            static const QRegularExpression htmlContinuationRegExp(QStringLiteral("<[/]?\\S+"));
             p1 = bibTeXcode.indexOf(htmlContinuationRegExp);
             if (p1 > 1)
                 bibTeXcode = bibTeXcode.left(p1 - 1);

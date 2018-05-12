@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -149,8 +149,10 @@ public:
         result.terms.clear();
         if (comboBoxCombination->currentIndex() == 2) /// exact phrase
             result.terms << comboBoxFilterText->lineEdit()->text();
-        else /// any or every word
-            result.terms = comboBoxFilterText->lineEdit()->text().split(QRegExp(QStringLiteral("\\s+")), QString::SkipEmptyParts);
+        else { /// any or every word
+            static const QRegularExpression sequenceOfSpacesRegExp(QStringLiteral("\\s+"));
+            result.terms = comboBoxFilterText->lineEdit()->text().split(sequenceOfSpacesRegExp, QString::SkipEmptyParts);
+        }
         result.field = comboBoxField->currentIndex() == 0 ? QString() : comboBoxField->itemData(comboBoxField->currentIndex(), Qt::UserRole).toString();
         result.searchPDFfiles = buttonSearchPDFfiles->isChecked();
 

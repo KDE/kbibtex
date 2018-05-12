@@ -22,6 +22,8 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrlQuery>
+#include <QRegularExpression>
+#include <QRegularExpressionMatchIterator>
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
@@ -49,13 +51,13 @@ public:
     }
 
     void sanitizeBibTeXCode(QString &code) {
-        const QRegExp htmlEncodedChar("&#(\\d+);");
-        while (htmlEncodedChar.indexIn(code) >= 0) {
+        static const QRegularExpression htmlEncodedChar(QStringLiteral("&#(\\d+);"));
+        QRegularExpressionMatch match;
+        while ((match = htmlEncodedChar.match(code)).hasMatch()) {
             bool ok = false;
-            QChar c(htmlEncodedChar.cap(1).toInt(&ok));
-            if (ok) {
-                code = code.replace(htmlEncodedChar.cap(0), c);
-            }
+            QChar c(match.captured(1).toInt(&ok));
+            if (ok)
+                code = code.replace(match.captured(0), c);
         }
 
         /// ACM's BibTeX code does not properly use various commands.
@@ -155,10 +157,11 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
     if (handleErrors(reply)) {
         const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
 
-        static const QRegExp citationUrlRegExp(QStringLiteral("citation.cfm\\?id=[0-9][0-9.]+[0-9]"), Qt::CaseInsensitive);
-        int p1 = -1;
-        while ((p1 = citationUrlRegExp.indexIn(htmlSource, p1 + 1)) >= 0) {
-            const QString newUrl = d->acmPortalBaseUrl + citationUrlRegExp.cap(0);
+        static const QRegularExpression citationUrlRegExp(QStringLiteral("citation.cfm\\?id=[0-9][0-9.]+[0-9]"), QRegularExpression::CaseInsensitiveOption);
+        QRegularExpressionMatchIterator citationUrlRegExpMatchIt = citationUrlRegExp.globalMatch(htmlSource);
+        while (citationUrlRegExpMatchIt.hasNext()) {
+            const QRegularExpressionMatch citationUrlRegExpMatch = citationUrlRegExpMatchIt.next();
+            const QString newUrl = d->acmPortalBaseUrl + citationUrlRegExpMatch.captured(0);
             d->citationUrls << newUrl;
         }
 
@@ -196,14 +199,20 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
     if (handleErrors(reply)) {
         const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
 
-        static const QRegExp idRegExp(QStringLiteral("citation_abstract_html_url\" content=\"http://dl.acm.org/citation.cfm\\?id=([0-9]+)[.]([0-9]+)"));
-        int p = -1;
-        while ((p = idRegExp.indexIn(htmlSource, p + 1)) > 0) {
-            const QString parentId = idRegExp.cap(1);
-            const QString id = idRegExp.cap(2);
+        static const QRegularExpression idRegExp(QStringLiteral("citation_abstract_html_url\" content=\"http://dl.acm.org/citation.cfm\\?id=([0-9]+)[.]([0-9]+)"));
+        QRegularExpressionMatchIterator idRegExpMatchIt = idRegExp.globalMatch(htmlSource);
+        while (idRegExpMatchIt.hasNext()) {
+            const QRegularExpressionMatch idRegExpMatch = idRegExpMatchIt.next();
+            const QString parentId = idRegExpMatch.captured(1);
+            const QString id = idRegExpMatch.captured(2);
             if (!parentId.isEmpty() && !id.isEmpty()) {
                 const QUrl bibTeXUrl(d->acmPortalBaseUrl + QString(QStringLiteral("/downformats.cfm?id=%1&parent_id=%2&expformat=bibtex")).arg(id, parentId));
                 bibTeXUrls.insert(bibTeXUrl);
+            } else {
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "No citation link found in " << reply->url().toDisplayString() << "  parentId=" << parentId;
+                stopSearch(resultNoError);
+                emit progress(curStep = numSteps, numSteps);
+                return;
             }
         }
         if (bibTeXUrls.isEmpty())

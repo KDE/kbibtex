@@ -19,7 +19,6 @@
 #define BIBTEXVALUE_H
 
 #include <QVector>
-#include <QRegExp>
 #include <QVariant>
 #include <QSharedPointer>
 
@@ -72,7 +71,7 @@ public:
 protected:
     /// contains text fragments to be removed before performing a "contains pattern" operation
     /// includes among other "{" and "}"
-    static const QRegExp ignoredInSorting;
+    static const QRegularExpression ignoredInSorting;
 
 private:
     /// Unique numeric identifier
@@ -173,7 +172,6 @@ public:
 
 protected:
     QString m_text;
-    static const QRegExp validMacroKey;
 };
 
 QDebug operator<<(QDebug dbg, const MacroKey &macrokey);

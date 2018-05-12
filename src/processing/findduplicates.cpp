@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,6 +23,7 @@
 #include <QProgressDialog>
 #include <QApplication>
 #include <QDate>
+#include <QRegularExpression>
 
 #include <KLocalizedString>
 
@@ -300,7 +301,7 @@ public:
      * @return distance between both sentences
      */
     double levenshteinDistance(const QString &s, const QString &t) {
-        const QRegExp nonWordRegExp("[^a-z']+", Qt::CaseInsensitive);
+        static const QRegularExpression nonWordRegExp(QStringLiteral("[^a-z']+"), QRegularExpression::CaseInsensitiveOption);
         if (s.isEmpty() || t.isEmpty()) return 1.0;
         return levenshteinDistance(s.toLower().split(nonWordRegExp, QString::SkipEmptyParts), t.toLower().split(nonWordRegExp, QString::SkipEmptyParts));
     }

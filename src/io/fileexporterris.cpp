@@ -17,7 +17,7 @@
 
 #include "fileexporterris.h"
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 
 #include "entry.h"
@@ -179,7 +179,8 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
             // FIXME for local files, use "L1"
             result &= writeKeyValue(stream, QStringLiteral("UR"), PlainTextValue::text(value));
         } else if (key == Entry::ftPages) {
-            QStringList pageRange = PlainTextValue::text(value).split(QRegExp(QString("--|-|%1").arg(QChar(0x2013))));
+            static const QRegularExpression splitRegExp(QString(QStringLiteral("-{1,2}|%1")).arg(QChar(0x2013)));
+            QStringList pageRange = PlainTextValue::text(value).split(splitRegExp);
             if (pageRange.count() == 2) {
                 result &= writeKeyValue(stream, QStringLiteral("SP"), pageRange[ 0 ]);
                 result &= writeKeyValue(stream, QStringLiteral("EP"), pageRange[ 1 ]);

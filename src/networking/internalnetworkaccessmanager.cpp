@@ -20,7 +20,7 @@
 #include <ctime>
 
 #include <QStringList>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QNetworkAccessManager>
 #include <QNetworkCookieJar>
 #include <QNetworkCookie>
@@ -46,14 +46,15 @@ class InternalNetworkAccessManager::HTTPEquivCookieJar: public QNetworkCookieJar
 
 public:
     void mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url) {
-        static QRegExp cookieContent("^([^\"=; ]+)=([^\"=; ]+).*\\bpath=([^\"=; ]+)", Qt::CaseInsensitive);
+        static const QRegularExpression cookieContent("^([^\"=; ]+)=([^\"=; ]+).*\\bpath=([^\"=; ]+)", QRegularExpression::CaseInsensitiveOption);
         int p1 = -1;
+        QRegularExpressionMatch cookieContentRegExpMatch;
         if ((p1 = htmlCode.toLower().indexOf(QStringLiteral("http-equiv=\"set-cookie\""), 0, Qt::CaseInsensitive)) >= 5
                 && (p1 = htmlCode.lastIndexOf(QStringLiteral("<meta"), p1, Qt::CaseInsensitive)) >= 0
                 && (p1 = htmlCode.indexOf(QStringLiteral("content=\""), p1, Qt::CaseInsensitive)) >= 0
-                && cookieContent.indexIn(htmlCode.mid(p1 + 9, 256)) >= 0) {
-            const QString key = cookieContent.cap(1);
-            const QString value = cookieContent.cap(2);
+                && (cookieContentRegExpMatch = cookieContent.match(htmlCode.mid(p1 + 9, 512))).hasMatch()) {
+            const QString key = cookieContentRegExpMatch.captured(1);
+            const QString value = cookieContentRegExpMatch.captured(2);
             QList<QNetworkCookie> cookies = cookiesForUrl(url);
             cookies.append(QNetworkCookie(key.toLatin1(), value.toLatin1()));
             setCookiesFromUrl(cookies, url);

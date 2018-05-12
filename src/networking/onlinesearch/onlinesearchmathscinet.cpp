@@ -23,6 +23,7 @@
 #include <QNetworkAccessManager>
 #include <QMap>
 #include <QUrlQuery>
+#include <QRegularExpression>
 
 #include <KLocalizedString>
 
@@ -182,10 +183,12 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         }
         query.addQueryItem(QStringLiteral("fmt"), QStringLiteral("bibtex"));
 
-        int p = -1, count = 0;
-        static const QRegExp checkBoxRegExp(QStringLiteral("<input class=\"hlCheckBox\" type=\"checkbox\" name=\"b\" value=\"(\\d+)\""));
-        while (count < d->numResults && (p = checkBoxRegExp.indexIn(htmlText, p + 1)) >= 0) {
-            query.addQueryItem(QStringLiteral("b"), checkBoxRegExp.cap(1));
+        int count = 0;
+        static const QRegularExpression checkBoxRegExp(QStringLiteral("<input class=\"hlCheckBox\" type=\"checkbox\" name=\"b\" value=\"(\\d+)\""));
+        QRegularExpressionMatchIterator checkBoxRegExpMatchIt = checkBoxRegExp.globalMatch(htmlText);
+        while (count < d->numResults && checkBoxRegExpMatchIt.hasNext()) {
+            const QRegularExpressionMatch checkBoxRegExpMatch = checkBoxRegExpMatchIt.next();
+            query.addQueryItem(QStringLiteral("b"), checkBoxRegExpMatch.captured(1));
             ++count;
         }
 

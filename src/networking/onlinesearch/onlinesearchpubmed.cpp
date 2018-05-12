@@ -22,6 +22,7 @@
 #include <QTimer>
 #include <QStandardPaths>
 #include <QCoreApplication>
+#include <QRegularExpression>
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
@@ -55,7 +56,7 @@ public:
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         /// used to auto-detect PMIDs (unique identifiers for documents) in free text search
-        static const QRegExp pmidRegExp(QStringLiteral("^[0-9]{6,}$"));
+        static const QRegularExpression pmidRegExp(QStringLiteral("^[0-9]{6,}$"));
 
         QString url = pubMedUrlPrefix + QStringLiteral("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
 
@@ -70,7 +71,7 @@ public:
 
         /// add words from "free text" field, but auto-detect PMIDs
         for (const QString &text : freeTextWords)
-            queryFragments.append(text + (pmidRegExp.indexIn(text) >= 0 ? QStringLiteral("") : QStringLiteral("[All Fields]")));
+            queryFragments.append(text + (pmidRegExp.match(text).hasMatch() ? QStringLiteral("") : QStringLiteral("[All Fields]")));
 
         /// add words from "year" field
         for (const QString &text : yearWords)

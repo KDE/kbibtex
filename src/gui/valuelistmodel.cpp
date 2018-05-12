@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -218,7 +218,7 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
         } else
             return QVariant(values[index.row()].count);
     } else if (role == SortRole) {
-        static const QRegExp ignoredInSorting(QStringLiteral("[{}\\\\]+"));
+        static const QRegularExpression ignoredInSorting(QStringLiteral("[{}\\\\]+"));
 
         QString buffer = values[index.row()].sortBy.isEmpty() ? values[index.row()].text : values[index.row()].sortBy;
         buffer = buffer.remove(ignoredInSorting).toLower();

@@ -20,6 +20,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrlQuery>
+#include <QRegularExpression>
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
@@ -162,9 +163,10 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
         /// extract all unique DOI from HTML code
         QStringList uniqueDOIs;
-        int p = -6;
-        while ((p = KBibTeX::doiRegExp.indexIn(htmlText, p + 6)) >= 0) {
-            QString doi = KBibTeX::doiRegExp.cap(0);
+        QRegularExpressionMatchIterator doiRegExpMatchIt = KBibTeX::doiRegExp.globalMatch(htmlText);
+        while (doiRegExpMatchIt.hasNext()) {
+            const QRegularExpressionMatch doiRegExpMatch = doiRegExpMatchIt.next();
+            QString doi = doiRegExpMatch.captured(0);
             // FIXME DOI RegExp accepts DOIs with question marks, causes problems here
             const int p = doi.indexOf(QLatin1Char('?'));
             if (p > 0) doi = doi.left(p);
@@ -228,10 +230,11 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
 {
     OnlineSearchAbstract::sanitizeEntry(entry);
 
-    if (KBibTeX::doiRegExp.indexIn(entry->id()) == 0) {
+    const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(entry->id());
+    if (doiRegExpMatch.hasMatch()) {
         /// entry ID is a DOI
         Value v;
-        v.append(QSharedPointer<VerbatimText>(new VerbatimText(KBibTeX::doiRegExp.cap(0))));
+        v.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(0))));
         entry->insert(Entry::ftDOI, v);
     }
 

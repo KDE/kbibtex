@@ -32,6 +32,7 @@
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QMimeData>
+#include <QRegularExpression>
 
 #include <KRun>
 #include <KMessageBox>
@@ -161,13 +162,13 @@ public:
 
         const EncoderLaTeX &encoder = EncoderLaTeX::instance();
         const QString encodedText = encoder.decode(text);
+        static const QRegularExpression invalidCharsForReferenceRegExp(QStringLiteral("[^-_:/a-zA-Z0-9]"));
         if (encodedText.isEmpty())
             return true;
-
         else if (typeFlag == KBibTeX::tfPlainText) {
             value.append(QSharedPointer<PlainText>(new PlainText(encodedText)));
             return true;
-        } else if (typeFlag == KBibTeX::tfReference && !encodedText.contains(QRegExp("[^-_:/a-zA-Z0-9]"))) {
+        } else if (typeFlag == KBibTeX::tfReference && !encodedText.contains(invalidCharsForReferenceRegExp)) {
             value.append(QSharedPointer<MacroKey>(new MacroKey(encodedText)));
             return true;
         } else if (typeFlag == KBibTeX::tfPerson) {

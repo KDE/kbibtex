@@ -42,7 +42,7 @@ public:
     }
 
     QString normalizeText(const QString &input) const {
-        static const QRegExp unwantedChars = QRegExp("[^-_:/=+a-zA-Z0-9]+");
+        static const QRegularExpression unwantedChars(QStringLiteral("[^-_:/=+a-zA-Z0-9]+"));
         return EncoderLaTeX::instance().convertToPlainAscii(input).remove(unwantedChars);
     }
 
@@ -69,7 +69,7 @@ public:
     QString translateTitleToken(const Entry &entry, const struct IdSuggestionTokenInfo &tti, bool removeSmallWords) const {
         QString result;
         bool first = true;
-        static const QRegExp sequenceOfSpaces(QStringLiteral("\\s+"));
+        static const QRegularExpression sequenceOfSpaces(QStringLiteral("\\s+"));
         const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
         int index = 0;
         for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it, ++index) {
@@ -161,7 +161,7 @@ public:
     }
 
     QString translateJournalToken(const Entry &entry, const struct IdSuggestionTokenInfo &jti, bool removeSmallWords) const {
-        static const QRegExp sequenceOfSpaces(QStringLiteral("\\s+"));
+        static const QRegularExpression sequenceOfSpaces(QStringLiteral("\\s+"));
         QString journalName = PlainTextValue::text(entry.value(Entry::ftJournal));
         journalName = JournalAbbreviations::self()->toShortName(journalName);
         const QStringList journalWords = journalName.split(sequenceOfSpaces, QString::SkipEmptyParts);

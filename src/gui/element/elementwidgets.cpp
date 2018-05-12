@@ -607,17 +607,18 @@ bool FilesWidget::apply(QSharedPointer<Element> element) const
         const QSharedPointer<const VerbatimText> verbatimText = valueItem.dynamicCast<const VerbatimText>();
         if (!verbatimText.isNull()) {
             const QString text = verbatimText->text();
-            if (KBibTeX::urlRegExp.indexIn(text) > -1) {
+            QRegularExpressionMatch match;
+            if ((match = KBibTeX::urlRegExp.match(text)).hasMatch()) {
                 /// add full URL
-                VerbatimText *newVT = new VerbatimText(KBibTeX::urlRegExp.cap(0));
+                VerbatimText *newVT = new VerbatimText(match.captured(0));
                 /// test for duplicates
                 if (urlValue.contains(*newVT))
                     delete newVT;
                 else
                     urlValue.append(QSharedPointer<VerbatimText>(newVT));
-            } else if (KBibTeX::doiRegExp.indexIn(text) > -1) {
+            } else if ((match = KBibTeX::doiRegExp.match(text)).hasMatch()) {
                 /// add DOI
-                VerbatimText *newVT = new VerbatimText(KBibTeX::doiRegExp.cap(0));
+                VerbatimText *newVT = new VerbatimText(match.captured(0));
                 /// test for duplicates
                 if (doiValue.contains(*newVT))
                     delete newVT;
@@ -791,8 +792,9 @@ void OtherFieldsWidget::listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetIte
         currentUrl = QUrl(item->text(1));
         validUrl = currentUrl.isValid() && currentUrl.isLocalFile() & QFileInfo::exists(currentUrl.toLocalFile());
         if (!validUrl) {
-            if (KBibTeX::urlRegExp.indexIn(item->text(1)) > -1) {
-                currentUrl = QUrl(KBibTeX::urlRegExp.cap(0));
+            const QRegularExpressionMatch urlRegExpMatch = KBibTeX::urlRegExp.match(item->text(1));
+            if (urlRegExpMatch.hasMatch()) {
+                currentUrl = QUrl(urlRegExpMatch.captured(0));
                 validUrl = currentUrl.isValid();
                 buttonOpen->setEnabled(validUrl);
             }

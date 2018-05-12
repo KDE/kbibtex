@@ -19,6 +19,7 @@
 
 #include <KSharedConfig>
 #include <KConfigGroup>
+#include <QRegularExpression>
 
 #include "bibtexfields.h"
 #include "bibtexentries.h"
@@ -98,7 +99,7 @@ bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &r
 
         /// compare each person in both values
         for (Value::Iterator itA = valueA.begin(), itB = valueB.begin(); itA != valueA.end() &&  itB != valueB.end(); ++itA, ++itB) {
-            static const QRegExp curlyRegExp(QStringLiteral("[{}]+"));
+            static const QRegularExpression curlyRegExp(QStringLiteral("[{}]+"));
 
             QSharedPointer<Person>  personA = (*itA).dynamicCast<Person>();
             QSharedPointer<Person>  personB = (*itB).dynamicCast<Person>();

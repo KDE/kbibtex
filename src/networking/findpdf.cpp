@@ -87,28 +87,31 @@ public:
         if (!ok) depth = 0;
 
         /// regular expressions to guess links to follow
-        static const QRegExp anchorRegExp[5] = {
-            QRegExp(QString(QStringLiteral("<a[^>]*href=\"([^\"]*%1[^\"]*[.]pdf)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-            QRegExp(QString(QStringLiteral("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*[.]pdf")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-            QRegExp(QString(QStringLiteral("<a[^>]*href=\"([^\"]*%1[^\"]*)\"")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-            QRegExp(QString(QStringLiteral("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*\\b")).arg(QRegExp::escape(term)), Qt::CaseInsensitive),
-            QRegExp(QStringLiteral("<a[^>]*href=\"([^\"]+)\""), Qt::CaseInsensitive) /// any link
+        const QVector<QRegularExpression> specificAnchorRegExp = {
+            QRegularExpression(QString(QStringLiteral("<a[^>]*href=\"([^\"]*%1[^\"]*[.]pdf)\"")).arg(QRegularExpression::escape(term)), QRegularExpression::CaseInsensitiveOption),
+            QRegularExpression(QString(QStringLiteral("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*[.]pdf")).arg(QRegularExpression::escape(term)), QRegularExpression::CaseInsensitiveOption),
+            QRegularExpression(QString(QStringLiteral("<a[^>]*href=\"([^\"]*%1[^\"]*)\"")).arg(QRegularExpression::escape(term)), QRegularExpression::CaseInsensitiveOption),
+            QRegularExpression(QString(QStringLiteral("<a[^>]*href=\"([^\"]+)\"[^>]*>[^<]*%1[^<]*\\b")).arg(QRegularExpression::escape(term)), QRegularExpression::CaseInsensitiveOption)
         };
+        static const QRegularExpression genericAnchorRegExp = QRegularExpression(QStringLiteral("<a[^>]*href=\"([^\"]+)\""), QRegularExpression::CaseInsensitiveOption);
 
         bool gotLink = false;
-        for (int i = 0; !gotLink && i < 4; ++i) {
-            if (anchorRegExp[i].indexIn(text) >= 0) {
-                const QUrl url = QUrl::fromEncoded(anchorRegExp[i].cap(1).toLatin1());
+        for (const QRegularExpression &anchorRegExp : specificAnchorRegExp) {
+            const QRegularExpressionMatch match = anchorRegExp.match(text);
+            if (match.hasMatch()) {
+                const QUrl url = QUrl::fromEncoded(match.captured(1).toLatin1());
                 queueUrl(reply->url().resolved(url), term, origin, depth - 1);
                 gotLink = true;
+                break;
             }
         }
 
-        if (!gotLink && text.count(anchorRegExp[4]) == 1) {
+        if (!gotLink) {
             /// this is only the last resort:
             /// to follow the first link found in the HTML document
-            if (anchorRegExp[4].indexIn(text) >= 0) {
-                const QUrl url = QUrl::fromEncoded(anchorRegExp[4].cap(1).toLatin1());
+            const QRegularExpressionMatch match = genericAnchorRegExp.match(text);
+            if (match.hasMatch()) {
+                const QUrl url = QUrl::fromEncoded(match.captured(1).toLatin1());
                 queueUrl(reply->url().resolved(url), term, origin, depth - 1);
             }
         }
@@ -141,44 +144,42 @@ public:
 
     void processSpringerLink(QNetworkReply *reply, const QString &text)
     {
-        static const QRegExp fulltextPDFlink(QStringLiteral("href=\"([^\"]+/fulltext.pdf)\""));
-
-        if (fulltextPDFlink.indexIn(text) > 0) {
+        static const QRegularExpression fulltextPDFlink(QStringLiteral("href=\"([^\"]+/fulltext.pdf)\""));
+        const QRegularExpressionMatch match = fulltextPDFlink.match(text);
+        if (match.hasMatch()) {
             bool ok = false;
             int depth = reply->property(depthProperty).toInt(&ok);
             if (!ok) depth = 0;
 
-            QUrl url(fulltextPDFlink.cap(1));
+            const QUrl url(match.captured(1));
             queueUrl(reply->url().resolved(url), QString(), QStringLiteral("springerlink"), depth - 1);
         }
     }
 
     void processCiteSeerX(QNetworkReply *reply, const QString &text)
     {
-        static const QRegExp downloadPDFlink(QStringLiteral("href=\"(/viewdoc/download[^\"]+type=pdf)\""));
-
-        if (downloadPDFlink.indexIn(text) > 0) {
+        static const QRegularExpression downloadPDFlink(QStringLiteral("href=\"(/viewdoc/download[^\"]+type=pdf)\""));
+        const QRegularExpressionMatch match = downloadPDFlink.match(text);
+        if (match.hasMatch()) {
             bool ok = false;
             int depth = reply->property(depthProperty).toInt(&ok);
             if (!ok) depth = 0;
 
-            QUrl url(QUrl::fromEncoded(downloadPDFlink.cap(1).toLatin1()));
+            const QUrl url = QUrl::fromEncoded(match.captured(1).toLatin1());
             queueUrl(reply->url().resolved(url), QString(), QStringLiteral("citeseerx"), depth - 1);
         }
     }
 
     void processACMDigitalLibrary(QNetworkReply *reply, const QString &text)
     {
-        static const QRegExp downloadPDFlink(QStringLiteral("href=\"(ft_gateway.cfm\\?id=\\d+&ftid=\\d+&dwn=1&CFID=\\d+&CFTOKEN=\\d+)\""));
-
-        qCDebug(LOG_KBIBTEX_NETWORKING) << "processACMDigitalLibrary  " << downloadPDFlink.pattern();
-        if (downloadPDFlink.indexIn(text) > 0) {
-            qCDebug(LOG_KBIBTEX_NETWORKING) << "processACMDigitalLibrary  " << downloadPDFlink.cap(1);
+        static const QRegularExpression downloadPDFlink(QStringLiteral("href=\"(ft_gateway.cfm\\?id=\\d+&ftid=\\d+&dwn=1&CFID=\\d+&CFTOKEN=\\d+)\""));
+        const QRegularExpressionMatch match = downloadPDFlink.match(text);
+        if (match.hasMatch()) {
             bool ok = false;
             int depth = reply->property(depthProperty).toInt(&ok);
             if (!ok) depth = 0;
 
-            QUrl url(QUrl::fromEncoded(QString(QStringLiteral("https://dl.acm.org/") + downloadPDFlink.cap(1)).toLatin1()));
+            const QUrl url = QUrl::fromEncoded(match.captured(1).toLatin1());
             queueUrl(reply->url().resolved(url), QString(), QStringLiteral("acmdl"), depth - 1);
         }
     }
@@ -300,13 +301,17 @@ bool FindPDF::search(const Entry &entry)
     for (const QString &field : const_cast<const QStringList &>(urlFields)) {
         if (entry.contains(field)) {
             const QString fieldText = PlainTextValue::text(entry.value(field));
-            int p = -1;
-            while ((p = KBibTeX::doiRegExp.indexIn(fieldText, p + 1)) >= 0)
-                d->queueUrl(QUrl(FileInfo::doiUrlPrefix() + KBibTeX::doiRegExp.cap(0)), fieldText, Entry::ftDOI, maxDepth);
+            QRegularExpressionMatchIterator doiRegExpMatchIt = KBibTeX::doiRegExp.globalMatch(fieldText);
+            while (doiRegExpMatchIt.hasNext()) {
+                const QRegularExpressionMatch doiRegExpMatch = doiRegExpMatchIt.next();
+                d->queueUrl(QUrl(FileInfo::doiUrlPrefix() + doiRegExpMatch.captured(0)), fieldText, Entry::ftDOI, maxDepth);
+            }
 
-            p = -1;
-            while ((p = KBibTeX::urlRegExp.indexIn(fieldText, p + 1)) >= 0)
-                d->queueUrl(QUrl(KBibTeX::urlRegExp.cap(0)), searchWords, Entry::ftUrl, maxDepth);
+            QRegularExpressionMatchIterator urlRegExpMatchIt = KBibTeX::urlRegExp.globalMatch(fieldText);
+            while (urlRegExpMatchIt.hasNext()) {
+                QRegularExpressionMatch urlRegExpMatch = urlRegExpMatchIt.next();
+                d->queueUrl(QUrl(urlRegExpMatch.captured(0)), searchWords, Entry::ftUrl, maxDepth);
+            }
         }
     }
 
@@ -404,28 +409,28 @@ void FindPDF::downloadFinished()
                 const QString text = QString::fromUtf8(data.constData());
 
                 /// regular expression to check if this is a Google Scholar result page
-                static const QRegExp googleScholarTitleRegExp(QStringLiteral("<title>[^>]* - Google Scholar</title>"));
+                static const QRegularExpression googleScholarTitleRegExp(QStringLiteral("<title>[^>]* - Google Scholar</title>"));
                 /// regular expression to check if this is a SpringerLink page
-                static const QRegExp springerLinkTitleRegExp(QStringLiteral("<title>[^>]* - Springer - [^>]*</title>"));
+                static const QRegularExpression springerLinkTitleRegExp(QStringLiteral("<title>[^>]* - Springer - [^>]*</title>"));
                 /// regular expression to check if this is a CiteSeerX page
-                static const QRegExp citeseerxTitleRegExp(QStringLiteral("<title>CiteSeerX &mdash; [^>]*</title>"));
+                static const QRegularExpression citeseerxTitleRegExp(QStringLiteral("<title>CiteSeerX &mdash; [^>]*</title>"));
                 /// regular expression to check if this is a ACM Digital Library page
                 static const QString acmDigitalLibraryString(QStringLiteral("The ACM Digital Library is published by the Association for Computing Machinery"));
 
-                if (text.indexOf(googleScholarTitleRegExp) > 0)
+                if (googleScholarTitleRegExp.match(text).hasMatch())
                     d->processGoogleResult(reply, text);
-                else if (text.indexOf(springerLinkTitleRegExp) > 0)
+                else if (springerLinkTitleRegExp.match(text).hasMatch())
                     d->processSpringerLink(reply, text);
-                else if (text.indexOf(citeseerxTitleRegExp) > 0)
+                else if (citeseerxTitleRegExp.match(text).hasMatch())
                     d->processCiteSeerX(reply, text);
                 else if (text.contains(acmDigitalLibraryString))
                     d->processACMDigitalLibrary(reply, text);
                 else {
                     /// regular expression to extract title
-                    static QRegExp titleRegExp(QStringLiteral("<title>(.*)</title>"));
-                    titleRegExp.setMinimal(true);
-                    if (titleRegExp.indexIn(text) >= 0)
-                        qCDebug(LOG_KBIBTEX_NETWORKING) << "Using general HTML processor for page" << titleRegExp.cap(1) << " URL=" << reply->url().toDisplayString();
+                    static const QRegularExpression titleRegExp(QStringLiteral("<title>(.*?)</title>"));
+                    const QRegularExpressionMatch match = titleRegExp.match(text);
+                    if (match.hasMatch())
+                        qCDebug(LOG_KBIBTEX_NETWORKING) << "Using general HTML processor for page" << match.captured(1) << " URL=" << reply->url().toDisplayString();
                     else
                         qCDebug(LOG_KBIBTEX_NETWORKING) << "Using general HTML processor for URL=" << reply->url().toDisplayString();
                     d->processGeneralHTML(reply, text);

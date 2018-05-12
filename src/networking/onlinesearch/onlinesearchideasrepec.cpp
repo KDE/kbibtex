@@ -21,6 +21,8 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrlQuery>
+#include <QRegularExpression>
+#include <QRegularExpressionMatchIterator>
 
 #include <KLocalizedString>
 
@@ -39,7 +41,7 @@ public:
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
         bool hasTitle = !query[queryKeyTitle].isEmpty();
         bool hasAuthor = !query[queryKeyAuthor].isEmpty();
-        bool hasYear = QRegExp(QStringLiteral("^(19|20)[0-9]{2}$")).indexIn(query[queryKeyYear]) == 0;
+        bool hasYear = QRegularExpression(QStringLiteral("^(19|20)[0-9]{2}$")).match(query[queryKeyYear]).hasMatch();
 
         QString fieldWF = QStringLiteral("4BFF"); ///< search whole record by default
         QString fieldQ, fieldDB, fieldDE;
@@ -139,10 +141,11 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             d->publicationLinks.clear();
             if (ol1 > 0 && ol2 > ol1) {
                 const QString olHtmlCode = htmlCode.mid(ol1, ol2 - ol1 + 5);
-                static const QRegExp publicationLinkRegExp(QStringLiteral("\"/[a-z](/[^\"]+){1,6}[.]html"));
-                int p = -1;
-                while ((p = publicationLinkRegExp.indexIn(olHtmlCode, p + 1)) > 0) {
-                    const QUrl c = reply->url().resolved(QUrl(publicationLinkRegExp.cap().mid(1)));
+                static const QRegularExpression publicationLinkRegExp(QStringLiteral("\"/[a-z](/[^\"]+){1,6}[.]html"));
+                QRegularExpressionMatchIterator publicationLinkRegExpMatchIt = publicationLinkRegExp.globalMatch(olHtmlCode);
+                while (publicationLinkRegExpMatchIt.hasNext()) {
+                    const QRegularExpressionMatch publicationLinkRegExpMatch = publicationLinkRegExpMatchIt.next();
+                    const QUrl c = reply->url().resolved(QUrl(publicationLinkRegExpMatch.captured().mid(1)));
                     d->publicationLinks.insert(c);
                 }
                 numSteps += 2 * d->publicationLinks.count(); ///< update number of steps

@@ -26,6 +26,7 @@
 #include <QPushButton>
 #include <QUrl>
 #include <QUrlQuery>
+#include <QRegularExpression>
 
 #include <KLocalizedString>
 #include <KLineEdit>
@@ -52,7 +53,7 @@ class HexInputLineEdit: public KLineEdit
     Q_OBJECT
 
 private:
-    const QRegExp correctInput;
+    const QRegularExpression correctInput;
 
 public:
     HexInputLineEdit(int expectedLength, QWidget *parent)
@@ -61,7 +62,7 @@ public:
     }
 
     bool hasAcceptableInput() const {
-        return correctInput.exactMatch(text());
+        return correctInput.match(text()).hasMatch();
     }
 };
 

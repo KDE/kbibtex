@@ -218,9 +218,10 @@ public:
 
         QString year = query[queryKeyYear];
         if (!year.isEmpty()) {
-            static const QRegExp yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
-            if (yearRegExp.indexIn(year) >= 0) {
-                year = yearRegExp.cap(0);
+            static const QRegularExpression yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
+            const QRegularExpressionMatch yearRegExpMatch = yearRegExp.match(year);
+            if (yearRegExpMatch.hasMatch()) {
+                year = yearRegExpMatch.captured(0);
                 queryString += QString(QStringLiteral(" year:%1")).arg(year);
             }
         }

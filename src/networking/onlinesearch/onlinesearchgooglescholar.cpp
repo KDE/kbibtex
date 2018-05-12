@@ -55,7 +55,7 @@ public:
 
     QString documentUrlForBibTeXEntry(const QString &htmlText, int bibLinkPos) {
         /// Regular expression to detect text of a link to a document
-        static const QRegExp documentLinkIndicator(QStringLiteral("\\[(PDF|HTML)\\]"), Qt::CaseSensitive);
+        static const QRegularExpression documentLinkIndicator(QStringLiteral("\\[(PDF|HTML)\\]"), QRegularExpression::CaseInsensitiveOption);
 
         /// Text for link is *before* the BibTeX link in Google's HTML code
         int posDocumentLinkText = htmlText.lastIndexOf(documentLinkIndicator, bibLinkPos);

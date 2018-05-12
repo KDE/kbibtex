@@ -106,11 +106,13 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
     /// a DOI in between.
     QString internalText = text;
     int pos = 0;
-    while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
-        QString doiMatch = KBibTeX::doiRegExp.cap(0);
+    QRegularExpressionMatch doiRegExpMatch;
+    while ((doiRegExpMatch = KBibTeX::doiRegExp.match(internalText, pos)).hasMatch()) {
+        pos = doiRegExpMatch.capturedStart(0);
+        QString doiMatch = doiRegExpMatch.captured(0);
         const int semicolonHttpPos = doiMatch.indexOf(QStringLiteral(";http"));
         if (semicolonHttpPos > 0) doiMatch = doiMatch.left(semicolonHttpPos);
-        QUrl url(doiUrlPrefix() + doiMatch.remove(QStringLiteral("\\")));
+        const QUrl url(doiUrlPrefix() + QString(doiMatch).remove(QStringLiteral("\\")));
         if (url.isValid() && !result.contains(url))
             result << url;
         /// remove match from internal text to avoid duplicates
@@ -120,11 +122,11 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
         ///   'Lore ipsum http://doi.example.org/10.1000/38-abc Lore ipsum'
         /// also remove 'http://doi.example.org/' from the text, keeping only
         ///   'Lore ipsum  Lore ipsum'
-        static const QRegExp genericDoiUrlPrefix(QStringLiteral("http[s]?://[a-z0-9./]+/")); ///< looks like an URL
-        const int urlStartPos = genericDoiUrlPrefix.lastIndexIn(internalText, pos);
-        if (urlStartPos >= 0 && genericDoiUrlPrefix.cap(0).length() > pos - urlStartPos)
-            /// genericDoiUrlPrefix.cap(0) may contain (parts of) DOI
-            internalText = internalText.left(urlStartPos) + internalText.mid(pos + doiMatch.length());
+        static const QRegularExpression genericDoiUrlPrefix(QStringLiteral("http[s]?://[a-z0-9./-]+/$")); ///< looks like an URL
+        const QRegularExpressionMatch genericDoiUrlPrefixMatch = genericDoiUrlPrefix.match(internalText.left(pos));
+        if (genericDoiUrlPrefixMatch.hasMatch())
+            /// genericDoiUrlPrefixMatch.captured(0) may contain (parts of) DOI
+            internalText = internalText.left(genericDoiUrlPrefixMatch.capturedStart(0)) + internalText.mid(pos + doiMatch.length());
         else
             internalText = internalText.left(pos) + internalText.mid(pos + doiMatch.length());
     }
@@ -176,8 +178,10 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
 
         /// extract URL from current field
         pos = 0;
-        while ((pos = KBibTeX::urlRegExp.indexIn(internalText, pos)) != -1) {
-            const QString match = KBibTeX::urlRegExp.cap(0);
+        QRegularExpressionMatch urlRegExpMatch;
+        while ((urlRegExpMatch = KBibTeX::urlRegExp.match(internalText, pos)).hasMatch()) {
+            pos = urlRegExpMatch.capturedStart(0);
+            const QString match = urlRegExpMatch.captured(0);
             QUrl url(match);
             if (url.isValid() && (testExistence == TestExistenceNo || !url.isLocalFile() || QFileInfo::exists(url.toLocalFile())) && !result.contains(url))
                 result << url;
@@ -187,11 +191,13 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
 
         /// explicitly check URL entry, may be an URL even if http:// or alike is missing
         pos = 0;
-        while ((pos = KBibTeX::domainNameRegExp.indexIn(internalText, pos)) > -1) {
+        QRegularExpressionMatch domainNameRegExpMatch;
+        while ((domainNameRegExpMatch = KBibTeX::domainNameRegExp.match(internalText, pos)).hasMatch()) {
+            pos = domainNameRegExpMatch.capturedStart(0);
             int pos2 = internalText.indexOf(QStringLiteral(" "), pos + 1);
             if (pos2 < 0) pos2 = internalText.length();
             QString match = internalText.mid(pos, pos2 - pos);
-            QUrl url("http://" + match);
+            const QUrl url(QStringLiteral("http://") + match); // FIXME what about HTTPS?
             if (url.isValid() && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
@@ -200,8 +206,10 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
 
         /// extract general file-like patterns
         pos = 0;
-        while ((pos = KBibTeX::fileRegExp.indexIn(internalText, pos)) != -1) {
-            QString match = KBibTeX::fileRegExp.cap(0);
+        QRegularExpressionMatch fileRegExpMatch;
+        while ((fileRegExpMatch = KBibTeX::fileRegExp.match(internalText, pos)).hasMatch()) {
+            pos = fileRegExpMatch.capturedStart(0);
+            const QString match = fileRegExpMatch.captured(0);
             QUrl url(match);
             if (url.isValid() && (testExistence == TestExistenceNo || !url.isLocalFile() || QFileInfo::exists(url.toLocalFile())) && !result.contains(url))
                 result << url;
@@ -219,8 +227,9 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
 
     if (entry->contains(Entry::ftDOI)) {
         const QString doi = PlainTextValue::text(entry->value(Entry::ftDOI));
-        if (!doi.isEmpty() && KBibTeX::doiRegExp.indexIn(doi) == 0) {
-            QString match = KBibTeX::doiRegExp.cap(0);
+        QRegularExpressionMatch doiRegExpMatch;
+        if (!doi.isEmpty() && (doiRegExpMatch = KBibTeX::doiRegExp.match(doi)).hasMatch()) {
+            QString match = doiRegExpMatch.captured(0);
             QUrl url(doiUrlPrefix() + match.remove(QStringLiteral("\\")));
             result.insert(url);
         }
@@ -246,7 +255,6 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
 
     const QString baseDirectory = bibTeXUrl.isValid() ? bibTeXUrl.adjusted(QUrl::RemoveFilename | QUrl::StripTrailingSlash).path() : QString();
 
-    static const QRegExp regExpEscapedChars = QRegExp(QStringLiteral("\\\\+([&_~])"));
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         /// skip abstracts, they contain sometimes strange text fragments
         /// that are mistaken for URLs
@@ -256,9 +264,8 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
         for (const auto &valueItem : v) {
             QString plainText = PlainTextValue::text(*valueItem);
 
-            int pos = -1;
-            while ((pos = regExpEscapedChars.indexIn(plainText, pos + 1)) != -1)
-                plainText = plainText.replace(regExpEscapedChars.cap(0), regExpEscapedChars.cap(1));
+            static const QRegularExpression regExpEscapedChars = QRegularExpression(QStringLiteral("\\\\+([&_~])"));
+            plainText.replace(regExpEscapedChars,QStringLiteral("\\1"));
 
             urlsInText(plainText, testExistence, baseDirectory, result);
         }
@@ -283,7 +290,8 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
         /// check if in the same directory as the BibTeX file there is a subdirectory
         /// similar to the BibTeX file's name and which contains a PDF file exists
         /// which filename is based on the entry's id
-        QString basename = bibTeXUrl.fileName().remove(QRegExp("\\.[^.]{2,5}$"));
+        static const QRegularExpression filenameExtension(QStringLiteral("\\.[^.]{2,5}$"));
+        const QString basename = bibTeXUrl.fileName().remove(filenameExtension);
         QString directory = baseDirectory + QDir::separator() + basename;
         for (const QString &extension : documentFileExtensions) {
             const QFileInfo fi(directory + QDir::separator() + entry->id() + extension);
@@ -301,11 +309,11 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
 QString FileInfo::pdfToText(const QString &pdfFilename)
 {
     /// Build filename for text file where PDF file's plain text is cached
-    static const QRegExp invalidChars(QStringLiteral("[^-a-z0-9_]"), Qt::CaseInsensitive);
     const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/pdftotext");
     if (!QDir(cacheDirectory).exists() && !QDir::home().mkdir(cacheDirectory))
         /// Could not create cache directory
         return QString();
+    static const QRegularExpression invalidChars(QStringLiteral("[^-a-z0-9_]"), QRegularExpression::CaseInsensitiveOption);
     const QString textFilename = QString(pdfFilename).remove(invalidChars).append(QStringLiteral(".txt")).prepend(QStringLiteral("/")).prepend(cacheDirectory);
 
     /// First, check if there is a cache text file

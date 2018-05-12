@@ -23,6 +23,7 @@
 #endif // HAVE_QTWIDGETS
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QRegularExpression>
 
 #ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
@@ -115,8 +116,9 @@ public:
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         Q_UNUSED(numResults)
 
-        if (KBibTeX::doiRegExp.indexIn(query[queryKeyFreeText]) >= 0) {
-            return QUrl(QStringLiteral("https://dx.doi.org/") + KBibTeX::doiRegExp.cap(0));
+        const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(query[queryKeyFreeText]);
+        if (doiRegExpMatch.hasMatch()) {
+            return QUrl(QStringLiteral("https://dx.doi.org/") + doiRegExpMatch.captured(0));
         }
 
         return QUrl();

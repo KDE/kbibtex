@@ -19,7 +19,7 @@
 
 #include <QVector>
 #include <QTextStream>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QCoreApplication>
 #include <QStringList>
 
@@ -136,13 +136,7 @@ public:
                 appendValue(entry, Entry::ftNote, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == QStringLiteral("KW")) {
                 QString text = (*it).value;
-                QRegExp splitRegExp;
-                if (text.contains(QStringLiteral(";")))
-                    splitRegExp = QRegExp("\\s*[;\\n]\\s*");
-                else if (text.contains(QStringLiteral(",")))
-                    splitRegExp = QRegExp("\\s*[,\\n]\\s*");
-                else
-                    splitRegExp = QRegExp("\\n");
+                const QRegularExpression splitRegExp(text.contains(QStringLiteral(";")) ? QStringLiteral("\\s*[;\\n]\\s*") : (text.contains(QStringLiteral(",")) ? QStringLiteral("\\s*[,\\n]\\s*") : QStringLiteral("\\n")));
                 QStringList newKeywords = text.split(splitRegExp, QString::SkipEmptyParts);
                 for (QStringList::Iterator it = newKeywords.begin(); it != newKeywords.end();
                         ++it)
@@ -176,7 +170,7 @@ public:
             }  else if ((*it).key == QStringLiteral("AD")) {
                 appendValue(entry, Entry::ftAddress, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == QStringLiteral("L1") || (*it).key == QStringLiteral("L2") || (*it).key == QStringLiteral("L3") || (*it).key == QStringLiteral("UR")) {
-                const QString fieldName = KBibTeX::doiRegExp.indexIn((*it).value) >= 0 ? Entry::ftDOI : (KBibTeX::urlRegExp.indexIn((*it).value) >= 0 ? Entry::ftUrl : Entry::ftLocalFile);
+                const QString fieldName = KBibTeX::doiRegExp.match((*it).value).hasMatch() ? Entry::ftDOI : (KBibTeX::urlRegExp.match((*it).value).hasMatch() ? Entry::ftUrl : Entry::ftLocalFile);
                 appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == QStringLiteral("SP")) {
                 startPage = (*it).value;
