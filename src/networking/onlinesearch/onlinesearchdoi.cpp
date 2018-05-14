@@ -108,7 +108,7 @@ public:
             return QUrl();
         }
 
-        return QUrl(QStringLiteral("http://dx.doi.org/") + form->lineEditDoiNumber->text());
+        return QUrl(QStringLiteral("https://dx.doi.org/") + form->lineEditDoiNumber->text());
     }
 #endif // HAVE_QTWIDGETS
 
@@ -116,7 +116,7 @@ public:
         Q_UNUSED(numResults)
 
         if (KBibTeX::doiRegExp.indexIn(query[queryKeyFreeText]) >= 0) {
-            return QUrl(QStringLiteral("http://dx.doi.org/") + KBibTeX::doiRegExp.cap(0));
+            return QUrl(QStringLiteral("https://dx.doi.org/") + KBibTeX::doiRegExp.cap(0));
         }
 
         return QUrl();
@@ -187,12 +187,12 @@ OnlineSearchQueryFormAbstract *OnlineSearchDOI::customWidget(QWidget *parent)
 
 QUrl OnlineSearchDOI::homepage() const
 {
-    return QUrl(QStringLiteral("http://dx.doi.org/"));
+    return QUrl(QStringLiteral("https://dx.doi.org/"));
 }
 
 QString OnlineSearchDOI::favIconUrl() const
 {
-    return QStringLiteral("http://dx.doi.org/favicon.ico");
+    return QStringLiteral("https://dx.doi.org/favicon.ico");
 }
 
 void OnlineSearchDOI::downloadDone()
