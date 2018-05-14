@@ -14,6 +14,7 @@ various dependencies in the process (e.g. Qt5-based poppler)
 - Various modernizations of C++ code towards C++11, including deprecation of SIGNAL/SLOT
 - Moving bibliography files that previously resided in testset/ into their own Git repository
   (kbibtex-testset)
+- Removing ISBNdb as it is no longer a free service
 - KDE Bug 393032: Updating list of journal abbreviations
 - KDE Bug 393224: LyX pipe detection (issues with Kile 3 fixed)
 - KDE Bug 391198: Preview image/vnd.djvu+multipage files
