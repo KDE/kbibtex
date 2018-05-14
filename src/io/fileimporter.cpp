@@ -84,11 +84,11 @@ Person *FileImporter::splitName(const QString &name)
             /** This is a special case for names from PubMed, which are formatted like "Fischer T A"
               * all segment values until the first single letter segment are last name parts */
             for (int i = 0; i < p; ++i)
-                lastName.append(segments[i]).append(" ");
+                lastName.append(segments[i]).append(QStringLiteral(" "));
             lastName.append(segments[p]);
             /// Single letter segments are first name parts
             for (int i = p + 1; i < segments.count() - 1; ++i)
-                firstName.append(segments[i]).append(" ");
+                firstName.append(segments[i]).append(QStringLiteral(" "));
             firstName.append(segments[segments.count() - 1]);
         } else {
             int from = segments.count() - 1;
@@ -98,7 +98,7 @@ Person *FileImporter::splitName(const QString &name)
                 if (segments[from - 1].compare(segments[from - 1].toLower()) != 0)
                     break;
                 --from;
-                lastName.prepend(" ");
+                lastName.prepend(QStringLiteral(" "));
                 lastName.prepend(segments[from]);
             }
 
