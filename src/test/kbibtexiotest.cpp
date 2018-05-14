@@ -18,6 +18,8 @@
 #include <QtTest/QtTest>
 
 #include "encoderxml.h"
+#include "value.h"
+#include "fileimporter.h"
 
 class KBibTeXIOTest : public QObject
 {
@@ -29,6 +31,8 @@ private slots:
     void encoderXMLdecode();
     void encoderXMLencode_data();
     void encoderXMLencode();
+    void fileImporterSplitName_data();
+    void fileImporterSplitName();
 
 private:
 };
@@ -73,6 +77,33 @@ void KBibTeXIOTest::encoderXMLencode()
     QFETCH(QString, unicode);
 
     QCOMPARE(EncoderXML::instance().encode(unicode, Encoder::TargetEncodingASCII), xml);
+}
+
+void KBibTeXIOTest::fileImporterSplitName_data()
+{
+    QTest::addColumn<QString>("name");
+    QTest::addColumn<Person *>("person");
+
+    QTest::newRow("Empty name") << QStringLiteral("") << new Person(QString(), QString(), QString());
+    QTest::newRow("PubMed style") << QStringLiteral("Jones A B C") << new Person(QStringLiteral("A B C"), QStringLiteral("Jones"), QString());
+    QTest::newRow("Just last name") << QStringLiteral("Dido") << new Person(QString(), QStringLiteral("Dido"), QString());
+    QTest::newRow("Name with 'von'") << QStringLiteral("Theodor von Sickel") << new Person(QStringLiteral("Theodor"), QStringLiteral("von Sickel"), QString());
+    QTest::newRow("Name with 'von', reversed") << QStringLiteral("von Sickel, Theodor") << new Person(QStringLiteral("Theodor"), QStringLiteral("von Sickel"), QString());
+    QTest::newRow("Name with 'van der'") << QStringLiteral("Adriaen van der Werff") << new Person(QStringLiteral("Adriaen"), QStringLiteral("van der Werff"), QString());
+    QTest::newRow("Name with 'van der', reversed") << QStringLiteral("van der Werff, Adriaen") << new Person(QStringLiteral("Adriaen"), QStringLiteral("van der Werff"), QString());
+    QTest::newRow("Name with suffix") << QStringLiteral("Anna Eleanor Roosevelt Jr.") << new Person(QStringLiteral("Anna Eleanor"), QStringLiteral("Roosevelt"), QStringLiteral("Jr."));
+}
+
+void KBibTeXIOTest::fileImporterSplitName()
+{
+    QFETCH(QString, name);
+    QFETCH(Person *, person);
+
+    Person *computedPerson = FileImporter::splitName(name);
+    QCOMPARE(*computedPerson, *person);
+
+    delete person;
+    delete computedPerson;
 }
 
 void KBibTeXIOTest::initTestCase()
