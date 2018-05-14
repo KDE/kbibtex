@@ -63,14 +63,13 @@ Person *FileImporter::splitName(const QString &name)
 {
     // FIXME: This is a rather ugly code
     QStringList segments = name.split(QRegExp("[ ,]+"));
-    bool containsComma = name.contains(',');
     QString firstName;
     QString lastName;
 
     if (segments.isEmpty())
         return nullptr;
 
-    if (!containsComma) {
+    if (!name.contains(QLatin1Char(','))) {
         /** PubMed uses a special writing style for names, where the last name is followed by
           * single capital letters, each being the first letter of each first name
           * So, check how many single capital letters are at the end of the given segment list */
