@@ -238,7 +238,7 @@ public:
         addEngine(new OnlineSearchScienceDirect(p));
         addEngine(new OnlineSearchSpringerLink(p));
         addEngine(new OnlineSearchSOANASAADS(p));
-        addEngine(new OnlineSearchIsbnDB(p));
+        /// addEngine(new OnlineSearchIsbnDB(p)); /// disabled as provider switched to a paid model on 2017-12-26
         addEngine(new OnlineSearchIDEASRePEc(p));
         addEngine(new OnlineSearchDOI(p));
 

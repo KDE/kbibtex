@@ -20,7 +20,7 @@ set(
     onlinesearch/onlinesearchsimplebibtexdownload.cpp
     onlinesearch/onlinesearchgeneral.cpp
     onlinesearch/onlinesearchsoanasaads.cpp
-    onlinesearch/onlinesearchisbndb.cpp
+    # onlinesearch/onlinesearchisbndb.cpp # disabled as provider switched to a paid model on 2017-12-26
     onlinesearch/onlinesearchideasrepec.cpp
     onlinesearch/onlinesearchdoi.cpp
     onlinesearch/onlinesearchbiorxiv.cpp
