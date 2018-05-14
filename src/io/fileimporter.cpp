@@ -71,8 +71,8 @@ Person *FileImporter::splitName(const QString &name)
         return nullptr;
 
     if (!containsComma) {
-        /** PubMed uses a special writing style for names, where the last name is followed by single capital letter,
-          * each being the first letter of each first name
+        /** PubMed uses a special writing style for names, where the last name is followed by
+          * single capital letters, each being the first letter of each first name
           * So, check how many single capital letters are at the end of the given segment list */
         int singleCapitalLettersCounter = 0;
         int p = segments.count() - 1;
@@ -82,19 +82,19 @@ Person *FileImporter::splitName(const QString &name)
         }
 
         if (singleCapitalLettersCounter > 0) {
-            /** this is a special case for names from PubMed, which are formatted like "Fischer T"
+            /** This is a special case for names from PubMed, which are formatted like "Fischer T A"
               * all segment values until the first single letter segment are last name parts */
             for (int i = 0; i < p; ++i)
                 lastName.append(segments[i]).append(" ");
             lastName.append(segments[p]);
-            /** single letter segments are first name parts */
+            /// Single letter segments are first name parts
             for (int i = p + 1; i < segments.count() - 1; ++i)
                 firstName.append(segments[i]).append(" ");
             firstName.append(segments[segments.count() - 1]);
         } else {
             int from = segments.count() - 1;
-            lastName = segments[from];
-            /** check for lower case parts of the last name such as "van", "von", "de", ... */
+            lastName = segments[from]; ///< Initialize last name with last segment
+            /// Check for lower case parts of the last name such as "van", "von", "de", ...
             while (from > 0) {
                 if (segments[from - 1].compare(segments[from - 1].toLower()) != 0)
                     break;
@@ -104,8 +104,7 @@ Person *FileImporter::splitName(const QString &name)
             }
 
             if (from > 0) {
-                /** there are segments left for the first name */
-                firstName = *segments.begin();
+                firstName = *segments.begin(); /// First name initialized with first segment
                 for (QStringList::Iterator it = ++segments.begin(); from > 1; ++it, --from) {
                     firstName.append(" ");
                     firstName.append(*it);
