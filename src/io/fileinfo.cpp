@@ -101,8 +101,8 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
     QString internalText = text;
     int pos = 0;
     while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
-        QString match = KBibTeX::doiRegExp.cap(0);
-        QUrl url(doiUrlPrefix() + match.remove(QStringLiteral("\\")));
+        QString doiMatch = KBibTeX::doiRegExp.cap(0);
+        QUrl url(doiUrlPrefix() + doiMatch.remove(QStringLiteral("\\")));
         if (url.isValid() && !result.contains(url))
             result << url;
         /// remove match from internal text to avoid duplicates
@@ -116,9 +116,9 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
         const int urlStartPos = genericDoiUrlPrefix.lastIndexIn(internalText, pos);
         if (urlStartPos >= 0 && genericDoiUrlPrefix.cap(0).length() > pos - urlStartPos)
             /// genericDoiUrlPrefix.cap(0) may contain (parts of) DOI
-            internalText = internalText.left(urlStartPos) + internalText.mid(pos + match.length());
+            internalText = internalText.left(urlStartPos) + internalText.mid(pos + doiMatch.length());
         else
-            internalText = internalText.left(pos) + internalText.mid(pos + match.length());
+            internalText = internalText.left(pos) + internalText.mid(pos + doiMatch.length());
     }
 
     const QStringList fileList = internalText.split(KBibTeX::fileListSeparatorRegExp, QString::SkipEmptyParts);
