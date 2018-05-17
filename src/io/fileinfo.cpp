@@ -90,7 +90,7 @@ QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
     return result;
 }
 
-void FileInfo::urlsInText(const QString &text, TestExistence testExistence, const QString &baseDirectory, QList<QUrl> &result)
+void FileInfo::urlsInText(const QString &text, const TestExistence testExistence, const QString &baseDirectory, QSet<QUrl> &result)
 {
     if (text.isEmpty())
         return;
@@ -203,9 +203,9 @@ void FileInfo::urlsInText(const QString &text, TestExistence testExistence, cons
     }
 }
 
-QList<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const QUrl &bibTeXUrl, TestExistence testExistence)
+QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const QUrl &bibTeXUrl, TestExistence testExistence)
 {
-    QList<QUrl> result;
+    QSet<QUrl> result;
     if (entry.isNull() || entry->isEmpty())
         return result;
 
@@ -214,7 +214,7 @@ QList<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const 
         if (!doi.isEmpty() && KBibTeX::doiRegExp.indexIn(doi) == 0) {
             QString match = KBibTeX::doiRegExp.cap(0);
             QUrl url(doiUrlPrefix() + match.remove(QStringLiteral("\\")));
-            result.append(url);
+            result.insert(url);
         }
     }
     static const QString etPMID = QStringLiteral("pmid");
@@ -224,7 +224,7 @@ QList<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const 
         ok &= pmid.toInt(&ok) > 0;
         if (ok) {
             QUrl url(QStringLiteral("https://www.ncbi.nlm.nih.gov/pubmed/") + pmid);
-            result.append(url);
+            result.insert(url);
         }
     }
     static const QString etEPrint = QStringLiteral("eprint");
@@ -232,7 +232,7 @@ QList<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const 
         const QString eprint = PlainTextValue::text(entry->value(etEPrint));
         if (!eprint.isEmpty()) {
             QUrl url(QStringLiteral("http://arxiv.org/search?query=") + eprint);
-            result.append(url);
+            result.insert(url);
         }
     }
 

@@ -387,10 +387,11 @@ public:
     }
 
     void updateURL(const QString &text) {
-        QList<QUrl> urls;
+        QSet<QUrl> urls;
         FileInfo::urlsInText(text, FileInfo::TestExistenceYes, file != nullptr && file->property(File::Url).toUrl().isValid() ? QUrl(file->property(File::Url).toUrl()).path() : QString(), urls);
-        if (!urls.isEmpty() && urls.first().isValid())
-            urlToOpen = urls.first();
+        QSet<QUrl>::ConstIterator urlsIt = urls.constBegin();
+        if (urlsIt != urls.constEnd() && (*urlsIt).isValid())
+            urlToOpen = (*urlsIt);
         else
             urlToOpen = QUrl();
 

@@ -208,7 +208,7 @@ void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> e
     const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
     if (!entry.isNull()) {
         const QString title = PlainTextValue::text(entry->value(Entry::ftTitle));
-        const QList<QUrl> urlList = FileInfo::entryUrls(entry, bibtexfile->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
+        const auto urlList = FileInfo::entryUrls(entry, bibtexfile->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
         for (const QUrl &url : urlList) {
             if (!url.isLocalFile()) continue;
             const QString filename = url.toLocalFile();

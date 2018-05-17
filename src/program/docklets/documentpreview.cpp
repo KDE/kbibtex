@@ -321,7 +321,7 @@ public:
 
         /// do not load external reference if widget is hidden
         if (isVisible()) {
-            const QList<QUrl> urlList = FileInfo::entryUrls(entry, baseUrl, FileInfo::TestExistenceYes);
+            const auto urlList = FileInfo::entryUrls(entry, baseUrl, FileInfo::TestExistenceYes);
             for (const QUrl &url : urlList) {
                 bool isLocal = KBibTeX::isLocalOrRelative(url);
                 anyRemote |= !isLocal;
