@@ -20,6 +20,9 @@
 #include "encoderxml.h"
 #include "value.h"
 #include "fileimporter.h"
+#include "fileinfo.h"
+
+Q_DECLARE_METATYPE(QMimeType)
 
 class KBibTeXIOTest : public QObject
 {
@@ -33,6 +36,8 @@ private slots:
     void encoderXMLencode();
     void fileImporterSplitName_data();
     void fileImporterSplitName();
+    void fileInfoMimeTypeForUrl_data();
+    void fileInfoMimeTypeForUrl();
 
 private:
 };
@@ -104,6 +109,30 @@ void KBibTeXIOTest::fileImporterSplitName()
 
     delete person;
     delete computedPerson;
+}
+
+void KBibTeXIOTest::fileInfoMimeTypeForUrl_data()
+{
+    QTest::addColumn<QUrl>("url");
+    QTest::addColumn<QMimeType>("mimetype");
+
+    static const QMimeDatabase db;
+    QTest::newRow("Invalid URL") << QUrl() << QMimeType();
+    QTest::newRow("Generic URL") << QUrl(QStringLiteral("https://www.example.com")) << db.mimeTypeForName(QStringLiteral("text/html"));
+    QTest::newRow("Generic local file") << QUrl(QStringLiteral("/usr/bin/who")) << db.mimeTypeForName(QStringLiteral("application/octet-stream"));
+    QTest::newRow("Generic Samba URL") << QUrl(QStringLiteral("smb://fileserver.local/file")) << db.mimeTypeForName(QStringLiteral("application/octet-stream"));
+    QTest::newRow("URL to .bib file") << QUrl(QStringLiteral("https://www.example.com/references.bib")) << db.mimeTypeForName(QStringLiteral("text/x-bibtex"));
+    QTest::newRow("Local .bib file") << QUrl(QStringLiteral("/home/user/references.bib")) << db.mimeTypeForName(QStringLiteral("text/x-bibtex"));
+    QTest::newRow("URL to .pdf file") << QUrl(QStringLiteral("https://www.example.com/references.pdf")) << db.mimeTypeForName(QStringLiteral("application/pdf"));
+    QTest::newRow("Local .pdf file") << QUrl(QStringLiteral("/home/user/references.pdf")) << db.mimeTypeForName(QStringLiteral("application/pdf"));
+}
+
+void KBibTeXIOTest::fileInfoMimeTypeForUrl()
+{
+    QFETCH(QUrl, url);
+    QFETCH(QMimeType, mimetype);
+
+    QCOMPARE(FileInfo::mimeTypeForUrl(url), mimetype);
 }
 
 void KBibTeXIOTest::initTestCase()
