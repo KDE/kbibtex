@@ -108,6 +108,8 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
     int pos = 0;
     while ((pos = KBibTeX::doiRegExp.indexIn(internalText, pos)) != -1) {
         QString doiMatch = KBibTeX::doiRegExp.cap(0);
+        const int semicolonHttpPos = doiMatch.indexOf(QStringLiteral(";http"));
+        if (semicolonHttpPos > 0) doiMatch = doiMatch.left(semicolonHttpPos);
         QUrl url(doiUrlPrefix() + doiMatch.remove(QStringLiteral("\\")));
         if (url.isValid() && !result.contains(url))
             result << url;
