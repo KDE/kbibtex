@@ -30,6 +30,7 @@
 
 #include "kbibtex.h"
 #include "entry.h"
+#include "logging_io.h"
 
 FileInfo::FileInfo()
 {
@@ -44,7 +45,12 @@ const QString FileInfo::mimetypePDF = QStringLiteral("application/pdf");
 
 QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
 {
-    static QMimeDatabase db;
+    if (!url.isValid() || url.isEmpty()) {
+        qCWarning(LOG_KBIBTEX_IO) << "Cannot determine mime type for empty or invalid QUrl";
+        return QMimeType(); ///< invalid input gives invalid mime type
+    }
+
+    static const QMimeDatabase db;
     static const QMimeType mtHTML(db.mimeTypeForName(mimetypeHTML));
     static const QMimeType mtOctetStream(db.mimeTypeForName(mimetypeOctetStream));
     static const QMimeType mtBibTeX(db.mimeTypeForName(mimetypeBibTeX));
