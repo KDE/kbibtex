@@ -18,6 +18,7 @@
 #include <QtTest/QtTest>
 
 #include "encoderxml.h"
+#include "encoderlatex.h"
 #include "value.h"
 #include "fileimporter.h"
 #include "fileinfo.h"
@@ -34,6 +35,10 @@ private slots:
     void encoderXMLdecode();
     void encoderXMLencode_data();
     void encoderXMLencode();
+    void encoderLaTeXdecode_data();
+    void encoderLaTeXdecode();
+    void encoderLaTeXencode_data();
+    void encoderLaTeXencode();
     void fileImporterSplitName_data();
     void fileImporterSplitName();
     void fileInfoMimeTypeForUrl_data();
@@ -84,6 +89,44 @@ void KBibTeXIOTest::encoderXMLencode()
     QFETCH(QString, unicode);
 
     QCOMPARE(EncoderXML::instance().encode(unicode, Encoder::TargetEncodingASCII), xml);
+}
+
+void KBibTeXIOTest::encoderLaTeXdecode_data()
+{
+    QTest::addColumn<QString>("latex");
+    QTest::addColumn<QString>("unicode");
+    QTest::addColumn<QString>("alternativelatex");
+
+    QTest::newRow("Just ASCII") << QStringLiteral("Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur.") << QStringLiteral("Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur.") << QString();
+    QTest::newRow("Dotless i and j characters") << QStringLiteral("\\`{\\i}\\'{\\i}\\^{\\i}\\\"{\\i}\\~{\\i}\\={\\i}\\u{\\i}\\k{\\i}\\^{\\j}\\v{\\i}\\v{\\j}") << QString(QChar(0x00EC)) + QChar(0x00ED) + QChar(0x00EE) + QChar(0x00EF) + QChar(0x0129) + QChar(0x012B) + QChar(0x012D) + QChar(0x012F) + QChar(0x0135) + QChar(0x01D0) + QChar(0x01F0) << QString();
+    QTest::newRow("\\l and \\ldots") << QStringLiteral("\\l\\ldots\\l\\ldots") << QString(QChar(0x0142)) + QChar(0x2026) + QChar(0x0142) + QChar(0x2026) << QStringLiteral("{\\l}{\\ldots}{\\l}{\\ldots}");
+}
+
+void KBibTeXIOTest::encoderLaTeXdecode()
+{
+    QFETCH(QString, latex);
+    QFETCH(QString, unicode);
+    QFETCH(QString, alternativelatex);
+
+    QCOMPARE(EncoderLaTeX::instance().decode(latex), unicode);
+}
+
+void KBibTeXIOTest::encoderLaTeXencode_data()
+{
+    encoderLaTeXdecode_data();
+}
+
+void KBibTeXIOTest::encoderLaTeXencode()
+{
+    QFETCH(QString, latex);
+    QFETCH(QString, unicode);
+    QFETCH(QString, alternativelatex);
+
+    const QString generatedLatex = EncoderLaTeX::instance().encode(unicode, Encoder::TargetEncodingASCII);
+    if (generatedLatex != latex && !alternativelatex.isEmpty())
+        QCOMPARE(generatedLatex, alternativelatex);
+    else
+        QCOMPARE(generatedLatex, latex);
 }
 
 void KBibTeXIOTest::fileImporterSplitName_data()
