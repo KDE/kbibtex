@@ -29,6 +29,8 @@ inline bool isAsciiLetter(const char c) {
     return ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
 }
 
+enum EncoderLaTeXCommandDirection { DirectionCommandToUnicode = 1, DirectionUnicodeToCommand = 2, DirectionBoth = DirectionCommandToUnicode | DirectionUnicodeToCommand };
+
 /**
  * General documentation on this topic:
  *   http://www.tex.ac.uk/CTAN/macros/latex/doc/encguide.pdf
@@ -50,7 +52,14 @@ inline bool isAsciiLetter(const char c) {
 static const struct EncoderLaTeXEscapedCharacter {
     const char modifier;
     const char letter;
-    ushort unicode;
+    const ushort unicode;
+    const EncoderLaTeXCommandDirection direction;
+
+    EncoderLaTeXEscapedCharacter(const char _modifier, const char _letter, const ushort _unicode, const EncoderLaTeXCommandDirection _direction = DirectionBoth)
+            : modifier(_modifier), letter(_letter), unicode(_unicode), direction(_direction)
+    {
+        /// nothing
+    }
 }
 encoderLaTeXEscapedCharacters[] = {
     {'`', 'A', 0x00C0},
@@ -59,7 +68,7 @@ encoderLaTeXEscapedCharacters[] = {
     {'~', 'A', 0x00C3},
     {'"', 'A', 0x00C4},
     {'r', 'A', 0x00C5},
-    /** 0x00C6 */
+    /** 0x00C6: see EncoderLaTeXCharacterCommand */
     {'c', 'C', 0x00C7},
     {'`', 'E', 0x00C8},
     {'\'', 'E', 0x00C9},
@@ -76,14 +85,14 @@ encoderLaTeXEscapedCharacters[] = {
     {'^', 'O', 0x00D4},
     {'~', 'O', 0x00D5},
     {'"', 'O', 0x00D6},
-    /** 0x00D7 */
+    /** 0x00D7: see EncoderLaTeXCharacterCommand */
     /** 0x00D8: see EncoderLaTeXCharacterCommand */
     {'`', 'U', 0x00D9},
     {'\'', 'U', 0x00DA},
     {'^', 'U', 0x00DB},
     {'"', 'U', 0x00DC},
     {'\'', 'Y', 0x00DD},
-    /** 0x00DE */
+    /** 0x00DE: see EncoderLaTeXCharacterCommand */
     {'"', 's', 0x00DF},
     {'`', 'a', 0x00E0},
     {'\'', 'a', 0x00E1},
@@ -91,7 +100,7 @@ encoderLaTeXEscapedCharacters[] = {
     {'~', 'a', 0x00E3},
     {'"', 'a', 0x00E4},
     {'r', 'a', 0x00E5},
-    /** 0x00E6 */
+    /** 0x00E6: see EncoderLaTeXCharacterCommand */
     {'c', 'c', 0x00E7},
     {'`', 'e', 0x00E8},
     {'\'', 'e', 0x00E9},
@@ -101,21 +110,21 @@ encoderLaTeXEscapedCharacters[] = {
     {'\'', 'i', 0x00ED},
     {'^', 'i', 0x00EE},
     {'"', 'i', 0x00EF},
-    /** 0x00F0 */
+    /** 0x00F0: see EncoderLaTeXCharacterCommand */
     {'~', 'n', 0x00F1},
     {'`', 'o', 0x00F2},
     {'\'', 'o', 0x00F3},
     {'^', 'o', 0x00F4},
     {'~', 'o', 0x00F5},
     {'"', 'o', 0x00F6},
-    /** 0x00F7 Division Sign */
+    /** 0x00F7: see EncoderLaTeXCharacterCommand */
     /** 0x00F8: see EncoderLaTeXCharacterCommand */
     {'`', 'u', 0x00F9},
     {'\'', 'u', 0x00FA},
     {'^', 'u', 0x00FB},
     {'"', 'u', 0x00FC},
     {'\'', 'y', 0x00FD},
-    /** 0x00FE Thorn */
+    /** 0x00FE: see EncoderLaTeXCharacterCommand */
     {'"', 'y', 0x00FF},
     {'=', 'A', 0x0100},
     {'=', 'a', 0x0101},
@@ -125,38 +134,38 @@ encoderLaTeXEscapedCharacters[] = {
     {'k', 'a', 0x0105},
     {'\'', 'C', 0x0106},
     {'\'', 'c', 0x0107},
-    /** 0x0108 */
-    /** 0x0109 */
+    {'^', 'C', 0x0108},
+    {'^', 'c', 0x0109},
     {'.', 'C', 0x010A},
     {'.', 'c', 0x010B},
     {'v', 'C', 0x010C},
     {'v', 'c', 0x010D},
     {'v', 'D', 0x010E},
-    /** 0x010F */
-    /** 0x0110 */
-    /** 0x0111 */
+    {'v', 'd', 0x010F},
+    {'B', 'D', 0x0110, DirectionCommandToUnicode},
+    {'B', 'd', 0x0111, DirectionCommandToUnicode},
     {'=', 'E', 0x0112},
     {'=', 'e', 0x0113},
-    /** 0x0114 */
-    /** 0x0115 */
+    {'u', 'E', 0x0114},
+    {'u', 'e', 0x0115},
     {'.', 'E', 0x0116},
     {'.', 'e', 0x0117},
     {'k', 'E', 0x0118},
     {'k', 'e', 0x0119},
     {'v', 'E', 0x011A},
     {'v', 'e', 0x011B},
-    /** 0x011C */
-    /** 0x011D */
+    {'^', 'G', 0x011C},
+    {'^', 'g', 0x011D},
     {'u', 'G', 0x011E},
     {'u', 'g', 0x011F},
     {'.', 'G', 0x0120},
     {'.', 'g', 0x0121},
     {'c', 'G', 0x0122},
     {'c', 'g', 0x0123},
-    /** 0x0124 */
-    /** 0x0125 */
-    /** 0x0126 */
-    /** 0x0127 */
+    {'^', 'H', 0x0124},
+    {'^', 'h', 0x0125},
+    {'B', 'H', 0x0126, DirectionCommandToUnicode},
+    {'B', 'h', 0x0127, DirectionCommandToUnicode},
     {'~', 'I', 0x0128},
     {'~', 'i', 0x0129},
     {'=', 'I', 0x012A},
@@ -166,41 +175,41 @@ encoderLaTeXEscapedCharacters[] = {
     {'k', 'I', 0x012E},
     {'k', 'i', 0x012F},
     {'.', 'I', 0x0130},
-    /** 0x0131 */
-    /** 0x0132 */
-    /** 0x0133 */
-    /** 0x0134 */
-    /** 0x0135 */
+    /** 0x0131: see EncoderLaTeXCharacterCommand */
+    /** 0x0132: see EncoderLaTeXCharacterCommand */
+    /** 0x0133: see EncoderLaTeXCharacterCommand */
+    {'^', 'J', 0x012E},
+    {'^', 'j', 0x012F},
     {'c', 'K', 0x0136},
     {'c', 'k', 0x0137},
-    /** 0x0138 */
+    /** 0x0138: see EncoderLaTeXCharacterCommand */
     {'\'', 'L', 0x0139},
     {'\'', 'l', 0x013A},
     {'c', 'L', 0x013B},
     {'c', 'l', 0x013C},
-    /** 0x013D */
-    /** 0x013E */
-    /** 0x013F */
-    /** 0x0140 */
-    /** 0x0141 */
-    /** 0x0142 */
+    {'v', 'L', 0x013D},
+    {'v', 'l', 0x013E},
+    {'.', 'L', 0x013F},
+    {'.', 'l', 0x0140},
+    {'B', 'L', 0x0141, DirectionCommandToUnicode},
+    {'B', 'l', 0x0142, DirectionCommandToUnicode},
     {'\'', 'N', 0x0143},
     {'\'', 'n', 0x0144},
     {'c', 'n', 0x0145},
     {'c', 'n', 0x0146},
     {'v', 'N', 0x0147},
     {'v', 'n', 0x0148},
-    /** 0x0149 */
-    /** 0x014A */
-    /** 0x014B */
+    /** 0x0149: TODO n preceeded by apostrophe */
+    {'m', 'N', 0x014A, DirectionCommandToUnicode},
+    {'m', 'n', 0x014B, DirectionCommandToUnicode},
     {'=', 'O', 0x014C},
     {'=', 'o', 0x014D},
     {'u', 'O', 0x014E},
     {'u', 'o', 0x014F},
     {'H', 'O', 0x0150},
     {'H', 'o', 0x0151},
-    /** 0x0152 */
-    /** 0x0153 */
+    /** 0x0152: see EncoderLaTeXCharacterCommand */
+    /** 0x0153: see EncoderLaTeXCharacterCommand */
     {'\'', 'R', 0x0154},
     {'\'', 'r', 0x0155},
     {'c', 'R', 0x0156},
@@ -209,8 +218,8 @@ encoderLaTeXEscapedCharacters[] = {
     {'v', 'r', 0x0159},
     {'\'', 'S', 0x015A},
     {'\'', 's', 0x015B},
-    /** 0x015C */
-    /** 0x015D */
+    {'^', 'S', 0x015C},
+    {'^', 's', 0x015D},
     {'c', 'S', 0x015E},
     {'c', 's', 0x015F},
     {'v', 'S', 0x0160},
@@ -218,9 +227,9 @@ encoderLaTeXEscapedCharacters[] = {
     {'c', 'T', 0x0162},
     {'c', 't', 0x0163},
     {'v', 'T', 0x0164},
-    /** 0x0165 */
-    /** 0x0166 */
-    /** 0x0167 */
+    {'v', 't', 0x0165},
+    {'B', 'T', 0x0166, DirectionCommandToUnicode},
+    {'B', 't', 0x0167, DirectionCommandToUnicode},
     {'~', 'U', 0x0168},
     {'~', 'u', 0x0169},
     {'=', 'U', 0x016A},
@@ -233,10 +242,10 @@ encoderLaTeXEscapedCharacters[] = {
     {'H', 'u', 0x0171},
     {'k', 'U', 0x0172},
     {'k', 'u', 0x0173},
-    /** 0x0174 */
-    /** 0x0175 */
-    /** 0x0176 */
-    /** 0x0177 */
+    {'^', 'W', 0x0174},
+    {'^', 'w', 0x0175},
+    {'^', 'Y', 0x0176},
+    {'^', 'y', 0x0177},
     {'"', 'Y', 0x0178},
     {'\'', 'Z', 0x0179},
     {'\'', 'z', 0x017A},
@@ -244,8 +253,84 @@ encoderLaTeXEscapedCharacters[] = {
     {'.', 'z', 0x017C},
     {'v', 'Z', 0x017D},
     {'v', 'z', 0x017E},
-    /** 0x017F */
-    /** 0x0180 */
+    /** 0x017F: TODO long s */
+    {'B', 'b', 0x0180, DirectionCommandToUnicode},
+    {'m', 'B', 0x0181, DirectionCommandToUnicode},
+    /** 0x0182 */
+    /** 0x0183 */
+    /** 0x0184 */
+    /** 0x0185 */
+    {'m', 'O', 0x0186, DirectionCommandToUnicode},
+    {'m', 'C', 0x0187, DirectionCommandToUnicode},
+    {'m', 'c', 0x0188, DirectionCommandToUnicode},
+    {'M', 'D', 0x0189, DirectionCommandToUnicode},
+    {'m', 'D', 0x018A, DirectionCommandToUnicode},
+    /** 0x018B */
+    /** 0x018C */
+    /** 0x018D */
+    {'M', 'E', 0x018E, DirectionCommandToUnicode},
+    /** 0x018F */
+    {'m', 'E', 0x0190, DirectionCommandToUnicode},
+    {'m', 'F', 0x0191, DirectionCommandToUnicode},
+    {'m', 'f', 0x0192, DirectionCommandToUnicode},
+    /** 0x0193 */
+    {'m', 'G', 0x0194, DirectionCommandToUnicode},
+    /** 0x0195: see EncoderLaTeXCharacterCommand */
+    {'m', 'I', 0x0196, DirectionCommandToUnicode},
+    {'B', 'I', 0x0197, DirectionCommandToUnicode},
+    {'m', 'K', 0x0198, DirectionCommandToUnicode},
+    {'m', 'k', 0x0199, DirectionCommandToUnicode},
+    {'B', 'l', 0x019A, DirectionCommandToUnicode},
+    /** 0x019B */
+    /** 0x019C */
+    {'m', 'J', 0x019D, DirectionCommandToUnicode},
+    /** 0x019E */
+    /** 0x019F */
+    /** 0x01A0 */
+    /** 0x01A1 */
+    /** 0x01A2 */
+    /** 0x01A3 */
+    {'m', 'P', 0x01A4, DirectionCommandToUnicode},
+    {'m', 'p', 0x01A5, DirectionCommandToUnicode},
+    /** 0x01A6 */
+    /** 0x01A7 */
+    /** 0x01A8 */
+    /** 0x01A9: see EncoderLaTeXCharacterCommand */
+    /** 0x01AA */
+    /** 0x01AB */
+    {'m', 'T', 0x01AC, DirectionCommandToUnicode},
+    {'m', 't', 0x01AD, DirectionCommandToUnicode},
+    {'M', 'T', 0x01AE, DirectionCommandToUnicode},
+    /** 0x01AF */
+    /** 0x01B0 */
+    {'m', 'U', 0x01B1, DirectionCommandToUnicode},
+    {'m', 'V', 0x01B2, DirectionCommandToUnicode},
+    {'m', 'Y', 0x01B3, DirectionCommandToUnicode},
+    {'m', 'y', 0x01B4, DirectionCommandToUnicode},
+    {'B', 'Z', 0x01B5, DirectionCommandToUnicode},
+    {'B', 'z', 0x01B6, DirectionCommandToUnicode},
+    {'m', 'Z', 0x01B7, DirectionCommandToUnicode},
+    /** 0x01B8 */
+    /** 0x01B9 */
+    /** 0x01BA */
+    {'B', '2', 0x01BB, DirectionCommandToUnicode},
+    /** 0x01BC */
+    /** 0x01BD */
+    /** 0x01BE */
+    /** 0x01BF */
+    /** 0x01C0 */
+    /** 0x01C1 */
+    /** 0x01C2 */
+    /** 0x01C3 */
+    /** 0x01C4 */
+    /** 0x01C5 */
+    /** 0x01C6 */
+    /** 0x01C7 */
+    /** 0x01C8 */
+    /** 0x01C9 */
+    /** 0x01CA */
+    /** 0x01CB */
+    /** 0x01CC */
     {'v', 'A', 0x01CD},
     {'v', 'a', 0x01CE},
     {'v', 'G', 0x01E6},
@@ -360,11 +445,17 @@ static const int encoderLaTeXEscapedCharactersLen = sizeof(encoderLaTeXEscapedCh
  * character described by a hexcode.
  */
 // TODO other cases of \i and \j?
-// TODO capital cases like \I and \J?
 static const struct DotlessIJCharacter {
     const char modifier;
     const char letter;
-    ushort unicode;
+    const ushort unicode;
+    const EncoderLaTeXCommandDirection direction;
+
+    DotlessIJCharacter(const char _modifier, const char _letter, const ushort _unicode, const EncoderLaTeXCommandDirection _direction = DirectionBoth)
+            : modifier(_modifier), letter(_letter), unicode(_unicode), direction(_direction)
+    {
+        /// nothing
+    }
 }
 dotlessIJCharacters[] = {
     {'`', 'i', 0x00EC},
@@ -378,7 +469,7 @@ dotlessIJCharacters[] = {
     {'^', 'j', 0x0135},
     {'v', 'i', 0x01D0},
     {'v', 'j', 0x01F0},
-    {'t', 'i', 0x020B}
+    {'G', 'i', 0x0209, DirectionCommandToUnicode}
 };
 static const int dotlessIJCharactersLen = sizeof(dotlessIJCharacters) / sizeof(dotlessIJCharacters[0]);
 
@@ -394,7 +485,7 @@ static const int dotlessIJCharactersLen = sizeof(dotlessIJCharacters) / sizeof(d
  * This data structure is built in the constructor.
  */
 static const int lookupTableNumModifiers = 32;
-static const int lookupTableNumCharacters = 60;
+static const int lookupTableNumCharacters = 26 * 2 + 10;
 static struct EncoderLaTeXEscapedCharacterLookupTableRow {
     char modifier;
     QChar unicode[lookupTableNumCharacters];
@@ -410,7 +501,14 @@ static struct EncoderLaTeXEscapedCharacterLookupTableRow {
  */
 static const struct MathCommand {
     const char *written;
-    ushort unicode;
+    const ushort unicode;
+    const EncoderLaTeXCommandDirection direction;
+
+    MathCommand(const char *_written, const ushort _unicode, const EncoderLaTeXCommandDirection _direction = DirectionBoth)
+            : written(_written), unicode(_unicode), direction(_direction)
+    {
+        /// nothing
+    }
 }
 mathCommand[] = {
     {"ell", 0x2113},
@@ -419,7 +517,7 @@ mathCommand[] = {
     {"exists", 0x2203},
     {"in", 0x2208},
     {"ni", 0x220B},
-    {"asterisk", 0x2217},
+    {"asterisk", 0x2217, DirectionCommandToUnicode},
     {"infty", 0x221E},
     {"subset", 0x2282},
     {"supset", 0x2283},
@@ -446,40 +544,193 @@ static const int mathCommandLen = sizeof(mathCommand) / sizeof(mathCommand[0]);
  */
 static const struct EncoderLaTeXCharacterCommand {
     const char *letters;
-    ushort unicode;
+    const ushort unicode;
+    const EncoderLaTeXCommandDirection direction;
+
+    EncoderLaTeXCharacterCommand(const char *_letters, const ushort _unicode, const EncoderLaTeXCommandDirection _direction = DirectionBoth)
+            : letters(_letters), unicode(_unicode), direction(_direction)
+    {
+        /// nothing
+    }
 }
 encoderLaTeXCharacterCommands[] = {
+    {"textexclamdown", 0x00A1}, // TODO /// recommended to write  !`  instead of  \textexclamdown
+    {"textcent", 0x00A2},
     {"pounds", 0x00A3},
+    {"textsterling", 0x00A3},
+    /** 0x00A4 */
+    {"textyen", 0x00A5},
+    {"textbrokenbar", 0x00A6},
     {"S", 0x00A7},
+    {"textsection", 0x00A7},
+    /** 0x00A8 */
     {"copyright", 0x00A9},
+    {"textcopyright", 0x00A9},
+    {"textordfeminine", 0x00AA},
+    {"guillemotleft", 0x00AB},
+    {"textflqq", 0x00AB, DirectionCommandToUnicode},
+    /** 0x00AC */
+    /** 0x00AD */
     {"textregistered", 0x00AE},
+    /** 0x00AF */
+    {"textdegree", 0x00B0},
+    {"textpm", 0x00B1},
+    {"textplusminus", 0x00B1, DirectionCommandToUnicode},
+    /** 0x00B2 */
+    /** 0x00B3 */
+    /** 0x00B4 */
+    {"textmu", 0x00B5},
+    {"textparagraph", 0x00B6},
+    {"textpilcrow", 0x00B6},
     {"textperiodcentered", 0x00B7},
+    {"textcdot", 0x00B7, DirectionCommandToUnicode},
+    {"textcentereddot", 0x00B7, DirectionCommandToUnicode},
+    /** 0x00B8 */
+    /** 0x00B9 */
+    {"textordmasculine", 0x00BA},
+    {"guillemotright", 0x00BB},
+    {"textfrqq", 0x00BB, DirectionCommandToUnicode},
+    {"textonequarter", 0x00BC},
+    {"textonehalf", 0x00BD},
+    {"textthreequarters", 0x00BE},
+    {"textquestiondown", 0x00BF, DirectionCommandToUnicode}, // TODO /// recommended to write  ?`  instead of  \textquestiondown
     {"AA", 0x00C5},
     {"AE", 0x00C6},
     {"DH", 0x00D0},
-    {"DJ", 0x00D0},
+    {"texttimes", 0x00D7},
+    {"textmultiply", 0x00D7, DirectionCommandToUnicode},
     {"O", 0x00D8},
     {"TH", 0x00DE},
+    {"Thorn", 0x00DE, DirectionCommandToUnicode},
+    {"textThorn", 0x00DE, DirectionCommandToUnicode},
     {"ss", 0x00DF},
     {"aa", 0x00E5},
     {"ae", 0x00E6},
     {"dh", 0x00F0},
+    {"textdiv", 0x00F7},
+    {"textdivide", 0x00F7, DirectionCommandToUnicode},
     {"o", 0x00F8},
     {"th", 0x00FE},
+    {"textthorn", 0x00FE, DirectionCommandToUnicode},
+    {"textthornvari", 0x00FE, DirectionCommandToUnicode},
+    {"textthornvarii", 0x00FE, DirectionCommandToUnicode},
+    {"textthornvariii", 0x00FE, DirectionCommandToUnicode},
+    {"textthornvariv", 0x00FE, DirectionCommandToUnicode},
+    {"Aogonek", 0x0104, DirectionCommandToUnicode},
+    {"aogonek", 0x0105, DirectionCommandToUnicode},
+    {"DJ", 0x0110},
+    {"dj", 0x0111},
+    {"textcrd", 0x0111, DirectionCommandToUnicode},
+    {"textHslash", 0x0126, DirectionCommandToUnicode},
+    {"textHbar", 0x0126, DirectionCommandToUnicode},
+    {"textcrh", 0x0127, DirectionCommandToUnicode},
+    {"texthbar", 0x0127, DirectionCommandToUnicode},
     {"i", 0x0131},
+    {"IJ", 0x0132},
+    {"ij", 0x0133},
+    {"textkra", 0x0138, DirectionCommandToUnicode},
+    {"Lcaron", 0x013D, DirectionCommandToUnicode},
+    {"lcaron", 0x013E, DirectionCommandToUnicode},
+    {"L", 0x0141},
+    {"Lstroke", 0x0141, DirectionCommandToUnicode},
+    {"l", 0x0142},
+    {"lstroke", 0x0142, DirectionCommandToUnicode},
+    {"textbarl", 0x0142, DirectionCommandToUnicode},
     {"NG", 0x014A},
     {"ng", 0x014B},
-    {"L", 0x0141},
-    {"l", 0x0142},
     {"OE", 0x0152},
     {"oe", 0x0153},
+    {"Racute", 0x0154, DirectionCommandToUnicode},
+    {"racute", 0x0155, DirectionCommandToUnicode},
+    {"Sacute", 0x015A, DirectionCommandToUnicode},
+    {"sacute", 0x015B, DirectionCommandToUnicode},
+    {"Scedilla", 0x015E, DirectionCommandToUnicode},
+    {"scedilla", 0x015F, DirectionCommandToUnicode},
+    {"Scaron", 0x0160, DirectionCommandToUnicode},
+    {"scaron", 0x0161, DirectionCommandToUnicode},
+    {"Tcaron", 0x0164, DirectionCommandToUnicode},
+    {"tcaron", 0x0165, DirectionCommandToUnicode},
+    {"textTstroke", 0x0166, DirectionCommandToUnicode},
+    {"textTbar", 0x0166, DirectionCommandToUnicode},
+    {"textTslash", 0x0166, DirectionCommandToUnicode},
+    {"texttstroke", 0x0167, DirectionCommandToUnicode},
+    {"texttbar", 0x0167, DirectionCommandToUnicode},
+    {"texttslash", 0x0167, DirectionCommandToUnicode},
+    {"Zdotaccent", 0x017B, DirectionCommandToUnicode},
+    {"zdotaccent", 0x017C, DirectionCommandToUnicode},
+    {"Zcaron", 0x017D, DirectionCommandToUnicode},
+    {"zcaron", 0x017E, DirectionCommandToUnicode},
+    {"textlongs", 0x017F, DirectionCommandToUnicode},
+    {"textcrb", 0x0180, DirectionCommandToUnicode},
+    {"textBhook", 0x0181, DirectionCommandToUnicode},
+    {"texthausaB", 0x0181, DirectionCommandToUnicode},
+    {"textOopen", 0x0186, DirectionCommandToUnicode},
+    {"textChook", 0x0187, DirectionCommandToUnicode},
+    {"textchook", 0x0188, DirectionCommandToUnicode},
+    {"texthtc", 0x0188, DirectionCommandToUnicode},
+    {"textDafrican", 0x0189, DirectionCommandToUnicode},
+    {"textDhook", 0x018A, DirectionCommandToUnicode},
+    {"texthausaD", 0x018A, DirectionCommandToUnicode},
+    {"textEreversed", 0x018E, DirectionCommandToUnicode},
+    {"textrevE", 0x018E, DirectionCommandToUnicode},
+    {"textEopen", 0x0190, DirectionCommandToUnicode},
+    {"textFhook", 0x0191, DirectionCommandToUnicode},
+    {"textflorin", 0x0192},
+    {"textgamma", 0x0194, DirectionCommandToUnicode},
+    {"textGammaafrican", 0x0194, DirectionCommandToUnicode},
+    {"hv", 0x0195, DirectionCommandToUnicode},
+    {"texthvlig", 0x0195, DirectionCommandToUnicode},
+    {"textIotaafrican", 0x0196, DirectionCommandToUnicode},
+    {"textKhook", 0x0198, DirectionCommandToUnicode},
+    {"texthausaK", 0x0198, DirectionCommandToUnicode},
+    {"texthtk", 0x0199, DirectionCommandToUnicode},
+    {"textkhook", 0x0199, DirectionCommandToUnicode},
+    {"textbarl", 0x019A, DirectionCommandToUnicode},
+    {"textcrlambda", 0x019B, DirectionCommandToUnicode},
+    {"textNhookleft", 0x019D, DirectionCommandToUnicode},
+    {"textnrleg", 0x019E, DirectionCommandToUnicode},
+    {"textPUnrleg", 0x019E, DirectionCommandToUnicode},
+    {"Ohorn", 0x01A0, DirectionCommandToUnicode},
+    {"ohorn", 0x01A1, DirectionCommandToUnicode},
+    {"textPhook", 0x01A4, DirectionCommandToUnicode},
+    {"texthtp", 0x01A5, DirectionCommandToUnicode},
+    {"textphook", 0x01A5, DirectionCommandToUnicode},
+    {"ESH", 0x01A9, DirectionCommandToUnicode},
+    {"textEsh", 0x01A9, DirectionCommandToUnicode},
+    {"textlooptoprevsh", 0x01AA, DirectionCommandToUnicode},
+    {"textlhtlongi", 0x01AA, DirectionCommandToUnicode},
+    {"textlhookt", 0x01AB, DirectionCommandToUnicode},
+    {"textThook", 0x01AC, DirectionCommandToUnicode},
+    {"textthook", 0x01AD, DirectionCommandToUnicode},
+    {"texthtt", 0x01AD, DirectionCommandToUnicode},
+    {"textTretroflexhook", 0x01AE, DirectionCommandToUnicode},
+    {"Uhorn", 0x01AF, DirectionCommandToUnicode},
+    {"uhorn", 0x01B0, DirectionCommandToUnicode},
+    {"textupsilon", 0x01B1, DirectionCommandToUnicode},
+    {"textVhook", 0x01B2, DirectionCommandToUnicode},
+    {"textYhook", 0x01B3, DirectionCommandToUnicode},
+    {"textvhook", 0x01B4, DirectionCommandToUnicode},
+    {"Zbar", 0x01B5, DirectionCommandToUnicode},
+    {"zbar", 0x01B6, DirectionCommandToUnicode},
+    {"EZH", 0x01B7, DirectionCommandToUnicode},
+    {"textEzh", 0x01B7, DirectionCommandToUnicode},
+    {"LJ", 0x01C7, DirectionCommandToUnicode},
+    {"Lj", 0x01C8, DirectionCommandToUnicode},
+    {"lj", 0x01C9, DirectionCommandToUnicode},
+    {"NJ", 0x01CA, DirectionCommandToUnicode},
+    {"Nj", 0x01CB, DirectionCommandToUnicode},
+    {"nj", 0x01CC, DirectionCommandToUnicode},
+    {"DZ", 0x01F1, DirectionCommandToUnicode},
+    {"Dz", 0x01F2, DirectionCommandToUnicode},
+    {"dz", 0x01F3, DirectionCommandToUnicode},
+    {"HV", 0x01F6, DirectionCommandToUnicode},
     {"j", 0x0237},
-    {"ldots", 0x2026}, /** \ldots must be before \l */
-    {"grqq", 0x201C},
-    {"rqq", 0x201D},
-    {"glqq", 0x201E},
-    {"frqq", 0x00BB},
-    {"flqq", 0x00AB},
+    {"ldots", 0x2026}, /** \ldots must be before \l */ // TODO comment still true?
+    {"grqq", 0x201C, DirectionCommandToUnicode},
+    {"rqq", 0x201D, DirectionCommandToUnicode},
+    {"glqq", 0x201E, DirectionCommandToUnicode},
+    {"frqq", 0x00BB, DirectionCommandToUnicode},
+    {"flqq", 0x00AB, DirectionCommandToUnicode},
     {"rq", 0x2019}, ///< tricky one: 'r' is a valid modifier
     {"lq", 0x2018}
 };
@@ -502,24 +753,30 @@ const int EncoderLaTeX::encoderLaTeXProtectedTextOnlySymbolsLen = sizeof(encoder
  */
 static const struct EncoderLaTeXSymbolSequence {
     const char *latex;
-    ushort unicode;
-    bool useUnicode;
+    const ushort unicode;
+    const EncoderLaTeXCommandDirection direction;
+
+    EncoderLaTeXSymbolSequence(const char *_latex, const ushort _unicode, const EncoderLaTeXCommandDirection _direction = DirectionBoth)
+            : latex(_latex), unicode(_unicode), direction(_direction)
+    {
+        /// nothing
+    }
 } encoderLaTeXSymbolSequences[] = {
-    {"!`", 0x00A1, true},
-    {"\"<", 0x00AB, true},
-    {"\">", 0x00BB, true},
-    {"?`", 0x00BF, true},
-    {"---", 0x2014, true},
-    {"--", 0x2013, true},
-    {"``", 0x201C, true},
-    {"''", 0x201D, true},
-    {"ff", 0xFB00, false},
-    {"fi", 0xFB01, false},
-    {"fl", 0xFB02, false},
-    {"ffi", 0xFB03, false},
-    {"ffl", 0xFB04, false},
-    {"ft", 0xFB05, false},
-    {"st", 0xFB06, false}
+    {"!`", 0x00A1},
+    {"\"<", 0x00AB},
+    {"\">", 0x00BB},
+    {"?`", 0x00BF},
+    {"---", 0x2014},
+    {"--", 0x2013},
+    {"``", 0x201C},
+    {"''", 0x201D},
+    {"ff", 0xFB00, DirectionUnicodeToCommand},
+    {"fi", 0xFB01, DirectionUnicodeToCommand},
+    {"fl", 0xFB02, DirectionUnicodeToCommand},
+    {"ffi", 0xFB03, DirectionUnicodeToCommand},
+    {"ffl", 0xFB04, DirectionUnicodeToCommand},
+    {"ft", 0xFB05, DirectionUnicodeToCommand},
+    {"st", 0xFB06, DirectionUnicodeToCommand}
 };
 static const int encoderLaTeXSymbolSequencesLen = sizeof(encoderLaTeXSymbolSequences) / sizeof(encoderLaTeXSymbolSequences[0]);
 
@@ -905,7 +1162,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// First, check if read input character matches beginning of symbol sequence
                 /// and input buffer as enough characters left to potentially contain
                 /// symbol sequence
-                if (encoderLaTeXSymbolSequences[l].useUnicode && encoderLaTeXSymbolSequences[l].latex[0] == c.toLatin1() && i <= len - (int)qstrlen(encoderLaTeXSymbolSequences[l].latex)) {
+                if ((encoderLaTeXSymbolSequences[l].direction & DirectionCommandToUnicode) && encoderLaTeXSymbolSequences[l].latex[0] == c.toLatin1() && i <= len - (int)qstrlen(encoderLaTeXSymbolSequences[l].latex)) {
                     /// Now actually check if symbol sequence is in input buffer
                     isSymbolSequence = true;
                     for (int p = 1; isSymbolSequence && p < (int)qstrlen(encoderLaTeXSymbolSequences[l].latex); ++p)
@@ -989,7 +1246,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
 
             /// Handle special cases of i without a dot (\i)
             for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                if (c.unicode() == dotlessIJCharacters[k].unicode) {
+                if (c.unicode() == dotlessIJCharacters[k].unicode && (dotlessIJCharacters[k].direction & DirectionUnicodeToCommand)) {
                     output.append(QString(QStringLiteral("\\%1{\\%2}")).arg(dotlessIJCharacters[k].modifier).arg(dotlessIJCharacters[k].letter));
                     found = true;
                 }
@@ -998,7 +1255,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// ... test if there is a symbol sequence like ---
                 /// to encode it
                 for (int k = 0; k < encoderLaTeXSymbolSequencesLen; ++k)
-                    if (encoderLaTeXSymbolSequences[k].unicode == c.unicode()) {
+                    if (encoderLaTeXSymbolSequences[k].unicode == c.unicode() && (encoderLaTeXSymbolSequences[k].direction & DirectionUnicodeToCommand)) {
                         for (int l = 0; l < (int)qstrlen(encoderLaTeXSymbolSequences[k].latex); ++l)
                             output.append(encoderLaTeXSymbolSequences[k].latex[l]);
                         found = true;
@@ -1010,7 +1267,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// Ok, no symbol sequence. Let's test character
                 /// commands like \ss
                 for (int k = 0; k < encoderLaTeXCharacterCommandsLen; ++k)
-                    if (encoderLaTeXCharacterCommands[k].unicode == c.unicode()) {
+                    if (encoderLaTeXCharacterCommands[k].unicode == c.unicode() && (encoderLaTeXCharacterCommands[k].direction & DirectionUnicodeToCommand)) {
                         output.append(QString(QStringLiteral("{\\%1}")).arg(encoderLaTeXCharacterCommands[k].letters));
                         found = true;
                         break;
@@ -1021,7 +1278,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// Ok, neither a character command. Let's test
                 /// escaped characters with modifiers like \"a
                 for (int k = 0; k < encoderLaTeXEscapedCharactersLen; ++k)
-                    if (encoderLaTeXEscapedCharacters[k].unicode == c.unicode()) {
+                    if (encoderLaTeXEscapedCharacters[k].unicode == c.unicode() && (encoderLaTeXEscapedCharacters[k].direction & DirectionUnicodeToCommand)) {
                         const char modifier = encoderLaTeXEscapedCharacters[k].modifier;
                         const QString formatString = (modifier >= 'A' && modifier <= 'Z') || (modifier >= 'a' && modifier <= 'z') ? QStringLiteral("{\\%1 %2}") : QStringLiteral("{\\%1%2}");
                         output.append(formatString.arg(modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
@@ -1033,7 +1290,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             if (!found) {
                 /// Ok, test for math commands
                 for (int k = 0; k < mathCommandLen; ++k)
-                    if (mathCommand[k].unicode == c.unicode()) {
+                    if (mathCommand[k].unicode == c.unicode() && (mathCommand[k].direction & DirectionUnicodeToCommand)) {
                         if (inMathMode)
                             output.append(QString(QStringLiteral("\\%1{}")).arg(mathCommand[k].written));
                         else
