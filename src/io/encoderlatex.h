@@ -24,6 +24,8 @@
 #include <unicode/translit.h>
 #endif // HAVE_ICU
 
+#include <QIODevice>
+
 #include "encoder.h"
 
 /**
@@ -47,6 +49,10 @@ public:
 
     static const EncoderLaTeX &instance();
     ~EncoderLaTeX() override;
+
+#ifdef BUILD_TESTING
+    static bool writeLaTeXTables(QIODevice &output);
+#endif // BUILD_TESTING
 
 protected:
     EncoderLaTeX();

@@ -17,6 +17,8 @@
 
 #include <QtTest/QtTest>
 
+#include <QStandardPaths>
+
 #include "encoderxml.h"
 #include "encoderlatex.h"
 #include "value.h"
@@ -209,7 +211,12 @@ void KBibTeXIOTest::fileInfoUrlsInText()
 
 void KBibTeXIOTest::initTestCase()
 {
-    /// nothing
+    QFile texFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QStringLiteral("/encoderlatex-tables.tex"));
+    qDebug() << "Writing LaTeX tables to: " << texFile.fileName();
+    if (texFile.open(QFile::WriteOnly)) {
+        EncoderLaTeX::writeLaTeXTables(texFile);
+        texFile.close();
+    }
 }
 
 QTEST_MAIN(KBibTeXIOTest)

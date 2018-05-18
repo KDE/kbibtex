@@ -68,6 +68,8 @@ endif (MSVC)
 if(
     BUILD_TESTING
 )
+    add_definitions(-DBUILD_TESTING)
+
     find_package(
         Qt5Test ${QT_MIN_VERSION}
         CONFIG

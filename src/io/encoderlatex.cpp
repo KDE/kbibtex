@@ -1414,3 +1414,183 @@ const EncoderLaTeX &EncoderLaTeX::instance()
     static const EncoderLaTeX self;
     return self;
 }
+
+#ifdef BUILD_TESTING
+bool EncoderLaTeX::writeLaTeXTables(QIODevice &output)
+{
+    if (!output.isOpen() || !output.isWritable()) return false;
+
+    output.write("\\documentclass{article}\n");
+    output.write("\\usepackage[T1]{fontenc}% required for pdflatex, remove for lualatex or xelatex\n");
+    output.write("\\usepackage{longtable}% tables breaking across multiple pages\n");
+    output.write("\\usepackage{booktabs}% nicer table lines\n");
+    output.write("\\usepackage{amssymb,textcomp}% more symbols\n");
+    output.write("\n");
+    output.write("\\begin{document}\n");
+
+    output.write("\\begin{longtable}{ccccc}\n");
+    output.write("\\toprule\n");
+    output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
+    output.write("\\midrule\n");
+    output.write("\\endfirsthead\n");
+    output.write("\\toprule\n");
+    output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
+    output.write("\\midrule\n");
+    output.write("\\endhead\n");
+    output.write("\\midrule\n");
+    output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
+    output.write("\\bottomrule\n");
+    output.write("\\endfoot\n");
+    output.write("\\midrule\n");
+    output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
+    output.write("\\bottomrule\n");
+    output.write("\\endlastfoot\n");
+    for (int i = 0; i < encoderLaTeXEscapedCharactersLen; ++i) {
+        output.write("\\verb|");
+        output.write(&encoderLaTeXEscapedCharacters[i].modifier, 1);
+        output.write("| & \\verb|");
+        output.write(&encoderLaTeXEscapedCharacters[i].letter, 1);
+        output.write("| & \\texttt{0x");
+        const QString unicodeStr = QStringLiteral("00000") + QString::number(encoderLaTeXEscapedCharacters[i].unicode, 16);
+        output.write(unicodeStr.right(4).toLatin1());
+        output.write("} & \\verb|\\");
+        output.write(&encoderLaTeXEscapedCharacters[i].modifier, 1);
+        output.write("|\\{\\verb|");
+        output.write(&encoderLaTeXEscapedCharacters[i].letter, 1);
+        output.write("|\\} & ");
+        if ((encoderLaTeXEscapedCharacters[i].direction & DirectionUnicodeToCommand) == 0)
+            output.write("\\emph{?}");
+        else {
+            output.write("{\\");
+            output.write(&encoderLaTeXEscapedCharacters[i].modifier, 1);
+            output.write("{");
+            output.write(&encoderLaTeXEscapedCharacters[i].letter, 1);
+            output.write("}}");
+        }
+        output.write(" \\\\\n");
+    }
+    output.write("\\end{longtable}\n\n");
+
+    output.write("\\begin{longtable}{ccccc}\n");
+    output.write("\\toprule\n");
+    output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
+    output.write("\\midrule\n");
+    output.write("\\endfirsthead\n");
+    output.write("\\toprule\n");
+    output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
+    output.write("\\midrule\n");
+    output.write("\\endhead\n");
+    output.write("\\midrule\n");
+    output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
+    output.write("\\bottomrule\n");
+    output.write("\\endfoot\n");
+    output.write("\\midrule\n");
+    output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
+    output.write("\\bottomrule\n");
+    output.write("\\endlastfoot\n");
+    for (int i = 0; i < dotlessIJCharactersLen; ++i) {
+        output.write("\\verb|");
+        output.write(&dotlessIJCharacters[i].modifier, 1);
+        output.write("| & \\verb|");
+        output.write(&dotlessIJCharacters[i].letter, 1);
+        output.write("| & \\texttt{0x");
+        const QString unicodeStr = QStringLiteral("00000") + QString::number(dotlessIJCharacters[i].unicode, 16);
+        output.write(unicodeStr.right(4).toLatin1());
+        output.write("} & \\verb|\\");
+        output.write(&dotlessIJCharacters[i].modifier, 1);
+        output.write("|\\{\\verb|\\");
+        output.write(&dotlessIJCharacters[i].letter, 1);
+        output.write("|\\} & ");
+        if ((dotlessIJCharacters[i].direction & DirectionUnicodeToCommand) == 0)
+            output.write("\\emph{?}");
+        else {
+            output.write("{\\");
+            output.write(&dotlessIJCharacters[i].modifier, 1);
+            output.write("{\\");
+            output.write(&dotlessIJCharacters[i].letter, 1);
+            output.write("}}");
+        }
+        output.write(" \\\\\n");
+    }
+    output.write("\\end{longtable}\n\n");
+
+    output.write("\\begin{longtable}{cccc}\n");
+    output.write("\\toprule\n");
+    output.write("Text & Unicode & Command & Symbol \\\\\n");
+    output.write("\\midrule\n");
+    output.write("\\endfirsthead\n");
+    output.write("\\toprule\n");
+    output.write("Text & Unicode & Command & Symbol \\\\\n");
+    output.write("\\midrule\n");
+    output.write("\\endhead\n");
+    output.write("\\midrule\n");
+    output.write("Text & Unicode & Command & Symbol \\\\\n");
+    output.write("\\bottomrule\n");
+    output.write("\\endfoot\n");
+    output.write("\\midrule\n");
+    output.write("Text & Unicode & Command & Symbol \\\\\n");
+    output.write("\\bottomrule\n");
+    output.write("\\endlastfoot\n");
+    for (int i = 0; i < mathCommandLen; ++i) {
+        output.write("\\texttt{");
+        output.write(mathCommand[i].command);
+        output.write("} & \\texttt{0x");
+        const QString unicodeStr = QStringLiteral("00000") + QString::number(mathCommand[i].unicode, 16);
+        output.write(unicodeStr.right(4).toLatin1());
+        output.write("} & \\verb|$\\");
+        output.write(mathCommand[i].command);
+        output.write("$| & ");
+        if ((mathCommand[i].direction & DirectionUnicodeToCommand) == 0)
+            output.write("\\emph{?}");
+        else {
+            output.write("{$\\");
+            output.write(mathCommand[i].command);
+            output.write("$}");
+        }
+        output.write(" \\\\\n");
+    }
+    output.write("\\end{longtable}\n\n");
+
+
+    output.write("\\begin{longtable}{cccc}\n");
+    output.write("\\toprule\n");
+    output.write("Text & Unicode & Command & Symbol \\\\\n");
+    output.write("\\midrule\n");
+    output.write("\\endfirsthead\n");
+    output.write("\\toprule\n");
+    output.write("Text & Unicode & Command & Symbol \\\\\n");
+    output.write("\\midrule\n");
+    output.write("\\endhead\n");
+    output.write("\\midrule\n");
+    output.write("Text & Unicode & Command & Symbol \\\\\n");
+    output.write("\\bottomrule\n");
+    output.write("\\endfoot\n");
+    output.write("\\midrule\n");
+    output.write("Text & Unicode & Command & Symbol \\\\\n");
+    output.write("\\bottomrule\n");
+    output.write("\\endlastfoot\n");
+    for (int i = 0; i < encoderLaTeXCharacterCommandsLen; ++i) {
+        output.write("\\texttt{");
+        output.write(encoderLaTeXCharacterCommands[i].command);
+        output.write("} & \\texttt{0x");
+        const QString unicodeStr = QStringLiteral("00000") + QString::number(encoderLaTeXCharacterCommands[i].unicode, 16);
+        output.write(unicodeStr.right(4).toLatin1());
+        output.write("} & \\verb|\\");
+        output.write(encoderLaTeXCharacterCommands[i].command);
+        output.write("| & ");
+        if ((encoderLaTeXCharacterCommands[i].direction & DirectionUnicodeToCommand) == 0)
+            output.write("\\emph{?}");
+        else {
+            output.write("{\\");
+            output.write(encoderLaTeXCharacterCommands[i].command);
+            output.write("}");
+        }
+        output.write(" \\\\\n");
+    }
+    output.write("\\end{longtable}\n\n");
+
+    output.write("\\end{document}\n\n");
+
+    return true;
+}
+#endif // BUILD_TESTING
