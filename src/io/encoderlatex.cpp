@@ -1158,14 +1158,15 @@ QString EncoderLaTeX::decode(const QString &input) const
             /// May still be a symbol sequence like ---
             bool isSymbolSequence = false;
             /// Go through all known symbol sequnces
-            for (int l = 0; l < encoderLaTeXSymbolSequencesLen; ++l)
+            for (int l = 0; l < encoderLaTeXSymbolSequencesLen; ++l) {
                 /// First, check if read input character matches beginning of symbol sequence
                 /// and input buffer as enough characters left to potentially contain
                 /// symbol sequence
-                if ((encoderLaTeXSymbolSequences[l].direction & DirectionCommandToUnicode) && encoderLaTeXSymbolSequences[l].latex[0] == c.toLatin1() && i <= len - (int)qstrlen(encoderLaTeXSymbolSequences[l].latex)) {
+                const int latexLen = (int)qstrlen(encoderLaTeXSymbolSequences[l].latex);
+                if ((encoderLaTeXSymbolSequences[l].direction & DirectionCommandToUnicode) && encoderLaTeXSymbolSequences[l].latex[0] == c.toLatin1() && i <= len - latexLen) {
                     /// Now actually check if symbol sequence is in input buffer
                     isSymbolSequence = true;
-                    for (int p = 1; isSymbolSequence && p < (int)qstrlen(encoderLaTeXSymbolSequences[l].latex); ++p)
+                    for (int p = 1; isSymbolSequence && p < latexLen; ++p)
                         isSymbolSequence &= encoderLaTeXSymbolSequences[l].latex[p] == input[i + p].toLatin1();
                     if (isSymbolSequence) {
                         /// Ok, found sequence: insert Unicode character in output
@@ -1175,6 +1176,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         break;
                     }
                 }
+            }
 
             if (!isSymbolSequence) {
                 /// No symbol sequence found, so just copy input to output
