@@ -500,12 +500,12 @@ static struct EncoderLaTeXEscapedCharacterLookupTableRow {
  * in text mode.
  */
 static const struct MathCommand {
-    const char *written;
+    const char *command;
     const ushort unicode;
     const EncoderLaTeXCommandDirection direction;
 
-    MathCommand(const char *_written, const ushort _unicode, const EncoderLaTeXCommandDirection _direction = DirectionBoth)
-            : written(_written), unicode(_unicode), direction(_direction)
+    MathCommand(const char *_command, const ushort _unicode, const EncoderLaTeXCommandDirection _direction = DirectionBoth)
+            : command(_command), unicode(_unicode), direction(_direction)
     {
         /// nothing
     }
@@ -543,12 +543,12 @@ static const int mathCommandLen = sizeof(mathCommand) / sizeof(mathCommand[0]);
  * hexcode.
  */
 static const struct EncoderLaTeXCharacterCommand {
-    const char *letters;
+    const char *command;
     const ushort unicode;
     const EncoderLaTeXCommandDirection direction;
 
-    EncoderLaTeXCharacterCommand(const char *_letters, const ushort _unicode, const EncoderLaTeXCommandDirection _direction = DirectionBoth)
-            : letters(_letters), unicode(_unicode), direction(_direction)
+    EncoderLaTeXCharacterCommand(const char *_command, const ushort _unicode, const EncoderLaTeXCommandDirection _direction = DirectionBoth)
+            : command(_command), unicode(_unicode), direction(_direction)
     {
         /// nothing
     }
@@ -942,7 +942,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// insert corresponding Unicode character
                         bool foundCommand = false;
                         for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
-                            if (QLatin1String(encoderLaTeXCharacterCommands[ci].letters) == alpha) /** note: QStringLiteral won't work here (?) */ {
+                            if (QLatin1String(encoderLaTeXCharacterCommands[ci].command) == alpha) /** note: QStringLiteral won't work here (?) */ {
                                 output.append(QChar(encoderLaTeXCharacterCommands[ci].unicode));
                                 foundCommand = true;
                             }
@@ -952,7 +952,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// like \subset
                         /// (automatically skipped if command was found above)
                         for (int k = 0; !foundCommand && k < mathCommandLen; ++k) {
-                            if (QLatin1String(mathCommand[k].written) == alpha) /** note: QStringLiteral won't work here (?) */ {
+                            if (QLatin1String(mathCommand[k].command) == alpha) /** note: QStringLiteral won't work here (?) */ {
                                 if (output.endsWith(QStringLiteral("\\ensuremath"))) {
                                     /// Remove "\ensuremath" right before this math command,
                                     /// it will be re-inserted when exporting/saving the document
@@ -1091,7 +1091,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// insert corresponding Unicode character
                     bool foundCommand = false;
                     for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
-                        if (QLatin1String(encoderLaTeXCharacterCommands[ci].letters) == alpha) /** note: QStringLiteral won't work here (?) */ {
+                        if (QLatin1String(encoderLaTeXCharacterCommands[ci].command) == alpha) /** note: QStringLiteral won't work here (?) */ {
                             output.append(QChar(encoderLaTeXCharacterCommands[ci].unicode));
                             foundCommand = true;
                         }
@@ -1268,7 +1268,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// commands like \ss
                 for (int k = 0; k < encoderLaTeXCharacterCommandsLen; ++k)
                     if (encoderLaTeXCharacterCommands[k].unicode == c.unicode() && (encoderLaTeXCharacterCommands[k].direction & DirectionUnicodeToCommand)) {
-                        output.append(QString(QStringLiteral("{\\%1}")).arg(encoderLaTeXCharacterCommands[k].letters));
+                        output.append(QString(QStringLiteral("{\\%1}")).arg(encoderLaTeXCharacterCommands[k].command));
                         found = true;
                         break;
                     }
@@ -1292,9 +1292,9 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 for (int k = 0; k < mathCommandLen; ++k)
                     if (mathCommand[k].unicode == c.unicode() && (mathCommand[k].direction & DirectionUnicodeToCommand)) {
                         if (inMathMode)
-                            output.append(QString(QStringLiteral("\\%1{}")).arg(mathCommand[k].written));
+                            output.append(QString(QStringLiteral("\\%1{}")).arg(mathCommand[k].command));
                         else
-                            output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand[k].written));
+                            output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand[k].command));
                         found = true;
                         break;
                     }
