@@ -94,12 +94,7 @@ EntryConfiguredWidget::EntryConfiguredWidget(const QSharedPointer<const EntryTab
 
 EntryConfiguredWidget::~EntryConfiguredWidget()
 {
-    for (int i = fieldInputCount - 1; i >= 0; --i) {
-        delete listOfLabeledFieldInput[i]->fieldInput;
-        delete listOfLabeledFieldInput[i]->label;
-    }
     delete[] listOfLabeledFieldInput;
-    delete gridLayout;
 }
 
 bool EntryConfiguredWidget::apply(QSharedPointer<Element> element) const
