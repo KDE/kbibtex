@@ -85,6 +85,10 @@ EntryConfiguredWidget::EntryConfiguredWidget(const QSharedPointer<const EntryTab
         : ElementWidget(parent), fieldInputCount(entryTabLayout->singleFieldLayouts.size()), numCols(entryTabLayout->columns), etl(entryTabLayout)
 {
     gridLayout = new QGridLayout(this);
+
+    /// Initialize list of field input widgets plus labels
+    listOfLabeledFieldInput = new LabeledFieldInput*[fieldInputCount];
+
     createGUI();
 }
 
@@ -190,9 +194,6 @@ bool EntryConfiguredWidget::canEdit(const Element *element)
 void EntryConfiguredWidget::createGUI()
 {
     const BibTeXFields *bf = BibTeXFields::self();
-
-    /// initialize list of field input widgets plus labels
-    listOfLabeledFieldInput = new LabeledFieldInput*[fieldInputCount];
 
     int i = 0;
     for (const SingleFieldLayout &sfl : const_cast<const QList<SingleFieldLayout> &>(etl->singleFieldLayouts)) {
