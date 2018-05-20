@@ -60,8 +60,8 @@ static const char *PropertyIdSuggestion = "PropertyIdSuggestion";
 ElementWidget::ElementWidget(QWidget *parent)
         : QWidget(parent), isReadOnly(false), m_file(nullptr), m_isModified(false)
 {
-    // nothing
-};
+    /// nothing
+}
 
 bool ElementWidget::isModified() const
 {
