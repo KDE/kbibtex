@@ -90,7 +90,7 @@ private:
         bool isVerticallyMinimumExpaning;
     } LabeledFieldInput;
     LabeledFieldInput **listOfLabeledFieldInput;
-    int fieldInputCount, numCols;
+    const int fieldInputCount, numCols;
     QGridLayout *gridLayout;
 
     const QSharedPointer<const EntryTabLayout> etl;

@@ -82,7 +82,7 @@ void ElementWidget::gotModified()
 
 
 EntryConfiguredWidget::EntryConfiguredWidget(const QSharedPointer<const EntryTabLayout> &entryTabLayout, QWidget *parent)
-        : ElementWidget(parent), etl(entryTabLayout)
+        : ElementWidget(parent), fieldInputCount(entryTabLayout->singleFieldLayouts.size()), numCols(entryTabLayout->columns), etl(entryTabLayout)
 {
     gridLayout = new QGridLayout(this);
     createGUI();
@@ -191,9 +191,6 @@ void EntryConfiguredWidget::createGUI()
 {
     const BibTeXFields *bf = BibTeXFields::self();
 
-    /// store information on number of widgets and columns in class variable
-    fieldInputCount = etl->singleFieldLayouts.size();
-    numCols = etl->columns;
     /// initialize list of field input widgets plus labels
     listOfLabeledFieldInput = new LabeledFieldInput*[fieldInputCount];
 
