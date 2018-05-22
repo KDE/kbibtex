@@ -216,6 +216,9 @@ private:
     EntryPrivate *const d;
 };
 
+Q_DECLARE_METATYPE(Entry)
+Q_DECLARE_METATYPE(Entry *)
+
 QDebug operator<<(QDebug dbg, const Entry &Entry);
 
 /**

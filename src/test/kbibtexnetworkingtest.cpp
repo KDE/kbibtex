@@ -32,6 +32,7 @@ public:
     QUrl homepage() const override;
 
     QMap<QString, QString> formParameters_public(const QString &htmlText, int startPos);
+    void sanitizeEntry_public(QSharedPointer<Entry> entry);
 
 protected:
     QString favIconUrl() const override;
@@ -45,6 +46,8 @@ private slots:
     void initTestCase();
     void onlineSearchAbstractFormParameters_data();
     void onlineSearchAbstractFormParameters();
+    void onlineSearchAbstractSanitizeEntry_data();
+    void onlineSearchAbstractSanitizeEntry();
 
 private:
 };
@@ -79,6 +82,11 @@ QString OnlineSearchDummy::favIconUrl() const
 QMap<QString, QString> OnlineSearchDummy::formParameters_public(const QString &htmlText, int startPos)
 {
     return formParameters(htmlText, startPos);
+}
+
+void OnlineSearchDummy::sanitizeEntry_public(QSharedPointer<Entry> entry)
+{
+    sanitizeEntry(entry);
 }
 
 void KBibTeXNetworkingTest::onlineSearchAbstractFormParameters_data()
@@ -121,6 +129,97 @@ void KBibTeXNetworkingTest::onlineSearchAbstractFormParameters()
             QCOMPARE(expectedValue, computedValue);
         }
     }
+}
+
+void KBibTeXNetworkingTest::onlineSearchAbstractSanitizeEntry_data()
+{
+    QTest::addColumn<Entry *>("badInputEntry");
+    QTest::addColumn<Entry *>("goodOutputEntry");
+
+    QTest::newRow("Entry with type and id but without values") << new Entry(Entry::etArticle, QStringLiteral("abc123")) << new Entry(Entry::etArticle, QStringLiteral("abc123"));
+
+    const Value doiValue = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/182")));
+    const Value authorValue = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("Jane Doe")));
+
+    Entry *a = new Entry(Entry::etBook, QStringLiteral("abcdef"));
+    Entry *b = new Entry(*a);
+    Value a1 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("http://dx.example.org/10.1000/182"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://www.kde.org"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://dx.doi.org/10.1000/183")));
+    a->insert(Entry::ftUrl, a1);
+    Value b1 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/182"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/183")));
+    b->insert(Entry::ftDOI, b1);
+    Value b2 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://www.kde.org")));
+    b->insert(Entry::ftUrl, b2);
+    QTest::newRow("Entry with DOI number in URL") << a << b;
+
+    a = new Entry(Entry::etPhDThesis, QStringLiteral("abCDef2"));
+    b = new Entry(*a);
+    a1 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("http://dx.example.org/10.1000/182")))  << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://www.kde.org"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://dx.doi.org/10.1000/183")));
+    a->insert(Entry::ftUrl, a1);
+    b1 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/182"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/183")));
+    a->insert(Entry::ftDOI, b1);
+    b->insert(Entry::ftDOI, b1);
+    b2 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://www.kde.org")));
+    b->insert(Entry::ftUrl, b2);
+    QTest::newRow("Entry both with DOI and DOI number in URL") << a << b;
+
+    a = new Entry(Entry::etInProceedings, QStringLiteral("abc567"));
+    b = new Entry(*a);
+    a1 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("42")));
+    static const QString ftIssue = QStringLiteral("issue");
+    a->insert(ftIssue, a1);
+    a->insert(Entry::ftDOI, doiValue);
+    b1 = a1;
+    b->insert(Entry::ftDOI, doiValue);
+    b->insert(Entry::ftNumber, b1);
+    QTest::newRow("Entry with 'issue' becomes 'number'") << a << b;
+
+    a = new Entry(Entry::etTechReport, QStringLiteral("TR10.1000/182"));
+    b = new Entry(*a);
+    a->insert(Entry::ftAuthor, authorValue);
+    b->insert(Entry::ftDOI, doiValue);
+    b->insert(Entry::ftAuthor, authorValue);
+    QTest::newRow("Entry's id contains DOI, set DOI field accordingly") << a << b;
+
+    a = new Entry(Entry::etMastersThesis, QStringLiteral("xyz987"));
+    b = new Entry(*a);
+    a1 = Value() << QSharedPointer<ValueItem>(new MacroKey(QStringLiteral("TOBEREMOVED")));
+    a->insert(Entry::ftCrossRef, a1);
+    a->insert(Entry::ftAuthor, authorValue);
+    b->insert(Entry::ftAuthor, authorValue);
+    QTest::newRow("Removing 'crossref' field from Entry") << a << b;
+
+    a = new Entry(Entry::etInProceedings, QStringLiteral("abc567"));
+    b = new Entry(*a);
+    a1 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("Bla blubber")));
+    static const QString ftDescription = QStringLiteral("description");
+    a->insert(ftDescription, a1);
+    a->insert(Entry::ftDOI, doiValue);
+    b1 = a1;
+    b->insert(Entry::ftDOI, doiValue);
+    b->insert(Entry::ftAbstract, b1);
+    QTest::newRow("Entry with 'description' becomes 'abstract'") << a << b;
+
+    a = new Entry(Entry::etPhDThesis, QStringLiteral("qwertz"));
+    b = new Entry(*a);
+    a1 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("September"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("/"))) << QSharedPointer<ValueItem>(new MacroKey(QStringLiteral("nov")));
+    a->insert(Entry::ftMonth, a1);
+    a->insert(Entry::ftDOI, doiValue);
+    b1 = Value() << QSharedPointer<ValueItem>(new MacroKey(QStringLiteral("sep"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("/"))) << QSharedPointer<ValueItem>(new MacroKey(QStringLiteral("nov")));
+    b->insert(Entry::ftDOI, doiValue);
+    b->insert(Entry::ftMonth, b1);
+    QTest::newRow("Entry with month 'September' becomes macro key 'sep'") << a << b;
+}
+
+void KBibTeXNetworkingTest::onlineSearchAbstractSanitizeEntry()
+{
+    QFETCH(Entry *, badInputEntry);
+    QFETCH(Entry *, goodOutputEntry);
+    QSharedPointer<Entry> badInputEntrySharedPointer(badInputEntry);
+
+    OnlineSearchDummy onlineSearch(this);
+    onlineSearch.sanitizeEntry_public(badInputEntrySharedPointer);
+    QCOMPARE(*badInputEntrySharedPointer.data(), *goodOutputEntry);
+    delete goodOutputEntry;
 }
 
 void KBibTeXNetworkingTest::initTestCase()
