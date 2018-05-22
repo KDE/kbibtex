@@ -484,6 +484,9 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
     /// Sometimes, there is no identifier, so set a random one
     if (entry->id().isEmpty())
         entry->setId(QString(QStringLiteral("entry-%1")).arg(QString::number(qrand(), 36)));
+    /// Missing entry type? Set it to 'misc'
+    if (entry->type().isEmpty())
+        entry->setType(Entry::etMisc);
 
     const QString ftIssue = QStringLiteral("issue");
     if (entry->contains(ftIssue)) {
