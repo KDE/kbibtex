@@ -535,6 +535,57 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
             entry->insert(Entry::ftMonth, monthValue);
     }
 
+    if (entry->contains(Entry::ftDOI) && entry->contains(Entry::ftUrl)) {
+        /// Remove URL from entry if contains a DOI and the DOI field matches the DOI in the URL
+        const Value &doiValue = entry->value(Entry::ftDOI);
+        for (const auto &doiValueItem : doiValue) {
+            const QString doi = PlainTextValue::text(doiValueItem);
+            Value v = entry->value(Entry::ftUrl);
+            bool gotChanged = false;
+            for (Value::Iterator it = v.begin(); it != v.end();) {
+                const QSharedPointer<ValueItem> &vi = (*it);
+                if (vi->containsPattern(QStringLiteral("/") + doi)) {
+                    it = v.erase(it);
+                    gotChanged = true;
+                } else
+                    ++it;
+            }
+            if (v.isEmpty())
+                entry->remove(Entry::ftUrl);
+            else if (gotChanged)
+                entry->insert(Entry::ftUrl, v);
+        }
+    } else if (!entry->contains(Entry::ftDOI) && entry->contains(Entry::ftUrl)) {
+        /// If URL looks like a DOI, remove URL and add a DOI field
+        QSet<QString> doiSet;
+        Value v = entry->value(Entry::ftUrl);
+        bool gotChanged = false;
+        for (Value::Iterator it = v.begin(); it != v.end();) {
+            const QString viText = PlainTextValue::text(*it);
+            if (KBibTeX::doiRegExp.indexIn(viText) >= 0) {
+                doiSet.insert(KBibTeX::doiRegExp.cap());
+                it = v.erase(it);
+                gotChanged = true;
+            } else
+                ++it;
+        }
+        if (v.isEmpty())
+            entry->remove(Entry::ftUrl);
+        else if (gotChanged)
+            entry->insert(Entry::ftUrl, v);
+        if (!doiSet.isEmpty()) {
+            Value doiValue;
+            for (const QString &doi : doiSet)
+                doiValue.append(QSharedPointer<PlainText>(new PlainText(doi)));
+            entry->insert(Entry::ftDOI, doiValue);
+        }
+    } else if (!entry->contains(Entry::ftDOI) && KBibTeX::doiRegExp.indexIn(entry->id()) >= 0) {
+        /// If entry id looks like a DOI, add a DOI field
+        Value doiValue;
+        doiValue.append(QSharedPointer<PlainText>(new PlainText(KBibTeX::doiRegExp.cap())));
+        entry->insert(Entry::ftDOI, doiValue);
+    }
+
     /// Referenced strings or entries do not exist in the search result
     /// and BibTeX breaks if it finds a reference to a non-existing string or entry
     entry->remove(Entry::ftCrossRef);
