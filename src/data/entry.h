@@ -131,6 +131,9 @@ public:
 
     ~Entry() override;
 
+    bool operator==(const Entry &other) const;
+    bool operator!=(const Entry &other) const;
+
     /**
      * Assignment operator, working similar to a copy constructor,
      * but overwrites the current object's values.

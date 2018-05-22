@@ -61,6 +61,7 @@ public:
       * @return TRUE if both instances are equal
       */
     virtual bool operator==(const ValueItem &other) const = 0;
+    bool operator!=(const ValueItem &other) const;
 
     /**
      * Unique numeric identifier for every ValueItem instance.
@@ -271,6 +272,8 @@ public:
 
     Value &operator=(const Value &rhs);
     Value &operator=(Value &&rhs);
+    bool operator==(const Value &rhs) const;
+    bool operator!=(const Value &rhs) const;
 };
 
 QDebug operator<<(QDebug dbg, const Value &value);

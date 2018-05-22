@@ -103,6 +103,28 @@ quint64 Entry::uniqueId() const
     return internalUniqueId;
 }
 
+bool Entry::operator==(const Entry &other) const
+{
+    /// Quick and easy tests first: id, type, and numer of fields
+    if (id() != other.id() || type().compare(other.type(), Qt::CaseInsensitive) != 0 || count() != other.count())
+        return false;
+
+    /// Compare each field with other's corresponding field
+    for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it) {
+        if (!other.contains(it.key())) return false;
+        const Value &thisValue = it.value();
+        const Value &otherValue = other.value(it.key());
+        if (thisValue != otherValue) return false;
+    }
+
+    return true;
+}
+
+bool Entry::operator!=(const Entry &other) const
+{
+    return !operator ==(other);
+}
+
 Entry &Entry::operator= (const Entry &other)
 {
     if (this != &other) {
