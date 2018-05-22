@@ -239,6 +239,8 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 
 void OnlineSearchMathSciNet::sanitizeEntry(QSharedPointer<Entry> entry)
 {
+    OnlineSearchAbstract::sanitizeEntry(entry);
+
     const QString ftFJournal = QStringLiteral("fjournal");
     if (entry->contains(ftFJournal)) {
         Value v = entry->value(ftFJournal);

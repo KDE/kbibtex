@@ -118,6 +118,8 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
 
 void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)
 {
+    OnlineSearchAbstract::sanitizeEntry(entry);
+
     /// Rewrite 'fjournal' fields to become 'journal' fields
     /// (overwriting them if necessary)
     const QString ftFJournal = QStringLiteral("fjournal");
