@@ -488,7 +488,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
     if (entry->type().isEmpty())
         entry->setType(Entry::etMisc);
 
-    const QString ftIssue = QStringLiteral("issue");
+    static const QString ftIssue = QStringLiteral("issue");
     if (entry->contains(ftIssue)) {
         /// ACM's Digital Library uses "issue" instead of "number" -> fix that
         Value v = entry->value(ftIssue);
@@ -498,7 +498,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
 
     /// If entry contains a description field but no abstract,
     /// rename description field to abstract
-    const QString ftDescription = QStringLiteral("description");
+    static const QString ftDescription = QStringLiteral("description");
     if (!entry->contains(Entry::ftAbstract) && entry->contains(ftDescription)) {
         Value v = entry->value(ftDescription);
         entry->remove(ftDescription);
