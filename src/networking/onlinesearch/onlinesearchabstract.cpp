@@ -518,21 +518,21 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
     }
 
     if (entry->contains(Entry::ftMonth)) {
-        /// Fix strigns for months: "September" -> "sep"
-        const QString monthStr = PlainTextValue::text(entry->value(Entry::ftMonth));
+        /// Fix strings for months: "September" -> "sep"
+        Value monthValue = entry->value(Entry::ftMonth);
+        bool updated = false;
+        for (Value::Iterator it = monthValue.begin(); it != monthValue.end(); ++it) {
+            const QString valueItem = PlainTextValue::text(*it);
 
-        static const QRegExp longMonth = QRegExp(QStringLiteral("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*"), Qt::CaseInsensitive);
-        if (monthStr.indexOf(longMonth) == 0 && monthStr == longMonth.cap(0)) {
-            /// String used for month is actually a full name, therefore replace it
-            entry->remove(Entry::ftMonth);
-
-            /// Regular expression checked for valid three-letter abbreviations
-            /// that month names start with. Use those three letters for a macro key
-            /// Example: "September" -> sep
-            Value v;
-            v.append(QSharedPointer<MacroKey>(new MacroKey(longMonth.cap(1).toLower())));
-            entry->insert(Entry::ftMonth, v);
+            static const QRegExp longMonth = QRegExp(QStringLiteral("(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*"), Qt::CaseInsensitive);
+            if (valueItem.indexOf(longMonth) == 0) {
+                it = monthValue.erase(it);
+                it = monthValue.insert(it, QSharedPointer<MacroKey>(new MacroKey(valueItem.left(3).toLower())));
+                updated = true;
+            }
         }
+        if (updated)
+            entry->insert(Entry::ftMonth, monthValue);
     }
 
     /// Referenced strings or entries do not exist in the search result
