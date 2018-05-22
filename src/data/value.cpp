@@ -548,6 +548,11 @@ Value &Value::operator=(Value &&rhs)
     return static_cast<Value &>(QVector<QSharedPointer<ValueItem> >::operator =((rhs)));
 }
 
+Value &Value::operator<<(const QSharedPointer<ValueItem> &value)
+{
+    return static_cast<Value &>(QVector<QSharedPointer<ValueItem> >::operator<<((value)));
+}
+
 bool Value::operator==(const Value &rhs) const
 {
     const Value &lhs = *this; ///< just for readability to have a 'lhs' matching 'rhs'

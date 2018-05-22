@@ -272,6 +272,7 @@ public:
 
     Value &operator=(const Value &rhs);
     Value &operator=(Value &&rhs);
+    Value &operator<<(const QSharedPointer<ValueItem> &value);
     bool operator==(const Value &rhs) const;
     bool operator!=(const Value &rhs) const;
 };
