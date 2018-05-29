@@ -49,6 +49,7 @@ public:
      * @param parent QWidget's parent
      */
     explicit RangeWidget(const QStringList &values, QWidget *parent = nullptr);
+    ~RangeWidget();
 
     /**
       * Returns the maximum value of this RangeWidget.
