@@ -4,7 +4,7 @@ endif(POLICY CMP0048)
 
 project(
     kbibtex
-    VERSION "0.7.95"
+    VERSION "0.8"
 )
 
 cmake_minimum_required(
