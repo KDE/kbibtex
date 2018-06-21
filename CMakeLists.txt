@@ -115,19 +115,29 @@ ecm_setup_version(
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kbibtex-version.h"
 )
 
-if((${KBIBTEX_VERSION_PATCH} GREATER 50) OR (${KBIBTEX_VERSION_PATCH} EQUAL 50))
+# Compute a 'patch level' even if none were given in the program version
+if(KBIBTEX_VERSION_PATCH STREQUAL "")
+    set(KBIBTEX_VERSION_PATCH_VALUE 0)
+else(KBIBTEX_VERSION_PATCH STREQUAL "")
+    set(KBIBTEX_VERSION_PATCH_VALUE KBIBTEX_VERSION_PATCH)
+endif(KBIBTEX_VERSION_PATCH STREQUAL "")
+
+
+if((${KBIBTEX_VERSION_PATCH_VALUE} GREATER 50) OR (${KBIBTEX_VERSION_PATCH_VALUE} EQUAL 50))
     # If the version number indicates a pre-release version such as
-    # '0.7.90', i.e. a beta version for the major release 0.8,
+    # '0.7.90', i.e. a beta version for the major release 0.8, so
     # increment release version from 0.7 to 0.8
     math(EXPR KBIBTEX_RELEASE_VERSION_MINOR "${KBIBTEX_VERSION_MINOR} + 1")
     set(
         KBIBTEX_RELEASE_VERSION ${KBIBTEX_VERSION_MAJOR}.${KBIBTEX_RELEASE_VERSION_MINOR}
     )
-else((${KBIBTEX_VERSION_PATCH} GREATER 50) OR (${KBIBTEX_VERSION_PATCH} EQUAL 50))
+else((${KBIBTEX_VERSION_PATCH_VALUE} GREATER 50) OR (${KBIBTEX_VERSION_PATCH_VALUE} EQUAL 50))
+    # Patch level is less than 50, i.e. it is a regular bugfix release
+    # on a stable release
     set(
         KBIBTEX_RELEASE_VERSION ${KBIBTEX_VERSION_MAJOR}.${KBIBTEX_VERSION_MINOR}
     )
-endif((${KBIBTEX_VERSION_PATCH} GREATER 50) OR (${KBIBTEX_VERSION_PATCH} EQUAL 50))
+endif((${KBIBTEX_VERSION_PATCH_VALUE} GREATER 50) OR (${KBIBTEX_VERSION_PATCH_VALUE} EQUAL 50))
 
 option(
     UNITY_BUILD
