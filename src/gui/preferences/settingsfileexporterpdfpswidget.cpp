@@ -18,6 +18,7 @@
 #include "settingsfileexporterpdfpswidget.h"
 
 #include <QFormLayout>
+#include <QPageSize>
 #include <KLineEdit>
 
 #include <KSharedConfig>
@@ -34,7 +35,6 @@ private:
     SettingsFileExporterPDFPSWidget *p;
 
     KComboBox *comboBoxPaperSize;
-    QMap<QString, QString> paperSizeLabelToName;
 
     KComboBox *comboBoxBabelLanguage;
     KComboBox *comboBoxBibliographyStyle;
@@ -46,9 +46,6 @@ public:
 
     SettingsFileExporterPDFPSWidgetPrivate(SettingsFileExporterPDFPSWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterPDFPS")), configGroupNameGeneral(QStringLiteral("General")) {
-        paperSizeLabelToName.insert(i18n("A4"), QStringLiteral("a4"));
-        paperSizeLabelToName.insert(i18n("Letter"), QStringLiteral("letter"));
-        paperSizeLabelToName.insert(i18n("Legal"), QStringLiteral("legal"));
 
         setupGUI();
     }
@@ -56,7 +53,7 @@ public:
     void loadState() {
         KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
         const QString paperSizeName = configGroupGeneral.readEntry(FileExporter::keyPaperSize, FileExporter::defaultPaperSize);
-        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), paperSizeLabelToName.key(paperSizeName));
+        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), paperSizeName, Qt::UserRole);
         comboBoxPaperSize->setCurrentIndex(row);
 
         KConfigGroup configGroup(config, configGroupName);
@@ -70,7 +67,9 @@ public:
 
     void saveState() {
         KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
-        const QString paperSizeName = paperSizeLabelToName.value(comboBoxPaperSize->currentText(), FileExporter::defaultPaperSize);
+        QString paperSizeName = comboBoxPaperSize->currentData().toString();
+        if (paperSizeName.isEmpty())
+            paperSizeName = FileExporter::defaultPaperSize;
         configGroupGeneral.writeEntry(FileExporter::keyPaperSize, paperSizeName);
 
         KConfigGroup configGroup(config, configGroupName);
@@ -80,7 +79,7 @@ public:
     }
 
     void resetToDefaults() {
-        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), FileExporter::defaultPaperSize);
+        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), FileExporter::defaultPaperSize, Qt::UserRole);
         comboBoxPaperSize->setCurrentIndex(row);
         row = GUIHelper::selectValue(comboBoxBabelLanguage->model(), FileExporterToolchain::defaultBabelLanguage);
         comboBoxBabelLanguage->setCurrentIndex(row);
@@ -94,10 +93,14 @@ public:
         comboBoxPaperSize = new KComboBox(false, p);
         comboBoxPaperSize->setObjectName(QStringLiteral("comboBoxPaperSize"));
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
-        QStringList paperSizeLabelToNameKeys = paperSizeLabelToName.keys();
-        paperSizeLabelToNameKeys.sort();
-        for (const QString &labelText : const_cast<const QStringList &>(paperSizeLabelToNameKeys)) {
-            comboBoxPaperSize->addItem(labelText, paperSizeLabelToName[labelText]);
+        static const QMap<QString, QString> paperSizes = {
+            { QPageSize::name(QPageSize::A4), QStringLiteral("a4") },
+            { QPageSize::name(QPageSize::Letter), QStringLiteral("letter") },
+            { QPageSize::name(QPageSize::Legal), QStringLiteral("legal") },
+        };
+        /// already sorted by key, i.e. the labels
+        for (QMap<QString, QString>::ConstIterator it = paperSizes.begin(); it != paperSizes.end(); ++it) {
+            comboBoxPaperSize->addItem(it.key(), it.value());
         }
         connect(comboBoxPaperSize, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsAbstractWidget::changed);
 
