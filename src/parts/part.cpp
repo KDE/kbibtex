@@ -35,6 +35,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QTemporaryFile>
+#include <QTimer>
 
 #include <KMessageBox> // FIXME deprecated
 #include <KLocalizedString>
@@ -799,10 +800,17 @@ bool KBibTeXPart::saveFile()
 
     const bool saveOperationSuccess = d->saveFile(url());
 
-    /// Continue watching local file after write operation
-    if (!watchableFilename.isEmpty())
-        d->fileSystemWatcher.addPath(watchableFilename);
-    else
+    if (!watchableFilename.isEmpty()) {
+        /// Continue watching a local file after write operation, but do
+        /// so only after a short delay. The delay is necessary in some
+        /// situations as observed in KDE bug report 396343 where the
+        /// DropBox client seemingly touched the file right after saving
+        /// from within KBibTeX, triggering KBibTeX to show a 'reload'
+        /// message box.
+        QTimer::singleShot(500, [this, watchableFilename]() {
+            d->fileSystemWatcher.addPath(watchableFilename);
+        });
+    } else
         qCWarning(LOG_KBIBTEX_PARTS) << "watchableFilename is Empty";
 
     if (!saveOperationSuccess) {
