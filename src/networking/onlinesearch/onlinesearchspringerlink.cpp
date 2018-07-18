@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -74,35 +74,35 @@ public:
         layout->setMargin(0);
 
         lineEditFreeText = new KLineEdit(this);
-        lineEditFreeText->setClearButtonShown(true);
+        lineEditFreeText->setClearButtonEnabled(true);
         QLabel *label = new QLabel(i18n("Free Text:"), this);
         label->setBuddy(lineEditFreeText);
         layout->addRow(label, lineEditFreeText);
         connect(lineEditFreeText, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         lineEditTitle = new KLineEdit(this);
-        lineEditTitle->setClearButtonShown(true);
+        lineEditTitle->setClearButtonEnabled(true);
         label = new QLabel(i18n("Title:"), this);
         label->setBuddy(lineEditTitle);
         layout->addRow(label, lineEditTitle);
         connect(lineEditTitle, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         lineEditBookTitle = new KLineEdit(this);
-        lineEditBookTitle->setClearButtonShown(true);
+        lineEditBookTitle->setClearButtonEnabled(true);
         label = new QLabel(i18n("Book/Journal title:"), this);
         label->setBuddy(lineEditBookTitle);
         layout->addRow(label, lineEditBookTitle);
         connect(lineEditBookTitle, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         lineEditAuthorEditor = new KLineEdit(this);
-        lineEditAuthorEditor->setClearButtonShown(true);
+        lineEditAuthorEditor->setClearButtonEnabled(true);
         label = new QLabel(i18n("Author or Editor:"), this);
         label->setBuddy(lineEditAuthorEditor);
         layout->addRow(label, lineEditAuthorEditor);
         connect(lineEditAuthorEditor, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         lineEditYear = new KLineEdit(this);
-        lineEditYear->setClearButtonShown(true);
+        lineEditYear->setClearButtonEnabled(true);
         label = new QLabel(i18n("Year:"), this);
         label->setBuddy(lineEditYear);
         layout->addRow(label, lineEditYear);
