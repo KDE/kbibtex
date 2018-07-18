@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -112,7 +112,7 @@ public:
         comboBoxBibliographyStyle = new KComboBox(true, p);
         comboBoxBibliographyStyle->setObjectName(QStringLiteral("comboBoxBibliographyStyle"));
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
-        static const QStringList styles = QStringList() << QString(QStringLiteral("abbrv")) << QString(QStringLiteral("alpha")) << QString(QStringLiteral("plain")) << QString(QStringLiteral("agsm")) << QString(QStringLiteral("dcu")) << QString(QStringLiteral("jmr")) << QString(QStringLiteral("jphysicsB")) << QString(QStringLiteral("kluwer")) << QString(QStringLiteral("nederlands"));
+        static const QStringList styles {QString(QStringLiteral("abbrv")), QString(QStringLiteral("alpha")), QString(QStringLiteral("plain")), QString(QStringLiteral("agsm")), QString(QStringLiteral("dcu")), QString(QStringLiteral("jmr")), QString(QStringLiteral("jphysicsB")), QString(QStringLiteral("kluwer")), QString(QStringLiteral("nederlands"))};
         for (const QString &style : styles) {
             comboBoxBibliographyStyle->addItem(style);
         }

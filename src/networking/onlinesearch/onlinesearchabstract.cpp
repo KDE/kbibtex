@@ -82,7 +82,7 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/favicons/");
     QDir().mkpath(cacheDirectory);
     const QString fileNameStem = cacheDirectory + QString(favIconUrl()).remove(invalidChars);
-    const QStringList fileNameExtensions = QStringList() << QStringLiteral(".ico") << QStringLiteral(".png") << QString();
+    const QStringList fileNameExtensions {QStringLiteral(".ico"), QStringLiteral(".png"), QString()};
 
     for (const QString &extension : fileNameExtensions) {
         const QString fileName = fileNameStem + extension;
@@ -267,7 +267,7 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
         timeout = 10 * 1000;
 
     QDBusMessage m = QDBusMessage::createMethodCall(dbusServiceName, dbusPath, dbusInterfaceName, QStringLiteral("Notify"));
-    QList<QVariant> args = QList<QVariant>() << QStringLiteral("kdialog") << 0U << icon << title << text << QStringList() << QVariantMap() << timeout;
+    QList<QVariant> args {QStringLiteral("kdialog"), 0U, icon, title, text, QStringList(), QVariantMap(), timeout};
     m.setArguments(args);
 
     QDBusMessage replyMsg = QDBusConnection::sessionBus().call(m);

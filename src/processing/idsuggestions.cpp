@@ -313,7 +313,7 @@ const QStringList IdSuggestions::IdSuggestionsPrivate::smallWords = i18nc("Small
 const QString IdSuggestions::keyDefaultFormatString = QStringLiteral("DefaultFormatString");
 const QString IdSuggestions::defaultDefaultFormatString = QString();
 const QString IdSuggestions::keyFormatStringList = QStringLiteral("FormatStringList");
-const QStringList IdSuggestions::defaultFormatStringList = QStringList() << QStringLiteral("A") << QStringLiteral("A2|y") << QStringLiteral("A3|y") << QStringLiteral("A4|y|\":|T5") << QStringLiteral("al|\":|T") << QStringLiteral("al|y") << QStringLiteral("al|Y") << QStringLiteral("Al\"-|\"-|y") << QStringLiteral("Al\"+|Y") << QStringLiteral("al|y|T") << QStringLiteral("al|Y|T3") << QStringLiteral("al|Y|T3l") << QStringLiteral("a|\":|Y|\":|T1") << QStringLiteral("a|y") << QStringLiteral("A|\":|Y");
+const QStringList IdSuggestions::defaultFormatStringList {QStringLiteral("A"), QStringLiteral("A2|y"), QStringLiteral("A3|y"), QStringLiteral("A4|y|\":|T5"), QStringLiteral("al|\":|T"), QStringLiteral("al|y"), QStringLiteral("al|Y"), QStringLiteral("Al\"-|\"-|y"), QStringLiteral("Al\"+|Y"), QStringLiteral("al|y|T"), QStringLiteral("al|Y|T3"), QStringLiteral("al|Y|T3l"), QStringLiteral("a|\":|Y|\":|T1"), QStringLiteral("a|y"), QStringLiteral("A|\":|Y")};
 const QString IdSuggestions::configGroupName = QStringLiteral("IdSuggestions");
 
 IdSuggestions::IdSuggestions()

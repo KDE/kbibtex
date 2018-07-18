@@ -113,7 +113,7 @@ void FileExporterBibTeXOutput::setLaTeXBibliographyStyle(const QString &bibStyle
 
 bool FileExporterBibTeXOutput::generateOutput(QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QStringLiteral("pdflatex -halt-on-error ") + m_fileBasename + KBibTeX::extensionTeX << QStringLiteral("bibtex ") + m_fileBasename + KBibTeX::extensionAux;
+    QStringList cmdLines {QStringLiteral("pdflatex -halt-on-error ") + m_fileBasename + KBibTeX::extensionTeX, QStringLiteral("bibtex ") + m_fileBasename + KBibTeX::extensionAux};
 
     if (writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog))
         return true;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,12 +21,12 @@
 
 const QString Preferences::groupColor = QStringLiteral("Color Labels");
 const QString Preferences::keyColorCodes = QStringLiteral("colorCodes");
-const QStringList Preferences::defaultColorCodes = QStringList() << QStringLiteral("#cc3300") << QStringLiteral("#0033ff") << QStringLiteral("#009966") << QStringLiteral("#f0d000");
+const QStringList Preferences::defaultColorCodes {QStringLiteral("#cc3300"), QStringLiteral("#0033ff"), QStringLiteral("#009966"), QStringLiteral("#f0d000")};
 const QString Preferences::keyColorLabels = QStringLiteral("colorLabels");
 // FIXME
 // clazy warns: QString(const char*) being called [-Wclazy-qstring-uneeded-heap-allocations]
 // ... but using QStringLiteral may break the translation process?
-const QStringList Preferences::defaultColorLabels = QStringList() << I18N_NOOP("Important") << I18N_NOOP("Unread") << I18N_NOOP("Read") << I18N_NOOP("Watch");
+const QStringList Preferences::defaultColorLabels {I18N_NOOP("Important"), I18N_NOOP("Unread"), I18N_NOOP("Read"), I18N_NOOP("Watch")};
 
 const QString Preferences::groupGeneral = QStringLiteral("General");
 const QString Preferences::keyBackupScope = QStringLiteral("backupScope");

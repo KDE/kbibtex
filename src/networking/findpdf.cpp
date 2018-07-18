@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -294,7 +294,7 @@ bool FindPDF::search(const Entry &entry)
 
     searchWords.remove(QLatin1Char('{')).remove(QLatin1Char('}'));
 
-    QStringList urlFields = QStringList() << Entry::ftDOI << Entry::ftUrl << QStringLiteral("ee");
+    QStringList urlFields {Entry::ftDOI, Entry::ftUrl, QStringLiteral("ee")};
     for (int i = 2; i < 256; ++i)
         urlFields << QString(QStringLiteral("%1%2")).arg(Entry::ftDOI).arg(i) << QString(QStringLiteral("%1%2")).arg(Entry::ftUrl).arg(i);
     for (const QString &field : const_cast<const QStringList &>(urlFields)) {

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -473,9 +473,9 @@ public:
     }
 
     bool showUrl(const struct UrlInfo &urlInfo) {
-        static const QStringList okularMimetypes = QStringList() << QStringLiteral("application/x-pdf") << QStringLiteral("application/pdf") << QStringLiteral("application/x-gzpdf") << QStringLiteral("application/x-bzpdf") << QStringLiteral("application/x-wwf") << QStringLiteral("image/vnd.djvu") << QStringLiteral("image/vnd.djvu+multipage") << QStringLiteral("application/postscript") << QStringLiteral("image/x-eps") << QStringLiteral("application/x-gzpostscript") << QStringLiteral("application/x-bzpostscript") << QStringLiteral("image/x-gzeps") << QStringLiteral("image/x-bzeps");
-        static const QStringList htmlMimetypes = QStringList() << QStringLiteral("text/html") << QStringLiteral("application/xml") << QStringLiteral("application/xhtml+xml");
-        static const QStringList imageMimetypes = QStringList() << QStringLiteral("image/jpeg") << QStringLiteral("image/png") << QStringLiteral("image/gif") << QStringLiteral("image/tiff");
+        static const QStringList okularMimetypes {QStringLiteral("application/x-pdf"), QStringLiteral("application/pdf"), QStringLiteral("application/x-gzpdf"), QStringLiteral("application/x-bzpdf"), QStringLiteral("application/x-wwf"), QStringLiteral("image/vnd.djvu"), QStringLiteral("image/vnd.djvu+multipage"), QStringLiteral("application/postscript"), QStringLiteral("image/x-eps"), QStringLiteral("application/x-gzpostscript"), QStringLiteral("application/x-bzpostscript"), QStringLiteral("image/x-gzeps"), QStringLiteral("image/x-bzeps")};
+        static const QStringList htmlMimetypes {QStringLiteral("text/html"), QStringLiteral("application/xml"), QStringLiteral("application/xhtml+xml")};
+        static const QStringList imageMimetypes {QStringLiteral("image/jpeg"), QStringLiteral("image/png"), QStringLiteral("image/gif"), QStringLiteral("image/tiff")};
 
         if (swpHTML >= 0)
             stackedWidget->widget(swpHTML)->setEnabled(false);

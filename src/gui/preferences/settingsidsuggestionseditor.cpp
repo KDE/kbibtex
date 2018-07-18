@@ -111,7 +111,7 @@ public:
         QBoxLayout *boxLayout = new QVBoxLayout();
         boxLayout->setMargin(0);
         formLayout->addRow(i18n("Author Range:"), boxLayout);
-        static const QStringList authorRange = QStringList() << i18n("First author") << i18n("Second author") << i18n("Third author") << i18n("Fourth author") << i18n("Fifth author") << i18n("Sixth author") << i18n("Seventh author") << i18n("Eighth author") << i18n("Ninth author") << i18n("Tenth author") << i18n("|Last author");
+        static const QStringList authorRange {i18n("First author"), i18n("Second author"), i18n("Third author"), i18n("Fourth author"), i18n("Fifth author"), i18n("Sixth author"), i18n("Seventh author"), i18n("Eighth author"), i18n("Ninth author"), i18n("Tenth author"), i18n("|Last author")};
         rangeWidgetAuthor = new RangeWidget(authorRange, this);
         boxLayout->addWidget(rangeWidgetAuthor);
         rangeWidgetAuthor->setLowerValue(info.startWord);
@@ -315,7 +315,7 @@ public:
         QBoxLayout *boxLayout = new QVBoxLayout();
         boxLayout->setMargin(0);
         formLayout->addRow(i18n("Word Range:"), boxLayout);
-        static const QStringList wordRange = QStringList() << i18n("First word") << i18n("Second word") << i18n("Third word") << i18n("Fourth word") << i18n("Fifth word") << i18n("Sixth word") << i18n("Seventh word") << i18n("Eighth word") << i18n("Ninth word") << i18n("Tenth word") << i18n("|Last word");
+        static const QStringList wordRange {i18n("First word"), i18n("Second word"), i18n("Third word"), i18n("Fourth word"), i18n("Fifth word"), i18n("Sixth word"), i18n("Seventh word"), i18n("Eighth word"), i18n("Ninth word"), i18n("Tenth word"), i18n("|Last word")};
         rangeWidgetAuthor = new RangeWidget(wordRange, this);
         boxLayout->addWidget(rangeWidgetAuthor);
         if (info.startWord > 0 || info.endWord < 0xffff) {

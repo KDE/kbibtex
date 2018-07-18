@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -106,7 +106,7 @@ bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Elemen
 
 bool FileExporterPS::generatePS(QIODevice *iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QStringLiteral("latex -halt-on-error bibtex-to-ps.tex") << QStringLiteral("bibtex bibtex-to-ps") << QStringLiteral("latex -halt-on-error bibtex-to-ps.tex") << QStringLiteral("latex -halt-on-error bibtex-to-ps.tex") << QStringLiteral("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi");
+    QStringList cmdLines {QStringLiteral("latex -halt-on-error bibtex-to-ps.tex"), QStringLiteral("bibtex bibtex-to-ps"), QStringLiteral("latex -halt-on-error bibtex-to-ps.tex"), QStringLiteral("latex -halt-on-error bibtex-to-ps.tex"), QStringLiteral("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi")};
 
     return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_fileStem + KBibTeX::extensionPostScript, QStringLiteral("Exported Bibliography")) && writeFileToIODevice(m_fileStem + KBibTeX::extensionPostScript, iodevice, errorLog);
 }

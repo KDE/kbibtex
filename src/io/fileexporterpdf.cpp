@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -136,7 +136,7 @@ void FileExporterPDF::setFileEmbedding(FileEmbedding fileEmbedding) {
 
 bool FileExporterPDF::generatePDF(QIODevice *iodevice, QStringList *errorLog)
 {
-    QStringList cmdLines = QStringList() << QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX << QStringLiteral("bibtex ") + m_fileStem + KBibTeX::extensionAux << QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX << QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX;
+    QStringList cmdLines {QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX, QStringLiteral("bibtex ") + m_fileStem + KBibTeX::extensionAux, QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX, QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX};
 
     return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + KBibTeX::extensionPDF, iodevice, errorLog);
 }

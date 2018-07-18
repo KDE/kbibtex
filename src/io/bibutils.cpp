@@ -61,7 +61,7 @@ bool BibUtils::available() {
     /// Perform test only once, later rely on statically stored result
     if (state == untested) {
         /// Test a number of known BibUtils programs
-        static const QStringList programs = QStringList() << QStringLiteral("bib2xml") << QStringLiteral("isi2xml") << QStringLiteral("ris2xml") << QStringLiteral("end2xml");
+        static const QStringList programs {QStringLiteral("bib2xml"), QStringLiteral("isi2xml"), QStringLiteral("ris2xml"), QStringLiteral("end2xml")};
         state = avail;
         for (const QString &program : programs) {
             const QString fullPath = QStandardPaths::findExecutable(program);
@@ -149,7 +149,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format sourceFormat, Q
     }
 
     QProcess bibUtilsProcess;
-    const QStringList arguments = QStringList() << QStringLiteral("-i") << QStringLiteral("utf8") << utf8Argument;
+    const QStringList arguments {QStringLiteral("-i"), QStringLiteral("utf8"), utf8Argument};
     /// Start BibUtils program/process
     bibUtilsProcess.start(bibUtilsProgram, arguments);
 

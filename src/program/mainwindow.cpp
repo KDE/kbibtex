@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -341,7 +341,7 @@ void KBibTeXMainWindow::openDocumentDialog()
     }
 
     /// Assemble list of supported mimetypes
-    QStringList supportedMimeTypes = QStringList() << QStringLiteral("text/x-bibtex") << QStringLiteral("application/x-research-info-systems") << QStringLiteral("application/xml");
+    QStringList supportedMimeTypes {QStringLiteral("text/x-bibtex"), QStringLiteral("application/x-research-info-systems"), QStringLiteral("application/xml")};
     if (BibUtils::available()) {
         supportedMimeTypes.append(QStringLiteral("application/x-isi-export-format"));
         supportedMimeTypes.append(QStringLiteral("application/x-endnote-refer"));

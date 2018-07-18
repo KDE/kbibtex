@@ -699,7 +699,7 @@ bool FilesWidget::canEdit(const Element *element)
     return Entry::isEntry(*element);
 }
 
-const QStringList FilesWidget::keyStart = QStringList() << Entry::ftUrl << QStringLiteral("postscript") << Entry::ftLocalFile << Entry::ftDOI << Entry::ftFile << QStringLiteral("ee") << QStringLiteral("biburl");
+const QStringList FilesWidget::keyStart {Entry::ftUrl, QStringLiteral("postscript"), Entry::ftLocalFile, Entry::ftDOI, Entry::ftFile, QStringLiteral("ee"), QStringLiteral("biburl")};
 
 
 
@@ -892,7 +892,7 @@ void OtherFieldsWidget::createGUI()
     label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
 
     otherFieldsList = new QTreeWidget(this);
-    otherFieldsList->setHeaderLabels(QStringList() << i18n("Key") << i18n("Value"));
+    otherFieldsList->setHeaderLabels(QStringList {i18n("Key"), i18n("Value")});
     otherFieldsList->setRootIsDecorated(false);
     layout->addWidget(otherFieldsList, 2, 1, 3, 1);
     label->setBuddy(otherFieldsList);

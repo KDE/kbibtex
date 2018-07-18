@@ -59,7 +59,7 @@ public:
 
 };
 
-const QStringList EncoderXML::EncoderXMLPrivate::backslashSymbols = QStringList() << QStringLiteral("\\&") << QStringLiteral("\\%") << QStringLiteral("\\_");
+const QStringList EncoderXML::EncoderXMLPrivate::backslashSymbols {QStringLiteral("\\&"), QStringLiteral("\\%"), QStringLiteral("\\_")};
 
 EncoderXML::EncoderXML()
         : Encoder(), d(new EncoderXML::EncoderXMLPrivate)

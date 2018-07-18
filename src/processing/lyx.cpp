@@ -139,8 +139,8 @@ void LyX::sendReferenceToLyX()
 QString LyX::guessLyXPipeLocation()
 {
     QT_STATBUF statBuffer;
-    const QStringList nameFilter = QStringList() << QStringLiteral("*lyxpipe*in*");
-    const QVector<QDir> directoriesToScan = QVector<QDir>(4) << QDir::home() << QDir(QDir::homePath() + QStringLiteral("/.lyx")) << QDir::temp();
+    const QStringList nameFilter {QStringLiteral("*lyxpipe*in*")};
+    const QVector<QDir> directoriesToScan {QDir::home(), QDir(QDir::homePath() + QStringLiteral("/.lyx")), QDir::temp()};
     for (const QDir &directory : directoriesToScan) {
         const QStringList files = directory.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
         for (const QString &filename : files) {

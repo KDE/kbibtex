@@ -173,7 +173,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         /// build url by appending parameters
         QUrl url(OnlineSearchMathSciNetPrivate::queryUrlStem);
         QUrlQuery query(url);
-        const QStringList copyParameters = QStringList() << QStringLiteral("foo") << QStringLiteral("bdl") << QStringLiteral("reqargs") << QStringLiteral("batch_title");
+        static const QStringList copyParameters {QStringLiteral("foo"), QStringLiteral("bdl"), QStringLiteral("reqargs"), QStringLiteral("batch_title")};
         for (const QString &param : copyParameters) {
             query.addQueryItem(param, formParams[param]);
         }

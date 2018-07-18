@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -266,7 +266,7 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
 
     if (!baseDirectory.isEmpty()) {
         /// File types supported by "document preview"
-        static const QStringList documentFileExtensions = QStringList() << QStringLiteral(".pdf") << QStringLiteral(".pdf.gz") << QStringLiteral(".pdf.bz2") << QStringLiteral(".ps") << QStringLiteral(".ps.gz") << QStringLiteral(".ps.bz2") << QStringLiteral(".eps") << QStringLiteral(".eps.gz") << QStringLiteral(".eps.bz2") << QStringLiteral(".html") << QStringLiteral(".xhtml") << QStringLiteral(".htm") << QStringLiteral(".dvi") << QStringLiteral(".djvu") << QStringLiteral(".wwf") << QStringLiteral(".jpeg") << QStringLiteral(".jpg") << QStringLiteral(".png") << QStringLiteral(".gif") << QStringLiteral(".tif") << QStringLiteral(".tiff");
+        static const QStringList documentFileExtensions {QStringLiteral(".pdf"), QStringLiteral(".pdf.gz"), QStringLiteral(".pdf.bz2"), QStringLiteral(".ps"), QStringLiteral(".ps.gz"), QStringLiteral(".ps.bz2"), QStringLiteral(".eps"), QStringLiteral(".eps.gz"), QStringLiteral(".eps.bz2"), QStringLiteral(".html"), QStringLiteral(".xhtml"), QStringLiteral(".htm"), QStringLiteral(".dvi"), QStringLiteral(".djvu"), QStringLiteral(".wwf"), QStringLiteral(".jpeg"), QStringLiteral(".jpg"), QStringLiteral(".png"), QStringLiteral(".gif"), QStringLiteral(".tif"), QStringLiteral(".tiff")};
         result.reserve(result.size() + documentFileExtensions.size() * 2);
 
         /// check if in the same directory as the BibTeX file

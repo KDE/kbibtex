@@ -836,7 +836,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     QString internalText = text;
 
     /// Remove invalid characters such as dots or (double) daggers for footnotes
-    static const QList<QChar> invalidChars = QList<QChar>() << QChar(0x00b7) << QChar(0x2020) << QChar(0x2217) << QChar(0x2021) << QChar(0x002a) << QChar(0x21d1) /** Upwards double arrow */;
+    static const QList<QChar> invalidChars {QChar(0x00b7), QChar(0x2020), QChar(0x2217), QChar(0x2021), QChar(0x002a), QChar(0x21d1) /** Upwards double arrow */};
     for (const auto &invalidChar : invalidChars)
         /// Replacing daggers with commas ensures that they act as persons' names separator
         internalText = internalText.replace(invalidChar, QChar(','));
@@ -1044,7 +1044,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
      * name, not counted as part of the last name.
      */
     partA.clear(); partB.clear(); partC.clear();
-    static const QSet<QString> capitalCaseLastNameFragments = QSet<QString>() << QStringLiteral("Di");
+    static const QSet<QString> capitalCaseLastNameFragments {QStringLiteral("Di")};
     it = tokens.constEnd();
     while (it != tokens.constBegin()) {
         --it;

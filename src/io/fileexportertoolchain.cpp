@@ -146,7 +146,7 @@ bool FileExporterToolchain::kpsewhich(const QString &filename)
 
     bool result = false;
     QProcess kpsewhich;
-    const QStringList param = QStringList() << filename;
+    const QStringList param {filename};
     kpsewhich.start(QStringLiteral("kpsewhich"), param);
     if (kpsewhich.waitForStarted(3000) && kpsewhich.waitForFinished(30000)) {
         const QString standardOut = QString::fromUtf8(kpsewhich.readAllStandardOutput());
