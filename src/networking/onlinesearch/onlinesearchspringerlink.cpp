@@ -152,14 +152,14 @@ private:
     OnlineSearchSpringerLink *p;
 
 public:
-    const QString springerMetadataKey;
+    static const QString springerMetadataKey;
     const XSLTransform xslt;
 #ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormSpringerLink *form;
 #endif // HAVE_QTWIDGETS
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
-            : p(parent), springerMetadataKey(QStringLiteral("7pphfmtb9rtwt3dw3e4hm7av")),
+            : p(parent),
           xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pam2bibtex.xsl")))
 #ifdef HAVE_QTWIDGETS
         , form(nullptr)
@@ -236,6 +236,8 @@ public:
         return queryUrl;
     }
 };
+
+const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::springerMetadataKey(InternalNetworkAccessManager::reverseObfuscate("\xce\xb8\x4d\x2c\x8d\xba\xa9\xc4\x61\x9\x58\x6c\xbb\xde\x86\xb5\xb1\xc6\x15\x71\x76\x45\xd\x79\x12\x65\x95\xe1\x5d\x2f\x1d\x24\x10\x72\x2a\x5e\x69\x4\xdc\xba\xab\xc3\x28\x58\x8a\xfa\x5e\x69"));
 
 
 OnlineSearchSpringerLink::OnlineSearchSpringerLink(QObject *parent)

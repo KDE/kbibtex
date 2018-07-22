@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -123,8 +123,8 @@ public:
             : p(parent), userId(-1) {
         qOAuth = new QOAuth::Interface(p);
         /// Set the consumer key and secret
-        qOAuth->setConsumerKey("1eef4a961e819e6a695c");
-        qOAuth->setConsumerSecret("8bb22bb3262b5703d5b4");
+        qOAuth->setConsumerKey(InternalNetworkAccessManager::reverseObfuscate("\xb7\xd4\x7d\x48\xc0\xf9\x3f\x9\x3c\x5d\x10\x26\x36\x53\xf6\xcf\x54\x65\xee\xd6\x35\x50\xdb\xea\xb8\x8e\xf4\xcd\x14\x75\xbe\x8a\x55\x33\x4d\x28\xbe\xdb\x60\x51").toLatin1());
+        qOAuth->setConsumerSecret(InternalNetworkAccessManager::reverseObfuscate("\x95\xa1\xa9\xcb\xc8\xfd\xd8\xbc\x43\x70\x54\x64\x5f\x68\x2b\x1e\xb3\xd1\x29\x1b\x39\xf\x89\xbb\x55\x66\x20\x42\xa7\xc5\x1a\x28\x4e\x7c\xf9\x9b\x9\x6b\x75\x4d").toLatin1());
         /// Set a timeout for requests (in msecs)
         qOAuth->setRequestTimeout(10000);
 

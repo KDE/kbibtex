@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -181,6 +181,17 @@ void InternalNetworkAccessManager::setNetworkReplyTimeout(QNetworkReply *reply, 
     m_mapTimerToReply.insert(timer, reply);
     timer->start(timeOutSec * 1000);
     connect(reply, &QNetworkReply::finished, this, &InternalNetworkAccessManager::networkReplyFinished);
+}
+
+QString InternalNetworkAccessManager::reverseObfuscate(const QByteArray &a) {
+    if (a.length() % 2 != 0 || a.length() == 0) return QString();
+    QString result;
+    result.reserve(a.length() / 2);
+    for (int p = a.length() - 1; p >= 0; p -= 2) {
+        const QChar c = QLatin1Char(a.at(p) ^ a.at(p - 1));
+        result.append(c);
+    }
+    return result;
 }
 
 void InternalNetworkAccessManager::networkReplyTimeout()
