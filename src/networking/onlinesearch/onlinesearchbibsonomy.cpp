@@ -140,12 +140,12 @@ public:
         }
 
         QString queryString = OnlineSearchAbstract::encodeURL(form->lineEditSearchTerm->text());
-        return QUrl(QStringLiteral("http://www.bibsonomy.org/bib/") + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString(QStringLiteral("?items=%1")).arg(form->numResultsField->value()));
+        return QUrl(QStringLiteral("https://www.bibsonomy.org/bib/") + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString(QStringLiteral("?items=%1")).arg(form->numResultsField->value()));
     }
 #endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        QString url = QStringLiteral("http://www.bibsonomy.org/bib/");
+        QString url = QStringLiteral("https://www.bibsonomy.org/bib/");
 
         bool hasFreeText = !query[queryKeyFreeText].isEmpty();
         bool hasTitle = !query[queryKeyTitle].isEmpty();
@@ -228,7 +228,7 @@ QString OnlineSearchBibsonomy::label() const
 
 QString OnlineSearchBibsonomy::favIconUrl() const
 {
-    return QStringLiteral("http://www.bibsonomy.org/resources/image/favicon.png");
+    return QStringLiteral("https://www.bibsonomy.org/resources/image/favicon.png");
 }
 
 #ifdef HAVE_QTWIDGETS
@@ -242,7 +242,7 @@ OnlineSearchQueryFormAbstract *OnlineSearchBibsonomy::customWidget(QWidget *pare
 
 QUrl OnlineSearchBibsonomy::homepage() const
 {
-    return QUrl(QStringLiteral("http://www.bibsonomy.org/"));
+    return QUrl(QStringLiteral("https://www.bibsonomy.org/"));
 }
 
 void OnlineSearchBibsonomy::downloadDone()

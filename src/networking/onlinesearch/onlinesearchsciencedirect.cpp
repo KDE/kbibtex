@@ -109,12 +109,12 @@ QString OnlineSearchScienceDirect::label() const
 
 QString OnlineSearchScienceDirect::favIconUrl() const
 {
-    return QStringLiteral("http://cdn.els-cdn.com/sd/favSD.ico");
+    return QStringLiteral("https://cdn.els-cdn.com/sd/favSD.ico");
 }
 
 QUrl OnlineSearchScienceDirect::homepage() const
 {
-    return QUrl(QStringLiteral("http://www.sciencedirect.com/"));
+    return QUrl(QStringLiteral("https://www.sciencedirect.com/"));
 }
 
 void OnlineSearchScienceDirect::doneFetchingStartPage()

@@ -43,7 +43,7 @@ public:
     }
 };
 
-const QString OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl = QStringLiteral("http://www.jstor.org/");
+const QString OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl = QStringLiteral("https://www.jstor.org/");
 
 OnlineSearchJStor::OnlineSearchJStor(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchJStorPrivate(this))
@@ -115,12 +115,12 @@ QString OnlineSearchJStor::label() const
 
 QString OnlineSearchJStor::favIconUrl() const
 {
-    return QStringLiteral("http://www.jstor.org/assets/search_20151218T0921/files/search/images/favicon.ico");
+    return QStringLiteral("https://www.jstor.org/assets/search_20151218T0921/files/search/images/favicon.ico");
 }
 
 QUrl OnlineSearchJStor::homepage() const
 {
-    return QUrl(QStringLiteral("http://www.jstor.org/"));
+    return QUrl(QStringLiteral("https://www.jstor.org/"));
 }
 
 void OnlineSearchJStor::doneFetchingStartPage()
@@ -239,7 +239,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
     }
 
     QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
-    if (url.startsWith(QStringLiteral("http://www.jstor.org/stable/"))) {
+    if (url.startsWith(QStringLiteral("https://www.jstor.org/stable/"))) {
         /// use JSTOR's own stable ID for entry ID
         entry->setId("jstor" + url.mid(28).replace(QLatin1Char(','), QString()));
         /// store JSTOR's own stable ID
