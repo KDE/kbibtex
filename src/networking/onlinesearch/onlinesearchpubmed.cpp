@@ -29,6 +29,7 @@
 #endif // HAVE_KF5
 
 #include "xsltransform.h"
+#include "encoderxml.h"
 #include "fileimporterbibtex.h"
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
@@ -204,7 +205,7 @@ void OnlineSearchPubMed::eFetchDone()
         QString input = QString::fromUtf8(reply->readAll().constData());
 
         /// use XSL transformation to get BibTeX document from XML result
-        QString bibTeXcode = d->xslt.transform(input);
+        QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(input));
         if (bibTeXcode.isEmpty()) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
             stopSearch(resultInvalidArguments);

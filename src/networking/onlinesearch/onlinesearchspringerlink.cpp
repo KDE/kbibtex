@@ -39,6 +39,7 @@
 
 #include "internalnetworkaccessmanager.h"
 #include "encoderlatex.h"
+#include "encoderxml.h"
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
 #include "logging_networking.h"
@@ -315,7 +316,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
         /// ensure proper treatment of UTF-8 characters
         const QString xmlSource = QString::fromUtf8(reply->readAll().constData());
 
-        const QString bibTeXcode = d->xslt.transform(xmlSource).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        const QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(xmlSource).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")));
         if (bibTeXcode.isEmpty()) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
             stopSearch(resultInvalidArguments);

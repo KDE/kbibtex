@@ -29,6 +29,7 @@
 
 #include "internalnetworkaccessmanager.h"
 #include "xsltransform.h"
+#include "encoderxml.h"
 #include "fileimporterbibtex.h"
 #include "logging_networking.h"
 
@@ -128,7 +129,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
             const QString xmlCode = QString::fromUtf8(reply->readAll().constData());
 
             /// use XSL transformation to get BibTeX document from XML result
-            const QString bibTeXcode = d->xslt.transform(xmlCode);
+            const QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(xmlCode));
             if (bibTeXcode.isEmpty()) {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
                 stopSearch(resultInvalidArguments);
