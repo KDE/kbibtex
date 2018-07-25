@@ -59,10 +59,10 @@ public:
 
         QString url = pubMedUrlPrefix + QStringLiteral("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
 
-        const QStringList freeTextWords = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
-        const QStringList yearWords = p->splitRespectingQuotationMarks(query[queryKeyYear]);
-        const QStringList titleWords = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
-        const QStringList authorWords = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList freeTextWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        const QStringList yearWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyYear]);
+        const QStringList titleWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyTitle]);
+        const QStringList authorWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
 
         /// append search terms
         QStringList queryFragments;

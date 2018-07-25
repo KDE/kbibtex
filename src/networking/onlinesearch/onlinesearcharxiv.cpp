@@ -131,11 +131,11 @@ public:
 #ifdef HAVE_QTWIDGETS
     QUrl buildQueryUrl() {
         /// format search terms
-        const auto respectingQuotationMarks = p->splitRespectingQuotationMarks(form->lineEditFreeText->text());
+        const auto respectingQuotationMarks = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditFreeText->text());
         QStringList queryFragments;
         queryFragments.reserve(respectingQuotationMarks.size());
         for (const QString &queryFragment : respectingQuotationMarks)
-            queryFragments.append(p->encodeURL(queryFragment));
+            queryFragments.append(OnlineSearchAbstract::encodeURL(queryFragment));
         return QUrl(QString(QStringLiteral("%1search_query=all:\"%3\"&start=0&max_results=%2")).arg(arXivQueryBaseUrl).arg(form->numResultsField->value()).arg(queryFragments.join(QStringLiteral("\"+AND+all:\"")))); ///< join search terms with an AND operation
     }
 #endif // HAVE_QTWIDGETS
@@ -144,9 +144,9 @@ public:
         /// format search terms
         QStringList queryFragments;
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
-            const auto respectingQuotationMarks = p->splitRespectingQuotationMarks(it.value());
+            const auto respectingQuotationMarks = OnlineSearchAbstract::splitRespectingQuotationMarks(it.value());
             for (const auto &queryFragment : respectingQuotationMarks)
-                queryFragments.append(p->encodeURL(queryFragment));
+                queryFragments.append(OnlineSearchAbstract::encodeURL(queryFragment));
         }
         return QUrl(QString(QStringLiteral("%1search_query=all:\"%3\"&start=0&max_results=%2")).arg(arXivQueryBaseUrl).arg(numResults).arg(queryFragments.join(QStringLiteral("\"+AND+all:\"")))); ///< join search terms with an AND operation
     }

@@ -196,7 +196,7 @@ public:
         QUrlQuery query(queryUrl);
 
         int index = 1;
-        const QStringList chunksFullText = p->splitRespectingQuotationMarks(form->lineEditFullText->text());
+        const QStringList chunksFullText = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditFullText->text());
         for (const QString &chunk : chunksFullText) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND")); ///< join search terms with an AND operation
@@ -205,7 +205,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksAuthor = p->splitRespectingQuotationMarks(form->lineEditAuthor->text());
+        const QStringList chunksAuthor = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditAuthor->text());
         for (const QString &chunk : chunksAuthor) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -214,7 +214,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksTitle = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
+        const QStringList chunksTitle = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditTitle->text());
         for (const QString &chunk : chunksTitle) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -223,7 +223,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksPublication = p->splitRespectingQuotationMarks(form->lineEditPublication->text());
+        const QStringList chunksPublication = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditPublication->text());
         for (const QString &chunk : chunksPublication) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -232,7 +232,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksIssue = p->splitRespectingQuotationMarks(form->lineEditIssue->text());
+        const QStringList chunksIssue = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditIssue->text());
         for (const QString &chunk : chunksIssue) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -241,7 +241,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksVolume = p->splitRespectingQuotationMarks(form->lineEditVolume->text());
+        const QStringList chunksVolume = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditVolume->text());
         for (const QString &chunk : chunksVolume) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -250,7 +250,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksKeywords = p->splitRespectingQuotationMarks(form->lineEditAbstractKeywords->text());
+        const QStringList chunksKeywords = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditAbstractKeywords->text());
         for (const QString &chunk : chunksKeywords) {
             if (index > 1)
                 query.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -275,7 +275,7 @@ public:
         QUrlQuery q(queryUrl);
 
         int index = 1;
-        const QStringList chunksFreeText = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        const QStringList chunksFreeText = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyFreeText]);
         for (const QString &chunk : chunksFreeText) {
             if (index > 1)
                 q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -284,7 +284,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksAuthor = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList chunksAuthor = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (const QString &chunk : chunksAuthor) {
             if (index > 1)
                 q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -293,7 +293,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksTitle = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
+        const QStringList chunksTitle = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyTitle]);
         for (const QString &chunk : chunksTitle) {
             if (index > 1)
                 q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));

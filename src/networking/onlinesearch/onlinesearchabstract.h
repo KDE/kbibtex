@@ -124,7 +124,7 @@ protected:
     /**
      * Split a string along spaces, but keep text in quotation marks together
      */
-    QStringList splitRespectingQuotationMarks(const QString &text);
+    static QStringList splitRespectingQuotationMarks(const QString &text);
 
     /**
     * Will check for common problems with downloads via QNetworkReply. It will return true
@@ -148,9 +148,9 @@ protected:
     /**
      * Encode a text to be HTTP URL save, e.g. replace '=' by '%3D'.
      */
-    QString encodeURL(QString rawText);
+    static QString encodeURL(QString rawText);
 
-    QString decodeURL(QString rawText);
+    static QString decodeURL(QString rawText);
 
     QMap<QString, QString> formParameters(const QString &htmlText, int startPos);
 

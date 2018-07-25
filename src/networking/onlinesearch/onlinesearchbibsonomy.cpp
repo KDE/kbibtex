@@ -143,7 +143,7 @@ public:
             return QUrl();
         }
 
-        QString queryString = p->encodeURL(form->lineEditSearchTerm->text());
+        QString queryString = OnlineSearchAbstract::encodeURL(form->lineEditSearchTerm->text());
         return QUrl(QStringLiteral("http://www.bibsonomy.org/bib/") + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString(QStringLiteral("?items=%1")).arg(form->numResultsField->value()));
     }
 #endif // HAVE_QTWIDGETS
@@ -165,7 +165,7 @@ public:
 
         QStringList queryFragments;
         for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
-            queryFragments << p->encodeURL(it.value());
+            queryFragments << OnlineSearchAbstract::encodeURL(it.value());
         }
 
         QString queryString = queryFragments.join(QStringLiteral("%20"));

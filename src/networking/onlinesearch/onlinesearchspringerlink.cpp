@@ -176,17 +176,17 @@ public:
 
         QString queryString = form->lineEditFreeText->text();
 
-        const QStringList titleChunks = p->splitRespectingQuotationMarks(form->lineEditTitle->text());
+        const QStringList titleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditTitle->text());
         for (const QString &titleChunk : titleChunks) {
             queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
         }
 
-        const QStringList bookTitleChunks = p->splitRespectingQuotationMarks(form->lineEditBookTitle->text());
+        const QStringList bookTitleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditBookTitle->text());
         for (const QString &titleChunk : bookTitleChunks) {
             queryString += QString(QStringLiteral(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
         }
 
-        const QStringList authors = p->splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
+        const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
         for (const QString &author : authors) {
             queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(author));
         }
@@ -209,12 +209,12 @@ public:
 
         QString queryString = query[queryKeyFreeText];
 
-        const QStringList titleChunks = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
+        const QStringList titleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyTitle]);
         for (const QString &titleChunk : titleChunks) {
             queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
         }
 
-        const QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (const QString &author : authors) {
             queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(author));
         }
