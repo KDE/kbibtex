@@ -265,6 +265,8 @@ void OnlineSearchSpringerLink::startSearchFromForm()
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchSpringerLink::doneFetchingPAM);
 
     if (d->form != nullptr) d->form->saveState();
+
+    refreshBusyProperty();
 }
 #endif // HAVE_QTWIDGETS
 
@@ -282,6 +284,8 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchSpringerLink::doneFetchingPAM);
+
+    refreshBusyProperty();
 }
 
 QString OnlineSearchSpringerLink::label() const
@@ -341,6 +345,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 
+    refreshBusyProperty();
 }
 
 #include "onlinesearchspringerlink.moc"

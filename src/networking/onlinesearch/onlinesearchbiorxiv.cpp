@@ -72,6 +72,8 @@ void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int n
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultsPageDone);
+
+    refreshBusyProperty();
 }
 
 QString OnlineSearchBioRxiv::label() const {
@@ -112,6 +114,8 @@ void OnlineSearchBioRxiv::resultsPageDone() {
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
         }
     }
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchBioRxiv::resultPageDone() {
@@ -139,6 +143,8 @@ void OnlineSearchBioRxiv::resultPageDone() {
         } else
             stopSearch(resultNoError);
     }
+
+    refreshBusyProperty();
 }
 
 
@@ -177,4 +183,6 @@ void OnlineSearchBioRxiv::bibTeXDownloadDone() {
         InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
     }
+
+    refreshBusyProperty();
 }

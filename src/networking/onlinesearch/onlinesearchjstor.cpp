@@ -104,6 +104,8 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingStartPage);
+
+    refreshBusyProperty();
 }
 
 QString OnlineSearchJStor::label() const
@@ -145,6 +147,8 @@ void OnlineSearchJStor::doneFetchingStartPage()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchJStor::doneFetchingResultPage()
@@ -190,6 +194,8 @@ void OnlineSearchJStor::doneFetchingResultPage()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchJStor::doneFetchingBibTeXCode()
@@ -217,6 +223,8 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         stopSearch(numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)

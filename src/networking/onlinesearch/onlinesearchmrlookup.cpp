@@ -65,6 +65,8 @@ void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchMRLookup::doneFetchingResultPage);
+
+    refreshBusyProperty();
 }
 
 QString OnlineSearchMRLookup::label() const
@@ -114,6 +116,8 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
         stopSearch(hasEntry ? resultNoError : resultUnspecifiedError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)

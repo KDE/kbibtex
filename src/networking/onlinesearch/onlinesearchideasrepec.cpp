@@ -95,6 +95,8 @@ void OnlineSearchIDEASRePEc::startSearch(const QMap<QString, QString> &query, in
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadListDone);
+
+    refreshBusyProperty();
 }
 
 
@@ -159,6 +161,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 
+    refreshBusyProperty();
 }
 
 void OnlineSearchIDEASRePEc::downloadPublicationDone()
@@ -199,6 +202,8 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
 
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchIDEASRePEc::downloadBibTeXDone()
@@ -252,4 +257,6 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString() << "(was" << downloadUrl << ")";
+
+    refreshBusyProperty();
 }

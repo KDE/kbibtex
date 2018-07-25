@@ -80,6 +80,7 @@ Q_DECLARE_METATYPE(OnlineSearchQueryFormAbstract *)
 class KBIBTEXNETWORKING_EXPORT OnlineSearchAbstract : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
 
 public:
     explicit OnlineSearchAbstract(QObject *parent);

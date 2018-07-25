@@ -129,6 +129,8 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchPubMed::eSearchDone);
+
+    refreshBusyProperty();
 }
 
 
@@ -187,6 +189,8 @@ void OnlineSearchPubMed::eSearchDone()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchPubMed::eFetchDone()
@@ -227,4 +231,6 @@ void OnlineSearchPubMed::eFetchDone()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }

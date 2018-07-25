@@ -98,6 +98,8 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingStartPage);
+
+    refreshBusyProperty();
 }
 
 QString OnlineSearchScienceDirect::label() const

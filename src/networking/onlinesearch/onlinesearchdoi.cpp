@@ -152,6 +152,8 @@ void OnlineSearchDOI::startSearchFromForm()
         d->form->saveState();
     } else
         delayedStoppedSearch(resultNoError);
+
+    refreshBusyProperty();
 }
 #endif // HAVE_QTWIDGETS
 
@@ -167,6 +169,8 @@ void OnlineSearchDOI::startSearch(const QMap<QString, QString> &query, int numRe
         QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
         InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchDOI::downloadDone);
+
+        refreshBusyProperty();
     } else
         delayedStoppedSearch(resultNoError);
 }
@@ -239,6 +243,8 @@ void OnlineSearchDOI::downloadDone()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 #include "onlinesearchdoi.moc"

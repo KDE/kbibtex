@@ -98,6 +98,8 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingStartPage);
+
+    refreshBusyProperty();
 }
 
 QString OnlineSearchAcmPortal::label() const
@@ -141,6 +143,8 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchAcmPortal::doneFetchingSearchPage()
@@ -180,6 +184,8 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             stopSearch(resultNoError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchAcmPortal::doneFetchingCitation()
@@ -223,6 +229,8 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
         InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingBibTeX);
     }
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchAcmPortal::doneFetchingBibTeX()
@@ -258,4 +266,6 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
             stopSearch(resultNoError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }

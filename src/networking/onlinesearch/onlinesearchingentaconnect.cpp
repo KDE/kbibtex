@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -335,6 +335,8 @@ void OnlineSearchIngentaConnect::startSearch(const QMap<QString, QString> &query
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIngentaConnect::downloadDone);
+
+    refreshBusyProperty();
 }
 
 #ifdef HAVE_QTWIDGETS
@@ -349,6 +351,8 @@ void OnlineSearchIngentaConnect::startSearchFromForm()
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIngentaConnect::downloadDone);
 
     d->form->saveState();
+
+    refreshBusyProperty();
 }
 #endif // HAVE_QTWIDGETS
 
@@ -410,6 +414,8 @@ void OnlineSearchIngentaConnect::downloadDone()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 #include "onlinesearchingentaconnect.moc"

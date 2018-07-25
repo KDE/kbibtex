@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,6 +39,8 @@ void OnlineSearchSimpleBibTeXDownload::startSearch(const QMap<QString, QString> 
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchSimpleBibTeXDownload::downloadDone);
+
+    refreshBusyProperty();
 }
 
 QString OnlineSearchSimpleBibTeXDownload::processRawDownload(const QString &download) {
@@ -101,5 +103,5 @@ void OnlineSearchSimpleBibTeXDownload::downloadDone()
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 
-    emit progress(curStep = numSteps, numSteps);
+    refreshBusyProperty();
 }

@@ -643,6 +643,8 @@ void OnlineSearchArXiv::startSearchFromForm()
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchArXiv::downloadDone);
 
     d->form->saveState();
+
+    refreshBusyProperty();
 }
 #endif // HAVE_QTWIDGETS
 
@@ -655,6 +657,8 @@ void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int num
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchArXiv::downloadDone);
+
+    refreshBusyProperty();
 }
 
 QString OnlineSearchArXiv::label() const
@@ -718,6 +722,8 @@ void OnlineSearchArXiv::downloadDone()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchArXiv::sanitizeEntry(QSharedPointer<Entry> entry)

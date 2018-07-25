@@ -149,6 +149,8 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingStartPage);
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingStartPage()
@@ -192,6 +194,8 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingConfigPage()
@@ -233,6 +237,8 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
@@ -259,6 +265,8 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingQueryPage()
@@ -306,6 +314,8 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             stopSearch(resultNoError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 void OnlineSearchGoogleScholar::doneFetchingBibTeX()
@@ -388,6 +398,8 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 QString OnlineSearchGoogleScholar::label() const

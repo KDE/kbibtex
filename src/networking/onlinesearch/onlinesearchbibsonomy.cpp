@@ -206,6 +206,8 @@ void OnlineSearchBibsonomy::startSearch(const QMap<QString, QString> &query, int
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
+
+    refreshBusyProperty();
 }
 
 #ifdef HAVE_QTWIDGETS
@@ -219,6 +221,7 @@ void OnlineSearchBibsonomy::startSearchFromForm()
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
 
+    refreshBusyProperty();
 }
 #endif // HAVE_QTWIDGETS
 
@@ -280,6 +283,8 @@ void OnlineSearchBibsonomy::downloadDone()
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+
+    refreshBusyProperty();
 }
 
 #include "onlinesearchbibsonomy.moc"
