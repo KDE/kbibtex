@@ -102,8 +102,8 @@ public:
     virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
     QString name();
-    virtual QIcon icon(QListWidgetItem *listWidgetItem = nullptr);
 #ifdef HAVE_QTWIDGETS
+    virtual QIcon icon(QListWidgetItem *listWidgetItem = nullptr);
     virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
 #endif // HAVE_QTWIDGETS
     virtual QUrl homepage() const = 0;
@@ -197,7 +197,9 @@ private:
     bool m_previousBusyState;
     QString m_name;
     static const char *httpUnsafeChars;
+#ifdef HAVE_QTWIDGETS
     QMap<QNetworkReply *, QListWidgetItem *> m_iconReplyToListWidgetItem;
+#endif // HAVE_QTWIDGETS
     int m_delayedStoppedSearchReturnCode;
 
     QString htmlAttribute(const QString &htmlCode, const int startPos, const QString &attribute) const;
@@ -208,7 +210,9 @@ private:
 #endif // HAVE_KF5
 
 private slots:
+#ifdef HAVE_QTWIDGETS
     void iconDownloadFinished();
+#endif // HAVE_QTWIDGETS
     void delayedStoppedSearchTimer();
 
 signals:

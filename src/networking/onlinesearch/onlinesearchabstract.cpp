@@ -76,6 +76,7 @@ OnlineSearchAbstract::OnlineSearchAbstract(QObject *parent)
     m_parent = parent;
 }
 
+#ifdef HAVE_QTWIDGETS
 QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
     static const QRegExp invalidChars(QStringLiteral("[^-a-z0-9_]"), Qt::CaseInsensitive);
@@ -99,7 +100,6 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     return QIcon::fromTheme(QStringLiteral("applications-internet"));
 }
 
-#ifdef HAVE_QTWIDGETS
 OnlineSearchQueryFormAbstract *OnlineSearchAbstract::customWidget(QWidget *) {
     return nullptr;
 }
@@ -390,6 +390,7 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     return result;
 }
 
+#ifdef HAVE_QTWIDGETS
 void OnlineSearchAbstract::iconDownloadFinished()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
@@ -450,6 +451,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon from URL " << reply->url().toDisplayString() << ": " << reply->errorString();
 }
+#endif // HAVE_QTWIDGETS
 
 void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)
 {
