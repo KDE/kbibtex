@@ -119,18 +119,14 @@ public:
 
 class OnlineSearchBibsonomy::OnlineSearchBibsonomyPrivate
 {
-private:
-    OnlineSearchBibsonomy *p;
-
 public:
 #ifdef HAVE_QTWIDGETS
     OnlineSearchQueryFormBibsonomy *form;
 #endif // HAVE_QTWIDGETS
 
-    OnlineSearchBibsonomyPrivate(OnlineSearchBibsonomy *parent)
-            : p(parent)
+    OnlineSearchBibsonomyPrivate(OnlineSearchBibsonomy *)
 #ifdef HAVE_QTWIDGETS
-        , form(nullptr)
+            : form(nullptr)
 #endif // HAVE_QTWIDGETS
     {
         // nothing

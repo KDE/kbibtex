@@ -40,14 +40,13 @@ uint OnlineSearchPubMed::lastQueryEpoch = 0;
 class OnlineSearchPubMed::OnlineSearchPubMedPrivate
 {
 private:
-    OnlineSearchPubMed *p;
     const QString pubMedUrlPrefix;
 
 public:
     const XSLTransform xslt;
 
-    OnlineSearchPubMedPrivate(OnlineSearchPubMed *parent)
-            : p(parent), pubMedUrlPrefix(QStringLiteral("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
+    OnlineSearchPubMedPrivate(OnlineSearchPubMed *)
+            : pubMedUrlPrefix(QStringLiteral("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
           xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pubmed2bibtex.xsl")))
     {
         /// nothing

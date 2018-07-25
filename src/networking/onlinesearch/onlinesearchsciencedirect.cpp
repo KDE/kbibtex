@@ -38,9 +38,9 @@ public:
     QStringList bibTeXUrls;
     int runningJobs;
 
-    OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect *parent)
+    OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect *)
             : currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), runningJobs(0) {
-        Q_UNUSED(parent)
+        /// nothing
     }
 
     void sanitizeBibTeXCode(QString &code) {

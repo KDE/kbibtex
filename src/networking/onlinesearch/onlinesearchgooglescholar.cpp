@@ -32,9 +32,6 @@
 
 class OnlineSearchGoogleScholar::OnlineSearchGoogleScholarPrivate
 {
-private:
-    // UNUSED OnlineSearchGoogleScholar *p;
-
 public:
     int numResults;
     QMap<QString, QString> listBibTeXurls;
@@ -45,7 +42,7 @@ public:
     FileImporterBibTeX *importer;
 
     OnlineSearchGoogleScholarPrivate(OnlineSearchGoogleScholar *parent)
-        : /* UNUSED p(parent), */ numResults(0)
+            : numResults(0)
     {
         importer = new FileImporterBibTeX(parent);
         startPageUrl = QStringLiteral("http://scholar.google.com/");

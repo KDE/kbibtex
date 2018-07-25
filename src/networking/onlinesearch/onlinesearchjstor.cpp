@@ -36,10 +36,10 @@ public:
     static const QString jstorBaseUrl;
     QUrl queryUrl;
 
-    OnlineSearchJStorPrivate(OnlineSearchJStor *parent)
+    OnlineSearchJStorPrivate(OnlineSearchJStor *)
             : numExpectedResults(0)
     {
-        Q_UNUSED(parent)
+        /// nothing
     }
 };
 

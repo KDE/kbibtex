@@ -42,10 +42,10 @@ public:
     int currentSearchPosition;
     QStringList citationUrls;
 
-    OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal *parent)
+    OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal *)
             : numExpectedResults(0), numFoundResults(0),
           acmPortalBaseUrl(QStringLiteral("https://dl.acm.org/")), currentSearchPosition(0) {
-        Q_UNUSED(parent)
+        /// nothing
     }
 
     void sanitizeBibTeXCode(QString &code) {

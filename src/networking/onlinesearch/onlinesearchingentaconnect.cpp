@@ -168,7 +168,6 @@ public:
 class OnlineSearchIngentaConnect::OnlineSearchIngentaConnectPrivate
 {
 private:
-    OnlineSearchIngentaConnect *p;
     const QString ingentaConnectBaseUrl;
 
 public:
@@ -176,8 +175,8 @@ public:
     OnlineSearchQueryFormIngentaConnect *form;
 #endif // HAVE_QTWIDGETS
 
-    OnlineSearchIngentaConnectPrivate(OnlineSearchIngentaConnect *parent)
-            : p(parent), ingentaConnectBaseUrl(QStringLiteral("http://www.ingentaconnect.com/search?format=bib"))
+    OnlineSearchIngentaConnectPrivate(OnlineSearchIngentaConnect *)
+            : ingentaConnectBaseUrl(QStringLiteral("http://www.ingentaconnect.com/search?format=bib"))
 #ifdef HAVE_QTWIDGETS
         , form(nullptr)
 #endif // HAVE_QTWIDGETS

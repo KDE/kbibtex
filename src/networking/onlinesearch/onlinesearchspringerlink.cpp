@@ -148,9 +148,6 @@ public:
 
 class OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate
 {
-private:
-    OnlineSearchSpringerLink *p;
-
 public:
     static const QString springerMetadataKey;
     const XSLTransform xslt;
@@ -158,9 +155,8 @@ public:
     OnlineSearchQueryFormSpringerLink *form;
 #endif // HAVE_QTWIDGETS
 
-    OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *parent)
-            : p(parent),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pam2bibtex.xsl")))
+    OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *)
+            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pam2bibtex.xsl")))
 #ifdef HAVE_QTWIDGETS
         , form(nullptr)
 #endif // HAVE_QTWIDGETS

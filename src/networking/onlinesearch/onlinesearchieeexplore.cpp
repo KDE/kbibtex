@@ -34,15 +34,12 @@
 
 class OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate
 {
-private:
-    OnlineSearchIEEEXplore *p;
-
 public:
     const QString gatewayUrl;
     const XSLTransform xslt;
 
-    OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
-            : p(parent), gatewayUrl(QStringLiteral("https://ieeexplore.ieee.org/gateway/ipsSearch.jsp")),
+    OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *)
+            : gatewayUrl(QStringLiteral("https://ieeexplore.ieee.org/gateway/ipsSearch.jsp")),
           xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/ieeexplore2bibtex.xsl")))
     {
         /// nothing
@@ -51,8 +48,8 @@ public:
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QUrl queryUrl = QUrl(gatewayUrl);
 
-        const QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
-        const QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList freeTextFragments = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
         QStringList queryText;
         queryText.reserve(freeTextFragments.size() + 1 + authors.size() + 1);
 
