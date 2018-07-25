@@ -129,9 +129,9 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
         if ((p1 = htmlSource.indexOf(QStringLiteral("<form name=\"qiksearch\""))) >= 0
                 && (p2 = htmlSource.indexOf(QStringLiteral("action="), p1)) >= 0
                 && (p3 = htmlSource.indexOf(QStringLiteral("\""), p2 + 8)) >= 0) {
-            const QString body = QString(QStringLiteral("Go=&query=%1")).arg(d->joinedQueryString).simplified();
+            const QString body = QString(QStringLiteral("Go.x=0&Go.y=0&query=%1")).arg(d->joinedQueryString).simplified();
             const QString action = decodeURL(htmlSource.mid(p2 + 8, p3 - p2 - 8));
-            QUrl url(reply->url().resolved(QUrl(action + QStringLiteral("&") + body)));
+            const QUrl url(reply->url().resolved(QUrl(action + QStringLiteral("?") + body)));
 
             QNetworkRequest request(url);
             QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
@@ -156,7 +156,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
     if (handleErrors(reply)) {
         const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
 
-        static const QRegExp citationUrlRegExp(QStringLiteral("citation.cfm\\?id=[0-9][0-9.]+[0-9][^\">]+CFID=[0-9]+[^\">]+CFTOKEN=[0-9]+"), Qt::CaseInsensitive);
+        static const QRegExp citationUrlRegExp(QStringLiteral("citation.cfm\\?id=[0-9][0-9.]+[0-9]"), Qt::CaseInsensitive);
         int p1 = -1;
         while ((p1 = citationUrlRegExp.indexIn(htmlSource, p1 + 1)) >= 0) {
             const QString newUrl = d->acmPortalBaseUrl + citationUrlRegExp.cap(0);
@@ -193,28 +193,27 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
     emit progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    QString bibTeXUrl;
+    QSet<const QUrl> bibTeXUrls;
 
     if (handleErrors(reply)) {
         const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
 
-        static const QRegExp parentIdRegExp(QStringLiteral("parent_id=([0-9]+)"));
-        const int parentId = parentIdRegExp.indexIn(htmlSource) > 0 ? parentIdRegExp.cap(1).toInt() : 0;
-
-        static const QRegExp paramRegExp(QStringLiteral("\\?id=([0-9][0-9.]+[0-9])[^\">]+CFID=([0-9]+)[^\">]+CFTOKEN=([0-9]+)"), Qt::CaseInsensitive);
-        int p1 = -1;
-        if (parentId > 0 && (p1 = paramRegExp.indexIn(htmlSource)) >= 0) {
-            bibTeXUrl = d->acmPortalBaseUrl + QString(QStringLiteral("/downformats.cfm?id=%2&parent_id=%1&expformat=bibtex&CFID=%3&CFTOKEN=%4")).arg(QString::number(parentId), paramRegExp.cap(1),  paramRegExp.cap(2), paramRegExp.cap(3));
-        } else {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "No citation link found in " << reply->url().toDisplayString() << "  parentId=" << parentId;
-            stopSearch(resultNoError);
-            emit progress(curStep = numSteps, numSteps);
-            return;
+        static const QRegExp idRegExp(QStringLiteral("citation_abstract_html_url\" content=\"http://dl.acm.org/citation.cfm\\?id=([0-9]+)[.]([0-9]+)"));
+        int p = -1;
+        while ((p = idRegExp.indexIn(htmlSource, p + 1)) > 0) {
+            const QString parentId = idRegExp.cap(1);
+            const QString id = idRegExp.cap(2);
+            if (!parentId.isEmpty() && !id.isEmpty()) {
+                const QUrl bibTeXUrl(d->acmPortalBaseUrl + QString(QStringLiteral("/downformats.cfm?id=%1&parent_id=%2&expformat=bibtex")).arg(id, parentId));
+                bibTeXUrls.insert(bibTeXUrl);
+            }
         }
+        if (bibTeXUrls.isEmpty())
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "No citation link found in " << reply->url().toDisplayString();
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 
-    if (bibTeXUrl.isEmpty()) {
+    if (bibTeXUrls.isEmpty()) {
         if (!d->citationUrls.isEmpty()) {
             QNetworkRequest request(d->citationUrls.first());
             QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
@@ -224,10 +223,14 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
         } else
             stopSearch(resultNoError);
     } else {
-        QNetworkRequest request(bibTeXUrl);
-        QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-        connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingBibTeX);
+        numSteps += bibTeXUrls.count() - 1;
+        for (QSet<const QUrl>::ConstIterator it = bibTeXUrls.constBegin(); it != bibTeXUrls.constEnd(); ++it) {
+            const QUrl &bibTeXUrl = *it;
+            QNetworkRequest request(bibTeXUrl);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingBibTeX);
+        }
     }
 
     refreshBusyProperty();
