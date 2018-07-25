@@ -123,6 +123,10 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
     if (oldUrl.isValid())
         request.setRawHeader(QByteArray("Referer"), oldUrl.toDisplayString().toLatin1());
     QNetworkReply *reply = QNetworkAccessManager::get(request);
+
+    /// Log SSL errors
+    connect(reply, &QNetworkReply::sslErrors, this, &InternalNetworkAccessManager::logSslErrors);
+
     return reply;
 }
 
@@ -214,6 +218,14 @@ void InternalNetworkAccessManager::networkReplyFinished()
         timer->stop();
         m_mapTimerToReply.remove(timer);
     }
+}
+
+void InternalNetworkAccessManager::logSslErrors(const QList<QSslError> &errors)
+{
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+    qWarning() << QStringLiteral("Got the following SSL errors when querying the following URL: ") << reply->url().toDisplayString();
+    for (const QSslError &error : errors)
+        qWarning() << QStringLiteral(" * ") + error.errorString() << "; Code: " << static_cast<int>(error.error());
 }
 
 #include "internalnetworkaccessmanager.moc"

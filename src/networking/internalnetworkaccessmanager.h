@@ -72,7 +72,7 @@ private:
 private slots:
     void networkReplyTimeout();
     void networkReplyFinished();
-
+    void logSslErrors(const QList<QSslError> &errors);
 };
 
 #endif // KBIBTEX_NETWORKING_INTERNALNETWORKACCESSMANAGER_H
