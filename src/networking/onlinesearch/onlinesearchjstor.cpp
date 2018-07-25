@@ -171,7 +171,6 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
         if (uniqueDOIs.isEmpty()) {
             /// No results found
-            emit progress(curStep = numSteps, numSteps);
             stopSearch(resultNoError);
         } else {
             /// Build POST request that should return a BibTeX document
@@ -215,7 +214,6 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
             delete bibtexFile;
         }
 
-        emit progress(curStep = numSteps, numSteps);
         stopSearch(numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();

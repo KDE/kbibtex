@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -219,7 +219,6 @@ void OnlineSearchBibsonomy::startSearchFromForm()
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchBibsonomy::downloadDone);
 
-    emit progress(0, numSteps);
 }
 #endif // HAVE_QTWIDGETS
 
@@ -269,7 +268,6 @@ void OnlineSearchBibsonomy::downloadDone()
                 }
 
                 stopSearch(resultNoError);
-                emit progress(curStep = numSteps, numSteps);
 
                 delete bibtexFile;
             } else {
@@ -279,7 +277,6 @@ void OnlineSearchBibsonomy::downloadDone()
         } else {
             /// returned file is empty
             stopSearch(resultNoError);
-            emit progress(curStep = numSteps, numSteps);
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();

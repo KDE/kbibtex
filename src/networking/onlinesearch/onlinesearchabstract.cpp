@@ -473,7 +473,6 @@ void OnlineSearchAbstract::delayedStoppedSearch(int returnCode)
 
 void OnlineSearchAbstract::delayedStoppedSearchTimer()
 {
-    emit progress(1, 1);
     stopSearch(m_delayedStoppedSearchReturnCode);
 }
 
@@ -611,6 +610,7 @@ void OnlineSearchAbstract::stopSearch(int errorCode) {
         curStep = numSteps;
     else
         curStep = numSteps = 0;
+    emit progress(curStep, numSteps);
     emit stoppedSearch(errorCode);
 }
 

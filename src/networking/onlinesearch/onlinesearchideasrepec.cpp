@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -144,10 +144,9 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             }
             numSteps += 2 * d->publicationLinks.count(); ///< update number of steps
 
-            if (d->publicationLinks.isEmpty()) {
+            if (d->publicationLinks.isEmpty())
                 stopSearch(resultNoError);
-                emit progress(curStep = numSteps, numSteps);
-            } else {
+            else {
                 QSet<QString>::Iterator it = d->publicationLinks.begin();
                 const QString publicationLink = *it;
                 d->publicationLinks.erase(it);
@@ -240,10 +239,9 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             }
         }
 
-        if (d->publicationLinks.isEmpty()) {
+        if (d->publicationLinks.isEmpty())
             stopSearch(resultNoError);
-            emit progress(1, 1);
-        } else {
+        else {
             QSet<QString>::Iterator it = d->publicationLinks.begin();
             const QString publicationLink = *it;
             d->publicationLinks.erase(it);

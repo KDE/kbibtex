@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -302,10 +302,8 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
             d->listBibTeXurls.erase(d->listBibTeXurls.begin());
-        } else {
+        } else
             stopSearch(resultNoError);
-            emit progress(curStep = numSteps, numSteps);
-        }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
@@ -385,10 +383,8 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                 }
                 connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
                 d->listBibTeXurls.erase(d->listBibTeXurls.begin());
-            } else {
+            } else
                 stopSearch(resultNoError);
-                emit progress(curStep = numSteps, numSteps);
-            }
         }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();

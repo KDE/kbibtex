@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -100,7 +100,7 @@ OnlineSearchIEEEXplore::~OnlineSearchIEEEXplore()
 void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 2);
+    emit progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
@@ -145,7 +145,6 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
                     }
 
                     stopSearch(resultNoError);
-                    emit progress(curStep = numSteps, numSteps);
 
                     delete bibtexFile;
                 } else {

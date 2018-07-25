@@ -195,7 +195,6 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingBibTeXcode);
         } else {
             /// nothing found
-            emit progress(curStep = numSteps, numSteps);
             stopSearch(resultNoError);
         }
     } else

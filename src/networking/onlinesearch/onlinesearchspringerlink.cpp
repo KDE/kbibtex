@@ -341,7 +341,6 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 
-    emit progress(curStep = numSteps, numSteps);
 }
 
 #include "onlinesearchspringerlink.moc"

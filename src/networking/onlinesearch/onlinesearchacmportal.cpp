@@ -176,10 +176,8 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingCitation);
             d->citationUrls.removeFirst();
-        } else {
+        } else
             stopSearch(resultNoError);
-            emit progress(curStep = numSteps, numSteps);
-        }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
@@ -217,10 +215,8 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingCitation);
             d->citationUrls.removeFirst();
-        } else {
+        } else
             stopSearch(resultNoError);
-            emit progress(curStep = numSteps, numSteps);
-        }
     } else {
         QNetworkRequest request(bibTeXUrl);
         QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
@@ -258,10 +254,8 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAcmPortal::doneFetchingCitation);
             d->citationUrls.removeFirst();
-        } else {
+        } else
             stopSearch(resultNoError);
-            emit progress(curStep = numSteps, numSteps);
-        }
     } else
         qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
 }
