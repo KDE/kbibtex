@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -75,12 +75,11 @@ QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
 
     /// Build URL
     QString urlText = QStringLiteral("http://adsabs.harvard.edu/cgi-bin/basic_connect?version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&qsearch=");
-    urlText.append(queryFragments.join(QStringLiteral("+")));
-    urlText = urlText.replace(QLatin1Char('"'), QStringLiteral("%22"));
+    urlText.append(queryFragments.join(QStringLiteral("+")).replace(QLatin1Char('"'), QStringLiteral("%22")));
     /// set number of expected results
     urlText.append(QString(QStringLiteral("&nr_to_return=%1")).arg(numResults));
 
-    return QUrl::fromUserInput(urlText);
+    return QUrl(urlText);
 }
 
 QString OnlineSearchSOANASAADS::processRawDownload(const QString &download) {
