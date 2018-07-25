@@ -866,7 +866,7 @@ EncoderLaTeX::~EncoderLaTeX()
 
 QString EncoderLaTeX::decode(const QString &input) const
 {
-    int len = input.length();
+    const int len = input.length();
     QString output;
     output.reserve(len);
     bool inMathMode = false;
@@ -893,7 +893,7 @@ QString EncoderLaTeX::decode(const QString &input) const
 
                 /// Next, check if there follows a modifier after the backslash
                 /// For example an quotation mark as used in {\"a}
-                int lookupTablePos = modifierInLookupTable(input[i + 2].toLatin1());
+                const int lookupTablePos = modifierInLookupTable(input[i + 2].toLatin1());
 
                 /// Check for spaces between modifier and character, for example
                 /// like {\H o}
@@ -954,11 +954,11 @@ QString EncoderLaTeX::decode(const QString &input) const
                             found = true;
                         }
                     if (!found)
-                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5 + skipSpaces] << "}";
+                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5 + skipSpaces] << "}";
                 } else {
                     /// Now, the case of something like {\AA} is left
                     /// to check for
-                    QString alpha = readAlphaCharacters(input, i + 2);
+                    const QString alpha = readAlphaCharacters(input, i + 2);
                     int nextPosAfterAlpha = i + 2 + alpha.size();
                     if (nextPosAfterAlpha < input.length() && input[nextPosAfterAlpha] == '}') {
                         /// We are dealing actually with a string like {\AA}
@@ -1013,7 +1013,7 @@ QString EncoderLaTeX::decode(const QString &input) const
 
             /// Check if there follows a modifier after the backslash
             /// For example an quotation mark as used in \"a
-            int lookupTablePos = modifierInLookupTable(input[i + 1].toLatin1());
+            const int lookupTablePos = modifierInLookupTable(input[i + 1].toLatin1());
 
             /// Check for spaces between modifier and character, for example
             /// like \H o
@@ -1107,7 +1107,7 @@ QString EncoderLaTeX::decode(const QString &input) const
             } else if (i < len - 1) {
                 /// Now, the case of something like \AA is left
                 /// to check for
-                QString alpha = readAlphaCharacters(input, i + 1);
+                const QString alpha = readAlphaCharacters(input, i + 1);
                 int nextPosAfterAlpha = i + 1 + alpha.size();
                 if (alpha.size() >= 1 && alpha.at(0).isLetter()) {
                     /// We are dealing actually with a string like \AA or \o
@@ -1425,7 +1425,7 @@ int EncoderLaTeX::modifierInLookupTable(const char latinModifier) const
 
 QString EncoderLaTeX::readAlphaCharacters(const QString &base, int startFrom) const
 {
-    int len = base.size();
+    const int len = base.size();
     for (int j = startFrom; j < len; ++j) {
         if ((base[j] < 'A' || base[j] > 'Z') && (base[j] < 'a' || base[j] > 'z'))
             return base.mid(startFrom, j - startFrom);

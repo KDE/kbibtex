@@ -267,7 +267,7 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
         timeout = 10 * 1000;
 
     QDBusMessage m = QDBusMessage::createMethodCall(dbusServiceName, dbusPath, dbusInterfaceName, QStringLiteral("Notify"));
-    QList<QVariant> args {QStringLiteral("kdialog"), 0U, icon, title, text, QStringList(), QVariantMap(), timeout};
+    const QList<QVariant> args {QStringLiteral("kdialog"), 0U, icon, title, text, QStringList(), QVariantMap(), timeout};
     m.setArguments(args);
 
     QDBusMessage replyMsg = QDBusConnection::sessionBus().call(m);
@@ -313,7 +313,7 @@ QString OnlineSearchAbstract::decodeURL(QString rawText)
     return rawText;
 }
 
-QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, int startPos)
+QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, int startPos) const
 {
     /// how to recognize HTML tags
     static const QString formTagEnd = QStringLiteral("</form>");

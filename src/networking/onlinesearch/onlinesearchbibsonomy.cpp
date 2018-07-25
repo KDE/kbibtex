@@ -147,10 +147,10 @@ public:
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QString url = QStringLiteral("https://www.bibsonomy.org/bib/");
 
-        bool hasFreeText = !query[queryKeyFreeText].isEmpty();
-        bool hasTitle = !query[queryKeyTitle].isEmpty();
-        bool hasAuthor = !query[queryKeyAuthor].isEmpty();
-        bool hasYear = !query[queryKeyYear].isEmpty();
+        const bool hasFreeText = !query[queryKeyFreeText].isEmpty();
+        const bool hasTitle = !query[queryKeyTitle].isEmpty();
+        const bool hasAuthor = !query[queryKeyAuthor].isEmpty();
+        const bool hasYear = !query[queryKeyYear].isEmpty();
 
         QString searchType = QStringLiteral("search");
         if (hasAuthor && !hasFreeText && !hasTitle && !hasYear) {
