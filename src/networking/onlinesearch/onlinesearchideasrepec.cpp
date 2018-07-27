@@ -160,8 +160,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
                 connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadPublicationDone);
             }
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -201,9 +200,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         reply->setProperty("downloadurl", QVariant::fromValue<QString>(downloadUrl));
         InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadBibTeXDone);
-
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -257,8 +254,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadPublicationDone);
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString() << "(was" << downloadUrl << ")";
+    }
 
     refreshBusyProperty();
 }

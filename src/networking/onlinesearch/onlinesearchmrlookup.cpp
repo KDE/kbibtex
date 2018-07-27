@@ -114,8 +114,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
         }
 
         stopSearch(hasEntry ? resultNoError : resultUnspecifiedError);
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }

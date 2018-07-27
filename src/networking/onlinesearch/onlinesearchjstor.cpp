@@ -145,8 +145,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingResultPage);
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -192,8 +191,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingBibTeXCode);
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -221,8 +219,7 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
         }
 
         stopSearch(numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }

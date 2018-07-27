@@ -160,6 +160,9 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
 
 bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
 {
+    /// The URL to be shown or logged shall not contain any API key
+    const QUrl urlToShow = InternalNetworkAccessManager::removeApiKey(reply->url());
+
     newUrl = QUrl();
     if (m_hasBeenCanceled) {
         stopSearch(resultCancelled);
@@ -167,7 +170,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     } else if (reply->error() != QNetworkReply::NoError) {
         m_hasBeenCanceled = true;
         const QString errorString = reply->errorString();
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ")";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ") for URL" << urlToShow.toDisplayString();
 #ifdef HAVE_KF5
         sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), errorString), label(), QStringLiteral("kbibtex"), 7 * 1000);
 #endif // HAVE_KF5
@@ -191,7 +194,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
     if (reply->attribute(QNetworkRequest::RedirectionTargetAttribute).isValid()) {
         newUrl = reply->url().resolved(reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl());
     } else if (reply->size() == 0)
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "on url" << reply->url().toDisplayString() << "returned no data";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "on url" << urlToShow.toDisplayString() << "returned no data";
 
     return true;
 }
@@ -413,7 +416,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
         if (iconData.size() < 10) {
             /// Unlikely that an icon's data is less than 10 bytes,
             /// must be an error.
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Received invalid icon data from " << reply->url().toDisplayString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Received invalid icon data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             return;
         }
 
@@ -428,10 +431,10 @@ void OnlineSearchAbstract::iconDownloadFinished()
         } else if (iconData[0] == '<') {
             /// HTML or XML code
             const QString htmlCode = QString::fromUtf8(iconData);
-            qCDebug(LOG_KBIBTEX_NETWORKING) << "Received XML or HTML data from " << reply->url().toDisplayString() << ": " << htmlCode.left(128);
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "Received XML or HTML data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString() << ": " << htmlCode.left(128);
             return;
         } else {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << reply->url().toDisplayString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             return;
         }
         const QString filename = reply->objectName() + extension;
@@ -445,11 +448,11 @@ void OnlineSearchAbstract::iconDownloadFinished()
             if (listWidgetItem != nullptr)
                 listWidgetItem->setIcon(QIcon(filename));
         } else {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not save icon data from URL" << reply->url().toDisplayString() << "to file" << filename;
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not save icon data from URL" << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString() << "to file" << filename;
             return;
         }
     } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon from URL " << reply->url().toDisplayString() << ": " << reply->errorString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon from URL " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString() << ": " << reply->errorString();
 }
 #endif // HAVE_QTWIDGETS
 

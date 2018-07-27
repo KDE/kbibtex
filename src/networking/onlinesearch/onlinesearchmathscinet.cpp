@@ -156,8 +156,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
         QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
         InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchMathSciNet::doneFetchingResultPage);
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -201,8 +200,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
             /// nothing found
             stopSearch(resultNoError);
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -238,8 +236,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
         }
 
         stopSearch(hasEntry ? resultNoError : resultUnspecifiedError);
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }

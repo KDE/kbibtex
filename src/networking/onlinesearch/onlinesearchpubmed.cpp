@@ -187,8 +187,7 @@ void OnlineSearchPubMed::eSearchDone()
             /// search resulted in no hits (and PubMed told so)
             stopSearch(resultNoError);
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -207,7 +206,7 @@ void OnlineSearchPubMed::eFetchDone()
         /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(input));
         if (bibTeXcode.isEmpty()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             stopSearch(resultInvalidArguments);
         } else {  /// remove XML header
             if (bibTeXcode[0] == '<')
@@ -229,8 +228,7 @@ void OnlineSearchPubMed::eFetchDone()
                 stopSearch(resultUnspecifiedError);
             }
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }

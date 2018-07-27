@@ -131,7 +131,7 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
             /// use XSL transformation to get BibTeX document from XML result
             const QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(xmlCode));
             if (bibTeXcode.isEmpty()) {
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
                 stopSearch(resultInvalidArguments);
             } else {
                 FileImporterBibTeX importer(this);
@@ -148,13 +148,12 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
 
                     delete bibtexFile;
                 } else {
-                    qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << reply->url().toDisplayString();
+                    qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
                     stopSearch(resultUnspecifiedError);
                 }
             }
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }

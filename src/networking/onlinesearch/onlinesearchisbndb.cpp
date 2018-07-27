@@ -158,6 +158,5 @@ void OnlineSearchIsbnDB::downloadDone()
                 stopSearch(resultUnspecifiedError);
             }
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 }

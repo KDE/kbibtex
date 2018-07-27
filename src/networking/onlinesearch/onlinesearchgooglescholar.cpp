@@ -189,8 +189,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingConfigPage);
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -232,8 +231,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
         QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
         InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -260,8 +258,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
         QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
         InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
         connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -309,8 +306,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
             d->listBibTeXurls.erase(d->listBibTeXurls.begin());
         } else
             stopSearch(resultNoError);
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -393,8 +389,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             } else
                 stopSearch(resultNoError);
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }

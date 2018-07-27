@@ -141,8 +141,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed.";
             stopSearch(resultUnspecifiedError);
         }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -182,8 +181,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
             d->citationUrls.removeFirst();
         } else
             stopSearch(resultNoError);
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }
@@ -209,9 +207,8 @@ void OnlineSearchAcmPortal::doneFetchingCitation()
             }
         }
         if (bibTeXUrls.isEmpty())
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "No citation link found in " << reply->url().toDisplayString();
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "No citation link found in " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
+    }
 
     if (bibTeXUrls.isEmpty()) {
         if (!d->citationUrls.isEmpty()) {
@@ -267,8 +264,7 @@ void OnlineSearchAcmPortal::doneFetchingBibTeX()
             d->citationUrls.removeFirst();
         } else
             stopSearch(resultNoError);
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "url was" << reply->url().toDisplayString();
+    }
 
     refreshBusyProperty();
 }

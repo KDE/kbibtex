@@ -31,6 +31,7 @@
 #include <QApplication>
 #include <QTimer>
 #include <QUrl>
+#include <QUrlQuery>
 
 #include <KProtocolManager>
 
@@ -121,7 +122,7 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
     request.setRawHeader(QByteArray("Accept-Language"), QByteArray("en-US, en;q=0.9"));
     request.setRawHeader(QByteArray("User-Agent"), userAgent().toLatin1());
     if (oldUrl.isValid())
-        request.setRawHeader(QByteArray("Referer"), oldUrl.toDisplayString().toLatin1());
+        request.setRawHeader(QByteArray("Referer"), removeApiKey(oldUrl).toDisplayString().toLatin1());
     QNetworkReply *reply = QNetworkAccessManager::get(request);
 
     /// Log SSL errors
@@ -198,13 +199,22 @@ QString InternalNetworkAccessManager::reverseObfuscate(const QByteArray &a) {
     return result;
 }
 
+QUrl InternalNetworkAccessManager::removeApiKey(QUrl url)
+{
+    QUrlQuery urlQuery(url);
+    urlQuery.removeQueryItem(QStringLiteral("apikey"));
+    urlQuery.removeQueryItem(QStringLiteral("api_key"));
+    url.setQuery(urlQuery);
+    return url;
+}
+
 void InternalNetworkAccessManager::networkReplyTimeout()
 {
     QTimer *timer = static_cast<QTimer *>(sender());
     timer->stop();
     QNetworkReply *reply = m_mapTimerToReply[timer];
     if (reply != nullptr) {
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Timeout on reply to " << reply->url().toDisplayString();
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Timeout on reply to " << removeApiKey(reply->url()).toDisplayString();
         reply->close();
         m_mapTimerToReply.remove(timer);
     }
@@ -223,7 +233,7 @@ void InternalNetworkAccessManager::networkReplyFinished()
 void InternalNetworkAccessManager::logSslErrors(const QList<QSslError> &errors)
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    qWarning() << QStringLiteral("Got the following SSL errors when querying the following URL: ") << reply->url().toDisplayString();
+    qWarning() << QStringLiteral("Got the following SSL errors when querying the following URL: ") << removeApiKey(reply->url()).toDisplayString();
     for (const QSslError &error : errors)
         qWarning() << QStringLiteral(" * ") + error.errorString() << "; Code: " << static_cast<int>(error.error());
 }

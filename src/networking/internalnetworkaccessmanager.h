@@ -57,6 +57,14 @@ public:
      */
     static QString reverseObfuscate(const QByteArray &obfuscated);
 
+    /**
+     * Remove API keys from an URL.
+     *
+     * @param url URL where API keys have to be removed
+     * @return a reference to the URL passed to this function
+     */
+    static QUrl removeApiKey(QUrl url);
+
 protected:
     InternalNetworkAccessManager(QObject *parent = nullptr);
     class HTTPEquivCookieJar;
