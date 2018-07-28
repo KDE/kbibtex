@@ -7,7 +7,7 @@ install(
     pubmed2bibtex.xsl
     pam2bibtex.xsl
     isbndb2bibtex.xsl
-    ieeexplore2bibtex.xsl
+    ieeexploreapiv1-to-bibtex.xsl
     wikipedia-cite.xsl
     worldcatdc2bibtex.xsl
     DESTINATION
