@@ -19,55 +19,76 @@
 
 #include <QNetworkReply>
 #include <QUrlQuery>
+#include <QCoreApplication>
+#include <QStandardPaths>
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
 #endif // HAVE_KF5
 
-#include "encoderlatex.h"
 #include "fileimporterbibtex.h"
+#include "encoderxml.h"
+#include "xsltransform.h"
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 
 class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate
 {
 public:
-    QString queryFreetext, queryAuthor;
-    int currentSearchPosition;
-    int numExpectedResults, numFoundResults;
-    QStringList bibTeXUrls;
-    int runningJobs;
+    static const QUrl apiUrl;
+    static const QString apiKey;
+    const XSLTransform xslt;
 
     OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect *)
-            : currentSearchPosition(0), numExpectedResults(0), numFoundResults(0), runningJobs(0) {
+            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/sciencedirectsearchapi-to-bibtex.xsl")))
+    {
         /// nothing
     }
 
-    void sanitizeBibTeXCode(QString &code) {
-        /// find and escape unprotected quotation marks in the text (e.g. abstract)
-        const QRegExp quotationMarks("([^= ]\\s*)\"(\\s*[a-z.])", Qt::CaseInsensitive);
-        int p = -2;
-        while ((p = quotationMarks.indexIn(code, p + 2)) >= 0) {
-            code = code.left(p - 1) + quotationMarks.cap(1) + QStringLiteral("\\\"") + quotationMarks.cap(2) + code.mid(p + quotationMarks.cap(0).length());
-        }
-        /// Remove "<!-- Tag Not Handled -->" and other XML tags from keywords
-        int i1 = -1;
-        while ((i1 = code.indexOf(QStringLiteral("keywords = "), i1 + 1)) > 0) {
-            const int i2 = code.indexOf(QStringLiteral("\n"), i1);
-            int t1 = -1;
-            while ((t1 = code.indexOf(QLatin1Char('<'), i1 + 7)) > 0) {
-                const int t2 = code.indexOf(QLatin1Char('>'), t1);
-                if (t2 > 0 && t1 < i2 && t2 < i2)
-                    code = code.left(t1) + code.mid(t2 + 1);
-                else
-                    break;
-            }
+    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+        QUrl queryUrl = apiUrl;
+        QUrlQuery q(queryUrl.query());
+
+        QString queryText;
+
+        /// Free text
+        const QStringList freeTextFragments = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        if (!freeTextFragments.isEmpty()) {
+            if (!queryText.isEmpty()) queryText.append(QStringLiteral(" AND "));
+            queryText.append(QStringLiteral("\"") + freeTextFragments.join(QStringLiteral("\" AND \"")) + QStringLiteral("\""));
         }
 
-        /// Fix some HTML-isms
-        code.replace(QStringLiteral("\\&amp;"), QStringLiteral("\\&")).replace(QStringLiteral("&amp;"), QStringLiteral("\\&"));
+        /// Title
+        const QStringList title = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyTitle]);
+        if (!title.isEmpty()) {
+            if (!queryText.isEmpty()) queryText.append(QStringLiteral(" AND "));
+            queryText.append(QStringLiteral("title(\"") + title.join(QStringLiteral("\" AND \"")) + QStringLiteral("\")"));
+        }
+
+        /// Authors
+        const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        if (!authors.isEmpty()) {
+            if (!queryText.isEmpty()) queryText.append(QStringLiteral(" AND "));
+            queryText.append(QStringLiteral("aut(\"") + authors.join(QStringLiteral("\" AND \"")) + QStringLiteral("\")"));
+        }
+
+        q.addQueryItem(QStringLiteral("query"), queryText);
+
+        /// Year
+        if (!query[queryKeyYear].isEmpty())
+            q.addQueryItem(QStringLiteral("date"), query[queryKeyYear]);
+
+        /// Request numResults many entries
+        q.addQueryItem(QStringLiteral("count"), QString::number(numResults));
+
+        queryUrl.setQuery(q);
+
+        return queryUrl;
     }
 };
+
+const QUrl OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiUrl(QStringLiteral("https://api.elsevier.com/content/search/scidir"));
+const QString OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiKey(InternalNetworkAccessManager::reverseObfuscate("\x43\x74\x9a\xa9\x6f\x5d\xa9\x9f\xeb\xda\xb9\xd8\x1b\x2b\x80\xe1\x3f\x5e\x29\x1c\xab\xc8\x54\x63\x58\x61\x13\x71\xca\xa9\xf1\xc4\xe4\xd3\xc9\xaa\x14\x70\xef\xdc\xb\x69\xff\xc6\xd5\xb6\x4a\x7d\x10\x27\xbb\xde\x92\xaa\xb0\xd6\xb9\x80\xd\x34\x48\x7e\x9d\xff"));
 
 OnlineSearchScienceDirect::OnlineSearchScienceDirect(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchScienceDirectPrivate(this))
@@ -82,22 +103,14 @@ OnlineSearchScienceDirect::~OnlineSearchScienceDirect()
 
 void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query, int numResults)
 {
-    d->runningJobs = 0;
-    d->numFoundResults = 0;
-    m_hasBeenCanceled = false;
-    d->bibTeXUrls.clear();
-    d->currentSearchPosition = 0;
-    emit progress(curStep = 0, numSteps = 2 + 2 * numResults);
+    emit progress(curStep = 0, numSteps = 1);
 
-    d->queryFreetext = query[queryKeyFreeText] + QStringLiteral(" ") + query[queryKeyTitle] + QStringLiteral(" ") + query[queryKeyYear];
-    d->queryAuthor = query[queryKeyAuthor];
-    d->numExpectedResults = numResults;
-
-    ++d->runningJobs;
-    QNetworkRequest request(QStringLiteral("http://www.sciencedirect.com/science/search"));
+    QNetworkRequest request(d->buildQueryUrl(query, numResults));
+    request.setRawHeader(QByteArray("X-ELS-APIKey"), d->apiKey.toLatin1());
+    request.setRawHeader(QByteArray("Accept"), QByteArray("application/xml"));
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
-    connect(reply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingStartPage);
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingXML);
 
     refreshBusyProperty();
 }
@@ -117,177 +130,54 @@ QUrl OnlineSearchScienceDirect::homepage() const
     return QUrl(QStringLiteral("https://www.sciencedirect.com/"));
 }
 
-void OnlineSearchScienceDirect::doneFetchingStartPage()
+void OnlineSearchScienceDirect::doneFetchingXML()
 {
     emit progress(++curStep, numSteps);
 
-    --d->runningJobs;
-    if (d->runningJobs != 0)
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "In OnlineSearchScienceDirect::doneFetchingStartPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     QUrl redirUrl;
-    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply, redirUrl)) {
-        const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-
         if (redirUrl.isValid()) {
-            ++numSteps;
-            ++d->runningJobs;
-
             /// redirection to another url
+            ++numSteps;
+
             QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply->url());
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingStartPage);
+            request.setRawHeader(QByteArray("X-ELS-APIKey"), d->apiKey.toLatin1());
+            request.setRawHeader(QByteArray("Accept"), QByteArray("application/xml"));
+            QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
+            connect(reply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingXML);
         } else {
-            InternalNetworkAccessManager::instance().mergeHtmlHeadCookies(htmlText, reply->url());
+            /// ensure proper treatment of UTF-8 characters
+            const QString xmlCode = QString::fromUtf8(reply->readAll().constData()).remove(QStringLiteral("xmlns=\"http://www.w3.org/2005/Atom\""));
 
-            QUrl url(QStringLiteral("http://www.sciencedirect.com/science"));
-            QMap<QString, QString> inputMap = formParameters(htmlText, htmlText.indexOf(QStringLiteral("<form id=\"quickSearch\" name=\"qkSrch\" metho"), Qt::CaseInsensitive));
-            inputMap[QStringLiteral("qs_all")] = d->queryFreetext.simplified();
-            inputMap[QStringLiteral("qs_author")] = d->queryAuthor.simplified();
-            inputMap[QStringLiteral("resultsPerPage")] = QString::number(d->numExpectedResults);
-            inputMap[QStringLiteral("_ob")] = QStringLiteral("QuickSearchURL");
-            inputMap[QStringLiteral("_method")] = QStringLiteral("submitForm");
-            inputMap[QStringLiteral("sdSearch")] = QStringLiteral("Search");
+            /// use XSL transformation to get BibTeX document from XML result
+            const QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(xmlCode));
+            if (bibTeXcode.isEmpty()) {
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
+                stopSearch(resultInvalidArguments);
+            } else {
+                FileImporterBibTeX importer(this);
+                File *bibtexFile = importer.fromString(bibTeXcode);
 
-            QUrlQuery query(url);
-            static const QStringList orderOfParameters = QString(QStringLiteral("_ob|_method|_acct|_origin|_zone|md5|_eidkey|qs_issue|qs_pages|qs_title|qs_vol|sdSearch|qs_all|qs_author|resultsPerPage")).split(QStringLiteral("|"));
-            for (const QString &key : orderOfParameters) {
-                if (!inputMap.contains(key)) continue;
-                query.addQueryItem(key, inputMap[key]);
-            }
-            url.setQuery(query);
+                bool hasEntries = false;
+                if (bibtexFile != nullptr) {
+                    for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+                        hasEntries |= publishEntry(entry);
+                    }
 
-            ++d->runningJobs;
-            QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingResultPage);
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-        }
-    }
-}
+                    stopSearch(resultNoError);
 
-void OnlineSearchScienceDirect::doneFetchingResultPage()
-{
-    --d->runningJobs;
-    if (d->runningJobs != 0)
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "In OnlineSearchScienceDirect::doneFetchingResultPage: Some jobs are running (" << d->runningJobs << "!= 0 )";
-
-    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    if (handleErrors(reply)) {
-        QUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-        if (!redirUrl.isEmpty()) {
-            ++d->runningJobs;
-            QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingResultPage);
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-        } else {
-            emit progress(++curStep, numSteps);
-
-            const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-            InternalNetworkAccessManager::instance().mergeHtmlHeadCookies(htmlText, reply->url());
-
-            QSet<QString> knownUrls;
-            int p = -1, p2 = -1;
-            while ((p = htmlText.indexOf(QStringLiteral("http://www.sciencedirect.com/science/article/pii/"), p + 1)) >= 0 && (p2 = htmlText.indexOf(QRegExp("[\"/ #]"), p + 50)) >= 0) {
-                const QString urlText = htmlText.mid(p, p2 - p);
-                if (knownUrls.contains(urlText)) continue;
-                knownUrls.insert(urlText);
-
-                if (d->numFoundResults < d->numExpectedResults) {
-                    ++d->numFoundResults;
-                    ++d->runningJobs;
-                    QUrl url(urlText);
-                    QNetworkRequest request(url);
-                    QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-                    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-                    connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingAbstractPage);
+                    delete bibtexFile;
+                } else {
+                    qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
+                    stopSearch(resultUnspecifiedError);
                 }
             }
         }
-
-        if (d->runningJobs <= 0) {
-            stopSearch(resultNoError);
-            emit progress(curStep = numSteps, numSteps);
-        }
     }
-}
 
-void OnlineSearchScienceDirect::doneFetchingAbstractPage()
-{
-    --d->runningJobs;
-    if (d->runningJobs < 0)
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
-
-    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    if (handleErrors(reply)) {
-        QUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-        if (!redirUrl.isEmpty()) {
-            ++d->runningJobs;
-            QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingAbstractPage);
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-        } else {
-            emit progress(++curStep, numSteps);
-
-            const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-            InternalNetworkAccessManager::instance().mergeHtmlHeadCookies(htmlText, reply->url());
-
-            int p1 = -1, p2 = -1;
-            if ((p1 = htmlText.indexOf(QStringLiteral("/science?_ob=DownloadURL&"))) >= 0 && (p2 = htmlText.indexOf(QRegExp("[ \"<>]"), p1 + 1)) >= 0) {
-                QUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
-                QUrlQuery query(url);
-                query.addQueryItem(QStringLiteral("citation-type"), QStringLiteral("BIBTEX"));
-                query.addQueryItem(QStringLiteral("format"), QStringLiteral("cite-abs"));
-                query.addQueryItem(QStringLiteral("export"), QStringLiteral("Export"));
-                url.setQuery(query);
-                ++d->runningJobs;
-                QNetworkRequest request(url);
-                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingBibTeX);
-                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-            }
-        }
-
-        if (d->runningJobs <= 0) {
-            stopSearch(resultNoError);
-            emit progress(curStep = numSteps, numSteps);
-        }
-    }
-}
-
-void OnlineSearchScienceDirect::doneFetchingBibTeX()
-{
-    emit progress(++curStep, numSteps);
-
-    --d->runningJobs;
-    if (d->runningJobs < 0)
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "In OnlineSearchScienceDirect::doneFetchingAbstractPage: Counting jobs failed (" << d->runningJobs << "< 0 )";
-
-    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    if (handleErrors(reply)) {
-        /// ensure proper treatment of UTF-8 characters
-        QString bibTeXcode = QString::fromUtf8(reply->readAll().constData());
-        d->sanitizeBibTeXCode(bibTeXcode);
-
-        FileImporterBibTeX importer(this);
-        File *bibtexFile = importer.fromString(bibTeXcode);
-
-        bool hasEntry = false;
-        if (bibtexFile != nullptr) {
-            for (const auto &element : const_cast<const File &>(*bibtexFile)) {
-                QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
-                hasEntry |= publishEntry(entry);
-            }
-            delete bibtexFile;
-        }
-
-        if (d->runningJobs <= 0) {
-            stopSearch(hasEntry ? resultNoError : resultUnspecifiedError);
-            emit progress(curStep = numSteps, numSteps);
-        }
-    }
+    refreshBusyProperty();
 }
