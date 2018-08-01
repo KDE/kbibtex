@@ -71,7 +71,7 @@
 ImageLabel::ImageLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
         : QLabel(text, parent, f)
 {
-    // nothing
+    /// nothing
 }
 
 void ImageLabel::setPixmap(const QPixmap &pixmap)

@@ -41,7 +41,7 @@ FileExporterRTF::FileExporterRTF(QObject *parent)
 
 FileExporterRTF::~FileExporterRTF()
 {
-    // nothing
+    /// nothing
 }
 
 void FileExporterRTF::reloadConfig()

@@ -43,7 +43,7 @@ FileExporterXSLT::FileExporterXSLT(const QString &xsltFilename, QObject *parent)
 
 FileExporterXSLT::~FileExporterXSLT()
 {
-    // nothing
+    /// nothing
 }
 
 bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)

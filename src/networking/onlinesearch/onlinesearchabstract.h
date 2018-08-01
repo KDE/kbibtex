@@ -130,7 +130,7 @@ protected:
     * Will check for common problems with downloads via QNetworkReply. It will return true
     * if there is no problem and you may process this job result. If there is a problem,
     * this function will notify the user if necessary (KMessageBox), emit a
-    * "stoppedSearch" signal, and return false.
+    * "stoppedSearch" signal (by invoking "stopSearch"), and return false.
     * @see handleErrors(KJob*)
     */
     bool handleErrors(QNetworkReply *reply);
@@ -139,7 +139,7 @@ protected:
     * Will check for common problems with downloads via QNetworkReply. It will return true
     * if there is no problem and you may process this job result. If there is a problem,
     * this function will notify the user if necessary (KMessageBox), emit a
-    * "stoppedSearch" signal, and return false.
+    * "stoppedSearch" signal (by invoking "stopSearch"), and return false.
     * @see handleErrors(KJob*)
     * @param newUrl will be set to the new URL if reply contains a redirection, otherwise reply's original URL
     */

@@ -26,12 +26,12 @@
 FileExporterRIS::FileExporterRIS(QObject *parent)
         : FileExporter(parent), m_cancelFlag(false)
 {
-    // nothing
+    /// nothing
 }
 
 FileExporterRIS::~FileExporterRIS()
 {
-    // nothing
+    /// nothing
 }
 
 bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)

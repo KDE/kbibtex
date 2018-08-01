@@ -77,7 +77,7 @@ public:
 
     AlternativesItemModel(QTreeView *parent)
             : QAbstractItemModel(parent), p(parent), currentClique(nullptr) {
-        // nothing
+        /// nothing
     }
 
     static SelectionType selectionType(const QString &fieldName) {
@@ -355,7 +355,7 @@ class AlternativesItemDelegate: public RadioButtonItemDelegate
 public:
     AlternativesItemDelegate(QObject *p)
             : RadioButtonItemDelegate(p) {
-        // nothing
+        /// nothing
     }
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const override {
@@ -418,7 +418,7 @@ private:
 public:
     CheckableFileModel(QList<EntryClique *> &cliqueList, QTreeView *treeView, QObject *parent = nullptr)
             : FileModel(parent), cl(cliqueList), currentClique(0), tv(treeView) {
-        // nothing
+        /// nothing
     }
 
     void setCurrentClique(EntryClique *currentClique) {
@@ -482,7 +482,7 @@ private:
 public:
     FilterIdFileModel(QObject *parent = nullptr)
             : QSortFilterProxyModel(parent), internalModel(nullptr), currentClique(nullptr) {
-        // nothing
+        /// nothing
     }
 
     void setCurrentClique(EntryClique *currentClique) {

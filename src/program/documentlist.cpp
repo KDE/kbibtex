@@ -72,7 +72,7 @@ public:
 DocumentListDelegate::DocumentListDelegate(QObject *parent)
         : QStyledItemDelegate(parent), ofim(OpenFileInfoManager::instance())
 {
-    // nothing
+    /// nothing
 }
 
 void DocumentListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

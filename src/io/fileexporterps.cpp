@@ -41,7 +41,7 @@ FileExporterPS::FileExporterPS(QObject *parent)
 
 FileExporterPS::~FileExporterPS()
 {
-    // nothing
+    /// nothing
 }
 
 void FileExporterPS::reloadConfig()

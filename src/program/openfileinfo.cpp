@@ -171,13 +171,13 @@ const QString OpenFileInfo::OpenFileInfoPrivate::keyURL = QStringLiteral("URL");
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QUrl &url)
         : d(new OpenFileInfoPrivate(openFileInfoManager, url, FileInfo::mimeTypeForUrl(url).name(), this))
 {
-    // nothing
+    /// nothing
 }
 
 OpenFileInfo::OpenFileInfo(OpenFileInfoManager *openFileInfoManager, const QString &mimeType)
         : d(new OpenFileInfoPrivate(openFileInfoManager, QUrl(), mimeType, this))
 {
-    // nothing
+    /// nothing
 }
 
 OpenFileInfo::~OpenFileInfo()
@@ -380,7 +380,7 @@ public:
 
     OpenFileInfoManagerPrivate(OpenFileInfoManager *parent)
             : p(parent), currentFileInfo(nullptr) {
-        // nothing
+        /// nothing
     }
 
     ~OpenFileInfoManagerPrivate() {

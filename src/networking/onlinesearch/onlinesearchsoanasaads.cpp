@@ -22,7 +22,7 @@
 OnlineSearchSOANASAADS::OnlineSearchSOANASAADS(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
 {
-    // nothing
+    /// nothing
 }
 
 QString OnlineSearchSOANASAADS::label() const

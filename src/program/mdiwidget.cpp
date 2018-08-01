@@ -55,7 +55,7 @@ public:
 
     LRUItemModel(OpenFileInfoManager *openFileInfoManager, QObject *parent = nullptr)
             : QAbstractItemModel(parent), ofim(openFileInfoManager) {
-        // nothing
+        /// nothing
     }
 
     void reset() {

@@ -24,7 +24,7 @@
 RadioButtonItemDelegate::RadioButtonItemDelegate(QObject *p)
         : QStyledItemDelegate(p)
 {
-    // nothing
+    /// nothing
 }
 
 void RadioButtonItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

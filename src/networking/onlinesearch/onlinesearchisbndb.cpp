@@ -76,7 +76,7 @@ const QString OnlineSearchIsbnDB::OnlineSearchIsbnDBPrivate::authorsUrl = QStrin
 OnlineSearchIsbnDB::OnlineSearchIsbnDB(QWidget *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIsbnDBPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchIsbnDB::~OnlineSearchIsbnDB()

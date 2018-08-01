@@ -103,7 +103,7 @@ public:
 OnlineSearchPubMed::OnlineSearchPubMed(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchPubMed::OnlineSearchPubMedPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchPubMed::~OnlineSearchPubMed()

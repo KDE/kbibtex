@@ -107,7 +107,7 @@ public:
 OnlineSearchGoogleScholar::OnlineSearchGoogleScholar(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchGoogleScholar::OnlineSearchGoogleScholarPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchGoogleScholar::~OnlineSearchGoogleScholar()
@@ -169,6 +169,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             /// landed on country-specific domain
             static const QRegularExpression pathToSettingsPage(QStringLiteral(" href=\"(/scholar_settings[^ \"]*)"));
             const QString htmlCode = QString::fromUtf8(reply->readAll());
+            // dumpToFile(QStringLiteral("01-doneFetchingStartPage.html"),htmlCode);
             const QRegularExpressionMatch pathToSettingsPageMatch = pathToSettingsPage.match(htmlCode);
             if (!pathToSettingsPageMatch.hasMatch() || pathToSettingsPageMatch.captured(1).isEmpty()) {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "No link to Google Scholar settings found";
@@ -202,6 +203,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
     if (handleErrors(reply)) {
         const QString htmlText = QString::fromUtf8(reply->readAll().constData());
+        // dumpToFile(QStringLiteral("02-doneFetchingConfigPage.html"),htmlText);
         static const QRegularExpression formOpeningTag(QStringLiteral("<form [^>]+action=\"([^\"]*scholar_setprefs[^\"]*)"));
         const QRegularExpressionMatch formOpeningTagMatch = formOpeningTag.match(htmlText);
         const int formOpeningTagPos = formOpeningTagMatch.capturedStart(0);
@@ -243,6 +245,9 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
+        // const QString htmlText = QString::fromUtf8(reply->readAll().constData());
+        // dumpToFile(QStringLiteral("03-doneFetchingSetConfigPage.html"),htmlText);
+
         QUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
         QUrlQuery query(url);
         query.addQueryItem(QStringLiteral("as_q"), d->queryFreetext);
@@ -271,6 +276,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 
     if (handleErrors(reply)) {
         const QString htmlText = QString::fromUtf8(reply->readAll().constData());
+        // dumpToFile(QStringLiteral("04-doneFetchingQueryPage.html"),htmlText);
 
         static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
         int pos = 0;
@@ -332,6 +338,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
         } else {
             /// ensure proper treatment of UTF-8 characters
             const QString rawText = QString::fromUtf8(reply->readAll());
+            // dumpToFile(QStringLiteral("05-doneFetchingBibTeX.bib"),rawText);
             File *bibtexFile = d->importer->fromString(rawText);
 
             bool hasEntry = false;

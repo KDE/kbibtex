@@ -240,7 +240,7 @@ const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::springe
 OnlineSearchSpringerLink::OnlineSearchSpringerLink(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchSpringerLink::~OnlineSearchSpringerLink()

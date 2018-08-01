@@ -32,7 +32,7 @@
 
 EntryClique::EntryClique()
 {
-    // nothing
+    /// nothing
 }
 
 int EntryClique::entryCount() const
@@ -363,7 +363,7 @@ const int FindDuplicates::FindDuplicatesPrivate::dsize = 32;
 FindDuplicates::FindDuplicates(QWidget *parent, int sensitivity)
         : QObject(parent), d(new FindDuplicatesPrivate(sensitivity, parent))
 {
-    // nothing
+    /// nothing
 }
 
 FindDuplicates::~FindDuplicates()

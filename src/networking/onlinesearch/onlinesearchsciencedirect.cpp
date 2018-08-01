@@ -93,7 +93,7 @@ const QString OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiKe
 OnlineSearchScienceDirect::OnlineSearchScienceDirect(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchScienceDirectPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchScienceDirect::~OnlineSearchScienceDirect()

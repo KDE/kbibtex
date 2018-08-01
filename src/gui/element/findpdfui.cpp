@@ -61,7 +61,7 @@ const int posRadioURLonly = 5;
 PDFItemDelegate::PDFItemDelegate(QListView *itemView, QObject *parent)
         : KWidgetItemDelegate(itemView, parent), m_parent(itemView)
 {
-    // nothing
+    /// nothing
 }
 
 void PDFItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
@@ -288,7 +288,7 @@ void PDFItemDelegate::slotRadioURLonlyToggled(bool checked)
 PDFListModel::PDFListModel(QList<FindPDF::ResultItem> &resultList, QObject *parent)
         : QAbstractListModel(parent), m_resultList(resultList)
 {
-    // nothing
+    /// nothing
 }
 
 int PDFListModel::rowCount(const QModelIndex &parent) const

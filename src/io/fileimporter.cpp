@@ -28,12 +28,12 @@
 FileImporter::FileImporter(QObject *parent)
         : QObject(parent)
 {
-    // nothing
+    /// nothing
 }
 
 FileImporter::~FileImporter()
 {
-    // nothing
+    /// nothing
 }
 
 File *FileImporter::fromString(const QString &text)

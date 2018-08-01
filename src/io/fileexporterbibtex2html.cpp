@@ -93,7 +93,7 @@ public:
 FileExporterBibTeX2HTML::FileExporterBibTeX2HTML(QObject *parent)
         : FileExporterToolchain(parent), d(new FileExporterBibTeX2HTMLPrivate(this, tempDir.path()))
 {
-    // nothing
+    /// nothing
 }
 
 FileExporterBibTeX2HTML::~FileExporterBibTeX2HTML()
@@ -103,7 +103,7 @@ FileExporterBibTeX2HTML::~FileExporterBibTeX2HTML()
 
 void FileExporterBibTeX2HTML::reloadConfig()
 {
-    // nothing
+    /// nothing
 }
 
 bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)

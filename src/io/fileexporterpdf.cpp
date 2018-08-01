@@ -46,7 +46,7 @@ FileExporterPDF::FileExporterPDF(QObject *parent)
 
 FileExporterPDF::~FileExporterPDF()
 {
-    // nothing
+    /// nothing
 }
 
 void FileExporterPDF::reloadConfig()

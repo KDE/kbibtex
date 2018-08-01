@@ -154,7 +154,7 @@ public:
 SearchResults::SearchResults(MDIWidget *mdiWidget, QWidget *parent)
         : QWidget(parent), d(new SearchResultsPrivate(mdiWidget, this))
 {
-    // nothing
+    /// nothing
 }
 
 SearchResults::~SearchResults()

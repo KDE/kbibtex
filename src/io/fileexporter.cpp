@@ -28,12 +28,12 @@ const QString FileExporter::defaultFont = QStringLiteral("");
 FileExporter::FileExporter(QObject *parent)
         : QObject(parent)
 {
-    // nothing
+    /// nothing
 }
 
 FileExporter::~FileExporter()
 {
-    // nothing
+    /// nothing
 }
 
 QString FileExporter::toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)

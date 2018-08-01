@@ -27,7 +27,7 @@
 OnlineSearchSimpleBibTeXDownload::OnlineSearchSimpleBibTeXDownload(QWidget *parent)
         : OnlineSearchAbstract(parent)
 {
-    // nothing
+    /// nothing
 }
 
 void OnlineSearchSimpleBibTeXDownload::startSearch(const QMap<QString, QString> &query, int numResults)

@@ -620,7 +620,7 @@ public:
 OnlineSearchArXiv::OnlineSearchArXiv(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchArXiv::OnlineSearchArXivPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchArXiv::~OnlineSearchArXiv()

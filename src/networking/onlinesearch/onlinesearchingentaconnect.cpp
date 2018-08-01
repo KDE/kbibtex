@@ -181,7 +181,7 @@ public:
         , form(nullptr)
 #endif // HAVE_QTWIDGETS
     {
-        // nothing
+        /// nothing
     }
 
 #ifdef HAVE_QTWIDGETS
@@ -317,7 +317,7 @@ public:
 OnlineSearchIngentaConnect::OnlineSearchIngentaConnect(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIngentaConnectPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchIngentaConnect::~OnlineSearchIngentaConnect()

@@ -22,7 +22,7 @@
 OnlineSearchInspireHep::OnlineSearchInspireHep(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
 {
-    // nothing
+    /// nothing
 }
 
 QString OnlineSearchInspireHep::label() const

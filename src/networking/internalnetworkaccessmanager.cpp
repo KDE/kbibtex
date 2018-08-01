@@ -62,7 +62,7 @@ public:
 
     HTTPEquivCookieJar(QObject *parent = nullptr)
             : QNetworkCookieJar(parent) {
-        // nothing
+        /// nothing
     }
 };
 

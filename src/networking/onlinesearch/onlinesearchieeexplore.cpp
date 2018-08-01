@@ -88,7 +88,7 @@ const QUrl OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate::apiUrl(QString
 OnlineSearchIEEEXplore::OnlineSearchIEEEXplore(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchIEEEXplore::~OnlineSearchIEEEXplore()

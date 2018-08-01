@@ -38,7 +38,7 @@ public:
 
     IdSuggestionsPrivate(IdSuggestions *parent)
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), group(config, IdSuggestions::configGroupName) {
-        // nothing
+        /// nothing
     }
 
     QString normalizeText(const QString &input) const {

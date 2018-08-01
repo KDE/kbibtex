@@ -1086,7 +1086,7 @@ class SourceWidget::SourceWidgetTextEdit : public KTextEdit
 public:
     SourceWidgetTextEdit(QWidget *parent)
             : KTextEdit(parent) {
-        // nothing
+        /// nothing
     }
 
 protected:

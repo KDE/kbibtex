@@ -39,12 +39,12 @@ FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType, QObjec
 
 FileExporterBibTeXOutput::~FileExporterBibTeXOutput()
 {
-    // nothing
+    /// nothing
 }
 
 void FileExporterBibTeXOutput::reloadConfig()
 {
-    // nothing
+    /// nothing
 }
 
 bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile, QStringList *errorLog)

@@ -67,7 +67,7 @@ public:
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
             : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(Qt::PartiallyChecked), cancelFlag(false), destinationCodec(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")), configGroupNameGeneral(QStringLiteral("General")) {
-        // nothing
+        /// nothing
     }
 
     void loadState() {
@@ -360,7 +360,7 @@ public:
 FileExporterBibTeX::FileExporterBibTeX(QObject *parent)
         : FileExporter(parent), d(new FileExporterBibTeXPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 FileExporterBibTeX::~FileExporterBibTeX()

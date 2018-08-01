@@ -143,7 +143,7 @@ quint64 File::FilePrivate::internalIdCounter = File::FilePrivate::initialInterna
 File::File()
         : QList<QSharedPointer<Element> >(), d(new FilePrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 File::File(const File &other)

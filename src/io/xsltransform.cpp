@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -75,6 +75,8 @@ QString XSLTransform::transform(const QString &xmlText) const
 
     QString result;
     if (query.evaluateTo(&result)) {
+        /// Return result of XSL transformation and replace
+        /// the usual XML suspects with its plain counterparts
         return result;
     } else {
         qWarning() << "Invoking QXmlQuery::evaluateTo(...) failed";

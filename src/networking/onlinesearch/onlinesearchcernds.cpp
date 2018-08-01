@@ -27,7 +27,7 @@
 OnlineSearchCERNDS::OnlineSearchCERNDS(QWidget *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
 {
-    // nothing
+    /// nothing
 }
 
 QString OnlineSearchCERNDS::label() const

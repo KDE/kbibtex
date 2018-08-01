@@ -71,7 +71,7 @@ public:
 OnlineSearchAcmPortal::OnlineSearchAcmPortal(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchAcmPortalPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchAcmPortal::~OnlineSearchAcmPortal()

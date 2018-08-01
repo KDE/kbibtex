@@ -129,7 +129,7 @@ public:
             : form(nullptr)
 #endif // HAVE_QTWIDGETS
     {
-        // nothing
+        /// nothing
     }
 
 #ifdef HAVE_QTWIDGETS
@@ -185,7 +185,7 @@ public:
 OnlineSearchBibsonomy::OnlineSearchBibsonomy(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchBibsonomyPrivate(this))
 {
-    // nothing
+    /// nothing
 }
 
 OnlineSearchBibsonomy::~OnlineSearchBibsonomy()

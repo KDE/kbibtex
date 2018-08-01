@@ -22,5 +22,5 @@
 SettingsAbstractWidget::SettingsAbstractWidget(QWidget *parent)
         : QWidget(parent)
 {
-    // nothing
+    /// nothing
 }
