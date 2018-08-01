@@ -372,10 +372,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
             if (!hasEntry) {
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
                 stopSearch(resultUnspecifiedError);
-                return;
-            }
-
-            if (!d->listBibTeXurls.isEmpty()) {
+            } else if (!d->listBibTeXurls.isEmpty()) {
                 const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
                 const QStringList urls = d->listBibTeXurls.constBegin().value().split(QStringLiteral("|"), QString::KeepEmptyParts);
                 const QString primaryUrl = urls.first();
