@@ -140,7 +140,7 @@ public:
         }
 
         QString queryString = OnlineSearchAbstract::encodeURL(form->lineEditSearchTerm->text());
-        return QUrl(QStringLiteral("https://www.bibsonomy.org/bib/") + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + "/" + queryString + QString(QStringLiteral("?items=%1")).arg(form->numResultsField->value()));
+        return QUrl(QStringLiteral("https://www.bibsonomy.org/bib/") + form->comboBoxSearchWhere->itemData(form->comboBoxSearchWhere->currentIndex()).toString() + QStringLiteral("/") + queryString + QString(QStringLiteral("?items=%1")).arg(form->numResultsField->value()));
     }
 #endif // HAVE_QTWIDGETS
 
