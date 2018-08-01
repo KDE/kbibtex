@@ -171,6 +171,12 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
         m_hasBeenCanceled = true;
         const QString errorString = reply->errorString();
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "(" << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ") for URL" << urlToShow.toDisplayString();
+        const QNetworkRequest &request = reply->request();
+        /// Dump all HTTP headers that were sent with the original request (except for API keys)
+        for (const QByteArray &rawHeaderName : request.rawHeaderList()) {
+            if (rawHeaderName.toLower().contains("apikey") || rawHeaderName.toLower().contains("api-key")) continue; ///< skip dumping header values containing an API key
+            qCDebug(LOG_KBIBTEX_NETWORKING) << " " << rawHeaderName << ":" << request.rawHeader(rawHeaderName);
+        }
 #ifdef HAVE_KF5
         sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), errorString), label(), QStringLiteral("kbibtex"), 7 * 1000);
 #endif // HAVE_KF5
