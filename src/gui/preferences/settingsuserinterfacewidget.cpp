@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -54,16 +54,9 @@ public:
         checkBoxShowComments->setChecked(configGroup.readEntry(FileModel::keyShowComments, FileModel::defaultShowComments));
         checkBoxShowMacros->setChecked(configGroup.readEntry(FileModel::keyShowMacros, FileModel::defaultShowMacros));
 
-        const QStringList styles = configGroup.readEntry("BibTeXStyles", QStringList());
-        for (const QString &style : styles) {
-            QStringList item = style.split(QStringLiteral("|"));
-            QString itemLabel = item.at(0);
-            item.removeFirst();
-            comboBoxBibliographySystem->addItem(itemLabel, item);
-        }
         int styleIndex = comboBoxBibliographySystem->findData(configGroup.readEntry("CurrentStyle", QString(QStringLiteral("bibtex"))));
         if (styleIndex < 0) styleIndex = 0;
-        comboBoxBibliographySystem->setCurrentIndex(styleIndex);
+        if (styleIndex < comboBoxBibliographySystem->count()) comboBoxBibliographySystem->setCurrentIndex(styleIndex);
 
         comboBoxElementDoubleClickAction->setCurrentIndex(configGroup.readEntry(Preferences::keyElementDoubleClickAction, (int)Preferences::defaultElementDoubleClickAction));
     }
