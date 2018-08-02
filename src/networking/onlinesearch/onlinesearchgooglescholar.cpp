@@ -201,38 +201,48 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (handleErrors(reply)) {
-        const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-        // dumpToFile(QStringLiteral("02-doneFetchingConfigPage.html"),htmlText);
-        static const QRegularExpression formOpeningTag(QStringLiteral("<form [^>]+action=\"([^\"]*scholar_setprefs[^\"]*)"));
-        const QRegularExpressionMatch formOpeningTagMatch = formOpeningTag.match(htmlText);
-        const int formOpeningTagPos = formOpeningTagMatch.capturedStart(0);
-        if (formOpeningTagPos < 0) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not find opening tag for form:" << formOpeningTag.pattern();
-            stopSearch(resultNoError);
-            return;
+    QUrl redirUrl;
+    if (handleErrors(reply, redirUrl)) {
+        if (redirUrl.isValid()) {
+            /// Redirection to another url
+            ++numSteps;
+
+            QNetworkRequest request(redirUrl);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingConfigPage);
+        } else {
+            const QString htmlText = QString::fromUtf8(reply->readAll().constData());
+            // dumpToFile(QStringLiteral("02-doneFetchingConfigPage.html"), htmlText);
+            static const QRegularExpression formOpeningTag(QStringLiteral("<form [^>]+action=\"([^\"]*scholar_setprefs[^\"]*)"));
+            const QRegularExpressionMatch formOpeningTagMatch = formOpeningTag.match(htmlText);
+            const int formOpeningTagPos = formOpeningTagMatch.capturedStart(0);
+            if (formOpeningTagPos < 0) {
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not find opening tag for form:" << formOpeningTag.pattern();
+                stopSearch(resultNoError);
+                return;
+            }
+
+            QMap<QString, QString> inputMap = formParameters(htmlText, formOpeningTagPos);
+            inputMap[QStringLiteral("hl")] = QStringLiteral("en");
+            inputMap[QStringLiteral("scis")] = QStringLiteral("yes");
+            inputMap[QStringLiteral("scisf")] = QStringLiteral("4");
+            inputMap[QStringLiteral("num")] = QString::number(d->numResults);
+            inputMap[QStringLiteral("submit")] = QStringLiteral("");
+
+            QUrl url = reply->url().resolved(QUrl(decodeURL(formOpeningTagMatch.captured(1))));
+            QUrlQuery query(url);
+            for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it) {
+                query.removeQueryItem(it.key());
+                query.addQueryItem(it.key(), it.value());
+            }
+            url.setQuery(query);
+
+            QNetworkRequest request(url);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
         }
-
-        QMap<QString, QString> inputMap = formParameters(htmlText, formOpeningTagPos);
-        inputMap[QStringLiteral("hl")] = QStringLiteral("en");
-        inputMap[QStringLiteral("scis")] = QStringLiteral("yes");
-        inputMap[QStringLiteral("scisf")] = QStringLiteral("4");
-        inputMap[QStringLiteral("num")] = QString::number(d->numResults);
-        inputMap[QStringLiteral("submit")] = QStringLiteral("");
-
-        QUrl url = reply->url().resolved(QUrl(decodeURL(formOpeningTagMatch.captured(1))));
-        QUrlQuery query(url);
-        for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it) {
-            query.removeQueryItem(it.key());
-            query.addQueryItem(it.key(), it.value());
-        }
-        url.setQuery(query);
-
-
-        QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-        connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
     }
 
     refreshBusyProperty();
@@ -244,25 +254,36 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (handleErrors(reply)) {
-        // const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-        // dumpToFile(QStringLiteral("03-doneFetchingSetConfigPage.html"),htmlText);
+    QUrl redirUrl;
+    if (handleErrors(reply, redirUrl)) {
+        if (redirUrl.isValid()) {
+            /// Redirection to another url
+            ++numSteps;
 
-        QUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
-        QUrlQuery query(url);
-        query.addQueryItem(QStringLiteral("as_q"), d->queryFreetext);
-        query.addQueryItem(QStringLiteral("as_sauthors"), d->queryAuthor);
-        query.addQueryItem(QStringLiteral("as_ylo"), d->queryYear);
-        query.addQueryItem(QStringLiteral("as_yhi"), d->queryYear);
-        query.addQueryItem(QStringLiteral("as_vis"), QStringLiteral("1")); ///< include citations
-        query.addQueryItem(QStringLiteral("num"), QString::number(d->numResults));
-        query.addQueryItem(QStringLiteral("btnG"), QStringLiteral("Search Scholar"));
-        url.setQuery(query);
+            QNetworkRequest request(redirUrl);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
+        } else {
+            // const QString htmlText = QString::fromUtf8(reply->readAll().constData());
+            // dumpToFile(QStringLiteral("03-doneFetchingSetConfigPage.html"), htmlText);
 
-        QNetworkRequest request(url);
-        QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-        connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
+            QUrl url(QString(d->queryPageUrl).arg(reply->url().host()));
+            QUrlQuery query(url);
+            query.addQueryItem(QStringLiteral("as_q"), d->queryFreetext);
+            query.addQueryItem(QStringLiteral("as_sauthors"), d->queryAuthor);
+            query.addQueryItem(QStringLiteral("as_ylo"), d->queryYear);
+            query.addQueryItem(QStringLiteral("as_yhi"), d->queryYear);
+            query.addQueryItem(QStringLiteral("as_vis"), QStringLiteral("1")); ///< include citations
+            query.addQueryItem(QStringLiteral("num"), QString::number(d->numResults));
+            query.addQueryItem(QStringLiteral("btnG"), QStringLiteral("Search Scholar"));
+            url.setQuery(query);
+
+            QNetworkRequest request(url);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
+        }
     }
 
     refreshBusyProperty();
@@ -274,44 +295,56 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (handleErrors(reply)) {
-        const QString htmlText = QString::fromUtf8(reply->readAll().constData());
-        // dumpToFile(QStringLiteral("04-doneFetchingQueryPage.html"),htmlText);
+    QUrl redirUrl;
+    if (handleErrors(reply, redirUrl)) {
+        if (redirUrl.isValid()) {
+            /// Redirection to another url
+            ++numSteps;
 
-        static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
-        int pos = 0;
-        d->listBibTeXurls.clear();
-        while ((pos = linkToBib.indexIn(htmlText, pos)) != -1) {
-            /// Try to figure out [PDF] or [HTML] link associated with BibTeX entry
-            const QString documentUrl = d->documentUrlForBibTeXEntry(htmlText, pos);
-            /// Extract primary link associated with BibTeX entry
-            const QString primaryUrl = d->mainUrlForBibTeXEntry(htmlText, pos);
-
-            const QString bibtexUrl("https://" + reply->url().host() + linkToBib.cap(0).replace(QStringLiteral("&amp;"), QStringLiteral("&")));
-            d->listBibTeXurls.insert(bibtexUrl, primaryUrl + QLatin1Char('|') + documentUrl);
-            pos += linkToBib.matchedLength();
-        }
-
-        if (!d->listBibTeXurls.isEmpty()) {
-            const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
-            const QStringList urls = d->listBibTeXurls.constBegin().value().split(QStringLiteral("|"), QString::KeepEmptyParts);
-            const QString primaryUrl = urls.first();
-            const QString documentUrl = urls.last();
-            QNetworkRequest request(bibtexUrl);
+            QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-            if (!primaryUrl.isEmpty()) {
-                /// Store primary URL as a property of the request/reply
-                newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
-            }
-            if (!documentUrl.isEmpty()) {
-                /// Store URL to document as a property of the request/reply
-                newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
-            }
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
-            d->listBibTeXurls.erase(d->listBibTeXurls.begin());
-        } else
-            stopSearch(resultNoError);
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
+        } else {
+            const QString htmlText = QString::fromUtf8(reply->readAll().constData());
+            // dumpToFile(QStringLiteral("04-doneFetchingQueryPage.html"), htmlText);
+
+            d->listBibTeXurls.clear();
+
+            static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
+            int pos = 0;
+            while ((pos = linkToBib.indexIn(htmlText, pos)) != -1) {
+                /// Try to figure out [PDF] or [HTML] link associated with BibTeX entry
+                const QString documentUrl = d->documentUrlForBibTeXEntry(htmlText, pos);
+                /// Extract primary link associated with BibTeX entry
+                const QString primaryUrl = d->mainUrlForBibTeXEntry(htmlText, pos);
+
+                const QString bibtexUrl("https://" + reply->url().host() + linkToBib.cap(0).replace(QStringLiteral("&amp;"), QStringLiteral("&")));
+                d->listBibTeXurls.insert(bibtexUrl, primaryUrl + QLatin1Char('|') + documentUrl);
+                pos += linkToBib.matchedLength();
+            }
+
+            if (!d->listBibTeXurls.isEmpty()) {
+                const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
+                const QStringList urls = d->listBibTeXurls.constBegin().value().split(QStringLiteral("|"), QString::KeepEmptyParts);
+                const QString primaryUrl = urls.first();
+                const QString documentUrl = urls.last();
+                QNetworkRequest request(bibtexUrl);
+                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+                if (!primaryUrl.isEmpty()) {
+                    /// Store primary URL as a property of the request/reply
+                    newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
+                }
+                if (!documentUrl.isEmpty()) {
+                    /// Store URL to document as a property of the request/reply
+                    newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
+                }
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
+                d->listBibTeXurls.erase(d->listBibTeXurls.begin());
+            } else
+                stopSearch(resultNoError);
+        }
     }
 
     refreshBusyProperty();
