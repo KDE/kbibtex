@@ -311,18 +311,26 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 
             d->listBibTeXurls.clear();
 
-            static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
-            int pos = 0;
-            while ((pos = linkToBib.indexIn(htmlText, pos)) != -1) {
-                /// Try to figure out [PDF] or [HTML] link associated with BibTeX entry
-                const QString documentUrl = d->documentUrlForBibTeXEntry(htmlText, pos);
-                /// Extract primary link associated with BibTeX entry
-                const QString primaryUrl = d->mainUrlForBibTeXEntry(htmlText, pos);
+#ifdef HAVE_KF5
+            if (htmlText.contains(QStringLiteral("enable JavaScript")) || htmlText.contains(QStringLiteral("re not a robot"))) {
+                sendVisualNotification(i18n("'Google Scholar' denied scrapping data because it thinks you are a robot."), label(), QStringLiteral("kbibtex"), 7 * 1000);
+            } else {
+#endif // HAVE_KF5
+                static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
+                int pos = 0;
+                while ((pos = linkToBib.indexIn(htmlText, pos)) != -1) {
+                    /// Try to figure out [PDF] or [HTML] link associated with BibTeX entry
+                    const QString documentUrl = d->documentUrlForBibTeXEntry(htmlText, pos);
+                    /// Extract primary link associated with BibTeX entry
+                    const QString primaryUrl = d->mainUrlForBibTeXEntry(htmlText, pos);
 
-                const QString bibtexUrl("https://" + reply->url().host() + linkToBib.cap(0).replace(QStringLiteral("&amp;"), QStringLiteral("&")));
-                d->listBibTeXurls.insert(bibtexUrl, primaryUrl + QLatin1Char('|') + documentUrl);
-                pos += linkToBib.matchedLength();
+                    const QString bibtexUrl("https://" + reply->url().host() + linkToBib.cap(0).replace(QStringLiteral("&amp;"), QStringLiteral("&")));
+                    d->listBibTeXurls.insert(bibtexUrl, primaryUrl + QLatin1Char('|') + documentUrl);
+                    pos += linkToBib.matchedLength();
+                }
+#ifdef HAVE_KF5
             }
+#endif // HAVE_KF5
 
             if (!d->listBibTeXurls.isEmpty()) {
                 const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
