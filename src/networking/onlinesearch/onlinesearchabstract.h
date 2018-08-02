@@ -194,6 +194,10 @@ protected:
      */
     void refreshBusyProperty();
 
+#ifdef HAVE_KF5
+    void sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout);
+#endif // HAVE_KF5
+
 private:
     bool m_previousBusyState;
     QString m_name;
@@ -205,10 +209,6 @@ private:
 
     QString htmlAttribute(const QString &htmlCode, const int startPos, const QString &attribute) const;
     bool htmlAttributeIsSelected(const QString &htmlCode, const int startPos, const QString &attribute) const;
-
-#ifdef HAVE_KF5
-    void sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout);
-#endif // HAVE_KF5
 
 private slots:
 #ifdef HAVE_QTWIDGETS
