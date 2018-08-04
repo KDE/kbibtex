@@ -68,16 +68,17 @@ QByteArray TextEncoder::encode(const QString &input, const QTextCodec *destinati
     return result;
 }
 
-const QStringList TextEncoder::encodings = QStringList()
+const QStringList TextEncoder::encodings {
         /// the classics
-        << QStringLiteral("US-ASCII") /** effectively like 'LaTeX' encoding */
+        QStringLiteral("US-ASCII"), /** effectively like 'LaTeX' encoding */
         /// ISO 8859 a.k.a. Latin codecs
-        << QStringLiteral("ISO-8859-1") << QStringLiteral("ISO-8859-2") << QStringLiteral("ISO-8859-3") << QStringLiteral("ISO-8859-4") << QStringLiteral("ISO-8859-5") << QStringLiteral("ISO-8859-6") << QStringLiteral("ISO-8859-7") << QStringLiteral("ISO-8859-8") << QStringLiteral("ISO-8859-9") << QStringLiteral("ISO-8859-10") << QStringLiteral("ISO-8859-13") << QStringLiteral("ISO-8859-14") << QStringLiteral("ISO-8859-15") << QStringLiteral("ISO-8859-16")
+        QStringLiteral("ISO-8859-1"), QStringLiteral("ISO-8859-2"), QStringLiteral("ISO-8859-3"), QStringLiteral("ISO-8859-4"), QStringLiteral("ISO-8859-5"), QStringLiteral("ISO-8859-6"), QStringLiteral("ISO-8859-7"), QStringLiteral("ISO-8859-8"), QStringLiteral("ISO-8859-9"), QStringLiteral("ISO-8859-10"), QStringLiteral("ISO-8859-13"), QStringLiteral("ISO-8859-14"), QStringLiteral("ISO-8859-15"), QStringLiteral("ISO-8859-16"),
         /// various Unicode codecs
-        << QStringLiteral("UTF-8") << QStringLiteral("UTF-16") << QStringLiteral("UTF-16BE") << QStringLiteral("UTF-16LE") << QStringLiteral("UTF-32") << QStringLiteral("UTF-32BE") << QStringLiteral("UTF-32LE")
+        QStringLiteral("UTF-8"), QStringLiteral("UTF-16"), QStringLiteral("UTF-16BE"), QStringLiteral("UTF-16LE"), QStringLiteral("UTF-32"), QStringLiteral("UTF-32BE"), QStringLiteral("UTF-32LE"),
         /// various Cyrillic codecs
-        << QStringLiteral("KOI8-R") << QStringLiteral("KOI8-U")
+        QStringLiteral("KOI8-R"), QStringLiteral("KOI8-U"),
         /// various CJK codecs
-        << QStringLiteral("Big5") << QStringLiteral("Big5-HKSCS") << QStringLiteral("GB18030") << QStringLiteral("EUC-JP") << QStringLiteral("EUC-KR") << QStringLiteral("ISO 2022-JP") << QStringLiteral("Shift-JIS")
+        QStringLiteral("Big5"), QStringLiteral("Big5-HKSCS"), QStringLiteral("GB18030"), QStringLiteral("EUC-JP"), QStringLiteral("EUC-KR"), QStringLiteral("ISO 2022-JP"), QStringLiteral("Shift-JIS"),
         /// Windows codecs
-        << QStringLiteral("Windows-1250") << QStringLiteral("Windows-1251") << QStringLiteral("Windows-1252") << QStringLiteral("Windows-1253") << QStringLiteral("Windows-1254") << QStringLiteral("Windows-1255") << QStringLiteral("Windows-1256") << QStringLiteral("Windows-1257") << QStringLiteral("Windows-1258");
+        QStringLiteral("Windows-1250"), QStringLiteral("Windows-1251"), QStringLiteral("Windows-1252"), QStringLiteral("Windows-1253"), QStringLiteral("Windows-1254"), QStringLiteral("Windows-1255"), QStringLiteral("Windows-1256"), QStringLiteral("Windows-1257"), QStringLiteral("Windows-1258")
+};

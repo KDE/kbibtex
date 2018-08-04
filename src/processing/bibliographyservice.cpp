@@ -43,7 +43,7 @@ private:
 
 public:
     QWidget *parentWidget;
-    const QStringList textBasedMimeTypes;
+    static const QStringList textBasedMimeTypes;
 
     Private(QWidget *w, BibliographyService *parent)
             : configXDGMimeAppsList(KSharedConfig::openConfig(QStringLiteral("mimeapps.list"), KConfig::NoGlobals, QStandardPaths::ApplicationsLocation)),
@@ -51,11 +51,7 @@ public:
           configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
           configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
           configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
-          parentWidget(w),
-          textBasedMimeTypes(QStringList()
-                             << QStringLiteral("text/x-bibtex") ///< classical BibTeX bibliographies
-                             << QStringLiteral("application/x-research-info-systems") ///< Research Information Systems (RIS) bibliographies
-                             << QStringLiteral("application/x-isi-export-format")) ///< Information Sciences Institute (ISI) bibliographies
+          parentWidget(w)
     {
         Q_UNUSED(parent)
     }
@@ -159,6 +155,11 @@ const QString BibliographyService::Private::kbibtexApplicationDesktop = QStringL
 const QString BibliographyService::Private::kbibtexPartDesktop = QStringLiteral("kbibtexpart.desktop");
 const QString BibliographyService::Private::kateApplicationDesktop = QStringLiteral("org.kde.kate.desktop");
 const QString BibliographyService::Private::katePartDesktop = QStringLiteral("katepart.desktop");
+const QStringList BibliographyService::Private::textBasedMimeTypes {
+    QStringLiteral("text/x-bibtex"), ///< classical BibTeX bibliographies
+    QStringLiteral("application/x-research-info-systems"), ///< Research Information Systems (RIS) bibliographies
+    QStringLiteral("application/x-isi-export-format") ///< Information Sciences Institute (ISI) bibliographies
+};
 
 BibliographyService::BibliographyService(QWidget *parentWidget)
         : QObject(parentWidget), d(new BibliographyService::Private(parentWidget, this))
