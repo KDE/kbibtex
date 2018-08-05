@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -43,6 +43,8 @@ private slots:
     void resetProgress();
 
 private:
+    enum MessageStatus { statusInfo, statusOk, statusError, statusAuth, statusNetwork };
+
     bool m_running;
     TestWidget *m_testWidget;
     bool m_isBusy;
@@ -51,7 +53,7 @@ private:
     QList<OnlineSearchAbstract *>::ConstIterator m_currentOnlineSearch;
     int m_currentOnlineSearchNumFoundEntries;
 
-    void addMessage(const QString &message, const QIcon &icon = QIcon());
+    void addMessage(const QString &message, const MessageStatus messageStatus);
     void setBusy(bool isBusy);
 
     void processNextSearch();
