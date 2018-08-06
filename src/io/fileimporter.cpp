@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -61,16 +61,14 @@ File *FileImporter::fromString(const QString &text)
 
 Person *FileImporter::splitName(const QString &name)
 {
-    // FIXME: This is a rather ugly code
-    QStringList segments = name.split(QRegExp("[ ,]+"));
     bool containsComma = name.contains(',');
     QString firstName;
     QString lastName;
-
-    if (segments.isEmpty())
-        return nullptr;
+    QString suffix;
 
     if (!containsComma) {
+        const QStringList segments = name.split(QRegExp("[ ]+"));
+
         /** PubMed uses a special writing style for names, where the last name is followed by single capital letter,
           * each being the first letter of each first name
           * So, check how many single capital letters are at the end of the given segment list */
@@ -93,6 +91,10 @@ Person *FileImporter::splitName(const QString &name)
             firstName.append(segments[segments.count() - 1]);
         } else {
             int from = segments.count() - 1;
+            if (looksLikeSuffix(segments[from])) {
+                suffix = segments[from];
+                --from;
+            }
             lastName = segments[from];
             /** check for lower case parts of the last name such as "van", "von", "de", ... */
             while (from > 0) {
@@ -106,28 +108,41 @@ Person *FileImporter::splitName(const QString &name)
             if (from > 0) {
                 /** there are segments left for the first name */
                 firstName = *segments.begin();
-                for (QStringList::Iterator it = ++segments.begin(); from > 1; ++it, --from) {
+                for (QStringList::ConstIterator it = ++segments.begin(); from > 1; ++it, --from) {
                     firstName.append(" ");
                     firstName.append(*it);
                 }
             }
         }
     } else {
-        bool inLastName = true;
-        for (int i = 0; i < segments.count(); ++i) {
-            if (segments[i] == QStringLiteral(","))
-                inLastName = false;
-            else if (inLastName) {
-                if (!lastName.isEmpty()) lastName.append(" ");
-                lastName.append(segments[i]);
-            } else {
-                if (!firstName.isEmpty()) firstName.append(" ");
-                firstName.append(segments[i]);
-            }
-        }
+        const QStringList segments = name.split(QStringLiteral(","));
+        /// segments.count() must be >=2
+        if (segments.count() == 2) {
+            /// Most probably "Smith, Adam"
+            lastName = segments[0].trimmed();
+            firstName = segments[1].trimmed();
+        } else if (segments.count() == 3 && looksLikeSuffix(segments[2])) {
+            /// Most probably "Smith, Adam, Jr."
+            lastName = segments[0].trimmed();
+            firstName = segments[1].trimmed();
+            suffix = segments[2].trimmed();
+        } else
+            qWarning() << "Too many commas in name:" << name;
     }
 
-    return new Person(firstName, lastName);
+    return new Person(firstName, lastName, suffix);
+}
+
+bool FileImporter::looksLikeSuffix(const QString &suffix)
+{
+    const QString normalizedSuffix = suffix.trimmed().toLower();
+    return normalizedSuffix == QStringLiteral("jr")
+           || normalizedSuffix == QStringLiteral("jr.")
+           || normalizedSuffix == QStringLiteral("sr")
+           || normalizedSuffix == QStringLiteral("sr.")
+           || normalizedSuffix == QStringLiteral("ii")
+           || normalizedSuffix == QStringLiteral("iii")
+           || normalizedSuffix == QStringLiteral("iv");
 }
 
 // #include "fileimporter.moc"
