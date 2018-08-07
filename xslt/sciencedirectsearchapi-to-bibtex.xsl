@@ -20,7 +20,11 @@
 <xsl:apply-templates select="entry" />
 </xsl:template>
 
-<xsl:template match="entry">
+<xsl:template match="entry[error]">
+<!-- do nothing on empty result set -->
+</xsl:template>
+
+<xsl:template match="entry[not(error)]">
 
 <!-- Determine publication type, use @misc as fallback -->
 <xsl:choose>
