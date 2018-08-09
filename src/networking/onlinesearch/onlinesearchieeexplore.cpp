@@ -39,53 +39,55 @@ private:
     OnlineSearchIEEEXplore *p;
 
 public:
-    const QString gatewayUrl;
+    static const QUrl apiUrl;
     const XSLTransform xslt;
 
     OnlineSearchIEEEXplorePrivate(OnlineSearchIEEEXplore *parent)
-            : p(parent), gatewayUrl(QStringLiteral("https://ieeexplore.ieee.org/gateway/ipsSearch.jsp")),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/ieeexplore2bibtex.xsl")))
+            : p(parent),
+              xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/ieeexploreapiv1-to-bibtex.xsl")))
     {
         /// nothing
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
-        QUrl queryUrl = QUrl(gatewayUrl);
-
-        const QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
-        const QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
-        QStringList queryText;
-        queryText.reserve(freeTextFragments.size() + 1 + authors.size() + 1);
+        QUrl queryUrl = apiUrl;
+        QUrlQuery q(queryUrl.query());
 
         /// Free text
-        for (const QString &freeTextFragment : freeTextFragments) {
-            queryText << QString(QStringLiteral("\"%1\"")).arg(freeTextFragment);
-        }
+        const QStringList freeTextFragments = p->splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        if (!freeTextFragments.isEmpty())
+            q.addQueryItem(QStringLiteral("querytext"), QStringLiteral("\"") + freeTextFragments.join(QStringLiteral("\"+\"")) + QStringLiteral("\""));
 
         /// Title
-        if (!query[queryKeyTitle].isEmpty())
-            queryText << QString(QStringLiteral("\"Document Title\":\"%1\"")).arg(query[queryKeyTitle]);
+        const QStringList title = p->splitRespectingQuotationMarks(query[queryKeyTitle]);
+        if (!title.isEmpty())
+            q.addQueryItem(QStringLiteral("article_title"), QStringLiteral("\"") + title.join(QStringLiteral("\"+\"")) + QStringLiteral("\""));
 
         /// Author
-        for (const QString &author : authors) {
-            queryText << QString(QStringLiteral("Author:\"%1\"")).arg(author);
-        }
+        const QStringList authors = p->splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        if (!authors.isEmpty())
+            q.addQueryItem(QStringLiteral("author"), QStringLiteral("\"") + authors.join(QStringLiteral("\"+\"")) + QStringLiteral("\""));
 
         /// Year
-        if (!query[queryKeyYear].isEmpty())
-            queryText << QString(QStringLiteral("\"Publication Year\":\"%1\"")).arg(query[queryKeyYear]);
+        if (!query[queryKeyYear].isEmpty()) {
+            q.addQueryItem(QStringLiteral("start_year"), query[queryKeyYear]);
+            q.addQueryItem(QStringLiteral("end_year"), query[queryKeyYear]);
+        }
 
-        QUrlQuery q(queryUrl);
-        q.addQueryItem(QStringLiteral("queryText"), queryText.join(QStringLiteral(" AND ")));
-        q.addQueryItem(QStringLiteral("sortfield"), QStringLiteral("py"));
-        q.addQueryItem(QStringLiteral("sortorder"), QStringLiteral("desc"));
-        q.addQueryItem(QStringLiteral("hc"), QString::number(numResults));
-        q.addQueryItem(QStringLiteral("rs"), QStringLiteral("1"));
+        /// Sort order of results: newest publications first
+        q.addQueryItem(QStringLiteral("sort_field"), QStringLiteral("publication_year"));
+        q.addQueryItem(QStringLiteral("sort_order"), QStringLiteral("desc"));
+        /// Request numResults many entries
+        q.addQueryItem(QStringLiteral("start_record"), QStringLiteral("1"));
+        q.addQueryItem(QStringLiteral("max_records"), QString::number(numResults));
+
         queryUrl.setQuery(q);
 
         return queryUrl;
     }
 };
+
+const QUrl OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate::apiUrl(QStringLiteral("https://ieeexploreapi.ieee.org/api/v1/search/articles?format=xml&apikey=") + InternalNetworkAccessManager::reverseObfuscate("\x15\x65\x4b\x2a\x37\x5f\x78\x12\x44\x70\xf8\x8e\x85\xe0\xdb\xae\xb\x7a\x7e\x46\xab\x93\xbc\xc8\xdb\xa8\xa5\xd2\xee\x96\x7e\x7\x37\x54\xa3\xd4\x2b\x5e\x81\xe6\x6f\x17\xb3\xd6\x7b\x1f\x1a\x60"));
 
 OnlineSearchIEEEXplore::OnlineSearchIEEEXplore(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate(this))
@@ -104,6 +106,13 @@ void OnlineSearchIEEEXplore::startSearch(const QMap<QString, QString> &query, in
     emit progress(curStep = 0, numSteps = 2);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
+
+    // FIXME 'ieeexploreapi.ieee.org' uses a SSL/TLS certificate only valid for 'mashery.com'
+    // TODO re-enable certificate validation once problem has been fix (already reported)
+    QSslConfiguration requestSslConfig = request.sslConfiguration();
+    requestSslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+    request.setSslConfiguration(requestSslConfig);
+
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchIEEEXplore::doneFetchingXML);
@@ -122,6 +131,13 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
             ++numSteps;
 
             QNetworkRequest request(redirUrl);
+
+            // FIXME 'ieeexploreapi.ieee.org' uses a SSL/TLS certificate only valid for 'mashery.com'
+            // TODO re-enable certificate validation once problem has been fix (already reported)
+            QSslConfiguration requestSslConfig = request.sslConfiguration();
+            requestSslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);
+            request.setSslConfiguration(requestSslConfig);
+
             QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchIEEEXplore::doneFetchingXML);
@@ -174,26 +190,3 @@ QUrl OnlineSearchIEEEXplore::homepage() const
     return QUrl(QStringLiteral("https://ieeexplore.ieee.org/"));
 }
 
-void OnlineSearchIEEEXplore::sanitizeEntry(QSharedPointer<Entry> entry)
-{
-    OnlineSearchAbstract::sanitizeEntry(entry);
-
-    /// XSL file cannot yet replace semicolon-separate author list
-    /// by "and"-separated author list, so do it manually
-    const QString ftXAuthor = QStringLiteral("x-author");
-    if (!entry->contains(Entry::ftAuthor) && entry->contains(ftXAuthor)) {
-        const Value xAuthorValue = entry->value(ftXAuthor);
-        Value authorValue;
-        for (const auto &xAuthorValueItem : xAuthorValue) {
-            const QSharedPointer<const PlainText> pt = xAuthorValueItem.dynamicCast<const PlainText>();
-            if (!pt.isNull()) {
-                const QList<QSharedPointer<Person> > personList = FileImporterBibTeX::splitNames(pt->text());
-                for (const auto &person : personList)
-                    authorValue << person;
-            }
-        }
-
-        entry->insert(Entry::ftAuthor, authorValue);
-        entry->remove(ftXAuthor);
-    }
-}

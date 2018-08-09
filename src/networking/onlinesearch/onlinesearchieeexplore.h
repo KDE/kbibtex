@@ -37,7 +37,6 @@ public:
 
 protected:
     QString favIconUrl() const override;
-    void sanitizeEntry(QSharedPointer<Entry> entry) override;
 
 private slots:
     void doneFetchingXML();
