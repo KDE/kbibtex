@@ -503,7 +503,7 @@ bool OnlineSearchAbstract::publishEntry(QSharedPointer<Entry> entry)
     if (entry.isNull()) return false;
 
     Value v;
-    v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
+    v.append(QSharedPointer<PlainText>(new PlainText(label())));
     entry->insert(QStringLiteral("x-fetchedfrom"), v);
 
     sanitizeEntry(entry);
