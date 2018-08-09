@@ -42,7 +42,7 @@ const QRegExp KBibTeX::fileRegExp(QRegExp(QStringLiteral("(\\bfile:)?[^{}\\t]+\\
 const QRegExp KBibTeX::urlRegExp(QRegExp(QStringLiteral("\\b(http|s?ftp|webdav|file)s?://[^ {}\"]+(\\b|[/])"), Qt::CaseInsensitive));
 const QRegExp KBibTeX::doiRegExp(QRegExp(QStringLiteral("10([.][0-9]+)+/[/-a-z0-9.()<>_:;\\\\]+"), Qt::CaseInsensitive));
 const QRegExp KBibTeX::mendeleyFileRegExp(QRegExp(QStringLiteral(":(.*):pdf"), Qt::CaseInsensitive));
-const QString KBibTeX::doiUrlPrefix(QStringLiteral("http://dx.doi.org/")); ///< use FileInfo::doiUrlPrefix() instead
+const QString KBibTeX::doiUrlPrefix(QStringLiteral("https://dx.doi.org/")); ///< use FileInfo::doiUrlPrefix() instead
 const QRegExp KBibTeX::domainNameRegExp(QRegExp(QStringLiteral("[a-z0-9.-]+\\.((a[cdefgilmnoqrstuwxz]|aero|arpa)|(b[abdefghijmnorstvwyz]|biz)|(c[acdfghiklmnorsuvxyz]|cat|com|coop)|d[ejkmoz]|(e[ceghrstu]|edu)|f[ijkmor]|(g[abdefghilmnpqrstuwy]|gov)|h[kmnrtu]|(i[delmnoqrst]|info|int)|(j[emop]|jobs)|k[eghimnprwyz]|l[abcikrstuvy]|(m[acdghklmnopqrstuvwxyz]|me|mil|mobi|museum)|(n[acefgilopruz]|name|net)|(om|org)|(p[aefghklmnrstwy]|pro)|qa|r[eouw]|s[abcdeghijklmnortvyz]|(t[cdfghjklmnoprtvwz]|travel)|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw])\\b"), Qt::CaseInsensitive));
 const QRegExp KBibTeX::htmlRegExp(QStringLiteral("</?(a|pre|p|br|span|i|b|italic)\\b[^>{}]{,32}>"), Qt::CaseInsensitive);
 
