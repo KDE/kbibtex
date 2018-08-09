@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -46,6 +46,16 @@ public:
     void mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url);
 
     void setNetworkReplyTimeout(QNetworkReply *reply, int timeOutSec = 30);
+
+    /**
+     * Reverse the obfuscation of an API key. Given a byte
+     * array holding the obfuscated API key, restore and
+     * return the original API key.
+     *
+     * @param obfuscated obfuscated API key
+     * @return restored original API key if succeeded, empty on error
+     */
+    static QString reverseObfuscate(const QByteArray &obfuscated);
 
 protected:
     InternalNetworkAccessManager(QObject *parent = nullptr);
