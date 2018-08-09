@@ -39,6 +39,7 @@
 
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
+#include "encoderxml.h"
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 
@@ -693,7 +694,7 @@ void OnlineSearchArXiv::downloadDone()
         result = result.remove(QStringLiteral("xmlns=\"http://www.w3.org/2005/Atom\"")); // FIXME fix arxiv2bibtex.xsl to handle namespace
 
         /// use XSL transformation to get BibTeX document from XML result
-        const QString bibTeXcode = d->xslt.transform(result);
+        const QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(result));
         if (bibTeXcode.isEmpty()) {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << reply->url().toDisplayString();
             stopSearch(resultInvalidArguments);
