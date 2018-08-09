@@ -110,6 +110,11 @@ RangeWidget::RangeWidget(const QStringList &values, QWidget *parent)
     /// nothing
 }
 
+RangeWidget::~RangeWidget()
+{
+    delete d;
+}
+
 int RangeWidget::maximum() const
 {
     return d->values.size() - 1;
