@@ -193,16 +193,16 @@ protected:
      */
     void refreshBusyProperty();
 
+#ifdef HAVE_KF5
+    void sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout);
+#endif // HAVE_KF5
+
 private:
     bool m_previousBusyState;
     QString m_name;
     static const char *httpUnsafeChars;
     QMap<QNetworkReply *, QListWidgetItem *> m_iconReplyToListWidgetItem;
     int m_delayedStoppedSearchReturnCode;
-
-#ifdef HAVE_KF5
-    void sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout);
-#endif // HAVE_KF5
 
 private slots:
     void iconDownloadFinished();
