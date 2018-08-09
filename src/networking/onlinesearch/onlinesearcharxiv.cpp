@@ -123,7 +123,7 @@ public:
 #ifdef HAVE_QTWIDGETS
           form(nullptr),
 #endif // HAVE_QTWIDGETS
-          arXivQueryBaseUrl(QStringLiteral("http://export.arxiv.org/api/query?"))
+          arXivQueryBaseUrl(QStringLiteral("https://export.arxiv.org/api/query?"))
     {
         /// nothing
     }

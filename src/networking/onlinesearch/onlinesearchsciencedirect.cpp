@@ -97,7 +97,7 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
     d->numExpectedResults = numResults;
 
     ++d->runningJobs;
-    QNetworkRequest request(QStringLiteral("http://www.sciencedirect.com/science/search"));
+    QNetworkRequest request(QStringLiteral("https://www.sciencedirect.com/science/search"));
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingStartPage);
@@ -110,12 +110,12 @@ QString OnlineSearchScienceDirect::label() const
 
 QString OnlineSearchScienceDirect::favIconUrl() const
 {
-    return QStringLiteral("http://cdn.els-cdn.com/sd/favSD.ico");
+    return QStringLiteral("https://cdn.els-cdn.com/sd/favSD.ico");
 }
 
 QUrl OnlineSearchScienceDirect::homepage() const
 {
-    return QUrl(QStringLiteral("http://www.sciencedirect.com/"));
+    return QUrl(QStringLiteral("https://www.sciencedirect.com/"));
 }
 
 void OnlineSearchScienceDirect::doneFetchingStartPage()
@@ -143,7 +143,7 @@ void OnlineSearchScienceDirect::doneFetchingStartPage()
         } else {
             InternalNetworkAccessManager::instance().mergeHtmlHeadCookies(htmlText, reply->url());
 
-            QUrl url(QStringLiteral("http://www.sciencedirect.com/science"));
+            QUrl url(QStringLiteral("https://www.sciencedirect.com/science"));
             QMap<QString, QString> inputMap = formParameters(htmlText, htmlText.indexOf(QStringLiteral("<form id=\"quickSearch\" name=\"qkSrch\" metho"), Qt::CaseInsensitive));
             inputMap[QStringLiteral("qs_all")] = d->queryFreetext.simplified();
             inputMap[QStringLiteral("qs_author")] = d->queryAuthor.simplified();
@@ -193,7 +193,7 @@ void OnlineSearchScienceDirect::doneFetchingResultPage()
 
             QSet<QString> knownUrls;
             int p = -1, p2 = -1;
-            while ((p = htmlText.indexOf(QStringLiteral("http://www.sciencedirect.com/science/article/pii/"), p + 1)) >= 0 && (p2 = htmlText.indexOf(QRegExp("[\"/ #]"), p + 50)) >= 0) {
+            while ((p = htmlText.indexOf(QStringLiteral("https://www.sciencedirect.com/science/article/pii/"), p + 1)) >= 0 && (p2 = htmlText.indexOf(QRegExp("[\"/ #]"), p + 50)) >= 0) {
                 const QString urlText = htmlText.mid(p, p2 - p);
                 if (knownUrls.contains(urlText)) continue;
                 knownUrls.insert(urlText);
@@ -241,7 +241,7 @@ void OnlineSearchScienceDirect::doneFetchingAbstractPage()
 
             int p1 = -1, p2 = -1;
             if ((p1 = htmlText.indexOf(QStringLiteral("/science?_ob=DownloadURL&"))) >= 0 && (p2 = htmlText.indexOf(QRegExp("[ \"<>]"), p1 + 1)) >= 0) {
-                QUrl url("http://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
+                QUrl url("https://www.sciencedirect.com" + htmlText.mid(p1, p2 - p1));
                 QUrlQuery query(url);
                 query.addQueryItem(QStringLiteral("citation-type"), QStringLiteral("BIBTEX"));
                 query.addQueryItem(QStringLiteral("format"), QStringLiteral("cite-abs"));
