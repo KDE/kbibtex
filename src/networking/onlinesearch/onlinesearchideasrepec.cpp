@@ -31,8 +31,7 @@
 class OnlineSearchIDEASRePEc::OnlineSearchIDEASRePEcPrivate
 {
 public:
-    int numSteps, curStep;
-    QSet<QString> publicationLinks;
+    QSet<const QUrl> publicationLinks;
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
         QString urlBase = QStringLiteral("https://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
@@ -133,25 +132,28 @@ void OnlineSearchIDEASRePEc::downloadListDone()
             /// ensure proper treatment of UTF-8 characters
             const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
 
-            static const QRegExp publicationLinkRegExp(QStringLiteral("http[s]?://ideas.repec.org/[a-z]/\\S{,8}/\\S{2,24}/\\S{,64}.html"));
+            const int ol1 = htmlCode.indexOf(QStringLiteral(" results for "));
+            const int ol2 = htmlCode.indexOf(QStringLiteral("</ol>"), ol1 + 2);
             d->publicationLinks.clear();
-            int p = -1;
-            while ((p = publicationLinkRegExp.indexIn(htmlCode, p + 1)) >= 0) {
-                QString c = publicationLinkRegExp.cap(0);
-                /// Rewrite URL to be https instead of http, avoids HTTP redirection
-                c = c.replace(QStringLiteral("http://"), QStringLiteral("https://"));
-                d->publicationLinks.insert(c);
+            if (ol1 > 0 && ol2 > ol1) {
+                const QString olHtmlCode = htmlCode.mid(ol1, ol2 - ol1 + 5);
+                static const QRegExp publicationLinkRegExp(QStringLiteral("\"/[a-z](/[^\"]+){1,6}[.]html"));
+                int p = -1;
+                while ((p = publicationLinkRegExp.indexIn(olHtmlCode, p + 1)) > 0) {
+                    const QUrl c = reply->url().resolved(QUrl(publicationLinkRegExp.cap().mid(1)));
+                    d->publicationLinks.insert(c);
+                }
+                numSteps += 2 * d->publicationLinks.count(); ///< update number of steps
             }
-            numSteps += 2 * d->publicationLinks.count(); ///< update number of steps
 
             if (d->publicationLinks.isEmpty()) {
                 stopSearch(resultNoError);
                 emit progress(curStep = numSteps, numSteps);
             } else {
-                QSet<QString>::Iterator it = d->publicationLinks.begin();
-                const QString publicationLink = *it;
+                QSet<const QUrl>::Iterator it = d->publicationLinks.begin();
+                const QUrl publicationLink = *it;
                 d->publicationLinks.erase(it);
-                QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
+                QNetworkRequest request = QNetworkRequest(publicationLink);
                 reply = InternalNetworkAccessManager::instance().get(request, reply);
                 InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
                 connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadPublicationDone);
@@ -244,10 +246,10 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
             stopSearch(resultNoError);
             emit progress(1, 1);
         } else {
-            QSet<QString>::Iterator it = d->publicationLinks.begin();
-            const QString publicationLink = *it;
+            QSet<const QUrl>::Iterator it = d->publicationLinks.begin();
+            const QUrl publicationLink = *it;
             d->publicationLinks.erase(it);
-            QNetworkRequest request = QNetworkRequest(QUrl(publicationLink));
+            QNetworkRequest request = QNetworkRequest(publicationLink);
             reply = InternalNetworkAccessManager::instance().get(request, reply);
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
             connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadPublicationDone);
