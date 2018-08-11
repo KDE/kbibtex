@@ -120,7 +120,7 @@ public:
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *parent)
             : p(parent),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName() + QStringLiteral("/arxiv2bibtex.xsl"))),
+          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/arxiv2bibtex.xsl"))),
 #ifdef HAVE_QTWIDGETS
           form(nullptr),
 #endif // HAVE_QTWIDGETS
