@@ -49,7 +49,10 @@
 <xsl:apply-templates select="title" />
 <xsl:apply-templates select="updated" />
 <xsl:apply-templates select="summary" />
-<xsl:apply-templates select="link" />
+<xsl:if test="link[@type='application/pdf' or @type='text/html']">
+<xsl:text>,
+    url = {</xsl:text><xsl:value-of select="link[@type='application/pdf' or @type='text/html']/@href" separator=";" /><xsl:text>}</xsl:text>
+</xsl:if>
 <xsl:apply-templates select="arxiv:doi" />
 <xsl:apply-templates select="arxiv:journal_ref" />
 <xsl:text>,
@@ -107,18 +110,6 @@
 <xsl:template match="summary">
 <xsl:text>,
     abstract = {</xsl:text><xsl:value-of select="." /><xsl:text>}</xsl:text>
-</xsl:template>
-
-<xsl:template match="link"><xsl:choose>
-<xsl:when test="@title = 'doi'">
-<!-- ignore for now -->
-</xsl:when>
-<xsl:otherwise>
-<!-- FIXME handle multiple URLs -->
-<xsl:text>,
-    url = {</xsl:text><xsl:value-of select="@href" /><xsl:text>}</xsl:text>
-</xsl:otherwise>
-</xsl:choose>
 </xsl:template>
 
 <xsl:template match="arxiv:doi">
