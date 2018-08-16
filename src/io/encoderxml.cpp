@@ -21,16 +21,15 @@
 #include <QList>
 
 static const struct EncoderXMLCharMapping {
-    unsigned int unicode;
-    const char *xml;
+    QChar unicode;
+    const QString xml;
 }
 charmappingdataxml[] = {
-    {0x0026, "&amp;"},
-    {0x0022, "&quot;"},
-    {0x003C, "&lt;"},
-    {0x003E, "&gt;"}
+    {QChar(0x0026), QStringLiteral("&amp;")},
+    {QChar(0x0022), QStringLiteral("&quot;")},
+    {QChar(0x003C), QStringLiteral("&lt;")},
+    {QChar(0x003E), QStringLiteral("&gt;")}
 };
-static const int charmappingdataxmlcount = sizeof(charmappingdataxml) / sizeof(charmappingdataxml[ 0 ]) ;
 
 /**
  * Private class to store internal variables that should not be visible
@@ -40,23 +39,6 @@ class EncoderXML::EncoderXMLPrivate
 {
 public:
     static const QStringList backslashSymbols;
-
-    struct CharMappingItem {
-        QChar unicode;
-        QString xml;
-    };
-
-    QList<CharMappingItem> charMapping;
-
-    void buildCharMapping() {
-        for (int i = 0; i < charmappingdataxmlcount; i++) {
-            CharMappingItem charMappingItem;
-            charMappingItem.unicode = QChar(charmappingdataxml[ i ].unicode);
-            charMappingItem.xml = QString::fromLatin1(charmappingdataxml[ i ].xml);
-            charMapping.append(charMappingItem);
-        }
-    }
-
 };
 
 const QStringList EncoderXML::EncoderXMLPrivate::backslashSymbols {QStringLiteral("\\&"), QStringLiteral("\\%"), QStringLiteral("\\_")};
@@ -64,7 +46,7 @@ const QStringList EncoderXML::EncoderXMLPrivate::backslashSymbols {QStringLitera
 EncoderXML::EncoderXML()
         : Encoder(), d(new EncoderXML::EncoderXMLPrivate)
 {
-    d->buildCharMapping();
+    /// nothing
 }
 
 EncoderXML::~EncoderXML()
@@ -76,7 +58,7 @@ QString EncoderXML::decode(const QString &text) const
 {
     QString result = text;
 
-    for (const auto &item : const_cast<const QList<EncoderXMLPrivate::CharMappingItem> &>(d->charMapping))
+    for (const auto &item : charmappingdataxml)
         result.replace(item.xml, item.unicode);
 
     /**
@@ -124,7 +106,7 @@ QString EncoderXML::encode(const QString &text, const TargetEncoding targetEncod
 {
     QString result = text;
 
-    for (const auto &item : const_cast<const QList<EncoderXMLPrivate::CharMappingItem> &>(d->charMapping))
+    for (const auto &item : charmappingdataxml)
         result.replace(item.unicode, item.xml);
 
     if (targetEncoding == TargetEncodingASCII) {
