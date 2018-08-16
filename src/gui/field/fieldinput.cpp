@@ -114,7 +114,7 @@ public:
         case KBibTeX::CrossRef: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("flag-gree")), QStringLiteral("")); ///< find better icon
+            QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("flag-green")), QStringLiteral("")); ///< find better icon
             referenceSelector->setToolTip(i18n("Select an existing entry"));
             fieldLineEdit->prependWidget(referenceSelector);
             connect(referenceSelector, &QPushButton::clicked, p, &FieldInput::selectCrossRef);
