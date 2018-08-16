@@ -56,7 +56,8 @@ public:
         UrlList = 8,
         KeywordList = 9,
         CrossRef = 10,
-        StarRating = 11
+        StarRating = 11,
+        Edition = 12
     };
 
     enum TypeFlag {

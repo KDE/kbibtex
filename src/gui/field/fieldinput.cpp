@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -91,6 +91,24 @@ public:
                 sm->setMapping(monthAction, i);
             }
             monthSelector->setMenu(monthMenu);
+        }
+        break;
+        case KBibTeX::Edition: {
+            fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
+            layout->addWidget(fieldLineEdit);
+            QPushButton *editionSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("clock")), QString());
+            editionSelector->setToolTip(i18n("Select a predefined edition"));
+            fieldLineEdit->prependWidget(editionSelector);
+
+            QSignalMapper *sm = new QSignalMapper(editionSelector);
+            connect(sm, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &FieldInput::setEdition);
+            QMenu *editionMenu = new QMenu(editionSelector);
+            static const QStringList ordinals{i18n("1st"), i18n("2nd"), i18n("3rd"), i18n("4th"), i18n("5th"), i18n("6th"), i18n("7th"), i18n("8th"), i18n("9th"), i18n("10th"), i18n("11th"), i18n("12th"), i18n("13th"), i18n("14th"), i18n("15th"), i18n("16th")};
+            for (int i = 0; i < ordinals.length(); ++i) {
+                QAction *editionAction = editionMenu->addAction(ordinals[i], sm, SLOT(map()));
+                sm->setMapping(editionAction, i + 1);
+            }
+            editionSelector->setMenu(editionMenu);
         }
         break;
         case KBibTeX::CrossRef: {
@@ -336,6 +354,14 @@ void FieldInput::setMonth(int month)
 {
     Value value;
     value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
+    reset(value);
+    emit modified();
+}
+
+void FieldInput::setEdition(int edition)
+{
+    Value value;
+    value.append(QSharedPointer<MacroKey>(new MacroKey(QString::number(edition))));
     reset(value);
     emit modified();
 }

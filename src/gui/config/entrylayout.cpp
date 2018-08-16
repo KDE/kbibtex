@@ -52,6 +52,7 @@ public:
         case KBibTeX::List : return QStringLiteral("List");
         case KBibTeX::URL : return QStringLiteral("URL");
         case KBibTeX::Month : return QStringLiteral("Month");
+        case KBibTeX::Edition : return QStringLiteral("Edition");
         case KBibTeX::Color : return QStringLiteral("Color");
         case KBibTeX::PersonList : return QStringLiteral("PersonList");
         case KBibTeX::KeywordList : return QStringLiteral("KeywordList");
@@ -73,6 +74,8 @@ public:
             return KBibTeX::UrlList;
         else if (text == QStringLiteral("Month"))
             return KBibTeX::Month;
+        else if (text == QStringLiteral("Edition"))
+            return KBibTeX::Edition;
         else if (text == QStringLiteral("Color"))
             return KBibTeX::Color;
         else if (text == QStringLiteral("PersonList"))

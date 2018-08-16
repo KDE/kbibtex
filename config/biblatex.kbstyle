@@ -1220,7 +1220,7 @@ fieldInputLayout16=SingleLine
 
 bibtexLabel17=edition
 uiLabel17=Edition
-fieldInputLayout17=SingleLine
+fieldInputLayout17=Edition
 
 bibtexLabel18=chapter
 uiLabel18=Chapter
