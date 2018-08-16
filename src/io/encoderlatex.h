@@ -62,7 +62,7 @@ protected:
      * a special purpose in LaTeX and therefore needs to be escaped
      * both in text and in math mode by prefixing with a backlash.
      */
-    static const char encoderLaTeXProtectedSymbols[];
+    static const QChar encoderLaTeXProtectedSymbols[];
     static const int encoderLaTeXProtectedSymbolsLen;
 
     /**
@@ -71,7 +71,7 @@ protected:
      * to be escaped by prefixing with a backlash. In math mode,
      * those have a different purpose and may not be escaped there.
      */
-    static const char encoderLaTeXProtectedTextOnlySymbols[];
+    static const QChar encoderLaTeXProtectedTextOnlySymbols[];
     static const int encoderLaTeXProtectedTextOnlySymbolsLen;
 
     /**
@@ -91,7 +91,7 @@ private:
      * index in the lookup table or -1 if not a known
      * modifier.
      */
-    int modifierInLookupTable(const char latinModifier) const;
+    int modifierInLookupTable(const QChar modifier) const;
 
     /**
      * Return a string that represents the part of
