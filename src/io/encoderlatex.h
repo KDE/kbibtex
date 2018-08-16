@@ -95,9 +95,9 @@ private:
 
     /**
      * Return a string that represents the part of
-     * the base string starting from startFrom containing
+     * the base string starting from startFrom contains
      * only alpha characters (a-z,A-Z).
-     * Return value may be an empty byte array.
+     * Return value may be an empty string.
      */
     QString readAlphaCharacters(const QString &base, int startFrom) const;
 

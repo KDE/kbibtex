@@ -928,7 +928,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                             found = true;
                         }
                     if (!found)
-                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interprete BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4 + skipSpaces];
+                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4 + skipSpaces];
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 6 && input[i + 3 + skipSpaces] == QLatin1Char('{') && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 4 + skipSpaces])) >= 0 && input[i + 5 + skipSpaces] == QLatin1Char('}') && input[i + 6 + skipSpaces] == QLatin1Char('}')) {
                     /// If we found a modifier which is followed by
                     /// an opening curly bracket followed by a letter
@@ -1094,7 +1094,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         found = true;
                     }
                 if (!found)
-                    qCWarning(LOG_KBIBTEX_IO) << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3 + skipSpaces];
+                    qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3 + skipSpaces];
             } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 2 + skipSpaces] == QLatin1Char('{') && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
                 /// This is the case for \'{\i} or alike.
                 bool found = false;
@@ -1105,7 +1105,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         found = true;
                     }
                 if (!found)
-                    qCWarning(LOG_KBIBTEX_IO) << "Cannot interprete BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4 + skipSpaces] << "}";
+                    qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4 + skipSpaces] << "}";
             } else if (i < len - 1) {
                 /// Now, the case of something like \AA is left
                 /// to check for
