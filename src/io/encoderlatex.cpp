@@ -801,10 +801,15 @@ static const int encoderLaTeXSymbolSequencesLen = sizeof(encoderLaTeXSymbolSeque
 EncoderLaTeX::EncoderLaTeX()
 {
 #ifdef HAVE_ICU
-    /// Create an ICO Transliterator, configured to
+    /// Create an ICU Transliterator, configured to
     /// transliterate virtually anything into plain ASCII
     UErrorCode uec = U_ZERO_ERROR;
     m_trans = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
+    if (U_FAILURE(uec)) {
+        qCWarning(LOG_KBIBTEX_IO) << "Error creating an ICU Transliterator instance: " << u_errorName(uec);
+        if (m_trans != nullptr) delete m_trans;
+        m_trans = nullptr;
+    }
 #endif // HAVE_ICU
 
     /// Initialize lookup table with NULL pointers
@@ -1391,7 +1396,7 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
     /// Create an ICU-specific unicode string
     icu::UnicodeString uString = icu::UnicodeString(uChars, ninputLen);
     /// Perform the actual transliteration, modifying Unicode string
-    m_trans->transliterate(uString);
+    if (m_trans != nullptr) m_trans->transliterate(uString);
     /// Create regular C++ string from Unicode string
     std::string cppString;
     uString.toUTF8String(cppString);
