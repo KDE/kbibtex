@@ -220,7 +220,7 @@ encoderLaTeXEscapedCharacters[] = {
     {'c', 'n', 0x0146},
     {'v', 'N', 0x0147},
     {'v', 'n', 0x0148},
-    /** 0x0149: TODO n preceeded by apostrophe */
+    /** 0x0149: TODO n preceded by apostrophe */
     {'m', 'N', 0x014A, DirectionCommandToUnicode},
     {'m', 'n', 0x014B, DirectionCommandToUnicode},
     {'=', 'O', 0x014C},

@@ -68,7 +68,7 @@ void KBibTeXIOTest::encoderXMLdecode_data()
             xmlString += QStringLiteral("&#") + QString::number(unicode) + QStringLiteral(";");
             unicodeString += QChar(unicode);
         }
-        QTest::newRow(QString(QStringLiteral("Some arbitary Unicode characters (%1)")).arg(start).toLatin1().constData()) << xmlString << unicodeString;
+        QTest::newRow(QString(QStringLiteral("Some arbitrary Unicode characters (%1)")).arg(start).toLatin1().constData()) << xmlString << unicodeString;
     }
 }
 

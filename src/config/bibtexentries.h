@@ -71,7 +71,7 @@ public:
     QString label(const QString &name) const;
 
 private:
-    BibTeXEntries(const QVector<EntryDescription> &other);
+    explicit BibTeXEntries(const QVector<EntryDescription> &other);
 
     class BibTeXEntriesPrivate;
     BibTeXEntriesPrivate *d;

@@ -64,7 +64,7 @@ public:
                 ///    Acc. Chem. Res.
                 ///    ACHRE4
                 ///    M
-                /// The last two colums are optional and are not processed here.
+                /// The last two columns are optional and are not processed here.
                 /// The first column is the journal's full name, the second column
                 /// is its abbreviation.
                 /// QHash leftToRightMap maps from full name to abbreviation,
