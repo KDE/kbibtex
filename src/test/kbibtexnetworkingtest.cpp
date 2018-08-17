@@ -118,7 +118,8 @@ void KBibTeXNetworkingTest::onlineSearchAbstractFormParameters()
     const FormData computedResult = onlineSearch.formParameters_public(htmlCode, startPos);
 
     QCOMPARE(expectedResult.size(), computedResult.size());
-    for (const QString &key : expectedResult.keys()) {
+    const QList<QString> keys = expectedResult.keys();
+    for (const QString &key : keys) {
         QCOMPARE(computedResult.contains(key), true);
         const QList<QString> expectedValues = expectedResult.values(key);
         const QList<QString> computedValues = computedResult.values(key);

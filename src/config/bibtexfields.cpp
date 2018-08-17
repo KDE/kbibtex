@@ -72,7 +72,8 @@ public:
 
             fd.visible.clear();
             if (configGroup.exists()) {
-                for (const QString &key : configGroup.keyList()) {
+                const QStringList keyList = configGroup.keyList();
+                for (const QString &key : keyList) {
                     if (!key.startsWith(QStringLiteral("Visible_"))) continue; ///< a key other than a 'visibility' key
                     const QString treeViewName = key.mid(8);
                     fd.visible.insert(treeViewName, configGroup.readEntry(key, fd.defaultVisible));

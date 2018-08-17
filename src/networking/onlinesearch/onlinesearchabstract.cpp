@@ -173,7 +173,8 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "," << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ") for URL" << urlToShow.toDisplayString();
         const QNetworkRequest &request = reply->request();
         /// Dump all HTTP headers that were sent with the original request (except for API keys)
-        for (const QByteArray &rawHeaderName : request.rawHeaderList()) {
+        const QList<QByteArray> rawHeaderList = request.rawHeaderList();
+        for (const QByteArray &rawHeaderName : rawHeaderList) {
             if (rawHeaderName.toLower().contains("apikey") || rawHeaderName.toLower().contains("api-key")) continue; ///< skip dumping header values containing an API key
             qCDebug(LOG_KBIBTEX_NETWORKING) << " " << rawHeaderName << ":" << request.rawHeader(rawHeaderName);
         }

@@ -108,7 +108,6 @@ void KBibTeXIOTest::encoderLaTeXdecode()
 {
     QFETCH(QString, latex);
     QFETCH(QString, unicode);
-    QFETCH(QString, alternativelatex);
 
     QCOMPARE(EncoderLaTeX::instance().decode(latex), unicode);
 }
