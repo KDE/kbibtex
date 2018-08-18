@@ -16,6 +16,7 @@
   <name xml:lang="fr">KBibTeX</name>
   <name xml:lang="gl">KBibTeX</name>
   <name xml:lang="it">KBibTeX</name>
+  <name xml:lang="ko">KBibTeX</name>
   <name xml:lang="nl">KBibTeX</name>
   <name xml:lang="pl">KBibTeX</name>
   <name xml:lang="pt">KBibTeX</name>
@@ -37,6 +38,7 @@
   <summary xml:lang="fr">Éditeur BixTeX par KDE pour modifier des bibliographies utilisées avec LaTeX</summary>
   <summary xml:lang="gl">Editor de BibTeX de KDE, para editar bibliografías que se usen con LaTeX</summary>
   <summary xml:lang="it">Editor BibTeX di KDE per la modifica delle bibliografie usate con LaTeX</summary>
+  <summary xml:lang="ko">KDE의 BibTeX(LaTeX 서지 정보) 편집기</summary>
   <summary xml:lang="nl">BibTeX-bewerker door KDE om bibliografieën te bewerken gebruikt met LaTeX</summary>
   <summary xml:lang="pl">Edytor BibTeX autorstwa KDE do edytowania bibliografii używanych w edytorach LaTeX</summary>
   <summary xml:lang="pt">O BibTeX é um editor do KDE, onde se podem editar bibliografias usadas com o LaTeX</summary>
@@ -60,6 +62,7 @@
     <p xml:lang="fr">KBibTeX est une application de gestion de références qui peut être utilisée pour collecter des bibliographies TeX/LaTeX et les exporter dans divers formats.</p>
     <p xml:lang="gl">KBibTeX é un aplicativo de xestión de referencias que pode usar para recoller bibliografías de TeX/LaTeX e exportalas en diversos formatos.</p>
     <p xml:lang="it">KBibTeX è un'applicazione di gestione delle fonti che può essere utilizzata per radunare bibliografie TeX/LaTeX ed esportarle in vari formati.</p>
+    <p xml:lang="ko">KBibTeX는 TeX/LaTeX 서지 정보를 수집하고 다양한 형식으로 내보낼 수 있는 참고 문헌 관리 프로그램입니다.</p>
     <p xml:lang="nl">KBibTeX is een toepassing voor beheer van referenties die gebruikt kunnen worden om TeX/LaTeX bibliografieën te verzamelen en te exporteren in verschillende formaten.</p>
     <p xml:lang="pl">KBibTeX jest programem do zarządzania odsyłaczami, którego można użyć do zbierania bibliografii TeX/LaTeX i eksportowania ich w różnych postaciach.</p>
     <p xml:lang="pt">O KBibTeX é uma aplicação de gestão de referências que pode ser usada para recolher as bibliografias de TeX/LaTeX e exportá-las em vários formatos.</p>
@@ -80,6 +83,7 @@
     <p xml:lang="fr">KBibTeX peut faire les choses suivantes : </p>
     <p xml:lang="gl">KBibTeX pode facer o seguinte:</p>
     <p xml:lang="it">KBibTeX è in grado di svolgere i seguenti compiti:</p>
+    <p xml:lang="ko">KBibTeX는 다음 기능을 지원합니다:</p>
     <p xml:lang="nl">KBibTeX kan de volgende dingen:</p>
     <p xml:lang="pl">KBibTeX ma następujące możliwości:</p>
     <p xml:lang="pt">O KBibTeX pode fazer as seguintes coisas:</p>
@@ -102,6 +106,7 @@
       <li xml:lang="fr">Prévisualiser des entrées bibliographiques dans divers formats (Source (BibTeX), Source (RIS), Wikipédia, standard (XML/XSLT), sophistiqué (XML/XSLT), et abstrait (XML/XSLT)). Des styles d'aperçus supplémentaires sont disponibles après de l'installation de bibtex2html.</li>
       <li xml:lang="gl">Obteña unha vista previa de entradas bibliográficas en varios formatos: fonte (BibTeX ou RIS), Wikipedia, estándar (XML/XSLT), elegante (XML/XSLT), e só resumo (XML/XSLT). Se ten «bibtex2html» instalado, disporá de estilos de vista previa adicionais.</li>
       <li xml:lang="it">Visualizzare in anteprima le voci bibliografiche in vari formati (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), e in formato solo sommario (XML/XSLT)). Saranno disponibili stili aggiuntivi di anteprima se si installa il pacchetto bibtex2html.</li>
+      <li xml:lang="ko">원본(BibTeX, RIS), 위키백과, 표준(XML/XSLT), 서식 있는 보기(XML/XSLT), 초록만 보기(XML/XSLT) 등 여러 형식으로 서지 정보를 봅니다. bibtex2html이 설치되어 있으면 추가 미리 보기 스타일을 사용할 수 있습니다.</li>
       <li xml:lang="nl">Bibliografische items bekijken in verschillende formaten (bron (BibTeX), bron (RIS), Wikipedia, standaard (XML/XSLT), fancy (XML/XSLT) en alleen abstract (XML/XSLT)). Extra stijlen voor bekijken komen beschikbaar wanneer bibtex2html is geïnstalleerd.</li>
       <li xml:lang="pl">Podgląd wpisów bibliograficznych w rozmaitych formatach (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), elegancki (XML/XSLT) i tylko streszczenia (XML/XSLT)). Dodatkowo, dostępne stają się style podglądu, gdy wgrany jest pakiet bibtex2html.</li>
       <li xml:lang="pt">Antever os itens bibliográficos em diversos formatos (Código (BibTeX), Código (RIS), Wikipédia, normal (XML/XSLT), bonito (XML/XSLT) e apenas o resumo (XML/XSLT)). Ficam disponíveis mais estilos de antevisão quando instalar o 'bibtex2html'.</li>
@@ -122,6 +127,7 @@
       <li xml:lang="fr">Importer des données dans divers formats de fichiers bibliographiques comme BibTeX, RIS, ISI (nécessite bibutils) et exporter des données en PDF (nécessite pdflatex), PostScript (nécessite latex), RTF (nécessite latex2rtf), et HTML.</li>
       <li xml:lang="gl">Importe datos in varios formatos de ficheiro bibliográficos como BibTeX, RIS e ISI (require «bibutils») e exporte os datos a PDF (require «pdflatex»), PostScript (require «latex»), RTF (require «latex2rtf»), e HTML.</li>
       <li xml:lang="it">Importare i dati in vari formati di file bibliografici, come BibTeX, RIS e ISI (richiede bibutils), ed esportare i dati in PDF (richiede pdflatex), PostScript (richiede latex), RTF (richiede latex2rtf) e HTML.</li>
+      <li xml:lang="ko">BibTeX, RIS, ISI(bibutils 필요) 등 형식으로 된 서지 정보를 가져오고 데이터를 PDF(pdflatex 필요), 포스트스크립트(latex 필요), RTF(latex2rtf 필요), HTML로 내보냅니다.</li>
       <li xml:lang="nl">Gegevens importeren in verschillende bestandsformaten voor bibliografieën zoals BibTeX, RIS en ISI (vereist bibutils) en exporteert gegevens naar PDF (vereist pdflatex), PostScript (vereist latex), RTF (vereist latex2rtf), en HTML.</li>
       <li xml:lang="pl">Importowanie danych w rozmaitych formatach plików bibliografii takich jak BibTeX, RIS oraz ISI (wymaga bibutils) i eksportowanie danych do PDF (wymaga pdflatex), PostScript (wymaga latex), RTF (wymaga latex2rtf) oraz HTML.</li>
       <li xml:lang="pt">Importar os dados em diversos formatos de ficheiros bibliográficos, como o BibTeX, RIS e ISI (precisa das 'bibutils') e exportar os dados para PDF (precisa do 'pdflatex'), PostScript (precisa do 'latex'), RTF (precisa do 'latex2rtf') e HTML.</li>
@@ -142,6 +148,7 @@
       <li xml:lang="fr">Rechercher des entrées bibliographiques dans des banques de données en ligne (par exemple Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="gl">Busque os datos das entradas bibliográficas en base de datos en internet (como Google Scholar, ACM, IEEE, arXiv, etc.).</li>
       <li xml:lang="it">Ricercare voci bibliografiche nei database in linea (per es., Google Scholar, ACM, IEEE, arXiv, ecc.)</li>
+      <li xml:lang="ko">Google 학술검색, ACM, IEEE, arXiv 등 온라인 데이터베이스에서 서지 정보를 검색합니다.</li>
       <li xml:lang="nl">Zoeken naar bibliografie-items in online databases (bijv. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="pl">Wyszukiwanie wpisów bibliograficznych w bazach internetowych (np. Google Scholar, ACM, IEEE, arXiv, itp.)</li>
       <li xml:lang="pt">Procurar por dados de itens bibliográficos nas bases de dados 'online' (p.ex. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
@@ -162,6 +169,7 @@
       <li xml:lang="fr">Prévisualiser des ressources locales ou distantes (en ligne), par exemple des fichiers PDF ou des liens dans l'entrée BibTeX.</li>
       <li xml:lang="gl">Obteña unha vista previa de recursos locais ou en internet, como ficheiros PDF, que estean ligados desde a entrada de BibTeX.</li>
       <li xml:lang="it">Visualizzare in anteprima risorse locali o remote (in linea), per es. file PDF, collegate nella voce BibTEX.</li>
+      <li xml:lang="ko">BibTeX 항목과 연결된 PDF 파일 등 로컬 및 온라인 자원을 봅니다.</li>
       <li xml:lang="nl">Bekijken van lokale hulpbronnen of op afstand (online), bijv. PDF-bestanden, gekoppeld in het BibTEX-item.</li>
       <li xml:lang="pl">Podgląd lokalnych lub zdalnych (internetowych) zasobów, np. plików PDF, do których odwołuje się wpis BibTEX.</li>
       <li xml:lang="pt">Fazer uma antevisão dos recursos locais ou remotos ('online'), p.ex. ficheiros PDF, associada aos itens do BibTEX.</li>
@@ -182,6 +190,7 @@
       <li xml:lang="fr">Trouver et fusionner des doublons dans les entrées bibliographiques.</li>
       <li xml:lang="gl">Atope e fusione entradas duplicadas da bibliografía.</li>
       <li xml:lang="it">Trovare e unire voci duplicate nella bibliografia.</li>
+      <li xml:lang="ko">중복되는 참고 문헌을 찾아서 합칩니다.</li>
       <li xml:lang="nl">Zoek en voeg dubbele items in de bibliografie samen.</li>
       <li xml:lang="pl">Znajdywanie i scalanie powielonych wpisów w bibliografii.</li>
       <li xml:lang="pt">Procurar e reunir itens duplicados na bibliografia.</li>
@@ -202,6 +211,7 @@
       <li xml:lang="fr">Intégrer vos bibliographies avec des éditeurs LaTeX comme Kile et LyX.</li>
       <li xml:lang="gl">Integre as súas bibliografías con editores de LaTeX como Kile e LyX.</li>
       <li xml:lang="it">Integrare le tue bibliografie con gli editor LaTeX, come Kile e LyX.</li>
+      <li xml:lang="ko">Kile, LyX 등의 LaTeX 편집기에 서지 정보를 통합합니다.</li>
       <li xml:lang="nl">Integreer uw bibliografieën met LaTeX bewerkers zoals Kile en LyX.</li>
       <li xml:lang="pl">Integracja bibliografii z edytorami LaTeX takimi jak Kile i LyX.</li>
       <li xml:lang="pt">Integrar as suas bibliografias com os editores de LaTeX, como o Kile e o LyX.</li>
@@ -223,6 +233,7 @@
       <li xml:lang="fr">Importer une bibliothèque Zotero.</li>
       <li xml:lang="gl">Importe a súa biblioteca de Zotero.</li>
       <li xml:lang="it">Importare la tua raccolta Zotero.</li>
+      <li xml:lang="ko">Zotero 라이브러리를 가져옵니다.</li>
       <li xml:lang="nl">Uw Zotero bibliotheek importeren.</li>
       <li xml:lang="pl">Importowanie bibliotek Zotero.</li>
       <li xml:lang="pt">Importar a sua biblioteca do Zotero.</li>
