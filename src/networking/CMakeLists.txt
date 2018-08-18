@@ -43,7 +43,7 @@ if(BUILD_ZOTERO)
         zotero/oauthwizard.cpp
         zotero/tags.cpp
         zotero/tagmodel.cpp
-        )
+    )
 endif(BUILD_ZOTERO)
 
 set(
@@ -70,18 +70,25 @@ set(
     onlinesearch/onlinesearchideasrepec.h
     onlinesearch/onlinesearchdoi.h
     onlinesearch/onlinesearchbiorxiv.h
-    zotero/collectionmodel.h
-    zotero/collection.h
-    zotero/groups.h
-    zotero/tags.h
-    zotero/tagmodel.h
-    zotero/items.h
-    zotero/api.h
-    zotero/oauthwizard.h
     associatedfiles.h
     findpdf.h
     internalnetworkaccessmanager.h
 )
+
+if(BUILD_ZOTERO)
+    list(
+        APPEND
+        kbibtexnetworking_HDRS
+        zotero/api.h
+        zotero/collectionmodel.h
+        zotero/collection.h
+        zotero/items.h
+        zotero/groups.h
+        zotero/oauthwizard.h
+        zotero/tags.h
+        zotero/tagmodel.h
+    )
+endif(BUILD_ZOTERO)
 
 if(UNITY_BUILD)
     enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
