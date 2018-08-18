@@ -23,7 +23,7 @@
 #include <QDir>
 #include <QTextStream>
 #include <QStandardPaths>
-#include <QtConcurrent/QtConcurrent>
+#include <QtConcurrent>
 
 #include <KSharedConfig>
 #include <KConfigGroup>

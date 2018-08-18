@@ -54,6 +54,7 @@ find_package(
     Widgets
     Network
     XmlPatterns
+    Concurrent
 )
 
 if (MSVC)

@@ -36,7 +36,7 @@
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 
-#include <QtOAuth/QtOAuth>
+#include <QtOAuth>
 
 using namespace Zotero;
 

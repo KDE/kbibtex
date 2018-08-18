@@ -15,7 +15,7 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#include <QtTest/QtTest>
+#include <QtTest>
 
 #include <QStandardPaths>
 

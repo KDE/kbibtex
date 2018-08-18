@@ -126,7 +126,7 @@ target_link_libraries(
 
 if(BUILD_ZOTERO)
     include_directories(
-        ${QTOAUTH_INCLUDE_DIR}
+        ${QTOAUTH_INCLUDE_DIR}/QtOAuth
     )
     target_link_libraries(
         kbibtexnetworking
