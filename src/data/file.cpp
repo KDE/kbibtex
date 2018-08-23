@@ -21,7 +21,6 @@
 #include <QTextStream>
 #include <QIODevice>
 #include <QStringList>
-#include <QRegExp>
 
 #ifdef HAVE_KF5
 #include <KSharedConfig>

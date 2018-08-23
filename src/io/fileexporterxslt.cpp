@@ -17,7 +17,6 @@
 
 #include "fileexporterxslt.h"
 
-#include <QRegExp>
 #include <QStringList>
 #include <QBuffer>
 #include <QFile>

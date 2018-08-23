@@ -20,7 +20,6 @@
 #include <typeinfo>
 
 #include <QDebug>
-#include <QRegExp>
 #include <QStringList>
 
 /**

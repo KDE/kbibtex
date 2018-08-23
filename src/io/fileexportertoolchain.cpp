@@ -21,7 +21,6 @@
 #include <QStringList>
 #include <QFile>
 #include <QDir>
-#include <QRegExp>
 #include <QHash>
 #include <QTextStream>
 #include <QProcess>
