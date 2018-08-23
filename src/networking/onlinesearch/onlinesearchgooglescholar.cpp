@@ -34,7 +34,7 @@ class OnlineSearchGoogleScholar::OnlineSearchGoogleScholarPrivate
 {
 public:
     int numResults;
-    QMap<QString, QString> listBibTeXurls;
+    QMap<QString, QPair<QString, QString>> listBibTeXurls;
     QString queryFreetext, queryAuthor, queryYear;
     QString startPageUrl;
     QString advancedSearchPageUrl;
@@ -316,27 +316,28 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                 sendVisualNotification(i18n("'Google Scholar' denied scrapping data because it thinks you are a robot."), label(), QStringLiteral("kbibtex"), 7 * 1000);
             } else {
 #endif // HAVE_KF5
-                static const QRegExp linkToBib("/scholar.bib\\?[^\" >]+");
-                int pos = 0;
-                while ((pos = linkToBib.indexIn(htmlText, pos)) != -1) {
+                static const QRegularExpression linkToBib("/scholar.bib\\?[^\" >]+");
+                QRegularExpressionMatchIterator linkToBibMatchIterator = linkToBib.globalMatch(htmlText);
+                while (linkToBibMatchIterator.hasNext()) {
+                    const QRegularExpressionMatch linkToBibMatch = linkToBibMatchIterator.next();
+                    const int pos = linkToBibMatch.capturedStart();
                     /// Try to figure out [PDF] or [HTML] link associated with BibTeX entry
                     const QString documentUrl = d->documentUrlForBibTeXEntry(htmlText, pos);
                     /// Extract primary link associated with BibTeX entry
                     const QString primaryUrl = d->mainUrlForBibTeXEntry(htmlText, pos);
 
-                    const QString bibtexUrl("https://" + reply->url().host() + linkToBib.cap(0).replace(QStringLiteral("&amp;"), QStringLiteral("&")));
-                    d->listBibTeXurls.insert(bibtexUrl, primaryUrl + QLatin1Char('|') + documentUrl);
-                    pos += linkToBib.matchedLength();
+                    const QString bibtexUrl(QStringLiteral("https://") + reply->url().host() + linkToBibMatch.captured().replace(QStringLiteral("&amp;"), QStringLiteral("&")));
+                    d->listBibTeXurls.insert(bibtexUrl, qMakePair(primaryUrl, documentUrl));
                 }
 #ifdef HAVE_KF5
             }
 #endif // HAVE_KF5
 
             if (!d->listBibTeXurls.isEmpty()) {
-                const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
-                const QStringList urls = d->listBibTeXurls.constBegin().value().split(QStringLiteral("|"), QString::KeepEmptyParts);
-                const QString primaryUrl = urls.first();
-                const QString documentUrl = urls.last();
+                const auto listBibTeXurlsFront = d->listBibTeXurls.begin();
+                const QString bibtexUrl = listBibTeXurlsFront.key();
+                const QString primaryUrl = listBibTeXurlsFront.value().first;
+                const QString documentUrl = listBibTeXurlsFront.value().second;
                 QNetworkRequest request(bibtexUrl);
                 QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
                 if (!primaryUrl.isEmpty()) {
@@ -349,7 +350,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                 }
                 InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
                 connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
-                d->listBibTeXurls.erase(d->listBibTeXurls.begin());
+                d->listBibTeXurls.erase(listBibTeXurlsFront);
             } else
                 stopSearch(resultNoError);
         }
@@ -414,10 +415,10 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "Searching" << label() << "resulted in invalid BibTeX data:" << rawText;
                 stopSearch(resultUnspecifiedError);
             } else if (!d->listBibTeXurls.isEmpty()) {
-                const QString bibtexUrl = d->listBibTeXurls.constBegin().key();
-                const QStringList urls = d->listBibTeXurls.constBegin().value().split(QStringLiteral("|"), QString::KeepEmptyParts);
-                const QString primaryUrl = urls.first();
-                const QString documentUrl = urls.last();
+                const auto listBibTeXurlsFront = d->listBibTeXurls.begin();
+                const QString bibtexUrl = listBibTeXurlsFront.key();
+                const QString primaryUrl = listBibTeXurlsFront.value().first;
+                const QString documentUrl = listBibTeXurlsFront.value().second;
                 QNetworkRequest request(bibtexUrl);
                 QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
                 InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
@@ -430,7 +431,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                     newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
                 }
                 connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
-                d->listBibTeXurls.erase(d->listBibTeXurls.begin());
+                d->listBibTeXurls.erase(listBibTeXurlsFront);
             } else
                 stopSearch(resultNoError);
         }
