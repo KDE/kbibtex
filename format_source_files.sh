@@ -115,3 +115,9 @@ while read filename ; do
 
 	rm -f ${TEMPFILE}
 done
+
+year=$(date '+%Y')
+test -s README && { grep -q "2004-${year} Thomas Fischer" README || echo "README should have current year in copyright: ${year}" ; }
+for copyrightfile in src/program/program.cpp src/test/main.cpp src/parts/partfactory.cpp ; do
+    test -s "${copyrightfile}" && { grep -q "\"Copyright 2004-${year} Thomas Fischer" "${copyrightfile}" || echo "'${copyrightfile}' should have current year in copyright: ${year}" ; }
+done
