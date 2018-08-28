@@ -58,7 +58,7 @@ public:
         if (styleIndex < 0) styleIndex = 0;
         if (styleIndex < comboBoxBibliographySystem->count()) comboBoxBibliographySystem->setCurrentIndex(styleIndex);
 
-        comboBoxElementDoubleClickAction->setCurrentIndex(configGroup.readEntry(Preferences::keyElementDoubleClickAction, (int)Preferences::defaultElementDoubleClickAction));
+        comboBoxElementDoubleClickAction->setCurrentIndex(configGroup.readEntry(Preferences::keyElementDoubleClickAction, static_cast<int>(Preferences::defaultElementDoubleClickAction)));
     }
 
     void saveState() {

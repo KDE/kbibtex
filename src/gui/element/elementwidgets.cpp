@@ -208,7 +208,7 @@ void EntryConfiguredWidget::createGUI()
         labeledFieldInput->label = new QLabel(QString(QStringLiteral("%1:")).arg(sfl.uiLabel), this);
         labeledFieldInput->label->setBuddy(labeledFieldInput->fieldInput->buddy());
         /// align label's text vertically to match field input
-        Qt::Alignment horizontalAlignment = (Qt::Alignment)(labeledFieldInput->label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment) & 0x001f);
+        const Qt::Alignment horizontalAlignment = static_cast<Qt::Alignment>(labeledFieldInput->label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)) & Qt::AlignHorizontal_Mask;
         labeledFieldInput->label->setAlignment(horizontalAlignment | (labeledFieldInput->isVerticallyMinimumExpaning ? Qt::AlignTop : Qt::AlignVCenter));
 
         listOfLabeledFieldInput[i] = labeledFieldInput;

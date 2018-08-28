@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -209,7 +209,7 @@ QSize PDFItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModel
     /// set a size that is suiteable
     QSize size;
     size.setWidth(option.fontMetrics.width(i18n("Download")) * 6);
-    size.setHeight(qMax(option.fontMetrics.height() * 16 / 3, (int)KIconLoader::SizeMedium));
+    size.setHeight(qMax(option.fontMetrics.height() * 16 / 3, static_cast<int>(KIconLoader::SizeMedium))); ///< KIconLoader::SizeMedium should be 32
     return size;
 }
 
@@ -331,7 +331,7 @@ bool PDFListModel::setData(const QModelIndex &index, const QVariant &value, int 
 {
     if (index != QModelIndex() && index.row() < m_resultList.count() && role == DownloadModeRole) {
         bool ok = false;
-        FindPDF::DownloadMode downloadMode = (FindPDF::DownloadMode)value.toInt(&ok);
+        const FindPDF::DownloadMode downloadMode = static_cast<FindPDF::DownloadMode>(value.toInt(&ok));
         if (ok) {
             m_resultList[index.row()].downloadMode = downloadMode;
             return true;
@@ -441,7 +441,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
     QAbstractItemModel *model = d->listViewResult->model();
     for (int i = 0; i < model->rowCount(); ++i) {
         bool ok = false;
-        FindPDF::DownloadMode downloadMode = (FindPDF::DownloadMode)model->data(model->index(i, 0), PDFListModel::DownloadModeRole).toInt(&ok);
+        FindPDF::DownloadMode downloadMode = static_cast<FindPDF::DownloadMode>(model->data(model->index(i, 0), PDFListModel::DownloadModeRole).toInt(&ok));
         if (!ok) {
             qCDebug(LOG_KBIBTEX_GUI) << "Could not interprete download mode";
             downloadMode = FindPDF::NoDownload;

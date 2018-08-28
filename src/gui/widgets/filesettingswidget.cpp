@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -64,19 +64,19 @@ void FileSettingsWidget::loadProperties(File *file)
     }
     if (file->hasProperty(File::QuoteComment)) {
         m_comboBoxQuoteComment->blockSignals(true);
-        Preferences::QuoteComment quoteComment = (Preferences::QuoteComment)file->property(File::QuoteComment).toInt();
-        m_comboBoxQuoteComment->setCurrentIndex((int)quoteComment);
+        const Preferences::QuoteComment quoteComment = static_cast<Preferences::QuoteComment>(file->property(File::QuoteComment).toInt());
+        m_comboBoxQuoteComment->setCurrentIndex(static_cast<int>(quoteComment));
         m_comboBoxQuoteComment->blockSignals(false);
     }
     if (file->hasProperty(File::KeywordCasing)) {
         m_comboBoxKeywordCasing->blockSignals(true);
-        KBibTeX::Casing keywordCasing = (KBibTeX::Casing)file->property(File::KeywordCasing).toInt();
-        m_comboBoxKeywordCasing->setCurrentIndex((int)keywordCasing);
+        const KBibTeX::Casing keywordCasing = static_cast<KBibTeX::Casing>(file->property(File::KeywordCasing).toInt());
+        m_comboBoxKeywordCasing->setCurrentIndex(static_cast<int>(keywordCasing));
         m_comboBoxKeywordCasing->blockSignals(false);
     }
     if (file->hasProperty(File::ProtectCasing)) {
         m_checkBoxProtectCasing->blockSignals(true);
-        m_checkBoxProtectCasing->setCheckState((Qt::CheckState)file->property(File::ProtectCasing).toInt());
+        m_checkBoxProtectCasing->setCheckState(static_cast<Qt::CheckState>(file->property(File::ProtectCasing).toInt()));
         m_checkBoxProtectCasing->blockSignals(false);
     }
     if (file->hasProperty(File::NameFormatting)) {
@@ -105,11 +105,11 @@ void FileSettingsWidget::saveProperties(File *file)
     file->setProperty(File::Encoding, m_comboBoxEncodings->currentText());
     QString stringDelimiter = m_comboBoxStringDelimiters->currentText();
     file->setProperty(File::StringDelimiter, QString(stringDelimiter[0]) + stringDelimiter[stringDelimiter.length() - 1]);
-    Preferences::QuoteComment quoteComment = (Preferences::QuoteComment)m_comboBoxQuoteComment->currentIndex();
-    file->setProperty(File::QuoteComment, (int)quoteComment);
-    KBibTeX::Casing keywordCasing = (KBibTeX::Casing)m_comboBoxKeywordCasing->currentIndex();
-    file->setProperty(File::KeywordCasing, (int)keywordCasing);
-    file->setProperty(File::ProtectCasing, (int)m_checkBoxProtectCasing->checkState());
+    const Preferences::QuoteComment quoteComment = static_cast<Preferences::QuoteComment>(m_comboBoxQuoteComment->currentIndex());
+    file->setProperty(File::QuoteComment, static_cast<int>(quoteComment));
+    const KBibTeX::Casing keywordCasing = static_cast<KBibTeX::Casing>(m_comboBoxKeywordCasing->currentIndex());
+    file->setProperty(File::KeywordCasing, static_cast<int>(keywordCasing));
+    file->setProperty(File::ProtectCasing, static_cast<int>(m_checkBoxProtectCasing->checkState()));
     file->setProperty(File::NameFormatting, m_comboBoxPersonNameFormatting->itemData(m_comboBoxPersonNameFormatting->currentIndex(), ItalicTextItemModel::IdentifierRole));
     file->setProperty(File::ListSeparator, m_comboBoxListSeparator->itemData(m_comboBoxListSeparator->currentIndex()).toString());
 }

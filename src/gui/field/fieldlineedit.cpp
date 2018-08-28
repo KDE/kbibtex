@@ -210,7 +210,7 @@ public:
         else if (value.count() == 1) {
             int p = 1;
             for (int i = 1; i < 8; ++i, p <<= 1) {
-                KBibTeX::TypeFlag flag = (KBibTeX::TypeFlag)p;
+                const KBibTeX::TypeFlag flag = static_cast<KBibTeX::TypeFlag>(p);
                 if (availableTypeFlags.testFlag(flag) && typeFlagSupported(value, flag)) {
                     result = flag; break;
                 }
@@ -438,7 +438,7 @@ void FieldLineEdit::setReadOnly(bool isReadOnly)
 
 void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
 {
-    KBibTeX::TypeFlag newTypeFlag = (KBibTeX::TypeFlag)newTypeFlagInt;
+    const KBibTeX::TypeFlag newTypeFlag = static_cast<KBibTeX::TypeFlag>(newTypeFlagInt);
 
     Value value;
     d->apply(value);

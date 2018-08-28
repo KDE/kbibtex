@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2015 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -229,10 +229,10 @@ void StarRating::paintStars(QPainter *painter, KIconLoader::States defaultState,
     const int y = inside.top() + (inside.height() - starSize) / 2;
 
     /// Number of full golden stars
-    int numActiveStars = percent * numTotalStars / 100;
+    int numActiveStars = static_cast<int>(percent * numTotalStars / 100);
     /// Number of golden pixels of the star that is
     /// partially golden and partially grey
-    int coloredPartWidth = (percent * numTotalStars / 100 - numActiveStars) * starSize;
+    int coloredPartWidth = static_cast<int>((percent * numTotalStars / 100 - numActiveStars) * starSize);
 
     /// Horizontal position of first star
     int x = inside.left() + Private::paintMargin;

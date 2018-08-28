@@ -70,7 +70,7 @@ public:
         int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), copyReferenceCommand.isEmpty() ? QString() : copyReferenceCommand, ItalicTextItemModel::IdentifierRole);
         comboBoxCopyReferenceCmd->setCurrentIndex(row);
 
-        const int index = qMax(0, comboBoxBackupScope->findData(configGroup.readEntry(Preferences::keyBackupScope, (int)Preferences::defaultBackupScope)));
+        const int index = qMax(0, comboBoxBackupScope->findData(configGroup.readEntry(Preferences::keyBackupScope, static_cast<int>(Preferences::defaultBackupScope))));
         comboBoxBackupScope->setCurrentIndex(index);
         spinboxNumberOfBackups->setValue(qMax(0, qMin(spinboxNumberOfBackups->maximum(), configGroup.readEntry(Preferences::keyNumberOfBackups, Preferences::defaultNumberOfBackups))));
 
@@ -219,5 +219,5 @@ void SettingsFileExporterWidget::automaticLyXDetectionToggled(bool isChecked)
 
 void SettingsFileExporterWidget::updateGUI()
 {
-    d->spinboxNumberOfBackups->setEnabled(d->comboBoxBackupScope->itemData(d->comboBoxBackupScope->currentIndex()).toInt() != (int)Preferences::NoBackup);
+    d->spinboxNumberOfBackups->setEnabled(d->comboBoxBackupScope->itemData(d->comboBoxBackupScope->currentIndex()).toInt() != static_cast<int>(Preferences::NoBackup));
 }

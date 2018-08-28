@@ -131,7 +131,7 @@ public:
         comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
         comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
+        comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
         lineEditTextInBetween = new KLineEdit(this);
         formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
@@ -164,7 +164,7 @@ public:
         if (spinBoxLength->value() > 0)
             result.append(QString::number(spinBoxLength->value()));
 
-        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+        const IdSuggestions::CaseChange caseChange = static_cast<IdSuggestions::CaseChange>(comboBoxChangeCase->currentIndex());
         if (caseChange == IdSuggestions::ccToLower)
             result.append(QStringLiteral("l"));
         else if (caseChange == IdSuggestions::ccToUpper)
@@ -342,7 +342,7 @@ public:
         comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
         comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
+        comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
         lineEditTextInBetween = new KLineEdit(this);
         formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
@@ -374,7 +374,7 @@ public:
         if (spinBoxLength->value() > 0)
             result.append(QString::number(spinBoxLength->value()));
 
-        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+        const IdSuggestions::CaseChange caseChange = static_cast<IdSuggestions::CaseChange>(comboBoxChangeCase->currentIndex());
         if (caseChange == IdSuggestions::ccToLower)
             result.append(QStringLiteral("l"));
         else if (caseChange == IdSuggestions::ccToUpper)
@@ -426,7 +426,7 @@ public:
         comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
         comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
+        comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
         lineEditTextInBetween = new KLineEdit(this);
         formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
@@ -452,7 +452,7 @@ public:
         if (spinBoxLength->value() > 0)
             result.append(QString::number(spinBoxLength->value()));
 
-        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+        const IdSuggestions::CaseChange caseChange = static_cast<IdSuggestions::CaseChange>(comboBoxChangeCase->currentIndex());
         if (caseChange == IdSuggestions::ccToLower)
             result.append(QStringLiteral("l"));
         else if (caseChange == IdSuggestions::ccToUpper)
@@ -495,7 +495,7 @@ public:
         comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
         comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
-        comboBoxChangeCase->setCurrentIndex((int)info.caseChange); /// enum has numbers assigned to cases and combo box has same indices
+        comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
         spinBoxLength = new QSpinBox(this);
         formLayout->addRow(i18n("Only first characters:"), spinBoxLength);
@@ -515,7 +515,7 @@ public:
         if (spinBoxLength->value() > 0)
             result.append(QString::number(spinBoxLength->value()));
 
-        IdSuggestions::CaseChange caseChange = (IdSuggestions::CaseChange)comboBoxChangeCase->currentIndex();
+        const IdSuggestions::CaseChange caseChange = static_cast<IdSuggestions::CaseChange>(comboBoxChangeCase->currentIndex());
         if (caseChange == IdSuggestions::ccToLower)
             result.append(QStringLiteral("l"));
         else if (caseChange == IdSuggestions::ccToUpper)
@@ -881,10 +881,10 @@ void IdSuggestionsEditWidget::removeToken(QWidget *widget)
 void IdSuggestionsEditWidget::addToken(int cmd)
 {
     if (cmd < 0) {
-        d->add((IdSuggestionsEditWidgetPrivate::TokenType)(-cmd), true);
+        d->add(static_cast<IdSuggestionsEditWidgetPrivate::TokenType>(-cmd), true);
         d->area->ensureWidgetVisible(d->buttonAddTokenAtTop); // FIXME does not work as intended
     } else {
-        d->add((IdSuggestionsEditWidgetPrivate::TokenType)cmd, false);
+        d->add(static_cast<IdSuggestionsEditWidgetPrivate::TokenType>(cmd), false);
         d->area->ensureWidgetVisible(d->buttonAddTokenAtBottom); // FIXME does not work as intended
     }
     updatePreview();

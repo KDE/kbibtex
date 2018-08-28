@@ -230,7 +230,7 @@ public:
       * @return distance between both words
       */
     double levenshteinDistanceWord(const QString &s, const QString &t) {
-        int m = qMin(s.length(), dsize - 1), n = qMin(t.length(), dsize - 1);
+        const int m = qMin(s.length(), dsize - 1), n = qMin(t.length(), dsize - 1);
         if (m < 1 && n < 1) return 0.0;
         if (m < 1 || n < 1) return 1.0;
 
@@ -250,7 +250,7 @@ public:
 
         double result = d[m][n];
 
-        result = result / (double)qMax(m, n);
+        result = result / qMax(m, n);
         result *= result;
         return result;
     }
@@ -263,7 +263,7 @@ public:
      * @return distance between both sentences
      */
     double levenshteinDistance(const QStringList &s, const QStringList &t) {
-        int m = s.size(), n = t.size();
+        const int m = s.size(), n = t.size();
         if (m < 1 && n < 1) return 0.0;
         if (m < 1 || n < 1) return 1.0;
 
@@ -286,7 +286,7 @@ public:
         for (int i = 0; i <= m; ++i) delete[] d[i];
         delete [] d;
 
-        result = result / (double)qMax(m, n);
+        result = result / qMax(m, n);
 
         return result;
     }
@@ -351,7 +351,7 @@ public:
          * Scale distance by maximum distance and round to int; result
          * will be in range 0 .. maxDistance.
          */
-        int distance = (unsigned int)(maxDistance * (titleDistance * 0.6 + authorDistance * 0.3 + yearDistance * 0.1) + 0.5);
+        int distance = static_cast<int>(maxDistance * (titleDistance * 0.6 + authorDistance * 0.3 + yearDistance * 0.1) + 0.5);
 
         return distance;
     }

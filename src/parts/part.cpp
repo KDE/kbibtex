@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -403,7 +403,7 @@ public:
     void makeBackup(const QUrl &url) const {
         /// Fetch settings from configuration
         KConfigGroup configGroup(config, Preferences::groupGeneral);
-        const Preferences::BackupScope backupScope = (Preferences::BackupScope)configGroup.readEntry(Preferences::keyBackupScope, (int)Preferences::defaultBackupScope);
+        const Preferences::BackupScope backupScope = static_cast<Preferences::BackupScope>(configGroup.readEntry(Preferences::keyBackupScope, static_cast<int>(Preferences::defaultBackupScope)));
         const int numberOfBackups = configGroup.readEntry(Preferences::keyNumberOfBackups, Preferences::defaultNumberOfBackups);
 
         /// Stop right here if no backup is requested
@@ -728,7 +728,7 @@ public:
     void readConfiguration() {
         /// Fetch settings from configuration
         KConfigGroup configGroup(config, Preferences::groupUserInterface);
-        const Preferences::ElementDoubleClickAction doubleClickAction = (Preferences::ElementDoubleClickAction)configGroup.readEntry(Preferences::keyElementDoubleClickAction, (int)Preferences::defaultElementDoubleClickAction);
+        const Preferences::ElementDoubleClickAction doubleClickAction = static_cast<Preferences::ElementDoubleClickAction>(configGroup.readEntry(Preferences::keyElementDoubleClickAction, static_cast<int>(Preferences::defaultElementDoubleClickAction)));
 
         disconnect(partWidget->fileView(), &FileView::elementExecuted, partWidget->fileView(), &FileView::editElement);
         disconnect(partWidget->fileView(), &FileView::elementExecuted, p, &KBibTeXPart::elementViewDocument);

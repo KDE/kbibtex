@@ -133,14 +133,14 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? Preferences::personNameFormatFirstLast : Preferences::personNameFormatLastFirst);
         /// Set the file's preferences for title protected
         Qt::CheckState triState = (m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle * 4) ? Qt::Checked : ((m_statistics.countProtectedTitle * 4 < m_statistics.countUnprotectedTitle) ? Qt::Unchecked : Qt::PartiallyChecked);
-        result->setProperty(File::ProtectCasing, (int)triState);
+        result->setProperty(File::ProtectCasing, static_cast<int>(triState));
         /// Set the file's preferences for quoting of comments
         if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
-            result->setProperty(File::QuoteComment, (int)Preferences::qcNone);
+            result->setProperty(File::QuoteComment, static_cast<int>(Preferences::qcNone));
         else if (m_statistics.countCommentCommand > m_statistics.countNoCommentQuote && m_statistics.countCommentCommand > m_statistics.countCommentPercent)
-            result->setProperty(File::QuoteComment, (int)Preferences::qcCommand);
+            result->setProperty(File::QuoteComment, static_cast<int>(Preferences::qcCommand));
         else
-            result->setProperty(File::QuoteComment, (int)Preferences::qcPercentSign);
+            result->setProperty(File::QuoteComment, static_cast<int>(Preferences::qcPercentSign));
         if (!m_statistics.mostRecentListSeparator.isEmpty())
             result->setProperty(File::ListSeparator, m_statistics.mostRecentListSeparator);
         // TODO gather more statistics for keyword casing etc.

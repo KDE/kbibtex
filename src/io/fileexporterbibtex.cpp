@@ -84,9 +84,9 @@ public:
         stringOpenDelimiter = stringDelimiter[0];
         stringCloseDelimiter = stringDelimiter[1];
 #ifdef HAVE_KF5
-        keywordCasing = (KBibTeX::Casing)configGroup.readEntry(Preferences::keyKeywordCasing, (int)Preferences::defaultKeywordCasing);
-        quoteComment = (Preferences::QuoteComment)configGroup.readEntry(Preferences::keyQuoteComment, (int)Preferences::defaultQuoteComment);
-        protectCasing = (Qt::CheckState)configGroup.readEntry(Preferences::keyProtectCasing, (int)Preferences::defaultProtectCasing);
+        keywordCasing = static_cast<KBibTeX::Casing>(configGroup.readEntry(Preferences::keyKeywordCasing, static_cast<int>(Preferences::defaultKeywordCasing)));
+        quoteComment = static_cast<Preferences::QuoteComment>(configGroup.readEntry(Preferences::keyQuoteComment, static_cast<int>(Preferences::defaultQuoteComment)));
+        protectCasing = static_cast<Qt::CheckState>(configGroup.readEntry(Preferences::keyProtectCasing, static_cast<int>(Preferences::defaultProtectCasing)));
         personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, QString());
         listSeparator = configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator);
 
@@ -124,11 +124,11 @@ public:
             stringCloseDelimiter = stringDelimiter[1];
         }
         if (bibtexfile->hasProperty(File::QuoteComment))
-            quoteComment = (Preferences::QuoteComment)bibtexfile->property(File::QuoteComment).toInt();
+            quoteComment = static_cast<Preferences::QuoteComment>(bibtexfile->property(File::QuoteComment).toInt());
         if (bibtexfile->hasProperty(File::KeywordCasing))
-            keywordCasing = (KBibTeX::Casing)bibtexfile->property(File::KeywordCasing).toInt();
+            keywordCasing = static_cast<KBibTeX::Casing>(bibtexfile->property(File::KeywordCasing).toInt());
         if (bibtexfile->hasProperty(File::ProtectCasing))
-            protectCasing = (Qt::CheckState)bibtexfile->property(File::ProtectCasing).toInt();
+            protectCasing = static_cast<Qt::CheckState>(bibtexfile->property(File::ProtectCasing).toInt());
         if (bibtexfile->hasProperty(File::NameFormatting)) {
             /// if the user set "use global default", this property is an empty string
             /// in this case, keep default value
@@ -383,7 +383,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     }
 
     bool result = true;
-    int totalElements = (int) bibtexfile->count();
+    const int totalElements = bibtexfile->count();
     int currentPos = 0;
 
     d->loadState();

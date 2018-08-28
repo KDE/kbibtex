@@ -58,7 +58,7 @@ class AlternativesItemModel : public QAbstractItemModel
 
 private:
     /// marker to memorize in an index's internal id that it is a top-level index
-    static const quint32 noParentInternalId;
+    static const quintptr noParentInternalId;
 
     /// parent widget, needed to get font from (for text in italics)
     QTreeView *p;
@@ -96,7 +96,7 @@ public:
         if (parent == QModelIndex())
             return createIndex(row, column, noParentInternalId);
         else if (parent.parent() == QModelIndex())
-            return createIndex(row, column, parent.row());
+            return createIndex(row, column, static_cast<quintptr>(parent.row()));
         return QModelIndex();
     }
 
@@ -104,7 +104,7 @@ public:
         if (index.internalId() >= noParentInternalId)
             return QModelIndex();
         else
-            return createIndex(index.internalId(), 0, noParentInternalId);
+            return createIndex(static_cast<int>(index.internalId()), 0, noParentInternalId);
     }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override {
@@ -341,7 +341,7 @@ public:
     }
 };
 
-const quint32 AlternativesItemModel::noParentInternalId = 0xffffff;
+const quintptr AlternativesItemModel::noParentInternalId = std::numeric_limits<quintptr>::max();
 
 
 /**
