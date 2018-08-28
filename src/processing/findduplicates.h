@@ -66,7 +66,7 @@ private:
     QMap<QString, QVector<Value> > chosenValueMap;
 
     void recalculateValueMap();
-    void insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText);
+    void insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText, const Qt::CaseSensitivity = Qt::CaseSensitive);
 };
 
 /**

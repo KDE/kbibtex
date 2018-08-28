@@ -134,7 +134,7 @@ void EntryClique::recalculateValueMap()
             /// cover entry type
             Value v;
             v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->type())));
-            insertKeyValueToValueMap(QStringLiteral("^type"), v, entry->type());
+            insertKeyValueToValueMap(QStringLiteral("^type"), v, entry->type(), Qt::CaseInsensitive /** entry types shall be compared case insensitive */);
 
             /// cover entry id
             v.clear();
@@ -169,7 +169,7 @@ void EntryClique::recalculateValueMap()
         }
 }
 
-void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText)
+void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText, const Qt::CaseSensitivity)
 {
     if (fieldValueText.isEmpty()) return;
 
