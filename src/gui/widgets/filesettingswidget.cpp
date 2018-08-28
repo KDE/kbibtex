@@ -50,15 +50,15 @@ void FileSettingsWidget::loadProperties(File *file)
 
     if (file->hasProperty(File::Encoding)) {
         m_comboBoxEncodings->blockSignals(true);
-        QString encoding = file->property(File::Encoding).toString();
-        int row = GUIHelper::selectValue(m_comboBoxEncodings->model(), encoding);
+        const QString encoding = file->property(File::Encoding).toString();
+        const int row = GUIHelper::selectValue(m_comboBoxEncodings->model(), encoding);
         m_comboBoxEncodings->setCurrentIndex(row);
         m_comboBoxEncodings->blockSignals(false);
     }
     if (file->hasProperty(File::StringDelimiter)) {
         m_comboBoxStringDelimiters->blockSignals(true);
-        QString stringDelimiter = file->property(File::StringDelimiter).toString();
-        int row = GUIHelper::selectValue(m_comboBoxStringDelimiters->model(), createDelimiterString(stringDelimiter[0], stringDelimiter[1]));
+        const QString stringDelimiter = file->property(File::StringDelimiter).toString();
+        const int row = GUIHelper::selectValue(m_comboBoxStringDelimiters->model(), createDelimiterString(stringDelimiter[0], stringDelimiter[1]));
         m_comboBoxStringDelimiters->setCurrentIndex(row);
         m_comboBoxStringDelimiters->blockSignals(false);
     }
@@ -81,7 +81,7 @@ void FileSettingsWidget::loadProperties(File *file)
     }
     if (file->hasProperty(File::NameFormatting)) {
         m_comboBoxPersonNameFormatting->blockSignals(true);
-        int row = GUIHelper::selectValue(m_comboBoxPersonNameFormatting->model(), file->property(File::NameFormatting).toString(), ItalicTextItemModel::IdentifierRole);
+        const int row = GUIHelper::selectValue(m_comboBoxPersonNameFormatting->model(), file->property(File::NameFormatting).toString(), ItalicTextItemModel::IdentifierRole);
         m_comboBoxPersonNameFormatting->setCurrentIndex(row);
         m_comboBoxPersonNameFormatting->blockSignals(false);
     }
@@ -103,7 +103,7 @@ void FileSettingsWidget::saveProperties(File *file)
     if (m_file == nullptr) return;
 
     file->setProperty(File::Encoding, m_comboBoxEncodings->currentText());
-    QString stringDelimiter = m_comboBoxStringDelimiters->currentText();
+    const QString stringDelimiter = m_comboBoxStringDelimiters->currentText();
     file->setProperty(File::StringDelimiter, QString(stringDelimiter[0]) + stringDelimiter[stringDelimiter.length() - 1]);
     const Preferences::QuoteComment quoteComment = static_cast<Preferences::QuoteComment>(m_comboBoxQuoteComment->currentIndex());
     file->setProperty(File::QuoteComment, static_cast<int>(quoteComment));

@@ -53,7 +53,7 @@ public:
     QVector<Value> &values(const QString &field);
     Value chosenValue(const QString &field) const;
     QVector<Value> chosenValues(const QString &field) const;
-    void setChosenValue(const QString &field, Value &value, ValueOperation valueOperation = SetValue);
+    void setChosenValue(const QString &field, const Value &value, ValueOperation valueOperation = SetValue);
 
     QString dump() const;
 

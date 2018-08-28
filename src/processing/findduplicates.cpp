@@ -88,7 +88,7 @@ QVector<Value> EntryClique::chosenValues(const QString &field) const
     return chosenValueMap[field];
 }
 
-void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperation valueOperation)
+void EntryClique::setChosenValue(const QString &field, const Value &value, ValueOperation valueOperation)
 {
     switch (valueOperation) {
     case SetValue: {
