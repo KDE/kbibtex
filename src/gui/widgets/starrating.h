@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -61,13 +61,13 @@ public:
      * the return value will be negative.
      * @return either percent between 0.0 and 100.0, or a negative value
      */
-    float value() const;
+    double value() const;
 
     /**
      * Set the rating in percent (valid only >=0.0 and <=100.0).
      * @param percent value between 0.0 and 100.0
      */
-    void setValue(float percent);
+    void setValue(double percent);
 
     /**
      * Remove any value assigned to this widget.
@@ -92,7 +92,7 @@ public:
      * @param percent percent value of "glowing" starts, to be >=0.0 and <= 100.0
      * @param inside fit and paint stars inside this rectangle on the painter
      */
-    static void paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, float percent, const QRect inside);
+    static void paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, double percent, const QRect inside);
 
 signals:
     void modified();

@@ -38,7 +38,7 @@ public:
     static const int paintMargin;
 
     bool isReadOnly;
-    float percent;
+    double percent;
     int maxNumberOfStars;
     int spacing;
     const QString unsetStarsText;
@@ -76,13 +76,13 @@ public:
         return QRect(QPoint(labelPercent->width() + spacing, (p->height() - starRectHeight) / 2), QSize(p->width() - 2 * spacing - clearButton->width() - labelPercent->width(), starRectHeight));
     }
 
-    float percentForPosition(const QPoint pos, int numTotalStars, const QRect inside)
+    double percentForPosition(const QPoint pos, int numTotalStars, const QRect inside)
     {
         const int starSize = qMin(inside.height() - 2 * Private::paintMargin, (inside.width() - 2 * Private::paintMargin) / numTotalStars);
         const int width = starSize * numTotalStars;
         const int x = pos.x() - Private::paintMargin - inside.left();
-        const float percent = x * 100.0f / width;
-        return qMax(0.0f, qMin(100.0f, percent));
+        const double percent = x * 100.0 / width;
+        return qMax(0.0, qMin(100.0, percent));
     }
 };
 
@@ -102,7 +102,7 @@ void StarRating::paintEvent(QPaintEvent *ev)
     QPainter p(this);
 
     const QRect r = d->starsInside();
-    const float percent = d->mouseLocation.isNull() ? d->percent : d->percentForPosition(d->mouseLocation, d->maxNumberOfStars, r);
+    const double percent = d->mouseLocation.isNull() ? d->percent : d->percentForPosition(d->mouseLocation, d->maxNumberOfStars, r);
 
     if (percent >= 0.0) {
         paintStars(&p, KIconLoader::DefaultState, d->maxNumberOfStars, percent, d->starsInside());
@@ -125,7 +125,7 @@ void StarRating::mouseReleaseEvent(QMouseEvent *ev)
 
     if (!d->isReadOnly && ev->button() == Qt::LeftButton) {
         d->mouseLocation = QPoint();
-        const float newPercent = d->percentForPosition(ev->pos(), d->maxNumberOfStars, d->starsInside());
+        const double newPercent = d->percentForPosition(ev->pos(), d->maxNumberOfStars, d->starsInside());
         setValue(newPercent);
         emit modified();
         ev->accept();
@@ -168,12 +168,12 @@ bool StarRating::eventFilter(QObject *obj, QEvent *event)
     return false;
 }
 
-float StarRating::value() const
+double StarRating::value() const
 {
     return d->percent;
 }
 
-void StarRating::setValue(float percent)
+void StarRating::setValue(double percent)
 {
     if (d->isReadOnly) return; ///< disallow modifications if read-only
 
@@ -213,7 +213,7 @@ void StarRating::buttonHeight()
     d->clearButton->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
 }
 
-void StarRating::paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, float percent, const QRect inside)
+void StarRating::paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, double percent, const QRect inside)
 {
     painter->save(); ///< Save the current painter's state; at this function's end restored
 
