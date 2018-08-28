@@ -67,12 +67,12 @@ QList<QString> EntryClique::fieldList() const
     return valueMap.keys();
 }
 
-QList<Value> EntryClique::values(const QString &field) const
+QVector<Value> EntryClique::values(const QString &field) const
 {
     return valueMap[field];
 }
 
-QList<Value> &EntryClique::values(const QString &field)
+QVector<Value> &EntryClique::values(const QString &field)
 {
     return valueMap[field];
 }
@@ -83,7 +83,7 @@ Value EntryClique::chosenValue(const QString &field) const
     return chosenValueMap[field].first();
 }
 
-QList<Value> EntryClique::chosenValues(const QString &field) const
+QVector<Value> EntryClique::chosenValues(const QString &field) const
 {
     return chosenValueMap[field];
 }
@@ -98,7 +98,7 @@ void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperat
     }
     case AddValue: {
         QString text = PlainTextValue::text(value);
-        for (const Value &value : const_cast<const QList<Value> &>(chosenValueMap[field]))
+        for (const Value &value : const_cast<const QVector<Value> &>(chosenValueMap[field]))
             if (PlainTextValue::text(value) == text)
                 return;
         chosenValueMap[field] << value;
@@ -106,7 +106,7 @@ void EntryClique::setChosenValue(const QString &field, Value &value, ValueOperat
     }
     case RemoveValue: {
         QString text = PlainTextValue::text(value);
-        for (QList<Value>::Iterator it = chosenValueMap[field].begin(); it != chosenValueMap[field].end(); ++it)
+        for (QVector<Value>::Iterator it = chosenValueMap[field].begin(); it != chosenValueMap[field].end(); ++it)
             if (PlainTextValue::text(*it) == text) {
                 chosenValueMap[field].erase(it);
                 return;
@@ -161,7 +161,7 @@ void EntryClique::recalculateValueMap()
             }
         }
 
-    const QList<QString> fl = fieldList();
+    const auto fl = fieldList();
     for (const QString &fieldName : fl)
         if (valueMap[fieldName].count() < 2) {
             valueMap.remove(fieldName);
@@ -178,8 +178,8 @@ void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value
         /// to the current (as of fieldIt) value (to avoid duplicates)
 
         bool alreadyContained = false;
-        QList<Value> alternatives = valueMap[fieldName];
-        for (const Value &v : const_cast<const QList<Value> &>(alternatives))
+        QVector<Value> alternatives = valueMap[fieldName];
+        for (const Value &v : const_cast<const QVector<Value> &>(alternatives))
             if (PlainTextValue::text(v) == fieldValueText) {
                 alreadyContained = true;
                 break;
@@ -190,10 +190,10 @@ void EntryClique::insertKeyValueToValueMap(const QString &fieldName, const Value
             valueMap[fieldName] = alternatives;
         }
     } else {
-        QList<Value> alternatives = valueMap[fieldName];
+        QVector<Value> alternatives = valueMap[fieldName];
         alternatives << fieldValue;
         valueMap.insert(fieldName, alternatives);
-        QList<Value> chosen;
+        QVector<Value> chosen;
         chosen << fieldValue;
         chosenValueMap.insert(fieldName, chosen);
     }
@@ -372,7 +372,7 @@ FindDuplicates::~FindDuplicates()
     delete d;
 }
 
-bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entryCliqueList)
+bool FindDuplicates::findDuplicateEntries(File *file, QVector<EntryClique *> &entryCliqueList)
 {
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QScopedPointer<QProgressDialog> progressDlg(new QProgressDialog(i18n("Searching ..."), i18n("Cancel"), 0, 100000 /* to be set later to actual value */, d->widget));
@@ -383,7 +383,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     entryCliqueList.clear();
 
     /// assemble list of entries only (ignoring comments, macros, ...)
-    QList<QSharedPointer<Entry> > listOfEntries;
+    QVector<QSharedPointer<Entry> > listOfEntries;
     listOfEntries.reserve(file->size());
     for (const auto &element : const_cast<const File &>(*file)) {
         QSharedPointer<Entry> e = element.dynamicCast<Entry>();
@@ -407,7 +407,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     emit maximumProgress(maxProgress);
 
     /// go through all entries ...
-    for (const auto &entry : const_cast<const QList<QSharedPointer<Entry> > &>(listOfEntries)) {
+    for (const auto &entry : const_cast<const QVector<QSharedPointer<Entry> > &>(listOfEntries)) {
         QApplication::instance()->processEvents();
         if (progressDlg->wasCanceled()) {
             entryCliqueList.clear();
@@ -422,7 +422,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
         bool foundClique = false;
 
         /// go through all existing cliques
-        for (QList<EntryClique *>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end(); ++cit) {
+        for (QVector<EntryClique *>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end(); ++cit) {
             /// check distance between current entry and clique's first entry
             if (d->entryDistance(entry.data(), (*cit)->entryList().first().data()) < d->sensitivity) {
                 /// if distance is below sensitivity, add current entry to clique
@@ -456,7 +456,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QList<EntryClique *> &entr
     progressDlg->setValue(progressDlg->maximum());
 
     /// remove cliques with only one element (nothing to merge here) from the list of cliques
-    for (QList<EntryClique *>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end();)
+    for (QVector<EntryClique *>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end();)
         if ((*cit)->entryCount() < 2) {
             EntryClique *ec = *cit;
             cit = entryCliqueList.erase(cit);
@@ -479,7 +479,7 @@ MergeDuplicates::MergeDuplicates()
     /// nothing
 }
 
-bool MergeDuplicates::mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, FileModel *fileModel)
+bool MergeDuplicates::mergeDuplicateEntries(const QVector<EntryClique *> &entryCliques, FileModel *fileModel)
 {
     bool didMerge = false;
 

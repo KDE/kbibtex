@@ -117,7 +117,7 @@ public:
         } else if (parent.parent() == QModelIndex()) {
             /// first, find the map of alternatives for this chosen field name (see parent)
             QString fieldName = parent.data(FieldNameRole).toString();
-            QList<Value> alt = currentClique->values(fieldName);
+            const auto alt = currentClique->values(fieldName);
             /// second, return number of alternatives for list of alternatives
             /// plus one for an "else" option
             return alt.count() + (fieldName.startsWith('^') || fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl ? 0 : 1);
@@ -173,7 +173,7 @@ public:
 
             /// start with determining which list of alternatives actually to use
             QString fieldName = index.parent().data(FieldNameRole).toString();
-            QList<Value> values = currentClique->values(fieldName);
+            const auto &values = currentClique->values(fieldName);
 
             switch (role) {
             case Qt::EditRole:
@@ -203,7 +203,7 @@ public:
                 if (selectionType(fieldName) != SelectionTypeCheck)
                     return QVariant();
 
-                const QList<Value> chosenValues = currentClique->chosenValues(fieldName);
+                const auto chosenValues = currentClique->chosenValues(fieldName);
                 QString text = PlainTextValue::text(values.at(index.row()));
                 for (const Value &value : chosenValues) {
                     if (PlainTextValue::text(value) == text)
@@ -242,7 +242,7 @@ public:
             int checkState = value.toInt(&isInt);
 
             const QString fieldName = index.parent().data(FieldNameRole).toString();
-            QList<Value> &values = currentClique->values(fieldName);
+            auto values = currentClique->values(fieldName);
 
             if (role == RadioButtonTreeView::RadioSelectedRole && value.canConvert<bool>() && value.toBool() == true && selectionType(fieldName) == SelectionTypeRadio) {
                 /// start with determining which list of alternatives actually to use
@@ -333,7 +333,7 @@ public:
             if (selectionType(fieldName) == SelectionTypeCheck)
                 f |= Qt::ItemIsUserCheckable;
 
-            QList<Value> values = currentClique->values(fieldName);
+            const auto values = currentClique->values(fieldName);
             if (index.row() < values.count())
                 f |= Qt::ItemIsEditable;
         }
@@ -411,12 +411,12 @@ class CheckableFileModel : public FileModel
     Q_OBJECT
 
 private:
-    QList<EntryClique *> cl;
+    QVector<EntryClique *> cl;
     int currentClique;
     QTreeView *tv;
 
 public:
-    CheckableFileModel(QList<EntryClique *> &cliqueList, QTreeView *treeView, QObject *parent = nullptr)
+    CheckableFileModel(QVector<EntryClique *> &cliqueList, QTreeView *treeView, QObject *parent = nullptr)
             : FileModel(parent), cl(cliqueList), currentClique(0), tv(treeView) {
         /// nothing
     }
@@ -533,9 +533,9 @@ public:
     AlternativesItemDelegate *alternativesItemDelegate;
 
     int currentClique;
-    QList<EntryClique *> &cl;
+    QVector<EntryClique *> &cl;
 
-    MergeWidgetPrivate(MergeWidget *parent, File *bibTeXFile, QList<EntryClique *> &cliqueList)
+    MergeWidgetPrivate(MergeWidget *parent, File *bibTeXFile, QVector<EntryClique *> &cliqueList)
             : p(parent), file(bibTeXFile), currentClique(0), cl(cliqueList) {
         setupGUI();
     }
@@ -604,7 +604,7 @@ public:
 
 const char *MergeWidget::MergeWidgetPrivate::whichCliqueText = "Showing clique %1 of %2.";
 
-MergeWidget::MergeWidget(File *file, QList<EntryClique *> &cliqueList, QWidget *parent)
+MergeWidget::MergeWidget(File *file, QVector<EntryClique *> &cliqueList, QWidget *parent)
         : QWidget(parent), d(new MergeWidgetPrivate(this, file, cliqueList))
 {
     /// nothing
@@ -688,7 +688,7 @@ void FindDuplicatesUI::startDuplicatesSearch()
     /// parent of a progress bar window and sensitivity value when to
     /// recognize two entries as being duplicates of each other
     FindDuplicates fd(d->part->widget(), sensitivity);
-    QList<EntryClique *> cliques;
+    QVector<EntryClique *> cliques;
     bool gotCanceled = fd.findDuplicateEntries(workingSetFile, cliques);
     if (gotCanceled) {
         /// Duplicate search was cancelled, e.g. by pressing the Cancel

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -49,10 +49,10 @@ public:
 
     int fieldCount() const;
     QList<QString> fieldList() const;
-    QList<Value> values(const QString &field) const;
-    QList<Value> &values(const QString &field);
+    QVector<Value> values(const QString &field) const;
+    QVector<Value> &values(const QString &field);
     Value chosenValue(const QString &field) const;
-    QList<Value> chosenValues(const QString &field) const;
+    QVector<Value> chosenValues(const QString &field) const;
     void setChosenValue(const QString &field, Value &value, ValueOperation valueOperation = SetValue);
 
     QString dump() const;
@@ -62,8 +62,8 @@ protected:
 
 private:
     QMap<QSharedPointer<Entry>, bool> checkedEntries;
-    QMap<QString, QList<Value> > valueMap;
-    QMap<QString, QList<Value> > chosenValueMap;
+    QMap<QString, QVector<Value> > valueMap;
+    QMap<QString, QVector<Value> > chosenValueMap;
 
     void recalculateValueMap();
     void insertKeyValueToValueMap(const QString &fieldName, const Value &fieldValue, const QString &fieldValueText);
@@ -80,7 +80,7 @@ public:
     explicit FindDuplicates(QWidget *parent, int sensitivity = 4000);
     ~FindDuplicates() override;
 
-    bool findDuplicateEntries(File *file, QList<EntryClique *> &entryCliqueList);
+    bool findDuplicateEntries(File *file, QVector<EntryClique *> &entryCliqueList);
 
 signals:
     void maximumProgress(int maxProgress);
@@ -97,7 +97,7 @@ private:
 class KBIBTEXPROC_EXPORT MergeDuplicates
 {
 public:
-    static bool mergeDuplicateEntries(const QList<EntryClique *> &entryCliques, FileModel *fileModel);
+    static bool mergeDuplicateEntries(const QVector<EntryClique *> &entryCliques, FileModel *fileModel);
 
 private:
     explicit MergeDuplicates();
