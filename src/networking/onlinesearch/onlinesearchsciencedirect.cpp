@@ -122,7 +122,7 @@ QString OnlineSearchScienceDirect::label() const
 
 QString OnlineSearchScienceDirect::favIconUrl() const
 {
-    return QStringLiteral("https://cdn.els-cdn.com/sd/favSD.ico");
+    return QStringLiteral("https://sdfestaticassets-us-east-1.sciencedirectassets.com/shared-assets/11/images/favSD.ico");
 }
 
 QUrl OnlineSearchScienceDirect::homepage() const
