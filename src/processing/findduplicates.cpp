@@ -424,7 +424,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QVector<EntryClique *> &en
         /// go through all existing cliques
         for (QVector<EntryClique *>::Iterator cit = entryCliqueList.begin(); cit != entryCliqueList.end(); ++cit) {
             /// check distance between current entry and clique's first entry
-            if (d->entryDistance(entry.data(), (*cit)->entryList().first().data()) < d->sensitivity) {
+            if (d->entryDistance(entry.data(), (*cit)->entryList().constFirst().data()) < d->sensitivity) {
                 /// if distance is below sensitivity, add current entry to clique
                 foundClique = true;
                 (*cit)->addEntry(entry);
