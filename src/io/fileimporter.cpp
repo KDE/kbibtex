@@ -45,9 +45,7 @@ File *FileImporter::fromString(const QString &text)
 
     QBuffer buffer;
     buffer.open(QIODevice::WriteOnly);
-    QTextStream stream(&buffer);
-    stream.setCodec("UTF-8");
-    stream << text;
+    buffer.write(text.toUtf8());
     buffer.close();
 
     buffer.open(QIODevice::ReadOnly);

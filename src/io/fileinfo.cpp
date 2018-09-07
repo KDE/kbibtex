@@ -321,8 +321,7 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
         /// Load text from cache file
         QFile f(textFilename);
         if (f.open(QFile::ReadOnly)) {
-            QTextStream ts(&f);
-            const QString text = ts.readAll();
+            const QString text = QString::fromUtf8(f.readAll());
             f.close();
             return text;
         }
@@ -357,14 +356,16 @@ void FileInfo::extractPDFTextToCache(const QString &pdfFilename, const QString &
     QFile f(cacheFilename);
     if (f.open(QFile::WriteOnly)) {
         static const int maxCharacters = 1 << 18;
-        QTextStream ts(&f);
-        ts << text.left(maxCharacters); ///< keep only the first 2^18 many characters
+        f.write(text.left(maxCharacters).toUtf8()); ///< keep only the first 2^18 many characters
 
         if (text.length() > maxCharacters)
             msgList << QString(QStringLiteral("### Text too long, skipping %1 characters ###")).arg(text.length() - maxCharacters);
         /// Write all messages (warnings) to end of text file
-        for (const QString &msg : const_cast<const QStringList &>(msgList))
-            ts << endl << msg;
+        for (const QString &msg : const_cast<const QStringList &>(msgList)) {
+            static const char linebreak = '\n';
+            f.write(&linebreak, 1);
+            f.write(msg.toUtf8());
+        }
 
         f.close();
     }

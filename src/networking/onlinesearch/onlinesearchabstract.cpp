@@ -471,9 +471,7 @@ void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &te
     QFile f(usedFilename);
     if (f.open(QFile::WriteOnly)) {
         qCDebug(LOG_KBIBTEX_NETWORKING) << "Dumping text" << KBibTeX::squeezeText(text, 96) << "to" << usedFilename;
-        QTextStream ts(&f);
-        ts.setCodec("UTF-8");
-        ts << text;
+        f.write(text.toUtf8());
         f.close();
     }
 }

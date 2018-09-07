@@ -67,8 +67,7 @@ public:
             return QString();
 
         buffer.open(QBuffer::ReadOnly);
-        QTextStream ts(&buffer);
-        QString text = ts.readAll();
+        const QString text = QString::fromUtf8(buffer.readAll());
         buffer.close();
 
         return text;
