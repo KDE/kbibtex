@@ -75,7 +75,6 @@ previewStyles[] = {
     {i18n("Wikipedia Citation"), QStringLiteral("wikipedia-cite"), QStringLiteral("plain_xml")},
     {i18n("Abstract-only"), QStringLiteral("abstractonly"), QStringLiteral("xml")}
 };
-static const int previewStylesLen = sizeof(previewStyles) / sizeof(previewStyles[0]);
 
 Q_DECLARE_METATYPE(PreviewStyles)
 
@@ -174,15 +173,16 @@ public:
     void loadState() {
         static bool hasBibTeX2HTML = !QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty();
 
-        int styleIndex = 0;
         KConfigGroup configGroup(config, configGroupName);
         const QString previousStyle = configGroup.readEntry(configKeyName, QString());
 
         comboBox->clear();
-        for (int i = 0, c = 0; i < previewStylesLen; ++i) {
-            if (!hasBibTeX2HTML && previewStyles[i].type.contains(QStringLiteral("bibtex2html"))) continue;
-            comboBox->addItem(previewStyles[i].label, QVariant::fromValue(previewStyles[i]));
-            if (previousStyle == previewStyles[i].style)
+
+        int styleIndex = 0, c = 0;
+        for (const PreviewStyles &previewStyle : previewStyles) {
+            if (!hasBibTeX2HTML && previewStyle.type.contains(QStringLiteral("bibtex2html"))) continue;
+            comboBox->addItem(previewStyle.label, QVariant::fromValue(previewStyle));
+            if (previousStyle == previewStyle.style)
                 styleIndex = c;
             ++c;
         }

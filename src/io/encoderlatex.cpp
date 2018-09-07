@@ -474,7 +474,6 @@ encoderLaTeXEscapedCharacters[] = {
     {QLatin1Char('d'), QLatin1Char('y'), 0x1EF5, DirectionBoth},
     {QLatin1Char('r'), QLatin1Char('q'), 0x2019, DirectionBoth} ///< tricky: this is \rq
 };
-static const int encoderLaTeXEscapedCharactersLen = sizeof(encoderLaTeXEscapedCharacters) / sizeof(encoderLaTeXEscapedCharacters[0]);
 
 
 /**
@@ -507,7 +506,6 @@ dotlessIJCharacters[] = {
     {QLatin1Char('v'), QLatin1Char('j'), 0x01F0, DirectionBoth},
     {QLatin1Char('G'), QLatin1Char('i'), 0x0209, DirectionCommandToUnicode}
 };
-static const int dotlessIJCharactersLen = sizeof(dotlessIJCharacters) / sizeof(dotlessIJCharacters[0]);
 
 
 /**
@@ -539,7 +537,7 @@ static const struct MathCommand {
     const ushort unicode;
     const EncoderLaTeXCommandDirection direction;
 }
-mathCommand[] = {
+mathCommands[] = {
     {QStringLiteral("ell"), 0x2113, DirectionBoth},
     {QStringLiteral("rightarrow"), 0x2192, DirectionBoth},
     {QStringLiteral("forall"), 0x2200, DirectionBoth},
@@ -560,7 +558,6 @@ mathCommand[] = {
     {QStringLiteral("Supset"), 0x22D1, DirectionBoth},
     {QStringLiteral("top"), 0x22A4, DirectionBoth},
 };
-static const int mathCommandLen = sizeof(mathCommand) / sizeof(mathCommand[0]);
 
 
 /**
@@ -757,13 +754,10 @@ encoderLaTeXCharacterCommands[] = {
     {QStringLiteral("rq"), 0x2019, DirectionBoth}, ///< tricky one: 'r' is a valid modifier
     {QStringLiteral("lq"), 0x2018, DirectionBoth}
 };
-static const int encoderLaTeXCharacterCommandsLen = sizeof(encoderLaTeXCharacterCommands) / sizeof(encoderLaTeXCharacterCommands[0]);
 
 const QChar EncoderLaTeX::encoderLaTeXProtectedSymbols[] = {QLatin1Char('#'), QLatin1Char('&'), QLatin1Char('%')};
-const int EncoderLaTeX::encoderLaTeXProtectedSymbolsLen = sizeof(EncoderLaTeX::encoderLaTeXProtectedSymbols) / sizeof(EncoderLaTeX::encoderLaTeXProtectedSymbols[0]);
 
 const QChar EncoderLaTeX::encoderLaTeXProtectedTextOnlySymbols[] = {QLatin1Char('_')};
-const int EncoderLaTeX::encoderLaTeXProtectedTextOnlySymbolsLen = sizeof(encoderLaTeXProtectedTextOnlySymbols) / sizeof(encoderLaTeXProtectedTextOnlySymbols[0]);
 
 
 /**
@@ -778,7 +772,8 @@ static const struct EncoderLaTeXSymbolSequence {
     const QString latex;
     const ushort unicode;
     const EncoderLaTeXCommandDirection direction;
-} encoderLaTeXSymbolSequences[] = {
+}
+encoderLaTeXSymbolSequences[] = {
     {QStringLiteral("!`"), 0x00A1, DirectionBoth},
     {QStringLiteral("\"<"), 0x00AB, DirectionBoth},
     {QStringLiteral("\">"), 0x00BB, DirectionBoth},
@@ -795,7 +790,6 @@ static const struct EncoderLaTeXSymbolSequence {
     {QStringLiteral("ft"), 0xFB05, DirectionUnicodeToCommand},
     {QStringLiteral("st"), 0xFB06, DirectionUnicodeToCommand}
 };
-static const int encoderLaTeXSymbolSequencesLen = sizeof(encoderLaTeXSymbolSequences) / sizeof(encoderLaTeXSymbolSequences[0]);
 
 
 EncoderLaTeX::EncoderLaTeX()
@@ -817,12 +811,12 @@ EncoderLaTeX::EncoderLaTeX()
 
     int lookupTableCount = 0;
     /// Go through all table rows of encoderLaTeXEscapedCharacters
-    for (int i = encoderLaTeXEscapedCharactersLen - 1; i >= 0; --i) {
+    for (const EncoderLaTeXEscapedCharacter &encoderLaTeXEscapedCharacter : encoderLaTeXEscapedCharacters) {
         /// Check if this row's modifier is already known
         bool knownModifier = false;
         int j;
         for (j = lookupTableCount - 1; j >= 0; --j) {
-            knownModifier |= lookupTable[j]->modifier == encoderLaTeXEscapedCharacters[i].modifier;
+            knownModifier |= lookupTable[j]->modifier == encoderLaTeXEscapedCharacter.modifier;
             if (knownModifier) break;
         }
 
@@ -830,7 +824,7 @@ EncoderLaTeX::EncoderLaTeX()
             /// Ok, this row's modifier appeared for the first time,
             /// therefore initialize memory structure, i.e. row in lookupTable
             lookupTable[lookupTableCount] = new EncoderLaTeXEscapedCharacterLookupTableRow;
-            lookupTable[lookupTableCount]->modifier = encoderLaTeXEscapedCharacters[i].modifier;
+            lookupTable[lookupTableCount]->modifier = encoderLaTeXEscapedCharacter.modifier;
             /// If no special character is known for a letter+modifier
             /// combination, fall back using the ASCII character only
             for (ushort k = 0; k < 26; ++k) {
@@ -846,10 +840,10 @@ EncoderLaTeX::EncoderLaTeX()
         /// Add the letter as of the current row in encoderLaTeXEscapedCharacters
         /// into Unicode char array in the current modifier's row in the lookup table.
         int pos = -1;
-        if ((pos = asciiLetterOrDigitToPos(encoderLaTeXEscapedCharacters[i].letter)) >= 0)
-            lookupTable[j]->unicode[pos] = QChar(encoderLaTeXEscapedCharacters[i].unicode);
+        if ((pos = asciiLetterOrDigitToPos(encoderLaTeXEscapedCharacter.letter)) >= 0)
+            lookupTable[j]->unicode[pos] = QChar(encoderLaTeXEscapedCharacter.unicode);
         else
-            qCWarning(LOG_KBIBTEX_IO) << "Cannot handle letter " << encoderLaTeXEscapedCharacters[i].letter;
+            qCWarning(LOG_KBIBTEX_IO) << "Cannot handle letter " << encoderLaTeXEscapedCharacter.letter;
     }
 }
 
@@ -921,11 +915,12 @@ QString EncoderLaTeX::decode(const QString &input) const
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
                     /// This is the case for {\'\i} or alike.
                     bool found = false;
-                    for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                        if (dotlessIJCharacters[k].letter == input[i + 4 + skipSpaces] && dotlessIJCharacters[k].modifier == input[i + 2]) {
-                            output.append(QChar(dotlessIJCharacters[k].unicode));
+                    for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
+                        if (dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
+                            output.append(QChar(dotlessIJCharacter.unicode));
                             i += 5 + skipSpaces;
                             found = true;
+                            break;
                         }
                     if (!found)
                         qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4 + skipSpaces];
@@ -949,11 +944,12 @@ QString EncoderLaTeX::decode(const QString &input) const
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 7 && input[i + 3 + skipSpaces] == QLatin1Char('{') && input[i + 4 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 5 + skipSpaces]) && input[i + 6 + skipSpaces] == QLatin1Char('}') && input[i + 7 + skipSpaces] == QLatin1Char('}')) {
                     /// This is the case for {\'{\i}} or alike.
                     bool found = false;
-                    for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                        if (dotlessIJCharacters[k].letter == input[i + 5 + skipSpaces] && dotlessIJCharacters[k].modifier == input[i + 2]) {
-                            output.append(QChar(dotlessIJCharacters[k].unicode));
+                    for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
+                        if (dotlessIJCharacter.letter == input[i + 5 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
+                            output.append(QChar(dotlessIJCharacter.unicode));
                             i += 7 + skipSpaces;
                             found = true;
+                            break;
                         }
                     if (!found)
                         qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5 + skipSpaces] << "}";
@@ -967,25 +963,27 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// Check which command it is,
                         /// insert corresponding Unicode character
                         bool foundCommand = false;
-                        for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
-                            if (encoderLaTeXCharacterCommands[ci].command == alpha) {
-                                output.append(QChar(encoderLaTeXCharacterCommands[ci].unicode));
+                        for (const EncoderLaTeXCharacterCommand &encoderLaTeXCharacterCommand : encoderLaTeXCharacterCommands) {
+                            if (encoderLaTeXCharacterCommand.command == alpha) {
+                                output.append(QChar(encoderLaTeXCharacterCommand.unicode));
                                 foundCommand = true;
+                                break;
                             }
                         }
 
                         /// Check if a math command has been read,
                         /// like \subset
                         /// (automatically skipped if command was found above)
-                        for (int k = 0; !foundCommand && k < mathCommandLen; ++k) {
-                            if (mathCommand[k].command == alpha) {
+                        for (const MathCommand &mathCommand : mathCommands) {
+                            if (mathCommand.command == alpha) {
                                 if (output.endsWith(QStringLiteral("\\ensuremath"))) {
                                     /// Remove "\ensuremath" right before this math command,
                                     /// it will be re-inserted when exporting/saving the document
                                     output = output.left(output.length() - 11);
                                 }
-                                output.append(QChar(mathCommand[k].unicode));
+                                output.append(QChar(mathCommand.unicode));
                                 foundCommand = true;
+                                break;
                             }
                         }
 
@@ -1087,22 +1085,24 @@ QString EncoderLaTeX::decode(const QString &input) const
             } else if (lookupTablePos >= 0 && i + skipSpaces < len - 3 && input[i + 2 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 3 + skipSpaces])) {
                 /// This is the case for \'\i or alike.
                 bool found = false;
-                for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                    if (dotlessIJCharacters[k].letter == input[i + 3 + skipSpaces] && dotlessIJCharacters[k].modifier == input[i + 1]) {
-                        output.append(QChar(dotlessIJCharacters[k].unicode));
+                for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
+                    if (dotlessIJCharacter.letter == input[i + 3 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
+                        output.append(QChar(dotlessIJCharacter.unicode));
                         i += 3 + skipSpaces;
                         found = true;
+                        break;
                     }
                 if (!found)
                     qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3 + skipSpaces];
             } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 2 + skipSpaces] == QLatin1Char('{') && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
                 /// This is the case for \'{\i} or alike.
                 bool found = false;
-                for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                    if (dotlessIJCharacters[k].letter == input[i + 4 + skipSpaces] && dotlessIJCharacters[k].modifier == input[i + 1]) {
-                        output.append(QChar(dotlessIJCharacters[k].unicode));
+                for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
+                    if (dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
+                        output.append(QChar(dotlessIJCharacter.unicode));
                         i += 5 + skipSpaces;
                         found = true;
+                        break;
                     }
                 if (!found)
                     qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4 + skipSpaces] << "}";
@@ -1116,10 +1116,11 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Check which command it is,
                     /// insert corresponding Unicode character
                     bool foundCommand = false;
-                    for (int ci = 0; !foundCommand && ci < encoderLaTeXCharacterCommandsLen; ++ci) {
-                        if (encoderLaTeXCharacterCommands[ci].command == alpha) {
-                            output.append(QChar(encoderLaTeXCharacterCommands[ci].unicode));
+                    for (const EncoderLaTeXCharacterCommand &encoderLaTeXCharacterCommand : encoderLaTeXCharacterCommands) {
+                        if (encoderLaTeXCharacterCommand.command == alpha) {
+                            output.append(QChar(encoderLaTeXCharacterCommand.unicode));
                             foundCommand = true;
+                            break;
                         }
                     }
 
@@ -1143,17 +1144,19 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Maybe we are dealing with a string like \& or \_
                     /// Check which command it is
                     bool foundCommand = false;
-                    for (int k = 0; k < encoderLaTeXProtectedSymbolsLen; ++k)
-                        if (encoderLaTeXProtectedSymbols[k] == input[i + 1]) {
-                            output.append(encoderLaTeXProtectedSymbols[k]);
+                    for (const QChar &encoderLaTeXProtectedSymbol : encoderLaTeXProtectedSymbols)
+                        if (encoderLaTeXProtectedSymbol == input[i + 1]) {
+                            output.append(encoderLaTeXProtectedSymbol);
                             foundCommand = true;
+                            break;
                         }
 
                     if (!foundCommand && !inMathMode)
-                        for (int k = 0; k < encoderLaTeXProtectedTextOnlySymbolsLen; ++k)
-                            if (encoderLaTeXProtectedTextOnlySymbols[k] == input[i + 1]) {
-                                output.append(encoderLaTeXProtectedTextOnlySymbols[k]);
+                        for (const QChar &encoderLaTeXProtectedTextOnlySymbol : encoderLaTeXProtectedTextOnlySymbols)
+                            if (encoderLaTeXProtectedTextOnlySymbol == input[i + 1]) {
+                                output.append(encoderLaTeXProtectedTextOnlySymbol);
                                 foundCommand = true;
+                                break;
                             }
 
                     /// If command has been found, nothing has to be done
@@ -1184,21 +1187,21 @@ QString EncoderLaTeX::decode(const QString &input) const
             /// May still be a symbol sequence like ---
             bool isSymbolSequence = false;
             /// Go through all known symbol sequnces
-            for (int l = 0; l < encoderLaTeXSymbolSequencesLen; ++l) {
+            for (const EncoderLaTeXSymbolSequence &encoderLaTeXSymbolSequence : encoderLaTeXSymbolSequences) {
                 /// First, check if read input character matches beginning of symbol sequence
                 /// and input buffer as enough characters left to potentially contain
                 /// symbol sequence
-                const int latexLen = encoderLaTeXSymbolSequences[l].latex.length();
-                if ((encoderLaTeXSymbolSequences[l].direction & DirectionCommandToUnicode) && encoderLaTeXSymbolSequences[l].latex[0] == c && i <= len - latexLen) {
+                const int latexLen = encoderLaTeXSymbolSequence.latex.length();
+                if ((encoderLaTeXSymbolSequence.direction & DirectionCommandToUnicode) && encoderLaTeXSymbolSequence.latex[0] == c && i <= len - latexLen) {
                     /// Now actually check if symbol sequence is in input buffer
                     isSymbolSequence = true;
                     for (int p = 1; isSymbolSequence && p < latexLen; ++p)
-                        isSymbolSequence &= encoderLaTeXSymbolSequences[l].latex[p] == input[i + p];
+                        isSymbolSequence &= encoderLaTeXSymbolSequence.latex[p] == input[i + p];
                     if (isSymbolSequence) {
                         /// Ok, found sequence: insert Unicode character in output
                         /// and hop over sequence in input buffer
-                        output.append(QChar(encoderLaTeXSymbolSequences[l].unicode));
-                        i += encoderLaTeXSymbolSequences[l].latex.length() - 1;
+                        output.append(QChar(encoderLaTeXSymbolSequence.unicode));
+                        i += encoderLaTeXSymbolSequence.latex.length() - 1;
                         break;
                     }
                 }
@@ -1273,19 +1276,20 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             bool found = false;
 
             /// Handle special cases of i without a dot (\i)
-            for (int k = 0; !found && k < dotlessIJCharactersLen; ++k)
-                if (c.unicode() == dotlessIJCharacters[k].unicode && (dotlessIJCharacters[k].direction & DirectionUnicodeToCommand)) {
-                    output.append(QString(QStringLiteral("\\%1{\\%2}")).arg(dotlessIJCharacters[k].modifier).arg(dotlessIJCharacters[k].letter));
+            for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
+                if (c.unicode() == dotlessIJCharacter.unicode && (dotlessIJCharacter.direction & DirectionUnicodeToCommand)) {
+                    output.append(QString(QStringLiteral("\\%1{\\%2}")).arg(dotlessIJCharacter.modifier).arg(dotlessIJCharacter.letter));
                     found = true;
+                    break;
                 }
 
             if (!found) {
                 /// ... test if there is a symbol sequence like ---
                 /// to encode it
-                for (int k = 0; k < encoderLaTeXSymbolSequencesLen; ++k)
-                    if (encoderLaTeXSymbolSequences[k].unicode == c.unicode() && (encoderLaTeXSymbolSequences[k].direction & DirectionUnicodeToCommand)) {
-                        for (int l = 0; l < encoderLaTeXSymbolSequences[k].latex.length(); ++l)
-                            output.append(encoderLaTeXSymbolSequences[k].latex[l]);
+                for (const EncoderLaTeXSymbolSequence &encoderLaTeXSymbolSequence : encoderLaTeXSymbolSequences)
+                    if (encoderLaTeXSymbolSequence.unicode == c.unicode() && (encoderLaTeXSymbolSequence.direction & DirectionUnicodeToCommand)) {
+                        for (int l = 0; l < encoderLaTeXSymbolSequence.latex.length(); ++l)
+                            output.append(encoderLaTeXSymbolSequence.latex[l]);
                         found = true;
                         break;
                     }
@@ -1294,9 +1298,9 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             if (!found) {
                 /// Ok, no symbol sequence. Let's test character
                 /// commands like \ss
-                for (int k = 0; k < encoderLaTeXCharacterCommandsLen; ++k)
-                    if (encoderLaTeXCharacterCommands[k].unicode == c.unicode() && (encoderLaTeXCharacterCommands[k].direction & DirectionUnicodeToCommand)) {
-                        output.append(QString(QStringLiteral("{\\%1}")).arg(encoderLaTeXCharacterCommands[k].command));
+                for (const EncoderLaTeXCharacterCommand &encoderLaTeXCharacterCommand : encoderLaTeXCharacterCommands)
+                    if (encoderLaTeXCharacterCommand.unicode == c.unicode() && (encoderLaTeXCharacterCommand.direction & DirectionUnicodeToCommand)) {
+                        output.append(QString(QStringLiteral("{\\%1}")).arg(encoderLaTeXCharacterCommand.command));
                         found = true;
                         break;
                     }
@@ -1305,11 +1309,11 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             if (!found) {
                 /// Ok, neither a character command. Let's test
                 /// escaped characters with modifiers like \"a
-                for (int k = 0; k < encoderLaTeXEscapedCharactersLen; ++k)
-                    if (encoderLaTeXEscapedCharacters[k].unicode == c.unicode() && (encoderLaTeXEscapedCharacters[k].direction & DirectionUnicodeToCommand)) {
-                        const QChar modifier = encoderLaTeXEscapedCharacters[k].modifier;
+                for (const EncoderLaTeXEscapedCharacter &encoderLaTeXEscapedCharacter : encoderLaTeXEscapedCharacters)
+                    if (encoderLaTeXEscapedCharacter.unicode == c.unicode() && (encoderLaTeXEscapedCharacter.direction & DirectionUnicodeToCommand)) {
+                        const QChar modifier = encoderLaTeXEscapedCharacter.modifier;
                         const QString formatString = isAsciiLetter(modifier) ? QStringLiteral("{\\%1 %2}") : QStringLiteral("{\\%1%2}");
-                        output.append(formatString.arg(modifier).arg(encoderLaTeXEscapedCharacters[k].letter));
+                        output.append(formatString.arg(modifier).arg(encoderLaTeXEscapedCharacter.letter));
                         found = true;
                         break;
                     }
@@ -1317,12 +1321,12 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
 
             if (!found) {
                 /// Ok, test for math commands
-                for (int k = 0; k < mathCommandLen; ++k)
-                    if (mathCommand[k].unicode == c.unicode() && (mathCommand[k].direction & DirectionUnicodeToCommand)) {
+                for (const MathCommand &mathCommand : mathCommands)
+                    if (mathCommand.unicode == c.unicode() && (mathCommand.direction & DirectionUnicodeToCommand)) {
                         if (inMathMode)
-                            output.append(QString(QStringLiteral("\\%1{}")).arg(mathCommand[k].command));
+                            output.append(QString(QStringLiteral("\\%1{}")).arg(mathCommand.command));
                         else
-                            output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand[k].command));
+                            output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand.command));
                         found = true;
                         break;
                     }
@@ -1346,16 +1350,16 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             /// Still, some characters have special meaning
             /// in TeX and have to be preceded with a backslash
             bool found = false;
-            for (int k = 0; k < encoderLaTeXProtectedSymbolsLen; ++k)
-                if (encoderLaTeXProtectedSymbols[k] == c) {
+            for (const QChar &encoderLaTeXProtectedSymbol : encoderLaTeXProtectedSymbols)
+                if (encoderLaTeXProtectedSymbol == c) {
                     output.append(QLatin1Char('\\'));
                     found = true;
                     break;
                 }
 
             if (!found && !inMathMode)
-                for (int k = 0; k < encoderLaTeXProtectedTextOnlySymbolsLen; ++k)
-                    if (encoderLaTeXProtectedTextOnlySymbols[k] == c) {
+                for (const QChar &encoderLaTeXProtectedTextOnlySymbol : encoderLaTeXProtectedTextOnlySymbols)
+                    if (encoderLaTeXProtectedTextOnlySymbol == c) {
                         output.append(QLatin1Char('\\'));
                         break;
                     }
@@ -1472,26 +1476,26 @@ bool EncoderLaTeX::writeLaTeXTables(QIODevice &output)
     output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
     output.write("\\bottomrule\n");
     output.write("\\endlastfoot\n");
-    for (int i = 0; i < encoderLaTeXEscapedCharactersLen; ++i) {
+    for (const EncoderLaTeXEscapedCharacter &encoderLaTeXEscapedCharacter : encoderLaTeXEscapedCharacters) {
         output.write("\\verb|");
-        output.write(toUtf8(encoderLaTeXEscapedCharacters[i].modifier));
+        output.write(toUtf8(encoderLaTeXEscapedCharacter.modifier));
         output.write("| & \\verb|");
-        output.write(toUtf8(encoderLaTeXEscapedCharacters[i].letter));
+        output.write(toUtf8(encoderLaTeXEscapedCharacter.letter));
         output.write("| & \\texttt{0x");
-        const QString unicodeStr = QStringLiteral("00000") + QString::number(encoderLaTeXEscapedCharacters[i].unicode, 16);
+        const QString unicodeStr = QStringLiteral("00000") + QString::number(encoderLaTeXEscapedCharacter.unicode, 16);
         output.write(unicodeStr.right(4).toLatin1());
         output.write("} & \\verb|\\");
-        output.write(toUtf8(encoderLaTeXEscapedCharacters[i].modifier));
+        output.write(toUtf8(encoderLaTeXEscapedCharacter.modifier));
         output.write("|\\{\\verb|");
-        output.write(toUtf8(encoderLaTeXEscapedCharacters[i].letter));
+        output.write(toUtf8(encoderLaTeXEscapedCharacter.letter));
         output.write("|\\} & ");
-        if ((encoderLaTeXEscapedCharacters[i].direction & DirectionUnicodeToCommand) == 0)
+        if ((encoderLaTeXEscapedCharacter.direction & DirectionUnicodeToCommand) == 0)
             output.write("\\emph{?}");
         else {
             output.write("{\\");
-            output.write(toUtf8(encoderLaTeXEscapedCharacters[i].modifier));
+            output.write(toUtf8(encoderLaTeXEscapedCharacter.modifier));
             output.write("{");
-            output.write(toUtf8(encoderLaTeXEscapedCharacters[i].letter));
+            output.write(toUtf8(encoderLaTeXEscapedCharacter.letter));
             output.write("}}");
         }
         output.write(" \\\\\n");
@@ -1515,26 +1519,26 @@ bool EncoderLaTeX::writeLaTeXTables(QIODevice &output)
     output.write("Modifier & Letter & Unicode & Command & Symbol \\\\\n");
     output.write("\\bottomrule\n");
     output.write("\\endlastfoot\n");
-    for (int i = 0; i < dotlessIJCharactersLen; ++i) {
+    for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters) {
         output.write("\\verb|");
-        output.write(toUtf8(dotlessIJCharacters[i].modifier));
+        output.write(toUtf8(dotlessIJCharacter.modifier));
         output.write("| & \\verb|");
-        output.write(toUtf8(dotlessIJCharacters[i].letter));
+        output.write(toUtf8(dotlessIJCharacter.letter));
         output.write("| & \\texttt{0x");
-        const QString unicodeStr = QStringLiteral("00000") + QString::number(dotlessIJCharacters[i].unicode, 16);
+        const QString unicodeStr = QStringLiteral("00000") + QString::number(dotlessIJCharacter.unicode, 16);
         output.write(unicodeStr.right(4).toLatin1());
         output.write("} & \\verb|\\");
-        output.write(toUtf8(dotlessIJCharacters[i].modifier));
+        output.write(toUtf8(dotlessIJCharacter.modifier));
         output.write("|\\{\\verb|\\");
-        output.write(toUtf8(dotlessIJCharacters[i].letter));
+        output.write(toUtf8(dotlessIJCharacter.letter));
         output.write("|\\} & ");
-        if ((dotlessIJCharacters[i].direction & DirectionUnicodeToCommand) == 0)
+        if ((dotlessIJCharacter.direction & DirectionUnicodeToCommand) == 0)
             output.write("\\emph{?}");
         else {
             output.write("{\\");
-            output.write(toUtf8(dotlessIJCharacters[i].modifier));
+            output.write(toUtf8(dotlessIJCharacter.modifier));
             output.write("{\\");
-            output.write(toUtf8(dotlessIJCharacters[i].letter));
+            output.write(toUtf8(dotlessIJCharacter.letter));
             output.write("}}");
         }
         output.write(" \\\\\n");
@@ -1558,20 +1562,20 @@ bool EncoderLaTeX::writeLaTeXTables(QIODevice &output)
     output.write("Text & Unicode & Command & Symbol \\\\\n");
     output.write("\\bottomrule\n");
     output.write("\\endlastfoot\n");
-    for (int i = 0; i < mathCommandLen; ++i) {
+    for (const MathCommand &mathCommand : mathCommands) {
         output.write("\\texttt{");
-        output.write(mathCommand[i].command.toUtf8());
+        output.write(mathCommand.command.toUtf8());
         output.write("} & \\texttt{0x");
-        const QString unicodeStr = QStringLiteral("00000") + QString::number(mathCommand[i].unicode, 16);
+        const QString unicodeStr = QStringLiteral("00000") + QString::number(mathCommand.unicode, 16);
         output.write(unicodeStr.right(4).toLatin1());
         output.write("} & \\verb|$\\");
-        output.write(mathCommand[i].command.toUtf8());
+        output.write(mathCommand.command.toUtf8());
         output.write("$| & ");
-        if ((mathCommand[i].direction & DirectionUnicodeToCommand) == 0)
+        if ((mathCommand.direction & DirectionUnicodeToCommand) == 0)
             output.write("\\emph{?}");
         else {
             output.write("{$\\");
-            output.write(mathCommand[i].command.toUtf8());
+            output.write(mathCommand.command.toUtf8());
             output.write("$}");
         }
         output.write(" \\\\\n");
@@ -1596,20 +1600,20 @@ bool EncoderLaTeX::writeLaTeXTables(QIODevice &output)
     output.write("Text & Unicode & Command & Symbol \\\\\n");
     output.write("\\bottomrule\n");
     output.write("\\endlastfoot\n");
-    for (int i = 0; i < encoderLaTeXCharacterCommandsLen; ++i) {
+    for (const EncoderLaTeXCharacterCommand &encoderLaTeXCharacterCommand : encoderLaTeXCharacterCommands) {
         output.write("\\texttt{");
-        output.write(encoderLaTeXCharacterCommands[i].command.toUtf8());
+        output.write(encoderLaTeXCharacterCommand.command.toUtf8());
         output.write("} & \\texttt{0x");
-        const QString unicodeStr = QStringLiteral("00000") + QString::number(encoderLaTeXCharacterCommands[i].unicode, 16);
+        const QString unicodeStr = QStringLiteral("00000") + QString::number(encoderLaTeXCharacterCommand.unicode, 16);
         output.write(unicodeStr.right(4).toLatin1());
         output.write("} & \\verb|\\");
-        output.write(encoderLaTeXCharacterCommands[i].command.toUtf8());
+        output.write(encoderLaTeXCharacterCommand.command.toUtf8());
         output.write("| & ");
-        if ((encoderLaTeXCharacterCommands[i].direction & DirectionUnicodeToCommand) == 0)
+        if ((encoderLaTeXCharacterCommand.direction & DirectionUnicodeToCommand) == 0)
             output.write("\\emph{?}");
         else {
             output.write("{\\");
-            output.write(encoderLaTeXCharacterCommands[i].command.toUtf8());
+            output.write(encoderLaTeXCharacterCommand.command.toUtf8());
             output.write("}");
         }
         output.write(" \\\\\n");

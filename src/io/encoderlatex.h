@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -63,7 +63,6 @@ protected:
      * both in text and in math mode by prefixing with a backlash.
      */
     static const QChar encoderLaTeXProtectedSymbols[];
-    static const int encoderLaTeXProtectedSymbolsLen;
 
     /**
      * This data structure keeps individual characters that have
@@ -72,7 +71,6 @@ protected:
      * those have a different purpose and may not be escaped there.
      */
     static const QChar encoderLaTeXProtectedTextOnlySymbols[];
-    static const int encoderLaTeXProtectedTextOnlySymbolsLen;
 
     /**
      * Check if input data contains a verbatim command like \url{...},
