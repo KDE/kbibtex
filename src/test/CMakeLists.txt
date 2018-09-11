@@ -53,11 +53,17 @@ set(
     kbibtexiotest.cpp
 )
 
+set(
+    kbibtexdatatest_SRCS
+    kbibtexdatatest.cpp
+)
+
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtextest kbibtextest_SRCS)
     enable_unity_build(kbibtexfilestest kbibtexfilestest_SRCS)
     enable_unity_build(kbibtexnetworkingtest kbibtexnetworkingtest_SRCS)
     enable_unity_build(kbibtexiotest kbibtexiotest_SRCS)
+    enable_unity_build(kbibtexdatatest kbibtexdatatest_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
 # Creates kbibtex-git-info.h containing information about the source code's Git revision
@@ -105,6 +111,12 @@ add_executable(
     ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
 )
 
+add_executable(
+    kbibtexdatatest
+    ${kbibtexdatatest_SRCS}
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+)
+
 target_link_libraries( kbibtextest
     Qt5::Core
     KF5::KIOCore
@@ -132,10 +144,16 @@ target_link_libraries( kbibtexiotest
     kbibtexio
 )
 
+target_link_libraries( kbibtexdatatest
+    Qt5::Test
+    kbibtexdata
+)
+
 ecm_mark_as_test(
     kbibtexfilestest
     kbibtexnetworkingtest
     kbibtexiotest
+    kbibtexdatatest
 )
 
 add_test(
@@ -157,4 +175,11 @@ add_test(
     kbibtexiotest
     COMMAND
     kbibtexiotest
+)
+
+add_test(
+    NAME
+    kbibtexdatatest
+    COMMAND
+    kbibtexdatatest
 )
