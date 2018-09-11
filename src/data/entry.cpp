@@ -169,9 +169,11 @@ const Value Entry::value(const QString &key) const
 int Entry::remove(const QString &key)
 {
     const QString lcKey = key.toLower();
-    for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
-        if (it.key().toLower() == lcKey)
-            return QMap<QString, Value>::remove(it.key());
+    for (Entry::Iterator it = begin(); it != end(); ++it)
+        if (it.key().toLower() == lcKey) {
+            QMap<QString, Value>::erase(it);
+            return 1;
+        }
 
     return 0;
 }

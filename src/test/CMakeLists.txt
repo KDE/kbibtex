@@ -81,6 +81,7 @@ add_executable(
     ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
 )
 
+
 target_link_libraries( kbibtextest
     Qt5::Core
     KF5::KIOCore
