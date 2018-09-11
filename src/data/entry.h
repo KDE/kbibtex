@@ -140,9 +140,6 @@ public:
      */
     Entry &operator= (const Entry &other);
 
-    Value &operator[](const QString &key);
-    const Value operator[](const QString &key) const;
-
     /**
      * Set the type of this entry. Common values are "article" or "book".
      * @param type type of this entry

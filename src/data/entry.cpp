@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -136,27 +136,6 @@ Entry &Entry::operator= (const Entry &other)
     }
     return *this;
 }
-
-Value &Entry::operator[](const QString &key)
-{
-    const QString lcKey = key.toLower();
-    for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
-        if (it.key().toLower() == lcKey)
-            return QMap<QString, Value>::operator[](it.key());
-
-    return QMap<QString, Value>::operator[](key);
-}
-
-const Value Entry::operator[](const QString &key) const
-{
-    const QString lcKey = key.toLower();
-    for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it)
-        if (it.key().toLower() == lcKey)
-            return QMap<QString, Value>::operator[](it.key());
-
-    return QMap<QString, Value>::operator[](key);
-}
-
 
 void Entry::setType(const QString &type)
 {
