@@ -25,6 +25,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ********************************************************************************/
 
+#ifndef KBIBTEX_FILES_TEST_RAWDATA_H
+#define KBIBTEX_FILES_TEST_RAWDATA_H
+
 static const char *bug19489LastAuthors("Ralph");
 static const char *bug19489FilesUrlsDois("bart.04.1242.pdf");
 static const char *nameswithbracesLastAuthors("{{{{{LastName3A LastName3B}}}}}");
@@ -773,3 +776,5 @@ static const char *cloudduplicatesFilesUrlsDois("http://dl.acm.org/citation.cfm?
         "10.1145/2063576.2063973http://www.cslab.ece.ntua.gr/~dtsouma/index_files/tira_cikm_ext.pdfhttp://dblp.uni-trier.de/db/conf/cikm/cikm2011.html#KonstantinouABTK11http://dblp.uni-trier.de/db/journals/corr/corr1208.html#abs-1208-4166http://dblp.uni-trier.de/db/journals/pvldb/pvldb5.html#FloratouTDPZ12"
         "http://dl.acm.org/citation.cfm?id=2367511http://arxiv.org/pdf/1208.4166http://dl.acm.org/citation.cfm?id=2367502.2367511http://dblp.uni-trier.de/db/journals/corr/corr1207.html#abs-1207-0780http://adsabs.harvard.edu/abs/2012arXiv1207.0780Thttp://arxiv.org/abs/1207.0780"
         "http://arxiv.org/pdf/1207.0780");
+
+#endif // KBIBTEX_FILES_TEST_RAWDATA_H

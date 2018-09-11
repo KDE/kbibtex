@@ -49,6 +49,9 @@ class KBibTeXFilesTest : public QObject
 
 private slots:
     void initTestCase();
+#ifdef WRITE_RAWDATAFILE
+    void cleanupTestCase();
+#endif // WRITE_RAWDATAFILE
     void testFiles_data();
     void testFiles();
 
@@ -99,7 +102,35 @@ private:
 void KBibTeXFilesTest::initTestCase()
 {
     qRegisterMetaType<TestFile>("TestFile");
+
+#ifdef WRITE_RAWDATAFILE
+    QFile rawDataFile("kbibtexfilestest-rawdata.h");
+    if (rawDataFile.open(QFile::WriteOnly)) {
+        QTextStream ts(&rawDataFile);
+        ts << QStringLiteral("/********************************************************************************") << endl << endl;
+        ts << QStringLiteral("Copyright ") << QDate::currentDate().year() << QStringLiteral("  Thomas Fischer <fischer@unix-ag.uni-kl.de> and others") << endl << endl;
+        ts << QStringLiteral("Redistribution and use in source and binary forms, with or without") << endl << QStringLiteral("modification, are permitted provided that the following conditions") << endl << QStringLiteral("are met:") << endl << endl;
+        ts << QStringLiteral("1. Redistributions of source code must retain the above copyright") << endl << QStringLiteral("   notice, this list of conditions and the following disclaimer.") << endl;
+        ts << QStringLiteral("2. Redistributions in binary form must reproduce the above copyright") << endl << QStringLiteral("   notice, this list of conditions and the following disclaimer in the") << endl << QStringLiteral("   documentation and/or other materials provided with the distribution.") << endl << endl;
+        ts << QStringLiteral("THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR") << endl << QStringLiteral("IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES") << endl << QStringLiteral("OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.") << endl << QStringLiteral("IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,") << endl << QStringLiteral("INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT") << endl << QStringLiteral("NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,") << endl << QStringLiteral("DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY") << endl << QStringLiteral("THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT") << endl << QStringLiteral("(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF") << endl << QStringLiteral("THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.") << endl << endl;
+        ts << QStringLiteral("********************************************************************************/") << endl << endl;
+        ts << QStringLiteral("#ifndef KBIBTEX_FILES_TEST_RAWDATA_H") << endl << QStringLiteral("#define KBIBTEX_FILES_TEST_RAWDATA_H") << endl << endl;
+        rawDataFile.close();
+    }
+#endif // WRITE_RAWDATAFILE
 }
+
+#ifdef WRITE_RAWDATAFILE
+void KBibTeXFilesTest::cleanupTestCase()
+{
+    QFile rawDataFile("kbibtexfilestest-rawdata.h");
+    if (rawDataFile.open(QFile::Append)) {
+        QTextStream ts(&rawDataFile);
+        ts << endl << QStringLiteral("#endif // KBIBTEX_FILES_TEST_RAWDATA_H") << endl;
+        rawDataFile.close();
+    }
+}
+#endif // WRITE_RAWDATAFILE
 
 void KBibTeXFilesTest::testFiles_data()
 {
@@ -244,17 +275,6 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     static const QRegularExpression filenameStemRegExp(QStringLiteral("/?([^/]+)[.]bib$"));
     const QString filenameStem = filenameStemRegExp.match(currentTestFile.filename).captured(1).remove(QChar('-')).remove(QChar('_'));
     QFile rawDataFile("kbibtexfilestest-rawdata.h");
-    if (!rawDataFile.exists() && rawDataFile.open(QFile::Append)) {
-        QTextStream ts(&rawDataFile);
-        ts << QStringLiteral("/********************************************************************************") << endl << endl;
-        ts << QStringLiteral("Copyright ") << QDate::currentDate().year() << QStringLiteral("  Thomas Fischer <fischer@unix-ag.uni-kl.de> and others") << endl << endl;
-        ts << QStringLiteral("Redistribution and use in source and binary forms, with or without") << endl << QStringLiteral("modification, are permitted provided that the following conditions") << endl << QStringLiteral("are met:") << endl << endl;
-        ts << QStringLiteral("1. Redistributions of source code must retain the above copyright") << endl << QStringLiteral("   notice, this list of conditions and the following disclaimer.") << endl;
-        ts << QStringLiteral("2. Redistributions in binary form must reproduce the above copyright") << endl << QStringLiteral("   notice, this list of conditions and the following disclaimer in the") << endl << QStringLiteral("   documentation and/or other materials provided with the distribution.") << endl << endl;
-        ts << QStringLiteral("THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR") << endl << QStringLiteral("IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES") << endl << QStringLiteral("OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.") << endl << QStringLiteral("IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,") << endl << QStringLiteral("INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT") << endl << QStringLiteral("NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,") << endl << QStringLiteral("DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY") << endl << QStringLiteral("THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT") << endl << QStringLiteral("(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF") << endl << QStringLiteral("THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.") << endl << endl;
-        ts << QStringLiteral("********************************************************************************/") << endl << endl;
-        rawDataFile.close();
-    }
     static const size_t max_len = 256;
     size_t len;
 #endif // WRITE_RAWDATAFILE
