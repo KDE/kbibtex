@@ -164,7 +164,7 @@ const Value Entry::value(const QString &key) const
         if (it.key().toLower() == lcKey)
             return QMap<QString, Value>::value(it.key());
 
-    return QMap<QString, Value>::value(key);
+    return Value();
 }
 
 int Entry::remove(const QString &key)
@@ -174,7 +174,7 @@ int Entry::remove(const QString &key)
         if (it.key().toLower() == lcKey)
             return QMap<QString, Value>::remove(it.key());
 
-    return QMap<QString, Value>::remove(key);
+    return 0;
 }
 
 bool Entry::contains(const QString &key) const
