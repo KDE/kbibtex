@@ -33,6 +33,7 @@ class SettingsGeneralWidget::SettingsGeneralWidgetPrivate
 private:
     SettingsGeneralWidget *p;
 
+    KComboBox *comboBoxBibliographySystem;
     KComboBox *comboBoxPersonNameFormatting;
     const Person dummyPerson;
     QString restartRequiredMsg;
@@ -48,6 +49,8 @@ public:
     }
 
     void loadState() {
+        comboBoxBibliographySystem->setCurrentIndex(comboBoxBibliographySystem->findData(QVariant::fromValue<int>(static_cast<int>(Preferences::bibliographySystem()))));
+
         KConfigGroup configGroup(config, configGroupName);
         QString personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
         int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, personNameFormatting));
@@ -55,18 +58,30 @@ public:
     }
 
     void saveState() {
+        Preferences::setBibliographySystem(static_cast<Preferences::BibliographySystem>(comboBoxBibliographySystem->currentData().toInt()));
+
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(Preferences::keyPersonNameFormatting, comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()));
         config->sync();
     }
 
     void resetToDefaults() {
+        comboBoxBibliographySystem->setCurrentIndex(static_cast<int>(Preferences::defaultBibliographySystem));
+
         int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, Preferences::defaultPersonNameFormatting));
         comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
     void setupGUI() {
         QFormLayout *layout = new QFormLayout(p);
+
+        comboBoxBibliographySystem = new KComboBox(false, p);
+        comboBoxBibliographySystem->setObjectName(QStringLiteral("comboBoxBibliographySystem"));
+        const QMap<Preferences::BibliographySystem, QString> &availableBibliographySystems = Preferences::availableBibliographySystems();
+        for (QMap<Preferences::BibliographySystem, QString>::ConstIterator it = availableBibliographySystems.constBegin(), itEnd = availableBibliographySystems.constEnd(); it != itEnd; ++it)
+            comboBoxBibliographySystem->addItem(it.value(), QVariant::fromValue<int>(static_cast<int>(it.key())));
+        layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
+        connect(comboBoxBibliographySystem, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsGeneralWidget::changed);
 
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);

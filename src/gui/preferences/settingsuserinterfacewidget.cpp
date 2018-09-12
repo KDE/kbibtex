@@ -37,7 +37,6 @@ private:
 
     QCheckBox *checkBoxShowComments;
     QCheckBox *checkBoxShowMacros;
-    KComboBox *comboBoxBibliographySystem;
     KComboBox *comboBoxElementDoubleClickAction;
 
     KSharedConfigPtr config;
@@ -54,10 +53,6 @@ public:
         checkBoxShowComments->setChecked(configGroup.readEntry(FileModel::keyShowComments, FileModel::defaultShowComments));
         checkBoxShowMacros->setChecked(configGroup.readEntry(FileModel::keyShowMacros, FileModel::defaultShowMacros));
 
-        int styleIndex = comboBoxBibliographySystem->findData(configGroup.readEntry("CurrentStyle", QString(QStringLiteral("bibtex"))));
-        if (styleIndex < 0) styleIndex = 0;
-        if (styleIndex < comboBoxBibliographySystem->count()) comboBoxBibliographySystem->setCurrentIndex(styleIndex);
-
         comboBoxElementDoubleClickAction->setCurrentIndex(configGroup.readEntry(Preferences::keyElementDoubleClickAction, static_cast<int>(Preferences::defaultElementDoubleClickAction)));
     }
 
@@ -65,7 +60,6 @@ public:
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(FileModel::keyShowComments, checkBoxShowComments->isChecked());
         configGroup.writeEntry(FileModel::keyShowMacros, checkBoxShowMacros->isChecked());
-        configGroup.writeEntry("CurrentStyle", comboBoxBibliographySystem->itemData(comboBoxBibliographySystem->currentIndex()).toString());
         configGroup.writeEntry(Preferences::keyElementDoubleClickAction, comboBoxElementDoubleClickAction->currentIndex());
         config->sync();
     }
@@ -73,7 +67,6 @@ public:
     void resetToDefaults() {
         checkBoxShowComments->setChecked(FileModel::defaultShowComments);
         checkBoxShowMacros->setChecked(FileModel::defaultShowMacros);
-        comboBoxBibliographySystem->setCurrentIndex(0);
         comboBoxElementDoubleClickAction->setCurrentIndex(Preferences::defaultElementDoubleClickAction);
     }
 
@@ -87,13 +80,6 @@ public:
         checkBoxShowMacros = new QCheckBox(p);
         layout->addRow(i18n("Show Macros:"), checkBoxShowMacros);
         connect(checkBoxShowMacros, &QCheckBox::toggled, p, &SettingsUserInterfaceWidget::changed);
-
-        comboBoxBibliographySystem = new KComboBox(p);
-        comboBoxBibliographySystem->setObjectName(QStringLiteral("comboBoxBibtexStyle"));
-        comboBoxBibliographySystem->addItem(i18n("BibTeX"), QStringLiteral("bibtex"));
-        comboBoxBibliographySystem->addItem(i18n("BibLaTeX"), QStringLiteral("biblatex"));
-        layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
-        connect(comboBoxBibliographySystem, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsUserInterfaceWidget::changed);
 
         comboBoxElementDoubleClickAction = new KComboBox(p);
         comboBoxElementDoubleClickAction->setObjectName(QStringLiteral("comboBoxElementDoubleClickAction"));
