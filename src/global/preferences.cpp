@@ -17,7 +17,11 @@
 
 #include "preferences.h"
 
+#include <QDebug>
+
 #include <KLocalizedString>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 const QString Preferences::groupColor = QStringLiteral("Color Labels");
 const QString Preferences::keyColorCodes = QStringLiteral("colorCodes");
@@ -58,3 +62,38 @@ const QString Preferences::keyPersonNameFormatting = QStringLiteral("personNameF
 const QString Preferences::personNameFormatLastFirst = QStringLiteral("<%l><, %s><, %f>");
 const QString Preferences::personNameFormatFirstLast = QStringLiteral("<%f ><%l>< %s>");
 const QString Preferences::defaultPersonNameFormatting = personNameFormatLastFirst;
+
+const Preferences::BibliographySystem Preferences::defaultBibliographySystem = Preferences::BibTeX;
+
+Preferences::BibliographySystem Preferences::bibliographySystem()
+{
+    static KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
+    static const KConfigGroup configGroup(config, QStringLiteral("General"));
+    config->reparseConfiguration();
+    const int index = configGroup.readEntry(QStringLiteral("BibliographySystem"), static_cast<int>(defaultBibliographySystem));
+    if (index != static_cast<int>(Preferences::BibTeX) && index != static_cast<int>(Preferences::BibLaTeX)) {
+        qWarning() << "Configuration file setting for Bibliography System has an invalid value, using default as fallback";
+        setBibliographySystem(defaultBibliographySystem);
+        return defaultBibliographySystem;
+    } else
+        return static_cast<Preferences::BibliographySystem>(index);
+}
+
+bool Preferences::setBibliographySystem(const Preferences::BibliographySystem bibliographySystem)
+{
+    static KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
+    static KConfigGroup configGroup(config, QStringLiteral("General"));
+    config->reparseConfiguration();
+    const int prevIndex = configGroup.readEntry(QStringLiteral("BibliographySystem"), static_cast<int>(defaultBibliographySystem));
+    const int newIndex = static_cast<int>(bibliographySystem);
+    if (prevIndex == newIndex) return false; /// If old and new bibliography system are the same, return 'false' directly
+    configGroup.writeEntry(QStringLiteral("BibliographySystem"), newIndex);
+    config->sync();
+    return true;
+}
+
+const QMap<Preferences::BibliographySystem, QString> Preferences::availableBibliographySystems()
+{
+    static const QMap<Preferences::BibliographySystem, QString> result {{Preferences::BibTeX, i18n("BibTeX")}, {Preferences::BibLaTeX, i18n("BibLaTeX")}};
+    return result;
+}
