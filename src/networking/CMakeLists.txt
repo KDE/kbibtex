@@ -28,6 +28,7 @@ set(
     findpdf.cpp
     internalnetworkaccessmanager.cpp
     ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
+    ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
     logging_networking.cpp
 )
 

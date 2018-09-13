@@ -215,6 +215,7 @@ public:
         return (field.compare(Entry::ftAuthor, Qt::CaseInsensitive) == 0
                 || field.compare(Entry::ftEditor, Qt::CaseInsensitive) == 0
                 || field.compare(Entry::ftUrl, Qt::CaseInsensitive) == 0
+                || field.compare(Entry::ftFile, Qt::CaseInsensitive) == 0
                 || field.compare(Entry::ftLocalFile, Qt::CaseInsensitive) == 0
                 || field.compare(Entry::ftDOI, Qt::CaseInsensitive) == 0
                 || field.compare(Entry::ftKeywords, Qt::CaseInsensitive) == 0);

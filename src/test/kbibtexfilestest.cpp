@@ -263,6 +263,14 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
                 }
                 if (v.isEmpty() && index > 10) break;
             }
+            for (int index = 1; index < 100; ++index) {
+                const QString field = index == 1 ? Entry::ftLocalFile : QString(QStringLiteral("%1%2")).arg(Entry::ftFile).arg(index);
+                const Value v = entry->value(field);
+                for (const QSharedPointer<ValueItem> &vi : v) {
+                    filesUrlsDoiList << PlainTextValue::text(vi);
+                }
+                if (v.isEmpty() && index > 10) break;
+            }
         }
     }
 

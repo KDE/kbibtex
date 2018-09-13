@@ -39,6 +39,7 @@
 #include <KTextEdit>
 #include <kio_version.h>
 
+#include "preferences.h"
 #include "idsuggestions.h"
 #include "fileinfo.h"
 #include "kbibtex.h"
@@ -641,10 +642,16 @@ bool FilesWidget::apply(QSharedPointer<Element> element) const
     else
         entry->insert(Entry::ftUrl, urlValue);
 
-    if (localFileValue.isEmpty())
+    if (localFileValue.isEmpty()) {
+        entry->remove(Entry::ftFile);
         entry->remove(Entry::ftLocalFile);
-    else
+    } else if (Preferences::bibliographySystem() == Preferences::BibLaTeX) {
+        entry->remove(Entry::ftLocalFile);
+        entry->insert(Entry::ftFile, localFileValue);
+    } else if (Preferences::bibliographySystem() == Preferences::BibTeX) {
+        entry->remove(Entry::ftFile);
         entry->insert(Entry::ftLocalFile, localFileValue);
+    }
 
     if (doiValue.isEmpty())
         entry->remove(Entry::ftDOI);

@@ -631,7 +631,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else
                 value.append(QSharedPointer<PlainText>(new PlainText(text)));
-        } else if ((iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) || iKey.startsWith(Entry::ftLocalFile) || iKey.compare(QStringLiteral("ee"), Qt::CaseInsensitive) == 0 || iKey.compare(QStringLiteral("biburl"), Qt::CaseInsensitive) == 0) {
+        } else if ((iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) || iKey.startsWith(Entry::ftLocalFile) || iKey.startsWith(Entry::ftFile) || iKey == QStringLiteral("ee") || iKey == QStringLiteral("biburl")) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
             else {

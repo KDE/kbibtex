@@ -23,6 +23,7 @@
 #include <QCoreApplication>
 #include <QStringList>
 
+#include "preferences.h"
 #include "kbibtex.h"
 #include "entry.h"
 #include "value.h"
@@ -185,7 +186,7 @@ public:
                 fieldValue.replace(QStringLiteral("<Go to ISI>://"), QStringLiteral("isi://"));
                 const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(fieldValue);
                 const QRegularExpressionMatch urlRegExpMatch = KBibTeX::urlRegExp.match(fieldValue);
-                const QString fieldName = doiRegExpMatch.hasMatch() ? Entry::ftDOI : (KBibTeX::urlRegExp.match((*it).value).hasMatch() ? Entry::ftUrl : Entry::ftLocalFile);
+                const QString fieldName = doiRegExpMatch.hasMatch() ? Entry::ftDOI : (KBibTeX::urlRegExp.match((*it).value).hasMatch() ? Entry::ftUrl : (Preferences::bibliographySystem() == Preferences::BibTeX ? Entry::ftLocalFile : Entry::ftFile));
                 fieldValue = doiRegExpMatch.hasMatch() ? doiRegExpMatch.captured() : (urlRegExpMatch.hasMatch() ? urlRegExpMatch.captured() : fieldValue);
                 if (fieldValue.startsWith(QStringLiteral("file:///"))) fieldValue = fieldValue.mid(7);
                 appendValue(entry, fieldName, QSharedPointer<VerbatimText>(new VerbatimText(fieldValue)));

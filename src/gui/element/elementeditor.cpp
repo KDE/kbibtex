@@ -139,9 +139,9 @@ public:
                 blacklistedFields << sfl.bibtexLabel;
 
         /// blacklist fields covered by FilesWidget
-        blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftDOI) << QStringLiteral("ee") << QStringLiteral("biburl") << QStringLiteral("postscript");
+        blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftFile) << QString(Entry::ftDOI) << QStringLiteral("ee") << QStringLiteral("biburl") << QStringLiteral("postscript");
         for (int i = 2; i < 256; ++i) // FIXME replace number by constant
-            blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QStringLiteral("ee") + QString::number(i) << QStringLiteral("postscript") + QString::number(i);
+            blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) << QString(Entry::ftFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QStringLiteral("ee") + QString::number(i) << QStringLiteral("postscript") + QString::number(i);
 
         widget = new OtherFieldsWidget(blacklistedFields, tab);
         connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
