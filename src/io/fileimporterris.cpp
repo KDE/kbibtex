@@ -29,6 +29,7 @@
 #include "logging_io.h"
 
 #define appendValue(entry, fieldname, newvalue) { Value value = (entry)->value((fieldname)); value.append((newvalue)); (entry)->insert((fieldname), value); }
+#define removeDuplicates(entry, fieldname) { Value value = (entry)->value((fieldname)); removeDuplicateValueItems((value)); (entry)->insert((fieldname), value); }
 
 class FileImporterRIS::FileImporterRISPrivate
 {
@@ -156,8 +157,10 @@ public:
                 appendValue(entry, Entry::ftChapter, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == QStringLiteral("IS")) {
                 appendValue(entry, Entry::ftNumber, QSharedPointer<PlainText>(new PlainText((*it).value)));
-            } else if ((*it).key == QStringLiteral("DO")) {
-                appendValue(entry, Entry::ftDOI, QSharedPointer<PlainText>(new PlainText((*it).value)));
+            } else if ((*it).key == QStringLiteral("DO") || (*it).key == QStringLiteral("M3")) {
+                const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match((*it).value);
+                if (doiRegExpMatch.hasMatch())
+                    appendValue(entry, Entry::ftDOI, QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured())));
             } else if ((*it).key == QStringLiteral("PB")) {
                 appendValue(entry, Entry::ftPublisher, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == QStringLiteral("IN")) {
@@ -170,8 +173,14 @@ public:
             }  else if ((*it).key == QStringLiteral("AD")) {
                 appendValue(entry, Entry::ftAddress, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == QStringLiteral("L1") || (*it).key == QStringLiteral("L2") || (*it).key == QStringLiteral("L3") || (*it).key == QStringLiteral("UR")) {
-                const QString fieldName = KBibTeX::doiRegExp.match((*it).value).hasMatch() ? Entry::ftDOI : (KBibTeX::urlRegExp.match((*it).value).hasMatch() ? Entry::ftUrl : Entry::ftLocalFile);
-                appendValue(entry, fieldName, QSharedPointer<PlainText>(new PlainText((*it).value)));
+                QString fieldValue = (*it).value;
+                fieldValue.replace(QStringLiteral("<Go to ISI>://"), QStringLiteral("isi://"));
+                const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(fieldValue);
+                const QRegularExpressionMatch urlRegExpMatch = KBibTeX::urlRegExp.match(fieldValue);
+                const QString fieldName = doiRegExpMatch.hasMatch() ? Entry::ftDOI : (KBibTeX::urlRegExp.match((*it).value).hasMatch() ? Entry::ftUrl : Entry::ftLocalFile);
+                fieldValue = doiRegExpMatch.hasMatch() ? doiRegExpMatch.captured() : (urlRegExpMatch.hasMatch() ? urlRegExpMatch.captured() : fieldValue);
+                if (fieldValue.startsWith(QStringLiteral("file:///"))) fieldValue = fieldValue.mid(7);
+                appendValue(entry, fieldName, QSharedPointer<VerbatimText>(new VerbatimText(fieldValue)));
             } else if ((*it).key == QStringLiteral("SP")) {
                 startPage = (*it).value;
             } else if ((*it).key == QStringLiteral("EP")) {
@@ -225,9 +234,26 @@ public:
                 qCDebug(LOG_KBIBTEX_IO) << "invalid month: " << month;
         }
 
+        removeDuplicates(entry, Entry::ftDOI);
+        removeDuplicates(entry, Entry::ftUrl);
+
         return entry;
     }
 
+    void removeDuplicateValueItems(Value &value) {
+        if (value.count() < 2) return; /// Values with one or no ValueItem cannot have duplicates
+
+        QSet<QString> uniqueStrings;
+        for (Value::Iterator it = value.begin(); it != value.end();) {
+            const QString itemString = PlainTextValue::text(*it);
+            if (uniqueStrings.contains(itemString))
+                it = value.erase(it);
+            else {
+                uniqueStrings.insert(itemString);
+                ++it;
+            }
+        }
+    }
 };
 
 FileImporterRIS::FileImporterRIS(QObject *parent)
