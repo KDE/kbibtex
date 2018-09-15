@@ -22,12 +22,6 @@
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
- *
- * On the subject of having multiple search terms in a search,
- * SciVerse ScienceDirect's documentation states: "[...] when
- * you enter search terms in multiple fields, an AND connector
- * is automatically included in your search"
- * (source: http://help.sciencedirect.com/flare/Content/qs_multiple.htm)
  */
 class KBIBTEXNETWORKING_EXPORT OnlineSearchScienceDirect : public OnlineSearchAbstract
 {
@@ -49,7 +43,7 @@ private:
     OnlineSearchScienceDirectPrivate *d;
 
 private slots:
-    void doneFetchingXML();
+    void doneFetchingJSON();
 };
 
 #endif // KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H

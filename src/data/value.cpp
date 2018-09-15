@@ -543,6 +543,11 @@ Value &Value::operator=(Value &&rhs)
     return static_cast<Value &>(QVector<QSharedPointer<ValueItem> >::operator =((rhs)));
 }
 
+Value &Value::operator<<(const QSharedPointer<ValueItem> &vi)
+{
+    return static_cast<Value &>(QVector<QSharedPointer<ValueItem> >::operator<<(vi));
+}
+
 QDebug operator<<(QDebug dbg, const Value &value) {
     dbg.nospace() << "Value";
     if (value.isEmpty())

@@ -269,6 +269,7 @@ public:
 
     Value &operator=(const Value &rhs);
     Value &operator=(Value &&rhs);
+    Value &operator<<(const QSharedPointer<ValueItem> &vi);
 };
 
 QDebug operator<<(QDebug dbg, const Value &value);

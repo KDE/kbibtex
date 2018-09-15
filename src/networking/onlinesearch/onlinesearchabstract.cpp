@@ -71,7 +71,7 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 #endif // HAVE_QTWIDGETS
 
 OnlineSearchAbstract::OnlineSearchAbstract(QObject *parent)
-        : QObject(parent), m_hasBeenCanceled(false), numSteps(0), curStep(0), m_previousBusyState(false), m_delayedStoppedSearchReturnCode(0)
+    : QObject(parent), m_hasBeenCanceled(false), numSteps(0), curStep(0), m_previousBusyState(false), m_delayedStoppedSearchReturnCode(0)
 {
     m_parent = parent;
 }
