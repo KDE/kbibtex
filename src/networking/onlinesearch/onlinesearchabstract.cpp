@@ -173,10 +173,16 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "," << errorString << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ") for URL" << urlToShow.toDisplayString();
         const QNetworkRequest &request = reply->request();
         /// Dump all HTTP headers that were sent with the original request (except for API keys)
-        const QList<QByteArray> rawHeaderList = request.rawHeaderList();
-        for (const QByteArray &rawHeaderName : rawHeaderList) {
+        const QList<QByteArray> rawHeadersSent = request.rawHeaderList();
+        for (const QByteArray &rawHeaderName : rawHeadersSent) {
             if (rawHeaderName.toLower().contains("apikey") || rawHeaderName.toLower().contains("api-key")) continue; ///< skip dumping header values containing an API key
-            qCDebug(LOG_KBIBTEX_NETWORKING) << " " << rawHeaderName << ":" << request.rawHeader(rawHeaderName);
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "SENT " << rawHeaderName << ":" << request.rawHeader(rawHeaderName);
+        }
+        /// Dump all HTTP headers that were received
+        const QList<QByteArray> rawHeadersReceived = reply->rawHeaderList();
+        for (const QByteArray &rawHeaderName : rawHeadersReceived) {
+            if (rawHeaderName.toLower().contains("apikey") || rawHeaderName.toLower().contains("api-key")) continue; ///< skip dumping header values containing an API key
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "RECVD " << rawHeaderName << ":" << reply->rawHeader(rawHeaderName);
         }
 #ifdef HAVE_KF5
         sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), errorString), label(), QStringLiteral("kbibtex"), 7 * 1000);
