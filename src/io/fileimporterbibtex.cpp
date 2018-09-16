@@ -586,6 +586,7 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
 {
     Token token = tUnknown;
     const QString iKey = key.toLower();
+    static const QSet<QString> verbatimKeys {Entry::ftColor.toLower(), Entry::ftCrossRef.toLower(), Entry::ftXData.toLower()};
 
     do {
         bool isStringKey = false;
@@ -685,16 +686,6 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(0))));
                 }
             }
-        } else if (iKey == Entry::ftColor) {
-            if (isStringKey)
-                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
-            else
-                value.append(QSharedPointer<VerbatimText>(new VerbatimText(rawText)));
-        } else if (iKey == Entry::ftCrossRef) {
-            if (isStringKey)
-                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
-            else
-                value.append(QSharedPointer<VerbatimText>(new VerbatimText(rawText)));
         } else if (iKey == Entry::ftKeywords) {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
@@ -711,6 +702,11 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
                     m_statistics.mostRecentListSeparator = QStringLiteral(", ");
 
             }
+        } else if (verbatimKeys.contains(iKey)) {
+            if (isStringKey)
+                value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
+            else
+                value.append(QSharedPointer<VerbatimText>(new VerbatimText(rawText)));
         } else {
             if (isStringKey)
                 value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
