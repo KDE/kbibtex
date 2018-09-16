@@ -84,48 +84,58 @@ void FileModel::readConfiguration()
     }
 }
 
-QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QString &rawAlt, const QStringList &rawAliases, int role, bool followCrossRef) const
+QString FileModel::entryText(const Entry *entry, const QString &raw, const QString &rawAlt, const QStringList &rawAliases, int role, bool followCrossRef) const
 {
-    if (raw == QStringLiteral("^id")) // FIXME: Use constant here?
-        return QVariant(entry->id());
-    else if (raw == QStringLiteral("^type")) { // FIXME: Use constant here?
-        /// try to beautify type, e.g. translate "proceedings" into
+    if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != SortRole)
+        return QString();
+
+    if (raw == QStringLiteral("^id")) {
+        return entry->id();
+    } else if (raw == QStringLiteral("^type")) { // FIXME: Use constant here?
+        /// Try to beautify type, e.g. translate "proceedings" into
         /// "Conference or Workshop Proceedings"
         const QString label = BibTeXEntries::instance().label(entry->type());
         if (label.isEmpty()) {
-            /// fall-back to entry type as it is
-            return QVariant(entry->type());
+            /// Fall-back to entry type as it is
+            return entry->type();
         } else
-            return QVariant(label);
+            return label;
     } else if (raw.toLower() == Entry::ftStarRating) {
-        return QVariant();
+        return QString(); /// Stars have no string representation
     } else if (raw.toLower() == Entry::ftColor) {
-        QString text = PlainTextValue::text(entry->value(raw));
-        if (text.isEmpty()) return QVariant();
-        QString colorText = colorToLabel[text];
-        if (colorText.isEmpty()) return QVariant(text);
-        return QVariant(colorText);
+        const QString text = PlainTextValue::text(entry->value(raw));
+        if (text.isEmpty()) return QString();
+        const QString colorText = colorToLabel[text];
+        if (colorText.isEmpty()) return text;
+        return colorText;
     } else {
         QString text;
         if (entry->contains(raw))
             text = PlainTextValue::text(entry->value(raw)).simplified();
         else if (!rawAlt.isEmpty() && entry->contains(rawAlt))
             text = PlainTextValue::text(entry->value(rawAlt)).simplified();
+        if (text.isEmpty())
+            for (const QString &alias : rawAliases) {
+                if (entry->contains(alias)) {
+                    text = PlainTextValue::text(entry->value(alias)).simplified();
+                    if (!text.isEmpty()) break;
+                }
+            }
 
         if (followCrossRef && text.isEmpty() && entry->contains(Entry::ftCrossRef)) {
             QScopedPointer<const Entry> completedEntry(entry->resolveCrossref(m_file));
-            return entryData(completedEntry.data(), raw, rawAlt, rawAliases, role, false);
+            return entryText(completedEntry.data(), raw, rawAlt, rawAliases, role, false);
         }
 
         if (text.isEmpty())
-            return QVariant();
+            return QString();
         else if (role == FileModel::SortRole)
-            return QVariant(text.toLower());
+            return text.toLower();
         else if (role == Qt::ToolTipRole) {
             // TODO: find a better solution, such as line-wrapping tooltips
-            return QVariant(KBibTeX::leftSqueezeText(text, 128));
+            return KBibTeX::leftSqueezeText(text, 128);
         } else
-            return QVariant(text);
+            return text;
     }
 
 }
@@ -235,7 +245,7 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
         /// The only roles left at this point shall be SortRole, Qt::DisplayRole, and Qt::ToolTipRole
 
         if (!entry.isNull()) {
-            return entryData(entry.data(), raw, rawAlt, rawAliases, role, true);
+            return QVariant(entryText(entry.data(), raw, rawAlt, rawAliases, role, true));
         } else {
             QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
             if (!macro.isNull()) {

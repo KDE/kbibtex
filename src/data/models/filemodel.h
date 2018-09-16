@@ -79,7 +79,7 @@ private:
 
     void readConfiguration();
 
-    QVariant entryData(const Entry *entry, const QString &raw, const QString &rawAlt, const QStringList &rawAliases, int role, bool followCrossRef) const;
+    QString entryText(const Entry *entry, const QString &raw, const QString &rawAlt, const QStringList &rawAliases, int role, bool followCrossRef) const;
 };
 
 #endif // KBIBTEX_GUI_FILEMODEL_H
