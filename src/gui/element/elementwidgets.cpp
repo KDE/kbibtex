@@ -189,14 +189,12 @@ bool EntryConfiguredWidget::canEdit(const Element *element)
 
 void EntryConfiguredWidget::createGUI()
 {
-    const BibTeXFields *bf = BibTeXFields::self();
-
     int i = 0;
     for (const SingleFieldLayout &sfl : const_cast<const QList<SingleFieldLayout> &>(etl->singleFieldLayouts)) {
         LabeledFieldInput *labeledFieldInput = new LabeledFieldInput;
 
         /// create an editing widget for this field
-        const FieldDescription &fd = bf->find(sfl.bibtexLabel);
+        const FieldDescription &fd = BibTeXFields::instance().find(sfl.bibtexLabel);
         labeledFieldInput->fieldInput = new FieldInput(sfl.fieldInputLayout, fd.preferredTypeFlag, fd.typeFlags, this);
         labeledFieldInput->fieldInput->setFieldKey(sfl.bibtexLabel);
         bibtexKeyToWidget.insert(sfl.bibtexLabel, labeledFieldInput->fieldInput);
@@ -222,13 +220,10 @@ void EntryConfiguredWidget::createGUI()
 
 void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryType)
 {
-    const BibTeXFields *bf = BibTeXFields::self();
-
     QStringList visibleItems;
     if (!forceVisible && !entryType.isEmpty()) {
         const QString entryTypeLc = entryType.toLower();
-        const BibTeXEntries *be = BibTeXEntries::self();
-        for (const auto &ed : const_cast<const BibTeXEntries &>(*be)) {
+        for (const auto &ed : BibTeXEntries::instance()) {
             if (entryTypeLc == ed.upperCamelCase.toLower() || entryTypeLc == ed.upperCamelCaseAlt.toLower()) {
                 /// this ugly conversion is necessary because we have a "^" (xor) and "|" (and/or)
                 /// syntax to differentiate required items (not used yet, but will be used
@@ -258,7 +253,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
         gridLayout->removeWidget(listOfLabeledFieldInput[i]->fieldInput);
 
         const QString key = bibtexKeyToWidget.key(listOfLabeledFieldInput[i]->fieldInput).toLower();
-        const FieldDescription &fd = bf->find(key);
+        const FieldDescription &fd = BibTeXFields::instance().find(key);
         Value value;
         listOfLabeledFieldInput[i]->fieldInput->apply(value);
         /// Hide non-required and non-optional type-dependent fields,
@@ -354,12 +349,11 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
     if (!entry.isNull()) {
         entryType->setEnabled(!isReadOnly);
         buttonSuggestId->setEnabled(!isReadOnly);
-        const BibTeXEntries *be = BibTeXEntries::self();
-        QString type = be->format(entry->type(), KBibTeX::cUpperCamelCase);
+        QString type = BibTeXEntries::instance().format(entry->type(), KBibTeX::cUpperCamelCase);
         int index = entryType->findData(type);
         if (index == -1) {
             const QString typeLower(type.toLower());
-            for (const auto &ed : const_cast<const BibTeXEntries &>(*be))
+            for (const auto &ed : BibTeXEntries::instance())
                 if (typeLower == ed.upperCamelCaseAlt.toLower()) {
                     index = entryType->findData(ed.upperCamelCase);
                     break;
@@ -450,8 +444,7 @@ void ReferenceWidget::createGUI()
     layout->addWidget(label);
     layout->addWidget(entryId);
 
-    const BibTeXEntries *be = BibTeXEntries::self();
-    for (const auto &ed : const_cast<const BibTeXEntries &>(*be))
+    for (const auto &ed : BibTeXEntries::instance())
         entryType->addItem(ed.label, ed.upperCamelCase);
     /// Sort the combo box locale-aware. Thus we need a SortFilterProxyModel
     QSortFilterProxyModel *proxy = new QSortFilterProxyModel(entryType);
@@ -479,7 +472,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
     /// Collect information on the current entry as it is edited
     QSharedPointer<Entry> guiDataEntry(new Entry());
     m_applyElement->apply(guiDataEntry);
-    QSharedPointer<Entry> crossrefResolvedEntry(Entry::resolveCrossref(*guiDataEntry.data(), m_file));
+    QSharedPointer<Entry> crossrefResolvedEntry(guiDataEntry->resolveCrossref(m_file));
 
     static const IdSuggestions *idSuggestions = new IdSuggestions();
     QMenu *suggestionsMenu = buttonSuggestId->menu();
@@ -566,9 +559,8 @@ void ReferenceWidget::setEntryIdByDefault()
 
 QString ReferenceWidget::computeType() const
 {
-    const BibTeXEntries *be = BibTeXEntries::self();
     if (entryType->currentIndex() < 0 || entryType->lineEdit()->isModified())
-        return be->format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
+        return BibTeXEntries::instance().format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
     else
         return entryType->itemData(entryType->currentIndex()).toString();
 }

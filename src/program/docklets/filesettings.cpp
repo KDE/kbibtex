@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -40,11 +40,11 @@ FileSettings::FileSettings(QWidget *parent)
 
     connect(this, &FileSettings::widgetsChanged, this, &FileSettings::widgetsChangedSlot);
 
-    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::currentChanged, this, &FileSettings::currentFileChangedSlot);
+    connect(&OpenFileInfoManager::instance(), &OpenFileInfoManager::currentChanged, this, &FileSettings::currentFileChangedSlot);
     /// Monitoring file flag changes to get notified of
     /// "Save As" operations where the file settings
     /// may get changed (requires a reload of properties)
-    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &FileSettings::resetToLoadedProperties);
+    connect(&OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &FileSettings::resetToLoadedProperties);
 }
 
 void FileSettings::setFileView(FileView *fileView)

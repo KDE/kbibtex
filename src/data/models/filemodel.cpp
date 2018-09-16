@@ -57,8 +57,7 @@ void FileModel::notificationEvent(int eventId)
     if (eventId == NotificationHub::EventConfigurationChanged) {
         readConfiguration();
         int column = 0;
-        const BibTeXFields *bf = BibTeXFields::self();
-        for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
+        for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
             /// Colors may have changed
             bool columnChanged = fd.upperCamelCase.toLower() == Entry::ftColor;
             /// Person name formatting may has changed
@@ -85,14 +84,14 @@ void FileModel::readConfiguration()
     }
 }
 
-QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QString &rawAlt, int role, bool followCrossRef) const
+QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QString &rawAlt, const QStringList &rawAliases, int role, bool followCrossRef) const
 {
     if (raw == QStringLiteral("^id")) // FIXME: Use constant here?
         return QVariant(entry->id());
     else if (raw == QStringLiteral("^type")) { // FIXME: Use constant here?
         /// try to beautify type, e.g. translate "proceedings" into
         /// "Conference or Workshop Proceedings"
-        QString label = BibTeXEntries::self()->label(entry->type());
+        const QString label = BibTeXEntries::instance().label(entry->type());
         if (label.isEmpty()) {
             /// fall-back to entry type as it is
             return QVariant(entry->type());
@@ -116,7 +115,7 @@ QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QStr
         if (followCrossRef && text.isEmpty() && entry->contains(Entry::ftCrossRef)) {
             // TODO do not only follow "crossref", but other files from Biber/Biblatex as well
             Entry *completedEntry = entry->resolveCrossref(m_file);
-            QVariant result = entryData(completedEntry, raw, rawAlt, role, false);
+            QVariant result = entryData(completedEntry, raw, rawAlt, rawAliases, role, false);
             delete completedEntry;
             return result;
         }
@@ -169,7 +168,7 @@ int FileModel::rowCount(const QModelIndex &parent) const
 int FileModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent)
-    return BibTeXFields::self()->count();
+    return BibTeXFields::instance().count();
 }
 
 QVariant FileModel::data(const QModelIndex &index, int role) const
@@ -186,11 +185,11 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
     if (role != NumberRole && role != SortRole && role != Qt::DisplayRole && role != Qt::ToolTipRole && role != Qt::BackgroundRole && role != Qt::ForegroundRole)
         return QVariant();
 
-    const BibTeXFields *bibtexFields = BibTeXFields::self();
-    if (index.row() < m_file->count() && index.column() < bibtexFields->count()) {
-        const FieldDescription &fd = bibtexFields->at(index.column());
-        QString raw = fd.upperCamelCase;
-        QString rawAlt = fd.upperCamelCaseAlt;
+    if (index.row() < m_file->count() && index.column() < BibTeXFields::instance().count()) {
+        const FieldDescription &fd = BibTeXFields::instance().at(index.column());
+        const QString &raw = fd.upperCamelCase;
+        const QString &rawAlt = fd.upperCamelCaseAlt;
+        const QStringList &rawAliases = fd.upperCamelCaseAliases;
         QSharedPointer<Element> element = (*m_file)[index.row()];
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
 
@@ -236,8 +235,10 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
                 return QVariant();
         }
 
+        /// The only roles left at this point shall be SortRole, Qt::DisplayRole, and Qt::ToolTipRole
+
         if (!entry.isNull()) {
-            return entryData(entry.data(), raw, rawAlt, role, true);
+            return entryData(entry.data(), raw, rawAlt, rawAliases, role, true);
         } else {
             QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
             if (!macro.isNull()) {
@@ -281,10 +282,9 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
 
 QVariant FileModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    const BibTeXFields *bibtexFields = BibTeXFields::self();
-    if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section < 0 || section >= bibtexFields->count())
+    if (role != Qt::DisplayRole || orientation != Qt::Horizontal || section < 0 || section >= BibTeXFields::instance().count())
         return QVariant();
-    return bibtexFields->at(section).label;
+    return BibTeXFields::instance().at(section).label;
 }
 
 Qt::ItemFlags FileModel::flags(const QModelIndex &index) const

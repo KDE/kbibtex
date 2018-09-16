@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -46,15 +46,13 @@ class LRUItemModel : public QAbstractItemModel
 {
     Q_OBJECT
 
-private:
-    OpenFileInfoManager *ofim;
-
 public:
     static const int URLRole = Qt::UserRole + 235;
     static const int SortRole = Qt::UserRole + 236;
 
-    LRUItemModel(OpenFileInfoManager *openFileInfoManager, QObject *parent = nullptr)
-            : QAbstractItemModel(parent), ofim(openFileInfoManager) {
+    LRUItemModel(QObject *parent = nullptr)
+            : QAbstractItemModel(parent)
+    {
         /// nothing
     }
 
@@ -68,7 +66,7 @@ public:
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
-        OpenFileInfoManager::OpenFileInfoList ofiList = ofim->filteredItems(OpenFileInfo::RecentlyUsed);
+        OpenFileInfoManager::OpenFileInfoList ofiList = OpenFileInfoManager::instance().filteredItems(OpenFileInfo::RecentlyUsed);
         if (index.row() < ofiList.count()) {
             OpenFileInfo *ofiItem = ofiList[index.row()];
             if (index.column() == 0) {
@@ -113,7 +111,7 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override {
         if (parent == QModelIndex())
-            return ofim->filteredItems(OpenFileInfo::RecentlyUsed).count();
+            return OpenFileInfoManager::instance().filteredItems(OpenFileInfo::RecentlyUsed).count();
         else
             return 0;
     }
@@ -186,7 +184,6 @@ private:
 
 public:
     MDIWidget *p;
-    OpenFileInfoManager *ofim;
     OpenFileInfo *currentFile;
     QWidget *welcomeWidget;
     QSignalMapper signalMapperCompleted;
@@ -194,10 +191,10 @@ public:
     KSharedConfigPtr config;
 
     MDIWidgetPrivate(MDIWidget *parent)
-            : p(parent), ofim(OpenFileInfoManager::instance()), currentFile(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
+            : p(parent), currentFile(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
         createWelcomeWidget();
 
-        modelLRU = new LRUItemModel(ofim, listLRU);
+        modelLRU = new LRUItemModel(listLRU);
         QSortFilterProxyModel *sfpm = new QSortFilterProxyModel(listLRU);
         sfpm->setSourceModel(modelLRU);
         sfpm->setSortRole(LRUItemModel::SortRole);
@@ -230,7 +227,7 @@ const QString MDIWidget::MDIWidgetPrivate::configHeaderState = QStringLiteral("L
 MDIWidget::MDIWidget(QWidget *parent)
         : QStackedWidget(parent), d(new MDIWidgetPrivate(this))
 {
-    connect(d->ofim, &OpenFileInfoManager::flagsChanged, this, &MDIWidget::slotStatusFlagsChanged);
+    connect(&OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &MDIWidget::slotStatusFlagsChanged);
 }
 
 MDIWidget::~MDIWidget()
@@ -252,7 +249,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
     } else if (openFileInfo != nullptr) {
         /// A valid OpenFileInfo was given, but no KPart could be located
 
-        d->ofim->close(openFileInfo); // FIXME does not close correctly if file is new
+        OpenFileInfoManager::instance().close(openFileInfo); // FIXME does not close correctly if file is new
         const QString filename = openFileInfo->url().fileName();
         if (filename.isEmpty())
             KMessageBox::error(this, i18n("No part available for file of mime type '%1'.", openFileInfo->mimeType()), i18n("No Part Available"));
@@ -303,7 +300,7 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr)
 
 FileView *MDIWidget::fileView()
 {
-    OpenFileInfo *ofi = d->ofim->currentFile();
+    OpenFileInfo *ofi = OpenFileInfoManager::instance().currentFile();
     return qobject_cast<PartWidget *>(ofi->part(this)->widget())->fileView();
 }
 
@@ -320,7 +317,7 @@ void MDIWidget::slotCompleted(QObject *obj)
 
     if (oldUrl != newUrl) {
         qCDebug(LOG_KBIBTEX_PROGRAM) << "Url changed from " << oldUrl.url(QUrl::PreferLocalFile) << " to " << newUrl.url(QUrl::PreferLocalFile) << endl;
-        d->ofim->changeUrl(ofi, newUrl);
+        OpenFileInfoManager::instance().changeUrl(ofi, newUrl);
 
         /// completely opened or saved files should be marked as "recently used"
         ofi->addFlags(OpenFileInfo::RecentlyUsed);

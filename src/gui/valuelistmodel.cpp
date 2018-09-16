@@ -47,7 +47,7 @@
 QWidget *ValueListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &sovi, const QModelIndex &index) const
 {
     if (index.column() == 0) {
-        const FieldDescription &fd = BibTeXFields::self()->find(m_fieldName);
+        const FieldDescription &fd = BibTeXFields::instance().find(m_fieldName);
         FieldLineEdit *fieldLineEdit = new FieldLineEdit(fd.preferredTypeFlag, fd.typeFlags, false, parent);
         fieldLineEdit->setAutoFillBackground(true);
         return fieldLineEdit;

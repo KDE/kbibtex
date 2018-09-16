@@ -35,9 +35,6 @@ class DocumentListDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
-private:
-    OpenFileInfoManager *ofim;
-
 public:
     explicit DocumentListDelegate(QObject *parent = nullptr);
 

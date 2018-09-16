@@ -145,11 +145,9 @@ public:
     }
 
     void initialize() {
-        const BibTeXFields *bibtexFields = BibTeXFields::self();
-
         lineeditFilter->clear();
         comboboxFieldNames->clear();
-        for (const auto &fd : const_cast<const BibTeXFields &>(*bibtexFields)) {
+        for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
             if (!fd.upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
             if (fd.upperCamelCase.startsWith('^')) continue; /// skip "type" and "id"
             comboboxFieldNames->addItem(fd.label, fd.upperCamelCase);

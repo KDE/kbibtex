@@ -102,8 +102,7 @@ public:
     }
 
     void addTabWidgets() {
-        const EntryLayout *el = EntryLayout::self();
-        for (const auto &etl : const_cast<const EntryLayout &>(*el)) {
+        for (const auto &etl : EntryLayout::instance()) {
             ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
             connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
             widgets << widget;
@@ -134,7 +133,7 @@ public:
         QStringList blacklistedFields;
 
         /// blacklist fields covered by EntryConfiguredWidget
-        for (const auto &etl : const_cast<const EntryLayout &>(*el))
+        for (const auto &etl : EntryLayout::instance())
             for (const auto &sfl : const_cast<const QList<SingleFieldLayout> &>(etl->singleFieldLayouts))
                 blacklistedFields << sfl.bibtexLabel;
 

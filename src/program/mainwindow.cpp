@@ -269,8 +269,8 @@ KBibTeXMainWindow::KBibTeXMainWindow(QWidget *parent)
     connect(d->mdiWidget, &MDIWidget::documentNew, this, &KBibTeXMainWindow::newDocument);
     connect(d->mdiWidget, &MDIWidget::documentOpen, this, &KBibTeXMainWindow::openDocumentDialog);
     connect(d->mdiWidget, &MDIWidget::documentOpenURL, this, &KBibTeXMainWindow::openDocument);
-    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::currentChanged, d->mdiWidget, &MDIWidget::setFile);
-    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &KBibTeXMainWindow::documentListsChanged);
+    connect(&OpenFileInfoManager::instance(), &OpenFileInfoManager::currentChanged, d->mdiWidget, &MDIWidget::setFile);
+    connect(&OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &KBibTeXMainWindow::documentListsChanged);
     connect(d->mdiWidget, &MDIWidget::setCaption, this, static_cast<void(KMainWindow::*)(const QString &)>(&KMainWindow::setCaption)); ///< actually: KMainWindow::setCaption
 
     documentListsChanged(OpenFileInfo::RecentlyUsed); /// force initialization of menu of recently used files
@@ -321,9 +321,9 @@ void KBibTeXMainWindow::dropEvent(QDropEvent *event)
 void KBibTeXMainWindow::newDocument()
 {
     const QString mimeType = FileInfo::mimetypeBibTeX;
-    OpenFileInfo *openFileInfo = OpenFileInfoManager::instance()->createNew(mimeType);
+    OpenFileInfo *openFileInfo = OpenFileInfoManager::instance().createNew(mimeType);
     if (openFileInfo) {
-        OpenFileInfoManager::instance()->setCurrentFile(openFileInfo);
+        OpenFileInfoManager::instance().setCurrentFile(openFileInfo);
         openFileInfo->addFlags(OpenFileInfo::Open);
     } else
         KMessageBox::error(this, i18n("Creating a new document of mime type '%1' failed as no editor component could be instantiated.", mimeType), i18n("Creating document failed"));
@@ -331,10 +331,10 @@ void KBibTeXMainWindow::newDocument()
 
 void KBibTeXMainWindow::openDocumentDialog()
 {
-    OpenFileInfo *currFile = OpenFileInfoManager::instance()->currentFile();
+    OpenFileInfo *currFile = OpenFileInfoManager::instance().currentFile();
     QUrl currFileUrl = currFile == nullptr ? QUrl() : currFile->url();
     QString startDir = currFileUrl.isValid() ? QUrl(currFileUrl.url()).path() : QString();
-    OpenFileInfo *ofi = OpenFileInfoManager::instance()->currentFile();
+    OpenFileInfo *ofi = OpenFileInfoManager::instance().currentFile();
     if (ofi != nullptr) {
         QUrl url = ofi->url();
         if (url.isValid()) startDir = url.path();
@@ -363,20 +363,20 @@ void KBibTeXMainWindow::openDocumentDialog()
 
 void KBibTeXMainWindow::openDocument(const QUrl &url)
 {
-    OpenFileInfo *openFileInfo = OpenFileInfoManager::instance()->open(url);
-    OpenFileInfoManager::instance()->setCurrentFile(openFileInfo);
+    OpenFileInfo *openFileInfo = OpenFileInfoManager::instance().open(url);
+    OpenFileInfoManager::instance().setCurrentFile(openFileInfo);
 }
 
 void KBibTeXMainWindow::closeDocument()
 {
-    OpenFileInfoManager::instance()->close(OpenFileInfoManager::instance()->currentFile());
+    OpenFileInfoManager::instance().close(OpenFileInfoManager::instance().currentFile());
 }
 
 void KBibTeXMainWindow::closeEvent(QCloseEvent *event)
 {
     KMainWindow::closeEvent(event);
 
-    if (OpenFileInfoManager::instance()->queryCloseAll())
+    if (OpenFileInfoManager::instance().queryCloseAll())
         event->accept();
     else
         event->ignore();
@@ -441,7 +441,7 @@ void KBibTeXMainWindow::showSearchResults()
 void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFlags)
 {
     if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed)) {
-        const OpenFileInfoManager::OpenFileInfoList list = OpenFileInfoManager::instance()->filteredItems(OpenFileInfo::RecentlyUsed);
+        const OpenFileInfoManager::OpenFileInfoList list = OpenFileInfoManager::instance().filteredItems(OpenFileInfo::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
         for (OpenFileInfo *cur : list) {
             /// Fixing bug 19511: too long filenames make menu too large,
@@ -467,7 +467,7 @@ void KBibTeXMainWindow::openRecentFile()
 
 void KBibTeXMainWindow::queryCloseAll()
 {
-    if (OpenFileInfoManager::instance()->queryCloseAll())
+    if (OpenFileInfoManager::instance().queryCloseAll())
         qApp->quit();
 }
 

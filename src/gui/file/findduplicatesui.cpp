@@ -156,7 +156,7 @@ public:
                 else if (fieldName == QStringLiteral("^type"))
                     return i18n("Type");
                 else
-                    return BibTeXEntries::self()->format(fieldName, KBibTeX::cUpperCamelCase);
+                    return BibTeXEntries::instance().format(fieldName, KBibTeX::cUpperCamelCase);
             case RadioButtonTreeView::IsRadioRole:
                 /// this is not to be a radio widget
                 return QVariant::fromValue(false);
@@ -181,10 +181,8 @@ public:
             case Qt::DisplayRole:
                 if (index.row() < values.count()) {
                     QString text = PlainTextValue::text(values.at(index.row()));
-                    if (fieldName == QStringLiteral("^type")) {
-                        const BibTeXEntries *be = BibTeXEntries::self();
-                        text = be->format(text, KBibTeX::cUpperCamelCase);
-                    }
+                    if (fieldName == QStringLiteral("^type"))
+                        text = BibTeXEntries::instance().format(text, KBibTeX::cUpperCamelCase);
 
                     /// textual representation of the alternative's value
                     return text;

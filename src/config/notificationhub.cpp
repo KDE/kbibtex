@@ -1,6 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
- *                                                                           *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
  *   it under the terms of the GNU General Public License as published by    *
@@ -29,11 +28,7 @@ NotificationListener::~NotificationListener()
 
 class NotificationHub::NotificationHubPrivate
 {
-private:
-    // UNUSED NotificationHub *p;
-
 public:
-    static NotificationHub *singleton;
     QHash<int, QSet<NotificationListener *> > listenersPerEventId;
     QSet<NotificationListener *> listenersAnyEvent;
 
@@ -54,17 +49,15 @@ NotificationHub::~NotificationHub()
     delete d;
 }
 
-NotificationHub *NotificationHub::getHub()
+NotificationHub &NotificationHub::instance()
 {
-    if (NotificationHub::NotificationHubPrivate::singleton == nullptr)
-        NotificationHub::NotificationHubPrivate::singleton = new NotificationHub();
-    return NotificationHub::NotificationHubPrivate::singleton;
+    static NotificationHub singleton;
+    return singleton;
 }
 
 void NotificationHub::registerNotificationListener(NotificationListener *listener, int eventId)
 {
-
-    NotificationHub::NotificationHubPrivate *d = getHub()->d;
+    NotificationHub::NotificationHubPrivate *d = instance().d;
     if (eventId == EventAny)
         d->listenersAnyEvent.insert(listener);
     else {
@@ -76,7 +69,7 @@ void NotificationHub::registerNotificationListener(NotificationListener *listene
 
 void NotificationHub::unregisterNotificationListener(NotificationListener *listener, int eventId)
 {
-    NotificationHub::NotificationHubPrivate *d = getHub()->d;
+    NotificationHub::NotificationHubPrivate *d = instance().d;
     if (eventId == EventAny) {
         for (QHash<int, QSet<NotificationListener *> >::Iterator it = d->listenersPerEventId.begin(); it != d->listenersPerEventId.end(); ++it)
             it.value().remove(listener);
@@ -90,7 +83,7 @@ void NotificationHub::unregisterNotificationListener(NotificationListener *liste
 
 void NotificationHub::publishEvent(int eventId)
 {
-    NotificationHub::NotificationHubPrivate *d = getHub()->d;
+    NotificationHub::NotificationHubPrivate *d = instance().d;
     if (eventId >= 0) {
         QSet<NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
         for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(d->listenersAnyEvent))
@@ -104,4 +97,3 @@ void NotificationHub::publishEvent(int eventId)
 const int NotificationHub::EventAny = -1;
 const int NotificationHub::EventConfigurationChanged = 0;
 const int NotificationHub::EventUserDefined = 1024;
-NotificationHub *NotificationHub::NotificationHubPrivate::singleton = nullptr;

@@ -404,9 +404,10 @@ public:
     }
 
     ~OpenFileInfoManagerPrivate() {
-        for (OpenFileInfoManager::OpenFileInfoList::Iterator it = openFileInfoList.begin(); it != openFileInfoList.end(); ++it) {
+        for (OpenFileInfoManager::OpenFileInfoList::Iterator it = openFileInfoList.begin(); it != openFileInfoList.end();) {
             OpenFileInfo *ofi = *it;
             delete ofi;
+            it = openFileInfoList.erase(it);
         }
     }
 
@@ -489,18 +490,17 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumFavoriteFiles =
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumRecentlyUsedFiles = 8;
 const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 
-OpenFileInfoManager *OpenFileInfoManager::singleton = nullptr;
-
 OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
         : QObject(parent), d(new OpenFileInfoManagerPrivate(this))
 {
     QTimer::singleShot(300, this, &OpenFileInfoManager::delayedReadConfig);
 }
 
-OpenFileInfoManager *OpenFileInfoManager::instance() {
-    if (singleton == nullptr)
-        singleton = new OpenFileInfoManager(QCoreApplication::instance());
-    return singleton;
+OpenFileInfoManager &OpenFileInfoManager::instance() {
+    /// Allocate this singleton on heap not stack like most other singletons
+    /// Supposedly, QCoreApplication will clean this singleton at application's end
+    static OpenFileInfoManager *singleton = new OpenFileInfoManager(QCoreApplication::instance());
+    return *singleton;
 }
 
 OpenFileInfoManager::~OpenFileInfoManager()

@@ -140,13 +140,11 @@ public:
     }
 
     bool writeEntry(QIODevice *iodevice, const Entry &entry) {
-        const BibTeXEntries *be = BibTeXEntries::self();
-        const BibTeXFields *bf = BibTeXFields::self();
         const EncoderLaTeX &laTeXEncoder = EncoderLaTeX::instance();
 
         /// write start of a entry (entry type and id) in plain ASCII
         iodevice->putChar('@');
-        iodevice->write(be->format(entry.type(), keywordCasing).toLatin1().data());
+        iodevice->write(BibTeXEntries::instance().format(entry.type(), keywordCasing).toLatin1().data());
         iodevice->putChar('{');
         iodevice->write(laTeXEncoder.convertToPlainAscii(entry.id()).toLatin1());
 
@@ -174,7 +172,7 @@ public:
             iodevice->putChar(',');
             iodevice->putChar('\n');
             iodevice->putChar('\t');
-            iodevice->write(laTeXEncoder.convertToPlainAscii(bf->format(key, keywordCasing)).toLatin1());
+            iodevice->write(laTeXEncoder.convertToPlainAscii(BibTeXFields::instance().format(key, keywordCasing)).toLatin1());
             iodevice->putChar(' ');
             iodevice->putChar('=');
             iodevice->putChar(' ');
@@ -189,8 +187,6 @@ public:
     }
 
     bool writeMacro(QIODevice *iodevice, const Macro &macro) {
-        const BibTeXEntries *be = BibTeXEntries::self();
-
         QString text = p->internalValueToBibTeX(macro.value(), QString(), leUTF8);
         if (protectCasing == Qt::Checked)
             addProtectiveCasing(text);
@@ -198,7 +194,7 @@ public:
             removeProtectiveCasing(text);
 
         iodevice->putChar('@');
-        iodevice->write(be->format(QStringLiteral("String"), keywordCasing).toLatin1().data());
+        iodevice->write(BibTeXEntries::instance().format(QStringLiteral("String"), keywordCasing).toLatin1().data());
         iodevice->putChar('{');
         iodevice->write(TextEncoder::encode(macro.key(), destinationCodec));
         iodevice->putChar(' ');
@@ -213,13 +209,11 @@ public:
     }
 
     bool writeComment(QIODevice *iodevice, const Comment &comment) {
-        const BibTeXEntries *be = BibTeXEntries::self();
-
         QString text = comment.text() ;
 
         if (comment.useCommand() || quoteComment == Preferences::qcCommand) {
             iodevice->putChar('@');
-            iodevice->write(be->format(QStringLiteral("Comment"), keywordCasing).toLatin1().data());
+            iodevice->write(BibTeXEntries::instance().format(QStringLiteral("Comment"), keywordCasing).toLatin1().data());
             iodevice->putChar('{');
             iodevice->write(TextEncoder::encode(text, destinationCodec));
             iodevice->putChar('}');
@@ -248,10 +242,8 @@ public:
     }
 
     bool writePreamble(QIODevice *iodevice, const Preamble &preamble) {
-        const BibTeXEntries *be = BibTeXEntries::self();
-
         iodevice->putChar('@');
-        iodevice->write(be->format(QStringLiteral("Preamble"), keywordCasing).toLatin1().data());
+        iodevice->write(BibTeXEntries::instance().format(QStringLiteral("Preamble"), keywordCasing).toLatin1().data());
         iodevice->putChar('{');
         /// Remember: strings from preamble do not get encoded,
         /// may contain raw LaTeX commands and code

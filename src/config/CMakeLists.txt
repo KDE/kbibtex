@@ -5,6 +5,7 @@ set(
     notificationhub.cpp
     bibtexentries.cpp
     bibtexfields.cpp
+    ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
     logging_config.cpp
 )
 

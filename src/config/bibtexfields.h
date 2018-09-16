@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,8 +26,27 @@
 #include "kbibtex.h"
 
 typedef struct {
+    /**
+     * Name of this field in 'upper camel case', e.g. 'BookTitle', but not
+     * 'booktitle', 'BOOKTITLE', or 'BoOkTiTlE'.
+     */
     QString upperCamelCase;
+    /**
+     * The 'alternative' field name is used to create 'meta fields', such as
+     * 'author' or 'editor' combined. It shall not be used to define aliases
+     * such as 'pdf' to be an alias for 'file'.
+     */
     QString upperCamelCaseAlt;
+    /**
+     * List of aliases for a field. Empty for most fields. Alias for BibLaTeX
+     * must be explictly mentioned in BibLaTeX's official documentation, see
+     * section 'Field Aliases'.
+     * Field aliases shall not be used as alternative field names.
+     */
+    QStringList upperCamelCaseAliases;
+    /**
+     * Localized (translated) name of this field.
+     */
     QString label;
     KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
@@ -54,7 +73,7 @@ public:
      * Only one instance of this class has to be used
      * @return the class's singleton
      */
-    static BibTeXFields *self();
+    static BibTeXFields &instance();
 
 #ifdef HAVE_KF5
     void save();

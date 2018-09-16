@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,6 +23,7 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 
+#include "preferences.h"
 #include "logging_gui.h"
 
 static const int entryLayoutMaxTabCount = 256;
@@ -33,16 +34,9 @@ class EntryLayout::EntryLayoutPrivate
 public:
     EntryLayout *p;
 
-    KSharedConfigPtr layoutConfig;
-
-    static EntryLayout *singleton;
-
     EntryLayoutPrivate(EntryLayout *parent)
             : p(parent) {
-        KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
-        KConfigGroup configGroup(config, QString(QStringLiteral("User Interface")));
-        const QString stylefile = configGroup.readEntry("CurrentStyle", "bibtex").append(".kbstyle").prepend("kbibtex/");
-        layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::GenericDataLocation);
+        /// nothing
     }
 
     static QString convert(KBibTeX::FieldInputType fil) {
@@ -91,12 +85,10 @@ public:
     }
 };
 
-EntryLayout *EntryLayout::EntryLayoutPrivate::singleton = nullptr;
-
-EntryLayout::EntryLayout()
+EntryLayout::EntryLayout(const QString &style)
         : QVector<QSharedPointer<EntryTabLayout> >(), d(new EntryLayoutPrivate(this))
 {
-    load();
+    load(style);
 }
 
 EntryLayout::~EntryLayout()
@@ -104,24 +96,25 @@ EntryLayout::~EntryLayout()
     delete d;
 }
 
-EntryLayout *EntryLayout::self()
+const EntryLayout &EntryLayout::instance()
 {
-    if (EntryLayoutPrivate::singleton == nullptr)
-        EntryLayoutPrivate::singleton  = new EntryLayout();
-    return EntryLayoutPrivate::singleton;
+    static const EntryLayout singletonBibTeX(QStringLiteral("bibtex")), singletonBibLaTeX(QStringLiteral("biblatex"));
+    return Preferences::bibliographySystem() == Preferences::BibLaTeX ? singletonBibLaTeX : singletonBibTeX;
 }
 
-void EntryLayout::load()
+void EntryLayout::load(const QString &style)
 {
     clear();
 
-    QString groupName = QStringLiteral("EntryLayoutTab");
-    KConfigGroup configGroup(d->layoutConfig, groupName);
-    int tabCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxTabCount);
+    const QString stylefile = QStringLiteral("kbibtex/") + style + QStringLiteral(".kbstyle");
+    KSharedConfigPtr layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::GenericDataLocation);
+    static const QString groupName = QStringLiteral("EntryLayoutTab");
+    const KConfigGroup configGroup(layoutConfig, groupName);
+    const int tabCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxTabCount);
 
     for (int tab = 1; tab <= tabCount; ++tab) {
-        QString groupName = QString(QStringLiteral("EntryLayoutTab%1")).arg(tab);
-        KConfigGroup configGroup(d->layoutConfig, groupName);
+        const QString groupName = QString(QStringLiteral("EntryLayoutTab%1")).arg(tab);
+        const KConfigGroup configGroup(layoutConfig, groupName);
 
         QSharedPointer<EntryTabLayout> etl = QSharedPointer<EntryTabLayout>(new EntryTabLayout);
         etl->uiCaption = i18n(configGroup.readEntry("uiCaption", QString()).toUtf8().constData());
@@ -130,7 +123,7 @@ void EntryLayout::load()
         if (etl->uiCaption.isEmpty())
             continue;
 
-        int fieldCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxFieldPerTabCount);
+        const int fieldCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxFieldPerTabCount);
         for (int field = 1; field <= fieldCount; ++field) {
             SingleFieldLayout sfl;
             sfl.bibtexLabel = configGroup.readEntry(QString(QStringLiteral("bibtexLabel%1")).arg(field), QString());
@@ -145,48 +138,4 @@ void EntryLayout::load()
     }
 
     if (isEmpty()) qCWarning(LOG_KBIBTEX_GUI) << "List of entry layouts is empty";
-}
-
-void EntryLayout::save()
-{
-    int tabCount = 0;
-    for (const auto &etl : const_cast<const EntryLayout &>(*this)) {
-        ++tabCount;
-        QString groupName = QString(QStringLiteral("EntryLayoutTab%1")).arg(tabCount);
-        KConfigGroup configGroup(d->layoutConfig, groupName);
-
-        configGroup.writeEntry(QStringLiteral("uiCaption"), etl->uiCaption);
-        configGroup.writeEntry(QStringLiteral("iconName"), etl->iconName);
-        configGroup.writeEntry(QStringLiteral("columns"), etl->columns);
-
-        int fieldCount = 0;
-        for (const SingleFieldLayout &sfl : const_cast<const QList<SingleFieldLayout> &>(etl->singleFieldLayouts)) {
-            ++fieldCount;
-            configGroup.writeEntry(QString(QStringLiteral("bibtexLabel%1")).arg(fieldCount), sfl.bibtexLabel);
-            configGroup.writeEntry(QString(QStringLiteral("uiLabel%1")).arg(fieldCount), sfl.uiLabel);
-            configGroup.writeEntry(QString(QStringLiteral("fieldInputLayout%1")).arg(fieldCount), EntryLayoutPrivate::convert(sfl.fieldInputLayout));
-        }
-        configGroup.writeEntry(QStringLiteral("count"), fieldCount);
-    }
-
-    QString groupName = QStringLiteral("EntryLayoutTab");
-    KConfigGroup configGroup(d->layoutConfig, groupName);
-    configGroup.writeEntry(QStringLiteral("count"), tabCount);
-
-    d->layoutConfig->sync();
-}
-
-void EntryLayout::resetToDefaults()
-{
-    QString groupName = QStringLiteral("EntryLayoutTab");
-    KConfigGroup configGroup(d->layoutConfig, groupName);
-    configGroup.deleteGroup();
-
-    for (int tab = 1; tab < entryLayoutMaxTabCount; ++tab) {
-        QString groupName = QString(QStringLiteral("EntryLayoutTab%1")).arg(tab);
-        KConfigGroup configGroup(d->layoutConfig, groupName);
-        configGroup.deleteGroup();
-    }
-
-    load();
 }

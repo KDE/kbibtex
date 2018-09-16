@@ -70,7 +70,7 @@ public:
 };
 
 DocumentListDelegate::DocumentListDelegate(QObject *parent)
-        : QStyledItemDelegate(parent), ofim(OpenFileInfoManager::instance())
+        : QStyledItemDelegate(parent)
 {
     /// nothing
 }
@@ -92,7 +92,7 @@ void DocumentListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &
 
     OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(index.data(Qt::UserRole));
 
-    if (ofim->currentFile() == ofi) {
+    if (OpenFileInfoManager::instance().currentFile() == ofi) {
         /// for the currently open file, use a bold font to write file name
         QFont font = painter->font();
         font.setBold(true);
@@ -131,12 +131,11 @@ class DocumentListModel::DocumentListModelPrivate
 {
 public:
     OpenFileInfo::StatusFlag sf;
-    OpenFileInfoManager *ofim;
     OpenFileInfoManager::OpenFileInfoList ofiList;
 
 public:
     DocumentListModelPrivate(OpenFileInfo::StatusFlag statusFlag, DocumentListModel *parent)
-            : sf(statusFlag), ofim(OpenFileInfoManager::instance())
+            : sf(statusFlag)
     {
         Q_UNUSED(parent)
     }
@@ -147,7 +146,7 @@ DocumentListModel::DocumentListModel(OpenFileInfo::StatusFlag statusFlag, QObjec
 {
     listsChanged(d->sf);
 
-    connect(OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &DocumentListModel::listsChanged);
+    connect(&OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &DocumentListModel::listsChanged);
 }
 
 DocumentListModel::~DocumentListModel()
@@ -234,7 +233,7 @@ void DocumentListModel::listsChanged(OpenFileInfo::StatusFlags statusFlags)
 {
     if (statusFlags.testFlag(d->sf)) {
         beginResetModel();
-        d->ofiList = d->ofim->filteredItems(d->sf);
+        d->ofiList = OpenFileInfoManager::instance().filteredItems(d->sf);
         endResetModel();
     }
 }
@@ -245,7 +244,6 @@ private:
     DocumentListView *p;
 
 public:
-    OpenFileInfoManager *ofim;
     QAction *actionAddToFav, *actionRemFromFav;
     QAction *actionCloseFile, *actionOpenFile;
     KActionMenu *actionOpenMenu;
@@ -254,7 +252,8 @@ public:
     QSignalMapper openMenuSignalMapper;
 
     DocumentListViewPrivate(DocumentListView *parent)
-            : p(parent), ofim(OpenFileInfoManager::instance()), actionAddToFav(nullptr), actionRemFromFav(nullptr), actionCloseFile(nullptr), actionOpenFile(nullptr), actionOpenMenu(nullptr) {
+            : p(parent), actionAddToFav(nullptr), actionRemFromFav(nullptr), actionCloseFile(nullptr), actionOpenFile(nullptr), actionOpenMenu(nullptr)
+    {
         connect(&openMenuSignalMapper, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &DocumentListView::openFileWithService);
     }
 };
@@ -321,7 +320,7 @@ void DocumentListView::openFile()
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-        d->ofim->setCurrentFile(ofi);
+        OpenFileInfoManager::instance().setCurrentFile(ofi);
     }
 }
 
@@ -331,7 +330,7 @@ void DocumentListView::openFileWithService(int i)
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
         if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), QIcon::fromTheme(QStringLiteral("document-save"))), KGuiItem(i18n("Do not switch"), QIcon::fromTheme(QStringLiteral("dialog-cancel")))) == KMessageBox::Yes && ofi->save()))
-            d->ofim->setCurrentFile(ofi, d->openMenuServices[i]);
+            OpenFileInfoManager::instance().setCurrentFile(ofi, d->openMenuServices[i]);
     }
 }
 
@@ -340,7 +339,7 @@ void DocumentListView::closeFile()
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-        d->ofim->close(ofi);
+        OpenFileInfoManager::instance().close(ofi);
     }
 }
 

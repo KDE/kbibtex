@@ -54,8 +54,7 @@ public:
     void balanceColumns() {
         int defaultWidthSumVisible = 0;
         int col = 0;
-        const BibTeXFields *bf = BibTeXFields::self();
-        for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
+        for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
             if (!p->header()->isSectionHidden(col))
                 defaultWidthSumVisible += fd.defaultWidth;
             ++col;
@@ -64,7 +63,7 @@ public:
         if (defaultWidthSumVisible == 0) return;
 
         col = 0;
-        for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
+        for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
             if (!p->header()->isSectionHidden(col))
                 p->header()->resizeSection(col, p->header()->width() * fd.defaultWidth / defaultWidthSumVisible);
             ++col;
@@ -73,8 +72,7 @@ public:
 
     void resetColumnProperties() {
         int col = 0;
-        BibTeXFields *bf = BibTeXFields::self();
-        for (BibTeXFields::Iterator it = bf->begin(); it != bf->end(); ++it) {
+        for (BibTeXFields::Iterator it = BibTeXFields::instance().begin(), endIt = BibTeXFields::instance().end(); it != endIt; ++it) {
             auto &fd = *it;
             fd.visible.remove(name);
             const bool visibility = fd.defaultVisible;
@@ -82,14 +80,13 @@ public:
             p->header()->actions().at(col)->setChecked(visibility);
             ++col;
         }
-        bf->save();
+        BibTeXFields::instance().save();
         balanceColumns();
     }
 
     void loadColumnProperties() {
         int col = 0;
-        const BibTeXFields *bf = BibTeXFields::self();
-        for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
+        for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
             const bool visibility = fd.visible.contains(name) ? fd.visible[name] : fd.defaultVisible;
             p->header()->setSectionHidden(col, !visibility);
             p->header()->actions().at(col)->setChecked(visibility);
@@ -100,13 +97,12 @@ public:
 
     void saveColumnProperties() {
         int col = 0;
-        BibTeXFields *bf = BibTeXFields::self();
-        for (BibTeXFields::Iterator it = bf->begin(); it != bf->end(); ++it) {
+        for (BibTeXFields::Iterator it = BibTeXFields::instance().begin(), endIt = BibTeXFields::instance().end(); it != endIt; ++it) {
             auto &fd = *it;
             fd.visible[name] = !p->header()->isSectionHidden(col);
             ++col;
         }
-        bf->save();
+        BibTeXFields::instance().save();
     }
 };
 
@@ -134,8 +130,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
 
     /// build context menu for header to show/hide single columns
     int col = 0;
-    const BibTeXFields *bf = BibTeXFields::self();
-    for (const auto &fd : const_cast<const BibTeXFields &>(*bf)) {
+    for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
         QAction *action = new QAction(fd.label, header());
         action->setData(col);
         action->setCheckable(true);

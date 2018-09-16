@@ -314,9 +314,6 @@ Preamble *FileImporterBibTeX::readPreambleElement()
 
 Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 {
-    const BibTeXEntries *be = BibTeXEntries::self();
-    const BibTeXFields *bf = BibTeXFields::self();
-
     Token token = nextToken();
     while (token != tBracketOpen) {
         if (token == tEOF) {
@@ -350,7 +347,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
     }
     m_knownElementIds.insert(id);
 
-    Entry *entry = new Entry(be->format(typeString, m_keywordCasing), id);
+    Entry *entry = new Entry(BibTeXEntries::instance().format(typeString, m_keywordCasing), id);
 
     token = nextToken();
     do {
@@ -367,7 +364,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             return nullptr;
         }
 
-        QString keyName = bf->format(readSimpleString(), m_keywordCasing);
+        QString keyName = BibTeXFields::instance().format(readSimpleString(), m_keywordCasing);
         if (keyName.isEmpty()) {
             token = nextToken();
             if (token == tBracketClose) {

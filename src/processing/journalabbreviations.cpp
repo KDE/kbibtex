@@ -107,7 +107,6 @@ public:
     }
 };
 
-JournalAbbreviations *JournalAbbreviations::instance = nullptr;
 
 JournalAbbreviations::JournalAbbreviations()
         : d(new JournalAbbreviations::Private(this))
@@ -120,10 +119,9 @@ JournalAbbreviations::~JournalAbbreviations()
     delete d;
 }
 
-JournalAbbreviations *JournalAbbreviations::self() {
-    if (instance == nullptr)
-        instance = new JournalAbbreviations();
-    return instance;
+const JournalAbbreviations &JournalAbbreviations::instance() {
+    static JournalAbbreviations singleton;
+    return singleton;
 }
 
 QString JournalAbbreviations::toShortName(const QString &longName) const {

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -48,7 +48,7 @@ public:
      * Only one instance of this class has to be used
      * @return the class's singleton
      */
-    static const BibTeXEntries *self();
+    static const BibTeXEntries &instance();
 
     /**
      * Change the casing of a given entry name to one of the predefine formats.

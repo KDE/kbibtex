@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,7 +28,7 @@
 class KBIBTEXPROC_EXPORT JournalAbbreviations
 {
 public:
-    static JournalAbbreviations *self();
+    static const JournalAbbreviations &instance();
 
     QString toShortName(const QString &longName) const;
     QString toLongName(const QString &shortName) const;
@@ -40,8 +40,6 @@ protected:
 private:
     class Private;
     Private *const d;
-
-    static JournalAbbreviations *instance;
 };
 
 #endif // KBIBTEX_PROC_JOURNALABBREVIATIONS_H

@@ -163,7 +163,7 @@ public:
     QString translateJournalToken(const Entry &entry, const struct IdSuggestionTokenInfo &jti, bool removeSmallWords) const {
         static const QRegularExpression sequenceOfSpaces(QStringLiteral("\\s+"));
         QString journalName = PlainTextValue::text(entry.value(Entry::ftJournal));
-        journalName = JournalAbbreviations::self()->toShortName(journalName);
+        journalName = JournalAbbreviations::instance().toShortName(journalName);
         const QStringList journalWords = journalName.split(sequenceOfSpaces, QString::SkipEmptyParts);
         bool first = true;
         int index = 0;

@@ -72,8 +72,7 @@ bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &r
     int column = left.column();
     Q_ASSERT_X(left.column() == right.column(), "bool SortFilterFileModel::lessThan(const QModelIndex &left, const QModelIndex &right) const", "Not comparing items in same column"); ///< assume that we only sort by column
 
-    const BibTeXFields *bibtexFields = BibTeXFields::self();
-    const FieldDescription &fd = bibtexFields->at(column);
+    const FieldDescription &fd = BibTeXFields::instance().at(column);
 
     if (column == right.column() && (fd.upperCamelCase == QStringLiteral("Author") || fd.upperCamelCase == QStringLiteral("Editor"))) {
         /// special sorting for authors or editors: check all names,
@@ -181,7 +180,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
             /// Check entry's type
             const QString type = entry->type();
             /// Check type's description ("Journal Article")
-            const QString label = BibTeXEntries::self()->label(type);
+            const QString label = BibTeXEntries::instance().label(type);
             // TODO test for internationalized variants like "Artikel" or "bok" as well?
             int i = 0;
             for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)

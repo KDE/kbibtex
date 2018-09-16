@@ -97,10 +97,9 @@ public:
         comboBoxField->addItem(i18n("any field"), QVariant());
         comboBoxField->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-        const BibTeXFields *bf = BibTeXFields::self();
         /// Use a hash map to get an alphabetically sorted list
         QHash<QString, QString> fielddescs;
-        for (const auto &fd : const_cast<const BibTeXFields &>(*bf))
+        for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance()))
             if (fd.upperCamelCaseAlt.isEmpty())
                 fielddescs.insert(fd.label, fd.upperCamelCase);
         /// Sort locale-aware
