@@ -73,11 +73,6 @@ public:
         initialize();
     }
 
-    ~ValueListPrivate() {
-        delete comboboxFieldNames;
-        // TODO more deletes
-    }
-
     void setupGUI() {
         QBoxLayout *layout = new QVBoxLayout(p);
         layout->setMargin(0);
