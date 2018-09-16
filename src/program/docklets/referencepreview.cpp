@@ -297,7 +297,7 @@ void ReferencePreview::renderHTML()
                 exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
         } else */
         if (crossRefHandling == merge && !entry.isNull()) {
-            QSharedPointer<Entry> merged = QSharedPointer<Entry>(Entry::resolveCrossref(*entry, d->file));
+            QSharedPointer<Entry> merged = QSharedPointer<Entry>(entry->resolveCrossref(d->file));
             exporterResult = exporter->save(&buffer, merged, d->file, &errorLog);
         } else
             exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);

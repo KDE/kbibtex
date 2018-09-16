@@ -101,11 +101,12 @@ bool FileExporterXML::write(QTextStream &stream, const Element *element, const F
 
     const Entry *entry = dynamic_cast<const Entry *>(element);
     if (entry != nullptr) {
-        if (bibtexfile != nullptr)
-            entry = entry->resolveCrossref(bibtexfile);
-        result |= writeEntry(stream, entry);
-        if (bibtexfile != nullptr)
-            delete entry; /// delete artificially created Entry from resolveCrossref(..)
+        if (bibtexfile == nullptr)
+            result |= writeEntry(stream, entry);
+        else {
+            QScopedPointer<const Entry> resolvedEntry(entry->resolveCrossref(bibtexfile));
+            result |= writeEntry(stream, resolvedEntry.data());
+        }
     } else {
         const Macro *macro = dynamic_cast<const Macro *>(element);
         if (macro != nullptr)

@@ -113,11 +113,8 @@ QVariant FileModel::entryData(const Entry *entry, const QString &raw, const QStr
             text = PlainTextValue::text(entry->value(rawAlt)).simplified();
 
         if (followCrossRef && text.isEmpty() && entry->contains(Entry::ftCrossRef)) {
-            // TODO do not only follow "crossref", but other files from Biber/Biblatex as well
-            Entry *completedEntry = entry->resolveCrossref(m_file);
-            QVariant result = entryData(completedEntry, raw, rawAlt, rawAliases, role, false);
-            delete completedEntry;
-            return result;
+            QScopedPointer<const Entry> completedEntry(entry->resolveCrossref(m_file));
+            return entryData(completedEntry.data(), raw, rawAlt, rawAliases, role, false);
         }
 
         if (text.isEmpty())

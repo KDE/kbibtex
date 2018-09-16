@@ -544,7 +544,7 @@ void ReferenceWidget::setEntryIdByDefault()
         /// Collect information on the current entry as it is edited
         QSharedPointer<Entry> guiDataEntry(new Entry());
         m_applyElement->apply(guiDataEntry);
-        QSharedPointer<Entry> crossrefResolvedEntry(Entry::resolveCrossref(*guiDataEntry.data(), m_file));
+        QSharedPointer<Entry> crossrefResolvedEntry(guiDataEntry->resolveCrossref(m_file));
         /// Determine default suggestion based on current data
         const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 

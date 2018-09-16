@@ -96,6 +96,9 @@ public:
     /** Representation of the BibTeX field key "year" */
     static const QString ftYear;
 
+    /** Representation of the BibLaTeX field key "year" */
+    static const QString ftXData;
+
     /** Representation of the BibTeX entry type "Article" */
     static const QString etArticle;
     /** Representation of the BibTeX entry type "Book" */
@@ -104,6 +107,8 @@ public:
     static const QString etInBook;
     /** Representation of the BibTeX entry type "InProceedings" */
     static const QString etInProceedings;
+    /** Representation of the BibTeX entry type "Proceedings" */
+    static const QString etProceedings;
     /** Representation of the BibTeX entry type "Misc" */
     static const QString etMisc;
     /** Representation of the BibTeX entry type "TechReport" */
@@ -188,8 +193,22 @@ public:
      */
     bool contains(const QString &key) const;
 
+    /**
+     * Resolve cross references in an entry. This function evaluates known cross
+     * reference fields such as 'crossref' from BibTeX and 'xdata' from BibLaTeX.
+     * Fields that exist in cross-referenced entries will be copied in the entry
+     * that this function will eventually return.
+     * This function always returns a new Entry that must be deleted by the caller,
+     * even if no cross reference fields existed in the original entry or no fields
+     * were copied from cross-referenced entries.
+     * This new Entry will not be part of any File object, not even the one passed
+     * to this function.
+     * Tip: As the returned Entry is most often only used temporary, it may be a
+     * good idea to wrap it into a QScopedPointer<const Entry> at the caller's side.
+     * @param bibTeXfile bibliography to search for entries being cross-referenced
+     * @return New entry object with known cross references resolved
+     */
     Entry *resolveCrossref(const File *bibTeXfile) const;
-    static Entry *resolveCrossref(const Entry &original, const File *bibTeXfile);
 
     static QStringList authorsLastName(const Entry &entry);
     QStringList authorsLastName() const;
