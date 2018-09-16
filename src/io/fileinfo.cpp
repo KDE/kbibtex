@@ -150,11 +150,11 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
                     continue;
                 }
             } else if (!baseDirectory.isEmpty() &&
-                    // TODO the following test assumes that absolute paths start
-                    // with a dir separator, which may only be true on Unix/Linux,
-                    // but not Windows. May be a test for 'first character is a letter,
-                    // second is ":", third is "\"' may be necessary.
-                    !internalText.startsWith(QDir::separator())) {
+                       // TODO the following test assumes that absolute paths start
+                       // with a dir separator, which may only be true on Unix/Linux,
+                       // but not Windows. May be a test for 'first character is a letter,
+                       // second is ":", third is "\"' may be necessary.
+                       !internalText.startsWith(QDir::separator())) {
                 /// To get the absolute path, prepend filename fragment with base directory
                 const QString fullFilename = baseDirectory + QDir::separator() + internalText;
                 const QFileInfo fileInfo(fullFilename);
@@ -266,7 +266,7 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
             QString plainText = PlainTextValue::text(*valueItem);
 
             static const QRegularExpression regExpEscapedChars = QRegularExpression(QStringLiteral("\\\\+([&_~])"));
-            plainText.replace(regExpEscapedChars,QStringLiteral("\\1"));
+            plainText.replace(regExpEscapedChars, QStringLiteral("\\1"));
 
             urlsInText(plainText, testExistence, baseDirectory, result);
         }
