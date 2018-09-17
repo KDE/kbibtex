@@ -35,7 +35,7 @@ private:
 public:
     static NotificationHub *singleton;
     QHash<int, QSet<NotificationListener *> > listenersPerEventId;
-    QSet<NotificationListener *> allListeners;
+    QSet<NotificationListener *> listenersAnyEvent;
 
     NotificationHubPrivate(NotificationHub *)
     {
@@ -63,12 +63,15 @@ NotificationHub *NotificationHub::getHub()
 
 void NotificationHub::registerNotificationListener(NotificationListener *listener, int eventId)
 {
+
     NotificationHub::NotificationHubPrivate *d = getHub()->d;
-    if (eventId != EventAny) {
-        QSet< NotificationListener *> set = d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>());
+    if (eventId == EventAny)
+        d->listenersAnyEvent.insert(listener);
+    else {
+        QSet<NotificationListener *> set = d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>());
         set.insert(listener);
+        d->listenersPerEventId.insert(eventId, set);
     }
-    d->allListeners.insert(listener);
 }
 
 void NotificationHub::unregisterNotificationListener(NotificationListener *listener, int eventId)
@@ -78,25 +81,23 @@ void NotificationHub::unregisterNotificationListener(NotificationListener *liste
         for (QHash<int, QSet<NotificationListener *> >::Iterator it = d->listenersPerEventId.begin(); it != d->listenersPerEventId.end(); ++it)
             it.value().remove(listener);
     } else {
-        QSet< NotificationListener *> set = d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>());
+        QSet<NotificationListener *> set = d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>());
         set.remove(listener);
+        d->listenersPerEventId.insert(eventId, set);
     }
-    d->allListeners.remove(listener);
+    d->listenersAnyEvent.remove(listener);
 }
 
 void NotificationHub::publishEvent(int eventId)
 {
     NotificationHub::NotificationHubPrivate *d = getHub()->d;
     if (eventId >= 0) {
-        qCDebug(LOG_KBIBTEX_CONFIG) << "Notifying about event" << eventId;
-
-        QSet< NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
-        for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(d->allListeners)) {
+        QSet<NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
+        for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(d->listenersAnyEvent))
             set.insert(listener);
-        }
-        for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(set)) {
+        qCDebug(LOG_KBIBTEX_CONFIG) << "Notifying about event" << eventId << " having" << set.count() << "receivers";
+        for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(set))
             listener->notificationEvent(eventId);
-        }
     }
 }
 

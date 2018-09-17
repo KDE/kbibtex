@@ -52,7 +52,7 @@ public:
 
 private:
     class NotificationHubPrivate;
-    NotificationHubPrivate *d;
+    NotificationHubPrivate *const d;
 
     static NotificationHub *getHub();
 
