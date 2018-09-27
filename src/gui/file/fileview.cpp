@@ -195,7 +195,7 @@ void FileView::selectionChanged(const QItemSelection &selected, const QItemSelec
         if (index.column() != 0) continue; ///< consider only column-0 indices to avoid duplicate elements
         m_selection.append(elementAt(index));
     }
-    if (m_current == nullptr && !selectedSet.isEmpty())
+    if (m_current.isNull() && !selectedSet.isEmpty())
         m_current = elementAt(selectedSet.first());
 
     const QModelIndexList deselectedSet = deselected.indexes();
