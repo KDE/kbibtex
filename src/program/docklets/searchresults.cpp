@@ -201,6 +201,7 @@ void SearchResults::importSelected()
     FileModel *sourceModel = d->resultList->fileModel();
     if (targetModel == nullptr || sourceModel == nullptr) return; ///< either source or target model is invalid
 
+    bool atLeastOneSuccessfullInsertion = false;
     const QModelIndexList selList = d->resultList->selectionModel()->selectedRows();
     for (const QModelIndex &modelIndex : selList) {
         /// Map from visible row to 'real' row
@@ -213,11 +214,11 @@ void SearchResults::importSelected()
             /// Important: make clone of entry before inserting
             /// in main list, otherwise data would be shared
             QSharedPointer<Entry> clone(new Entry(*entry));
-            targetModel->insertRow(clone, targetModel->rowCount());
+            atLeastOneSuccessfullInsertion |= targetModel->insertRow(clone, targetModel->rowCount());
         } else
             qCWarning(LOG_KBIBTEX_PROGRAM) << "Trying to import something that isn't an Entry";
     }
 
-    if (!selList.isEmpty())
+    if (atLeastOneSuccessfullInsertion)
         d->mainEditor->externalModification();
 }
