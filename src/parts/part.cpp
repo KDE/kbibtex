@@ -646,6 +646,9 @@ public:
         viewDocumentMenu->clear();
         int result = 0; ///< Initially, no references are known
 
+        File *bibliographyFile = partWidget != nullptr && partWidget->fileView() != nullptr && partWidget->fileView()->fileModel() != nullptr ? partWidget->fileView()->fileModel()->bibliographyFile() : nullptr;
+        if (bibliographyFile == nullptr) return result;
+
         /// Clean signal mapper of old mappings
         /// as stored in QSet signalMapperViewDocumentSenders
         /// and identified by their QAction*'s
@@ -661,7 +664,7 @@ public:
         /// Test and continue if there was an Entry to retrieve
         if (!entry.isNull()) {
             /// Get list of URLs associated with this entry
-            const auto urlList = FileInfo::entryUrls(entry, partWidget->fileView()->fileModel()->bibliographyFile()->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
+            const auto urlList = FileInfo::entryUrls(entry, bibliographyFile->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
             if (!urlList.isEmpty()) {
                 /// Memorize first action, necessary to set menu title
                 QAction *firstAction = nullptr;
@@ -932,10 +935,13 @@ void KBibTeXPart::elementFindPDF()
 
 void KBibTeXPart::applyDefaultFormatString()
 {
+    FileModel *model = d->partWidget != nullptr && d->partWidget->fileView() != nullptr ? d->partWidget->fileView()->fileModel() : nullptr;
+    if (model == nullptr) return;
+
     bool documentModified = false;
     const QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
     for (const QModelIndex &index : mil) {
-        QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
+        QSharedPointer<Entry> entry = model->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull()) {
             static IdSuggestions idSuggestions;
             bool success = idSuggestions.applyDefaultFormatId(*entry.data());
@@ -1033,6 +1039,9 @@ void KBibTeXPart::newCommentTriggered()
 
 void KBibTeXPart::updateActions()
 {
+    FileModel *model = d->partWidget != nullptr && d->partWidget->fileView() != nullptr ? d->partWidget->fileView()->fileModel() : nullptr;
+    if (model == nullptr) return;
+
     bool emptySelection = d->partWidget->fileView()->selectedElements().isEmpty();
     d->elementEditAction->setEnabled(!emptySelection);
     d->editCopyAction->setEnabled(!emptySelection);
@@ -1058,7 +1067,7 @@ void KBibTeXPart::updateActions()
         const QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
         references.reserve(mil.size());
         for (const QModelIndex &index : mil) {
-            QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
+            const QSharedPointer<Entry> entry = model->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
             if (!entry.isNull())
                 references << entry->id();
         }

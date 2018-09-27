@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -119,7 +119,9 @@ public:
     }
 
     void clear() {
-        resultList->fileModel()->clear();
+        FileModel *model = resultList->fileModel();
+        if (model != nullptr)
+            model->clear();
     }
 
     bool insertElement(QSharedPointer<Element> element) {
@@ -132,7 +134,7 @@ public:
         if (!entry.isNull())
             idSuggestions.applyDefaultFormatId(*entry.data());
 
-        bool result = model->insertRow(element, model->rowCount());
+        bool result = model != nullptr ? model->insertRow(element, model->rowCount()) : false;
         if (result)
             resultList->sortFilterProxyModel()->invalidate();
 

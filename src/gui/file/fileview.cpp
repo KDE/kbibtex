@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -113,7 +113,9 @@ void FileView::viewCurrentElement()
 void FileView::viewElement(const QSharedPointer<Element> element)
 {
     prepareEditorDialog(DialogTypeView);
-    m_elementEditor->setElement(element, fileModel()->bibliographyFile());
+    FileModel *model = fileModel();
+    File *bibliographyFile = model != nullptr ? model->bibliographyFile() : nullptr;
+    m_elementEditor->setElement(element, bibliographyFile);
 
     m_elementEditor->setCurrentPage(m_lastEditorPage);
     m_elementEditorDialog->exec();
@@ -128,7 +130,9 @@ void FileView::editCurrentElement()
 bool FileView::editElement(QSharedPointer<Element> element)
 {
     prepareEditorDialog(DialogTypeEdit);
-    m_elementEditor->setElement(element, fileModel()->bibliographyFile());
+    FileModel *model = fileModel();
+    File *bibliographyFile = model != nullptr ? model->bibliographyFile() : nullptr;
+    m_elementEditor->setElement(element, bibliographyFile);
 
     m_elementEditor->setCurrentPage(m_lastEditorPage);
     m_elementEditorDialog->exec();
@@ -137,7 +141,9 @@ bool FileView::editElement(QSharedPointer<Element> element)
     if (!isReadOnly()) {
         bool changed = m_elementEditor->elementChanged();
         if (changed) {
-            emit currentElementChanged(currentElement(), fileModel()->bibliographyFile());
+            FileModel *model = fileModel();
+            const File *bibliographyFile = model != nullptr ? model->bibliographyFile() : nullptr;
+            emit currentElementChanged(currentElement(), bibliographyFile);
             emit selectedElementsChanged();
             emit modified(true);
         }
@@ -158,8 +164,10 @@ void FileView::setSelectedElement(QSharedPointer<Element> element)
 
     QItemSelectionModel *selModel = selectionModel();
     selModel->clear();
-    const int row = fileModel()->row(element);
-    const QModelIndex idx = sortFilterProxyModel()->mapFromSource(fileModel()->index(row, 0));
+    FileModel *model = fileModel();
+    const int row = model != nullptr ? model->row(element) : -1;
+    const QModelIndex sourceIdx = row >= 0 && model != nullptr ? model->index(row, 0) : QModelIndex();
+    const QModelIndex idx = sortFilterProxyModel()->mapFromSource(sourceIdx);
     selModel->setCurrentIndex(idx, QItemSelectionModel::Select | QItemSelectionModel::Rows);
 }
 
@@ -175,7 +183,8 @@ QSharedPointer<Element> FileView::currentElement()
 
 QSharedPointer<Element> FileView::elementAt(const QModelIndex &index)
 {
-    return fileModel()->element(sortFilterProxyModel()->mapToSource(index).row());
+    FileModel *model = fileModel();
+    return model != nullptr ? model->element(sortFilterProxyModel()->mapToSource(index).row()) : QSharedPointer<Element>();
 }
 
 void FileView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
@@ -183,7 +192,9 @@ void FileView::currentChanged(const QModelIndex &current, const QModelIndex &pre
     QTreeView::currentChanged(current, previous); // FIXME necessary?
 
     m_current = elementAt(current);
-    emit currentElementChanged(m_current, fileModel()->bibliographyFile());
+    FileModel *model = fileModel();
+    if (model != nullptr)
+        emit currentElementChanged(m_current, model->bibliographyFile());
 }
 
 void FileView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
@@ -215,7 +226,8 @@ void FileView::selectionDelete()
     for (const QModelIndex &idx : mil)
         rows << sortFilterProxyModel()->mapToSource(idx).row();
 
-    fileModel()->removeRowList(rows);
+    FileModel *model = fileModel();
+    if (model != nullptr) model->removeRowList(rows);
 
     emit modified(true);
 }

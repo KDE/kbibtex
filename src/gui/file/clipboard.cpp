@@ -52,10 +52,13 @@ public:
     }
 
     QString selectionToText() {
+        FileModel *model = fileView->fileModel();
+        if (model == nullptr) return QString();
+
         const QModelIndexList mil = fileView->selectionModel()->selectedRows();
         QScopedPointer<File> file(new File());
         for (const QModelIndex &index : mil)
-            file->append(fileView->fileModel()->element(fileView->sortFilterProxyModel()->mapToSource(index).row()));
+            file->append(model->element(fileView->sortFilterProxyModel()->mapToSource(index).row()));
 
         FileExporterBibTeX exporter(fileView);
         exporter.setEncoding(QStringLiteral("latex"));
@@ -88,9 +91,11 @@ public:
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (entry.isNull()) return false;
         if (!url.isValid()) return false;
+        FileModel *model = fileView->fileModel();
+        if (model == nullptr) return false;
 
         qCDebug(LOG_KBIBTEX_GUI) << "About to add URL " << url.toDisplayString() << " to entry" << entry->id();
-        return AssociatedFilesUI::associateUrl(url, entry, fileView->fileModel()->bibliographyFile(), fileView);
+        return AssociatedFilesUI::associateUrl(url, entry, model->bibliographyFile(), fileView);
     }
 
     bool insertText(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
@@ -105,13 +110,15 @@ public:
                 insertUrlPreviouslyCalled = true;
         }
 
+        FileModel *fileModel = fileView->fileModel();
+        if (fileModel == nullptr) return false;
+
         /// Assumption: user dropped a piece of BibTeX code,
         /// use BibTeX importer to generate representation from plain text
         FileImporterBibTeX importer(fileView);
         File *file = importer.fromString(text);
         if (file != nullptr) {
             if (!file->isEmpty()) {
-                FileModel *fileModel = fileView->fileModel();
                 QSortFilterProxyModel *sfpModel = fileView->sortFilterProxyModel();
 
                 /// Insert new elements one by one
@@ -189,11 +196,14 @@ void Clipboard::copy()
 
 void Clipboard::copyReferences()
 {
+    FileModel *model = d->fileView != nullptr ? d->fileView->fileModel() : nullptr;
+    if (model == nullptr) return;
+
     QStringList references;
     const QModelIndexList mil = d->fileView->selectionModel()->selectedRows();
     references.reserve(mil.size());
     for (const QModelIndex &index : mil) {
-        QSharedPointer<Entry> entry = d->fileView->fileModel()->element(d->fileView->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
+        QSharedPointer<Entry> entry = model->element(d->fileView->sortFilterProxyModel()->mapToSource(index).row()).dynamicCast<Entry>();
         if (!entry.isNull())
             references << entry->id();
     }

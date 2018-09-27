@@ -665,9 +665,12 @@ void FindDuplicatesUI::startDuplicatesSearch()
     //if (!ok) sensitivity = 4000;
     int sensitivity = 4000;
 
+    FileModel *model = d->view->fileModel();
+    if (model == nullptr) return;
+
     /// Full file, used to remove merged elements from
     /// Stays the same even when merging is restricted to selected elements
-    File *originalFile = d->view->fileModel()->bibliographyFile();
+    File *originalFile = model->bibliographyFile();
     /// File to be used to find duplicate in,
     /// may be only a subset of the original one if selection is used
     File *workingSetFile = originalFile;
@@ -681,7 +684,7 @@ void FindDuplicatesUI::startDuplicatesSearch()
         workingSetFile = new File();
         const QModelIndexList mil = d->view->selectionModel()->selectedRows();
         for (const QModelIndex &index : mil)
-            workingSetFile->append(d->view->fileModel()->element(d->view->sortFilterProxyModel()->mapToSource(index).row()));
+            workingSetFile->append(model->element(d->view->sortFilterProxyModel()->mapToSource(index).row()));
     }
 
     /// Actual duplicate finder, can be given a widget that will be the
