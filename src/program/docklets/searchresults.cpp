@@ -197,6 +197,8 @@ void SearchResults::importSelected()
 
     FileModel *targetModel = d->mainEditor->fileModel();
     FileModel *sourceModel = d->resultList->fileModel();
+    if (targetModel == nullptr || sourceModel == nullptr) return; ///< either source or target model is invalid
+
     const QModelIndexList selList = d->resultList->selectionModel()->selectedRows();
     for (const QModelIndex &modelIndex : selList) {
         /// Map from visible row to 'real' row
