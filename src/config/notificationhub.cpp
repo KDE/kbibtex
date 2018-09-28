@@ -83,8 +83,8 @@ void NotificationHub::unregisterNotificationListener(NotificationListener *liste
 
 void NotificationHub::publishEvent(int eventId)
 {
-    NotificationHub::NotificationHubPrivate *d = instance().d;
     if (eventId >= 0) {
+        NotificationHub::NotificationHubPrivate *d = instance().d;
         QSet<NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
         for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(d->listenersAnyEvent))
             set.insert(listener);
@@ -96,4 +96,5 @@ void NotificationHub::publishEvent(int eventId)
 
 const int NotificationHub::EventAny = -1;
 const int NotificationHub::EventConfigurationChanged = 0;
+const int NotificationHub::EventBibliographySystemChanged = 1;
 const int NotificationHub::EventUserDefined = 1024;

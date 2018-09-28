@@ -48,7 +48,7 @@ const bool FileModel::defaultShowMacros = true;
 FileModel::FileModel(QObject *parent)
         : QAbstractTableModel(parent), m_file(nullptr)
 {
-    NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
+    NotificationHub::registerNotificationListener(this);
     readConfiguration();
 }
 
@@ -68,7 +68,8 @@ void FileModel::notificationEvent(int eventId)
                 emit dataChanged(index(0, column), index(rowCount() - 1, column));
             ++column;
         }
-    }
+    } else if (eventId == NotificationHub::EventBibliographySystemChanged)
+        emit headerDataChanged(Qt::Horizontal, 0, 0xffff);
 }
 
 void FileModel::readConfiguration()

@@ -23,6 +23,8 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
+#include "notificationhub.h"
+
 const QString Preferences::groupColor = QStringLiteral("Color Labels");
 const QString Preferences::keyColorCodes = QStringLiteral("colorCodes");
 const QStringList Preferences::defaultColorCodes {QStringLiteral("#cc3300"), QStringLiteral("#0033ff"), QStringLiteral("#009966"), QStringLiteral("#f0d000")};
@@ -89,6 +91,7 @@ bool Preferences::setBibliographySystem(const Preferences::BibliographySystem bi
     if (prevIndex == newIndex) return false; /// If old and new bibliography system are the same, return 'false' directly
     configGroup.writeEntry(QStringLiteral("BibliographySystem"), newIndex);
     config->sync();
+    NotificationHub::publishEvent(NotificationHub::EventBibliographySystemChanged);
     return true;
 }
 

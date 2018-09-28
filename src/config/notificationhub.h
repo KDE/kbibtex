@@ -42,6 +42,7 @@ public:
 
     static const int EventAny;
     static const int EventConfigurationChanged;
+    static const int EventBibliographySystemChanged;
     static const int EventUserDefined;
 
     static void registerNotificationListener(NotificationListener *listener, int eventId = NotificationHub::EventAny);
