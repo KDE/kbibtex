@@ -21,6 +21,7 @@
 #include <QScrollBar>
 #include <QKeyEvent>
 #include <QAction>
+#include <QMenu>
 
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -77,7 +78,6 @@ public:
             fd.visible.remove(name);
             const bool visibility = fd.defaultVisible;
             p->header()->setSectionHidden(col, !visibility);
-            p->header()->actions().at(col)->setChecked(visibility);
             ++col;
         }
         BibTeXFields::instance().save();
@@ -89,7 +89,6 @@ public:
         for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
             const bool visibility = fd.visible.contains(name) ? fd.visible[name] : fd.defaultVisible;
             p->header()->setSectionHidden(col, !visibility);
-            p->header()->actions().at(col)->setChecked(visibility);
             ++col;
         }
         balanceColumns();
@@ -126,39 +125,8 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     header()->setSectionsMovable(false);
     header()->setSectionResizeMode(QHeaderView::Fixed);
     connect(header(), &QHeaderView::sortIndicatorChanged, this, &BasicFileView::sort);
-    header()->setContextMenuPolicy(Qt::ActionsContextMenu);
-
-    /// build context menu for header to show/hide single columns
-    int col = 0;
-    for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
-        QAction *action = new QAction(fd.label, header());
-        action->setData(col);
-        action->setCheckable(true);
-        action->setChecked(!header()->isSectionHidden(col));
-        connect(action, &QAction::triggered, this, &BasicFileView::headerActionToggled);
-        header()->addAction(action);
-        ++col;
-    }
-
-    /// add separator to header's context menu
-    QAction *action = new QAction(header());
-    action->setSeparator(true);
-    header()->addAction(action);
-
-    /// add action to reset to defaults (regarding column visibility) to header's context menu
-    action = new QAction(i18n("Reset to defaults"), header());
-    connect(action, &QAction::triggered, this, &BasicFileView::headerResetToDefaults);
-    header()->addAction(action);
-
-    /// add separator to header's context menu
-    action = new QAction(header());
-    action->setSeparator(true);
-    header()->addAction(action);
-
-    /// add action to disable any sorting
-    action = new QAction(i18n("No sorting"), header());
-    connect(action, &QAction::triggered, this, &BasicFileView::noSorting);
-    header()->addAction(action);
+    header()->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(header(), &QHeaderView::customContextMenuRequested, this, &BasicFileView::showHeaderContextMenu);
 }
 
 BasicFileView::~BasicFileView()
@@ -168,6 +136,9 @@ BasicFileView::~BasicFileView()
 
 void BasicFileView::setModel(QAbstractItemModel *model)
 {
+    if (d->fileModel != nullptr)
+        disconnect(d->fileModel, &FileModel::headerDataChanged, this, &BasicFileView::headerResetToDefaults);
+
     d->sortFilterProxyModel = nullptr;
     d->fileModel = dynamic_cast<FileModel *>(model);
     if (d->fileModel == nullptr) {
@@ -179,6 +150,10 @@ void BasicFileView::setModel(QAbstractItemModel *model)
     }
     if (d->fileModel == nullptr)
         qCWarning(LOG_KBIBTEX_GUI) << "Failed to dynamically cast model to FileModel*";
+    else
+        /// On header data change, e.g. triggered by change of bibliographic system, reset visibile columns
+        connect(d->fileModel, &FileModel::headerDataChanged, this, &BasicFileView::headerResetToDefaults);
+
     QTreeView::setModel(model);
 
     /// sort according to session
@@ -251,4 +226,43 @@ void BasicFileView::noSorting()
         sortedModel->sort(-1);
         header()->setSortIndicator(-1, Qt::AscendingOrder);
     }
+}
+
+void BasicFileView::showHeaderContextMenu(const QPoint &pos)
+{
+    const QPoint globalPos = viewport()->mapToGlobal(pos);
+    QMenu menu;
+
+    int col = 0;
+    for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
+        QAction *action = new QAction(fd.label, &menu);
+        action->setData(col);
+        action->setCheckable(true);
+        action->setChecked(!header()->isSectionHidden(col));
+        connect(action, &QAction::triggered, this, &BasicFileView::headerActionToggled);
+        menu.addAction(action);
+        ++col;
+    }
+
+    /// Add separator to header's context menu
+    QAction *action = new QAction(&menu);
+    action->setSeparator(true);
+    menu.addAction(action);
+
+    /// Add action to reset to defaults (regarding column visibility) to header's context menu
+    action = new QAction(i18n("Reset to defaults"), &menu);
+    connect(action, &QAction::triggered, this, &BasicFileView::headerResetToDefaults);
+    menu.addAction(action);
+
+    /// Add separator to header's context menu
+    action = new QAction(&menu);
+    action->setSeparator(true);
+    menu.addAction(action);
+
+    /// Add action to disable any sorting
+    action = new QAction(i18n("No sorting"), &menu);
+    connect(action, &QAction::triggered, this, &BasicFileView::noSorting);
+    menu.addAction(action);
+
+    menu.exec(globalPos);
 }
