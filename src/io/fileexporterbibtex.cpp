@@ -256,7 +256,11 @@ public:
     }
 
     QString addProtectiveCasing(QString &text) {
-        if (text.length() < 2 && (text[0] != QLatin1Char('"') || text[text.length() - 1] != QLatin1Char('"')) && (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}'))) {
+        /// Check if either
+        ///  - text is too short (less than two characters)  or
+        ///  - text neither starts/stops with double quotation marks
+        ///    nor starts with { and stops with }
+        if (text.length() < 2 || ((text[0] != QLatin1Char('"') || text[text.length() - 1] != QLatin1Char('"')) && (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}')))) {
             /// Nothing to protect, as this is no text string
             return text;
         }
@@ -264,11 +268,10 @@ public:
         bool addBrackets = true;
 
         if (text[1] == QLatin1Char('{') && text[text.length() - 2] == QLatin1Char('}')) {
-            /// If the given text looks like this:  {{...}}
+            /// If the given text looks like this:  {{...}}  or  "{...}"
             /// still check that it is not like this: {{..}..{..}}
             addBrackets = false;
-            int count = 0;
-            for (int i = text.length() - 2; !addBrackets && i > 1; --i) {
+            for (int i = text.length() - 2, count = 0; !addBrackets && i > 1; --i) {
                 if (text[i] == QLatin1Char('{')) ++count;
                 else if (text[i] == QLatin1Char('}')) --count;
                 if (count == 0) addBrackets = true;
@@ -282,7 +285,11 @@ public:
     }
 
     QString removeProtectiveCasing(QString &text) {
-        if (text.length() < 2 && (text[0] != QLatin1Char('"') || text[text.length() - 1] != QLatin1Char('"')) && (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}'))) {
+        /// Check if either
+        ///  - text is too short (less than two characters)  or
+        ///  - text neither starts/stops with double quotation marks
+        ///    nor starts with { and stops with }
+        if (text.length() < 2 || ((text[0] != QLatin1Char('"') || text[text.length() - 1] != QLatin1Char('"')) && (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}')))) {
             /// Nothing to protect, as this is no text string
             return text;
         }
@@ -291,9 +298,10 @@ public:
             /// Nothing to remove
             return text;
 
+        /// If the given text looks like this:  {{...}}  or  "{...}"
+        /// still check that it is not like this: {{..}..{..}}
         bool removeBrackets = true;
-        int count = 0;
-        for (int i = text.length() - 2; removeBrackets && i > 1; --i) {
+        for (int i = text.length() - 2, count = 0; removeBrackets && i > 1; --i) {
             if (text[i] == QLatin1Char('{')) ++count;
             else if (text[i] == QLatin1Char('}')) --count;
             if (count == 0) removeBrackets = false;
