@@ -276,7 +276,7 @@ public:
         }
 
         if (addBrackets)
-            text.insert(1, QStringLiteral("{")).insert(text.length(),  QStringLiteral("}"));
+            text.insert(1, QStringLiteral("{")).insert(text.length() - 1,  QStringLiteral("}"));
 
         return text;
     }
