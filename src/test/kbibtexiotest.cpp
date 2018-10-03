@@ -23,11 +23,12 @@
 #include "encoderlatex.h"
 #include "value.h"
 #include "entry.h"
-#include "fileimporter.h"
-#include "fileexporterris.h"
 #include "fileexporterbibtex.h"
+#include "fileexporterris.h"
 #include "fileexporterxml.h"
+#include "file.h"
 #include "fileimporterbibtex.h"
+#include "fileimporter.h"
 #include "fileimporterris.h"
 #include "fileinfo.h"
 #include "preferences.h"
@@ -65,6 +66,8 @@ private slots:
     void fileImporterRISload();
     void fileImporterBibTeXload_data();
     void fileImporterBibTeXload();
+    void protectiveCasingEntryGeneratedOnTheFly();
+    void protectiveCasingEntryFromData();
 
 private:
 };
@@ -404,6 +407,85 @@ void KBibTeXIOTest::fileImporterBibTeXload()
     QScopedPointer<File> generatedFile(fileImporterBibTeX.load(&buffer));
 
     QVERIFY(generatedFile->operator ==(*bibTeXfile));
+}
+
+void KBibTeXIOTest::protectiveCasingEntryGeneratedOnTheFly()
+{
+    static const QString titleText = QStringLiteral("Some Title for a Journal Article");
+    static const QString singleCurleyBracketTitle = QStringLiteral("{") + titleText + QStringLiteral("}");
+    static const QString doubleCurleyBracketTitle = QStringLiteral("{{") + titleText + QStringLiteral("}}");
+
+    FileExporterBibTeX fileExporterBibTeX(this);
+
+    /// Create a simple File object with a title field
+    File file;
+    file.setProperty(File::StringDelimiter, QStringLiteral("{}"));
+    QSharedPointer<Entry> entry {new Entry(Entry::etArticle, QStringLiteral("SomeId"))};
+    Value titleValue = Value() << QSharedPointer<PlainText>(new PlainText(titleText));
+    entry->insert(Entry::ftTitle, titleValue);
+    file.append(entry);
+
+    file.setProperty(File::ProtectCasing, Qt::Checked);
+    const QString textWithProtectiveCasing = fileExporterBibTeX.toString(&file);
+    QVERIFY(textWithProtectiveCasing.contains(doubleCurleyBracketTitle));
+
+    file.setProperty(File::ProtectCasing, Qt::Unchecked);
+    const QString textWithoutProtectiveCasing = fileExporterBibTeX.toString(&file);
+    QVERIFY(textWithoutProtectiveCasing.contains(singleCurleyBracketTitle)
+            && !textWithoutProtectiveCasing.contains(doubleCurleyBracketTitle));
+}
+
+void KBibTeXIOTest::protectiveCasingEntryFromData()
+{
+    static const QString titleText = QStringLiteral("Some Title for a Journal Article");
+    static const QString singleCurleyBracketTitle = QStringLiteral("{") + titleText + QStringLiteral("}");
+    static const QString doubleCurleyBracketTitle = QStringLiteral("{{") + titleText + QStringLiteral("}}");
+    static const QString bibTeXDataDoubleCurleyBracketTitle = QStringLiteral("@articl{doubleCurleyBracketTitle,\ntitle={{") + titleText + QStringLiteral("}}\n}\n");
+    static const QString bibTeXDataSingleCurleyBracketTitle = QStringLiteral("@articl{singleCurleyBracketTitle,\ntitle={") + titleText + QStringLiteral("}\n}\n");
+
+    FileImporterBibTeX fileImporterBibTeX(this);
+    FileExporterBibTeX fileExporterBibTeX(this);
+
+    QByteArray b1(bibTeXDataDoubleCurleyBracketTitle.toUtf8());
+    QBuffer bufferDoubleCurleyBracketTitle(&b1, this);
+    QByteArray b2(bibTeXDataSingleCurleyBracketTitle.toUtf8());
+    QBuffer bufferSingleCurleyBracketTitle(&b2, this);
+
+    bufferDoubleCurleyBracketTitle.open(QBuffer::ReadOnly);
+    QScopedPointer<File> fileDoubleCurleyBracketTitle(fileImporterBibTeX.load(&bufferDoubleCurleyBracketTitle));
+    bufferDoubleCurleyBracketTitle.close();
+    fileDoubleCurleyBracketTitle->setProperty(File::StringDelimiter, QStringLiteral("{}"));
+    bufferSingleCurleyBracketTitle.open(QBuffer::ReadOnly);
+    QScopedPointer<File> fileSingleCurleyBracketTitle(fileImporterBibTeX.load(&bufferSingleCurleyBracketTitle));
+    bufferSingleCurleyBracketTitle.close();
+    fileSingleCurleyBracketTitle->setProperty(File::StringDelimiter, QStringLiteral("{}"));
+
+    fileDoubleCurleyBracketTitle->setProperty(File::ProtectCasing, Qt::PartiallyChecked);
+    const QString textDoubleCurleyBracketTitlePartialProtectiveCasing = fileExporterBibTeX.toString(fileDoubleCurleyBracketTitle.data());
+    QVERIFY(textDoubleCurleyBracketTitlePartialProtectiveCasing.contains(doubleCurleyBracketTitle));
+
+    fileSingleCurleyBracketTitle->setProperty(File::ProtectCasing, Qt::PartiallyChecked);
+    const QString textSingleCurleyBracketTitlePartialProtectiveCasing = fileExporterBibTeX.toString(fileSingleCurleyBracketTitle.data());
+    QVERIFY(textSingleCurleyBracketTitlePartialProtectiveCasing.contains(singleCurleyBracketTitle)
+            && !textSingleCurleyBracketTitlePartialProtectiveCasing.contains(doubleCurleyBracketTitle));
+
+    fileDoubleCurleyBracketTitle->setProperty(File::ProtectCasing, Qt::Checked);
+    const QString textDoubleCurleyBracketTitleWithProtectiveCasing = fileExporterBibTeX.toString(fileDoubleCurleyBracketTitle.data());
+    QVERIFY(textDoubleCurleyBracketTitleWithProtectiveCasing.contains(doubleCurleyBracketTitle));
+
+    fileSingleCurleyBracketTitle->setProperty(File::ProtectCasing, Qt::Checked);
+    const QString textSingleCurleyBracketTitleWithProtectiveCasing = fileExporterBibTeX.toString(fileSingleCurleyBracketTitle.data());
+    QVERIFY(textSingleCurleyBracketTitleWithProtectiveCasing.contains(doubleCurleyBracketTitle));
+
+    fileDoubleCurleyBracketTitle->setProperty(File::ProtectCasing, Qt::Unchecked);
+    const QString textDoubleCurleyBracketTitleWithoutProtectiveCasing = fileExporterBibTeX.toString(fileDoubleCurleyBracketTitle.data());
+    QVERIFY(textDoubleCurleyBracketTitleWithoutProtectiveCasing.contains(singleCurleyBracketTitle)
+            && !textDoubleCurleyBracketTitleWithoutProtectiveCasing.contains(doubleCurleyBracketTitle));
+
+    fileSingleCurleyBracketTitle->setProperty(File::ProtectCasing, Qt::Unchecked);
+    const QString textSingleCurleyBracketTitleWithoutProtectiveCasing = fileExporterBibTeX.toString(fileSingleCurleyBracketTitle.data());
+    QVERIFY(textSingleCurleyBracketTitleWithoutProtectiveCasing.contains(singleCurleyBracketTitle)
+            && !textSingleCurleyBracketTitleWithoutProtectiveCasing.contains(doubleCurleyBracketTitle));
 }
 
 void KBibTeXIOTest::initTestCase()
