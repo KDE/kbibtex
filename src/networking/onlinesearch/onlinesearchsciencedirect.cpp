@@ -235,32 +235,42 @@ void OnlineSearchScienceDirect::doneFetchingJSON()
         const QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &parseError);
         if (parseError.error == QJsonParseError::NoError) {
             if (document.isObject()) {
-                const QJsonValue resultArrayValue = document.object().value(QStringLiteral("results"));
-                if (resultArrayValue.isArray()) {
-                    const QJsonArray resultArray = resultArrayValue.toArray();
-                    bool encounteredUnexpectedData = false;
-                    for (const QJsonValue &resultValue : resultArray) {
-                        if (resultValue.isObject()) {
-                            Entry *entry = d->entryFromJsonObject(resultValue.toObject());
-                            if (entry != nullptr)
-                                publishEntry(QSharedPointer<Entry>(entry));
-                            else {
-                                qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from ScienceDirect: Data could not be interpreted as a bibliographic entry";
+                const int resultsFound = document.object().value(QStringLiteral("resultsFound")).toInt(-1);
+                if (resultsFound > 0) {
+                    const QJsonValue resultArrayValue = document.object().value(QStringLiteral("results"));
+                    if (resultArrayValue.isArray()) {
+                        const QJsonArray resultArray = resultArrayValue.toArray();
+                        bool encounteredUnexpectedData = false;
+                        for (const QJsonValue &resultValue : resultArray) {
+                            if (resultValue.isObject()) {
+                                Entry *entry = d->entryFromJsonObject(resultValue.toObject());
+                                if (entry != nullptr)
+                                    publishEntry(QSharedPointer<Entry>(entry));
+                                else {
+                                    qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from ScienceDirect: Data could not be interpreted as a bibliographic entry";
+                                    encounteredUnexpectedData = true;
+                                    break;
+                                }
+                            } else {
+                                qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from ScienceDirect: No object found in 'results' array where expected";
                                 encounteredUnexpectedData = true;
                                 break;
                             }
-                        } else {
-                            qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from ScienceDirect: No object found in 'results' array where expected";
-                            encounteredUnexpectedData = true;
-                            break;
                         }
-                    }
-                    if (encounteredUnexpectedData)
+                        if (encounteredUnexpectedData)
+                            stopSearch(resultUnspecifiedError);
+                        else
+                            stopSearch(resultNoError);
+                    } else {
+                        qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from ScienceDirect: No 'results' array found";
                         stopSearch(resultUnspecifiedError);
-                    else
-                        stopSearch(resultNoError);
+                    }
+                } else if (resultsFound == 0) {
+                    qCDebug(LOG_KBIBTEX_NETWORKING) << "No results found by ScienceDirect";
+                    stopSearch(resultNoError);
                 } else {
-                    qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from ScienceDirect: No 'results' array found";
+                    /// resultsFound < 0  --> no 'resultsFound' field in JSON data
+                    qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from ScienceDirect: No 'resultsFound' field found";
                     stopSearch(resultUnspecifiedError);
                 }
             } else {
