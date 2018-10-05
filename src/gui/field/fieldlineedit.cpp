@@ -80,7 +80,7 @@ public:
         setupMenu();
         connect(menuTypesSignalMapper, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), parent, &FieldLineEdit::slotTypeChanged);
 
-        buttonOpenUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open-remote")), QStringLiteral(""), parent);
+        buttonOpenUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open-remote")), QString(), parent);
         buttonOpenUrl->setVisible(false);
         buttonOpenUrl->setProperty("isConst", true);
         parent->appendWidget(buttonOpenUrl);
@@ -295,7 +295,7 @@ public:
             parent->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
             break;
         case KBibTeX::tfVerbatim: parent->setButtonToolTip(i18n("Verbatim Text")); break;
-        default: parent->setButtonToolTip(QStringLiteral("")); break;
+        default: parent->setButtonToolTip(QString()); break;
         };
     }
 

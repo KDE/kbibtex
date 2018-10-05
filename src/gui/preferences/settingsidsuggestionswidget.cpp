@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -335,7 +335,7 @@ void SettingsIdSuggestionsWidget::buttonClicked()
     QModelIndex selectedIndex = d->treeViewSuggestions->selectionModel()->currentIndex();
 
     if (button == d->buttonNewSuggestion) {
-        const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), QStringLiteral(""), this);
+        const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), QString(), this);
         const int row = d->treeViewSuggestions->model()->rowCount(QModelIndex());
         if (!newSuggestion.isEmpty() && d->idSuggestionsModel->insertRow(row)) {
             QModelIndex index = d->idSuggestionsModel->index(row, 0, QModelIndex());

@@ -1059,7 +1059,7 @@ void KBibTeXPart::updateActions()
     d->elementViewDocumentAction->setEnabled(!emptySelection && numDocumentsToView > 0);
     /// activate sub-menu only if there are at least two documents to view
     d->elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? d->viewDocumentMenu : nullptr);
-    d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? (*d->viewDocumentMenu->actions().constBegin())->text() : QStringLiteral(""));
+    d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? (*d->viewDocumentMenu->actions().constBegin())->text() : QString());
 
     /// update list of references which can be sent to LyX
     QStringList references;

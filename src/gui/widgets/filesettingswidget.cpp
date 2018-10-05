@@ -169,7 +169,7 @@ void FileSettingsWidget::setupGUI()
     connect(m_comboBoxPersonNameFormatting, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
     ItalicTextItemModel *itim = new ItalicTextItemModel(this);
-    itim->addItem(i18n("Use global settings"), QString(QStringLiteral("")));
+    itim->addItem(i18n("Use global settings"), QString(QString()));
     itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatFirstLast), Preferences::personNameFormatFirstLast);
     itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatLastFirst), Preferences::personNameFormatLastFirst);
     m_comboBoxPersonNameFormatting->setModel(itim);

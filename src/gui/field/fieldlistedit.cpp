@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -147,19 +147,19 @@ public:
         layout->insertWidget(layout->count() - 2, le);
         lineEditList.append(le);
 
-        QPushButton *remove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), QStringLiteral(""), le);
+        QPushButton *remove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), QString(), le);
         remove->setToolTip(i18n("Remove value"));
         le->appendWidget(remove);
         connect(remove, &QPushButton::clicked, smRemove, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         smRemove->setMapping(remove, le);
 
-        QPushButton *goDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QStringLiteral(""), le);
+        QPushButton *goDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QString(), le);
         goDown->setToolTip(i18n("Move value down"));
         le->appendWidget(goDown);
         connect(goDown, &QPushButton::clicked, smGoDown, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         smGoDown->setMapping(goDown, le);
 
-        QPushButton *goUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QStringLiteral(""), le);
+        QPushButton *goUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QString(), le);
         goUp->setToolTip(i18n("Move value up"));
         le->appendWidget(goUp);
         connect(goUp, &QPushButton::clicked, smGoUp, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
@@ -582,7 +582,7 @@ void UrlListEdit::textChanged(QWidget *widget)
     // TODO more file types?
     const bool canBeSaved = lowerText.contains(QStringLiteral("://")) && (lowerText.endsWith(QStringLiteral(".djvu")) || lowerText.endsWith(QStringLiteral(".pdf")) || lowerText.endsWith(QStringLiteral(".ps")));
     buttonSaveLocally->setEnabled(canBeSaved);
-    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", newText) : QStringLiteral(""));
+    buttonSaveLocally->setToolTip(canBeSaved ? i18n("Save file '%1' locally", newText) : QString());
 }
 
 QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString &absoluteFilename, const QUrl &baseUrl)
@@ -592,7 +592,7 @@ QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString 
     if (!baseUrl.isEmpty() && (filenameInfo.absolutePath() == baseUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(baseUrlInfo.absolutePath() + QDir::separator()))) {
         // TODO cover level-up cases like "../../test.pdf"
         const QString relativePath = filenameInfo.absolutePath().mid(baseUrlInfo.absolutePath().length() + 1);
-        const QString relativeFilename = relativePath + (relativePath.isEmpty() ? QStringLiteral("") : QString(QDir::separator())) + filenameInfo.fileName();
+        const QString relativeFilename = relativePath + (relativePath.isEmpty() ? QString() : QString(QDir::separator())) + filenameInfo.fileName();
         if (KMessageBox::questionYesNo(parent, i18n("<qt><p>Use a filename relative to the bibliography file?</p><p>The relative path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>", relativeFilename, absoluteFilename, QFontDatabase::systemFont(QFontDatabase::FixedFont).family()), i18n("Relative Path"), KGuiItem(i18n("Relative Path")), KGuiItem(i18n("Absolute Path"))) == KMessageBox::Yes)
             return relativeFilename;
     }
@@ -613,7 +613,7 @@ FieldLineEdit *UrlListEdit::addFieldLineEdit()
     FieldLineEdit *fieldLineEdit = FieldListEdit::addFieldLineEdit();
 
     /// Create a new "save locally" button
-    QPushButton *buttonSaveLocally = new QPushButton(QIcon::fromTheme(QStringLiteral("document-save")), QStringLiteral(""), fieldLineEdit);
+    QPushButton *buttonSaveLocally = new QPushButton(QIcon::fromTheme(QStringLiteral("document-save")), QString(), fieldLineEdit);
     buttonSaveLocally->setToolTip(i18n("Save file locally"));
     buttonSaveLocally->setEnabled(false);
     /// Append button to new FieldLineEdit

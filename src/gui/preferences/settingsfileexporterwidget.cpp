@@ -137,7 +137,7 @@ public:
         connect(comboBoxCopyReferenceCmd, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsFileExporterWidget::changed);
 
 #ifdef QT_LSTAT
-        checkboxUseAutomaticLyXPipeDetection = new QCheckBox(QStringLiteral(""), p);
+        checkboxUseAutomaticLyXPipeDetection = new QCheckBox(QString(), p);
         layout->addRow(i18n("Detect LyX pipe automatically:"), checkboxUseAutomaticLyXPipeDetection);
         connect(checkboxUseAutomaticLyXPipeDetection, &QCheckBox::toggled, p, &SettingsFileExporterWidget::changed);
         connect(checkboxUseAutomaticLyXPipeDetection, &QCheckBox::toggled, p, &SettingsFileExporterWidget::automaticLyXDetectionToggled);

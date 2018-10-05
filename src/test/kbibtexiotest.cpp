@@ -135,7 +135,7 @@ void KBibTeXIOTest::fileImporterSplitName_data()
     QTest::addColumn<QString>("name");
     QTest::addColumn<Person *>("person");
 
-    QTest::newRow("Empty name") << QStringLiteral("") << new Person(QString(), QString(), QString());
+    QTest::newRow("Empty name") << QString() << new Person(QString(), QString(), QString());
     QTest::newRow("PubMed style") << QStringLiteral("Jones A B C") << new Person(QStringLiteral("A B C"), QStringLiteral("Jones"), QString());
     QTest::newRow("Just last name") << QStringLiteral("Dido") << new Person(QString(), QStringLiteral("Dido"), QString());
     QTest::newRow("Name with 'von'") << QStringLiteral("Theodor von Sickel") << new Person(QStringLiteral("Theodor"), QStringLiteral("von Sickel"), QString());

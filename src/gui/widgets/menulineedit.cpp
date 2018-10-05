@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -220,7 +220,7 @@ QString MenuLineEdit::text() const
         return d->m_singleLineEditText->text();
     if (d->m_multiLineEditText != nullptr)
         return d->m_multiLineEditText->document()->toPlainText();
-    return QStringLiteral("");
+    return QString();
 }
 
 void MenuLineEdit::setText(const QString &text)

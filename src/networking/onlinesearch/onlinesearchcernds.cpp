@@ -1,5 +1,5 @@
 /****************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de>  *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>  *
  *   Copyright (C) 2013 Yngve I. Levinsen <yngve.inntjore.levinsen@cern.ch> *
  *                                                                          *
  *   This program is free software; you can redistribute it and/or modify   *
@@ -75,7 +75,7 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
         q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
         q.addQueryItem(QString(QStringLiteral("m%1")).arg(argumentCount), QStringLiteral("a"));
         q.addQueryItem(QString(QStringLiteral("op%1")).arg(argumentCount), QStringLiteral("a"));
-        q.addQueryItem(QString(QStringLiteral("f%1")).arg(argumentCount), QStringLiteral(""));
+        q.addQueryItem(QString(QStringLiteral("f%1")).arg(argumentCount), QString());
     }
 
     /// add words from "author" field

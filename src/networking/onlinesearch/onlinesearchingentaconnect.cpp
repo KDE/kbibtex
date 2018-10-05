@@ -146,7 +146,7 @@ public:
         lineEditPublication->setText(publication);
 
         // TODO
-        lineEditAbstractKeywords->setText(QStringLiteral(""));
+        lineEditAbstractKeywords->setText(QString());
     }
 
     void saveState() {

@@ -656,9 +656,9 @@ public:
 
     void addManagementButtons(TokenWidget *tokenWidget) {
         if (tokenWidget != nullptr) {
-            QPushButton *buttonUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QStringLiteral(""), tokenWidget);
-            QPushButton *buttonDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QStringLiteral(""), tokenWidget);
-            QPushButton *buttonRemove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), QStringLiteral(""), tokenWidget);
+            QPushButton *buttonUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QString(), tokenWidget);
+            QPushButton *buttonDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QString(), tokenWidget);
+            QPushButton *buttonRemove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), QString(), tokenWidget);
             tokenWidget->addButtons(buttonUp, buttonDown, buttonRemove);
             connect(buttonUp, &QPushButton::clicked, signalMapperMoveUp, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
             signalMapperMoveUp->setMapping(buttonUp, tokenWidget);

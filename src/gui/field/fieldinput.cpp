@@ -79,7 +79,7 @@ public:
         case KBibTeX::Month: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            QPushButton *monthSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("view-calendar-month")), QStringLiteral(""));
+            QPushButton *monthSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("view-calendar-month")), QString());
             monthSelector->setToolTip(i18n("Select a predefined month"));
             fieldLineEdit->prependWidget(monthSelector);
 
@@ -114,7 +114,7 @@ public:
         case KBibTeX::CrossRef: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             layout->addWidget(fieldLineEdit);
-            QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("flag-green")), QStringLiteral("")); ///< find better icon
+            QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("flag-green")), QString()); ///< find better icon
             referenceSelector->setToolTip(i18n("Select an existing entry"));
             fieldLineEdit->prependWidget(referenceSelector);
             connect(referenceSelector, &QPushButton::clicked, p, &FieldInput::selectCrossRef);
@@ -153,7 +153,7 @@ public:
     void clear() {
         disableModifiedSignal();
         if (fieldLineEdit != nullptr)
-            fieldLineEdit->setText(QStringLiteral(""));
+            fieldLineEdit->setText(QString());
         else if (fieldListEdit != nullptr)
             fieldListEdit->clear();
         else if (colorWidget != nullptr)

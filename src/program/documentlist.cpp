@@ -52,11 +52,11 @@ public:
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 1);
 
-        QPushButton *buttonUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QStringLiteral(""), this);
+        QPushButton *buttonUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QString(), this);
         buttonUp->setToolTip(i18n("One level up"));
         layout->addWidget(buttonUp, 0, 0, 1, 1);
 
-        QPushButton *buttonHome = new QPushButton(QIcon::fromTheme(QStringLiteral("user-home")), QStringLiteral(""), this);
+        QPushButton *buttonHome = new QPushButton(QIcon::fromTheme(QStringLiteral("user-home")), QString(), this);
         buttonHome->setToolTip(i18n("Go to Home folder"));
         layout->addWidget(buttonHome, 0, 1, 1, 1);
 
@@ -176,19 +176,19 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
         if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
             overlays << QStringLiteral("favorites");
         else
-            overlays << QStringLiteral("");
+            overlays << QString();
         if (openFileInfo->flags().testFlag(OpenFileInfo::RecentlyUsed))
             overlays << QStringLiteral("document-open-recent");
         else
-            overlays << QStringLiteral("");
+            overlays << QString();
         if (openFileInfo->flags().testFlag(OpenFileInfo::Open))
             overlays << QStringLiteral("folder-open");
         else
-            overlays << QStringLiteral("");
+            overlays << QString();
         if (openFileInfo->isModified())
             overlays << QStringLiteral("document-save");
         else
-            overlays << QStringLiteral("");
+            overlays << QString();
         return KDE::icon(iconName, overlays, nullptr);
     }
     case Qt::ToolTipRole: {

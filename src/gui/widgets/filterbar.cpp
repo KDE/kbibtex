@@ -128,7 +128,7 @@ public:
         QStringList completionListDate = configGroup.readEntry(QStringLiteral("PreviousSearches"), QStringList());
         for (QStringList::Iterator it = completionListDate.begin(); it != completionListDate.end(); ++it)
             comboBoxFilterText->addItem((*it).mid(12));
-        comboBoxFilterText->lineEdit()->setText(QStringLiteral(""));
+        comboBoxFilterText->lineEdit()->setText(QString());
         comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
         comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
 

@@ -461,7 +461,7 @@ void ReferenceWidget::createGUI()
     entryType->model()->sort(0);
 
     /// Button with a menu listing a set of preconfigured id suggestions
-    buttonSuggestId = new QPushButton(QIcon::fromTheme(QStringLiteral("view-filter")), QStringLiteral(""), this);
+    buttonSuggestId = new QPushButton(QIcon::fromTheme(QStringLiteral("view-filter")), QString(), this);
     buttonSuggestId->setToolTip(i18n("Select a suggested id for this entry"));
     layout->addWidget(buttonSuggestId);
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);

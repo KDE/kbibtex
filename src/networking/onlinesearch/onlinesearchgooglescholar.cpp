@@ -228,7 +228,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
             inputMap[QStringLiteral("scis")] = QStringLiteral("yes");
             inputMap[QStringLiteral("scisf")] = QStringLiteral("4");
             inputMap[QStringLiteral("num")] = QString::number(d->numResults);
-            inputMap[QStringLiteral("submit")] = QStringLiteral("");
+            inputMap[QStringLiteral("submit")] = QString();
 
             QUrl url = reply->url().resolved(QUrl(decodeURL(formOpeningTagMatch.captured(1))));
             QUrlQuery query(url);

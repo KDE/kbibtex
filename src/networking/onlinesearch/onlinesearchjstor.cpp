@@ -70,8 +70,8 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     d->queryUrl.setPath(QStringLiteral("/action/doAdvancedSearch"));
     q.addQueryItem(QStringLiteral("Search"), QStringLiteral("Search"));
     q.addQueryItem(QStringLiteral("wc"), QStringLiteral("on")); /// include external references, too
-    q.addQueryItem(QStringLiteral("la"), QStringLiteral("")); /// no specific language
-    q.addQueryItem(QStringLiteral("jo"), QStringLiteral("")); /// no specific journal
+    q.addQueryItem(QStringLiteral("la"), QString()); /// no specific language
+    q.addQueryItem(QStringLiteral("jo"), QString()); /// no specific journal
     q.addQueryItem(QStringLiteral("hp"), QString::number(numResults)); /// hits per page
     int queryNumber = 0;
     const QStringList elementsTitle = splitRespectingQuotationMarks(query[queryKeyTitle]);

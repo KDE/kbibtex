@@ -128,7 +128,7 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
     }
 
     /// count will be empty unless only one column is shown
-    const QString count = index.column() == 0 && index.model()->columnCount() == 1 ? QString(QStringLiteral(" (%1)")).arg(index.data(ValueListModel::CountRole).toInt()) : QStringLiteral("");
+    const QString count = index.column() == 0 && index.model()->columnCount() == 1 ? QString(QStringLiteral(" (%1)")).arg(index.data(ValueListModel::CountRole).toInt()) : QString();
 
     /// squeeze the folder text if it is to big and calculate the rectangles
     /// where the folder text and the unread count will be drawn to
@@ -392,7 +392,7 @@ int ValueListModel::indexOf(const QString &text)
 {
     QString color;
     QString cmpText = text;
-    if (fName == Entry::ftColor && !(color = colorToLabel.key(text, QStringLiteral(""))).isEmpty())
+    if (fName == Entry::ftColor && !(color = colorToLabel.key(text, QString())).isEmpty())
         cmpText = color;
     if (cmpText.isEmpty())
         qCWarning(LOG_KBIBTEX_GUI) << "Should never happen";

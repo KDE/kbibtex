@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,7 +23,7 @@
 const QString FileExporter::keyPaperSize = QStringLiteral("paperSize");
 const QString FileExporter::defaultPaperSize = QStringLiteral("a4");
 const QString FileExporter::keyFont = QStringLiteral("Font");
-const QString FileExporter::defaultFont = QStringLiteral("");
+const QString FileExporter::defaultFont = QString();
 
 FileExporter::FileExporter(QObject *parent)
         : QObject(parent)

@@ -36,7 +36,7 @@
 #include "logging_gui.h"
 
 const QString Clipboard::keyCopyReferenceCommand = QStringLiteral("copyReferenceCommand");
-const QString Clipboard::defaultCopyReferenceCommand = QStringLiteral("");
+const QString Clipboard::defaultCopyReferenceCommand = QString();
 
 class Clipboard::ClipboardPrivate
 {

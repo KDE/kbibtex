@@ -71,7 +71,7 @@ public:
 
         /// add words from "free text" field, but auto-detect PMIDs
         for (const QString &text : freeTextWords)
-            queryFragments.append(text + (pmidRegExp.match(text).hasMatch() ? QStringLiteral("") : QStringLiteral("[All Fields]")));
+            queryFragments.append(text + (pmidRegExp.match(text).hasMatch() ? QString() : QStringLiteral("[All Fields]")));
 
         /// add words from "year" field
         for (const QString &text : yearWords)
