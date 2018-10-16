@@ -103,7 +103,7 @@ void Items::retrieveItemsByCollection(const QString &collection)
         d->retrieveItems(url, 0);
 }
 
-void  Items::retrieveItemsByTag(const QString &tag)
+void Items::retrieveItemsByTag(const QString &tag)
 {
     QUrl url = d->api->baseUrl().adjusted(QUrl::StripTrailingSlash);
     QUrlQuery query(url);
