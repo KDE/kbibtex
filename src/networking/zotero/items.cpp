@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -64,7 +64,7 @@ public:
 
         if (api->inBackoffMode())
             /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
-            QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+            QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, p, [ = ]() {
                 requestZoteroUrl(internalUrl);
             });
         else
@@ -96,7 +96,7 @@ void Items::retrieveItemsByCollection(const QString &collection)
 
     if (d->api->inBackoffMode())
         /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
-        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, [ = ]() {
             d->retrieveItems(url, 0);
         });
     else
@@ -115,7 +115,7 @@ void  Items::retrieveItemsByTag(const QString &tag)
 
     if (d->api->inBackoffMode())
         /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
-        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+        QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, [ = ]() {
             d->retrieveItems(url, 0);
         });
     else

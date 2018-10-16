@@ -88,7 +88,7 @@ void API::startBackoff(int duration) {
         emit backoffModeStart();
         /// Use single-shot timer and functor to emit signal
         /// that backoff mode has finished
-        QTimer::singleShot((duration + 1) * 1000, [ = ]() {
+        QTimer::singleShot((duration + 1) * 1000, this, [ = ]() {
             emit backoffModeEnd();
         });
     }
