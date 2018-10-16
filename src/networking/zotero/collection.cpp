@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -74,7 +74,7 @@ public:
             url.setPath(url.path() + QString(QStringLiteral("/collections/%1/collections")).arg(head));
             if (api->inBackoffMode())
                 /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
-                QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+                QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, p, [ = ]() {
                     requestZoteroUrl(url);
                 });
             else
@@ -98,7 +98,7 @@ Collection::Collection(QSharedPointer<Zotero::API> api, QObject *parent)
     url.setPath(url.path() + QStringLiteral("/collections/top"));
     if (api->inBackoffMode())
         /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
-        QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+        QTimer::singleShot((api->backoffSecondsLeft() + 1) * 1000, this, [ = ]() {
         d->requestZoteroUrl(url);
     });
     else
@@ -230,7 +230,7 @@ void Collection::finishedFetchingCollection()
         if (!nextPage.isEmpty()) {
             if (d->api->inBackoffMode())
                 /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
-                QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, [ = ]() {
+                QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, [ = ]() {
                     d->requestZoteroUrl(nextPage);
                 });
             else

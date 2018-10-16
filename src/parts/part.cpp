@@ -807,7 +807,7 @@ bool KBibTeXPart::saveFile()
         /// DropBox client seemingly touched the file right after saving
         /// from within KBibTeX, triggering KBibTeX to show a 'reload'
         /// message box.
-        QTimer::singleShot(500, [this, watchableFilename]() {
+        QTimer::singleShot(500, this, [this, watchableFilename]() {
             d->fileSystemWatcher.addPath(watchableFilename);
         });
     } else
