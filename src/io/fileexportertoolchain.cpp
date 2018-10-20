@@ -79,15 +79,13 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     if (errorLog != nullptr) {
         /// Redirect any standard output from process into errorLog
         connect(&process, &QProcess::readyReadStandardOutput, [errorLog, &process] {
-            QByteArray stdout = process.readAllStandardOutput();
-            QTextStream ts(&stdout);
+            QTextStream ts(process.readAllStandardOutput());
             while (!ts.atEnd())
                 errorLog->append(ts.readLine());
         });
         /// Redirect any standard error from process into errorLog
         connect(&process, &QProcess::readyReadStandardError, [errorLog, &process] {
-            QByteArray stderr = process.readAllStandardError();
-            QTextStream ts(&stderr);
+            QTextStream ts(process.readAllStandardError());
             while (!ts.atEnd())
                 errorLog->append(ts.readLine());
         });
