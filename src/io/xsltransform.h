@@ -41,6 +41,8 @@ public:
     XSLTransform(const XSLTransform &other) = delete;
     XSLTransform &operator= (const XSLTransform &other) = delete;
 
+    bool isValid() const;
+
     /**
      * Transform a given XML document using the tranformer's
      * XSL file.

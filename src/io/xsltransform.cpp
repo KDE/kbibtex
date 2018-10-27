@@ -50,6 +50,11 @@ XSLTransform::~XSLTransform() {
     if (xsltData != nullptr) delete xsltData;
 }
 
+bool XSLTransform::isValid() const
+{
+    return xsltData != nullptr;
+}
+
 QString XSLTransform::transform(const QString &xmlText) const
 {
     if (xsltData == nullptr) {

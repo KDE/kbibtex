@@ -122,7 +122,14 @@ public:
 #endif // HAVE_QTWIDGETS
           arXivQueryBaseUrl(QStringLiteral("https://export.arxiv.org/api/query?"))
     {
-        /// nothing
+        if (!xslt.isValid()) {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file 'arxiv2bibtex.xsl'";
+            const QString xsltFilename = QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/arxiv2bibtex.xsl");
+            if (xsltFilename.isEmpty())
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename is empty";
+            else
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename was '" << xsltFilename << "'";
+        }
     }
 
 #ifdef HAVE_QTWIDGETS

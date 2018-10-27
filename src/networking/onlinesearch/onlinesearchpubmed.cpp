@@ -51,7 +51,14 @@ public:
             : pubMedUrlPrefix(QStringLiteral("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
           xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pubmed2bibtex.xsl")))
     {
-        /// nothing
+        if (!xslt.isValid()) {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file 'pubmed2bibtex.xsl'";
+            const QString xsltFilename = QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pubmed2bibtex.xsl");
+            if (xsltFilename.isEmpty())
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename is empty";
+            else
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename was '" << xsltFilename << "'";
+        }
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {

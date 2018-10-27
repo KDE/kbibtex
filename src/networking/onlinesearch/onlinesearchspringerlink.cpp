@@ -162,7 +162,14 @@ public:
         , form(nullptr)
 #endif // HAVE_QTWIDGETS
     {
-        /// nothing
+        if (!xslt.isValid()) {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file 'pam2bibtex.xsl'";
+            const QString xsltFilename = QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pam2bibtex.xsl");
+            if (xsltFilename.isEmpty())
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename is empty";
+            else
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename was '" << xsltFilename << "'";
+        }
     }
 
 #ifdef HAVE_QTWIDGETS
