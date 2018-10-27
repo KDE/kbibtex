@@ -43,10 +43,8 @@ class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate
 public:
     static const QUrl apiUrl;
     static const QString apiKey;
-    const XSLTransform xslt;
 
     OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect *)
-            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/sciencedirectsearchapi-to-bibtex.xsl")))
     {
         /// nothing
     }
