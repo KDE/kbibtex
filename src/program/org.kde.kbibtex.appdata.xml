@@ -45,7 +45,7 @@
   <summary xml:lang="sk">Editor BibTeX pre KDE na editáciu použitých bibliografií s LaTeXom</summary>
   <summary xml:lang="sv">Bibtex-editor av KDE för att redigera bibliografier använda med Latex</summary>
   <summary xml:lang="tr">Kaynakça dosyalarını LaTeX kullanarak düzenlemek için KDE BibTeX düzenleyicisi</summary>
-  <summary xml:lang="uk">Редактор BibTeX від KDE. Призначений для редагування бібліографій, що використовуються у LaTeX.</summary>
+  <summary xml:lang="uk">Редактор BibTeX від KDE. Призначений для редагування бібліографій, що використовуються у LaTeX</summary>
   <summary xml:lang="x-test">xxBibTeX editor by KDE to edit bibliographies used with LaTeXxx</summary>
   <summary xml:lang="zh-CN">KDE 提供的 BibTeX 编辑器，用来编辑 LaTeX 使用的参考文献目录</summary>
   <description>
@@ -251,6 +251,7 @@
   <url type="help">http://docs.kde.org/development/en/extragear-office/kbibtex/index.html</url>
   <screenshots>
     <screenshot type="default">
+      <caption>KBibTeX main window</caption>
       <image>https://cdn.kde.org/screenshots/kbibtex/kbibtex-kf5.png</image>
     </screenshot>
   </screenshots>
