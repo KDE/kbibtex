@@ -252,6 +252,14 @@
   <screenshots>
     <screenshot type="default">
       <caption>KBibTeX main window</caption>
+      <caption xml:lang="ca">Finestra principal del KBibTeX</caption>
+      <caption xml:lang="ca-valencia">Finestra principal del KBibTeX</caption>
+      <caption xml:lang="gl">Xanela principal de KBibTeX</caption>
+      <caption xml:lang="nl">Hoofdvenster van KBibTeX</caption>
+      <caption xml:lang="pt">Janela principal do KBibTeX</caption>
+      <caption xml:lang="sv">Huvudfönstret i Kbibtex</caption>
+      <caption xml:lang="uk">Головне вікно KBibTeX</caption>
+      <caption xml:lang="x-test">xxKBibTeX main windowxx</caption>
       <image>https://cdn.kde.org/screenshots/kbibtex/kbibtex-kf5.png</image>
     </screenshot>
   </screenshots>
