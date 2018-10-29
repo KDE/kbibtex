@@ -26,7 +26,6 @@
 #include <QTextDocument>
 #include <QLayout>
 #include <QApplication>
-#include <QStandardPaths>
 #include <QTextStream>
 #include <QTemporaryFile>
 #include <QPalette>
@@ -46,6 +45,7 @@
 #include <KTextEdit>
 #include <kio_version.h>
 
+#include "xsltransform.h"
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtex2html.h"
 #include "fileexporterris.h"
@@ -273,7 +273,7 @@ void ReferencePreview::renderHTML()
     } else if (previewStyle.type == QStringLiteral("xml") || previewStyle.type.endsWith(QStringLiteral("_xml"))) {
         crossRefHandling = merge;
         const QString filename = previewStyle.style + QStringLiteral(".xsl");
-        exporter = new FileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/") + filename), this);
+        exporter = new FileExporterXSLT(XSLTransform::locateXSLTfile(filename), this);
     } else
         qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output type " << previewStyle.type;
 

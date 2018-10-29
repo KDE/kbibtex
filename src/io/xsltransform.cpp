@@ -20,6 +20,8 @@
 #include <QFileInfo>
 #include <QXmlQuery>
 #include <QBuffer>
+#include <QCoreApplication>
+#include <QStandardPaths>
 #include <QDebug>
 
 #include "logging_io.h"
@@ -87,4 +89,16 @@ QString XSLTransform::transform(const QString &xmlText) const
         qCWarning(LOG_KBIBTEX_IO) << "Invoking QXmlQuery::evaluateTo(...) failed";
         return QString();
     }
+}
+
+QString XSLTransform::locateXSLTfile(const QString &stem)
+{
+    const QString xsltFilename = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QLatin1Char('/') + stem);
+    if (xsltFilename.isEmpty())
+        qCWarning(LOG_KBIBTEX_IO) << "Generated XSLT filename is empty for stem " << stem;
+    else if (!QFileInfo(xsltFilename).exists())
+        qCWarning(LOG_KBIBTEX_IO) << "Generated XSLT filename " << xsltFilename << " refers to non-existing file";
+    else
+        qCDebug(LOG_KBIBTEX_IO) << "Generated XSLT filename is " << xsltFilename << " for stem " << stem;
+    return xsltFilename;
 }

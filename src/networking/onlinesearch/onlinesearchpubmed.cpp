@@ -20,8 +20,6 @@
 #include <QNetworkReply>
 #include <QDateTime>
 #include <QTimer>
-#include <QStandardPaths>
-#include <QCoreApplication>
 #include <QRegularExpression>
 
 #ifdef HAVE_KF5
@@ -43,22 +41,17 @@ class OnlineSearchPubMed::OnlineSearchPubMedPrivate
 {
 private:
     const QString pubMedUrlPrefix;
+    static const QString xsltFilenameBase;
 
 public:
     const XSLTransform xslt;
 
     OnlineSearchPubMedPrivate(OnlineSearchPubMed *)
             : pubMedUrlPrefix(QStringLiteral("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/")),
-          xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pubmed2bibtex.xsl")))
+          xslt(XSLTransform::locateXSLTfile(xsltFilenameBase))
     {
-        if (!xslt.isValid()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file 'pubmed2bibtex.xsl'";
-            const QString xsltFilename = QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pubmed2bibtex.xsl");
-            if (xsltFilename.isEmpty())
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename is empty";
-            else
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename was '" << xsltFilename << "'";
-        }
+        if (!xslt.isValid())
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file '" << xsltFilenameBase << "'";
     }
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
@@ -107,6 +100,9 @@ public:
         return QUrl::fromUserInput(urlText);
     }
 };
+
+const QString OnlineSearchPubMed::OnlineSearchPubMedPrivate::xsltFilenameBase = QStringLiteral("pubmed2bibtex.xsl");
+
 
 OnlineSearchPubMed::OnlineSearchPubMed(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchPubMed::OnlineSearchPubMedPrivate(this))

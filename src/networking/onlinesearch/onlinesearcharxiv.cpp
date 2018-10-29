@@ -18,14 +18,12 @@
 #include "onlinesearcharxiv.h"
 
 #include <QNetworkReply>
-#include <QCoreApplication>
 #ifdef HAVE_QTWIDGETS
 #include <QGridLayout>
 #include <QLabel>
 #include <QSpinBox>
 #include <QTextStream>
 #endif // HAVE_QTWIDGETS
-#include <QStandardPaths>
 
 #ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
@@ -108,6 +106,9 @@ public:
 
 class OnlineSearchArXiv::OnlineSearchArXivPrivate
 {
+private:
+    static const QString xsltFilenameBase;
+
 public:
     const XSLTransform xslt;
 #ifdef HAVE_QTWIDGETS
@@ -116,20 +117,14 @@ public:
     const QString arXivQueryBaseUrl;
 
     OnlineSearchArXivPrivate(OnlineSearchArXiv *)
-            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/arxiv2bibtex.xsl"))),
+            : xslt(XSLTransform::locateXSLTfile(xsltFilenameBase)),
 #ifdef HAVE_QTWIDGETS
           form(nullptr),
 #endif // HAVE_QTWIDGETS
           arXivQueryBaseUrl(QStringLiteral("https://export.arxiv.org/api/query?"))
     {
-        if (!xslt.isValid()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file 'arxiv2bibtex.xsl'";
-            const QString xsltFilename = QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/arxiv2bibtex.xsl");
-            if (xsltFilename.isEmpty())
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename is empty";
-            else
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename was '" << xsltFilename << "'";
-        }
+        if (!xslt.isValid())
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file '" << xsltFilenameBase << "'";
     }
 
 #ifdef HAVE_QTWIDGETS
@@ -626,6 +621,9 @@ public:
         }
     }
 };
+
+const QString OnlineSearchArXiv::OnlineSearchArXivPrivate::xsltFilenameBase = QStringLiteral("arxiv2bibtex.xsl");
+
 
 OnlineSearchArXiv::OnlineSearchArXiv(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchArXiv::OnlineSearchArXivPrivate(this))

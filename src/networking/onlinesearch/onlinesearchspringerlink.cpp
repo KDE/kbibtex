@@ -25,9 +25,7 @@
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
-#include <QStandardPaths>
 #include <QUrlQuery>
-#include <QCoreApplication>
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
@@ -149,6 +147,9 @@ public:
 
 class OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate
 {
+private:
+    static const QString xsltFilenameBase;
+
 public:
     static const QString springerMetadataKey;
     const XSLTransform xslt;
@@ -157,19 +158,13 @@ public:
 #endif // HAVE_QTWIDGETS
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *)
-            : xslt(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pam2bibtex.xsl")))
+            : xslt(XSLTransform::locateXSLTfile(xsltFilenameBase))
 #ifdef HAVE_QTWIDGETS
         , form(nullptr)
 #endif // HAVE_QTWIDGETS
     {
-        if (!xslt.isValid()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file 'pam2bibtex.xsl'";
-            const QString xsltFilename = QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QStringLiteral("/pam2bibtex.xsl");
-            if (xsltFilename.isEmpty())
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename is empty";
-            else
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "Generated XSLT filename was '" << xsltFilename << "'";
-        }
+        if (!xslt.isValid())
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file '" << xsltFilenameBase << "'";
     }
 
 #ifdef HAVE_QTWIDGETS
@@ -242,6 +237,7 @@ public:
     }
 };
 
+const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::xsltFilenameBase = QStringLiteral("pam2bibtex.xsl");
 const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::springerMetadataKey(InternalNetworkAccessManager::reverseObfuscate("\xce\xb8\x4d\x2c\x8d\xba\xa9\xc4\x61\x9\x58\x6c\xbb\xde\x86\xb5\xb1\xc6\x15\x71\x76\x45\xd\x79\x12\x65\x95\xe1\x5d\x2f\x1d\x24\x10\x72\x2a\x5e\x69\x4\xdc\xba\xab\xc3\x28\x58\x8a\xfa\x5e\x69"));
 
 
