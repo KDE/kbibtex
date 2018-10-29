@@ -36,14 +36,14 @@ XSLTransform::XSLTransform(const QString &xsltFilename)
             xsltData = new QByteArray(xsltFile.readAll());
             xsltFile.close();
             if (xsltData->size() == 0) {
-                qWarning() << "Read only 0 Bytes from file" << xsltFilename;
+                qCWarning(LOG_KBIBTEX_IO) << "Read only 0 Bytes from file" << xsltFilename;
                 delete xsltData;
                 xsltData = nullptr;
             }
         } else
-            qWarning() << "Opening XSLT file" << xsltFilename << "failed";
+            qCWarning(LOG_KBIBTEX_IO) << "Opening XSLT file" << xsltFilename << "failed";
     } else
-        qWarning() << "Empty filename for XSLT";
+        qCWarning(LOG_KBIBTEX_IO) << "Empty filename for XSLT";
 }
 
 XSLTransform::~XSLTransform() {
@@ -58,14 +58,14 @@ bool XSLTransform::isValid() const
 QString XSLTransform::transform(const QString &xmlText) const
 {
     if (xsltData == nullptr) {
-        qWarning() << "Empty XSL transformation cannot transform";
+        qCWarning(LOG_KBIBTEX_IO) << "Empty XSL transformation cannot transform";
         return QString();
     }
 
     QXmlQuery query(QXmlQuery::XSLT20);
 
     if (!query.setFocus(xmlText)) {
-        qWarning() << "Invoking QXmlQuery::setFocus(" << xmlText.left(32) << "...) failed";
+        qCWarning(LOG_KBIBTEX_IO) << "Invoking QXmlQuery::setFocus(" << xmlText.left(32) << "...) failed";
         return QString();
     }
 
@@ -74,7 +74,7 @@ QString XSLTransform::transform(const QString &xmlText) const
     query.setQuery(&xsltBuffer);
 
     if (!query.isValid()) {
-        qWarning() << "QXmlQuery::isValid got negative result";
+        qCWarning(LOG_KBIBTEX_IO) << "QXmlQuery::isValid got negative result";
         return QString();
     }
 
@@ -84,7 +84,7 @@ QString XSLTransform::transform(const QString &xmlText) const
         /// the usual XML suspects with its plain counterparts
         return result;
     } else {
-        qWarning() << "Invoking QXmlQuery::evaluateTo(...) failed";
+        qCWarning(LOG_KBIBTEX_IO) << "Invoking QXmlQuery::evaluateTo(...) failed";
         return QString();
     }
 }
