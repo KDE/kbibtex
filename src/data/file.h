@@ -119,6 +119,8 @@ private:
     FilePrivate *d;
 };
 
+Q_DECLARE_METATYPE(File *)
+
 QDebug operator<<(QDebug dbg, const File &file);
 
 #endif // KBIBTEX_IO_FILE_H
