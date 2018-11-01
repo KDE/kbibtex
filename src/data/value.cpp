@@ -565,31 +565,42 @@ bool Value::operator==(const Value &rhs) const
         /// Are both ValueItems PlainTexts and are both PlainTexts equal?
         const QSharedPointer<PlainText> lhsPlainText = lhsIt->dynamicCast<PlainText>();
         const QSharedPointer<PlainText> rhsPlainText = rhsIt->dynamicCast<PlainText>();
-        if (!lhsPlainText.isNull() && !rhsPlainText.isNull() && *lhsPlainText.data() != *rhsPlainText.data())
-            return false;
-        else {
+        if ((lhsPlainText.isNull() && !rhsPlainText.isNull()) || (!lhsPlainText.isNull() && rhsPlainText.isNull())) return false;
+        if (!lhsPlainText.isNull() && !rhsPlainText.isNull()) {
+            if (*lhsPlainText.data() != *rhsPlainText.data())
+                return false;
+        } else {
             /// Remainder of comparisons is like for PlainText above, just for other descendants of ValueItem
             const QSharedPointer<MacroKey> lhsMacroKey = lhsIt->dynamicCast<MacroKey>();
             const QSharedPointer<MacroKey> rhsMacroKey = rhsIt->dynamicCast<MacroKey>();
-            if (!lhsMacroKey.isNull() && !rhsMacroKey.isNull() && *lhsMacroKey.data() != *rhsMacroKey.data())
-                return false;
-            else {
+            if ((lhsMacroKey.isNull() && !rhsMacroKey.isNull()) || (!lhsMacroKey.isNull() && rhsMacroKey.isNull())) return false;
+            if (!lhsMacroKey.isNull() && !rhsMacroKey.isNull()) {
+                if (*lhsMacroKey.data() != *rhsMacroKey.data())
+                    return false;
+            } else {
                 const QSharedPointer<Person> lhsPerson = lhsIt->dynamicCast<Person>();
                 const QSharedPointer<Person> rhsPerson = rhsIt->dynamicCast<Person>();
-                if (!lhsPerson.isNull() && !rhsPerson.isNull() && *lhsPerson.data() != *rhsPerson.data())
-                    return false;
-                else {
+                if ((lhsPerson.isNull() && !rhsPerson.isNull()) || (!lhsPerson.isNull() && rhsPerson.isNull())) return false;
+                if (!lhsPerson.isNull() && !rhsPerson.isNull()) {
+                    if (*lhsPerson.data() != *rhsPerson.data())
+                        return false;
+                } else {
                     const QSharedPointer<VerbatimText> lhsVerbatimText = lhsIt->dynamicCast<VerbatimText>();
                     const QSharedPointer<VerbatimText> rhsVerbatimText = rhsIt->dynamicCast<VerbatimText>();
-                    if (!lhsVerbatimText.isNull() && !rhsVerbatimText.isNull() && *lhsVerbatimText.data() != *rhsVerbatimText.data())
-                        return false;
-                    else {
+                    if ((lhsVerbatimText.isNull() && !rhsVerbatimText.isNull()) || (!lhsVerbatimText.isNull() && rhsVerbatimText.isNull())) return false;
+                    if (!lhsVerbatimText.isNull() && !rhsVerbatimText.isNull()) {
+                        if (*lhsVerbatimText.data() != *rhsVerbatimText.data())
+                            return false;
+                    } else {
                         const QSharedPointer<Keyword> lhsKeyword = lhsIt->dynamicCast<Keyword>();
                         const QSharedPointer<Keyword> rhsKeyword = rhsIt->dynamicCast<Keyword>();
-                        if (!lhsKeyword.isNull() && !rhsKeyword.isNull() && *lhsKeyword.data() != *rhsKeyword.data())
-                            return false;
-                        else {
+                        if ((lhsKeyword.isNull() && !rhsKeyword.isNull()) || (!lhsKeyword.isNull() && rhsKeyword.isNull())) return false;
+                        if (!lhsKeyword.isNull() && !rhsKeyword.isNull()) {
+                            if (*lhsKeyword.data() != *rhsKeyword.data())
+                                return false;
+                        } else {
                             /// If there are other descendants of ValueItem, add tests here ...
+                            return false;
                         }
                     }
                 }
