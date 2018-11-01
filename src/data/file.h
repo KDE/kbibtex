@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -65,6 +65,9 @@ public:
     File &operator= (const File &other);
     /// Move-assignment operator.
     File &operator= (File &&other);
+
+    bool operator== (const File &other) const;
+    bool operator!= (const File &other) const;
 
     /**
      * Check if a given key (e.g. a key for a macro or an id for an entry)

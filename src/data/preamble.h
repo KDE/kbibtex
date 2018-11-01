@@ -33,6 +33,9 @@ public:
     Preamble(const Preamble &other);
     ~Preamble() override;
 
+    bool operator==(const Preamble &other) const;
+    bool operator!=(const Preamble &other) const;
+
     /**
      * Assignment operator, working similar to a copy constructor,
      * but overwrites the current object's values.

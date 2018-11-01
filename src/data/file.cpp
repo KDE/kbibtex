@@ -32,6 +32,7 @@
 #include "element.h"
 #include "macro.h"
 #include "comment.h"
+#include "preamble.h"
 #include "logging_data.h"
 
 const QString File::Url = QStringLiteral("Url");
@@ -174,6 +175,54 @@ File &File::operator= (File &&other) {
     if (this != &other)
         d->operator =(std::move(*other.d));
     return *this;
+}
+
+bool File::operator==(const File &other) const {
+    if (size() != other.size()) return false;
+
+    for (File::ConstIterator myIt = constBegin(), otherIt = other.constBegin(); myIt != constEnd() && otherIt != constEnd(); ++myIt, ++otherIt) {
+        QSharedPointer<const Entry> myEntry = myIt->dynamicCast<const Entry>();
+        QSharedPointer<const Entry> otherEntry = otherIt->dynamicCast<const Entry>();
+        if ((myEntry.isNull() && !otherEntry.isNull()) || (!myEntry.isNull() && otherEntry.isNull())) return false;
+        if (!myEntry.isNull() && !otherEntry.isNull()) {
+            if (myEntry->operator !=(*otherEntry.data()))
+                return false;
+        } else {
+            QSharedPointer<const Macro> myMacro = myIt->dynamicCast<const Macro>();
+            QSharedPointer<const Macro> otherMacro = otherIt->dynamicCast<const Macro>();
+            if ((myMacro.isNull() && !otherMacro.isNull()) || (!myMacro.isNull() && otherMacro.isNull())) return false;
+            if (!myMacro.isNull() && !otherMacro.isNull()) {
+                if (myMacro->operator !=(*otherMacro.data()))
+                    return false;
+            } else {
+                QSharedPointer<const Preamble> myPreamble = myIt->dynamicCast<const Preamble>();
+                QSharedPointer<const Preamble> otherPreamble = otherIt->dynamicCast<const Preamble>();
+                if ((myPreamble.isNull() && !otherPreamble.isNull()) || (!myPreamble.isNull() && otherPreamble.isNull())) return false;
+                if (!myPreamble.isNull() && !otherPreamble.isNull()) {
+                    if (myPreamble->operator !=(*otherPreamble.data()))
+                        return false;
+                } else {
+                    QSharedPointer<const Comment> myComment = myIt->dynamicCast<const Comment>();
+                    QSharedPointer<const Comment> otherComment = otherIt->dynamicCast<const Comment>();
+                    if ((myComment.isNull() && !otherComment.isNull()) || (!myComment.isNull() && otherComment.isNull())) return false;
+                    if (!myComment.isNull() && !otherComment.isNull()) {
+                        // TODO right now, don't care if comments are equal
+                        qCDebug(LOG_KBIBTEX_DATA) << "File objects being compared contain comments, ignoring those";
+                    } else {
+                        /// This case should never be reached
+                        qCWarning(LOG_KBIBTEX_DATA) << "Met unhandled case while comparing two File objects";
+                        return false;
+                    }
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+bool File::operator!=(const File &other) const {
+    return !operator ==(other);
 }
 
 const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const

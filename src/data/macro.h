@@ -47,6 +47,9 @@ public:
 
     ~Macro() override;
 
+    bool operator==(const Macro &other) const;
+    bool operator!=(const Macro &other) const;
+
     /**
      * Assignment operator, working similar to a copy constructor,
      * but overwrites the current object's values.
