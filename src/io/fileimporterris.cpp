@@ -29,7 +29,7 @@
 #include "logging_io.h"
 
 #define appendValue(entry, fieldname, newvalue) { Value value = (entry)->value((fieldname)); value.append((newvalue)); (entry)->insert((fieldname), value); }
-#define removeDuplicates(entry, fieldname) { Value value = (entry)->value((fieldname)); removeDuplicateValueItems((value)); (entry)->insert((fieldname), value); }
+#define removeDuplicates(entry, fieldname) { Value value = (entry)->value((fieldname)); if (!(value).isEmpty()) removeDuplicateValueItems((value)); if (!(value).isEmpty()) (entry)->insert((fieldname), value); }
 
 class FileImporterRIS::FileImporterRISPrivate
 {
