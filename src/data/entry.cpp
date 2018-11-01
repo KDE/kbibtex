@@ -117,6 +117,11 @@ bool Entry::operator==(const Entry &other) const
         if (thisValue != otherValue) return false;
     }
 
+    /// All fields of the other entry must occurr as well in this entry
+    /// (no need to check equivalence again)
+    for (Entry::ConstIterator it = other.constBegin(); it != other.constEnd(); ++it)
+        if (!contains(it.key())) return false;
+
     return true;
 }
 
