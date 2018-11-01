@@ -36,6 +36,7 @@ class FileImporterRIS::FileImporterRISPrivate
 public:
     int referenceCounter;
     bool cancelFlag;
+    bool protectCasing;
 
     typedef struct {
         QString key;
@@ -45,7 +46,7 @@ public:
     typedef QVector<RISitem> RISitemList;
 
     FileImporterRISPrivate(FileImporterRIS *parent)
-            : referenceCounter(0), cancelFlag(false) {
+            : referenceCounter(0), cancelFlag(false), protectCasing(false) {
         Q_UNUSED(parent)
     }
 
@@ -87,6 +88,13 @@ public:
         }
 
         return result;
+    }
+
+    inline QString optionallyProtectCasing(const QString &text) const {
+        if (protectCasing)
+            return QLatin1Char('{') + text + QLatin1Char('}');
+        else
+            return text;
     }
 
     Element *nextElement(QTextStream &textStream) {
@@ -143,7 +151,7 @@ public:
                         ++it)
                     appendValue(entry, Entry::ftKeywords, QSharedPointer<Keyword>(new Keyword(*it)));
             } else if ((*it).key == QStringLiteral("TI") || (*it).key == QStringLiteral("T1")) {
-                appendValue(entry, Entry::ftTitle, QSharedPointer<PlainText>(new PlainText((*it).value)));
+                appendValue(entry, Entry::ftTitle, QSharedPointer<PlainText>(new PlainText(optionallyProtectCasing((*it).value))));
             } else if ((*it).key == QStringLiteral("T3")) {
                 appendValue(entry, Entry::ftSeries, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == QStringLiteral("JO") || (*it).key == QStringLiteral("J1") || (*it).key == QStringLiteral("J2")) {
@@ -194,7 +202,7 @@ public:
         if (!journalName.isEmpty()) {
             const QString fieldName = entryType == Entry::etInBook || entryType == Entry::etInProceedings ? Entry::ftBookTitle : Entry::ftJournal;
             Value value = entry->value(fieldName);
-            value.append(QSharedPointer<PlainText>(new PlainText(journalName)));
+            value.append(QSharedPointer<PlainText>(new PlainText(optionallyProtectCasing(journalName))));
             entry->insert(fieldName, value);
         }
 
@@ -296,12 +304,21 @@ File *FileImporterRIS::load(QIODevice *iodevice)
     }
 
     iodevice->close();
+
+    if (result != nullptr)
+        result->setProperty(File::ProtectCasing, static_cast<int>(d->protectCasing ? Qt::Checked : Qt::Unchecked));
+
     return result;
 }
 
 bool FileImporterRIS::guessCanDecode(const QString &text)
 {
     return text.indexOf(QStringLiteral("TY  - ")) >= 0;
+}
+
+void FileImporterRIS::setProtectCasing(bool protectCasing)
+{
+    d->protectCasing = protectCasing;
 }
 
 void FileImporterRIS::cancel()
