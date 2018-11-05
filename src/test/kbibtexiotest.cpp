@@ -262,7 +262,7 @@ void KBibTeXIOTest::fileExporterXMLsave_data()
     QTest::addColumn<File *>("bibTeXfile");
     QTest::addColumn<QString>("xmlData");
 
-    static const QMap<const char *, QString> keyToXmlData {
+    static const QHash<const char *, QString> keyToXmlData {
         {"Empty file", QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>|</bibliography>|")},
         {"Moby Dick", QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>| <entry id=\"the-whale-1851\" type=\"article\">|  <authors>|<person><firstname>Herman</firstname><lastname>Melville</lastname></person> <person><firstname>Moby</firstname><lastname>Dick</lastname></person>|  </authors>|  <title><text>Call me Ishmael</text></title>|  <year><text>1851</text></year>| </entry>|</bibliography>|")}
     };
@@ -281,7 +281,7 @@ void KBibTeXIOTest::fileExporterXMLsave()
     FileExporterXML fileExporterXML(this);
     QStringList errorLog;
     const QString generatedData = fileExporterXML.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
-    for (const QString &logLine : errorLog)
+    for (const QString &logLine : const_cast<const QStringList &>(errorLog))
         qDebug() << logLine;
 
     QCOMPARE(generatedData, xmlData);
@@ -292,7 +292,7 @@ void KBibTeXIOTest::fileExporterRISsave_data()
     QTest::addColumn<File *>("bibTeXfile");
     QTest::addColumn<QString>("risData");
 
-    static const QMap<const char *, QString> keyToRisData {
+    static const QHash<const char *, QString> keyToRisData {
         {"Empty file", QString()},
         {"Moby Dick", QStringLiteral("TY  - JOUR|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851///|ER  - ||")}
     };
@@ -311,7 +311,7 @@ void KBibTeXIOTest::fileExporterRISsave()
     FileExporterRIS fileExporterRIS(this);
     QStringList errorLog;
     const QString generatedData = fileExporterRIS.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
-    for (const QString &logLine : errorLog)
+    for (const QString &logLine : const_cast<const QStringList &>(errorLog))
         qDebug() << logLine;
 
     QCOMPARE(generatedData, risData);
@@ -322,7 +322,7 @@ void KBibTeXIOTest::fileExporterBibTeXsave_data()
     QTest::addColumn<File *>("bibTeXfile");
     QTest::addColumn<QString>("bibTeXdata");
 
-    static const QMap<const char *, QString> keyToBibTeXData {
+    static const QHash<const char *, QString> keyToBibTeXData {
         {"Empty file", QString()},
         {"Moby Dick", QStringLiteral("@article{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
     };
@@ -341,7 +341,7 @@ void KBibTeXIOTest::fileExporterBibTeXsave()
     FileExporterBibTeX fileExporterBibTeX(this);
     QStringList errorLog;
     const QString generatedData = fileExporterBibTeX.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
-    for (const QString &logLine : errorLog)
+    for (const QString &logLine : const_cast<const QStringList &>(errorLog))
         qDebug() << logLine;
 
     QCOMPARE(generatedData, bibTeXdata);
@@ -352,7 +352,7 @@ void KBibTeXIOTest::fileImporterRISload_data()
     QTest::addColumn<QByteArray>("risData");
     QTest::addColumn<File *>("bibTeXfile");
 
-    static const QMap<const char *, QString> keyToRisData {
+    static const QHash<const char *, QString> keyToRisData {
         {"Empty file", QString()},
         {"Moby Dick", QStringLiteral("TY  - JOUR|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851///|ER  - ||")}
     };
@@ -384,7 +384,7 @@ void KBibTeXIOTest::fileImporterBibTeXload_data()
     QTest::addColumn<QByteArray>("bibTeXdata");
     QTest::addColumn<File *>("bibTeXfile");
 
-    static const QMap<const char *, QString> keyToBibTeXData {
+    static const QHash<const char *, QString> keyToBibTeXData {
         {"Empty file", QString()},
         {"Moby Dick", QStringLiteral("@article{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
     };
