@@ -298,7 +298,6 @@ private:
 #ifdef HAVE_KF5
     PlainTextValue();
     void readConfiguration();
-    static PlainTextValue *notificationListener;
     static QString personNameFormatting;
 #else // HAVE_KF5
     static const QString personNameFormatting;

@@ -671,8 +671,11 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
     vit = VITOther;
 
 #ifdef HAVE_KF5
-    if (notificationListener == nullptr)
-        notificationListener = new PlainTextValue();
+    /// Required to have static instance of PlainTextValue here
+    /// to initialize @see personNameFormatting from settings
+    /// as well as update @see personNameFormatting upon notification
+    /// from NotificationHub
+    static PlainTextValue ptv;
 #endif // HAVE_KF5
 
     bool isVerbatim = false;
@@ -758,7 +761,6 @@ void PlainTextValue::readConfiguration()
     personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
 }
 
-PlainTextValue *PlainTextValue::notificationListener = nullptr;
 QString PlainTextValue::personNameFormatting;
 #else // HAVE_KF5
 const QString PlainTextValue::personNameFormatting = QStringLiteral("<%l><, %s><, %f>");
