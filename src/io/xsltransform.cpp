@@ -96,7 +96,7 @@ QString XSLTransform::locateXSLTfile(const QString &stem)
     const QString xsltFilename = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QLatin1Char('/') + stem);
     if (xsltFilename.isEmpty())
         qCWarning(LOG_KBIBTEX_IO) << "Generated XSLT filename is empty for stem " << stem;
-    else if (!QFileInfo(xsltFilename).exists())
+    else if (!QFileInfo::exists(xsltFilename))
         qCWarning(LOG_KBIBTEX_IO) << "Generated XSLT filename " << xsltFilename << " refers to non-existing file";
     else
         qCDebug(LOG_KBIBTEX_IO) << "Generated XSLT filename is " << xsltFilename << " for stem " << stem;
