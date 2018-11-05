@@ -106,8 +106,4 @@ private:
     DocumentListPrivate *d;
 };
 
-static const int RecentlyUsedItemType = QListWidgetItem::UserType + 23;
-static const int FavoritesItemType = QListWidgetItem::UserType + 24;
-
-
 #endif // KBIBTEX_PROGRAM_DOCUMENTLIST_H

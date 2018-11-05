@@ -322,10 +322,9 @@ void KBibTeXMainWindow::newDocument()
 {
     const QString mimeType = FileInfo::mimetypeBibTeX;
     OpenFileInfo *openFileInfo = OpenFileInfoManager::instance().createNew(mimeType);
-    if (openFileInfo) {
+    if (openFileInfo)
         OpenFileInfoManager::instance().setCurrentFile(openFileInfo);
-        openFileInfo->addFlags(OpenFileInfo::Open);
-    } else
+    else
         KMessageBox::error(this, i18n("Creating a new document of mime type '%1' failed as no editor component could be instantiated.", mimeType), i18n("Creating document failed"));
 }
 
