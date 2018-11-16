@@ -41,6 +41,11 @@ public:
 
 signals:
     void searchFor(const QString &);
+    /**
+     * Signal emitted if this view's selection changes.
+     * @param hasSelection true if at least one row is selected, false otherwise
+     */
+    void hasSelectionChanged(bool hasSelection);
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

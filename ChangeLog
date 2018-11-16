@@ -6,6 +6,7 @@ Diff 0.10 to 0.11
   favicon URLs
 - KDE Bug 403750, 413367: Allow to resize and reorder columns in the main
   bibliography view
+- KDE Bug 400672: Save only selected elements in a new bibliography file
 
 Diff 0.9.2 to 0.10
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -114,6 +114,8 @@ private:
     }
 
 public:
+    enum FileScope { scopeAllElements, scopeSelectedElements };
+
     File *bibTeXFile;
     PartWidget *partWidget;
     FileModel *model;
@@ -158,6 +160,13 @@ public:
         QAction *saveCopyAsAction = new QAction(QIcon::fromTheme(QStringLiteral("document-save")), i18n("Save Copy As..."), p);
         p->actionCollection()->addAction(QStringLiteral("file_save_copy_as"), saveCopyAsAction);
         connect(saveCopyAsAction, &QAction::triggered, p, &KBibTeXPart::documentSaveCopyAs);
+        /// "Save selection" action
+        QAction *saveSelectionAction = new QAction(QIcon::fromTheme(QStringLiteral("document-save")), i18n("Save Selection..."), p);
+        p->actionCollection()->addAction(QStringLiteral("file_save_selection"), saveSelectionAction);
+        connect(saveSelectionAction, &QAction::triggered, p, &KBibTeXPart::documentSaveSelection);
+        /// Enable "save selection" action only if there is something selected
+        connect(partWidget->fileView(), &BasicFileView::hasSelectionChanged, saveSelectionAction, &QAction::setEnabled);
+        saveSelectionAction->setEnabled(false);
 
         /// Filter bar widget
         QAction *filterWidgetAction = new QAction(i18n("Filter"), p);
@@ -557,17 +566,40 @@ public:
         return exporter;
     }
 
-    bool saveFile(QFile &file, FileExporter *exporter, QStringList *errorLog = nullptr) {
+    bool saveFile(QFile &file, const FileScope fileScope, FileExporter *exporter, QStringList *errorLog = nullptr) {
         SortFilterFileModel *model = qobject_cast<SortFilterFileModel *>(partWidget->fileView()->model());
         Q_ASSERT_X(model != nullptr, "FileExporter *KBibTeXPart::KBibTeXPartPrivate:saveFile(...)", "SortFilterFileModel *model from editor->model() is invalid");
         Q_ASSERT_X(model->fileSourceModel()->bibliographyFile() == bibTeXFile, "FileExporter *KBibTeXPart::KBibTeXPartPrivate:saveFile(...)", "SortFilterFileModel's BibTeX File does not match Part's BibTeX File");
 
-        return exporter->save(&file, bibTeXFile, errorLog);
+        switch (fileScope) {
+        case scopeAllElements: {
+            /// Save complete file
+            return exporter->save(&file, bibTeXFile, errorLog);
+        } ///< no break required as there is an unconditional 'return' further above
+        case scopeSelectedElements: {
+            /// Save only selected elements
+            const auto &list = partWidget->fileView()->selectionModel()->selectedRows();
+            if (list.isEmpty()) return false; /// Empty selection? Abort here
+
+            File fileWithSelectedElements;
+            for (const QModelIndex &indexInSelection : list) {
+                const QModelIndex &indexInFileModel = model->mapToSource(indexInSelection);
+                const int row = indexInFileModel.row();
+                const QSharedPointer<Element> &element = (*bibTeXFile)[row];
+                fileWithSelectedElements << element;
+            }
+            return exporter->save(&file, &fileWithSelectedElements, errorLog);
+        } ///< no break required as there is an unconditional 'return' further above
+        }
+
+        /// Above switch should cover all cases and each case should
+        /// invoke 'return'. Thus, this code here should never be reached.
+        return false;
     }
 
-    bool saveFile(const QUrl &url) {
+    bool saveFile(const QUrl &url, const FileScope &fileScope = scopeAllElements) {
         bool result = false;
-        Q_ASSERT_X(url.isValid(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url)", "url must be valid");
+        Q_ASSERT_X(url.isValid(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url, const FileScope&)", "url must be valid");
 
         /// Extract filename extension (e.g. 'bib') to determine which FileExporter to use
         static const QRegularExpression suffixRegExp(QStringLiteral("\\.([^.]{1,4})$"));
@@ -595,7 +627,7 @@ public:
 
                 QFile file(filename);
                 if (file.open(QIODevice::WriteOnly)) {
-                    result = saveFile(file, exporter, &errorLog);
+                    result = saveFile(file, fileScope, exporter, &errorLog);
                     file.close();
                 }
             }
@@ -606,7 +638,7 @@ public:
             QTemporaryFile temporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QStringLiteral("kbibtex_savefile_XXXXXX") + ending);
             temporaryFile.setAutoRemove(true);
             if (temporaryFile.open()) {
-                result = saveFile(temporaryFile, exporter, &errorLog);
+                result = saveFile(temporaryFile, fileScope, exporter, &errorLog);
 
                 /// Close/flush temporary file
                 temporaryFile.close();
@@ -859,6 +891,18 @@ bool KBibTeXPart::documentSaveCopyAs()
     /// difference from KParts::ReadWritePart::saveAs:
     /// current document's URL won't be changed
     return d->saveFile(newUrl);
+}
+
+bool KBibTeXPart::documentSaveSelection()
+{
+    d->isSaveAsOperation = true;
+    const QUrl newUrl = d->getSaveFilename(~KBibTeXPartPrivate::gsfoCurrentFilenameReused);
+    if (!newUrl.isValid() || newUrl == url())
+        return false;
+
+    /// difference from KParts::ReadWritePart::saveAs:
+    /// current document's URL won't be changed
+    return d->saveFile(newUrl, KBibTeXPartPrivate::scopeSelectedElements);
 }
 
 void KBibTeXPart::elementViewDocument()

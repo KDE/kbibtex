@@ -256,6 +256,11 @@ void BasicFileView::setModel(QAbstractItemModel *model)
 
     QTreeView::setModel(model);
 
+    connect(selectionModel(), &QItemSelectionModel::selectionChanged, [this](const QItemSelection &selected, const QItemSelection &) {
+        const bool hasSelection = !selected.empty();
+        emit this->hasSelectionChanged(hasSelection);
+    });
+
     /// sort according to session
     if (header()->isSortIndicatorShown())
         sort(header()->sortIndicatorSection(), header()->sortIndicatorOrder());
