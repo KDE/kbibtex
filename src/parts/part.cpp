@@ -35,6 +35,7 @@
 #include <QTemporaryFile>
 #include <QTimer>
 #include <QStandardPaths>
+#include <QFlags>
 
 #include <KMessageBox> // FIXME deprecated
 #include <KLocalizedString>
@@ -464,19 +465,35 @@ public:
             KMessageBox::error(p->widget(), i18n("Could not create backup copies of document '%1'.", url.url(QUrl::PreferLocalFile)), i18n("Backup copies"));
     }
 
-    QUrl getSaveFilename(bool mustBeImportable = true) {
-        QString startDir = p->url().isValid() ? p->url().path() : QString();
+    /**
+     * Options to tell @see getSaveFileame how to prepare the file-save dialog.
+     */
+    enum GetSaveFilenameOption {
+        gsfoImportableFiletype = 0x01, ///< List of available mime types to save as may onlz include mime types which can be loaded/imported, too
+        gsfoCurrentFilenameReused = 0x02 ///< Propose the current filename as the default suggestion (file extension may get adjusted, though)
+    };
+
+    /**
+     * Prepare and show a file-save dialog to the user. The dialog is prepared
+     * as requested by the options, which are an OR combination of flags from
+     * @see GetSaveFilenameOption
+     * @param options OR combination of flags from @see GetSaveFilenameOption enum
+     * @return Valid URL if querying filename in file-save dialog succeeded, invalid URL otherwise
+     */
+    QUrl getSaveFilename(const int options) const {
+        const QString startDir = p->url().isValid() ? ((options & GetSaveFilenameOption::gsfoCurrentFilenameReused) > 0 ? p->url().path() : QFileInfo(p->url().path()).absolutePath()) : QString();
         QString supportedMimeTypes = QStringLiteral("text/x-bibtex text/x-research-info-systems");
         if (BibUtils::available())
             supportedMimeTypes += QStringLiteral(" application/x-isi-export-format application/x-endnote-refer");
-        if (!mustBeImportable && !QStandardPaths::findExecutable(QStringLiteral("pdflatex")).isEmpty())
-            supportedMimeTypes += QStringLiteral(" application/pdf");
-        if (!mustBeImportable && !QStandardPaths::findExecutable(QStringLiteral("dvips")).isEmpty())
-            supportedMimeTypes += QStringLiteral(" application/postscript");
-        if (!mustBeImportable)
+        if ((options & GetSaveFilenameOption::gsfoImportableFiletype) == 0) {
+            if (!QStandardPaths::findExecutable(QStringLiteral("pdflatex")).isEmpty())
+                supportedMimeTypes += QStringLiteral(" application/pdf");
+            if (!QStandardPaths::findExecutable(QStringLiteral("dvips")).isEmpty())
+                supportedMimeTypes += QStringLiteral(" application/postscript");
             supportedMimeTypes += QStringLiteral(" text/html");
-        if (!mustBeImportable && !QStandardPaths::findExecutable(QStringLiteral("latex2rtf")).isEmpty())
-            supportedMimeTypes += QStringLiteral(" application/rtf");
+            if (!QStandardPaths::findExecutable(QStringLiteral("latex2rtf")).isEmpty())
+                supportedMimeTypes += QStringLiteral(" application/rtf");
+        }
 
         QPointer<QFileDialog> saveDlg = new QFileDialog(p->widget(), i18n("Save file") /* TODO better text */, startDir, supportedMimeTypes);
         /// Setting list of mime types for the second time,
@@ -484,6 +501,7 @@ public:
         saveDlg->setMimeTypeFilters(supportedMimeTypes.split(QLatin1Char(' '), QString::SkipEmptyParts));
         /// Setting the dialog into "Saving" mode make the "add extension" checkbox available
         saveDlg->setAcceptMode(QFileDialog::AcceptSave);
+        /// Mime type 'text/x-bibtex' is guaranteed to be pre-selected, so set default filename suffix accordingly
         saveDlg->setDefaultSuffix(QStringLiteral("bib"));
         saveDlg->setFileMode(QFileDialog::AnyFile);
         if (saveDlg->exec() != QDialog::Accepted)
@@ -810,7 +828,7 @@ bool KBibTeXPart::documentSave()
 bool KBibTeXPart::documentSaveAs()
 {
     d->isSaveAsOperation = true;
-    QUrl newUrl = d->getSaveFilename();
+    QUrl newUrl = d->getSaveFilename(KBibTeXPartPrivate::gsfoCurrentFilenameReused | KBibTeXPartPrivate::gsfoImportableFiletype);
     if (!newUrl.isValid())
         return false;
 
@@ -834,7 +852,7 @@ bool KBibTeXPart::documentSaveAs()
 bool KBibTeXPart::documentSaveCopyAs()
 {
     d->isSaveAsOperation = true;
-    QUrl newUrl = d->getSaveFilename(false);
+    QUrl newUrl = d->getSaveFilename(KBibTeXPartPrivate::gsfoCurrentFilenameReused);
     if (!newUrl.isValid() || newUrl == url())
         return false;
 
