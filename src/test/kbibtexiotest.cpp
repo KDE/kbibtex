@@ -372,11 +372,9 @@ void KBibTeXIOTest::fileImporterRISload()
     fileImporterRIS.setProtectCasing(true);
     QBuffer buffer(&risData);
     buffer.open(QBuffer::ReadOnly);
-    File *generatedFile = fileImporterRIS.load(&buffer);
+    QScopedPointer<File> generatedFile(fileImporterRIS.load(&buffer));
 
     QVERIFY(generatedFile->operator ==(*bibTeXfile));
-
-    delete generatedFile;
 }
 
 void KBibTeXIOTest::fileImporterBibTeXload_data()
@@ -403,11 +401,9 @@ void KBibTeXIOTest::fileImporterBibTeXload()
     FileImporterBibTeX fileImporterBibTeX(this);
     QBuffer buffer(&bibTeXdata);
     buffer.open(QBuffer::ReadOnly);
-    File *generatedFile = fileImporterBibTeX.load(&buffer);
+    QScopedPointer<File> generatedFile(fileImporterBibTeX.load(&buffer));
 
     QVERIFY(generatedFile->operator ==(*bibTeXfile));
-
-    delete generatedFile;
 }
 
 void KBibTeXIOTest::initTestCase()
