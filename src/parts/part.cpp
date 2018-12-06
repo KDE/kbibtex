@@ -879,7 +879,9 @@ void KBibTeXPart::elementViewDocument()
     /// Go through all actions (i.e. document URLs) for this element
     for (const QAction *action : actionList) {
         /// Make URL from action's data ...
-        QUrl tmpUrl = QUrl(action->data().toString());
+        const QString actionData = action->data().toString();
+        if (actionData.isEmpty()) continue; ///< No URL from empty string
+        const QUrl tmpUrl = QUrl::fromUserInput(actionData);
         /// ... but skip this action if the URL is invalid
         if (!tmpUrl.isValid()) continue;
         if (tmpUrl.isLocalFile()) {
