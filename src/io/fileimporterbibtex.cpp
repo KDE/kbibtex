@@ -1087,8 +1087,11 @@ QString FileImporterBibTeX::bibtexAwareSimplify(const QString &text)
     QString result;
     int i = 0;
 
-    /// Skip initial spaces, can be safely ignored
+    /// Consume initial spaces ...
     while (i < text.length() && text[i].isSpace()) ++i;
+    /// ... but if there have been spaces (i.e. i>0), then record a single space only
+    if (i > 0)
+        result.append(QStringLiteral(" "));
 
     while (i < text.length()) {
         /// Consume non-spaces
