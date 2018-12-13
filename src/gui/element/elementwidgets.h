@@ -22,7 +22,6 @@
 
 #include <QLabel>
 #include <QWidget>
-
 #include <QUrl>
 #include <QIcon>
 
@@ -32,10 +31,14 @@
 class QTreeWidget;
 class QTreeWidgetItem;
 class QGridLayout;
+class QPushButton;
 
 class KLineEdit;
 class KComboBox;
-class QPushButton;
+
+namespace KTextEditor {
+class Document;
+}
 
 class File;
 class Entry;
@@ -299,8 +302,7 @@ public:
     enum ElementClass { elementInvalid = -1, elementEntry = 0, elementMacro, elementPreamble };
 
 private:
-    class SourceWidgetTextEdit;
-    SourceWidgetTextEdit *sourceEdit;
+    KTextEditor::Document *document;
     QString originalText;
     ElementClass elementClass;
 

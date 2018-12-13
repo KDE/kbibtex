@@ -37,7 +37,9 @@
 #include <KLineEdit>
 #include <KComboBox>
 #include <KRun>
-#include <KTextEdit>
+#include <KTextEditor/Document>
+#include <KTextEditor/Editor>
+#include <KTextEditor/View>
 #include <kio_version.h>
 
 #include "preferences.h"
@@ -1142,28 +1144,6 @@ void PreambleWidget::createGUI()
 }
 
 
-class SourceWidget::SourceWidgetTextEdit : public KTextEdit
-{
-    Q_OBJECT
-
-public:
-    SourceWidgetTextEdit(QWidget *parent)
-            : KTextEdit(parent) {
-        /// nothing
-    }
-
-protected:
-    void dropEvent(QDropEvent *event) override {
-        FileImporterBibTeX importer(this);
-        QScopedPointer<File> file(importer.fromString(event->mimeData()->text()));
-        if (!file.isNull() && file->count() == 1) {
-            FileExporterBibTeX exporter(this);
-            document()->setPlainText(exporter.toString(file->first(), file.data()));
-        } else
-            KTextEdit::dropEvent(event);
-    }
-};
-
 class SourceWidget::Private
 {
 public:
@@ -1184,7 +1164,7 @@ SourceWidget::SourceWidget(QWidget *parent)
 
 SourceWidget::~SourceWidget()
 {
-    delete sourceEdit;
+    delete document;
     delete d;
 }
 
@@ -1197,7 +1177,7 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
 {
     if (isReadOnly) return false; ///< never save data if in read-only mode
 
-    const QString text = sourceEdit->document()->toPlainText();
+    const QString text = document->text();
     const QScopedPointer<const File> file(d->importerBibTeX->fromString(text));
     if (file.isNull() || file->count() != 1) return false;
 
@@ -1233,17 +1213,17 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widget's value
-    disconnect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
+    disconnect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
 
     FileExporterBibTeX exporter(this);
     exporter.setEncoding(QStringLiteral("utf-8"));
     const QString exportedText = exporter.toString(element, m_file);
     if (!exportedText.isEmpty()) {
         originalText = exportedText;
-        sourceEdit->document()->setPlainText(originalText);
+        document->setText(originalText);
     }
 
-    connect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
+    connect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
 
     return !exportedText.isEmpty();
 }
@@ -1252,10 +1232,10 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
 {
     message.clear();
 
-    const QString text = sourceEdit->document()->toPlainText();
+    const QString text = document->text();
     const QScopedPointer<const File> file(d->importerBibTeX->fromString(text));
     if (file.isNull() || file->count() != 1) {
-        if (widgetWithIssue != nullptr) *widgetWithIssue = sourceEdit;
+        if (widgetWithIssue != nullptr) *widgetWithIssue = document->views().first(); ///< We create one view initially, so this should never fail
         message = i18n("Given source code does not parse as one single BibTeX element.");
         return false;
     }
@@ -1285,7 +1265,7 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
     }
 
     if (!result && widgetWithIssue != nullptr)
-        *widgetWithIssue = sourceEdit;
+        *widgetWithIssue = document->views().first(); ///< We create one view initially, so this should never fail
 
     return result;
 }
@@ -1295,7 +1275,7 @@ void SourceWidget::setReadOnly(bool isReadOnly)
     ElementWidget::setReadOnly(isReadOnly);
 
     d->buttonRestore->setEnabled(!isReadOnly);
-    sourceEdit->setReadOnly(isReadOnly);
+    document->setReadWrite(!isReadOnly);
 }
 
 QString SourceWidget::label()
@@ -1322,27 +1302,28 @@ void SourceWidget::createGUI()
     layout->setRowStretch(0, 1);
     layout->setRowStretch(1, 0);
 
-    sourceEdit = new SourceWidgetTextEdit(this);
-    layout->addWidget(sourceEdit, 0, 0, 1, 3);
-    sourceEdit->document()->setDefaultFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-    sourceEdit->setTabStopWidth(QFontMetrics(sourceEdit->font()).averageCharWidth() * 4);
+    KTextEditor::Editor *editor = KTextEditor::Editor::instance();
+    document = editor->createDocument(this);
+    document->setHighlightingMode(QStringLiteral("BibTeX"));
+    KTextEditor::View *view = document->createView(this);
+    layout->addWidget(view, 0, 0, 1, 3);
 
     d->buttonRestore = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Restore"), this);
     layout->addWidget(d->buttonRestore, 1, 1, 1, 1);
     connect(d->buttonRestore, &QPushButton::clicked, this, static_cast<void(SourceWidget::*)()>(&SourceWidget::reset));
-    connect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
+    connect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
 }
 
 void SourceWidget::reset()
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widget's value
-    disconnect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
+    disconnect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
 
-    sourceEdit->document()->setPlainText(originalText);
+    document->setText(originalText);
     setModified(false);
 
-    connect(sourceEdit, &SourceWidget::SourceWidgetTextEdit::textChanged, this, &SourceWidget::gotModified);
+    connect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
 }
 
 #include "elementwidgets.moc"

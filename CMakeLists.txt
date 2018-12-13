@@ -120,6 +120,8 @@ find_package(
 
 find_package(KF5DocTools)
 
+find_package(KF5TextEditor NO_MODULE)
+
 ecm_setup_version(
     PROJECT
     VARIABLE_PREFIX KBIBTEX
