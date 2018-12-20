@@ -29,9 +29,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Found at  http://qt-project.org/wiki/Delay_action_to_wait_for_user_interaction
 modified/simplified by Thomas Fischer
 */
+
 #include "delayedexecutiontimer.h"
+
 #include <QTimer>
-#include <QStringBuilder>
 
 DelayedExecutionTimer::DelayedExecutionTimer(int maximumDelay, int minimumDelay, QObject *parent):
     QObject(parent),

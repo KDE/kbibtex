@@ -33,6 +33,7 @@ modified/simplified by Thomas Fischer
 #define DELAYEDEXECUTIONTIMER_H
 
 #include <QObject>
+
 class QTimer;
 
 /**
