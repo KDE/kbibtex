@@ -888,7 +888,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
     return result;
 }
 
-QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &text)
+QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &text, const int line_number, QObject *parent)
 {
     /// Case: Smith, John and Johnson, Tim
     /// Case: Smith, John and Fulkerson, Ford and Johnson, Tim
@@ -933,7 +933,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     if (containsSpace) {
         /// Tokens look like "John Smith"
         for (const QString &authorToken : authorTokenList) {
-            QSharedPointer<Person> person = personFromString(authorToken);
+            QSharedPointer<Person> person = personFromString(authorToken, nullptr, line_number, parent);
             if (!person.isNull())
                 result.append(person);
         }
@@ -945,7 +945,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
             ++it;
             if (it != authorTokenList.constEnd()) {
                 lastname += QStringLiteral(", ") + (*it);
-                QSharedPointer<Person> person = personFromString(lastname);
+                QSharedPointer<Person> person = personFromString(lastname, nullptr, line_number, parent);
                 if (!person.isNull())
                     result.append(person);
             } else
@@ -968,37 +968,59 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
     static QStringList tokens;
     contextSensitiveSplit(text, tokens);
 
+    if (tokens.count() > 0) {
+        if (tokens[0] == tokenAnd) {
+            qCInfo(LOG_KBIBTEX_IO) << "Person list starts with" << tokenAnd << "near line" << line_number;
+            if (parent != nullptr)
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Person list starts with 'and' near line %1")).arg(line_number)));
+        } else if (tokens.count() > 1 && tokens[tokens.count() - 1] == tokenAnd) {
+            qCInfo(LOG_KBIBTEX_IO) << "Person list ends with" << tokenAnd << "near line" << line_number;
+            if (parent != nullptr)
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Person list ends with 'and' near line %1")).arg(line_number)));
+        }
+        if (tokens[0] == tokenOthers) {
+            qCInfo(LOG_KBIBTEX_IO) << "Person list starts with" << tokenOthers << "near line" << line_number;
+            if (parent != nullptr)
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Person list starts with 'others' near line %1")).arg(line_number)));
+        } else if (tokens[tokens.count() - 1] == tokenOthers && (tokens.count() < 3 || tokens[tokens.count() - 2] != tokenAnd)) {
+            qCInfo(LOG_KBIBTEX_IO) << "Person list ends with" << tokenOthers << "but is not preceeded with name and" << tokenAnd << "near line" << line_number;
+            if (parent != nullptr)
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Person list ends with 'others' but is not preceeded with name and 'and' near line %1")).arg(line_number)));
+        }
+    }
+
     int nameStart = 0;
     QString prevToken;
-    bool encounteredName = false;
     for (int i = 0; i < tokens.count(); ++i) {
         if (tokens[i] == tokenAnd) {
             if (prevToken == tokenAnd) {
-                qCDebug(LOG_KBIBTEX_IO) << "Two subsequent" << tokenAnd << "found in person list near line" << line_number;
+                qCInfo(LOG_KBIBTEX_IO) << "Two subsequent" << tokenAnd << "found in person list near line" << line_number;
                 if (parent != nullptr)
-                    QMetaObject::invokeMethod(parent, "message", Qt::QueuedConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Two subsequent 'and' found in person list near line %1")).arg(line_number)));
-            } else if (!encounteredName) {
-                qCDebug(LOG_KBIBTEX_IO) << "Found" << tokenAnd << "but no name before it near line" << line_number;
-                if (parent != nullptr)
-                    QMetaObject::invokeMethod(parent, "message", Qt::QueuedConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Found 'and' but no name before it near line %1")).arg(line_number)));
-            } else {
+                    QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Two subsequent 'and' found in person list near line %1")).arg(line_number)));
+            } else if (nameStart < i) {
                 const QSharedPointer<Person> person = personFromTokenList(tokens.mid(nameStart, i - nameStart), comma, line_number, parent);
                 if (!person.isNull())
                     value.append(person);
+                else {
+                    qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart, i - nameStart).join(' ') << "does not form a name near line" << line_number;
+                    if (parent != nullptr)
+                        QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart, i - nameStart).join(' ')).arg(line_number)));
+                }
+            } else {
+                qCInfo(LOG_KBIBTEX_IO) << "Found" << tokenAnd << "but no name before it near line" << line_number;
+                if (parent != nullptr)
+                    QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Found 'and' but no name before it near line %1")).arg(line_number)));
             }
             nameStart = i + 1;
-            encounteredName = false;
         } else if (tokens[i] == tokenOthers) {
             if (i < tokens.count() - 1) {
-                qCDebug(LOG_KBIBTEX_IO) << "Special word" << tokenOthers << "found before last position in person name near line" << line_number;
+                qCInfo(LOG_KBIBTEX_IO) << "Special word" << tokenOthers << "found before last position in person name near line" << line_number;
                 if (parent != nullptr)
-                    QMetaObject::invokeMethod(parent, "message", Qt::QueuedConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Special word 'others' found before last position in person name near line %1")).arg(line_number)));
+                    QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Special word 'others' found before last position in person name near line %1")).arg(line_number)));
             } else
                 value.append(QSharedPointer<PlainText>(new PlainText(QStringLiteral("others"))));
             nameStart = tokens.count() + 1;
-            encounteredName = false;
-        } else
-            encounteredName = true;
+        }
         prevToken = tokens[i];
     }
 
@@ -1006,6 +1028,11 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
         const QSharedPointer<Person> person = personFromTokenList(tokens.mid(nameStart), comma, line_number, parent);
         if (!person.isNull())
             value.append(person);
+        else {
+            qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart).join(' ') << "does not form a name near line" << line_number;
+            if (parent != nullptr)
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart).join(' ')).arg(line_number)));
+        }
     }
 }
 
@@ -1061,7 +1088,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
                     /// Should never happen: more closing brackets than opening ones
                     qCWarning(LOG_KBIBTEX_IO) << "Opening and closing brackets do not match near line" << line_number;
                     if (parent != nullptr)
-                        QMetaObject::invokeMethod(parent, "message", Qt::QueuedConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Opening and closing brackets do not match near line %1")).arg(line_number)));
+                        QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Opening and closing brackets do not match near line %1")).arg(line_number)));
                 }
             }
         }
@@ -1142,7 +1169,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
 
     qCWarning(LOG_KBIBTEX_IO) << "Don't know how to handle name" << tokens.join(QLatin1Char(' ')) << "near line" << line_number;
     if (parent != nullptr)
-        QMetaObject::invokeMethod(parent, "message", Qt::QueuedConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Don't know how to handle name '%1' near line %2")).arg(tokens.join(QLatin1Char(' '))).arg(line_number)));
+        QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Don't know how to handle name '%1' near line %2")).arg(tokens.join(QLatin1Char(' '))).arg(line_number)));
     return QSharedPointer<Person>();
 }
 

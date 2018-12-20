@@ -68,6 +68,10 @@ private slots:
     void fileImporterBibTeXload();
     void protectiveCasingEntryGeneratedOnTheFly();
     void protectiveCasingEntryFromData();
+    void partialBibTeXInput_data();
+    void partialBibTeXInput();
+    void partialRISInput_data();
+    void partialRISInput();
 
 private:
 };
@@ -488,6 +492,108 @@ void KBibTeXIOTest::protectiveCasingEntryFromData()
             && !textSingleCurleyBracketTitleWithoutProtectiveCasing.contains(doubleCurleyBracketTitle));
 }
 
+void KBibTeXIOTest::partialBibTeXInput_data()
+{
+    QTest::addColumn<bool>("isValid");
+    QTest::addColumn<QString>("text");
+
+    static const struct BibTeXDataTable {
+        const char *label;
+        const bool isValid;
+        const QString text;
+    }
+    bibTeXDataTable[] = {
+        {"Empty string", false, QString()},
+        {"Only 'at' sign", false, QStringLiteral("@")},
+        {"Only 'at' sign followed by element type", false, QStringLiteral("@entry")},
+        {"Only up to opening curly bracket", false, QStringLiteral("@entry{")},
+        {"Complete entry but without id", true, QStringLiteral("@entry{,\n  title=\"{Abc Def}\",\n  month = jan\n}")},
+        {"Entry without any data", true, QStringLiteral("@entry{}")},
+        {"Entry up to entry id, but no closing curly bracket", false, QStringLiteral("@entry{test")},
+        {"Entry up to entry id with opening curly bracket", false, QStringLiteral("@entry{test{")},
+        {"Entry up to entry id with closing curly bracket", true, QStringLiteral("@entry{test}")},
+        {"Entry up to comma after entry id", false, QStringLiteral("@entry{test,")},
+        {"Entry up to comma after entry id, followed by closing curly bracket", true, QStringLiteral("@entry{test,}")},
+        {"Entry up to first field's key, but nothing more, not even an assign char", false, QStringLiteral("@entry{test,title")},
+        {"Entry up to first field's key, but nothing more, just a closing curly bracket", false, QStringLiteral("@entry{test,title}")},
+        {"Entry up to first field's assign char, but nothing more", false, QStringLiteral("@entry{test,title=")},
+        {"Entry up to first field's assign char, but nothing more, just a closing curly bracket", false, QStringLiteral("@entry{test,title=}")},
+        {"Invalid combination of curly bracket in a field's value (1)", false, QStringLiteral("@entry{test,title={}")},
+        {"Invalid combination of curly bracket in a field's value (2)", false, QStringLiteral("@entry{test,title={{}}")},
+        {"Invalid combination of curly bracket in a field's value (3)", false, QStringLiteral("@entry{test,title={}{}")},
+        {"Invalid combination of curly bracket in a field's value (4)", false, QStringLiteral("@entry{test,title={}{}}")},
+        {"Complete entry with empty title (1)", true, QStringLiteral("@entry{test,\n  title=\"{}\"\n}")},
+        {"Complete entry with empty title (2)", true, QStringLiteral("@entry{test,\n  title=\"\"\n}")},
+        {"Complete entry with empty title (3)", true, QStringLiteral("@entry{test,\n  title={{}}\n}")},
+        {"Entry abruptly ending at macro key as field value (1)", false, QStringLiteral("@entry{test,\n  month = jan")},
+        {"Entry abruptly ending at macro key as field value (2)", false, QStringLiteral("@entry{test,\n  month = jan\n")},
+        // TODO more tests
+        {"Complete entry", true, QStringLiteral("@entry{test,\n  title=\"{Abc Def}\",\n  month = jan\n}")}
+    };
+
+    for (const auto &bibTeXDataRow : bibTeXDataTable)
+        QTest::newRow(bibTeXDataRow.label) << bibTeXDataRow.isValid << bibTeXDataRow.text;
+}
+
+void KBibTeXIOTest::partialBibTeXInput()
+{
+    QFETCH(bool, isValid);
+    QFETCH(QString, text);
+
+    bool gotErrors = false;
+    FileImporterBibTeX importer(this);
+    connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
+        gotErrors |= messageSeverity >= FileImporter::SeverityError;
+        Q_UNUSED(messageText);
+        //qDebug()<<"FileImporterBibTeX issues message during 'partialBibTeXInput' test: "<<messageText;
+    });
+    QScopedPointer<File> bibTeXfile(importer.fromString(text));
+
+    QVERIFY(text.isEmpty() || isValid != gotErrors);
+    QVERIFY(isValid ? (!bibTeXfile.isNull() && bibTeXfile->count() == 1) : (bibTeXfile.isNull() || bibTeXfile->count() == 0));
+}
+
+void KBibTeXIOTest::partialRISInput_data()
+{
+    QTest::addColumn<bool>("isValid");
+    QTest::addColumn<QString>("text");
+
+    static const struct RISDataTable {
+        const char *label;
+        const bool isValid;
+        const QString text;
+    }
+    risDataTable[] = {
+        //{"Empty string", false, QString()},
+        {"Incorrect year", true, QStringLiteral("TY  - JOUR\nAU  - Shannon, Claude E.\nPY  - 5555/07//\nTI  - A Mathematical Theory of Communication\nT2  - Bell System Technical Journal\nSP  - 379\nEP  - 423\nVL  - 27\nER  -")},
+        {"Incorrect month", true, QStringLiteral("TY  - JOUR\nAU  - Shannon, Claude E.\nPY  - 1948/17//\nTI  - A Mathematical Theory of Communication\nT2  - Bell System Technical Journal\nSP  - 379\nEP  - 423\nVL  - 27\nER  -")},
+        {"Entry does not end with 'ER'", true, QStringLiteral("TY  - JOUR\nAU  - Shannon, Claude E.\nPY  - 1948/07//\nTI  - A Mathematical Theory of Communication\nT2  - Bell System Technical Journal\nSP  - 379\nEP  - 423\nVL  - 27")},
+        // TODO more tests
+        //{"Complete entry", true, QStringLiteral("TY  - JOUR\nAU  - Shannon, Claude E.\nPY  - 1948/07//\nTI  - A Mathematical Theory of Communication\nT2  - Bell System Technical Journal\nSP  - 379\nEP  - 423\nVL  - 27\nER  -")}
+    };
+
+    for (const auto &risDataRow : risDataTable)
+        QTest::newRow(risDataRow.label) << risDataRow.isValid << risDataRow.text;
+}
+
+void KBibTeXIOTest::partialRISInput()
+{
+    QFETCH(bool, isValid);
+    QFETCH(QString, text);
+
+    bool gotErrors = false;
+    FileImporterRIS importer(this);
+    connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
+        gotErrors |= messageSeverity >= FileImporter::SeverityError;
+        Q_UNUSED(messageText);
+        //qDebug()<<"FileImporterRIS issues message during 'partialBibTeXInput' test: "<<messageText;
+    });
+    QScopedPointer<File> bibTeXfile(importer.fromString(text));
+
+    QVERIFY(text.isEmpty() || isValid != gotErrors);
+    QVERIFY(isValid ? (!bibTeXfile.isNull() && bibTeXfile->count() == 1) : (bibTeXfile.isNull() || bibTeXfile->count() == 0));
+}
+
 void KBibTeXIOTest::initTestCase()
 {
     QFile texFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QStringLiteral("/encoderlatex-tables.tex"));
@@ -496,6 +602,8 @@ void KBibTeXIOTest::initTestCase()
         EncoderLaTeX::writeLaTeXTables(texFile);
         texFile.close();
     }
+
+    qRegisterMetaType<FileImporter::MessageSeverity>();
 }
 
 QTEST_MAIN(KBibTeXIOTest)

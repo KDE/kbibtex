@@ -85,7 +85,7 @@ public:
         if (!line.startsWith(QStringLiteral("ER  -")) && textStream.atEnd()) {
             qCWarning(LOG_KBIBTEX_IO) << "Expected that entry that starts with 'TY' ends with 'ER' but instead met end of file";
             /// Instead of an 'emit' ...
-            QMetaObject::invokeMethod(parent, "message", Qt::QueuedConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QStringLiteral("Expected that entry that starts with 'TY' ends with 'ER' but instead met end of file")));
+            QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QStringLiteral("Expected that entry that starts with 'TY' ends with 'ER' but instead met end of file")));
         }
         if (!value.isEmpty()) {
             RISitem item;
@@ -237,7 +237,7 @@ public:
             } else {
                 qCWarning(LOG_KBIBTEX_IO) << "Invalid year: " << dateFragments[0];
                 /// Instead of an 'emit' ...
-                QMetaObject::invokeMethod(parent, "message", Qt::QueuedConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Invalid year: '%1'")).arg(dateFragments[0])));
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Invalid year: '%1'")).arg(dateFragments[0])));
             }
         }
         if (dateFragments.count() > 1) {
@@ -250,7 +250,7 @@ public:
             } else {
                 qCWarning(LOG_KBIBTEX_IO) << "Invalid month: " << dateFragments[1];
                 /// Instead of an 'emit' ...
-                QMetaObject::invokeMethod(parent, "message", Qt::QueuedConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Invalid month: '%1'")).arg(dateFragments[1])));
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Invalid month: '%1'")).arg(dateFragments[1])));
             }
         }
 

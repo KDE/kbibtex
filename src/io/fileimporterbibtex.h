@@ -84,7 +84,7 @@ public:
      * @return A list of Person object containing the names
      * @see Person
      */
-    static QList<QSharedPointer<Person> > splitNames(const QString &text);
+    static QList<QSharedPointer<Person> > splitNames(const QString &text, const int line_number = 1, QObject *parent = nullptr);
 
     /**
      * Split a person's name into its parts and construct a Person object from them.
