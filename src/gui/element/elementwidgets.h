@@ -27,6 +27,7 @@
 
 #include "elementeditor.h"
 #include "entrylayout.h"
+#include "fileimporter.h"
 
 class QTreeWidget;
 class QTreeWidgetItem;
@@ -299,7 +300,7 @@ class SourceWidget : public ElementWidget
     Q_OBJECT
 
 public:
-    enum ElementClass { elementInvalid = -1, elementEntry = 0, elementMacro, elementPreamble };
+    enum ElementClass { elementInvalid = -1, elementEntry = 0, elementMacro, elementPreamble, elementComment };
 
 private:
     KTextEditor::Document *document;
@@ -325,6 +326,8 @@ public:
 
 private slots:
     void reset();
+    void addMessage(const FileImporter::MessageSeverity severity, const QString &messageText);
+    void updateMessage();
 
 private:
     class Private;

@@ -365,21 +365,25 @@ public:
         }
 
         QSharedPointer<const Entry> e = element.dynamicCast<const Entry>();
-        if (!e.isNull())
+        if (!e.isNull()) {
             internalEntry = QSharedPointer<Entry>(new Entry(*e.data()));
-        else {
+            sourceWidget->setElementClass(SourceWidget::elementEntry);
+        } else {
             QSharedPointer<const Macro> m = element.dynamicCast<const Macro>();
-            if (!m.isNull())
+            if (!m.isNull()) {
                 internalMacro = QSharedPointer<Macro>(new Macro(*m.data()));
-            else {
+                sourceWidget->setElementClass(SourceWidget::elementMacro);
+            } else {
                 QSharedPointer<const Comment> c = element.dynamicCast<const Comment>();
-                if (!c.isNull())
+                if (!c.isNull()) {
                     internalComment = QSharedPointer<Comment>(new Comment(*c.data()));
-                else {
+                    sourceWidget->setElementClass(SourceWidget::elementComment);
+                } else {
                     QSharedPointer<const Preamble> p = element.dynamicCast<const Preamble>();
-                    if (!p.isNull())
+                    if (!p.isNull()) {
                         internalPreamble = QSharedPointer<Preamble>(new Preamble(*p.data()));
-                    else
+                        sourceWidget->setElementClass(SourceWidget::elementPreamble);
+                    } else
                         Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::reset(QSharedPointer<const Element> element)", "element is not NULL but could not be cast on a valid Element sub-class");
                 }
             }

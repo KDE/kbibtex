@@ -56,6 +56,7 @@
 #include "macro.h"
 #include "preamble.h"
 #include "fieldlineedit.h"
+#include "delayedexecutiontimer.h"
 #include "logging_gui.h"
 
 static const unsigned int interColumnSpace = 16;
@@ -1147,12 +1148,20 @@ void PreambleWidget::createGUI()
 class SourceWidget::Private
 {
 public:
+    KComboBox *messages;
     QPushButton *buttonRestore;
     FileImporterBibTeX *importerBibTeX;
+    DelayedExecutionTimer *delayedExecutionTimer;
 
     Private(SourceWidget *parent)
-            : buttonRestore(nullptr), importerBibTeX(new FileImporterBibTeX(parent)) {
+            : messages(nullptr), buttonRestore(nullptr), importerBibTeX(new FileImporterBibTeX(parent)), delayedExecutionTimer(new DelayedExecutionTimer(1500, 500, parent)) {
         /// nothing
+    }
+
+    void addMessage(const FileImporter::MessageSeverity severity, const QString &messageText)
+    {
+        const QIcon icon = severity == FileImporter::SeverityInfo ? QIcon::fromTheme(QStringLiteral("dialog-information")) : (severity == FileImporter::SeverityWarning ? QIcon::fromTheme(QStringLiteral("dialog-warning")) : (severity == FileImporter::SeverityError ? QIcon::fromTheme(QStringLiteral("dialog-error")) : QIcon::fromTheme(QStringLiteral("dialog-question"))));
+        messages->addItem(icon, messageText);
     }
 };
 
@@ -1160,6 +1169,10 @@ SourceWidget::SourceWidget(QWidget *parent)
         : ElementWidget(parent), elementClass(elementInvalid), d(new SourceWidget::Private(this))
 {
     createGUI();
+
+    connect(document, &KTextEditor::Document::textChanged, d->delayedExecutionTimer, &DelayedExecutionTimer::trigger);
+    connect(document, &KTextEditor::Document::textChanged, d->messages, &KComboBox::clear);
+    connect(d->delayedExecutionTimer, &DelayedExecutionTimer::triggered, this, &SourceWidget::updateMessage);
 }
 
 SourceWidget::~SourceWidget()
@@ -1171,6 +1184,7 @@ SourceWidget::~SourceWidget()
 void SourceWidget::setElementClass(ElementClass elementClass)
 {
     this->elementClass = elementClass;
+    updateMessage();
 }
 
 bool SourceWidget::apply(QSharedPointer<Element> element) const
@@ -1231,9 +1245,12 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
 bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
 {
     message.clear();
+    d->messages->clear();
 
     const QString text = document->text();
+    connect(d->importerBibTeX, &FileImporterBibTeX::message, this, &SourceWidget::addMessage);
     const QScopedPointer<const File> file(d->importerBibTeX->fromString(text));
+    disconnect(d->importerBibTeX, &FileImporterBibTeX::message, this, &SourceWidget::addMessage);
     if (file.isNull() || file->count() != 1) {
         if (widgetWithIssue != nullptr) *widgetWithIssue = document->views().first(); ///< We create one view initially, so this should never fail
         message = i18n("Given source code does not parse as one single BibTeX element.");
@@ -1260,12 +1277,17 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
         if (!result) message = i18n("Given source code does not parse as one single BibTeX preamble.");
     }
     break;
+    // case elementComment // TODO?
     default:
+        message = QString(QStringLiteral("elementClass is unknown: %1")).arg(elementClass);
         result = false;
     }
 
     if (!result && widgetWithIssue != nullptr)
         *widgetWithIssue = document->views().first(); ///< We create one view initially, so this should never fail
+
+    if (message.isEmpty() && d->messages->count() == 0)
+        d->addMessage(FileImporter::SeverityInfo, i18n("No issues detected"));
 
     return result;
 }
@@ -1306,7 +1328,10 @@ void SourceWidget::createGUI()
     document = editor->createDocument(this);
     document->setHighlightingMode(QStringLiteral("BibTeX"));
     KTextEditor::View *view = document->createView(this);
-    layout->addWidget(view, 0, 0, 1, 3);
+    layout->addWidget(view, 0, 0, 1, 2);
+
+    d->messages = new KComboBox(this);
+    layout->addWidget(d->messages, 1, 0, 1, 1);
 
     d->buttonRestore = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Restore"), this);
     layout->addWidget(d->buttonRestore, 1, 1, 1, 1);
@@ -1324,6 +1349,24 @@ void SourceWidget::reset()
     setModified(false);
 
     connect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
+}
+
+void SourceWidget::addMessage(const FileImporter::MessageSeverity severity, const QString &messageText)
+{
+    d->addMessage(severity, messageText);
+}
+
+void SourceWidget::updateMessage()
+{
+    QString message;
+    const bool validationResult = validate(nullptr, message);
+
+    if (!message.isEmpty()) {
+        if (validationResult)
+            addMessage(FileImporter::SeverityInfo, message);
+        else
+            addMessage(FileImporter::SeverityError, message);
+    }
 }
 
 #include "elementwidgets.moc"
