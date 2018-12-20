@@ -57,6 +57,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     }
 
     File *result = new File();
+
     /// Used to determine if file prefers quotation marks over
     /// curly brackets or the other way around
     m_statistics.countCurlyBrackets = 0;
@@ -293,7 +294,13 @@ Macro *FileImporterBibTeX::readMacroElement()
     Macro *macro = new Macro(key);
     do {
         bool isStringKey = false;
-        QString text = EncoderLaTeX::instance().decode(bibtexAwareSimplify(readString(isStringKey)));
+        QString text = readString(isStringKey);
+        if (text.isNull()) {
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing macro" << key << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Could not read macro's text";
+            emit message(SeverityError, QString(QStringLiteral("Error in parsing macro '%1' near line %2: Could not read macro's text")).arg(key).arg(m_lineNo));
+            delete macro;
+        }
+        text = EncoderLaTeX::instance().decode(bibtexAwareSimplify(text));
         if (isStringKey)
             macro->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
@@ -320,9 +327,16 @@ Preamble *FileImporterBibTeX::readPreambleElement()
     Preamble *preamble = new Preamble();
     do {
         bool isStringKey = false;
+        QString text = readString(isStringKey);
+        if (text.isNull()) {
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing preamble near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Could not read preamble's text";
+            emit message(SeverityError, QString(QStringLiteral("Error in parsing preamble near line %1: Could not read preamble's text")).arg(m_lineNo));
+            delete preamble;
+            return nullptr;
+        }
         /// Remember: strings from preamble do not get encoded,
         /// may contain raw LaTeX commands and code
-        QString text = bibtexAwareSimplify(readString(isStringKey));
+        text = bibtexAwareSimplify(text);
         if (isStringKey)
             preamble->value().append(QSharedPointer<MacroKey>(new MacroKey(text)));
         else
@@ -346,11 +360,18 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         token = nextToken();
     }
 
-    QString id = readSimpleString(',').trimmed();
+    QString id = readSimpleString(QStringLiteral(",}")).trimmed();
     if (id.isEmpty()) {
-        /// Cope with empty ids,
-        /// duplicates are handled further below
-        id = QStringLiteral("EmptyId");
+        if (m_nextChar == QLatin1Char(',') || m_nextChar == QLatin1Char('}')) {
+            /// Cope with empty ids,
+            /// duplicates are handled further below
+            id = QStringLiteral("EmptyId");
+        }
+        else {
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Could not read entry id";
+            emit message(SeverityError, QString(QStringLiteral("Error in parsing preambentryle near line %1: Could not read entry id")).arg(m_lineNo));
+            return nullptr;
+        }
     } else if (!EncoderLaTeX::containsOnlyAscii(id)) {
         /// Try to avoid non-ascii characters in ids
         const QString newId = EncoderLaTeX::instance().convertToPlainAscii(id);
@@ -358,6 +379,13 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         emit message(SeverityWarning, QString(QStringLiteral("Entry id '%1' near line %2 contains non-ASCII characters, converted to '%3'")).arg(id).arg(m_lineNo).arg(newId));
         id = newId;
     }
+    static const QVector<QChar> invalidIdCharacters = {QLatin1Char('{'), QLatin1Char('}'), QLatin1Char(',')};
+    for (const QChar &invalidIdCharacter : invalidIdCharacters)
+        if (id.contains(invalidIdCharacter)) {
+            qCWarning(LOG_KBIBTEX_IO) << "Entry id" << id << "near line" << m_lineNo << "contains invalid character" << invalidIdCharacter;
+            emit message(SeverityError, QString(QStringLiteral("Entry id '%1' near line %2 contains invalid character '%3'")).arg(id).arg(m_lineNo).arg(invalidIdCharacter));
+            return nullptr;
+        }
 
     /// Check for duplicate entry ids, avoid collisions
     if (m_knownElementIds.contains(id)) {
@@ -376,15 +404,24 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 
     token = nextToken();
     do {
-        if (token == tBracketClose || token == tEOF)
+        if (token == tBracketClose)
             break;
-        else if (token != tComma) {
-            if (m_nextChar.isLetter())
-                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_nextChar << "(token" << tokenidToString(token) << ")";
-            else if (m_nextChar.isPrint())
-                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << m_nextChar << "(" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
-            else
-                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "(near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
+        else if (token == tEOF) {
+            qCWarning(LOG_KBIBTEX_IO) << "Unexpected end of data in entry" << id << "near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine;
+            emit message(SeverityError, QString(QStringLiteral("Unexpected end of data in entry '%1' near line %2")).arg(id).arg(m_lineNo));
+            delete entry;
+            return nullptr;
+        } else if (token != tComma) {
+            if (m_nextChar.isLetter()) {
+                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Comma symbol ',' expected but got character" << m_nextChar << "(token" << tokenidToString(token) << ")";
+                emit message(SeverityError, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (token %4)")).arg(id).arg(m_lineNo).arg(m_nextChar).arg(tokenidToString(token)));
+            } else if (m_nextChar.isPrint()) {
+                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Comma symbol ',' expected but got character" << m_nextChar << "(" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
+                emit message(SeverityError, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (0x%4, token %5)")).arg(id).arg(m_lineNo).arg(m_nextChar).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token)));
+            } else {
+                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
+                emit message(SeverityError, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character 0x%3 (token %4)")).arg(id).arg(m_lineNo).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token)));
+            }
             delete entry;
             return nullptr;
         }
@@ -408,7 +445,12 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             }
         }
         /// Try to avoid non-ascii characters in keys
-        keyName = EncoderLaTeX::instance().convertToPlainAscii(keyName);
+        const QString newkeyName = EncoderLaTeX::instance().convertToPlainAscii(keyName);
+        if (newkeyName != keyName) {
+            qCWarning(LOG_KBIBTEX_IO) << "Field name " << keyName << "near line" << m_lineNo << "contains non-ASCII characters, converted to" << newkeyName;
+            emit message(SeverityWarning, QString(QStringLiteral("Field name '%1' near line %2 contains non-ASCII characters, converted to '%3'")).arg(keyName).arg(m_lineNo).arg(newkeyName));
+            keyName = newkeyName;
+        }
 
         token = nextToken();
         if (token != tAssign) {
@@ -509,7 +551,7 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
 
     if (!skipWhiteChar()) {
         /// Some error occurred while reading from data stream
-        return QString();
+        return QString::null;
     }
 
     switch (m_nextChar.toLatin1()) {
@@ -531,23 +573,23 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
     }
 }
 
-QString FileImporterBibTeX::readSimpleString(const char until)
+QString FileImporterBibTeX::readSimpleString(const QString &until)
 {
     static const QString extraAlphaNumChars = QString(QStringLiteral("?'`-_:.+/$\\\"&"));
 
-    QString result;
+    QString result; ///< 'result' is Null on purpose: simple strings cannot be empty in contrast to e.g. quoted strings
 
     if (!skipWhiteChar()) {
         /// Some error occurred while reading from data stream
-        return QString();
+        return QString::null;
     }
 
     while (!m_nextChar.isNull()) {
         const ushort nextCharUnicode = m_nextChar.unicode();
-        if (until != '\0') {
+        if (!until.isEmpty()) {
             /// Variable "until" has user-defined value
-            if (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r') || m_nextChar.toLatin1() == until) {
-                /// Force break on line-breaks or if the "until" char has been read
+            if (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r') || until.contains(m_nextChar)) {
+                /// Force break on line-breaks or if one of the "until" chars has been read
                 break;
             } else {
                 /// Append read character to final result
@@ -565,11 +607,11 @@ QString FileImporterBibTeX::readSimpleString(const char until)
 
 QString FileImporterBibTeX::readQuotedString()
 {
-    QString result;
+    QString result(QStringLiteral(""));
 
     Q_ASSERT_X(m_nextChar == QLatin1Char('"'), "QString FileImporterBibTeX::readQuotedString()", "m_nextChar is not '\"'");
 
-    if (!readChar()) return QString();
+    if (!readChar()) return QString::null;
 
     while (!m_nextChar.isNull()) {
         if (m_nextChar == QLatin1Char('"') && m_prevChar != QLatin1Char('\\') && m_prevChar != QLatin1Char('{'))
@@ -577,10 +619,10 @@ QString FileImporterBibTeX::readQuotedString()
         else
             result.append(m_nextChar);
 
-        if (!readChar()) return QString();
+        if (!readChar()) return QString::null;
     }
 
-    if (!readChar()) return QString();
+    if (!readChar()) return QString::null;
 
     /// Remove protection around quotation marks
     result.replace(QStringLiteral("{\"}"), QStringLiteral("\""));
@@ -591,13 +633,13 @@ QString FileImporterBibTeX::readQuotedString()
 QString FileImporterBibTeX::readBracketString()
 {
     static const QChar backslash = QLatin1Char('\\');
-    QString result;
+    QString result(QStringLiteral(""));
     const QChar openingBracket = m_nextChar;
     const QChar closingBracket = openingBracket == QLatin1Char('{') ? QLatin1Char('}') : (openingBracket == QLatin1Char('(') ? QLatin1Char(')') : QChar());
     Q_ASSERT_X(!closingBracket.isNull(), "QString FileImporterBibTeX::readBracketString()", "openingBracket==m_nextChar is neither '{' nor '('");
     int counter = 1;
 
-    if (!readChar()) return QString();
+    if (!readChar()) return QString::null;
 
     while (!m_nextChar.isNull()) {
         if (m_nextChar == openingBracket && m_prevChar != backslash)
@@ -610,10 +652,10 @@ QString FileImporterBibTeX::readBracketString()
         } else
             result.append(m_nextChar);
 
-        if (!readChar()) return QString();
+        if (!readChar()) return QString::null;
     }
 
-    if (!readChar()) return QString();
+    if (!readChar()) return QString::null;
     return result;
 }
 
@@ -626,6 +668,8 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
     do {
         bool isStringKey = false;
         const QString rawText = readString(isStringKey);
+        if (rawText.isNull())
+            return tEOF;
         QString text = EncoderLaTeX::instance().decode(rawText);
         /// for all entries except for abstracts ...
         if (iKey != Entry::ftAbstract && !(iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) && !iKey.startsWith(Entry::ftLocalFile) && !iKey.startsWith(Entry::ftFile)) {

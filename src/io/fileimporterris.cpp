@@ -133,11 +133,11 @@ public:
                 entry->setType(entryType);
             } else if ((*it).key == QStringLiteral("AU") || (*it).key == QStringLiteral("A1")) {
                 Person *person = splitName((*it).value);
-                if (person != NULL)
+                if (person != nullptr)
                     appendValue(entry, Entry::ftAuthor, QSharedPointer<Person>(person));
             } else if ((*it).key == QStringLiteral("ED") || (*it).key == QStringLiteral("A2")) {
                 Person *person = splitName((*it).value);
-                if (person != NULL)
+                if (person != nullptr)
                     appendValue(entry, Entry::ftEditor, QSharedPointer<Person>(person));
             } else if ((*it).key == QStringLiteral("ID")) {
                 entry->setId((*it).value);
@@ -154,8 +154,7 @@ public:
                 QString text = (*it).value;
                 const QRegularExpression splitRegExp(text.contains(QStringLiteral(";")) ? QStringLiteral("\\s*[;\\n]\\s*") : (text.contains(QStringLiteral(",")) ? QStringLiteral("\\s*[,\\n]\\s*") : QStringLiteral("\\n")));
                 QStringList newKeywords = text.split(splitRegExp, QString::SkipEmptyParts);
-                for (QStringList::Iterator it = newKeywords.begin(); it != newKeywords.end();
-                        ++it)
+                for (QStringList::Iterator it = newKeywords.begin(); it != newKeywords.end(); ++it)
                     appendValue(entry, Entry::ftKeywords, QSharedPointer<Keyword>(new Keyword(*it)));
             } else if ((*it).key == QStringLiteral("TI") || (*it).key == QStringLiteral("T1")) {
                 appendValue(entry, Entry::ftTitle, QSharedPointer<PlainText>(new PlainText(optionallyProtectCasing((*it).value))));
