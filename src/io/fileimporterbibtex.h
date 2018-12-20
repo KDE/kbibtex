@@ -94,9 +94,9 @@ public:
      * @return A Person object containing the name
      * @see Person
      */
-    static QSharedPointer<Person> personFromString(const QString &name);
+    static QSharedPointer<Person> personFromString(const QString &name, const int line_number = 1, QObject *parent = nullptr);
 
-    static void parsePersonList(const QString &text, Value &value);
+    static void parsePersonList(const QString &text, Value &value, const int line_number = 1, QObject *parent = nullptr);
 
     void setCommentHandling(CommentHandling commentHandling);
 
@@ -147,9 +147,9 @@ private:
     QString readBracketString();
     Token readValue(Value &value, const QString &fieldType);
 
-    static QSharedPointer<Person> personFromString(const QString &name, CommaContainment *comma);
-    static QSharedPointer<Person> personFromTokenList(const QStringList &tokens, CommaContainment *comma = nullptr);
-    static void parsePersonList(const QString &text, Value &value, CommaContainment *comma);
+    static QSharedPointer<Person> personFromString(const QString &name, CommaContainment *comma, const int line_number, QObject *parent);
+    static QSharedPointer<Person> personFromTokenList(const QStringList &tokens, CommaContainment *comma, const int line_number, QObject *parent);
+    static void parsePersonList(const QString &text, Value &value, CommaContainment *comma, const int line_number, QObject *parent);
 
     /**
      * Split a string into white-space separated chunks,

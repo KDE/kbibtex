@@ -35,6 +35,12 @@ class KBIBTEXIO_EXPORT FileImporter : public QObject
     Q_OBJECT
 
 public:
+    enum MessageSeverity {
+        SeverityInfo, ///< Messages that are of informative type, such as additional comma for last key-value pair in BibTeX entry
+        SeverityWarning, ///< Messages that are of warning type, such as automatic corrections of BibTeX code without loss of information
+        SeverityError ///< Messages that are of error type, which point to issue where information may get lost, e.g. invalid syntax or incomplete data
+    };
+
     explicit FileImporter(QObject *parent);
     ~FileImporter() override;
 
@@ -78,13 +84,29 @@ private:
     static bool looksLikeSuffix(const QString &suffix);
 
 signals:
-    void parseError(int errorId);
     void progress(int current, int total);
+
+    /**
+     * Signal to notify the user of a FileImporter class about issues detected
+     * during loading and parsing bibliographic data. Messages may be of various
+     * severity levels. The message text may reveal additional information on
+     * what the issue is and where it has been found (e.g. line number).
+     * Implementations of FileImporter are recommended to print a similar message
+     * as debug output.
+     * TODO messages shall get i18n'ized if the code is compiled with/linked against
+     * KDE Frameworks libraries.
+     *
+     * @param severity The message's severity level
+     * @param messageText The message's text
+     */
+    void message(const FileImporter::MessageSeverity severity, const QString &messageText);
 
 public slots:
     virtual void cancel() {
         // nothing
     }
 };
+
+Q_DECLARE_METATYPE(FileImporter::MessageSeverity)
 
 #endif // KBIBTEX_IO_FILEIMPORTER_H
