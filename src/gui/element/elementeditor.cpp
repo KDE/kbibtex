@@ -533,7 +533,7 @@ void ElementEditor::apply()
 
     if (idToUse == UseOriginalId) {
         /// As 'apply()' above set the 'new' id/key but the 'original' id/key is to be used,
-        /// now UI must be updated accordingly. Changes will propage to the the entry id or
+        /// now UI must be updated accordingly. Changes will propagate to the entry id or
         /// macro key, respectively, when invoking apply() further down
         d->setCurrentId(originalId);
     }
