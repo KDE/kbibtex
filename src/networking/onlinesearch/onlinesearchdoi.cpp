@@ -25,11 +25,11 @@
 #include <QNetworkReply>
 #include <QRegularExpression>
 
-#ifdef HAVE_QTWIDGETS
+#ifdef HAVE_KF5
 #include <KLineEdit>
 #include <KConfigGroup>
-#endif // HAVE_QTWIDGETS
 #include <KLocalizedString>
+#endif // HAVE_KF5
 
 #include "kbibtex.h"
 #include "internalnetworkaccessmanager.h"

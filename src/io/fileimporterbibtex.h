@@ -18,7 +18,9 @@
 #ifndef KBIBTEX_IO_FILEIMPORTERBIBTEX_H
 #define KBIBTEX_IO_FILEIMPORTERBIBTEX_H
 
+#ifdef HAVE_KF5
 #include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 #include <QTextStream>
 #include <QSharedPointer>

@@ -18,7 +18,9 @@
 #ifndef KBIBTEX_XSLTRANSFORM_H
 #define KBIBTEX_XSLTRANSFORM_H
 
+#ifdef HAVE_KF5
 #include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 #include <QString>
 

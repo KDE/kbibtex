@@ -18,7 +18,9 @@
 #ifndef ENCODERLATEX_H
 #define ENCODERLATEX_H
 
+#ifdef HAVE_KF5
 #include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 #ifdef HAVE_ICU
 #include <unicode/translit.h>

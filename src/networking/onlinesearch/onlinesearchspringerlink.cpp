@@ -30,11 +30,11 @@
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
-#endif // HAVE_KF5
-#ifdef HAVE_QTWIDGETS
 #include <KLineEdit>
 #include <KConfigGroup>
-#endif // HAVE_QTWIDGETS
+#else // HAVE_KF5
+#define i18n(text) QObject::tr(text)
+#endif // HAVE_KF5
 
 #include "internalnetworkaccessmanager.h"
 #include "encoderlatex.h"

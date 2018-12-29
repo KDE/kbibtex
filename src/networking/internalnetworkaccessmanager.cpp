@@ -33,7 +33,9 @@
 #include <QUrl>
 #include <QUrlQuery>
 
+#ifdef HAVE_KF5
 #include <KProtocolManager>
+#endif // HAVE_KF5
 
 #include "logging_networking.h"
 

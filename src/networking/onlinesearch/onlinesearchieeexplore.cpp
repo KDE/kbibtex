@@ -23,6 +23,8 @@
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
+#else // HAVE_KF5
+#define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
 
 #include "internalnetworkaccessmanager.h"

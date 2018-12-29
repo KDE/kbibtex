@@ -20,10 +20,14 @@
 
 #include "onlinesearchabstract.h"
 
+#ifdef HAVE_QTWIDGETS
 class QSpinBox;
+
+#ifdef HAVE_KF5
 class KComboBox;
 class KLineEdit;
-
+#endif // HAVE_KF5
+#endif // HAVE_QTWIDGETS
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

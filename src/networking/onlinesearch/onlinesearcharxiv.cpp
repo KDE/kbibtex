@@ -26,14 +26,13 @@
 #include <QTextStream>
 #endif // HAVE_QTWIDGETS
 
-#ifdef HAVE_QTWIDGETS
+#ifdef HAVE_KF5
 #include <KLineEdit>
 #include <KMessageBox>
-#endif // HAVE_QTWIDGETS
-
-#ifdef HAVE_KF5
 #include <KConfigGroup>
 #include <KLocalizedString>
+#else // HAVE_KF5
+#define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
 
 #include "fileimporterbibtex.h"

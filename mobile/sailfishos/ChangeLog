@@ -1,0 +1,28 @@
+ChangeLog for BibSearch
+
+Version 0.5 (2019-01-xx)
+ * Migrating BibSearch to reside in KBibTeX's code repository.
+ * Latest code fixes from KBibTeX's 'master' branch.
+
+Version 0.4 (2018-08-04)
+ * Fixing various issues with search engines.
+ * Various minor UI improvements.
+ * Matching code between KBibTeX and BibSearch to increase
+   code sharing.
+
+Version 0.3 (2017-09-04)
+ * Support search in PubMed.
+ * User can enable/select which search engines to search in.
+ * Refactoring UI to follow more closely the Silica style.
+ * Matching code between KBibTeX and BibSearch to increase
+   code sharing
+
+Version 0.2 (2017-02-03)
+ * Search results can be sorted by various combinations of
+   publication date and first author's name.
+ * Various minor usability changes.
+
+Version 0.1 (2016-10-21)
+ * Support searching in ACM Digital Library, arXiv, Bibsonomy,
+   Google Scholar, IEEE Xplore, Ingenta Connect, JStor, Science
+   Direct, and Springer Link.

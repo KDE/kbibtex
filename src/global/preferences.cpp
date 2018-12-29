@@ -19,11 +19,18 @@
 
 #include <QDebug>
 
+#ifdef HAVE_KF5
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
+#else // HAVE_KF5
+#define I18N_NOOP(text) QObject::tr(text)
+#define i18n(text) QObject::tr(text)
+#endif // HAVE_KF5
 
+#ifdef HAVE_KF5
 #include "notificationhub.h"
+#endif // HAVE_KF5
 
 const QString Preferences::groupColor = QStringLiteral("Color Labels");
 const QString Preferences::keyColorCodes = QStringLiteral("colorCodes");
@@ -69,6 +76,7 @@ const Preferences::BibliographySystem Preferences::defaultBibliographySystem = P
 
 Preferences::BibliographySystem Preferences::bibliographySystem()
 {
+#ifdef HAVE_KF5
     static KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
     static const KConfigGroup configGroup(config, QStringLiteral("General"));
     config->reparseConfiguration();
@@ -79,10 +87,14 @@ Preferences::BibliographySystem Preferences::bibliographySystem()
         return defaultBibliographySystem;
     } else
         return static_cast<Preferences::BibliographySystem>(index);
+#else // HAVE_KF5
+    return defaultBibliographySystem;
+#endif // HAVE_KF5
 }
 
 bool Preferences::setBibliographySystem(const Preferences::BibliographySystem bibliographySystem)
 {
+#ifdef HAVE_KF5
     static KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
     static KConfigGroup configGroup(config, QStringLiteral("General"));
     config->reparseConfiguration();
@@ -92,6 +104,9 @@ bool Preferences::setBibliographySystem(const Preferences::BibliographySystem bi
     configGroup.writeEntry(QStringLiteral("BibliographySystem"), newIndex);
     config->sync();
     NotificationHub::publishEvent(NotificationHub::EventBibliographySystemChanged);
+#else // HAVE_KF5
+    Q_UNUSED(bibliographySystem);
+#endif // HAVE_KF5
     return true;
 }
 

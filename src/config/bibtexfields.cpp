@@ -24,6 +24,8 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
+#else // HAVE_KF5
+#define i18n(text) QObject::tr(text)
 #endif // HAVE KF5
 
 #include "preferences.h"

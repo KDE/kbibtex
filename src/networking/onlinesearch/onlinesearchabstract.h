@@ -18,7 +18,9 @@
 #ifndef KBIBTEX_ONLINESEARCH_ABSTRACT_H
 #define KBIBTEX_ONLINESEARCH_ABSTRACT_H
 
+#ifdef HAVE_KF5
 #include "kbibtexnetworking_export.h"
+#endif // HAVE_KF5
 
 #include <QObject>
 #include <QMap>

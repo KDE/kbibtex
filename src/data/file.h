@@ -24,7 +24,9 @@
 
 #include "element.h"
 
+#ifdef HAVE_KF5
 #include "kbibtexdata_export.h"
+#endif // HAVE_KF5
 
 class Element;
 

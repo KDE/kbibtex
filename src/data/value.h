@@ -22,7 +22,9 @@
 #include <QVariant>
 #include <QSharedPointer>
 
+#ifdef HAVE_KF5
 #include "kbibtexdata_export.h"
+#endif // HAVE_KF5
 
 #ifdef HAVE_KF5
 #include "notificationhub.h"

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/128/harbour-bibsearch.png</file>
+    </qresource>
+</RCC>
