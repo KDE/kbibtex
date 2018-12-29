@@ -22,6 +22,7 @@
 #include <QDir>
 #include <QTimer>
 #include <QStandardPaths>
+#include <QRegularExpression>
 #ifdef HAVE_QTWIDGETS
 #include <QListWidgetItem>
 #include <QDBusConnection>

@@ -22,6 +22,7 @@
 #include <QSpinBox>
 #include <QLabel>
 #endif // HAVE_QTWIDGETS
+#include <QRegularExpression>
 #include <QNetworkRequest>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>

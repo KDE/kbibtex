@@ -18,6 +18,7 @@
 #include "onlinesearcharxiv.h"
 
 #include <QNetworkReply>
+#include <QRegularExpression>
 #ifdef HAVE_QTWIDGETS
 #include <QGridLayout>
 #include <QLabel>

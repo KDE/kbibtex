@@ -34,7 +34,6 @@
 #include "encoderlatex.h"
 #include "bibtexentries.h"
 #include "bibtexfields.h"
-#include "fileexporterbibtex.h"
 #include "logging_io.h"
 
 const char *FileImporterBibTeX::defaultCodecName = "utf-8";

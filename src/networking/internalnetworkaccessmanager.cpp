@@ -28,7 +28,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QtGlobal>
-#include <QApplication>
+#include <QCoreApplication>
 #include <QTimer>
 #include <QUrl>
 #include <QUrlQuery>
