@@ -42,11 +42,7 @@ class BibTeXEntries::BibTeXEntriesPrivate
 public:
     static const QVector<EntryDescription> entryDescriptionsBibTeX;
     static const QVector<EntryDescription> entryDescriptionsBibLaTeX;
-
-    static BibTeXEntries *singleton;
 };
-
-BibTeXEntries *BibTeXEntries::BibTeXEntriesPrivate::singleton = nullptr;
 
 
 BibTeXEntries::BibTeXEntries(const QVector<EntryDescription> &other)
