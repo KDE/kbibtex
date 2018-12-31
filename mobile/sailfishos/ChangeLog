@@ -1,6 +1,6 @@
 ChangeLog for BibSearch
 
-Version 0.5 (2019-01-xx)
+Version 0.5 (2018-12-31)
  * Migrating BibSearch to reside in KBibTeX's code repository.
  * Latest code fixes from KBibTeX's 'master' branch.
 

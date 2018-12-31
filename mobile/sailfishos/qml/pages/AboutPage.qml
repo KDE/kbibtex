@@ -81,14 +81,14 @@ Page {
 
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Source Code"
+                    text: "Project Homepage"
                     onClicked: {
                         Qt.openUrlExternally("https://gitlab.com/tfischer/BibSearch")
                     }
                 }
 
                 Label {
-                    text: "Based on KBibTeX, the bibliography editor using KDE technology."
+                    text: "This program is sharing its code base with KBibTeX, the bibliography editor using KDE technology."
                     width: parent.width - 2 * x
                     x: Theme.horizontalPageMargin
                     font.pointSize: Theme.fontSizeTiny
@@ -100,6 +100,14 @@ Page {
                     text: "KBibTeX's Homepage"
                     onClicked: {
                         Qt.openUrlExternally("https://userbase.kde.org/KBibTeX")
+                    }
+                }
+
+                Button {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    text: "Git Repository"
+                    onClicked: {
+                        Qt.openUrlExternally("https://cgit.kde.org/kbibtex.git")
                     }
                 }
 
