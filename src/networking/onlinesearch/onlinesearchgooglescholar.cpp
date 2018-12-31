@@ -21,6 +21,7 @@
 #include <QIcon>
 #include <QUrlQuery>
 #include <QRegularExpression>
+#include <QTimer>
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
@@ -185,10 +186,13 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             query.addQueryItem(QStringLiteral("as_sdt"), QStringLiteral("0,5"));
             url.setQuery(query);
 
-            QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply->url());
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingConfigPage);
+            const QUrl replyUrl = reply->url();
+            QTimer::singleShot(250, [this, url, replyUrl]() {
+                QNetworkRequest request(url);
+                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, replyUrl);
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingConfigPage);
+            });
         }
     }
 
@@ -238,10 +242,12 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
             }
             url.setQuery(query);
 
-            QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
+            QTimer::singleShot(250, [this, url, reply]() {
+                QNetworkRequest request(url);
+                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingSetConfigPage);
+            });
         }
     }
 
@@ -279,10 +285,12 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
             query.addQueryItem(QStringLiteral("btnG"), QStringLiteral("Search Scholar"));
             url.setQuery(query);
 
-            QNetworkRequest request(url);
-            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
+            QTimer::singleShot(250, [this, url, reply]() {
+                QNetworkRequest request(url);
+                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingQueryPage);
+            });
         }
     }
 
@@ -313,6 +321,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 
 #ifdef HAVE_KF5
             if (htmlText.contains(QStringLiteral("enable JavaScript")) || htmlText.contains(QStringLiteral("re not a robot"))) {
+                qCInfo(LOG_KBIBTEX_NETWORKING) << "'Google Scholar' denied scrapping data because it thinks KBibTeX is a robot.";
                 sendVisualNotification(i18n("'Google Scholar' denied scrapping data because it thinks you are a robot."), label(), QStringLiteral("kbibtex"), 7 * 1000);
             } else {
 #endif // HAVE_KF5
@@ -338,18 +347,20 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                 const QString bibtexUrl = listBibTeXurlsFront.key();
                 const QString primaryUrl = listBibTeXurlsFront.value().first;
                 const QString documentUrl = listBibTeXurlsFront.value().second;
-                QNetworkRequest request(bibtexUrl);
-                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
-                if (!primaryUrl.isEmpty()) {
-                    /// Store primary URL as a property of the request/reply
-                    newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
-                }
-                if (!documentUrl.isEmpty()) {
-                    /// Store URL to document as a property of the request/reply
-                    newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
-                }
-                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
+                QTimer::singleShot(250, [this, bibtexUrl, primaryUrl, documentUrl, reply]() {
+                    QNetworkRequest request(bibtexUrl);
+                    QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+                    if (!primaryUrl.isEmpty()) {
+                        /// Store primary URL as a property of the request/reply
+                        newReply->setProperty("primaryurl", QVariant::fromValue<QString>(primaryUrl));
+                    }
+                    if (!documentUrl.isEmpty()) {
+                        /// Store URL to document as a property of the request/reply
+                        newReply->setProperty("documenturl", QVariant::fromValue<QString>(documentUrl));
+                    }
+                    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+                    connect(newReply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingBibTeX);
+                });
                 d->listBibTeXurls.erase(listBibTeXurlsFront);
             } else
                 stopSearch(resultNoError);
