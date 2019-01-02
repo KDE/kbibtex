@@ -4,6 +4,13 @@ X-Nemo-Application-Type=silica-qt5
 Icon=harbour-bibsearch
 Exec=harbour-bibsearch
 Name=BibSearch
+Name[ca]=BibSearch
+Name[gl]=BibSearch
+Name[nl]=BibSearch
+Name[pt]=BibSearch
+Name[sv]=Bibsearch
+Name[uk]=BibSearch
+Name[x-test]=xxBibSearchxx
 # translation example:
 # your app name in German locale (de)
 #
