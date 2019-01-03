@@ -1,5 +1,27 @@
 ChangeLog
 
+Diff 0.8.2 to 0.9
+
+- Can be compiled under Windows via Craft
+- Integrating 'BibSearch', a mobile variant of KBibTeX using QML
+  (Sailfish OS only as of now)
+- Refactoring of id suggestion editor
+- Making building Zotero support compile-time optional
+- Internal refactoring of singleton variables and configuration settings
+- Adding considerable number of QtText-based tests
+- Migrating from QRegExp to QRegularExpression class
+- Using Kate's text editor component for BibTeX sources
+- Validating user-entered BibTeX sources while typing
+- More verbose diagnostics while loading BibTeX or RIS data
+- Various small improvements for better robustness, performance, and
+  memory efficiency
+- KDE Bug 392137: Make entry type (and more fields) available in entry id suggestion setup
+- KDE Bug 396597: BibLaTeX uses "file" instead of "localfile"
+- Fixing resource leakage as identified by Coverity Scan:
+  CID 325572, 325573
+- Integrating commits by Alexander Dunlap, Antonio Rojas, Erik Quaeghebeur,
+  Frederik Schwarzer, Pino Toscano, and Yuri Chornoivan
+
 Diff 0.8.1 to 0.8.2
 
 - KDE Bug 388892: Formatting error when saving file ( switching " and } )
