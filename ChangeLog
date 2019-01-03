@@ -1,5 +1,27 @@
 ChangeLog
 
+Diff 0.8.1 to 0.8.2
+
+- KDE Bug 388892: Formatting error when saving file ( switching " and } )
+- KDE Bug 394659: Crash after compilation 
+- KDE Bug 396343: When saving the file, I am always warned that file has changed in disk 
+- KDE Bug 396598: Bibliography system options contains duplicates 
+- KDE Bug 397027: ScienceDirect search broken 
+- KDE Bug 397604: Untranslated strings from bibtexfields.cpp and bibtexentries.cpp 
+- KDE Bug 398136: KBibTeX crashes when editing element 
+- KDE Bug 401470: Don't remove leading whitespace in macros
+- Using official APIs for IEEE Xplore and ScienceDirect
+- Fixing resource leakage as identified by Coverity Scan:
+  CID 287670, 287669
+- Fixing issues as identified by clazy
+- Migrating from HTTP to HTTPS protocol in various places
+- In encoder classes, migrating away from raw char and char* to Qt classes
+- Various smaller fixes
+
+Diff 0.8 to 0.8.1
+
+- Fixing incorrect version number computation
+
 Diff 0.7 to 0.8
 
 Porting from Qt4 to Qt5, from KDE4 (kdelibs) to KDE Frameworks 5, as well as updating
