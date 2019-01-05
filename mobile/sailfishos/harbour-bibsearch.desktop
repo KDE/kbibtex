@@ -5,6 +5,7 @@ Icon=harbour-bibsearch
 Exec=harbour-bibsearch
 Name=BibSearch
 Name[ca]=BibSearch
+Name[ca@valencia]=BibSearch
 Name[gl]=BibSearch
 Name[nl]=BibSearch
 Name[pt]=BibSearch
