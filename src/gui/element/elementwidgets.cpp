@@ -1234,8 +1234,16 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
     const QString exportedText = exporter.toString(element, m_file);
     if (!exportedText.isEmpty()) {
         originalText = exportedText;
-        document->setText(originalText);
-    }
+        /// Limitation of KTextEditor: If editor is read-only, no text can be set
+        /// Therefore, temporarily lift read-only status
+        const bool originalReadWriteStatus = document->isReadWrite();
+        document->setReadWrite(true);
+        const bool settingTextSuccessful = document->setText(originalText);
+        if (!settingTextSuccessful)
+            qCWarning(LOG_KBIBTEX_GUI) << "Could not set BibTeX source code to source editor";
+        document->setReadWrite(originalReadWriteStatus);
+    } else
+        qCWarning(LOG_KBIBTEX_GUI) << "Converting entry to BibTeX source resulting in empty text";
 
     connect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
 
