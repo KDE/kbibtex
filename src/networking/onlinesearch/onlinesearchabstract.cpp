@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -68,6 +68,31 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
     }
 
     return result;
+}
+
+QString OnlineSearchQueryFormAbstract::guessFreeText(const Entry &entry) const
+{
+    /// If there is a DOI value in this entry, use it as free text
+    static const QStringList doiKeys = {Entry::ftDOI, Entry::ftUrl};
+    for (const QString &doiKey : doiKeys)
+        if (!entry.value(doiKey).isEmpty()) {
+            const QString text = PlainTextValue::text(entry[doiKey]);
+            const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(text);
+            if (doiRegExpMatch.hasMatch())
+                return doiRegExpMatch.captured(0);
+        }
+
+    /// If there is no free text yet (e.g. no DOI number), try to identify an arXiv eprint number
+    static const QStringList arxivKeys = {QStringLiteral("eprint"), Entry::ftNumber};
+    for (const QString &arxivKey : arxivKeys)
+        if (!entry.value(arxivKey).isEmpty()) {
+            const QString text = PlainTextValue::text(entry[arxivKey]);
+            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithPrefix.match(text);
+            if (arXivRegExpMatch.hasMatch())
+                return arXivRegExpMatch.captured(1);
+        }
+
+    return QString();
 }
 #endif // HAVE_QTWIDGETS
 

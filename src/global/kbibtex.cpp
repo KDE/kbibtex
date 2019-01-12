@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,6 +41,8 @@ const QRegularExpression KBibTeX::fileListSeparatorRegExp(QStringLiteral("[ \\t]
 const QRegularExpression KBibTeX::fileRegExp(QStringLiteral("(\\bfile:)?[^{}\\t]+\\.\\w{2,4}\\b"), QRegularExpression::CaseInsensitiveOption);
 const QRegularExpression KBibTeX::urlRegExp(QStringLiteral("\\b(http|s?ftp|webdav|file)s?://[^ {}\"]+(\\b|[/])"), QRegularExpression::CaseInsensitiveOption);
 const QRegularExpression KBibTeX::doiRegExp(QStringLiteral("10([.][0-9]+)+/[/-a-z0-9.()<>_:;\\\\]+"), QRegularExpression::CaseInsensitiveOption);
+const QRegularExpression KBibTeX::arXivRegExpWithPrefix(QStringLiteral("arXiv:(([0-9]+[.][0-9]+|[a-z-]+/[0-9]+)(v[0-9]+)?)"));
+const QRegularExpression KBibTeX::arXivRegExpWithoutPrefix(QStringLiteral("([0-9]+[.][0-9]+|[a-z-]+/[0-9]+)(v[0-9]+)?"));
 const QRegularExpression KBibTeX::mendeleyFileRegExp(QStringLiteral(":(.*):pdf"), QRegularExpression::CaseInsensitiveOption);
 const QRegularExpression KBibTeX::domainNameRegExp(QStringLiteral("[a-z0-9.-]+\\.((a[cdefgilmnoqrstuwxz]|aero|arpa)|(b[abdefghijmnorstvwyz]|biz)|(c[acdfghiklmnorsuvxyz]|cat|com|coop)|d[ejkmoz]|(e[ceghrstu]|edu)|f[ijkmor]|(g[abdefghilmnpqrstuwy]|gov)|h[kmnrtu]|(i[delmnoqrst]|info|int)|(j[emop]|jobs)|k[eghimnprwyz]|l[abcikrstuvy]|(m[acdghklmnopqrstuvwxyz]|me|mil|mobi|museum)|(n[acefgilopruz]|name|net)|(om|org)|(p[aefghklmnrstwy]|pro)|qa|r[eouw]|s[abcdeghijklmnortvyz]|(t[cdfghjklmnoprtvwz]|travel)|u[agkmsyz]|v[aceginu]|w[fs]|y[etu]|z[amw])\\b"), QRegularExpression::CaseInsensitiveOption);
 const QRegularExpression KBibTeX::htmlRegExp(QStringLiteral("</?(a|pre|p|br|span|i|b|italic)\\b[^>{}]{,32}>"), QRegularExpression::CaseInsensitiveOption);
