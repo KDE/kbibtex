@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -926,7 +926,7 @@ void OtherFieldsWidget::createGUI()
 
     QLabel *label = new QLabel(i18n("Name:"), this);
     layout->addWidget(label, 0, 0, 1, 1);
-    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
+    label->setAlignment(static_cast<Qt::Alignment>(label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)));
 
     fieldName = new KLineEdit(this);
     layout->addWidget(fieldName, 0, 1, 1, 1);
@@ -938,14 +938,14 @@ void OtherFieldsWidget::createGUI()
 
     label = new QLabel(i18n("Content:"), this);
     layout->addWidget(label, 1, 0, 1, 1);
-    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
+    label->setAlignment(static_cast<Qt::Alignment>(label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)));
     fieldContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this);
     layout->addWidget(fieldContent, 1, 1, 1, 2);
     label->setBuddy(fieldContent->buddy());
 
     label = new QLabel(i18n("List:"), this);
     layout->addWidget(label, 2,  0, 1, 1);
-    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
+    label->setAlignment(static_cast<Qt::Alignment>(label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)));
 
     otherFieldsList = new QTreeWidget(this);
     otherFieldsList->setHeaderLabels(QStringList {i18n("Key"), i18n("Value")});
@@ -1066,7 +1066,7 @@ void MacroWidget::createGUI()
 
     QLabel *label = new QLabel(i18n("Value:"), this);
     layout->addWidget(label, 0);
-    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
+    label->setAlignment(static_cast<Qt::Alignment>(label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)));
     fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfPlainText, KBibTeX::tfPlainText | KBibTeX::tfSource, this);
     layout->addWidget(fieldInputValue, 1);
     label->setBuddy(fieldInputValue->buddy());
@@ -1136,7 +1136,7 @@ void PreambleWidget::createGUI()
 
     QLabel *label = new QLabel(i18n("Value:"), this);
     layout->addWidget(label, 0);
-    label->setAlignment((Qt::Alignment)label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment));
+    label->setAlignment(static_cast<Qt::Alignment>(label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)));
     fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this); // FIXME: other editing modes beyond Source applicable?
     layout->addWidget(fieldInputValue, 1);
     label->setBuddy(fieldInputValue->buddy());
