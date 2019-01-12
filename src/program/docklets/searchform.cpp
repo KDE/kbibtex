@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -70,6 +70,7 @@
 #include "onlinesearchideasrepec.h"
 #include "onlinesearchdoi.h"
 #include "onlinesearchbiorxiv.h"
+#include "onlinesearchsemanticscholar.h"
 #include "openfileinfo.h"
 #include "fileview.h"
 #include "models/filemodel.h"
@@ -241,6 +242,7 @@ public:
         /// addEngine(new OnlineSearchIsbnDB(p)); /// disabled as provider switched to a paid model on 2017-12-26
         addEngine(new OnlineSearchIDEASRePEc(p));
         addEngine(new OnlineSearchDOI(p));
+        addEngine(new OnlineSearchSemanticScholar(p));
 
         p->itemCheckChanged(nullptr);
         updateGUI();

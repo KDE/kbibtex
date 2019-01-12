@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -50,6 +50,7 @@
 #include <onlinesearchspringerlink.h>
 #include <onlinesearchsoanasaads.h>
 #include <onlinesearchbiorxiv.h>
+#include <onlinesearchsemanticscholar.h>
 
 int filenameCounter = 0;
 
@@ -141,6 +142,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchSOANASAADS(this);
     m_onlineSearchList << new OnlineSearchSpringerLink(this);
     m_onlineSearchList << new OnlineSearchBioRxiv(this);
+    m_onlineSearchList << new OnlineSearchSemanticScholar(this);
     m_currentOnlineSearch = m_onlineSearchList.constBegin();
 
     setWindowTitle(QStringLiteral("KBibTeX Test Suite"));

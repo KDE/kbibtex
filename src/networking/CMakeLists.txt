@@ -24,6 +24,7 @@ set(
     onlinesearch/onlinesearchideasrepec.cpp
     onlinesearch/onlinesearchdoi.cpp
     onlinesearch/onlinesearchbiorxiv.cpp
+    onlinesearch/onlinesearchsemanticscholar.cpp
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
@@ -71,6 +72,7 @@ set(
     onlinesearch/onlinesearchideasrepec.h
     onlinesearch/onlinesearchdoi.h
     onlinesearch/onlinesearchbiorxiv.h
+    onlinesearch/onlinesearchsemanticscholar.h
     associatedfiles.h
     findpdf.h
     internalnetworkaccessmanager.h
