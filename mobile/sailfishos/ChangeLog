@@ -1,5 +1,9 @@
 ChangeLog for BibSearch
 
+Version 0.6 (2019-0x-xx)
+ * Cover page includes app icon and an action to open the
+   search form page.
+
 Version 0.5 (2018-12-31)
  * Migrating BibSearch to reside in KBibTeX's code repository.
  * Latest code fixes from KBibTeX's 'master' branch.

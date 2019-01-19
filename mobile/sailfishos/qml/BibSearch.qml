@@ -22,6 +22,8 @@ import "pages"
 
 ApplicationWindow
 {
+    id: mainWindow
+
     SortedBibliographyModel {
         id: bibliographyModel
     }

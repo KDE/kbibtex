@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2016-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,11 +19,34 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 CoverBackground {
-    Label {
-        id: label
+    Column {
+        id: cover
         anchors.centerIn: parent
-        text: qsTr("BibSearch")
+
+        Image {
+            id: logo
+            source: 'qrc:/icons/kbibtex.svg'
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
+            height: sourceSize.height * width / sourceSize.width
+        }
+
+        Label {
+            id: label
+            text: qsTr("BibSearch")
+        }
+    }
+
+
+    CoverActionList {
+        CoverAction {
+            iconSource: "image://theme/icon-cover-search"
+            onTriggered: {
+                pageStack.clear()
+                pageStack.push(Qt.resolvedUrl("../pages/BibliographyListView.qml"))
+                pageStack.push(Qt.resolvedUrl("../pages/SearchForm.qml"))
+                mainWindow.activate()
+            }
+        }
     }
 }
-
-
