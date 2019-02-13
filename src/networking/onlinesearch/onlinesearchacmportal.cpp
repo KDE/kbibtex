@@ -108,7 +108,12 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
 
 QString OnlineSearchAcmPortal::label() const
 {
+#ifdef HAVE_KF5
     return i18n("ACM Digital Library");
+#else // HAVE_KF5
+    //= onlinesearch-acmdigitallibrary-label
+    return QObject::tr("ACM Digital Library");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchAcmPortal::favIconUrl() const

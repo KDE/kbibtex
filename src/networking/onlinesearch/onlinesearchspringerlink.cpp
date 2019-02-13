@@ -292,7 +292,12 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, 
 
 QString OnlineSearchSpringerLink::label() const
 {
+#ifdef HAVE_KF5
     return i18n("SpringerLink");
+#else // HAVE_KF5
+    //= onlinesearch-springerlink-label
+    return QObject::tr("SpringerLink");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchSpringerLink::favIconUrl() const

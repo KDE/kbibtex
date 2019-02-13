@@ -357,7 +357,12 @@ void OnlineSearchIngentaConnect::startSearchFromForm()
 
 QString OnlineSearchIngentaConnect::label() const
 {
+#ifdef HAVE_KF5
     return i18n("IngentaConnect");
+#else // HAVE_KF5
+    //= onlinesearch-ingentaconnect-label
+    return QObject::tr("IngentaConnect");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchIngentaConnect::favIconUrl() const

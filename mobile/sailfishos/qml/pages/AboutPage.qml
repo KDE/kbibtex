@@ -41,7 +41,8 @@ Page {
 
                 PageHeader {
                     id: header
-                    title: qsTr("About BibSearch")
+                    //% "About BibSearch"
+                    title: qsTrId("bibsearch-application-about")
                 }
 
                 Image {
@@ -52,14 +53,16 @@ Page {
                 }
 
                 Label {
-                    text: qsTr("Version 0.6")
+                    //% "Version %1"
+                    text: qsTrId("bibsearch-version").arg("0.6")
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                     }
                 }
 
                 Label {
-                    text: qsTr("\u00a9 2016\u20132019 Thomas Fischer")
+                    //% "\u00a9 2016\u20132019 Thomas Fischer"
+                    text: qsTrId("bibsearch-copyright-line")
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                     }
@@ -72,7 +75,8 @@ Page {
                 }
 
                 Label {
-                    text: "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
+                    //% "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
+                    text: qsTrId("bibsearch-under-gpl")
                     width: parent.width - 2 * x
                     x: Theme.horizontalPageMargin
                     font.pointSize: Theme.fontSizeTiny
@@ -81,14 +85,16 @@ Page {
 
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Project Homepage"
+                    //% "Project Homepage"
+                    text: qsTrId("bibsearch-link-label-project-hompage")
                     onClicked: {
                         Qt.openUrlExternally("https://gitlab.com/tfischer/BibSearch")
                     }
                 }
 
                 Label {
-                    text: "This program is sharing its code base with KBibTeX, the bibliography editor using KDE technology."
+                    //% "This program is sharing its code base with KBibTeX, the bibliography editor using KDE technology."
+                    text: qsTrId("bibsearch-based-on-kbibtex")
                     width: parent.width - 2 * x
                     x: Theme.horizontalPageMargin
                     font.pointSize: Theme.fontSizeTiny
@@ -97,7 +103,8 @@ Page {
 
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "KBibTeX's Homepage"
+                    //% "KBibTeX's Homepage"
+                    text: qsTrId("bibsearch-link-label-kbibtex-homepage")
                     onClicked: {
                         Qt.openUrlExternally("https://userbase.kde.org/KBibTeX")
                     }
@@ -105,7 +112,8 @@ Page {
 
                 Button {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: "Git Repository"
+                    //% "Git Repository"
+                    text: qsTrId("bibsearch-link-label-git-repository")
                     onClicked: {
                         Qt.openUrlExternally("https://cgit.kde.org/kbibtex.git")
                     }
@@ -122,7 +130,8 @@ Page {
         PullDownMenu {
             MenuItem {
                 id: menuItemIssueTracker
-                text: qsTr("Report Issue")
+                //% "Report Issue"
+                text: qsTrId("bibsearch-link-label-report-issue")
                 onClicked: {
                     Qt.openUrlExternally("https://gitlab.com/tfischer/BibSearch/issues")
                 }

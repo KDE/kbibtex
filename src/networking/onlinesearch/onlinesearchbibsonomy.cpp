@@ -223,7 +223,12 @@ void OnlineSearchBibsonomy::startSearchFromForm()
 
 QString OnlineSearchBibsonomy::label() const
 {
+#ifdef HAVE_KF5
     return i18n("Bibsonomy");
+#else // HAVE_KF5
+    //= onlinesearch-bibsonomy-label
+    return QObject::tr("Bibsonomy");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchBibsonomy::favIconUrl() const

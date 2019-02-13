@@ -211,7 +211,12 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query,
 
 QString OnlineSearchScienceDirect::label() const
 {
+#ifdef HAVE_KF5
     return i18n("ScienceDirect");
+#else // HAVE_KF5
+    //= onlinesearch-sciencedirect-label
+    return QObject::tr("ScienceDirect");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchScienceDirect::favIconUrl() const

@@ -36,12 +36,14 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: qsTr("Settings")
+                //% "Settings"
+                title: qsTrId("settings-title")
             }
 
             ComboBox {
                 id: sortOrder
-                label: qsTr("Sort Order")
+                //% "Sort Order"
+                label: qsTrId("label-sort-order")
                 currentIndex: bibliographyModel.sortOrder
                 menu: ContextMenu {
                     Repeater {
@@ -57,12 +59,16 @@ Page {
             }
 
             ValueButton {
-                label: qsTr("Search Engines")
+                //% "Search Engines"
+                label: qsTrId("label-search-engines")
                 value: searchEngineList.searchEngineCount === 0
-                       ? qsTr("None selected")
-                       : qsTr("%1 selected").arg(searchEngineList.searchEngineCount)
+                       //% "None selected"
+                       ? qsTrId("selected-count-none")
+                       //% "%1 selected"
+                       : qsTrId("selected-count-numarg").arg(searchEngineList.searchEngineCount)
                 description: searchEngineList.searchEngineCount === 0
-                             ? qsTr("At least one search engine must be selected.")
+                             //% "At least one search engine must be selected."
+                             ? qsTrId("label-selected-atleastone")
                              : searchEngineList.humanReadableSearchEngines()
 
                 onClicked: {

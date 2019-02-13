@@ -142,7 +142,12 @@ void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int nu
 
 QString OnlineSearchPubMed::label() const
 {
+#ifdef HAVE_KF5
     return i18n("PubMed");
+#else // HAVE_KF5
+    //= onlinesearch-pubmed-label
+    return QObject::tr("PubMed");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchPubMed::favIconUrl() const

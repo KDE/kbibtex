@@ -35,7 +35,11 @@ Page {
 
         ViewPlaceholder {
             enabled: bibliographyListView.count === 0
-            text: bibliographyModel.busy ? qsTr("Waiting for results \u2026") : qsTr("Pull down to start a new search.")
+            text: bibliographyModel.busy
+                  //% "Waiting for results \u2026"
+                  ? qsTrId("resultlist-waiting-for-results")
+                  //% "Pull down to start a new search."
+                  : qsTrId("resultlist-pulldown-new-search")
         }
 
         ProgressBar {
@@ -99,15 +103,18 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("About")
+                //% "About"
+                text: qsTrId("pulldownmenu-about")
                 onClicked: pageStack.push("AboutPage.qml")
             }
             MenuItem {
-                text: qsTr("Settings")
+                //% "Settings"
+                text: qsTrId("pulldownmenu-settings")
                 onClicked: pageStack.push("SettingsPage.qml")
             }
             MenuItem {
-                text: qsTr("New Search")
+                //% "New Search"
+                text: qsTrId("pulldownmenu-new-search")
                 onClicked: pageStack.push("SearchForm.qml")
             }
         }

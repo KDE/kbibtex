@@ -113,7 +113,12 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
 
 QString OnlineSearchJStor::label() const
 {
+#ifdef HAVE_KF5
     return i18n("JSTOR");
+#else // HAVE_KF5
+    //= onlinesearch-jstor-label
+    return QObject::tr("JSTOR");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchJStor::favIconUrl() const

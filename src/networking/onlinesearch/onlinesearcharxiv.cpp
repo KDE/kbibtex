@@ -668,7 +668,12 @@ void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int num
 
 QString OnlineSearchArXiv::label() const
 {
+#ifdef HAVE_KF5
     return i18n("arXiv.org");
+#else // HAVE_KF5
+    //= onlinesearch-arxiv-label
+    return QObject::tr("arXiv.org");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchArXiv::favIconUrl() const

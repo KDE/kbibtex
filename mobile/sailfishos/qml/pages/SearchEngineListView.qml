@@ -33,7 +33,8 @@ Page {
             width: parent.width
 
             PageHeader {
-                title: "Available Search Engines"
+                //% "Available Search Engines"
+                title: qsTrId("searchengines-title")
             }
 
             SilicaListView {

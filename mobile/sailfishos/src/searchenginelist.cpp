@@ -161,17 +161,37 @@ QString SearchEngineList::humanReadableSearchEngines() const {
     for (int i = 0; i < size(); ++i)
         if (isSearchEngineEnabled(settings, at(i)))
             enabledSearchEnginesLabels.append(at(i)->label());
-    if (enabledSearchEnginesLabels.isEmpty()) return QString();
 
-    QString result = enabledSearchEnginesLabels.first();
-    if (enabledSearchEnginesLabels.size() == 1) return result;
-    if (enabledSearchEnginesLabels.size() == 2) return result.append(" and ").append(enabledSearchEnginesLabels.last());
-    /// assertion: enabledSearchEnginesLabels.size() >= 3
-    for (int i = 1 ; i < enabledSearchEnginesLabels.size() - 1; ++i)
-        result.append(QStringLiteral(", ")).append(enabledSearchEnginesLabels[i]);
-    result.append(", and ").append(enabledSearchEnginesLabels.last());
-
-    return result;
+    switch (enabledSearchEnginesLabels.size()){
+    case 0: return QString(); ///< empty selection
+    case 1: return enabledSearchEnginesLabels.first(); ///< just one search engine selected
+    case 2:
+        //: Two search engines selected
+        //% "%1 and %2"
+        return qtTrId("human-readable-two-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1));
+    case 3:
+        //: Three search engines selected
+        //% "%1, %2, and %3"
+        return qtTrId("human-readable-three-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2));
+    case 4:
+        //: Four search engines selected
+        //% "%1, %2, %3, and %4"
+        return qtTrId("human-readable-four-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3));
+    case 5:
+        //: Five search engines selected
+        //% "%1, %2, %3, %4, and %5"
+        return qtTrId("human-readable-five-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3),enabledSearchEnginesLabels.at(4));
+    case 6:
+        //: Six search engines selected
+        //% "%1, %2, %3, %4, %5, and %6"
+        return qtTrId("human-readable-six-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3),enabledSearchEnginesLabels.at(4),enabledSearchEnginesLabels.at(5));
+    case 7:
+        //: Seven search engines selected
+        //% "%1, %2, %3, %4, %5, %6, and %7"
+        return qtTrId("human-readable-seven-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3),enabledSearchEnginesLabels.at(4),enabledSearchEnginesLabels.at(5),enabledSearchEnginesLabels.at(6));
+    default:
+        return enabledSearchEnginesLabels.join(", ");
+    }
 }
 
 int SearchEngineList::getSearchEngineCount() const {

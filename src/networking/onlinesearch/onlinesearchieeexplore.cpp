@@ -180,7 +180,12 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
 
 QString OnlineSearchIEEEXplore::label() const
 {
+#ifdef HAVE_KF5
     return i18n("IEEEXplore");
+#else // HAVE_KF5
+    //= onlinesearch-ieeexplore-label
+    return QObject::tr("IEEEXplore");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchIEEEXplore::favIconUrl() const

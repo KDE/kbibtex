@@ -88,10 +88,14 @@ void SortedBibliographyModel::setSortOrder(int _sortOrder) {
 
 QStringList SortedBibliographyModel::humanReadableSortOrder() const {
     static const QStringList result {
-                                     tr("Last name, newest first"), ///< SortAuthorNewestTitle
-                                     tr("Last name, oldest first"), ///< SortAuthorOldestTitle
-                                     tr("Newest first, last name"), ///< SortNewestAuthorTitle
-                                     tr("Oldest first, last name")  ///< SortOldestAuthorTitle
+                                     //% "Last name, newest first"
+                                     qtTrId("sortorder-humanreadable-lastname-newestfirst"), ///< SortAuthorNewestTitle
+                                     //% "Last name, oldest first"
+                                     qtTrId("sortorder-humanreadable-lastname-oldestfirst"), ///< SortAuthorOldestTitle
+                                     //% "Newest first, last name"
+                                     qtTrId("sortorder-humanreadable-newestfirst-lastname"), ///< SortNewestAuthorTitle
+                                     //% "Oldest first, last name"
+                                     qtTrId("sortorder-humanreadable-oldestfirst-lastname")  ///< SortOldestAuthorTitle
                                     };
     return result;
 }
@@ -269,10 +273,13 @@ QVariant BibliographyModel::data(const QModelIndex &index, int role) const {
             const bool isPhdThesis = curEntry->type() == Entry::etPhDThesis;
             if (isPhdThesis) {
                 const QString school = valueToText(curEntry->operator[](Entry::ftSchool));
-                if (school.isEmpty())
-                    return tr("Doctoral dissertation");
-                else
-                    return tr("Doctoral dissertation (%1)").arg(school);
+                if (school.isEmpty()) {
+                    //% "Doctoral dissertation"
+                    return qtTrId("wherepublished-doctoral-dissertation");
+                } else {
+                    //% "Doctoral dissertation (%1)"
+                    return qtTrId("wherepublished-doctoral-dissertation-arg").arg(school);
+                }
             }
             const QString school = valueToText(curEntry->operator[](Entry::ftSchool));
             if (!school.isEmpty()) return school;
@@ -284,8 +291,12 @@ QVariant BibliographyModel::data(const QModelIndex &index, int role) const {
             switch (authors.size()) {
             case 0: return QString(); ///< empty list of authors
             case 1: return authors.first(); ///< single author
-            case 2: return tr("%1 and %2").arg(authors.first()).arg(authors[1]); ///< two authors
-            default: return tr("%1 and %2 more").arg(authors.first()).arg(QString::number(authors.size() - 1)); ///< three or more authors
+            case 2:
+                //% "%1 and %2"
+                return qtTrId("shortauthors-two-author-args").arg(authors.first()).arg(authors[1]); ///< two authors
+            default:
+                //% "%1 and %2 more"
+                return qtTrId("shortauthors-one-author-arg-and-n-others-arg").arg(authors.first()).arg(QString::number(authors.size() - 1)); ///< three or more authors
             }
         } else if (role == UrlRole) {
             const QStringList doiList = valueToList(curEntry->operator[](Entry::ftDOI));

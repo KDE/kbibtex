@@ -455,7 +455,12 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 
 QString OnlineSearchGoogleScholar::label() const
 {
+#ifdef HAVE_KF5
     return i18n("Google Scholar");
+#else // HAVE_KF5
+    //= onlinesearch-googlescholar-label
+    return QObject::tr("Google Scholar");
+#endif // HAVE_KF5
 }
 
 QString OnlineSearchGoogleScholar::favIconUrl() const

@@ -44,7 +44,8 @@ Page {
             }
 
             Label {
-                text: qsTr("Author")
+                //% "Author"
+                text: qsTrId("label-author")
                 color: Theme.highlightColor
                 font.pointSize: Theme.fontSizeExtraSmall
             }
@@ -58,7 +59,8 @@ Page {
             }
 
             Label {
-                text: qsTr("Title")
+                //% "Title"
+                text: qsTrId("label-title")
                 color: Theme.highlightColor
                 font.pointSize: Theme.fontSizeExtraSmall
             }
@@ -72,7 +74,8 @@ Page {
             }
             Label {
                 visible: entryView.wherePublished.length > 0
-                text: qsTr("Publication")
+                //% "Publication"
+                text: qsTrId("label-publication")
                 color: Theme.highlightColor
                 font.pointSize: Theme.fontSizeExtraSmall
             }
@@ -86,7 +89,8 @@ Page {
                 font.pointSize: Theme.fontSizeMedium
             }
             Label {
-                text: qsTr("Year")
+                //% "Year"
+                text: qsTrId("label-year")
                 color: Theme.highlightColor
                 font.pointSize: Theme.fontSizeExtraSmall
             }
@@ -100,7 +104,11 @@ Page {
             }
             Label {
                 visible: entryView.doi.length > 0 || entryView.url.length > 0
-                text: entryView.doi.length > 0 ? qsTr("DOI") : qsTr("URL")
+                text: entryView.doi.length > 0
+                      //% "DOI"
+                      ? qsTrId("label-doi")
+                      //% "URL"
+                      : qsTrId("label-url")
                 color: Theme.highlightColor
                 font.pointSize: Theme.fontSizeExtraSmall
             }
@@ -115,7 +123,8 @@ Page {
             }
             Label {
                 visible: entryView.foundVia.length > 0
-                text: qsTr("Found via")
+                //% "Found via"
+                text: qsTrId("label-found-via")
                 color: Theme.highlightColor
                 font.pointSize: Theme.fontSizeExtraSmall
             }
@@ -133,7 +142,8 @@ Page {
         PullDownMenu {
             MenuItem {
                 id: menuItemViewOnline
-                text: qsTr("View Online")
+                //% "View Online"
+                text: qsTrId("pulldownmenu-view-online")
                 enabled: entryView.url.length > 0
                 onClicked: {
                     Qt.openUrlExternally(url)

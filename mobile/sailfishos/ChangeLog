@@ -3,6 +3,7 @@ ChangeLog for BibSearch
 Version 0.6 (2019-0x-xx)
  * Cover page includes app icon and an action to open the
    search form page.
+ * Supporting translations, first language is German
 
 Version 0.5 (2018-12-31)
  * Migrating BibSearch to reside in KBibTeX's code repository.
