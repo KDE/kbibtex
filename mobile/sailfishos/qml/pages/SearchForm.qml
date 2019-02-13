@@ -28,11 +28,9 @@ Page {
         contentHeight: content.height
 
         function startSearching() {
-            bibliographyModel.clear();
-            bibliographyModel.startSearch(inputFreeText.text,
-                                          inputTitle.text,
-                                          inputAuthor.text);
-            pop();
+            bibliographyModel.clear()
+            bibliographyModel.startSearch(inputFreeText.text, inputTitle.text, inputAuthor.text)
+            pop()
         }
 
         Column {

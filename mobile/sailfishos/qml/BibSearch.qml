@@ -20,8 +20,7 @@ import Sailfish.Silica 1.0
 import harbour.bibsearch 1.0
 import "pages"
 
-ApplicationWindow
-{
+ApplicationWindow {
     id: mainWindow
 
     SortedBibliographyModel {
@@ -32,8 +31,9 @@ ApplicationWindow
         id: searchEngineList
     }
 
-    initialPage: Component { BibliographyListView { } }
+    initialPage: Component {
+        BibliographyListView {
+        }
+    }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 }
-
-
