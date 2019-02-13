@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2016-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -52,14 +52,14 @@ Page {
                 }
 
                 Label {
-                    text: qsTr("Version 0.5")
+                    text: qsTr("Version 0.6")
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                     }
                 }
 
                 Label {
-                    text: "\u00a9 2016\u20132018 Thomas Fischer"
+                    text: qsTr("\u00a9 2016\u20132019 Thomas Fischer")
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                     }

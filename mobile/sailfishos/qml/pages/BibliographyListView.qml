@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2016-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,6 +36,16 @@ Page {
         ViewPlaceholder {
             enabled: bibliographyListView.count === 0
             text: bibliographyModel.busy ? qsTr("Waiting for results \u2026") : qsTr("Pull down to start a new search.")
+        }
+
+        ProgressBar {
+            visible: bibliographyModel.busy
+            value: bibliographyModel.progress
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            minimumValue: 0
+            maximumValue: 1000
         }
 
         delegate: BackgroundItem {

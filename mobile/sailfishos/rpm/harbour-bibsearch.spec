@@ -13,7 +13,7 @@ Name:       harbour-bibsearch
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    BibSearch
-Version:    0.5
+Version:    0.6
 Release:    1
 Group:      Applications/Publishing
 License:    GNU General Public License version 2 or any later version

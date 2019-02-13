@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2016-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,6 +36,7 @@ SortedBibliographyModel::SortedBibliographyModel()
     setDynamicSortFilter(true);
     sort(0);
     connect(model, &BibliographyModel::busyChanged, this, &SortedBibliographyModel::busyChanged);
+    connect(model, &BibliographyModel::progressChanged, this, &SortedBibliographyModel::progressChanged);
 }
 
 SortedBibliographyModel::~SortedBibliographyModel() {
@@ -64,6 +65,13 @@ bool SortedBibliographyModel::isBusy() const {
         return model->isBusy();
     else
         return false;
+}
+
+int SortedBibliographyModel::progress() const {
+    if (model != nullptr)
+        return model->progress();
+    else
+        return -1;
 }
 
 int SortedBibliographyModel::sortOrder() const {
@@ -203,6 +211,7 @@ BibliographyModel::BibliographyModel() {
     m_searchEngineList = new SearchEngineList();
     connect(m_searchEngineList, &SearchEngineList::foundEntry, this, &BibliographyModel::newEntry);
     connect(m_searchEngineList, &SearchEngineList::busyChanged, this, &BibliographyModel::busyChanged);
+    connect(m_searchEngineList, &SearchEngineList::progressChanged, this, &BibliographyModel::progressChanged);
 }
 
 BibliographyModel::~BibliographyModel() {
@@ -308,6 +317,8 @@ void BibliographyModel::startSearch(const QString &freeText, const QString &titl
     query[OnlineSearchAbstract::queryKeyTitle] = title;
     query[OnlineSearchAbstract::queryKeyAuthor] = author;
 
+    m_searchEngineList->resetProgress();
+
     m_runningSearches = 0;
     const QSettings settings(QStringLiteral("harbour-bibsearch"), QStringLiteral("BibSearch"));
     for (int i = 0; i < m_searchEngineList->size(); ++i) {
@@ -330,6 +341,10 @@ bool BibliographyModel::isBusy() const {
         if ((*it)->busy()) return true;
     }
     return false;
+}
+
+int BibliographyModel::progress() const {
+    return m_searchEngineList->progress();
 }
 
 void BibliographyModel::searchFinished() {

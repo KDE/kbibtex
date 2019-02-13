@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2017-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2017-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +22,7 @@
 #define setSearchEngineEnabled(settings, osa, isEnabled) ((settings).setValue(QStringLiteral("SearchEngineList-Enable") + (osa)->name(), (isEnabled)))
 
 #include <QAbstractListModel>
+#include <QHash>
 
 #include "entry.h"
 
@@ -49,10 +50,20 @@ public:
 
     QHash<int, QByteArray> roleNames() const;
 
+    void resetProgress();
+    int progress() const;
+
 signals:
     void foundEntry(QSharedPointer<Entry>);
     void busyChanged();
+    void progressChanged();
     void searchEngineCountChanged();
+
+private slots:
+    void collectingProgress(int, int);
+
+private:
+    QHash<QObject *, int> m_collectedProgress;
 };
 
 Q_DECLARE_METATYPE(SearchEngineList)

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2016-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -47,6 +47,7 @@ public:
     virtual QHash<int, QByteArray> roleNames() const;
 
     bool isBusy() const;
+    int progress() const;
     int sortOrder() const;
     void setSortOrder(int sortOrder);
     Q_PROPERTY(int sortOrder READ sortOrder WRITE setSortOrder NOTIFY sortOrderChanged)
@@ -55,9 +56,11 @@ public:
     Q_INVOKABLE void startSearch(const QString &freeText, const QString &title, const QString &author);
     Q_INVOKABLE void clear();
     Q_PROPERTY(bool busy READ isBusy NOTIFY busyChanged)
+    Q_PROPERTY(int progress READ progress NOTIFY progressChanged)
 
 signals:
     void busyChanged();
+    void progressChanged();
     void sortOrderChanged(int sortOrder);
 
 protected:
@@ -89,12 +92,14 @@ public:
     static QString valueToText(const Value &value);
 
     bool isBusy() const;
+    int progress() const;
 
     void startSearch(const QString &freeText, const QString &title, const QString &author);
     void clear();
 
 signals:
     void busyChanged();
+    void progressChanged();
 
 private slots:
     void newEntry(QSharedPointer<Entry>);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2017-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2017-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,51 +38,61 @@ SearchEngineList::SearchEngineList()
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     osa = new OnlineSearchArXiv(this);
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     osa = new OnlineSearchBibsonomy(this);
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     osa = new OnlineSearchGoogleScholar(this);
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     osa = new OnlineSearchIEEEXplore(this);
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     osa = new OnlineSearchIngentaConnect(this);
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     osa = new OnlineSearchJStor(this);
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     osa = new OnlineSearchScienceDirect(this);
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     osa = new OnlineSearchPubMed(this);
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     osa = new OnlineSearchSpringerLink(this);
     append(osa);
     connect(osa, &OnlineSearchAbstract::foundEntry, this, &SearchEngineList::foundEntry);
     connect(osa, &OnlineSearchAbstract::busyChanged, this, &SearchEngineList::busyChanged);
+    connect(osa, &OnlineSearchAbstract::progress, this, &SearchEngineList::collectingProgress);
 
     connect(this,&SearchEngineList::dataChanged,[this](const QModelIndex &, const QModelIndex &, const QVector<int> &roles = QVector<int>()){
         if (roles.contains(EngineEnabledRole))
@@ -180,4 +190,21 @@ QHash<int, QByteArray> SearchEngineList::roleNames() const {
     roles[LabelRole] = "label";
     roles[EngineEnabledRole] = "engineEnabled";
     return roles;
+}
+
+void SearchEngineList::resetProgress() {
+    m_collectedProgress.clear();
+}
+
+int SearchEngineList::progress() const {
+    int count = 0, sum = 0;
+    for (QHash<QObject *, int>::ConstIterator it = m_collectedProgress.constBegin(); it != m_collectedProgress.constEnd(); ++it, ++count)
+        sum += it.value();
+    return count > 0 ? sum / count : 0;
+}
+
+void SearchEngineList::collectingProgress(int cur, int total) {
+    if (cur > total) cur = total;
+    m_collectedProgress.insert(sender(), total > 0 ? cur * 1000 / total : 0);
+    emit progressChanged();
 }
