@@ -209,6 +209,7 @@
       <li xml:lang="tr">Kaynakçadaki yinelenen girişleri bulun ve birleştirin.</li>
       <li xml:lang="uk">Шукати і об’єднувати дублікати записів у бібліографії.</li>
       <li xml:lang="x-test">xxFind and merge duplicate entries in bibliography.xx</li>
+      <li xml:lang="zh-CN">查找和合并参考文献中的重复条目。</li>
       <li>Integrate your bibliographies with LaTeX editors such as Kile and LyX.</li>
       <li xml:lang="bs">Integriraj vaše bibliografije sa LaTeX uređivačima kao što su Kile i LyX.</li>
       <li xml:lang="ca">Integra les vostres bibliografies amb editors de LaTeX com Kile i LyX.</li>
@@ -231,6 +232,7 @@
       <li xml:lang="tr">Kaynakçalarınızı Kile ve LyX gibi LaTeX düzenleyicileri ile bütünleştirin.</li>
       <li xml:lang="uk">Інтегрувати ваші бібліографії з редакторами LaTeX, зокрема Kile та LyX.</li>
       <li xml:lang="x-test">xxIntegrate your bibliographies with LaTeX editors such as Kile and LyX.xx</li>
+      <li xml:lang="zh-CN">将参考文献与 LaTeX 编辑器整合，例如 Kile 和 LyX。</li>
       <li>Import your Zotero library.</li>
       <li xml:lang="bs">Uvoz vaše Zotero biblioteke.</li>
       <li xml:lang="ca">Importa la vostra biblioteca de Zotero.</li>
@@ -254,7 +256,7 @@
       <li xml:lang="tr">Zotero kütüphanenizi İçe Aktarın.</li>
       <li xml:lang="uk">Імпортувати дані з вашої бібліотеки Zotero.</li>
       <li xml:lang="x-test">xxImport your Zotero library.xx</li>
-      <li xml:lang="zh-CN">导入您的 Zotero 仓库。</li>
+      <li xml:lang="zh-CN">导入您的 Zotero 库。</li>
     </ul>
   </description>
   <url type="homepage">https://userbase.kde.org/KBibTeX</url>
@@ -279,6 +281,7 @@
       <caption xml:lang="sv">Huvudfönstret i Kbibtex</caption>
       <caption xml:lang="uk">Головне вікно KBibTeX</caption>
       <caption xml:lang="x-test">xxKBibTeX main windowxx</caption>
+      <caption xml:lang="zh-CN">KBibTeX 主窗口</caption>
       <image>https://cdn.kde.org/screenshots/kbibtex/kbibtex-kf5.png</image>
     </screenshot>
   </screenshots>
