@@ -23,7 +23,7 @@ Page {
     allowedOrientations: Orientation.All
 
     SilicaFlickable {
-        id: resultList
+        id: searchFormList
         anchors.fill: parent
         contentHeight: content.height
 
@@ -71,7 +71,7 @@ Page {
 
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-search"
-                EnterKey.onClicked: resultList.startSearching()
+                EnterKey.onClicked: searchFormList.startSearching()
             }
 
             TextField {
@@ -84,7 +84,7 @@ Page {
 
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-search"
-                EnterKey.onClicked: resultList.startSearching()
+                EnterKey.onClicked: searchFormList.startSearching()
             }
 
             TextField {
@@ -97,7 +97,7 @@ Page {
 
                 EnterKey.enabled: text.length > 0
                 EnterKey.iconSource: "image://theme/icon-m-search"
-                EnterKey.onClicked: resultList.startSearching()
+                EnterKey.onClicked: searchFormList.startSearching()
             }
         }
 
@@ -110,7 +110,7 @@ Page {
                           || inputTitle.text.length > 0
                           || inputAuthor.text.length > 0)
                          && searchEngineList.searchEngineCount > 0
-                onClicked: resultList.startSearching()
+                onClicked: searchFormList.startSearching()
             }
 
             visible: menuItemStartSearching.enabled

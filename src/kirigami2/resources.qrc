@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="KBibTeX.qml">../../qml/kirigami2/KBibTeX.qml</file>
+        <file alias="./pages/BibliographyListView.qml">../../qml/kirigami2/pages/BibliographyListView.qml</file>
+        <file alias="./pages/SearchForm.qml">../../qml/kirigami2/pages/SearchForm.qml</file>
+    </qresource>
+</RCC>

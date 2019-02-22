@@ -104,7 +104,7 @@ add_definitions(-DHAVE_QTWIDGETS)
 find_package(
     KF5 ${KF5_MIN_VERSION}
     MODULE
-    REQUIRED
+    COMPONENTS
     I18n
     XmlGui
     KIO
@@ -116,6 +116,8 @@ find_package(
     Crash
     DocTools
     TextEditor
+    OPTIONAL_COMPONENTS
+    Kirigami2
 )
 add_definitions(-DHAVE_KF5)
 

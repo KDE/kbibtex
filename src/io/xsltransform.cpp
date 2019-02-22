@@ -92,7 +92,7 @@ QString XSLTransform::transform(const QString &xmlText) const
 
 QString XSLTransform::locateXSLTfile(const QString &stem)
 {
-    const QString xsltFilename = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")) + QLatin1Char('/') + stem);
+    const QString xsltFilename = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QCoreApplication::instance()->applicationName().remove(QStringLiteral("test")).remove(QStringLiteral("_kirigami2")) + QLatin1Char('/') + stem);
     if (xsltFilename.isEmpty())
         qCWarning(LOG_KBIBTEX_IO) << "Generated XSLT filename is empty for stem " << stem;
     else if (!QFileInfo::exists(xsltFilename))
