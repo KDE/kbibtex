@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
  *   it under the terms of the GNU General Public License as published by    *
@@ -32,10 +32,19 @@ public:
     QHash<int, QSet<NotificationListener *> > listenersPerEventId;
     QSet<NotificationListener *> listenersAnyEvent;
 
+    static const QHash<int, QString> eventIdToName;
+
     NotificationHubPrivate(NotificationHub *)
     {
         /// nothing
     }
+};
+
+const QHash<int, QString> NotificationHub::NotificationHubPrivate::eventIdToName{
+    {NotificationHub::EventAny, QStringLiteral("Any")},
+    {NotificationHub::EventConfigurationChanged, QStringLiteral("ConfigurationChanged")},
+    {NotificationHub::EventBibliographySystemChanged, QStringLiteral("BibliographySystemChanged")},
+    {NotificationHub::EventUserDefined, QStringLiteral("UserDefined")}
 };
 
 NotificationHub::NotificationHub()
@@ -88,7 +97,7 @@ void NotificationHub::publishEvent(int eventId)
         QSet<NotificationListener *> set(d->listenersPerEventId.value(eventId,  QSet<NotificationListener *>()));
         for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(d->listenersAnyEvent))
             set.insert(listener);
-        qCDebug(LOG_KBIBTEX_CONFIG) << "Notifying about event" << eventId << " having" << set.count() << "receivers";
+        qCDebug(LOG_KBIBTEX_CONFIG) << "Notifying about event" << NotificationHubPrivate::eventIdToName.value(eventId, QString::number(eventId)) << "having" << set.count() << "receivers";
         for (NotificationListener *listener : const_cast<const QSet<NotificationListener *> &>(set))
             listener->notificationEvent(eventId);
     }
