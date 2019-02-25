@@ -416,7 +416,7 @@ bool ReferenceWidget::validate(QWidget **widgetWithIssue, QString &message) cons
         return false;
     }
 
-    static const QRegularExpression validIdRegExp(QStringLiteral("^[a-z][a-z0-9_:.+/$\\\"&-]*$"), QRegularExpression::CaseInsensitiveOption);
+    static const QRegularExpression validIdRegExp(QStringLiteral("^[a-z0-9][a-z0-9_:.+/$\\\"&-]*$"), QRegularExpression::CaseInsensitiveOption);
     const QString id = entryId->text();
     const QRegularExpressionMatch validIdMatch = validIdRegExp.match(id);
     if (!validIdMatch.hasMatch() || validIdMatch.capturedLength() != id.length()) {
