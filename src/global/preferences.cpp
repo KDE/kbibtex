@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +22,7 @@
 #ifdef HAVE_KF5
 #include <KLocalizedString>
 #include <KSharedConfig>
+#include <KConfigWatcher>
 #include <KConfigGroup>
 #else // HAVE_KF5
 #define I18N_NOOP(text) QObject::tr(text)
@@ -64,6 +65,8 @@ const Qt::CheckState Preferences::defaultProtectCasing = Qt::PartiallyChecked;
 const QString Preferences::keyListSeparator = QStringLiteral("ListSeparator");
 const QString Preferences::defaultListSeparator = QStringLiteral("; ");
 
+const Preferences::BibliographySystem Preferences::defaultBibliographySystem = Preferences::BibTeX;
+
 /**
  * Preferences for Data objects
  */
@@ -72,21 +75,85 @@ const QString Preferences::personNameFormatLastFirst = QStringLiteral("<%l><, %s
 const QString Preferences::personNameFormatFirstLast = QStringLiteral("<%f ><%l>< %s>");
 const QString Preferences::defaultPersonNameFormatting = personNameFormatLastFirst;
 
-const Preferences::BibliographySystem Preferences::defaultBibliographySystem = Preferences::BibTeX;
+class Preferences::Private
+{
+private:
+    Preferences *parent;
+
+public:
+#ifdef HAVE_KF5
+    KSharedConfigPtr config;
+    KConfigWatcher::Ptr watcher;
+#endif // HAVE_KF5
+
+    static const QString keyBibliographySystem;
+#ifdef HAVE_KF5
+    bool bibliographySystemDirtyFlag;
+    Preferences::BibliographySystem bibliographySystemCached;
+#endif // HAVE_KF5
+
+    Private(Preferences *_parent)
+            : parent(_parent)
+    {
+#ifdef HAVE_KF5
+        config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
+        watcher = KConfigWatcher::create(config);
+        bibliographySystemDirtyFlag = true;
+        bibliographySystemCached = defaultBibliographySystem;
+#endif // HAVE_KF5
+    }
+};
+
+const QString Preferences::Private::keyBibliographySystem = QStringLiteral("BibliographySystem");
+
+Preferences &Preferences::instance()
+{
+    static Preferences singleton;
+    return singleton;
+}
+
+Preferences::Preferences()
+        : d(new Preferences::Private(this))
+{
+#ifdef HAVE_KF5
+    QObject::connect(d->watcher.data(), &KConfigWatcher::configChanged, [this](const KConfigGroup & group, const QByteArrayList & names) {
+        QSet<int> eventsToPublish;
+        if (group.name() == QStringLiteral("General")) {
+            if (names.contains(Preferences::Private::keyBibliographySystem.toLatin1())) {
+                qDebug() << "Bibliography system got changed by another Preferences instance";
+                d->bibliographySystemDirtyFlag = true;
+                eventsToPublish.insert(NotificationHub::EventBibliographySystemChanged);
+            }
+        }
+
+        for (const int eventId : eventsToPublish)
+            NotificationHub::publishEvent(eventId);
+    });
+
+#endif // HAVE_KF5
+}
+
+Preferences::~Preferences()
+{
+    delete d;
+}
 
 Preferences::BibliographySystem Preferences::bibliographySystem()
 {
 #ifdef HAVE_KF5
-    static KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
-    static const KConfigGroup configGroup(config, QStringLiteral("General"));
-    config->reparseConfiguration();
-    const int index = configGroup.readEntry(QStringLiteral("BibliographySystem"), static_cast<int>(defaultBibliographySystem));
-    if (index != static_cast<int>(Preferences::BibTeX) && index != static_cast<int>(Preferences::BibLaTeX)) {
-        qWarning() << "Configuration file setting for Bibliography System has an invalid value, using default as fallback";
-        setBibliographySystem(defaultBibliographySystem);
-        return defaultBibliographySystem;
-    } else
-        return static_cast<Preferences::BibliographySystem>(index);
+    if (d->bibliographySystemDirtyFlag) {
+        d->config->reparseConfiguration();
+        static const KConfigGroup configGroup(d->config, QStringLiteral("General"));
+        const int index = configGroup.readEntry(Preferences::Private::keyBibliographySystem, static_cast<int>(defaultBibliographySystem));
+        if (index != static_cast<int>(Preferences::BibTeX) && index != static_cast<int>(Preferences::BibLaTeX)) {
+            qWarning() << "Configuration file setting for Bibliography System has an invalid value, using default as fallback";
+            setBibliographySystem(defaultBibliographySystem);
+            d->bibliographySystemCached = defaultBibliographySystem;
+        } else
+            d->bibliographySystemCached = static_cast<Preferences::BibliographySystem>(index);
+        d->bibliographySystemDirtyFlag = false;
+    }
+    return d->bibliographySystemCached;
 #else // HAVE_KF5
     return defaultBibliographySystem;
 #endif // HAVE_KF5
@@ -95,14 +162,14 @@ Preferences::BibliographySystem Preferences::bibliographySystem()
 bool Preferences::setBibliographySystem(const Preferences::BibliographySystem bibliographySystem)
 {
 #ifdef HAVE_KF5
-    static KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
-    static KConfigGroup configGroup(config, QStringLiteral("General"));
-    config->reparseConfiguration();
-    const int prevIndex = configGroup.readEntry(QStringLiteral("BibliographySystem"), static_cast<int>(defaultBibliographySystem));
+    d->bibliographySystemDirtyFlag = false;
+    d->bibliographySystemCached = bibliographySystem;
+    static KConfigGroup configGroup(d->config, QStringLiteral("General"));
+    const int prevIndex = configGroup.readEntry(Preferences::Private::keyBibliographySystem, static_cast<int>(defaultBibliographySystem));
     const int newIndex = static_cast<int>(bibliographySystem);
     if (prevIndex == newIndex) return false; /// If old and new bibliography system are the same, return 'false' directly
-    configGroup.writeEntry(QStringLiteral("BibliographySystem"), newIndex);
-    config->sync();
+    configGroup.writeEntry(Preferences::Private::keyBibliographySystem, newIndex, KConfig::Notify /** to catch changes via KConfigWatcher */);
+    d->config->sync();
     NotificationHub::publishEvent(NotificationHub::EventBibliographySystemChanged);
 #else // HAVE_KF5
     Q_UNUSED(bibliographySystem);

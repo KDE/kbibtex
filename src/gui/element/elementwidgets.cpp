@@ -680,10 +680,10 @@ bool FilesWidget::apply(QSharedPointer<Element> element) const
     if (localFileValue.isEmpty()) {
         entry->remove(Entry::ftFile);
         entry->remove(Entry::ftLocalFile);
-    } else if (Preferences::bibliographySystem() == Preferences::BibLaTeX) {
+    } else if (Preferences::instance().bibliographySystem() == Preferences::BibLaTeX) {
         entry->remove(Entry::ftLocalFile);
         entry->insert(Entry::ftFile, localFileValue);
-    } else if (Preferences::bibliographySystem() == Preferences::BibTeX) {
+    } else if (Preferences::instance().bibliographySystem() == Preferences::BibTeX) {
         entry->remove(Entry::ftFile);
         entry->insert(Entry::ftLocalFile, localFileValue);
     }

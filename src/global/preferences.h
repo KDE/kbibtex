@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,17 +25,26 @@
  */
 class Preferences {
 public:
+    static Preferences &instance();
+    ~Preferences();
+
+protected:
+    Preferences();
+
+public:
+
+    /// *** Bibliography system, as of now either BibTeX or BibLaTeX
 
     /// Bibliography system: either BibTeX or BibLaTeX
     enum BibliographySystem { BibTeX = 0, BibLaTeX = 1 };
 
     /// Default bibliography system if nothing else is set or defined
     static const BibliographySystem defaultBibliographySystem;
-    /// Current bibliography system as read from configuration file
-    static BibliographySystem bibliographySystem();
-    /// Update bibliography system in configuration file
-    /// @return true if the set bibliography system differed from the previous value, false if both were the same
-    static bool setBibliographySystem(const BibliographySystem bibliographySystem);
+    /// Retrieve current bibliography system
+    BibliographySystem bibliographySystem();
+    /// Set bibliography system
+    /// @return true if the set bibliography system is differed from the previous value, false if both were the same
+    bool setBibliographySystem(const BibliographySystem bibliographySystem);
     /// Map of supported bibliography systems, should be the same as in enum BibliographySystem
     static const QMap<BibliographySystem, QString> availableBibliographySystems();
 
@@ -79,6 +88,13 @@ static const QString keyPersonNameFormatting;
 static const QString personNameFormatLastFirst;
 static const QString personNameFormatFirstLast;
 static const QString defaultPersonNameFormatting;
+
+
+private:
+    Q_DISABLE_COPY(Preferences)
+
+    class Private;
+    Private *const d;
 };
 
 #endif // KBIBTEX_GLOBAL_PREFERENCES_H
