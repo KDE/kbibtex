@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -95,7 +95,7 @@ QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPoint
     }
 
     const bool isLocal = urlIsLocal(document);
-    const QString field = isLocal ? (Preferences::bibliographySystem() == Preferences::BibTeX ? Entry::ftLocalFile : Entry::ftFile) : Entry::ftUrl;
+    const QString field = isLocal ? (Preferences::instance().bibliographySystem() == Preferences::instance().BibTeX ? Entry::ftLocalFile : Entry::ftFile) : Entry::ftUrl;
     QString finalUrl = pathType == ptAbsolute ? absoluteFilename(document, baseUrl) : relativeFilename(document, baseUrl);
 
     if (!dryRun) { /// only if not pretending

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -486,7 +486,7 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                 if (!alreadyContained) {
                     Value value;
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
-                    const QString fieldNameStem = Preferences::bibliographySystem() == Preferences::BibTeX ? Entry::ftLocalFile : Entry::ftFile;
+                    const QString fieldNameStem = Preferences::instance().bibliographySystem() == Preferences::BibTeX ? Entry::ftLocalFile : Entry::ftFile;
                     if (!entry.contains(fieldNameStem))
                         entry.insert(fieldNameStem, value);
                     else
