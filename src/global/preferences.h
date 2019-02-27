@@ -48,6 +48,21 @@ public:
     /// Map of supported bibliography systems, should be the same as in enum BibliographySystem
     static const QMap<BibliographySystem, QString> availableBibliographySystems();
 
+    /// *** Name formatting like "Firstname Lastname", "Lastname, Firstname", or any other combination
+
+    /// Predefined value for a person formatting, where last name comes before first name
+    static const QString personNameFormatLastFirst;
+    /// Predefined value for a person formatting, where first name comes before last name
+    static const QString personNameFormatFirstLast;
+    /// Default name formatting for a person if nothing else is set or defined
+    static const QString defaultPersonNameFormatting;
+    /// Retrieve current name formatting
+    QString personNameFormatting();
+    /// Set name formatting
+    /// @return true if the set formatting is differed from the previous value, false if both were the same
+    bool setPersonNameFormatting(const QString &personNameFormatting);
+
+
 enum BackupScope { NoBackup, LocalOnly, BothLocalAndRemote };
 enum ElementDoubleClickAction { ActionOpenEditor = 0, ActionViewDocument = 1 };
 /**
@@ -83,12 +98,6 @@ static const QString keyProtectCasing;
 static const Qt::CheckState defaultProtectCasing;
 static const QString keyListSeparator;
 static const QString defaultListSeparator;
-
-static const QString keyPersonNameFormatting;
-static const QString personNameFormatLastFirst;
-static const QString personNameFormatFirstLast;
-static const QString defaultPersonNameFormatting;
-
 
 private:
     Q_DISABLE_COPY(Preferences)

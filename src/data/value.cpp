@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -672,14 +672,6 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
     QString result;
     vit = VITOther;
 
-#ifdef HAVE_KF5
-    /// Required to have static instance of PlainTextValue here
-    /// to initialize @see personNameFormatting from settings
-    /// as well as update @see personNameFormatting upon notification
-    /// from NotificationHub
-    static PlainTextValue ptv;
-#endif // HAVE_KF5
-
     bool isVerbatim = false;
     const PlainText *plainText = dynamic_cast<const PlainText *>(&valueItem);
     if (plainText != nullptr) {
@@ -691,7 +683,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
         } else {
             const Person *person = dynamic_cast<const Person *>(&valueItem);
             if (person != nullptr) {
-                result = Person::transcribePersonName(person, personNameFormatting);
+                result = Person::transcribePersonName(person, Preferences::instance().personNameFormatting());
                 vit = VITPerson;
             } else {
                 const Keyword *keyword = dynamic_cast<const Keyword *>(&valueItem);
@@ -742,28 +734,3 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
 
     return result;
 }
-
-#ifdef HAVE_KF5
-PlainTextValue::PlainTextValue()
-{
-    NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
-    readConfiguration();
-}
-
-void PlainTextValue::notificationEvent(int eventId)
-{
-    if (eventId == NotificationHub::EventConfigurationChanged)
-        readConfiguration();
-}
-
-void PlainTextValue::readConfiguration()
-{
-    KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
-    KConfigGroup configGroup(config, "General");
-    personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
-}
-
-QString PlainTextValue::personNameFormatting;
-#else // HAVE_KF5
-const QString PlainTextValue::personNameFormatting = QStringLiteral("<%l><, %s><, %f>");
-#endif // HAVE_KF5

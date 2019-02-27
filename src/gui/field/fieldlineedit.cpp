@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -62,10 +62,6 @@ private:
     QSignalMapper *menuTypesSignalMapper;
     QPushButton *buttonOpenUrl;
 
-    KSharedConfigPtr config;
-    const QString configGroupNameGeneral;
-    QString personNameFormatting;
-
 public:
     QMenu *menuTypes;
     KBibTeX::TypeFlag typeFlag;
@@ -74,7 +70,7 @@ public:
     QString fieldKey;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
-            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupNameGeneral(QStringLiteral("General")), file(nullptr) {
+            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), file(nullptr) {
         menuTypes = new QMenu(parent);
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
@@ -91,9 +87,6 @@ public:
         Value value;
         typeFlag = determineTypeFlag(value, preferredTypeFlag, typeFlags);
         updateGUI(typeFlag);
-
-        KConfigGroup configGroup(config, configGroupNameGeneral);
-        personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
     }
 
     bool reset(const Value &value) {
@@ -120,7 +113,7 @@ public:
                 } else {
                     const QSharedPointer<Person> person = first.dynamicCast<Person>();
                     if (typeFlag == KBibTeX::tfPerson && !person.isNull()) {
-                        text = Person::transcribePersonName(person.data(), personNameFormatting);
+                        text = Person::transcribePersonName(person.data(), Preferences::instance().personNameFormatting());
                         result = true;
                     } else {
                         const QSharedPointer<MacroKey> macroKey = first.dynamicCast<MacroKey>();

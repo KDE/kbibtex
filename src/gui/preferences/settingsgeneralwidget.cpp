@@ -36,33 +36,24 @@ private:
     KComboBox *comboBoxBibliographySystem;
     KComboBox *comboBoxPersonNameFormatting;
     const Person dummyPerson;
-    QString restartRequiredMsg;
-
-    KSharedConfigPtr config;
-    const QString configGroupName;
 
 public:
 
     SettingsGeneralWidgetPrivate(SettingsGeneralWidget *parent)
-            : p(parent), dummyPerson(Person(i18n("John"), i18n("Doe"), i18n("Jr."))), restartRequiredMsg(i18n("Changing this option requires a restart to take effect.")), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("General")) {
+            : p(parent), dummyPerson(Person(i18n("John"), i18n("Doe"), i18n("Jr."))) {
         setupGUI();
     }
 
     void loadState() {
         comboBoxBibliographySystem->setCurrentIndex(comboBoxBibliographySystem->findData(QVariant::fromValue<int>(static_cast<int>(Preferences::instance().bibliographySystem()))));
 
-        KConfigGroup configGroup(config, configGroupName);
-        QString personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
-        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, personNameFormatting));
+        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, Preferences::instance().personNameFormatting()));
         comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
     void saveState() {
         Preferences::instance().setBibliographySystem(static_cast<Preferences::BibliographySystem>(comboBoxBibliographySystem->currentData().toInt()));
-
-        KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(Preferences::keyPersonNameFormatting, comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()));
-        config->sync();
+        Preferences::instance().setPersonNameFormatting(comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()).toString());
     }
 
     void resetToDefaults() {
@@ -86,10 +77,8 @@ public:
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
         const QStringList formattingOptions {Preferences::personNameFormatFirstLast, Preferences::personNameFormatLastFirst};
-        for (const QString &formattingOption : formattingOptions) {
+        for (const QString &formattingOption : formattingOptions)
             comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(&dummyPerson, formattingOption), formattingOption);
-        }
-        comboBoxPersonNameFormatting->setToolTip(restartRequiredMsg);
         connect(comboBoxPersonNameFormatting, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsGeneralWidget::changed);
     }
 };

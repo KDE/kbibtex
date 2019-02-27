@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -87,21 +87,14 @@ public:
         keywordCasing = static_cast<KBibTeX::Casing>(configGroup.readEntry(Preferences::keyKeywordCasing, static_cast<int>(Preferences::defaultKeywordCasing)));
         quoteComment = static_cast<Preferences::QuoteComment>(configGroup.readEntry(Preferences::keyQuoteComment, static_cast<int>(Preferences::defaultQuoteComment)));
         protectCasing = static_cast<Qt::CheckState>(configGroup.readEntry(Preferences::keyProtectCasing, static_cast<int>(Preferences::defaultProtectCasing)));
-        personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, QString());
         listSeparator = configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator);
-
-        if (personNameFormatting.isEmpty()) {
-            /// no person name formatting is specified for BibTeX, fall back to general setting
-            KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
-            personNameFormatting = configGroupGeneral.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
-        }
 #else // HAVE_KF5
         keywordCasing = KBibTeX::cLowerCase;
         quoteComment = qcNone;
         protectCasing = Qt::PartiallyChecked;
-        personNameFormatting = QStringLiteral("<%l><, %s><, %f>");
         listSeparator = QStringLiteral("; ");
 #endif // HAVE_KF5
+        personNameFormatting = Preferences::instance().personNameFormatting();
     }
 
     void loadStateFromFile(const File *bibtexfile) {

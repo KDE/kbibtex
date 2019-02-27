@@ -67,13 +67,9 @@ const QString Preferences::defaultListSeparator = QStringLiteral("; ");
 
 const Preferences::BibliographySystem Preferences::defaultBibliographySystem = Preferences::BibTeX;
 
-/**
- * Preferences for Data objects
- */
-const QString Preferences::keyPersonNameFormatting = QStringLiteral("personNameFormatting");
 const QString Preferences::personNameFormatLastFirst = QStringLiteral("<%l><, %s><, %f>");
 const QString Preferences::personNameFormatFirstLast = QStringLiteral("<%f ><%l>< %s>");
-const QString Preferences::defaultPersonNameFormatting = personNameFormatLastFirst;
+const QString Preferences::defaultPersonNameFormatting = Preferences::personNameFormatLastFirst;
 
 class Preferences::Private
 {
@@ -92,6 +88,12 @@ public:
     Preferences::BibliographySystem bibliographySystemCached;
 #endif // HAVE_KF5
 
+    static const QString keyPersonNameFormatting;
+#ifdef HAVE_KF5
+    bool personNameFormattingDirtyFlag;
+    QString personNameFormattingCached;
+#endif // HAVE_KF5
+
     Private(Preferences *_parent)
             : parent(_parent)
     {
@@ -100,11 +102,14 @@ public:
         watcher = KConfigWatcher::create(config);
         bibliographySystemDirtyFlag = true;
         bibliographySystemCached = defaultBibliographySystem;
+        personNameFormattingDirtyFlag = true;
+        personNameFormattingCached = defaultPersonNameFormatting;
 #endif // HAVE_KF5
     }
 };
 
 const QString Preferences::Private::keyBibliographySystem = QStringLiteral("BibliographySystem");
+const QString Preferences::Private::keyPersonNameFormatting = QStringLiteral("personNameFormatting");
 
 Preferences &Preferences::instance()
 {
@@ -123,6 +128,11 @@ Preferences::Preferences()
                 qDebug() << "Bibliography system got changed by another Preferences instance";
                 d->bibliographySystemDirtyFlag = true;
                 eventsToPublish.insert(NotificationHub::EventBibliographySystemChanged);
+            }
+            if (names.contains(Preferences::Private::keyPersonNameFormatting.toLatin1())) {
+                qDebug() << "Person name formatting got changed by another Preferences instance";
+                d->personNameFormattingDirtyFlag = true;
+                eventsToPublish.insert(NotificationHub::EventConfigurationChanged);
             }
         }
 
@@ -181,4 +191,36 @@ const QMap<Preferences::BibliographySystem, QString> Preferences::availableBibli
 {
     static const QMap<Preferences::BibliographySystem, QString> result {{Preferences::BibTeX, i18n("BibTeX")}, {Preferences::BibLaTeX, i18n("BibLaTeX")}};
     return result;
+}
+
+QString Preferences::personNameFormatting()
+{
+#ifdef HAVE_KF5
+    if (d->personNameFormattingDirtyFlag) {
+        d->config->reparseConfiguration();
+        static const KConfigGroup configGroup(d->config, QStringLiteral("General"));
+        d->personNameFormattingCached = configGroup.readEntry(Preferences::Private::keyPersonNameFormatting, defaultPersonNameFormatting);
+        d->personNameFormattingDirtyFlag = false;
+    }
+    return d->personNameFormattingCached;
+#else // HAVE_KF5
+    return defaultPersonNameFormatting;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setPersonNameFormatting(const QString &personNameFormatting)
+{
+#ifdef HAVE_KF5
+    d->personNameFormattingDirtyFlag = false;
+    d->personNameFormattingCached = personNameFormatting;
+    static KConfigGroup configGroup(d->config, QStringLiteral("General"));
+    const QString prevFormatting = configGroup.readEntry(Preferences::Private::keyPersonNameFormatting, defaultPersonNameFormatting);
+    if (prevFormatting == personNameFormatting) return false;
+    configGroup.writeEntry(Preferences::Private::keyPersonNameFormatting, personNameFormatting, KConfig::Notify /** to catch changes via KConfigWatcher */);
+    d->config->sync();
+    NotificationHub::publishEvent(NotificationHub::EventConfigurationChanged);
+#else // HAVE_KF5
+    Q_UNUSED(personNameFormatting);
+#endif // HAVE_KF5
+    return true;
 }

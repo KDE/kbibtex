@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -113,7 +113,7 @@ public:
         properties.insert(File::StringDelimiter, configGroup.readEntry(Preferences::keyStringDelimiter, Preferences::defaultStringDelimiter));
         properties.insert(File::QuoteComment, static_cast<Preferences::QuoteComment>(configGroup.readEntry(Preferences::keyQuoteComment, static_cast<int>(Preferences::defaultQuoteComment))));
         properties.insert(File::KeywordCasing, static_cast<KBibTeX::Casing>(configGroup.readEntry(Preferences::keyKeywordCasing, static_cast<int>(Preferences::defaultKeywordCasing))));
-        properties.insert(File::NameFormatting, configGroup.readEntry(Preferences::keyPersonNameFormatting, QString()));
+        properties.insert(File::NameFormatting, Preferences::instance().personNameFormatting());
         properties.insert(File::ProtectCasing, configGroup.readEntry(Preferences::keyProtectCasing, static_cast<int>(Preferences::defaultProtectCasing)));
         properties.insert(File::ListSeparator, configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator));
     }
@@ -283,27 +283,11 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
                         /// Check if ValueItem to process points to a person
                         const QSharedPointer<Person> person = valueItem.dynamicCast<Person>();
                         if (!person.isNull()) {
-                            /// Assemble a list of formatting templates for a person's name
-                            static QStringList personNameFormattingList; ///< use static to do pattern assembly only once
-                            if (personNameFormattingList.isEmpty()) {
-                                /// Use the two default patterns last-name-first and first-name-first
-#ifdef HAVE_KF5
-                                personNameFormattingList << Preferences::personNameFormatLastFirst << Preferences::personNameFormatFirstLast;
-                                /// Check configuration if user-specified formatting template is different
-                                KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
-                                KConfigGroup configGroup(config, "General");
-                                QString personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
-                                /// Add user's template if it differs from the two specified above
-                                if (!personNameFormattingList.contains(personNameFormatting))
-                                    personNameFormattingList << personNameFormatting;
-#else // HAVE_KF5
-                                personNameFormattingList << QStringLiteral("<%l><, %s><, %f>") << QStringLiteral("<%f ><%l>< %s>");
-#endif // HAVE_KF5
-                            }
+                            QSet<QString> personNameFormattingSet {Preferences::personNameFormatLastFirst, Preferences::personNameFormatFirstLast};
+                            personNameFormattingSet.insert(Preferences::instance().personNameFormatting());
                             /// Add person's name formatted using each of the templates assembled above
-                            for (const QString &personNameFormatting : const_cast<const QStringList &>(personNameFormattingList)) {
+                            for (const QString &personNameFormatting : const_cast<const QSet<QString> &>(personNameFormattingSet))
                                 valueSet.insert(Person::transcribePersonName(person.data(), personNameFormatting));
-                            }
                         } else {
                             /// Default case: use PlainTextValue::text to translate ValueItem
                             /// to a human-readable text
