@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,8 +24,6 @@
 #include <qplatformdefs.h>
 
 #include <KLocalizedString>
-#include <KSharedConfig>
-#include <KConfigGroup>
 #include <KComboBox>
 #include <KLineEdit>
 #include <KUrlRequester>
@@ -45,8 +43,6 @@ private:
     KComboBox *comboBoxCopyReferenceCmd;
     static const QString citeCmdToLabel;
 
-    KSharedConfigPtr config;
-
 public:
 #ifdef QT_LSTAT
     QCheckBox *checkboxUseAutomaticLyXPipeDetection;
@@ -60,47 +56,38 @@ public:
 #endif // QT_LSTAT
 
     SettingsFileExporterWidgetPrivate(SettingsFileExporterWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
+            : p(parent) {
         setupGUI();
     }
 
     void loadState() {
-        KConfigGroup configGroup(config, Preferences::groupGeneral);
-        const QString copyReferenceCommand = configGroup.readEntry(Clipboard::keyCopyReferenceCommand, Clipboard::defaultCopyReferenceCommand);
-        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), copyReferenceCommand.isEmpty() ? QString() : copyReferenceCommand, ItalicTextItemModel::IdentifierRole);
+        int row = GUIHelper::selectValue(comboBoxCopyReferenceCmd->model(), Preferences::instance().copyReferenceCommand(), ItalicTextItemModel::IdentifierRole);
         comboBoxCopyReferenceCmd->setCurrentIndex(row);
 
-        const int index = qMax(0, comboBoxBackupScope->findData(configGroup.readEntry(Preferences::keyBackupScope, static_cast<int>(Preferences::defaultBackupScope))));
+        const int index = qMax(0, comboBoxBackupScope->findData(static_cast<int>(Preferences::instance().backupScope())));
         comboBoxBackupScope->setCurrentIndex(index);
-        spinboxNumberOfBackups->setValue(qMax(0, qMin(spinboxNumberOfBackups->maximum(), configGroup.readEntry(Preferences::keyNumberOfBackups, Preferences::defaultNumberOfBackups))));
+        spinboxNumberOfBackups->setValue(qMax(0, qMin(spinboxNumberOfBackups->maximum(), Preferences::instance().numberOfBackups())));
 
-        KConfigGroup configGroupLyX(config, LyX::configGroupName);
 #ifndef QT_LSTAT
-        lineeditLyXPipePath->setText(configGroupLyX.readEntry(LyX::keyLyXPipePath, LyX::defaultLyXPipePath));
+        lineeditLyXPipePath->setText(Preferences::instance().lyXPipePath());
 #else // QT_LSTAT
-        checkboxUseAutomaticLyXPipeDetection->setChecked(configGroupLyX.readEntry(LyX::keyUseAutomaticLyXPipeDetection, LyX::defaultUseAutomaticLyXPipeDetection));
-        lastUserInputLyXPipePath = configGroupLyX.readEntry(LyX::keyLyXPipePath, LyX::defaultLyXPipePath);
+        checkboxUseAutomaticLyXPipeDetection->setChecked(Preferences::instance().lyXUseAutomaticPipeDetection());
+        lastUserInputLyXPipePath = Preferences::instance().lyXPipePath();
         p->automaticLyXDetectionToggled(checkboxUseAutomaticLyXPipeDetection->isChecked());
 #endif // QT_LSTAT
     }
 
     void saveState() {
-        KConfigGroup configGroup(config, Preferences::groupGeneral);
-        const QString copyReferenceCommand = comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex(), ItalicTextItemModel::IdentifierRole).toString();
-        configGroup.writeEntry(Clipboard::keyCopyReferenceCommand, copyReferenceCommand);
+        Preferences::instance().setCopyReferenceCommand(comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex(), ItalicTextItemModel::IdentifierRole).toString());
+        Preferences::instance().setBackupScope(static_cast<Preferences::BackupScope>(comboBoxBackupScope->itemData(comboBoxBackupScope->currentIndex()).toInt()));
+        Preferences::instance().setNumberOfBackups(spinboxNumberOfBackups->value());
 
-        configGroup.writeEntry(Preferences::keyBackupScope, comboBoxBackupScope->itemData(comboBoxBackupScope->currentIndex()).toInt());
-        configGroup.writeEntry(Preferences::keyNumberOfBackups, spinboxNumberOfBackups->value());
-
-        KConfigGroup configGroupLyX(config, LyX::configGroupName);
 #ifndef QT_LSTAT
-        configGroupLyX.writeEntry(LyX::keyLyXPipePath, lineeditLyXPipePath->text());
+        Preferences::instance().setLyXPipePath(lineeditLyXPipePath->text());
 #else // QT_LSTAT
-        configGroupLyX.writeEntry(LyX::keyUseAutomaticLyXPipeDetection, checkboxUseAutomaticLyXPipeDetection->isChecked());
-        configGroupLyX.writeEntry(LyX::keyLyXPipePath, checkboxUseAutomaticLyXPipeDetection->isChecked() ? lastUserInputLyXPipePath : lineeditLyXPipePath->text());
+        Preferences::instance().setLyXUseAutomaticPipeDetection(checkboxUseAutomaticLyXPipeDetection->isChecked());
+        Preferences::instance().setLyXPipePath(checkboxUseAutomaticLyXPipeDetection->isChecked() ? lastUserInputLyXPipePath : lineeditLyXPipePath->text());
 #endif // QT_LSTAT
-
-        config->sync();
     }
 
     void resetToDefaults() {
@@ -112,11 +99,11 @@ public:
         spinboxNumberOfBackups->setValue(qMax(0, qMin(spinboxNumberOfBackups->maximum(), Preferences::defaultNumberOfBackups)));
 
 #ifndef QT_LSTAT
-        const QString pipe = LyX::defaultLyXPipePath;
+        const QString pipe = Preferences::defaultLyXPipePath;
 #else // QT_LSTAT
-        checkboxUseAutomaticLyXPipeDetection->setChecked(LyX::defaultUseAutomaticLyXPipeDetection);
+        checkboxUseAutomaticLyXPipeDetection->setChecked(Preferences::defaultLyXUseAutomaticPipeDetection);
         QString pipe = LyX::guessLyXPipeLocation();
-        if (pipe.isEmpty()) pipe = LyX::defaultLyXPipePath;
+        if (pipe.isEmpty()) pipe = Preferences::defaultLyXPipePath;
 #endif // QT_LSTAT
         lineeditLyXPipePath->setText(pipe);
     }
@@ -129,10 +116,8 @@ public:
         layout->addRow(i18n("Command for 'Copy Reference':"), comboBoxCopyReferenceCmd);
         ItalicTextItemModel *itim = new ItalicTextItemModel();
         itim->addItem(i18n("No command"), QString());
-        static const QStringList citeCommands {QStringLiteral("cite"), QStringLiteral("citealt"), QStringLiteral("citeauthor"), QStringLiteral("citeauthor*"), QStringLiteral("citeyear"), QStringLiteral("citeyearpar"), QStringLiteral("shortcite"), QStringLiteral("citet"), QStringLiteral("citet*"), QStringLiteral("citep"), QStringLiteral("citep*")}; // TODO more
-        for (const QString &citeCommand : citeCommands) {
+        for (const QString &citeCommand : Preferences::availableCopyReferenceCommands)
             itim->addItem(citeCmdToLabel.arg(citeCommand), citeCommand);
-        }
         comboBoxCopyReferenceCmd->setModel(itim);
         connect(comboBoxCopyReferenceCmd, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsFileExporterWidget::changed);
 
@@ -151,9 +136,8 @@ public:
         lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
 
         comboBoxBackupScope = new KComboBox(false, p);
-        comboBoxBackupScope->addItem(i18n("No backups"), Preferences::NoBackup);
-        comboBoxBackupScope->addItem(i18n("Local files only"), Preferences::LocalOnly);
-        comboBoxBackupScope->addItem(i18n("Both local and remote files"), Preferences::BothLocalAndRemote);
+        for (const auto &pair : Preferences::availableBackupScopes)
+            comboBoxBackupScope->addItem(pair.second, static_cast<int>(pair.first));
         layout->addRow(i18n("Backups when saving:"), comboBoxBackupScope);
         connect(comboBoxBackupScope, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsFileExporterWidget::changed);
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,6 +28,7 @@
 #include "element.h"
 #include "fileexporterbibtex.h"
 #include "kbibtex.h"
+#include "preferences.h"
 #include "logging_io.h"
 
 FileExporterPS::FileExporterPS(QObject *parent)
@@ -52,7 +53,6 @@ void FileExporterPS::reloadConfig()
     m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
 
     KConfigGroup configGroupGeneral(config, QStringLiteral("General"));
-    m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
     m_font = configGroupGeneral.readEntry(keyFont, defaultFont);
 }
 
@@ -129,7 +129,7 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
         if ((m_bibliographyStyle == QStringLiteral("agsm") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("jmr") || m_bibliographyStyle == QStringLiteral("jphysicsB") || m_bibliographyStyle == QStringLiteral("kluwer") || m_bibliographyStyle == QStringLiteral("nederlands") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("dcu")) && kpsewhich(QStringLiteral("harvard.sty")) && kpsewhich(QStringLiteral("html.sty")))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
         if (kpsewhich(QStringLiteral("geometry.sty")))
-            ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
+            ts << "\\usepackage[paper=" << Preferences::pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << endl;
         if (!m_font.isEmpty() && kpsewhich(m_font + QStringLiteral(".sty")))
             ts << "\\usepackage{" << m_font << "}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;

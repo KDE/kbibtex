@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -33,6 +33,22 @@ int GUIHelper::selectValue(QAbstractItemModel *model, const QString &value, int 
     while (row < model->rowCount() && (index = model->index(row, 0, QModelIndex())) != QModelIndex()) {
         QString line = model->data(index, role).toString();
         if (line.toLower() == lowerValue)
+            return row;
+        ++row;
+    }
+
+    qCWarning(LOG_KBIBTEX_GUI) << "Could not find matching row in model for value " << value << " in role" << role;
+
+    return -1;
+}
+
+int GUIHelper::selectValue(QAbstractItemModel *model, const int value, int role)
+{
+    int row = 0;
+    QModelIndex index;
+    while (row < model->rowCount() && (index = model->index(row, 0, QModelIndex())) != QModelIndex()) {
+        const int lineValue = model->data(index, role).toInt();
+        if (lineValue == value)
             return row;
         ++row;
     }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2016 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -37,12 +37,6 @@ public:
         CaseChange caseChange;
         QString inBetween;
     };
-
-    static const QString keyFormatStringList;
-    static const QString keyDefaultFormatString;
-    static const QStringList defaultFormatStringList;
-    static const QString defaultDefaultFormatString;
-    static const QString configGroupName;
 
     IdSuggestions();
     IdSuggestions(const IdSuggestions &) = delete;

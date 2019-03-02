@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,6 +28,7 @@
 #include "element.h"
 #include "fileexporterbibtex.h"
 #include "kbibtex.h"
+#include "preferences.h"
 #include "logging_io.h"
 
 FileExporterRTF::FileExporterRTF(QObject *parent)
@@ -50,9 +51,6 @@ void FileExporterRTF::reloadConfig()
     KConfigGroup configGroup(config, QStringLiteral("FileExporterPDFPS"));
     m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
     m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
-
-    KConfigGroup configGroupGeneral(config, QStringLiteral("General"));
-    m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
 }
 
 bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
@@ -128,7 +126,7 @@ bool FileExporterRTF::writeLatexFile(const QString &filename)
         if (m_bibliographyStyle == QStringLiteral("dcu") && kpsewhich(QStringLiteral("harvard.sty")) && kpsewhich(QStringLiteral("html.sty")))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
         if (kpsewhich(QStringLiteral("geometry.sty")))
-            ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
+            ts << "\\usepackage[paper=" << Preferences::pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
         ts << "\\nocite{*}" << endl;

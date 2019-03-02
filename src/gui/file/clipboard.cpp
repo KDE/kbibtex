@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,30 +24,23 @@
 #include <QMouseEvent>
 #include <QDrag>
 
-#include <KConfigGroup>
-#include <KSharedConfig>
-
 #include "fileview.h"
 #include "models/filemodel.h"
 #include "fileimporterbibtex.h"
 #include "fileexporterbibtex.h"
 #include "file.h"
 #include "associatedfilesui.h"
+#include "preferences.h"
 #include "logging_gui.h"
-
-const QString Clipboard::keyCopyReferenceCommand = QStringLiteral("copyReferenceCommand");
-const QString Clipboard::defaultCopyReferenceCommand = QString();
 
 class Clipboard::ClipboardPrivate
 {
 public:
     FileView *fileView;
     QPoint previousPosition;
-    KSharedConfigPtr config;
-    const QString configGroupName;
 
     ClipboardPrivate(FileView *fv, Clipboard *parent)
-            : fileView(fv), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("General")) {
+            : fileView(fv) {
         Q_UNUSED(parent)
     }
 
@@ -212,8 +205,7 @@ void Clipboard::copyReferences()
         QClipboard *clipboard = QApplication::clipboard();
         QString text = references.join(QStringLiteral(","));
 
-        KConfigGroup configGroup(d->config, d->configGroupName);
-        const QString copyReferenceCommand = configGroup.readEntry(keyCopyReferenceCommand, defaultCopyReferenceCommand);
+        const QString copyReferenceCommand = Preferences::instance().copyReferenceCommand();
         if (!copyReferenceCommand.isEmpty())
             text = QString(QStringLiteral("\\%1{%2}")).arg(copyReferenceCommand, text);
 

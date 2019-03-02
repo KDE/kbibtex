@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -402,16 +402,14 @@ public:
 
     void makeBackup(const QUrl &url) const {
         /// Fetch settings from configuration
-        KConfigGroup configGroup(config, Preferences::groupGeneral);
-        const Preferences::BackupScope backupScope = static_cast<Preferences::BackupScope>(configGroup.readEntry(Preferences::keyBackupScope, static_cast<int>(Preferences::defaultBackupScope)));
-        const int numberOfBackups = configGroup.readEntry(Preferences::keyNumberOfBackups, Preferences::defaultNumberOfBackups);
+        const int numberOfBackups = Preferences::instance().numberOfBackups();
 
         /// Stop right here if no backup is requested
-        if (backupScope == Preferences::NoBackup)
+        if (Preferences::instance().backupScope() == Preferences::NoBackup)
             return;
 
         /// For non-local files, proceed only if backups to remote storage is allowed
-        if (backupScope != Preferences::BothLocalAndRemote && !url.isLocalFile())
+        if (Preferences::instance().backupScope() != Preferences::BothLocalAndRemote && !url.isLocalFile())
             return;
 
         /// Do not make backup copies if destination file does not exist yet

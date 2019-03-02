@@ -1,6 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
- *                                                                           *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
  *   it under the terms of the GNU General Public License as published by    *
@@ -49,6 +48,7 @@ public:
      * @return row of value's occurrence or a negative value if not found or any other error
      */
     static int selectValue(QAbstractItemModel *model, const QString &value, int role = Qt::DisplayRole);
+    static int selectValue(QAbstractItemModel *model, const int value, int role = Qt::DisplayRole);
 };
 
 

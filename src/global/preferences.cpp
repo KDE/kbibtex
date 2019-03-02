@@ -18,6 +18,7 @@
 #include "preferences.h"
 
 #include <QDebug>
+#include <QDir>
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
@@ -43,10 +44,6 @@ const QString Preferences::keyColorLabels = QStringLiteral("colorLabels");
 const QStringList Preferences::defaultColorLabels {I18N_NOOP("Important"), I18N_NOOP("Unread"), I18N_NOOP("Read"), I18N_NOOP("Watch")};
 
 const QString Preferences::groupGeneral = QStringLiteral("General");
-const QString Preferences::keyBackupScope = QStringLiteral("backupScope");
-const Preferences::BackupScope Preferences::defaultBackupScope = LocalOnly;
-const QString Preferences::keyNumberOfBackups = QStringLiteral("numberOfBackups");
-const int Preferences::defaultNumberOfBackups = 5;
 
 const QString Preferences::groupUserInterface = QStringLiteral("User Interface");
 const QString Preferences::keyElementDoubleClickAction = QStringLiteral("elementDoubleClickAction");
@@ -86,9 +83,26 @@ public:
         cachedBibliographySystem = defaultBibliographySystem;
         dirtyFlagPersonNameFormatting = true;
         cachedPersonNameFormatting = defaultPersonNameFormatting;
+        dirtyFlagCopyReferenceCommand = true;
+        cachedCopyReferenceCommand = defaultCopyReferenceCommand;
+        dirtyFlagPageSize = true;
+        cachedPageSize = defaultPageSize;
+        dirtyFlagBackupScope = true;
+        cachedBackupScope = defaultBackupScope;
+        dirtyFlagNumberOfBackups = true;
+        cachedNumberOfBackups = defaultNumberOfBackups;
+        dirtyFlagIdSuggestionFormatStrings = true;
+        cachedIdSuggestionFormatStrings = defaultIdSuggestionFormatStrings;
+        dirtyFlagActiveIdSuggestionFormatString = true;
+        cachedActiveIdSuggestionFormatString = defaultActiveIdSuggestionFormatString;
+        dirtyFlagLyXUseAutomaticPipeDetection = true;
+        cachedLyXUseAutomaticPipeDetection = defaultLyXUseAutomaticPipeDetection;
+        dirtyFlagLyXPipePath = true;
+        cachedLyXPipePath = defaultLyXPipePath;
 #endif // HAVE_KF5
     }
 
+#ifdef HAVE_KF5
     inline bool validateValueForBibliographySystem(const int valueToBeChecked) {
         for (QVector<QPair<Preferences::BibliographySystem, QString>>::ConstIterator it = Preferences::availableBibliographySystems.constBegin(); it != Preferences::availableBibliographySystems.constEnd(); ++it)
             if (static_cast<int>(it->first) == valueToBeChecked) return true;
@@ -99,7 +113,42 @@ public:
         return valueToBeChecked.contains(QStringLiteral("%f")) && valueToBeChecked.contains(QStringLiteral("%l")) && valueToBeChecked.contains(QStringLiteral("%s"));
     }
 
-#ifdef HAVE_KF5
+    inline bool validateValueForPageSize(const int valueToBeChecked) {
+        for (const auto &dbItem : Preferences::availablePageSizes)
+            if (static_cast<int>(dbItem.internalPageSizeId) == valueToBeChecked) return true;
+        return false;
+    }
+
+    inline bool validateValueForCopyReferenceCommand(const QString &/*valueToBeChecked*/) {
+        return true;
+    }
+
+    inline bool validateValueForBackupScope(const int valueToBeChecked) {
+        for (const auto &dbItem : Preferences::availableBackupScopes)
+            if (static_cast<int>(dbItem.first) == valueToBeChecked) return true;
+        return false;
+    }
+
+    inline bool validateValueForNumberOfBackups(const int valueToBeChecked) {
+        return valueToBeChecked >= 0;
+    }
+
+    inline bool validateValueForIdSuggestionFormatStrings(const QStringList &valueToBeChecked) {
+        return !valueToBeChecked.isEmpty() && (valueToBeChecked.front().contains(QLatin1Char('A')) || valueToBeChecked.front().contains(QLatin1Char('a')) || valueToBeChecked.front().contains(QLatin1Char('y')) || valueToBeChecked.front().contains(QLatin1Char('Y')) || valueToBeChecked.front().contains(QLatin1Char('T')));
+    }
+
+    inline bool validateValueForActiveIdSuggestionFormatString(const QString &) {
+        return true;
+    }
+
+    inline bool validateValueForLyXUseAutomaticPipeDetection(const bool) {
+        return true;
+    }
+
+    inline bool validateValueForLyXPipePath(const QString &valueToBeChecked) {
+        return valueToBeChecked.startsWith(QLatin1Char('/'));
+    }
+
 #define getterSetter(type, typeInConfig, stem, notificationEventId, configGroupName) \
     bool dirtyFlag##stem; \
     type cached##stem; \
@@ -132,6 +181,14 @@ public:
 
     getterSetter(Preferences::BibliographySystem, int, BibliographySystem, NotificationHub::EventBibliographySystemChanged, "General")
     getterSetter(QString, QString, PersonNameFormatting, NotificationHub::EventConfigurationChanged, "General")
+    getterSetter(QPageSize::PageSizeId, int, PageSize, NotificationHub::EventConfigurationChanged, "General")
+    getterSetter(QString, QString, CopyReferenceCommand, NotificationHub::EventConfigurationChanged, "LaTeX")
+    getterSetter(Preferences::BackupScope, int, BackupScope, NotificationHub::EventConfigurationChanged, "InputOutput")
+    getterSetter(int, int, NumberOfBackups, NotificationHub::EventConfigurationChanged, "InputOutput")
+    getterSetter(QStringList, QStringList, IdSuggestionFormatStrings, NotificationHub::EventConfigurationChanged, "IdSuggestions")
+    getterSetter(QString, QString, ActiveIdSuggestionFormatString, NotificationHub::EventConfigurationChanged, "IdSuggestions")
+    getterSetter(bool, bool, LyXUseAutomaticPipeDetection, NotificationHub::EventConfigurationChanged, "LyX")
+    getterSetter(QString, QString, LyXPipePath, NotificationHub::EventConfigurationChanged, "LyX")
 #endif // HAVE_KF5
 };
 
@@ -155,6 +212,10 @@ Preferences::Preferences()
     }
         eventCheck(Preferences::BibliographySystem, BibliographySystem, NotificationHub::EventBibliographySystemChanged, "General")
         eventCheck(QString, PersonNameFormatting, NotificationHub::EventConfigurationChanged, "General")
+        eventCheck(QPageSize::PageSizeId, PageSize, NotificationHub::EventConfigurationChanged, "General")
+        eventCheck(QString, CopyReferenceCommand, NotificationHub::EventConfigurationChanged, "LaTeX")
+        eventCheck(Preferences::BackupScope, BackupScope, NotificationHub::EventConfigurationChanged, "InputOutput")
+        eventCheck(int, NumberOfBackups, NotificationHub::EventConfigurationChanged, "InputOutput")
 
         for (const int eventId : eventsToPublish)
             NotificationHub::publishEvent(eventId);
@@ -210,6 +271,202 @@ bool Preferences::setPersonNameFormatting(const QString &personNameFormatting)
     return d->setPersonNameFormatting(personNameFormatting);
 #else // HAVE_KF5
     Q_UNUSED(personNameFormatting);
-#endif // HAVE_KF5
     return true;
+#endif // HAVE_KF5
+}
+
+
+const QVector<QString> Preferences::availableCopyReferenceCommands {QStringLiteral("cite"), QStringLiteral("citealt"), QStringLiteral("citeauthor"), QStringLiteral("citeauthor*"), QStringLiteral("citeyear"), QStringLiteral("citeyearpar"), QStringLiteral("shortcite"), QStringLiteral("citet"), QStringLiteral("citet*"), QStringLiteral("citep"), QStringLiteral("citep*")}; // TODO more
+const QString Preferences::defaultCopyReferenceCommand = availableCopyReferenceCommands.first();
+
+QString Preferences::copyReferenceCommand()
+{
+#ifdef HAVE_KF5
+    return d->getCopyReferenceCommand();
+#else // HAVE_KF5
+    return defaultCopyReferenceCommand;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setCopyReferenceCommand(const QString &copyReferenceCommand)
+{
+#ifdef HAVE_KF5
+    return d->setCopyReferenceCommand(copyReferenceCommand);
+#else // HAVE_KF5
+    Q_UNUSED(copyReferenceCommand);
+    return true;
+#endif // HAVE_KF5
+}
+
+
+const QVector<Preferences::PageSizeDatabase> Preferences::availablePageSizes {{QPageSize::A4, i18n("A4"), QStringLiteral("a4paper")}, {QPageSize::Letter, i18n("Letter"), QStringLiteral("letter")}, {QPageSize::Legal, i18n("Legal"), QStringLiteral("legal")}};
+const QPageSize::PageSizeId Preferences::defaultPageSize = Preferences::availablePageSizes.front().internalPageSizeId;
+
+QPageSize::PageSizeId Preferences::pageSize()
+{
+#ifdef HAVE_KF5
+    return d->getPageSize();
+#else // HAVE_KF5
+    return defaultPageSize;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setPageSize(const QPageSize::PageSizeId pageSizeId)
+{
+#ifdef HAVE_KF5
+    return d->setPageSize(pageSizeId);
+#else // HAVE_KF5
+    Q_UNUSED(pageSizeId);
+    return true;
+#endif // HAVE_KF5
+}
+
+QString Preferences::pageSizeToLocalizedName(const QPageSize::PageSizeId pageSizeId)
+{
+    for (const auto &dbItem : availablePageSizes)
+        if (dbItem.internalPageSizeId == pageSizeId)
+            return dbItem.localizedName;
+    return QPageSize::name(pageSizeId);
+}
+
+QString Preferences::pageSizeToLaTeXName(const QPageSize::PageSizeId pageSizeId)
+{
+    for (const auto &dbItem : availablePageSizes)
+        if (dbItem.internalPageSizeId == pageSizeId)
+            return dbItem.laTeXName;
+    return QPageSize::name(pageSizeId).toLower(); ///< just a wild guess
+}
+
+const QVector<QPair<Preferences::BackupScope, QString>> Preferences::availableBackupScopes {{Preferences::NoBackup, i18n("No backups")}, {Preferences::LocalOnly, i18n("Local files only")}, {Preferences::BothLocalAndRemote, i18n("Both local and remote files")}};
+const Preferences::BackupScope Preferences::defaultBackupScope = Preferences::availableBackupScopes.at(1).first;
+
+Preferences::BackupScope Preferences::backupScope()
+{
+#ifdef HAVE_KF5
+    return d->getBackupScope();
+#else // HAVE_KF5
+    return defaultBackupScope;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setBackupScope(const Preferences::BackupScope backupScope)
+{
+#ifdef HAVE_KF5
+    return d->setBackupScope(backupScope);
+#else // HAVE_KF5
+    Q_UNUSED(backupScope);
+    return true;
+#endif // HAVE_KF5
+}
+
+const int Preferences::defaultNumberOfBackups = 5;
+
+int Preferences::numberOfBackups()
+{
+#ifdef HAVE_KF5
+    return d->getNumberOfBackups();
+#else // HAVE_KF5
+    return defaultNumberOfBackups;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setNumberOfBackups(const int numberOfBackups)
+{
+#ifdef HAVE_KF5
+    return d->setNumberOfBackups(numberOfBackups);
+#else // HAVE_KF5
+    Q_UNUSED(numberOfBackups);
+    return true;
+#endif // HAVE_KF5
+}
+
+
+const QStringList Preferences::defaultIdSuggestionFormatStrings {QStringLiteral("A"), QStringLiteral("A2|y"), QStringLiteral("A3|y"), QStringLiteral("A4|y|\":|T5"), QStringLiteral("al|\":|T"), QStringLiteral("al|y"), QStringLiteral("al|Y"), QStringLiteral("Al\"-|\"-|y"), QStringLiteral("Al\"+|Y"), QStringLiteral("al|y|T"), QStringLiteral("al|Y|T3"), QStringLiteral("al|Y|T3l"), QStringLiteral("a|\":|Y|\":|T1"), QStringLiteral("a|y"), QStringLiteral("A|\":|Y")};
+
+QStringList Preferences::idSuggestionFormatStrings()
+{
+#ifdef HAVE_KF5
+    return d->getIdSuggestionFormatStrings();
+#else // HAVE_KF5
+    return defaultIdSuggestionFormatStrings;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setIdSuggestionFormatStrings(const QStringList &idSuggestionFormatStrings)
+{
+#ifdef HAVE_KF5
+    return d->setIdSuggestionFormatStrings(idSuggestionFormatStrings);
+#else // HAVE_KF5
+    Q_UNUSED(idSuggestionFormatStrings);
+    return true;
+#endif // HAVE_KF5
+}
+
+const QString Preferences::defaultActiveIdSuggestionFormatString; ///< intentially empty
+
+QString Preferences::activeIdSuggestionFormatString()
+{
+#ifdef HAVE_KF5
+    return d->getActiveIdSuggestionFormatString();
+#else // HAVE_KF5
+    return defaultActiveIdSuggestionFormatString;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setActiveIdSuggestionFormatString(const QString &activeIdSuggestionFormatString)
+{
+#ifdef HAVE_KF5
+    return d->setActiveIdSuggestionFormatString(activeIdSuggestionFormatString);
+#else // HAVE_KF5
+    Q_UNUSED(activeIdSuggestionFormatString);
+    return true;
+#endif // HAVE_KF5
+}
+
+
+const bool Preferences::defaultLyXUseAutomaticPipeDetection = true;
+
+bool Preferences::lyXUseAutomaticPipeDetection()
+{
+#ifdef HAVE_KF5
+    return d->getLyXUseAutomaticPipeDetection();
+#else // HAVE_KF5
+    return defaultLyXUseAutomaticPipeDetection;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setLyXUseAutomaticPipeDetection(const bool lyXUseAutomaticPipeDetection)
+{
+#ifdef HAVE_KF5
+    return d->setLyXUseAutomaticPipeDetection(lyXUseAutomaticPipeDetection);
+#else // HAVE_KF5
+    Q_UNUSED(lyXUseAutomaticPipeDetection);
+    return true;
+#endif // HAVE_KF5
+}
+
+const QString Preferences::defaultLyXPipePath = QDir::homePath() + QStringLiteral("/.lyxpipe.in");
+
+QString Preferences::lyXPipePath()
+{
+#ifdef HAVE_KF5
+    return d->getLyXPipePath();
+#else // HAVE_KF5
+    return defaultLyXPipePath;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setLyXPipePath(const QString &lyXPipePath)
+{
+#ifdef HAVE_KF5
+    QString sanitizedLyXPipePath = lyXPipePath;
+    if (sanitizedLyXPipePath.endsWith(QStringLiteral(".out")))
+        sanitizedLyXPipePath = sanitizedLyXPipePath.left(sanitizedLyXPipePath.length() - 4);
+    if (!sanitizedLyXPipePath.endsWith(QStringLiteral(".in")))
+        sanitizedLyXPipePath = sanitizedLyXPipePath.append(QStringLiteral(".in"));
+    return d->setLyXPipePath(sanitizedLyXPipePath);
+#else // HAVE_KF5
+    Q_UNUSED(lyXPipePath);
+    return true;
+#endif // HAVE_KF5
 }

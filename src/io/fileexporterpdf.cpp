@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,6 +31,7 @@
 #include "entry.h"
 #include "fileexporterbibtex.h"
 #include "kbibtex.h"
+#include "preferences.h"
 #include "logging_io.h"
 
 FileExporterPDF::FileExporterPDF(QObject *parent)
@@ -57,7 +58,6 @@ void FileExporterPDF::reloadConfig()
     m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
 
     KConfigGroup configGroupGeneral(config, QStringLiteral("General"));
-    m_paperSize = configGroupGeneral.readEntry(keyPaperSize, defaultPaperSize);
     m_font = configGroupGeneral.readEntry(keyFont, defaultFont);
 }
 
@@ -163,7 +163,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         if (kpsewhich(QStringLiteral("embedfile.sty")))
             ts << "\\usepackage{embedfile}" << endl;
         if (kpsewhich(QStringLiteral("geometry.sty")))
-            ts << "\\usepackage[paper=" << m_paperSize << (m_paperSize.length() <= 2 ? "paper" : "") << "]{geometry}" << endl;
+            ts << "\\usepackage[paper=" << Preferences::pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << endl;
         if (!m_font.isEmpty() && kpsewhich(m_font + QStringLiteral(".sty")))
             ts << "\\usepackage{" << m_font << "}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;

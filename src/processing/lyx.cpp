@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,8 +29,8 @@
 #include <KLocalizedString>
 #include <KParts/ReadOnlyPart>
 #include <KMessageBox>
-#include <KSharedConfig>
-#include <KConfigGroup>
+
+#include "preferences.h"
 
 class LyX::LyXPrivate
 {
@@ -39,11 +39,8 @@ public:
     QAction *action;
     QStringList references;
 
-    KSharedConfigPtr config;
-    const KConfigGroup group;
-
     LyXPrivate(LyX *parent, QWidget *widget)
-            : action(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), group(config, LyX::configGroupName) {
+            : action(nullptr) {
         Q_UNUSED(parent)
         this->widget = widget;
     }
@@ -53,8 +50,8 @@ public:
 
         /// First, check if automatic detection is disabled.
         /// In this case, read the LyX pipe's path from configuration
-        if (!group.readEntry(keyUseAutomaticLyXPipeDetection, defaultUseAutomaticLyXPipeDetection))
-            result = group.readEntry(keyLyXPipePath, defaultLyXPipePath);
+        if (!Preferences::instance().lyXUseAutomaticPipeDetection())
+            result = Preferences::instance().lyXPipePath();
 
 #ifdef QT_LSTAT
         /// Check if the result so far is empty. This means that
@@ -67,19 +64,13 @@ public:
 
         /// Finally, even if automatic detection was preferred by the user,
         /// still check configuration for a path if automatic detection failed
-        if (result.isEmpty() && group.readEntry(keyUseAutomaticLyXPipeDetection, defaultUseAutomaticLyXPipeDetection))
-            result = group.readEntry(keyLyXPipePath, defaultLyXPipePath);
+        if (result.isEmpty() && Preferences::instance().lyXUseAutomaticPipeDetection())
+            result = Preferences::instance().lyXPipePath();
 
         /// Return the best found LyX pipe path
         return result;
     }
 };
-
-const QString LyX::keyUseAutomaticLyXPipeDetection = QStringLiteral("UseAutomaticLyXPipeDetection");
-const QString LyX::keyLyXPipePath = QStringLiteral("LyXPipePath");
-const bool LyX::defaultUseAutomaticLyXPipeDetection = true;
-const QString LyX::defaultLyXPipePath = QString();
-const QString LyX::configGroupName = QStringLiteral("LyXPipe");
 
 
 LyX::LyX(KParts::ReadOnlyPart *part, QWidget *widget)

@@ -20,8 +20,6 @@
 #include <QFormLayout>
 
 #include <KLocalizedString>
-#include <KSharedConfig>
-#include <KConfigGroup>
 #include <KComboBox>
 
 #include "guihelper.h"

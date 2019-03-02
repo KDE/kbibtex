@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,6 +28,7 @@
 
 #include "guihelper.h"
 #include "fileexportertoolchain.h"
+#include "preferences.h"
 
 class SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidgetPrivate
 {
@@ -52,8 +53,8 @@ public:
 
     void loadState() {
         KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
-        const QString paperSizeName = configGroupGeneral.readEntry(FileExporter::keyPaperSize, FileExporter::defaultPaperSize);
-        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), paperSizeName, Qt::UserRole);
+
+        int row = qMax(0, GUIHelper::selectValue(comboBoxPaperSize->model(), static_cast<int>(Preferences::instance().pageSize()), Qt::UserRole));
         comboBoxPaperSize->setCurrentIndex(row);
 
         KConfigGroup configGroup(config, configGroupName);
@@ -67,10 +68,8 @@ public:
 
     void saveState() {
         KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
-        QString paperSizeName = comboBoxPaperSize->currentData().toString();
-        if (paperSizeName.isEmpty())
-            paperSizeName = FileExporter::defaultPaperSize;
-        configGroupGeneral.writeEntry(FileExporter::keyPaperSize, paperSizeName);
+
+        Preferences::instance().setPageSize(static_cast<QPageSize::PageSizeId>(comboBoxPaperSize->currentData().toInt()));
 
         KConfigGroup configGroup(config, configGroupName);
         configGroup.writeEntry(FileExporterToolchain::keyBabelLanguage, comboBoxBabelLanguage->lineEdit()->text());
@@ -79,7 +78,7 @@ public:
     }
 
     void resetToDefaults() {
-        int row = GUIHelper::selectValue(comboBoxPaperSize->model(), FileExporter::defaultPaperSize, Qt::UserRole);
+        int row = qMax(0, GUIHelper::selectValue(comboBoxPaperSize->model(), static_cast<int>(Preferences::defaultPageSize), Qt::UserRole));
         comboBoxPaperSize->setCurrentIndex(row);
         row = GUIHelper::selectValue(comboBoxBabelLanguage->model(), FileExporterToolchain::defaultBabelLanguage);
         comboBoxBabelLanguage->setCurrentIndex(row);
@@ -93,15 +92,8 @@ public:
         comboBoxPaperSize = new KComboBox(false, p);
         comboBoxPaperSize->setObjectName(QStringLiteral("comboBoxPaperSize"));
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
-        static const QMap<QString, QString> paperSizes = {
-            { QPageSize::name(QPageSize::A4), QStringLiteral("a4") },
-            { QPageSize::name(QPageSize::Letter), QStringLiteral("letter") },
-            { QPageSize::name(QPageSize::Legal), QStringLiteral("legal") },
-        };
-        /// already sorted by key, i.e. the labels
-        for (QMap<QString, QString>::ConstIterator it = paperSizes.begin(); it != paperSizes.end(); ++it) {
-            comboBoxPaperSize->addItem(it.key(), it.value());
-        }
+        for (const auto &dbItem : Preferences::availablePageSizes)
+            comboBoxPaperSize->addItem(dbItem.localizedName, dbItem.internalPageSizeId);
         connect(comboBoxPaperSize, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsAbstractWidget::changed);
 
         comboBoxBabelLanguage = new KComboBox(true, p);

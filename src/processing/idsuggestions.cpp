@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,25 +19,22 @@
 
 #include <QRegularExpression>
 
-#include <KSharedConfig>
-#include <KConfigGroup>
 #include <KLocalizedString>
 
 #include "journalabbreviations.h"
 #include "encoderlatex.h"
+#include "preferences.h"
 
 class IdSuggestions::IdSuggestionsPrivate
 {
 private:
     IdSuggestions *p;
-    KSharedConfigPtr config;
-    const KConfigGroup group;
     static const QStringList smallWords;
 
 public:
 
     IdSuggestionsPrivate(IdSuggestions *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), group(config, IdSuggestions::configGroupName) {
+            : p(parent) {
         /// nothing
     }
 
@@ -295,26 +292,12 @@ public:
 
         return QString();
     }
-
-    QString defaultFormatString() const {
-        return group.readEntry(keyDefaultFormatString, defaultDefaultFormatString);
-    }
-
-    QStringList formatStringList() const {
-        return group.readEntry(keyFormatStringList, defaultFormatStringList);
-    }
 };
 
 /// List of small words taken from OCLC:
 /// https://www.oclc.org/developer/develop/web-services/worldcat-search-api/bibliographic-resource.en.html
 const QStringList IdSuggestions::IdSuggestionsPrivate::smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QStringLiteral("|"), QString::SkipEmptyParts);
 
-
-const QString IdSuggestions::keyDefaultFormatString = QStringLiteral("DefaultFormatString");
-const QString IdSuggestions::defaultDefaultFormatString = QString();
-const QString IdSuggestions::keyFormatStringList = QStringLiteral("FormatStringList");
-const QStringList IdSuggestions::defaultFormatStringList {QStringLiteral("A"), QStringLiteral("A2|y"), QStringLiteral("A3|y"), QStringLiteral("A4|y|\":|T5"), QStringLiteral("al|\":|T"), QStringLiteral("al|y"), QStringLiteral("al|Y"), QStringLiteral("Al\"-|\"-|y"), QStringLiteral("Al\"+|Y"), QStringLiteral("al|y|T"), QStringLiteral("al|Y|T3"), QStringLiteral("al|Y|T3l"), QStringLiteral("a|\":|Y|\":|T1"), QStringLiteral("a|y"), QStringLiteral("A|\":|Y")};
-const QString IdSuggestions::configGroupName = QStringLiteral("IdSuggestions");
 
 IdSuggestions::IdSuggestions()
         : d(new IdSuggestionsPrivate(this))
@@ -340,17 +323,17 @@ QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr) co
 
 QString IdSuggestions::defaultFormatId(const Entry &entry) const
 {
-    return formatId(entry, d->defaultFormatString());
+    return formatId(entry, Preferences::instance().activeIdSuggestionFormatString());
 }
 
 bool IdSuggestions::hasDefaultFormat() const
 {
-    return !d->defaultFormatString().isEmpty();
+    return !Preferences::instance().activeIdSuggestionFormatString().isEmpty();
 }
 
 bool IdSuggestions::applyDefaultFormatId(Entry &entry) const
 {
-    const QString dfs = d->defaultFormatString();
+    const QString dfs = Preferences::instance().activeIdSuggestionFormatString();
     if (!dfs.isEmpty()) {
         entry.setId(defaultFormatId(entry));
         return true;
@@ -360,7 +343,7 @@ bool IdSuggestions::applyDefaultFormatId(Entry &entry) const
 
 QStringList IdSuggestions::formatIdList(const Entry &entry) const
 {
-    const QStringList formatStrings = d->formatStringList();
+    const QStringList formatStrings = Preferences::instance().idSuggestionFormatStrings();
     QStringList result;
     result.reserve(formatStrings.size());
     for (const QString &formatString : formatStrings) {
