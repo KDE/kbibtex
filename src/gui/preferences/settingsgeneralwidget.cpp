@@ -68,9 +68,9 @@ public:
 
         comboBoxBibliographySystem = new KComboBox(false, p);
         comboBoxBibliographySystem->setObjectName(QStringLiteral("comboBoxBibliographySystem"));
-        const QMap<Preferences::BibliographySystem, QString> &availableBibliographySystems = Preferences::availableBibliographySystems();
-        for (QMap<Preferences::BibliographySystem, QString>::ConstIterator it = availableBibliographySystems.constBegin(), itEnd = availableBibliographySystems.constEnd(); it != itEnd; ++it)
-            comboBoxBibliographySystem->addItem(it.value(), QVariant::fromValue<int>(static_cast<int>(it.key())));
+
+        for (QVector<QPair<Preferences::BibliographySystem, QString>>::ConstIterator it = Preferences::availableBibliographySystems.constBegin(); it != Preferences::availableBibliographySystems.constEnd(); ++it)
+            comboBoxBibliographySystem->addItem(it->second, QVariant::fromValue<int>(static_cast<int>(it->first)));
         layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
         connect(comboBoxBibliographySystem, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsGeneralWidget::changed);
 

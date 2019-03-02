@@ -46,7 +46,7 @@ public:
     /// @return true if the set bibliography system is differed from the previous value, false if both were the same
     bool setBibliographySystem(const BibliographySystem bibliographySystem);
     /// Map of supported bibliography systems, should be the same as in enum BibliographySystem
-    static const QMap<BibliographySystem, QString> availableBibliographySystems();
+    static const QVector<QPair<BibliographySystem, QString>> availableBibliographySystems;
 
     /// *** Name formatting like "Firstname Lastname", "Lastname, Firstname", or any other combination
 

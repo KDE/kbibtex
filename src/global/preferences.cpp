@@ -90,8 +90,8 @@ public:
     }
 
     inline bool validateValueForBibliographySystem(const int valueToBeChecked) {
-        for (QMap<Preferences::BibliographySystem, QString>::ConstIterator it = Preferences::availableBibliographySystems().constBegin(); it != Preferences::availableBibliographySystems().constEnd(); ++it)
-            if (static_cast<int>(it.key()) == valueToBeChecked) return true;
+        for (QVector<QPair<Preferences::BibliographySystem, QString>>::ConstIterator it = Preferences::availableBibliographySystems.constBegin(); it != Preferences::availableBibliographySystems.constEnd(); ++it)
+            if (static_cast<int>(it->first) == valueToBeChecked) return true;
         return false;
     }
 
@@ -188,11 +188,7 @@ bool Preferences::setBibliographySystem(const Preferences::BibliographySystem bi
 #endif // HAVE_KF5
 }
 
-const QMap<Preferences::BibliographySystem, QString> Preferences::availableBibliographySystems()
-{
-    static const QMap<Preferences::BibliographySystem, QString> result {{Preferences::BibTeX, i18n("BibTeX")}, {Preferences::BibLaTeX, i18n("BibLaTeX")}};
-    return result;
-}
+const QVector<QPair<Preferences::BibliographySystem, QString>> Preferences::availableBibliographySystems {{Preferences::BibTeX, i18n("BibTeX")}, {Preferences::BibLaTeX, i18n("BibLaTeX")}};
 
 
 const QString Preferences::personNameFormatLastFirst = QStringLiteral("<%l><, %s><, %f>");
