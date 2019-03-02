@@ -65,12 +65,6 @@ const Qt::CheckState Preferences::defaultProtectCasing = Qt::PartiallyChecked;
 const QString Preferences::keyListSeparator = QStringLiteral("ListSeparator");
 const QString Preferences::defaultListSeparator = QStringLiteral("; ");
 
-const Preferences::BibliographySystem Preferences::defaultBibliographySystem = Preferences::BibTeX;
-
-const QString Preferences::personNameFormatLastFirst = QStringLiteral("<%l><, %s><, %f>");
-const QString Preferences::personNameFormatFirstLast = QStringLiteral("<%f ><%l>< %s>");
-const QString Preferences::defaultPersonNameFormatting = Preferences::personNameFormatLastFirst;
-
 class Preferences::Private
 {
 private:
@@ -82,34 +76,64 @@ public:
     KConfigWatcher::Ptr watcher;
 #endif // HAVE_KF5
 
-    static const QString keyBibliographySystem;
-#ifdef HAVE_KF5
-    bool bibliographySystemDirtyFlag;
-    Preferences::BibliographySystem bibliographySystemCached;
-#endif // HAVE_KF5
-
-    static const QString keyPersonNameFormatting;
-#ifdef HAVE_KF5
-    bool personNameFormattingDirtyFlag;
-    QString personNameFormattingCached;
-#endif // HAVE_KF5
-
     Private(Preferences *_parent)
             : parent(_parent)
     {
 #ifdef HAVE_KF5
         config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
         watcher = KConfigWatcher::create(config);
-        bibliographySystemDirtyFlag = true;
-        bibliographySystemCached = defaultBibliographySystem;
-        personNameFormattingDirtyFlag = true;
-        personNameFormattingCached = defaultPersonNameFormatting;
+        dirtyFlagBibliographySystem = true;
+        cachedBibliographySystem = defaultBibliographySystem;
+        dirtyFlagPersonNameFormatting = true;
+        cachedPersonNameFormatting = defaultPersonNameFormatting;
 #endif // HAVE_KF5
     }
-};
 
-const QString Preferences::Private::keyBibliographySystem = QStringLiteral("BibliographySystem");
-const QString Preferences::Private::keyPersonNameFormatting = QStringLiteral("personNameFormatting");
+    inline bool validateValueForBibliographySystem(const int valueToBeChecked) {
+        for (QMap<Preferences::BibliographySystem, QString>::ConstIterator it = Preferences::availableBibliographySystems().constBegin(); it != Preferences::availableBibliographySystems().constEnd(); ++it)
+            if (static_cast<int>(it.key()) == valueToBeChecked) return true;
+        return false;
+    }
+
+    inline bool validateValueForPersonNameFormatting(const QString &valueToBeChecked) {
+        return valueToBeChecked.contains(QStringLiteral("%f")) && valueToBeChecked.contains(QStringLiteral("%l")) && valueToBeChecked.contains(QStringLiteral("%s"));
+    }
+
+#ifdef HAVE_KF5
+#define getterSetter(type, typeInConfig, stem, notificationEventId, configGroupName) \
+    bool dirtyFlag##stem; \
+    type cached##stem; \
+    bool set##stem(const type &newValue) { \
+        dirtyFlag##stem = false; \
+        cached##stem = newValue; \
+        static KConfigGroup configGroup(config, QStringLiteral(configGroupName)); \
+        const typeInConfig valueFromConfig = configGroup.readEntry(QStringLiteral(#stem), static_cast<typeInConfig>(Preferences::default##stem)); \
+        const typeInConfig newValuePOD = static_cast<typeInConfig>(newValue); \
+        if (valueFromConfig == newValuePOD) return false; \
+        configGroup.writeEntry(QStringLiteral(#stem), newValuePOD, KConfig::Notify /** to catch changes via KConfigWatcher */); \
+        config->sync(); \
+        NotificationHub::publishEvent(notificationEventId); \
+        return true; \
+    } \
+    type get##stem() { \
+        if (dirtyFlag##stem) { \
+            config->reparseConfiguration(); static const KConfigGroup configGroup(config, QStringLiteral(configGroupName)); \
+            const typeInConfig valueFromConfiguration = configGroup.readEntry(QStringLiteral(#stem), static_cast<typeInConfig>(Preferences::default##stem)); \
+            if (validateValueFor##stem(valueFromConfiguration)) { \
+                cached##stem = static_cast<type>(valueFromConfiguration); \
+                dirtyFlag##stem = false; \
+            } else { \
+                qWarning() << "Configuration file setting for" << #stem << "has an invalid value, using default as fallback"; \
+                set##stem(Preferences::default##stem); \
+            } \
+        } \
+        return cached##stem; \
+    }
+
+    getterSetter(Preferences::BibliographySystem, int, BibliographySystem, NotificationHub::EventBibliographySystemChanged, "General")
+    getterSetter(QString, QString, PersonNameFormatting, NotificationHub::EventConfigurationChanged, "General")
+#endif // HAVE_KF5
+};
 
 Preferences &Preferences::instance()
 {
@@ -123,23 +147,18 @@ Preferences::Preferences()
 #ifdef HAVE_KF5
     QObject::connect(d->watcher.data(), &KConfigWatcher::configChanged, [this](const KConfigGroup & group, const QByteArrayList & names) {
         QSet<int> eventsToPublish;
-        if (group.name() == QStringLiteral("General")) {
-            if (names.contains(Preferences::Private::keyBibliographySystem.toLatin1())) {
-                qDebug() << "Bibliography system got changed by another Preferences instance";
-                d->bibliographySystemDirtyFlag = true;
-                eventsToPublish.insert(NotificationHub::EventBibliographySystemChanged);
-            }
-            if (names.contains(Preferences::Private::keyPersonNameFormatting.toLatin1())) {
-                qDebug() << "Person name formatting got changed by another Preferences instance";
-                d->personNameFormattingDirtyFlag = true;
-                eventsToPublish.insert(NotificationHub::EventConfigurationChanged);
-            }
-        }
+#define eventCheck(type, stem, notificationEventId, configGroupName) \
+    if (group.name() == QStringLiteral(configGroupName) && names.contains(#stem)) { \
+        qDebug() << "Configuration setting"<<#stem<<"got changed by another Preferences instance"; \
+        d->dirtyFlag##stem = true; \
+        eventsToPublish.insert(notificationEventId); \
+    }
+        eventCheck(Preferences::BibliographySystem, BibliographySystem, NotificationHub::EventBibliographySystemChanged, "General")
+        eventCheck(QString, PersonNameFormatting, NotificationHub::EventConfigurationChanged, "General")
 
         for (const int eventId : eventsToPublish)
             NotificationHub::publishEvent(eventId);
     });
-
 #endif // HAVE_KF5
 }
 
@@ -148,22 +167,12 @@ Preferences::~Preferences()
     delete d;
 }
 
+const Preferences::BibliographySystem Preferences::defaultBibliographySystem = Preferences::BibTeX;
+
 Preferences::BibliographySystem Preferences::bibliographySystem()
 {
 #ifdef HAVE_KF5
-    if (d->bibliographySystemDirtyFlag) {
-        d->config->reparseConfiguration();
-        static const KConfigGroup configGroup(d->config, QStringLiteral("General"));
-        const int index = configGroup.readEntry(Preferences::Private::keyBibliographySystem, static_cast<int>(defaultBibliographySystem));
-        if (index != static_cast<int>(Preferences::BibTeX) && index != static_cast<int>(Preferences::BibLaTeX)) {
-            qWarning() << "Configuration file setting for Bibliography System has an invalid value, using default as fallback";
-            setBibliographySystem(defaultBibliographySystem);
-            d->bibliographySystemCached = defaultBibliographySystem;
-        } else
-            d->bibliographySystemCached = static_cast<Preferences::BibliographySystem>(index);
-        d->bibliographySystemDirtyFlag = false;
-    }
-    return d->bibliographySystemCached;
+    return d->getBibliographySystem();
 #else // HAVE_KF5
     return defaultBibliographySystem;
 #endif // HAVE_KF5
@@ -172,19 +181,11 @@ Preferences::BibliographySystem Preferences::bibliographySystem()
 bool Preferences::setBibliographySystem(const Preferences::BibliographySystem bibliographySystem)
 {
 #ifdef HAVE_KF5
-    d->bibliographySystemDirtyFlag = false;
-    d->bibliographySystemCached = bibliographySystem;
-    static KConfigGroup configGroup(d->config, QStringLiteral("General"));
-    const int prevIndex = configGroup.readEntry(Preferences::Private::keyBibliographySystem, static_cast<int>(defaultBibliographySystem));
-    const int newIndex = static_cast<int>(bibliographySystem);
-    if (prevIndex == newIndex) return false; /// If old and new bibliography system are the same, return 'false' directly
-    configGroup.writeEntry(Preferences::Private::keyBibliographySystem, newIndex, KConfig::Notify /** to catch changes via KConfigWatcher */);
-    d->config->sync();
-    NotificationHub::publishEvent(NotificationHub::EventBibliographySystemChanged);
+    return d->setBibliographySystem(bibliographySystem);
 #else // HAVE_KF5
     Q_UNUSED(bibliographySystem);
-#endif // HAVE_KF5
     return true;
+#endif // HAVE_KF5
 }
 
 const QMap<Preferences::BibliographySystem, QString> Preferences::availableBibliographySystems()
@@ -193,16 +194,15 @@ const QMap<Preferences::BibliographySystem, QString> Preferences::availableBibli
     return result;
 }
 
+
+const QString Preferences::personNameFormatLastFirst = QStringLiteral("<%l><, %s><, %f>");
+const QString Preferences::personNameFormatFirstLast = QStringLiteral("<%f ><%l>< %s>");
+const QString Preferences::defaultPersonNameFormatting = Preferences::personNameFormatLastFirst;
+
 QString Preferences::personNameFormatting()
 {
 #ifdef HAVE_KF5
-    if (d->personNameFormattingDirtyFlag) {
-        d->config->reparseConfiguration();
-        static const KConfigGroup configGroup(d->config, QStringLiteral("General"));
-        d->personNameFormattingCached = configGroup.readEntry(Preferences::Private::keyPersonNameFormatting, defaultPersonNameFormatting);
-        d->personNameFormattingDirtyFlag = false;
-    }
-    return d->personNameFormattingCached;
+    return d->getPersonNameFormatting();
 #else // HAVE_KF5
     return defaultPersonNameFormatting;
 #endif // HAVE_KF5
@@ -211,14 +211,7 @@ QString Preferences::personNameFormatting()
 bool Preferences::setPersonNameFormatting(const QString &personNameFormatting)
 {
 #ifdef HAVE_KF5
-    d->personNameFormattingDirtyFlag = false;
-    d->personNameFormattingCached = personNameFormatting;
-    static KConfigGroup configGroup(d->config, QStringLiteral("General"));
-    const QString prevFormatting = configGroup.readEntry(Preferences::Private::keyPersonNameFormatting, defaultPersonNameFormatting);
-    if (prevFormatting == personNameFormatting) return false;
-    configGroup.writeEntry(Preferences::Private::keyPersonNameFormatting, personNameFormatting, KConfig::Notify /** to catch changes via KConfigWatcher */);
-    d->config->sync();
-    NotificationHub::publishEvent(NotificationHub::EventConfigurationChanged);
+    return d->setPersonNameFormatting(personNameFormatting);
 #else // HAVE_KF5
     Q_UNUSED(personNameFormatting);
 #endif // HAVE_KF5
