@@ -64,17 +64,13 @@ const QString Preferences::defaultListSeparator = QStringLiteral("; ");
 
 class Preferences::Private
 {
-private:
-    Preferences *parent;
-
 public:
 #ifdef HAVE_KF5
     KSharedConfigPtr config;
     KConfigWatcher::Ptr watcher;
 #endif // HAVE_KF5
 
-    Private(Preferences *_parent)
-            : parent(_parent)
+    Private(Preferences *)
     {
 #ifdef HAVE_KF5
         config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
