@@ -52,15 +52,15 @@ public:
     KSharedConfigPtr layoutConfig;
 #endif // HAVE_KF5
 
-    BibTeXFieldsPrivate(BibTeXFields *parent)
+    BibTeXFieldsPrivate(const QString &style, BibTeXFields *parent)
             : p(parent) {
 #ifdef HAVE_KF5
-        KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
-        KConfigGroup configGroup(config, QStringLiteral("User Interface"));
-        const QString stylefile = configGroup.readEntry(QStringLiteral("CurrentStyle"), QString(QStringLiteral("bibtex"))).append(QStringLiteral(".kbstyle"));
+        const QString stylefile = style + QStringLiteral(".kbstyle");
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
         if (layoutConfig->groupList().isEmpty())
-            qCWarning(LOG_KBIBTEX_CONFIG) << "The configuration file for BibTeX fields could not be located or is empty:" << stylefile;
+            qCWarning(LOG_KBIBTEX_CONFIG) << "The configuration file for layout of type" << style << "could not be located or is empty";
+#else // HAVE_KF5
+        Q_UNUSED(style);
 #endif // HAVE_KF5
     }
 
@@ -111,8 +111,8 @@ public:
 };
 
 
-BibTeXFields::BibTeXFields(const QVector<FieldDescription> &other)
-        : QVector<FieldDescription>(other), d(new BibTeXFieldsPrivate(this))
+BibTeXFields::BibTeXFields(const QString &style, const QVector<FieldDescription> &other)
+        : QVector<FieldDescription>(other), d(new BibTeXFieldsPrivate(style, this))
 {
 #ifdef HAVE_KF5
     d->load();
@@ -286,7 +286,7 @@ BibTeXFields &BibTeXFields::instance()
         FieldDescription {QStringLiteral("Location"), QString(), {}, i18n("Location"), KBibTeX::tfPlainText, KBibTeX::tfPlainText | KBibTeX::tfReference | KBibTeX::tfSource, 3, {}, false, false},
     };
 
-    static BibTeXFields singletonBibTeX(fieldDescriptionsBibTeX), singletonBibLaTeX(fieldDescriptionsBibLaTeX);
+    static BibTeXFields singletonBibTeX(QStringLiteral("bibtex"), fieldDescriptionsBibTeX), singletonBibLaTeX(QStringLiteral("biblatex"), fieldDescriptionsBibLaTeX);
 
     return Preferences::instance().bibliographySystem() == Preferences::BibLaTeX ? singletonBibLaTeX : singletonBibTeX;
 }

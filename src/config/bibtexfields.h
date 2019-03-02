@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -95,7 +95,7 @@ public:
     const FieldDescription find(const QString &name) const;
 
 private:
-    explicit BibTeXFields(const QVector<FieldDescription> &other);
+    explicit BibTeXFields(const QString &style, const QVector<FieldDescription> &other);
 
     class BibTeXFieldsPrivate;
     BibTeXFieldsPrivate *d;
