@@ -83,12 +83,50 @@ public:
         else
             return KBibTeX::SingleLine;
     }
+
+    void load(const QString &style)
+    {
+        p->clear();
+
+        const QString stylefile = QStringLiteral("kbibtex/") + style + QStringLiteral(".kbstyle");
+        KSharedConfigPtr layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::GenericDataLocation);
+        static const QString groupName = QStringLiteral("EntryLayoutTab");
+        const KConfigGroup configGroup(layoutConfig, groupName);
+        const int tabCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxTabCount);
+
+        for (int tab = 1; tab <= tabCount; ++tab) {
+            const QString groupName = QString(QStringLiteral("EntryLayoutTab%1")).arg(tab);
+            const KConfigGroup configGroup(layoutConfig, groupName);
+
+            QSharedPointer<EntryTabLayout> etl = QSharedPointer<EntryTabLayout>(new EntryTabLayout);
+            etl->uiCaption = i18n(configGroup.readEntry("uiCaption", QString()).toUtf8().constData());
+            etl->iconName = configGroup.readEntry("iconName", "entry");
+            etl->columns = configGroup.readEntry("columns", 1);
+            if (etl->uiCaption.isEmpty())
+                continue;
+
+            const int fieldCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxFieldPerTabCount);
+            for (int field = 1; field <= fieldCount; ++field) {
+                SingleFieldLayout sfl;
+                sfl.bibtexLabel = configGroup.readEntry(QString(QStringLiteral("bibtexLabel%1")).arg(field), QString());
+                sfl.uiLabel = i18n(configGroup.readEntry(QString(QStringLiteral("uiLabel%1")).arg(field), QString()).toUtf8().constData());
+                sfl.fieldInputLayout = EntryLayoutPrivate::convert(configGroup.readEntry(QString(QStringLiteral("fieldInputLayout%1")).arg(field), "SingleLine"));
+                if (sfl.bibtexLabel.isEmpty() || sfl.uiLabel.isEmpty())
+                    continue;
+
+                etl->singleFieldLayouts.append(sfl);
+            }
+            p->append(etl);
+        }
+
+        if (p->isEmpty()) qCWarning(LOG_KBIBTEX_GUI) << "List of entry layouts is empty";
+    }
 };
 
 EntryLayout::EntryLayout(const QString &style)
         : QVector<QSharedPointer<EntryTabLayout> >(), d(new EntryLayoutPrivate(this))
 {
-    load(style);
+    d->load(style);
 }
 
 EntryLayout::~EntryLayout()
@@ -100,42 +138,4 @@ const EntryLayout &EntryLayout::instance()
 {
     static const EntryLayout singletonBibTeX(QStringLiteral("bibtex")), singletonBibLaTeX(QStringLiteral("biblatex"));
     return Preferences::instance().bibliographySystem() == Preferences::BibLaTeX ? singletonBibLaTeX : singletonBibTeX;
-}
-
-void EntryLayout::load(const QString &style)
-{
-    clear();
-
-    const QString stylefile = QStringLiteral("kbibtex/") + style + QStringLiteral(".kbstyle");
-    KSharedConfigPtr layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::GenericDataLocation);
-    static const QString groupName = QStringLiteral("EntryLayoutTab");
-    const KConfigGroup configGroup(layoutConfig, groupName);
-    const int tabCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxTabCount);
-
-    for (int tab = 1; tab <= tabCount; ++tab) {
-        const QString groupName = QString(QStringLiteral("EntryLayoutTab%1")).arg(tab);
-        const KConfigGroup configGroup(layoutConfig, groupName);
-
-        QSharedPointer<EntryTabLayout> etl = QSharedPointer<EntryTabLayout>(new EntryTabLayout);
-        etl->uiCaption = i18n(configGroup.readEntry("uiCaption", QString()).toUtf8().constData());
-        etl->iconName = configGroup.readEntry("iconName", "entry");
-        etl->columns = configGroup.readEntry("columns", 1);
-        if (etl->uiCaption.isEmpty())
-            continue;
-
-        const int fieldCount = qMin(configGroup.readEntry("count", 0), entryLayoutMaxFieldPerTabCount);
-        for (int field = 1; field <= fieldCount; ++field) {
-            SingleFieldLayout sfl;
-            sfl.bibtexLabel = configGroup.readEntry(QString(QStringLiteral("bibtexLabel%1")).arg(field), QString());
-            sfl.uiLabel = i18n(configGroup.readEntry(QString(QStringLiteral("uiLabel%1")).arg(field), QString()).toUtf8().constData());
-            sfl.fieldInputLayout = EntryLayoutPrivate::convert(configGroup.readEntry(QString(QStringLiteral("fieldInputLayout%1")).arg(field), "SingleLine"));
-            if (sfl.bibtexLabel.isEmpty() || sfl.uiLabel.isEmpty())
-                continue;
-
-            etl->singleFieldLayouts.append(sfl);
-        }
-        append(etl);
-    }
-
-    if (isEmpty()) qCWarning(LOG_KBIBTEX_GUI) << "List of entry layouts is empty";
 }
