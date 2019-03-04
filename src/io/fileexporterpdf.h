@@ -46,7 +46,6 @@ private:
     QString m_fileStem;
     QString m_babelLanguage;
     QString m_paperSize;
-    QString m_font;
     QString m_bibliographyStyle;
     FileEmbedding m_fileEmbedding;
     QStringList m_embeddedFileList;
