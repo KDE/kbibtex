@@ -30,8 +30,6 @@
 
 #include <KLocalizedString>
 #include <KComboBox>
-#include <KConfigGroup>
-#include <KSharedConfig>
 #include <KWallet/KWallet>
 #include <KMessageBox>
 
