@@ -37,9 +37,6 @@ class KBIBTEXIO_EXPORT FileExporter : public QObject
     Q_OBJECT
 
 public:
-    static const QString keyFont;
-    static const QString defaultFont;
-
     explicit FileExporter(QObject *parent);
     ~FileExporter() override;
 

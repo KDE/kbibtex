@@ -20,9 +20,6 @@
 #include <QBuffer>
 #include <QTextStream>
 
-const QString FileExporter::keyFont = QStringLiteral("Font");
-const QString FileExporter::defaultFont = QString();
-
 FileExporter::FileExporter(QObject *parent)
         : QObject(parent)
 {

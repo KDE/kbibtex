@@ -42,7 +42,6 @@ private:
     QString m_fileBasename;
     QString m_fileStem;
     QString m_babelLanguage;
-    QString m_font;
     QString m_bibliographyStyle;
 
     bool generatePS(QIODevice *iodevice, QStringList *errorLog);

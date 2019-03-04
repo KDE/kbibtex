@@ -56,9 +56,6 @@ void FileExporterPDF::reloadConfig()
     KConfigGroup configGroup(config, QStringLiteral("FileExporterPDFPS"));
     m_babelLanguage = configGroup.readEntry(keyBabelLanguage, defaultBabelLanguage);
     m_bibliographyStyle = configGroup.readEntry(keyBibliographyStyle, defaultBibliographyStyle);
-
-    KConfigGroup configGroupGeneral(config, QStringLiteral("General"));
-    m_font = configGroupGeneral.readEntry(keyFont, defaultFont);
 }
 
 bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
@@ -164,8 +161,6 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
             ts << "\\usepackage{embedfile}" << endl;
         if (kpsewhich(QStringLiteral("geometry.sty")))
             ts << "\\usepackage[paper=" << Preferences::pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << endl;
-        if (!m_font.isEmpty() && kpsewhich(m_font + QStringLiteral(".sty")))
-            ts << "\\usepackage{" << m_font << "}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
 
