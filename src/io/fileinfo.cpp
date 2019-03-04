@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,9 +25,6 @@
 #include <QStandardPaths>
 #include <QRegularExpression>
 #include <QtConcurrentRun>
-
-#include <KSharedConfig>
-#include <KConfigGroup>
 
 #include "kbibtex.h"
 #include "entry.h"
@@ -113,7 +110,7 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
         QString doiMatch = doiRegExpMatch.captured(0);
         const int semicolonHttpPos = doiMatch.indexOf(QStringLiteral(";http"));
         if (semicolonHttpPos > 0) doiMatch = doiMatch.left(semicolonHttpPos);
-        const QUrl url(doiUrlPrefix() + QString(doiMatch).remove(QStringLiteral("\\")));
+        const QUrl url(KBibTeX::doiUrlPrefix + QString(doiMatch).remove(QStringLiteral("\\")));
         if (url.isValid() && !result.contains(url))
             result << url;
         /// remove match from internal text to avoid duplicates
@@ -231,7 +228,7 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
         QRegularExpressionMatch doiRegExpMatch;
         if (!doi.isEmpty() && (doiRegExpMatch = KBibTeX::doiRegExp.match(doi)).hasMatch()) {
             QString match = doiRegExpMatch.captured(0);
-            QUrl url(doiUrlPrefix() + match.remove(QStringLiteral("\\")));
+            QUrl url(KBibTeX::doiUrlPrefix + match.remove(QStringLiteral("\\")));
             result.insert(url);
         }
     }
@@ -370,13 +367,4 @@ void FileInfo::extractPDFTextToCache(const QString &pdfFilename, const QString &
 
         f.close();
     }
-}
-
-QString FileInfo::doiUrlPrefix()
-{
-    KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
-    static const QString configGroupNameNetworking(QStringLiteral("Networking"));
-    static const QString keyDOIUrlPrefix(QStringLiteral("DOIUrlPrefix"));
-    KConfigGroup configGroup(config, configGroupNameNetworking);
-    return configGroup.readEntry(keyDOIUrlPrefix, KBibTeX::doiUrlPrefix);
 }

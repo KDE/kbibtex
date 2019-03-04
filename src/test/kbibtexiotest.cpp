@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,6 +31,7 @@
 #include "fileimporter.h"
 #include "fileimporterris.h"
 #include "fileinfo.h"
+#include "kbibtex.h"
 #include "preferences.h"
 
 Q_DECLARE_METATYPE(QMimeType)
@@ -212,12 +213,12 @@ void KBibTeXIOTest::fileInfoUrlsInText_data()
     QTest::addColumn<QSet<QUrl>>("expectedUrls");
 
     QTest::newRow("Empty text") << QString() << QSet<QUrl>();
-    QTest::newRow("Lore ipsum with DOI (without URL)") << QStringLiteral("Lore ipsum 10.1000/38-abc Lore ipsum") << QSet<QUrl>{QUrl(FileInfo::doiUrlPrefix() + QStringLiteral("10.1000/38-abc"))};
-    QTest::newRow("Lore ipsum with DOI (with URL)") << QStringLiteral("Lore ipsum http://doi.example.org/10.1000/38-abc Lore ipsum") << QSet<QUrl>{QUrl(FileInfo::doiUrlPrefix() + QStringLiteral("10.1000/38-abc"))};
-    QTest::newRow("URLs and DOI (without URL), all semicolon-separated") << QStringLiteral("http://www.example.com;10.1000/38-abc   ;\nhttps://www.example.com") << QSet<QUrl>{QUrl(QStringLiteral("http://www.example.com")), QUrl(FileInfo::doiUrlPrefix() + QStringLiteral("10.1000/38-abc")), QUrl(QStringLiteral("https://www.example.com"))};
-    QTest::newRow("URLs and DOI (with URL), all semicolon-separated") << QStringLiteral("http://www.example.com\n;   10.1000/38-abc;https://www.example.com") << QSet<QUrl>{QUrl(QStringLiteral("http://www.example.com")), QUrl(FileInfo::doiUrlPrefix() + QStringLiteral("10.1000/38-abc")), QUrl(QStringLiteral("https://www.example.com"))};
-    QTest::newRow("URLs with various separators") << QStringLiteral("http://www.example.com/def.pdf https://www.example.com\nhttp://download.example.com/abc") << QSet<QUrl>{QUrl(QStringLiteral("http://www.example.com/def.pdf")), QUrl(QStringLiteral("https://www.example.com")), QUrl(QStringLiteral("http://download.example.com/abc"))};
-    QTest::newRow("URLs with query strings and anchors") << QStringLiteral("http://www.example.com/def.pdf?a=3&b=1 https://www.example.com#1581584\nhttp://download.example.com/abc,7352,A#abc?gh=352&ghi=1254") << QSet<QUrl>{QUrl(QStringLiteral("http://www.example.com/def.pdf?a=3&b=1")), QUrl(QStringLiteral("https://www.example.com#1581584")), QUrl(QStringLiteral("http://download.example.com/abc,7352,A#abc?gh=352&ghi=1254"))};
+    QTest::newRow("Lore ipsum with DOI (without URL)") << QStringLiteral("Lore ipsum 10.1000/38-abc Lore ipsum") << QSet<QUrl> {QUrl(KBibTeX::doiUrlPrefix + QStringLiteral("10.1000/38-abc"))};
+    QTest::newRow("Lore ipsum with DOI (with URL)") << QStringLiteral("Lore ipsum http://doi.example.org/10.1000/38-abc Lore ipsum") << QSet<QUrl> {QUrl(KBibTeX::doiUrlPrefix + QStringLiteral("10.1000/38-abc"))};
+    QTest::newRow("URLs and DOI (without URL), all semicolon-separated") << QStringLiteral("http://www.example.com;10.1000/38-abc   ;\nhttps://www.example.com") << QSet<QUrl> {QUrl(QStringLiteral("http://www.example.com")), QUrl(KBibTeX::doiUrlPrefix + QStringLiteral("10.1000/38-abc")), QUrl(QStringLiteral("https://www.example.com"))};
+    QTest::newRow("URLs and DOI (with URL), all semicolon-separated") << QStringLiteral("http://www.example.com\n;   10.1000/38-abc;https://www.example.com") << QSet<QUrl> {QUrl(QStringLiteral("http://www.example.com")), QUrl(KBibTeX::doiUrlPrefix + QStringLiteral("10.1000/38-abc")), QUrl(QStringLiteral("https://www.example.com"))};
+    QTest::newRow("URLs with various separators") << QStringLiteral("http://www.example.com/def.pdf https://www.example.com\nhttp://download.example.com/abc") << QSet<QUrl> {QUrl(QStringLiteral("http://www.example.com/def.pdf")), QUrl(QStringLiteral("https://www.example.com")), QUrl(QStringLiteral("http://download.example.com/abc"))};
+    QTest::newRow("URLs with query strings and anchors") << QStringLiteral("http://www.example.com/def.pdf?a=3&b=1 https://www.example.com#1581584\nhttp://download.example.com/abc,7352,A#abc?gh=352&ghi=1254") << QSet<QUrl> {QUrl(QStringLiteral("http://www.example.com/def.pdf?a=3&b=1")), QUrl(QStringLiteral("https://www.example.com#1581584")), QUrl(QStringLiteral("http://download.example.com/abc,7352,A#abc?gh=352&ghi=1254"))};
 }
 
 void KBibTeXIOTest::fileInfoUrlsInText()
