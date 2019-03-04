@@ -51,6 +51,7 @@ set(
 set(
     kbibtexiotest_SRCS
     kbibtexiotest.cpp
+    ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
 )
 
