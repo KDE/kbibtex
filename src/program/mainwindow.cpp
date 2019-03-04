@@ -34,7 +34,6 @@
 #include <KPluginFactory>
 #include <KPluginLoader>
 #include <KLocalizedString>
-#include <KSharedConfig>
 #include <KMessageBox>
 
 #include "kbibtex.h"
@@ -252,13 +251,6 @@ KBibTeXMainWindow::KBibTeXMainWindow(QWidget *parent)
         : KParts::MainWindow(parent, (Qt::WindowFlags)KDE_DEFAULT_WINDOWFLAGS), d(new KBibTeXMainWindowPrivate(this))
 {
     setObjectName(QStringLiteral("KBibTeXShell"));
-
-    /*
-        const char mainWindowStateKey[] = "State";
-        KConfigGroup group( KSharedConfig::openConfig(), "MainWindow" );
-        if( !group.hasKey(mainWindowStateKey) )
-            group.writeEntry( mainWindowStateKey, mainWindowState );
-    */
 
     setXMLFile(QStringLiteral("kbibtexui.rc"));
 
