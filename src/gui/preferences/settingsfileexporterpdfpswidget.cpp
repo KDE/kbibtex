@@ -93,7 +93,7 @@ public:
         comboBoxPaperSize->setObjectName(QStringLiteral("comboBoxPaperSize"));
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
         for (const auto &dbItem : Preferences::availablePageSizes)
-            comboBoxPaperSize->addItem(dbItem.localizedName, dbItem.internalPageSizeId);
+            comboBoxPaperSize->addItem(QPageSize::name(dbItem.internalPageSizeId), dbItem.internalPageSizeId);
         connect(comboBoxPaperSize, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsAbstractWidget::changed);
 
         comboBoxBabelLanguage = new KComboBox(true, p);

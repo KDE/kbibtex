@@ -295,7 +295,7 @@ bool Preferences::setCopyReferenceCommand(const QString &copyReferenceCommand)
 }
 
 
-const QVector<Preferences::PageSizeDatabase> Preferences::availablePageSizes {{QPageSize::A4, i18n("A4"), QStringLiteral("a4paper")}, {QPageSize::Letter, i18n("Letter"), QStringLiteral("letter")}, {QPageSize::Legal, i18n("Legal"), QStringLiteral("legal")}};
+const QVector<Preferences::PageSizeDatabase> Preferences::availablePageSizes {{QPageSize::A4, QStringLiteral("a4paper")}, {QPageSize::Letter, QStringLiteral("letter")}, {QPageSize::Legal, QStringLiteral("legal")}};
 const QPageSize::PageSizeId Preferences::defaultPageSize = Preferences::availablePageSizes.front().internalPageSizeId;
 
 QPageSize::PageSizeId Preferences::pageSize()
@@ -315,14 +315,6 @@ bool Preferences::setPageSize(const QPageSize::PageSizeId pageSizeId)
     Q_UNUSED(pageSizeId);
     return true;
 #endif // HAVE_KF5
-}
-
-QString Preferences::pageSizeToLocalizedName(const QPageSize::PageSizeId pageSizeId)
-{
-    for (const auto &dbItem : availablePageSizes)
-        if (dbItem.internalPageSizeId == pageSizeId)
-            return dbItem.localizedName;
-    return QPageSize::name(pageSizeId);
 }
 
 QString Preferences::pageSizeToLaTeXName(const QPageSize::PageSizeId pageSizeId)

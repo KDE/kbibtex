@@ -86,11 +86,9 @@ public:
     /// List of supported paper sizes including mappings to localized names and LaTeX names
     typedef struct {
         QPageSize::PageSizeId internalPageSizeId;
-        QString localizedName;
         QString laTeXName;
     } PageSizeDatabase;
     static const QVector<PageSizeDatabase> availablePageSizes;
-    static QString pageSizeToLocalizedName(const QPageSize::PageSizeId pageSize);
     static QString pageSizeToLaTeXName(const QPageSize::PageSizeId pageSize);
 
     /// *** Backups of bibliography files
