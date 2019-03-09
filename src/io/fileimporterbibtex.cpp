@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,8 +36,6 @@
 #include "bibtexfields.h"
 #include "logging_io.h"
 
-const char *FileImporterBibTeX::defaultCodecName = "utf-8";
-
 FileImporterBibTeX::FileImporterBibTeX(QObject *parent)
         : FileImporter(parent), m_cancelFlag(false), m_textStream(nullptr), m_commentHandling(IgnoreComments), m_keywordCasing(KBibTeX::cLowerCase), m_lineNo(1)
 {
@@ -72,8 +70,8 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_statistics.mostRecentListSeparator.clear();
 
     m_textStream = new QTextStream(iodevice);
-    m_textStream->setCodec(defaultCodecName); ///< unless we learn something else, assume default codec
-    result->setProperty(File::Encoding, QStringLiteral("latex"));
+    m_textStream->setCodec(Preferences::defaultBibTeXEncoding.toLatin1()); ///< unless we learn something else, assume default codec
+    result->setProperty(File::Encoding, Preferences::defaultBibTeXEncoding);
 
     QString rawText;
     while (!m_textStream->atEnd()) {
@@ -101,7 +99,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 
     // TODO really necessary to pipe data through several QTextStreams?
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
-    m_textStream->setCodec(defaultCodecName);
+    m_textStream->setCodec(Preferences::defaultBibTeXEncoding.toLower() == QStringLiteral("latex") ? "us-ascii" : Preferences::defaultBibTeXEncoding.toLatin1());
     m_lineNo = 1;
     m_prevLine = m_currentLine = QString();
     m_knownElementIds.clear();
@@ -1235,9 +1233,9 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
 
     /** check if this file requests a special encoding */
     if (line.startsWith(QStringLiteral("@comment{x-kbibtex-encoding=")) && line.endsWith(QLatin1Char('}'))) {
-        QString encoding = line.mid(28, line.length() - 29);
-        textStream->setCodec(encoding == QStringLiteral("latex") ? defaultCodecName : encoding.toLatin1().data());
-        file->setProperty(File::Encoding, encoding == QStringLiteral("latex") ? encoding : textStream->codec()->name());
+        const QString encoding = line.mid(28, line.length() - 29).toLower();
+        textStream->setCodec(encoding.toLower() == QStringLiteral("latex") ? "us-ascii" : encoding.toLatin1());
+        file->setProperty(File::Encoding, encoding.toLower() == QStringLiteral("latex") ? encoding : QString::fromLatin1(textStream->codec()->name()));
         return true;
     } else if (line.startsWith(QStringLiteral("@comment{x-kbibtex-personnameformatting=")) && line.endsWith(QLatin1Char('}'))) {
         // TODO usage of x-kbibtex-personnameformatting is deprecated,
@@ -1250,8 +1248,7 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
         QString encoding = line.mid(12);
         qCDebug(LOG_KBIBTEX_IO) << "Using JabRef's encoding:" << encoding;
         textStream->setCodec(encoding.toLatin1());
-        encoding = textStream->codec()->name();
-        file->setProperty(File::Encoding, encoding);
+        file->setProperty(File::Encoding, QString::fromLatin1(textStream->codec()->name()));
         return true;
     }
 

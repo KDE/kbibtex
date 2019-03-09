@@ -1,6 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
- *                                                                           *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
  *   it under the terms of the GNU General Public License as published by    *
@@ -26,7 +25,6 @@
 
 #include "preferences.h"
 #include "italictextitemmodel.h"
-#include "textencoder.h"
 #include "file.h"
 #include "guihelper.h"
 
@@ -131,7 +129,7 @@ void FileSettingsWidget::setupGUI()
     layout->addRow(i18n("Encoding:"), m_comboBoxEncodings);
     m_comboBoxEncodings->addItem(QStringLiteral("LaTeX"));
     m_comboBoxEncodings->insertSeparator(1);
-    m_comboBoxEncodings->addItems(TextEncoder::encodings);
+    m_comboBoxEncodings->addItems(Preferences::availableBibTeXEncodings);
     connect(m_comboBoxEncodings, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
     m_comboBoxStringDelimiters = new KComboBox(false, this);

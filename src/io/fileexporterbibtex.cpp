@@ -73,7 +73,7 @@ public:
     void loadState() {
 #ifdef HAVE_KF5
         KConfigGroup configGroup(config, configGroupName);
-        encoding = configGroup.readEntry(Preferences::keyEncoding, Preferences::defaultEncoding);
+        encoding = Preferences::instance().bibTeXEncoding();
         QString stringDelimiter = configGroup.readEntry(Preferences::keyStringDelimiter, Preferences::defaultStringDelimiter);
         if (stringDelimiter.length() != 2)
             stringDelimiter = Preferences::defaultStringDelimiter;

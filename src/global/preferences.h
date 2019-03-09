@@ -133,6 +133,14 @@ public:
     bool setLyXPipePath(const QString &lyXPipePath);
 
 
+    /// *** BibTeX Exporter
+
+    static const QString defaultBibTeXEncoding;
+    QString bibTeXEncoding();
+    bool setBibTeXEncoding(const QString &bibTeXEncoding);
+    static const QStringList &availableBibTeXEncodings;
+
+
 
 enum ElementDoubleClickAction { ActionOpenEditor = 0, ActionViewDocument = 1 };
 /**

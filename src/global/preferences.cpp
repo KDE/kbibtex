@@ -49,8 +49,6 @@ const QString Preferences::groupUserInterface = QStringLiteral("User Interface")
 const QString Preferences::keyElementDoubleClickAction = QStringLiteral("elementDoubleClickAction");
 const Preferences::ElementDoubleClickAction Preferences::defaultElementDoubleClickAction = ActionOpenEditor;
 
-const QString Preferences::keyEncoding = QStringLiteral("encoding");
-const QString Preferences::defaultEncoding = QStringLiteral("LaTeX");
 const QString Preferences::keyStringDelimiter = QStringLiteral("stringDelimiter");
 const QString Preferences::defaultStringDelimiter = QStringLiteral("{}");
 const QString Preferences::keyQuoteComment = QStringLiteral("quoteComment");
@@ -145,6 +143,10 @@ public:
         return valueToBeChecked.startsWith(QLatin1Char('/'));
     }
 
+    inline bool validateValueForBibTeXEncoding(const QString &valueToBeChecked) {
+        return Preferences::availableBibTeXEncodings.contains(valueToBeChecked);
+    }
+
 #define getterSetter(type, typeInConfig, stem, notificationEventId, configGroupName) \
     bool dirtyFlag##stem; \
     type cached##stem; \
@@ -185,6 +187,7 @@ public:
     getterSetter(QString, QString, ActiveIdSuggestionFormatString, NotificationHub::EventConfigurationChanged, "IdSuggestions")
     getterSetter(bool, bool, LyXUseAutomaticPipeDetection, NotificationHub::EventConfigurationChanged, "LyX")
     getterSetter(QString, QString, LyXPipePath, NotificationHub::EventConfigurationChanged, "LyX")
+    getterSetter(QString, QString, BibTeXEncoding, NotificationHub::EventConfigurationChanged, "FileExporterBibTeX")
 #endif // HAVE_KF5
 };
 
@@ -458,3 +461,49 @@ bool Preferences::setLyXPipePath(const QString &lyXPipePath)
     return true;
 #endif // HAVE_KF5
 }
+
+
+const QString Preferences::defaultBibTeXEncoding = QStringLiteral("UTF-8");
+
+QString Preferences::bibTeXEncoding()
+{
+#ifdef HAVE_KF5
+    return d->getBibTeXEncoding();
+#else // HAVE_KF5
+    return defaultBibTeXEncoding;
+#endif // HAVE_KF5
+}
+
+bool Preferences::setBibTeXEncoding(const QString &bibTeXEncoding)
+{
+#ifdef HAVE_KF5
+    QString sanitizedBibTeXEncoding = bibTeXEncoding;
+    const QString sanitizedBibTeXEncodingLower = sanitizedBibTeXEncoding.toLower();
+    for (const QString &knownBibTeXEncoding : availableBibTeXEncodings)
+        if (knownBibTeXEncoding.toLower() == sanitizedBibTeXEncodingLower) {
+            sanitizedBibTeXEncoding = knownBibTeXEncoding;
+            break;
+        }
+    return d->setBibTeXEncoding(sanitizedBibTeXEncoding);
+#else // HAVE_KF5
+    Q_UNUSED(bibTeXEncoding);
+    return true;
+#endif // HAVE_KF5
+}
+
+const QStringList &Preferences::availableBibTeXEncodings {
+    /// use LaTeX commands for everything that is not ASCII
+    QStringLiteral("LaTeX"),
+    /// the classics
+    QStringLiteral("US-ASCII"), /** effectively like 'LaTeX' encoding */
+    /// ISO 8859 a.k.a. Latin codecs
+    QStringLiteral("ISO-8859-1"), QStringLiteral("ISO-8859-2"), QStringLiteral("ISO-8859-3"), QStringLiteral("ISO-8859-4"), QStringLiteral("ISO-8859-5"), QStringLiteral("ISO-8859-6"), QStringLiteral("ISO-8859-7"), QStringLiteral("ISO-8859-8"), QStringLiteral("ISO-8859-9"), QStringLiteral("ISO-8859-10"), QStringLiteral("ISO-8859-13"), QStringLiteral("ISO-8859-14"), QStringLiteral("ISO-8859-15"), QStringLiteral("ISO-8859-16"),
+    /// various Unicode codecs
+    QStringLiteral("UTF-8"), QStringLiteral("UTF-16"), QStringLiteral("UTF-16BE"), QStringLiteral("UTF-16LE"), QStringLiteral("UTF-32"), QStringLiteral("UTF-32BE"), QStringLiteral("UTF-32LE"),
+    /// various Cyrillic codecs
+    QStringLiteral("KOI8-R"), QStringLiteral("KOI8-U"),
+    /// various CJK codecs
+    QStringLiteral("Big5"), QStringLiteral("Big5-HKSCS"), QStringLiteral("GB18030"), QStringLiteral("EUC-JP"), QStringLiteral("EUC-KR"), QStringLiteral("ISO 2022-JP"), QStringLiteral("Shift-JIS"),
+    /// Windows codecs
+    QStringLiteral("Windows-1250"), QStringLiteral("Windows-1251"), QStringLiteral("Windows-1252"), QStringLiteral("Windows-1253"), QStringLiteral("Windows-1254"), QStringLiteral("Windows-1255"), QStringLiteral("Windows-1256"), QStringLiteral("Windows-1257"), QStringLiteral("Windows-1258")
+};
