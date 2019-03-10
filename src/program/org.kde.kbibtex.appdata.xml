@@ -36,7 +36,7 @@
   <summary xml:lang="gl">Editor de BibTeX de KDE, para editar bibliografías que se usen con LaTeX</summary>
   <summary xml:lang="id">BibTeX editor oleh KDE untuk mengedit bibliografis yang digunakan menggunakan LaTeX</summary>
   <summary xml:lang="it">Editor BibTeX di KDE per la modifica delle bibliografie usate con LaTeX</summary>
-  <summary xml:lang="ko">KDE의 BibTeX(LaTeX 서지 정보) 편집기</summary>
+  <summary xml:lang="ko">LaTeX에서 사용되는 서지 정보를 편집하기 위한 KDE의 BibTeX 편집기</summary>
   <summary xml:lang="nl">BibTeX-bewerker door KDE om bibliografieën te bewerken met LaTeX</summary>
   <summary xml:lang="pl">Edytor BibTeX autorstwa KDE do edytowania bibliografii używanych w edytorach LaTeX</summary>
   <summary xml:lang="pt">O BibTeX é um editor do KDE, onde se podem editar bibliografias usadas com o LaTeX</summary>
@@ -102,7 +102,7 @@
       <li xml:lang="gl">Obteña unha vista previa de entradas bibliográficas en varios formatos: fonte (BibTeX ou RIS), Wikipedia, estándar (XML/XSLT), elegante (XML/XSLT), e só resumo (XML/XSLT). Se ten «bibtex2html» instalado, disporá de estilos de vista previa adicionais.</li>
       <li xml:lang="id">Mempratinjau entry-entry bibliografi dalam beberapa format (Source (BibTeX), Source (RIS), Wikipedia, (XML/XSLT) standar, (XML/XSLT) fancy, dan (XML/XSLT) hanya-abstrak). Gaya pratinjau tambahan menjadi tersedia ketika bibtex2html telah terinstal.</li>
       <li xml:lang="it">Visualizzare in anteprima le voci bibliografiche in vari formati (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), e in formato solo sommario (XML/XSLT)). Saranno disponibili stili aggiuntivi di anteprima se si installa il pacchetto bibtex2html.</li>
-      <li xml:lang="ko">원본(BibTeX, RIS), 위키백과, 표준(XML/XSLT), 서식 있는 보기(XML/XSLT), 초록만 보기(XML/XSLT) 등 여러 형식으로 서지 정보를 봅니다. bibtex2html이 설치되어 있으면 추가 미리 보기 스타일을 사용할 수 있습니다.</li>
+      <li xml:lang="ko">원본(BibTeX, RIS), 위키백과, 표준(XML/XSLT), 서식 있는 보기(XML/XSLT), 초록만 보기(XML/XSLT) 등 여러 형식으로 서지 정보 항목을 미리 봅니다. 추가 미리보기 스타일은 Bibtex2html을 설치하면 사용할 수 있습니다.</li>
       <li xml:lang="nl">Bibliografie-items bekijken in verschillende formaten  (bron (BibTeX), bron (RIS), Wikipedia, standaard (XML/XSLT), elegant (XML/XSLT) en alleen abstract (XML/XSLT)). Additionele stijlen om te bekijken worden beschikbaar wanneer bibtex2html is geïnstalleerd.</li>
       <li xml:lang="pl">Podgląd wpisów bibliograficznych w rozmaitych formatach (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), elegancki (XML/XSLT) i tylko streszczenia (XML/XSLT)). Dodatkowo, dostępne stają się style podglądu, gdy wgrany jest pakiet bibtex2html.</li>
       <li xml:lang="pt">Antever os itens bibliográficos em diversos formatos (Código (BibTeX), Código (RIS), Wikipédia, normal (XML/XSLT), bonito (XML/XSLT) e apenas o resumo (XML/XSLT)). Ficam disponíveis mais estilos de antevisão quando instalar o 'bibtex2html'.</li>
@@ -122,7 +122,7 @@
       <li xml:lang="gl">Importe datos in varios formatos de ficheiro bibliográficos como BibTeX, RIS e ISI (require «bibutils») e exporte os datos a PDF (require «pdflatex»), PostScript (require «latex»), RTF (require «latex2rtf»), e HTML.</li>
       <li xml:lang="id">Mengimpor data dalam beberapa format file bibliografi sepertihalnya BibTeX  RIS dan ISI (diperlukan bibutils) dan data expor ke PDF (diperlukan pdflatex), PostScript (diperlukan latex), RTF (diperlukan latex2rtf), dan HTML.</li>
       <li xml:lang="it">Importare i dati in vari formati di file bibliografici, come BibTeX, RIS e ISI (richiede bibutils), ed esportare i dati in PDF (richiede pdflatex), PostScript (richiede latex), RTF (richiede latex2rtf) e HTML.</li>
-      <li xml:lang="ko">BibTeX, RIS, ISI(bibutils 필요) 등 형식으로 된 서지 정보를 가져오고 데이터를 PDF(pdflatex 필요), 포스트스크립트(latex 필요), RTF(latex2rtf 필요), HTML로 내보냅니다.</li>
+      <li xml:lang="ko">BibTeX, RIS, ISI(bibutils 필요) 와 같은 다양한 서지 정보 파일 형식으로 데이터를 가져오고, PDF(pdflatex 필요), PostScript(latex 필요), RTF(latex2rtf 필요) 및 HTML로 데이터를 내보냅니다.</li>
       <li xml:lang="nl">Gegevens importeren in verschillende bibliografie bestandsformaten zoals BibTeX, RIS en ISI (vereist bibutils) en exporteert gegevens naar PDF (vereist pdflatex), PostScript (vereist latex), RTF (vereist latex2rtf) en HTML.</li>
       <li xml:lang="pl">Importowanie danych w rozmaitych formatach plików bibliografii takich jak BibTeX, RIS oraz ISI (wymaga bibutils) i eksportowanie danych do PDF (wymaga pdflatex), PostScript (wymaga latex), RTF (wymaga latex2rtf) oraz HTML.</li>
       <li xml:lang="pt">Importar os dados em diversos formatos de ficheiros bibliográficos, como o BibTeX, RIS e ISI (precisa das 'bibutils') e exportar os dados para PDF (precisa do 'pdflatex'), PostScript (precisa do 'latex'), RTF (precisa do 'latex2rtf') e HTML.</li>
@@ -142,7 +142,7 @@
       <li xml:lang="gl">Busque os datos das entradas bibliográficas en base de datos en internet (como Google Scholar, ACM, IEEE, arXiv, etc.).</li>
       <li xml:lang="id">Pencarian untuk entri data bibliografi dalam database online (misal Google Scholar, ACM, IEEE, arXiv, dll.)</li>
       <li xml:lang="it">Ricercare voci bibliografiche nei database in linea (per es., Google Scholar, ACM, IEEE, arXiv, ecc.)</li>
-      <li xml:lang="ko">Google 학술검색, ACM, IEEE, arXiv 등 온라인 데이터베이스에서 서지 정보를 검색합니다.</li>
+      <li xml:lang="ko">온라인 데이터베이스에서 서지 항목 데이터 검색 (예: Google 학술검색, ACM, IEEE, arXiv 등)</li>
       <li xml:lang="nl">Zoeken naar de bibliografie-items in online databases (bijv. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="pl">Wyszukiwanie wpisów bibliograficznych w bazach internetowych (np. Google Scholar, ACM, IEEE, arXiv, itp.)</li>
       <li xml:lang="pt">Procurar por dados de itens bibliográficos nas bases de dados 'online' (p.ex. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
@@ -162,7 +162,7 @@
       <li xml:lang="gl">Obteña unha vista previa de recursos locais ou en internet, como ficheiros PDF, que estean ligados desde a entrada de BibTeX.</li>
       <li xml:lang="id">Mempratinjau sumberdaya lokal atau jarak jauh, misalnya file PDF, tertaut dalam entri BibTEX.</li>
       <li xml:lang="it">Visualizzare in anteprima risorse locali o remote (in linea), per es. file PDF, collegate nella voce BibTEX.</li>
-      <li xml:lang="ko">BibTeX 항목과 연결된 PDF 파일 등 로컬 및 온라인 자원을 봅니다.</li>
+      <li xml:lang="ko">BibTeX 항목에 연결된 PDF 파일 등 로컬 또는 원격(온라인) 리소스를 미리 봅니다.</li>
       <li xml:lang="nl">Locale of hulpbronnen op afstand (online), bijv. PDF bestanden, gekoppeld in het BibTEX item.</li>
       <li xml:lang="pl">Podgląd lokalnych lub zdalnych (internetowych) zasobów, np. plików PDF, do których odwołuje się wpis BibTEX.</li>
       <li xml:lang="pt">Fazer uma antevisão dos recursos locais ou remotos ('online'), p.ex. ficheiros PDF, associada aos itens do BibTEX.</li>
@@ -182,7 +182,7 @@
       <li xml:lang="gl">Atope e fusione entradas duplicadas da bibliografía.</li>
       <li xml:lang="id">Menemukan dan menggabungkan entri-entri duplikat dalam bibliografi.</li>
       <li xml:lang="it">Trovare e unire voci duplicate nella bibliografia.</li>
-      <li xml:lang="ko">중복되는 참고 문헌을 찾아서 합칩니다.</li>
+      <li xml:lang="ko">서지 정보에서 중복 항목을 찾아 합칩니다.</li>
       <li xml:lang="nl">Zoeken en mengen van dubbele items in een bibliografie.</li>
       <li xml:lang="pl">Znajdywanie i scalanie powielonych wpisów w bibliografii.</li>
       <li xml:lang="pt">Procurar e reunir itens duplicados na bibliografia.</li>
@@ -203,7 +203,7 @@
       <li xml:lang="gl">Integre as súas bibliografías con editores de LaTeX como Kile e LyX.</li>
       <li xml:lang="id">Mengintegrasikan bibliografismu dengan editor LaTeX sepertihalnya Kile dan LyX.</li>
       <li xml:lang="it">Integrare le tue bibliografie con gli editor LaTeX, come Kile e LyX.</li>
-      <li xml:lang="ko">Kile, LyX 등의 LaTeX 편집기에 서지 정보를 통합합니다.</li>
+      <li xml:lang="ko">Kile, LyX와 같은 LaTeX 편집기에 서지 정보를 통합합니다.</li>
       <li xml:lang="nl">Integreer uw bibliografieën met LaTeX bewerkers zoals Kile en LyX.</li>
       <li xml:lang="pl">Integracja bibliografii z edytorami LaTeX takimi jak Kile i LyX.</li>
       <li xml:lang="pt">Integrar as suas bibliografias com os editores de LaTeX, como o Kile e o LyX.</li>
@@ -250,6 +250,7 @@
       <caption xml:lang="gl">Xanela principal de KBibTeX</caption>
       <caption xml:lang="id">Window utama KBibTeX</caption>
       <caption xml:lang="it">Finestra principale di KBibTeX</caption>
+      <caption xml:lang="ko">KBibTeX 메인 창</caption>
       <caption xml:lang="nl">Hoofdvenster van KBibTeX</caption>
       <caption xml:lang="pl">Okno główne KBibTeX</caption>
       <caption xml:lang="pt">Janela principal do KBibTeX</caption>
