@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -21,9 +21,10 @@
 
 #include "filesettingswidget.h"
 
+#include "openfileinfo.h"
+
 class FileView;
 class File;
-class OpenFileInfoManager;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -40,6 +41,7 @@ public:
 private slots:
     void widgetsChangedSlot();
     void currentFileChangedSlot();
+    void flagsChangedSlot(const OpenFileInfo::StatusFlags statusFlags);
 
 private:
     FileView *m_fileView;

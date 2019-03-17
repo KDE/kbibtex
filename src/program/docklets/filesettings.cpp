@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -31,7 +31,6 @@
 #include "models/filemodel.h"
 #include "value.h"
 #include "file.h"
-#include "openfileinfo.h"
 
 FileSettings::FileSettings(QWidget *parent)
         : FileSettingsWidget(parent), m_fileView(nullptr)
@@ -44,7 +43,7 @@ FileSettings::FileSettings(QWidget *parent)
     /// Monitoring file flag changes to get notified of
     /// "Save As" operations where the file settings
     /// may get changed (requires a reload of properties)
-    connect(&OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &FileSettings::resetToLoadedProperties);
+    connect(&OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &FileSettings::flagsChangedSlot);
 }
 
 void FileSettings::setFileView(FileView *fileView)
@@ -67,4 +66,12 @@ void FileSettings::currentFileChangedSlot() {
     File *file = m_fileView != nullptr && m_fileView->fileModel() != nullptr ? m_fileView->fileModel()->bibliographyFile() : nullptr;
     loadProperties(file);
     setEnabled(file != nullptr);
+}
+
+void FileSettings::flagsChangedSlot(const OpenFileInfo::StatusFlags statusFlags)
+{
+    if (statusFlags.testFlag(OpenFileInfo::Open)) {
+        File *file = m_fileView != nullptr && m_fileView->fileModel() != nullptr ? m_fileView->fileModel()->bibliographyFile() : nullptr;
+        loadProperties(file);
+    }
 }
