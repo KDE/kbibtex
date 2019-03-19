@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -1278,7 +1278,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             /// Handle special cases of i without a dot (\i)
             for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                 if (c.unicode() == dotlessIJCharacter.unicode && (dotlessIJCharacter.direction & DirectionUnicodeToCommand)) {
-                    output.append(QString(QStringLiteral("\\%1{\\%2}")).arg(dotlessIJCharacter.modifier).arg(dotlessIJCharacter.letter));
+                    output.append(QString(QStringLiteral("{\\%1\\%2}")).arg(dotlessIJCharacter.modifier, dotlessIJCharacter.letter));
                     found = true;
                     break;
                 }
@@ -1311,9 +1311,8 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// escaped characters with modifiers like \"a
                 for (const EncoderLaTeXEscapedCharacter &encoderLaTeXEscapedCharacter : encoderLaTeXEscapedCharacters)
                     if (encoderLaTeXEscapedCharacter.unicode == c.unicode() && (encoderLaTeXEscapedCharacter.direction & DirectionUnicodeToCommand)) {
-                        const QChar modifier = encoderLaTeXEscapedCharacter.modifier;
-                        const QString formatString = isAsciiLetter(modifier) ? QStringLiteral("{\\%1 %2}") : QStringLiteral("{\\%1%2}");
-                        output.append(formatString.arg(modifier).arg(encoderLaTeXEscapedCharacter.letter));
+                        const QString formatString = isAsciiLetter(encoderLaTeXEscapedCharacter.modifier) ? QStringLiteral("{\\%1 %2}") : QStringLiteral("{\\%1%2}");
+                        output.append(formatString.arg(encoderLaTeXEscapedCharacter.modifier).arg(encoderLaTeXEscapedCharacter.letter));
                         found = true;
                         break;
                     }
