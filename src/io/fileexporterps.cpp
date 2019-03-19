@@ -126,7 +126,7 @@ bool FileExporterPS::writeLatexFile(const QString &filename)
         if ((m_bibliographyStyle == QStringLiteral("agsm") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("jmr") || m_bibliographyStyle == QStringLiteral("jphysicsB") || m_bibliographyStyle == QStringLiteral("kluwer") || m_bibliographyStyle == QStringLiteral("nederlands") || m_bibliographyStyle == QStringLiteral("dcu") || m_bibliographyStyle == QStringLiteral("dcu")) && kpsewhich(QStringLiteral("harvard.sty")) && kpsewhich(QStringLiteral("html.sty")))
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
         if (kpsewhich(QStringLiteral("geometry.sty")))
-            ts << "\\usepackage[paper=" << Preferences::pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << endl;
+            ts << "\\usepackage[paper=" << pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
         ts << "\\nocite{*}" << endl;

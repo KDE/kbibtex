@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -32,8 +32,6 @@
 
 #include <KComboBox>
 #include <KLocalizedString>
-#include <KSharedConfig>
-#include <KConfigGroup>
 #include <KColorScheme>
 #include <KLineEdit>
 
@@ -330,14 +328,9 @@ void ValueListModel::notificationEvent(int eventId)
 void ValueListModel::readConfiguration()
 {
     /// load mapping from color value to label
-    KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
-    KConfigGroup configGroup(config, Preferences::groupColor);
-    QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-    QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultColorLabels);
     colorToLabel.clear();
-    for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-        colorToLabel.insert(*itc, i18n((*itl).toUtf8().constData()));
-    }
+    for (QVector<QPair<QColor, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); it != Preferences::instance().colorCodes().constEnd(); ++it)
+        colorToLabel.insert(it->first.name(), it->second);
 }
 
 void ValueListModel::updateValues()

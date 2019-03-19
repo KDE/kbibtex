@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,8 +23,6 @@
 #include <QColorDialog>
 
 #include <KLocalizedString>
-#include <KSharedConfig>
-#include <KConfigGroup>
 
 #include "notificationhub.h"
 #include "preferences.h"
@@ -47,30 +45,16 @@ public:
     QList<ColorLabelPair> colorLabelPairs;
     QColor userColor;
 
-    KSharedConfigPtr config;
-
     ColorLabelComboBoxModel(QObject *p = nullptr)
-            : QAbstractItemModel(p), userColor(Qt::black), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
-        readConfiguration();
+            : QAbstractItemModel(p), userColor(Qt::black) {
         NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     }
 
     void notificationEvent(int eventId) override {
-        if (eventId == NotificationHub::EventConfigurationChanged)
-            readConfiguration();
-    }
-
-    void readConfiguration() {
-        KConfigGroup configGroup(config, Preferences::groupColor);
-        QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-        QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultColorLabels);
-
-        colorLabelPairs.clear();
-        for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-            ColorLabelPair clp;
-            clp.color = QColor(*itc);
-            clp.label = i18n((*itl).toUtf8().constData());
-            colorLabelPairs << clp;
+        if (eventId == NotificationHub::EventConfigurationChanged) {
+            beginResetModel();
+            /// New data will be pulled automatically via Preferences::instance().colorCodes()
+            endResetModel();
         }
     }
 
@@ -83,7 +67,7 @@ public:
     }
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override {
-        return parent == QModelIndex() ? 2 + colorLabelPairs.count() : 0;
+        return parent == QModelIndex() ? 2 + Preferences::instance().colorCodes().count() : 0;
     }
 
     int columnCount(const QModelIndex & = QModelIndex()) const override {
@@ -97,7 +81,7 @@ public:
             else if (index.row() == rowCount() - 1)
                 return userColor;
             else
-                return colorLabelPairs[index.row() - 1].color;
+                return Preferences::instance().colorCodes().at(index.row() - 1).first;
         } else if (role == Qt::FontRole && (index.row() == 0 || index.row() == rowCount() - 1)) {
             QFont font;
             font.setItalic(true);
@@ -111,7 +95,7 @@ public:
             else if (index.row() == rowCount() - 1)
                 return i18n("User-defined color");
             else
-                return colorLabelPairs[index.row() - 1].label;
+                return Preferences::instance().colorCodes().at(index.row() - 1).second;
         else
             return QVariant();
     }

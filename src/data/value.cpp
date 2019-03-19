@@ -213,7 +213,7 @@ bool Person::isPerson(const ValueItem &other) {
 }
 
 QDebug operator<<(QDebug dbg, const Person &person) {
-    dbg.nospace() << "Person " << Person::transcribePersonName(&person, Preferences::defaultPersonNameFormatting);
+    dbg.nospace() << "Person " << Person::transcribePersonName(&person, Preferences::defaultPersonNameFormat);
     return dbg;
 }
 
@@ -336,11 +336,6 @@ QDebug operator<<(QDebug dbg, const PlainText &plainText) {
 }
 
 
-#ifdef HAVE_KF5
-bool VerbatimText::colorLabelPairsInitialized = false;
-QList<VerbatimText::ColorLabelPair> VerbatimText::colorLabelPairs = QList<VerbatimText::ColorLabelPair>();
-#endif // HAVE_KF5
-
 VerbatimText::VerbatimText(const VerbatimText &other)
         : m_text(other.text())
 {
@@ -375,38 +370,14 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
 {
     const QString text = QString(m_text).remove(ignoredInSorting);
 
-#ifdef HAVE_KF5
-    /// Initialize map of labels to color (hex string) only once
-    // FIXME if user changes colors/labels later, it will not be updated here
-    if (!colorLabelPairsInitialized) {
-        colorLabelPairsInitialized = true;
-
-        /// Read data from config file
-        KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
-        KConfigGroup configGroup(config, Preferences::groupColor);
-        const QStringList colorCodes = configGroup.readEntry(Preferences::keyColorCodes, Preferences::defaultColorCodes);
-        const QStringList colorLabels = configGroup.readEntry(Preferences::keyColorLabels, Preferences::defaultColorLabels);
-
-        /// Translate data from config file into internal mapping
-        for (QStringList::ConstIterator itc = colorCodes.constBegin(), itl = colorLabels.constBegin(); itc != colorCodes.constEnd() && itl != colorLabels.constEnd(); ++itc, ++itl) {
-            ColorLabelPair clp;
-            clp.hexColor = *itc;
-            clp.label = i18n((*itl).toUtf8().constData());
-            colorLabelPairs << clp;
-        }
-    }
-#endif //  HAVE_KF5
-
     bool contained = text.contains(pattern, caseSensitive);
 #ifdef HAVE_KF5
     if (!contained) {
         /// Only if simple text match failed, check color labels
         /// For a match, the user's pattern has to be the start of the color label
         /// and this verbatim text has to contain the color as hex string
-        for (const auto &clp : const_cast<const QList<ColorLabelPair> &>(colorLabelPairs)) {
-            contained = text.compare(clp.hexColor, Qt::CaseInsensitive) == 0 && clp.label.contains(pattern, Qt::CaseInsensitive);
-            if (contained) break;
-        }
+        for (QVector<QPair<QColor, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); !contained && it != Preferences::instance().colorCodes().constEnd(); ++it)
+            contained = text.compare(it->first.name(), Qt::CaseInsensitive) == 0 && it->second.contains(pattern, Qt::CaseInsensitive);
     }
 #endif // HAVE_KF5
 
@@ -683,7 +654,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
         } else {
             const Person *person = dynamic_cast<const Person *>(&valueItem);
             if (person != nullptr) {
-                result = Person::transcribePersonName(person, Preferences::instance().personNameFormatting());
+                result = Person::transcribePersonName(person, Preferences::instance().personNameFormat());
                 vit = VITPerson;
             } else {
                 const Keyword *keyword = dynamic_cast<const Keyword *>(&valueItem);

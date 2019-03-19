@@ -22,11 +22,6 @@
 #include <QIODevice>
 #include <QStringList>
 
-#ifdef HAVE_KF5
-#include <KSharedConfig>
-#include <KConfigGroup>
-#endif // HAVE_KF5
-
 #include "preferences.h"
 #include "entry.h"
 #include "element.h"
@@ -54,27 +49,17 @@ private:
     static const quint64 initialInternalIdCounter;
     static quint64 internalIdCounter;
 
-#ifdef HAVE_KF5
-    KSharedConfigPtr config;
-    const QString configGroupName;
-#endif // HAVE_KF5
-
 public:
     const quint64 internalId;
     QHash<QString, QVariant> properties;
 
     explicit FilePrivate(File *parent)
-            : validInvalidField(valid),
-#ifdef HAVE_KF5
-        config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterBibTeX")),
-#endif // HAVE_KF5
-        internalId(++internalIdCounter) {
+            : validInvalidField(valid), internalId(++internalIdCounter)
+    {
         Q_UNUSED(parent)
         const bool isValid = checkValidity();
         if (!isValid) qCDebug(LOG_KBIBTEX_DATA) << "Creating File instance" << internalId << "  Valid?" << isValid;
-#ifdef HAVE_KF5
         loadConfiguration();
-#endif // HAVE_KF5
     }
 
     ~FilePrivate() {
@@ -105,19 +90,16 @@ public:
         return *this;
     }
 
-#ifdef HAVE_KF5
     void loadConfiguration() {
         /// Load and set configuration as stored in settings
-        KConfigGroup configGroup(config, configGroupName);
         properties.insert(File::Encoding, Preferences::instance().bibTeXEncoding());
-        properties.insert(File::StringDelimiter, configGroup.readEntry(Preferences::keyStringDelimiter, Preferences::defaultStringDelimiter));
-        properties.insert(File::QuoteComment, static_cast<Preferences::QuoteComment>(configGroup.readEntry(Preferences::keyQuoteComment, static_cast<int>(Preferences::defaultQuoteComment))));
-        properties.insert(File::KeywordCasing, static_cast<KBibTeX::Casing>(configGroup.readEntry(Preferences::keyKeywordCasing, static_cast<int>(Preferences::defaultKeywordCasing))));
-        properties.insert(File::NameFormatting, Preferences::instance().personNameFormatting());
-        properties.insert(File::ProtectCasing, configGroup.readEntry(Preferences::keyProtectCasing, static_cast<int>(Preferences::defaultProtectCasing)));
-        properties.insert(File::ListSeparator, configGroup.readEntry(Preferences::keyListSeparator, Preferences::defaultListSeparator));
+        properties.insert(File::StringDelimiter, Preferences::instance().bibTeXStringDelimiter());
+        properties.insert(File::QuoteComment,  Preferences::instance().bibTeXQuoteComment());
+        properties.insert(File::KeywordCasing, Preferences::instance().bibTeXKeywordCasing());
+        properties.insert(File::NameFormatting, Preferences::instance().personNameFormat());
+        properties.insert(File::ProtectCasing, static_cast<int>(Preferences::instance().bibTeXProtectCasing() ? Qt::Checked : Qt::Unchecked));
+        properties.insert(File::ListSeparator,  Preferences::instance().bibTeXListSeparator());
     }
-#endif // HAVE_KF5
 
     bool checkValidity() const {
         if (validInvalidField != valid) {
@@ -284,7 +266,7 @@ QSet<QString> File::uniqueEntryValuesSet(const QString &fieldName) const
                         const QSharedPointer<Person> person = valueItem.dynamicCast<Person>();
                         if (!person.isNull()) {
                             QSet<QString> personNameFormattingSet {Preferences::personNameFormatLastFirst, Preferences::personNameFormatFirstLast};
-                            personNameFormattingSet.insert(Preferences::instance().personNameFormatting());
+                            personNameFormattingSet.insert(Preferences::instance().personNameFormat());
                             /// Add person's name formatted using each of the templates assembled above
                             for (const QString &personNameFormatting : const_cast<const QSet<QString> &>(personNameFormattingSet))
                                 valueSet.insert(Person::transcribePersonName(person.data(), personNameFormatting));
@@ -338,14 +320,12 @@ bool File::hasProperty(const QString &key) const
     return d->properties.contains(key);
 }
 
-#ifdef HAVE_KF5
 void File::setPropertiesToDefault()
 {
     if (!d->checkValidity())
         qCCritical(LOG_KBIBTEX_DATA) << "void File::setPropertiesToDefault()" << "This File object is not valid";
     d->loadConfiguration();
 }
-#endif // HAVE_KF5
 
 bool File::checkValidity() const
 {

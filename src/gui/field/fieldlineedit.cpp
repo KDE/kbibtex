@@ -37,8 +37,6 @@
 #include <KRun>
 #include <KMessageBox>
 #include <KLocalizedString>
-#include <KSharedConfig>
-#include <KConfigGroup>
 #include <kio_version.h>
 
 #include "fileinfo.h"
@@ -113,7 +111,7 @@ public:
                 } else {
                     const QSharedPointer<Person> person = first.dynamicCast<Person>();
                     if (typeFlag == KBibTeX::tfPerson && !person.isNull()) {
-                        text = Person::transcribePersonName(person.data(), Preferences::instance().personNameFormatting());
+                        text = Person::transcribePersonName(person.data(), Preferences::instance().personNameFormat());
                         result = true;
                     } else {
                         const QSharedPointer<MacroKey> macroKey = first.dynamicCast<MacroKey>();

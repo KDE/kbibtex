@@ -63,7 +63,8 @@ void FileSettingsWidget::loadProperties(File *file)
     if (file->hasProperty(File::QuoteComment)) {
         m_comboBoxQuoteComment->blockSignals(true);
         const Preferences::QuoteComment quoteComment = static_cast<Preferences::QuoteComment>(file->property(File::QuoteComment).toInt());
-        m_comboBoxQuoteComment->setCurrentIndex(static_cast<int>(quoteComment));
+        const int row = qMax(0, GUIHelper::selectValue(m_comboBoxQuoteComment->model(), static_cast<int>(quoteComment), Qt::UserRole));
+        m_comboBoxQuoteComment->setCurrentIndex(row);
         m_comboBoxQuoteComment->blockSignals(false);
     }
     if (file->hasProperty(File::KeywordCasing)) {
@@ -103,8 +104,10 @@ void FileSettingsWidget::saveProperties(File *file)
     file->setProperty(File::Encoding, m_comboBoxEncodings->currentText());
     const QString stringDelimiter = m_comboBoxStringDelimiters->currentText();
     file->setProperty(File::StringDelimiter, QString(stringDelimiter[0]) + stringDelimiter[stringDelimiter.length() - 1]);
-    const Preferences::QuoteComment quoteComment = static_cast<Preferences::QuoteComment>(m_comboBoxQuoteComment->currentIndex());
-    file->setProperty(File::QuoteComment, static_cast<int>(quoteComment));
+    bool ok = false;
+    const Preferences::QuoteComment quoteComment = static_cast<Preferences::QuoteComment>(m_comboBoxQuoteComment->currentData().toInt(&ok));
+    if (ok)
+        file->setProperty(File::QuoteComment, static_cast<int>(quoteComment));
     const KBibTeX::Casing keywordCasing = static_cast<KBibTeX::Casing>(m_comboBoxKeywordCasing->currentIndex());
     file->setProperty(File::KeywordCasing, static_cast<int>(keywordCasing));
     file->setProperty(File::ProtectCasing, static_cast<int>(m_checkBoxProtectCasing->checkState()));
@@ -142,9 +145,8 @@ void FileSettingsWidget::setupGUI()
 
     m_comboBoxQuoteComment = new KComboBox(false, this);
     layout->addRow(i18n("Comment Quoting:"), m_comboBoxQuoteComment);
-    m_comboBoxQuoteComment->addItem(i18nc("Comment Quoting", "None"));
-    m_comboBoxQuoteComment->addItem(i18nc("Comment Quoting", "@comment{%1}", QChar(8230)));
-    m_comboBoxQuoteComment->addItem(i18nc("Comment Quoting", "%{%1}", QChar(8230)));
+    for (QVector<QPair<Preferences::QuoteComment, QString>>::ConstIterator it = Preferences::availableBibTeXQuoteComments.constBegin(); it != Preferences::availableBibTeXQuoteComments.constEnd(); ++it)
+        m_comboBoxQuoteComment->addItem(it->second, static_cast<int>(it->first));
     connect(m_comboBoxQuoteComment, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
     m_comboBoxKeywordCasing = new KComboBox(false, this);

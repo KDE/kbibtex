@@ -23,9 +23,6 @@
 #include <QTextStream>
 #include <QDir>
 
-#include <KSharedConfig>
-#include <KConfigGroup>
-
 #include "fileinfo.h"
 #include "element.h"
 #include "entry.h"
@@ -160,7 +157,7 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
         if (kpsewhich(QStringLiteral("embedfile.sty")))
             ts << "\\usepackage{embedfile}" << endl;
         if (kpsewhich(QStringLiteral("geometry.sty")))
-            ts << "\\usepackage[paper=" << Preferences::pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << endl;
+            ts << "\\usepackage[paper=" << pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << endl;
         ts << "\\bibliographystyle{" << m_bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
 

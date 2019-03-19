@@ -1,0 +1,204 @@
+{
+    "headerincludes": [
+        "<QPageSize>",
+        "<QColor>",
+        "\"kbibtex.h\""
+    ],
+    "implementationincludes": [
+        "<QVector>",
+        "<QDir>"
+    ],
+    "enums": {
+        "BibliographySystem": [
+            ["BibTeX", 0],
+            ["BibLaTeX", 1]
+        ],
+        "BackupScope": [
+            "NoBackup",
+            "LocalOnly",
+            "BothLocalAndRemote"
+        ],
+        "QuoteComment": [
+            ["qcNone", 0],
+            ["qcCommand", 1],
+            ["qcPercentSign", 2]
+        ],
+        "FileViewDoubleClickAction": [
+            ["ActionOpenEditor", 0],
+            ["ActionViewDocument", 1]
+        ]
+    },
+    "settings": [
+        {
+            "stem": "BibliographySystem",
+            "type": "BibliographySystem",
+            "availabletype": "QVector<QPair<Preferences::BibliographySystem, QString>>",
+            "available": "{{Preferences::BibTeX, i18n(\"BibTeX\")}, {Preferences::BibLaTeX, i18n(\"BibLaTeX\")}}",
+            "notificationevent": "NotificationHub::EventBibliographySystemChanged"
+        },
+        {
+            "stem": "PersonNameFormat",
+            "type": "QString",
+            "default": "LastFirst",
+            "predefined": [
+                ["LastFirst", "QStringLiteral(\"<%l><, %s><, %f>\")"],
+                ["FirstLast", "QStringLiteral(\"<%f ><%l>< %s>\")"]
+            ],
+            "validationcode": "return valueToBeChecked.contains(QStringLiteral(\"%f\")) && valueToBeChecked.contains(QStringLiteral(\"%l\")) && valueToBeChecked.contains(QStringLiteral(\"%s\"));",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "CopyReferenceCommand",
+            "type": "QString",
+            "configgroup": "LaTeX",
+            "availabletype": "QStringList",
+            "available": "{QStringLiteral(\"cite\"), QStringLiteral(\"citealt\"), QStringLiteral(\"citeauthor\"), QStringLiteral(\"citeauthor*\"), QStringLiteral(\"citeyear\"), QStringLiteral(\"citeyearpar\"), QStringLiteral(\"shortcite\"), QStringLiteral(\"citet\"), QStringLiteral(\"citet*\"), QStringLiteral(\"citep\"), QStringLiteral(\"citep*\")}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "PageSize",
+            "type": "QPageSize::PageSizeId",
+            "podtype": "int",
+            "availabletype": "QVector<QPair<QPageSize::PageSizeId, QString>>",
+            "available": "{{QPageSize::A4, QStringLiteral(\"a4paper\")}, {QPageSize::Letter, QStringLiteral(\"letter\")}, {QPageSize::Legal, QStringLiteral(\"legal\")}}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "BackupScope",
+            "type": "BackupScope",
+            "configgroup": "InputOutput",
+            "availabletype": "QVector<QPair<Preferences::BackupScope, QString>>",
+            "available": "{{Preferences::NoBackup, i18n(\"No backups\")}, {Preferences::LocalOnly, i18n(\"Local files only\")}, {Preferences::BothLocalAndRemote, i18n(\"Both local and remote files\")}}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "NumberOfBackups",
+            "type": "int",
+            "configgroup": "InputOutput",
+            "default": "5",
+            "validationcode": "return valueToBeChecked >= 0;",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "IdSuggestionFormatStrings",
+            "type": "QStringList",
+            "configgroup": "IdSuggestions",
+            "default": "{QStringLiteral(\"A\"), QStringLiteral(\"A2|y\"), QStringLiteral(\"A3|y\"), QStringLiteral(\"A4|y|\\\":|T5\"), QStringLiteral(\"al|\\\":|T\"), QStringLiteral(\"al|y\"), QStringLiteral(\"al|Y\"), QStringLiteral(\"Al\\\"-|\\\"-|y\"), QStringLiteral(\"Al\\\"+|Y\"), QStringLiteral(\"al|y|T\"), QStringLiteral(\"al|Y|T3\"), QStringLiteral(\"al|Y|T3l\"), QStringLiteral(\"a|\\\":|Y|\\\":|T1\"), QStringLiteral(\"a|y\"), QStringLiteral(\"A|\\\":|Y\")}",
+            "validationcode": "return !valueToBeChecked.isEmpty() && (valueToBeChecked.front().contains(QLatin1Char('A')) || valueToBeChecked.front().contains(QLatin1Char('a')) || valueToBeChecked.front().contains(QLatin1Char('y')) || valueToBeChecked.front().contains(QLatin1Char('Y')) || valueToBeChecked.front().contains(QLatin1Char('T')));",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "ActiveIdSuggestionFormatString",
+            "type": "QString",
+            "configgroup": "IdSuggestions",
+            "default": "{}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "LyXUseAutomaticPipeDetection",
+            "type": "bool",
+            "configgroup": "LyX",
+            "default": "true",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "LyXPipePath",
+            "type": "QString",
+            "configgroup": "LyX",
+            "default": "QDir::homePath() + QStringLiteral(\"/.lyxpipe.in\")",
+            "validationcode": "return valueToBeChecked.startsWith(QLatin1Char('/'));",
+            "sanitizecode": [
+                "QString sanitizedNewValue = newValue;",
+                "if (sanitizedNewValue.endsWith(QStringLiteral(\".out\")))",
+                "    sanitizedNewValue = sanitizedNewValue.left(sanitizedNewValue.length() - 4);",
+                "if (!sanitizedNewValue.endsWith(QStringLiteral(\".in\")))",
+                "    sanitizedNewValue = sanitizedNewValue.append(QStringLiteral(\".in\"));"
+            ],
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "BibTeXEncoding",
+            "type": "QString",
+            "configgroup": "FileExporterBibTeX",
+            "default": "QStringLiteral(\"UTF-8\")",
+            "availabletype": "QStringList",
+            "available": "{QStringLiteral(\"LaTeX\"), QStringLiteral(\"US-ASCII\"), QStringLiteral(\"ISO-8859-1\"), QStringLiteral(\"ISO-8859-2\"), QStringLiteral(\"ISO-8859-3\"), QStringLiteral(\"ISO-8859-4\"), QStringLiteral(\"ISO-8859-5\"), QStringLiteral(\"ISO-8859-6\"), QStringLiteral(\"ISO-8859-7\"), QStringLiteral(\"ISO-8859-8\"), QStringLiteral(\"ISO-8859-9\"), QStringLiteral(\"ISO-8859-10\"), QStringLiteral(\"ISO-8859-13\"), QStringLiteral(\"ISO-8859-14\"), QStringLiteral(\"ISO-8859-15\"), QStringLiteral(\"ISO-8859-16\"), QStringLiteral(\"UTF-8\"), QStringLiteral(\"UTF-16\"), QStringLiteral(\"UTF-16BE\"), QStringLiteral(\"UTF-16LE\"), QStringLiteral(\"UTF-32\"), QStringLiteral(\"UTF-32BE\"), QStringLiteral(\"UTF-32LE\"), QStringLiteral(\"KOI8-R\"), QStringLiteral(\"KOI8-U\"), QStringLiteral(\"Big5\"), QStringLiteral(\"Big5-HKSCS\"), QStringLiteral(\"GB18030\"), QStringLiteral(\"EUC-JP\"), QStringLiteral(\"EUC-KR\"), QStringLiteral(\"ISO 2022-JP\"), QStringLiteral(\"Shift-JIS\"), QStringLiteral(\"Windows-1250\"), QStringLiteral(\"Windows-1251\"), QStringLiteral(\"Windows-1252\"), QStringLiteral(\"Windows-1253\"), QStringLiteral(\"Windows-1254\"), QStringLiteral(\"Windows-1255\"), QStringLiteral(\"Windows-1256\"), QStringLiteral(\"Windows-1257\"), QStringLiteral(\"Windows-1258\")}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "BibTeXStringDelimiter",
+            "type": "QString",
+            "configgroup": "FileExporterBibTeX",
+            "availabletype": "QStringList",
+            "available": "{QStringLiteral(\"{}\"), QStringLiteral(\"\\\"\\\"\"), QStringLiteral(\"()\")}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "BibTeXQuoteComment",
+            "type": "QuoteComment",
+            "configgroup": "FileExporterBibTeX",
+            "availabletype": "QVector<QPair<Preferences::QuoteComment, QString>>",
+            "available": "{{Preferences::qcNone, i18nc(\"Comment Quoting\", \"None\")}, {Preferences::qcCommand, i18nc(\"Comment Quoting\", \"@comment{\\342\\200\\246}\")}, {Preferences::qcPercentSign, i18nc(\"Comment Quoting\", \"% \\342\\200\\246\")}}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "BibTeXKeywordCasing",
+            "type": "KBibTeX::Casing",
+            "podtype": "int",
+            "configgroup": "FileExporterBibTeX",
+            "availabletype": "QVector<QPair<KBibTeX::Casing, QString>>",
+            "available": "{{KBibTeX::cLowerCase, i18nc(\"Casing of strings\", \"lowercase\")}, {KBibTeX::cInitialCapital, i18nc(\"Casing of strings\", \"Initial capital\")}, {KBibTeX::cUpperCamelCase, i18nc(\"Casing of strings\", \"UpperCamelCase\")}, {KBibTeX::cLowerCamelCase, i18nc(\"Casing of strings\", \"lowerCamelCase\")}, {KBibTeX::cUpperCase, i18nc(\"Casing of strings\", \"UPPERCASE\")}}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "BibTeXProtectCasing",
+            "type": "bool",
+            "default": "true",
+            "configgroup": "FileExporterBibTeX",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "BibTeXListSeparator",
+            "type": "QString",
+            "configgroup": "FileExporterBibTeX",
+            "availabletype": "QStringList",
+            "available": "{QStringLiteral(\"; \"), QStringLiteral(\", \")}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "LaTeXBabelLanguage",
+            "type": "QString",
+            "configgroup": "FileExporterLaTeXbased",
+            "default": "QStringLiteral(\"english\")",
+            "validationcode": "return !valueToBeChecked.isEmpty();",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "BibTeXBibliographyStyle",
+            "type": "QString",
+            "configgroup": "FileExporterLaTeXbased",
+            "default": "QStringLiteral(\"plain\")",
+            "validationcode": "return !valueToBeChecked.isEmpty();",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "FileViewDoubleClickAction",
+            "type": "FileViewDoubleClickAction",
+            "podtype": "int",
+            "configgroup": "User Interface",
+            "availabletype": "QVector<QPair<Preferences::FileViewDoubleClickAction, QString>>",
+            "available": "{{Preferences::ActionOpenEditor, i18nc(\"What to do if double-clicking on a file view item\", \"Open Editor\")}, {Preferences::ActionViewDocument, i18nc(\"What to do if double-clicking on a file view item\", \"View Document\")}}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "ColorCodes",
+            "type": "QVector<QPair<QColor, QString>>",
+            "configgroup": "Color Labels",
+            "default": "{{QColor(0xcc, 0x33, 0x00), i18nc(\"Color Labels\", \"Important\")}, {QColor(0x00, 0x33, 0xff), i18nc(\"Color Labels\", \"Unread\")}, {QColor(0x00, 0x99, 0x66), i18nc(\"Color Labels\", \"Read\")}, {QColor(0xf0, 0xd0, 0x00), i18nc(\"Color Labels\", \"Watch\")}}",
+            "validationcode": ["static const QColor white(Qt::white), black(Qt::black);", "for (QVector<QPair<QColor, QString>>::ConstIterator it = valueToBeChecked.constBegin(); it != valueToBeChecked.constEnd(); ++it)", "    if (it->first == white || it->first == black || it->second.isEmpty())", "        return false;", "return true;"],
+            "notificationevent": "NotificationHub::EventConfigurationChanged",
+            "readEntry": ["const QString rawEntry = configGroup.readEntry(key, QString());", "if (rawEntry.isEmpty()) return Preferences::defaultColorCodes;", "const QStringList pairs = rawEntry.split(QStringLiteral(\"\\0\\0\"), QString::SkipEmptyParts);", "if (pairs.isEmpty()) return Preferences::defaultColorCodes;", "QVector<QPair<QColor, QString>> result;", "for (const QString &pair : pairs) {", "    const QStringList colorLabelPair = pair.split(QStringLiteral(\"\\0\"), QString::SkipEmptyParts);", "    if (colorLabelPair.length() != 2) return Preferences::defaultColorCodes;", "    result.append(qMakePair(QColor(colorLabelPair[0]), colorLabelPair[1]));", "}", "return result;"],
+            "writeEntry": ["QString rawEntry;", "for (QVector<QPair<QColor, QString>>::ConstIterator it = valueToBeWritten.constBegin(); it != valueToBeWritten.constEnd(); ++it) {", "    if (!rawEntry.isEmpty()) rawEntry.append(QStringLiteral(\"\\0\\0\"));", "    rawEntry = rawEntry.append(it->first.name(QColor::HexRgb)).append(QStringLiteral(\"\\0\")).append(it->second);", "}", "configGroup.writeEntry(key, rawEntry, KConfig::Notify);"]
+        }
+    ]
+}

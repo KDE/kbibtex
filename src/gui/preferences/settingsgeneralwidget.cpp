@@ -45,19 +45,19 @@ public:
     void loadState() {
         comboBoxBibliographySystem->setCurrentIndex(comboBoxBibliographySystem->findData(QVariant::fromValue<int>(static_cast<int>(Preferences::instance().bibliographySystem()))));
 
-        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, Preferences::instance().personNameFormatting()));
+        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, Preferences::instance().personNameFormat()));
         comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
     void saveState() {
         Preferences::instance().setBibliographySystem(static_cast<Preferences::BibliographySystem>(comboBoxBibliographySystem->currentData().toInt()));
-        Preferences::instance().setPersonNameFormatting(comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()).toString());
+        Preferences::instance().setPersonNameFormat(comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()).toString());
     }
 
     void resetToDefaults() {
         comboBoxBibliographySystem->setCurrentIndex(static_cast<int>(Preferences::defaultBibliographySystem));
 
-        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, Preferences::defaultPersonNameFormatting));
+        int row = GUIHelper::selectValue(comboBoxPersonNameFormatting->model(), Person::transcribePersonName(&dummyPerson, Preferences::defaultPersonNameFormat));
         comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
@@ -74,7 +74,7 @@ public:
 
         comboBoxPersonNameFormatting = new KComboBox(false, p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
-        const QStringList formattingOptions {Preferences::personNameFormatFirstLast, Preferences::personNameFormatLastFirst};
+        static const QStringList formattingOptions {Preferences::personNameFormatFirstLast, Preferences::personNameFormatLastFirst};
         for (const QString &formattingOption : formattingOptions)
             comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(&dummyPerson, formattingOption), formattingOption);
         connect(comboBoxPersonNameFormatting, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsGeneralWidget::changed);

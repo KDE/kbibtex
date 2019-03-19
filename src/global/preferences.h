@@ -15,166 +15,185 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
+/// This file has been automatically generated using the script 'preferences-generator.py'
+/// based on configuration data from file 'preferences.json'. If there are any problems or
+/// bugs, you need to fix those two files and re-generated both 'preferences.h' and
+/// 'preferences.cpp'. Manual changes in this file will be overwritten the next time the
+/// script will be run. You have been warned.
+
 #ifndef KBIBTEX_GLOBAL_PREFERENCES_H
 #define KBIBTEX_GLOBAL_PREFERENCES_H
 
 #include <QPageSize>
-
+#include <QColor>
 #include "kbibtex.h"
 
-/**
- @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
- */
 class Preferences {
 public:
     static Preferences &instance();
     ~Preferences();
 
-protected:
-    Preferences();
-
-public:
-
-    /// *** Bibliography system, as of now either BibTeX or BibLaTeX
-
-    /// Bibliography system: either BibTeX or BibLaTeX
+    enum BackupScope { NoBackup, LocalOnly, BothLocalAndRemote };
     enum BibliographySystem { BibTeX = 0, BibLaTeX = 1 };
+    enum FileViewDoubleClickAction { ActionOpenEditor = 0, ActionViewDocument = 1 };
+    enum QuoteComment { qcNone = 0, qcCommand = 1, qcPercentSign = 2 };
 
-    /// Default bibliography system if nothing else is set or defined
+
+    /// *** BibliographySystem of type BibliographySystem ***
+
     static const BibliographySystem defaultBibliographySystem;
-    /// Retrieve current bibliography system
+    static const QVector<QPair<Preferences::BibliographySystem, QString>> availableBibliographySystems;
     BibliographySystem bibliographySystem();
-    /// Set bibliography system
-    /// @return true if the set bibliography system is differed from the previous value, false if both were the same
     bool setBibliographySystem(const BibliographySystem bibliographySystem);
-    /// Map of supported bibliography systems, should be the same as in enum BibliographySystem
-    static const QVector<QPair<BibliographySystem, QString>> availableBibliographySystems;
 
-    /// *** Name formatting like "Firstname Lastname", "Lastname, Firstname", or any other combination
 
-    /// Predefined value for a person formatting, where last name comes before first name
+    /// *** PersonNameFormat of type QString ***
+
     static const QString personNameFormatLastFirst;
-    /// Predefined value for a person formatting, where first name comes before last name
     static const QString personNameFormatFirstLast;
-    /// Default name formatting for a person if nothing else is set or defined
-    static const QString defaultPersonNameFormatting;
-    /// Retrieve current name formatting
-    QString personNameFormatting();
-    /// Set name formatting
-    /// @return true if the set formatting is differed from the previous value, false if both were the same
-    bool setPersonNameFormatting(const QString &personNameFormatting);
+    static const QString defaultPersonNameFormat;
+    const QString &personNameFormat();
+    bool setPersonNameFormat(const QString &personNameFormat);
 
 
-    /// *** LaTeX cite command to use if copying references, such as \cite{smith2011} or \citep{smith2011}
+    /// *** CopyReferenceCommand of type QString ***
 
-    static const QVector<QString> availableCopyReferenceCommands;
     static const QString defaultCopyReferenceCommand;
-    QString copyReferenceCommand();
-    /// Set copy reference command
-    /// @return true if the set copy reference command is differed from the previous value, false if both were the same
+    static const QStringList availableCopyReferenceCommands;
+    const QString &copyReferenceCommand();
     bool setCopyReferenceCommand(const QString &copyReferenceCommand);
 
-    /// *** Default paper size
 
-    /// Default paper size if nothing else is set or defined
+    /// *** PageSize of type QPageSize::PageSizeId ***
+
     static const QPageSize::PageSizeId defaultPageSize;
-    /// Retrieve current paper size
+    static const QVector<QPair<QPageSize::PageSizeId, QString>> availablePageSizes;
     QPageSize::PageSizeId pageSize();
-    /// Set paper size
-    /// @return true if the set paper size is differed from the previous value, false if both were the same
-    bool setPageSize(const QPageSize::PageSizeId pageSizeId);
-    /// List of supported paper sizes including mappings to localized names and LaTeX names
-    typedef struct {
-        QPageSize::PageSizeId internalPageSizeId;
-        QString laTeXName;
-    } PageSizeDatabase;
-    static const QVector<PageSizeDatabase> availablePageSizes;
-    static QString pageSizeToLaTeXName(const QPageSize::PageSizeId pageSize);
+    bool setPageSize(const QPageSize::PageSizeId pageSize);
 
-    /// *** Backups of bibliography files
 
-    enum BackupScope { NoBackup, LocalOnly, BothLocalAndRemote };
-    /// Default backup scope if nothing else is set or defined
+    /// *** BackupScope of type BackupScope ***
+
     static const BackupScope defaultBackupScope;
-    /// Retrieve current backup scope
+    static const QVector<QPair<Preferences::BackupScope, QString>> availableBackupScopes;
     BackupScope backupScope();
-    /// Set backup scope
-    /// @return true if the set backup scope is differed from the previous value, false if both were the same
     bool setBackupScope(const BackupScope backupScope);
-    /// Map of supported backup scopes, should be the same as in enum BackupScope
-    static const QVector<QPair<BackupScope, QString>> availableBackupScopes;
 
-    /// Default number of backups if nothing else is set or defined
+
+    /// *** NumberOfBackups of type int ***
+
     static const int defaultNumberOfBackups;
-    /// Retrieve current number of backups
     int numberOfBackups();
-    /// Set number of backups
-    /// @return true if the set number of backups is differed from the previous value, false if both were the same
     bool setNumberOfBackups(const int numberOfBackups);
 
-    /// *** Id Suggestions
+
+    /// *** IdSuggestionFormatStrings of type QStringList ***
 
     static const QStringList defaultIdSuggestionFormatStrings;
-    QStringList idSuggestionFormatStrings();
+    const QStringList &idSuggestionFormatStrings();
     bool setIdSuggestionFormatStrings(const QStringList &idSuggestionFormatStrings);
 
+
+    /// *** ActiveIdSuggestionFormatString of type QString ***
+
     static const QString defaultActiveIdSuggestionFormatString;
-    QString activeIdSuggestionFormatString();
+    const QString &activeIdSuggestionFormatString();
     bool setActiveIdSuggestionFormatString(const QString &activeIdSuggestionFormatString);
 
-    /// *** LyX interaction via pipes
+
+    /// *** LyXUseAutomaticPipeDetection of type bool ***
 
     static const bool defaultLyXUseAutomaticPipeDetection;
     bool lyXUseAutomaticPipeDetection();
     bool setLyXUseAutomaticPipeDetection(const bool lyXUseAutomaticPipeDetection);
 
+
+    /// *** LyXPipePath of type QString ***
+
     static const QString defaultLyXPipePath;
-    QString lyXPipePath();
+    const QString &lyXPipePath();
     bool setLyXPipePath(const QString &lyXPipePath);
 
 
-    /// *** BibTeX Exporter
+    /// *** BibTeXEncoding of type QString ***
 
     static const QString defaultBibTeXEncoding;
-    QString bibTeXEncoding();
+    static const QStringList availableBibTeXEncodings;
+    const QString &bibTeXEncoding();
     bool setBibTeXEncoding(const QString &bibTeXEncoding);
-    static const QStringList &availableBibTeXEncodings;
 
 
+    /// *** BibTeXStringDelimiter of type QString ***
 
-enum ElementDoubleClickAction { ActionOpenEditor = 0, ActionViewDocument = 1 };
-/**
- * Preferences for File objects
- */
-enum QuoteComment { qcNone = 0, qcCommand = 1, qcPercentSign = 2 };
+    static const QString defaultBibTeXStringDelimiter;
+    static const QStringList availableBibTeXStringDelimiters;
+    const QString &bibTeXStringDelimiter();
+    bool setBibTeXStringDelimiter(const QString &bibTeXStringDelimiter);
 
-static const QString groupColor;
-static const QString keyColorCodes;
-static const QStringList defaultColorCodes;
-static const QString keyColorLabels;
-static const QStringList defaultColorLabels;
 
-static const QString groupGeneral;
+    /// *** BibTeXQuoteComment of type QuoteComment ***
 
-static const QString groupUserInterface;
-static const QString keyElementDoubleClickAction;
-static const ElementDoubleClickAction defaultElementDoubleClickAction;
+    static const QuoteComment defaultBibTeXQuoteComment;
+    static const QVector<QPair<Preferences::QuoteComment, QString>> availableBibTeXQuoteComments;
+    QuoteComment bibTeXQuoteComment();
+    bool setBibTeXQuoteComment(const QuoteComment bibTeXQuoteComment);
 
-static const QString keyEncoding;
-static const QString defaultEncoding;
-static const QString keyStringDelimiter;
-static const QString defaultStringDelimiter;
-static const QString keyQuoteComment;
-static const QuoteComment defaultQuoteComment;
-static const QString keyKeywordCasing;
-static const KBibTeX::Casing defaultKeywordCasing;
-static const QString keyProtectCasing;
-static const Qt::CheckState defaultProtectCasing;
-static const QString keyListSeparator;
-static const QString defaultListSeparator;
+
+    /// *** BibTeXKeywordCasing of type KBibTeX::Casing ***
+
+    static const KBibTeX::Casing defaultBibTeXKeywordCasing;
+    static const QVector<QPair<KBibTeX::Casing, QString>> availableBibTeXKeywordCasings;
+    KBibTeX::Casing bibTeXKeywordCasing();
+    bool setBibTeXKeywordCasing(const KBibTeX::Casing bibTeXKeywordCasing);
+
+
+    /// *** BibTeXProtectCasing of type bool ***
+
+    static const bool defaultBibTeXProtectCasing;
+    bool bibTeXProtectCasing();
+    bool setBibTeXProtectCasing(const bool bibTeXProtectCasing);
+
+
+    /// *** BibTeXListSeparator of type QString ***
+
+    static const QString defaultBibTeXListSeparator;
+    static const QStringList availableBibTeXListSeparators;
+    const QString &bibTeXListSeparator();
+    bool setBibTeXListSeparator(const QString &bibTeXListSeparator);
+
+
+    /// *** LaTeXBabelLanguage of type QString ***
+
+    static const QString defaultLaTeXBabelLanguage;
+    const QString &laTeXBabelLanguage();
+    bool setLaTeXBabelLanguage(const QString &laTeXBabelLanguage);
+
+
+    /// *** BibTeXBibliographyStyle of type QString ***
+
+    static const QString defaultBibTeXBibliographyStyle;
+    const QString &bibTeXBibliographyStyle();
+    bool setBibTeXBibliographyStyle(const QString &bibTeXBibliographyStyle);
+
+
+    /// *** FileViewDoubleClickAction of type FileViewDoubleClickAction ***
+
+    static const FileViewDoubleClickAction defaultFileViewDoubleClickAction;
+    static const QVector<QPair<Preferences::FileViewDoubleClickAction, QString>> availableFileViewDoubleClickActions;
+    FileViewDoubleClickAction fileViewDoubleClickAction();
+    bool setFileViewDoubleClickAction(const FileViewDoubleClickAction fileViewDoubleClickAction);
+
+
+    /// *** ColorCodes of type QVector<QPair<QColor, QString>> ***
+
+    static const QVector<QPair<QColor, QString>> defaultColorCodes;
+    const QVector<QPair<QColor, QString>> &colorCodes();
+    bool setColorCodes(const QVector<QPair<QColor, QString>> &colorCodes);
 
 private:
     Q_DISABLE_COPY(Preferences)
+
+    explicit Preferences();
 
     class Private;
     Private *const d;

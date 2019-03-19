@@ -23,9 +23,7 @@
 #include <QAction>
 #include <QMenu>
 
-#include <KConfigGroup>
 #include <KLocalizedString>
-#include <KSharedConfig>
 
 #include "bibtexfields.h"
 #include "models/filemodel.h"

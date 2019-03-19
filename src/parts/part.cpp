@@ -36,6 +36,7 @@
 #include <QPushButton>
 #include <QTemporaryFile>
 #include <QTimer>
+#include <QStandardPaths>
 
 #include <KMessageBox> // FIXME deprecated
 #include <KLocalizedString>
@@ -44,8 +45,6 @@
 #include <KActionMenu>
 #include <KSelectAction>
 #include <KToggleAction>
-#include <KSharedConfig>
-#include <KConfigGroup>
 #include <KRun>
 #include <KPluginFactory>
 #include <KIO/StatJob>
@@ -99,7 +98,6 @@ class KBibTeXPart::KBibTeXPartPrivate
 {
 private:
     KBibTeXPart *p;
-    KSharedConfigPtr config;
 
     /**
      * Modifies a given URL to become a "backup" filename/URL.
@@ -139,7 +137,7 @@ public:
     QFileSystemWatcher fileSystemWatcher;
 
     KBibTeXPartPrivate(QWidget *parentWidget, KBibTeXPart *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), bibTeXFile(nullptr), model(nullptr), sortFilterProxyModel(nullptr), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
+            : p(parent), bibTeXFile(nullptr), model(nullptr), sortFilterProxyModel(nullptr), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
         connect(signalMapperViewDocument, static_cast<void(QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), p, &KBibTeXPart::elementViewDocumentMenu);
         connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged, p, &KBibTeXPart::fileExternallyChange);
 
@@ -727,13 +725,9 @@ public:
     }
 
     void readConfiguration() {
-        /// Fetch settings from configuration
-        KConfigGroup configGroup(config, Preferences::groupUserInterface);
-        const Preferences::ElementDoubleClickAction doubleClickAction = static_cast<Preferences::ElementDoubleClickAction>(configGroup.readEntry(Preferences::keyElementDoubleClickAction, static_cast<int>(Preferences::defaultElementDoubleClickAction)));
-
         disconnect(partWidget->fileView(), &FileView::elementExecuted, partWidget->fileView(), &FileView::editElement);
         disconnect(partWidget->fileView(), &FileView::elementExecuted, p, &KBibTeXPart::elementViewDocument);
-        switch (doubleClickAction) {
+        switch (Preferences::instance().fileViewDoubleClickAction()) {
         case Preferences::ActionOpenEditor:
             connect(partWidget->fileView(), &FileView::elementExecuted, partWidget->fileView(), &FileView::editElement);
             break;

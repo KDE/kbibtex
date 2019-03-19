@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,8 +20,6 @@
 
 #include <QAbstractItemModel>
 #include <QColor>
-
-#include <KSharedConfig>
 
 /**
  * This model maintains a list of label-color pairs.
@@ -54,14 +52,7 @@ signals:
     void modified();
 
 private:
-    struct ColorLabelPair {
-        QColor color;
-        QString label;
-    };
-
-    QList<ColorLabelPair> colorLabelPairs;
-    KSharedConfigPtr config;
-
+    QVector<QPair<QColor, QString>> colorLabelPairs;
 };
 
 #endif // KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_P_H
