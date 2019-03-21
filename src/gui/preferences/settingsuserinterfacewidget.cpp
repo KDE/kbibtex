@@ -23,8 +23,6 @@
 
 #include <KComboBox>
 #include <KLocalizedString>
-#include <KSharedConfig>
-#include <KConfigGroup>
 
 #include "preferences.h"
 #include "elementwidgets.h"
@@ -36,53 +34,30 @@ class SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate
 private:
     SettingsUserInterfaceWidget *p;
 
-    QCheckBox *checkBoxShowComments;
-    QCheckBox *checkBoxShowMacros;
     KComboBox *comboBoxElementDoubleClickAction;
-
-    KSharedConfigPtr config;
-    static const QString configGroupName;
 
 public:
     SettingsUserInterfaceWidgetPrivate(SettingsUserInterfaceWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
+            : p(parent) {
         setupGUI();
     }
 
     void loadState() {
-        KConfigGroup configGroup(config, configGroupName);
-        checkBoxShowComments->setChecked(configGroup.readEntry(FileModel::keyShowComments, FileModel::defaultShowComments));
-        checkBoxShowMacros->setChecked(configGroup.readEntry(FileModel::keyShowMacros, FileModel::defaultShowMacros));
-
         const int row = qMax(0, GUIHelper::selectValue(comboBoxElementDoubleClickAction->model(), static_cast<int>(Preferences::instance().fileViewDoubleClickAction()), Qt::UserRole));
         comboBoxElementDoubleClickAction->setCurrentIndex(row);
     }
 
     void saveState() {
-        KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(FileModel::keyShowComments, checkBoxShowComments->isChecked());
-        configGroup.writeEntry(FileModel::keyShowMacros, checkBoxShowMacros->isChecked());
         Preferences::instance().setFileViewDoubleClickAction(static_cast<Preferences::FileViewDoubleClickAction>(comboBoxElementDoubleClickAction->currentData().toInt()));
-        config->sync();
     }
 
     void resetToDefaults() {
-        checkBoxShowComments->setChecked(FileModel::defaultShowComments);
-        checkBoxShowMacros->setChecked(FileModel::defaultShowMacros);
         const int row = qMax(0, GUIHelper::selectValue(comboBoxElementDoubleClickAction->model(), static_cast<int>(Preferences::defaultFileViewDoubleClickAction), Qt::UserRole));
         comboBoxElementDoubleClickAction->setCurrentIndex(row);
     }
 
     void setupGUI() {
         QFormLayout *layout = new QFormLayout(p);
-
-        checkBoxShowComments = new QCheckBox(p);
-        layout->addRow(i18n("Show Comments:"), checkBoxShowComments);
-        connect(checkBoxShowComments, &QCheckBox::toggled, p, &SettingsUserInterfaceWidget::changed);
-
-        checkBoxShowMacros = new QCheckBox(p);
-        layout->addRow(i18n("Show Macros:"), checkBoxShowMacros);
-        connect(checkBoxShowMacros, &QCheckBox::toggled, p, &SettingsUserInterfaceWidget::changed);
 
         comboBoxElementDoubleClickAction = new KComboBox(p);
         comboBoxElementDoubleClickAction->setObjectName(QStringLiteral("comboBoxElementDoubleClickAction"));
@@ -92,8 +67,6 @@ public:
         connect(comboBoxElementDoubleClickAction, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsUserInterfaceWidget::changed);
     }
 };
-
-const QString SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate::configGroupName = QStringLiteral("User Interface");
 
 
 SettingsUserInterfaceWidget::SettingsUserInterfaceWidget(QWidget *parent)

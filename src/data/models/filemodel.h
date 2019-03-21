@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,8 +23,6 @@
 #include <QList>
 #include <QStringList>
 
-#include <KSharedConfig>
-
 #include "kbibtexdata_export.h"
 
 #include "notificationhub.h"
@@ -43,10 +41,6 @@ class KBIBTEXDATA_EXPORT FileModel : public QAbstractTableModel, private Notific
 public:
     static const int NumberRole;
     static const int SortRole;
-    static const QString keyShowComments;
-    static const bool defaultShowComments;
-    static const QString keyShowMacros;
-    static const bool defaultShowMacros;
 
     explicit FileModel(QObject *parent = nullptr);
 

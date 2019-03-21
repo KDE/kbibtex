@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,8 +24,6 @@
 #include <QString>
 
 #include <KLocalizedString>
-#include <KConfigGroup>
-#include <KSharedConfig>
 
 #include "element.h"
 #include "entry.h"
@@ -38,11 +36,6 @@
 
 const int FileModel::NumberRole = Qt::UserRole + 9581;
 const int FileModel::SortRole = Qt::UserRole + 236; /// see also MDIWidget's SortRole
-
-const QString FileModel::keyShowComments = QStringLiteral("showComments");
-const bool FileModel::defaultShowComments = true;
-const QString FileModel::keyShowMacros = QStringLiteral("showMacros");
-const bool FileModel::defaultShowMacros = true;
 
 
 FileModel::FileModel(QObject *parent)
