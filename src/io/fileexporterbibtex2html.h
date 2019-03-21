@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,6 +14,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_IO_FILEEXPORTERBIBTEX2HTML_H
 #define KBIBTEX_IO_FILEEXPORTERBIBTEX2HTML_H
 
@@ -29,8 +30,6 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX2HTML: public FileExporterToolchain
 public:
     explicit FileExporterBibTeX2HTML(QObject *parent);
     ~FileExporterBibTeX2HTML() override;
-
-    void reloadConfig() override;
 
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;

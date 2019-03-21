@@ -33,16 +33,12 @@ public:
     explicit FileExporterPS(QObject *parent);
     ~FileExporterPS() override;
 
-    void reloadConfig() override;
-
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
 private:
     QString m_fileBasename;
     QString m_fileStem;
-    QString m_babelLanguage;
-    QString m_bibliographyStyle;
 
     bool generatePS(QIODevice *iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);

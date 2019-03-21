@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,6 +14,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef BIBTEXFILEEXPORTERRTF_H
 #define BIBTEXFILEEXPORTERRTF_H
 
@@ -32,17 +33,12 @@ public:
     explicit FileExporterRTF(QObject *parent);
     ~FileExporterRTF() override;
 
-    void reloadConfig() override;
-
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
 private:
     QString m_fileBasename;
     QString m_fileStem;
-    QString m_babelLanguage;
-    QString m_bibliographyStyle;
-    QString m_paperSize;
 
     bool generateRTF(QIODevice *iodevice, QStringList *errorLog);
     bool writeLatexFile(const QString &filename);

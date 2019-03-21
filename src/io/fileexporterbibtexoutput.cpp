@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,21 +28,17 @@
 #include "entry.h"
 #include "fileexporterbibtex.h"
 #include "kbibtex.h"
+#include "preferences.h"
 #include "logging_io.h"
 
 FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType, QObject *parent)
-        : FileExporterToolchain(parent), m_outputType(outputType), m_latexLanguage(QStringLiteral("english")), m_latexBibStyle(QStringLiteral("plain"))
+        : FileExporterToolchain(parent), m_outputType(outputType)
 {
     m_fileBasename = QStringLiteral("bibtex-to-output");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 }
 
 FileExporterBibTeXOutput::~FileExporterBibTeXOutput()
-{
-    /// nothing
-}
-
-void FileExporterBibTeXOutput::reloadConfig()
 {
     /// nothing
 }
@@ -101,16 +97,6 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<co
     return result;
 }
 
-void FileExporterBibTeXOutput::setLaTeXLanguage(const QString &language)
-{
-    m_latexLanguage = language;
-}
-
-void FileExporterBibTeXOutput::setLaTeXBibliographyStyle(const QString &bibStyle)
-{
-    m_latexBibStyle = bibStyle;
-}
-
 bool FileExporterBibTeXOutput::generateOutput(QStringList *errorLog)
 {
     QStringList cmdLines {QStringLiteral("pdflatex -halt-on-error ") + m_fileBasename + KBibTeX::extensionTeX, QStringLiteral("bibtex ") + m_fileBasename + KBibTeX::extensionAux};
@@ -133,14 +119,15 @@ bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
         ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";
         if (kpsewhich(QStringLiteral("babel.sty")))
-            ts << "\\usepackage[" << m_latexLanguage << "]{babel}\n";
+            ts << "\\usepackage[" << Preferences::instance().laTeXBabelLanguage() << "]{babel}\n";
         if (kpsewhich(QStringLiteral("hyperref.sty")))
             ts << "\\usepackage[pdfproducer={KBibTeX: https://userbase.kde.org/KBibTeX},pdftex]{hyperref}\n";
         else if (kpsewhich(QStringLiteral("url.sty")))
             ts << "\\usepackage{url}\n";
-        if (m_latexBibStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))
+        const QString latexBibStyle = Preferences::instance().bibTeXBibliographyStyle();
+        if (latexBibStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))
             ts << "\\usepackage[bibnewpage]{apacite}\n";
-        ts << "\\bibliographystyle{" << m_latexBibStyle << "}\n";
+        ts << "\\bibliographystyle{" << latexBibStyle << "}\n";
         ts << "\\begin{document}\n";
         ts << "\\nocite{*}\n";
         ts << QStringLiteral("\\bibliography{") + m_fileBasename + QStringLiteral("}\n");

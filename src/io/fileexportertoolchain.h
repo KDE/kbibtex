@@ -33,15 +33,7 @@ class KBIBTEXIO_EXPORT FileExporterToolchain : public FileExporter
     Q_OBJECT
 
 public:
-    static const QString keyBabelLanguage;
-    static const QString defaultBabelLanguage;
-
-    static const QString keyBibliographyStyle;
-    static const QString defaultBibliographyStyle;
-
     explicit FileExporterToolchain(QObject *parent);
-
-    virtual void reloadConfig() = 0;
 
     static bool kpsewhich(const QString &filename);
 

@@ -21,8 +21,6 @@
 #include <QPageSize>
 #include <KLineEdit>
 
-#include <KSharedConfig>
-#include <KConfigGroup>
 #include <KComboBox>
 #include <KLocalizedString>
 
@@ -40,49 +38,39 @@ private:
     KComboBox *comboBoxBabelLanguage;
     KComboBox *comboBoxBibliographyStyle;
 
-    KSharedConfigPtr config;
-    const QString configGroupName, configGroupNameGeneral ;
-
 public:
 
     SettingsFileExporterPDFPSWidgetPrivate(SettingsFileExporterPDFPSWidget *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("FileExporterPDFPS")), configGroupNameGeneral(QStringLiteral("General")) {
-
+            : p(parent)
+    {
         setupGUI();
     }
 
     void loadState() {
-        KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
-
         int row = qMax(0, GUIHelper::selectValue(comboBoxPaperSize->model(), static_cast<int>(Preferences::instance().pageSize()), Qt::UserRole));
         comboBoxPaperSize->setCurrentIndex(row);
 
-        KConfigGroup configGroup(config, configGroupName);
-        QString babelLanguage = configGroup.readEntry(FileExporterToolchain::keyBabelLanguage, FileExporterToolchain::defaultBabelLanguage);
-        row = GUIHelper::selectValue(comboBoxBabelLanguage->model(), babelLanguage);
+        const QString babelLanguage = Preferences::instance().laTeXBabelLanguage();
+        row = qMax(0, GUIHelper::selectValue(comboBoxBabelLanguage->model(), babelLanguage));
         comboBoxBabelLanguage->setCurrentIndex(row);
-        QString bibliographyStyle = configGroup.readEntry(FileExporterToolchain::keyBibliographyStyle, FileExporterToolchain::defaultBibliographyStyle);
-        row = GUIHelper::selectValue(comboBoxBibliographyStyle->model(), bibliographyStyle);
+        const QString bibliographyStyle = Preferences::instance().bibTeXBibliographyStyle();
+        row = qMax(0, GUIHelper::selectValue(comboBoxBibliographyStyle->model(), bibliographyStyle));
         comboBoxBibliographyStyle->setCurrentIndex(row);
     }
 
     void saveState() {
-        KConfigGroup configGroupGeneral(config, configGroupNameGeneral);
-
         Preferences::instance().setPageSize(static_cast<QPageSize::PageSizeId>(comboBoxPaperSize->currentData().toInt()));
 
-        KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(FileExporterToolchain::keyBabelLanguage, comboBoxBabelLanguage->lineEdit()->text());
-        configGroup.writeEntry(FileExporterToolchain::keyBibliographyStyle, comboBoxBibliographyStyle->lineEdit()->text());
-        config->sync();
+        Preferences::instance().setLaTeXBabelLanguage(comboBoxBabelLanguage->lineEdit()->text());
+        Preferences::instance().setBibTeXBibliographyStyle(comboBoxBibliographyStyle->lineEdit()->text());
     }
 
     void resetToDefaults() {
         int row = qMax(0, GUIHelper::selectValue(comboBoxPaperSize->model(), static_cast<int>(Preferences::defaultPageSize), Qt::UserRole));
         comboBoxPaperSize->setCurrentIndex(row);
-        row = GUIHelper::selectValue(comboBoxBabelLanguage->model(), FileExporterToolchain::defaultBabelLanguage);
+        row = qMax(0, GUIHelper::selectValue(comboBoxBabelLanguage->model(), Preferences::defaultLaTeXBabelLanguage));
         comboBoxBabelLanguage->setCurrentIndex(row);
-        row = GUIHelper::selectValue(comboBoxBibliographyStyle->model(), FileExporterToolchain::defaultBibliographyStyle);
+        row = qMax(0, GUIHelper::selectValue(comboBoxBibliographyStyle->model(), Preferences::defaultBibTeXBibliographyStyle));
         comboBoxBibliographyStyle->setCurrentIndex(row);
     }
 

@@ -31,11 +31,6 @@
 
 #include "preferences.h"
 
-const QString FileExporterToolchain::keyBabelLanguage = QStringLiteral("babelLanguage");
-const QString FileExporterToolchain::defaultBabelLanguage = QStringLiteral("english");
-const QString FileExporterToolchain::keyBibliographyStyle = QStringLiteral("bibliographyStyle");
-const QString FileExporterToolchain::defaultBibliographyStyle = QStringLiteral("plain");
-
 FileExporterToolchain::FileExporterToolchain(QObject *parent)
         : FileExporter(parent)
 {

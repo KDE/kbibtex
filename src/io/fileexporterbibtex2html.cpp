@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -99,11 +99,6 @@ FileExporterBibTeX2HTML::FileExporterBibTeX2HTML(QObject *parent)
 FileExporterBibTeX2HTML::~FileExporterBibTeX2HTML()
 {
     delete d;
-}
-
-void FileExporterBibTeX2HTML::reloadConfig()
-{
-    /// nothing
 }
 
 bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)

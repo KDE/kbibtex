@@ -543,7 +543,6 @@ public:
 
                 if (dlg->exec() == QDialog::Accepted)
                     settingsWidget->saveState();
-                fet->reloadConfig();
                 delete dlg;
             }
         }
