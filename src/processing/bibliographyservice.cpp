@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,7 +17,9 @@
 
 #include "bibliographyservice.h"
 
+#include <QCoreApplication>
 #include <QStandardPaths>
+#include <QProcess>
 
 #include <KSharedConfig>
 #include <KConfigGroup>
@@ -174,27 +176,25 @@ BibliographyService::~BibliographyService()
 
 void BibliographyService::setKBibTeXasDefault() {
     /// Go through all supported mime types
-    for (const QString &mimeType : d->textBasedMimeTypes) {
+    for (const QString &mimeType : BibliographyService::Private::textBasedMimeTypes) {
         d->setKBibTeXforMimeType(mimeType, true);
     }
 
     /// kbuildsycoca5 has to be run to update the mime type associations
     QProcess *kbuildsycoca5Process = new QProcess(d->parentWidget);
-    connect(kbuildsycoca5Process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), this, &BibliographyService::kbuildsycoca5finished);
+    connect(kbuildsycoca5Process, static_cast<void(QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), QCoreApplication::instance(), [this](const int exitCode, const QProcess::ExitStatus exitStatus) {
+        if (exitCode != 0 || exitStatus != QProcess::NormalExit)
+            KMessageBox::error(d->parentWidget, i18n("Failed to run 'kbuildsycoca5' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca5'"));
+    });
     kbuildsycoca5Process->start(QStringLiteral("kbuildsycoca5"), QStringList());
 }
 
 bool BibliographyService::isKBibTeXdefault() const {
     /// Go through all supported mime types
-    for (const QString &mimeType : d->textBasedMimeTypes) {
+    for (const QString &mimeType : BibliographyService::Private::textBasedMimeTypes) {
         /// Test if KBibTeX is default handler for mime type
         if (!d->isKBibTeXdefaultForMimeType(mimeType))
             return false; ///< Failing any test means KBibTeX is not default application/part
     }
     return true; ///< All tests passed, KBibTeX is default application/part
-}
-
-void BibliographyService::kbuildsycoca5finished(int exitCode, QProcess::ExitStatus exitStatus) {
-    if (exitCode != 0 || exitStatus != QProcess::NormalExit)
-        KMessageBox::error(d->parentWidget, i18n("Failed to run 'kbuildsycoca5' to update mime type associations.\n\nThe system may not know how to use KBibTeX to open bibliography files."), i18n("Failed to run 'kbuildsycoca5'"));
 }

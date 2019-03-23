@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,7 +20,7 @@
 
 #include "kbibtexproc_export.h"
 
-#include <QProcess>
+#include <QObject>
 
 /**
  * To make (or test for) KBibTeX the default bibliography editor,
@@ -50,9 +50,6 @@ public:
      * @return true if KBibTeX is default editor, else false
      */
     bool isKBibTeXdefault() const;
-
-private slots:
-    void kbuildsycoca5finished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     class Private;
