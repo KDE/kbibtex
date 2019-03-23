@@ -280,7 +280,7 @@ Macro *FileImporterBibTeX::readMacroElement()
         while (m_knownElementIds.contains(newKey))
             newKey = newIdPattern.arg(key).arg(++idx);
         qCDebug(LOG_KBIBTEX_IO) << "Duplicate macro key" << key << ", using replacement key" << newKey;
-        emit message(SeverityWarning, QString(QStringLiteral("Duplicate macro key '%1', using replacement key '%2'")).arg(key).arg(newKey));
+        emit message(SeverityWarning, QString(QStringLiteral("Duplicate macro key '%1', using replacement key '%2'")).arg(key, newKey));
         key = newKey;
     }
     m_knownElementIds.insert(key);
@@ -455,7 +455,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         token = nextToken();
         if (token != tAssign) {
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << ", field name" << keyName << "near line" << m_lineNo  << "(" << m_prevLine << endl << m_currentLine << "): Assign symbol '=' expected after field name";
-            emit message(SeverityError, QString(QStringLiteral("Error in parsing entry '%1', field name '%2' near line %3: Assign symbol '=' expected after field name")).arg(id).arg(keyName).arg(m_lineNo));
+            emit message(SeverityError, QString(QStringLiteral("Error in parsing entry '%1', field name '%2' near line %3: Assign symbol '=' expected after field name")).arg(id, keyName).arg(m_lineNo));
             delete entry;
             return nullptr;
         }
@@ -482,7 +482,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
                     appendix = QString::number(i);
                 }
                 qCDebug(LOG_KBIBTEX_IO) << "Entry" << id << "already contains a key" << keyName << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "), using" << (keyName + appendix);
-                emit message(SeverityWarning, QString(QStringLiteral("Entry '%1' already contains a key '%2' near line %3, using '%4'")).arg(id).arg(keyName).arg(m_lineNo).arg(keyName + appendix));
+                emit message(SeverityWarning, QString(QStringLiteral("Entry '%1' already contains a key '%2' near line %4, using '%3'")).arg(id, keyName, keyName + appendix).arg(m_lineNo));
                 keyName += appendix;
             }
         }
@@ -490,7 +490,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         token = readValue(value, keyName);
         if (token != tBracketClose && token != tComma) {
             qCWarning(LOG_KBIBTEX_IO) << "Failed to read value in entry" << id << ", field name" << keyName << "near line" << m_lineNo  << "(" << m_prevLine << endl << m_currentLine << ")";
-            emit message(SeverityError, QString(QStringLiteral("Failed to read value in entry '%1', field name '%2' near line %3")).arg(id).arg(keyName).arg(m_lineNo));
+            emit message(SeverityError, QString(QStringLiteral("Failed to read value in entry '%1', field name '%2' near line %3")).arg(id, keyName).arg(m_lineNo));
             delete entry;
             return nullptr;
         }
@@ -607,7 +607,7 @@ QString FileImporterBibTeX::readSimpleString(const QString &until)
 
 QString FileImporterBibTeX::readQuotedString()
 {
-    QString result(QStringLiteral(""));
+    QString result;
 
     Q_ASSERT_X(m_nextChar == QLatin1Char('"'), "QString FileImporterBibTeX::readQuotedString()", "m_nextChar is not '\"'");
 
@@ -633,7 +633,7 @@ QString FileImporterBibTeX::readQuotedString()
 QString FileImporterBibTeX::readBracketString()
 {
     static const QChar backslash = QLatin1Char('\\');
-    QString result(QStringLiteral(""));
+    QString result;
     const QChar openingBracket = m_nextChar;
     const QChar closingBracket = openingBracket == QLatin1Char('{') ? QLatin1Char('}') : (openingBracket == QLatin1Char('(') ? QLatin1Char(')') : QChar());
     Q_ASSERT_X(!closingBracket.isNull(), "QString FileImporterBibTeX::readBracketString()", "openingBracket==m_nextChar is neither '{' nor '('");

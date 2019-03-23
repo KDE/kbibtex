@@ -1260,7 +1260,7 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
     const QScopedPointer<const File> file(d->importerBibTeX->fromString(text));
     disconnect(d->importerBibTeX, &FileImporterBibTeX::message, this, &SourceWidget::addMessage);
     if (file.isNull() || file->count() != 1) {
-        if (widgetWithIssue != nullptr) *widgetWithIssue = document->views().first(); ///< We create one view initially, so this should never fail
+        if (widgetWithIssue != nullptr) *widgetWithIssue = document->views().at(0); ///< We create one view initially, so this should never fail
         message = i18n("Given source code does not parse as one single BibTeX element.");
         return false;
     }
@@ -1292,7 +1292,7 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
     }
 
     if (!result && widgetWithIssue != nullptr)
-        *widgetWithIssue = document->views().first(); ///< We create one view initially, so this should never fail
+        *widgetWithIssue = document->views().at(0); ///< We create one view initially, so this should never fail
 
     if (message.isEmpty() && d->messages->count() == 0)
         d->addMessage(FileImporter::SeverityInfo, i18n("No issues detected"));
