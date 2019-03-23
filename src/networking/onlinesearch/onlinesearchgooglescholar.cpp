@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -189,7 +189,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
             url.setQuery(query);
 
             const QUrl replyUrl = reply->url();
-            QTimer::singleShot(250, [this, url, replyUrl]() {
+            QTimer::singleShot(250, this, [this, url, replyUrl]() {
                 QNetworkRequest request(url);
                 QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, replyUrl);
                 InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
@@ -244,7 +244,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
             }
             url.setQuery(query);
 
-            QTimer::singleShot(250, [this, url, reply]() {
+            QTimer::singleShot(250, this, [this, url, reply]() {
                 QNetworkRequest request(url);
                 QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
                 InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
@@ -287,7 +287,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
             query.addQueryItem(QStringLiteral("btnG"), QStringLiteral("Search Scholar"));
             url.setQuery(query);
 
-            QTimer::singleShot(250, [this, url, reply]() {
+            QTimer::singleShot(250, this, [this, url, reply]() {
                 QNetworkRequest request(url);
                 QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
                 InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
@@ -349,7 +349,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                 const QString bibtexUrl = listBibTeXurlsFront.key();
                 const QString primaryUrl = listBibTeXurlsFront.value().first;
                 const QString documentUrl = listBibTeXurlsFront.value().second;
-                QTimer::singleShot(250, [this, bibtexUrl, primaryUrl, documentUrl, reply]() {
+                QTimer::singleShot(250, this, [this, bibtexUrl, primaryUrl, documentUrl, reply]() {
                     QNetworkRequest request(bibtexUrl);
                     QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
                     if (!primaryUrl.isEmpty()) {
