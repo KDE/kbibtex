@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *   Copyright (C) 2014 by Pino Toscano <pino@kde.org>                     *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -264,7 +264,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
                 if (v.isEmpty() && index > 10) break;
             }
             for (int index = 1; index < 100; ++index) {
-                const QString field = index == 1 ? Entry::ftLocalFile : QString(QStringLiteral("%1%2")).arg(Entry::ftFile).arg(index);
+                const QString field = index == 1 ? Entry::ftFile : QString(QStringLiteral("%1%2")).arg(Entry::ftFile).arg(index);
                 const Value v = entry->value(field);
                 for (const QSharedPointer<ValueItem> &vi : v) {
                     filesUrlsDoiList << PlainTextValue::text(vi);

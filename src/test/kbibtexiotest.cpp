@@ -126,7 +126,7 @@ void KBibTeXIOTest::encoderLaTeXdecode_data()
     QTest::addColumn<QString>("alternativelatex");
 
     QTest::newRow("Just ASCII") << QStringLiteral("Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur.") << QStringLiteral("Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur.") << QString();
-    QTest::newRow("Dotless i and j characters") << QStringLiteral("\\`{\\i}\\'{\\i}\\^{\\i}\\\"{\\i}\\~{\\i}\\={\\i}\\u{\\i}\\k{\\i}\\^{\\j}\\v{\\i}\\v{\\j}") << QString(QChar(0x00EC)) + QChar(0x00ED) + QChar(0x00EE) + QChar(0x00EF) + QChar(0x0129) + QChar(0x012B) + QChar(0x012D) + QChar(0x012F) + QChar(0x0135) + QChar(0x01D0) + QChar(0x01F0) << QString();
+    QTest::newRow("Dotless i and j characters") << QStringLiteral("{\\`\\i}{\\'\\i}{\\^\\i}{\\\"\\i}{\\~\\i}{\\=\\i}{\\u\\i}{\\k\\i}{\\^\\j}{\\v\\i}{\\v\\j}") << QString(QChar(0x00EC)) + QChar(0x00ED) + QChar(0x00EE) + QChar(0x00EF) + QChar(0x0129) + QChar(0x012B) + QChar(0x012D) + QChar(0x012F) + QChar(0x0135) + QChar(0x01D0) + QChar(0x01F0) << QString();
     QTest::newRow("\\l and \\ldots") << QStringLiteral("\\l\\ldots\\l\\ldots") << QString(QChar(0x0142)) + QChar(0x2026) + QChar(0x0142) + QChar(0x2026) << QStringLiteral("{\\l}{\\ldots}{\\l}{\\ldots}");
 }
 
@@ -526,6 +526,7 @@ void KBibTeXIOTest::partialBibTeXInput_data()
         {"Complete entry with empty title (1)", true, QStringLiteral("@entry{test,\n  title=\"{}\"\n}")},
         {"Complete entry with empty title (2)", true, QStringLiteral("@entry{test,\n  title=\"\"\n}")},
         {"Complete entry with empty title (3)", true, QStringLiteral("@entry{test,\n  title={{}}\n}")},
+        {"Complete entry with empty title (4)", true, QStringLiteral("@entry{test,\n  title={}\n}")},
         {"Entry abruptly ending at macro key as field value (1)", false, QStringLiteral("@entry{test,\n  month = jan")},
         {"Entry abruptly ending at macro key as field value (2)", false, QStringLiteral("@entry{test,\n  month = jan\n")},
         // TODO more tests

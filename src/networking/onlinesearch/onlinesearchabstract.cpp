@@ -600,7 +600,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
         }
     } else if (!entry->contains(Entry::ftDOI) && entry->contains(Entry::ftUrl)) {
         /// If URL looks like a DOI, remove URL and add a DOI field
-        QSet<QString> doiSet;
+        QSet<QString> doiSet; ///< using a QSet here to keep only unique DOIs
         Value v = entry->value(Entry::ftUrl);
         bool gotChanged = false;
         for (Value::Iterator it = v.begin(); it != v.end();) {
@@ -619,7 +619,13 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
             entry->insert(Entry::ftUrl, v);
         if (!doiSet.isEmpty()) {
             Value doiValue;
+            /// Rewriting QSet<QString> doiSet into a (sorted) list for reproducibility
+            /// (required for automated test in KBibTeXNetworkingTest)
+            QStringList list;
             for (const QString &doi : doiSet)
+                list.append(doi);
+            list.sort();
+            for (const QString &doi : const_cast<const QStringList &>(list))
                 doiValue.append(QSharedPointer<PlainText>(new PlainText(doi)));
             entry->insert(Entry::ftDOI, doiValue);
         }
