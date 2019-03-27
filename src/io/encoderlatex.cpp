@@ -472,7 +472,7 @@ encoderLaTeXEscapedCharacters[] = {
     {QLatin1Char('`'), QLatin1Char('y'), 0x1EF3, DirectionBoth},
     {QLatin1Char('d'), QLatin1Char('Y'), 0x1EF4, DirectionBoth},
     {QLatin1Char('d'), QLatin1Char('y'), 0x1EF5, DirectionBoth},
-    {QLatin1Char('r'), QLatin1Char('q'), 0x2019, DirectionBoth} ///< tricky: this is \rq
+    {QLatin1Char('r'), QLatin1Char('q'), 0x2019, DirectionCommandToUnicode} ///< tricky: this is \rq
 };
 
 
@@ -538,6 +538,37 @@ static const struct MathCommand {
     const EncoderLaTeXCommandDirection direction;
 }
 mathCommands[] = {
+    {QStringLiteral("pm"), 0x00B1, DirectionBoth},
+    {QStringLiteral("times"), 0x00D7, DirectionBoth},
+    {QStringLiteral("div"), 0x00F7, DirectionBoth},
+    // TODO more Greek letters for math mode
+    {QStringLiteral("alpha"), 0x03B1, DirectionBoth},
+    {QStringLiteral("beta"), 0x03B2, DirectionBoth},
+    {QStringLiteral("gamma"), 0x03B3, DirectionBoth},
+    {QStringLiteral("delta"), 0x03B4, DirectionBoth},
+    {QStringLiteral("epsilon"), 0x03B5, DirectionBoth},
+    {QStringLiteral("zeta"), 0x03B6, DirectionBoth},
+    {QStringLiteral("eta"), 0x03B7, DirectionBoth},
+    {QStringLiteral("theta"), 0x03B8, DirectionBoth},
+    {QStringLiteral("iota"), 0x03B9, DirectionBoth},
+    {QStringLiteral("kappa"), 0x03BA, DirectionBoth},
+    {QStringLiteral("lambda"), 0x03BB, DirectionBoth},
+    {QStringLiteral("mu"), 0x03BC, DirectionBoth},
+    {QStringLiteral("nu"), 0x03BD, DirectionBoth},
+    {QStringLiteral("xi"), 0x03BE, DirectionBoth},
+    {QStringLiteral("omicron"), 0x03BF, DirectionBoth},
+    {QStringLiteral("pi"), 0x03C0, DirectionBoth},
+    {QStringLiteral("rho"), 0x03C1, DirectionBoth},
+    {QStringLiteral("varsigma"), 0x03C2, DirectionBoth},
+    {QStringLiteral("sigma"), 0x03C3, DirectionBoth},
+    {QStringLiteral("tau"), 0x03C4, DirectionBoth},
+    {QStringLiteral("upsilon"), 0x03C5, DirectionBoth},
+    {QStringLiteral("phi"), 0x03C6, DirectionBoth},
+    {QStringLiteral("chi"), 0x03C7, DirectionBoth},
+    {QStringLiteral("psi"), 0x03C8, DirectionBoth},
+    {QStringLiteral("omega"), 0x03C9, DirectionBoth},
+    {QStringLiteral("dagger"), 0x2020, DirectionBoth},
+    {QStringLiteral("ddagger"), 0x2021, DirectionBoth},
     {QStringLiteral("ell"), 0x2113, DirectionBoth},
     {QStringLiteral("rightarrow"), 0x2192, DirectionBoth},
     {QStringLiteral("forall"), 0x2200, DirectionBoth},
@@ -574,7 +605,7 @@ static const struct EncoderLaTeXCharacterCommand {
     const EncoderLaTeXCommandDirection direction;
 }
 encoderLaTeXCharacterCommands[] = {
-    {QStringLiteral("textexclamdown"), 0x00A1, DirectionBoth}, // TODO /// recommended to write  !`  instead of  \textexclamdown
+    {QStringLiteral("textexclamdown"), 0x00A1, DirectionCommandToUnicode},
     {QStringLiteral("textcent"), 0x00A2, DirectionBoth},
     {QStringLiteral("pounds"), 0x00A3, DirectionBoth},
     {QStringLiteral("textsterling"), 0x00A3, DirectionBoth},
@@ -587,8 +618,9 @@ encoderLaTeXCharacterCommands[] = {
     {QStringLiteral("copyright"), 0x00A9, DirectionBoth},
     {QStringLiteral("textcopyright"), 0x00A9, DirectionBoth},
     {QStringLiteral("textordfeminine"), 0x00AA, DirectionBoth},
-    {QStringLiteral("guillemotleft"), 0x00AB, DirectionBoth},
+    {QStringLiteral("guillemotleft"), 0x00AB, DirectionCommandToUnicode},
     {QStringLiteral("textflqq"), 0x00AB, DirectionCommandToUnicode},
+    {QStringLiteral("flqq"), 0x00AB, DirectionBoth},
     /** 0x00AC */
     /** 0x00AD */
     {QStringLiteral("textregistered"), 0x00AE, DirectionBoth},
@@ -602,14 +634,15 @@ encoderLaTeXCharacterCommands[] = {
     {QStringLiteral("textmu"), 0x00B5, DirectionBoth},
     {QStringLiteral("textparagraph"), 0x00B6, DirectionBoth},
     {QStringLiteral("textpilcrow"), 0x00B6, DirectionBoth},
-    {QStringLiteral("textperiodcentered"), 0x00B7, DirectionBoth},
-    {QStringLiteral("textcdot"), 0x00B7, DirectionCommandToUnicode},
+    {QStringLiteral("textperiodcentered"), 0x00B7, DirectionCommandToUnicode},
+    {QStringLiteral("textcdot"), 0x00B7, DirectionBoth},
     {QStringLiteral("textcentereddot"), 0x00B7, DirectionCommandToUnicode},
     /** 0x00B8 */
     /** 0x00B9 */
     {QStringLiteral("textordmasculine"), 0x00BA, DirectionBoth},
-    {QStringLiteral("guillemotright"), 0x00BB, DirectionBoth},
+    {QStringLiteral("guillemotright"), 0x00BB, DirectionCommandToUnicode},
     {QStringLiteral("textfrqq"), 0x00BB, DirectionCommandToUnicode},
+    {QStringLiteral("frqq"), 0x00BB, DirectionBoth},
     {QStringLiteral("textonequarter"), 0x00BC, DirectionBoth},
     {QStringLiteral("textonehalf"), 0x00BD, DirectionBoth},
     {QStringLiteral("textthreequarters"), 0x00BE, DirectionBoth},
@@ -745,14 +778,24 @@ encoderLaTeXCharacterCommands[] = {
     {QStringLiteral("dz"), 0x01F3, DirectionCommandToUnicode},
     {QStringLiteral("HV"), 0x01F6, DirectionCommandToUnicode},
     {QStringLiteral("j"), 0x0237, DirectionBoth},
-    {QStringLiteral("ldots"), 0x2026, DirectionBoth}, /** \ldots must be before \l */ // TODO comment still true?
+    {QStringLiteral("ldots"), 0x2026, DirectionBoth},
     {QStringLiteral("grqq"), 0x201C, DirectionCommandToUnicode},
+    {QStringLiteral("textquotedblleft"), 0x201C, DirectionCommandToUnicode},
     {QStringLiteral("rqq"), 0x201D, DirectionCommandToUnicode},
+    {QStringLiteral("textquotedblright"), 0x201D, DirectionCommandToUnicode},
     {QStringLiteral("glqq"), 0x201E, DirectionCommandToUnicode},
-    {QStringLiteral("frqq"), 0x00BB, DirectionCommandToUnicode},
-    {QStringLiteral("flqq"), 0x00AB, DirectionCommandToUnicode},
+    {QStringLiteral("SS"), 0x1E9E, DirectionBoth},
+    {QStringLiteral("textendash"), 0x2013, DirectionCommandToUnicode},
+    {QStringLiteral("textemdash"), 0x2014, DirectionCommandToUnicode},
+    {QStringLiteral("textquoteleft"), 0x2018, DirectionCommandToUnicode},
+    {QStringLiteral("lq"), 0x2018, DirectionBoth},
+    {QStringLiteral("textquoteright"), 0x2019, DirectionCommandToUnicode},
     {QStringLiteral("rq"), 0x2019, DirectionBoth}, ///< tricky one: 'r' is a valid modifier
-    {QStringLiteral("lq"), 0x2018, DirectionBoth}
+    {QStringLiteral("quotesinglbase"), 0x201A, DirectionBoth},
+    {QStringLiteral("quotedblbase"), 0x201E, DirectionBoth},
+    {QStringLiteral("textbullet "), 0x2022, DirectionBoth},
+    {QStringLiteral("guilsinglleft "), 0x2039, DirectionBoth},
+    {QStringLiteral("guilsinglright "), 0x203A, DirectionBoth}
 };
 
 const QChar EncoderLaTeX::encoderLaTeXProtectedSymbols[] = {QLatin1Char('#'), QLatin1Char('&'), QLatin1Char('%')};
@@ -778,7 +821,7 @@ encoderLaTeXSymbolSequences[] = {
     {QStringLiteral("\"<"), 0x00AB, DirectionBoth},
     {QStringLiteral("\">"), 0x00BB, DirectionBoth},
     {QStringLiteral("?`"), 0x00BF, DirectionBoth},
-    {QStringLiteral("---"), 0x2014, DirectionBoth},
+    {QStringLiteral("---"), 0x2014, DirectionBoth}, ///< --- must come before --
     {QStringLiteral("--"), 0x2013, DirectionBoth},
     {QStringLiteral("``"), 0x201C, DirectionBoth},
     {QStringLiteral("''"), 0x201D, DirectionBoth},
@@ -1391,13 +1434,17 @@ QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
     /// It is already a dependency for Qt, so there is no "cost" involved
     /// in using it.
 
-    const int ninputLen = ninput.length();
+    /// Preprocessing where ICU may give unexpected results otherwise
+    QString input = ninput;
+    input = input.replace(QChar(0x2013), QStringLiteral("--")).replace(QChar(0x2014), QStringLiteral("---"));
+
+    const int inputLen = input.length();
     /// Make a copy of the input string into an array of UChar
-    UChar *uChars = new UChar[ninputLen];
-    for (int i = 0; i < ninputLen; ++i)
-        uChars[i] = ninput.at(i).unicode();
+    UChar *uChars = new UChar[inputLen];
+    for (int i = 0; i < inputLen; ++i)
+        uChars[i] = input.at(i).unicode();
     /// Create an ICU-specific unicode string
-    icu::UnicodeString uString = icu::UnicodeString(uChars, ninputLen);
+    icu::UnicodeString uString = icu::UnicodeString(uChars, inputLen);
     /// Perform the actual transliteration, modifying Unicode string
     if (m_trans != nullptr) m_trans->transliterate(uString);
     /// Create regular C++ string from Unicode string
