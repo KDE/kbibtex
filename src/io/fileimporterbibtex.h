@@ -144,7 +144,7 @@ private:
     Element *nextElement();
     Token nextToken();
     QString readString(bool &isStringKey);
-    QString readSimpleString(const QString &until = QString());
+    QString readSimpleString(const QString &until = QString(), const bool readNestedCurlyBrackets = false);
     QString readQuotedString();
     QString readBracketString();
     Token readValue(Value &value, const QString &fieldType);

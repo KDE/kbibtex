@@ -361,7 +361,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         token = nextToken();
     }
 
-    QString id = readSimpleString(QStringLiteral(",}")).trimmed();
+    QString id = readSimpleString(QStringLiteral(",}"), true).trimmed();
     if (id.isEmpty()) {
         if (m_nextChar == QLatin1Char(',') || m_nextChar == QLatin1Char('}')) {
             /// Cope with empty ids,
@@ -373,12 +373,20 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             emit message(SeverityError, QString(QStringLiteral("Error in parsing preambentryle near line %1: Could not read entry id")).arg(m_lineNo));
             return nullptr;
         }
-    } else if (!EncoderLaTeX::containsOnlyAscii(id)) {
-        /// Try to avoid non-ascii characters in ids
-        const QString newId = EncoderLaTeX::instance().convertToPlainAscii(id);
-        qCWarning(LOG_KBIBTEX_IO) << "Entry id" << id << "near line" << m_lineNo << "contains non-ASCII characters, converted to" << newId;
-        emit message(SeverityWarning, QString(QStringLiteral("Entry id '%1' near line %2 contains non-ASCII characters, converted to '%3'")).arg(id).arg(m_lineNo).arg(newId));
-        id = newId;
+    } else {
+        if (id.contains(QStringLiteral("\\")) || id.contains(QStringLiteral("{"))) {
+            const QString newId = EncoderLaTeX::instance().decode(id);
+            qCWarning(LOG_KBIBTEX_IO) << "Entry id" << id << "near line" << m_lineNo << "contains backslashes or curly brackets, converted to" << newId;
+            emit message(SeverityWarning, QString(QStringLiteral("Entry id '%1' near line %2 contains backslashes or curly brackets, converted to '%3'")).arg(id).arg(m_lineNo).arg(newId));
+            id = newId;
+        }
+        if (!EncoderLaTeX::containsOnlyAscii(id)) {
+            /// Try to avoid non-ascii characters in ids
+            const QString newId = EncoderLaTeX::instance().convertToPlainAscii(id);
+            qCWarning(LOG_KBIBTEX_IO) << "Entry id" << id << "near line" << m_lineNo << "contains non-ASCII characters, converted to" << newId;
+            emit message(SeverityWarning, QString(QStringLiteral("Entry id '%1' near line %2 contains non-ASCII characters, converted to '%3'")).arg(id).arg(m_lineNo).arg(newId));
+            id = newId;
+        }
     }
     static const QVector<QChar> invalidIdCharacters = {QLatin1Char('{'), QLatin1Char('}'), QLatin1Char(',')};
     for (const QChar &invalidIdCharacter : invalidIdCharacters)
@@ -574,7 +582,7 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
     }
 }
 
-QString FileImporterBibTeX::readSimpleString(const QString &until)
+QString FileImporterBibTeX::readSimpleString(const QString &until, const bool readNestedCurlyBrackets)
 {
     static const QString extraAlphaNumChars = QString(QStringLiteral("?'`-_:.+/$\\\"&"));
 
@@ -585,7 +593,22 @@ QString FileImporterBibTeX::readSimpleString(const QString &until)
         return QString::null;
     }
 
+    QChar prevChar = QChar(0x00);
     while (!m_nextChar.isNull()) {
+        if (readNestedCurlyBrackets && m_nextChar == QLatin1Char('{') && prevChar != QLatin1Char('\\')) {
+            int depth = 1;
+            while (depth > 0) {
+                result.append(m_nextChar);
+                prevChar = m_nextChar;
+                if (!readChar()) return result;
+                if (m_nextChar == QLatin1Char('{') && prevChar != QLatin1Char('\\')) ++depth;
+                else if (m_nextChar == QLatin1Char('}') && prevChar != QLatin1Char('\\')) --depth;
+            }
+            result.append(m_nextChar);
+            prevChar = m_nextChar;
+            if (!readChar()) return result;
+        }
+
         const ushort nextCharUnicode = m_nextChar.unicode();
         if (!until.isEmpty()) {
             /// Variable "until" has user-defined value
@@ -601,6 +624,7 @@ QString FileImporterBibTeX::readSimpleString(const QString &until)
             result.append(m_nextChar);
         } else
             break;
+        prevChar = m_nextChar;
         if (!readChar()) break;
     }
     return result;
