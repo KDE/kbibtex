@@ -36,6 +36,8 @@
 #include "bibtexfields.h"
 #include "logging_io.h"
 
+#define qint64toint(a) (static_cast<int>(qMax(0LL,qMin(0x7fffffffLL,(a)))))
+
 FileImporterBibTeX::FileImporterBibTeX(QObject *parent)
         : FileImporter(parent), m_cancelFlag(false), m_textStream(nullptr), m_commentHandling(IgnoreComments), m_keywordCasing(KBibTeX::cLowerCase), m_lineNo(1)
 {
@@ -106,7 +108,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     readChar();
 
     while (!m_nextChar.isNull() && !m_cancelFlag && !m_textStream->atEnd()) {
-        emit progress(m_textStream->pos(), rawText.length());
+        emit progress(qint64toint(m_textStream->pos()), rawText.length());
         Element *element = nextElement();
 
         if (element != nullptr) {
