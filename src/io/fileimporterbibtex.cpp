@@ -608,7 +608,7 @@ QString FileImporterBibTeX::readSimpleString(const QString &until)
 
 QString FileImporterBibTeX::readQuotedString()
 {
-    QString result;
+    QString result(0, QChar()); ///< Construct an empty but non-null string
 
     Q_ASSERT_X(m_nextChar == QLatin1Char('"'), "QString FileImporterBibTeX::readQuotedString()", "m_nextChar is not '\"'");
 
@@ -634,7 +634,7 @@ QString FileImporterBibTeX::readQuotedString()
 QString FileImporterBibTeX::readBracketString()
 {
     static const QChar backslash = QLatin1Char('\\');
-    QString result;
+    QString result(0, QChar()); ///< Construct an empty but non-null string
     const QChar openingBracket = m_nextChar;
     const QChar closingBracket = openingBracket == QLatin1Char('{') ? QLatin1Char('}') : (openingBracket == QLatin1Char('(') ? QLatin1Char(')') : QChar());
     Q_ASSERT_X(!closingBracket.isNull(), "QString FileImporterBibTeX::readBracketString()", "openingBracket==m_nextChar is neither '{' nor '('");
