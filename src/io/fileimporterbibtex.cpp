@@ -171,16 +171,17 @@ Element *FileImporterBibTeX::nextElement()
     Token token = nextToken();
 
     if (token == tAt) {
-        QString elementType = readSimpleString();
+        const QString elementType = readSimpleString();
+        const QString elementTypeLower = elementType.toLower();
 
-        if (elementType.toLower() == QStringLiteral("comment")) {
+        if (elementTypeLower == QStringLiteral("comment")) {
             ++m_statistics.countCommentCommand;
             return readCommentElement();
-        } else if (elementType.toLower() == QStringLiteral("string"))
+        } else if (elementTypeLower == QStringLiteral("string"))
             return readMacroElement();
-        else if (elementType.toLower() == QStringLiteral("preamble"))
+        else if (elementTypeLower == QStringLiteral("preamble"))
             return readPreambleElement();
-        else if (elementType.toLower() == QStringLiteral("import")) {
+        else if (elementTypeLower == QStringLiteral("import")) {
             qCDebug(LOG_KBIBTEX_IO) << "Skipping potential HTML/JavaScript @import statement near line" << m_lineNo;
             emit message(SeverityInfo, QString(QStringLiteral("Skipping potential HTML/JavaScript @import statement near line %1")).arg(m_lineNo));
             return nullptr;
