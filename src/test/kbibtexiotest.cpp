@@ -90,7 +90,7 @@ void KBibTeXIOTest::encoderXMLdecode_data()
     for (int start = 0; start < 16; ++start) {
         QString xmlString, unicodeString;
         for (int offset = 1561; offset < 6791; offset += 621) {
-            const ushort unicode = start * 3671 + offset;
+            const ushort unicode = static_cast<ushort>((start * 3671 + offset) & 0x7fff);
             xmlString += QStringLiteral("&#") + QString::number(unicode) + QStringLiteral(";");
             unicodeString += QChar(unicode);
         }
