@@ -110,11 +110,11 @@ QString EncoderXML::encode(const QString &text, const TargetEncoding targetEncod
         result.replace(item.unicode, item.xml);
 
     if (targetEncoding == TargetEncodingASCII) {
-        /// Replace all non-ASCII characters (code >=128) with an entity code,
-        /// for example a-umlaut becomes '&#228;'.
+        /// Replace all problematic or non-ASCII characters (code < 32 or code > 127)
+        /// with an entity code, for example a-umlaut becomes '&#228;'.
         for (int i = result.length() - 1; i >= 0; --i) {
             const auto code = result[i].unicode();
-            if (code > 127)
+            if (code < 32 || code > 127)
                 result = result.left(i) + QStringLiteral("&#") + QString::number(code) + QStringLiteral(";") + result.mid(i + 1);
         }
     }
