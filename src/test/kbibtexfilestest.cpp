@@ -194,11 +194,19 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     }
 
     QFile file(absoluteFilename);
+    if (file.open(QFile::ReadOnly)) {
+        const QByteArray fileData = file.readAll();
+        file.close();
+        const QByteArray hashData = QCryptographicHash::hash(fileData, QCryptographicHash::Md5);
+        qInfo() << "MD5 for file" << absoluteFilename << "is" << hashData.toHex();
+    }
+
     File *bibTeXFile = nullptr;
     QVERIFY(file.open(QFile::ReadOnly));
     bibTeXFile = importer->load(&file);
     file.close();
 
+    qInfo() << (bibTeXFile == nullptr ? "bibTeXFile is NULL" : (bibTeXFile->isEmpty() ? "bibTeXFile is EMPTY" : QString(QStringLiteral("bibTeXFile contains %1 elements")).arg(bibTeXFile->count()).toLatin1()));
     QVERIFY(bibTeXFile);
     QVERIFY(!bibTeXFile->isEmpty());
 
