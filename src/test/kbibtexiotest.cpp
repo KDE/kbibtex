@@ -87,14 +87,14 @@ void KBibTeXIOTest::encoderXMLdecode_data()
     QTest::newRow("Characters from EncoderXMLCharMapping") << QStringLiteral("&quot;&amp;&lt;&gt;") << QStringLiteral("\"\\&<>");
     QTest::newRow("Characters from backslashSymbols") << QStringLiteral("&amp;%_") << QStringLiteral("\\&\\%\\_");
 
-    for (int start = 0; start < 10; ++start) {
+    for (int start = 0; start < 16; ++start) {
         QString xmlString, unicodeString;
         for (int offset = 1561; offset < 6791; offset += 621) {
             const ushort unicode = start * 3671 + offset;
             xmlString += QStringLiteral("&#") + QString::number(unicode) + QStringLiteral(";");
             unicodeString += QChar(unicode);
         }
-        QTest::newRow(QString(QStringLiteral("Some arbitrary Unicode characters (%1)")).arg(start).toLatin1().constData()) << xmlString << unicodeString;
+        QTest::newRow(QString(QStringLiteral("Some arbitrary Unicode characters (%1): %2")).arg(start).arg(xmlString).toLatin1().constData()) << xmlString << unicodeString;
     }
 }
 
