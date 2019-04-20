@@ -34,7 +34,7 @@
 #include <KMessageBox>
 #endif // HAVE_KF5
 
-#include "encoderlatex.h"
+#include "encoder.h"
 #include "internalnetworkaccessmanager.h"
 #include "kbibtex.h"
 #include "logging_networking.h"
@@ -57,7 +57,7 @@ const char *OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 #ifdef HAVE_QTWIDGETS
 QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
 {
-    const EncoderLaTeX &encoder = EncoderLaTeX::instance();
+    const Encoder &encoder = Encoder::instance();
     const Value v = entry[Entry::ftAuthor];
     QStringList result;
     result.reserve(v.size());

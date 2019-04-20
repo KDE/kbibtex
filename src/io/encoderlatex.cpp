@@ -900,19 +900,8 @@ encoderLaTeXSymbolSequences[] = {
 
 
 EncoderLaTeX::EncoderLaTeX()
+        : Encoder()
 {
-#ifdef HAVE_ICU
-    /// Create an ICU Transliterator, configured to
-    /// transliterate virtually anything into plain ASCII
-    UErrorCode uec = U_ZERO_ERROR;
-    m_trans = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
-    if (U_FAILURE(uec)) {
-        qCWarning(LOG_KBIBTEX_IO) << "Error creating an ICU Transliterator instance: " << u_errorName(uec);
-        if (m_trans != nullptr) delete m_trans;
-        m_trans = nullptr;
-    }
-#endif // HAVE_ICU
-
     /// Initialize lookup table with NULL pointers
     for (int i = 0; i < lookupTableNumModifiers; ++i) lookupTable[i] = nullptr;
 
@@ -960,11 +949,6 @@ EncoderLaTeX::~EncoderLaTeX()
     for (int i = lookupTableNumModifiers - 1; i >= 0; --i)
         if (lookupTable[i] != nullptr)
             delete lookupTable[i];
-
-#ifdef HAVE_ICU
-    if (m_trans != nullptr)
-        delete m_trans;
-#endif // HAVE_ICU
 }
 
 QString EncoderLaTeX::decode(const QString &input) const
@@ -1483,53 +1467,6 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
 
     output.squeeze();
     return output;
-}
-
-#ifdef HAVE_ICU
-QString EncoderLaTeX::convertToPlainAscii(const QString &ninput) const
-{
-    /// Previously, iconv's //TRANSLIT feature had been used here.
-    /// However, the transliteration is locale-specific as discussed
-    /// here:
-    /// http://taschenorakel.de/mathias/2007/11/06/iconv-transliterations/
-    /// Therefore, iconv is not an acceptable solution.
-    ///
-    /// Instead, "International Components for Unicode" (ICU) is used.
-    /// It is already a dependency for Qt, so there is no "cost" involved
-    /// in using it.
-
-    /// Preprocessing where ICU may give unexpected results otherwise
-    QString input = ninput;
-    input = input.replace(QChar(0x2013), QStringLiteral("--")).replace(QChar(0x2014), QStringLiteral("---"));
-
-    const int inputLen = input.length();
-    /// Make a copy of the input string into an array of UChar
-    UChar *uChars = new UChar[inputLen];
-    for (int i = 0; i < inputLen; ++i)
-        uChars[i] = input.at(i).unicode();
-    /// Create an ICU-specific unicode string
-    icu::UnicodeString uString = icu::UnicodeString(uChars, inputLen);
-    /// Perform the actual transliteration, modifying Unicode string
-    if (m_trans != nullptr) m_trans->transliterate(uString);
-    /// Create regular C++ string from Unicode string
-    std::string cppString;
-    uString.toUTF8String(cppString);
-    /// Clean up any mess
-    delete[] uChars;
-    /// Convert regular C++ to Qt-specific QString,
-    /// should work as cppString contains only ASCII text
-    return QString::fromStdString(cppString);
-}
-#endif // HAVE_ICU
-
-bool EncoderLaTeX::containsOnlyAscii(const QString &ntext)
-{
-    /// Perform Canonical Decomposition followed by Canonical Composition
-    const QString text = ntext.normalized(QString::NormalizationForm_C);
-
-    for (const QChar &c : text)
-        if (c.unicode() > 127) return false;
-    return true;
 }
 
 int EncoderLaTeX::modifierInLookupTable(const QChar modifier) const

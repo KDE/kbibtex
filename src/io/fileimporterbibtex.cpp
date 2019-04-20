@@ -31,6 +31,7 @@
 #include "entry.h"
 #include "element.h"
 #include "value.h"
+#include "encoder.h"
 #include "encoderlatex.h"
 #include "bibtexentries.h"
 #include "bibtexfields.h"
@@ -266,9 +267,9 @@ Macro *FileImporterBibTeX::readMacroElement()
         /// Cope with empty keys,
         /// duplicates are handled further below
         key = QStringLiteral("EmptyId");
-    } else if (!EncoderLaTeX::containsOnlyAscii(key)) {
+    } else if (!Encoder::containsOnlyAscii(key)) {
         /// Try to avoid non-ascii characters in ids
-        const QString newKey = EncoderLaTeX::instance().convertToPlainAscii(key);
+        const QString newKey = Encoder::instance().convertToPlainAscii(key);
         qCWarning(LOG_KBIBTEX_IO) << "Macro key" << key << "near line" << m_lineNo << "contains non-ASCII characters, converted to" << newKey;
         emit message(SeverityWarning, QString(QStringLiteral("Macro key '%1'  near line %2 contains non-ASCII characters, converted to '%3'")).arg(key).arg(m_lineNo).arg(newKey));
         key = newKey;
@@ -381,9 +382,9 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             emit message(SeverityWarning, QString(QStringLiteral("Entry id '%1' near line %2 contains backslashes or curly brackets, converted to '%3'")).arg(id).arg(m_lineNo).arg(newId));
             id = newId;
         }
-        if (!EncoderLaTeX::containsOnlyAscii(id)) {
+        if (!Encoder::containsOnlyAscii(id)) {
             /// Try to avoid non-ascii characters in ids
-            const QString newId = EncoderLaTeX::instance().convertToPlainAscii(id);
+            const QString newId = Encoder::instance().convertToPlainAscii(id);
             qCWarning(LOG_KBIBTEX_IO) << "Entry id" << id << "near line" << m_lineNo << "contains non-ASCII characters, converted to" << newId;
             emit message(SeverityWarning, QString(QStringLiteral("Entry id '%1' near line %2 contains non-ASCII characters, converted to '%3'")).arg(id).arg(m_lineNo).arg(newId));
             id = newId;
@@ -455,7 +456,7 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             }
         }
         /// Try to avoid non-ascii characters in keys
-        const QString newkeyName = EncoderLaTeX::instance().convertToPlainAscii(keyName);
+        const QString newkeyName = Encoder::instance().convertToPlainAscii(keyName);
         if (newkeyName != keyName) {
             qCWarning(LOG_KBIBTEX_IO) << "Field name " << keyName << "near line" << m_lineNo << "contains non-ASCII characters, converted to" << newkeyName;
             emit message(SeverityWarning, QString(QStringLiteral("Field name '%1' near line %2 contains non-ASCII characters, converted to '%3'")).arg(keyName).arg(m_lineNo).arg(newkeyName));

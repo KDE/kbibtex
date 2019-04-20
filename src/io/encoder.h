@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,6 +18,14 @@
 #ifndef BIBTEXENCODER_H
 #define BIBTEXENCODER_H
 
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
+
+#ifdef HAVE_ICU
+#include <unicode/translit.h>
+#endif // HAVE_ICU
+
 #include <QString>
 
 /**
@@ -26,13 +34,17 @@
  * are \"a in LaTeX and &auml; in XML.
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class Encoder
+class KBIBTEXIO_EXPORT Encoder
 {
 public:
     enum TargetEncoding {TargetEncodingASCII = 0, TargetEncodingUTF8 = 1};
 
+    static const Encoder &instance();
     virtual ~Encoder() {
-        /// nothing
+#ifdef HAVE_ICU
+        if (m_trans != nullptr)
+            delete m_trans;
+#endif // HAVE_ICU
     }
 
     /**
@@ -53,6 +65,24 @@ public:
      * @return text text in external textual representation
      */
     virtual QString encode(const QString &text, const TargetEncoding targetEncoding) const;
+
+#ifdef HAVE_ICU
+    QString convertToPlainAscii(const QString &input) const;
+#else // HAVE_ICU
+    /// Dummy implementation without ICU
+    inline QString convertToPlainAscii(const QString &input) const {
+        return input;
+    }
+#endif // HAVE_ICU
+    static bool containsOnlyAscii(const QString &text);
+
+protected:
+    Encoder();
+
+private:
+#ifdef HAVE_ICU
+    icu::Transliterator *m_trans;
+#endif // HAVE_ICU
 };
 
 #endif

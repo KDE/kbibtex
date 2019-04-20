@@ -37,7 +37,7 @@
 #endif // HAVE_KF5
 
 #include "internalnetworkaccessmanager.h"
-#include "encoderlatex.h"
+#include "encoder.h"
 #include "encoderxml.h"
 #include "fileimporterbibtex.h"
 #include "xsltransform.h"
@@ -178,17 +178,17 @@ public:
 
         const QStringList titleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditTitle->text());
         for (const QString &titleChunk : titleChunks) {
-            queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
+            queryString += QString(QStringLiteral(" title:%1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
         }
 
         const QStringList bookTitleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditBookTitle->text());
         for (const QString &titleChunk : bookTitleChunks) {
-            queryString += QString(QStringLiteral(" ( journal:%1 OR book:%1 )")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
+            queryString += QString(QStringLiteral(" ( journal:%1 OR book:%1 )")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
         }
 
         const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
         for (const QString &author : authors) {
-            queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(author));
+            queryString += QString(QStringLiteral(" name:%1")).arg(Encoder::instance().convertToPlainAscii(author));
         }
 
         const QString year = form->lineEditYear->text();
@@ -211,12 +211,12 @@ public:
 
         const QStringList titleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyTitle]);
         for (const QString &titleChunk : titleChunks) {
-            queryString += QString(QStringLiteral(" title:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(titleChunk));
+            queryString += QString(QStringLiteral(" title:%1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
         }
 
         const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
         for (const QString &author : authors) {
-            queryString += QString(QStringLiteral(" name:%1")).arg(EncoderLaTeX::instance().convertToPlainAscii(author));
+            queryString += QString(QStringLiteral(" name:%1")).arg(Encoder::instance().convertToPlainAscii(author));
         }
 
         QString year = query[queryKeyYear];

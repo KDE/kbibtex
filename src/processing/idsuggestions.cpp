@@ -22,7 +22,7 @@
 #include <KLocalizedString>
 
 #include "journalabbreviations.h"
-#include "encoderlatex.h"
+#include "encoder.h"
 #include "preferences.h"
 
 class IdSuggestions::IdSuggestionsPrivate
@@ -40,7 +40,7 @@ public:
 
     QString normalizeText(const QString &input) const {
         static const QRegularExpression unwantedChars(QStringLiteral("[^-_:/=+a-zA-Z0-9]+"));
-        return EncoderLaTeX::instance().convertToPlainAscii(input).remove(unwantedChars);
+        return Encoder::instance().convertToPlainAscii(input).remove(unwantedChars);
     }
 
     int numberFromEntry(const Entry &entry, const QString &field) const {

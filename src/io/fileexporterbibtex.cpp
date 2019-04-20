@@ -32,7 +32,7 @@
 #include "preamble.h"
 #include "value.h"
 #include "comment.h"
-#include "encoderlatex.h"
+#include "encoder.h"
 #include "bibtexentries.h"
 #include "bibtexfields.h"
 #include "textencoder.h"
@@ -121,13 +121,11 @@ public:
     }
 
     bool writeEntry(QIODevice *iodevice, const Entry &entry) {
-        const EncoderLaTeX &laTeXEncoder = EncoderLaTeX::instance();
-
         /// write start of a entry (entry type and id) in plain ASCII
         iodevice->putChar('@');
         iodevice->write(BibTeXEntries::instance().format(entry.type(), keywordCasing).toLatin1().data());
         iodevice->putChar('{');
-        iodevice->write(laTeXEncoder.convertToPlainAscii(entry.id()).toLatin1());
+        iodevice->write(Encoder::instance().convertToPlainAscii(entry.id()).toLatin1());
 
         for (Entry::ConstIterator it = entry.constBegin(); it != entry.constEnd(); ++it) {
             const QString key = it.key();
@@ -153,7 +151,7 @@ public:
             iodevice->putChar(',');
             iodevice->putChar('\n');
             iodevice->putChar('\t');
-            iodevice->write(laTeXEncoder.convertToPlainAscii(BibTeXFields::instance().format(key, keywordCasing)).toLatin1());
+            iodevice->write(Encoder::instance().convertToPlainAscii(BibTeXFields::instance().format(key, keywordCasing)).toLatin1());
             iodevice->putChar(' ');
             iodevice->putChar('=');
             iodevice->putChar(' ');
@@ -542,8 +540,8 @@ QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key
 
 QString FileExporterBibTeX::applyEncoder(const QString &input, UseLaTeXEncoding useLaTeXEncoding) const {
     switch (useLaTeXEncoding) {
-    case leLaTeX: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncodingASCII);
-    case leUTF8: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncodingUTF8);
+    case leLaTeX: return Encoder::instance().encode(input, Encoder::TargetEncodingASCII);
+    case leUTF8: return Encoder::instance().encode(input, Encoder::TargetEncodingUTF8);
     default: return input;
     }
 }

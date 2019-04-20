@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,10 +22,6 @@
 #include "kbibtexio_export.h"
 #endif // HAVE_KF5
 
-#ifdef HAVE_ICU
-#include <unicode/translit.h>
-#endif // HAVE_ICU
-
 #include <QIODevice>
 
 #include "encoder.h"
@@ -41,13 +37,6 @@ class KBIBTEXIO_EXPORT EncoderLaTeX: public Encoder
 public:
     QString decode(const QString &text) const override;
     QString encode(const QString &text, const TargetEncoding targetEncoding) const override;
-#ifdef HAVE_ICU
-    QString convertToPlainAscii(const QString &input) const;
-#else // HAVE_ICU
-    /// Dummy implementation without ICU
-    inline QString convertToPlainAscii(const QString &input) const { return input; }
-#endif // HAVE_ICU
-    static bool containsOnlyAscii(const QString &text);
 
     static const EncoderLaTeX &instance();
     ~EncoderLaTeX() override;
@@ -100,10 +89,6 @@ private:
      * Return value may be an empty string.
      */
     QString readAlphaCharacters(const QString &base, int startFrom) const;
-
-#ifdef HAVE_ICU
-    icu::Transliterator *m_trans;
-#endif // HAVE_ICU
 };
 
 #endif // ENCODERLATEX_H
