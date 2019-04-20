@@ -374,24 +374,39 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     outputBuffer.open(QBuffer::WriteOnly);
 
     /// Memorize which entries are used in a crossref field
-    QStringList crossRefIdList;
+    QHash<QString, QStringList> crossRefMap;
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; ++it) {
         QSharedPointer<const Entry> entry = (*it).dynamicCast<const Entry>();
         if (!entry.isNull()) {
             const QString crossRef = PlainTextValue::text(entry->value(Entry::ftCrossRef));
-            if (!crossRef.isEmpty())
-                crossRefIdList << crossRef;
+            if (!crossRef.isEmpty()) {
+                QStringList crossRefList = crossRefMap.value(crossRef, QStringList());
+                crossRefList.append(entry->id());
+                crossRefMap.insert(crossRef, crossRefList);
+            }
         }
     }
 
     bool allPreamblesAndMacrosProcessed = false;
+    QSet<QString> processedEntryIds;
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; ++it) {
         QSharedPointer<const Element> element = (*it);
         QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
 
         if (!entry.isNull()) {
+            processedEntryIds.insert(entry->id());
+
             /// Postpone entries that are crossref'ed
-            if (crossRefIdList.contains(entry->id())) continue;
+            QStringList crossRefList = crossRefMap.value(entry->id(), QStringList());
+            if (!crossRefList.isEmpty()) {
+                bool allProcessed = true;
+                for (const QString &origin : crossRefList)
+                    allProcessed &= processedEntryIds.contains(origin);
+                if (allProcessed)
+                    crossRefMap.remove(entry->id());
+                else
+                    continue;
+            }
 
             if (!allPreamblesAndMacrosProcessed) {
                 /// Guarantee that all macros and the preamble are written
@@ -436,14 +451,15 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     }
 
     /// Crossref'ed entries are written last
-    for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; ++it) {
-        QSharedPointer<const Entry> entry = (*it).dynamicCast<const Entry>();
-        if (entry.isNull()) continue;
-        if (!crossRefIdList.contains(entry->id())) continue;
+    if (!crossRefMap.isEmpty())
+        for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; ++it) {
+            QSharedPointer<const Entry> entry = (*it).dynamicCast<const Entry>();
+            if (entry.isNull()) continue;
+            if (!crossRefMap.contains(entry->id())) continue;
 
-        result &= d->writeEntry(&outputBuffer, *entry);
-        emit progress(++currentPos, totalElements);
-    }
+            result &= d->writeEntry(&outputBuffer, *entry);
+            emit progress(++currentPos, totalElements);
+        }
 
     outputBuffer.close(); ///< close writing operation
 
