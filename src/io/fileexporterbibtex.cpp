@@ -22,6 +22,7 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <QStringList>
+#include <QBuffer>
 
 #include "preferences.h"
 #include "file.h"
@@ -369,10 +370,8 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     d->loadState();
     d->loadStateFromFile(bibtexfile);
 
-    if (d->encoding != QStringLiteral("latex")) {
-        Comment encodingComment(QStringLiteral("x-kbibtex-encoding=") + d->encoding, true);
-        result &= d->writeComment(iodevice, encodingComment);
-    }
+    QBuffer outputBuffer;
+    outputBuffer.open(QBuffer::WriteOnly);
 
     /// Memorize which entries are used in a crossref field
     QStringList crossRefIdList;
@@ -400,12 +399,12 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
                 for (File::ConstIterator msit = it + 1; msit != bibtexfile->constEnd() && result && !d->cancelFlag; ++msit) {
                     QSharedPointer<const Preamble> preamble = (*msit).dynamicCast<const Preamble>();
                     if (!preamble.isNull()) {
-                        result &= d->writePreamble(iodevice, *preamble);
+                        result &= d->writePreamble(&outputBuffer, *preamble);
                         emit progress(++currentPos, totalElements);
                     } else {
                         QSharedPointer<const Macro> macro = (*msit).dynamicCast<const Macro>();
                         if (!macro.isNull()) {
-                            result &= d->writeMacro(iodevice, *macro);
+                            result &= d->writeMacro(&outputBuffer, *macro);
                             emit progress(++currentPos, totalElements);
                         }
                     }
@@ -413,22 +412,22 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
                 allPreamblesAndMacrosProcessed = true;
             }
 
-            result &= d->writeEntry(iodevice, *entry);
+            result &= d->writeEntry(&outputBuffer, *entry);
             emit progress(++currentPos, totalElements);
         } else {
             QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
             if (!comment.isNull() && !comment->text().startsWith(QStringLiteral("x-kbibtex-"))) {
-                result &= d->writeComment(iodevice, *comment);
+                result &= d->writeComment(&outputBuffer, *comment);
                 emit progress(++currentPos, totalElements);
             } else if (!allPreamblesAndMacrosProcessed) {
                 QSharedPointer<const Preamble> preamble = element.dynamicCast<const Preamble>();
                 if (!preamble.isNull()) {
-                    result &= d->writePreamble(iodevice, *preamble);
+                    result &= d->writePreamble(&outputBuffer, *preamble);
                     emit progress(++currentPos, totalElements);
                 } else {
                     QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
                     if (!macro.isNull()) {
-                        result &= d->writeMacro(iodevice, *macro);
+                        result &= d->writeMacro(&outputBuffer, *macro);
                         emit progress(++currentPos, totalElements);
                     }
                 }
@@ -442,9 +441,29 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
         if (entry.isNull()) continue;
         if (!crossRefIdList.contains(entry->id())) continue;
 
-        result &= d->writeEntry(iodevice, *entry);
+        result &= d->writeEntry(&outputBuffer, *entry);
         emit progress(++currentPos, totalElements);
     }
+
+    outputBuffer.close(); ///< close writing operation
+
+    outputBuffer.open(QBuffer::ReadOnly);
+    const QByteArray outputData = outputBuffer.readAll();
+    outputBuffer.close();
+    bool hasNonAsciiCharacters = false;
+    for (const unsigned char c : outputData)
+        if ((c & 128) > 0) {
+            hasNonAsciiCharacters = true;
+            break;
+        }
+
+    if (hasNonAsciiCharacters) {
+        const QString encoding = d->encoding.toLower() == QStringLiteral("latex") ? QStringLiteral("utf-8") : d->encoding;
+        Comment encodingComment(QStringLiteral("x-kbibtex-encoding=") + encoding, true);
+        result &= d->writeComment(iodevice, encodingComment);
+    }
+
+    iodevice->write(outputData);
 
     iodevice->close();
     return result && !d->cancelFlag;
