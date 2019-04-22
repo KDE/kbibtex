@@ -130,8 +130,6 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxEncodings = new KComboBox(false, this);
     m_comboBoxEncodings->setObjectName(QStringLiteral("comboBoxEncodings"));
     layout->addRow(i18n("Encoding:"), m_comboBoxEncodings);
-    m_comboBoxEncodings->addItem(QStringLiteral("LaTeX"));
-    m_comboBoxEncodings->insertSeparator(1);
     m_comboBoxEncodings->addItems(Preferences::availableBibTeXEncodings);
     connect(m_comboBoxEncodings, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
