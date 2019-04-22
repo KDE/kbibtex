@@ -322,7 +322,7 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
             default = setting['default']
             if 'predefined' in setting and default in [pair[0] for pair in setting['predefined']]:
                 default = "Preferences::" + lowercasestart + default
-        if 'availabletype' in setting:
+        elif 'availabletype' in setting:
             if setting['availabletype'].startswith("QVector<QPair<"):
                 default = 'Preferences::available' + stem + 's.front().first'
             elif setting['availabletype'] == "QStringList":
