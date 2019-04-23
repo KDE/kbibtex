@@ -247,37 +247,16 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
                 lastAuthorsList << lastEntryLastAuthorLastName;
             }
 
-            for (int index = 1; index < 100; ++index) {
-                const QString field = index == 1 ? Entry::ftUrl : QString(QStringLiteral("%1%2")).arg(Entry::ftUrl).arg(index);
-                const Value v = entry->value(field);
-                for (const QSharedPointer<ValueItem> &vi : v) {
-                    filesUrlsDoiList << PlainTextValue::text(vi);
+            static const QStringList stems {Entry::ftUrl, Entry::ftDOI, Entry::ftLocalFile, Entry::ftFile};
+            for (const QString &stem : stems) {
+                for (int index = 1; index < 100; ++index) {
+                    const QString field = index == 1 ? stem : QString(QStringLiteral("%1%2")).arg(stem).arg(index);
+                    const Value v = entry->value(field);
+                    for (const QSharedPointer<ValueItem> &vi : v) {
+                        filesUrlsDoiList << PlainTextValue::text(vi);
+                    }
+                    if (v.isEmpty() && index > 10) break;
                 }
-                if (v.isEmpty() && index > 10) break;
-            }
-            for (int index = 1; index < 100; ++index) {
-                const QString field = index == 1 ? Entry::ftDOI : QString(QStringLiteral("%1%2")).arg(Entry::ftDOI).arg(index);
-                const Value v = entry->value(field);
-                for (const QSharedPointer<ValueItem> &vi : v) {
-                    filesUrlsDoiList << PlainTextValue::text(vi);
-                }
-                if (v.isEmpty() && index > 10) break;
-            }
-            for (int index = 1; index < 100; ++index) {
-                const QString field = index == 1 ? Entry::ftLocalFile : QString(QStringLiteral("%1%2")).arg(Entry::ftLocalFile).arg(index);
-                const Value v = entry->value(field);
-                for (const QSharedPointer<ValueItem> &vi : v) {
-                    filesUrlsDoiList << PlainTextValue::text(vi);
-                }
-                if (v.isEmpty() && index > 10) break;
-            }
-            for (int index = 1; index < 100; ++index) {
-                const QString field = index == 1 ? Entry::ftFile : QString(QStringLiteral("%1%2")).arg(Entry::ftFile).arg(index);
-                const Value v = entry->value(field);
-                for (const QSharedPointer<ValueItem> &vi : v) {
-                    filesUrlsDoiList << PlainTextValue::text(vi);
-                }
-                if (v.isEmpty() && index > 10) break;
             }
         }
     }
