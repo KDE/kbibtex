@@ -38,7 +38,7 @@ typedef struct {
     QString filename;
     int numElements, numEntries;
     QString lastEntryId, lastEntryLastAuthorLastName;
-    QByteArray hashAuthors, hashFilesUrlsDoi;
+    QByteArray hashLastAuthors, hashFilesUrlsDoi;
 } TestFile;
 
 Q_DECLARE_METATYPE(TestFile)
@@ -87,11 +87,11 @@ private:
      * @param numEntries Number of entries to expect in bibliography
      * @param lastEntryId Identifier of last entry in bibliography
      * @param lastEntryLastAuthorLastName Last author's last name in bibliography
-     * @param hashAuthors The hash sum over all authors/editors in bibliography
+     * @param hashLastAuthors The hash sum over all authors/editors in bibliography
      * @param hashFilesUrlsDoi The hash sum over all URLs and DOIs in bibliography
      * @return An initialized TestFile data structure
      */
-    TestFile createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QByteArray &hashAuthors, const QByteArray &hashFilesUrlsDoi);
+    TestFile createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QByteArray &hashLastAuthors, const QByteArray &hashFilesUrlsDoi);
 
 #ifdef WRITE_RAWDATAFILE
     static QString rewriteNonASCII(const QString &input);
@@ -212,12 +212,13 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
 
     QStringList lastAuthorsList, filesUrlsDoiList;
     lastAuthorsList.reserve(bibTeXFile->size());
-    int countElements = bibTeXFile->count(), countEntries = 0;
+    const int numElements = bibTeXFile->count();
+    int numEntries = 0;
     QString lastEntryId, lastEntryLastAuthorLastName;
     for (const auto &element : const_cast<const File &>(*bibTeXFile)) {
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (!entry.isNull()) {
-            ++countEntries;
+            ++numEntries;
             lastEntryId = entry->id();
 
             Value authors = entry->value(Entry::ftAuthor);
@@ -261,8 +262,8 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
         }
     }
 
-    QCOMPARE(countElements, currentTestFile.numElements);
-    QCOMPARE(countEntries, currentTestFile.numEntries);
+    QCOMPARE(numElements, currentTestFile.numElements);
+    QCOMPARE(numEntries, currentTestFile.numEntries);
     QCOMPARE(lastEntryId, currentTestFile.lastEntryId);
     QCOMPARE(lastEntryLastAuthorLastName, currentTestFile.lastEntryLastAuthorLastName);
 
@@ -274,7 +275,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     size_t len;
 #endif // WRITE_RAWDATAFILE
 
-    QCryptographicHash hashAuthors(QCryptographicHash::Md4);
+    QCryptographicHash hashLastAuthors(QCryptographicHash::Md4);
     lastAuthorsList.sort();
 #ifdef WRITE_RAWDATAFILE
     QString sourceCode = QStringLiteral("static const char *") + filenameStem + QStringLiteral("LastAuthors(\"");
@@ -290,7 +291,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
             len = 0;
         }
 #endif // WRITE_RAWDATAFILE
-        hashAuthors.addData(lastAuthorUtf8);
+        hashLastAuthors.addData(lastAuthorUtf8);
     }
 #ifdef WRITE_RAWDATAFILE
     sourceCode += QStringLiteral("\");\n");
@@ -301,7 +302,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
         sourceCode.clear();
     }
 #else // WRITE_RAWDATAFILE
-    QCOMPARE(hashAuthors.result(), currentTestFile.hashAuthors);
+    QCOMPARE(currentTestFile.hashLastAuthors, hashLastAuthors.result());
 #endif // WRITE_RAWDATAFILE
 
     QCryptographicHash hashFilesUrlsDoi(QCryptographicHash::Md5);
@@ -359,7 +360,7 @@ void KBibTeXFilesTest::saveFile(File *file, const TestFile &currentTestFile, QSt
     *outFile = tempFile.fileName();
 }
 
-TestFile KBibTeXFilesTest::createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QByteArray &hashAuthors, const QByteArray &hashFilesUrlsDoi)
+TestFile KBibTeXFilesTest::createTestFile(const QString &filename, int numElements, int numEntries, const QString &lastEntryId, const QString &lastEntryLastAuthorLastName, const QByteArray &hashLastAuthors, const QByteArray &hashFilesUrlsDoi)
 {
     TestFile r;
     r.filename = filename;
@@ -367,7 +368,7 @@ TestFile KBibTeXFilesTest::createTestFile(const QString &filename, int numElemen
     r.numEntries = numEntries;
     r.lastEntryId = lastEntryId;
     r.lastEntryLastAuthorLastName = lastEntryLastAuthorLastName;
-    r.hashAuthors = hashAuthors;
+    r.hashLastAuthors = hashLastAuthors;
     r.hashFilesUrlsDoi = hashFilesUrlsDoi;
     return r;
 }
