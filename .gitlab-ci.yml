@@ -5,21 +5,25 @@ variables:
   INSTALL_DIR: "/tmp/usr"
   KDEDIRS: "/usr:$INSTALL_DIR"
   LD_LIBRARY_PATH: "$INSTALL_DIR/lib"
+  QT_ASSUME_STDERR_HAS_CONSOLE: 1
+  QT_DEPRECATED_WARNINGS: 1
+  QT_DISABLE_DEPRECATED: 0x050900
+  QT_MESSAGE_PATTERN: "[%{type}] %{appname} (%{file}:%{line}) - %{message}"
   QT_PLUGIN_PATH: "$INSTALL_DIR/lib/plugins/"
   XDG_CACHE_HOME: "$INSTALL_DIR/home/cache"
   XDG_CONFIG_HOME: "$INSTALL_DIR/home/config"
   XDG_DATA_DIRS: "/usr/share:/usr/local/share:$INSTALL_DIR/share"
   XDG_DATA_HOME: "$INSTALL_DIR/home/data"
-  TESETSET_DIR: "/tmp/kbibtex-testset"
+  TESTSET_DIR: "/tmp/kbibtex-testset"
 
 before_script:
   - env
   - sudo apt-get update -qq
   - sudo apt-get install -y -qq cmake ninja-build build-essential extra-cmake-modules libqt5xmlpatterns5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5itemviews-dev libkf5completion-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev libpoppler-qt5-dev gettext libicu-dev libqca-qt5-2-dev git
-  - cd /tmp && git clone --depth 1 "https://anongit.kde.org/kbibtex-testset.git"
+  - cd $(dirname $TESTSET_DIR) && git clone --depth 1 "https://anongit.kde.org/kbibtex-testset.git" $(basename $TESTSET_DIR)
   - mkdir -p $BUILD_DIR
   - cd $BUILD_DIR
-  - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=ON -DTESTSET_DIRECTORY:PATH=$TESETSET_DIR $CI_PROJECT_DIR
+  - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=ON -DTESTSET_DIRECTORY:PATH=$TESTSET_DIR $CI_PROJECT_DIR
   - ninja
   - ninja install
   - env
@@ -33,4 +37,3 @@ automated-tests:
     - ./kbibtexdatatest -platform offscreen
     - ./kbibtexfilestest -platform offscreen
     - ./kbibtexnetworkingtest -platform offscreen
-    - ./kbibtextest -platform offscreen
