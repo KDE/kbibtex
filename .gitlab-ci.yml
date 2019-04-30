@@ -1,4 +1,4 @@
-image: kdeneon/plasma:dev-stable
+image: kdeneon/plasma:dev-unstable
 
 variables:
   BUILD_DIR: "/tmp/build-kbibtex"
@@ -15,21 +15,34 @@ variables:
   XDG_DATA_DIRS: "/usr/share:/usr/local/share:$INSTALL_DIR/share"
   XDG_DATA_HOME: "$INSTALL_DIR/home/data"
   TESTSET_DIR: "/tmp/kbibtex-testset"
+  COVERITYSCAN_USR_DIR: "/tmp/coverity-scan-usr"
+  COVERITYSCAN_OUTPUT_DIR: "/tmp/coverity-scan-output"
+  COVERITYSCAN_COVINT_TARBALL: "/tmp/cov-scan.tar.gz"
 
 before_script:
   - sudo apt-get update -qq
   - sudo apt-get install -y -qq cmake ninja-build build-essential extra-cmake-modules libqt5xmlpatterns5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5itemviews-dev libkf5completion-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev libpoppler-qt5-dev gettext libicu-dev libqca-qt5-2-dev git
-  - cd $(dirname $TESTSET_DIR) && git clone --depth 1 "https://anongit.kde.org/kbibtex-testset.git" $(basename $TESTSET_DIR)
-  - mkdir -p $BUILD_DIR
-  - cd $BUILD_DIR
-  - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=ON -DTESTSET_DIRECTORY:PATH=$TESTSET_DIR $CI_PROJECT_DIR
-  - ninja
-  - ninja install
 
 automated-tests:
   script:
-    - cd $BUILD_DIR/src/test/
+    - mkdir -p $BUILD_DIR/$CI_JOB_NAME && cd $BUILD_DIR/$CI_JOB_NAME
+    - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=ON -DTESTSET_DIRECTORY:PATH=$TESTSET_DIR $CI_PROJECT_DIR
+    - ninja
+    - ninja install
+    - cd $(dirname $TESTSET_DIR) && git clone --depth 1 "https://anongit.kde.org/kbibtex-testset.git" $(basename $TESTSET_DIR)
+    - cd $BUILD_DIR/$CI_JOB_NAME/src/test/
     - ./kbibtexiotest -platform offscreen
     - ./kbibtexdatatest -platform offscreen
     - ./kbibtexfilestest -platform offscreen
     - ./kbibtexnetworkingtest -platform offscreen
+
+coverity-scan:
+  script:
+    - mkdir -p $COVERITYSCAN_USR_DIR $COVERITYSCAN_OUTPUT_DIR/cov-int
+    - wget --no-check-certificate --post-data "project=KBibTeX&token="$COVERITYSCAN_TOKEN https://scan.coverity.com/download/cxx/linux64 -O - | tar -zxv -C $COVERITYSCAN_USR_DIR --strip-components=2
+    - mkdir -p $BUILD_DIR/$CI_JOB_NAME && cd $BUILD_DIR/$CI_JOB_NAME
+    - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=OFF $CI_PROJECT_DIR
+    - ninja clean
+    - $COVERITYSCAN_USR_DIR/bin/cov-build --dir $COVERITYSCAN_OUTPUT_DIR/cov-int ninja
+    - tar -cavf $COVERITYSCAN_COVINT_TARBALL -C $COVERITYSCAN_OUTPUT_DIR cov-int
+    - curl --insecure --verbose --progress-bar --form "token="$COVERITYSCAN_TOKEN --form "email=fischer@unix-ag.uni-kl.de"  --form "file=@"$COVERITYSCAN_COVINT_TARBALL --form "version=GitLab" --form "description=Automatically built on GitLab" "https://scan.coverity.com/builds?project=KBibTeX"
