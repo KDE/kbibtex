@@ -1,11 +1,5 @@
 install(
     FILES
-    kbibtexrc
-    DESTINATION
-    ${KDE_INSTALL_CONFDIR}
-)
-install(
-    FILES
     bibtex.kbstyle
     biblatex.kbstyle
     jabref_journalabbrevlist.txt

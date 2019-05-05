@@ -140,9 +140,10 @@ void OnlineSearchAbstract::startSearchFromForm()
 
 QString OnlineSearchAbstract::name()
 {
-    static const QRegularExpression invalidChars(QStringLiteral("[^-a-z0-9]"), QRegularExpression::CaseInsensitiveOption);
-    if (m_name.isEmpty())
+    if (m_name.isEmpty()) {
+        static const QRegularExpression invalidChars(QStringLiteral("[^-a-z0-9]"), QRegularExpression::CaseInsensitiveOption);
         m_name = label().remove(invalidChars);
+    }
     return m_name;
 }
 
@@ -485,8 +486,13 @@ void OnlineSearchAbstract::iconDownloadFinished()
             iconFile.close();
 
             QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, nullptr);
-            if (listWidgetItem != nullptr)
+            if (listWidgetItem != nullptr) {
+                /// Disable signals while updating the widget and its items
+                blockSignals(true);
                 listWidgetItem->setIcon(QIcon(filename));
+                /// Re-enable signals after updating the widget and its items
+                blockSignals(false);
+            }
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not save icon data from URL" << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString() << "to file" << filename;
             return;

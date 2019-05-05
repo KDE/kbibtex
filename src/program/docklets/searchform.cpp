@@ -251,8 +251,12 @@ public:
     void addEngine(OnlineSearchAbstract *engine) {
         KConfigGroup configGroup(config, configGroupName);
 
+        /// Disable signals while updating the widget and its items
+        enginesList->blockSignals(true);
+
         QListWidgetItem *item = new QListWidgetItem(engine->label(), enginesList);
-        item->setCheckState(configGroup.readEntry(engine->name(), false) ? Qt::Checked : Qt::Unchecked);
+        static const QSet<QString> enginesEnabledByDefault {QStringLiteral("GoogleScholar"), QStringLiteral("Bibsonomy")};
+        item->setCheckState(configGroup.readEntry(engine->name(), enginesEnabledByDefault.contains(engine->name())) ? Qt::Checked : Qt::Unchecked);
         item->setIcon(engine->icon(item));
         item->setToolTip(engine->label());
         item->setData(HomepageRole, engine->homepage());
@@ -270,6 +274,9 @@ public:
         connect(engine, &OnlineSearchAbstract::foundEntry, p, &SearchForm::foundEntry);
         connect(engine, &OnlineSearchAbstract::stoppedSearch, p, &SearchForm::stoppedSearch);
         connect(engine, &OnlineSearchAbstract::progress, p, &SearchForm::updateProgress);
+
+        /// Re-enable signals after updating the widget and its items
+        enginesList->blockSignals(false);
     }
 
     void switchToSearch() {
