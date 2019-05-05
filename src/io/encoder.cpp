@@ -85,6 +85,7 @@ QString Encoder::convertToPlainAscii(const QString &ninput) const
     /// should work as cppString contains only ASCII text
     return QString::fromStdString(cppString);
 }
+#endif // HAVE_ICU
 
 bool Encoder::containsOnlyAscii(const QString &ntext)
 {
@@ -96,4 +97,3 @@ bool Encoder::containsOnlyAscii(const QString &ntext)
     return true;
 }
 
-#endif // HAVE_ICU
