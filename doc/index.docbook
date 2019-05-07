@@ -34,8 +34,8 @@
 <holder>Thomas Fischer</holder>
 </copyright>
 
-<date>2014-04-14</date>
-<releaseinfo>0.6</releaseinfo>
+<date>2019-05-07</date>
+<releaseinfo>0.9</releaseinfo>
 
 <legalnotice>
   &FDLNotice;
@@ -211,13 +211,13 @@
     <title>
       Writing a Bibliography File for Beginners
     </title>
-    <!-- 1) No request from kbibtex from Distri user (Kubuntu) nor from kbibtex self compiled as devel user
-         2a) Distri user has a mimeapps.list in home, but no kbibtex in it
+    <!-- 1) No request from kbibtex from Distro user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distro user has a mimeapps.list in home, but no kbibtex in it
          2b) Devel user has no mimeapps.list in home
-         2c) Systemsettings -> File Associations is the place to edit/chnage this in a kde desktop
+         2c) Systemsettings -> File Associations is the place to edit/change this in a kde desktop
          update after rebuilding post 2014-01-12
          Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
-         (why? from installation of distri?)
+         (why? from installation of distro?)
          This dialog even pops up when opening a .bib file with LMB click in file manager
     -->
     <para>
@@ -659,16 +659,7 @@ latex example</screen>
 	  Get Credentials</guibutton> button on <guilabel>Credentials</guilabel> tab to start the Zotero authorization wizard. Follow the instructions to allow &kbibtex; access your Zotero library.
 	</para>
 	<para>
-	  Then the <guibutton>
-	  <inlinemediaobject>
-	    <imageobject>
-	      <imagedata fileref="download.png" format="PNG"/>
-	    </imageobject>
-	  </inlinemediaobject>
-	  Load bibliography</guibutton> button can be used to download data from Zotero library.
-	</para>
-	<para>
-	  To access the downloaded library entries double-click on the corresponding item on <guilabel>Collections</guilabel> or <guilabel>Tags</guilabel> tabs. The entries that satisfy the chosen criteria will be shown on the <link linkend="search-results">Search Results panel</link>.
+	  To access the library entries double-click on the corresponding item on <guilabel>Collections</guilabel> or <guilabel>Tags</guilabel> tabs. The entries that satisfy the chosen criteria will be shown on the <link linkend="search-results">Search Results panel</link>.
 	</para>
     </sect2>
     <sect2 id="search-results">
