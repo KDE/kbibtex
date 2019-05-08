@@ -14,8 +14,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
-#ifndef KBIBTEX_ONLINESEARCH_SOANASAADS_H
-#define KBIBTEX_ONLINESEARCH_SOANASAADS_H
+
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHSOANASAADS_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHSOANASAADS_H
 
 #include "onlinesearchsimplebibtexdownload.h"
 
@@ -38,4 +39,4 @@ protected:
     QString processRawDownload(const QString &download) override;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_SOANASAADS_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHSOANASAADS_H

@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXFILEEXPORTERTOOLCHAIN_H
-#define BIBTEXFILEEXPORTERTOOLCHAIN_H
+#ifndef KBIBTEX_IO_FILEEXPORTERTOOLCHAIN_H
+#define KBIBTEX_IO_FILEEXPORTERTOOLCHAIN_H
 
 #include <QTemporaryDir>
 #include <QPageSize>
@@ -47,4 +47,4 @@ protected:
     QString pageSizeToLaTeXName(const QPageSize::PageSizeId pageSizeId) const;
 };
 
-#endif
+#endif // KBIBTEX_IO_FILEEXPORTERTOOLCHAIN_H

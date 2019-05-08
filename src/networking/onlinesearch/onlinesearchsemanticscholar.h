@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_SEMANTICSCHOLAR_H
-#define KBIBTEX_ONLINESEARCH_SEMANTICSCHOLAR_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHSEMANTICSCHOLAR_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHSEMANTICSCHOLAR_H
 
 #include "onlinesearchabstract.h"
 
@@ -50,4 +50,4 @@ private:
     OnlineSearchSemanticScholarPrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_SEMANTICSCHOLAR_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHSEMANTICSCHOLAR_H

@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_ZOTEROBROWSER_H
-#define KBIBTEX_PROGRAM_ZOTEROBROWSER_H
+#ifndef KBIBTEX_PROGRAM_DOCKLET_ZOTEROBROWSER_H
+#define KBIBTEX_PROGRAM_DOCKLET_ZOTEROBROWSER_H
 
 #include <QWidget>
 #include <QModelIndex>
@@ -64,5 +64,4 @@ private slots:
     void tabChanged(int);
 };
 
-
-#endif // KBIBTEX_PROGRAM_ZOTEROBROWSER_H
+#endif // KBIBTEX_PROGRAM_DOCKLET_ZOTEROBROWSER_H

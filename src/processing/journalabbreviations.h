@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROC_JOURNALABBREVIATIONS_H
-#define KBIBTEX_PROC_JOURNALABBREVIATIONS_H
+#ifndef KBIBTEX_PROCESSING_JOURNALABBREVIATIONS_H
+#define KBIBTEX_PROCESSING_JOURNALABBREVIATIONS_H
 
 #include <QString>
 
@@ -42,4 +42,4 @@ private:
     Private *const d;
 };
 
-#endif // KBIBTEX_PROC_JOURNALABBREVIATIONS_H
+#endif // KBIBTEX_PROCESSING_JOURNALABBREVIATIONS_H

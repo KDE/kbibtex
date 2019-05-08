@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef ENCODERLATEX_H
-#define ENCODERLATEX_H
+#ifndef KBIBTEX_IO_ENCODERLATEX_H
+#define KBIBTEX_IO_ENCODERLATEX_H
 
 #ifdef HAVE_KF5
 #include "kbibtexio_export.h"
@@ -91,4 +91,4 @@ private:
     QString readAlphaCharacters(const QString &base, int startFrom) const;
 };
 
-#endif // ENCODERLATEX_H
+#endif // KBIBTEX_IO_ENCODERLATEX_H

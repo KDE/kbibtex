@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXBIBTEXENTRY_H
-#define BIBTEXBIBTEXENTRY_H
+#ifndef KBIBTEX_DATA_ENTRY_H
+#define KBIBTEX_DATA_ENTRY_H
 
 #include <QMap>
 
@@ -245,4 +245,4 @@ static inline bool operator< (const QSharedPointer<Entry> &a, const QSharedPoint
     return a->uniqueId() < b->uniqueId();
 }
 
-#endif // BIBTEXBIBTEXENTRY_H
+#endif // KBIBTEX_DATA_ENTRY_H

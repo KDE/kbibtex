@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXENCODER_H
-#define BIBTEXENCODER_H
+#ifndef KBIBTEX_IO_ENCODER_H
+#define KBIBTEX_IO_ENCODER_H
 
 #ifdef HAVE_KF5
 #include "kbibtexio_export.h"
@@ -85,4 +85,4 @@ private:
 #endif // HAVE_ICU
 };
 
-#endif
+#endif // KBIBTEX_IO_ENCODER_H

@@ -17,8 +17,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_MRLOOKUP_H
-#define KBIBTEX_ONLINESEARCH_MRLOOKUP_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHMRLOOKUP_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHMRLOOKUP_H
 
 #include "onlinesearchabstract.h"
 
@@ -47,4 +47,4 @@ private:
     static const QString queryUrlStem;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_MRLOOKUP_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHMRLOOKUP_H

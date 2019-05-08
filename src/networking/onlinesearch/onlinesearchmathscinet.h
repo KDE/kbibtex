@@ -16,8 +16,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_MATHSCINET_H
-#define KBIBTEX_ONLINESEARCH_MATHSCINET_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHMATHSCINET_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHMATHSCINET_H
 
 #include "onlinesearchabstract.h"
 
@@ -50,4 +50,4 @@ private:
     OnlineSearchMathSciNetPrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_MATHSCINET_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHMATHSCINET_H

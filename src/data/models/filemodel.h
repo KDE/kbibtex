@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_GUI_FILEMODEL_H
-#define KBIBTEX_GUI_FILEMODEL_H
+#ifndef KBIBTEX_DATA_FILEMODEL_H
+#define KBIBTEX_DATA_FILEMODEL_H
 
 #include <QAbstractItemModel>
 #include <QLatin1String>
@@ -76,4 +76,4 @@ private:
     QString entryText(const Entry *entry, const QString &raw, const QString &rawAlt, const QStringList &rawAliases, int role, bool followCrossRef) const;
 };
 
-#endif // KBIBTEX_GUI_FILEMODEL_H
+#endif // KBIBTEX_DATA_FILEMODEL_H

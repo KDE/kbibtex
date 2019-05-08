@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_GENERAL_H
-#define KBIBTEX_ONLINESEARCH_GENERAL_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHGENERAL_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHGENERAL_H
 
 #include <KSharedConfig>
 
@@ -50,4 +50,4 @@ private:
 };
 #endif // HAVE_QTWIDGETS
 
-#endif // KBIBTEX_ONLINESEARCH_GENERAL_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHGENERAL_H

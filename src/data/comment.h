@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_IO_COMMENT_H
-#define KBIBTEX_IO_COMMENT_H
+#ifndef KBIBTEX_DATA_COMMENT_H
+#define KBIBTEX_DATA_COMMENT_H
 
 #include "element.h"
 
@@ -89,4 +89,4 @@ private:
 
 QDebug operator<<(QDebug dbg, const Comment &comment);
 
-#endif // KBIBTEX_IO_COMMENT_H
+#endif // KBIBTEX_DATA_COMMENT_H

@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_IEEEXPLORE_H
-#define KBIBTEX_ONLINESEARCH_IEEEXPLORE_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHIEEEXPLORE_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHIEEEXPLORE_H
 
 #include "onlinesearchabstract.h"
 
@@ -46,4 +46,4 @@ private:
     OnlineSearchIEEEXplorePrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_IEEEXPLORE_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHIEEEXPLORE_H

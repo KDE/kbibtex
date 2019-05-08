@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef IO_FILEIMPORTERBIBUTILS_H
-#define IO_FILEIMPORTERBIBUTILS_H
+#ifndef KBIBTEX_IO_FILEIMPORTERBIBUTILS_H
+#define KBIBTEX_IO_FILEIMPORTERBIBUTILS_H
 
 #include "fileimporter.h"
 #include "bibutils.h"
@@ -40,4 +40,4 @@ private:
 
 };
 
-#endif // IO_FILEIMPORTERBIBUTILS_H
+#endif // KBIBTEX_IO_FILEIMPORTERBIBUTILS_H

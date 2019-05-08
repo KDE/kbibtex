@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXVALUE_H
-#define BIBTEXVALUE_H
+#ifndef KBIBTEX_DATA_VALUE_H
+#define KBIBTEX_DATA_VALUE_H
 
 #include <QVector>
 #include <QVariant>
@@ -291,4 +291,4 @@ private:
 
 Q_DECLARE_METATYPE(Value)
 
-#endif
+#endif // KBIBTEX_DATA_VALUE_H

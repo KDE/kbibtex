@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef IO_FILEEXPORTERBIBUTILS_H
-#define IO_FILEEXPORTERBIBUTILS_H
+#ifndef KBIBTEX_IO_FILEEXPORTERBIBUTILS_H
+#define KBIBTEX_IO_FILEEXPORTERBIBUTILS_H
 
 #include "fileexporter.h"
 #include "bibutils.h"
@@ -40,4 +40,4 @@ private:
     Private *const d;
 };
 
-#endif // IO_FILEEXPORTERBIBUTILS_H
+#endif // KBIBTEX_IO_FILEEXPORTERBIBUTILS_H

@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_INGENTACONNECT_H
-#define KBIBTEX_ONLINESEARCH_INGENTACONNECT_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHINGENTACONNECT_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHINGENTACONNECT_H
 
 #include <QByteArray>
 
@@ -66,4 +66,4 @@ private slots:
     void downloadDone();
 };
 
-#endif // KBIBTEX_ONLINESEARCH_INGENTACONNECT_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHINGENTACONNECT_H

@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROC_FINDDUPLICATES_H
-#define KBIBTEX_PROC_FINDDUPLICATES_H
+#ifndef KBIBTEX_PROCESSING_FINDDUPLICATES_H
+#define KBIBTEX_PROCESSING_FINDDUPLICATES_H
 
 #include "kbibtexproc_export.h"
 
@@ -103,4 +103,4 @@ private:
     explicit MergeDuplicates();
 };
 
-#endif // KBIBTEX_PROC_FINDDUPLICATES_H
+#endif // KBIBTEX_PROCESSING_FINDDUPLICATES_H

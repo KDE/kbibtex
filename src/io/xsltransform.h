@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_XSLTRANSFORM_H
-#define KBIBTEX_XSLTRANSFORM_H
+#ifndef KBIBTEX_IO_XSLTRANSFORM_H
+#define KBIBTEX_IO_XSLTRANSFORM_H
 
 #ifdef HAVE_KF5
 #include "kbibtexio_export.h"
@@ -59,4 +59,4 @@ private:
     QByteArray *xsltData;
 };
 
-#endif // KBIBTEX_XSLTRANSFORM_H
+#endif // KBIBTEX_IO_XSLTRANSFORM_H

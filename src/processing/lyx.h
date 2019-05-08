@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROC_LYX_H
-#define KBIBTEX_PROC_LYX_H
+#ifndef KBIBTEX_PROCESSING_LYX_H
+#define KBIBTEX_PROCESSING_LYX_H
 
 #include "kbibtexproc_export.h"
 
@@ -54,4 +54,4 @@ private:
     LyXPrivate *d;
 };
 
-#endif // KBIBTEX_PROC_LYX_H
+#endif // KBIBTEX_PROCESSING_LYX_H

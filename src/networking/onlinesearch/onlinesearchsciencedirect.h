@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
-#define KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHSCIENCEDIRECT_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHSCIENCEDIRECT_H
 
 #include "onlinesearchabstract.h"
 
@@ -46,4 +46,4 @@ private slots:
     void doneFetchingJSON();
 };
 
-#endif // KBIBTEX_ONLINESEARCH_SCIENCEDIRECT_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHSCIENCEDIRECT_H

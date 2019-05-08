@@ -14,8 +14,9 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
-#ifndef BIBTEXFILEEXPORTERRIS_H
-#define BIBTEXFILEEXPORTERRIS_H
+
+#ifndef KBIBTEX_IO_FILEEXPORTERRIS_H
+#define KBIBTEX_IO_FILEEXPORTERRIS_H
 
 #include <QTextStream>
 
@@ -46,4 +47,4 @@ private:
     bool writeKeyValue(QTextStream &stream, const QString &key, const QString &value);
 };
 
-#endif
+#endif // KBIBTEX_IO_FILEEXPORTERRIS_H

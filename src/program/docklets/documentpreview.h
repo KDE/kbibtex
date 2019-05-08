@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_DOCUMENTPREVIEW_H
-#define KBIBTEX_PROGRAM_DOCUMENTPREVIEW_H
+#ifndef KBIBTEX_PROGRAM_DOCKLET_DOCUMENTPREVIEW_H
+#define KBIBTEX_PROGRAM_DOCKLET_DOCUMENTPREVIEW_H
 
 #include <QWidget>
 #include <QLabel>
@@ -78,4 +78,4 @@ private slots:
     void linkActivated(const QString &link);
 };
 
-#endif // KBIBTEX_PROGRAM_DOCUMENTPREVIEW_H
+#endif // KBIBTEX_PROGRAM_DOCKLET_DOCUMENTPREVIEW_H

@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_IDEASREPEC_H
-#define KBIBTEX_ONLINESEARCH_IDEASREPEC_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHIDEASREPEC_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHIDEASREPEC_H
 
 #include "onlinesearchabstract.h"
 
@@ -48,4 +48,4 @@ private:
     OnlineSearchIDEASRePEcPrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_IDEASREPEC_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHIDEASREPEC_H

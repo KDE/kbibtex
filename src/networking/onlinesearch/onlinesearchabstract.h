@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_ABSTRACT_H
-#define KBIBTEX_ONLINESEARCH_ABSTRACT_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHABSTRACT_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHABSTRACT_H
 
 #ifdef HAVE_KF5
 #include "kbibtexnetworking_export.h"
@@ -226,4 +226,4 @@ signals:
     void busyChanged();
 };
 
-#endif // KBIBTEX_ONLINESEARCH_ABSTRACT_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHABSTRACT_H

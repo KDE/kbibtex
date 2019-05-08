@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROC_BIBLIOGRAPHYSERVICE_H
-#define KBIBTEX_PROC_BIBLIOGRAPHYSERVICE_H
+#ifndef KBIBTEX_PROCESSING_BIBLIOGRAPHYSERVICE_H
+#define KBIBTEX_PROCESSING_BIBLIOGRAPHYSERVICE_H
 
 #include "kbibtexproc_export.h"
 
@@ -56,4 +56,4 @@ private:
     Private *const d;
 };
 
-#endif // KBIBTEX_PROC_BIBLIOGRAPHYSERVICE_H
+#endif // KBIBTEX_PROCESSING_BIBLIOGRAPHYSERVICE_H

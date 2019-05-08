@@ -15,9 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_ELEMENTFORM_H
-#define KBIBTEX_PROGRAM_ELEMENTFORM_H
-
+#ifndef KBIBTEX_PROGRAM_DOCKLET_ELEMENTFORM_H
+#define KBIBTEX_PROGRAM_DOCKLET_ELEMENTFORM_H
 
 #include <QWidget>
 
@@ -55,4 +54,4 @@ private slots:
     void autoApplyToggled(bool);
 };
 
-#endif // KBIBTEX_PROGRAM_ELEMENTFORM_H
+#endif // KBIBTEX_PROGRAM_DOCKLET_ELEMENTFORM_H

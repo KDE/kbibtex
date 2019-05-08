@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_IO_MACRO_H
-#define KBIBTEX_IO_MACRO_H
+#ifndef KBIBTEX_DATA_MACRO_H
+#define KBIBTEX_DATA_MACRO_H
 
 #include "element.h"
 #include "value.h"

@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_IO_PREAMBLE_H
-#define KBIBTEX_IO_PREAMBLE_H
+#ifndef KBIBTEX_DATA_PREAMBLE_H
+#define KBIBTEX_DATA_PREAMBLE_H
 
 #include "element.h"
 #include "value.h"
@@ -62,4 +62,4 @@ private:
 
 QDebug operator<<(QDebug dbg, const Preamble &preamble);
 
-#endif // KBIBTEX_IO_PREAMBLE_H
+#endif // KBIBTEX_DATA_PREAMBLE_H

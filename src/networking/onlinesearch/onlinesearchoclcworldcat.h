@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_OCLCWORLDCAT_H
-#define KBIBTEX_ONLINESEARCH_OCLCWORLDCAT_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHOCLCWORLDCAT_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHOCLCWORLDCAT_H
 
 #include "onlinesearchabstract.h"
 
@@ -60,4 +60,4 @@ private:
     Private *const d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_OCLCWORLDCAT_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHOCLCWORLDCAT_H

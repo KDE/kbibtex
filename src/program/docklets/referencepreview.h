@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_REFERENCEPREVIEW_H
-#define KBIBTEX_PROGRAM_REFERENCEPREVIEW_H
+#ifndef KBIBTEX_PROGRAM_DOCKLET_REFERENCEPREVIEW_H
+#define KBIBTEX_PROGRAM_DOCKLET_REFERENCEPREVIEW_H
 
 #include <QWidget>
 #include <QUrl>
@@ -52,5 +52,4 @@ private slots:
     void linkClicked(const QUrl &);
 };
 
-
-#endif // KBIBTEX_PROGRAM_REFERENCEPREVIEW_H
+#endif // KBIBTEX_PROGRAM_DOCKLET_REFERENCEPREVIEW_H

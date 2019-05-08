@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXFILEEXPORTERPS_H
-#define BIBTEXFILEEXPORTERPS_H
+#ifndef KBIBTEX_IO_FILEEXPORTERPS_H
+#define KBIBTEX_IO_FILEEXPORTERPS_H
 
 #include "fileexportertoolchain.h"
 
@@ -45,5 +45,4 @@ private:
     bool beautifyPostscriptFile(const QString &filename, const QString &title);
 };
 
-
-#endif
+#endif // KBIBTEX_IO_FILEEXPORTERPS_H

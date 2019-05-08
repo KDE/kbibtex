@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXELEMENT_H
-#define BIBTEXELEMENT_H
+#ifndef KBIBTEX_DATA_ELEMENT_H
+#define KBIBTEX_DATA_ELEMENT_H
 
 #include "file.h"
 
@@ -40,4 +40,4 @@ private:
     int uniqueId;
 };
 
-#endif
+#endif // KBIBTEX_DATA_ELEMENT_H

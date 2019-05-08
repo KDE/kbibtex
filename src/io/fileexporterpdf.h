@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXFILEEXPORTERPDF_H
-#define BIBTEXFILEEXPORTERPDF_H
+#ifndef KBIBTEX_IO_FILEEXPORTERPDF_H
+#define KBIBTEX_IO_FILEEXPORTERPDF_H
 
 #include <QStringList>
 
@@ -53,4 +53,4 @@ private:
     void fillEmbeddedFileList(const QSharedPointer<const Element> element, const File *bibtexfile);
 };
 
-#endif
+#endif // KBIBTEX_IO_FILEEXPORTERPDF_H

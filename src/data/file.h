@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_IO_FILE_H
-#define KBIBTEX_IO_FILE_H
+#ifndef KBIBTEX_DATA_FILE_H
+#define KBIBTEX_DATA_FILE_H
 
 #include <QList>
 #include <QStringList>
@@ -125,4 +125,4 @@ Q_DECLARE_METATYPE(File *)
 
 QDebug operator<<(QDebug dbg, const File &file);
 
-#endif // KBIBTEX_IO_FILE_H
+#endif // KBIBTEX_DATA_FILE_H

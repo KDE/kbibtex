@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_SPRINGERLINK_H
-#define KBIBTEX_ONLINESEARCH_SPRINGERLINK_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHSPRINGERLINK_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHSPRINGERLINK_H
 
 #include "onlinesearchabstract.h"
 
@@ -67,4 +67,4 @@ private:
     OnlineSearchSpringerLinkPrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_SPRINGERLINK_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHSPRINGERLINK_H

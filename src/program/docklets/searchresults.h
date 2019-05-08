@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_SEARCHRESULTS_H
-#define KBIBTEX_PROGRAM_SEARCHRESULTS_H
+#ifndef KBIBTEX_PROGRAM_DOCKLET_SEARCHRESULTS_H
+#define KBIBTEX_PROGRAM_DOCKLET_SEARCHRESULTS_H
 
 #include <QWidget>
 
@@ -48,4 +48,4 @@ private slots:
     void importSelected();
 };
 
-#endif // KBIBTEX_PROGRAM_SEARCHRESULTS_H
+#endif // KBIBTEX_PROGRAM_DOCKLET_SEARCHRESULTS_H

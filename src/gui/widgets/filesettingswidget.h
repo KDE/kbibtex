@@ -16,8 +16,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>.   *
  *****************************************************************************/
 
-#ifndef GUI_FILESETTINGSWIDGET_H
-#define GUI_FILESETTINGSWIDGET_H
+#ifndef KBIBTEX_GUI_FILESETTINGSWIDGET_H
+#define KBIBTEX_GUI_FILESETTINGSWIDGET_H
 
 #include "kbibtexgui_export.h"
 
@@ -67,4 +67,4 @@ private:
     void setupGUI();
 };
 
-#endif // GUI_FILESETTINGSWIDGET_H
+#endif // KBIBTEX_GUI_FILESETTINGSWIDGET_H

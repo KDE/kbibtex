@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>.   *
  *****************************************************************************/
 
-#ifndef KBIBTEX_GUI_HELPER_H
-#define KBIBTEX_GUI_HELPER_H
+#ifndef KBIBTEX_GUI_GUIHELPER_H
+#define KBIBTEX_GUI_GUIHELPER_H
 
 #include "kbibtexgui_export.h"
 
@@ -51,5 +51,4 @@ public:
     static int selectValue(QAbstractItemModel *model, const int value, int role = Qt::DisplayRole);
 };
 
-
-#endif // KBIBTEX_GUI_HELPER_H
+#endif // KBIBTEX_GUI_GUIHELPER_H

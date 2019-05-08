@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_ACMPORTAL_H
-#define KBIBTEX_ONLINESEARCH_ACMPORTAL_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHACMPORTAL_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHACMPORTAL_H
 
 #include <QByteArray>
 
@@ -55,4 +55,4 @@ private:
     OnlineSearchAcmPortalPrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_ACMPORTAL_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHACMPORTAL_H

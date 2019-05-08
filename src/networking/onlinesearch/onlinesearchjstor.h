@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_JSTOR_H
-#define KBIBTEX_ONLINESEARCH_JSTOR_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHJSTOR_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHJSTOR_H
 
 #include "onlinesearchabstract.h"
 
@@ -49,4 +49,4 @@ private:
     OnlineSearchJStorPrivate *d;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_JSTOR_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHJSTOR_H

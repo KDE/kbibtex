@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_PUBMED_H
-#define KBIBTEX_ONLINESEARCH_PUBMED_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHPUBMED_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHPUBMED_H
 
 #include "onlinesearchabstract.h"
 
@@ -52,4 +52,4 @@ private:
     static uint lastQueryEpoch;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_PUBMED_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHPUBMED_H

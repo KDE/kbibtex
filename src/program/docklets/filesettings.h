@@ -16,8 +16,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>.   *
  *****************************************************************************/
 
-#ifndef DOCKLET_FILESETTINGS_H
-#define DOCKLET_FILESETTINGS_H
+#ifndef KBIBTEX_PROGRAM_DOCKLET_FILESETTINGS_H
+#define KBIBTEX_PROGRAM_DOCKLET_FILESETTINGS_H
 
 #include "filesettingswidget.h"
 
@@ -47,4 +47,4 @@ private:
     FileView *m_fileView;
 };
 
-#endif // DOCKLET_FILESETTINGS_H
+#endif // KBIBTEX_PROGRAM_DOCKLET_FILESETTINGS_H

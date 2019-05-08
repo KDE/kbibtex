@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROC_CHECKBIBTEX_H
-#define KBIBTEX_PROC_CHECKBIBTEX_H
+#ifndef KBIBTEX_PROCESSING_CHECKBIBTEX_H
+#define KBIBTEX_PROCESSING_CHECKBIBTEX_H
 
 #include <QSharedPointer>
 
@@ -38,4 +38,4 @@ public:
     static CheckBibTeXResult checkBibTeX(QSharedPointer<Entry> &entry, const File *file, QWidget *parent);
 };
 
-#endif // KBIBTEX_PROC_CHECKBIBTEX_H
+#endif // KBIBTEX_PROCESSING_CHECKBIBTEX_H

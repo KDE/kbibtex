@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_ONLINESEARCH_CERNDS_H
-#define KBIBTEX_ONLINESEARCH_CERNDS_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHCERNDS_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHCERNDS_H
 
 #include "onlinesearchsimplebibtexdownload.h"
 
@@ -38,4 +38,4 @@ protected:
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) override;
 };
 
-#endif // KBIBTEX_ONLINESEARCH_CERNDS_H
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHCERNDS_H

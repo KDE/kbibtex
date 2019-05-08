@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROC_IDSUGGESTIONS_H
-#define KBIBTEX_PROC_IDSUGGESTIONS_H
+#ifndef KBIBTEX_PROCESSING_IDSUGGESTIONS_H
+#define KBIBTEX_PROCESSING_IDSUGGESTIONS_H
 
 #include "kbibtexproc_export.h"
 
@@ -73,4 +73,4 @@ private:
     IdSuggestionsPrivate *d;
 };
 
-#endif // KBIBTEX_PROC_IDSUGGESTIONS_H
+#endif // KBIBTEX_PROCESSING_IDSUGGESTIONS_H

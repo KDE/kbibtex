@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_PROGRAM_STATISTICS_H
-#define KBIBTEX_PROGRAM_STATISTICS_H
+#ifndef KBIBTEX_PROGRAM_DOCKLET_STATISTICS_H
+#define KBIBTEX_PROGRAM_DOCKLET_STATISTICS_H
 
 #include <QWidget>
 
@@ -42,4 +42,4 @@ private:
     StatisticsPrivate *d;
 };
 
-#endif // KBIBTEX_PROGRAM_STATISTICS_H
+#endif // KBIBTEX_PROGRAM_DOCKLET_STATISTICS_H

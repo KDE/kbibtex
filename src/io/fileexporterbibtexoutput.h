@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXFILEEXPORTERBIBTEXOUTPUT_H
-#define BIBTEXFILEEXPORTERBIBTEXOUTPUT_H
+#ifndef KBIBTEX_IO_FILEEXPORTERBIBTEXOUTPUT_H
+#define KBIBTEX_IO_FILEEXPORTERBIBTEXOUTPUT_H
 
 #include <QStringList>
 
@@ -46,4 +46,4 @@ private:
     bool writeLatexFile(const QString &filename);
 };
 
-#endif
+#endif // KBIBTEX_IO_FILEEXPORTERBIBTEXOUTPUT_H

@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXFILEEXPORTERRTF_H
-#define BIBTEXFILEEXPORTERRTF_H
+#ifndef KBIBTEX_IO_FILEEXPORTERRTF_H
+#define KBIBTEX_IO_FILEEXPORTERRTF_H
 
 #include "fileexportertoolchain.h"
 
@@ -44,4 +44,4 @@ private:
     bool writeLatexFile(const QString &filename);
 };
 
-#endif
+#endif // KBIBTEX_IO_FILEEXPORTERRTF_H

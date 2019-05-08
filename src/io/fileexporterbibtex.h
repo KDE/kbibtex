@@ -15,8 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef BIBTEXFILEEXPORTERBIBTEX_H
-#define BIBTEXFILEEXPORTERBIBTEX_H
+#ifndef KBIBTEX_IO_FILEEXPORTERBIBTEX_H
+#define KBIBTEX_IO_FILEEXPORTERBIBTEX_H
 
 #include <QTextStream>
 
@@ -72,4 +72,4 @@ private:
     static FileExporterBibTeX *staticFileExporterBibTeX;
 };
 
-#endif
+#endif // KBIBTEX_IO_FILEEXPORTERBIBTEX_H
