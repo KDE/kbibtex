@@ -32,7 +32,7 @@
 #include "preamble.h"
 #include "value.h"
 #include "comment.h"
-#include "encoder.h"
+#include "encoderlatex.h"
 #include "bibtexentries.h"
 #include "bibtexfields.h"
 #include "textencoder.h"
@@ -540,8 +540,8 @@ QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key
 
 QString FileExporterBibTeX::applyEncoder(const QString &input, UseLaTeXEncoding useLaTeXEncoding) const {
     switch (useLaTeXEncoding) {
-    case leLaTeX: return Encoder::instance().encode(input, Encoder::TargetEncodingASCII);
-    case leUTF8: return Encoder::instance().encode(input, Encoder::TargetEncodingUTF8);
+    case leLaTeX: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncodingASCII);
+    case leUTF8: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncodingUTF8);
     default: return input;
     }
 }
