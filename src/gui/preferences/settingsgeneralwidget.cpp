@@ -18,21 +18,21 @@
 #include "settingsgeneralwidget.h"
 
 #include <QFormLayout>
+#include <QComboBox>
 
 #include <KLocalizedString>
-#include <KComboBox>
 
-#include "guihelper.h"
-#include "value.h"
 #include "preferences.h"
+#include "value.h"
+#include "guihelper.h"
 
 class SettingsGeneralWidget::SettingsGeneralWidgetPrivate
 {
 private:
     SettingsGeneralWidget *p;
 
-    KComboBox *comboBoxBibliographySystem;
-    KComboBox *comboBoxPersonNameFormatting;
+    QComboBox *comboBoxBibliographySystem;
+    QComboBox *comboBoxPersonNameFormatting;
     const Person dummyPerson;
 
 public:
@@ -64,7 +64,7 @@ public:
     void setupGUI() {
         QFormLayout *layout = new QFormLayout(p);
 
-        comboBoxBibliographySystem = new KComboBox(false, p);
+        comboBoxBibliographySystem = new QComboBox(p);
         comboBoxBibliographySystem->setObjectName(QStringLiteral("comboBoxBibliographySystem"));
 
         for (QVector<QPair<Preferences::BibliographySystem, QString>>::ConstIterator it = Preferences::availableBibliographySystems.constBegin(); it != Preferences::availableBibliographySystems.constEnd(); ++it)
@@ -72,7 +72,7 @@ public:
         layout->addRow(i18n("Bibliography System:"), comboBoxBibliographySystem);
         connect(comboBoxBibliographySystem, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsGeneralWidget::changed);
 
-        comboBoxPersonNameFormatting = new KComboBox(false, p);
+        comboBoxPersonNameFormatting = new QComboBox(p);
         layout->addRow(i18n("Person Names Formatting:"), comboBoxPersonNameFormatting);
         static const QStringList formattingOptions {Preferences::personNameFormatFirstLast, Preferences::personNameFormatLastFirst};
         for (const QString &formattingOption : formattingOptions)

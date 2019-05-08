@@ -18,7 +18,7 @@
 #ifndef KBIBTEX_GUI_COLORLABELWIDGET_H
 #define KBIBTEX_GUI_COLORLABELWIDGET_H
 
-#include <KComboBox>
+#include <QComboBox>
 
 #include "kbibtexgui_export.h"
 
@@ -27,7 +27,7 @@
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXGUI_EXPORT ColorLabelWidget : public KComboBox
+class KBIBTEXGUI_EXPORT ColorLabelWidget : public QComboBox
 {
     Q_OBJECT
 

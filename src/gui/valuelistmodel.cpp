@@ -23,17 +23,17 @@
 #include <QTextDocument>
 #include <QAbstractTextDocumentLayout>
 #include <QListView>
+#include <QLineEdit>
 #include <QGridLayout>
 #include <QStringListModel>
 #include <QPainter>
 #include <QFrame>
 #include <QLayout>
 #include <QHeaderView>
+#include <QComboBox>
 
-#include <KComboBox>
 #include <KLocalizedString>
 #include <KColorScheme>
-#include <KLineEdit>
 
 #include "fieldlineedit.h"
 #include "bibtexfields.h"
@@ -82,7 +82,7 @@ QSize ValueListDelegate::sizeHint(const QStyleOptionViewItem &option, const QMod
 
 void ValueListDelegate::commitAndCloseEditor()
 {
-    KLineEdit *editor = qobject_cast<KLineEdit *>(sender());
+    QLineEdit *editor = qobject_cast<QLineEdit *>(sender());
     emit commitData(editor);
     emit closeEditor(editor);
 }

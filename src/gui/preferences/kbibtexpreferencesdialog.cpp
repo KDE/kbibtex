@@ -21,9 +21,9 @@
 #include <QFileInfo>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QComboBox>
 
 #include <KLocalizedString>
-#include <KComboBox>
 #include <KMessageBox>
 #include <KGuiItem>
 #include <QStandardPaths>

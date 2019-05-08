@@ -24,8 +24,7 @@
 
 #ifdef HAVE_QTWIDGETS
 class QSpinBox;
-
-class KLineEdit;
+class QLineEdit;
 
 class KBIBTEXNETWORKING_EXPORT OnlineSearchQueryFormGeneral : public OnlineSearchQueryFormAbstract
 {
@@ -41,7 +40,7 @@ public:
     int getNumResults();
 
 private:
-    QMap<QString, KLineEdit *> queryFields;
+    QMap<QString, QLineEdit *> queryFields;
     QSpinBox *numResultsField;
     const QString configGroupName;
 

@@ -24,11 +24,11 @@
 #include <QNetworkReply>
 #include <QRegularExpression>
 #ifdef HAVE_QTWIDGETS
+#include <QLineEdit>
 #include <QFormLayout>
 #endif // HAVE_QTWIDGETS
 
 #ifdef HAVE_KF5
-#include <KLineEdit>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #endif // HAVE_KF5
@@ -52,18 +52,18 @@ private:
     }
 
 public:
-    KLineEdit *lineEditPaperReference;
+    QLineEdit *lineEditPaperReference;
 
     OnlineSearchQueryFormSemanticScholar(QWidget *widget)
             : OnlineSearchQueryFormAbstract(widget), configGroupName(QStringLiteral("Search Engine Semantic Scholar")) {
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
-        lineEditPaperReference = new KLineEdit(this);
+        lineEditPaperReference = new QLineEdit(this);
         lineEditPaperReference->setClearButtonEnabled(true);
         lineEditPaperReference->setFocus(Qt::TabFocusReason);
         layout->addRow(i18n("Paper Reference:"), lineEditPaperReference);
-        connect(lineEditPaperReference, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSemanticScholar::returnPressed);
+        connect(lineEditPaperReference, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSemanticScholar::returnPressed);
 
         loadState();
     }

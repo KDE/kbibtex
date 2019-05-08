@@ -21,6 +21,7 @@
 #include <QMap>
 #include <QLabel>
 #include <QListWidget>
+#include <QLineEdit>
 #include <QSpinBox>
 #include <QStackedWidget>
 #include <QTabWidget>
@@ -35,7 +36,6 @@
 #include <QPushButton>
 #include <QDebug>
 
-#include <KLineEdit>
 #include <KLocalizedString>
 #include <KRun>
 #include <KMessageBox>

@@ -21,8 +21,8 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QSpinBox>
+#include <QLineEdit>
 
-#include <KLineEdit>
 #include <KLocalizedString>
 #include <KConfigGroup>
 
@@ -37,37 +37,37 @@ OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
     layout->setMargin(0);
 
     QLabel *label = new QLabel(i18n("Free text:"), this);
-    KLineEdit *lineEdit = new KLineEdit(this);
+    QLineEdit *lineEdit = new QLineEdit(this);
     layout->addRow(label, lineEdit);
     lineEdit->setClearButtonEnabled(true);
     lineEdit->setFocus(Qt::TabFocusReason);
     queryFields.insert(OnlineSearchAbstract::queryKeyFreeText, lineEdit);
     label->setBuddy(lineEdit);
-    connect(lineEdit, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
+    connect(lineEdit, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
 
     label = new QLabel(i18n("Title:"), this);
-    lineEdit = new KLineEdit(this);
+    lineEdit = new QLineEdit(this);
     layout->addRow(label, lineEdit);
     lineEdit->setClearButtonEnabled(true);
     queryFields.insert(OnlineSearchAbstract::queryKeyTitle, lineEdit);
     label->setBuddy(lineEdit);
-    connect(lineEdit, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
+    connect(lineEdit, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
 
     label = new QLabel(i18n("Author:"), this);
-    lineEdit = new KLineEdit(this);
+    lineEdit = new QLineEdit(this);
     layout->addRow(label, lineEdit);
     lineEdit->setClearButtonEnabled(true);
     queryFields.insert(OnlineSearchAbstract::queryKeyAuthor, lineEdit);
     label->setBuddy(lineEdit);
-    connect(lineEdit, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
+    connect(lineEdit, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
 
     label = new QLabel(i18n("Year:"), this);
-    lineEdit = new KLineEdit(this);
+    lineEdit = new QLineEdit(this);
     layout->addRow(label, lineEdit);
     lineEdit->setClearButtonEnabled(true);
     queryFields.insert(OnlineSearchAbstract::queryKeyYear, lineEdit);
     label->setBuddy(lineEdit);
-    connect(lineEdit, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
+    connect(lineEdit, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormGeneral::returnPressed);
 
     label = new QLabel(i18n("Number of Results:"), this);
     numResultsField = new QSpinBox(this);
@@ -82,7 +82,7 @@ OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
 
 bool OnlineSearchQueryFormGeneral::readyToStart() const
 {
-    for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
+    for (QMap<QString, QLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it)
         if (!it.value()->text().isEmpty())
             return true;
 
@@ -101,7 +101,7 @@ QMap<QString, QString> OnlineSearchQueryFormGeneral::getQueryTerms()
 {
     QMap<QString, QString> result;
 
-    for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
+    for (QMap<QString, QLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
         if (!it.value()->text().isEmpty())
             result.insert(it.key(), it.value()->text());
     }
@@ -118,7 +118,7 @@ int OnlineSearchQueryFormGeneral::getNumResults()
 void OnlineSearchQueryFormGeneral::loadState()
 {
     KConfigGroup configGroup(config, configGroupName);
-    for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
+    for (QMap<QString, QLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
         it.value()->setText(configGroup.readEntry(it.key(), QString()));
     }
     numResultsField->setValue(configGroup.readEntry(QStringLiteral("numResults"), 10));
@@ -127,7 +127,7 @@ void OnlineSearchQueryFormGeneral::loadState()
 void OnlineSearchQueryFormGeneral::saveState()
 {
     KConfigGroup configGroup(config, configGroupName);
-    for (QMap<QString, KLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
+    for (QMap<QString, QLineEdit *>::ConstIterator it = queryFields.constBegin(); it != queryFields.constEnd(); ++it) {
         configGroup.writeEntry(it.key(), it.value()->text());
     }
     configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());

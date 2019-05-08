@@ -23,11 +23,11 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QSpinBox>
+#include <QLineEdit>
 #include <QTextStream>
 #endif // HAVE_QTWIDGETS
 
 #ifdef HAVE_KF5
-#include <KLineEdit>
 #include <KMessageBox>
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -56,7 +56,7 @@ private:
     }
 
 public:
-    KLineEdit *lineEditFreeText;
+    QLineEdit *lineEditFreeText;
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormArXiv(QWidget *parent)
@@ -66,12 +66,12 @@ public:
 
         QLabel *label = new QLabel(i18n("Free text:"), this);
         layout->addWidget(label, 0, 0, 1, 1);
-        lineEditFreeText = new KLineEdit(this);
+        lineEditFreeText = new QLineEdit(this);
         lineEditFreeText->setClearButtonEnabled(true);
         lineEditFreeText->setFocus(Qt::TabFocusReason);
         layout->addWidget(lineEditFreeText, 0, 1, 1, 1);
         label->setBuddy(lineEditFreeText);
-        connect(lineEditFreeText, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormArXiv::returnPressed);
+        connect(lineEditFreeText, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormArXiv::returnPressed);
 
         label = new QLabel(i18n("Number of Results:"), this);
         layout->addWidget(label, 1, 0, 1, 1);

@@ -19,9 +19,9 @@
 
 #include <QFormLayout>
 #include <QPageSize>
-#include <KLineEdit>
+#include <QLineEdit>
+#include <QComboBox>
 
-#include <KComboBox>
 #include <KLocalizedString>
 
 #include "guihelper.h"
@@ -33,10 +33,10 @@ class SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidgetPrivate
 private:
     SettingsFileExporterPDFPSWidget *p;
 
-    KComboBox *comboBoxPaperSize;
+    QComboBox *comboBoxPaperSize;
 
-    KComboBox *comboBoxBabelLanguage;
-    KComboBox *comboBoxBibliographyStyle;
+    QComboBox *comboBoxBabelLanguage;
+    QComboBox *comboBoxBibliographyStyle;
 
 public:
 
@@ -77,23 +77,25 @@ public:
     void setupGUI() {
         QFormLayout *layout = new QFormLayout(p);
 
-        comboBoxPaperSize = new KComboBox(false, p);
+        comboBoxPaperSize = new QComboBox(p);
         comboBoxPaperSize->setObjectName(QStringLiteral("comboBoxPaperSize"));
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
         for (const auto &dbItem : Preferences::availablePageSizes)
             comboBoxPaperSize->addItem(QPageSize::name(dbItem.first), dbItem.second);
         connect(comboBoxPaperSize, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsAbstractWidget::changed);
 
-        comboBoxBabelLanguage = new KComboBox(true, p);
+        comboBoxBabelLanguage = new QComboBox(p);
         comboBoxBabelLanguage->setObjectName(QStringLiteral("comboBoxBabelLanguage"));
+        comboBoxBabelLanguage->setEditable(true);
         layout->addRow(i18n("Language for 'babel':"), comboBoxBabelLanguage);
         comboBoxBabelLanguage->addItem(QStringLiteral("english"));
         comboBoxBabelLanguage->addItem(QStringLiteral("ngerman"));
         comboBoxBabelLanguage->addItem(QStringLiteral("swedish"));
         connect(comboBoxBabelLanguage->lineEdit(), &QLineEdit::textChanged, p, &SettingsFileExporterPDFPSWidget::changed);
 
-        comboBoxBibliographyStyle = new KComboBox(true, p);
+        comboBoxBibliographyStyle = new QComboBox(p);
         comboBoxBibliographyStyle->setObjectName(QStringLiteral("comboBoxBibliographyStyle"));
+        comboBoxBibliographyStyle->setEditable(true);
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
         static const QStringList styles {QString(QStringLiteral("abbrv")), QString(QStringLiteral("alpha")), QString(QStringLiteral("plain")), QString(QStringLiteral("agsm")), QString(QStringLiteral("dcu")), QString(QStringLiteral("jmr")), QString(QStringLiteral("jphysicsB")), QString(QStringLiteral("kluwer")), QString(QStringLiteral("nederlands"))};
         for (const QString &style : styles) {

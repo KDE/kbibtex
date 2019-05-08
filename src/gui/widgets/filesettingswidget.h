@@ -26,8 +26,7 @@
 #include "value.h"
 
 class QCheckBox;
-
-class KComboBox;
+class QComboBox;
 
 class File;
 
@@ -53,13 +52,13 @@ signals:
     void widgetsChanged();
 
 private:
-    KComboBox *m_comboBoxEncodings;
-    KComboBox *m_comboBoxStringDelimiters;
-    KComboBox *m_comboBoxQuoteComment;
-    KComboBox *m_comboBoxKeywordCasing;
+    QComboBox *m_comboBoxEncodings;
+    QComboBox *m_comboBoxStringDelimiters;
+    QComboBox *m_comboBoxQuoteComment;
+    QComboBox *m_comboBoxKeywordCasing;
     QCheckBox *m_checkBoxProtectCasing;
-    KComboBox *m_comboBoxPersonNameFormatting;
-    KComboBox *m_comboBoxListSeparator;
+    QComboBox *m_comboBoxPersonNameFormatting;
+    QComboBox *m_comboBoxListSeparator;
 
     const Person dummyPerson;
     File *m_file;

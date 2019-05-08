@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,13 +24,13 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QPushButton>
+#include <QLineEdit>
 #include <QUrl>
 #include <QUrlQuery>
 #include <QRegularExpression>
 #include <QtNetworkAuth>
 
 #include <KLocalizedString>
-#include <KLineEdit>
 #include <KRun>
 #include <kio_version.h>
 
@@ -45,7 +45,7 @@ private:
     Zotero::OAuthWizard *p;
     QOAuth1 *qOAuth;
 
-    KLineEdit *lineEditAuthorizationUrl;
+    QLineEdit *lineEditAuthorizationUrl;
     QPushButton *buttonCopyAuthorizationUrl, *buttonOpenAuthorizationUrl;
 
 public:
@@ -132,7 +132,7 @@ public:
         QLabel *labelExplanation = new QLabel(i18n("<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The process of authorization involves multiple steps:</p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at Zotero and approve the permissions for KBibTeX.</li><li>If successful, you will be redirected to a web page telling you that KBibTeX got authorized.<br/>This window will be closed automatically.</li></ol></qt>"), p);
         gridLayout->addWidget(labelExplanation, 0, 0, 1, 3);
         gridLayout->setRowMinimumHeight(1, p->fontMetrics().xHeight() * 2);
-        lineEditAuthorizationUrl = new KLineEdit(p);
+        lineEditAuthorizationUrl = new QLineEdit(p);
         lineEditAuthorizationUrl->setReadOnly(true);
         gridLayout->addWidget(lineEditAuthorizationUrl, 2, 0, 1, 3);
         buttonCopyAuthorizationUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy URL"), p);

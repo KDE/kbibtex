@@ -34,9 +34,9 @@
 #include <QFileDialog>
 #include <QPushButton>
 #include <QFontDatabase>
+#include <QComboBox>
 
 #include <KLocalizedString>
-#include <KComboBox>
 #include <KRun>
 #include <KIO/CopyJob>
 #include <KJobWidgets>
@@ -93,7 +93,7 @@ public:
     QUrl baseUrl;
     QTextDocument *htmlDocument;
     KTextEdit *htmlView;
-    KComboBox *comboBox;
+    QComboBox *comboBox;
     QSharedPointer<const Element> element;
     const File *file;
     FileView *fileView;
@@ -115,7 +115,7 @@ public:
         gridLayout->setColumnStretch(1, 0);
         gridLayout->setColumnStretch(2, 0);
 
-        comboBox = new KComboBox(p);
+        comboBox = new QComboBox(p);
         gridLayout->addWidget(comboBox, 0, 0, 1, 3);
 
         QFrame *frame = new QFrame(p);

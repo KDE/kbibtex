@@ -20,6 +20,7 @@
 #ifdef HAVE_QTWIDGETS
 #include <QFormLayout>
 #include <QSpinBox>
+#include <QLineEdit>
 #include <QLabel>
 #endif // HAVE_QTWIDGETS
 #include <QRegularExpression>
@@ -30,7 +31,6 @@
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
-#include <KLineEdit>
 #include <KConfigGroup>
 #else // HAVE_KF5
 #define i18n(text) QObject::tr(text)
@@ -65,7 +65,7 @@ private:
     }
 
 public:
-    KLineEdit *lineEditFreeText, *lineEditTitle, *lineEditBookTitle, *lineEditAuthorEditor, *lineEditYear;
+    QLineEdit *lineEditFreeText, *lineEditTitle, *lineEditBookTitle, *lineEditAuthorEditor, *lineEditYear;
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormSpringerLink(QWidget *parent)
@@ -73,40 +73,40 @@ public:
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
-        lineEditFreeText = new KLineEdit(this);
+        lineEditFreeText = new QLineEdit(this);
         lineEditFreeText->setClearButtonEnabled(true);
         QLabel *label = new QLabel(i18n("Free Text:"), this);
         label->setBuddy(lineEditFreeText);
         layout->addRow(label, lineEditFreeText);
-        connect(lineEditFreeText, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditFreeText, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
-        lineEditTitle = new KLineEdit(this);
+        lineEditTitle = new QLineEdit(this);
         lineEditTitle->setClearButtonEnabled(true);
         label = new QLabel(i18n("Title:"), this);
         label->setBuddy(lineEditTitle);
         layout->addRow(label, lineEditTitle);
-        connect(lineEditTitle, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditTitle, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
-        lineEditBookTitle = new KLineEdit(this);
+        lineEditBookTitle = new QLineEdit(this);
         lineEditBookTitle->setClearButtonEnabled(true);
         label = new QLabel(i18n("Book/Journal title:"), this);
         label->setBuddy(lineEditBookTitle);
         layout->addRow(label, lineEditBookTitle);
-        connect(lineEditBookTitle, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditBookTitle, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
-        lineEditAuthorEditor = new KLineEdit(this);
+        lineEditAuthorEditor = new QLineEdit(this);
         lineEditAuthorEditor->setClearButtonEnabled(true);
         label = new QLabel(i18n("Author or Editor:"), this);
         label->setBuddy(lineEditAuthorEditor);
         layout->addRow(label, lineEditAuthorEditor);
-        connect(lineEditAuthorEditor, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditAuthorEditor, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
-        lineEditYear = new KLineEdit(this);
+        lineEditYear = new QLineEdit(this);
         lineEditYear->setClearButtonEnabled(true);
         label = new QLabel(i18n("Year:"), this);
         label->setBuddy(lineEditYear);
         layout->addRow(label, lineEditYear);
-        connect(lineEditYear, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditYear, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
 
         numResultsField = new QSpinBox(this);
         label = new QLabel(i18n("Number of Results:"), this);

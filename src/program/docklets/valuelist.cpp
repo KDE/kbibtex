@@ -24,12 +24,12 @@
 #include <QGridLayout>
 #include <QStringListModel>
 #include <QScrollBar>
+#include <QLineEdit>
+#include <QComboBox>
 #include <QTimer>
 #include <QSortFilterProxyModel>
 #include <QAction>
 
-#include <KLineEdit>
-#include <KComboBox>
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KToggleAction>
@@ -56,8 +56,8 @@ public:
     QTreeView *treeviewFieldValues;
     ValueListModel *model;
     QSortFilterProxyModel *sortingModel;
-    KComboBox *comboboxFieldNames;
-    KLineEdit *lineeditFilter;
+    QComboBox *comboboxFieldNames;
+    QLineEdit *lineeditFilter;
     const int countWidth;
     QAction *assignSelectionAction;
     QAction *removeSelectionAction;
@@ -77,10 +77,11 @@ public:
         QBoxLayout *layout = new QVBoxLayout(p);
         layout->setMargin(0);
 
-        comboboxFieldNames = new KComboBox(true, p);
+        comboboxFieldNames = new QComboBox(p);
+        comboboxFieldNames->setEditable(true);
         layout->addWidget(comboboxFieldNames);
 
-        lineeditFilter = new KLineEdit(p);
+        lineeditFilter = new QLineEdit(p);
         layout->addWidget(lineeditFilter);
         lineeditFilter->setClearButtonEnabled(true);
         lineeditFilter->setPlaceholderText(i18n("Filter value list"));
@@ -122,7 +123,7 @@ public:
         p->setEnabled(false);
 
         connect(comboboxFieldNames, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), p, &ValueList::fieldNamesChanged);
-        connect(comboboxFieldNames, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), lineeditFilter, &KLineEdit::clear);
+        connect(comboboxFieldNames, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), lineeditFilter, &QLineEdit::clear);
         connect(treeviewFieldValues, &QTreeView::activated, p, &ValueList::listItemActivated);
         connect(delegate, &ValueListDelegate::closeEditor, treeviewFieldValues, &QTreeView::reset);
 
@@ -198,7 +199,7 @@ public:
             sortingModel->setFilterKeyColumn(0);
             sortingModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
             sortingModel->setFilterRole(ValueListModel::SearchTextRole);
-            connect(lineeditFilter, &KLineEdit::textEdited, sortingModel, &QSortFilterProxyModel::setFilterFixedString);
+            connect(lineeditFilter, &QLineEdit::textEdited, sortingModel, &QSortFilterProxyModel::setFilterFixedString);
             sortingModel->setSortLocaleAware(true);
             usedModel = sortingModel;
         }

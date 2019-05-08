@@ -32,6 +32,7 @@
 #include <QDockWidget>
 #include <QDebug>
 #include <QPushButton>
+#include <QComboBox>
 #include <QMutex>
 #include <QMimeDatabase>
 #include <QMimeType>
@@ -45,7 +46,6 @@
 #endif // HAVE_WEBENGINEWIDGETS
 
 #include <KLocalizedString>
-#include <KComboBox>
 #include <KJobWidgets>
 #include <KRun>
 #include <KMimeTypeTrader>
@@ -139,7 +139,7 @@ private:
     int swpMessage, swpOkular, swpHTML;
 
 public:
-    KComboBox *urlComboBox;
+    QComboBox *urlComboBox;
     QPushButton *onlyLocalFilesButton;
     QList<KIO::StatJob *> runningJobs;
     QSharedPointer<const Entry> entry;
@@ -185,7 +185,7 @@ public:
         sp.setVerticalPolicy(QSizePolicy::MinimumExpanding);
         onlyLocalFilesButton->setSizePolicy(sp);
 
-        urlComboBox = new KComboBox(false, p);
+        urlComboBox = new QComboBox(p);
         innerLayout->addWidget(urlComboBox, 1);
 
         externalViewerButton = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open")), QString(), p);

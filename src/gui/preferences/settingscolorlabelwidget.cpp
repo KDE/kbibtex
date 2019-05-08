@@ -24,10 +24,10 @@
 #include <QStyledItemDelegate>
 #include <QSignalMapper>
 #include <QPushButton>
+#include <QLineEdit>
 #include <QMenu>
 
 #include <KColorButton>
-#include <KLineEdit>
 #include <KActionMenu>
 #include <KLocalizedString>
 
@@ -53,7 +53,7 @@ public:
             return new KColorButton(parent);
         else
             /// Text strings are to be edited in a line edit
-            return new KLineEdit(parent);
+            return new QLineEdit(parent);
     }
 
     void setEditorData(QWidget *editor, const QModelIndex &index) const override {
@@ -62,7 +62,7 @@ public:
             /// Initialized color button with row's current color
             colorButton->setColor(index.model()->data(index, Qt::EditRole).value<QColor>());
         } else {
-            KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor);
+            QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor);
             /// Initialized line edit with row's current color's label
             lineEdit->setText(index.model()->data(index, Qt::EditRole).toString());
         }
@@ -75,7 +75,7 @@ public:
                 /// Assign color button's color back to model
                 model->setData(index, colorButton->color(), Qt::EditRole);
         } else if (index.column() == 1) {
-            KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor);
+            QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor);
             if (!lineEdit->text().isEmpty())
                 /// Assign line edit's text back to model
                 model->setData(index, lineEdit->text(), Qt::EditRole);
@@ -310,7 +310,7 @@ public:
         connect(model, &ColorLabelSettingsModel::modified, p, &SettingsColorLabelWidget::changed);
 
         /// Delegate to handle changes of color (through KColorButton)
-        /// and label (throuh KLineEdit)
+        /// and label (throuh QLineEdit)
         delegate = new ColorLabelSettingsDelegate(view);
         view->setItemDelegate(delegate);
 

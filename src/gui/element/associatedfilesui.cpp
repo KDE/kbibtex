@@ -26,8 +26,9 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QLineEdit>
+#include <QPointer>
 
-#include <KLineEdit>
 #include <KLocalizedString>
 
 class AssociatedFilesUI::Private
@@ -37,16 +38,16 @@ private:
 
 public:
     QLabel *labelGreeting;
-    KLineEdit *lineEditSourceUrl;
+    QLineEdit *lineEditSourceUrl;
     QRadioButton *radioNoCopyMove, *radioCopyFile, *radioMoveFile;
     QLabel *labelMoveCopyLocation;
-    KLineEdit *lineMoveCopyLocation;
+    QLineEdit *lineMoveCopyLocation;
     QGroupBox *groupBoxRename;
     QRadioButton *radioKeepFilename, *radioRenameToEntryId, *radioUserDefinedName;
-    KLineEdit *lineEditUserDefinedName;
+    QLineEdit *lineEditUserDefinedName;
     QGroupBox *groupBoxPathType;
     QRadioButton *radioRelativePath, *radioAbsolutePath;
-    KLineEdit *linePreview;
+    QLineEdit *linePreview;
 
     QUrl sourceUrl;
     QSharedPointer<Entry> entry;
@@ -65,7 +66,7 @@ public:
         layout->addWidget(labelGreeting);
         labelGreeting->setWordWrap(true);
 
-        lineEditSourceUrl = new KLineEdit(p);
+        lineEditSourceUrl = new QLineEdit(p);
         layout->addWidget(lineEditSourceUrl);
         lineEditSourceUrl->setReadOnly(true);
 
@@ -93,7 +94,7 @@ public:
         groupBoxLayout->addSpacing(4);
         labelMoveCopyLocation = new QLabel(i18n("Path and filename of bibliography file:"), groupBox);
         groupBoxLayout->addWidget(labelMoveCopyLocation, 1);
-        lineMoveCopyLocation = new KLineEdit(groupBox);
+        lineMoveCopyLocation = new QLineEdit(groupBox);
         lineMoveCopyLocation->setReadOnly(true);
         groupBoxLayout->addWidget(lineMoveCopyLocation, 1);
 
@@ -113,9 +114,9 @@ public:
         radioUserDefinedName = new QRadioButton(i18n("User-defined name:"), groupBoxRename);
         gridLayout->addWidget(radioUserDefinedName, 2, 0, 1, 2);
         buttonGroup->addButton(radioUserDefinedName);
-        lineEditUserDefinedName = new KLineEdit(groupBoxRename);
+        lineEditUserDefinedName = new QLineEdit(groupBoxRename);
         gridLayout->addWidget(lineEditUserDefinedName, 3, 1, 1, 1);
-        connect(lineEditUserDefinedName, &KLineEdit::textEdited, p, &AssociatedFilesUI::updateUIandPreview);
+        connect(lineEditUserDefinedName, &QLineEdit::textEdited, p, &AssociatedFilesUI::updateUIandPreview);
         connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), p, &AssociatedFilesUI::updateUIandPreview);
         radioRenameToEntryId->setChecked(true); /// by default
 
@@ -137,7 +138,7 @@ public:
         label = new QLabel(i18n("Preview of reference to be inserted:"), p);
         layout->addWidget(label);
 
-        linePreview = new KLineEdit(p);
+        linePreview = new QLineEdit(p);
         layout->addWidget(linePreview);
         linePreview->setReadOnly(true);
 

@@ -17,8 +17,6 @@
 
 #include "settingsabstractwidget.h"
 
-#include <KComboBox>
-
 SettingsAbstractWidget::SettingsAbstractWidget(QWidget *parent)
         : QWidget(parent)
 {

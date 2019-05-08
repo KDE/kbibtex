@@ -20,6 +20,8 @@
 #include <QLayout>
 #include <QBuffer>
 #include <QLabel>
+#include <QLineEdit>
+#include <QComboBox>
 #include <QTreeWidget>
 #include <QFileInfo>
 #include <QDropEvent>
@@ -34,8 +36,6 @@
 #include <QRegularExpression>
 
 #include <KLocalizedString>
-#include <KLineEdit>
-#include <KComboBox>
 #include <KRun>
 #include <KTextEditor/Document>
 #include <KTextEditor/Editor>
@@ -354,8 +354,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widgets' values
-    disconnect(entryType->lineEdit(), &KLineEdit::textChanged, this, &ReferenceWidget::gotModified);
-    disconnect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+    disconnect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
+    disconnect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
 
     bool result = false;
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
@@ -397,8 +397,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
         }
     }
 
-    connect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
-    connect(entryType->lineEdit(), &KLineEdit::textChanged, this, &ReferenceWidget::gotModified);
+    connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
 
     return result;
 }
@@ -470,7 +470,7 @@ void ReferenceWidget::createGUI()
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
 
-    entryType = new KComboBox(this);
+    entryType = new QComboBox(this);
     entryType->setEditable(true);
     entryType->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
     QLabel *label = new QLabel(i18n("Type:"), this);
@@ -480,7 +480,7 @@ void ReferenceWidget::createGUI()
 
     layout->addSpacing(interColumnSpace);
 
-    entryId = new KLineEdit(this);
+    entryId = new QLineEdit(this);
     entryId->setClearButtonEnabled(true);
     label = new QLabel(i18n("Id:"), this);
     label->setBuddy(entryId);
@@ -504,9 +504,9 @@ void ReferenceWidget::createGUI()
     QMenu *suggestionsMenu = new QMenu(buttonSuggestId);
     buttonSuggestId->setMenu(suggestionsMenu);
 
-    connect(entryType->lineEdit(), &KLineEdit::textChanged, this, &ReferenceWidget::gotModified);
-    connect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
-    connect(entryType->lineEdit(), &KLineEdit::textChanged, this, &ReferenceWidget::entryTypeChanged);
+    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
+    connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::entryTypeChanged);
     connect(suggestionsMenu, &QMenu::aboutToShow, this, &ReferenceWidget::prepareSuggestionsMenu);
 }
 
@@ -592,10 +592,10 @@ void ReferenceWidget::setEntryIdByDefault()
         const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
         if (!defaultSuggestion.isEmpty()) {
-            disconnect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+            disconnect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
             /// Apply default suggestion to widget
             entryId->setText(defaultSuggestion);
-            connect(entryId, &KLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+            connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
         }
     }
 }
@@ -928,7 +928,7 @@ void OtherFieldsWidget::createGUI()
     layout->addWidget(label, 0, 0, 1, 1);
     label->setAlignment(static_cast<Qt::Alignment>(label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)));
 
-    fieldName = new KLineEdit(this);
+    fieldName = new QLineEdit(this);
     layout->addWidget(fieldName, 0, 1, 1, 1);
     label->setBuddy(fieldName);
 
@@ -963,7 +963,7 @@ void OtherFieldsWidget::createGUI()
     connect(otherFieldsList, &QTreeWidget::itemActivated, this, &OtherFieldsWidget::listElementExecuted);
     connect(otherFieldsList, &QTreeWidget::currentItemChanged, this, &OtherFieldsWidget::listCurrentChanged);
     connect(otherFieldsList, &QTreeWidget::itemSelectionChanged, this, &OtherFieldsWidget::updateGUI);
-    connect(fieldName, &KLineEdit::textEdited, this, &OtherFieldsWidget::updateGUI);
+    connect(fieldName, &QLineEdit::textEdited, this, &OtherFieldsWidget::updateGUI);
     connect(buttonAddApply, &QPushButton::clicked, this, &OtherFieldsWidget::actionAddApply);
     connect(buttonDelete, &QPushButton::clicked, this, &OtherFieldsWidget::actionDelete);
     connect(buttonOpen, &QPushButton::clicked, this, &OtherFieldsWidget::actionOpen);
@@ -1148,7 +1148,7 @@ void PreambleWidget::createGUI()
 class SourceWidget::Private
 {
 public:
-    KComboBox *messages;
+    QComboBox *messages;
     QPushButton *buttonRestore;
     FileImporterBibTeX *importerBibTeX;
     DelayedExecutionTimer *delayedExecutionTimer;
@@ -1171,7 +1171,7 @@ SourceWidget::SourceWidget(QWidget *parent)
     createGUI();
 
     connect(document, &KTextEditor::Document::textChanged, d->delayedExecutionTimer, &DelayedExecutionTimer::trigger);
-    connect(document, &KTextEditor::Document::textChanged, d->messages, &KComboBox::clear);
+    connect(document, &KTextEditor::Document::textChanged, d->messages, &QComboBox::clear);
     connect(d->delayedExecutionTimer, &DelayedExecutionTimer::triggered, this, &SourceWidget::updateMessage);
 }
 
@@ -1338,7 +1338,7 @@ void SourceWidget::createGUI()
     KTextEditor::View *view = document->createView(this);
     layout->addWidget(view, 0, 0, 1, 2);
 
-    d->messages = new KComboBox(this);
+    d->messages = new QComboBox(this);
     layout->addWidget(d->messages, 1, 0, 1, 1);
 
     d->buttonRestore = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-undo")), i18n("Restore"), this);

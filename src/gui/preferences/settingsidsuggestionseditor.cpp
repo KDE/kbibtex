@@ -21,6 +21,8 @@
 #include <QFormLayout>
 #include <QScrollArea>
 #include <QLabel>
+#include <QLineEdit>
+#include <QComboBox>
 #include <QSpinBox>
 #include <QCheckBox>
 #include <QSignalMapper>
@@ -30,8 +32,6 @@
 #include <QAction>
 #include <QDialogButtonBox>
 
-#include <KLineEdit>
-#include <KComboBox>
 #include <KLocalizedString>
 #include <KIconLoader>
 
@@ -88,8 +88,8 @@ private:
     RangeWidget *rangeWidgetAuthor;
     QCheckBox *checkBoxLastAuthor;
     QLabel *labelAuthorRange;
-    KComboBox *comboBoxChangeCase;
-    KLineEdit *lineEditTextInBetween;
+    QComboBox *comboBoxChangeCase;
+    QLineEdit *lineEditTextInBetween;
     QSpinBox *spinBoxLength;
 
 private slots:
@@ -125,7 +125,7 @@ public:
         const int maxWidth = qMax(labelAuthorRange->fontMetrics().width(i18n("From first author to author %1 and last author", 88)), labelAuthorRange->fontMetrics().width(i18n("From author %1 to author %2 and last author", 88, 88)));
         labelAuthorRange->setMinimumWidth(maxWidth);
 
-        comboBoxChangeCase = new KComboBox(false, this);
+        comboBoxChangeCase = new QComboBox(this);
         comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
         comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
         comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
@@ -133,7 +133,7 @@ public:
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
         comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
-        lineEditTextInBetween = new KLineEdit(this);
+        lineEditTextInBetween = new QLineEdit(this);
         formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
         lineEditTextInBetween->setText(info.inBetween);
 
@@ -151,7 +151,7 @@ public:
         connect(checkBoxLastAuthor, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
         connect(checkBoxLastAuthor, &QCheckBox::toggled, this, &AuthorWidget::updateRangeLabel);
         connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
-        connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(lineEditTextInBetween, &QLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
         connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
 
         updateRangeLabel();
@@ -194,14 +194,14 @@ class YearWidget : public TokenWidget
     Q_OBJECT
 
 private:
-    KComboBox *comboBoxDigits;
+    QComboBox *comboBoxDigits;
 
 public:
     YearWidget(int digits, IdSuggestionsEditWidget *isew, QWidget *parent)
             : TokenWidget(parent) {
         setTitle(i18n("Year"));
 
-        comboBoxDigits = new KComboBox(false, this);
+        comboBoxDigits = new QComboBox(this);
         comboBoxDigits->addItem(i18n("2 digits"), 2);
         comboBoxDigits->addItem(i18n("4 digits"), 4);
         formLayout->addRow(i18n("Digits:"), comboBoxDigits);
@@ -281,8 +281,8 @@ private:
     RangeWidget *rangeWidgetAuthor;
     QLabel *labelWordsRange;
     QCheckBox *checkBoxRemoveSmallWords;
-    KComboBox *comboBoxChangeCase;
-    KLineEdit *lineEditTextInBetween;
+    QComboBox *comboBoxChangeCase;
+    QLineEdit *lineEditTextInBetween;
     QSpinBox *spinBoxLength;
 
 private slots:
@@ -336,7 +336,7 @@ public:
         formLayout->addRow(i18n("Small words:"), checkBoxRemoveSmallWords);
         checkBoxRemoveSmallWords->setChecked(removeSmallWords);
 
-        comboBoxChangeCase = new KComboBox(false, this);
+        comboBoxChangeCase = new QComboBox(this);
         comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
         comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
         comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
@@ -344,7 +344,7 @@ public:
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
         comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
-        lineEditTextInBetween = new KLineEdit(this);
+        lineEditTextInBetween = new QLineEdit(this);
         formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
         lineEditTextInBetween->setText(info.inBetween);
 
@@ -361,7 +361,7 @@ public:
         connect(rangeWidgetAuthor, &RangeWidget::upperValueChanged, this, &TitleWidget::updateRangeLabel);
         connect(checkBoxRemoveSmallWords, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
         connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
-        connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(lineEditTextInBetween, &QLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
         connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
 
         updateRangeLabel();
@@ -403,8 +403,8 @@ class JournalWidget : public TokenWidget
 
 private:
     QCheckBox *checkBoxRemoveSmallWords;
-    KComboBox *comboBoxChangeCase;
-    KLineEdit *lineEditTextInBetween;
+    QComboBox *comboBoxChangeCase;
+    QLineEdit *lineEditTextInBetween;
     QSpinBox *spinBoxLength;
 
 public:
@@ -420,7 +420,7 @@ public:
         formLayout->addRow(i18n("Small words:"), checkBoxRemoveSmallWords);
         checkBoxRemoveSmallWords->setChecked(removeSmallWords);
 
-        comboBoxChangeCase = new KComboBox(false, this);
+        comboBoxChangeCase = new QComboBox(this);
         comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
         comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
         comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
@@ -428,7 +428,7 @@ public:
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
         comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
-        lineEditTextInBetween = new KLineEdit(this);
+        lineEditTextInBetween = new QLineEdit(this);
         formLayout->addRow(i18n("Text in between:"), lineEditTextInBetween);
         lineEditTextInBetween->setText(info.inBetween);
 
@@ -441,7 +441,7 @@ public:
 
         connect(checkBoxRemoveSmallWords, &QCheckBox::toggled, isew, &IdSuggestionsEditWidget::updatePreview);
         connect(comboBoxChangeCase, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), isew, &IdSuggestionsEditWidget::updatePreview);
-        connect(lineEditTextInBetween, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(lineEditTextInBetween, &QLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
         connect(spinBoxLength, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
@@ -477,7 +477,7 @@ class TypeWidget : public TokenWidget
     Q_OBJECT
 
 private:
-    KComboBox *comboBoxChangeCase;
+    QComboBox *comboBoxChangeCase;
     QSpinBox *spinBoxLength;
 
 public:
@@ -489,7 +489,7 @@ public:
         QBoxLayout *boxLayout = new QVBoxLayout();
         boxLayout->setMargin(0);
 
-        comboBoxChangeCase = new KComboBox(false, this);
+        comboBoxChangeCase = new QComboBox(this);
         comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
         comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
         comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
@@ -536,18 +536,18 @@ class TextWidget : public TokenWidget
     Q_OBJECT
 
 private:
-    KLineEdit *lineEditText;
+    QLineEdit *lineEditText;
 
 public:
     TextWidget(const QString &text, IdSuggestionsEditWidget *isew, QWidget *parent)
             : TokenWidget(parent) {
         setTitle(i18n("Text"));
 
-        lineEditText = new KLineEdit(this);
+        lineEditText = new QLineEdit(this);
         formLayout->addRow(i18n("Text:"), lineEditText);
         lineEditText->setText(text);
 
-        connect(lineEditText, &KLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
+        connect(lineEditText, &QLineEdit::textEdited, isew, &IdSuggestionsEditWidget::updatePreview);
     }
 
     QString toString() const override {

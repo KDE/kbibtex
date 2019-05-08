@@ -22,6 +22,7 @@
 #include <QLabel>
 #include <QFormLayout>
 #include <QSpinBox>
+#include <QLineEdit>
 #include <QIcon>
 #endif // HAVE_QTWIDGETS
 #include <QNetworkReply>
@@ -30,7 +31,6 @@
 #ifdef HAVE_KF5
 #include <KLocalizedString>
 #include <KConfigGroup>
-#include <KLineEdit>
 #else // HAVE_KF5
 #define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
@@ -63,14 +63,14 @@ private:
     }
 
 public:
-    KLineEdit *lineEditFullText;
-    KLineEdit *lineEditTitle;
-    KLineEdit *lineEditAuthor;
-    KLineEdit *lineEditAbstractKeywords;
-    KLineEdit *lineEditPublication;
-    KLineEdit *lineEditISSNDOIISBN;
-    KLineEdit *lineEditVolume;
-    KLineEdit *lineEditIssue;
+    QLineEdit *lineEditFullText;
+    QLineEdit *lineEditTitle;
+    QLineEdit *lineEditAuthor;
+    QLineEdit *lineEditAbstractKeywords;
+    QLineEdit *lineEditPublication;
+    QLineEdit *lineEditISSNDOIISBN;
+    QLineEdit *lineEditVolume;
+    QLineEdit *lineEditIssue;
     QSpinBox *numResultsField;
 
     OnlineSearchQueryFormIngentaConnect(QWidget *widget)
@@ -78,45 +78,45 @@ public:
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
-        lineEditFullText = new KLineEdit(this);
+        lineEditFullText = new QLineEdit(this);
         lineEditFullText->setClearButtonEnabled(true);
         layout->addRow(i18n("Full text:"), lineEditFullText);
-        connect(lineEditFullText, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditFullText, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
-        lineEditTitle = new KLineEdit(this);
+        lineEditTitle = new QLineEdit(this);
         lineEditTitle->setClearButtonEnabled(true);
         layout->addRow(i18n("Title:"), lineEditTitle);
-        connect(lineEditTitle, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditTitle, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
-        lineEditAuthor = new KLineEdit(this);
+        lineEditAuthor = new QLineEdit(this);
         lineEditAuthor->setClearButtonEnabled(true);
         layout->addRow(i18n("Author:"), lineEditAuthor);
-        connect(lineEditAuthor, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditAuthor, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
-        lineEditAbstractKeywords = new KLineEdit(this);
+        lineEditAbstractKeywords = new QLineEdit(this);
         lineEditAbstractKeywords->setClearButtonEnabled(true);
         layout->addRow(i18n("Abstract/Keywords:"), lineEditAbstractKeywords);
-        connect(lineEditAbstractKeywords, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditAbstractKeywords, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
-        lineEditPublication = new KLineEdit(this);
+        lineEditPublication = new QLineEdit(this);
         lineEditPublication->setClearButtonEnabled(true);
         layout->addRow(i18n("Publication:"), lineEditPublication);
-        connect(lineEditPublication, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditPublication, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
-        lineEditISSNDOIISBN = new KLineEdit(this);
+        lineEditISSNDOIISBN = new QLineEdit(this);
         lineEditISSNDOIISBN->setClearButtonEnabled(true);
         layout->addRow(i18n("ISSN/ISBN/DOI:"), lineEditISSNDOIISBN);
-        connect(lineEditISSNDOIISBN, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditISSNDOIISBN, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
-        lineEditVolume = new KLineEdit(this);
+        lineEditVolume = new QLineEdit(this);
         lineEditVolume->setClearButtonEnabled(true);
         layout->addRow(i18n("Volume:"), lineEditVolume);
-        connect(lineEditVolume, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditVolume, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
-        lineEditIssue = new KLineEdit(this);
+        lineEditIssue = new QLineEdit(this);
         lineEditIssue->setClearButtonEnabled(true);
         layout->addRow(i18n("Issue/Number:"), lineEditIssue);
-        connect(lineEditIssue, &KLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditIssue, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
 
         numResultsField = new QSpinBox(this);
         layout->addRow(i18n("Number of Results:"), numResultsField);

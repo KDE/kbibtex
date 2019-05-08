@@ -33,9 +33,8 @@ class QTreeWidget;
 class QTreeWidgetItem;
 class QGridLayout;
 class QPushButton;
-
-class KLineEdit;
-class KComboBox;
+class QLineEdit;
+class QComboBox;
 
 namespace KTextEditor {
 class Document;
@@ -126,8 +125,8 @@ class ReferenceWidget : public ElementWidget
     Q_OBJECT
 
 private:
-    KComboBox *entryType;
-    KLineEdit *entryId;
+    QComboBox *entryType;
+    QLineEdit *entryId;
     QPushButton *buttonSuggestId;
 
     void createGUI();
@@ -210,7 +209,7 @@ class OtherFieldsWidget : public ElementWidget
     Q_OBJECT
 
 private:
-    KLineEdit *fieldName;
+    QLineEdit *fieldName;
     FieldInput *fieldContent;
     QTreeWidget *otherFieldsList;
     QPushButton *buttonDelete;

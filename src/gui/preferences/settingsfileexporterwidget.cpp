@@ -20,13 +20,14 @@
 #include <QFormLayout>
 #include <QCheckBox>
 #include <QSpinBox>
+#include <QLineEdit>
+#include <QComboBox>
 #include <QPushButton>
 #include <qplatformdefs.h>
 
 #include <KLocalizedString>
-#include <KComboBox>
-#include <KLineEdit>
 #include <KUrlRequester>
+#include <KLineEdit> /// required as KUrlRequester returns it
 
 #include "guihelper.h"
 #include "italictextitemmodel.h"
@@ -40,14 +41,14 @@ class SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate
 private:
     SettingsFileExporterWidget *p;
 
-    KComboBox *comboBoxCopyReferenceCmd;
+    QComboBox *comboBoxCopyReferenceCmd;
     static const QString citeCmdToLabel;
 
 public:
 #ifdef QT_LSTAT
     QCheckBox *checkboxUseAutomaticLyXPipeDetection;
 #endif // QT_LSTAT
-    KComboBox *comboBoxBackupScope;
+    QComboBox *comboBoxBackupScope;
     QSpinBox *spinboxNumberOfBackups;
 
     KUrlRequester *lineeditLyXPipePath;
@@ -111,7 +112,7 @@ public:
     void setupGUI() {
         QFormLayout *layout = new QFormLayout(p);
 
-        comboBoxCopyReferenceCmd = new KComboBox(false, p);
+        comboBoxCopyReferenceCmd = new QComboBox(p);
         comboBoxCopyReferenceCmd->setObjectName(QStringLiteral("comboBoxCopyReferenceCmd"));
         layout->addRow(i18n("Command for 'Copy Reference':"), comboBoxCopyReferenceCmd);
         ItalicTextItemModel *itim = new ItalicTextItemModel();
@@ -130,12 +131,12 @@ public:
 
         lineeditLyXPipePath = new KUrlRequester(p);
         layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
-        connect(lineeditLyXPipePath->lineEdit(), &KLineEdit::textEdited, p, &SettingsFileExporterWidget::changed);
+        connect(qobject_cast<QLineEdit *>(lineeditLyXPipePath->lineEdit()), &QLineEdit::textEdited, p, &SettingsFileExporterWidget::changed);
         lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
         lineeditLyXPipePath->setFilter(QStringLiteral("inode/fifo"));
         lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
 
-        comboBoxBackupScope = new KComboBox(false, p);
+        comboBoxBackupScope = new QComboBox(p);
         for (const auto &pair : Preferences::availableBackupScopes)
             comboBoxBackupScope->addItem(pair.second, static_cast<int>(pair.first));
         layout->addRow(i18n("Backups when saving:"), comboBoxBackupScope);

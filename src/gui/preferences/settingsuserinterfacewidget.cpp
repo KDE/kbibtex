@@ -19,9 +19,9 @@
 
 #include <QFormLayout>
 #include <QCheckBox>
+#include <QComboBox>
 #include <QBoxLayout>
 
-#include <KComboBox>
 #include <KLocalizedString>
 
 #include "preferences.h"
@@ -34,7 +34,7 @@ class SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate
 private:
     SettingsUserInterfaceWidget *p;
 
-    KComboBox *comboBoxElementDoubleClickAction;
+    QComboBox *comboBoxElementDoubleClickAction;
 
 public:
     SettingsUserInterfaceWidgetPrivate(SettingsUserInterfaceWidget *parent)
@@ -59,7 +59,7 @@ public:
     void setupGUI() {
         QFormLayout *layout = new QFormLayout(p);
 
-        comboBoxElementDoubleClickAction = new KComboBox(p);
+        comboBoxElementDoubleClickAction = new QComboBox(p);
         comboBoxElementDoubleClickAction->setObjectName(QStringLiteral("comboBoxElementDoubleClickAction"));
         for (QVector<QPair<Preferences::FileViewDoubleClickAction, QString>>::ConstIterator it = Preferences::availableFileViewDoubleClickActions.constBegin(); it != Preferences::availableFileViewDoubleClickActions.constEnd(); ++it)
             comboBoxElementDoubleClickAction->addItem(it->second, static_cast<int>(it->first));

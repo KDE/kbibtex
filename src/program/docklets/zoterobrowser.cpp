@@ -26,10 +26,11 @@
 #include <QRadioButton>
 #include <QPushButton>
 #include <QDebug>
-#include <KLineEdit>
+#include <QPointer>
+#include <QLineEdit>
+#include <QComboBox>
 
 #include <KLocalizedString>
-#include <KComboBox>
 #include <KWallet/KWallet>
 #include <KMessageBox>
 
@@ -66,12 +67,12 @@ public:
     QTabWidget *tabWidget;
     QTreeView *collectionBrowser;
     QListView *tagBrowser;
-    KLineEdit *lineEditNumericUserId;
-    KLineEdit *lineEditApiKey;
+    QLineEdit *lineEditNumericUserId;
+    QLineEdit *lineEditApiKey;
     QRadioButton *radioPersonalLibrary;
     QRadioButton *radioGroupLibrary;
     bool comboBoxGroupListInitialized;
-    KComboBox *comboBoxGroupList;
+    QComboBox *comboBoxGroupList;
 
     QCursor nonBusyCursor;
 
@@ -115,7 +116,7 @@ public:
         gridLayout->addWidget(radioPersonalLibrary, 0, 0, 1, 2);
         radioGroupLibrary = new QRadioButton(i18n("Group library"), container);
         gridLayout->addWidget(radioGroupLibrary, 1, 0, 1, 2);
-        comboBoxGroupList = new KComboBox(false, container);
+        comboBoxGroupList = new QComboBox(container);
         gridLayout->addWidget(comboBoxGroupList, 2, 1, 1, 1);
         QSizePolicy sizePolicy = comboBoxGroupList->sizePolicy();
         sizePolicy.setHorizontalPolicy(QSizePolicy::MinimumExpanding);
@@ -133,17 +134,17 @@ public:
         QFormLayout *containerForm = new QFormLayout();
         containerLayout->addLayout(containerForm, 1);
         containerForm->setMargin(0);
-        lineEditNumericUserId = new KLineEdit(container);
+        lineEditNumericUserId = new QLineEdit(container);
         lineEditNumericUserId->setSizePolicy(sizePolicy);
         lineEditNumericUserId->setReadOnly(true);
         containerForm->addRow(i18n("Numeric user id:"), lineEditNumericUserId);
-        connect(lineEditNumericUserId, &KLineEdit::textChanged, p, &ZoteroBrowser::invalidateGroupList);
+        connect(lineEditNumericUserId, &QLineEdit::textChanged, p, &ZoteroBrowser::invalidateGroupList);
 
-        lineEditApiKey = new KLineEdit(container);
+        lineEditApiKey = new QLineEdit(container);
         lineEditApiKey->setSizePolicy(sizePolicy);
         lineEditApiKey->setReadOnly(true);
         containerForm->addRow(i18n("API key:"), lineEditApiKey);
-        connect(lineEditApiKey, &KLineEdit::textChanged, p, &ZoteroBrowser::invalidateGroupList);
+        connect(lineEditApiKey, &QLineEdit::textChanged, p, &ZoteroBrowser::invalidateGroupList);
 
         QBoxLayout *containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);

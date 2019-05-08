@@ -19,8 +19,8 @@
 
 #include <QCheckBox>
 #include <QFormLayout>
+#include <QComboBox>
 
-#include <KComboBox>
 #include <KLocalizedString>
 
 #include "preferences.h"
@@ -127,13 +127,13 @@ void FileSettingsWidget::setupGUI()
 {
     QFormLayout *layout = new QFormLayout(this);
 
-    m_comboBoxEncodings = new KComboBox(false, this);
+    m_comboBoxEncodings = new QComboBox(this);
     m_comboBoxEncodings->setObjectName(QStringLiteral("comboBoxEncodings"));
     layout->addRow(i18n("Encoding:"), m_comboBoxEncodings);
     m_comboBoxEncodings->addItems(Preferences::availableBibTeXEncodings);
     connect(m_comboBoxEncodings, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
-    m_comboBoxStringDelimiters = new KComboBox(false, this);
+    m_comboBoxStringDelimiters = new QComboBox(this);
     m_comboBoxStringDelimiters->setObjectName(QStringLiteral("comboBoxStringDelimiters"));
     layout->addRow(i18n("String Delimiters:"), m_comboBoxStringDelimiters);
     m_comboBoxStringDelimiters->addItem(createDelimiterString('"', '"'));
@@ -141,13 +141,13 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxStringDelimiters->addItem(createDelimiterString('(', ')'));
     connect(m_comboBoxStringDelimiters, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
-    m_comboBoxQuoteComment = new KComboBox(false, this);
+    m_comboBoxQuoteComment = new QComboBox(this);
     layout->addRow(i18n("Comment Quoting:"), m_comboBoxQuoteComment);
     for (QVector<QPair<Preferences::QuoteComment, QString>>::ConstIterator it = Preferences::availableBibTeXQuoteComments.constBegin(); it != Preferences::availableBibTeXQuoteComments.constEnd(); ++it)
         m_comboBoxQuoteComment->addItem(it->second, static_cast<int>(it->first));
     connect(m_comboBoxQuoteComment, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
-    m_comboBoxKeywordCasing = new KComboBox(false, this);
+    m_comboBoxKeywordCasing = new QComboBox(this);
     layout->addRow(i18n("Keyword Casing:"), m_comboBoxKeywordCasing);
     m_comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "lowercase"));
     m_comboBoxKeywordCasing->addItem(i18nc("Keyword Casing", "Initial capital"));
@@ -161,7 +161,7 @@ void FileSettingsWidget::setupGUI()
     layout->addRow(i18n("Protect Casing?"), m_checkBoxProtectCasing);
     connect(m_checkBoxProtectCasing, &QCheckBox::stateChanged, this, &FileSettingsWidget::widgetsChanged);
 
-    m_comboBoxPersonNameFormatting = new KComboBox(false, this);
+    m_comboBoxPersonNameFormatting = new QComboBox(this);
     m_comboBoxPersonNameFormatting->setObjectName(QStringLiteral("comboBoxPersonNameFormatting"));
     layout->addRow(i18n("Person Names Formatting:"), m_comboBoxPersonNameFormatting);
     connect(m_comboBoxPersonNameFormatting, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
@@ -172,7 +172,7 @@ void FileSettingsWidget::setupGUI()
     itim->addItem(Person::transcribePersonName(&dummyPerson, Preferences::personNameFormatLastFirst), Preferences::personNameFormatLastFirst);
     m_comboBoxPersonNameFormatting->setModel(itim);
 
-    m_comboBoxListSeparator = new KComboBox(false, this);
+    m_comboBoxListSeparator = new QComboBox(this);
     layout->addRow(i18n("List Separator"), m_comboBoxListSeparator);
     connect(m_comboBoxListSeparator, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
     m_comboBoxListSeparator->addItem(QStringLiteral(";"), QVariant::fromValue<QString>(QStringLiteral("; ")));

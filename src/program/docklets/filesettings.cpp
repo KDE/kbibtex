@@ -20,8 +20,8 @@
 
 #include <QFormLayout>
 #include <QCheckBox>
+#include <QComboBox>
 
-#include <KComboBox>
 #include <KLocalizedString>
 
 #include "preferences.h"

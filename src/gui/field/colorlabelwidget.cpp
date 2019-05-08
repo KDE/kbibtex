@@ -127,7 +127,7 @@ public:
 };
 
 ColorLabelWidget::ColorLabelWidget(QWidget *parent)
-        : KComboBox(false, parent), d(new ColorLabelWidgetPrivate(this, new ColorLabelComboBoxModel(this)))
+        : QComboBox(parent), d(new ColorLabelWidgetPrivate(this, new ColorLabelComboBoxModel(this)))
 {
     setModel(d->model);
     connect(this, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ColorLabelWidget::slotCurrentIndexChanged);

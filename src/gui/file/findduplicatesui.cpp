@@ -21,6 +21,7 @@
 #include <QWidget>
 #include <QBoxLayout>
 #include <QLabel>
+#include <QLineEdit>
 #include <QSortFilterProxyModel>
 #include <QStyle>
 #include <QRadioButton>
@@ -38,7 +39,6 @@
 #include <KLocalizedString>
 #include <kparts/part.h>
 #include <KMessageBox>
-#include <KLineEdit>
 
 #include "fileimporterbibtex.h"
 #include "bibtexentries.h"
@@ -360,8 +360,8 @@ public:
         if (index.parent() != QModelIndex()) {
             /// Only second-level indices in the model can be edited
             /// (those are the actual values).
-            /// Use a plain, border-less KLineEdit.
-            KLineEdit *lineEdit = new KLineEdit(parent);
+            /// Use a plain, border-less QLineEdit.
+            QLineEdit *lineEdit = new QLineEdit(parent);
             lineEdit->setStyleSheet(QStringLiteral("border: none;"));
             return lineEdit;
         }
@@ -369,14 +369,14 @@ public:
     }
 
     void setEditorData(QWidget *editor, const QModelIndex &index) const override {
-        if (KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor)) {
+        if (QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor)) {
             /// Set line edit's default value to string fetched from model
             lineEdit->setText(index.data(Qt::EditRole).toString());
         }
     }
 
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const override {
-        if (KLineEdit *lineEdit = qobject_cast<KLineEdit *>(editor)) {
+        if (QLineEdit *lineEdit = qobject_cast<QLineEdit *>(editor)) {
             /// Set user-entered text to model (and underlying value)
             model->setData(index, lineEdit->text(), AlternativesItemModel::UserInputRole);
 
