@@ -598,13 +598,6 @@ void KBibTeXIOTest::partialRISInput()
 
 void KBibTeXIOTest::initTestCase()
 {
-    QFile texFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QStringLiteral("/encoderlatex-tables.tex"));
-    qDebug() << "Writing LaTeX tables to: " << texFile.fileName();
-    if (texFile.open(QFile::WriteOnly)) {
-        EncoderLaTeX::writeLaTeXTables(texFile);
-        texFile.close();
-    }
-
     qRegisterMetaType<FileImporter::MessageSeverity>();
 }
 

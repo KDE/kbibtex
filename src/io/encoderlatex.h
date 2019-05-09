@@ -41,10 +41,6 @@ public:
     static const EncoderLaTeX &instance();
     ~EncoderLaTeX() override;
 
-#ifdef BUILD_TESTING
-    static bool writeLaTeXTables(QIODevice &output);
-#endif // BUILD_TESTING
-
 protected:
     EncoderLaTeX();
 
