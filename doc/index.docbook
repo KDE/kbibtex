@@ -2,7 +2,6 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
   <!ENTITY latex "L<superscript>A</superscript>T<subscript>E</subscript>X">
   <!ENTITY pdflatex "PDFL<superscript>A</superscript>T<subscript>E</subscript>X">
-  <!ENTITY pdf "<acronym>PDF</acronym>">
   <!ENTITY tex "T<subscript>E</subscript>X">
   <!ENTITY tetex "<application>teT<subscript>E</subscript>X</application>">
   <!ENTITY texlive "<application>TeX Live</application>">
@@ -409,7 +408,7 @@ latex example</screen>
       </para>
     </tip>
     <para>
-      Now, you can see the results as a &DVI; or &pdf; file (the format depends on your configuration), stored in the same folder as your source files.
+      Now, you can see the results as a &DVI; or &PDF; file (the format depends on your configuration), stored in the same folder as your source files.
     </para>
     <note>
       <para>
@@ -749,7 +748,7 @@ latex example</screen>
 	      <imagedata fileref="tools-check-spelling.png" format="PNG"/>
 	    </imageobject>
 	  </inlinemediaobject>
-	  Check with &bibtex;</guibutton> button to preview the editing entry as it will be shown in the compiled &pdf; file.
+	  Check with &bibtex;</guibutton> button to preview the editing entry as it will be shown in the compiled &PDF; file.
         </para>
 	<para>
 	  Check the <guilabel>Automatically apply changes</guilabel> box to have all your changes automatically applied to the entry without the need to click the <guibutton>Apply</guibutton> button.
@@ -932,7 +931,7 @@ latex example</screen>
 		    <imagedata fileref="application-pdf.png" format="PNG"/>
 		  </imageobject>
 		</inlinemediaobject>
-		<guibutton>Include &pdf; files in fulltext search</guibutton>: allows you to include fulltext &pdf; in the filtering.
+		<guibutton>Include &PDF; files in fulltext search</guibutton>: allows you to include fulltext &PDF; in the filtering.
 	      </para>
 	    </listitem>
 	    <listitem>
@@ -1163,21 +1162,21 @@ latex example</screen>
 	<term>
 	  <menuchoice>
 	    <guimenu>Element</guimenu>
-	    <guimenuitem>Find &pdf;...</guimenuitem>
+	    <guimenuitem>Find &PDF;...</guimenuitem>
 	  </menuchoice>
 	</term>
 	<listitem>
 	  <para>
-	    Try to find some &pdf; documents for the currently selected bibliography entry in the Internet.
+	    Try to find some &PDF; documents for the currently selected bibliography entry in the Internet.
 	  </para>
 	  <screenshot>
-	    <screeninfo>Find &pdf; dialog</screeninfo>
+	    <screeninfo>Find &PDF; dialog</screeninfo>
 	    <mediaobject>
 	      <imageobject>
 		<imagedata fileref="find-pdf.png" format="PNG" />
 	      </imageobject>
 	      <textobject>
-		<phrase>Find &pdf; dialog</phrase>
+		<phrase>Find &PDF; dialog</phrase>
 	      </textobject>
 	    </mediaobject>
 	  </screenshot>
@@ -1456,16 +1455,16 @@ latex example</screen>
       </sect2>
       <sect2 id="config-pdf">
       <title>
-	&pdf; &amp; Postscript Configuration
+	&PDF; &amp; Postscript Configuration
       </title>
       <screenshot>
-	<screeninfo>&pdf; &amp; Postscript configuration</screeninfo>
+	<screeninfo>&PDF; &amp; Postscript configuration</screeninfo>
 	  <mediaobject>
 	    <imageobject>
 	      <imagedata fileref="config-pdf.png" format="PNG" />
 	    </imageobject>
 	    <textobject>
-	      <phrase>&pdf; &amp; Postscript configuration</phrase>
+	      <phrase>&PDF; &amp; Postscript configuration</phrase>
 	    </textobject>
 	  </mediaobject>
 	</screenshot>
