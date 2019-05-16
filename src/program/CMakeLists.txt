@@ -18,19 +18,11 @@ set(
     docklets/searchresults.cpp
     docklets/elementform.cpp
     docklets/filesettings.cpp
+    docklets/zoterobrowser.cpp
     openfileinfo.cpp
     ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     logging_program.cpp
 )
-
-if(BUILD_ZOTERO)
-    list(
-        APPEND
-        kbibtex_SRCS
-        docklets/zoterobrowser.cpp
-        )
-endif(BUILD_ZOTERO)
-
 
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtex kbibtex_SRCS)

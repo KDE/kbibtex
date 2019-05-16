@@ -14,7 +14,7 @@ cmake_minimum_required(
 )
 
 set(
-    QT_MIN_VERSION "5.6.0"
+    QT_MIN_VERSION "5.9.0"
 )
 set(
     KF5_MIN_VERSION "5.51.0"
@@ -55,6 +55,7 @@ find_package(
     Network
     XmlPatterns
     Concurrent
+    NetworkAuth
 )
 
 if (MSVC)
@@ -204,29 +205,6 @@ if(
     include_directories(${ICU_INCLUDE_DIRS})
 endif(
     ICU_FOUND
-)
-
-find_package(
-    Qca-qt5 "2.1.0"
-)
-find_package(
-    QtOAuth
-)
-if (Qca-qt5_FOUND AND QTOAUTH_FOUND)
-    message(STATUS "Found Qca-qt5 " ${Qca-qt5_VERSION} " and QtOAuth")
-    add_definitions(-DHAVE_ZOTERO=1)
-    set(BUILD_ZOTERO ON)
-else(Qca-qt5_FOUND AND QTOAUTH_FOUND)
-    message(STATUS "No Qca-qt5 or no QtOAuth, disabling certain functionality")
-    set(BUILD_ZOTERO OFF)
-endif(Qca-qt5_FOUND AND QTOAUTH_FOUND)
-
-# Make an educated guess where to find headers for QCA-Qt5
-# TODO isn't there an "official" way to determine this directory?
-find_path(
-    QTCRYPTO_INCLUDE_DIR qca.h
-    HINTS ENV ${Qt5Core_INCLUDE_DIRS} ENV ${QT_INCLUDES}
-    PATH_SUFFIXES QtCrypto
 )
 
 

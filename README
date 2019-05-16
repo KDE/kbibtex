@@ -28,23 +28,22 @@ example, parse PDF or XML files.
 In detail, the following dependencies exist:
 
 * Compile time
-  - Qt 5.6 or later,
-    required components Core, Widgets, and Network
-  - KDE Frameworks 5.26 or later,
+  - Qt 5.9 or later,
+    required components Core, Widgets, Network, XmlPatterns,
+    Concurrent, and NetworkAuth,
+    optionally either Qt5WebEngineWidgets or Qt5WebKitWidgets,
+  - KDE Frameworks 5.51 or later,
     required components I18n, XmlGui, KIO, IconThemes, ItemViews,
                         Completion, Parts, CoreAddons, Service,
-                        DocTools, Wallet, Crash,
+                        DocTools, Wallet, Crash, TextEditor,
     and has helper package: extra-cmake-modules (ECM)
-  - libxml2 (any recent version should suffice)
-  - libxslt (any recent version should suffice)
-  - Poppler 0.32 or later with Qt5 bindings installed
-  - QCA 2.0 or later with Qt5 bindings installed
+  - Poppler (any recent version should suffice) with Qt5 bindings,
   - ICU (any recent version should suffice),
     required components uc and i18n
-  - QtOAuth 2.0 or later (OPTIONAL)
 
 * Runtime
   - BibUtils to import/export various bibliography formats
+  - A TeX distribution including pdflatex, bibtex, ...
 
 In case this list is incomplete, wrong, or out-dated, please file
 a bug for KBibTeX at https://bugs.kde.org/

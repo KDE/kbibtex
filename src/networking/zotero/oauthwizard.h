@@ -18,7 +18,7 @@
 #ifndef KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
 #define KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
 
-#include <QWizard>
+#include <QDialog>
 
 #include "kbibtexnetworking_export.h"
 
@@ -28,7 +28,7 @@ namespace Zotero
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT OAuthWizard : public QWizard
+class KBIBTEXNETWORKING_EXPORT OAuthWizard : public QDialog
 {
     Q_OBJECT
 
@@ -40,15 +40,6 @@ public:
 
     int userId() const;
     QString apiKey() const;
-    QString username() const;
-
-protected:
-    void initializePage(int id) override;
-    void accept() override;
-
-private slots:
-    void copyAuthorizationUrl();
-    void openAuthorizationUrl();
 
 private:
     class Private;

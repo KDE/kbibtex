@@ -25,6 +25,14 @@ set(
     onlinesearch/onlinesearchdoi.cpp
     onlinesearch/onlinesearchbiorxiv.cpp
     onlinesearch/onlinesearchsemanticscholar.cpp
+    zotero/api.cpp
+    zotero/collectionmodel.cpp
+    zotero/collection.cpp
+    zotero/items.cpp
+    zotero/groups.cpp
+    zotero/oauthwizard.cpp
+    zotero/tags.cpp
+    zotero/tagmodel.cpp
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
@@ -32,21 +40,6 @@ set(
     ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
     logging_networking.cpp
 )
-
-if(BUILD_ZOTERO)
-    list(
-        APPEND
-        kbibtexnetworking_LIB_SRCS
-        zotero/api.cpp
-        zotero/collectionmodel.cpp
-        zotero/collection.cpp
-        zotero/items.cpp
-        zotero/groups.cpp
-        zotero/oauthwizard.cpp
-        zotero/tags.cpp
-        zotero/tagmodel.cpp
-    )
-endif(BUILD_ZOTERO)
 
 set(
     kbibtexnetworking_HDRS
@@ -73,25 +66,18 @@ set(
     onlinesearch/onlinesearchdoi.h
     onlinesearch/onlinesearchbiorxiv.h
     onlinesearch/onlinesearchsemanticscholar.h
+    zotero/api.h
+    zotero/collectionmodel.h
+    zotero/collection.h
+    zotero/items.h
+    zotero/groups.h
+    zotero/oauthwizard.h
+    zotero/tags.h
+    zotero/tagmodel.h
     associatedfiles.h
     findpdf.h
     internalnetworkaccessmanager.h
 )
-
-if(BUILD_ZOTERO)
-    list(
-        APPEND
-        kbibtexnetworking_HDRS
-        zotero/api.h
-        zotero/collectionmodel.h
-        zotero/collection.h
-        zotero/items.h
-        zotero/groups.h
-        zotero/oauthwizard.h
-        zotero/tags.h
-        zotero/tagmodel.h
-    )
-endif(BUILD_ZOTERO)
 
 if(UNITY_BUILD)
     enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
@@ -120,6 +106,7 @@ target_link_libraries(
     Qt5::Core
     Qt5::Widgets
     Qt5::Network
+    Qt5::NetworkAuth
     KF5::I18n
     KF5::XmlGui
     KF5::Completion
@@ -133,18 +120,6 @@ target_link_libraries(
     kbibtexio
     Poppler::Qt5
 )
-
-if(BUILD_ZOTERO)
-    include_directories(
-        ${QTOAUTH_INCLUDE_DIR}/QtOAuth
-    )
-    target_link_libraries(
-        kbibtexnetworking
-        qca-qt5
-        ${QTOAUTH_LIBRARY}
-    )
-endif(BUILD_ZOTERO)
-
 
 set_target_properties(
     kbibtexnetworking
