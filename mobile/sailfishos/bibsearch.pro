@@ -19,12 +19,13 @@ SOURCES += src/main.cpp src/searchenginelist.cpp \
     ../../src/networking/onlinesearch/onlinesearcharxiv.cpp \
     ../../src/networking/onlinesearch/onlinesearchingentaconnect.cpp \
     ../../src/networking/onlinesearch/onlinesearchpubmed.cpp \
-    ../../src/global/preferences.cpp ../../src/global/kbibtex.cpp \
+    ../../src/global/kbibtex.cpp \
     ../../src/io/encoderxml.cpp ../../src/io/encoder.cpp \
     ../../src/io/encoderlatex.cpp \
     ../../src/io/fileimporter.cpp \
     ../../src/io/fileimporterbibtex.cpp \
     ../../src/io/textencoder.cpp ../../src/io/xsltransform.cpp \
+    ../../src/config/preferences.cpp \
     ../../src/config/bibtexfields.cpp \
     ../../src/config/bibtexentries.cpp \
     ../../src/config/logging_config.cpp \
@@ -48,11 +49,12 @@ HEADERS += src/bibliographymodel.h src/searchenginelist.h \
     ../../src/networking/onlinesearch/onlinesearchspringerlink.h \
     ../../src/networking/onlinesearch/onlinesearchieeexplore.h \
     ../../src/networking/onlinesearch/onlinesearchpubmed.h \
-    ../../src/global/preferences.h ../../src/global/kbibtex.h \
+    ../../src/global/kbibtex.h \
     ../../src/io/encoderxml.h ../../src/io/encoder.h \
     ../../src/io/encoderlatex.h ../../src/io/fileimporter.h \
     ../../src/io/fileimporterbibtex.h \
     ../../src/io/textencoder.h ../../src/io/xsltransform.h \
+    ../../src/config/preferences.h \
     ../../src/config/bibtexfields.h ../../src/config/bibtexentries.h
 
 OTHER_FILES += qml/pages/SearchForm.qml qml/pages/EntryView.qml \
@@ -70,7 +72,7 @@ QT += xmlpatterns
 
 DEFINES += KBIBTEXGLOBAL_EXPORT= KBIBTEXCONFIG_EXPORT= KBIBTEXDATA_EXPORT= KBIBTEXIO_EXPORT= KBIBTEXNETWORKING_EXPORT=
 
-INCLUDEPATH +=  ../../src/global $${OUT_PWD}/src/global ../../src/data ../../src/networking ../../src/networking/onlinesearch ../../src/io ../../src/config
+INCLUDEPATH +=  ../../src/global $${OUT_PWD}/src/global ../../src/config $${OUT_PWD}/src/config ../../src/data ../../src/networking ../../src/networking/onlinesearch ../../src/io
 
 CONFIG += sailfishapp_i18n sailfishapp_i18n_idbased
 

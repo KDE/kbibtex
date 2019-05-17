@@ -16,7 +16,6 @@ configure_file(test-config.h.in test-config.h @ONLY)
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/gui
@@ -50,7 +49,6 @@ set(
 set(
     kbibtexiotest_SRCS
     kbibtexiotest.cpp
-    ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
 )
 
 set(

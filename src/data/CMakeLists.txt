@@ -10,7 +10,6 @@ set(
     preamble.cpp
     value.cpp
     models/filemodel.cpp
-    ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_data.cpp
 )
 
@@ -29,11 +28,6 @@ set(
 if(UNITY_BUILD)
     enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
 endif(UNITY_BUILD)
-
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/config
-    ${CMAKE_BINARY_DIR}/src/config
-)
 
 add_library(
     kbibtexdata

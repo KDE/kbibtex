@@ -5,7 +5,6 @@ set(
     part.cpp
     partfactory.cpp
     browserextension.cpp
-    ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_parts.cpp
 )
 
@@ -16,7 +15,6 @@ endif(UNITY_BUILD)
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/io
@@ -59,6 +57,8 @@ add_library( kbibtexpart
 
 target_link_libraries( kbibtexpart
     KF5::Parts
+    KF5::CoreAddons
+    KF5::ItemViews
     kbibtexconfig
     kbibtexdata
     kbibtexio

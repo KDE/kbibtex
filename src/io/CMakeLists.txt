@@ -26,7 +26,6 @@ set(
     textencoder.cpp
     bibutils.cpp
     xsltransform.cpp
-    ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_io.cpp
 )
 
@@ -63,8 +62,6 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src/config
-    ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/data
 )

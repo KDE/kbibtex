@@ -36,7 +36,6 @@ set(
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
-    ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_networking.cpp
 )
 
@@ -83,8 +82,6 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
-    ${CMAKE_BINARY_DIR}/src/config
-    ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/io

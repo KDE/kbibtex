@@ -18,14 +18,14 @@
 #ifndef KBIBTEX_CONFIG_BIBTEXFIELDS_H
 #define KBIBTEX_CONFIG_BIBTEXFIELDS_H
 
-#ifdef HAVE_KF5
-#include "kbibtexconfig_export.h"
-#endif // HAVE_KF5
-
 #include <QString>
 #include <QVector>
 
-#include "kbibtex.h"
+#include <KBibTeX>
+
+#ifdef HAVE_KF5
+#include "kbibtexconfig_export.h"
+#endif // HAVE_KF5
 
 typedef struct {
     /**

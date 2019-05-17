@@ -21,7 +21,7 @@
 /// 'preferences.cpp'. Manual changes in this file will be overwritten the next time the
 /// script will be run. You have been warned.
 
-#include "preferences.h"
+#include <Preferences>
 
 #include <QCoreApplication>
 #ifdef HAVE_KF5
@@ -35,7 +35,7 @@
 #endif // HAVE_KF5
 
 #ifdef HAVE_KF5
-#include "notificationhub.h"
+#include <NotificationHub>
 #endif // HAVE_KF5
 
 #include <QVector>

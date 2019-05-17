@@ -39,7 +39,6 @@ set(
     italictextitemmodel.cpp
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
-    ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_gui.cpp
 )
 
@@ -80,8 +79,6 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src/config
-    ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io

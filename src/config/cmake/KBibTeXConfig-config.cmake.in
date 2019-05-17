@@ -1,0 +1,30 @@
+@PACKAGE_INIT@
+
+find_package(
+    Qt5 @QT_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    Core
+)
+
+find_package(
+    KF5 @KF5_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    ConfigCore
+    ConfigGui
+    I18n
+)
+
+find_package(
+    KBibTeX @PROJECT_VERSION@ EXACT
+    CONFIG
+    REQUIRED
+    Global
+)
+
+if(NOT TARGET KBibTeX::Config)
+    include("${KBibTeXConfig_CMAKE_DIR}/KBibTeXConfig-targets.cmake")
+endif()
+
+set(KBibTeXConfig_LIBRARIES KBibTeX::Config)

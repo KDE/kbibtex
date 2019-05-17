@@ -27,7 +27,7 @@
 #include <QPageSize>
 #include <QColor>
 
-#include "kbibtex.h"
+#include <KBibTeX>
 
 #ifdef HAVE_KF5
 #include "kbibtexconfig_export.h"
