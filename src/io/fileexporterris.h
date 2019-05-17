@@ -20,7 +20,11 @@
 
 #include <QTextStream>
 
-#include "fileexporter.h"
+#include <FileExporter>
+
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 class Element;
 class File;

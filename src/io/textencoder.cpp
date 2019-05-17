@@ -20,9 +20,9 @@
 #include <QStringList>
 #include <QTextCodec>
 #include <QDebug>
-#include "logging_io.h"
 
 #include "encoderlatex.h"
+#include "logging_io.h"
 
 TextEncoder::TextEncoder()
 {

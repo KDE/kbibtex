@@ -18,11 +18,11 @@
 #ifndef KBIBTEX_IO_XSLTRANSFORM_H
 #define KBIBTEX_IO_XSLTRANSFORM_H
 
+#include <QString>
+
 #ifdef HAVE_KF5
 #include "kbibtexio_export.h"
 #endif // HAVE_KF5
-
-#include <QString>
 
 class QXmlQuery;
 class QByteArray;

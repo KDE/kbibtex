@@ -20,7 +20,11 @@
 
 #include <QStringList>
 
-#include "fileexportertoolchain.h"
+#include <FileExporterToolchain>
+
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 /**
 @author Thomas Fischer

@@ -20,6 +20,8 @@
 #include <QBuffer>
 #include <QTextStream>
 
+#include <Element>
+
 FileExporter::FileExporter(QObject *parent)
         : QObject(parent)
 {

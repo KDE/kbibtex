@@ -20,7 +20,9 @@
 
 #include <QIODevice>
 
+#ifdef HAVE_KF5
 #include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 /**
  * This class encapsulates calling the various binary programs of the BibUtils program set.

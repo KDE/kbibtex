@@ -22,10 +22,10 @@
 #include <QTextStream>
 #include <QDir>
 
-#include "element.h"
+#include <KBibTeX>
+#include <Preferences>
+#include <Element>
 #include "fileexporterbibtex.h"
-#include "kbibtex.h"
-#include "preferences.h"
 #include "logging_io.h"
 
 FileExporterPS::FileExporterPS(QObject *parent)

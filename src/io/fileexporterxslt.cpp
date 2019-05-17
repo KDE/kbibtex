@@ -22,11 +22,10 @@
 #include <QFile>
 #include <QStandardPaths>
 
-#include "file.h"
-#include "element.h"
-#include "entry.h"
-#include "macro.h"
-#include "comment.h"
+#include <File>
+#include <Entry>
+#include <Macro>
+#include <Comment>
 #include "encoderxml.h"
 #include "fileexporterxml.h"
 #include "xsltransform.h"

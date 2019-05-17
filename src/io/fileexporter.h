@@ -20,9 +20,9 @@
 
 #include <QObject>
 
+#ifdef HAVE_KF5
 #include "kbibtexio_export.h"
-
-#include "file.h"
+#endif // HAVE_KF5
 
 class QIODevice;
 

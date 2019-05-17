@@ -17,20 +17,53 @@
 
 #include "encoder.h"
 
+#ifdef HAVE_ICU
+#include <unicode/translit.h>
+#endif // HAVE_ICU
+
 #include "logging_io.h"
 
+#ifdef HAVE_ICU
+class Encoder::Private
+{
+public:
+    icu::Transliterator *translit;
+
+    Private()
+            : translit(nullptr)
+    {
+        /// Create an ICU Transliterator, configured to
+        /// transliterate virtually anything into plain ASCII
+        UErrorCode uec = U_ZERO_ERROR;
+        translit = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
+        if (U_FAILURE(uec)) {
+            qCWarning(LOG_KBIBTEX_IO) << "Error creating an ICU Transliterator instance: " << u_errorName(uec);
+            if (translit != nullptr) delete translit;
+            translit = nullptr;
+        }
+    }
+
+    ~Private()
+    {
+        if (translit != nullptr)
+            delete translit;
+    }
+};
+#endif // HAVE_ICU
+
+
 Encoder::Encoder()
+#ifdef HAVE_ICU
+        : d(new Encoder::Private())
+#endif // HAVE_ICU
+{
+    /// nothing
+}
+
+Encoder::~Encoder()
 {
 #ifdef HAVE_ICU
-    /// Create an ICU Transliterator, configured to
-    /// transliterate virtually anything into plain ASCII
-    UErrorCode uec = U_ZERO_ERROR;
-    m_trans = icu::Transliterator::createInstance("Any-Latin;Latin-ASCII", UTRANS_FORWARD, uec);
-    if (U_FAILURE(uec)) {
-        qCWarning(LOG_KBIBTEX_IO) << "Error creating an ICU Transliterator instance: " << u_errorName(uec);
-        if (m_trans != nullptr) delete m_trans;
-        m_trans = nullptr;
-    }
+    delete d;
 #endif // HAVE_ICU
 }
 
@@ -75,7 +108,7 @@ QString Encoder::convertToPlainAscii(const QString &ninput) const
     /// Create an ICU-specific unicode string
     icu::UnicodeString uString = icu::UnicodeString(uChars, inputLen);
     /// Perform the actual transliteration, modifying Unicode string
-    if (m_trans != nullptr) m_trans->transliterate(uString);
+    if (d->translit != nullptr) d->translit->transliterate(uString);
     /// Create regular C++ string from Unicode string
     std::string cppString;
     uString.toUTF8String(cppString);
@@ -96,4 +129,3 @@ bool Encoder::containsOnlyAscii(const QString &ntext)
         if (c.unicode() > 127) return false;
     return true;
 }
-

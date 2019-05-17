@@ -22,7 +22,7 @@
 #include <QStringList>
 #include <QRegularExpression>
 
-#include "value.h"
+#include <Value>
 #include "logging_io.h"
 
 FileImporter::FileImporter(QObject *parent)

@@ -1,5 +1,3 @@
-# KBibTeXIO library
-
 set(
     kbibtexio_LIB_SRCS
     encoder.cpp
@@ -29,69 +27,105 @@ set(
     logging_io.cpp
 )
 
-set(
-    kbibtexio_HDRS
-    encoder.h
-    encoderlatex.h
-    encoderxml.h
-    fileexporterbibtex2html.h
-    fileexporterbibtex.h
-    fileexporterbibutils.h
-    fileexporterbibtexoutput.h
-    fileexporter.h
-    fileexporterpdf.h
-    fileexporterps.h
-    fileexporterris.h
-    fileexporterrtf.h
-    fileexportertoolchain.h
-    fileexporterxml.h
-    fileexporterxslt.h
-    fileimporterbibtex.h
-    fileimporterbibutils.h
-    fileimporter.h
-    fileimporterpdf.h
-    fileimporterris.h
-    fileinfo.h
-    textencoder.h
-    bibutils.h
-    xsltransform.h
-)
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexio kbibtexio_LIB_SRCS)
 endif(UNITY_BUILD)
 
-add_library(
-    kbibtexio
+add_library(kbibtexio
     SHARED
     ${kbibtexio_LIB_SRCS}
 )
+generate_export_header(kbibtexio)
+add_library(KBibTeX::IO ALIAS kbibtexio)
 
-target_link_libraries( kbibtexio
-    Qt5::Core
-    Qt5::Widgets
-    Qt5::XmlPatterns
-    Qt5::Concurrent
-    KF5::I18n
-    KF5::XmlGui
-    Poppler::Qt5
-    ${ICU_LIBRARIES}
-    kbibtexconfig
-    kbibtexdata
-)
-
-set_target_properties(
-    kbibtexio
+set_target_properties(kbibtexio
     PROPERTIES
     EXPORT_NAME "kbibtexio"
     VERSION ${KBIBTEX_RELEASE_VERSION}
     SOVERSION ${KBIBTEX_SOVERSION}
 )
 
-install(
-    TARGETS
-    kbibtexio
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+target_include_directories(kbibtexio
+    INTERFACE
+        $<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KBibTeX/io>
 )
 
-generate_export_header( kbibtexio )
+target_link_libraries(kbibtexio
+    PUBLIC
+        Qt5::Core
+        Qt5::Gui
+        KBibTeX::Data
+        KBibTeX::Global
+    PRIVATE
+        ICU::uc
+        ICU::i18n
+        Poppler::Qt5
+        Qt5::Concurrent
+        Qt5::XmlPatterns
+        KF5::I18n
+        KBibTeX::Config
+)
+
+install(
+    TARGETS kbibtexio
+    EXPORT kbibtexio-targets
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+set_target_properties(kbibtexio PROPERTIES
+    EXPORT_NAME "IO"
+)
+
+ecm_generate_headers(kbibtexio_HEADERS
+    HEADER_NAMES
+        BibUtils
+        Encoder
+        EncoderLaTeX
+        EncoderXML
+        FileExporter
+        FileExporterBibTeX
+        FileExporterBibTeX2HTML
+        FileExporterBibTeXOutput
+        FileExporterBibUtils
+        FileExporterPDF
+        FileExporterPS
+        FileExporterRIS
+        FileExporterRTF
+        FileExporterToolchain
+        FileExporterXML
+        FileExporterXSLT
+        FileImporter
+        FileImporterBibTeX
+        FileImporterBibUtils
+        FileImporterPDF
+        FileImporterRIS
+        FileInfo
+        TextEncoder
+        XSLTransform
+    REQUIRED_HEADERS kbibtexio_HEADERS
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtexio_export.h
+    ${kbibtexio_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KBibTeX/io
+    COMPONENT Devel
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXIO-configVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY ExactVersion
+)
+
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/KBibTeXIO-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXIO-config.cmake
+    INSTALL_DESTINATION ${KDE_INSTALL_LIBDIR}/cmake/KBibTeX
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXIO-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXIO-configVersion.cmake
+    DESTINATION ${KDE_INSTALL_LIBDIR}/cmake/KBibTeX
+)

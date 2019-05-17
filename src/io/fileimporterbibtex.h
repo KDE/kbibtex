@@ -18,17 +18,17 @@
 #ifndef KBIBTEX_IO_FILEIMPORTERBIBTEX_H
 #define KBIBTEX_IO_FILEIMPORTERBIBTEX_H
 
-#ifdef HAVE_KF5
-#include "kbibtexio_export.h"
-#endif // HAVE_KF5
-
 #include <QTextStream>
 #include <QSharedPointer>
 #include <QStringList>
 #include <QSet>
 
-#include "kbibtex.h"
-#include "fileimporter.h"
+#include <KBibTeX>
+#include <FileImporter>
+
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 class Element;
 class Comment;

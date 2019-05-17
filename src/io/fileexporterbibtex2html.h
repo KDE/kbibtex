@@ -18,12 +18,16 @@
 #ifndef KBIBTEX_IO_FILEEXPORTERBIBTEX2HTML_H
 #define KBIBTEX_IO_FILEEXPORTERBIBTEX2HTML_H
 
-#include "fileexportertoolchain.h"
+#include <FileExporterToolchain>
+
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 /**
 @author Thomas Fischer
  */
-class KBIBTEXIO_EXPORT FileExporterBibTeX2HTML: public FileExporterToolchain
+class KBIBTEXIO_EXPORT FileExporterBibTeX2HTML : public FileExporterToolchain
 {
     Q_OBJECT
 

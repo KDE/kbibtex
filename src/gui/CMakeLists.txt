@@ -79,9 +79,6 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src/io
-    ${CMAKE_BINARY_DIR}/src/io
-    ${CMAKE_SOURCE_DIR}/src/io/config
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_BINARY_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/processing

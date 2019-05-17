@@ -20,11 +20,11 @@
 #include <QRegularExpression>
 #include <QStringList>
 
-#include "kbibtex.h"
-#include "file.h"
-#include "entry.h"
-#include "macro.h"
-#include "comment.h"
+#include <KBibTeX>
+#include <File>
+#include <Entry>
+#include <Macro>
+#include <Comment>
 #include "encoderxml.h"
 #include "logging_io.h"
 

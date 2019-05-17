@@ -18,8 +18,12 @@
 #ifndef KBIBTEX_IO_FILEEXPORTERBIBUTILS_H
 #define KBIBTEX_IO_FILEEXPORTERBIBUTILS_H
 
-#include "fileexporter.h"
-#include "bibutils.h"
+#include <FileExporter>
+#include <BibUtils>
+
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

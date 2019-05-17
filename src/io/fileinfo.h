@@ -18,13 +18,15 @@
 #ifndef KBIBTEX_IO_FILEINFO_H
 #define KBIBTEX_IO_FILEINFO_H
 
-#include "kbibtexio_export.h"
-
 #include <QSet>
 #include <QUrl>
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QSharedPointer>
+
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 class Entry;
 

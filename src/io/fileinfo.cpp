@@ -26,8 +26,8 @@
 #include <QRegularExpression>
 #include <QtConcurrentRun>
 
-#include "kbibtex.h"
-#include "entry.h"
+#include <KBibTeX>
+#include <Entry>
 #include "logging_io.h"
 
 FileInfo::FileInfo()

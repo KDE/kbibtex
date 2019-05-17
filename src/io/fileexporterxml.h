@@ -20,9 +20,9 @@
 
 #include <QTextStream>
 
-#include "element.h"
-#include "value.h"
-#include "fileexporter.h"
+#include <Element>
+#include <Value>
+#include <FileExporter>
 
 #ifdef HAVE_KF5
 #include "kbibtexio_export.h"
@@ -62,4 +62,4 @@ private:
     static QString cleanXML(const QString &text);
 };
 
-#endif
+#endif // KBIBTEX_IO_FILEEXPORTERXML_H

@@ -18,13 +18,13 @@
 #ifndef KBIBTEX_IO_ENCODERLATEX_H
 #define KBIBTEX_IO_ENCODERLATEX_H
 
+#include <QIODevice>
+
+#include <Encoder>
+
 #ifdef HAVE_KF5
 #include "kbibtexio_export.h"
 #endif // HAVE_KF5
-
-#include <QIODevice>
-
-#include "encoder.h"
 
 /**
  * Base class for that convert between different textual representations
@@ -32,7 +32,7 @@
  * class can "translate" between \"a and its UTF-8 representation.
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXIO_EXPORT EncoderLaTeX: public Encoder
+class KBIBTEXIO_EXPORT EncoderLaTeX : public Encoder
 {
 public:
     QString decode(const QString &text) const override;

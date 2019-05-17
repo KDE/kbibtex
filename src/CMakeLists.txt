@@ -47,9 +47,7 @@ endif(Qt5WebEngineWidgets_FOUND)
 add_subdirectory(global)
 add_subdirectory(config)
 add_subdirectory(data)
-add_subdirectory(
-    io
-)
+add_subdirectory(io)
 add_subdirectory(
     processing
 )

@@ -23,18 +23,18 @@
 #include <QCoreApplication>
 #include <QStringList>
 
-#include "preferences.h"
-#include "file.h"
-#include "comment.h"
-#include "macro.h"
-#include "preamble.h"
-#include "entry.h"
-#include "element.h"
-#include "value.h"
+#include <BibTeXEntries>
+#include <BibTeXFields>
+#include <Preferences>
+#include <File>
+#include <Comment>
+#include <Macro>
+#include <Preamble>
+#include <Entry>
+#include <Element>
+#include <Value>
 #include "encoder.h"
 #include "encoderlatex.h"
-#include "bibtexentries.h"
-#include "bibtexfields.h"
 #include "logging_io.h"
 
 #define qint64toint(a) (static_cast<int>(qMax(0LL,qMin(0x7fffffffLL,(a)))))

@@ -24,17 +24,17 @@
 #include <QStringList>
 #include <QBuffer>
 
-#include "preferences.h"
-#include "file.h"
-#include "element.h"
-#include "entry.h"
-#include "macro.h"
-#include "preamble.h"
-#include "value.h"
-#include "comment.h"
+#include <BibTeXEntries>
+#include <BibTeXFields>
+#include <Preferences>
+#include <File>
+#include <Element>
+#include <Entry>
+#include <Macro>
+#include <Preamble>
+#include <Value>
+#include <Comment>
 #include "encoderlatex.h"
-#include "bibtexentries.h"
-#include "bibtexfields.h"
 #include "textencoder.h"
 #include "logging_io.h"
 

@@ -32,9 +32,6 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/src/processing
     ${CMAKE_BINARY_DIR}/src/processing
-    ${CMAKE_SOURCE_DIR}/src/io
-    ${CMAKE_BINARY_DIR}/src/io
-    ${CMAKE_SOURCE_DIR}/src/io/config
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_BINARY_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch

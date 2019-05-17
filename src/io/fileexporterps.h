@@ -18,7 +18,11 @@
 #ifndef KBIBTEX_IO_FILEEXPORTERPS_H
 #define KBIBTEX_IO_FILEEXPORTERPS_H
 
-#include "fileexportertoolchain.h"
+#include <FileExporterToolchain>
+
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 class QStringList;
 

@@ -1,0 +1,31 @@
+@PACKAGE_INIT@
+
+find_package(
+    Qt5 @QT_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    Core
+    Gui
+)
+
+find_package(
+    KF5 @KF5_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    I18n
+)
+
+find_package(
+    KBibTeX @PROJECT_VERSION@ EXACT
+    CONFIG
+    REQUIRED
+    Config
+    Data
+    Global
+)
+
+if(NOT TARGET KBibTeX::IO)
+    include("${KBibTeXIO_CMAKE_DIR}/KBibTeXIO-targets.cmake")
+endif()
+
+set(KBibTeXIO_LIBRARIES KBibTeX::IO)

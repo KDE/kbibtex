@@ -18,15 +18,11 @@
 #ifndef KBIBTEX_IO_ENCODER_H
 #define KBIBTEX_IO_ENCODER_H
 
+#include <QString>
+
 #ifdef HAVE_KF5
 #include "kbibtexio_export.h"
 #endif // HAVE_KF5
-
-#ifdef HAVE_ICU
-#include <unicode/translit.h>
-#endif // HAVE_ICU
-
-#include <QString>
 
 /**
  * Base class for that convert between different textual representations
@@ -40,12 +36,7 @@ public:
     enum TargetEncoding {TargetEncodingASCII = 0, TargetEncodingUTF8 = 1};
 
     static const Encoder &instance();
-    virtual ~Encoder() {
-#ifdef HAVE_ICU
-        if (m_trans != nullptr)
-            delete m_trans;
-#endif // HAVE_ICU
-    }
+    virtual ~Encoder();
 
     /**
      * Decode from external textual representation to internal (UTF-8) representation.
@@ -81,7 +72,8 @@ protected:
 
 private:
 #ifdef HAVE_ICU
-    icu::Transliterator *m_trans;
+    class Private;
+    Private *const d;
 #endif // HAVE_ICU
 };
 

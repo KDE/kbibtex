@@ -23,12 +23,12 @@
 #include <QTextStream>
 #include <QDir>
 
+#include <KBibTeX>
+#include <Preferences>
+#include <Element>
+#include <Entry>
 #include "fileinfo.h"
-#include "element.h"
-#include "entry.h"
 #include "fileexporterbibtex.h"
-#include "kbibtex.h"
-#include "preferences.h"
 #include "logging_io.h"
 
 FileExporterPDF::FileExporterPDF(QObject *parent)

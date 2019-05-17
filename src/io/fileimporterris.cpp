@@ -23,10 +23,10 @@
 #include <QCoreApplication>
 #include <QStringList>
 
-#include "preferences.h"
-#include "kbibtex.h"
-#include "entry.h"
-#include "value.h"
+#include <Preferences>
+#include <KBibTeX>
+#include <Entry>
+#include <Value>
 #include "logging_io.h"
 
 #define appendValue(entry, fieldname, newvalue) { Value value = (entry)->value((fieldname)); value.append((newvalue)); (entry)->insert((fieldname), value); }

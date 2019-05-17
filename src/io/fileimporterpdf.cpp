@@ -22,7 +22,7 @@
 
 #include <poppler-qt5.h>
 
-#include "file.h"
+#include <File>
 #include "fileimporterbibtex.h"
 #include "logging_io.h"
 

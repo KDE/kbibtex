@@ -29,7 +29,7 @@
 
 #include <KLocalizedString>
 
-#include "preferences.h"
+#include <Preferences>
 
 FileExporterToolchain::FileExporterToolchain(QObject *parent)
         : FileExporter(parent)

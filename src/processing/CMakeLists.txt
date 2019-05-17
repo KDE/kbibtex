@@ -26,8 +26,6 @@ if(UNITY_BUILD)
 endif(UNITY_BUILD)
 
 include_directories(
-    ${CMAKE_BINARY_DIR}/src/io
-    ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_BINARY_DIR}/src/gui
     ${CMAKE_SOURCE_DIR}/src/gui
 )

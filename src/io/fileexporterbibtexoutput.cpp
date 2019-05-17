@@ -24,11 +24,11 @@
 #include <QUrl>
 #include <QTextStream>
 
-#include "element.h"
-#include "entry.h"
+#include <KBibTeX>
+#include <Preferences>
+#include <Element>
+#include <Entry>
 #include "fileexporterbibtex.h"
-#include "kbibtex.h"
-#include "preferences.h"
 #include "logging_io.h"
 
 FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType, QObject *parent)

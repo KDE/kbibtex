@@ -14,14 +14,17 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_IO_FILEIMPORTERPDF_H
 #define KBIBTEX_IO_FILEIMPORTERPDF_H
 
-#include "kbibtexio_export.h"
-
 #include <QUrl>
 
-#include "fileimporter.h"
+#include <FileImporter>
+
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 class FileImporterBibTeX;
 

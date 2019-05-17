@@ -20,7 +20,7 @@
 #include <QRegularExpression>
 #include <QStringList>
 
-#include "entry.h"
+#include <Entry>
 #include "logging_io.h"
 
 FileExporterRIS::FileExporterRIS(QObject *parent)

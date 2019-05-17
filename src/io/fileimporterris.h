@@ -18,8 +18,12 @@
 #ifndef KBIBTEX_IO_FILEIMPORTERRIS_H
 #define KBIBTEX_IO_FILEIMPORTERRIS_H
 
-#include "entry.h"
-#include "fileimporter.h"
+#include <Entry>
+#include <FileImporter>
+
+#ifdef HAVE_KF5
+#include "kbibtexio_export.h"
+#endif // HAVE_KF5
 
 /**
  @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
