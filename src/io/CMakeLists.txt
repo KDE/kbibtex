@@ -26,7 +26,6 @@ set(
     textencoder.cpp
     bibutils.cpp
     xsltransform.cpp
-    ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_io.cpp
 )
@@ -68,7 +67,6 @@ include_directories(
     ${CMAKE_BINARY_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/data
-    ${CMAKE_SOURCE_DIR}/src/global
 )
 
 add_library(

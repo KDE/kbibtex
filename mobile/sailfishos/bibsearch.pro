@@ -68,9 +68,9 @@ RESOURCES += sailfishos_res.qrc
 
 QT += xmlpatterns
 
-DEFINES += KBIBTEXCONFIG_EXPORT= KBIBTEXDATA_EXPORT= KBIBTEXIO_EXPORT= KBIBTEXNETWORKING_EXPORT=
+DEFINES += KBIBTEXGLOBAL_EXPORT= KBIBTEXCONFIG_EXPORT= KBIBTEXDATA_EXPORT= KBIBTEXIO_EXPORT= KBIBTEXNETWORKING_EXPORT=
 
-INCLUDEPATH += ../../src/data ../../src/networking ../../src/networking/onlinesearch ../../src/io ../../src/config ../../src/global
+INCLUDEPATH +=  ../../src/global $${OUT_PWD}/src/global ../../src/data ../../src/networking ../../src/networking/onlinesearch ../../src/io ../../src/config
 
 CONFIG += sailfishapp_i18n sailfishapp_i18n_idbased
 

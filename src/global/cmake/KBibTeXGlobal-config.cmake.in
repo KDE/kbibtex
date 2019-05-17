@@ -1,0 +1,24 @@
+@PACKAGE_INIT@
+
+find_package(
+    Qt5 @QT_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    Core
+    Gui
+)
+
+find_package(
+    KF5 @KF5_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    ConfigCore
+    ConfigGui
+    I18n
+)
+
+if(NOT TARGET KBibTeX::Global)
+    include("${KBibTeXGlobal_CMAKE_DIR}/KBibTeXGlobal-targets.cmake")
+endif()
+
+set(KBibTeXGlobal_LIBRARIES KBibTeX::Global)

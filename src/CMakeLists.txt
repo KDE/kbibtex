@@ -44,6 +44,7 @@ else(Qt5WebEngineWidgets_FOUND)
 endif(Qt5WebEngineWidgets_FOUND)
 
 
+add_subdirectory(global)
 add_subdirectory(
     config
 )

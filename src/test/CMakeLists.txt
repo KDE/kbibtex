@@ -19,7 +19,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_SOURCE_DIR}/src/io
-    ${CMAKE_SOURCE_DIR}/src/global
     ${CMAKE_SOURCE_DIR}/src/gui
     ${CMAKE_SOURCE_DIR}/src/gui/config
     ${CMAKE_SOURCE_DIR}/src/gui/bibtex
@@ -51,7 +50,6 @@ set(
 set(
     kbibtexiotest_SRCS
     kbibtexiotest.cpp
-    ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
 )
 

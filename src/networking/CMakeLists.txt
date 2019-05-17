@@ -36,7 +36,6 @@ set(
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
-    ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_networking.cpp
 )
@@ -92,7 +91,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_SOURCE_DIR}/src/networking
-    ${CMAKE_SOURCE_DIR}/src/global
 )
 
 add_library(

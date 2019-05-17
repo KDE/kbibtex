@@ -33,7 +33,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/io
-    ${CMAKE_SOURCE_DIR}/src/global
     ${CMAKE_BINARY_DIR}/src/gui
     ${CMAKE_SOURCE_DIR}/src/gui
 )

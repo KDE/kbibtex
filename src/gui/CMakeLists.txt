@@ -39,7 +39,6 @@ set(
     italictextitemmodel.cpp
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
-    ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_gui.cpp
 )
@@ -100,7 +99,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/field
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/gui/config
-    ${CMAKE_SOURCE_DIR}/src/global
 )
 
 add_library(

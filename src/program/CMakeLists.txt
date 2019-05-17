@@ -20,7 +20,6 @@ set(
     docklets/filesettings.cpp
     docklets/zoterobrowser.cpp
     openfileinfo.cpp
-    ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     logging_program.cpp
 )
 
@@ -49,7 +48,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/file
     ${CMAKE_SOURCE_DIR}/src/gui/element
     ${CMAKE_SOURCE_DIR}/src/program/docklets
-    ${CMAKE_SOURCE_DIR}/src/global
 )
 
 ecm_add_app_icon( kbibtex_SRCS

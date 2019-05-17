@@ -20,10 +20,6 @@ if(UNITY_BUILD)
     enable_unity_build(kbibtexconfig kbibtexconfig_LIB_SRCS)
 endif(UNITY_BUILD)
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/global
-)
-
 add_library(
     kbibtexconfig
     SHARED
@@ -34,6 +30,7 @@ target_link_libraries( kbibtexconfig
     Qt5::Core
     KF5::I18n
     KF5::XmlGui
+    kbibtexglobal
 )
 
 set_target_properties(

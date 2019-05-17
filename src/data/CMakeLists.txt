@@ -10,7 +10,6 @@ set(
     preamble.cpp
     value.cpp
     models/filemodel.cpp
-    ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
     ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_data.cpp
 )
@@ -34,7 +33,6 @@ endif(UNITY_BUILD)
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/config
     ${CMAKE_BINARY_DIR}/src/config
-    ${CMAKE_SOURCE_DIR}/src/global
 )
 
 add_library(
