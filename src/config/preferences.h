@@ -21,14 +21,19 @@
 /// 'preferences.cpp'. Manual changes in this file will be overwritten the next time the
 /// script will be run. You have been warned.
 
-#ifndef KBIBTEX_GLOBAL_PREFERENCES_H
-#define KBIBTEX_GLOBAL_PREFERENCES_H
+#ifndef KBIBTEX_CONFIG_PREFERENCES_H
+#define KBIBTEX_CONFIG_PREFERENCES_H
 
 #include <QPageSize>
 #include <QColor>
+
 #include "kbibtex.h"
 
-class Preferences {
+#ifdef HAVE_KF5
+#include "kbibtexconfig_export.h"
+#endif // HAVE_KF5
+
+class KBIBTEXCONFIG_EXPORT Preferences {
 public:
     static Preferences &instance();
     ~Preferences();
@@ -199,4 +204,4 @@ private:
     Private *const d;
 };
 
-#endif // KBIBTEX_GLOBAL_PREFERENCES_H
+#endif // KBIBTEX_CONFIG_PREFERENCES_H

@@ -2,7 +2,8 @@
     "headerincludes": [
         "<QPageSize>",
         "<QColor>",
-        "\"kbibtex.h\""
+        "",
+        "<KBibTeX>"
     ],
     "implementationincludes": [
         "<QVector>",

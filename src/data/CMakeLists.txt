@@ -11,7 +11,7 @@ set(
     value.cpp
     models/filemodel.cpp
     ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
-    ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
+    ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_data.cpp
 )
 

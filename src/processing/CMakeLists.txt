@@ -8,7 +8,7 @@ set(
     checkbibtex.cpp
     bibliographyservice.cpp
     journalabbreviations.cpp
-    ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
+    ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_processing.cpp
 )
 

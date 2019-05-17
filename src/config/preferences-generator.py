@@ -61,17 +61,26 @@ def print_header(headerincludes, implementationincludes, enums, settings, output
     print_copyright_header(outputdevice)
 
     # Include guard definition
-    print("#ifndef KBIBTEX_GLOBAL_PREFERENCES_H", file=outputdevice)
-    print("#define KBIBTEX_GLOBAL_PREFERENCES_H", file=outputdevice)
+    print("#ifndef KBIBTEX_CONFIG_PREFERENCES_H", file=outputdevice)
+    print("#define KBIBTEX_CONFIG_PREFERENCES_H", file=outputdevice)
     print(file=outputdevice)
 
     # Include other headers as necessary
     for includeline in headerincludes:
-        print("#include", includeline, file=outputdevice)
+        if len(includeline) == 0:
+            print(file=outputdevice)
+        elif includeline[0] == '#':
+            print(includeline, file=outputdevice)
+        else:
+            print("#include", includeline, file=outputdevice)
     if headerincludes:
         print(file=outputdevice)
+    print('#ifdef HAVE_KF5', file=outputdevice)
+    print('#include "kbibtexconfig_export.h"', file=outputdevice)
+    print('#endif // HAVE_KF5', file=outputdevice)
+    print(file=outputdevice)
 
-    print("class Preferences {", file=outputdevice)
+    print("class KBIBTEXCONFIG_EXPORT Preferences {", file=outputdevice)
     print("public:", file=outputdevice)
     print("    static Preferences &instance();", file=outputdevice)
     print("    ~Preferences();", file=outputdevice)
@@ -127,7 +136,7 @@ def print_header(headerincludes, implementationincludes, enums, settings, output
     print("    Private *const d;", file=outputdevice)
     print("};", file=outputdevice)
     print(file=outputdevice)
-    print("#endif // KBIBTEX_GLOBAL_PREFERENCES_H", file=outputdevice)
+    print("#endif // KBIBTEX_CONFIG_PREFERENCES_H", file=outputdevice)
 
 
 def print_implementation(headerincludes, implementationincludes, enums, settings, outputdevice=sys.stdout):
@@ -136,7 +145,7 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
     print_copyright_header(outputdevice)
 
     # Include headers that will always be necessary
-    print('#include "preferences.h"', file=outputdevice)
+    print('#include <Preferences>', file=outputdevice)
     print(file=outputdevice)
     print('#include <QCoreApplication>', file=outputdevice)
     print('#ifdef HAVE_KF5', file=outputdevice)
@@ -150,12 +159,17 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
     print('#endif // HAVE_KF5', file=outputdevice)
     print(file=outputdevice)
     print('#ifdef HAVE_KF5', file=outputdevice)
-    print('#include "notificationhub.h"', file=outputdevice)
+    print('#include <NotificationHub>', file=outputdevice)
     print('#endif // HAVE_KF5', file=outputdevice)
     print(file=outputdevice)
     # Include other headers as necessary
     for includeline in implementationincludes:
-        print("#include", includeline, file=outputdevice)
+        if len(includeline) == 0:
+            print(file=outputdevice)
+        elif includeline[0] == '#':
+            print(includeline, file=outputdevice)
+        else:
+            print("#include", includeline, file=outputdevice)
     if implementationincludes:
         print(file=outputdevice)
     print('class Preferences::Private', file=outputdevice)

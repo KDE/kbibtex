@@ -27,7 +27,7 @@ set(
     bibutils.cpp
     xsltransform.cpp
     ${CMAKE_SOURCE_DIR}/src/global/kbibtex.cpp
-    ${CMAKE_SOURCE_DIR}/src/global/preferences.cpp
+    ${CMAKE_SOURCE_DIR}/src/config/preferences.cpp
     logging_io.cpp
 )
 
