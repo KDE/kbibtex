@@ -33,8 +33,8 @@
 #define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
 
+#include <Preferences>
 #include "file.h"
-#include "preferences.h"
 
 quint64 ValueItem::internalIdCounter = 0;
 

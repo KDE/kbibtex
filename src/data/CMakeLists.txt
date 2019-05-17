@@ -13,35 +13,16 @@ set(
     logging_data.cpp
 )
 
-set(
-    kbibtexdata_HDRS
-    comment.h
-    element.h
-    entry.h
-    file.h
-    macro.h
-    preamble.h
-    value.h
-    models/filemodel.h
-)
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
 endif(UNITY_BUILD)
 
-add_library(
-    kbibtexdata
+add_library(kbibtexdata
     SHARED
     ${kbibtexdata_LIB_SRCS}
 )
-
-target_link_libraries( kbibtexdata
-    Qt5::Core
-    Qt5::Widgets
-    KF5::I18n
-    KF5::XmlGui
-    kbibtexconfig
-)
+generate_export_header(kbibtexdata)
+add_library(KBibTeX::Data ALIAS kbibtexdata)
 
 set_target_properties(
     kbibtexdata
@@ -51,10 +32,67 @@ set_target_properties(
     SOVERSION ${KBIBTEX_SOVERSION}
 )
 
-install(
-    TARGETS
-    kbibtexdata
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+target_include_directories(kbibtexdata
+    INTERFACE
+        $<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KBibTeX/data>
 )
 
-generate_export_header( kbibtexdata )
+target_link_libraries(kbibtexdata
+    PUBLIC
+        Qt5::Core
+        KBibTeX::Config
+    PRIVATE
+        Qt5::Gui
+        KF5::ConfigCore
+        KF5::ConfigGui
+        KF5::I18n
+        KBibTeX::Global
+)
+
+install(
+    TARGETS kbibtexdata
+    EXPORT kbibtexdata-targets
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+set_target_properties(kbibtexdata PROPERTIES
+    EXPORT_NAME "Data"
+)
+
+ecm_generate_headers(kbibtexdata_HEADERS
+    HEADER_NAMES
+        Comment
+        Element
+        Entry
+        File
+        Macro
+        Preamble
+        Value
+        models/FileModel
+    REQUIRED_HEADERS kbibtexdata_HEADERS
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtexdata_export.h
+    ${kbibtexdata_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KBibTeX/data
+    COMPONENT Devel
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXData-configVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY ExactVersion
+)
+
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/KBibTeXData-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXData-config.cmake
+    INSTALL_DESTINATION ${KDE_INSTALL_LIBDIR}/cmake/KBibTeX
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXData-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXData-configVersion.cmake
+    DESTINATION ${KDE_INSTALL_LIBDIR}/cmake/KBibTeX
+)

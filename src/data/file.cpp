@@ -22,7 +22,7 @@
 #include <QIODevice>
 #include <QStringList>
 
-#include "preferences.h"
+#include <Preferences>
 #include "entry.h"
 #include "element.h"
 #include "macro.h"

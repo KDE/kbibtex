@@ -40,6 +40,7 @@
 #include <kparts/part.h>
 #include <KMessageBox>
 
+#include "entry.h"
 #include "fileimporterbibtex.h"
 #include "bibtexentries.h"
 #include "radiobuttontreeview.h"

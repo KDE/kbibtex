@@ -25,14 +25,14 @@
 
 #include <KLocalizedString>
 
-#include "element.h"
+#include <BibTeXEntries>
+#include <BibTeXFields>
+#include <Preferences>
+#include "file.h"
 #include "entry.h"
 #include "macro.h"
 #include "comment.h"
 #include "preamble.h"
-#include "bibtexentries.h"
-#include "bibtexfields.h"
-#include "preferences.h"
 
 const int FileModel::NumberRole = Qt::UserRole + 9581;
 const int FileModel::SortRole = Qt::UserRole + 236; /// see also MDIWidget's SortRole

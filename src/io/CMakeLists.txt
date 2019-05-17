@@ -61,11 +61,6 @@ if(UNITY_BUILD)
     enable_unity_build(kbibtexio kbibtexio_LIB_SRCS)
 endif(UNITY_BUILD)
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/data
-    ${CMAKE_BINARY_DIR}/src/data
-)
-
 add_library(
     kbibtexio
     SHARED

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,7 +18,7 @@
 #ifndef KBIBTEX_DATA_ELEMENT_H
 #define KBIBTEX_DATA_ELEMENT_H
 
-#include "file.h"
+#include <File>
 
 #ifdef HAVE_KF5
 #include "kbibtexdata_export.h"

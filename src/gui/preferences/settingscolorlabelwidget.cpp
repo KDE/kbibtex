@@ -31,6 +31,7 @@
 #include <KActionMenu>
 #include <KLocalizedString>
 
+#include "entry.h"
 #include "file.h"
 #include "fileview.h"
 #include "colorlabelwidget.h"

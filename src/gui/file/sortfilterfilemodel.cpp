@@ -21,6 +21,7 @@
 
 #include "bibtexfields.h"
 #include "bibtexentries.h"
+#include "entry.h"
 #include "macro.h"
 #include "preamble.h"
 #include "comment.h"

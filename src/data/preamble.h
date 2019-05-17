@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,8 +18,8 @@
 #ifndef KBIBTEX_DATA_PREAMBLE_H
 #define KBIBTEX_DATA_PREAMBLE_H
 
-#include "element.h"
-#include "value.h"
+#include <Element>
+#include <Value>
 
 /**
  * This class represents a preamble in a BibTeX file. Preables contain

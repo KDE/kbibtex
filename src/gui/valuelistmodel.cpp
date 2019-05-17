@@ -38,6 +38,7 @@
 #include "fieldlineedit.h"
 #include "bibtexfields.h"
 #include "entry.h"
+#include "value.h"
 #include "preferences.h"
 #include "models/filemodel.h"
 #include "logging_gui.h"

@@ -23,13 +23,15 @@
 #include <QList>
 #include <QStringList>
 
+#include <NotificationHub>
+#include <Element>
+
+#ifdef HAVE_KF5
 #include "kbibtexdata_export.h"
+#endif // HAVE_KF5
 
-#include "notificationhub.h"
-#include "file.h"
-#include "entry.h"
-
-class FileModel;
+class File;
+class Entry;
 
 /**
 @author Thomas Fischer

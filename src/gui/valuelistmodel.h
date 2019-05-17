@@ -24,6 +24,7 @@
 #include <QTreeView>
 #include <QStyledItemDelegate>
 
+#include "value.h"
 #include "notificationhub.h"
 #include "models/filemodel.h"
 

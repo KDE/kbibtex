@@ -22,9 +22,8 @@
 #include <QSortFilterProxyModel>
 #include <QSet>
 
-#include "file.h"
-#include "value.h"
-#include "entry.h"
+#include <File>
+#include <Value>
 #include "searchenginelist.h"
 
 class OnlineSearchAbstract;

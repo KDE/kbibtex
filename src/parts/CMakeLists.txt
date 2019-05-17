@@ -15,7 +15,6 @@ endif(UNITY_BUILD)
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/src/data
     ${CMAKE_BINARY_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/io
     ${CMAKE_SOURCE_DIR}/src/gui

@@ -20,6 +20,7 @@
 #include <KIconLoader>
 
 #include "models/filemodel.h"
+#include "entry.h"
 #include "bibtexfields.h"
 #include "starrating.h"
 

@@ -19,7 +19,7 @@
 
 #include <QSettings>
 
-#include "entry.h"
+#include <Entry>
 #include "onlinesearchabstract.h"
 
 const int SortedBibliographyModel::SortAuthorNewestTitle = 0;
