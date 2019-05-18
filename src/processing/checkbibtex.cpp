@@ -25,11 +25,11 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include "fileexporterbibtexoutput.h"
-#include "file.h"
-#include "entry.h"
-#include "element.h"
-#include "macro.h"
+#include <File>
+#include <Entry>
+#include <Element>
+#include <Macro>
+#include <FileExporterBibTeXOutput>
 
 CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Element> &element, const File *file, QWidget *parent)
 {

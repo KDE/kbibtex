@@ -20,12 +20,14 @@
 
 #include <QString>
 
-#include "kbibtexproc_export.h"
+#ifdef HAVE_KF5
+#include "kbibtexprocessing_export.h"
+#endif // HAVE_KF5
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXPROC_EXPORT JournalAbbreviations
+class KBIBTEXPROCESSING_EXPORT JournalAbbreviations
 {
 public:
     static const JournalAbbreviations &instance();

@@ -21,7 +21,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/preferences
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/gui/file
-    ${CMAKE_SOURCE_DIR}/src/processing
     ${CMAKE_SOURCE_DIR}/src/networking
 )
 
@@ -60,7 +59,7 @@ target_link_libraries( kbibtexpart
     kbibtexdata
     kbibtexio
     kbibtexgui
-    kbibtexproc
+    kbibtexprocessing
 )
 
 install(

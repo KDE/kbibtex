@@ -1,0 +1,31 @@
+@PACKAGE_INIT@
+
+find_package(
+    Qt5 @QT_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    Core
+    Gui
+)
+
+find_package(
+    KF5 @KF5_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    I18n
+)
+
+find_package(
+    KBibTeX @PROJECT_VERSION@ EXACT
+    CONFIG
+    REQUIRED
+    Config
+    Data
+    Global
+)
+
+if(NOT TARGET KBibTeX::Processing)
+    include("${KBibTeXProcessing_CMAKE_DIR}/KBibTeXProcessing-targets.cmake")
+endif()
+
+set(KBibTeXProcessing_LIBRARIES KBibTeX::Processing)

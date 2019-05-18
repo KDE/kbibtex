@@ -30,7 +30,7 @@
 #include <KParts/ReadOnlyPart>
 #include <KMessageBox>
 
-#include "preferences.h"
+#include <Preferences>
 
 class LyX::LyXPrivate
 {

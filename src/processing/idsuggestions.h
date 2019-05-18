@@ -18,14 +18,16 @@
 #ifndef KBIBTEX_PROCESSING_IDSUGGESTIONS_H
 #define KBIBTEX_PROCESSING_IDSUGGESTIONS_H
 
-#include "kbibtexproc_export.h"
+#include <Entry>
 
-#include "entry.h"
+#ifdef HAVE_KF5
+#include "kbibtexprocessing_export.h"
+#endif // HAVE_KF5
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXPROC_EXPORT IdSuggestions
+class KBIBTEXPROCESSING_EXPORT IdSuggestions
 {
 public:
     enum CaseChange {ccNoChange = 0, ccToUpper = 1, ccToLower = 2, ccToCamelCase = 3};

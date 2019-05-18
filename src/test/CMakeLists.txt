@@ -23,7 +23,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
-    ${CMAKE_SOURCE_DIR}/src/processing
 )
 
 set(
@@ -119,7 +118,7 @@ target_link_libraries( kbibtextest
     kbibtexconfig
     kbibtexdata
     kbibtexio
-    kbibtexproc
+    kbibtexprocessing
     kbibtexgui
     kbibtexnetworking
 )

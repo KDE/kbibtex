@@ -18,9 +18,11 @@
 #ifndef KBIBTEX_PROCESSING_BIBLIOGRAPHYSERVICE_H
 #define KBIBTEX_PROCESSING_BIBLIOGRAPHYSERVICE_H
 
-#include "kbibtexproc_export.h"
-
 #include <QObject>
+
+#ifdef HAVE_KF5
+#include "kbibtexprocessing_export.h"
+#endif // HAVE_KF5
 
 /**
  * To make (or test for) KBibTeX the default bibliography editor,
@@ -30,7 +32,7 @@
  *
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXPROC_EXPORT BibliographyService : public QObject
+class KBIBTEXPROCESSING_EXPORT BibliographyService : public QObject
 {
     Q_OBJECT
 

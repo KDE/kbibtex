@@ -81,8 +81,6 @@ endif(UNITY_BUILD)
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/networking
     ${CMAKE_BINARY_DIR}/src/networking
-    ${CMAKE_SOURCE_DIR}/src/processing
-    ${CMAKE_BINARY_DIR}/src/processing
     ${CMAKE_SOURCE_DIR}/src/gui
     ${CMAKE_BINARY_DIR}/src/gui
     ${CMAKE_SOURCE_DIR}/src/gui/file
@@ -109,7 +107,7 @@ target_link_libraries( kbibtexgui
     kbibtexdata
     kbibtexio
     kbibtexnetworking
-    kbibtexproc
+    kbibtexprocessing
 )
 
 set_target_properties(

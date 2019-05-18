@@ -20,7 +20,9 @@
 
 #include <QSharedPointer>
 
-#include "kbibtexproc_export.h"
+#ifdef HAVE_KF5
+#include "kbibtexprocessing_export.h"
+#endif // HAVE_KF5
 
 class Entry;
 class Element;
@@ -29,7 +31,7 @@ class File;
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXPROC_EXPORT CheckBibTeX
+class KBIBTEXPROCESSING_EXPORT CheckBibTeX
 {
 public:
     enum CheckBibTeXResult { NoProblem, BibTeXWarning, BibTeXError, InvalidData, FailedToCheck };

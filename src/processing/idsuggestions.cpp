@@ -21,9 +21,9 @@
 
 #include <KLocalizedString>
 
+#include <Preferences>
+#include <Encoder>
 #include "journalabbreviations.h"
-#include "encoder.h"
-#include "preferences.h"
 
 class IdSuggestions::IdSuggestionsPrivate
 {

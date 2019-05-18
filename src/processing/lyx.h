@@ -18,10 +18,12 @@
 #ifndef KBIBTEX_PROCESSING_LYX_H
 #define KBIBTEX_PROCESSING_LYX_H
 
-#include "kbibtexproc_export.h"
-
 #include <QObject>
 #include <qplatformdefs.h>
+
+#ifdef HAVE_KF5
+#include "kbibtexprocessing_export.h"
+#endif // HAVE_KF5
 
 namespace KParts
 {
@@ -33,7 +35,7 @@ class QWidget;
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXPROC_EXPORT LyX: public QObject
+class KBIBTEXPROCESSING_EXPORT LyX : public QObject
 {
     Q_OBJECT
 public:

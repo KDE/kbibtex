@@ -1,7 +1,5 @@
-# KBibTeX Processing library
-
 set(
-    kbibtexproc_LIB_SRCS
+    kbibtexprocessing_LIB_SRCS
     findduplicates.cpp
     idsuggestions.cpp
     lyx.cpp
@@ -11,51 +9,87 @@ set(
     logging_processing.cpp
 )
 
-set(
-    kbibtexproc_HDRS
-    findduplicates.h
-    idsuggestions.h
-    lyx.h
-    checkbibtex.h
-    bibliographyservice.h
-    journalabbreviations.h
-)
-
 if(UNITY_BUILD)
-    enable_unity_build(kbibtexproc kbibtexproc_LIB_SRCS)
+    enable_unity_build(kbibtexproc kbibtexprocessing_LIB_SRCS)
 endif(UNITY_BUILD)
 
-include_directories(
-    ${CMAKE_BINARY_DIR}/src/gui
-    ${CMAKE_SOURCE_DIR}/src/gui
-)
-
-add_library(
-    kbibtexproc
+add_library(kbibtexprocessing
     SHARED
-    ${kbibtexproc_LIB_SRCS}
+    ${kbibtexprocessing_LIB_SRCS}
 )
+generate_export_header(kbibtexprocessing)
+add_library(KBibTeX::Processing ALIAS kbibtexprocessing)
 
-target_link_libraries( kbibtexproc
-    Qt5::Core
-    KF5::Parts
-    kbibtexconfig
-    kbibtexdata
-    kbibtexio
-)
-
-set_target_properties(
-    kbibtexproc
+set_target_properties(kbibtexprocessing
     PROPERTIES
-    EXPORT_NAME "kbibtexproc"
+    EXPORT_NAME "kbibtexprocessing"
     VERSION ${KBIBTEX_RELEASE_VERSION}
     SOVERSION ${KBIBTEX_SOVERSION}
 )
 
-install(
-    TARGETS
-    kbibtexproc
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+target_include_directories(kbibtexprocessing
+    INTERFACE
+        $<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KBibTeX/processing>
 )
 
-generate_export_header( kbibtexproc )
+target_link_libraries(kbibtexprocessing
+    PUBLIC
+        Qt5::Core
+        KBibTeX::Data
+    PRIVATE
+        Qt5::Widgets
+        KF5::ConfigCore
+        KF5::ConfigGui
+        KF5::I18n
+        KF5::Parts
+        KF5::WidgetsAddons
+        KF5::XmlGui
+        KBibTeX::Config
+        KBibTeX::IO
+)
+
+install(
+    TARGETS kbibtexprocessing
+    EXPORT kbibtexprocessing-targets
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+set_target_properties(kbibtexprocessing PROPERTIES
+    EXPORT_NAME "Processing"
+)
+
+ecm_generate_headers(kbibtexprocessing_HEADERS
+    HEADER_NAMES
+        BibliographyService
+        CheckBibTeX
+        FindDuplicates
+        IdSuggestions
+        JournalAbbreviations
+        LyX
+    REQUIRED_HEADERS kbibtexprocessing_HEADERS
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtexprocessing_export.h
+    ${kbibtexprocessing_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KBibTeX/processing
+    COMPONENT Devel
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXProcessing-configVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY ExactVersion
+)
+
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/KBibTeXProcessing-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXProcessing-config.cmake
+    INSTALL_DESTINATION ${KDE_INSTALL_LIBDIR}/cmake/KBibTeX
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXProcessing-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXProcessing-configVersion.cmake
+    DESTINATION ${KDE_INSTALL_LIBDIR}/cmake/KBibTeX
+)

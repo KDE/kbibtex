@@ -27,9 +27,9 @@
 
 #include <KLocalizedString>
 
-#include "file.h"
-#include "models/filemodel.h"
-#include "entry.h"
+#include <File>
+#include <models/FileModel>
+#include <Entry>
 
 EntryClique::EntryClique()
 {
