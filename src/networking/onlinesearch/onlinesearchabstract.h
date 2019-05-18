@@ -18,10 +18,6 @@
 #ifndef KBIBTEX_NETWORKING_ONLINESEARCHABSTRACT_H
 #define KBIBTEX_NETWORKING_ONLINESEARCHABSTRACT_H
 
-#ifdef HAVE_KF5
-#include "kbibtexnetworking_export.h"
-#endif // HAVE_KF5
-
 #include <QObject>
 #include <QMap>
 #include <QString>
@@ -36,7 +32,11 @@
 #include <KSharedConfig>
 #endif // HAVE_KF5
 
-#include "entry.h"
+#include <Entry>
+
+#ifdef HAVE_KF5
+#include "kbibtexnetworking_export.h"
+#endif // HAVE_KF5
 
 class QNetworkReply;
 class QNetworkRequest;

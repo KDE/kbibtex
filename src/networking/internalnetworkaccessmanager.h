@@ -18,13 +18,13 @@
 #ifndef KBIBTEX_NETWORKING_INTERNALNETWORKACCESSMANAGER_H
 #define KBIBTEX_NETWORKING_INTERNALNETWORKACCESSMANAGER_H
 
-#ifdef HAVE_KF5
-#include "kbibtexnetworking_export.h"
-#endif // HAVE_KF5
-
 #include <QNetworkAccessManager>
 #include <QUrl>
 #include <QMap>
+
+#ifdef HAVE_KF5
+#include "kbibtexnetworking_export.h"
+#endif // HAVE_KF5
 
 class QNetworkAccessManager;
 class QNetworkReply;

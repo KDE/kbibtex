@@ -33,11 +33,11 @@
 #define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
 
-#include "fileimporterbibtex.h"
-#include "encoderxml.h"
-#include "xsltransform.h"
+#include <KBibTeX>
+#include <FileImporterBibTeX>
+#include <EncoderXML>
+#include <XSLTransform>
 #include "internalnetworkaccessmanager.h"
-#include "kbibtex.h"
 #include "logging_networking.h"
 
 class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate

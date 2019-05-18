@@ -28,8 +28,8 @@
 #define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
 
+#include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
-#include "fileimporterbibtex.h"
 #include "logging_networking.h"
 
 class OnlineSearchJStor::OnlineSearchJStorPrivate

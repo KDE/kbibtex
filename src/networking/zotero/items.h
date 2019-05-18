@@ -20,10 +20,11 @@
 
 #include <QObject>
 #include <QSharedPointer>
-
 #include <QUrl>
 
+#ifdef HAVE_KF5
 #include "kbibtexnetworking_export.h"
+#endif // HAVE_KF5
 
 class Element;
 

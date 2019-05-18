@@ -26,7 +26,7 @@
 
 #include <KLocalizedString>
 
-#include "api.h"
+#include "zotero/api.h"
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 

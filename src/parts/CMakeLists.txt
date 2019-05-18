@@ -21,7 +21,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/preferences
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
     ${CMAKE_SOURCE_DIR}/src/gui/file
-    ${CMAKE_SOURCE_DIR}/src/networking
 )
 
 # Creates kbibtex-git-info.h containing information about the source code's Git revision

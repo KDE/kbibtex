@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                 2014 Pavel Zorin-Kranich <pzorin@math.uni-bonn.de>      *
  *                 2018 Alexander Dunlap <alexander.dunlap@gmail.com>      *
  *                                                                         *
@@ -20,7 +20,11 @@
 #ifndef KBIBTEX_NETWORKING_ONLINESEARCHMRLOOKUP_H
 #define KBIBTEX_NETWORKING_ONLINESEARCHMRLOOKUP_H
 
-#include "onlinesearchabstract.h"
+#include <onlinesearch/OnlineSearchAbstract>
+
+#ifdef HAVE_KF5
+#include "kbibtexnetworking_export.h"
+#endif // HAVE_KF5
 
 /**
  * @author Pavel Zorin-Kranich <pzorin@math.uni-bonn.de>

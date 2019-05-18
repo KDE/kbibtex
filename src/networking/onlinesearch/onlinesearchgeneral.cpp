@@ -26,8 +26,8 @@
 #include <KLocalizedString>
 #include <KConfigGroup>
 
-#include "kbibtex.h"
-#include "entry.h"
+#include <KBibTeX>
+#include <Entry>
 
 OnlineSearchQueryFormGeneral::OnlineSearchQueryFormGeneral(QWidget *parent)
         : OnlineSearchQueryFormAbstract(parent),

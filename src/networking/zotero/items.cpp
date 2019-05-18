@@ -23,9 +23,9 @@
 #include <QUrlQuery>
 #include <QTimer>
 
-#include "file.h"
-#include "fileimporterbibtex.h"
-#include "api.h"
+#include <File>
+#include <FileImporterBibTeX>
+#include "zotero/api.h"
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 

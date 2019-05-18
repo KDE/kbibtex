@@ -33,8 +33,8 @@
 #include <KLocalizedString>
 #endif // HAVE_KF5
 
-#include "kbibtex.h"
-#include "fileimporterbibtex.h"
+#include <KBibTeX>
+#include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 

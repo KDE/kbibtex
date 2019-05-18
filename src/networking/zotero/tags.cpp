@@ -23,7 +23,7 @@
 #include <QTimer>
 
 #include "internalnetworkaccessmanager.h"
-#include "api.h"
+#include "zotero/api.h"
 #include "logging_networking.h"
 
 using namespace Zotero;

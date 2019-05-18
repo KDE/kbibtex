@@ -20,13 +20,15 @@
 
 #include <QUrl>
 
-#include "entry.h"
+#include <Entry>
+
+#ifdef HAVE_KF5
+#include "kbibtexnetworking_export.h"
+#endif // HAVE_KF5
 
 class QWidget;
 
 class File;
-
-#include "kbibtexnetworking_export.h"
 
 /**
  * Given a remote or local filename/URL, this class will, (1) at the user's

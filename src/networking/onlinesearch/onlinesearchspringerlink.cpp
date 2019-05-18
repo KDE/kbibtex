@@ -36,11 +36,11 @@
 #define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
 
+#include <Encoder>
+#include <EncoderXML>
+#include <FileImporterBibTeX>
+#include <XSLTransform>
 #include "internalnetworkaccessmanager.h"
-#include "encoder.h"
-#include "encoderxml.h"
-#include "fileimporterbibtex.h"
-#include "xsltransform.h"
 #include "logging_networking.h"
 
 #ifdef HAVE_QTWIDGETS

@@ -23,7 +23,9 @@
 #include <QVector>
 #include <QSet>
 
+#ifdef HAVE_KF5
 #include "kbibtexnetworking_export.h"
+#endif // HAVE_KF5
 
 namespace Zotero
 {

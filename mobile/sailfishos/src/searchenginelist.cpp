@@ -19,17 +19,17 @@
 
 #include <QSettings>
 
-#include "onlinesearchabstract.h"
-#include "onlinesearchacmportal.h"
-#include "onlinesearcharxiv.h"
-#include "onlinesearchbibsonomy.h"
-#include "onlinesearchgooglescholar.h"
-#include "onlinesearchieeexplore.h"
-#include "onlinesearchingentaconnect.h"
-#include "onlinesearchjstor.h"
-#include "onlinesearchpubmed.h"
-#include "onlinesearchsciencedirect.h"
-#include "onlinesearchspringerlink.h"
+#include "onlinesearch/onlinesearchabstract.h"
+#include "onlinesearch/onlinesearchacmportal.h"
+#include "onlinesearch/onlinesearcharxiv.h"
+#include "onlinesearch/onlinesearchbibsonomy.h"
+#include "onlinesearch/onlinesearchgooglescholar.h"
+#include "onlinesearch/onlinesearchieeexplore.h"
+#include "onlinesearch/onlinesearchingentaconnect.h"
+#include "onlinesearch/onlinesearchjstor.h"
+#include "onlinesearch/onlinesearchpubmed.h"
+#include "onlinesearch/onlinesearchsciencedirect.h"
+#include "onlinesearch/onlinesearchspringerlink.h"
 #include "bibliographymodel.h"
 
 SearchEngineList::SearchEngineList()

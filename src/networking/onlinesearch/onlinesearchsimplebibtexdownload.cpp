@@ -21,7 +21,7 @@
 #include <QNetworkReply>
 #include <QRegularExpression>
 
-#include "fileimporterbibtex.h"
+#include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 

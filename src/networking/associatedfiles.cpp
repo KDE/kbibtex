@@ -23,7 +23,7 @@
 #include <KIO/CopyJob>
 #include <KJobWidgets>
 
-#include "preferences.h"
+#include <Preferences>
 #include "logging_networking.h"
 
 bool AssociatedFiles::urlIsLocal(const QUrl &url)

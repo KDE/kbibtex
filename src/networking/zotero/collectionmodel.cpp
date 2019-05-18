@@ -18,7 +18,6 @@
 #include "collectionmodel.h"
 
 #include <QHash>
-
 #include <QIcon>
 
 #include "zotero/collection.h"

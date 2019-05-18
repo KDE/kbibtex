@@ -72,7 +72,7 @@ QT += xmlpatterns
 
 DEFINES += KBIBTEXGLOBAL_EXPORT= KBIBTEXCONFIG_EXPORT= KBIBTEXDATA_EXPORT= KBIBTEXIO_EXPORT= KBIBTEXNETWORKING_EXPORT=
 
-INCLUDEPATH +=  ../../src/global $${OUT_PWD}/src/global ../../src/config $${OUT_PWD}/src/config ../../src/data $${OUT_PWD}/src/data ../../src/io $${OUT_PWD}/src/io ../../src/networking ../../src/networking/onlinesearch
+INCLUDEPATH +=  ../../src/global $${OUT_PWD}/src/global ../../src/config $${OUT_PWD}/src/config ../../src/data $${OUT_PWD}/src/data ../../src/io $${OUT_PWD}/src/io ../../src/networking ../../src/networking/onlinesearch $${OUT_PWD}/src/networking
 
 CONFIG += sailfishapp_i18n sailfishapp_i18n_idbased
 

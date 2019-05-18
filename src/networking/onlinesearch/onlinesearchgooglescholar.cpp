@@ -29,7 +29,7 @@
 #define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
 
-#include "fileimporterbibtex.h"
+#include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 

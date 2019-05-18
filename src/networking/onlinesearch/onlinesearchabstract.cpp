@@ -34,9 +34,9 @@
 #include <KMessageBox>
 #endif // HAVE_KF5
 
-#include "encoder.h"
+#include <KBibTeX>
+#include <Encoder>
 #include "internalnetworkaccessmanager.h"
-#include "kbibtex.h"
 #include "logging_networking.h"
 
 const QString OnlineSearchAbstract::queryKeyFreeText = QStringLiteral("free");

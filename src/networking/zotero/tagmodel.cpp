@@ -18,7 +18,6 @@
 #include "tagmodel.h"
 
 #include <QHash>
-
 #include <QIcon>
 
 #include "zotero/tags.h"

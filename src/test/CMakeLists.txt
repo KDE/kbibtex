@@ -21,8 +21,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/gui/bibtex
     ${CMAKE_SOURCE_DIR}/src/gui/element
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
-    ${CMAKE_SOURCE_DIR}/src/networking
-    ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
 )
 
 set(

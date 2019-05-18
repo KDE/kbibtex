@@ -17,7 +17,7 @@
 
 #include <QtTest>
 
-#include "onlinesearchabstract.h"
+#include "onlinesearch/onlinesearchabstract.h"
 
 typedef QMap<QString, QString> FormData;
 

@@ -49,9 +49,7 @@ add_subdirectory(config)
 add_subdirectory(data)
 add_subdirectory(io)
 add_subdirectory(processing)
-add_subdirectory(
-    networking
-)
+add_subdirectory(networking)
 add_subdirectory(
     gui
 )

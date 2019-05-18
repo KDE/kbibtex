@@ -1,0 +1,40 @@
+@PACKAGE_INIT@
+
+find_package(
+    Qt5 @QT_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    Core
+    Gui
+    Network
+    Widgets
+    DBus
+)
+
+find_package(
+    KF5 @KF5_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    ConfigCore
+    ConfigGui
+    I18n
+    KIOCore
+    KIOFileWidgets
+    WidgetsAddons
+)
+
+find_package(
+    KBibTeX @PROJECT_VERSION@ EXACT
+    CONFIG
+    REQUIRED
+    Config
+    Data
+    Global
+    IO
+)
+
+if(NOT TARGET KBibTeX::Networking)
+    include("${KBibTeXNetworking_CMAKE_DIR}/KBibTeXNetworking-targets.cmake")
+endif()
+
+set(KBibTeXNetworking_LIBRARIES KBibTeX::Networking)

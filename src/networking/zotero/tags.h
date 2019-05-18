@@ -22,7 +22,9 @@
 #include <QMap>
 #include <QSharedPointer>
 
+#ifdef HAVE_KF5
 #include "kbibtexnetworking_export.h"
+#endif // HAVE_KF5
 
 namespace Zotero
 {
@@ -57,4 +59,4 @@ private slots:
 
 } // end of namespace Zotero
 
-#endif // KBIBTEX_NETWORKING_ZOTERO_ITEMS_H
+#endif // KBIBTEX_NETWORKING_ZOTERO_TAGS_H

@@ -30,9 +30,6 @@ endif(UNITY_BUILD AND NOT WIN32)
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/src/networking
-    ${CMAKE_BINARY_DIR}/src/networking
-    ${CMAKE_SOURCE_DIR}/src/networking/onlinesearch
     ${CMAKE_SOURCE_DIR}/src/gui
     ${CMAKE_BINARY_DIR}/src/gui
     ${CMAKE_SOURCE_DIR}/src/gui/widgets
@@ -92,6 +89,7 @@ target_link_libraries( kbibtex
     KF5::KIOWidgets
     KF5::KIONTLM
     KF5::Crash
+    KF5::Wallet
     kbibtexio
     kbibtexgui
     kbibtexnetworking

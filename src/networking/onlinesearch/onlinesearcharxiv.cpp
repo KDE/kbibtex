@@ -35,9 +35,9 @@
 #define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
 
-#include "fileimporterbibtex.h"
-#include "xsltransform.h"
-#include "encoderxml.h"
+#include <FileImporterBibTeX>
+#include <XSLTransform>
+#include <EncoderXML>
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 

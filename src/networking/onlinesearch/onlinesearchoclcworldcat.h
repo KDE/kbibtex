@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,7 +18,7 @@
 #ifndef KBIBTEX_NETWORKING_ONLINESEARCHOCLCWORLDCAT_H
 #define KBIBTEX_NETWORKING_ONLINESEARCHOCLCWORLDCAT_H
 
-#include "onlinesearchabstract.h"
+#include <onlinesearch/OnlineSearchAbstract>
 
 /**
  * According to its own description at oclc.org, "OCLC is a worldwide library

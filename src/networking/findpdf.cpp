@@ -28,10 +28,10 @@
 
 #include <poppler-qt5.h>
 
-#include "kbibtex.h"
+#include <KBibTeX>
+#include <Value>
+#include <FileInfo>
 #include "internalnetworkaccessmanager.h"
-#include "value.h"
-#include "fileinfo.h"
 #include "logging_networking.h"
 
 int maxDepth = 5;

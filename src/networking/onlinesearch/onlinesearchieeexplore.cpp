@@ -27,10 +27,10 @@
 #define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
 
+#include <XSLTransform>
+#include <EncoderXML>
+#include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
-#include "xsltransform.h"
-#include "encoderxml.h"
-#include "fileimporterbibtex.h"
 #include "logging_networking.h"
 
 class OnlineSearchIEEEXplore::OnlineSearchIEEEXplorePrivate

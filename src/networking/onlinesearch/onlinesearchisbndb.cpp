@@ -24,8 +24,8 @@
 
 #include <KLocalizedString>
 
-#include "fileimporterbibtex.h"
-#include "xsltransform.h"
+#include <FileImporterBibTeX>
+#include <XSLTransform>
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 

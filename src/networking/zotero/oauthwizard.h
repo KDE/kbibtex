@@ -20,7 +20,9 @@
 
 #include <QDialog>
 
+#ifdef HAVE_KF5
 #include "kbibtexnetworking_export.h"
+#endif // HAVE_KF5
 
 namespace Zotero
 {
