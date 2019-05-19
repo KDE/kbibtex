@@ -20,11 +20,11 @@
 
 #include <QWidget>
 
-#include "kbibtexgui_export.h"
+#include <widgets/FilterBar>
+#include <file/BasicFileView>
+#include <Element>
 
-#include "filterbar.h"
-#include "basicfileview.h"
-#include "element.h"
+#include "kbibtexgui_export.h"
 
 class QAbstractButton;
 class QDialogButtonBox;

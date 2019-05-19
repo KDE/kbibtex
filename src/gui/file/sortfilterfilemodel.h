@@ -18,11 +18,11 @@
 #ifndef KBIBTEX_GUI_SORTFILTERFILEMODEL_H
 #define KBIBTEX_GUI_SORTFILTERFILEMODEL_H
 
-#include "kbibtexgui_export.h"
-
 #include <QSortFilterProxyModel>
 
-#include "models/filemodel.h"
+#include <models/FileModel>
+
+#include "kbibtexgui_export.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

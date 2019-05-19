@@ -19,10 +19,10 @@
 
 #include <KIconLoader>
 
-#include "models/filemodel.h"
-#include "entry.h"
-#include "bibtexfields.h"
-#include "starrating.h"
+#include <BibTeXFields>
+#include <Entry>
+#include <models/FileModel>
+#include "widgets/starrating.h"
 
 void FileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {

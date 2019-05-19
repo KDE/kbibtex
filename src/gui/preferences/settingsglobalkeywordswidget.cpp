@@ -26,7 +26,7 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 
-#include <fieldlistedit.h>
+#include "field/fieldlistedit.h"
 
 class DisallowEmptyStringListModel : public QStringListModel
 {

@@ -19,7 +19,7 @@
 
 #include <QLayout>
 
-#include "filterbar.h"
+#include "widgets/filterbar.h"
 #include "fileview.h"
 #include "filedelegate.h"
 

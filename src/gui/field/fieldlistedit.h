@@ -14,6 +14,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_GUI_FIELDLISTEDIT_H
 #define KBIBTEX_GUI_FIELDLISTEDIT_H
 
@@ -22,8 +23,8 @@
 
 #include <KSharedConfig>
 
-#include "kbibtex.h"
-#include "value.h"
+#include <KBibTeX>
+#include <Value>
 
 class QCheckBox;
 class QDropEvent;

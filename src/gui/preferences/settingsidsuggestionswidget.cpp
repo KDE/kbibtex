@@ -25,10 +25,10 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include "fileimporterbibtex.h"
-#include "idsuggestions.h"
+#include <Preferences>
+#include <FileImporterBibTeX>
+#include <IdSuggestions>
 #include "settingsidsuggestionseditor.h"
-#include "preferences.h"
 
 class IdSuggestionsModel : public QAbstractListModel
 {

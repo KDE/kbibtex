@@ -18,9 +18,9 @@
 #ifndef KBIBTEX_GUI_SETTINGSIDSUGGESTIONSWIDGET_H
 #define KBIBTEX_GUI_SETTINGSIDSUGGESTIONSWIDGET_H
 
-#include <kbibtexgui_export.h>
-
 #include "settingsabstractwidget.h"
+
+#include "kbibtexgui_export.h"
 
 /**
 @author Thomas Fischer

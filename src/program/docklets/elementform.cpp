@@ -30,7 +30,7 @@
 #include <KMessageBox>
 
 #include "entry.h"
-#include "elementeditor.h"
+#include "element/elementeditor.h"
 #include "mdiwidget.h"
 
 class ElementForm::ElementFormPrivate

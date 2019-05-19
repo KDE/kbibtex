@@ -18,12 +18,12 @@
 #ifndef KBIBTEX_GUI_FIELDINPUT_H
 #define KBIBTEX_GUI_FIELDINPUT_H
 
-#include "kbibtexgui_export.h"
-
 #include <QWidget>
 
-#include "value.h"
-#include "kbibtex.h"
+#include <KBibTeX>
+#include <Value>
+
+#include "kbibtexgui_export.h"
 
 class Element;
 

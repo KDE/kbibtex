@@ -35,8 +35,7 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 
-#include "rangewidget.h"
-
+#include "widgets/rangewidget.h"
 
 /**
  * @author Thomas Fischer

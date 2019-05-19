@@ -35,17 +35,17 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-#include "menulineedit.h"
-#include "entry.h"
-#include "comment.h"
-#include "macro.h"
-#include "preamble.h"
-#include "element.h"
-#include "file.h"
+#include <NotificationHub>
+#include <Entry>
+#include <Comment>
+#include <Macro>
+#include <Preamble>
+#include <Element>
+#include <File>
+#include <CheckBibTeX>
 #include "elementwidgets.h"
-#include "checkbibtex.h"
-#include "hidingtabwidget.h"
-#include "notificationhub.h"
+#include "widgets/hidingtabwidget.h"
+#include "widgets/menulineedit.h"
 
 class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementInterface
 {

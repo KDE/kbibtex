@@ -18,10 +18,10 @@
 #ifndef KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
 #define KBIBTEX_GUI_SETTINGSCOLORLABELWIDGET_H
 
-#include <kbibtexgui_export.h>
+#include <NotificationHub>
+#include <preferences/SettingsAbstractWidget>
 
-#include "settingsabstractwidget.h"
-#include "notificationhub.h"
+#include "kbibtexgui_export.h"
 
 class QSignalMapper;
 

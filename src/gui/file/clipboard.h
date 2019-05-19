@@ -18,9 +18,9 @@
 #ifndef KBIBTEX_GUI_CLIPBOARD_H
 #define KBIBTEX_GUI_CLIPBOARD_H
 
-#include "kbibtexgui_export.h"
-
 #include <QObject>
+
+#include "kbibtexgui_export.h"
 
 class QMouseEvent;
 class QDragEnterEvent;

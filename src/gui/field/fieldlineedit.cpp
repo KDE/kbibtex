@@ -39,15 +39,15 @@
 #include <KLocalizedString>
 #include <kio_version.h>
 
-#include "fileinfo.h"
-#include "file.h"
-#include "entry.h"
-#include "value.h"
-#include "fileimporterbibtex.h"
-#include "fileexporterbibtex.h"
-#include "bibtexfields.h"
-#include "encoderlatex.h"
-#include "preferences.h"
+#include <BibTeXFields>
+#include <Preferences>
+#include <File>
+#include <Entry>
+#include <Value>
+#include <FileInfo>
+#include <FileImporterBibTeX>
+#include <FileExporterBibTeX>
+#include <EncoderLaTeX>
 #include "logging_gui.h"
 
 class FieldLineEdit::FieldLineEditPrivate

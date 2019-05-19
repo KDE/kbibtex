@@ -18,9 +18,9 @@
 #ifndef KBIBTEX_GUI_SETTINGSFILEEXPORTERPDFPSWIDGET_H
 #define KBIBTEX_GUI_SETTINGSFILEEXPORTERPDFPSWIDGET_H
 
-#include <kbibtexgui_export.h>
+#include <preferences/SettingsAbstractWidget>
 
-#include "settingsabstractwidget.h"
+#include "kbibtexgui_export.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

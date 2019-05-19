@@ -44,9 +44,9 @@
 #include <KRun>
 #include <kio_version.h>
 
-#include "preferences.h"
-#include "fileinfo.h"
-#include "fieldlistedit.h"
+#include <Preferences>
+#include <FileInfo>
+#include "field/fieldlistedit.h"
 #include "logging_gui.h"
 
 class PDFListModel;

@@ -1,40 +1,38 @@
-# KBibTeX GUI library
-
 set(
     kbibtexgui_LIB_SRCS
-    field/fieldinput.cpp
-    field/fieldlineedit.cpp
-    field/fieldlistedit.cpp
-    field/colorlabelwidget.cpp
-    file/fileview.cpp
-    file/filedelegate.cpp
-    file/partwidget.cpp
-    file/findduplicatesui.cpp
-    file/clipboard.cpp
-    file/basicfileview.cpp
-    file/sortfilterfilemodel.cpp
+    element/associatedfilesui.cpp
     element/elementeditor.cpp
     element/elementwidgets.cpp
     element/findpdfui.cpp
-    element/associatedfilesui.cpp
-    widgets/menulineedit.cpp
+    field/colorlabelwidget.cpp
+    field/fieldinput.cpp
+    field/fieldlineedit.cpp
+    field/fieldlistedit.cpp
+    file/basicfileview.cpp
+    file/clipboard.cpp
+    file/filedelegate.cpp
+    file/fileview.cpp
+    file/partwidget.cpp
+    file/findduplicatesui.cpp
+    file/sortfilterfilemodel.cpp
     widgets/filesettingswidget.cpp
     widgets/filterbar.cpp
-    widgets/radiobuttontreeview.cpp
     widgets/hidingtabwidget.cpp
-    widgets/starrating.cpp
+    widgets/menulineedit.cpp
+    widgets/radiobuttontreeview.cpp
     widgets/rangewidget.cpp
+    widgets/starrating.cpp
     config/entrylayout.cpp
     preferences/kbibtexpreferencesdialog.cpp
-    preferences/settingsgeneralwidget.cpp
-    preferences/settingsglobalkeywordswidget.cpp
+    preferences/settingsabstractwidget.cpp
     preferences/settingscolorlabelwidget.cpp
-    preferences/settingsuserinterfacewidget.cpp
     preferences/settingsfileexporterpdfpswidget.cpp
     preferences/settingsfileexporterwidget.cpp
-    preferences/settingsabstractwidget.cpp
+    preferences/settingsgeneralwidget.cpp
+    preferences/settingsglobalkeywordswidget.cpp
     preferences/settingsidsuggestionswidget.cpp
     preferences/settingsidsuggestionseditor.cpp
+    preferences/settingsuserinterfacewidget.cpp
     guihelper.cpp
     italictextitemmodel.cpp
     valuelistmodel.cpp
@@ -42,84 +40,128 @@ set(
     logging_gui.cpp
 )
 
-set(
-    kbibtexgui_HDRS
-    field/fieldinput.h
-    field/colorlabelwidget.h
-    field/fieldlineedit.h
-    widgets/filterbar.h
-    preferences/settingsuserinterfacewidget.h
-    preferences/kbibtexpreferencesdialog.h
-    preferences/settingsglobalkeywordswidget.h
-    preferences/settingsfileexporterwidget.h
-    preferences/settingsgeneralwidget.h
-    preferences/settingsabstractwidget.h
-    preferences/settingscolorlabelwidget.h
-    preferences/settingsfileexporterpdfpswidget.h
-    preferences/settingsidsuggestionswidget.h
-    preferences/settingsidsuggestionseditor.h
-    guihelper.h
-    valuelistmodel.h
-    italictextitemmodel.h
-    delayedexecutiontimer.h
-    file/findduplicatesui.h
-    file/basicfileview.h
-    file/clipboard.h
-    file/fileview.h
-    file/filedelegate.h
-    file/sortfilterfilemodel.h
-    file/partwidget.h
-    element/findpdfui.h
-    element/elementeditor.h
-    element/associatedfilesui.h
-)
-
 if(UNITY_BUILD)
     enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
 endif(UNITY_BUILD)
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/src/gui
-    ${CMAKE_BINARY_DIR}/src/gui
-    ${CMAKE_SOURCE_DIR}/src/gui/file
-    ${CMAKE_SOURCE_DIR}/src/gui/dialogs
-    ${CMAKE_SOURCE_DIR}/src/gui/element
-    ${CMAKE_SOURCE_DIR}/src/gui/field
-    ${CMAKE_SOURCE_DIR}/src/gui/widgets
-    ${CMAKE_SOURCE_DIR}/src/gui/config
-)
-
-add_library(
-    kbibtexgui
+add_library(kbibtexgui
     SHARED
     ${kbibtexgui_LIB_SRCS}
 )
+generate_export_header(kbibtexgui)
+add_library(KBibTeX::GUI ALIAS kbibtexgui)
 
-target_link_libraries( kbibtexgui
-    Qt5::Core
-    KF5::IconThemes
-    KF5::ItemViews
-    KF5::Completion
-    KF5::TextEditor
-    kbibtexconfig
-    kbibtexdata
-    kbibtexio
-    kbibtexnetworking
-    kbibtexprocessing
-)
-
-set_target_properties(
-    kbibtexgui
+set_target_properties(kbibtexgui
     PROPERTIES
     EXPORT_NAME "kbibtexgui"
     VERSION ${KBIBTEX_RELEASE_VERSION}
     SOVERSION ${KBIBTEX_SOVERSION}
 )
 
-install(
-    TARGETS
-    kbibtexgui
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+target_include_directories(kbibtexgui
+    INTERFACE
+        $<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KBibTeX/gui>
 )
 
-generate_export_header( kbibtexgui )
+target_link_libraries(kbibtexgui
+    PUBLIC
+        Qt5::Core
+        Qt5::Gui
+        Qt5::Widgets
+        # TODO refactor to be private
+        KF5::IconThemes
+        KBibTeX::Data
+        KBibTeX::Global
+        KBibTeX::Networking
+    PRIVATE
+        Poppler::Qt5
+        Qt5::Concurrent
+        Qt5::XmlPatterns
+        KF5::ConfigCore
+        KF5::ConfigGui
+        KF5::I18n
+        KF5::WidgetsAddons
+        KF5::KIOCore
+        KF5::KIOFileWidgets
+        KF5::Parts
+        KF5::TextEditor
+        KBibTeX::Config
+        KBibTeX::IO
+        KBibTeX::Processing
+)
+
+install(
+    TARGETS kbibtexgui
+    EXPORT kbibtexgui-targets
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+set_target_properties(kbibtexgui PROPERTIES
+    EXPORT_NAME "GUI"
+)
+
+ecm_generate_headers(kbibtexgui_HEADERS
+    HEADER_NAMES
+        element/AssociatedFilesUI
+        element/ElementEditor
+        element/ElementWidgets
+        element/FindPDFUI
+        field/ColorLabelWidget
+        field/FieldInput
+        field/FieldLineEdit
+        field/FieldListEdit
+        file/BasicFileView
+        file/Clipboard
+        file/FileDelegate
+        file/FileView
+        file/FindDuplicatesUI
+        file/PartWidget
+        file/SortFilterFileModel
+        widgets/FileSettingsWidget
+        widgets/FilterBar
+        widgets/HidingTabWidget
+        widgets/MenuLineEdit
+        widgets/RadioButtonTreeView
+        widgets/RangeWidget
+        widgets/StarRating
+        config/EntryLayout
+        preferences/KBibTeXPreferencesDialog
+        preferences/SettingsAbstractWidget
+        preferences/SettingsColorLabelWidget
+        preferences/SettingsFileExporterPDFPSWidget
+        preferences/SettingsFileExporterWidget
+        preferences/SettingsGeneralWidget
+        preferences/SettingsGlobalKeywordsWidget
+        preferences/SettingsIdSuggestionsEditor
+        preferences/SettingsIdSuggestionsWidget
+        preferences/SettingsUserInterfaceWidget
+        ItalicTextItemModel
+        ValueListModel
+        GUIHelper
+    REQUIRED_HEADERS kbibtexgui_HEADERS
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtexgui_export.h
+    ${kbibtexgui_HEADERS}
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KBibTeX/gui
+    COMPONENT Devel
+)
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXGUI-configVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY ExactVersion
+)
+
+configure_package_config_file(${CMAKE_CURRENT_LIST_DIR}/cmake/KBibTeXGUI-config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXGUI-config.cmake
+    INSTALL_DESTINATION ${KDE_INSTALL_LIBDIR}/cmake/KBibTeX
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXGUI-config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/KBibTeXGUI-configVersion.cmake
+    DESTINATION ${KDE_INSTALL_LIBDIR}/cmake/KBibTeX
+)

@@ -42,14 +42,14 @@
 #include <KSharedConfig>
 #include <KConfigGroup>
 
-#include "fileinfo.h"
-#include "file.h"
-#include "entry.h"
-#include "fileimporterbibtex.h"
-#include "fileexporterbibtex.h"
+#include <File>
+#include <Entry>
+#include <FileImporterBibTeX>
+#include <FileExporterBibTeX>
+#include <FileInfo>
+#include <AssociatedFiles>
 #include "fieldlineedit.h"
-#include "associatedfiles.h"
-#include "associatedfilesui.h"
+#include "element/associatedfilesui.h"
 #include "logging_gui.h"
 
 class FieldListEdit::FieldListEditProtected

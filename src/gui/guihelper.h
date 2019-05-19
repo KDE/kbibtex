@@ -18,11 +18,11 @@
 #ifndef KBIBTEX_GUI_GUIHELPER_H
 #define KBIBTEX_GUI_GUIHELPER_H
 
-#include "kbibtexgui_export.h"
-
 #include <QAbstractItemModel>
 #include <QPoint>
 #include <QSize>
+
+#include "kbibtexgui_export.h"
 
 class QPainter;
 

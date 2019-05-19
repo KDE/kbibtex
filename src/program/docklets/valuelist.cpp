@@ -37,7 +37,7 @@
 
 #include "bibtexfields.h"
 #include "entry.h"
-#include "fileview.h"
+#include "file/fileview.h"
 #include "valuelistmodel.h"
 #include "models/filemodel.h"
 

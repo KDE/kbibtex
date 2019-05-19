@@ -35,12 +35,11 @@
 #include <KLocalizedString>
 #include <KColorScheme>
 
-#include "fieldlineedit.h"
-#include "bibtexfields.h"
-#include "entry.h"
-#include "value.h"
-#include "preferences.h"
-#include "models/filemodel.h"
+#include <BibTeXFields>
+#include <Preferences>
+#include <Entry>
+#include <models/FileModel>
+#include "field/fieldlineedit.h"
 #include "logging_gui.h"
 
 QWidget *ValueListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &sovi, const QModelIndex &index) const

@@ -19,9 +19,9 @@
 #ifndef KBIBTEX_GUI_RANGEWIDGET_H
 #define KBIBTEX_GUI_RANGEWIDGET_H
 
-#include "kbibtexgui_export.h"
-
 #include <QWidget>
+
+#include "kbibtexgui_export.h"
 
 /**
  * Allows the user to specify a minimum and a maximum out of a range of values.

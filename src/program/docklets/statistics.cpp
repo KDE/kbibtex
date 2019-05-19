@@ -25,7 +25,7 @@
 #include <KLocalizedString>
 
 #include "file.h"
-#include "fileview.h"
+#include "file/fileview.h"
 #include "entry.h"
 #include "macro.h"
 #include "comment.h"

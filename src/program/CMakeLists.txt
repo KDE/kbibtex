@@ -30,11 +30,6 @@ endif(UNITY_BUILD AND NOT WIN32)
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/src/gui
-    ${CMAKE_BINARY_DIR}/src/gui
-    ${CMAKE_SOURCE_DIR}/src/gui/widgets
-    ${CMAKE_SOURCE_DIR}/src/gui/file
-    ${CMAKE_SOURCE_DIR}/src/gui/element
     ${CMAKE_SOURCE_DIR}/src/program/docklets
 )
 
@@ -93,6 +88,7 @@ target_link_libraries( kbibtex
     kbibtexio
     kbibtexgui
     kbibtexnetworking
+    kbibtexprocessing
 )
 
 if(Qt5WebEngineWidgets_FOUND)

@@ -31,7 +31,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-#include "bibtexfields.h"
+#include <BibTeXFields>
 #include "delayedexecutiontimer.h"
 
 static bool sortStringsLocaleAware(const QString &s1, const QString &s2) {

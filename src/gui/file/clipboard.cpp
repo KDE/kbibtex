@@ -24,13 +24,13 @@
 #include <QMouseEvent>
 #include <QDrag>
 
+#include <Preferences>
+#include <models/FileModel>
+#include <FileImporterBibTeX>
+#include <FileExporterBibTeX>
+#include <File>
 #include "fileview.h"
-#include "models/filemodel.h"
-#include "fileimporterbibtex.h"
-#include "fileexporterbibtex.h"
-#include "file.h"
-#include "associatedfilesui.h"
-#include "preferences.h"
+#include "element/associatedfilesui.h"
 #include "logging_gui.h"
 
 class Clipboard::ClipboardPrivate

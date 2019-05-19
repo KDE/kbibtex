@@ -18,11 +18,11 @@
 #ifndef KBIBTEX_GUI_SETTINGSFILEEXPORTERWIDGET_H
 #define KBIBTEX_GUI_SETTINGSFILEEXPORTERWIDGET_H
 
-#include <kbibtexgui_export.h>
-
 #include <qplatformdefs.h>
 
-#include "settingsabstractwidget.h"
+#include <preferences/SettingsAbstractWidget>
+
+#include "kbibtexgui_export.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

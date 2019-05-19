@@ -18,9 +18,9 @@
 #ifndef KBIBTEX_GUI_ELEMENTEDITOR_H
 #define KBIBTEX_GUI_ELEMENTEDITOR_H
 
-#include "kbibtexgui_export.h"
-
 #include <QWidget>
+
+#include "kbibtexgui_export.h"
 
 class Element;
 class File;

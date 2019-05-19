@@ -29,12 +29,12 @@
 #include <KUrlRequester>
 #include <KLineEdit> /// required as KUrlRequester returns it
 
+#include <Preferences>
+#include <FileExporter>
+#include <LyX>
 #include "guihelper.h"
 #include "italictextitemmodel.h"
-#include "fileexporter.h"
-#include "clipboard.h"
-#include "preferences.h"
-#include "lyx.h"
+#include "file/clipboard.h"
 
 class SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate
 {

@@ -42,20 +42,21 @@
 #include <KTextEditor/View>
 #include <kio_version.h>
 
-#include "preferences.h"
-#include "idsuggestions.h"
-#include "fileinfo.h"
-#include "kbibtex.h"
-#include "bibtexentries.h"
-#include "bibtexfields.h"
-#include "fileimporterbibtex.h"
-#include "fileexporterbibtex.h"
-#include "file.h"
-#include "fieldinput.h"
-#include "entry.h"
-#include "macro.h"
-#include "preamble.h"
-#include "fieldlineedit.h"
+#include <KBibTeX>
+#include <Preferences>
+#include <BibTeXEntries>
+#include <BibTeXFields>
+#include <Entry>
+#include <Macro>
+#include <Preamble>
+#include <File>
+#include <FileInfo>
+#include <FileImporterBibTeX>
+#include <FileExporterBibTeX>
+#include <FileExporterBibTeX2HTML>
+#include <IdSuggestions>
+#include "field/fieldinput.h"
+#include "field/fieldlineedit.h"
 #include "delayedexecutiontimer.h"
 #include "logging_gui.h"
 

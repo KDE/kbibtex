@@ -24,9 +24,9 @@
 
 #include <KLocalizedString>
 
+#include <Preferences>
+#include <FileExporterToolchain>
 #include "guihelper.h"
-#include "fileexportertoolchain.h"
-#include "preferences.h"
 
 class SettingsFileExporterPDFPSWidget::SettingsFileExporterPDFPSWidgetPrivate
 {

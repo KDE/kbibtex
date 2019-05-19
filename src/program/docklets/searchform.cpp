@@ -72,7 +72,7 @@
 #include "onlinesearch/onlinesearchbiorxiv.h"
 #include "onlinesearch/onlinesearchsemanticscholar.h"
 #include "openfileinfo.h"
-#include "fileview.h"
+#include "file/fileview.h"
 #include "models/filemodel.h"
 #include "searchresults.h"
 #include "logging_program.h"

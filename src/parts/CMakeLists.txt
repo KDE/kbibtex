@@ -15,12 +15,6 @@ endif(UNITY_BUILD)
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/src/gui
-    ${CMAKE_SOURCE_DIR}/src/gui/config
-    ${CMAKE_SOURCE_DIR}/src/gui/element
-    ${CMAKE_SOURCE_DIR}/src/gui/preferences
-    ${CMAKE_SOURCE_DIR}/src/gui/widgets
-    ${CMAKE_SOURCE_DIR}/src/gui/file
 )
 
 # Creates kbibtex-git-info.h containing information about the source code's Git revision

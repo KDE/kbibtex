@@ -19,7 +19,7 @@
 #ifndef KBIBTEX_PROGRAM_DOCKLET_FILESETTINGS_H
 #define KBIBTEX_PROGRAM_DOCKLET_FILESETTINGS_H
 
-#include "filesettingswidget.h"
+#include "widgets/filesettingswidget.h"
 
 #include "openfileinfo.h"
 

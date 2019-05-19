@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,14 +14,15 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_GUI_FILTERBAR_H
 #define KBIBTEX_GUI_FILTERBAR_H
 
-#include "kbibtexgui_export.h"
-
 #include <QWidget>
 
-#include "sortfilterfilemodel.h"
+#include <file/SortFilterFileModel>
+
+#include "kbibtexgui_export.h"
 
 /**
 @author Thomas Fischer

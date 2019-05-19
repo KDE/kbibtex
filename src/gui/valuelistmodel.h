@@ -18,15 +18,15 @@
 #ifndef KBIBTEX_GUI_VALUELISTMODEL_H
 #define KBIBTEX_GUI_VALUELISTMODEL_H
 
-#include "kbibtexgui_export.h"
-
 #include <QAbstractTableModel>
 #include <QTreeView>
 #include <QStyledItemDelegate>
 
-#include "value.h"
-#include "notificationhub.h"
-#include "models/filemodel.h"
+#include <NotificationHub>
+#include <Value>
+#include <models/FileModel>
+
+#include "kbibtexgui_export.h"
 
 class KBIBTEXGUI_EXPORT ValueListDelegate : public QStyledItemDelegate
 {

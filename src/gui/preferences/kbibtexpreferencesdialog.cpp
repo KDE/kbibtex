@@ -22,13 +22,13 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QComboBox>
+#include <QStandardPaths>
 
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KGuiItem>
-#include <QStandardPaths>
 
-#include "notificationhub.h"
+#include <NotificationHub>
 #include "settingsgeneralwidget.h"
 #include "settingsglobalkeywordswidget.h"
 #include "settingsfileexporterpdfpswidget.h"

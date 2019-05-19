@@ -27,7 +27,7 @@
 #include "preferences.h"
 #include "guihelper.h"
 #include "italictextitemmodel.h"
-#include "fileview.h"
+#include "file/fileview.h"
 #include "models/filemodel.h"
 #include "value.h"
 #include "file.h"

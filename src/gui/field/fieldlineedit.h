@@ -14,6 +14,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_GUI_FIELDLINEEDIT_H
 #define KBIBTEX_GUI_FIELDLINEEDIT_H
 
@@ -21,9 +22,9 @@
 
 #include <QIcon>
 
-#include "value.h"
-#include "menulineedit.h"
-#include "kbibtex.h"
+#include <KBibTeX>
+#include <Value>
+#include <widgets/MenuLineEdit>
 
 class QMenu;
 class QSignalMapper;

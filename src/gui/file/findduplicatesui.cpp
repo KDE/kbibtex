@@ -40,14 +40,14 @@
 #include <kparts/part.h>
 #include <KMessageBox>
 
-#include "entry.h"
-#include "fileimporterbibtex.h"
-#include "bibtexentries.h"
-#include "radiobuttontreeview.h"
+#include <BibTeXEntries>
+#include <Entry>
+#include <models/FileModel>
+#include <FileImporterBibTeX>
+#include <FindDuplicates>
+#include "widgets/radiobuttontreeview.h"
 #include "fileview.h"
 #include "filedelegate.h"
-#include "models/filemodel.h"
-#include "findduplicates.h"
 #include "logging_gui.h"
 
 /**

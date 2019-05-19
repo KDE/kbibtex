@@ -32,11 +32,11 @@
 #include <KWindowConfig>
 #include <KStandardGuiItem>
 
-#include "elementeditor.h"
-#include "entry.h"
-#include "macro.h"
-#include "models/filemodel.h"
-#include "fileexporterbibtex.h"
+#include <Entry>
+#include <Macro>
+#include <models/FileModel>
+#include <FileExporterBibTeX>
+#include "element/elementeditor.h"
 #include "valuelistmodel.h"
 
 #include "logging_gui.h"

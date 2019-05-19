@@ -26,9 +26,9 @@
 #include <KIconLoader>
 
 #include "file.h"
-#include "clipboard.h"
-#include "fileview.h"
-#include "filedelegate.h"
+#include "file/clipboard.h"
+#include "file/fileview.h"
+#include "file/filedelegate.h"
 #include "models/filemodel.h"
 #include "idsuggestions.h"
 #include "logging_program.h"

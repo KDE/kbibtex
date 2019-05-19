@@ -23,7 +23,7 @@
 #include <KConfigGroup>
 #include <KLocalizedString>
 
-#include "preferences.h"
+#include <Preferences>
 #include "logging_gui.h"
 
 static const int entryLayoutMaxTabCount = 256;

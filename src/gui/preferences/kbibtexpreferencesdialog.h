@@ -18,9 +18,9 @@
 #ifndef KBIBTEX_GUI_KBIBTEXPREFERENCESDIALOG_H
 #define KBIBTEX_GUI_KBIBTEXPREFERENCESDIALOG_H
 
-#include <kbibtexgui_export.h>
-
 #include <KPageDialog>
+
+#include "kbibtexgui_export.h"
 
 class QAbstractButton;
 

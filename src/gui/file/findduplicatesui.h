@@ -18,10 +18,10 @@
 #ifndef KBIBTEX_GUI_FINDDUPLICATESUI_H
 #define KBIBTEX_GUI_FINDDUPLICATESUI_H
 
-#include "kbibtexgui_export.h"
-
 #include <QObject>
 #include <QTreeView>
+
+#include "kbibtexgui_export.h"
 
 namespace KParts
 {
@@ -32,7 +32,6 @@ class QPushButton;
 class FileView;
 class EntryClique;
 class File;
-
 class RadioButtonTreeView;
 class AlternativesItemModel;
 

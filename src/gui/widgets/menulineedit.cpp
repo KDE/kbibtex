@@ -28,7 +28,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-#include "notificationhub.h"
+#include <NotificationHub>
 
 const int MenuLineEdit::MenuLineConfigurationChangedEvent = NotificationHub::EventUserDefined + 1861;
 const QString MenuLineEdit::keyLimitKeyboardTabStops = QStringLiteral("LimitKeyboardTabStops");

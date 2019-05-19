@@ -16,11 +16,6 @@ configure_file(test-config.h.in test-config.h @ONLY)
 include_directories(
     ${CMAKE_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/src/gui
-    ${CMAKE_SOURCE_DIR}/src/gui/config
-    ${CMAKE_SOURCE_DIR}/src/gui/bibtex
-    ${CMAKE_SOURCE_DIR}/src/gui/element
-    ${CMAKE_SOURCE_DIR}/src/gui/widgets
 )
 
 set(
@@ -113,6 +108,7 @@ add_executable(
 target_link_libraries( kbibtextest
     Qt5::Core
     KF5::KIOCore
+    KF5::I18n
     kbibtexconfig
     kbibtexdata
     kbibtexio

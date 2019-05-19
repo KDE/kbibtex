@@ -28,12 +28,12 @@
 
 #include <KLocalizedString>
 
-#include "file.h"
-#include "entry.h"
+#include <File>
+#include <Entry>
 #include "fieldlineedit.h"
 #include "fieldlistedit.h"
 #include "colorlabelwidget.h"
-#include "starrating.h"
+#include "widgets/starrating.h"
 
 class FieldInput::FieldInputPrivate
 {

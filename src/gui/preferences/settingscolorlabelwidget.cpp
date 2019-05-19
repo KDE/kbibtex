@@ -31,12 +31,11 @@
 #include <KActionMenu>
 #include <KLocalizedString>
 
-#include "entry.h"
-#include "file.h"
-#include "fileview.h"
-#include "colorlabelwidget.h"
-#include "models/filemodel.h"
-#include "preferences.h"
+#include <Preferences>
+#include <File>
+#include <Entry>
+#include "file/fileview.h"
+#include "field/colorlabelwidget.h"
 
 class ColorLabelSettingsDelegate : public QStyledItemDelegate
 {

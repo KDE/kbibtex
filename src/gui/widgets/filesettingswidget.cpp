@@ -23,9 +23,9 @@
 
 #include <KLocalizedString>
 
-#include "preferences.h"
+#include <Preferences>
+#include <File>
 #include "italictextitemmodel.h"
-#include "file.h"
 #include "guihelper.h"
 
 #define createDelimiterString(a, b) (QString(QStringLiteral("%1%2%3")).arg(a).arg(QChar(8230)).arg(b))

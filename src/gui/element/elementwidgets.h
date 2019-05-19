@@ -18,16 +18,16 @@
 #ifndef KBIBTEX_GUI_ELEMENTWIDGETS_H
 #define KBIBTEX_GUI_ELEMENTWIDGETS_H
 
-#include "kbibtexgui_export.h"
-
 #include <QLabel>
 #include <QWidget>
 #include <QUrl>
 #include <QIcon>
 
-#include "elementeditor.h"
-#include "entrylayout.h"
-#include "fileimporter.h"
+#include <FileImporter>
+#include <element/ElementEditor>
+#include <config/EntryLayout>
+
+#include "kbibtexgui_export.h"
 
 class QTreeWidget;
 class QTreeWidgetItem;

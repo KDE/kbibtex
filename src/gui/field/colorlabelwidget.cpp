@@ -24,8 +24,8 @@
 
 #include <KLocalizedString>
 
-#include "notificationhub.h"
-#include "preferences.h"
+#include <NotificationHub>
+#include <Preferences>
 
 class ColorLabelComboBoxModel : public QAbstractItemModel, private NotificationListener
 {

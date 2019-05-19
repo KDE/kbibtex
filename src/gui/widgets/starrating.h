@@ -19,18 +19,17 @@
 #ifndef KBIBTEX_GUI_STARRATING_H
 #define KBIBTEX_GUI_STARRATING_H
 
-#include "kbibtexgui_export.h"
-
 #include <QWidget>
 
 #include <KIconLoader>
 
-#include "value.h"
+#include <Value>
+
+#include "kbibtexgui_export.h"
 
 class QLabel;
 class QPaintEvent;
 class QMouseEvent;
-
 class QPushButton;
 
 /**

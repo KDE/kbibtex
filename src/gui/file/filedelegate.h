@@ -18,9 +18,9 @@
 #ifndef KBIBTEX_GUI_FILEDELEGATE_H
 #define KBIBTEX_GUI_FILEDELEGATE_H
 
-#include "kbibtexgui_export.h"
-
 #include <QStyledItemDelegate>
+
+#include "kbibtexgui_export.h"
 
 class KBIBTEXGUI_EXPORT FileDelegate : public QStyledItemDelegate
 {

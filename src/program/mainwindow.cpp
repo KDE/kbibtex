@@ -48,7 +48,7 @@
 #include "searchform.h"
 #include "searchresults.h"
 #include "elementform.h"
-#include "fileview.h"
+#include "file/fileview.h"
 #include "filesettings.h"
 #include "xsltransform.h"
 #include "bibliographyservice.h"

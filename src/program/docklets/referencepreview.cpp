@@ -53,7 +53,7 @@
 #include "element.h"
 #include "file.h"
 #include "entry.h"
-#include "fileview.h"
+#include "file/fileview.h"
 #include "logging_program.h"
 
 static const struct PreviewStyles {

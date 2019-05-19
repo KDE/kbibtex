@@ -1,0 +1,40 @@
+@PACKAGE_INIT@
+
+find_package(
+    Qt5 @QT_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    Core
+    Gui
+    Network
+    Widgets
+    DBus
+)
+
+find_package(
+    KF5 @KF5_MIN_VERSION@
+    CONFIG
+    REQUIRED
+    ConfigCore
+    ConfigGui
+    I18n
+    KIOCore
+    KIOFileWidgets
+    WidgetsAddons
+)
+
+find_package(
+    KBibTeX @PROJECT_VERSION@ EXACT
+    CONFIG
+    REQUIRED
+    Config
+    Data
+    Global
+    IO
+)
+
+if(NOT TARGET KBibTeX::GUI)
+    include("${KBibTeXGUI_CMAKE_DIR}/KBibTeXGUI-targets.cmake")
+endif()
+
+set(KBibTeXGUI_LIBRARIES KBibTeX::GUI)

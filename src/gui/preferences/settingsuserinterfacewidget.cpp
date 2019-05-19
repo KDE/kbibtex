@@ -24,10 +24,9 @@
 
 #include <KLocalizedString>
 
-#include "preferences.h"
-#include "elementwidgets.h"
+#include <Preferences>
+#include "element/elementwidgets.h"
 #include "guihelper.h"
-#include "models/filemodel.h"
 
 class SettingsUserInterfaceWidget::SettingsUserInterfaceWidgetPrivate
 {

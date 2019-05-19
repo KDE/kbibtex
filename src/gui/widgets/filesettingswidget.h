@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -19,11 +19,11 @@
 #ifndef KBIBTEX_GUI_FILESETTINGSWIDGET_H
 #define KBIBTEX_GUI_FILESETTINGSWIDGET_H
 
-#include "kbibtexgui_export.h"
-
 #include <QWidget>
 
-#include "value.h"
+#include <Value>
+
+#include "kbibtexgui_export.h"
 
 class QCheckBox;
 class QComboBox;

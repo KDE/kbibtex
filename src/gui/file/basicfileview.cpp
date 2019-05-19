@@ -25,9 +25,9 @@
 
 #include <KLocalizedString>
 
-#include "bibtexfields.h"
-#include "models/filemodel.h"
-#include "sortfilterfilemodel.h"
+#include <BibTeXFields>
+#include <models/FileModel>
+#include "file/sortfilterfilemodel.h"
 #include "logging_gui.h"
 
 class BasicFileView::Private

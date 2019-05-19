@@ -18,9 +18,9 @@
 #ifndef KBIBTEX_GUI_SETTINGSUSERINTERFACEWIDGET_H
 #define KBIBTEX_GUI_SETTINGSUSERINTERFACEWIDGET_H
 
-#include <kbibtexgui_export.h>
-
 #include "settingsabstractwidget.h"
+
+#include "kbibtexgui_export.h"
 
 /**
 @author Thomas Fischer

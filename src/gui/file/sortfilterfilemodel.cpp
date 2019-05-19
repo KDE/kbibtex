@@ -19,13 +19,13 @@
 
 #include <QRegularExpression>
 
-#include "bibtexfields.h"
-#include "bibtexentries.h"
-#include "entry.h"
-#include "macro.h"
-#include "preamble.h"
-#include "comment.h"
-#include "fileinfo.h"
+#include <BibTeXFields>
+#include <BibTeXEntries>
+#include <Entry>
+#include <Macro>
+#include <Preamble>
+#include <Comment>
+#include <FileInfo>
 
 SortFilterFileModel::SortFilterFileModel(QObject *parent)
         : QSortFilterProxyModel(parent), m_internalModel(nullptr)

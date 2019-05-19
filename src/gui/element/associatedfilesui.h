@@ -20,9 +20,9 @@
 
 #include <QWidget>
 
-#include "entry.h"
-#include "file.h"
-#include "associatedfiles.h"
+#include <Entry>
+#include <File>
+#include <AssociatedFiles>
 
 #include "kbibtexgui_export.h"
 

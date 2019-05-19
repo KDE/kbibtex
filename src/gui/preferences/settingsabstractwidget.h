@@ -18,14 +18,11 @@
 #ifndef KBIBTEX_GUI_SETTINGSABSTRACTWIDGET_H
 #define KBIBTEX_GUI_SETTINGSABSTRACTWIDGET_H
 
-#include <kbibtexgui_export.h>
-
 #include <QAbstractItemModel>
 #include <QWidget>
-
 #include <QIcon>
 
-class KComboBox;
+#include "kbibtexgui_export.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

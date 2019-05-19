@@ -39,7 +39,7 @@
 #include <KMessageBox>
 
 #include "kbibtex.h"
-#include "partwidget.h"
+#include "file/partwidget.h"
 #include "logging_program.h"
 
 class LRUItemModel : public QAbstractItemModel

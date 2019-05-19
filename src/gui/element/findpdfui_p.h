@@ -20,11 +20,9 @@
 
 #include <KWidgetItemDelegate>
 
-#include "findpdf.h"
+#include <FindPDF>
 
 class QListView;
-
-class FindPDF;
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>

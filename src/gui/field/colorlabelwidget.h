@@ -20,9 +20,9 @@
 
 #include <QComboBox>
 
-#include "kbibtexgui_export.h"
+#include <Value>
 
-#include "value.h"
+#include "kbibtexgui_export.h"
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
