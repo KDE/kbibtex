@@ -155,7 +155,7 @@
       <li xml:lang="gl">Busque os datos das entradas bibliográficas en base de datos en internet (como Google Scholar, ACM, IEEE, arXiv, etc.).</li>
       <li xml:lang="id">Pencarian untuk entri data bibliografi dalam database online (misal Google Scholar, ACM, IEEE, arXiv, dll.)</li>
       <li xml:lang="it">Ricercare voci bibliografiche nei database in linea (per es., Google Scholar, ACM, IEEE, arXiv, ecc.)</li>
-      <li xml:lang="ko">온라인 데이터베이스에서 서지 항목 데이터 검색 (예: Google 학술검색, ACM, IEEE, arXiv 등)</li>
+      <li xml:lang="ko">온라인 데이터베이스에서 서지 정보 데이터 검색(예: Google 학술검색, ACM, IEEE, arXiv 등)</li>
       <li xml:lang="nl">Zoeken naar bibliografie-items in online databases (bijv. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="pl">Wyszukiwanie wpisów bibliograficznych w bazach internetowych (np. Google Scholar, ACM, IEEE, arXiv, itp.)</li>
       <li xml:lang="pt">Procurar por dados de itens bibliográficos nas bases de dados 'online' (p.ex. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
@@ -199,7 +199,7 @@
       <li xml:lang="gl">Atope e fusione entradas duplicadas da bibliografía.</li>
       <li xml:lang="id">Menemukan dan menggabungkan entri-entri duplikat dalam bibliografi.</li>
       <li xml:lang="it">Trovare e unire voci duplicate nella bibliografia.</li>
-      <li xml:lang="ko">서지 정보에서 중복 항목을 찾아 합칩니다.</li>
+      <li xml:lang="ko">서지 정보 목록에서 중복 항목을 찾아 합칩니다.</li>
       <li xml:lang="nl">Zoek en voeg dubbele items in de bibliografie samen.</li>
       <li xml:lang="pl">Znajdywanie i scalanie powielonych wpisów w bibliografii.</li>
       <li xml:lang="pt">Procurar e reunir itens duplicados na bibliografia.</li>
@@ -274,7 +274,7 @@
       <caption xml:lang="gl">Xanela principal de KBibTeX</caption>
       <caption xml:lang="id">Window utama KBibTeX</caption>
       <caption xml:lang="it">Finestra principale di KBibTeX</caption>
-      <caption xml:lang="ko">KBibTeX 메인 창</caption>
+      <caption xml:lang="ko">KBibTeX 주 창</caption>
       <caption xml:lang="nl">Hoofdvenster van KBibTeX</caption>
       <caption xml:lang="pl">Okno główne KBibTeX</caption>
       <caption xml:lang="pt">Janela principal do KBibTeX</caption>
