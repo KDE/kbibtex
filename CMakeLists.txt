@@ -141,34 +141,6 @@ else(UNITY_BUILD)
     message(STATUS "Unity build disabled (default), use option UNITY_BUILD to enable it")
 endif(UNITY_BUILD)
 
-# # FIXME may have to be cleaned up a little bit
-# # Contributed by Jeremy Cribb <cribb.jeremy@gmail.com>
-# if(
-#     APPLE
-# )
-#     find_library(
-#         SYS_CONFIG_LIBRARY
-#         SystemConfiguration
-#     )
-#     mark_as_advanced(
-#         SYS_CONFIG_LIBRARY
-#     )
-#     # SET(TARGET_EXTERNAL_LIBRARIES iconv ${SYS_CONFIG_LIBRARY})
-#     set(
-#         ICONV_INCLUDE_DIR
-#         "/opt/local/include"
-#     )
-#     set(
-#         ICONV_LIBRARIES
-#         "/opt/local/lib/libiconv.dylib"
-#     )
-#     set(
-#         LIBXSLT_LIBRARIES
-#         "/opt/local/lib/libxslt.dylib"
-#     )
-# endif(
-#     APPLE
-# )
 
 find_package(
     Poppler

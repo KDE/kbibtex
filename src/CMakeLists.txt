@@ -55,12 +55,3 @@ add_subdirectory(parts)
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()
-
-# install(
-#     FILES
-#     kbibtexnamespace.h
-#     DESTINATION
-#     ${INCLUDE_INSTALL_DIR}/kbibtex
-#     COMPONENT
-#     development
-# )
