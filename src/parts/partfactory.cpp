@@ -38,6 +38,7 @@ public:
         aboutData.setOrganizationDomain(QByteArray("kde.org"));
         aboutData.setDesktopFileName(QStringLiteral("org.kde.kbibtex"));
         aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QStringLiteral("fischer@unix-ag.uni-kl.de"));
+        qCInfo(LOG_KBIBTEX_PARTS) << "Creating KBibTeX Part of version" << aboutData.version();
     }
 };
 
@@ -55,8 +56,6 @@ QObject *KBibTeXPartFactory::create(const char *iface, QWidget *parentWidget, QO
     Q_UNUSED(iface);
     Q_UNUSED(args)
     Q_UNUSED(keyword);
-
-    qCInfo(LOG_KBIBTEX_PARTS()) << "Creating KBibTeX Part of version" << (strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QLatin1String(KBIBTEX_GIT_INFO_STRING) : QLatin1String(KBIBTEX_VERSION_STRING));
 
     KBibTeXPart *part = new KBibTeXPart(parentWidget, parent, d->aboutData);
     return part;

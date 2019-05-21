@@ -54,55 +54,49 @@ if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtexdatatest kbibtexdatatest_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
-# Creates kbibtex-git-info.h containing information about the source code's Git revision
-# (if source directory is a Git clone)
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
-    COMMAND
-    ${CMAKE_COMMAND}
-    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
-    -P
-    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
-)
-set_source_files_properties(
-    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
-    PROPERTIES
-    GENERATED 1
-    HEADER_FILE_ONLY 1
-    SKIP_AUTOMOC ON
-    SKIP_AUTOUIC ON
-    SKIP_AUTOGEN ON
-)
-
 add_executable(
     kbibtextest
     ${kbibtextest_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+)
+
+add_dependencies(kbibtextest
+    generate-kbibtex-git-info
 )
 
 add_executable(
     kbibtexfilestest
     ${kbibtexfilestest_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+)
+
+add_dependencies(kbibtexfilestest
+    generate-kbibtex-git-info
 )
 
 add_executable(
     kbibtexnetworkingtest
     ${kbibtexnetworkingtest_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+)
+
+add_dependencies(kbibtexnetworkingtest
+    generate-kbibtex-git-info
 )
 
 add_executable(
     kbibtexiotest
     ${kbibtexiotest_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+)
+
+add_dependencies(kbibtexiotest
+    generate-kbibtex-git-info
 )
 
 add_executable(
     kbibtexdatatest
     ${kbibtexdatatest_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+)
+
+add_dependencies(kbibtexdatatest
+    generate-kbibtex-git-info
 )
 
 target_link_libraries( kbibtextest

@@ -17,6 +17,32 @@ function(enable_unity_build UB_SUFFIX SOURCE_VARIABLE_NAME)
 endfunction(enable_unity_build)
 
 
+# Creates kbibtex-git-info.h containing information about the source code's Git revision
+# (if source directory is a Git clone)
+add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+    COMMAND
+    ${CMAKE_COMMAND}
+    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -DBINARY_DIR=${CMAKE_BINARY_DIR}
+    -P
+    ${CMAKE_CURRENT_SOURCE_DIR}/getgit.cmake
+    COMMENT "Determine Git revision in case this source code is a Git checkout"
+)
+set_source_files_properties(
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+    PROPERTIES
+    GENERATED 1
+    HEADER_FILE_ONLY 1
+    SKIP_AUTOMOC ON
+    SKIP_AUTOUIC ON
+    SKIP_AUTOGEN ON
+)
+add_custom_target(generate-kbibtex-git-info
+    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+)
+
+
 if(Qt5WebEngineWidgets_FOUND)
     add_definitions(
         -DHAVE_WEBENGINEWIDGETS

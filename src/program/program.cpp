@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     programCore.setApplicationDisplayName(aboutData.displayName());
     programCore.setWindowIcon(QIcon::fromTheme(QStringLiteral("kbibtex")));
 
-    qCInfo(LOG_KBIBTEX_PROGRAM) << "Starting KBibTeX version" << (strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QLatin1String(KBIBTEX_GIT_INFO_STRING) : QLatin1String(KBIBTEX_VERSION_STRING));
+    qCInfo(LOG_KBIBTEX_PROGRAM) << "Starting KBibTeX version" << aboutData.version();
 
     QCommandLineParser cmdLineParser;
     cmdLineParser.addHelpOption();

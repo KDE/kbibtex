@@ -43,31 +43,13 @@ ecm_add_app_icon( kbibtex_SRCS
     ${CMAKE_SOURCE_DIR}/icons/64-apps-kbibtex.png
 )
 
-# Creates kbibtex-git-info.h containing information about the source code's Git revision
-# (if source directory is a Git clone)
-add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
-    COMMAND
-    ${CMAKE_COMMAND}
-    -DSOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -DBINARY_DIR=${CMAKE_CURRENT_BINARY_DIR}
-    -P
-    ${CMAKE_SOURCE_DIR}/src/getgit.cmake
-)
-set_source_files_properties(
-    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
-    PROPERTIES
-    GENERATED 1
-    HEADER_FILE_ONLY 1
-    SKIP_AUTOMOC ON
-    SKIP_AUTOUIC ON
-    SKIP_AUTOGEN ON
-)
-
 add_executable(
     kbibtex
     ${kbibtex_SRCS}
-    ${CMAKE_CURRENT_BINARY_DIR}/kbibtex-git-info.h
+)
+
+add_dependencies(kbibtex
+    generate-kbibtex-git-info
 )
 
 target_link_libraries( kbibtex

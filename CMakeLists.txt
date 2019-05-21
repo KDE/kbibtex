@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 3.7.2)
+
 if(POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
 endif(POLICY CMP0048)
@@ -5,12 +7,6 @@ endif(POLICY CMP0048)
 project(
     kbibtex
     VERSION "0.9.50"
-)
-
-cmake_minimum_required(
-    VERSION
-    3.7.2
-    FATAL_ERROR
 )
 
 set(
