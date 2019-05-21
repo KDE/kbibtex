@@ -35,11 +35,11 @@
 #include <KToggleAction>
 #include <KSharedConfig>
 
-#include "bibtexfields.h"
-#include "entry.h"
-#include "file/fileview.h"
-#include "valuelistmodel.h"
-#include "models/filemodel.h"
+#include <BibTeXFields>
+#include <Entry>
+#include <file/FileView>
+#include <ValueListModel>
+#include <models/FileModel>
 
 class ValueList::ValueListPrivate
 {

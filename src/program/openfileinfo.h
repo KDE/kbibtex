@@ -25,8 +25,7 @@
 #include <QVariant>
 
 #include <KService>
-
-#include "fileinfo.h"
+#include <FileInfo>
 
 namespace KParts
 {

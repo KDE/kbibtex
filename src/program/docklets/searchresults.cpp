@@ -25,12 +25,12 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 
-#include "file.h"
-#include "file/clipboard.h"
-#include "file/fileview.h"
-#include "file/filedelegate.h"
-#include "models/filemodel.h"
-#include "idsuggestions.h"
+#include <File>
+#include <file/Clipboard>
+#include <file/FileView>
+#include <file/FileDelegate>
+#include <models/FileModel>
+#include <IdSuggestions>
 #include "logging_program.h"
 
 class SearchResults::SearchResultsPrivate

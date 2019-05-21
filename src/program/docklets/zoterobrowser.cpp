@@ -34,7 +34,7 @@
 #include <KWallet/KWallet>
 #include <KMessageBox>
 
-#include "element.h"
+#include <Element>
 #include "searchresults.h"
 #include "zotero/collectionmodel.h"
 #include "zotero/collection.h"

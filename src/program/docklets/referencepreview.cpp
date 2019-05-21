@@ -45,15 +45,15 @@
 #include <KTextEdit>
 #include <kio_version.h>
 
-#include "xsltransform.h"
-#include "fileexporterbibtex.h"
-#include "fileexporterbibtex2html.h"
-#include "fileexporterris.h"
-#include "fileexporterxslt.h"
-#include "element.h"
-#include "file.h"
-#include "entry.h"
-#include "file/fileview.h"
+#include <Element>
+#include <Entry>
+#include <File>
+#include <XSLTransform>
+#include <FileExporterBibTeX>
+#include <FileExporterBibTeX2HTML>
+#include <FileExporterRIS>
+#include <FileExporterXSLT>
+#include <file/FileView>
 #include "logging_program.h"
 
 static const struct PreviewStyles {

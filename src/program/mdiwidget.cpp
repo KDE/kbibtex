@@ -38,8 +38,8 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include "kbibtex.h"
-#include "file/partwidget.h"
+#include <KBibTeX>
+#include <file/PartWidget>
 #include "logging_program.h"
 
 class LRUItemModel : public QAbstractItemModel

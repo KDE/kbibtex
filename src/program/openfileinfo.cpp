@@ -34,7 +34,7 @@
 #include <KParts/ReadOnlyPart>
 #include <KParts/ReadWritePart>
 
-#include "fileimporterpdf.h"
+#include <FileImporterPDF>
 #include "logging_program.h"
 
 class OpenFileInfo::OpenFileInfoPrivate

@@ -24,13 +24,13 @@
 
 #include <KLocalizedString>
 
-#include "preferences.h"
-#include "guihelper.h"
-#include "italictextitemmodel.h"
-#include "file/fileview.h"
-#include "models/filemodel.h"
-#include "value.h"
-#include "file.h"
+#include <Preferences>
+#include <Value>
+#include <File>
+#include <GUIHelper>
+#include <ItalicTextItemModel>
+#include <file/FileView>
+#include <models/FileModel>
 
 FileSettings::FileSettings(QWidget *parent)
         : FileSettingsWidget(parent), m_fileView(nullptr)

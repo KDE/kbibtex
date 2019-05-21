@@ -61,11 +61,11 @@
 #include <KConfigGroup>
 #include <kio_version.h>
 
-#include "kbibtex.h"
-#include "element.h"
-#include "entry.h"
-#include "file.h"
-#include "fileinfo.h"
+#include <KBibTeX>
+#include <Element>
+#include <Entry>
+#include <File>
+#include <FileInfo>
 #include "logging_program.h"
 
 ImageLabel::ImageLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)

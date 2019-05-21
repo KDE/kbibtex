@@ -35,7 +35,7 @@
 #include <KService>
 #include <KMessageBox>
 
-#include "kbibtex.h"
+#include <KBibTeX>
 
 class DirOperatorWidget : public QWidget
 {

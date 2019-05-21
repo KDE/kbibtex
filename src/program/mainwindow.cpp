@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,23 +36,24 @@
 #include <KLocalizedString>
 #include <KMessageBox>
 
-#include "kbibtex.h"
-#include "preferences/kbibtexpreferencesdialog.h"
-#include "valuelist.h"
-#include "zoterobrowser.h"
-#include "statistics.h"
+#include <KBibTeX>
+#include <preferences/KBibTeXPreferencesDialog>
+#include <file/FileView>
+#include <XSLTransform>
+#include <BibliographyService>
+#include <BibUtils>
+#include "docklets/referencepreview.h"
+#include "docklets/documentpreview.h"
+#include "docklets/searchform.h"
+#include "docklets/searchresults.h"
+#include "docklets/elementform.h"
+#include "docklets/documentpreview.h"
+#include "docklets/statistics.h"
+#include "docklets/filesettings.h"
+#include "docklets/valuelist.h"
+#include "docklets/zoterobrowser.h"
 #include "documentlist.h"
 #include "mdiwidget.h"
-#include "referencepreview.h"
-#include "documentpreview.h"
-#include "searchform.h"
-#include "searchresults.h"
-#include "elementform.h"
-#include "file/fileview.h"
-#include "filesettings.h"
-#include "xsltransform.h"
-#include "bibliographyservice.h"
-#include "bibutils.h"
 
 class KBibTeXMainWindow::KBibTeXMainWindowPrivate
 {

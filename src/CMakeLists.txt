@@ -50,9 +50,7 @@ add_subdirectory(io)
 add_subdirectory(processing)
 add_subdirectory(networking)
 add_subdirectory(gui)
-add_subdirectory(
-    program
-)
+add_subdirectory(program)
 add_subdirectory(
     parts
 )

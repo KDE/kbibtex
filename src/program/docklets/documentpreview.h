@@ -21,7 +21,6 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPixmap>
-
 #include <QUrl>
 
 class QDockWidget;

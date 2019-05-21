@@ -1,9 +1,3 @@
-# KBibTeX main program
-
-project(
-    kbibtexprogram
-)
-
 set(
     kbibtex_SRCS
     program.cpp
@@ -27,24 +21,18 @@ if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtex kbibtex_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
-include_directories(
-    ${CMAKE_BINARY_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/src/program/docklets
-)
 
-ecm_add_app_icon( kbibtex_SRCS
+ecm_add_app_icon(kbibtex_SRCS
     ICONS
-    ${CMAKE_SOURCE_DIR}/icons/128-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/16-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/22-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/32-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/48-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/64-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/128-apps-kbibtex.png
 )
 
-add_executable(
-    kbibtex
+add_executable(kbibtex
     ${kbibtex_SRCS}
 )
 
@@ -52,27 +40,28 @@ add_dependencies(kbibtex
     generate-kbibtex-git-info
 )
 
-target_link_libraries( kbibtex
-    Qt5::Core
-    Qt5::Widgets
-    KF5::CoreAddons
-    KF5::I18n
-    KF5::ConfigCore
-    KF5::Service
-    KF5::Parts
-    KF5::IconThemes
-    KF5::KIOCore
-    KF5::KIOFileWidgets
-    KF5::KIOWidgets
-    KF5::KIONTLM
-    KF5::Crash
-    KF5::Wallet
-    kbibtexio
-    kbibtexgui
-    kbibtexnetworking
-    kbibtexprocessing
+target_include_directories(kbibtex
+    PRIVATE
+        ${CMAKE_BINARY_DIR}
 )
 
+target_link_libraries(kbibtex
+    PRIVATE
+        Qt5::Core
+        Qt5::Gui
+        KF5::CoreAddons
+        KF5::Crash
+        KF5::I18n
+        KF5::KIOCore
+        KF5::KIOFileWidgets
+        KF5::Parts
+        KF5::Wallet
+        KBibTeX::Global
+        KBibTeX::GUI
+        KBibTeX::IO
+        KBibTeX::Networking
+        KBibTeX::Processing
+)
 
 if(Qt5WebEngineWidgets_FOUND)
     message(STATUS "Using QtWebEngine to render complex HTML content")
@@ -81,7 +70,8 @@ if(Qt5WebEngineWidgets_FOUND)
         -DHAVE_WEBENGINEWIDGETS
     )
     target_link_libraries(kbibtex
-        Qt5::WebEngineWidgets
+        PRIVATE
+            Qt5::WebEngineWidgets
     )
 else()
     if(Qt5WebKitWidgets_FOUND)
@@ -91,7 +81,8 @@ else()
             -DHAVE_WEBKITWIDGETS
         )
         target_link_libraries(kbibtex
-            Qt5::WebKitWidgets
+            PRIVATE
+                Qt5::WebKitWidgets
          )
     else()
         message(STATUS "If available, using a KPart to render complex HTML content")
@@ -102,7 +93,7 @@ endif()
 install(
     TARGETS
     kbibtex
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(
@@ -126,11 +117,11 @@ install(
 
 ecm_install_icons(
     ICONS
-    ${CMAKE_SOURCE_DIR}/icons/128-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/16-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/22-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/32-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/48-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/64-apps-kbibtex.png
+    ${CMAKE_SOURCE_DIR}/icons/128-apps-kbibtex.png
     DESTINATION ${KDE_INSTALL_ICONDIR}
 )

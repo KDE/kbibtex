@@ -20,8 +20,8 @@
 
 #include <QStackedWidget>
 #include <QModelIndex>
-
 #include <QUrl>
+
 #include <KService>
 
 #include "openfileinfo.h"
