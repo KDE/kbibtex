@@ -51,9 +51,7 @@ add_subdirectory(processing)
 add_subdirectory(networking)
 add_subdirectory(gui)
 add_subdirectory(program)
-add_subdirectory(
-    parts
-)
+add_subdirectory(parts)
 if(
     BUILD_TESTING
 )

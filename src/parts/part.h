@@ -24,8 +24,8 @@
 #include <KParts/ReadWritePart>
 #include <KAboutData>
 
-#include "file/partwidget.h"
-#include "notificationhub.h"
+#include <NotificationHub>
+#include <file/PartWidget>
 
 class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
 {
