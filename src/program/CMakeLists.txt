@@ -73,17 +73,31 @@ target_link_libraries( kbibtex
     kbibtexprocessing
 )
 
+
 if(Qt5WebEngineWidgets_FOUND)
-    target_link_libraries( kbibtex
+    message(STATUS "Using QtWebEngine to render complex HTML content")
+    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
+    add_definitions(
+        -DHAVE_WEBENGINEWIDGETS
+    )
+    target_link_libraries(kbibtex
         Qt5::WebEngineWidgets
     )
-else(Qt5WebEngineWidgets_FOUND)
+else()
     if(Qt5WebKitWidgets_FOUND)
-        target_link_libraries( kbibtex
-            Qt5::WebKitWidgets
+        message(STATUS "Using QtWebKit to render complex HTML content")
+        # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
+        add_definitions(
+            -DHAVE_WEBKITWIDGETS
         )
-    endif(Qt5WebKitWidgets_FOUND)
-endif(Qt5WebEngineWidgets_FOUND)
+        target_link_libraries(kbibtex
+            Qt5::WebKitWidgets
+         )
+    else()
+        message(STATUS "If available, using a KPart to render complex HTML content")
+    endif()
+endif()
+
 
 install(
     TARGETS

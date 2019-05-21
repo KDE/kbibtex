@@ -52,7 +52,12 @@ find_package(
     XmlPatterns
     Concurrent
     NetworkAuth
+    OPTIONAL_COMPONENTS
+    WebEngineWidgets
+    WebKitWidgets
+    Test
 )
+
 
 if (MSVC)
     MESSAGE( STATUS "Disabling building tests when using Microsoft Visual Studio C++ compiler" )
@@ -62,16 +67,16 @@ if (MSVC)
     # in 1252 encoding as assumed by MSVC for C++ source files.
     SET(BUILD_TESTING OFF)
 endif (MSVC)
+if(BUILD_TESTING AND NOT Qt5Test_FOUND)
+    message(STATUS
+        "Disabling building tests as Qt5::Test library is not available"
+    )
+    set(BUILD_TESTING OFF)
+endif()
 
 if(
     BUILD_TESTING
 )
-    find_package(
-        Qt5Test ${QT_MIN_VERSION}
-        CONFIG
-        REQUIRED
-    )
-
     if (WRITE_RAWDATAFILE)
         add_definitions(-DWRITE_RAWDATAFILE)
     endif(WRITE_RAWDATAFILE)
@@ -83,18 +88,6 @@ if(
     )
 endif(
     BUILD_TESTING
-)
-
-find_package(
-    Qt5WebEngineWidgets ${QT_MIN_VERSION}
-    QUIET
-    CONFIG
-)
-
-find_package(
-    Qt5WebKitWidgets ${QT_MIN_VERSION}
-    QUIET
-    CONFIG
 )
 
 find_package(
