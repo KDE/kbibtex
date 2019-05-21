@@ -17,7 +17,7 @@
 
 #include <QtTest>
 
-#include "entry.h"
+#include <Entry>
 
 class KBibTeXDataTest : public QObject
 {

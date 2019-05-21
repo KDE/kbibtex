@@ -19,20 +19,20 @@
 
 #include <QStandardPaths>
 
-#include "encoderxml.h"
-#include "encoderlatex.h"
-#include "value.h"
-#include "entry.h"
-#include "fileexporterbibtex.h"
-#include "fileexporterris.h"
-#include "fileexporterxml.h"
-#include "file.h"
-#include "fileimporterbibtex.h"
-#include "fileimporter.h"
-#include "fileimporterris.h"
-#include "fileinfo.h"
-#include "kbibtex.h"
-#include "preferences.h"
+#include <KBibTeX>
+#include <Preferences>
+#include <Value>
+#include <Entry>
+#include <File>
+#include <FileInfo>
+#include <EncoderXML>
+#include <EncoderLaTeX>
+#include <FileImporter>
+#include <FileImporterBibTeX>
+#include <FileImporterRIS>
+#include <FileExporterBibTeX>
+#include <FileExporterRIS>
+#include <FileExporterXML>
 
 Q_DECLARE_METATYPE(QMimeType)
 

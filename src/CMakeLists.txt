@@ -52,15 +52,9 @@ add_subdirectory(networking)
 add_subdirectory(gui)
 add_subdirectory(program)
 add_subdirectory(parts)
-if(
-    BUILD_TESTING
-)
-    add_subdirectory(
-        test
-    )
-endif(
-    BUILD_TESTING
-)
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()
 
 # install(
 #     FILES

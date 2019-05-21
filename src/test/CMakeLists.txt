@@ -1,22 +1,7 @@
-# KBibTeX test program
-
-project(
-    test
-)
-
-include(
-    AddFileDependencies
-)
-include(
-    ECMMarkAsTest
-)
+include(AddFileDependencies)
+include(ECMMarkAsTest)
 
 configure_file(test-config.h.in test-config.h @ONLY)
-
-include_directories(
-    ${CMAKE_BINARY_DIR}
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
 
 set(
     kbibtextest_SRCS
@@ -99,37 +84,69 @@ add_dependencies(kbibtexdatatest
     generate-kbibtex-git-info
 )
 
-target_link_libraries( kbibtextest
+target_link_libraries(kbibtextest
     Qt5::Core
     KF5::KIOCore
     KF5::I18n
-    kbibtexconfig
-    kbibtexdata
-    kbibtexio
-    kbibtexprocessing
-    kbibtexgui
-    kbibtexnetworking
+    KBibTeX::Config
+    KBibTeX::Data
+    KBibTeX::IO
+    KBibTeX::Processing
+    KBibTeX::GUI
+    KBibTeX::Networking
 )
 
-target_link_libraries( kbibtexfilestest
-    Qt5::Test
-    kbibtexdata
-    kbibtexio
+target_include_directories(kbibtextest
+    PRIVATE
+        ${CMAKE_BINARY_DIR}
 )
 
-target_link_libraries( kbibtexnetworkingtest
-    Qt5::Test
-    kbibtexnetworking
+target_link_libraries(kbibtexfilestest
+    PRIVATE
+        Qt5::Test
+        KBibTeX::Data
+        KBibTeX::IO
 )
 
-target_link_libraries( kbibtexiotest
-    Qt5::Test
-    kbibtexio
+target_include_directories(kbibtexfilestest
+    PRIVATE
+        ${CMAKE_BINARY_DIR}
 )
 
-target_link_libraries( kbibtexdatatest
-    Qt5::Test
-    kbibtexdata
+target_link_libraries(kbibtexnetworkingtest
+    PRIVATE
+        Qt5::Test
+        KBibTeX::Networking
+)
+
+target_include_directories(kbibtexnetworkingtest
+    PRIVATE
+        ${CMAKE_BINARY_DIR}
+)
+
+target_link_libraries(kbibtexiotest
+    PRIVATE
+        Qt5::Test
+        KF5::I18n
+        KF5::ConfigCore
+        KF5::ConfigGui
+        KBibTeX::IO
+)
+
+target_include_directories(kbibtexiotest
+    PRIVATE
+        ${CMAKE_BINARY_DIR}
+)
+
+target_link_libraries(kbibtexdatatest
+    PRIVATE
+        Qt5::Test
+        KBibTeX::Data
+)
+
+target_include_directories(kbibtexdatatest
+    PRIVATE
+        ${CMAKE_BINARY_DIR}
 )
 
 ecm_mark_as_test(

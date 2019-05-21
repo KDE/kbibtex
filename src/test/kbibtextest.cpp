@@ -32,25 +32,25 @@
 #include <KAboutData>
 #include <KIconEffect>
 
-#include <onlinesearchacmportal.h>
-#include <onlinesearcharxiv.h>
-#include <onlinesearchbibsonomy.h>
-#include <onlinesearchgooglescholar.h>
-#include <onlinesearchcernds.h>
-#include <onlinesearchieeexplore.h>
-#include <onlinesearchingentaconnect.h>
-#include <onlinesearchinspirehep.h>
-#include <onlinesearchideasrepec.h>
-#include <onlinesearchisbndb.h>
-#include <onlinesearchjstor.h>
-#include <onlinesearchmathscinet.h>
-#include <onlinesearchmrlookup.h>
-#include <onlinesearchpubmed.h>
-#include <onlinesearchsciencedirect.h>
-#include <onlinesearchspringerlink.h>
-#include <onlinesearchsoanasaads.h>
-#include <onlinesearchbiorxiv.h>
-#include <onlinesearchsemanticscholar.h>
+#include <onlinesearch/OnlineSearchAcmPortal>
+#include <onlinesearch/OnlineSearchArXiv>
+#include <onlinesearch/OnlineSearchBibsonomy>
+#include <onlinesearch/OnlineSearchGoogleScholar>
+#include <onlinesearch/OnlineSearchCERNDS>
+#include <onlinesearch/OnlineSearchIEEEXplore>
+#include <onlinesearch/OnlineSearchIngentaConnect>
+#include <onlinesearch/OnlineSearchInspireHep>
+#include <onlinesearch/OnlineSearchIDEASRePEc>
+#include <onlinesearch/OnlineSearchIsbnDB>
+#include <onlinesearch/OnlineSearchJStor>
+#include <onlinesearch/OnlineSearchMathSciNet>
+#include <onlinesearch/OnlineSearchMRLookup>
+#include <onlinesearch/OnlineSearchPubMed>
+#include <onlinesearch/OnlineSearchScienceDirect>
+#include <onlinesearch/OnlineSearchSpringerLink>
+#include <onlinesearch/OnlineSearchSOANASAADS>
+#include <onlinesearch/OnlineSearchBioRxiv>
+#include <onlinesearch/OnlineSearchSemanticScholar>
 
 int filenameCounter = 0;
 

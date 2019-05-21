@@ -26,10 +26,10 @@
 #include <QFile>
 #endif // WRITE_RAWDATAFILE
 
-#include "entry.h"
-#include "fileimporterbibtex.h"
-#include "fileexporterbibtex.h"
-#include "file.h"
+#include <File>
+#include <Entry>
+#include <FileImporterBibTeX>
+#include <FileExporterBibTeX>
 /// Provides definition of TESTSET_DIRECTORY
 #include "test-config.h"
 #ifndef WRITE_RAWDATAFILE
