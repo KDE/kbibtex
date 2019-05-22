@@ -134,8 +134,8 @@ if (MSVC)
     # Examples may include: (1) char* texts which exceed the size limit supported by MSVC which
     # is about 2^16 bytes and (2) characters in strings written in \uXXXX notation not supported
     # in 1252 encoding as assumed by MSVC for C++ source files.
-    SET(BUILD_TESTING OFF)
-endif (MSVC)
+    set(BUILD_TESTING OFF)
+endif()
 if(BUILD_TESTING AND NOT Qt5Test_FOUND)
     message(STATUS
         "Disabling building tests as Qt5::Test library is not available"
@@ -143,9 +143,7 @@ if(BUILD_TESTING AND NOT Qt5Test_FOUND)
     set(BUILD_TESTING OFF)
 endif()
 
-if(
-    BUILD_TESTING
-)
+if(BUILD_TESTING)
     if (WRITE_RAWDATAFILE)
         add_definitions(-DWRITE_RAWDATAFILE)
     endif(WRITE_RAWDATAFILE)
@@ -155,9 +153,7 @@ if(
         CACHE PATH
         "Directory where the local checkout of Git repository 'kbibtex-testset' is located"
     )
-endif(
-    BUILD_TESTING
-)
+endif()
 
 
 
