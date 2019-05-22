@@ -6,23 +6,18 @@ endif(POLICY CMP0048)
 
 project(
     kbibtex
-    VERSION "0.9.50"
+    VERSION 0.9.50
+    LANGUAGES CXX
 )
 
-set(
-    QT_MIN_VERSION "5.9.0"
-)
-set(
-    KF5_MIN_VERSION "5.51.0"
-)
-
-find_package(ECM 5.19 REQUIRED NO_MODULE)
+set(CMAKE_CXX_STANDARD 11)
+set(QT_MIN_VERSION 5.9.0)
+# Somewhat arbitrary chosen version number ...
+set(KF5_MIN_VERSION 5.51)
+find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 
 add_definitions(
     -DTRANSLATION_DOMAIN="kbibtex"
-    -DHAVE_QTWIDGETS
-    -DHAVE_KF5
-    -DHAVE_ICU
 )
 
 set(
@@ -32,7 +27,7 @@ set(
     ${CMAKE_MODULE_PATH}
 )
 
-
+set(KDE_INSTALL_DIRS_NO_DEPRECATED TRUE)
 include(KDEInstallDirs)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(KDECMakeSettings)
@@ -42,10 +37,39 @@ include(ECMSetupVersion)
 include(ECMAddAppIcon)
 include(GenerateExportHeader)
 
+ecm_setup_version(
+    PROJECT
+    VARIABLE_PREFIX KBIBTEX
+    SOVERSION ${KBIBTEX_VERSION_MAJOR}
+    VERSION_HEADER "${CMAKE_BINARY_DIR}/kbibtex-version.h"
+    PACKAGE_VERSION_FILE "${CMAKE_BINARY_DIR}/KBibTeXConfigVersion.cmake"
+)
+
+install(
+    FILES ${CMAKE_BINARY_DIR}/kbibtex-version.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KBibTeX
+    # FIXME is "Devel" standard?
+    COMPONENT Devel
+)
+
+if((${KBIBTEX_VERSION_PATCH} GREATER 50) OR (${KBIBTEX_VERSION_PATCH} EQUAL 50))
+    # If the version number indicates a pre-release version such as
+    # '0.7.90', i.e. a beta version for the major release 0.8,
+    # increment release version from 0.7 to 0.8
+    math(EXPR KBIBTEX_RELEASE_VERSION_MINOR "${KBIBTEX_VERSION_MINOR} + 1")
+    set(
+        KBIBTEX_RELEASE_VERSION ${KBIBTEX_VERSION_MAJOR}.${KBIBTEX_RELEASE_VERSION_MINOR}
+    )
+else()
+    set(
+        KBIBTEX_RELEASE_VERSION ${KBIBTEX_VERSION_MAJOR}.${KBIBTEX_VERSION_MINOR}
+    )
+endif()
+
 find_package(
     Qt5 ${QT_MIN_VERSION}
     CONFIG
-    REQUIRED
+    COMPONENTS
     Core
     Widgets
     Network
@@ -57,6 +81,7 @@ find_package(
     WebKitWidgets
     Test
 )
+add_definitions(-DHAVE_QTWIDGETS)
 
 
 if (MSVC)
@@ -105,31 +130,12 @@ find_package(
     Wallet
     Crash
 )
+add_definitions(-DHAVE_KF5)
 
 find_package(KF5DocTools)
 
 find_package(KF5TextEditor NO_MODULE)
 
-ecm_setup_version(
-    PROJECT
-    VARIABLE_PREFIX KBIBTEX
-    SOVERSION ${KBIBTEX_VERSION_MAJOR}
-    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kbibtex-version.h"
-)
-
-if((${KBIBTEX_VERSION_PATCH} GREATER 50) OR (${KBIBTEX_VERSION_PATCH} EQUAL 50))
-    # If the version number indicates a pre-release version such as
-    # '0.7.90', i.e. a beta version for the major release 0.8,
-    # increment release version from 0.7 to 0.8
-    math(EXPR KBIBTEX_RELEASE_VERSION_MINOR "${KBIBTEX_VERSION_MINOR} + 1")
-    set(
-        KBIBTEX_RELEASE_VERSION ${KBIBTEX_VERSION_MAJOR}.${KBIBTEX_RELEASE_VERSION_MINOR}
-    )
-else((${KBIBTEX_VERSION_PATCH} GREATER 50) OR (${KBIBTEX_VERSION_PATCH} EQUAL 50))
-    set(
-        KBIBTEX_RELEASE_VERSION ${KBIBTEX_VERSION_MAJOR}.${KBIBTEX_VERSION_MINOR}
-    )
-endif((${KBIBTEX_VERSION_PATCH} GREATER 50) OR (${KBIBTEX_VERSION_PATCH} EQUAL 50))
 
 option(
     UNITY_BUILD
@@ -154,17 +160,7 @@ find_package(
     REQUIRED
     COMPONENTS uc i18n
 )
-if(
-    ICU_FOUND
-)
-    message(
-        STATUS
-        "Found ICU " ${ICU_VERSION}
-    )
-    include_directories(${ICU_INCLUDE_DIRS})
-endif(
-    ICU_FOUND
-)
+add_definitions(-DHAVE_ICU)
 
 
 add_subdirectory(
