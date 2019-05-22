@@ -66,6 +66,16 @@ else()
     )
 endif()
 
+option(
+    UNITY_BUILD
+    "Compile multiple C++ files in one big, merged file (\"Unity build\")\nSee also http://t-fischer.dreamwidth.org/3054.html"
+)
+if(UNITY_BUILD)
+    message(STATUS "Unity build enabled")
+else(UNITY_BUILD)
+    message(STATUS "Unity build disabled (default), use option UNITY_BUILD to enable it")
+endif(UNITY_BUILD)
+
 find_package(
     Qt5 ${QT_MIN_VERSION}
     CONFIG
@@ -82,6 +92,40 @@ find_package(
     Test
 )
 add_definitions(-DHAVE_QTWIDGETS)
+
+find_package(
+    KF5 ${KF5_MIN_VERSION}
+    MODULE
+    REQUIRED
+    I18n
+    XmlGui
+    KIO
+    IconThemes
+    Completion
+    Parts
+    CoreAddons
+    Service
+    Wallet
+    Crash
+    DocTools
+    TextEditor
+)
+add_definitions(-DHAVE_KF5)
+
+find_package(
+    Poppler
+    MODULE
+    REQUIRED
+    Qt5
+)
+
+find_package(
+    ICU
+    MODULE
+    REQUIRED
+    uc i18n
+)
+add_definitions(-DHAVE_ICU)
 
 
 if (MSVC)
@@ -115,52 +159,7 @@ endif(
     BUILD_TESTING
 )
 
-find_package(
-    KF5 ${KF5_MIN_VERSION}
-    REQUIRED
-    I18n
-    XmlGui
-    KIO
-    IconThemes
-    ItemViews
-    Completion
-    Parts
-    CoreAddons
-    Service
-    Wallet
-    Crash
-)
-add_definitions(-DHAVE_KF5)
 
-find_package(KF5DocTools)
-
-find_package(KF5TextEditor NO_MODULE)
-
-
-option(
-    UNITY_BUILD
-    "Compile multiple C++ files in one big, merged file (\"Unity build\")\nSee also http://t-fischer.dreamwidth.org/3054.html"
-)
-if(UNITY_BUILD)
-    message(STATUS "Unity build enabled")
-else(UNITY_BUILD)
-    message(STATUS "Unity build disabled (default), use option UNITY_BUILD to enable it")
-endif(UNITY_BUILD)
-
-
-find_package(
-    Poppler
-    REQUIRED
-    COMPONENTS
-    Qt5
-)
-
-find_package(
-    ICU
-    REQUIRED
-    COMPONENTS uc i18n
-)
-add_definitions(-DHAVE_ICU)
 
 
 add_subdirectory(
