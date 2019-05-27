@@ -22,9 +22,11 @@ if(DEFINED ENV{GIT_REV} AND DEFINED ENV{GIT_BRANCH} AND NOT("${GIT_REV}" STREQUA
     message (STATUS "Git information set by environment variables GIT_REV and GIT_BRANCH")
     set (GIT_REV $ENV{GIT_REV})
     set (GIT_BRANCH $ENV{GIT_BRANCH})
+    set (GIT_COMMIT_COUNT "0")
 else()
     set(GIT_REV "")
     set(GIT_BRANCH "")
+    set(GIT_COMMIT_COUNT "0")
 
     if(EXISTS ${SOURCE_DIR}/.git)
         # Git
@@ -44,6 +46,14 @@ else()
                 COMMAND
                 ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD
                 OUTPUT_VARIABLE GIT_BRANCH
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+            execute_process (
+                WORKING_DIRECTORY
+                "${SOURCE_DIR}"
+                COMMAND
+                ${GIT_EXECUTABLE} rev-list --count HEAD
+                OUTPUT_VARIABLE GIT_COMMIT_COUNT
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
         else()
@@ -74,6 +84,7 @@ file(
 if("${GIT_REV}" STREQUAL "" OR "${GIT_BRANCH}" STREQUAL "")
     set(GIT_REV "")
     set(GIT_BRANCH "")
+    set(GIT_COMMIT_COUNT "0")
     message(
         STATUS
         "Source does not come from a Git checkout or determining the Git revision or branch failed"
@@ -90,6 +101,8 @@ else()
         ${GIT_REV}
         "\nGit branch is "
         ${GIT_BRANCH}
+        "\nGit commit count is "
+        ${GIT_COMMIT_COUNT}
     )
 endif()
 
@@ -103,6 +116,11 @@ file(
     "${BINARY_DIR}/kbibtex-git-info.h.tmp"
     "#define KBIBTEX_GIT_BRANCH_STRING \"${GIT_BRANCH}\"\n"
 )
+file(
+    APPEND
+    "${BINARY_DIR}/kbibtex-git-info.h.tmp"
+    "#define KBIBTEX_GIT_COMMIT_COUNT ${GIT_COMMIT_COUNT}\n"
+)
 if("${GIT_REV}" STREQUAL "" OR "${GIT_BRANCH}" STREQUAL "")
     file(
         APPEND
@@ -113,7 +131,7 @@ else()
     file(
         APPEND
         "${BINARY_DIR}/kbibtex-git-info.h.tmp"
-        "#define KBIBTEX_GIT_INFO_STRING \"${GIT_REV} (${GIT_BRANCH})\"\n"
+        "#define KBIBTEX_GIT_INFO_STRING \"${GIT_REV} (${GIT_BRANCH}, ${GIT_COMMIT_COUNT} commits in history)\"\n"
     )
 endif()
 file(
