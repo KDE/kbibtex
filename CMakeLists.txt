@@ -128,6 +128,11 @@ find_package(
 add_definitions(-DHAVE_ICU)
 
 
+option(
+    BUILD_TESTING
+    "Build automated and interactive tests"
+    OFF
+)
 if (MSVC)
     MESSAGE( STATUS "Disabling building tests when using Microsoft Visual Studio C++ compiler" )
     # Note to any developer: Try to enable building tests and see which issues you may encounter.
@@ -135,6 +140,11 @@ if (MSVC)
     # is about 2^16 bytes and (2) characters in strings written in \uXXXX notation not supported
     # in 1252 encoding as assumed by MSVC for C++ source files.
     set(BUILD_TESTING OFF)
+endif()
+if(NOT BUILD_TESTING AND Qt5Test_FOUND)
+    message(STATUS
+        "Testing is disabled, but can be enabled as the Qt5::Test library is available"
+    )
 endif()
 if(BUILD_TESTING AND NOT Qt5Test_FOUND)
     message(STATUS
