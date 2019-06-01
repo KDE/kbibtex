@@ -21,7 +21,7 @@ variables:
 
 before_script:
   - sudo apt-get update -qq
-  - sudo apt-get install -y -qq cmake ninja-build build-essential extra-cmake-modules libqt5xmlpatterns5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5itemviews-dev libkf5completion-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev libpoppler-qt5-dev gettext libicu-dev libqca-qt5-2-dev git
+  - sudo apt-get install -y -qq cmake ninja-build build-essential extra-cmake-modules libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5test5 libqt5webenginewidgets5 libqt5webkit5 libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5itemviews-dev libkf5completion-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev libpoppler-qt5-dev gettext libicu-dev libqca-qt5-2-dev git
 
 automated-tests:
   script:
