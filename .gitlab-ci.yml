@@ -30,7 +30,7 @@ automated-tests:
     - ninja
     - ninja install
     - cd $(dirname $TESTSET_DIR) && git clone --depth 1 "https://anongit.kde.org/kbibtex-testset.git" $(basename $TESTSET_DIR)
-    - cd $BUILD_DIR/$CI_JOB_NAME/src/test/
+    - cd $BUILD_DIR/$CI_JOB_NAME/bin/
     - ./kbibtexiotest -platform offscreen
     - ./kbibtexdatatest -platform offscreen
     - ./kbibtexfilestest -platform offscreen
