@@ -129,6 +129,13 @@ ecm_setup_version(
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kbibtex-version.h"
 )
 
+
+if("${KBIBTEX_VERSION_PATCH}" STREQUAL "")
+    # Patch level is not set for version numbers like "0.9",
+    # so set the patch level manually to 0
+    set(KBIBTEX_VERSION_PATCH 0)
+endif()
+
 if((${KBIBTEX_VERSION_PATCH} GREATER 50) OR (${KBIBTEX_VERSION_PATCH} EQUAL 50))
     # If the version number indicates a pre-release version such as
     # '0.7.90', i.e. a beta version for the major release 0.8,
