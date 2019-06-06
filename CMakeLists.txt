@@ -108,7 +108,6 @@ find_package(
     XmlGui
     KIO
     IconThemes
-    Completion
     Parts
     CoreAddons
     Service

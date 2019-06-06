@@ -34,8 +34,8 @@ In detail, the following dependencies exist:
     optionally either Qt5WebEngineWidgets or Qt5WebKitWidgets,
   - KDE Frameworks 5.51 or later,
     required components I18n, XmlGui, KIO, IconThemes, ItemViews,
-                        Completion, Parts, CoreAddons, Service,
-                        DocTools, Wallet, Crash, TextEditor,
+                        Parts, CoreAddons, Service, TextEditor,
+                        DocTools, Wallet, Crash,
     and has helper package: extra-cmake-modules (ECM)
   - Poppler (any recent version should suffice) with Qt5 bindings,
   - ICU (any recent version should suffice),
