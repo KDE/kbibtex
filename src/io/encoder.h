@@ -57,24 +57,15 @@ public:
      */
     virtual QString encode(const QString &text, const TargetEncoding targetEncoding) const;
 
-#if defined(HAVE_ICU) || defined(HAVE_ICONV)
     QString convertToPlainAscii(const QString &input) const;
-#else // defined(HAVE_ICU) || defined(HAVE_ICONV)
-    /// Dummy implementation without ICU
-    inline QString convertToPlainAscii(const QString &input) const {
-        return input;
-    }
-#endif // defined(HAVE_ICU) || defined(HAVE_ICONV)
     static bool containsOnlyAscii(const QString &text);
 
 protected:
     Encoder();
 
 private:
-#if defined(HAVE_ICU) || defined(HAVE_ICONV)
     class Private;
     Private *const d;
-#endif // defined(HAVE_ICU) || defined(HAVE_ICONV)
 };
 
 #endif // KBIBTEX_IO_ENCODER_H
