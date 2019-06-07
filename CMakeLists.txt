@@ -128,11 +128,19 @@ find_package(
 find_package(
     ICU
     MODULE
-    REQUIRED
+    OPTIONAL_COMPONENTS
     uc i18n
 )
-add_definitions(-DHAVE_ICU)
+if(ICU_FOUND)
+    add_definitions(-DHAVE_ICU)
+endif()
 
+find_package(
+    Iconv
+)
+if(Iconv_FOUND)
+    add_definitions(-DHAVE_ICONV)
+endif()
 
 option(
     BUILD_TESTING

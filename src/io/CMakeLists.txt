@@ -57,14 +57,27 @@ target_link_libraries(kbibtexio
         KBibTeX::Data
         KBibTeX::Global
     PRIVATE
-        ICU::uc
-        ICU::i18n
         Poppler::Qt5
         Qt5::Concurrent
         Qt5::XmlPatterns
         KF5::I18n
         KBibTeX::Config
 )
+
+if(ICU_FOUND)
+    target_link_libraries(kbibtexio
+        PRIVATE
+            ICU::uc
+            ICU::i18n
+    )
+else()
+    if(Iconv_FOUND)
+        target_link_libraries(kbibtexio
+            PRIVATE
+                Iconv::Iconv
+        )
+    endif()
+endif()
 
 install(
     TARGETS kbibtexio
