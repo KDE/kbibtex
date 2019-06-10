@@ -93,6 +93,7 @@ target_link_libraries(kbibtexgui
 install(
     TARGETS kbibtexgui
     EXPORT kbibtexgui-targets
+    LIBRARY NAMELINK_SKIP
     ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 

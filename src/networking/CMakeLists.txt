@@ -86,6 +86,7 @@ target_link_libraries(kbibtexnetworking
 install(
     TARGETS kbibtexnetworking
     EXPORT kbibtexnetworking-targets
+    LIBRARY NAMELINK_SKIP
     ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 

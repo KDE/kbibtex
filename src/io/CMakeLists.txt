@@ -82,6 +82,7 @@ endif()
 install(
     TARGETS kbibtexio
     EXPORT kbibtexio-targets
+    LIBRARY NAMELINK_SKIP
     ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 

@@ -51,6 +51,7 @@ target_link_libraries(kbibtexprocessing
 install(
     TARGETS kbibtexprocessing
     EXPORT kbibtexprocessing-targets
+    LIBRARY NAMELINK_SKIP
     ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
