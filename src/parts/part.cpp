@@ -324,7 +324,6 @@ public:
                 return result;
             ++i;
         }
-        return QString();
     }
 
     void initializeNew() {
