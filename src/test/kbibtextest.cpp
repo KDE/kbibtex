@@ -41,7 +41,6 @@
 #include <onlinesearch/OnlineSearchIngentaConnect>
 #include <onlinesearch/OnlineSearchInspireHep>
 #include <onlinesearch/OnlineSearchIDEASRePEc>
-#include <onlinesearch/OnlineSearchIsbnDB>
 #include <onlinesearch/OnlineSearchJStor>
 #include <onlinesearch/OnlineSearchMathSciNet>
 #include <onlinesearch/OnlineSearchMRLookup>
@@ -133,7 +132,6 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchIEEEXplore(this);
     m_onlineSearchList << new OnlineSearchIngentaConnect(this);
     m_onlineSearchList << new OnlineSearchInspireHep(this);
-    /// m_onlineSearchList << new OnlineSearchIsbnDB(this); /// disabled as provider switched to a paid model on 2017-12-26
     m_onlineSearchList << new OnlineSearchJStor(this);
     m_onlineSearchList << new OnlineSearchMathSciNet(this);
     m_onlineSearchList << new OnlineSearchMRLookup(this);
