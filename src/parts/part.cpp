@@ -85,7 +85,6 @@
 #include <preferences/SettingsColorLabelWidget>
 #include <preferences/SettingsFileExporterPDFPSWidget>
 #include <ValueListModel>
-#include "browserextension.h"
 #include "logging_parts.h"
 
 static const char RCFileName[] = "kbibtexpartui.rc";
@@ -748,8 +747,6 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutDat
     d->initializeNew();
 
     setXMLFile(RCFileName);
-
-    new BrowserExtension(this);
 
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     d->readConfiguration();

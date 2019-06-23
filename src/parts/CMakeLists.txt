@@ -2,7 +2,6 @@ set(
     kbibtexpart_SRCS
     part.cpp
     partfactory.cpp
-    browserextension.cpp
     logging_parts.cpp
 )
 
