@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,14 +17,68 @@
 
 #include "hidingtabwidget.h"
 
+#include <QSet>
+
+typedef struct {
+    /// the hidden widget
+    QWidget *widget;
+    /// the hidden widget's neighboring widgets,
+    /// used to find a place where to insert the tab when it will be shown again.
+    QWidget *leftNeighborWidget, *rightNeighborWidget;
+    /// tab properties
+    QIcon icon;
+    QString label;
+    bool enabled;
+    QString toolTip;
+    QString whatsThis;
+} HiddenTabInfo;
+
+class HidingTabWidget::Private {
+private:
+    HidingTabWidget *parent;
+    QTabWidget *parentAsQTabWidget;
+
+public:
+    QSet<HiddenTabInfo> hiddenTabInfo;
+
+    Private(HidingTabWidget *_parent)
+            : parent(_parent), parentAsQTabWidget(qobject_cast<QTabWidget *>(_parent))
+    {
+        /// nothing
+    }
+
+    int showTab(const HiddenTabInfo &hti, int index = InvalidTabPosition)
+    {
+        if (index <0) {
+            /// No position to insert tab given, so make an educated guess
+            index = parent->count(); ///< Append at end of tab row by default
+            int i = InvalidTabPosition;
+            if ((i = parent->indexOf(hti.leftNeighborWidget)) >= 0)
+                index = i + 1; ///< Right of left neighbor
+            else if ((i = parent->indexOf(hti.rightNeighborWidget)) >= 0)
+                index = i; ///< Left of right neighbor
+        }
+
+        /// Insert tab using QTabWidget's original function
+        index = parentAsQTabWidget->insertTab(index, hti.widget, hti.icon, hti.label);
+        /// Restore tab's properties
+        parent->setTabToolTip(index, hti.toolTip);
+        parent->setTabWhatsThis(index, hti.whatsThis);
+        parent->setTabEnabled(index, hti.enabled);
+
+        return index;
+    }
+};
+
+
 /// required to for QSet<HiddenTabInfo>
-uint qHash(const HidingTabWidget::HiddenTabInfo &hti)
+uint qHash(const HiddenTabInfo &hti)
 {
     return qHash(hti.widget);
 }
 
 /// required to for QSet<HiddenTabInfo>
-bool operator==(const HidingTabWidget::HiddenTabInfo &a, const HidingTabWidget::HiddenTabInfo &b)
+bool operator==(const HiddenTabInfo &a, const HiddenTabInfo &b)
 {
     return a.widget == b.widget;
 }
@@ -32,9 +86,14 @@ bool operator==(const HidingTabWidget::HiddenTabInfo &a, const HidingTabWidget::
 const int HidingTabWidget::InvalidTabPosition = -1;
 
 HidingTabWidget::HidingTabWidget(QWidget *parent)
-        : QTabWidget(parent)
+        : QTabWidget(parent), d(new Private(this))
 {
     /// nothing to see here
+}
+
+HidingTabWidget::~HidingTabWidget()
+{
+    delete d;
 }
 
 QWidget *HidingTabWidget::hideTab(int index)
@@ -50,7 +109,7 @@ QWidget *HidingTabWidget::hideTab(int index)
     hti.enabled = isTabEnabled(index);
     hti.toolTip = tabToolTip(index);
     hti.whatsThis = tabWhatsThis(index);
-    m_hiddenTabInfo.insert(hti);
+    d->hiddenTabInfo.insert(hti);
 
     QTabWidget::removeTab(index);
 
@@ -59,42 +118,21 @@ QWidget *HidingTabWidget::hideTab(int index)
 
 int HidingTabWidget::showTab(QWidget *page)
 {
-    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(m_hiddenTabInfo)) {
+    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(d->hiddenTabInfo)) {
         if (hti.widget == page)
-            return showTab(hti);
+            return d->showTab(hti);
     }
 
     return InvalidTabPosition;
-}
-
-int HidingTabWidget::showTab(const HiddenTabInfo &hti, int index)
-{
-    if (index == InvalidTabPosition) {
-        index = count(); ///< append at end of tab row
-        int i = InvalidTabPosition;
-        if ((i = indexOf(hti.leftNeighborWidget)) >= 0)
-            index = i + 1; ///< right of left neighbor
-        else if ((i = indexOf(hti.rightNeighborWidget)) >= 0)
-            index = i; ///< left of right neighbor
-    }
-
-    /// insert tab using KTabWidget's original function
-    index = QTabWidget::insertTab(index, hti.widget, hti.icon, hti.label);
-    /// restore tab's properties
-    setTabToolTip(index, hti.toolTip);
-    setTabWhatsThis(index, hti.whatsThis);
-    setTabEnabled(index, hti.enabled);
-
-    return index;
 }
 
 void HidingTabWidget::removeTab(int index)
 {
     if (index >= 0 && index < count()) {
         QWidget *page = widget(index);
-        for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(m_hiddenTabInfo)) {
+        for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(d->hiddenTabInfo)) {
             if (hti.widget == page) {
-                m_hiddenTabInfo.remove(hti);
+                d->hiddenTabInfo.remove(hti);
                 break;
             }
         }
@@ -104,9 +142,9 @@ void HidingTabWidget::removeTab(int index)
 
 int HidingTabWidget::addTab(QWidget *page, const QString &label)
 {
-    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(m_hiddenTabInfo)) {
+    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(d->hiddenTabInfo)) {
         if (hti.widget == page) {
-            int pos = showTab(hti);
+            int pos = d->showTab(hti);
             setTabText(pos, label);
             return pos;
         }
@@ -117,9 +155,9 @@ int HidingTabWidget::addTab(QWidget *page, const QString &label)
 
 int HidingTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label)
 {
-    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(m_hiddenTabInfo)) {
+    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(d->hiddenTabInfo)) {
         if (hti.widget == page) {
-            int pos = showTab(hti);
+            int pos = d->showTab(hti);
             setTabIcon(pos, icon);
             setTabText(pos, label);
             return pos;
@@ -131,9 +169,9 @@ int HidingTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &lab
 
 int HidingTabWidget::insertTab(int index, QWidget *page, const QString &label)
 {
-    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(m_hiddenTabInfo)) {
+    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(d->hiddenTabInfo)) {
         if (hti.widget == page) {
-            int pos = showTab(hti, index);
+            int pos = d->showTab(hti, index);
             setTabText(pos, label);
             return pos;
         }
@@ -144,9 +182,9 @@ int HidingTabWidget::insertTab(int index, QWidget *page, const QString &label)
 
 int HidingTabWidget::insertTab(int index, QWidget *page, const QIcon &icon, const QString &label)
 {
-    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(m_hiddenTabInfo)) {
+    for (const HiddenTabInfo &hti : const_cast<const QSet<HiddenTabInfo> &>(d->hiddenTabInfo)) {
         if (hti.widget == page) {
-            index = showTab(hti, index);
+            index = d->showTab(hti, index);
             setTabIcon(index, icon);
             setTabText(index, label);
             return index;

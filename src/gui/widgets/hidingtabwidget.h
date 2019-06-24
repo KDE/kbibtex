@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,7 +18,6 @@
 #ifndef KBIBTEX_GUI_HIDINGTABWIDGET_H
 #define KBIBTEX_GUI_HIDINGTABWIDGET_H
 
-#include <QSet>
 #include <QTabWidget>
 
 /**
@@ -38,12 +37,13 @@ public:
     static const int InvalidTabPosition;
 
     explicit HidingTabWidget(QWidget *parent = nullptr);
+    ~HidingTabWidget();
 
     /**
      * Hides the tab at position @param index from this stack of widgets.
      * The page widget itself is not deleted.
      * For future reference, the page widget is returned.
-     * If @param index does not refer to a valid widget, NULL will be returned.
+     * If @param index does not refer to a valid widget, nullptr will be returned.
      */
     QWidget *hideTab(int index);
 
@@ -81,24 +81,9 @@ public:
      */
     int insertTab(int index, QWidget *page, const QIcon &icon, const QString &label);
 
-    typedef struct {
-        /// the hidden widget
-        QWidget *widget;
-        /// the hidden widget's neighboring widgets,
-        /// used to find a place where to insert the tab when it will be shown again.
-        QWidget *leftNeighborWidget, *rightNeighborWidget;
-        /// tab properties
-        QIcon icon;
-        QString label;
-        bool enabled;
-        QString toolTip;
-        QString whatsThis;
-    } HiddenTabInfo;
-
 private:
-    QSet<HiddenTabInfo> m_hiddenTabInfo;
-
-    int showTab(const HiddenTabInfo &hti, int index = InvalidTabPosition);
+    class Private;
+    Private *const d;
 };
 
 #endif // KBIBTEX_GUI_HIDINGTABWIDGET_H
