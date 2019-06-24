@@ -2508,7 +2508,15 @@ const char *Encoder::Private::unidecode_text =
 Encoder::Encoder()
         : d(new Encoder::Private())
 {
-    /// nothing
+#ifdef HAVE_ICU
+    qInfo() << "Using ICU in Encoder class";
+#else // HAVE_ICU
+#ifdef HAVE_ICONV
+    qInfo() << "Using Iconv in Encoder class";
+#else // HAVE_ICONV
+    qInfo() << "Using built-in translation table in Encoder class";
+#endif // HAVE_ICONV
+#endif // HAVE_ICU
 }
 
 Encoder::~Encoder()

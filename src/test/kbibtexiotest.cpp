@@ -85,7 +85,8 @@ void KBibTeXIOTest::encoderConvertToPlainAscii_data()
     QTest::addColumn<QString>("asciialternative1");
     QTest::addColumn<QString>("asciialternative2");
 
-    QTest::newRow("Just ASCII") << QStringLiteral("qwertyuiopASDFGHJKLzxcvbnm1234567890") << QStringLiteral("qwertyuiopASDFGHJKLzxcvbnm1234567890") << QString();
+    QTest::newRow("Just ASCII letters and numbers") << QStringLiteral("qwertyuiopASDFGHJKLzxcvbnm1234567890") << QStringLiteral("qwertyuiopASDFGHJKLzxcvbnm1234567890") << QString();
+    QTest::newRow("ASCII low and high bytes") << QStringLiteral("\x00\x01\x09\x0a\x10\x11\x19\x1a\x1f\x20\x7e\x7f") << QStringLiteral(" ~") << QString();
     QTest::newRow("European Scripts/Latin-1 Supplement") << QString::fromUtf8("\xc3\x80\xc3\x82\xc3\x84\xc3\x92\xc3\x94\xc3\x96\xc3\xac\xc3\xad\xc3\xae\xc3\xaf") << QStringLiteral("AAAOOOiiii") << QStringLiteral("AAAEOOOEiiii");
     QTest::newRow("European Scripts/Latin Extended-A") << QString::fromUtf8("\xc4\x8a\xc4\x8b\xc4\xae\xc4\xaf\xc5\x9c\xc5\x9d\xc5\xbb\xc5\xbc") << QStringLiteral("CcIiSsZz") << QString();
     QTest::newRow("European Scripts/Latin Extended-B") << QString::fromUtf8("\xc7\x8a\xc7\x8b\xc7\x8c") << QStringLiteral("NJNjnj") << QString();
@@ -103,8 +104,8 @@ void KBibTeXIOTest::encoderConvertToPlainAscii()
     QFETCH(QString, asciialternative2);
 
     const QString converted = Encoder::instance().convertToPlainAscii(unicodestring);
-    if (converted!=asciialternative1 && converted!=asciialternative2)
-    qWarning() << "converted=" << converted << "  asciialternative1=" << asciialternative1 << "  asciialternative2=" << asciialternative2;
+    if (converted != asciialternative1 && converted != asciialternative2)
+        qWarning() << "converted=" << converted << "  asciialternative1=" << asciialternative1 << "  asciialternative2=" << asciialternative2;
     QVERIFY(converted == asciialternative1 || converted == asciialternative2);
 }
 
