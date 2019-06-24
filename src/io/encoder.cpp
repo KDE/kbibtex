@@ -2547,20 +2547,23 @@ QString Encoder::convertToPlainAscii(const QString &ninput) const
     input = input.replace(QChar(0x2013), QStringLiteral("--")).replace(QChar(0x2014), QStringLiteral("---"));
 
 #ifdef HAVE_ICU
-    const int inputLen = input.length();
-    /// Make a copy of the input string into an array of UChar
-    UChar *uChars = new UChar[inputLen];
-    for (int i = 0; i < inputLen; ++i)
-        uChars[i] = input.at(i).unicode();
+    static const int uChars_size = 16384;
+    static UChar uChars[uChars_size];
+    const int inputLen = qMin(input.length(), uChars_size);
+    int dataLen = 0;
+    /// Make a copy of the input string into an array of UChar, but skip certain characters
+    for (int i = 0; i < inputLen; ++i) {
+        const auto u = input.at(i).unicode();
+        if (u < 32 || u == 127) continue;
+        uChars[dataLen++] = u;
+    }
     /// Create an ICU-specific unicode string
-    icu::UnicodeString uString = icu::UnicodeString(uChars, inputLen);
+    icu::UnicodeString uString = icu::UnicodeString(uChars, dataLen);
     /// Perform the actual transliteration, modifying Unicode string
     if (d->translit != nullptr) d->translit->transliterate(uString);
     /// Create regular C++ string from Unicode string
     std::string cppString;
     uString.toUTF8String(cppString);
-    /// Clean up any mess
-    delete[] uChars;
     /// Convert regular C++ to Qt-specific QString,
     /// should work as cppString contains only ASCII text
     return QString::fromStdString(cppString);
