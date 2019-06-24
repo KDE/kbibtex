@@ -19,10 +19,6 @@
 
 #ifdef HAVE_ICU
 #include <unicode/translit.h>
-#else // HAVE_ICU
-#ifdef HAVE_ICONV
-#include <iconv.h>
-#endif // HAVE_ICONV
 #endif // HAVE_ICU
 
 #include "encoderlatex.h"
@@ -34,23 +30,13 @@ public:
 #ifdef HAVE_ICU
     icu::Transliterator *translit;
 #else // HAVE_ICU
-#ifdef HAVE_ICONV
-    iconv_t iconvHandle;
-#else // HAVE_ICONV
     static const char *unidecode_text;
     static const unsigned int unidecode_pos[];
-#endif // HAVE_ICONV
 #endif // HAVE_ICU
 
     Private()
 #ifdef HAVE_ICU
             : translit(nullptr)
-#else // HAVE_ICU
-#ifdef HAVE_ICONV
-            : iconvHandle((iconv_t) -1)
-#else // HAVE_ICONV
-    /// nothing
-#endif // HAVE_ICONV
 #endif // HAVE_ICU
     {
 #ifdef HAVE_ICU
@@ -63,12 +49,6 @@ public:
             if (translit != nullptr) delete translit;
             translit = nullptr;
         }
-#else // HAVE_ICU
-#ifdef HAVE_ICONV
-        iconvHandle = iconv_open("ASCII//TRANSLIT//IGNORE", "UTF-8");
-#else // HAVE_ICONV
-        /// nothing
-#endif // HAVE_ICONV
 #endif // HAVE_ICU
     }
 
@@ -77,19 +57,11 @@ public:
 #ifdef HAVE_ICU
         if (translit != nullptr)
             delete translit;
-#else // HAVE_ICU
-#ifdef HAVE_ICONV
-        if (iconvHandle != (iconv_t) -1)
-            iconv_close(iconvHandle);
-#else // HAVE_ICONV
-        /// nothing
-#endif // HAVE_ICONV
 #endif // HAVE_ICU
     }
 };
 
 #ifndef HAVE_ICU
-#ifndef HAVE_ICONV
 const unsigned int Encoder::Private::unidecode_pos[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     97, 913569, 921249, 921281, 921313, 921345, 921377, 871489, 358817, 358945, 921409, 921441, 914081, 921473, 719073, 662913, 715521, 713569, 713633, 713761, 713889, 714017, 714145, 715361, 714273, 716673, 876289, 921505, 914145, 876353, 914209, 913665,
@@ -2502,7 +2474,6 @@ const char *Encoder::Private::unidecode_text =
     "EP'PRPSRHRsRxSSSvT'TLWba1aaaubzc'cccdcmdBdre1evfhfjfufyhvivkAkVkWlnlxlzm1mAmVmWn"
     "AnFnVnWoVp'pApFpHpVpWq'qaqhqlqpqysrtrtzvavevovuwwwyyrywyz||~a~e~i~o~u\"#$%&*+-;@Q"
     "[\\]^_`{}";
-#endif // HAVE_ICONV
 #endif // HAVE_ICU
 
 Encoder::Encoder()
@@ -2511,11 +2482,7 @@ Encoder::Encoder()
 #ifdef HAVE_ICU
     qInfo() << "Using ICU in Encoder class";
 #else // HAVE_ICU
-#ifdef HAVE_ICONV
-    qInfo() << "Using Iconv in Encoder class";
-#else // HAVE_ICONV
     qInfo() << "Using built-in translation table in Encoder class";
-#endif // HAVE_ICONV
 #endif // HAVE_ICU
 }
 
@@ -2542,7 +2509,7 @@ QString Encoder::encode(const QString &text, const TargetEncoding) const
 
 QString Encoder::convertToPlainAscii(const QString &ninput) const
 {
-    /// Preprocessing where ICU or Iconv may give unexpected results otherwise
+    /// Preprocessing where ICU may give unexpected results otherwise
     QString input = ninput;
     input = input.replace(QChar(0x2013), QStringLiteral("--")).replace(QChar(0x2014), QStringLiteral("---"));
 
@@ -2568,42 +2535,6 @@ QString Encoder::convertToPlainAscii(const QString &ninput) const
     /// should work as cppString contains only ASCII text
     return QString::fromStdString(cppString);
 #else // HAVE_ICU
-#ifdef HAVE_ICONV
-    /// Get an UTF-8 representation of the input string
-    QByteArray inputByteArray = input.toUtf8();
-    /// Limit the size of the output buffer
-    /// by making an educated guess of its maximum size
-    const size_t maxOutputByteArraySize = inputByteArray.size() * 8 + 1024;
-    /// iconv on Linux likes to have it as char *
-    char *inputBuffer = inputByteArray.data();
-    QByteArray outputByteArray(maxOutputByteArraySize, '\0');
-    char *outputBuffer = outputByteArray.data();
-    size_t inputBufferBytesLeft = inputByteArray.size();
-    size_t ouputBufferBytesLeft = maxOutputByteArraySize;
-
-    while (inputBufferBytesLeft > 0 && ouputBufferBytesLeft > inputBufferBytesLeft * 2 + 1024 && iconv(d->iconvHandle, &inputBuffer, &inputBufferBytesLeft, &outputBuffer, &ouputBufferBytesLeft) == (size_t)(-1)) {
-        /// Split text into character where iconv stopped and remaining text
-        QString remainingString = QString::fromUtf8(inputBuffer);
-        const QString problematicChar = remainingString.left(1);
-        remainingString = remainingString.mid(1);
-
-        /// Setup input buffer to continue with remaining text
-        inputByteArray = remainingString.toUtf8();
-        inputBuffer = inputByteArray.data();
-        inputBufferBytesLeft = inputByteArray.size();
-
-        /// Encode problematic character in LaTeX encoding and append to output buffer
-        const QString encodedProblem = EncoderLaTeX::instance().encode(problematicChar, Encoder::TargetEncodingASCII);
-        QByteArray encodedProblemByteArray = encodedProblem.toUtf8();
-        qstrncpy(outputBuffer, encodedProblemByteArray.data(), ouputBufferBytesLeft);
-        ouputBufferBytesLeft -= encodedProblemByteArray.size();
-        outputBuffer += encodedProblemByteArray.size();
-    }
-
-    outputByteArray.resize(maxOutputByteArraySize - ouputBufferBytesLeft);
-
-    return QString::fromUtf8(outputByteArray);
-#else // HAVE_ICONV
     QString result;
     result.reserve(input.length() + 256);
     for (const QChar &c : input) {
@@ -2614,7 +2545,6 @@ QString Encoder::convertToPlainAscii(const QString &ninput) const
         result.append(QString::fromLatin1(Encoder::Private::unidecode_text + pos, len));
     }
     return result;
-#endif // HAVE_ICONV
 #endif // HAVE_ICU
 }
 

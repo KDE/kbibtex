@@ -70,13 +70,6 @@ if(ICU_FOUND)
             ICU::uc
             ICU::i18n
     )
-else()
-    if(Iconv_FOUND)
-        target_link_libraries(kbibtexio
-            PRIVATE
-                Iconv::Iconv
-        )
-    endif()
 endif()
 
 install(

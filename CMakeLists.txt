@@ -135,13 +135,6 @@ if(ICU_FOUND)
     add_definitions(-DHAVE_ICU)
 endif()
 
-find_package(
-    Iconv
-)
-if(Iconv_FOUND)
-    add_definitions(-DHAVE_ICONV)
-endif()
-
 option(
     BUILD_TESTING
     "Build automated and interactive tests"

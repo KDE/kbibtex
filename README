@@ -37,10 +37,8 @@ In detail, the following dependencies exist:
                         DocTools, Wallet, Crash,
     and has helper package: extra-cmake-modules (ECM)
   - Poppler (any recent version should suffice) with Qt5 bindings,
-  - ICU (any recent version should suffice),
+  - Optionally, ICU (any recent version should suffice),
     required components uc and i18n
-    -- or --
-    Iconv
 
 * Runtime
   - BibUtils to import/export various bibliography formats
