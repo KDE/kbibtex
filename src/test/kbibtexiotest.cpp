@@ -42,6 +42,8 @@ class KBibTeXIOTest : public QObject
 
 private slots:
     void initTestCase();
+    void encoderConvertToPlainAscii_data();
+    void encoderConvertToPlainAscii();
     void encoderXMLdecode_data();
     void encoderXMLdecode();
     void encoderXMLencode_data();
@@ -76,6 +78,35 @@ private slots:
 
 private:
 };
+
+void KBibTeXIOTest::encoderConvertToPlainAscii_data()
+{
+    QTest::addColumn<QString>("unicodestring");
+    QTest::addColumn<QString>("asciialternative1");
+    QTest::addColumn<QString>("asciialternative2");
+
+    QTest::newRow("Just ASCII") << QStringLiteral("qwertyuiopASDFGHJKLzxcvbnm1234567890") << QStringLiteral("qwertyuiopASDFGHJKLzxcvbnm1234567890") << QString();
+    QTest::newRow("European Scripts/Latin-1 Supplement") << QString::fromUtf8("\xc3\x80\xc3\x82\xc3\x84\xc3\x92\xc3\x94\xc3\x96\xc3\xac\xc3\xad\xc3\xae\xc3\xaf") << QStringLiteral("AAAOOOiiii") << QStringLiteral("AAAEOOOEiiii");
+    QTest::newRow("European Scripts/Latin Extended-A") << QString::fromUtf8("\xc4\x8a\xc4\x8b\xc4\xae\xc4\xaf\xc5\x9c\xc5\x9d\xc5\xbb\xc5\xbc") << QStringLiteral("CcIiSsZz") << QString();
+    QTest::newRow("European Scripts/Latin Extended-B") << QString::fromUtf8("\xc7\x8a\xc7\x8b\xc7\x8c") << QStringLiteral("NJNjnj") << QString();
+    QTest::newRow("European Scripts/Latin Extended Additional") << QString::fromUtf8("\xe1\xb8\xbe\xe1\xb8\xbf\xe1\xb9\xa4\xe1\xb9\xa5\xe1\xbb\xae\xe1\xbb\xaf") << QStringLiteral("MmSsUu") << QString();
+    QTest::newRow("European Scripts/Cyrillic") << QString::fromUtf8("\xd0\x90\xd0\x9e\xd0\x9f") << QStringLiteral("AOP") << QString();
+    QTest::newRow("European Scripts/Greek and Coptic") << QString::fromUtf8("\xce\xba\xce\xb1\xce\xa4\xcf\xba\xce\x9d") << QStringLiteral("kaTSN") << QStringLiteral("kappaalphaTauSanNu");
+    QTest::newRow("East Asian Scripts/Katakana") << QString::fromUtf8("\xe3\x82\xb7\xe3\x83\x84") << QStringLiteral("shitsu") << QStringLiteral("situ");
+    QTest::newRow("East Asian Scripts/Hangul Syllables") << QString::fromUtf8("\xea\xb9\x80\xec\xa0\x95\xec\x9d\x80") << QStringLiteral("gimjeongeun") << QStringLiteral("gimjeong-eun");
+}
+
+void KBibTeXIOTest::encoderConvertToPlainAscii()
+{
+    QFETCH(QString, unicodestring);
+    QFETCH(QString, asciialternative1);
+    QFETCH(QString, asciialternative2);
+
+    const QString converted = Encoder::instance().convertToPlainAscii(unicodestring);
+    if (converted!=asciialternative1 && converted!=asciialternative2)
+    qWarning() << "converted=" << converted << "  asciialternative1=" << asciialternative1 << "  asciialternative2=" << asciialternative2;
+    QVERIFY(converted == asciialternative1 || converted == asciialternative2);
+}
 
 void KBibTeXIOTest::encoderXMLdecode_data()
 {
