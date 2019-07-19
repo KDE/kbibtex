@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -56,8 +56,12 @@ public:
 
         labelPercent = new QLabel(p);
         layout->addWidget(labelPercent, 0, Qt::AlignRight | Qt::AlignVCenter);
-        QFontMetrics fm(labelPercent->fontMetrics());
+        const QFontMetrics fm(labelPercent->fontMetrics());
+#if QT_VERSION >= 0x050b00
+        labelPercent->setFixedWidth(fm.horizontalAdvance(unsetStarsText));
+#else // QT_VERSION >= 0x050b00
         labelPercent->setFixedWidth(fm.width(unsetStarsText));
+#endif // QT_VERSION >= 0x050b00
         labelPercent->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
         labelPercent->setText(unsetStarsText);
         labelPercent->installEventFilter(parent);

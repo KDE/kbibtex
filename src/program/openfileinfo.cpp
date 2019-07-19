@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -696,9 +696,9 @@ OpenFileInfoManager::OpenFileInfoList OpenFileInfoManager::filteredItems(OpenFil
     }
 
     if (required == OpenFileInfo::RecentlyUsed)
-        qSort(result.begin(), result.end(), OpenFileInfoManagerPrivate::byLRULessThan);
+        std::sort(result.begin(), result.end(), OpenFileInfoManagerPrivate::byLRULessThan);
     else if (required == OpenFileInfo::Favorite || required == OpenFileInfo::Open)
-        qSort(result.begin(), result.end(), OpenFileInfoManagerPrivate::byNameLessThan);
+        std::sort(result.begin(), result.end(), OpenFileInfoManagerPrivate::byNameLessThan);
 
     return result;
 }

@@ -156,7 +156,11 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QS
     /// determine some variables used for layout
     const int margin = option.fontMetrics.height() / 3;
     const int buttonHeight = option.fontMetrics.height() * 6 / 3;
+#if QT_VERSION >= 0x050b00
+    const int maxTextWidth = qMax(qMax(option.fontMetrics.horizontalAdvance(i18n("Use URL only")), option.fontMetrics.horizontalAdvance(i18n("Ignore"))), qMax(option.fontMetrics.horizontalAdvance(i18n("Download")), option.fontMetrics.horizontalAdvance(i18n("View"))));
+#else // QT_VERSION >= 0x050b00
     const int maxTextWidth = qMax(qMax(option.fontMetrics.width(i18n("Use URL only")), option.fontMetrics.width(i18n("Ignore"))), qMax(option.fontMetrics.width(i18n("Download")), option.fontMetrics.width(i18n("View"))));
+#endif // QT_VERSION >= 0x050b00
     const int buttonWidth = maxTextWidth * 3 / 2;
     const int labelWidth = option.rect.width() - 3 * margin - KIconLoader::SizeMedium;
     const int labelHeight = option.fontMetrics.height();//(option.rect.height() - 4 * margin - buttonHeight) / 2;
@@ -209,7 +213,11 @@ QSize PDFItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModel
 {
     /// set a size that is suiteable
     QSize size;
+#if QT_VERSION >= 0x050b00
+    size.setWidth(option.fontMetrics.horizontalAdvance(i18n("Download")) * 6);
+#else // QT_VERSION >= 0x050b00
     size.setWidth(option.fontMetrics.width(i18n("Download")) * 6);
+#endif // QT_VERSION >= 0x050b00
     size.setHeight(qMax(option.fontMetrics.height() * 16 / 3, static_cast<int>(KIconLoader::SizeMedium))); ///< KIconLoader::SizeMedium should be 32
     return size;
 }

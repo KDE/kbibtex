@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -80,7 +80,11 @@ public:
         comboBoxFilterText->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
         comboBoxFilterText->setEditable(true);
         QFontMetrics metrics(comboBoxFilterText->font());
+#if QT_VERSION >= 0x050b00
+        comboBoxFilterText->setMinimumWidth(metrics.horizontalAdvance(QStringLiteral("AIWaiw")) * 7);
+#else // QT_VERSION >= 0x050b00
         comboBoxFilterText->setMinimumWidth(metrics.width(QStringLiteral("AIWaiw")) * 7);
+#endif // QT_VERSION >= 0x050b00
         QLineEdit *lineEdit = static_cast<QLineEdit *>(comboBoxFilterText->lineEdit());
         lineEdit->setClearButtonEnabled(true);
         lineEdit->setPlaceholderText(i18n("Filter bibliographic entries"));

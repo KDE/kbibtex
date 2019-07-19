@@ -130,9 +130,14 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
 
     /// squeeze the folder text if it is to big and calculate the rectangles
     /// where the folder text and the unread count will be drawn to
-    QFontMetrics fm(painter->fontMetrics());
-    int countWidth = fm.width(count);
+    const QFontMetrics fm(painter->fontMetrics());
+#if QT_VERSION >= 0x050b00
+    const int countWidth = fm.horizontalAdvance(count);
+    int fieldWidth = fm.horizontalAdvance(field);
+#else // QT_VERSION >= 0x050b00
+    const int countWidth = fm.width(count);
     int fieldWidth = fm.width(field);
+#endif // QT_VERSION >= 0x050b00
     if (countWidth + fieldWidth > textRect.width()) {
         /// text plus count is too wide for column, cut text and insert "..."
         field = fm.elidedText(field, Qt::ElideRight, textRect.width() - countWidth - 8);

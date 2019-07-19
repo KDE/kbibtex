@@ -121,7 +121,11 @@ public:
 
         labelAuthorRange = new QLabel(this);
         boxLayout->addWidget(labelAuthorRange);
+#if QT_VERSION >= 0x050b00
+        const int maxWidth = qMax(labelAuthorRange->fontMetrics().horizontalAdvance(i18n("From first author to author %1 and last author", 88)), labelAuthorRange->fontMetrics().horizontalAdvance(i18n("From author %1 to author %2 and last author", 88, 88)));
+#else // QT_VERSION >= 0x050b00
         const int maxWidth = qMax(labelAuthorRange->fontMetrics().width(i18n("From first author to author %1 and last author", 88)), labelAuthorRange->fontMetrics().width(i18n("From author %1 to author %2 and last author", 88, 88)));
+#endif // QT_VERSION >= 0x050b00
         labelAuthorRange->setMinimumWidth(maxWidth);
 
         comboBoxChangeCase = new QComboBox(this);
@@ -327,8 +331,13 @@ public:
 
         labelWordsRange = new QLabel(this);
         boxLayout->addWidget(labelWordsRange);
+#if QT_VERSION >= 0x050b00
+        const int a = qMax(labelWordsRange->fontMetrics().horizontalAdvance(i18n("From first to last word")), labelWordsRange->fontMetrics().horizontalAdvance(i18n("From word %1 to last word", 88)));
+        const int b = qMax(labelWordsRange->fontMetrics().horizontalAdvance(i18n("From first word to word %1", 88)), labelWordsRange->fontMetrics().horizontalAdvance(i18n("From word %1 to word %2", 88, 88)));
+#else // QT_VERSION >= 0x050b00
         const int a = qMax(labelWordsRange->fontMetrics().width(i18n("From first to last word")), labelWordsRange->fontMetrics().width(i18n("From word %1 to last word", 88)));
         const int b = qMax(labelWordsRange->fontMetrics().width(i18n("From first word to word %1", 88)), labelWordsRange->fontMetrics().width(i18n("From word %1 to word %2", 88, 88)));
+#endif // QT_VERSION >= 0x050b00
         labelWordsRange->setMinimumWidth(qMax(a, b));
 
         checkBoxRemoveSmallWords = new QCheckBox(i18n("Remove"), this);

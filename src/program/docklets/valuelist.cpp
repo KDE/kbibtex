@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -68,7 +68,13 @@ public:
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("Value List Docklet")),
           configKeyFieldName(QStringLiteral("FieldName")), configKeyShowCountColumn(QStringLiteral("ShowCountColumn")),
           configKeySortByCountAction(QStringLiteral("SortByCountAction")), configKeyHeaderState(QStringLiteral("HeaderState")),
-          fileView(nullptr), model(nullptr), sortingModel(nullptr), countWidth(8 + parent->fontMetrics().width(i18n("Count"))) {
+          fileView(nullptr), model(nullptr), sortingModel(nullptr),
+#if QT_VERSION >= 0x050b00
+          countWidth(8 + parent->fontMetrics().horizontalAdvance(i18n("Count")))
+#else // QT_VERSION >= 0x050b00
+          countWidth(8 + parent->fontMetrics().width(i18n("Count")))
+#endif // QT_VERSION >= 0x050b00
+    {
         setupGUI();
         initialize();
     }

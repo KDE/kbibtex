@@ -562,7 +562,7 @@ QString FileImporterBibTeX::readString(bool &isStringKey)
 
     if (!skipWhiteChar()) {
         /// Some error occurred while reading from data stream
-        return QString::null;
+        return QString(); ///< return null QString
     }
 
     switch (m_nextChar.toLatin1()) {
@@ -592,7 +592,7 @@ QString FileImporterBibTeX::readSimpleString(const QString &until, const bool re
 
     if (!skipWhiteChar()) {
         /// Some error occurred while reading from data stream
-        return QString::null;
+        return QString(); ///< return null QString
     }
 
     QChar prevChar = QChar(0x00);
@@ -638,7 +638,10 @@ QString FileImporterBibTeX::readQuotedString()
 
     Q_ASSERT_X(m_nextChar == QLatin1Char('"'), "QString FileImporterBibTeX::readQuotedString()", "m_nextChar is not '\"'");
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) {
+        /// Some error occurred while reading from data stream
+        return QString(); ///< return null QString
+    }
 
     while (!m_nextChar.isNull()) {
         if (m_nextChar == QLatin1Char('"') && m_prevChar != QLatin1Char('\\') && m_prevChar != QLatin1Char('{'))
@@ -646,10 +649,16 @@ QString FileImporterBibTeX::readQuotedString()
         else
             result.append(m_nextChar);
 
-        if (!readChar()) return QString::null;
+        if (!readChar()) {
+            /// Some error occurred while reading from data stream
+            return QString(); ///< return null QString
+        }
     }
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) {
+        /// Some error occurred while reading from data stream
+        return QString(); ///< return null QString
+    }
 
     /// Remove protection around quotation marks
     result.replace(QStringLiteral("{\"}"), QStringLiteral("\""));
@@ -666,7 +675,10 @@ QString FileImporterBibTeX::readBracketString()
     Q_ASSERT_X(!closingBracket.isNull(), "QString FileImporterBibTeX::readBracketString()", "openingBracket==m_nextChar is neither '{' nor '('");
     int counter = 1;
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) {
+        /// Some error occurred while reading from data stream
+        return QString(); ///< return null QString
+    }
 
     while (!m_nextChar.isNull()) {
         if (m_nextChar == openingBracket && m_prevChar != backslash)
@@ -679,10 +691,16 @@ QString FileImporterBibTeX::readBracketString()
         } else
             result.append(m_nextChar);
 
-        if (!readChar()) return QString::null;
+        if (!readChar()) {
+            /// Some error occurred while reading from data stream
+            return QString(); ///< return null QString
+        }
     }
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) {
+        /// Some error occurred while reading from data stream
+        return QString(); ///< return null QString
+    }
     return result;
 }
 

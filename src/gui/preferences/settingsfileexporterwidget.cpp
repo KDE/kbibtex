@@ -132,7 +132,11 @@ public:
         lineeditLyXPipePath = new KUrlRequester(p);
         layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
         connect(qobject_cast<QLineEdit *>(lineeditLyXPipePath->lineEdit()), &QLineEdit::textEdited, p, &SettingsFileExporterWidget::changed);
+#if QT_VERSION >= 0x050b00
+        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().horizontalAdvance(QChar('W')) * 20);
+#else // QT_VERSION >= 0x050b00
         lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
+#endif // QT_VERSION >= 0x050b00
         lineeditLyXPipePath->setFilter(QStringLiteral("inode/fifo"));
         lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
 
