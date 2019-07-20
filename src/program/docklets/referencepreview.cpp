@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                              and contributors                           *
  *                                                                         *
  *   Contributions to this file were made by                               *
@@ -382,11 +382,7 @@ void ReferencePreview::openAsHTML()
 
     /// Ask KDE subsystem to open url in viewer matching mime type
     QUrl url(file.fileName());
-#if KIO_VERSION < 0x051f00 // < 5.31.0
-    KRun::runUrl(url, QStringLiteral("text/html"), this, false, false);
-#else // KIO_VERSION < 0x051f00 // >= 5.31.0
     KRun::runUrl(url, QStringLiteral("text/html"), this, KRun::RunFlags());
-#endif // KIO_VERSION < 0x051f00
 }
 
 void ReferencePreview::saveAsHTML()

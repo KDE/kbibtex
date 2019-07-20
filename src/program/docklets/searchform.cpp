@@ -346,11 +346,7 @@ public:
             QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x051f00 // < 5.31.0
-            KRun::runUrl(url, mimeTypeName, p, false, false);
-#else // KIO_VERSION < 0x051f00 // >= 5.31.0
             KRun::runUrl(url, mimeTypeName, p, KRun::RunFlags());
-#endif // KIO_VERSION < 0x051f00
         }
     }
 

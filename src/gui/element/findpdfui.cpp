@@ -239,21 +239,13 @@ void PDFItemDelegate::slotViewPDF()
             QMimeType mimeType = FileInfo::mimeTypeForUrl(tempUrl);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x051f00 // < 5.31.0
-            KRun::runUrl(tempUrl, mimeTypeName, itemView(), false, false, url.toDisplayString());
-#else // KIO_VERSION < 0x051f00 // >= 5.31.0
             KRun::runUrl(tempUrl, mimeTypeName, itemView(), KRun::RunFlags(), url.toDisplayString());
-#endif // KIO_VERSION < 0x051f00
         } else if (url.isValid()) {
             /// Guess mime type for url to open
             QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x051f00 // < 5.31.0
-            KRun::runUrl(url, mimeTypeName, itemView(), false, false);
-#else // KIO_VERSION < 0x051f00 // >= 5.31.0
             KRun::runUrl(url, mimeTypeName, itemView(), KRun::RunFlags());
-#endif // KIO_VERSION < 0x051f00
         }
     }
 }
