@@ -178,7 +178,7 @@ public:
 
             /// Try to keep sequences of capital letters at the start of the journal name,
             /// those may already be abbreviations.
-            unsigned int countCaptialCharsAtStart = 0;
+            int countCaptialCharsAtStart = 0;
             while (journalComponent[countCaptialCharsAtStart].isUpper()) ++countCaptialCharsAtStart;
             journalComponent = journalComponent.left(qMax(jti.len, countCaptialCharsAtStart));
 
@@ -249,7 +249,7 @@ public:
             struct IdSuggestionTokenInfo ati = p->evalToken(token.mid(1));
             /// All but first author
             ati.startWord = 1;
-            ati.endWord = 0x00ffffff;
+            ati.endWord = std::numeric_limits<int>::max();
             return translateAuthorsToken(entry, ati);
         }
         case 'y': {
@@ -364,12 +364,11 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
                 info.startWord = info.endWord = 0;
             else if (token[0] == 'z') {
                 info.startWord = 1;
-                info.endWord = 0x00ffffff;
+                info.endWord = std::numeric_limits<int>::max();
             }
             text = formatAuthorRange(info.startWord, info.endWord, info.lastWord);
 
-            int n = info.len;
-            if (info.len < 0x00ffffff) text.append(i18np(", but only first letter of each last name", ", but only first %1 letters of each last name", n));
+            if (info.len > 0 && info.len < std::numeric_limits<int>::max()) text.append(i18np(", but only first letter of each last name", ", but only first %1 letters of each last name", info.len));
 
             switch (info.caseChange) {
             case IdSuggestions::ccToUpper:
@@ -394,13 +393,13 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
         else if (token[0] == 't' || token[0] == 'T') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Title"));
-            if (info.startWord == 0 && info.endWord <= 0xffff)
+            if (info.startWord == 0 && info.endWord < std::numeric_limits<int>::max())
                 text.append(i18np(", but only the first word", ", but only first %1 words", info.endWord + 1));
-            else if (info.startWord > 0 && info.endWord > 0xffff)
+            else if (info.startWord > 0 && info.endWord == std::numeric_limits<int>::max())
                 text.append(i18n(", but only starting from word %1", info.startWord + 1));
-            else if (info.startWord > 0 && info.endWord <= 0xffff)
+            else if (info.startWord > 0 && info.endWord < std::numeric_limits<int>::max())
                 text.append(i18n(", but only from word %1 to word %2", info.startWord + 1, info.endWord + 1));
-            if (info.len < 0x00ffffff)
+            if (info.len > 0 && info.len < std::numeric_limits<int>::max())
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
 
             switch (info.caseChange) {
@@ -423,7 +422,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
         else if (token[0] == 'j') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Journal"));
-            if (info.len < 0x00ffffff)
+            if (info.len > 0 && info.len < std::numeric_limits<int>::max())
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
             switch (info.caseChange) {
             case IdSuggestions::ccToUpper:
@@ -441,7 +440,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
         } else if (token[0] == 'e') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Type"));
-            if (info.len < 0x00ffffff)
+            if (info.len > 0 && info.len < std::numeric_limits<int>::max())
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
             switch (info.caseChange) {
             case IdSuggestions::ccToUpper:
@@ -478,7 +477,7 @@ QString IdSuggestions::formatAuthorRange(int minValue, int maxValue, bool lastAu
                 return i18n("First and last authors only");
             else
                 return i18n("First author only");
-        } else if (maxValue > 0xffff)
+        } else if (maxValue == std::numeric_limits<int>::max())
             return i18n("All authors");
         else {
             if (lastAuthor)
@@ -487,7 +486,7 @@ QString IdSuggestions::formatAuthorRange(int minValue, int maxValue, bool lastAu
                 return i18n("From first author to author %1", maxValue + 1);
         }
     } else if (minValue == 1) {
-        if (maxValue > 0xffff)
+        if (maxValue == std::numeric_limits<int>::max())
             return i18n("All but first author");
         else {
             if (lastAuthor)
@@ -496,7 +495,7 @@ QString IdSuggestions::formatAuthorRange(int minValue, int maxValue, bool lastAu
                 return i18n("From author %1 to author %2", minValue + 1, maxValue + 1);
         }
     } else {
-        if (maxValue > 0xffff)
+        if (maxValue == std::numeric_limits<int>::max())
             return i18n("From author %1 to last author", minValue + 1);
         else if (lastAuthor)
             return i18n("From author %1 to author %2 and last author", minValue + 1, maxValue + 1);
@@ -508,9 +507,9 @@ QString IdSuggestions::formatAuthorRange(int minValue, int maxValue, bool lastAu
 struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &token) const {
     int pos = 0;
     struct IdSuggestionTokenInfo result;
-    result.len = 0x00ffffff;
+    result.len = std::numeric_limits<int>::max();
     result.startWord = 0;
-    result.endWord = 0x00ffffff;
+    result.endWord = std::numeric_limits<int>::max();
     result.lastWord = false;
     result.caseChange = IdSuggestions::ccNoChange;
     result.inBetween = QString();
@@ -542,7 +541,7 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
         }
     }
 
-    int dvStart = -1, dvEnd = 0x00ffffff;
+    int dvStart = 0, dvEnd = std::numeric_limits<int>::max();
     if (token.length() > pos + 2 ///< sufficiently many characters to follow
             && token[pos] == 'w' ///< identifier to start specifying a range of words
             && (dvStart = token[pos + 1].digitValue()) > -1 ///< first word index correctly parsed

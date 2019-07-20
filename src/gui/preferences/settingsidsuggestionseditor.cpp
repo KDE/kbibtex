@@ -17,6 +17,8 @@
 
 #include "settingsidsuggestionseditor.h"
 
+#include <limits>
+
 #include <QTimer>
 #include <QGridLayout>
 #include <QFormLayout>
@@ -98,7 +100,7 @@ private slots:
         const int upper = rangeWidgetAuthor->upperValue();
         const int max = rangeWidgetAuthor->maximum();
 
-        labelAuthorRange->setText(IdSuggestions::formatAuthorRange(lower, upper == max ? 0x00ffffff : upper, checkBoxLastAuthor->isChecked()));
+        labelAuthorRange->setText(IdSuggestions::formatAuthorRange(lower, upper == max ? std::numeric_limits<int>::max() : upper, checkBoxLastAuthor->isChecked()));
     }
 
 public:
@@ -297,11 +299,11 @@ private slots:
 
         if (lower == 0 && upper == 0)
             labelWordsRange->setText(i18n("First word only"));
-        else if (lower == 1 && upper == max)
+        else if (lower == 1 && upper >= max)
             labelWordsRange->setText(i18n("All but first word"));
-        else if (lower == 0 && upper == max)
+        else if (lower == 0 && upper >= max)
             labelWordsRange->setText(i18n("From first to last word"));
-        else if (lower > 0 && upper == max)
+        else if (lower > 0 && upper >= max)
             labelWordsRange->setText(i18n("From word %1 to last word", lower + 1));
         else if (lower == 0 && upper < max)
             labelWordsRange->setText(i18n("From first word to word %1", upper + 1));
@@ -321,13 +323,8 @@ public:
         static const QStringList wordRange {i18n("First word"), i18n("Second word"), i18n("Third word"), i18n("Fourth word"), i18n("Fifth word"), i18n("Sixth word"), i18n("Seventh word"), i18n("Eighth word"), i18n("Ninth word"), i18n("Tenth word"), i18n("|Last word")};
         rangeWidgetAuthor = new RangeWidget(wordRange, this);
         boxLayout->addWidget(rangeWidgetAuthor);
-        if (info.startWord > 0 || info.endWord < 0xffff) {
-            rangeWidgetAuthor->setLowerValue(info.startWord);
-            rangeWidgetAuthor->setUpperValue(qMin(rangeWidgetAuthor->maximum(), info.endWord));
-        } else {
-            rangeWidgetAuthor->setLowerValue(0);
-            rangeWidgetAuthor->setUpperValue(rangeWidgetAuthor->maximum());
-        }
+        rangeWidgetAuthor->setLowerValue(info.startWord);
+        rangeWidgetAuthor->setUpperValue(qMin(rangeWidgetAuthor->maximum(), info.endWord));
 
         labelWordsRange = new QLabel(this);
         boxLayout->addWidget(labelWordsRange);
@@ -706,9 +703,9 @@ public:
         case ttTitle: {
             struct IdSuggestions::IdSuggestionTokenInfo info;
             info.inBetween = QString();
-            info.len = -1;
+            info.len = std::numeric_limits<int>::max();
             info.startWord = 0;
-            info.endWord = 0x00ffffff;
+            info.endWord = std::numeric_limits<int>::max();
             info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new TitleWidget(info, true, p, container);
@@ -717,9 +714,9 @@ public:
         case ttAuthor: {
             struct IdSuggestions::IdSuggestionTokenInfo info;
             info.inBetween = QString();
-            info.len = -1;
+            info.len = std::numeric_limits<int>::max();
             info.startWord = 0;
-            info.endWord = 0x00ffffff;
+            info.endWord = std::numeric_limits<int>::max();
             info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new AuthorWidget(info, p, container);
@@ -733,7 +730,7 @@ public:
             info.inBetween = QString();
             info.len = 1;
             info.startWord = 0;
-            info.endWord = 0x00ffffff;
+            info.endWord = std::numeric_limits<int>::max();
             info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new JournalWidget(info, true, p, container);
@@ -742,9 +739,9 @@ public:
         case ttType: {
             struct IdSuggestions::IdSuggestionTokenInfo info;
             info.inBetween = QString();
-            info.len = -1;
+            info.len = std::numeric_limits<int>::max();
             info.startWord = 0;
-            info.endWord = 0x00ffffff;
+            info.endWord = std::numeric_limits<int>::max();
             info.lastWord = false;
             info.caseChange = IdSuggestions::ccNoChange;
             tokenWidget = new TypeWidget(info, p, container);
@@ -787,7 +784,7 @@ public:
                     info.startWord = info.endWord = 0;
                 else if (token[0] == 'z') {
                     info.startWord = 1;
-                    info.endWord = 0x00ffffff;
+                    info.endWord = std::numeric_limits<int>::max();
                 }
                 tokenWidget = new AuthorWidget(info, p, container);
                 widgetList << tokenWidget;

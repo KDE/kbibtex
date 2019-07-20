@@ -33,7 +33,7 @@ public:
     enum CaseChange {ccNoChange = 0, ccToUpper = 1, ccToLower = 2, ccToCamelCase = 3};
 
     struct IdSuggestionTokenInfo {
-        unsigned int len;
+        int len;
         int startWord, endWord;
         bool lastWord;
         CaseChange caseChange;
