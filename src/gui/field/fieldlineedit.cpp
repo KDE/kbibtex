@@ -28,7 +28,6 @@
 #include <QPushButton>
 #include <QFontDatabase>
 #include <QUrl>
-#include <QMimeDatabase>
 #include <QMimeType>
 #include <QMimeData>
 #include <QRegularExpression>

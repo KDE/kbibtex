@@ -20,6 +20,7 @@
 #include <poppler-qt5.h>
 
 #include <QFileInfo>
+#include <QMimeDatabase>
 #include <QDir>
 #include <QTextStream>
 #include <QStandardPaths>

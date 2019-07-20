@@ -34,7 +34,6 @@
 #include <QFileDialog>
 #include <QDialog>
 #include <QDialogButtonBox>
-#include <QMimeDatabase>
 #include <QMimeType>
 #include <QTemporaryFile>
 

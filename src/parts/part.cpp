@@ -25,7 +25,6 @@
 #include <QApplication>
 #include <QLayout>
 #include <QKeyEvent>
-#include <QMimeDatabase>
 #include <QMimeType>
 #include <QPointer>
 #include <QFileSystemWatcher>
@@ -651,8 +650,7 @@ public:
                     /// Build a nice menu item (label, icon, ...)
                     const QFileInfo fi(url.toLocalFile());
                     const QString label = QString(QStringLiteral("%1 [%2]")).arg(fi.fileName(), fi.absolutePath());
-                    QMimeDatabase db;
-                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(url).iconName()), label, p);
+                    QAction *action = new QAction(QIcon::fromTheme(FileInfo::mimeTypeForUrl(url).iconName()), label, p);
                     action->setToolTip(fi.absoluteFilePath());
                     /// Open URL when action is triggered
                     connect(action, &QAction::triggered, p, [this, fi]() {
@@ -676,8 +674,7 @@ public:
 
                     /// Build a nice menu item (label, icon, ...)
                     const QString prettyUrl = url.toDisplayString();
-                    QMimeDatabase db;
-                    QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(url).iconName()), prettyUrl, p);
+                    QAction *action = new QAction(QIcon::fromTheme(FileInfo::mimeTypeForUrl(url).iconName()), prettyUrl, p);
                     action->setToolTip(prettyUrl);
                     /// Open URL when action is triggered
                     connect(action, &QAction::triggered, p, [this, url]() {

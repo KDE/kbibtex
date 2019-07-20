@@ -26,7 +26,6 @@
 #include <QStackedWidget>
 #include <QTabWidget>
 #include <QProgressBar>
-#include <QMimeDatabase>
 #include <QMimeType>
 #include <QTimer>
 #include <QSet>

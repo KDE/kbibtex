@@ -34,7 +34,6 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QMutex>
-#include <QMimeDatabase>
 #include <QMimeType>
 #include <QIcon>
 #ifdef HAVE_WEBENGINEWIDGETS
@@ -556,14 +555,7 @@ public:
             return result;
         }
 
-        QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
-        // FIXME accuracy, necessary:
-        /*
-        if (accuracy < 50) {
-        QMimeDatabase db;
-            mimeType = db.mimeTypeForFile(url.fileName());
-        }
-        */
+        const QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         result.mimeType = mimeType.name();
         result.icon = QIcon::fromTheme(mimeType.iconName());
 

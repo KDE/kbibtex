@@ -20,7 +20,6 @@
 
 #include <QSet>
 #include <QUrl>
-#include <QMimeDatabase>
 #include <QMimeType>
 #include <QSharedPointer>
 

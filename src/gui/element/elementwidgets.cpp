@@ -26,7 +26,6 @@
 #include <QFileInfo>
 #include <QDropEvent>
 #include <QMenu>
-#include <QMimeDatabase>
 #include <QMimeType>
 #include <QMimeData>
 #include <QSortFilterProxyModel>
