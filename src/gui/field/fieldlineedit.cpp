@@ -320,8 +320,8 @@ public:
         case KBibTeX::tfKeyword: return QIcon::fromTheme(QStringLiteral("edit-find"));
         case KBibTeX::tfSource: return QIcon::fromTheme(QStringLiteral("code-context"));
         case KBibTeX::tfVerbatim: return QIcon::fromTheme(QStringLiteral("preferences-desktop-keyboard"));
-        default: return QIcon();
-        };
+        }
+        return QIcon(); //< should never happen as switch above covers all cases
     }
 
     void updateGUI(KBibTeX::TypeFlag typeFlag) {
@@ -337,8 +337,7 @@ public:
             parent->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
             break;
         case KBibTeX::tfVerbatim: parent->setButtonToolTip(i18n("Verbatim Text")); break;
-        default: parent->setButtonToolTip(QString()); break;
-        };
+        }
     }
 
     void openUrl() {
