@@ -300,6 +300,7 @@ Macro *FileImporterBibTeX::readMacroElement()
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing macro" << key << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Could not read macro's text";
             emit message(SeverityError, QString(QStringLiteral("Error in parsing macro '%1' near line %2: Could not read macro's text")).arg(key).arg(m_lineNo));
             delete macro;
+            return nullptr;
         }
         text = EncoderLaTeX::instance().decode(bibtexAwareSimplify(text));
         if (isStringKey)
