@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,6 @@
 #include <QApplication>
 #include <QMenu>
 #include <QDate>
-#include <QSignalMapper>
 #include <QSpinBox>
 #include <QPushButton>
 #include <QInputDialog>
@@ -83,12 +82,12 @@ public:
             monthSelector->setToolTip(i18n("Select a predefined month"));
             fieldLineEdit->prependWidget(monthSelector);
 
-            QSignalMapper *sm = new QSignalMapper(monthSelector);
-            connect(sm, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &FieldInput::setMonth);
             QMenu *monthMenu = new QMenu(monthSelector);
             for (int i = 1; i <= 12; ++i) {
-                QAction *monthAction = monthMenu->addAction(QDate::longMonthName(i, QDate::StandaloneFormat), sm, SLOT(map()));
-                sm->setMapping(monthAction, i);
+                QAction *monthAction = monthMenu->addAction(QLocale::system().standaloneMonthName(i));
+                connect(monthAction, &QAction::triggered, p, [this, i]() {
+                    setMonth(i);
+                });
             }
             monthSelector->setMenu(monthMenu);
         }
@@ -100,13 +99,13 @@ public:
             editionSelector->setToolTip(i18n("Select a predefined edition"));
             fieldLineEdit->prependWidget(editionSelector);
 
-            QSignalMapper *sm = new QSignalMapper(editionSelector);
-            connect(sm, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &FieldInput::setEdition);
             QMenu *editionMenu = new QMenu(editionSelector);
             static const QStringList ordinals{i18n("1st"), i18n("2nd"), i18n("3rd"), i18n("4th"), i18n("5th"), i18n("6th"), i18n("7th"), i18n("8th"), i18n("9th"), i18n("10th"), i18n("11th"), i18n("12th"), i18n("13th"), i18n("14th"), i18n("15th"), i18n("16th")};
             for (int i = 0; i < ordinals.length(); ++i) {
-                QAction *editionAction = editionMenu->addAction(ordinals[i], sm, SLOT(map()));
-                sm->setMapping(editionAction, i + 1);
+                QAction *editionAction = editionMenu->addAction(ordinals[i]);
+                connect(editionAction, &QAction::triggered, p, [this, i]() {
+                    setEdition(i + 1);
+                });
             }
             editionSelector->setMenu(editionMenu);
         }
@@ -294,6 +293,24 @@ public:
         if (starRatingWidget != nullptr)
             disconnect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
     }
+
+    void setMonth(int month)
+    {
+        Value value;
+        value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
+        reset(value);
+        /// Instead of an 'emit' ...
+        QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+    }
+
+    void setEdition(int edition)
+    {
+        Value value;
+        value.append(QSharedPointer<MacroKey>(new MacroKey(QString::number(edition))));
+        reset(value);
+        /// Instead of an 'emit' ...
+        QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+    }
 };
 
 FieldInput::FieldInput(KBibTeX::FieldInputType fieldInputType, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
@@ -365,22 +382,6 @@ QWidget *FieldInput::buddy()
     else if (d->starRatingWidget != nullptr)
         return d->starRatingWidget;
     return nullptr;
-}
-
-void FieldInput::setMonth(int month)
-{
-    Value value;
-    value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
-    reset(value);
-    emit modified();
-}
-
-void FieldInput::setEdition(int edition)
-{
-    Value value;
-    value.append(QSharedPointer<MacroKey>(new MacroKey(QString::number(edition))));
-    reset(value);
-    emit modified();
 }
 
 void FieldInput::selectCrossRef()

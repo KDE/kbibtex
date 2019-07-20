@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,7 +23,6 @@
 #include <QClipboard>
 #include <QScrollArea>
 #include <QLayout>
-#include <QSignalMapper>
 #include <QCheckBox>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -57,7 +56,6 @@ class FieldListEdit::FieldListEditProtected
 private:
     FieldListEdit *p;
     const int innerSpacing;
-    QSignalMapper *smRemove, *smGoUp, *smGoDown;
     QVBoxLayout *layout;
     KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
@@ -76,9 +74,6 @@ public:
 
     FieldListEditProtected(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldListEdit *parent)
             : p(parent), innerSpacing(4), preferredTypeFlag(ptf), typeFlags(tf), file(nullptr), m_isReadOnly(false) {
-        smRemove = new QSignalMapper(parent);
-        smGoUp = new QSignalMapper(parent);
-        smGoDown = new QSignalMapper(parent);
         setupGUI();
     }
 
@@ -111,10 +106,6 @@ public:
         pushButtonContainerLayout->addWidget(addLineButton);
 
         layout->addStretch(100);
-
-        connect(smRemove, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), p, &FieldListEdit::lineRemove);
-        connect(smGoDown, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), p, &FieldListEdit::lineGoDown);
-        connect(smGoUp, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), p, &FieldListEdit::lineGoUp);
 
         scrollArea->setBackgroundRole(QPalette::Base);
         scrollArea->ensureWidgetVisible(container);
@@ -150,20 +141,35 @@ public:
         QPushButton *remove = new QPushButton(QIcon::fromTheme(QStringLiteral("list-remove")), QString(), le);
         remove->setToolTip(i18n("Remove value"));
         le->appendWidget(remove);
-        connect(remove, &QPushButton::clicked, smRemove, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-        smRemove->setMapping(remove, le);
+        connect(remove, &QPushButton::clicked, p, [this, le]() {
+            removeFieldLineEdit(le);
+            const QSize size(container->width(), recommendedHeight());
+            container->resize(size);
+            /// Instead of an 'emit' ...
+            QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+        });
 
         QPushButton *goDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QString(), le);
         goDown->setToolTip(i18n("Move value down"));
         le->appendWidget(goDown);
-        connect(goDown, &QPushButton::clicked, smGoDown, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-        smGoDown->setMapping(goDown, le);
+        connect(goDown, &QPushButton::clicked, p, [this, le]() {
+            const bool gotModified = goDownFieldLineEdit(le);
+            if (gotModified) {
+                /// Instead of an 'emit' ...
+                QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+            }
+        });
 
         QPushButton *goUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QString(), le);
         goUp->setToolTip(i18n("Move value up"));
         le->appendWidget(goUp);
-        connect(goUp, &QPushButton::clicked, smGoUp, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-        smGoUp->setMapping(goUp, le);
+        connect(goUp, &QPushButton::clicked, p, [this, le]() {
+            const bool gotModified = goUpFieldLineEdit(le);
+            if (gotModified) {
+                /// Instead of an 'emit' ...
+                QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+            }
+        });
 
         connect(le, &FieldLineEdit::textChanged, p, &FieldListEdit::modified);
 
@@ -192,24 +198,28 @@ public:
         delete fieldLineEdit;
     }
 
-    void goDownFieldLineEdit(FieldLineEdit *fieldLineEdit) {
+    bool goDownFieldLineEdit(FieldLineEdit *fieldLineEdit) {
         int idx = lineEditList.indexOf(fieldLineEdit);
         if (idx < lineEditList.count() - 1) {
             layout->removeWidget(fieldLineEdit);
             lineEditList.removeOne(fieldLineEdit);
             lineEditList.insert(idx + 1, fieldLineEdit);
             layout->insertWidget(idx + 1, fieldLineEdit);
+            return true; ///< return 'true' upon actual modification
         }
+        return false; ///< return 'false' if nothing changed, i.e. FieldLineEdit is already at bottom
     }
 
-    void goUpFieldLineEdit(FieldLineEdit *fieldLineEdit) {
+    bool goUpFieldLineEdit(FieldLineEdit *fieldLineEdit) {
         int idx = lineEditList.indexOf(fieldLineEdit);
         if (idx > 0) {
             layout->removeWidget(fieldLineEdit);
             lineEditList.removeOne(fieldLineEdit);
             lineEditList.insert(idx - 1, fieldLineEdit);
             layout->insertWidget(idx - 1, fieldLineEdit);
+            return true; ///< return 'true' upon actual modification
         }
+        return false; ///< return 'false' if nothing changed, i.e. FieldLineEdit is already at top
     }
 };
 
@@ -378,29 +388,6 @@ void FieldListEdit::lineAdd()
     newEdit->setFocus(Qt::ShortcutFocusReason);
 }
 
-void FieldListEdit::lineRemove(QWidget *widget)
-{
-    FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit *>(widget);
-    d->removeFieldLineEdit(fieldLineEdit);
-    QSize size(d->container->width(), d->recommendedHeight());
-    d->container->resize(size);
-    emit modified();
-}
-
-void FieldListEdit::lineGoDown(QWidget *widget)
-{
-    FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit *>(widget);
-    d->goDownFieldLineEdit(fieldLineEdit);
-    emit modified();
-}
-
-void FieldListEdit::lineGoUp(QWidget *widget)
-{
-    FieldLineEdit *fieldLineEdit = static_cast<FieldLineEdit *>(widget);
-    d->goUpFieldLineEdit(fieldLineEdit);
-    emit modified();
-}
-
 PersonListEdit::PersonListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags typeFlags, QWidget *parent)
         : FieldListEdit(preferredTypeFlag, typeFlags, parent)
 {
@@ -472,11 +459,6 @@ void PersonListEdit::slotAddNamesFromClipboard()
 UrlListEdit::UrlListEdit(QWidget *parent)
         : FieldListEdit(KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, parent)
 {
-    m_signalMapperSaveLocallyButtonClicked = new QSignalMapper(this);
-    connect(m_signalMapperSaveLocallyButtonClicked, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), this, &UrlListEdit::slotSaveLocally);
-    m_signalMapperFieldLineEditTextChanged = new QSignalMapper(this);
-    connect(m_signalMapperFieldLineEditTextChanged, static_cast<void(QSignalMapper::*)(QWidget *)>(&QSignalMapper::mapped), this, &UrlListEdit::textChanged);
-
     m_buttonAddFile = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add file..."), this);
     addButton(m_buttonAddFile);
     QMenu *menuAddFile = new QMenu(m_buttonAddFile);
@@ -519,13 +501,8 @@ void UrlListEdit::addReference(const QUrl &url) {
     }
 }
 
-void UrlListEdit::slotSaveLocally(QWidget *widget)
+void UrlListEdit::downloadAndSaveLocally(const QUrl &url)
 {
-    /// Determine FieldLineEdit widget
-    FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(widget);
-    /// Build Url from line edit's content
-    const QUrl url = QUrl::fromUserInput(fieldLineEdit->text());
-
     /// Only proceed if Url is valid and points to a remote location
     if (url.isValid() && !urlIsLocal(url)) {
         /// Get filename from url (without any path/directory part)
@@ -570,15 +547,9 @@ void UrlListEdit::downloadFinished(KJob *j) {
     unsetCursor();
 }
 
-void UrlListEdit::textChanged(QWidget *widget)
+void UrlListEdit::textChanged(QPushButton *buttonSaveLocally, FieldLineEdit *fieldLineEdit)
 {
-    /// Determine associated QPushButton "Save locally"
-    QPushButton *buttonSaveLocally = qobject_cast<QPushButton *>(widget);
-    if (buttonSaveLocally == nullptr) return; ///< should never happen!
-
-    /// Assume a FieldLineEdit was the sender of this signal
-    FieldLineEdit *fieldLineEdit = qobject_cast<FieldLineEdit *>(m_signalMapperFieldLineEditTextChanged->mapping(widget));
-    if (fieldLineEdit == nullptr) return; ///< should never happen!
+    if (buttonSaveLocally == nullptr || fieldLineEdit == nullptr) return; ///< should never happen!
 
     /// Create URL from new text to make some tests on it
     /// Only remote URLs are of interest, therefore no tests
@@ -629,10 +600,12 @@ FieldLineEdit *UrlListEdit::addFieldLineEdit()
     fieldLineEdit->appendWidget(buttonSaveLocally);
     /// Connect signals to react on button events
     /// or changes in the FieldLineEdit's text
-    m_signalMapperSaveLocallyButtonClicked->setMapping(buttonSaveLocally, fieldLineEdit);
-    m_signalMapperFieldLineEditTextChanged->setMapping(fieldLineEdit, buttonSaveLocally);
-    connect(buttonSaveLocally, &QPushButton::clicked, m_signalMapperSaveLocallyButtonClicked, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-    connect(fieldLineEdit, &FieldLineEdit::textChanged, m_signalMapperFieldLineEditTextChanged, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+    connect(buttonSaveLocally, &QPushButton::clicked, this, [this, fieldLineEdit]() {
+        downloadAndSaveLocally(QUrl::fromUserInput(fieldLineEdit->text()));
+    });
+    connect(fieldLineEdit, &FieldLineEdit::textChanged, this, [this, buttonSaveLocally, fieldLineEdit]() {
+        textChanged(buttonSaveLocally, fieldLineEdit);
+    });
 
     return fieldLineEdit;
 }

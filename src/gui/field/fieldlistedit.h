@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,7 +29,6 @@
 class QCheckBox;
 class QDropEvent;
 class QDragEnterEvent;
-class QSignalMapper;
 class QPushButton;
 
 class KJob;
@@ -76,9 +75,6 @@ protected:
 
 private slots:
     void lineAdd();
-    void lineRemove(QWidget *widget);
-    void lineGoDown(QWidget *widget);
-    void lineGoUp(QWidget *widget);
 
 protected:
     class FieldListEditProtected;
@@ -133,18 +129,14 @@ protected:
 private slots:
     void slotAddReference();
     void slotAddReferenceFromClipboard();
-    /// Slot for events where the "save locally" button is triggered
-    void slotSaveLocally(QWidget *widget);
     void downloadFinished(KJob *);
-    /// Catch events where the line edit's text change
-    void textChanged(QWidget *widget);
 
 private:
     QPushButton *m_buttonAddFile;
-    QSignalMapper *m_signalMapperSaveLocallyButtonClicked;
-    QSignalMapper *m_signalMapperFieldLineEditTextChanged;
 
     void addReference(const QUrl &url);
+    void downloadAndSaveLocally(const QUrl &url);
+    void textChanged(QPushButton *buttonSaveLocally, FieldLineEdit *fieldLineEdit);
 };
 
 

@@ -25,7 +25,6 @@
 #include <QApplication>
 #include <QLayout>
 #include <QKeyEvent>
-#include <QSignalMapper>
 #include <QMimeDatabase>
 #include <QMimeType>
 #include <QPointer>
@@ -88,11 +87,6 @@
 #include "logging_parts.h"
 
 static const char RCFileName[] = "kbibtexpartui.rc";
-static const int smEntry = 1;
-static const int smComment = 2;
-static const int smPreamble = 3;
-static const int smMacro = 4;
-
 class KBibTeXPart::KBibTeXPartPrivate
 {
 private:
@@ -123,11 +117,8 @@ public:
     PartWidget *partWidget;
     FileModel *model;
     SortFilterFileModel *sortFilterProxyModel;
-    QSignalMapper *signalMapperNewElement;
     QAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
     QMenu *viewDocumentMenu;
-    QSignalMapper *signalMapperViewDocument;
-    QSet<QObject *> signalMapperViewDocumentSenders;
     bool isSaveAsOperation;
     LyX *lyx;
     FindDuplicatesUI *findDuplicatesUI;
@@ -136,8 +127,7 @@ public:
     QFileSystemWatcher fileSystemWatcher;
 
     KBibTeXPartPrivate(QWidget *parentWidget, KBibTeXPart *parent)
-            : p(parent), bibTeXFile(nullptr), model(nullptr), sortFilterProxyModel(nullptr), signalMapperNewElement(new QSignalMapper(parent)), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), signalMapperViewDocument(new QSignalMapper(parent)), isSaveAsOperation(false), fileSystemWatcher(p) {
-        connect(signalMapperViewDocument, static_cast<void(QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), p, &KBibTeXPart::elementViewDocumentMenu);
+            : p(parent), bibTeXFile(nullptr), model(nullptr), sortFilterProxyModel(nullptr), viewDocumentMenu(new QMenu(i18n("View Document"), parent->widget())), isSaveAsOperation(false), fileSystemWatcher(p) {
         connect(&fileSystemWatcher, &QFileSystemWatcher::fileChanged, p, &KBibTeXPart::fileExternallyChange);
 
         partWidget = new PartWidget(parentWidget);
@@ -150,9 +140,7 @@ public:
     ~KBibTeXPartPrivate() {
         delete bibTeXFile;
         delete model;
-        delete signalMapperNewElement;
         delete viewDocumentMenu;
-        delete signalMapperViewDocument;
         delete findDuplicatesUI;
     }
 
@@ -184,20 +172,23 @@ public:
         QMenu *newElementMenu = new QMenu(newElementAction->text(), p->widget());
         newElementAction->setMenu(newElementMenu);
         connect(newElementAction, &QAction::triggered, p, &KBibTeXPart::newEntryTriggered);
-        QAction *newEntry = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New entry"));
+
+        QAction *newEntry = new QAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New entry"), newElementAction);
+        newElementMenu->addAction(newEntry);
         p->actionCollection()->setDefaultShortcut(newEntry, Qt::CTRL + Qt::SHIFT + Qt::Key_N);
-        connect(newEntry, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-        signalMapperNewElement->setMapping(newEntry, smEntry);
-        QAction *newComment = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New comment"));
-        connect(newComment, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-        signalMapperNewElement->setMapping(newComment, smComment);
-        QAction *newMacro = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New macro"));
-        connect(newMacro, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-        signalMapperNewElement->setMapping(newMacro, smMacro);
-        QAction *newPreamble = newElementMenu->addAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New preamble"));
-        connect(newPreamble, &QAction::triggered, signalMapperNewElement, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-        signalMapperNewElement->setMapping(newPreamble, smPreamble);
-        connect(signalMapperNewElement, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &KBibTeXPart::newElementTriggered);
+        connect(newEntry, &QAction::triggered, p, &KBibTeXPart::newEntryTriggered);
+
+        QAction *newComment = new QAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New comment"), newElementAction);
+        newElementMenu->addAction(newComment);
+        connect(newComment, &QAction::triggered, p, &KBibTeXPart::newCommentTriggered);
+
+        QAction *newMacro = new QAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New macro"), newElementAction);
+        newElementMenu->addAction(newMacro);
+        connect(newMacro, &QAction::triggered, p, &KBibTeXPart::newMacroTriggered);
+
+        QAction *newPreamble = new QAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New preamble"), newElementAction);
+        newElementMenu->addAction(newPreamble);
+        connect(newPreamble, &QAction::triggered, p, &KBibTeXPart::newPreambleTriggered);
 
         /// Action to edit an element
         elementEditAction = new QAction(QIcon::fromTheme(QStringLiteral("document-edit")), i18n("Edit Element"), p);
@@ -642,15 +633,6 @@ public:
         File *bibliographyFile = partWidget != nullptr && partWidget->fileView() != nullptr && partWidget->fileView()->fileModel() != nullptr ? partWidget->fileView()->fileModel()->bibliographyFile() : nullptr;
         if (bibliographyFile == nullptr) return result;
 
-        /// Clean signal mapper of old mappings
-        /// as stored in QSet signalMapperViewDocumentSenders
-        /// and identified by their QAction*'s
-        QSet<QObject *>::Iterator it = signalMapperViewDocumentSenders.begin();
-        while (it != signalMapperViewDocumentSenders.end()) {
-            signalMapperViewDocument->removeMappings(*it);
-            it = signalMapperViewDocumentSenders.erase(it);
-        }
-
         /// Retrieve Entry object of currently selected line
         /// in main list view
         QSharedPointer<const Entry> entry = partWidget->fileView()->currentElement().dynamicCast<const Entry>();
@@ -671,12 +653,11 @@ public:
                     const QString label = QString(QStringLiteral("%1 [%2]")).arg(fi.fileName(), fi.absolutePath());
                     QMimeDatabase db;
                     QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(url).iconName()), label, p);
-                    action->setData(fi.absoluteFilePath());
                     action->setToolTip(fi.absoluteFilePath());
-                    /// Register action at signal handler to open URL when triggered
-                    connect(action, &QAction::triggered, signalMapperViewDocument, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-                    signalMapperViewDocument->setMapping(action, action);
-                    signalMapperViewDocumentSenders.insert(action);
+                    /// Open URL when action is triggered
+                    connect(action, &QAction::triggered, p, [this, fi]() {
+                        elementViewDocumentMenu(QUrl::fromLocalFile(fi.absoluteFilePath()));
+                    });
                     viewDocumentMenu->addAction(action);
                     /// Memorize first action
                     if (firstAction == nullptr) firstAction = action;
@@ -697,12 +678,11 @@ public:
                     const QString prettyUrl = url.toDisplayString();
                     QMimeDatabase db;
                     QAction *action = new QAction(QIcon::fromTheme(db.mimeTypeForUrl(url).iconName()), prettyUrl, p);
-                    action->setData(prettyUrl);
                     action->setToolTip(prettyUrl);
-                    /// Register action at signal handler to open URL when triggered
-                    connect(action, &QAction::triggered, signalMapperViewDocument, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-                    signalMapperViewDocument->setMapping(action, action);
-                    signalMapperViewDocumentSenders.insert(action);
+                    /// Open URL when action is triggered
+                    connect(action, &QAction::triggered, p, [this, url]() {
+                        elementViewDocumentMenu(url);
+                    });
                     viewDocumentMenu->addAction(action);
                     /// Memorize first action
                     if (firstAction == nullptr) firstAction = action;
@@ -733,6 +713,15 @@ public:
             break;
         }
     }
+
+    void elementViewDocumentMenu(const QUrl &url)
+    {
+        const QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+        const QString mimeTypeName = mimeType.name();
+        /// Ask KDE subsystem to open url in viewer matching mime type
+        KRun::runUrl(url, mimeTypeName, p->widget(), KRun::RunFlags());
+    }
+
 };
 
 KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutData &componentData)
@@ -894,22 +883,6 @@ void KBibTeXPart::elementViewDocument()
     }
 }
 
-void KBibTeXPart::elementViewDocumentMenu(QObject *obj)
-{
-    QString text = static_cast<QAction *>(obj)->data().toString(); ///< only a QAction will be passed along
-
-    /// Guess mime type for url to open
-    QUrl url(text);
-    QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
-    const QString mimeTypeName = mimeType.name();
-    /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x051f00 // < 5.31.0
-    KRun::runUrl(url, mimeTypeName, widget(), false, false);
-#else // KIO_VERSION < 0x051f00 // >= 5.31.0
-    KRun::runUrl(url, mimeTypeName, widget(), KRun::RunFlags());
-#endif // KIO_VERSION < 0x051f00
-}
-
 void KBibTeXPart::elementFindPDF()
 {
     QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
@@ -949,23 +922,6 @@ bool KBibTeXPart::openFile()
     const bool success = d->openFile(url(), localFilePath());
     emit completed();
     return success;
-}
-
-void KBibTeXPart::newElementTriggered(int event)
-{
-    switch (event) {
-    case smComment:
-        newCommentTriggered();
-        break;
-    case smMacro:
-        newMacroTriggered();
-        break;
-    case smPreamble:
-        newPreambleTriggered();
-        break;
-    default:
-        newEntryTriggered();
-    }
 }
 
 void KBibTeXPart::newEntryTriggered()

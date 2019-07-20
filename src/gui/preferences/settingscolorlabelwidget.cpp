@@ -22,7 +22,6 @@
 
 #include <QLayout>
 #include <QStyledItemDelegate>
-#include <QSignalMapper>
 #include <QPushButton>
 #include <QLineEdit>
 #include <QMenu>
@@ -403,20 +402,17 @@ void SettingsColorLabelWidget::updateRemoveButtonStatus()
 class ColorLabelContextMenu::Private
 {
 private:
-    // UNUSED ColorLabelContextMenu *p;
+    ColorLabelContextMenu *p;
 
 public:
     /// Tree view to show this context menu in
     FileView *fileView;
     /// Actual menu to show
     KActionMenu *menu;
-    /// Signal handle to react to calls to items in menu
-    QSignalMapper *sm;
 
     Private(FileView *fv, ColorLabelContextMenu *parent)
-        : /* UNUSED p(parent),*/ fileView(fv)
+            : p(parent), fileView(fv)
     {
-        sm = new QSignalMapper(parent);
         menu = new KActionMenu(QIcon::fromTheme(QStringLiteral("preferences-desktop-color")), i18n("Color"), fileView);
         /// Let menu be a sub menu to the tree view's context menu
         fileView->addAction(menu);
@@ -430,8 +426,10 @@ public:
         for (QVector<QPair<QColor, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); it != Preferences::instance().colorCodes().constEnd(); ++it) {
             QAction *action = new QAction(QIcon(ColorLabelWidget::createSolidIcon(it->first)), it->second, menu);
             menu->addAction(action);
-            sm->setMapping(action, it->first.name());
-            connect(action, &QAction::triggered, sm, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+            const QString colorCode = it->first.name();
+            connect(action, &QAction::triggered, p, [this, colorCode]() {
+                colorActivated(colorCode);
+            });
         }
 
         QAction *action = new QAction(menu);
@@ -442,8 +440,52 @@ public:
         /// from a BibTeX entry by setting the color to black
         action = new QAction(i18n("No color"), menu);
         menu->addAction(action);
-        sm->setMapping(action, QStringLiteral("#000000"));
-        connect(action, &QAction::triggered, sm, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+        connect(action, &QAction::triggered, p, [this]() {
+            colorActivated(QStringLiteral("#000000"));
+        });
+    }
+
+
+    void colorActivated(const QString &colorString)
+    {
+        /// User activated some color from the menu, so apply this color
+        /// code to the currently selected item in the tree view
+
+        SortFilterFileModel *sfbfm = qobject_cast<SortFilterFileModel *>(fileView->model());
+        if (sfbfm == nullptr) {
+            /// Something went horribly wrong
+            return;
+        }
+        FileModel *model = sfbfm->fileSourceModel();
+        if (model == nullptr) {
+            /// Something went horribly wrong
+            return;
+        }
+
+        /// Apply color change to all selected rows
+        const QModelIndexList list = fileView->selectionModel()->selectedIndexes();
+        for (const QModelIndex &index : list) {
+            const QModelIndex mappedIndex = sfbfm->mapToSource(index);
+            /// Selection may span over multiple columns;
+            /// to avoid duplicate assignments, consider only column 1
+            if (mappedIndex.column() == 1) {
+                const int row = mappedIndex.row();
+                QSharedPointer<Entry> entry = model->element(row).dynamicCast<Entry>();
+                if (!entry.isNull()) {
+                    /// Clear old color entry
+                    bool modifying = entry->remove(Entry::ftColor) > 0;
+                    if (colorString != QStringLiteral("#000000")) { ///< black is a special color that means "no color"
+                        /// Only if valid color was selected, set this color
+                        Value v;
+                        v.append(QSharedPointer<VerbatimText>(new VerbatimText(colorString)));
+                        entry->insert(Entry::ftColor, v);
+                        modifying = true;
+                    }
+                    if (modifying)
+                        model->elementChanged(row);
+                }
+            }
+        }
     }
 };
 
@@ -451,8 +493,6 @@ public:
 ColorLabelContextMenu::ColorLabelContextMenu(FileView *widget)
         : QObject(widget), d(new Private(widget, this))
 {
-    connect(d->sm, static_cast<void(QSignalMapper::*)(const QString &)>(&QSignalMapper::mapped), this, &ColorLabelContextMenu::colorActivated);
-
     /// Listen to changes in the configuration files
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
 
@@ -477,43 +517,6 @@ void ColorLabelContextMenu::notificationEvent(int eventId)
 {
     if (eventId == NotificationHub::EventConfigurationChanged)
         d->rebuildMenu();
-}
-
-void ColorLabelContextMenu::colorActivated(const QString &colorString)
-{
-    /// User activated some color from the menu,
-    /// so apply this color code to the currently
-    /// selected item in the tree view
-
-    SortFilterFileModel *sfbfm = qobject_cast<SortFilterFileModel *>(d->fileView->model());
-    Q_ASSERT_X(sfbfm != nullptr, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "SortFilterFileModel *sfbfm is NULL");
-    FileModel *model = sfbfm->fileSourceModel();
-    Q_ASSERT_X(model != nullptr, "ColorLabelContextMenu::colorActivated(const QString &colorString)", "FileModel *model is NULL");
-
-    /// Apply color change to all selected rows
-    const QModelIndexList list = d->fileView->selectionModel()->selectedIndexes();
-    for (const QModelIndex &index : list) {
-        const QModelIndex mappedIndex = sfbfm->mapToSource(index);
-        /// Selection may span over multiple columns;
-        /// to avoid duplicate assignments, consider only column 1
-        if (mappedIndex.column() == 1) {
-            const int row = mappedIndex.row();
-            QSharedPointer<Entry> entry = model->element(row).dynamicCast<Entry>();
-            if (!entry.isNull()) {
-                /// Clear old color entry
-                bool modifying = entry->remove(Entry::ftColor) > 0;
-                if (colorString != QStringLiteral("#000000")) { ///< black is a special color that means "no color"
-                    /// Only if valid color was selected, set this color
-                    Value v;
-                    v.append(QSharedPointer<VerbatimText>(new VerbatimText(colorString)));
-                    entry->insert(Entry::ftColor, v);
-                    modifying = true;
-                }
-                if (modifying)
-                    model->elementChanged(row);
-            }
-        }
-    }
 }
 
 #include "settingscolorlabelwidget.moc"

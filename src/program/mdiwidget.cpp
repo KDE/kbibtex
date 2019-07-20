@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,6 @@
 #include <QPair>
 #include <QLabel>
 #include <QApplication>
-#include <QSignalMapper>
 #include <QLayout>
 #include <QTreeView>
 #include <QAbstractItemModel>
@@ -186,7 +185,6 @@ public:
     MDIWidget *p;
     OpenFileInfo *currentFile;
     QWidget *welcomeWidget;
-    QSignalMapper signalMapperCompleted;
 
     KSharedConfigPtr config;
 
@@ -200,8 +198,6 @@ public:
         sfpm->setSortRole(LRUItemModel::SortRole);
         listLRU->setModel(sfpm);
 
-        connect(&signalMapperCompleted, static_cast<void(QSignalMapper::*)(QObject *)>(&QSignalMapper::mapped), p, &MDIWidget::slotCompleted);
-
         restoreColumnsState();
     }
 
@@ -212,12 +208,30 @@ public:
 
     void addToMapper(OpenFileInfo *openFileInfo) {
         KParts::ReadOnlyPart *part = openFileInfo->part(p);
-        signalMapperCompleted.setMapping(part, openFileInfo);
-        connect(part, static_cast<void(KParts::ReadOnlyPart::*)()>(&KParts::ReadOnlyPart::completed), &signalMapperCompleted, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
+        connect(part, static_cast<void(KParts::ReadOnlyPart::*)()>(&KParts::ReadOnlyPart::completed), p, [this, openFileInfo]() {
+            loadingFinished(openFileInfo);
+        });
     }
 
     void updateLRU() {
         modelLRU->reset();
+    }
+
+    void loadingFinished(OpenFileInfo *ofi)
+    {
+        const QUrl oldUrl = ofi->url();
+        const QUrl newUrl = ofi->part(p)->url();
+
+        if (oldUrl != newUrl) {
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "Url changed from " << oldUrl.url(QUrl::PreferLocalFile) << " to " << newUrl.url(QUrl::PreferLocalFile);
+            OpenFileInfoManager::instance().changeUrl(ofi, newUrl);
+
+            /// completely opened or saved files should be marked as "recently used"
+            ofi->addFlags(OpenFileInfo::RecentlyUsed);
+
+            /// Instead of an 'emit' ...
+            QMetaObject::invokeMethod(p, "setCaption", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QString, QString(QStringLiteral("%1 [%2]")).arg(ofi->shortCaption(), squeeze_text(ofi->fullCaption(), 64))));
+        }
     }
 };
 
@@ -307,23 +321,6 @@ FileView *MDIWidget::fileView()
 OpenFileInfo *MDIWidget::currentFile()
 {
     return d->currentFile;
-}
-
-void MDIWidget::slotCompleted(QObject *obj)
-{
-    OpenFileInfo *ofi = static_cast<OpenFileInfo *>(obj);
-    QUrl oldUrl = ofi->url();
-    QUrl newUrl = ofi->part(this)->url();
-
-    if (oldUrl != newUrl) {
-        qCDebug(LOG_KBIBTEX_PROGRAM) << "Url changed from " << oldUrl.url(QUrl::PreferLocalFile) << " to " << newUrl.url(QUrl::PreferLocalFile) << endl;
-        OpenFileInfoManager::instance().changeUrl(ofi, newUrl);
-
-        /// completely opened or saved files should be marked as "recently used"
-        ofi->addFlags(OpenFileInfo::RecentlyUsed);
-
-        emit setCaption(QString(QStringLiteral("%1 [%2]")).arg(ofi->shortCaption(), squeeze_text(ofi->fullCaption(), 64)));
-    }
 }
 
 void MDIWidget::slotStatusFlagsChanged(OpenFileInfo::StatusFlags statusFlags)

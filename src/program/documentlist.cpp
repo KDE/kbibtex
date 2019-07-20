@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,7 +19,6 @@
 
 #include <QStringListModel>
 #include <QTimer>
-#include <QSignalMapper>
 #include <QGridLayout>
 #include <QLabel>
 #include <QPainter>
@@ -248,13 +247,21 @@ public:
     QAction *actionCloseFile, *actionOpenFile;
     KActionMenu *actionOpenMenu;
     QList<QAction *> openMenuActions;
-    KService::List openMenuServices;
-    QSignalMapper openMenuSignalMapper;
 
     DocumentListViewPrivate(DocumentListView *parent)
             : p(parent), actionAddToFav(nullptr), actionRemFromFav(nullptr), actionCloseFile(nullptr), actionOpenFile(nullptr), actionOpenMenu(nullptr)
     {
-        connect(&openMenuSignalMapper, static_cast<void(QSignalMapper::*)(int)>(&QSignalMapper::mapped), p, &DocumentListView::openFileWithService);
+        /// nothing
+    }
+
+    void openFileWithService(KService::Ptr service)
+    {
+        const QModelIndex modelIndex = p->currentIndex();
+        if (modelIndex != QModelIndex()) {
+            OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
+            if (!ofi->isModified() || (KMessageBox::questionYesNo(p, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), QIcon::fromTheme(QStringLiteral("document-save"))), KGuiItem(i18n("Do not switch"), QIcon::fromTheme(QStringLiteral("dialog-cancel")))) == KMessageBox::Yes && ofi->save()))
+                OpenFileInfoManager::instance().setCurrentFile(ofi, service);
+        }
     }
 };
 
@@ -324,16 +331,6 @@ void DocumentListView::openFile()
     }
 }
 
-void DocumentListView::openFileWithService(int i)
-{
-    QModelIndex modelIndex = currentIndex();
-    if (modelIndex != QModelIndex()) {
-        OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-        if (!ofi->isModified() || (KMessageBox::questionYesNo(this, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), QIcon::fromTheme(QStringLiteral("document-save"))), KGuiItem(i18n("Do not switch"), QIcon::fromTheme(QStringLiteral("dialog-cancel")))) == KMessageBox::Yes && ofi->save()))
-            OpenFileInfoManager::instance().setCurrentFile(ofi, d->openMenuServices[i]);
-    }
-}
-
 void DocumentListView::closeFile()
 {
     QModelIndex modelIndex = currentIndex();
@@ -363,18 +360,16 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
     for (QAction *action : const_cast<const QList<QAction *> &>(d->openMenuActions)) {
         d->actionOpenMenu->removeAction(action);
     }
-    d->openMenuServices.clear();
     if (ofi != nullptr) {
-        d->openMenuServices = ofi->listOfServices();
-        int i = 0;
-        for (KService::Ptr servicePtr : const_cast<const KService::List &>(d->openMenuServices)) {
+        const KService::List services = ofi->listOfServices();
+        for (KService::Ptr servicePtr : services) {
             QAction *menuItem = new QAction(QIcon::fromTheme(servicePtr->icon()), servicePtr->name(), this);
             d->actionOpenMenu->addAction(menuItem);
             d->openMenuActions << menuItem;
 
-            d->openMenuSignalMapper.setMapping(menuItem, i);
-            connect(menuItem, &QAction::triggered, &d->openMenuSignalMapper, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
-            ++i;
+            connect(menuItem, &QAction::triggered, this, [this, servicePtr]() {
+                d->openFileWithService(servicePtr);
+            });
         }
     }
     d->actionOpenMenu->setEnabled(!d->openMenuActions.isEmpty());
