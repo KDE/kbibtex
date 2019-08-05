@@ -82,10 +82,16 @@ private:
 void KBibTeXIOTest::encoderConvertToPlainAscii_data()
 {
     QTest::addColumn<QString>("unicodestring");
+    /// Depending on the chosen implementation for Encoder::instance().convertToPlainAscii(),
+    /// the ASCII variant may slightly differ (both alternatives are considered valid).
+    /// If both implementation should produce the same ASCII output, 'asciialternative2' is
+    /// to be set to be empty.
     QTest::addColumn<QString>("asciialternative1");
     QTest::addColumn<QString>("asciialternative2");
 
+    QTest::newRow("Just 'A'") << QString(QChar(0x00c0)) + QChar(0x00c2) + QChar(0x00c5) << QStringLiteral("AAA") << QString();
     QTest::newRow("Just ASCII letters and numbers") << QStringLiteral("qwertyuiopASDFGHJKLzxcvbnm1234567890") << QStringLiteral("qwertyuiopASDFGHJKLzxcvbnm1234567890") << QString();
+    QTest::newRow("Latin text") << QStringLiteral("Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur.") << QStringLiteral("Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur.") << QString();
     QTest::newRow("ASCII low and high bytes") << QStringLiteral("\x00\x01\x09\x0a\x10\x11\x19\x1a\x1f\x20\x7e\x7f") << QStringLiteral(" ~") << QString();
     QTest::newRow("European Scripts/Latin-1 Supplement") << QString::fromUtf8("\xc3\x80\xc3\x82\xc3\x84\xc3\x92\xc3\x94\xc3\x96\xc3\xac\xc3\xad\xc3\xae\xc3\xaf") << QStringLiteral("AAAOOOiiii") << QStringLiteral("AAAEOOOEiiii");
     QTest::newRow("European Scripts/Latin Extended-A") << QString::fromUtf8("\xc4\x8a\xc4\x8b\xc4\xae\xc4\xaf\xc5\x9c\xc5\x9d\xc5\xbb\xc5\xbc") << QStringLiteral("CcIiSsZz") << QString();
@@ -104,6 +110,8 @@ void KBibTeXIOTest::encoderConvertToPlainAscii()
     QFETCH(QString, asciialternative2);
 
     const QString converted = Encoder::instance().convertToPlainAscii(unicodestring);
+    /// Depending on the chosen implementation for Encoder::instance().convertToPlainAscii(),
+    /// the ASCII variant may slightly differ (both alternatives are considered valid).
     if (converted != asciialternative1 && converted != asciialternative2)
         qWarning() << "converted=" << converted << "  asciialternative1=" << asciialternative1 << "  asciialternative2=" << asciialternative2;
     QVERIFY(converted == asciialternative1 || converted == asciialternative2);
