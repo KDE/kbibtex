@@ -101,6 +101,7 @@ void KBibTeXIOTest::encoderConvertToPlainAscii_data()
     QTest::newRow("European Scripts/Greek and Coptic") << QString::fromUtf8("\xce\xba\xce\xb1\xce\xa4\xcf\xba\xce\x9d") << QStringLiteral("kaTSN") << QStringLiteral("kappaalphaTauSanNu");
     QTest::newRow("East Asian Scripts/Katakana") << QString::fromUtf8("\xe3\x82\xb7\xe3\x83\x84") << QStringLiteral("shitsu") << QStringLiteral("situ");
     QTest::newRow("East Asian Scripts/Hangul Syllables") << QString::fromUtf8("\xea\xb9\x80\xec\xa0\x95\xec\x9d\x80") << QStringLiteral("gimjeongeun") << QStringLiteral("gimjeong-eun");
+    QTest::newRow("Non-BMP characters (stay unchanged)") << QString::fromUtf8(/* U+10437 */ "\xf0\x90\x90\xb7" /* U+10E6D */ "\xf0\x90\xb9\xad" /* U+1D11E */ "\xf0\x9d\x84\x9e" /* U+10FFFF */ "") << QString::fromUtf8("\xf0\x90\x90\xb7\xf0\x90\xb9\xad\xf0\x9d\x84\x9e") << QString();
 }
 
 void KBibTeXIOTest::encoderConvertToPlainAscii()
