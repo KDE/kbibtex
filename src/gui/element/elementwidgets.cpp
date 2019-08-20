@@ -165,12 +165,12 @@ QString EntryConfiguredWidget::identifier() const
     return etl->identifier;
 }
 
-void EntryConfiguredWidget::setReadOnly(bool isReadOnly)
+void EntryConfiguredWidget::setReadOnly(bool _isReadOnly)
 {
-    ElementWidget::setReadOnly(isReadOnly);
+    ElementWidget::setReadOnly(_isReadOnly);
 
     for (QMap<QString, FieldInput *>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it)
-        it.value()->setReadOnly(isReadOnly);
+        it.value()->setReadOnly(_isReadOnly);
 }
 
 QString EntryConfiguredWidget::label()
@@ -451,12 +451,12 @@ bool ReferenceWidget::validate(QWidget **widgetWithIssue, QString &message) cons
     return true;
 }
 
-void ReferenceWidget::setReadOnly(bool isReadOnly)
+void ReferenceWidget::setReadOnly(bool _isReadOnly)
 {
-    ElementWidget::setReadOnly(isReadOnly);
+    ElementWidget::setReadOnly(_isReadOnly);
 
-    entryId->setReadOnly(isReadOnly);
-    entryType->setEnabled(!isReadOnly);
+    entryId->setReadOnly(_isReadOnly);
+    entryType->setEnabled(!_isReadOnly);
 }
 
 QString ReferenceWidget::label()
@@ -743,10 +743,10 @@ bool FilesWidget::validate(QWidget **widgetWithIssue, QString &message) const
     return fileList->validate(widgetWithIssue, message);
 }
 
-void FilesWidget::setReadOnly(bool isReadOnly)
+void FilesWidget::setReadOnly(bool _isReadOnly)
 {
-    ElementWidget::setReadOnly(isReadOnly);
-    fileList->setReadOnly(isReadOnly);
+    ElementWidget::setReadOnly(_isReadOnly);
+    fileList->setReadOnly(_isReadOnly);
 }
 
 QString FilesWidget::label()
@@ -823,12 +823,12 @@ bool OtherFieldsWidget::validate(QWidget **, QString &) const
     return true;
 }
 
-void OtherFieldsWidget::setReadOnly(bool isReadOnly)
+void OtherFieldsWidget::setReadOnly(bool _isReadOnly)
 {
-    ElementWidget::setReadOnly(isReadOnly);
+    ElementWidget::setReadOnly(_isReadOnly);
 
-    fieldName->setReadOnly(isReadOnly);
-    fieldContent->setReadOnly(isReadOnly);
+    fieldName->setReadOnly(_isReadOnly);
+    fieldContent->setReadOnly(_isReadOnly);
 
     /// will take care of enabled/disabling buttons
     updateGUI();
@@ -1057,11 +1057,11 @@ bool MacroWidget::validate(QWidget **widgetWithIssue, QString &message) const
     return fieldInputValue->validate(widgetWithIssue, message);
 }
 
-void MacroWidget::setReadOnly(bool isReadOnly)
+void MacroWidget::setReadOnly(bool _isReadOnly)
 {
-    ElementWidget::setReadOnly(isReadOnly);
+    ElementWidget::setReadOnly(_isReadOnly);
 
-    fieldInputValue->setReadOnly(isReadOnly);
+    fieldInputValue->setReadOnly(_isReadOnly);
 }
 
 QString MacroWidget::label()
@@ -1127,11 +1127,11 @@ bool PreambleWidget::validate(QWidget **widgetWithIssue, QString &message) const
     return fieldInputValue->validate(widgetWithIssue, message);
 }
 
-void PreambleWidget::setReadOnly(bool isReadOnly)
+void PreambleWidget::setReadOnly(bool _isReadOnly)
 {
-    ElementWidget::setReadOnly(isReadOnly);
+    ElementWidget::setReadOnly(_isReadOnly);
 
-    fieldInputValue->setReadOnly(isReadOnly);
+    fieldInputValue->setReadOnly(_isReadOnly);
 }
 
 QString PreambleWidget::label()
@@ -1319,12 +1319,12 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
     return result;
 }
 
-void SourceWidget::setReadOnly(bool isReadOnly)
+void SourceWidget::setReadOnly(bool _isReadOnly)
 {
-    ElementWidget::setReadOnly(isReadOnly);
+    ElementWidget::setReadOnly(_isReadOnly);
 
-    d->buttonRestore->setEnabled(!isReadOnly);
-    document->setReadWrite(!isReadOnly);
+    d->buttonRestore->setEnabled(!_isReadOnly);
+    document->setReadWrite(!_isReadOnly);
 }
 
 QString SourceWidget::label()

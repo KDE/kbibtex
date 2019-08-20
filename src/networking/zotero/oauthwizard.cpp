@@ -69,7 +69,7 @@ public:
         /// If the correct URL with an authorization token is requested from this
         /// local webserver, the credentials will be stored and this wizard dialog
         /// be closed.
-        const int port = qrand() % 50000 + 15000;
+        const quint16 port = static_cast<quint16>(qrand() % 50000) + 15000;
         QOAuthHttpServerReplyHandler *replyHandler = new QOAuthHttpServerReplyHandler(port, parent);
         replyHandler->setCallbackPath("kbibtex-zotero-oauth");
         replyHandler->setCallbackText(i18n("<html><head><title>KBibTeX authorized to use Zotero</title></head><body><p>KBibTeX got successfully authorized to read your Zotero database.</p></body></html>"));
@@ -82,7 +82,7 @@ public:
         buttonOpenAuthorizationUrl->setEnabled(false);
         QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
 
-        connect(qOAuth, &QAbstractOAuth::authorizeWithBrowser, parent, [this, parent](QUrl url) {
+        connect(qOAuth, &QAbstractOAuth::authorizeWithBrowser, parent, [this](QUrl url) {
             QUrlQuery query(url);
             query.addQueryItem(QStringLiteral("name"), QStringLiteral("KBibTeX"));
             query.addQueryItem(QStringLiteral("library_access"), QStringLiteral("1"));

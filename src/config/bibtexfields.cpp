@@ -60,7 +60,7 @@ public:
         if (layoutConfig->groupList().isEmpty())
             qCWarning(LOG_KBIBTEX_CONFIG) << "The configuration file for layout of type" << style << "could not be located or is empty";
 #else // HAVE_KF5
-        Q_UNUSED(style);
+        Q_UNUSED(style)
 #endif // HAVE_KF5
     }
 
@@ -358,7 +358,7 @@ const FieldDescription BibTeXFields::find(const QString &name) const
 
 KBibTeX::TypeFlag BibTeXFields::typeFlagFromString(const QString &typeFlagString)
 {
-    KBibTeX::TypeFlag result = (KBibTeX::TypeFlag)0;
+    KBibTeX::TypeFlag result = KBibTeX::tfInvalid;
 
     if (typeFlagString == QStringLiteral("Text"))
         result = KBibTeX::tfPlainText;
@@ -372,6 +372,8 @@ KBibTeX::TypeFlag BibTeXFields::typeFlagFromString(const QString &typeFlagString
         result = KBibTeX::tfReference;
     else if (typeFlagString == QStringLiteral("Verbatim"))
         result = KBibTeX::tfVerbatim;
+    else
+        qCWarning(LOG_KBIBTEX_CONFIG) << "Could not interpret string" << typeFlagString << "into a KBibTeX::TypeFlag value";
 
     return result;
 }

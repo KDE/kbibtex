@@ -471,7 +471,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
         if (iconData[1] == 'P' && iconData[2] == 'N' && iconData[3] == 'G') {
             /// PNG files have string "PNG" at second to fourth byte
             extension = QStringLiteral(".png");
-        } else if (iconData[0] == (char)0x00 && iconData[1] == (char)0x00 && iconData[2] == (char)0x01 && iconData[3] == (char)0x00) {
+        } else if (iconData[0] == static_cast<char>(0x00) && iconData[1] == static_cast<char>(0x00) && iconData[2] == static_cast<char>(0x01) && iconData[3] == static_cast<char>(0x00)) {
             /// Microsoft Icon have first two bytes always 0x0000,
             /// third and fourth byte is 0x0001 (for .ico)
             extension = QStringLiteral(".ico");

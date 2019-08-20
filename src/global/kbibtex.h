@@ -65,6 +65,7 @@ public:
     };
 
     enum TypeFlag {
+        tfInvalid = 0x0,
         tfPlainText = 0x1,
         tfReference = 0x2,
         tfPerson = 0x4,

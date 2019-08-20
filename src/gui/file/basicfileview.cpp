@@ -202,7 +202,7 @@ void BasicFileView::keyPressEvent(QKeyEvent *event)
 }
 
 void BasicFileView::resizeEvent(QResizeEvent *event) {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
     const int w = qMax(width() - 20, 0);
     header()->setMinimumWidth(w);
     header()->setMaximumWidth(w);

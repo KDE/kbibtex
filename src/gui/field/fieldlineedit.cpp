@@ -59,10 +59,10 @@ private:
 
 public:
     QMenu *menuTypes;
-    KBibTeX::TypeFlag typeFlag;
     QUrl urlToOpen;
     const File *file;
     QString fieldKey;
+    KBibTeX::TypeFlag typeFlag;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
             : parent(p), preferredTypeFlag(ptf), typeFlags(tf), file(nullptr) {
@@ -314,6 +314,7 @@ public:
 
     QIcon iconForTypeFlag(KBibTeX::TypeFlag typeFlag) {
         switch (typeFlag) {
+        case KBibTeX::tfInvalid: return QIcon();
         case KBibTeX::tfPlainText: return QIcon::fromTheme(QStringLiteral("draw-text"));
         case KBibTeX::tfReference: return QIcon::fromTheme(QStringLiteral("emblem-symbolic-link"));
         case KBibTeX::tfPerson: return QIcon::fromTheme(QStringLiteral("user-identity"));
@@ -328,6 +329,7 @@ public:
         parent->setFont(QFontDatabase::systemFont(QFontDatabase::GeneralFont));
         parent->setIcon(iconForTypeFlag(typeFlag));
         switch (typeFlag) {
+        case KBibTeX::tfInvalid: parent->setButtonToolTip(QString()); break;
         case KBibTeX::tfPlainText: parent->setButtonToolTip(i18n("Plain Text")); break;
         case KBibTeX::tfReference: parent->setButtonToolTip(i18n("Reference")); break;
         case KBibTeX::tfPerson: parent->setButtonToolTip(i18n("Person")); break;

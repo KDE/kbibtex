@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -49,7 +49,7 @@ public:
     QString collectionParent(const QString &collectionId) const;
     QVector<QString> collectionChildren(const QString &collectionId) const;
     uint collectionNumericId(const QString &collectionId) const;
-    QString collectionFromNumericId(uint numericId) const;
+    QString collectionFromNumericId(quintptr numericId) const;
 
 signals:
     void finishedLoading();

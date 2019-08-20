@@ -51,9 +51,9 @@ KBibTeXPartFactory::~KBibTeXPartFactory() {
 }
 
 QObject *KBibTeXPartFactory::create(const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword) {
-    Q_UNUSED(iface);
+    Q_UNUSED(iface)
     Q_UNUSED(args)
-    Q_UNUSED(keyword);
+    Q_UNUSED(keyword)
 
     KBibTeXPart *part = new KBibTeXPart(parentWidget, parent, d->aboutData);
     return part;
