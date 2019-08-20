@@ -74,12 +74,12 @@ public:
      * element. May fail for various reasons, such as the text not being
      * a valid URL or the element being invalid.
      */
-    bool insertUrl(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
+    bool insertUrl(const QString &text, QSharedPointer<Element> element) {
         const QUrl url = QUrl::fromUserInput(text);
         return insertUrl(url, element);
     }
 
-    bool insertUrl(const QUrl &url, QSharedPointer<Element> element = QSharedPointer<Element>()) {
+    bool insertUrl(const QUrl &url, QSharedPointer<Element> element) {
         if (element.isNull()) return false;
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (entry.isNull()) return false;

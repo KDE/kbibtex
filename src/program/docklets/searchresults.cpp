@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -179,7 +179,7 @@ bool SearchResults::insertElement(QSharedPointer<Element> element)
 
 void SearchResults::documentSwitched(FileView *oldEditor, FileView *newEditor)
 {
-    Q_UNUSED(oldEditor);
+    Q_UNUSED(oldEditor)
     d->mainEditor = newEditor;
     updateGUI();
 }

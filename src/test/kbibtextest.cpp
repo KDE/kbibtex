@@ -49,13 +49,11 @@
 #include <onlinesearch/OnlineSearchBioRxiv>
 #include <onlinesearch/OnlineSearchSemanticScholar>
 
-int filenameCounter = 0;
-
 static QColor blendColors(const QColor &color1, const QColor &color2, const qreal ratio)
 {
-    const int r = color1.red() * (1 - ratio) + color2.red() * ratio;
-    const int g = color1.green() * (1 - ratio) + color2.green() * ratio;
-    const int b = color1.blue() * (1 - ratio) + color2.blue() * ratio;
+    const int r = static_cast<int>(color1.red() * (1 - ratio) + color2.red() * ratio);
+    const int g = static_cast<int>(color1.green() * (1 - ratio) + color2.green() * ratio);
+    const int b = static_cast<int>(color1.blue() * (1 - ratio) + color2.blue() * ratio);
 
     return QColor(r, g, b, 255);
 }

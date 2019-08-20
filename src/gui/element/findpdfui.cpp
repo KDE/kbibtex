@@ -342,7 +342,7 @@ bool PDFListModel::setData(const QModelIndex &index, const QVariant &value, int 
 
 QVariant PDFListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    Q_UNUSED(orientation);
+    Q_UNUSED(orientation)
 
     if (section == 0) {
         if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {

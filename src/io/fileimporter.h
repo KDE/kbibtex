@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -64,7 +64,7 @@ public:
       * additional information is necessary or not.
       */
     virtual bool showImportDialog(QWidget *parent) {
-        Q_UNUSED(parent);
+        Q_UNUSED(parent)
         return true;
     }
 

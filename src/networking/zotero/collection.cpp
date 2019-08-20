@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -151,7 +151,7 @@ uint Collection::collectionNumericId(const QString &collectionId) const
     return qHash(collectionId);
 }
 
-QString Collection::collectionFromNumericId(uint numericId) const
+QString Collection::collectionFromNumericId(quintptr numericId) const
 {
     if (numericId == 0) /// root node
         return Private::top;

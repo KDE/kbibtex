@@ -457,7 +457,7 @@ void SearchForm::stoppedSearch(int)
 
 void SearchForm::tabSwitched(int newTab)
 {
-    Q_UNUSED(newTab);
+    Q_UNUSED(newTab)
     d->updateGUI();
 }
 

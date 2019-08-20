@@ -622,7 +622,7 @@ QString FileImporterBibTeX::readSimpleString(const QString &until, const bool re
                 /// Append read character to final result
                 result.append(m_nextChar);
             }
-        } else if ((nextCharUnicode >= (ushort)'a' && nextCharUnicode <= (ushort)'z') || (nextCharUnicode >= (ushort)'A' && nextCharUnicode <= (ushort)'Z') || (nextCharUnicode >= (ushort)'0' && nextCharUnicode <= (ushort)'9') || extraAlphaNumChars.contains(m_nextChar)) {
+        } else if ((nextCharUnicode >= static_cast<ushort>('a') && nextCharUnicode <= static_cast<ushort>('z')) || (nextCharUnicode >= static_cast<ushort>('A') && nextCharUnicode <= static_cast<ushort>('Z')) || (nextCharUnicode >= static_cast<ushort>('0') && nextCharUnicode <= static_cast<ushort>('9')) || extraAlphaNumChars.contains(m_nextChar)) {
             /// Accept default set of alpha-numeric characters
             result.append(m_nextChar);
         } else

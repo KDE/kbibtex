@@ -115,7 +115,7 @@ QModelIndex ColorLabelSettingsModel::index(int row, int column, const QModelInde
 {
     if (row >= 0 && row <= colorLabelPairs.size() - 1 && column >= 0 && column <= 1 && parent == QModelIndex())
         /// Create index for valid combinations of row, column, and parent
-        return createIndex(row, column, row);
+        return createIndex(row, column, static_cast<quintptr>(row));
     else
         return QModelIndex();
 }

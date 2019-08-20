@@ -660,7 +660,7 @@ void KBibTeXIOTest::partialBibTeXInput()
     FileImporterBibTeX importer(this);
     connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
         gotErrors |= messageSeverity >= FileImporter::SeverityError;
-        Q_UNUSED(messageText);
+        Q_UNUSED(messageText)
         //qCDebug(LOG_KBIBTEX_TEST)<<"FileImporterBibTeX issues message during 'partialBibTeXInput' test: "<<messageText;
     });
     QScopedPointer<File> bibTeXfile(importer.fromString(text));
@@ -701,7 +701,7 @@ void KBibTeXIOTest::partialRISInput()
     FileImporterRIS importer(this);
     connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
         gotErrors |= messageSeverity >= FileImporter::SeverityError;
-        Q_UNUSED(messageText);
+        Q_UNUSED(messageText)
         //qCDebug(LOG_KBIBTEX_TEST)<<"FileImporterRIS issues message during 'partialBibTeXInput' test: "<<messageText;
     });
     QScopedPointer<File> bibTeXfile(importer.fromString(text));
