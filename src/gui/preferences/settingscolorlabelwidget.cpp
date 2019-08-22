@@ -492,6 +492,7 @@ public:
                         modifying = true;
                     }
                     if (modifying)
+                        // TODO notification of modification does not propagate?
                         model->elementChanged(row);
                 }
             }

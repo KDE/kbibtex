@@ -1084,11 +1084,13 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
 
 QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name, const int line_number, QObject *parent)
 {
+    // TODO Merge with FileImporter::splitName
     return personFromString(name, nullptr, line_number, parent);
 }
 
 QSharedPointer<Person> FileImporterBibTeX::personFromString(const QString &name, CommaContainment *comma, const int line_number, QObject *parent)
 {
+    // TODO Merge with FileImporter::splitName and FileImporterBibTeX::contextSensitiveSplit
     static QStringList tokens;
     contextSensitiveSplit(name, tokens);
     return personFromTokenList(tokens, comma, line_number, parent);
@@ -1221,6 +1223,7 @@ QSharedPointer<Person> FileImporterBibTeX::personFromTokenList(const QStringList
 
 void FileImporterBibTeX::contextSensitiveSplit(const QString &text, QStringList &segments)
 {
+    // TODO Merge with FileImporter::splitName and FileImporterBibTeX::personFromString
     int bracketCounter = 0; ///< keep track of opening and closing brackets: {...}
     QString buffer;
     int len = text.length();
