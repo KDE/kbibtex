@@ -276,13 +276,16 @@ void KBibTeXIOTest::fileInfoUrlsInText()
         QCOMPARE(extractedUrls.contains(expectedUrl), true);
 }
 
+static const char *fileImporterExporterTestCases_Label_Empty_file = "Empty file";
+static const char *fileImporterExporterTestCases_Label_Moby_Dick = "Moby Dick";
+
 QVector<QPair<const char *, File *> > KBibTeXIOTest::fileImporterExporterTestCases()
 {
     static QVector<QPair<const char *, File *> > result;
 
     if (result.isEmpty()) {
         /// Empty file without any entries
-        result.append(QPair<const char *, File *>("Empty file", new File()));
+        result.append(QPair<const char *, File *>(fileImporterExporterTestCases_Label_Empty_file, new File()));
 
         /// File with single entry, inspired by 'Moby Dick'
         File *f1 = new File();
@@ -291,7 +294,7 @@ QVector<QPair<const char *, File *> > KBibTeXIOTest::fileImporterExporterTestCas
         entry1->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("{Call me Ishmael}"))));
         entry1->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Herman"), QStringLiteral("Melville"))) << QSharedPointer<Person>(new Person(QStringLiteral("Moby"), QStringLiteral("Dick"))));
         entry1->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("1851"))));
-        result.append(QPair<const char *, File *>("Moby Dick", f1));
+        result.append(QPair<const char *, File *>(fileImporterExporterTestCases_Label_Moby_Dick, f1));
 
         // TODO add more file objects to result vector
 
@@ -313,8 +316,8 @@ void KBibTeXIOTest::fileExporterXMLsave_data()
     QTest::addColumn<QString>("xmlData");
 
     static const QHash<const char *, QString> keyToXmlData {
-        {"Empty file", QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>|</bibliography>|")},
-        {"Moby Dick", QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>| <entry id=\"the-whale-1851\" type=\"article\">|  <authors>|<person><firstname>Herman</firstname><lastname>Melville</lastname></person> <person><firstname>Moby</firstname><lastname>Dick</lastname></person>|  </authors>|  <title><text>Call me Ishmael</text></title>|  <year><text>1851</text></year>| </entry>|</bibliography>|")}
+        {fileImporterExporterTestCases_Label_Empty_file, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>|</bibliography>|")},
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>| <entry id=\"the-whale-1851\" type=\"article\">|  <authors>|<person><firstname>Herman</firstname><lastname>Melville</lastname></person> <person><firstname>Moby</firstname><lastname>Dick</lastname></person>|  </authors>|  <title><text>Call me Ishmael</text></title>|  <year><text>1851</text></year>| </entry>|</bibliography>|")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -343,8 +346,8 @@ void KBibTeXIOTest::fileExporterRISsave_data()
     QTest::addColumn<QString>("risData");
 
     static const QHash<const char *, QString> keyToRisData {
-        {"Empty file", QString()},
-        {"Moby Dick", QStringLiteral("TY  - JOUR|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851///|ER  - ||")}
+        {fileImporterExporterTestCases_Label_Empty_file, QString()},
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("TY  - JOUR|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851///|ER  - ||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -373,8 +376,8 @@ void KBibTeXIOTest::fileExporterBibTeXsave_data()
     QTest::addColumn<QString>("bibTeXdata");
 
     static const QHash<const char *, QString> keyToBibTeXData {
-        {"Empty file", QString()},
-        {"Moby Dick", QStringLiteral("@article{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
+        {fileImporterExporterTestCases_Label_Empty_file, QString()},
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("@article{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -403,8 +406,8 @@ void KBibTeXIOTest::fileImporterRISload_data()
     QTest::addColumn<File *>("bibTeXfile");
 
     static const QHash<const char *, QString> keyToRisData {
-        {"Empty file", QString()},
-        {"Moby Dick", QStringLiteral("TY  - JOUR|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851///|ER  - ||")}
+        {fileImporterExporterTestCases_Label_Empty_file, QString()},
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("TY  - JOUR|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851///|ER  - ||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -433,8 +436,8 @@ void KBibTeXIOTest::fileImporterBibTeXload_data()
     QTest::addColumn<File *>("bibTeXfile");
 
     static const QHash<const char *, QString> keyToBibTeXData {
-        {"Empty file", QString()},
-        {"Moby Dick", QStringLiteral("@article{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
+        {fileImporterExporterTestCases_Label_Empty_file, QString()},
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("@article{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
