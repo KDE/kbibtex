@@ -513,39 +513,41 @@ void ElementEditor::apply()
 
     QSharedPointer<Entry> entry = d->element.dynamicCast<Entry>();
     QSharedPointer<Macro> macro = d->element.dynamicCast<Macro>();
-    /// Determine id/key as it was set before the current editing started
-    const QString originalId = !entry.isNull() ? entry->id() : (!macro.isNull() ? macro->key() : QString());
-    /// Get the id/key as it is in the editing widget right now
-    const QString newId = d->currentId();
-    /// Keep track whether the 'original' id/key or the 'new' id/key will eventually be used
-    enum IdToUse {UseOriginalId, UseNewId};
-    IdToUse idToUse = UseNewId;
+    /// Only for entry or macro bother with duplicate ids (but not for preamble or comment)
+    if (!entry.isNull() || !macro.isNull()) {
+        /// Determine id/key as it was set before the current editing started
+        const QString originalId = !entry.isNull() ? entry->id() : (!macro.isNull() ? macro->key() : QString());
+        /// Get the id/key as it is in the editing widget right now
+        const QString newId = d->currentId();
+        /// Keep track whether the 'original' id/key or the 'new' id/key will eventually be used
+        enum IdToUse {UseOriginalId, UseNewId};
+        IdToUse idToUse = UseNewId;
 
-    if (newId.isEmpty() && !originalId.isEmpty()) {
-        /// New id/key is empty (invalid by definition), so just notify use and revert back to original id/key
-        /// (assuming that original id/key is valid)
-        KMessageBox::sorry(this, i18n("No id was entered, so the previous id '%1' will be restored.", originalId), i18n("No id given"));
-        idToUse = UseOriginalId;
-    } else if (!newId.isEmpty()) {
-        /// If new id/key is not empty, then check if it is identical to another entry/macro in the current file
-        const QSharedPointer<Element> knownElementWithSameId = d->currentFile() != nullptr ? d->currentFile()->containsKey(newId) : QSharedPointer<Element>();
-        if (!knownElementWithSameId.isNull() && d->element != knownElementWithSameId) {
-            /// Some other, different element (entry or macro) uses same id/key, so ask user how to proceed
-            const int msgBoxResult = KMessageBox::warningContinueCancel(this, i18n("The entered id '%1' is already in use for another element.\n\nKeep original id '%2' instead?", newId, originalId), i18n("Id already in use"), KGuiItem(i18n("Keep duplicate ids")), KGuiItem(i18n("Restore original id")));
-            idToUse = msgBoxResult == KMessageBox::Continue ? UseNewId : UseOriginalId;
+        if (newId.isEmpty() && !originalId.isEmpty()) {
+            /// New id/key is empty (invalid by definition), so just notify use and revert back to original id/key
+            /// (assuming that original id/key is valid)
+            KMessageBox::sorry(this, i18n("No id was entered, so the previous id '%1' will be restored.", originalId), i18n("No id given"));
+            idToUse = UseOriginalId;
+        } else if (!newId.isEmpty()) { // FIXME test if !originalId.isEmpty() ?
+            /// If new id/key is not empty, then check if it is identical to another entry/macro in the current file
+            const QSharedPointer<Element> knownElementWithSameId = d->currentFile() != nullptr ? d->currentFile()->containsKey(newId) : QSharedPointer<Element>();
+            if (!knownElementWithSameId.isNull() && d->element != knownElementWithSameId) {
+                /// Some other, different element (entry or macro) uses same id/key, so ask user how to proceed
+                const int msgBoxResult = KMessageBox::warningContinueCancel(this, i18n("The entered id '%1' is already in use for another element.\n\nKeep original id '%2' instead?", newId, originalId), i18n("Id already in use"), KGuiItem(i18n("Keep duplicate ids")), KGuiItem(i18n("Restore original id")));
+                idToUse = msgBoxResult == KMessageBox::Continue ? UseNewId : UseOriginalId;
+            }
         }
+
+        if (idToUse == UseOriginalId) {
+            /// As 'apply()' above set the 'new' id/key but the 'original' id/key is to be used,
+            /// now UI must be updated accordingly. Changes will propagate to the entry id or
+            /// macro key, respectively, when invoking apply() further down
+            d->setCurrentId(originalId);
+        }
+        /// Case idToUse == UseNewId does not need to get handled as newId == d->currentId()
     }
 
-    if (idToUse == UseOriginalId) {
-        /// As 'apply()' above set the 'new' id/key but the 'original' id/key is to be used,
-        /// now UI must be updated accordingly. Changes will propagate to the entry id or
-        /// macro key, respectively, when invoking apply() further down
-        d->setCurrentId(originalId);
-    }
-
-    /// Apply will always set the 'new' id/key to the entry or macro, respectively
     d->apply();
-
     d->setModified(false);
     emit modified(false);
 }
