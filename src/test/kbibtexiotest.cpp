@@ -92,7 +92,7 @@ void KBibTeXIOTest::encoderConvertToPlainAscii_data()
     QTest::addColumn<QString>("unicodestring");
     /// Depending on the chosen implementation for Encoder::instance().convertToPlainAscii(),
     /// the ASCII variant may slightly differ (both alternatives are considered valid).
-    /// If both implementation should produce the same ASCII output, 'asciialternative2' is
+    /// If both implementations produce the same ASCII output, 'asciialternative2' is
     /// to be set to be empty.
     QTest::addColumn<QString>("asciialternative1");
     QTest::addColumn<QString>("asciialternative2");
@@ -289,6 +289,9 @@ static const char *fileImporterExporterTestCases_Label_Moby_Dick = "Moby Dick";
 
 QVector<QPair<const char *, File *> > KBibTeXIOTest::fileImporterExporterTestCases()
 {
+    /// The vector 'result' is static so that if this function is invoked multiple
+    /// times, the vector will be initialized and filled with File objects only upon
+    /// the function's first invocation.
     static QVector<QPair<const char *, File *> > result;
 
     if (result.isEmpty()) {
