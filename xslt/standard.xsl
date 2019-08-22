@@ -159,14 +159,14 @@
 </xsl:text>
 </xsl:template>
 
-<xsl:template match="bibliography">
+<xsl:template match="/bibliography">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <title>Bibliography</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 </head>
 <body>
-<xsl:apply-templates select="entry" />
+<xsl:apply-templates />
 </body>
 </html>
 </xsl:template>

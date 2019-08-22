@@ -33,6 +33,7 @@
 #include <FileExporterBibTeX>
 #include <FileExporterRIS>
 #include <FileExporterXML>
+#include <FileExporterXSLT>
 
 Q_DECLARE_METATYPE(QMimeType)
 
@@ -61,6 +62,8 @@ private slots:
     QVector<QPair<const char *, File *> > fileImporterExporterTestCases();
     void fileExporterXMLsave_data();
     void fileExporterXMLsave();
+    void fileExporterXSLTstandardSave_data();
+    void fileExporterXSLTstandardSave();
     void fileExporterRISsave_data();
     void fileExporterRISsave();
     void fileExporterBibTeXsave_data();
@@ -338,6 +341,37 @@ void KBibTeXIOTest::fileExporterXMLsave()
         qDebug() << logLine;
 
     QCOMPARE(generatedData, xmlData);
+}
+
+void KBibTeXIOTest::fileExporterXSLTstandardSave_data()
+{
+    QTest::addColumn<File *>("bibTeXfile");
+    QTest::addColumn<QSet<QString>>("expectedFragments");
+
+    static const QHash<const char *, QSet<QString>> keyToXsltData {
+        {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body/>")}},
+        {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral(">1851<"), QStringLiteral(">Call me Ishmael<"), QStringLiteral("</b>"), QStringLiteral("</body>")}}
+    };
+    static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
+
+    for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
+        if (keyToXsltData.contains(it->first))
+            QTest::newRow(it->first) << it->second << keyToXsltData.value(it->first);
+}
+
+void KBibTeXIOTest::fileExporterXSLTstandardSave()
+{
+    QFETCH(File *, bibTeXfile);
+    QFETCH(QSet<QString>, expectedFragments);
+
+    FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/standard.xsl")), this);
+    QStringList errorLog;
+    const QString generatedData = fileExporterXSLT.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
+    for (const QString &logLine : const_cast<const QStringList &>(errorLog))
+        qDebug() << logLine;
+
+    for (const QString &fragment : expectedFragments)
+        QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data")).arg(fragment).toLatin1().constData());
 }
 
 void KBibTeXIOTest::fileExporterRISsave_data()
