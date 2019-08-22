@@ -192,9 +192,10 @@ void ColorLabelWidget::setReadOnly(bool isReadOnly)
 void ColorLabelWidget::slotCurrentIndexChanged(int index)
 {
     if (index == count() - 1) {
-        QColor dialogColor = d->model->userColor;
-        if (QColorDialog::getColor(dialogColor, this) == QColorDialog::Accepted)
-            d->model->setColor(dialogColor);
+        const QColor initialColor = d->model->userColor;
+        const QColor newColor = QColorDialog::getColor(initialColor, this);
+        if (newColor.isValid())
+            d->model->setColor(newColor);
     }
 
     emit modified();
