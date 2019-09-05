@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -51,6 +51,10 @@ public:
     }
 
     void balanceColumns() {
+        if (p->header()->count() != BibTeXFields::instance().count()) {
+            qWarning() << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            return;
+        }
         int defaultWidthSumVisible = 0;
         int col = 0;
         for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
@@ -70,6 +74,10 @@ public:
     }
 
     void resetColumnProperties() {
+        if (p->header()->count() != BibTeXFields::instance().count()) {
+            qWarning() << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            return;
+        }
         int col = 0;
         for (BibTeXFields::Iterator it = BibTeXFields::instance().begin(), endIt = BibTeXFields::instance().end(); it != endIt; ++it) {
             auto &fd = *it;
@@ -83,6 +91,10 @@ public:
     }
 
     void loadColumnProperties() {
+        if (p->header()->count() != BibTeXFields::instance().count()) {
+            qWarning() << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            return;
+        }
         int col = 0;
         for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
             const bool visibility = fd.visible.contains(name) ? fd.visible[name] : fd.defaultVisible;
@@ -93,6 +105,10 @@ public:
     }
 
     void saveColumnProperties() {
+        if (p->header()->count() != BibTeXFields::instance().count()) {
+            qWarning() << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            return;
+        }
         int col = 0;
         for (BibTeXFields::Iterator it = BibTeXFields::instance().begin(), endIt = BibTeXFields::instance().end(); it != endIt; ++it) {
             auto &fd = *it;
