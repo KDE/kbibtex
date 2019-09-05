@@ -61,8 +61,12 @@ void FileModel::notificationEvent(int eventId)
                 emit dataChanged(index(0, column), index(rowCount() - 1, column));
             ++column;
         }
-    } else if (eventId == NotificationHub::EventBibliographySystemChanged)
+    } else if (eventId == NotificationHub::EventBibliographySystemChanged) {
+        beginResetModel();
+        endResetModel();
         emit headerDataChanged(Qt::Horizontal, 0, 0xffff);
+        emit dataChanged(index(0, 0), index(rowCount() - 1, columnCount() - 1));
+    }
 }
 
 void FileModel::readConfiguration()
