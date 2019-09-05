@@ -160,14 +160,12 @@ bool FileModel::hasChildren(const QModelIndex &parent) const
 
 int FileModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
-    return m_file != nullptr ? m_file->count() : 0;
+    return parent == QModelIndex() && m_file != nullptr ? m_file->count() : 0;
 }
 
 int FileModel::columnCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent)
-    return BibTeXFields::instance().count();
+    return parent == QModelIndex() ? BibTeXFields::instance().count() : 0;
 }
 
 QVariant FileModel::data(const QModelIndex &index, int role) const
