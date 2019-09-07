@@ -504,7 +504,7 @@ void UrlListEdit::addReference(const QUrl &url) {
 void UrlListEdit::downloadAndSaveLocally(const QUrl &url)
 {
     /// Only proceed if Url is valid and points to a remote location
-    if (url.isValid() && !urlIsLocal(url)) {
+    if (url.isValid() && !url.isLocalFile()) {
         /// Get filename from url (without any path/directory part)
         QString filename = url.fileName();
         /// Build QFileInfo from current BibTeX file if available
@@ -577,14 +577,6 @@ QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString 
             return relativeFilename;
     }
     return absoluteFilename;
-}
-
-bool UrlListEdit::urlIsLocal(const QUrl &url)
-{
-    // FIXME same function as in AssociateFiles; move to common code base?
-    const QString scheme = url.scheme();
-    /// Test various schemes such as "http", "https", "ftp", ...
-    return !scheme.startsWith(QStringLiteral("http")) && !scheme.startsWith(QStringLiteral("ftp")) && !scheme.startsWith(QStringLiteral("sftp")) && !scheme.startsWith(QStringLiteral("fish")) && !scheme.startsWith(QStringLiteral("webdav")) && scheme != QStringLiteral("smb");
 }
 
 FieldLineEdit *UrlListEdit::addFieldLineEdit()

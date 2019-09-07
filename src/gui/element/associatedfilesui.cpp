@@ -158,7 +158,7 @@ bool AssociatedFilesUI::associateUrl(const QUrl &url, QSharedPointer<Entry> &ent
     connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
 
-    if (AssociatedFiles::urlIsLocal(url))
+    if (url.isLocalFile())
         ui->setupForLocalFile(url, entry->id());
     else
         ui->setupForRemoteUrl(url, entry->id());
@@ -190,7 +190,7 @@ QString AssociatedFilesUI::associateUrl(const QUrl &url, const QString &entryId,
     connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
 
-    if (AssociatedFiles::urlIsLocal(url))
+    if (url.isLocalFile())
         ui->setupForLocalFile(url, entryId);
     else
         ui->setupForRemoteUrl(url, entryId);

@@ -26,14 +26,6 @@
 #include <Preferences>
 #include "logging_networking.h"
 
-bool AssociatedFiles::urlIsLocal(const QUrl &url)
-{
-    // FIXME same function as in UrlListEdit; move to common code base?
-    const QString scheme = url.scheme();
-    /// Test various schemes such as "http", "https", "ftp", ...
-    return !scheme.startsWith(QStringLiteral("http")) && !scheme.startsWith(QStringLiteral("ftp")) && !scheme.startsWith(QStringLiteral("sftp")) && !scheme.startsWith(QStringLiteral("fish")) && !scheme.startsWith(QStringLiteral("webdav")) && scheme != QStringLiteral("smb");
-}
-
 QString AssociatedFiles::relativeFilename(const QUrl &documentUrl, const QUrl &baseUrl) {
     if (documentUrl.isEmpty()) {
         qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL has to point to a file location or URL";
@@ -94,8 +86,7 @@ QString AssociatedFiles::associateDocumentURL(const QUrl &document, QSharedPoint
         pathType = ptAbsolute;
     }
 
-    const bool isLocal = urlIsLocal(document);
-    const QString field = isLocal ? (Preferences::instance().bibliographySystem() == Preferences::instance().BibTeX ? Entry::ftLocalFile : Entry::ftFile) : Entry::ftUrl;
+    const QString field = document.isLocalFile() ? (Preferences::instance().bibliographySystem() == Preferences::instance().BibTeX ? Entry::ftLocalFile : Entry::ftFile) : Entry::ftUrl;
     QString finalUrl = pathType == ptAbsolute ? absoluteFilename(document, baseUrl) : relativeFilename(document, baseUrl);
 
     if (!dryRun) { /// only if not pretending
@@ -164,7 +155,7 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
 
     if (!dryRun) { /// only if not pretending
         bool success = true;
-        if (urlIsLocal(internalSourceUrl) && urlIsLocal(targetUrl)) {
+        if (internalSourceUrl.isLocalFile() && targetUrl.isLocalFile()) {
             QFile(targetUrl.path()).remove();
             success &= QFile::copy(internalSourceUrl.path(), targetUrl.path()); // FIXME check if succeeded
             if (moveCopyOperation == mcoMove) {
