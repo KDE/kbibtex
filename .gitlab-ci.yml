@@ -22,7 +22,7 @@ variables:
 
 before_script:
   - sudo apt-get update -qq
-  - sudo apt-get install -y -qq cmake ninja-build build-essential extra-cmake-modules libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5test5 libqt5webenginewidgets5 libqt5webkit5 libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5itemviews-dev libkf5completion-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev libpoppler-qt5-dev gettext libicu-dev libqca-qt5-2-dev git
+  - sudo apt-get install -y -qq cmake ninja-build build-essential extra-cmake-modules libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5test5 libqt5webenginewidgets5 libqt5webkit5 libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5itemviews-dev libkf5completion-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev libkf5syntaxhighlighting-dev libpoppler-qt5-dev gettext libicu-dev libqca-qt5-2-dev git
 
 automated-tests:
   script:
@@ -37,13 +37,13 @@ automated-tests:
     - ./kbibtexfilestest -platform offscreen
     - ./kbibtexnetworkingtest -platform offscreen
 
-coverity-scan:
-  script:
-    - mkdir -p $COVERITYSCAN_USR_DIR $COVERITYSCAN_OUTPUT_DIR/cov-int
-    - wget --no-check-certificate --post-data "project=KBibTeX&token="$COVERITYSCAN_TOKEN https://scan.coverity.com/download/cxx/linux64 -O - | tar -zxv -C $COVERITYSCAN_USR_DIR
-    - mkdir -p $BUILD_DIR/$CI_JOB_NAME && cd $BUILD_DIR/$CI_JOB_NAME
-    - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=OFF $CI_PROJECT_DIR
-    - ninja clean
-    - $COVERITYSCAN_USR_DIR/cov-analysis-linux64-$COVERITYSCAN_VERSION/bin/cov-build --dir $COVERITYSCAN_OUTPUT_DIR/cov-int ninja
-    - tar -cavf $COVERITYSCAN_COVINT_TARBALL -C $COVERITYSCAN_OUTPUT_DIR cov-int
-    - curl --insecure --verbose --progress-bar --form "token="$COVERITYSCAN_TOKEN --form "email=fischer@unix-ag.uni-kl.de"  --form "file=@"$COVERITYSCAN_COVINT_TARBALL --form "version=GitLab" --form "description=Automatically built on GitLab" "https://scan.coverity.com/builds?project=KBibTeX"
+#### coverity-scan:
+####   script:
+####     - mkdir -p $COVERITYSCAN_USR_DIR $COVERITYSCAN_OUTPUT_DIR/cov-int
+####     - wget --no-check-certificate --post-data "project=KBibTeX&token="$COVERITYSCAN_TOKEN https://scan.coverity.com/download/cxx/linux64 -O - | tar -zxv -C $COVERITYSCAN_USR_DIR
+####     - mkdir -p $BUILD_DIR/$CI_JOB_NAME && cd $BUILD_DIR/$CI_JOB_NAME
+####     - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=OFF $CI_PROJECT_DIR
+####     - ninja clean
+####     - $COVERITYSCAN_USR_DIR/cov-analysis-linux64-$COVERITYSCAN_VERSION/bin/cov-build --dir $COVERITYSCAN_OUTPUT_DIR/cov-int ninja
+####     - tar -cavf $COVERITYSCAN_COVINT_TARBALL -C $COVERITYSCAN_OUTPUT_DIR cov-int
+####     - curl --insecure --verbose --progress-bar --form "token="$COVERITYSCAN_TOKEN --form "email=fischer@unix-ag.uni-kl.de"  --form "file=@"$COVERITYSCAN_COVINT_TARBALL --form "version=GitLab" --form "description=Automatically built on GitLab" "https://scan.coverity.com/builds?project=KBibTeX"
