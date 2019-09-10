@@ -88,7 +88,7 @@ public:
         if (model == nullptr) return false;
 
         qCDebug(LOG_KBIBTEX_GUI) << "About to add URL " << url.toDisplayString() << " to entry" << entry->id();
-        return AssociatedFilesUI::associateUrl(url, entry, model->bibliographyFile(), fileView);
+        return !AssociatedFilesUI::associateUrl(url, entry, model->bibliographyFile(), true, fileView).isEmpty();
     }
 
     bool insertText(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {

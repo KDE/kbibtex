@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,6 +18,9 @@
 #include <QtTest>
 
 #include <onlinesearch/OnlineSearchAbstract>
+#include <AssociatedFiles>
+
+Q_DECLARE_METATYPE(AssociatedFiles::PathType)
 
 typedef QMap<QString, QString> FormData;
 
@@ -49,6 +52,8 @@ private slots:
     void onlineSearchAbstractSanitizeEntry_data();
     void onlineSearchAbstractSanitizeEntry();
 
+    void associatedFilescomputeAssociateURL_data();
+    void associatedFilescomputeAssociateURL();
 private:
 };
 
@@ -220,6 +225,53 @@ void KBibTeXNetworkingTest::onlineSearchAbstractSanitizeEntry()
     onlineSearch.sanitizeEntry_public(badInputEntrySharedPointer);
     QCOMPARE(*badInputEntrySharedPointer.data(), *goodOutputEntry);
     delete goodOutputEntry;
+}
+
+void KBibTeXNetworkingTest::associatedFilescomputeAssociateURL_data()
+{
+    QTest::addColumn<QUrl>("documentUrl");
+    QTest::addColumn<File *>("bibTeXFile");
+    QTest::addColumn<AssociatedFiles::PathType>("pathType");
+    QTest::addColumn<QString>("expectedResult");
+
+    File *bibTeXFile = new File();
+    bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
+    QTest::newRow("Remote URL, relative path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("../documents/paper.pdf");
+
+    bibTeXFile = new File();
+    bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
+    QTest::newRow("Remote URL, absolute path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptAbsolute << QStringLiteral("https://www.example.com/documents/paper.pdf");
+
+    bibTeXFile = new File();
+    QTest::newRow("Empty base URL, relative path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("https://www.example.com/documents/paper.pdf");
+
+    bibTeXFile = new File();
+    bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
+    QTest::newRow("Empty document URL, relative path requested") << QUrl() << bibTeXFile << AssociatedFiles::ptRelative << QString();
+
+    bibTeXFile = new File();
+    bibTeXFile->setProperty(File::Url, QUrl(QStringLiteral("bibliography/all.bib")));
+    QTest::newRow("Document URL and base URL are relative, relative path requested") << QUrl(QStringLiteral("documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("documents/paper.pdf");
+
+    bibTeXFile = new File();
+    bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
+    QTest::newRow("Document URL and base URL have different protocols, relative path requested") << QUrl::fromUserInput(QStringLiteral("ftp://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("ftp://www.example.com/documents/paper.pdf");
+
+    bibTeXFile = new File();
+    bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
+    QTest::newRow("Document URL and base URL have different hosts, relative path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example2.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("https://www.example2.com/documents/paper.pdf");
+}
+
+void KBibTeXNetworkingTest::associatedFilescomputeAssociateURL()
+{
+    QFETCH(QUrl, documentUrl);
+    QFETCH(File *, bibTeXFile);
+    QFETCH(AssociatedFiles::PathType, pathType);
+    QFETCH(QString, expectedResult);
+
+    const QString computedResult = AssociatedFiles::computeAssociateUrl(documentUrl, bibTeXFile, pathType);
+    QCOMPARE(expectedResult, computedResult);
+    delete bibTeXFile;
 }
 
 void KBibTeXNetworkingTest::initTestCase()

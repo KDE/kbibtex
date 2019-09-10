@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,8 +36,7 @@ class KBIBTEXGUI_EXPORT AssociatedFilesUI: public QWidget
 public:
     ~AssociatedFilesUI() override;
 
-    static bool associateUrl(const QUrl &url, QSharedPointer<Entry> &entry, const File *bibTeXfile, QWidget *parent);
-    static QString associateUrl(const QUrl &url, const QString &entryId, const File *bibTeXfile, QWidget *parent);
+    static QString associateUrl(const QUrl &url, QSharedPointer<Entry> &entry, const File *bibTeXfile, const bool doInsertUrl, QWidget *parent);
 
     AssociatedFiles::RenameOperation renameOperation() const;
     AssociatedFiles::MoveCopyOperation moveCopyOperation() const;

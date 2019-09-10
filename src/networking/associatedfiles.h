@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -60,19 +60,55 @@ public:
     };
 
     /**
-     * Test if a given URL points to a local file or a remote location.
-     * @param url URL to test
-     * @return true if the URL points to a local file
+     * Based on a given URL to an external document, compute an URL used for association
+     * and insert it into the given entry, either as local file or as URL.
+     *
+     * @param documentUrl URL to a document like 'http://www.example.com/publication.pdf'
+     * @param entry bibliography entry where the URL is to be associated with
+     * @param bibTeXFile valid bibliography, preferrably with property 'File::Url' set
+     * @param pathType request either a relative or an absolute path
+     * @return the computed URL string
      */
-    static bool urlIsLocal(const QUrl &url);
+    static QString insertUrl(const QUrl &documentUrl, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType);
 
+    /**
+     * Compute how the URL string to be associated to a bibliographic entry may look
+     * like for a given document URL, a given bibliography, and whether the URL string
+     * should be preferrably relative or absolute.
+     * @param documentUrl URL to a document like 'http://www.example.com/publication.pdf'
+     * @param bibTeXFile valid bibliography, preferrably with property 'File::Url' set
+     * @param pathType request either a relative or an absolute path
+     * @return the computed URL string
+     */
+    static QString computeAssociateUrl(const QUrl &documentUrl, const File *bibTeXFile, PathType pathType);
+
+    /**
+     * For a given (remote) source URL and given various information such as which
+     * bibliographic entry and file the local copy will be associated with, determine
+     * a destination URL where the source document may be copied to.
+     * This function will neither modify the bibliographic entry or file, nor do the
+     * actual copying.
+     *
+     * @param sourceUrl The remote location of the document
+     * @param entryId the identifier of the bibliography entry
+     * @param bibTeXFile the bibliographic file
+     * @param renameOperation what type of renaming is requested
+     * @param userDefinedFilename an optional custom basename
+     * @return A pair of URLs: refined source URL and computed destination URL
+     */
+    static QPair<QUrl, QUrl> computeSourceDestinationUrls(const QUrl &sourceUrl, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, const QString &userDefinedFilename);
+
+    static QUrl copyDocument(const QUrl &document, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const QString &userDefinedFilename = QString());
+
+private:
     /**
      * Translate a given URL of a document (e.g. a PDF file) to a string
      * representation pointing to the relative location of this document.
-     * A "base URL", i.e. the bibliography's file location has to provided to
-     * calculate the relative location of the document.
+     * A "base URL", i.e. the bibliography's file location has to be provided
+     * in order to calculate the relative location of the document.
      * "Upwards relativity" (i.e. paths containing "..") is not supported for this
      * functions output; in this case, an absolute path will be generated as fallback.
+     *
      * @param document The document's URL
      * @param baseUrl The base URL
      * @return The document URL's string representation relative to the base URL
@@ -82,16 +118,13 @@ public:
      * Translate a given URL of a document (e.g. a PDF file) to a string
      * representation pointing to the absolute location of this document.
      * A "base URL", i.e. the bibliography's file location may be provided to
-     * resolve relative document URLs
+     * resolve relative document URLs.
+     *
      * @param document The document's URL
      * @param baseUrl The base URL
      * @return The document URL's string representation in absolute form
      */
     static QString absoluteFilename(const QUrl &document, const QUrl &baseUrl);
-
-    static QString associateDocumentURL(const QUrl &document, QSharedPointer<Entry> &entry, const File *bibTeXFile, PathType pathType, const bool dryRun = false);
-    static QString associateDocumentURL(const QUrl &document, const File *bibTeXFile, PathType pathType);
-    static QUrl copyDocument(const QUrl &document, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const QString &userDefinedFilename = QString(), const bool dryRun = false);
 };
 
 #endif // KBIBTEX_NETWORKING_ASSOCIATEDFILES_H
