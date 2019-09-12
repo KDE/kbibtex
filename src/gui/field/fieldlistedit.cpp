@@ -490,14 +490,16 @@ void UrlListEdit::slotAddReferenceFromClipboard()
 
 void UrlListEdit::addReference(const QUrl &url) {
     const Entry *entry = dynamic_cast<const Entry *>(m_element);
-    QSharedPointer<Entry> fakeTempEntry(new Entry(entry->type(), entry->id()));
-    const QString visibleFilename = AssociatedFilesUI::associateUrl(url, fakeTempEntry, d->file, false, this);
-    if (!visibleFilename.isEmpty()) {
-        Value *value = new Value();
-        value->append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
-        lineAdd(value);
-        delete value;
-        emit modified();
+    if (entry != nullptr) {
+        QSharedPointer<Entry> fakeTempEntry(new Entry(entry->type(), entry->id()));
+        const QString visibleFilename = AssociatedFilesUI::associateUrl(url, fakeTempEntry, d->file, false, this);
+        if (!visibleFilename.isEmpty()) {
+            Value *value = new Value();
+            value->append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
+            lineAdd(value);
+            delete value;
+            emit modified();
+        }
     }
 }
 
