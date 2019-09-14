@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -59,7 +59,7 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     stream << "<bibliography>" << endl;
 
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; ++it)
-        write(stream, (*it).data(), bibtexfile);
+        result &= write(stream, (*it).data(), bibtexfile);
 
     stream << "</bibliography>" << endl;
 
@@ -83,8 +83,11 @@ bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
     stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX -->" << endl;
     stream << "<!-- https://userbase.kde.org/KBibTeX -->" << endl;
+    stream << "<bibliography>" << endl;
 
     const bool result = write(stream, element.data());
+
+    stream << "</bibliography>" << endl;
 
     iodevice->close();
     return result;
