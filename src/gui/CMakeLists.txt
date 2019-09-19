@@ -68,11 +68,6 @@ target_link_libraries(kbibtexgui
         Qt5::Core
         Qt5::Gui
         Qt5::Widgets
-        # TODO refactor to be private
-        KF5::IconThemes
-        KBibTeX::Data
-        KBibTeX::Global
-        KBibTeX::Networking
     PRIVATE
         Poppler::Qt5
         Qt5::Concurrent
@@ -80,13 +75,17 @@ target_link_libraries(kbibtexgui
         KF5::ConfigCore
         KF5::ConfigGui
         KF5::I18n
+        KF5::IconThemes
         KF5::WidgetsAddons
         KF5::KIOCore
         KF5::KIOFileWidgets
         KF5::Parts
         KF5::TextEditor
         KBibTeX::Config
+        KBibTeX::Data
+        KBibTeX::Global
         KBibTeX::IO
+        KBibTeX::Networking
         KBibTeX::Processing
 )
 

@@ -65,14 +65,13 @@ target_link_libraries(kbibtexnetworking
         Qt5::Gui
         Qt5::Network
         Qt5::Widgets
-        # TODO refactor code to not expose config interface
-        KF5::ConfigCore
-        KF5::ConfigGui
         KBibTeX::Data
     PRIVATE
         Poppler::Qt5
         Qt5::DBus
         Qt5::NetworkAuth
+        KF5::ConfigCore
+        KF5::ConfigGui
         KF5::WidgetsAddons
         KF5::I18n
         KF5::KIOCore

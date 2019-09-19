@@ -30,7 +30,6 @@
 #include <QApplication>
 
 #include <KAboutData>
-#include <KIconEffect>
 
 #include <onlinesearch/OnlineSearchAcmPortal>
 #include <onlinesearch/OnlineSearchArXiv>

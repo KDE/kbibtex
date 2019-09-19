@@ -52,6 +52,7 @@ target_link_libraries(kbibtex
         KF5::CoreAddons
         KF5::Crash
         KF5::I18n
+        KF5::IconThemes
         KF5::KIOCore
         KF5::KIOFileWidgets
         KF5::Parts
