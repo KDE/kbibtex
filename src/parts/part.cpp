@@ -547,7 +547,7 @@ public:
 
     bool saveFile(const QUrl &url) {
         bool result = false;
-        Q_ASSERT_X(!url.isEmpty(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url)", "url is not allowed to be empty");
+        Q_ASSERT_X(url.isValid(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url)", "url must be valid");
 
         /// Extract filename extension (e.g. 'bib') to determine which FileExporter to use
         static const QRegularExpression suffixRegExp(QStringLiteral("\\.([^.]{1,4})$"));
@@ -761,7 +761,7 @@ bool KBibTeXPart::saveFile()
 {
     Q_ASSERT_X(isReadWrite(), "bool KBibTeXPart::saveFile()", "Trying to save although document is in read-only mode");
 
-    if (url().isEmpty())
+    if (!url().isValid())
         return documentSaveAs();
 
     /// If the current file is "watchable" (i.e. a local file),

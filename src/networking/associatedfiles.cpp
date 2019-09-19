@@ -27,12 +27,12 @@
 #include "logging_networking.h"
 
 QString AssociatedFiles::relativeFilename(const QUrl &documentUrl, const QUrl &baseUrl) {
-    if (documentUrl.isEmpty()) {
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL has to point to a file location or URL";
+    if (!documentUrl.isValid()) {
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL has to point to a file location or URL but is invalid";
         return QString();
     }
-    if (baseUrl.isEmpty() || baseUrl.isRelative()) {
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "base URL has to point to an absolute file location or URL";
+    if (!baseUrl.isValid() || baseUrl.isRelative()) {
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "base URL has to point to an absolute file location or URL and must be valid";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QStringLiteral("file") && documentUrl.host() != baseUrl.host())) {
@@ -54,12 +54,12 @@ QString AssociatedFiles::relativeFilename(const QUrl &documentUrl, const QUrl &b
 }
 
 QString AssociatedFiles::absoluteFilename(const QUrl &documentUrl, const QUrl &baseUrl) {
-    if (documentUrl.isEmpty()) {
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL has to point to a file location or URL";
+    if (!documentUrl.isValid()) {
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "document URL has to point to a file location or URL but is invalid";
         return QString();
     }
-    if (documentUrl.isRelative() && (baseUrl.isEmpty() || baseUrl.isRelative())) {
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "base URL has to point to an absolute file location or URL if the document URL is relative";
+    if (documentUrl.isRelative() && (!baseUrl.isValid() || baseUrl.isRelative())) {
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "base URL has to point to an absolute, valid file location or URL if the document URL is relative";
         return documentUrl.url(QUrl::PreferLocalFile);
     }
     if (documentUrl.isRelative() && (documentUrl.scheme() != baseUrl.scheme() || (documentUrl.scheme() != QStringLiteral("file") && documentUrl.host() != baseUrl.host()))) {
@@ -101,7 +101,7 @@ QString AssociatedFiles::computeAssociateUrl(const QUrl &documentUrl, const File
     Q_ASSERT(bibTeXFile != nullptr); // FIXME more graceful?
 
     const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
-    if (baseUrl.isEmpty() && pathType == ptRelative) {
+    if (!baseUrl.isValid() && pathType == ptRelative) {
         /// If no base URL was given but still a relative path was requested,
         /// revert choice and enforce the generation of an absolute one
         pathType = ptAbsolute;
@@ -135,7 +135,7 @@ QPair<QUrl, QUrl> AssociatedFiles::computeSourceDestinationUrls(const QUrl &sour
 
     if (!bibTeXFile->hasProperty(File::Url)) return QPair<QUrl, QUrl>(); /// no valid URL set of BibTeX file object
     QUrl targetUrl = bibTeXFile->property(File::Url).toUrl();
-    if (targetUrl.isEmpty()) return QPair<QUrl, QUrl>(); /// no valid URL set of BibTeX file object
+    if (!targetUrl.isValid()) return QPair<QUrl, QUrl>(); /// no valid URL set of BibTeX file object
     const QString targetPath = QFileInfo(targetUrl.path()).absolutePath();
     targetUrl.setPath(targetPath + QDir::separator() + (renameOperation == roEntryId ? entryId + QStringLiteral(".") + suffix : (renameOperation == roUserDefined ? userDefinedFilename : filename)));
 

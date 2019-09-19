@@ -392,10 +392,10 @@ void FindPDF::downloadFinished()
         const QByteArray data = reply->readAll();
 
         QUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-        redirUrl = redirUrl.isEmpty() ? QUrl() : reply->url().resolved(redirUrl);
+        redirUrl = redirUrl.isValid() ? reply->url().resolved(redirUrl) : QUrl();
         qCDebug(LOG_KBIBTEX_NETWORKING) << "finished Downloading " << reply->url().toDisplayString() << "   depth=" << depth  << "  d->aliveCounter=" << d->aliveCounter << "  data.size=" << data.size() << "  redirUrl=" << redirUrl.toDisplayString() << "   origin=" << origin;
 
-        if (!redirUrl.isEmpty()) {
+        if (redirUrl.isValid()) {
             redirUrl = d->ieeeDocumentUrlToDownloadUrl(redirUrl);
             d->queueUrl(redirUrl, term, origin, depth - 1);
         } else if (data.contains(htmlHead1) || data.contains(htmlHead2) || data.contains(htmlHead3)) {

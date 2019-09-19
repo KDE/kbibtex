@@ -472,19 +472,19 @@ UrlListEdit::UrlListEdit(QWidget *parent)
 void UrlListEdit::slotAddReference()
 {
     QUrl bibtexUrl(d->file != nullptr ? d->file->property(File::Url, QVariant()).toUrl() : QUrl());
-    if (!bibtexUrl.isEmpty()) {
+    if (bibtexUrl.isValid()) {
         const QFileInfo fi(bibtexUrl.path());
         bibtexUrl.setPath(fi.absolutePath());
     }
     const QUrl documentUrl = QFileDialog::getOpenFileUrl(this, i18n("File to Associate"), bibtexUrl);
-    if (!documentUrl.isEmpty())
+    if (documentUrl.isValid())
         addReference(documentUrl);
 }
 
 void UrlListEdit::slotAddReferenceFromClipboard()
 {
     const QUrl url = QUrl::fromUserInput(QApplication::clipboard()->text());
-    if (!url.isEmpty())
+    if (url.isValid())
         addReference(url);
 }
 
@@ -569,9 +569,9 @@ void UrlListEdit::textChanged(QPushButton *buttonSaveLocally, FieldLineEdit *fie
 
 QString UrlListEdit::askRelativeOrStaticFilename(QWidget *parent, const QString &absoluteFilename, const QUrl &baseUrl)
 {
-    QFileInfo baseUrlInfo = baseUrl.isEmpty() ? QFileInfo() : QFileInfo(baseUrl.path());
+    QFileInfo baseUrlInfo = baseUrl.isValid() ? QFileInfo(baseUrl.path()) : QFileInfo();
     QFileInfo filenameInfo(absoluteFilename);
-    if (!baseUrl.isEmpty() && (filenameInfo.absolutePath() == baseUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(baseUrlInfo.absolutePath() + QDir::separator()))) {
+    if (baseUrl.isValid() && (filenameInfo.absolutePath() == baseUrlInfo.absolutePath() || filenameInfo.absolutePath().startsWith(baseUrlInfo.absolutePath() + QDir::separator()))) {
         // TODO cover level-up cases like "../../test.pdf"
         const QString relativePath = filenameInfo.absolutePath().mid(baseUrlInfo.absolutePath().length() + 1);
         const QString relativeFilename = relativePath + (relativePath.isEmpty() ? QString() : QString(QDir::separator())) + filenameInfo.fileName();

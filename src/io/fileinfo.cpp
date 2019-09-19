@@ -44,7 +44,7 @@ const QString FileInfo::mimetypePDF = QStringLiteral("application/pdf");
 
 QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
 {
-    if (!url.isValid() || url.isEmpty()) {
+    if (!url.isValid()) {
         qCWarning(LOG_KBIBTEX_IO) << "Cannot determine mime type for empty or invalid QUrl";
         return QMimeType(); ///< invalid input gives invalid mime type
     }

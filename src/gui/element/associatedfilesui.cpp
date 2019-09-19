@@ -237,7 +237,7 @@ void AssociatedFilesUI::updateUIandPreview() {
         d->lineMoveCopyLocation->setText(d->bibTeXfile->property(File::Url).toUrl().path());
     }
 
-    if (d->bibTeXfile != nullptr && !d->sourceUrl.isEmpty() && !entryId.isEmpty()) {
+    if (d->bibTeXfile != nullptr && d->sourceUrl.isValid() && !entryId.isEmpty()) {
         const QPair<QUrl, QUrl> newURLs = AssociatedFiles::computeSourceDestinationUrls(d->sourceUrl, entryId, d->bibTeXfile, renameOperation(), d->lineEditUserDefinedName->text());
         if (newURLs.second.isValid())
             preview = AssociatedFiles::computeAssociateUrl(newURLs.second, d->bibTeXfile, pathType());

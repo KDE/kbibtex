@@ -339,7 +339,7 @@ void KBibTeXMainWindow::openDocumentDialog()
 
     delete dlg;
 
-    if (!url.isEmpty())
+    if (url.isValid())
         openDocument(url);
 }
 
