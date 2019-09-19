@@ -6,9 +6,10 @@ MY_NAME="$(basename "$0")"
 
 SET_VERBOSE=0
 ALL_FILES=0
+HEAD_COMMIT=0
 
 function parsearguments {
-	local ARGS=$(getopt -o "h" -l "verbose,all,help" -n "${MY_NAME}" -- "$@")
+	local ARGS=$(getopt -o "h" -l "verbose,all,head,help" -n "${MY_NAME}" -- "$@")
 	local PRINT_HELP=0
 
 	#Bad arguments
@@ -31,6 +32,12 @@ function parsearguments {
 		;;
 		--all )
 			ALL_FILES=1
+			HEAD_COMMIT=0
+			shift
+		;;
+		--head )
+			HEAD_COMMIT=1
+			ALL_FILES=0
 			shift
 		;;
 		--)
@@ -40,7 +47,7 @@ function parsearguments {
 	done
 
 	if [[ ${PRINT_HELP} -ne 0 ]] ; then
-		echo "Usage: ${MY_NAME} [--all] [--verbose]" >&2
+		echo "Usage: ${MY_NAME} [--all|--head] [--verbose]" >&2
 		echo "Format C++ source code and headers in a git-controlled directory structure." >&2
 		echo >&2
 		echo "Options:" >&2
@@ -48,6 +55,8 @@ function parsearguments {
 		echo "    Show this help" >&2
 		echo " --verbose" >&2
 		echo "    Show verbose (more) output" >&2
+		echo " --head" >&2
+		echo "    Format .cpp/.h files changed in current HEAD commit">&2
 		echo " --all" >&2
 		echo "    Format all .cpp/.h files, not just those marked by git as added or modified">&2
 		exit 1
@@ -56,7 +65,9 @@ function parsearguments {
 
 parsearguments "$@"
 
-if [[ ${ALL_FILES} -eq 0 ]] ; then
+if [[ ${HEAD_COMMIT} -eq 1 ]] ; then
+	git diff-tree --no-commit-id --name-only -r HEAD | grep -E '[.](cpp|h)$'
+elif [[ ${ALL_FILES} -eq 0 ]] ; then
 	# Format only files seen by git as added or modified,
 	# filter for .cpp or .h files.
 	# Trying to handle filenames with spaces correctly (not tested)
