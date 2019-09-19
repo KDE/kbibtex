@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -40,10 +40,11 @@
 #include <File>
 #include <Entry>
 #include "internalnetworkaccessmanager.h"
+#include "onlinesearchabstract_p.h"
 #include "logging_networking.h"
 
 #ifdef HAVE_QTWIDGETS
-class OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy : public OnlineSearchQueryFormAbstract
+class OnlineSearchBibsonomy::Form : public OnlineSearchAbstract::Form
 {
     Q_OBJECT
 
@@ -51,7 +52,7 @@ private:
     QString configGroupName;
 
     void loadState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         comboBoxSearchWhere->setCurrentIndex(configGroup.readEntry(QStringLiteral("searchWhere"), 0));
         lineEditSearchTerm->setText(configGroup.readEntry(QStringLiteral("searchTerm"), QString()));
         numResultsField->setValue(configGroup.readEntry(QStringLiteral("numResults"), 10));
@@ -62,8 +63,8 @@ public:
     QLineEdit *lineEditSearchTerm;
     QSpinBox *numResultsField;
 
-    OnlineSearchQueryFormBibsonomy(QWidget *widget)
-            : OnlineSearchQueryFormAbstract(widget), configGroupName(QStringLiteral("Search Engine Bibsonomy")) {
+    Form(QWidget *widget)
+            : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine Bibsonomy")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -82,7 +83,7 @@ public:
         lineEditSearchTerm = new QLineEdit(this);
         layout->addWidget(lineEditSearchTerm, 0, 1, 1, 1);
         lineEditSearchTerm->setClearButtonEnabled(true);
-        connect(lineEditSearchTerm, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormBibsonomy::returnPressed);
+        connect(lineEditSearchTerm, &QLineEdit::returnPressed, this, &OnlineSearchBibsonomy::Form::returnPressed);
 
         QLabel *label = new QLabel(i18n("Number of Results:"), this);
         layout->addWidget(label, 1, 0, 1, 1);
@@ -105,15 +106,15 @@ public:
 
     void copyFromEntry(const Entry &entry) override {
         comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
-        lineEditSearchTerm->setText(authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditSearchTerm->setText(d->authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
     void saveState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         configGroup.writeEntry(QStringLiteral("searchWhere"), comboBoxSearchWhere->currentIndex());
         configGroup.writeEntry(QStringLiteral("searchTerm"), lineEditSearchTerm->text());
         configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
-        config->sync();
+        d->config->sync();
     }
 };
 #endif // HAVE_QTWIDGETS
@@ -122,7 +123,7 @@ class OnlineSearchBibsonomy::OnlineSearchBibsonomyPrivate
 {
 public:
 #ifdef HAVE_QTWIDGETS
-    OnlineSearchQueryFormBibsonomy *form;
+    OnlineSearchBibsonomy::Form *form;
 #endif // HAVE_QTWIDGETS
 
     OnlineSearchBibsonomyPrivate(OnlineSearchBibsonomy *)
@@ -238,10 +239,10 @@ QString OnlineSearchBibsonomy::favIconUrl() const
 }
 
 #ifdef HAVE_QTWIDGETS
-OnlineSearchQueryFormAbstract *OnlineSearchBibsonomy::customWidget(QWidget *parent)
+OnlineSearchAbstract::Form *OnlineSearchBibsonomy::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
-        d->form = new OnlineSearchBibsonomy::OnlineSearchQueryFormBibsonomy(parent);
+        d->form = new OnlineSearchBibsonomy::Form(parent);
     return d->form;
 }
 #endif // HAVE_QTWIDGETS

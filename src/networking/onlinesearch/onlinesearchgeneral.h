@@ -27,30 +27,28 @@
 #endif // HAVE_KF5
 
 #ifdef HAVE_QTWIDGETS
-class QSpinBox;
-class QLineEdit;
-
-class KBIBTEXNETWORKING_EXPORT OnlineSearchQueryFormGeneral : public OnlineSearchQueryFormAbstract
+namespace OnlineSearchGeneral {
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class KBIBTEXNETWORKING_EXPORT Form : public OnlineSearchAbstract::Form
 {
-    Q_OBJECT
-
 public:
-    explicit OnlineSearchQueryFormGeneral(QWidget *parent);
+    explicit Form(QWidget *parent);
+    ~Form();
 
-    bool readyToStart() const override;
-    void copyFromEntry(const Entry &) override;
+    virtual bool readyToStart() const override;
+    virtual void copyFromEntry(const Entry &) override;
 
     QMap<QString, QString> getQueryTerms();
     int getNumResults();
 
 private:
-    QMap<QString, QLineEdit *> queryFields;
-    QSpinBox *numResultsField;
-    const QString configGroupName;
-
-    void loadState();
-    void saveState();
+    class Private;
+    Private *dg;
 };
+} /// namespace OnlineSearchGeneral
 #endif // HAVE_QTWIDGETS
+
 
 #endif // KBIBTEX_NETWORKING_ONLINESEARCHGENERAL_H

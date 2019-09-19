@@ -28,10 +28,6 @@
 #include <QIcon>
 #include <QUrl>
 
-#ifdef HAVE_KF5
-#include <KSharedConfig>
-#endif // HAVE_KF5
-
 #include <Entry>
 
 #ifdef HAVE_KF5
@@ -41,41 +37,6 @@
 class QNetworkReply;
 class QNetworkRequest;
 class QListWidgetItem;
-
-#ifdef HAVE_QTWIDGETS
-/**
- * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
- */
-class KBIBTEXNETWORKING_EXPORT OnlineSearchQueryFormAbstract : public QWidget
-{
-    Q_OBJECT
-
-public:
-    explicit OnlineSearchQueryFormAbstract(QWidget *parent)
-            : QWidget(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
-        // nothing
-    }
-
-    ~OnlineSearchQueryFormAbstract() override {
-        /// nothing
-    }
-
-    virtual bool readyToStart() const = 0;
-
-    virtual void copyFromEntry(const Entry &) = 0;
-
-protected:
-    KSharedConfigPtr config;
-
-    QStringList authorLastNames(const Entry &entry);
-    QString guessFreeText(const Entry &entry) const;
-
-signals:
-    void returnPressed();
-};
-
-Q_DECLARE_METATYPE(OnlineSearchQueryFormAbstract *)
-#endif // HAVE_QTWIDGETS
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -87,6 +48,10 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchAbstract : public QObject
 
 public:
     explicit OnlineSearchAbstract(QObject *parent);
+
+#ifdef HAVE_QTWIDGETS
+    class Form;
+#endif // HAVE_QTWIDGETS
 
     static const QString queryKeyFreeText;
     static const QString queryKeyTitle;
@@ -108,7 +73,7 @@ public:
     QString name();
 #ifdef HAVE_QTWIDGETS
     virtual QIcon icon(QListWidgetItem *listWidgetItem = nullptr);
-    virtual OnlineSearchQueryFormAbstract *customWidget(QWidget *parent);
+    virtual OnlineSearchAbstract::Form *customWidget(QWidget *parent);
 #endif // HAVE_QTWIDGETS
     virtual QUrl homepage() const = 0;
     virtual bool busy() const;
@@ -225,5 +190,29 @@ signals:
     void progress(int, int);
     void busyChanged();
 };
+
+#ifdef HAVE_QTWIDGETS
+/**
+ * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ */
+class KBIBTEXNETWORKING_EXPORT OnlineSearchAbstract::Form : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit Form(QWidget *parent);
+    ~Form();
+
+    virtual bool readyToStart() const = 0;
+    virtual void copyFromEntry(const Entry &) = 0;
+
+signals:
+    void returnPressed();
+
+protected:
+    class Private;
+    Private *d;
+};
+#endif // HAVE_QTWIDGETS
 
 #endif // KBIBTEX_NETWORKING_ONLINESEARCHABSTRACT_H

@@ -15,49 +15,30 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifndef KBIBTEX_NETWORKING_ONLINESEARCHARXIV_H
-#define KBIBTEX_NETWORKING_ONLINESEARCHARXIV_H
+#ifndef KBIBTEX_NETWORKING_ONLINESEARCHABSTRACT_P_H
+#define KBIBTEX_NETWORKING_ONLINESEARCHABSTRACT_P_H
 
-#include <onlinesearch/OnlineSearchAbstract>
+#ifdef HAVE_QTWIDGETS
+#include "onlinesearchabstract.h"
 
-#ifdef HAVE_KF5
-#include "kbibtexnetworking_export.h"
-#endif // HAVE_KF5
+#include <QWidget>
+
+#include <KSharedConfig>
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT OnlineSearchArXiv : public OnlineSearchAbstract
+class OnlineSearchAbstract::Form::Private
 {
-    Q_OBJECT
-
 public:
-    explicit OnlineSearchArXiv(QObject *parent);
-    ~OnlineSearchArXiv() override;
+    explicit Private();
 
-#ifdef HAVE_QTWIDGETS
-    void startSearchFromForm() override;
-#endif // HAVE_QTWIDGETS
-    void startSearch(const QMap<QString, QString> &query, int numResults) override;
-    QString label() const override;
-#ifdef HAVE_QTWIDGETS
-    OnlineSearchAbstract::Form *customWidget(QWidget *parent) override;
-#endif // HAVE_QTWIDGETS
-    QUrl homepage() const override;
+    KSharedConfigPtr config;
 
-protected:
-    QString favIconUrl() const override;
-    void sanitizeEntry(QSharedPointer<Entry> entry) override;
-
-private:
-#ifdef HAVE_QTWIDGETS
-    class Form;
-#endif // HAVE_QTWIDGETS
-    class OnlineSearchArXivPrivate;
-    OnlineSearchArXivPrivate *d;
-
-private slots:
-    void downloadDone();
+    static QStringList authorLastNames(const Entry &entry);
+    static QString guessFreeText(const Entry &entry);
 };
 
-#endif // KBIBTEX_NETWORKING_ONLINESEARCHARXIV_H
+#endif // HAVE_QTWIDGETS
+
+#endif // KBIBTEX_NETWORKING_ONLINESEARCHABSTRACT_P_H

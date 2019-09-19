@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,10 +34,11 @@
 #include <KBibTeX>
 #include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
+#include "onlinesearchabstract_p.h"
 #include "logging_networking.h"
 
 #ifdef HAVE_QTWIDGETS
-class OnlineSearchDOI::OnlineSearchQueryFormDOI : public OnlineSearchQueryFormAbstract
+class OnlineSearchDOI::Form : public OnlineSearchAbstract::Form
 {
     Q_OBJECT
 
@@ -45,15 +46,15 @@ private:
     QString configGroupName;
 
     void loadState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         lineEditDoiNumber->setText(configGroup.readEntry(QStringLiteral("doiNumber"), QString()));
     }
 
 public:
     QLineEdit *lineEditDoiNumber;
 
-    OnlineSearchQueryFormDOI(QWidget *widget)
-            : OnlineSearchQueryFormAbstract(widget), configGroupName(QStringLiteral("Search Engine DOI")) {
+    Form(QWidget *widget)
+            : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine DOI")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -62,7 +63,7 @@ public:
         lineEditDoiNumber = new QLineEdit(this);
         layout->addWidget(lineEditDoiNumber, 0, 1, 1, 1);
         lineEditDoiNumber->setClearButtonEnabled(true);
-        connect(lineEditDoiNumber, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormDOI::returnPressed);
+        connect(lineEditDoiNumber, &QLineEdit::returnPressed, this, &OnlineSearchDOI::Form::returnPressed);
 
         layout->setRowStretch(1, 100);
         lineEditDoiNumber->setFocus(Qt::TabFocusReason);
@@ -79,9 +80,9 @@ public:
     }
 
     void saveState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         configGroup.writeEntry(QStringLiteral("doiNumber"), lineEditDoiNumber->text());
-        config->sync();
+        d->config->sync();
     }
 };
 #endif // HAVE_QTWIDGETS
@@ -91,7 +92,7 @@ class OnlineSearchDOI::OnlineSearchDOIPrivate
 {
 public:
 #ifdef HAVE_QTWIDGETS
-    OnlineSearchQueryFormDOI *form;
+    OnlineSearchDOI::Form *form;
 #endif // HAVE_QTWIDGETS
 
     OnlineSearchDOIPrivate(OnlineSearchDOI *parent)
@@ -183,10 +184,10 @@ QString OnlineSearchDOI::label() const
 }
 
 #ifdef HAVE_QTWIDGETS
-OnlineSearchQueryFormAbstract *OnlineSearchDOI::customWidget(QWidget *parent)
+OnlineSearchAbstract::Form *OnlineSearchDOI::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
-        d->form = new OnlineSearchDOI::OnlineSearchQueryFormDOI(parent);
+        d->form = new OnlineSearchDOI::Form(parent);
     return d->form;
 }
 #endif // HAVE_QTWIDGETS

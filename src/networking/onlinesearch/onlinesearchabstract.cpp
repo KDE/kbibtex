@@ -37,6 +37,7 @@
 #include <KBibTeX>
 #include <Encoder>
 #include "internalnetworkaccessmanager.h"
+#include "onlinesearchabstract_p.h"
 #include "logging_networking.h"
 
 const QString OnlineSearchAbstract::queryKeyFreeText = QStringLiteral("free");
@@ -55,7 +56,12 @@ const char *OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
 
 
 #ifdef HAVE_QTWIDGETS
-QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
+OnlineSearchAbstract::Form::Private::Private()
+        : config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))) {
+    /// nothing
+}
+
+QStringList OnlineSearchAbstract::Form::Private::authorLastNames(const Entry &entry)
 {
     const Encoder &encoder = Encoder::instance();
     const Value v = entry[Entry::ftAuthor];
@@ -70,7 +76,7 @@ QStringList OnlineSearchQueryFormAbstract::authorLastNames(const Entry &entry)
     return result;
 }
 
-QString OnlineSearchQueryFormAbstract::guessFreeText(const Entry &entry) const
+QString OnlineSearchAbstract::Form::Private::guessFreeText(const Entry &entry)
 {
     /// If there is a DOI value in this entry, use it as free text
     static const QStringList doiKeys = {Entry::ftDOI, Entry::ftUrl};
@@ -126,7 +132,7 @@ QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
     return QIcon::fromTheme(QStringLiteral("applications-internet"));
 }
 
-OnlineSearchQueryFormAbstract *OnlineSearchAbstract::customWidget(QWidget *) {
+OnlineSearchAbstract::Form *OnlineSearchAbstract::customWidget(QWidget *) {
     return nullptr;
 }
 
@@ -681,3 +687,16 @@ void OnlineSearchAbstract::refreshBusyProperty() {
         emit busyChanged();
     }
 }
+
+#ifdef HAVE_QTWIDGETS
+OnlineSearchAbstract::Form::Form(QWidget *parent)
+        : QWidget(parent), d(new OnlineSearchAbstract::Form::Private())
+{
+    /// nothing
+}
+
+OnlineSearchAbstract::Form::~Form()
+{
+    delete d;
+}
+#endif // HAVE_QTWIDGETS

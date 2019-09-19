@@ -38,7 +38,7 @@ public:
     void startSearch(const QMap<QString, QString> &query, int numResults) override;
     QString label() const override;
 #ifdef HAVE_QTWIDGETS
-    OnlineSearchQueryFormAbstract *customWidget(QWidget *parent) override;
+    OnlineSearchAbstract::Form *customWidget(QWidget *parent) override;
 #endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
 

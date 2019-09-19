@@ -36,10 +36,11 @@
 #include <KBibTeX>
 #include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
+#include "onlinesearchabstract_p.h"
 #include "logging_networking.h"
 
 #ifdef HAVE_QTWIDGETS
-class OnlineSearchSemanticScholar::OnlineSearchQueryFormSemanticScholar : public OnlineSearchQueryFormAbstract
+class OnlineSearchSemanticScholar::OnlineSearchQueryFormSemanticScholar : public OnlineSearchAbstract::Form
 {
     Q_OBJECT
 
@@ -47,7 +48,7 @@ private:
     QString configGroupName;
 
     void loadState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         lineEditPaperReference->setText(configGroup.readEntry(QStringLiteral("paperReference"), QString()));
     }
 
@@ -55,7 +56,7 @@ public:
     QLineEdit *lineEditPaperReference;
 
     OnlineSearchQueryFormSemanticScholar(QWidget *widget)
-            : OnlineSearchQueryFormAbstract(widget), configGroupName(QStringLiteral("Search Engine Semantic Scholar")) {
+            : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine Semantic Scholar")) {
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
@@ -73,13 +74,13 @@ public:
     }
 
     void copyFromEntry(const Entry &entry) override {
-        lineEditPaperReference->setText(guessFreeText(entry));
+        lineEditPaperReference->setText(d->guessFreeText(entry));
     }
 
     void saveState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         configGroup.writeEntry(QStringLiteral("paperReference"), lineEditPaperReference->text());
-        config->sync();
+        d->config->sync();
     }
 };
 #endif // HAVE_QTWIDGETS
@@ -230,7 +231,7 @@ QString OnlineSearchSemanticScholar::label() const
 }
 
 #ifdef HAVE_QTWIDGETS
-OnlineSearchQueryFormAbstract *OnlineSearchSemanticScholar::customWidget(QWidget *parent)
+OnlineSearchAbstract::Form *OnlineSearchSemanticScholar::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
         d->form = new OnlineSearchSemanticScholar::OnlineSearchQueryFormSemanticScholar(parent);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,13 +41,14 @@
 #include <FileImporterBibTeX>
 #include <XSLTransform>
 #include "internalnetworkaccessmanager.h"
+#include "onlinesearchabstract_p.h"
 #include "logging_networking.h"
 
 #ifdef HAVE_QTWIDGETS
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class OnlineSearchSpringerLink::OnlineSearchQueryFormSpringerLink : public OnlineSearchQueryFormAbstract
+class OnlineSearchSpringerLink::Form : public OnlineSearchAbstract::Form
 {
     Q_OBJECT
 
@@ -55,7 +56,7 @@ private:
     QString configGroupName;
 
     void loadState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         lineEditFreeText->setText(configGroup.readEntry(QStringLiteral("free"), QString()));
         lineEditTitle->setText(configGroup.readEntry(QStringLiteral("title"), QString()));
         lineEditBookTitle->setText(configGroup.readEntry(QStringLiteral("bookTitle"), QString()));
@@ -68,8 +69,8 @@ public:
     QLineEdit *lineEditFreeText, *lineEditTitle, *lineEditBookTitle, *lineEditAuthorEditor, *lineEditYear;
     QSpinBox *numResultsField;
 
-    OnlineSearchQueryFormSpringerLink(QWidget *parent)
-            : OnlineSearchQueryFormAbstract(parent), configGroupName(QStringLiteral("Search Engine SpringerLink")) {
+    Form(QWidget *parent)
+            : OnlineSearchAbstract::Form(parent), configGroupName(QStringLiteral("Search Engine SpringerLink")) {
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
@@ -78,35 +79,35 @@ public:
         QLabel *label = new QLabel(i18n("Free Text:"), this);
         label->setBuddy(lineEditFreeText);
         layout->addRow(label, lineEditFreeText);
-        connect(lineEditFreeText, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditFreeText, &QLineEdit::returnPressed, this, &OnlineSearchSpringerLink::Form::returnPressed);
 
         lineEditTitle = new QLineEdit(this);
         lineEditTitle->setClearButtonEnabled(true);
         label = new QLabel(i18n("Title:"), this);
         label->setBuddy(lineEditTitle);
         layout->addRow(label, lineEditTitle);
-        connect(lineEditTitle, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditTitle, &QLineEdit::returnPressed, this, &OnlineSearchSpringerLink::Form::returnPressed);
 
         lineEditBookTitle = new QLineEdit(this);
         lineEditBookTitle->setClearButtonEnabled(true);
         label = new QLabel(i18n("Book/Journal title:"), this);
         label->setBuddy(lineEditBookTitle);
         layout->addRow(label, lineEditBookTitle);
-        connect(lineEditBookTitle, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditBookTitle, &QLineEdit::returnPressed, this, &OnlineSearchSpringerLink::Form::returnPressed);
 
         lineEditAuthorEditor = new QLineEdit(this);
         lineEditAuthorEditor->setClearButtonEnabled(true);
         label = new QLabel(i18n("Author or Editor:"), this);
         label->setBuddy(lineEditAuthorEditor);
         layout->addRow(label, lineEditAuthorEditor);
-        connect(lineEditAuthorEditor, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditAuthorEditor, &QLineEdit::returnPressed, this, &OnlineSearchSpringerLink::Form::returnPressed);
 
         lineEditYear = new QLineEdit(this);
         lineEditYear->setClearButtonEnabled(true);
         label = new QLabel(i18n("Year:"), this);
         label->setBuddy(lineEditYear);
         layout->addRow(label, lineEditYear);
-        connect(lineEditYear, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormSpringerLink::returnPressed);
+        connect(lineEditYear, &QLineEdit::returnPressed, this, &OnlineSearchSpringerLink::Form::returnPressed);
 
         numResultsField = new QSpinBox(this);
         label = new QLabel(i18n("Number of Results:"), this);
@@ -130,18 +131,18 @@ public:
         if (bookTitle.isEmpty())
             bookTitle = PlainTextValue::text(entry[Entry::ftJournal]);
         lineEditBookTitle->setText(bookTitle);
-        lineEditAuthorEditor->setText(authorLastNames(entry).join(QStringLiteral(" ")));
+        lineEditAuthorEditor->setText(d->authorLastNames(entry).join(QStringLiteral(" ")));
     }
 
     void saveState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         configGroup.writeEntry(QStringLiteral("free"), lineEditFreeText->text());
         configGroup.writeEntry(QStringLiteral("title"), lineEditTitle->text());
         configGroup.writeEntry(QStringLiteral("bookTitle"), lineEditBookTitle->text());
         configGroup.writeEntry(QStringLiteral("authorEditor"), lineEditAuthorEditor->text());
         configGroup.writeEntry(QStringLiteral("year"), lineEditYear->text());
         configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
-        config->sync();
+        d->config->sync();
     }
 };
 #endif // HAVE_QTWIDGETS
@@ -155,7 +156,7 @@ public:
     static const QString springerMetadataKey;
     const XSLTransform xslt;
 #ifdef HAVE_QTWIDGETS
-    OnlineSearchQueryFormSpringerLink *form;
+    OnlineSearchSpringerLink::Form *form;
 #endif // HAVE_QTWIDGETS
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *)
@@ -306,10 +307,10 @@ QString OnlineSearchSpringerLink::favIconUrl() const
 }
 
 #ifdef HAVE_QTWIDGETS
-OnlineSearchQueryFormAbstract *OnlineSearchSpringerLink::customWidget(QWidget *parent)
+OnlineSearchAbstract::Form *OnlineSearchSpringerLink::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
-        d->form = new OnlineSearchQueryFormSpringerLink(parent);
+        d->form = new Form(parent);
     return d->form;
 }
 #endif // HAVE_QTWIDGETS

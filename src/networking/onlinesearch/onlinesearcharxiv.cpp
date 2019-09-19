@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,10 +39,11 @@
 #include <XSLTransform>
 #include <EncoderXML>
 #include "internalnetworkaccessmanager.h"
+#include "onlinesearchabstract_p.h"
 #include "logging_networking.h"
 
 #ifdef HAVE_QTWIDGETS
-class OnlineSearchArXiv::OnlineSearchQueryFormArXiv : public OnlineSearchQueryFormAbstract
+class OnlineSearchArXiv::Form : public OnlineSearchAbstract::Form
 {
     Q_OBJECT
 
@@ -50,7 +51,7 @@ private:
     QString configGroupName;
 
     void loadState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         lineEditFreeText->setText(configGroup.readEntry(QStringLiteral("freeText"), QString()));
         numResultsField->setValue(configGroup.readEntry(QStringLiteral("numResults"), 10));
     }
@@ -59,8 +60,8 @@ public:
     QLineEdit *lineEditFreeText;
     QSpinBox *numResultsField;
 
-    OnlineSearchQueryFormArXiv(QWidget *parent)
-            : OnlineSearchQueryFormAbstract(parent), configGroupName(QStringLiteral("Search Engine arXiv.org")) {
+    Form(QWidget *parent)
+            : OnlineSearchAbstract::Form(parent), configGroupName(QStringLiteral("Search Engine arXiv.org")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setMargin(0);
 
@@ -71,7 +72,7 @@ public:
         lineEditFreeText->setFocus(Qt::TabFocusReason);
         layout->addWidget(lineEditFreeText, 0, 1, 1, 1);
         label->setBuddy(lineEditFreeText);
-        connect(lineEditFreeText, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormArXiv::returnPressed);
+        connect(lineEditFreeText, &QLineEdit::returnPressed, this, &OnlineSearchArXiv::Form::returnPressed);
 
         label = new QLabel(i18n("Number of Results:"), this);
         layout->addWidget(label, 1, 0, 1, 1);
@@ -92,14 +93,14 @@ public:
     }
 
     void copyFromEntry(const Entry &entry) override {
-        lineEditFreeText->setText(authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditFreeText->setText(d->authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
     void saveState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         configGroup.writeEntry(QStringLiteral("freeText"), lineEditFreeText->text());
         configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
-        config->sync();
+        d->config->sync();
     }
 };
 #endif // HAVE_QTWIDGETS
@@ -112,7 +113,7 @@ private:
 public:
     const XSLTransform xslt;
 #ifdef HAVE_QTWIDGETS
-    OnlineSearchQueryFormArXiv *form;
+    OnlineSearchArXiv::Form *form;
 #endif // HAVE_QTWIDGETS
     const QString arXivQueryBaseUrl;
 
@@ -682,10 +683,10 @@ QString OnlineSearchArXiv::favIconUrl() const
 }
 
 #ifdef HAVE_QTWIDGETS
-OnlineSearchQueryFormAbstract *OnlineSearchArXiv::customWidget(QWidget *parent)
+OnlineSearchAbstract::Form *OnlineSearchArXiv::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
-        d->form = new OnlineSearchArXiv::OnlineSearchQueryFormArXiv(parent);
+        d->form = new OnlineSearchArXiv::Form(parent);
     return d->form;
 }
 #endif // HAVE_QTWIDGETS

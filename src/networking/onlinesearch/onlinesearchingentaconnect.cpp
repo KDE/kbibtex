@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,10 +39,11 @@
 #include <Entry>
 #include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
+#include "onlinesearchabstract_p.h"
 #include "logging_networking.h"
 
 #ifdef HAVE_QTWIDGETS
-class OnlineSearchIngentaConnect::OnlineSearchQueryFormIngentaConnect : public OnlineSearchQueryFormAbstract
+class OnlineSearchIngentaConnect::Form : public OnlineSearchAbstract::Form
 {
     Q_OBJECT
 
@@ -50,7 +51,7 @@ private:
     QString configGroupName;
 
     void loadState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         lineEditFullText->setText(configGroup.readEntry(QStringLiteral("fullText"), QString()));
         lineEditTitle->setText(configGroup.readEntry(QStringLiteral("title"), QString()));
         lineEditAuthor->setText(configGroup.readEntry(QStringLiteral("author"), QString()));
@@ -73,50 +74,50 @@ public:
     QLineEdit *lineEditIssue;
     QSpinBox *numResultsField;
 
-    OnlineSearchQueryFormIngentaConnect(QWidget *widget)
-            : OnlineSearchQueryFormAbstract(widget), configGroupName(QStringLiteral("Search Engine IngentaConnect")) {
+    Form(QWidget *widget)
+            : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine IngentaConnect")) {
         QFormLayout *layout = new QFormLayout(this);
         layout->setMargin(0);
 
         lineEditFullText = new QLineEdit(this);
         lineEditFullText->setClearButtonEnabled(true);
         layout->addRow(i18n("Full text:"), lineEditFullText);
-        connect(lineEditFullText, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditFullText, &QLineEdit::returnPressed, this, &OnlineSearchIngentaConnect::Form::returnPressed);
 
         lineEditTitle = new QLineEdit(this);
         lineEditTitle->setClearButtonEnabled(true);
         layout->addRow(i18n("Title:"), lineEditTitle);
-        connect(lineEditTitle, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditTitle, &QLineEdit::returnPressed, this, &OnlineSearchIngentaConnect::Form::returnPressed);
 
         lineEditAuthor = new QLineEdit(this);
         lineEditAuthor->setClearButtonEnabled(true);
         layout->addRow(i18n("Author:"), lineEditAuthor);
-        connect(lineEditAuthor, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditAuthor, &QLineEdit::returnPressed, this, &OnlineSearchIngentaConnect::Form::returnPressed);
 
         lineEditAbstractKeywords = new QLineEdit(this);
         lineEditAbstractKeywords->setClearButtonEnabled(true);
         layout->addRow(i18n("Abstract/Keywords:"), lineEditAbstractKeywords);
-        connect(lineEditAbstractKeywords, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditAbstractKeywords, &QLineEdit::returnPressed, this, &OnlineSearchIngentaConnect::Form::returnPressed);
 
         lineEditPublication = new QLineEdit(this);
         lineEditPublication->setClearButtonEnabled(true);
         layout->addRow(i18n("Publication:"), lineEditPublication);
-        connect(lineEditPublication, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditPublication, &QLineEdit::returnPressed, this, &OnlineSearchIngentaConnect::Form::returnPressed);
 
         lineEditISSNDOIISBN = new QLineEdit(this);
         lineEditISSNDOIISBN->setClearButtonEnabled(true);
         layout->addRow(i18n("ISSN/ISBN/DOI:"), lineEditISSNDOIISBN);
-        connect(lineEditISSNDOIISBN, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditISSNDOIISBN, &QLineEdit::returnPressed, this, &OnlineSearchIngentaConnect::Form::returnPressed);
 
         lineEditVolume = new QLineEdit(this);
         lineEditVolume->setClearButtonEnabled(true);
         layout->addRow(i18n("Volume:"), lineEditVolume);
-        connect(lineEditVolume, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditVolume, &QLineEdit::returnPressed, this, &OnlineSearchIngentaConnect::Form::returnPressed);
 
         lineEditIssue = new QLineEdit(this);
         lineEditIssue->setClearButtonEnabled(true);
         layout->addRow(i18n("Issue/Number:"), lineEditIssue);
-        connect(lineEditIssue, &QLineEdit::returnPressed, this, &OnlineSearchQueryFormIngentaConnect::returnPressed);
+        connect(lineEditIssue, &QLineEdit::returnPressed, this, &OnlineSearchIngentaConnect::Form::returnPressed);
 
         numResultsField = new QSpinBox(this);
         layout->addRow(i18n("Number of Results:"), numResultsField);
@@ -131,7 +132,7 @@ public:
 
     void copyFromEntry(const Entry &entry) override {
         lineEditTitle->setText(PlainTextValue::text(entry[Entry::ftTitle]));
-        lineEditAuthor->setText(authorLastNames(entry).join(QStringLiteral(" ")));
+        lineEditAuthor->setText(d->authorLastNames(entry).join(QStringLiteral(" ")));
         lineEditVolume->setText(PlainTextValue::text(entry[Entry::ftVolume]));
         lineEditIssue->setText(PlainTextValue::text(entry[Entry::ftNumber]));
         QString issnDoiIsbn = PlainTextValue::text(entry[Entry::ftDOI]);
@@ -150,7 +151,7 @@ public:
     }
 
     void saveState() {
-        KConfigGroup configGroup(config, configGroupName);
+        KConfigGroup configGroup(d->config, configGroupName);
         configGroup.writeEntry(QStringLiteral("fullText"), lineEditFullText->text());
         configGroup.writeEntry(QStringLiteral("title"), lineEditTitle->text());
         configGroup.writeEntry(QStringLiteral("author"), lineEditAuthor->text());
@@ -160,7 +161,7 @@ public:
         configGroup.writeEntry(QStringLiteral("volume"), lineEditVolume->text());
         configGroup.writeEntry(QStringLiteral("issue"), lineEditIssue->text());
         configGroup.writeEntry(QStringLiteral("numResults"), numResultsField->value());
-        config->sync();
+        d->config->sync();
     }
 };
 #endif // HAVE_QTWIDGETS
@@ -172,7 +173,7 @@ private:
 
 public:
 #ifdef HAVE_QTWIDGETS
-    OnlineSearchQueryFormIngentaConnect *form;
+    OnlineSearchIngentaConnect::Form *form;
 #endif // HAVE_QTWIDGETS
 
     OnlineSearchIngentaConnectPrivate(OnlineSearchIngentaConnect *)
@@ -371,10 +372,10 @@ QString OnlineSearchIngentaConnect::favIconUrl() const
 }
 
 #ifdef HAVE_QTWIDGETS
-OnlineSearchQueryFormAbstract *OnlineSearchIngentaConnect::customWidget(QWidget *parent)
+OnlineSearchAbstract::Form *OnlineSearchIngentaConnect::customWidget(QWidget *parent)
 {
     if (d->form == nullptr)
-        d->form = new OnlineSearchIngentaConnect::OnlineSearchQueryFormIngentaConnect(parent);
+        d->form = new OnlineSearchIngentaConnect::Form(parent);
     return d->form;
 }
 #endif // HAVE_QTWIDGETS
