@@ -74,6 +74,7 @@
 #include <models/FileModel>
 #include <IdSuggestions>
 #include <LyX>
+#include <UrlChecker>
 #include <widgets/FileSettingsWidget>
 #include <widgets/FilterBar>
 #include <element/FindPDFUI>

@@ -33,6 +33,7 @@ set(
     associatedfiles.cpp
     findpdf.cpp
     internalnetworkaccessmanager.cpp
+    urlchecker.cpp
     logging_networking.cpp
 )
 
@@ -97,6 +98,7 @@ ecm_generate_headers(kbibtexnetworking_HEADERS
         AssociatedFiles
         FindPDF
         InternalNetworkAccessManager
+        UrlChecker
         onlinesearch/OnlineSearchAbstract
         onlinesearch/OnlineSearchGeneral
         onlinesearch/OnlineSearchAcmPortal
