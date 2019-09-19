@@ -37,13 +37,13 @@ automated-tests:
     - ./kbibtexfilestest -platform offscreen
     - ./kbibtexnetworkingtest -platform offscreen
 
-#### coverity-scan:
-####   script:
-####     - mkdir -p $COVERITYSCAN_USR_DIR $COVERITYSCAN_OUTPUT_DIR/cov-int
-####     - wget --no-check-certificate --post-data "project=KBibTeX&token="$COVERITYSCAN_TOKEN https://scan.coverity.com/download/cxx/linux64 -O - | tar -zxv -C $COVERITYSCAN_USR_DIR
-####     - mkdir -p $BUILD_DIR/$CI_JOB_NAME && cd $BUILD_DIR/$CI_JOB_NAME
-####     - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=OFF $CI_PROJECT_DIR
-####     - ninja clean
-####     - $COVERITYSCAN_USR_DIR/cov-analysis-linux64-$COVERITYSCAN_VERSION/bin/cov-build --dir $COVERITYSCAN_OUTPUT_DIR/cov-int ninja
-####     - tar -cavf $COVERITYSCAN_COVINT_TARBALL -C $COVERITYSCAN_OUTPUT_DIR cov-int
-####     - curl --insecure --verbose --progress-bar --form "token="$COVERITYSCAN_TOKEN --form "email=fischer@unix-ag.uni-kl.de"  --form "file=@"$COVERITYSCAN_COVINT_TARBALL --form "version=GitLab" --form "description=Automatically built on GitLab" "https://scan.coverity.com/builds?project=KBibTeX"
+coverity-scan:
+  script:
+    - mkdir -p $COVERITYSCAN_USR_DIR $COVERITYSCAN_OUTPUT_DIR/cov-int
+    - wget --no-check-certificate --post-data "project=KBibTeX&token="$COVERITYSCAN_TOKEN https://scan.coverity.com/download/cxx/linux64 -O - | tar -zxv -C $COVERITYSCAN_USR_DIR
+    - mkdir -p $BUILD_DIR/$CI_JOB_NAME && cd $BUILD_DIR/$CI_JOB_NAME
+    - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=OFF $CI_PROJECT_DIR
+    - ninja clean
+    - $COVERITYSCAN_USR_DIR/cov-analysis-linux64-$COVERITYSCAN_VERSION/bin/cov-build --dir $COVERITYSCAN_OUTPUT_DIR/cov-int ninja
+    - tar -cavf $COVERITYSCAN_COVINT_TARBALL -C $COVERITYSCAN_OUTPUT_DIR cov-int
+    - curl --insecure --verbose --progress-bar --form "token="$COVERITYSCAN_TOKEN --form "email=fischer@unix-ag.uni-kl.de"  --form "file=@"$COVERITYSCAN_COVINT_TARBALL --form "version=GitLab" --form "description=Automatically built on GitLab" "https://scan.coverity.com/builds?project=KBibTeX"
