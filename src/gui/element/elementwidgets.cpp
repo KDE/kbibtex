@@ -212,7 +212,7 @@ void EntryConfiguredWidget::infoMessageLinkActivated(const QString &contents)
 {
     if (contents.startsWith(QStringLiteral("#tab:"))) {
         const QString tabIdentifier = contents.mid(5);
-        // TODO
+        emit requestingTabChange(tabIdentifier);
     }
 }
 

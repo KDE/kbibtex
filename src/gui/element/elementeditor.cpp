@@ -50,8 +50,6 @@
 class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementInterface
 {
 private:
-    typedef QVector<ElementWidget *> WidgetList;
-    WidgetList widgets;
     const File *file;
     QSharedPointer<Entry> internalEntry;
     QSharedPointer<Macro> internalMacro;
@@ -60,7 +58,6 @@ private:
     ElementEditor *p;
     ElementWidget *previousWidget;
     ReferenceWidget *referenceWidget;
-    SourceWidget *sourceWidget;
     QPushButton *buttonCheckWithBibTeX;
 
     /// Settings management through a push button with menu
@@ -69,8 +66,12 @@ private:
     QAction *actionForceShowAllWidgets, *actionLimitKeyboardTabStops;
 
 public:
+    typedef QVector<ElementWidget *> WidgetList;
     QSharedPointer<Element> element;
     HidingTabWidget *tab;
+    WidgetList widgets;
+    SourceWidget *sourceWidget;
+    FilesWidget *filesWidget;
     bool elementChanged, elementUnapplied;
 
     ElementEditorPrivate(bool scrollable, ElementEditor *parent)
@@ -104,8 +105,9 @@ public:
 
     void addTabWidgets() {
         for (const auto &etl : EntryLayout::instance()) {
-            ElementWidget *widget = new EntryConfiguredWidget(etl, tab);
+            EntryConfiguredWidget *widget = new EntryConfiguredWidget(etl, tab);
             connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
+            connect(widget, &EntryConfiguredWidget::requestingTabChange, p, &ElementEditor::switchToTab);
             widgets << widget;
             if (previousWidget == nullptr)
                 previousWidget = widget; ///< memorize the first tab
@@ -125,7 +127,7 @@ public:
         index = tab->addTab(widget, widget->icon(), widget->label());
         tab->hideTab(index);
 
-        FilesWidget *filesWidget = new FilesWidget(tab);
+        filesWidget = new FilesWidget(tab);
         connect(filesWidget, &FilesWidget::modified, p, &ElementEditor::childModified);
         widgets << filesWidget;
         index = tab->addTab(filesWidget, filesWidget->icon(), filesWidget->label());
@@ -652,6 +654,23 @@ void ElementEditor::setCurrentPage(QWidget *page)
 void ElementEditor::tabChanged()
 {
     d->switchTo(d->tab->currentWidget());
+}
+
+void ElementEditor::switchToTab(const QString &tabIdentifier)
+{
+    if (tabIdentifier == QStringLiteral("source"))
+        setCurrentPage(d->sourceWidget);
+    else if (tabIdentifier == QStringLiteral("external"))
+        setCurrentPage(d->filesWidget);
+    else {
+        for (ElementWidget *widget : d->widgets) {
+            EntryConfiguredWidget *ecw = qobject_cast<EntryConfiguredWidget *>(widget);
+            if (ecw != nullptr && ecw->identifier() == tabIdentifier) {
+                setCurrentPage(ecw);
+                break;
+            }
+        }
+    }
 }
 
 void ElementEditor::checkBibTeX()

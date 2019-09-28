@@ -122,6 +122,9 @@ public:
 
     bool canEdit(const Element *element) override;
 
+signals:
+    void requestingTabChange(const QString &tabIdentifier);
+
 private slots:
     void infoMessageLinkActivated(const QString &contents);
 };
