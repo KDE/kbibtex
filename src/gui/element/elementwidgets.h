@@ -31,6 +31,7 @@
 
 class QTreeWidget;
 class QTreeWidgetItem;
+class QBoxLayout;
 class QGridLayout;
 class QPushButton;
 class QLineEdit;
@@ -95,6 +96,7 @@ private:
     } LabeledFieldInput;
     LabeledFieldInput **listOfLabeledFieldInput;
     const int fieldInputCount, numCols;
+    QBoxLayout *vboxLayout;
     QGridLayout *gridLayout;
 
     const QSharedPointer<const EntryTabLayout> etl;
@@ -119,6 +121,9 @@ public:
     void setFile(const File *file) override;
 
     bool canEdit(const Element *element) override;
+
+private slots:
+    void infoMessageLinkActivated(const QString &contents);
 };
 
 class ReferenceWidget : public ElementWidget

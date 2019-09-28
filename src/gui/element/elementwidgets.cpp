@@ -39,6 +39,7 @@
 #include <KTextEditor/Document>
 #include <KTextEditor/Editor>
 #include <KTextEditor/View>
+#include <KMessageWidget>
 #include <kio_version.h>
 
 #include <KBibTeX>
@@ -89,7 +90,9 @@ void ElementWidget::gotModified()
 EntryConfiguredWidget::EntryConfiguredWidget(const QSharedPointer<const EntryTabLayout> &entryTabLayout, QWidget *parent)
         : ElementWidget(parent), fieldInputCount(entryTabLayout->singleFieldLayouts.size()), numCols(entryTabLayout->columns), etl(entryTabLayout)
 {
-    gridLayout = new QGridLayout(this);
+    vboxLayout = new QVBoxLayout(this);
+    gridLayout = new QGridLayout();
+    vboxLayout->addLayout(gridLayout, 100);
 
     /// Initialize list of field input widgets plus labels
     listOfLabeledFieldInput = new LabeledFieldInput*[fieldInputCount];
@@ -205,6 +208,14 @@ bool EntryConfiguredWidget::canEdit(const Element *element)
     return Entry::isEntry(*element);
 }
 
+void EntryConfiguredWidget::infoMessageLinkActivated(const QString &contents)
+{
+    if (contents.startsWith(QStringLiteral("#tab:"))) {
+        const QString tabIdentifier = contents.mid(5);
+        // TODO
+    }
+}
+
 void EntryConfiguredWidget::createGUI()
 {
     int i = 0;
@@ -232,6 +243,13 @@ void EntryConfiguredWidget::createGUI()
 
         ++i;
     }
+
+    if (!etl->infoMessages.isEmpty())
+        for (const QString &infoMessage : etl->infoMessages) {
+            KMessageWidget *infoMessagesWidget = new KMessageWidget(infoMessage, this);
+            connect(infoMessagesWidget, &KMessageWidget::linkActivated, this, &EntryConfiguredWidget::infoMessageLinkActivated);
+            vboxLayout->addWidget(infoMessagesWidget, 1);
+        }
 
     layoutGUI(true);
 }
