@@ -1155,6 +1155,7 @@ fieldInputLayout14=PersonList
 [EntryLayoutTab4]
 identifier=publication
 uiCaption=Publication
+infoMessage=DOIs and URLs get handled in the &lsquo;<a href="#tab:external">External</a>&rsquo; tab.
 columns=2
 count=28
 

@@ -36,6 +36,7 @@ typedef struct {
     QString iconName;
     int columns;
     QList<SingleFieldLayout> singleFieldLayouts;
+    QStringList infoMessages;
 } EntryTabLayout;
 
 /**
