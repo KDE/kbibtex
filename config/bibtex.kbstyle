@@ -350,6 +350,7 @@ TypeIndependent=true
 count=4
 
 [EntryLayoutTab1]
+identifier=title
 uiCaption=Title
 columns=1
 count=3
@@ -367,6 +368,7 @@ uiLabel3=Series
 fieldInputLayout3=SingleLine
 
 [EntryLayoutTab2]
+identifier=author-editor
 uiCaption=Author/Editor
 iconName=user-identity
 columns=2
@@ -381,6 +383,7 @@ uiLabel2=Editor
 fieldInputLayout2=PersonList
 
 [EntryLayoutTab3]
+identifier=publication
 uiCaption=Publication
 columns=2
 count=18
@@ -458,6 +461,7 @@ uiLabel18=Cross-Reference
 fieldInputLayout18=CrossRef
 
 [EntryLayoutTab4]
+identifier=misc
 uiCaption=Misc
 columns=1
 count=7

@@ -157,6 +157,11 @@ void EntryConfiguredWidget::showReqOptWidgets(bool forceVisible, const QString &
     layoutGUI(forceVisible, entryType);
 }
 
+QString EntryConfiguredWidget::identifier() const
+{
+    return etl->identifier;
+}
+
 void EntryConfiguredWidget::setReadOnly(bool isReadOnly)
 {
     ElementWidget::setReadOnly(isReadOnly);

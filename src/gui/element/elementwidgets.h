@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -112,6 +112,7 @@ public:
     bool validate(QWidget **widgetWithIssue, QString &message) const override;
     void setReadOnly(bool isReadOnly) override;
     void showReqOptWidgets(bool forceVisible, const QString &entryType) override;
+    QString identifier() const;
     QString label() override;
     QIcon icon() override;
 

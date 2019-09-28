@@ -1017,6 +1017,7 @@ TypeFlags=Text;Reference;Source
 count=9
 
 [EntryLayoutTab1]
+identifier=title
 uiCaption=Title
 columns=1
 count=9
@@ -1058,6 +1059,7 @@ uiLabel9=Main Title Addon
 fieldInputLayout9=SingleLine
 
 [EntryLayoutTab2]
+identifier=author-editor
 uiCaption=Author/Editor
 iconName=user-identity
 columns=2
@@ -1088,6 +1090,7 @@ uiLabel6=Name Addon
 fieldInputLayout6=SingleLine
 
 [EntryLayoutTab3]
+identifier=further-persons
 uiCaption=Further Persons
 iconName=user-identity
 columns=2
@@ -1150,6 +1153,7 @@ uiLabel14=Patent Holder
 fieldInputLayout14=PersonList
 
 [EntryLayoutTab4]
+identifier=publication
 uiCaption=Publication
 columns=2
 count=28
@@ -1267,6 +1271,7 @@ uiLabel28=X-Reference
 fieldInputLayout28=CrossRef
 
 [EntryLayoutTab5]
+identifier=identifiers
 uiCaption=Identifiers
 columns=2
 count=12
@@ -1320,6 +1325,7 @@ uiLabel12=Library
 fieldInputLayout12=SingleLine
 
 [EntryLayoutTab6]
+identifier=sorting
 uiCaption=Sorting
 columns=1
 count=6
@@ -1349,6 +1355,7 @@ uiLabel6=Index Title
 fieldInputLayout6=SingleLine
 
 [EntryLayoutTab7]
+identifier=abbreviations
 uiCaption=Abbreviations
 columns=1
 count=7
@@ -1382,6 +1389,7 @@ uiLabel7=Short Title
 fieldInputLayout7=SingleLine
 
 [EntryLayoutTab8]
+identifier=reprint-data
 uiCaption=Reprint Data
 columns=1
 count=6
@@ -1411,6 +1419,7 @@ uiLabel6=Original Language
 fieldInputLayout6=SingleLine
 
 [EntryLayoutTab9]
+identifier=misc
 uiCaption=Misc
 columns=1
 count=11
