@@ -27,6 +27,8 @@
 #include <NotificationHub>
 #include <Preferences>
 
+static const QColor NoColor = Qt::black;
+
 class ColorLabelComboBoxModel : public QAbstractItemModel, private NotificationListener
 {
     Q_OBJECT
@@ -58,8 +60,8 @@ public:
         }
     }
 
-    QModelIndex index(int row, int column, const QModelIndex &) const override {
-        return createIndex(row, column);
+    QModelIndex index(int row, int column, const QModelIndex &parent) const override {
+        return parent == QModelIndex() ? createIndex(row, column) : QModelIndex();
     }
 
     QModelIndex parent(const QModelIndex & = QModelIndex()) const override {
@@ -70,23 +72,25 @@ public:
         return parent == QModelIndex() ? 2 + Preferences::instance().colorCodes().count() : 0;
     }
 
-    int columnCount(const QModelIndex & = QModelIndex()) const override {
-        return 1;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override {
+        return parent == QModelIndex() ? 1 : 0;
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
         if (role == ColorRole) {
             if (index.row() == 0)
-                return QColor(Qt::black);
+                return NoColor;
             else if (index.row() == rowCount() - 1)
                 return userColor;
             else
                 return Preferences::instance().colorCodes().at(index.row() - 1).first;
         } else if (role == Qt::FontRole && (index.row() == 0 || index.row() == rowCount() - 1)) {
+            /// Set first item's text ("No color") and last item's text ("User-defined color") in italics
             QFont font;
             font.setItalic(true);
             return font;
-        } else if (role == Qt::DecorationRole && index.row() > 0 && (index.row() < rowCount() - 1 || userColor != Qt::black)) {
+        } else if (role == Qt::DecorationRole && index.row() > 0 && (index.row() < rowCount() - 1 || userColor != NoColor)) {
+            /// For items that have a color to choose, draw a little square in this chosen color
             QColor color = data(index, ColorRole).value<QColor>();
             return ColorLabelWidget::createSolidIcon(color);
         } else if (role == Qt::DisplayRole)
@@ -174,7 +178,7 @@ bool ColorLabelWidget::apply(Value &value) const
 {
     QColor color = d->model->data(d->model->index(currentIndex(), 0, QModelIndex()), ColorLabelComboBoxModel::ColorRole).value<QColor>();
     value.clear();
-    if (color != Qt::black)
+    if (color != NoColor)
         value.append(QSharedPointer<VerbatimText>(new VerbatimText(color.name())));
     return true;
 }
