@@ -123,8 +123,13 @@ def print_header(headerincludes, implementationincludes, enums, settings, output
                   setting['availabletype'] + " available" + stem + "s;", file=outputdevice)
         print(("    const " if needsReference(type) else "    ") + type + (" &" if needsReference(type) else " ") +
               lowercasestart + "();", file=outputdevice)
+        print('#ifdef HAVE_KF5', file=outputdevice)
+        print('    /*!', file=outputdevice)
+        print('     * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions', file=outputdevice)
+        print('     */', file=outputdevice)
         print("    bool set" + stem + "(const " +
               type + (" &" if needsReference(type) else " ") + lowercasestart + ");", file=outputdevice)
+        print('#endif // HAVE_KF5', file=outputdevice)
         print("", file=outputdevice)
 
     print("private:", file=outputdevice)
@@ -395,10 +400,10 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
 
         print(file=outputdevice)
 
+        print('#ifdef HAVE_KF5', file=outputdevice)
         print("bool Preferences::set" + stem + '(const ' + type +
               (" &" if needsReference(type) else " ") + 'newValue)', file=outputdevice)
         print("{", file=outputdevice)
-        print('#ifdef HAVE_KF5', file=outputdevice)
 
         if 'sanitizecode' in setting:
             newValueVariable = 'sanitizedNewValue'
@@ -471,11 +476,8 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
         print('    d->config->sync();', file=outputdevice)
         # NotificationHub::publishEvent(notificationEventId);
         print('    return true;', file=outputdevice)
-        print('#else // HAVE_KF5', file=outputdevice)
-        print('    Q_UNUSED(newValue);', file=outputdevice)
-        print('    return true;', file=outputdevice)
-        print('#endif // HAVE_KF5', file=outputdevice)
         print("}", file=outputdevice)
+        print('#endif // HAVE_KF5', file=outputdevice)
 
 
 jsondata = {}

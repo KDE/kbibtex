@@ -413,9 +413,9 @@ Preferences::BibliographySystem Preferences::bibliographySystem()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setBibliographySystem(const Preferences::BibliographySystem newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForBibliographySystem(newValue)) return false;
     d->dirtyFlagBibliographySystem = false;
     d->cachedBibliographySystem = newValue;
@@ -425,11 +425,8 @@ bool Preferences::setBibliographySystem(const Preferences::BibliographySystem ne
     configGroup.writeEntry(QStringLiteral("BibliographySystem"), static_cast<int>(newValue), KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QString Preferences::personNameFormatLastFirst = QStringLiteral("<%l><, %s><, %f>");
 const QString Preferences::personNameFormatFirstLast = QStringLiteral("<%f ><%l>< %s>");
@@ -456,9 +453,9 @@ const QString &Preferences::personNameFormat()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setPersonNameFormat(const QString &newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForPersonNameFormat(newValue)) return false;
     d->dirtyFlagPersonNameFormat = false;
     d->cachedPersonNameFormat = newValue;
@@ -468,11 +465,8 @@ bool Preferences::setPersonNameFormat(const QString &newValue)
     configGroup.writeEntry(QStringLiteral("PersonNameFormat"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QStringList Preferences::availableCopyReferenceCommands {QStringLiteral("cite"), QStringLiteral("citealt"), QStringLiteral("citeauthor"), QStringLiteral("citeauthor*"), QStringLiteral("citeyear"), QStringLiteral("citeyearpar"), QStringLiteral("shortcite"), QStringLiteral("citet"), QStringLiteral("citet*"), QStringLiteral("citep"), QStringLiteral("citep*")};
 const QString Preferences::defaultCopyReferenceCommand = Preferences::availableCopyReferenceCommands.front();
@@ -498,9 +492,9 @@ const QString &Preferences::copyReferenceCommand()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setCopyReferenceCommand(const QString &newValue)
 {
-#ifdef HAVE_KF5
     QString sanitizedNewValue = newValue;
     const QString lowerSanitizedNewValue = sanitizedNewValue.toLower();
     for (const QString &knownCopyReferenceCommand : availableCopyReferenceCommands)
@@ -517,11 +511,8 @@ bool Preferences::setCopyReferenceCommand(const QString &newValue)
     configGroup.writeEntry(QStringLiteral("CopyReferenceCommand"), sanitizedNewValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QVector<QPair<QPageSize::PageSizeId, QString>> Preferences::availablePageSizes {{QPageSize::A4, QStringLiteral("a4paper")}, {QPageSize::Letter, QStringLiteral("letter")}, {QPageSize::Legal, QStringLiteral("legal")}};
 const QPageSize::PageSizeId Preferences::defaultPageSize = Preferences::availablePageSizes.front().first;
@@ -547,9 +538,9 @@ QPageSize::PageSizeId Preferences::pageSize()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setPageSize(const QPageSize::PageSizeId newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForPageSize(newValue)) return false;
     d->dirtyFlagPageSize = false;
     d->cachedPageSize = newValue;
@@ -559,11 +550,8 @@ bool Preferences::setPageSize(const QPageSize::PageSizeId newValue)
     configGroup.writeEntry(QStringLiteral("PageSize"), static_cast<int>(newValue), KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QVector<QPair<Preferences::BackupScope, QString>> Preferences::availableBackupScopes {{Preferences::NoBackup, i18n("No backups")}, {Preferences::LocalOnly, i18n("Local files only")}, {Preferences::BothLocalAndRemote, i18n("Both local and remote files")}};
 const Preferences::BackupScope Preferences::defaultBackupScope = Preferences::availableBackupScopes.front().first;
@@ -589,9 +577,9 @@ Preferences::BackupScope Preferences::backupScope()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setBackupScope(const Preferences::BackupScope newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForBackupScope(newValue)) return false;
     d->dirtyFlagBackupScope = false;
     d->cachedBackupScope = newValue;
@@ -601,11 +589,8 @@ bool Preferences::setBackupScope(const Preferences::BackupScope newValue)
     configGroup.writeEntry(QStringLiteral("BackupScope"), static_cast<int>(newValue), KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const int Preferences::defaultNumberOfBackups = 5;
 
@@ -630,9 +615,9 @@ int Preferences::numberOfBackups()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setNumberOfBackups(const int newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForNumberOfBackups(newValue)) return false;
     d->dirtyFlagNumberOfBackups = false;
     d->cachedNumberOfBackups = newValue;
@@ -642,11 +627,8 @@ bool Preferences::setNumberOfBackups(const int newValue)
     configGroup.writeEntry(QStringLiteral("NumberOfBackups"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QStringList Preferences::defaultIdSuggestionFormatStrings {QStringLiteral("A"), QStringLiteral("A2|y"), QStringLiteral("A3|y"), QStringLiteral("A4|y|\":|T5"), QStringLiteral("al|\":|T"), QStringLiteral("al|y"), QStringLiteral("al|Y"), QStringLiteral("Al\"-|\"-|y"), QStringLiteral("Al\"+|Y"), QStringLiteral("al|y|T"), QStringLiteral("al|Y|T3"), QStringLiteral("al|Y|T3l"), QStringLiteral("a|\":|Y|\":|T1"), QStringLiteral("a|y"), QStringLiteral("A|\":|Y")};
 
@@ -671,9 +653,9 @@ const QStringList &Preferences::idSuggestionFormatStrings()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setIdSuggestionFormatStrings(const QStringList &newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForIdSuggestionFormatStrings(newValue)) return false;
     d->dirtyFlagIdSuggestionFormatStrings = false;
     d->cachedIdSuggestionFormatStrings = newValue;
@@ -683,11 +665,8 @@ bool Preferences::setIdSuggestionFormatStrings(const QStringList &newValue)
     configGroup.writeEntry(QStringLiteral("IdSuggestionFormatStrings"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QString Preferences::defaultActiveIdSuggestionFormatString {};
 
@@ -712,9 +691,9 @@ const QString &Preferences::activeIdSuggestionFormatString()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setActiveIdSuggestionFormatString(const QString &newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForActiveIdSuggestionFormatString(newValue)) return false;
     d->dirtyFlagActiveIdSuggestionFormatString = false;
     d->cachedActiveIdSuggestionFormatString = newValue;
@@ -724,11 +703,8 @@ bool Preferences::setActiveIdSuggestionFormatString(const QString &newValue)
     configGroup.writeEntry(QStringLiteral("ActiveIdSuggestionFormatString"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const bool Preferences::defaultLyXUseAutomaticPipeDetection = true;
 
@@ -753,9 +729,9 @@ bool Preferences::lyXUseAutomaticPipeDetection()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setLyXUseAutomaticPipeDetection(const bool newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForLyXUseAutomaticPipeDetection(newValue)) return false;
     d->dirtyFlagLyXUseAutomaticPipeDetection = false;
     d->cachedLyXUseAutomaticPipeDetection = newValue;
@@ -765,11 +741,8 @@ bool Preferences::setLyXUseAutomaticPipeDetection(const bool newValue)
     configGroup.writeEntry(QStringLiteral("LyXUseAutomaticPipeDetection"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QString Preferences::defaultLyXPipePath = QDir::homePath() + QStringLiteral("/.lyxpipe.in");
 
@@ -794,9 +767,9 @@ const QString &Preferences::lyXPipePath()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setLyXPipePath(const QString &newValue)
 {
-#ifdef HAVE_KF5
     QString sanitizedNewValue = newValue;
     if (sanitizedNewValue.endsWith(QStringLiteral(".out")))
         sanitizedNewValue = sanitizedNewValue.left(sanitizedNewValue.length() - 4);
@@ -811,11 +784,8 @@ bool Preferences::setLyXPipePath(const QString &newValue)
     configGroup.writeEntry(QStringLiteral("LyXPipePath"), sanitizedNewValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QStringList Preferences::availableBibTeXEncodings {QStringLiteral("LaTeX"), QStringLiteral("US-ASCII"), QStringLiteral("ISO-8859-1"), QStringLiteral("ISO-8859-2"), QStringLiteral("ISO-8859-3"), QStringLiteral("ISO-8859-4"), QStringLiteral("ISO-8859-5"), QStringLiteral("ISO-8859-6"), QStringLiteral("ISO-8859-7"), QStringLiteral("ISO-8859-8"), QStringLiteral("ISO-8859-9"), QStringLiteral("ISO-8859-10"), QStringLiteral("ISO-8859-13"), QStringLiteral("ISO-8859-14"), QStringLiteral("ISO-8859-15"), QStringLiteral("ISO-8859-16"), QStringLiteral("UTF-8"), QStringLiteral("UTF-16"), QStringLiteral("UTF-16BE"), QStringLiteral("UTF-16LE"), QStringLiteral("UTF-32"), QStringLiteral("UTF-32BE"), QStringLiteral("UTF-32LE"), QStringLiteral("KOI8-R"), QStringLiteral("KOI8-U"), QStringLiteral("Big5"), QStringLiteral("Big5-HKSCS"), QStringLiteral("GB18030"), QStringLiteral("EUC-JP"), QStringLiteral("EUC-KR"), QStringLiteral("ISO 2022-JP"), QStringLiteral("Shift-JIS"), QStringLiteral("Windows-1250"), QStringLiteral("Windows-1251"), QStringLiteral("Windows-1252"), QStringLiteral("Windows-1253"), QStringLiteral("Windows-1254"), QStringLiteral("Windows-1255"), QStringLiteral("Windows-1256"), QStringLiteral("Windows-1257"), QStringLiteral("Windows-1258")};
 const QString Preferences::defaultBibTeXEncoding = QStringLiteral("UTF-8");
@@ -841,9 +811,9 @@ const QString &Preferences::bibTeXEncoding()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setBibTeXEncoding(const QString &newValue)
 {
-#ifdef HAVE_KF5
     QString sanitizedNewValue = newValue;
     const QString lowerSanitizedNewValue = sanitizedNewValue.toLower();
     for (const QString &knownBibTeXEncoding : availableBibTeXEncodings)
@@ -860,11 +830,8 @@ bool Preferences::setBibTeXEncoding(const QString &newValue)
     configGroup.writeEntry(QStringLiteral("BibTeXEncoding"), sanitizedNewValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QStringList Preferences::availableBibTeXStringDelimiters {QStringLiteral("{}"), QStringLiteral("\"\""), QStringLiteral("()")};
 const QString Preferences::defaultBibTeXStringDelimiter = Preferences::availableBibTeXStringDelimiters.front();
@@ -890,9 +857,9 @@ const QString &Preferences::bibTeXStringDelimiter()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setBibTeXStringDelimiter(const QString &newValue)
 {
-#ifdef HAVE_KF5
     QString sanitizedNewValue = newValue;
     const QString lowerSanitizedNewValue = sanitizedNewValue.toLower();
     for (const QString &knownBibTeXStringDelimiter : availableBibTeXStringDelimiters)
@@ -909,11 +876,8 @@ bool Preferences::setBibTeXStringDelimiter(const QString &newValue)
     configGroup.writeEntry(QStringLiteral("BibTeXStringDelimiter"), sanitizedNewValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QVector<QPair<Preferences::QuoteComment, QString>> Preferences::availableBibTeXQuoteComments {{Preferences::qcNone, i18nc("Comment Quoting", "None")}, {Preferences::qcCommand, i18nc("Comment Quoting", "@comment{\342\200\246}")}, {Preferences::qcPercentSign, i18nc("Comment Quoting", "% \342\200\246")}};
 const Preferences::QuoteComment Preferences::defaultBibTeXQuoteComment = Preferences::availableBibTeXQuoteComments.front().first;
@@ -939,9 +903,9 @@ Preferences::QuoteComment Preferences::bibTeXQuoteComment()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setBibTeXQuoteComment(const Preferences::QuoteComment newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForBibTeXQuoteComment(newValue)) return false;
     d->dirtyFlagBibTeXQuoteComment = false;
     d->cachedBibTeXQuoteComment = newValue;
@@ -951,11 +915,8 @@ bool Preferences::setBibTeXQuoteComment(const Preferences::QuoteComment newValue
     configGroup.writeEntry(QStringLiteral("BibTeXQuoteComment"), static_cast<int>(newValue), KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QVector<QPair<KBibTeX::Casing, QString>> Preferences::availableBibTeXKeywordCasings {{KBibTeX::cLowerCase, i18nc("Casing of strings", "lowercase")}, {KBibTeX::cInitialCapital, i18nc("Casing of strings", "Initial capital")}, {KBibTeX::cUpperCamelCase, i18nc("Casing of strings", "UpperCamelCase")}, {KBibTeX::cLowerCamelCase, i18nc("Casing of strings", "lowerCamelCase")}, {KBibTeX::cUpperCase, i18nc("Casing of strings", "UPPERCASE")}};
 const KBibTeX::Casing Preferences::defaultBibTeXKeywordCasing = Preferences::availableBibTeXKeywordCasings.front().first;
@@ -981,9 +942,9 @@ KBibTeX::Casing Preferences::bibTeXKeywordCasing()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setBibTeXKeywordCasing(const KBibTeX::Casing newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForBibTeXKeywordCasing(newValue)) return false;
     d->dirtyFlagBibTeXKeywordCasing = false;
     d->cachedBibTeXKeywordCasing = newValue;
@@ -993,11 +954,8 @@ bool Preferences::setBibTeXKeywordCasing(const KBibTeX::Casing newValue)
     configGroup.writeEntry(QStringLiteral("BibTeXKeywordCasing"), static_cast<int>(newValue), KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const bool Preferences::defaultBibTeXProtectCasing = true;
 
@@ -1022,9 +980,9 @@ bool Preferences::bibTeXProtectCasing()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setBibTeXProtectCasing(const bool newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForBibTeXProtectCasing(newValue)) return false;
     d->dirtyFlagBibTeXProtectCasing = false;
     d->cachedBibTeXProtectCasing = newValue;
@@ -1034,11 +992,8 @@ bool Preferences::setBibTeXProtectCasing(const bool newValue)
     configGroup.writeEntry(QStringLiteral("BibTeXProtectCasing"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QStringList Preferences::availableBibTeXListSeparators {QStringLiteral("; "), QStringLiteral(", ")};
 const QString Preferences::defaultBibTeXListSeparator = Preferences::availableBibTeXListSeparators.front();
@@ -1064,9 +1019,9 @@ const QString &Preferences::bibTeXListSeparator()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setBibTeXListSeparator(const QString &newValue)
 {
-#ifdef HAVE_KF5
     QString sanitizedNewValue = newValue;
     const QString lowerSanitizedNewValue = sanitizedNewValue.toLower();
     for (const QString &knownBibTeXListSeparator : availableBibTeXListSeparators)
@@ -1083,11 +1038,8 @@ bool Preferences::setBibTeXListSeparator(const QString &newValue)
     configGroup.writeEntry(QStringLiteral("BibTeXListSeparator"), sanitizedNewValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QString Preferences::defaultLaTeXBabelLanguage = QStringLiteral("english");
 
@@ -1112,9 +1064,9 @@ const QString &Preferences::laTeXBabelLanguage()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setLaTeXBabelLanguage(const QString &newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForLaTeXBabelLanguage(newValue)) return false;
     d->dirtyFlagLaTeXBabelLanguage = false;
     d->cachedLaTeXBabelLanguage = newValue;
@@ -1124,11 +1076,8 @@ bool Preferences::setLaTeXBabelLanguage(const QString &newValue)
     configGroup.writeEntry(QStringLiteral("LaTeXBabelLanguage"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QString Preferences::defaultBibTeXBibliographyStyle = QStringLiteral("plain");
 
@@ -1153,9 +1102,9 @@ const QString &Preferences::bibTeXBibliographyStyle()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setBibTeXBibliographyStyle(const QString &newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForBibTeXBibliographyStyle(newValue)) return false;
     d->dirtyFlagBibTeXBibliographyStyle = false;
     d->cachedBibTeXBibliographyStyle = newValue;
@@ -1165,11 +1114,8 @@ bool Preferences::setBibTeXBibliographyStyle(const QString &newValue)
     configGroup.writeEntry(QStringLiteral("BibTeXBibliographyStyle"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QVector<QPair<Preferences::FileViewDoubleClickAction, QString>> Preferences::availableFileViewDoubleClickActions {{Preferences::ActionOpenEditor, i18nc("What to do if double-clicking on a file view item", "Open Editor")}, {Preferences::ActionViewDocument, i18nc("What to do if double-clicking on a file view item", "View Document")}};
 const Preferences::FileViewDoubleClickAction Preferences::defaultFileViewDoubleClickAction = Preferences::availableFileViewDoubleClickActions.front().first;
@@ -1195,9 +1141,9 @@ Preferences::FileViewDoubleClickAction Preferences::fileViewDoubleClickAction()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setFileViewDoubleClickAction(const Preferences::FileViewDoubleClickAction newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForFileViewDoubleClickAction(newValue)) return false;
     d->dirtyFlagFileViewDoubleClickAction = false;
     d->cachedFileViewDoubleClickAction = newValue;
@@ -1207,11 +1153,8 @@ bool Preferences::setFileViewDoubleClickAction(const Preferences::FileViewDouble
     configGroup.writeEntry(QStringLiteral("FileViewDoubleClickAction"), static_cast<int>(newValue), KConfig::Notify);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
 
 const QVector<QPair<QColor, QString>> Preferences::defaultColorCodes {{QColor(0xcc, 0x33, 0x00), i18nc("Color Labels", "Important")}, {QColor(0x00, 0x33, 0xff), i18nc("Color Labels", "Unread")}, {QColor(0x00, 0x99, 0x66), i18nc("Color Labels", "Read")}, {QColor(0xf0, 0xd0, 0x00), i18nc("Color Labels", "Watch")}};
 
@@ -1236,9 +1179,9 @@ const QVector<QPair<QColor, QString>> &Preferences::colorCodes()
 #endif // HAVE_KF5
 }
 
+#ifdef HAVE_KF5
 bool Preferences::setColorCodes(const QVector<QPair<QColor, QString>> &newValue)
 {
-#ifdef HAVE_KF5
     if (!d->validateValueForColorCodes(newValue)) return false;
     d->dirtyFlagColorCodes = false;
     d->cachedColorCodes = newValue;
@@ -1248,8 +1191,5 @@ bool Preferences::setColorCodes(const QVector<QPair<QColor, QString>> &newValue)
     d->writeEntryColorCodes(configGroup, QStringLiteral("ColorCodes"), newValue);
     d->config->sync();
     return true;
-#else // HAVE_KF5
-    Q_UNUSED(newValue);
-    return true;
-#endif // HAVE_KF5
 }
+#endif // HAVE_KF5
