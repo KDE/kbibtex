@@ -238,9 +238,11 @@ public:
         idSuggestionsModel->setFormatStringList(Preferences::instance().idSuggestionFormatStrings(), Preferences::instance().activeIdSuggestionFormatString());
     }
 
-    void saveState() {
-        Preferences::instance().setIdSuggestionFormatStrings(idSuggestionsModel->formatStringList());
-        Preferences::instance().setActiveIdSuggestionFormatString(idSuggestionsModel->defaultFormatString());
+    bool saveState() {
+        bool settingsGotChanged = false;
+        settingsGotChanged |= Preferences::instance().setIdSuggestionFormatStrings(idSuggestionsModel->formatStringList());
+        settingsGotChanged |= Preferences::instance().setActiveIdSuggestionFormatString(idSuggestionsModel->defaultFormatString());
+        return settingsGotChanged;
     }
 
     void resetToDefaults() {
@@ -317,9 +319,9 @@ void SettingsIdSuggestionsWidget::loadState()
     d->loadState();
 }
 
-void SettingsIdSuggestionsWidget::saveState()
+bool SettingsIdSuggestionsWidget::saveState()
 {
-    d->saveState();
+    return d->saveState();
 }
 
 void SettingsIdSuggestionsWidget::resetToDefaults()

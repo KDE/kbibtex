@@ -43,7 +43,7 @@ public:
 
 public slots:
     void loadState() override;
-    void saveState() override;
+    bool saveState() override;
     void resetToDefaults() override;
 
 private slots:

@@ -58,11 +58,12 @@ public:
         comboBoxBibliographyStyle->setCurrentIndex(row);
     }
 
-    void saveState() {
-        Preferences::instance().setPageSize(static_cast<QPageSize::PageSizeId>(comboBoxPaperSize->currentData().toInt()));
-
-        Preferences::instance().setLaTeXBabelLanguage(comboBoxBabelLanguage->lineEdit()->text());
-        Preferences::instance().setBibTeXBibliographyStyle(comboBoxBibliographyStyle->lineEdit()->text());
+    bool saveState() {
+        bool settingsGotChanged = false;
+        settingsGotChanged |= Preferences::instance().setPageSize(static_cast<QPageSize::PageSizeId>(comboBoxPaperSize->currentData().toInt()));
+        settingsGotChanged |= Preferences::instance().setLaTeXBabelLanguage(comboBoxBabelLanguage->lineEdit()->text());
+        settingsGotChanged |= Preferences::instance().setBibTeXBibliographyStyle(comboBoxBibliographyStyle->lineEdit()->text());
+        return settingsGotChanged;
     }
 
     void resetToDefaults() {
@@ -131,9 +132,9 @@ void SettingsFileExporterPDFPSWidget::loadState()
     d->loadState();
 }
 
-void SettingsFileExporterPDFPSWidget::saveState()
+bool SettingsFileExporterPDFPSWidget::saveState()
 {
-    d->saveState();
+    return d->saveState();
 }
 
 void SettingsFileExporterPDFPSWidget::resetToDefaults()

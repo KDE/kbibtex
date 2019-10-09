@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -72,10 +72,12 @@ public:
         stringListModel.setStringList(keywordList);
     }
 
-    void saveState() {
+    bool saveState() {
         KConfigGroup configGroup(config, configGroupName);
+        const QStringList oldGlobalKeywordList = configGroup.readEntry(KeywordListEdit::keyGlobalKeywordList, QStringList());
         configGroup.writeEntry(KeywordListEdit::keyGlobalKeywordList, stringListModel.stringList());
         config->sync();
+        return oldGlobalKeywordList != stringListModel.stringList();
     }
 
     void resetToDefaults() {
@@ -131,9 +133,9 @@ void SettingsGlobalKeywordsWidget::loadState()
     d->loadState();
 }
 
-void SettingsGlobalKeywordsWidget::saveState()
+bool SettingsGlobalKeywordsWidget::saveState()
 {
-    d->saveState();
+    return d->saveState();
 }
 
 void SettingsGlobalKeywordsWidget::resetToDefaults()

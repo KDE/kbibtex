@@ -206,9 +206,17 @@ void ColorLabelSettingsModel::loadState()
 /**
  * Save list of color-label pairs in user's configuration file.
  */
-void ColorLabelSettingsModel::saveState()
+bool ColorLabelSettingsModel::saveState()
 {
+    const QVector<QPair<QColor, QString>> oldColorCodes = Preferences::instance().colorCodes();
     Preferences::instance().setColorCodes(colorLabelPairs);
+
+    QVector<QPair<QColor, QString>>::ConstIterator itOld = oldColorCodes.constBegin();
+    QVector<QPair<QColor, QString>>::ConstIterator itNew = colorLabelPairs.constBegin();
+    for (; itOld != oldColorCodes.constEnd() && itNew != colorLabelPairs.constEnd(); ++itOld, ++itNew)
+        if (itOld->first != itNew->first || itOld->second != itNew->second)
+            return true;
+    return !(itOld == oldColorCodes.constEnd() && itNew == colorLabelPairs.constEnd());
 }
 
 /**
@@ -279,10 +287,12 @@ public:
             model->loadState();
     }
 
-    void saveState() {
+    bool saveState() {
         /// Delegate state maintenance to model
         if (model != nullptr)
-            model->saveState();
+            return model->saveState();
+        else
+            return false;
     }
 
     void resetToDefaults() {
@@ -360,9 +370,9 @@ void SettingsColorLabelWidget::loadState()
     d->loadState();
 }
 
-void SettingsColorLabelWidget::saveState()
+bool SettingsColorLabelWidget::saveState()
 {
-    d->saveState();
+    return d->saveState();
 }
 
 void SettingsColorLabelWidget::resetToDefaults()

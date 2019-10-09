@@ -78,17 +78,20 @@ public:
 #endif // QT_LSTAT
     }
 
-    void saveState() {
-        Preferences::instance().setCopyReferenceCommand(comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex(), ItalicTextItemModel::IdentifierRole).toString());
-        Preferences::instance().setBackupScope(static_cast<Preferences::BackupScope>(comboBoxBackupScope->itemData(comboBoxBackupScope->currentIndex()).toInt()));
-        Preferences::instance().setNumberOfBackups(spinboxNumberOfBackups->value());
+    bool saveState() {
+        bool settingsGotChanged = false;
+        settingsGotChanged |= Preferences::instance().setCopyReferenceCommand(comboBoxCopyReferenceCmd->itemData(comboBoxCopyReferenceCmd->currentIndex(), ItalicTextItemModel::IdentifierRole).toString());
+        settingsGotChanged |= Preferences::instance().setBackupScope(static_cast<Preferences::BackupScope>(comboBoxBackupScope->itemData(comboBoxBackupScope->currentIndex()).toInt()));
+        settingsGotChanged |= Preferences::instance().setNumberOfBackups(spinboxNumberOfBackups->value());
 
 #ifndef QT_LSTAT
-        Preferences::instance().setLyXPipePath(lineeditLyXPipePath->text());
+        settingsGotChanged |= Preferences::instance().setLyXPipePath(lineeditLyXPipePath->text());
 #else // QT_LSTAT
-        Preferences::instance().setLyXUseAutomaticPipeDetection(checkboxUseAutomaticLyXPipeDetection->isChecked());
-        Preferences::instance().setLyXPipePath(checkboxUseAutomaticLyXPipeDetection->isChecked() ? lastUserInputLyXPipePath : lineeditLyXPipePath->text());
+        settingsGotChanged |= Preferences::instance().setLyXUseAutomaticPipeDetection(checkboxUseAutomaticLyXPipeDetection->isChecked());
+        settingsGotChanged |= Preferences::instance().setLyXPipePath(checkboxUseAutomaticLyXPipeDetection->isChecked() ? lastUserInputLyXPipePath : lineeditLyXPipePath->text());
 #endif // QT_LSTAT
+
+        return settingsGotChanged;
     }
 
     void resetToDefaults() {
@@ -184,9 +187,9 @@ void SettingsFileExporterWidget::loadState()
     d->loadState();
 }
 
-void SettingsFileExporterWidget::saveState()
+bool SettingsFileExporterWidget::saveState()
 {
-    d->saveState();
+    return d->saveState();
 }
 
 void SettingsFileExporterWidget::resetToDefaults()

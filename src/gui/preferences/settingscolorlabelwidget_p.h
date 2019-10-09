@@ -42,7 +42,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
 
     void loadState();
-    void saveState();
+    bool saveState();
     void resetToDefaults();
 
     void addColorLabel(const QColor &color, const QString &label);

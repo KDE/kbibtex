@@ -49,9 +49,11 @@ public:
         comboBoxPersonNameFormatting->setCurrentIndex(row);
     }
 
-    void saveState() {
-        Preferences::instance().setBibliographySystem(static_cast<Preferences::BibliographySystem>(comboBoxBibliographySystem->currentData().toInt()));
-        Preferences::instance().setPersonNameFormat(comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()).toString());
+    bool saveState() {
+        bool settingsGotChanged = false;
+        settingsGotChanged |= Preferences::instance().setBibliographySystem(static_cast<Preferences::BibliographySystem>(comboBoxBibliographySystem->currentData().toInt()));
+        settingsGotChanged |= Preferences::instance().setPersonNameFormat(comboBoxPersonNameFormatting->itemData(comboBoxPersonNameFormatting->currentIndex()).toString());
+        return settingsGotChanged;
     }
 
     void resetToDefaults() {
@@ -108,9 +110,9 @@ void SettingsGeneralWidget::loadState()
     d->loadState();
 }
 
-void SettingsGeneralWidget::saveState()
+bool SettingsGeneralWidget::saveState()
 {
-    d->saveState();
+    return d->saveState();
 }
 
 void SettingsGeneralWidget::resetToDefaults()

@@ -46,8 +46,10 @@ public:
         comboBoxElementDoubleClickAction->setCurrentIndex(row);
     }
 
-    void saveState() {
-        Preferences::instance().setFileViewDoubleClickAction(static_cast<Preferences::FileViewDoubleClickAction>(comboBoxElementDoubleClickAction->currentData().toInt()));
+    bool saveState() {
+        bool settingsGotChanged = false;
+        settingsGotChanged |= Preferences::instance().setFileViewDoubleClickAction(static_cast<Preferences::FileViewDoubleClickAction>(comboBoxElementDoubleClickAction->currentData().toInt()));
+        return settingsGotChanged;
     }
 
     void resetToDefaults() {
@@ -94,9 +96,9 @@ void SettingsUserInterfaceWidget::loadState()
     d->loadState();
 }
 
-void SettingsUserInterfaceWidget::saveState()
+bool SettingsUserInterfaceWidget::saveState()
 {
-    d->saveState();
+    return d->saveState();
 }
 
 void SettingsUserInterfaceWidget::resetToDefaults()
