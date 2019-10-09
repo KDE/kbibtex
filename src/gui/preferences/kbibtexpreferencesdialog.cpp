@@ -46,6 +46,7 @@ private:
 
 public:
     bool notifyOfChanges;
+    QSet<int> eventIdsToNotify;
 
     KBibTeXPreferencesDialogPrivate(KBibTeXPreferencesDialog *parent)
             : p(parent) {
@@ -104,7 +105,9 @@ public:
 
     void saveState() {
         for (SettingsAbstractWidget *settingsWidget : const_cast<const QSet<SettingsAbstractWidget *> &>(settingWidgets)) {
-            settingsWidget->saveState();
+            const bool settingsGotChanged = settingsWidget->saveState();
+            if (settingsGotChanged)
+                eventIdsToNotify.insert(settingsWidget->eventId());
         }
     }
 
@@ -181,8 +184,11 @@ KBibTeXPreferencesDialog::~KBibTeXPreferencesDialog()
 void KBibTeXPreferencesDialog::hideEvent(QHideEvent *)
 {
     // TODO missing documentation: what triggers 'hideEvent' and why is 'notifyOfChanges' necessary?
-    if (d->notifyOfChanges)
-        NotificationHub::publishEvent(NotificationHub::EventConfigurationChanged);
+    if (d->notifyOfChanges) {
+        for (const int eventId : const_cast<const QSet<int> &>(d->eventIdsToNotify))
+            NotificationHub::publishEvent(eventId);
+        d->notifyOfChanges = false;
+    }
 }
 
 void KBibTeXPreferencesDialog::buttonClicked(QAbstractButton *button) {

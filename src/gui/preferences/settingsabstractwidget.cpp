@@ -17,8 +17,15 @@
 
 #include "settingsabstractwidget.h"
 
+#include <NotificationHub>
+
 SettingsAbstractWidget::SettingsAbstractWidget(QWidget *parent)
         : QWidget(parent)
 {
     /// nothing
+}
+
+int SettingsAbstractWidget::eventId() const
+{
+    return NotificationHub::EventConfigurationChanged;
 }

@@ -35,6 +35,7 @@ public:
     explicit SettingsAbstractWidget(QWidget *parent);
     // virtual ~SettingsAbstractWidget() { /* nothing */ };
 
+    virtual int eventId() const;
     virtual QString label() const = 0;
     virtual QIcon icon() const = 0;
 
