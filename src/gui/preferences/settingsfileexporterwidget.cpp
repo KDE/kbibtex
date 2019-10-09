@@ -80,6 +80,7 @@ public:
 #else // QT_LSTAT
         checkboxUseAutomaticLyXPipeDetection->setChecked(configGroupLyX.readEntry(LyX::keyUseAutomaticLyXPipeDetection, LyX::defaultUseAutomaticLyXPipeDetection));
         lastUserInputLyXPipePath = configGroupLyX.readEntry(LyX::keyLyXPipePath, LyX::defaultLyXPipePath);
+        lineeditLyXPipePath->setText(lastUserInputLyXPipePath);
         p->automaticLyXDetectionToggled(checkboxUseAutomaticLyXPipeDetection->isChecked());
 #endif // QT_LSTAT
     }
