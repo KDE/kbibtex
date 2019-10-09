@@ -74,6 +74,7 @@ public:
 #else // QT_LSTAT
         checkboxUseAutomaticLyXPipeDetection->setChecked(Preferences::instance().lyXUseAutomaticPipeDetection());
         lastUserInputLyXPipePath = Preferences::instance().lyXPipePath();
+        lineeditLyXPipePath->setText(lastUserInputLyXPipePath);
         p->automaticLyXDetectionToggled(checkboxUseAutomaticLyXPipeDetection->isChecked());
 #endif // QT_LSTAT
     }
