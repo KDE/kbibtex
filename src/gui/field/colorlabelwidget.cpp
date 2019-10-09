@@ -29,7 +29,7 @@
 
 static const QColor NoColor = Qt::black;
 
-class ColorLabelComboBoxModel : public QAbstractItemModel, private NotificationListener
+class ColorLabelComboBoxModel : public QAbstractItemModel
 {
     Q_OBJECT
 
@@ -44,20 +44,11 @@ public:
         QString label;
     };
 
-    QList<ColorLabelPair> colorLabelPairs;
     QColor userColor;
 
     ColorLabelComboBoxModel(QObject *p = nullptr)
-            : QAbstractItemModel(p), userColor(Qt::black) {
-        NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
-    }
-
-    void notificationEvent(int eventId) override {
-        if (eventId == NotificationHub::EventConfigurationChanged) {
-            beginResetModel();
-            /// New data will be pulled automatically via Preferences::instance().colorCodes()
-            endResetModel();
-        }
+            : QAbstractItemModel(p), userColor(NoColor) {
+        /// nothing
     }
 
     QModelIndex index(int row, int column, const QModelIndex &parent) const override {
@@ -78,12 +69,13 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
         if (role == ColorRole) {
-            if (index.row() == 0)
+            const int cci = index.row() - 1;
+            if (index.row() == 0 || cci < 0 || cci >= Preferences::instance().colorCodes().count())
                 return NoColor;
             else if (index.row() == rowCount() - 1)
                 return userColor;
             else
-                return Preferences::instance().colorCodes().at(index.row() - 1).first;
+                return Preferences::instance().colorCodes().at(cci).first;
         } else if (role == Qt::FontRole && (index.row() == 0 || index.row() == rowCount() - 1)) {
             /// Set first item's text ("No color") and last item's text ("User-defined color") in italics
             QFont font;
@@ -116,17 +108,64 @@ public:
         const QModelIndex idx = index(rowCount() - 1, 0, QModelIndex());
         emit dataChanged(idx, idx);
     }
+
+    void reset() {
+        beginResetModel();
+        endResetModel();
+    }
 };
 
-class ColorLabelWidget::ColorLabelWidgetPrivate
+class ColorLabelWidget::ColorLabelWidgetPrivate : private NotificationListener
 {
+private:
+    ColorLabelWidget *parent;
+
 public:
     ColorLabelComboBoxModel *model;
 
-    ColorLabelWidgetPrivate(ColorLabelWidget *parent, ColorLabelComboBoxModel *m)
-            : model(m)
+    ColorLabelWidgetPrivate(ColorLabelWidget *_parent, ColorLabelComboBoxModel *m)
+            : parent(_parent), model(m)
     {
         Q_UNUSED(parent)
+        NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
+    }
+
+    void notificationEvent(int eventId) override {
+        if (eventId == NotificationHub::EventConfigurationChanged) {
+            /// Avoid triggering signal when current index is set by the program
+            disconnect(parent, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), parent, &ColorLabelWidget::slotCurrentIndexChanged);
+
+            const QColor currentColor = parent->currentColor();
+            model->reset();
+            model->userColor = NoColor;
+            selectColor(currentColor);
+
+            /// Re-enable triggering signal after setting current index
+            connect(parent, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), parent, &ColorLabelWidget::slotCurrentIndexChanged);
+        }
+    }
+
+    int selectColor(const QString &color)
+    {
+        return selectColor(QColor(color));
+    }
+
+    int selectColor(const QColor &color)
+    {
+        int rowIndex = 0;
+        if (color != NoColor) {
+            /// Find row that matches given color
+            for (rowIndex = 0; rowIndex < model->rowCount(); ++rowIndex)
+                if (model->data(model->index(rowIndex, 0, QModelIndex()), ColorLabelComboBoxModel::ColorRole).value<QColor>() == color)
+                    break;
+
+            if (rowIndex >= model->rowCount()) {
+                /// Color was not in the list of known colors, so set user color to given color
+                model->userColor = color;
+                rowIndex = model->rowCount() - 1;
+            }
+        }
+        return rowIndex;
     }
 };
 
@@ -144,7 +183,19 @@ ColorLabelWidget::~ColorLabelWidget()
 
 void ColorLabelWidget::clear()
 {
-    setCurrentIndex(0);
+    /// Avoid triggering signal when current index is set by the program
+    disconnect(this, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ColorLabelWidget::slotCurrentIndexChanged);
+
+    d->model->userColor = NoColor;
+    setCurrentIndex(0); ///< index 0 should be "no color"
+
+    /// Re-enable triggering signal after setting current index
+    connect(this, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ColorLabelWidget::slotCurrentIndexChanged);
+}
+
+QColor ColorLabelWidget::currentColor() const
+{
+    return d->model->data(d->model->index(currentIndex(), 0, QModelIndex()), ColorLabelComboBoxModel::ColorRole).value<QColor>();
 }
 
 bool ColorLabelWidget::reset(const Value &value)
@@ -153,20 +204,12 @@ bool ColorLabelWidget::reset(const Value &value)
     disconnect(this, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ColorLabelWidget::slotCurrentIndexChanged);
 
     QSharedPointer<VerbatimText> verbatimText;
+    int rowIndex = 0;
     if (value.count() == 1 && !(verbatimText = value.first().dynamicCast<VerbatimText>()).isNull()) {
-        int i = 0;
-        const QColor color = QColor(verbatimText->text());
-        for (; i < d->model->rowCount(); ++i)
-            if (d->model->data(d->model->index(i, 0, QModelIndex()), ColorLabelComboBoxModel::ColorRole).value<QColor>() == color)
-                break;
-
-        if (i >= d->model->rowCount()) {
-            d->model->userColor = color;
-            i = d->model->rowCount() - 1;
-        }
-        setCurrentIndex(i);
-    } else
-        setCurrentIndex(0);
+        /// Create QColor instance based on given textual representation
+        rowIndex = d->selectColor(verbatimText->text());
+    }
+    setCurrentIndex(rowIndex);
 
     /// Re-enable triggering signal after setting current index
     connect(this, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ColorLabelWidget::slotCurrentIndexChanged);
@@ -176,7 +219,7 @@ bool ColorLabelWidget::reset(const Value &value)
 
 bool ColorLabelWidget::apply(Value &value) const
 {
-    QColor color = d->model->data(d->model->index(currentIndex(), 0, QModelIndex()), ColorLabelComboBoxModel::ColorRole).value<QColor>();
+    const QColor color = currentColor();
     value.clear();
     if (color != NoColor)
         value.append(QSharedPointer<VerbatimText>(new VerbatimText(color.name())));
