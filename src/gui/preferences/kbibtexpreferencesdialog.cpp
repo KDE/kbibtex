@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -133,6 +133,7 @@ public:
     void apply()
     {
         p->buttonBox()->button(QDialogButtonBox::Apply)->setEnabled(false);
+        p->buttonBox()->button(QDialogButtonBox::Reset)->setEnabled(false);
         saveState();
         notifyOfChanges = true;
     }
@@ -140,6 +141,7 @@ public:
     void reset()
     {
         p->buttonBox()->button(QDialogButtonBox::Apply)->setEnabled(false);
+        p->buttonBox()->button(QDialogButtonBox::Reset)->setEnabled(false);
         loadState();
     }
 
@@ -162,6 +164,7 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WindowFl
     setWindowTitle(i18n("Preferences"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset | QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, Qt::Horizontal, this);
     buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
+    buttonBox->button(QDialogButtonBox::Reset)->setEnabled(false);
     connect(buttonBox, &QDialogButtonBox::clicked, this, &KBibTeXPreferencesDialog::buttonClicked);
     setButtonBox(buttonBox);
 
@@ -204,4 +207,5 @@ void KBibTeXPreferencesDialog::buttonClicked(QAbstractButton *button) {
 void KBibTeXPreferencesDialog::gotChanged()
 {
     buttonBox()->button(QDialogButtonBox::Apply)->setEnabled(true);
+    buttonBox()->button(QDialogButtonBox::Reset)->setEnabled(true);
 }
