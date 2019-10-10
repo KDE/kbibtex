@@ -37,7 +37,6 @@ target_link_libraries(kbibtexpart
 install(
     TARGETS
     kbibtexpart
-    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
     DESTINATION
     ${KDE_INSTALL_PLUGINDIR}
 )
