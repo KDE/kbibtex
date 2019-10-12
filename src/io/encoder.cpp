@@ -67,7 +67,7 @@ public:
 /// To get the index for a code point c in the range 0x0 to 0xffff,
 /// apply the following formula:
 ///   index = c < 0xd800 ? c : c - 2048;
-const unsigned int Encoder::Private::unidecode_pos[] = {
+static const size_t[] Encoder::Private::unidecode_pos = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     97, 913569, 921249, 921281, 921313, 921345, 921377, 871489, 358817, 358945, 921409, 921441, 914081, 921473, 719073, 662913, 715521, 713569, 713633, 713761, 713889, 714017, 714145, 715361, 714273, 716673, 876289, 921505, 914145, 876353, 914209, 913665,
     921537, 876481, 914529, 718785, 914849, 877185, 876673, 876865, 876897, 718945, 915329, 915553, 877793, 877345, 916257, 877281, 876993, 921569, 872577, 916673, 877729, 914497, 718913, 916225, 876737, 915265, 914881, 921601, 921633, 921665, 921697, 921729,
@@ -2053,7 +2053,7 @@ const unsigned int Encoder::Private::unidecode_pos[] = {
     0, 0, 129, 642, 3970, 3971, 7362, 673, 0, 0, 7331, 7330, 7393, 610, 611, 78370, 0, 0, 105058, 75521, 94114, 88354, 91234, 107938, 0, 0, 75490, 81442, 81473, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
-const char *Encoder::Private::unidecode_text =
+static const char *Encoder::Private::unidecode_text =
     "sly allh jl jlalhchwaebschwaechchwaegschwaekkchwaelbchwaelgchwaelhchwaelmchwaelp"
     "chwaelschwaeltchwaengchwaenhchwaenjchwaesschyaebschyaechchyaegschyaekkchyaelbchy"
     "aelgchyaelhchyaelmchyaelpchyaelschyaeltchyaengchyaenhchyaenjchyaesschyeobschyeoc"
