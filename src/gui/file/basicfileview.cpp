@@ -52,7 +52,7 @@ public:
 
     void balanceColumns() {
         if (p->header()->count() != BibTeXFields::instance().count()) {
-            qWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
             return;
         }
         int defaultWidthSumVisible = 0;
@@ -75,7 +75,7 @@ public:
 
     void resetColumnProperties() {
         if (p->header()->count() != BibTeXFields::instance().count()) {
-            qWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
             return;
         }
         int col = 0;
@@ -92,7 +92,7 @@ public:
 
     void loadColumnProperties() {
         if (p->header()->count() != BibTeXFields::instance().count()) {
-            qWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
             return;
         }
         int col = 0;
@@ -106,7 +106,7 @@ public:
 
     void saveColumnProperties() {
         if (p->header()->count() != BibTeXFields::instance().count()) {
-            qWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
             return;
         }
         int col = 0;

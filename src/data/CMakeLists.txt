@@ -10,7 +10,12 @@ set(
     preamble.cpp
     value.cpp
     models/filemodel.cpp
-    logging_data.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtexdata_SRCS
+    HEADER logging_data.h
+    IDENTIFIER LOG_KBIBTEX_DATA
+    CATEGORY_NAME kbibtex.data
 )
 
 if(UNITY_BUILD)

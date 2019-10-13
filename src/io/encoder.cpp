@@ -2421,9 +2421,9 @@ Encoder::Encoder()
         : d(new Encoder::Private())
 {
 #ifdef HAVE_ICU
-    qInfo() << "Using ICU in Encoder class";
+    qCInfo(LOG_KBIBTEX_IO) << "Using ICU in Encoder class";
 #else // HAVE_ICU
-    qInfo() << "Using built-in translation table in Encoder class";
+    qCInfo(LOG_KBIBTEX_IO) << "Using built-in translation table in Encoder class";
 #endif // HAVE_ICU
 }
 

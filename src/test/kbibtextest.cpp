@@ -23,7 +23,6 @@
 #include <QMenu>
 #include <QIcon>
 #include <QPalette>
-#include <QDebug>
 #include <QPushButton>
 #include <QAction>
 #include <QListWidget>

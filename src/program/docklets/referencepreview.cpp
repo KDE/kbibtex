@@ -30,7 +30,6 @@
 #include <QTemporaryFile>
 #include <QPalette>
 #include <QMimeType>
-#include <QDebug>
 #include <QFileDialog>
 #include <QPushButton>
 #include <QFontDatabase>

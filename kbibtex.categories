@@ -1,0 +1,12 @@
+# KBibTeX's logging categories (for the kdebugsettings tool)
+kbibtex.global KBibTeX (library 'global') DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXGlobal]
+kbibtex.config KBibTeX (library 'config') DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXConfig]
+kbibtex.data KBibTeX (library 'data') DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXData]
+kbibtex.io KBibTeX (library 'io') DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXIO]
+kbibtex.processing KBibTeX (library 'processing') DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXProcessing]
+kbibtex.networking KBibTeX (library 'networking') DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXNetworking]
+kbibtex.gui KBibTeX (library 'gui') DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXGUI]
+kbibtex.program KBibTeX (program) DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXProgram]
+kbibtex.part KBibTeX (KPart) DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXPart]
+kbibtex.test KBibTeX (Tests) DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXTest]
+kbibtex.kirigami KBibTeX (Kirigami) DEFAULT_SEVERITY [INFO] IDENTIFIER [KBibTeXKirigami]

@@ -237,9 +237,9 @@ void InternalNetworkAccessManager::networkReplyFinished()
 void InternalNetworkAccessManager::logSslErrors(const QList<QSslError> &errors)
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-    qWarning() << QStringLiteral("Got the following SSL errors when querying the following URL: ") << removeApiKey(reply->url()).toDisplayString();
+    qCWarning(LOG_KBIBTEX_NETWORKING) << QStringLiteral("Got the following SSL errors when querying the following URL: ") << removeApiKey(reply->url()).toDisplayString();
     for (const QSslError &error : errors)
-        qWarning() << QStringLiteral(" * ") + error.errorString() << "; Code: " << static_cast<int>(error.error());
+        qCWarning(LOG_KBIBTEX_NETWORKING) << QStringLiteral(" * ") + error.errorString() << "; Code: " << static_cast<int>(error.error());
 }
 
 #include "internalnetworkaccessmanager.moc"

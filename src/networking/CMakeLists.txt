@@ -34,7 +34,12 @@ set(
     findpdf.cpp
     internalnetworkaccessmanager.cpp
     urlchecker.cpp
-    logging_networking.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtexnetworking_SRCS
+    HEADER logging_networking.h
+    IDENTIFIER LOG_KBIBTEX_NETWORKING
+    CATEGORY_NAME kbibtex.networking
 )
 
 if(UNITY_BUILD)

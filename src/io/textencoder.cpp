@@ -19,7 +19,6 @@
 
 #include <QStringList>
 #include <QTextCodec>
-#include <QDebug>
 
 #include "encoderlatex.h"
 #include "logging_io.h"

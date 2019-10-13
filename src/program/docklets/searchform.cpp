@@ -33,7 +33,6 @@
 #include <QScrollArea>
 #include <QIcon>
 #include <QPushButton>
-#include <QDebug>
 
 #include <KLocalizedString>
 #include <KRun>

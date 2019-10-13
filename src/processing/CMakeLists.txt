@@ -6,7 +6,12 @@ set(
     checkbibtex.cpp
     bibliographyservice.cpp
     journalabbreviations.cpp
-    logging_processing.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtexprocessing_SRCS
+    HEADER logging_processing.h
+    IDENTIFIER LOG_KBIBTEX_PROCESSING
+    CATEGORY_NAME kbibtex.processing
 )
 
 if(UNITY_BUILD)

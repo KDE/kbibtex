@@ -30,7 +30,6 @@
 #include <QMenuBar>
 #include <QStackedWidget>
 #include <QDockWidget>
-#include <QDebug>
 #include <QPushButton>
 #include <QComboBox>
 #include <QMutex>

@@ -22,7 +22,6 @@
 #include <QSet>
 #include <QString>
 #include <QStringList>
-#include <QDebug>
 #include <QRegularExpression>
 
 #ifdef HAVE_KF5
@@ -35,6 +34,7 @@
 
 #include <Preferences>
 #include "file.h"
+#include "logging_data.h"
 
 quint64 ValueItem::internalIdCounter = 0;
 
@@ -667,7 +667,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
                         result = verbatimText->text();
                         isVerbatim = true;
                     } else
-                        qWarning() << "Cannot interpret ValueItem to one of its descendants";
+                        qCWarning(LOG_KBIBTEX_DATA) << "Cannot interpret ValueItem to one of its descendants";
                 }
             }
         }

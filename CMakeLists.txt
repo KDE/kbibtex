@@ -36,6 +36,7 @@ include(ECMInstallIcons)
 include(ECMSetupVersion)
 include(ECMAddAppIcon)
 include(GenerateExportHeader)
+include(ECMQtDeclareLoggingCategory)
 
 ecm_setup_version(
     PROJECT
@@ -193,5 +194,11 @@ endif()
 # macro_optional_add_subdirectory(
 #     po
 # )
+
+if (ECM_VERSION VERSION_GREATER_EQUAL "5.59.0")
+    install(FILES kbibtex.categories DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
+else()
+    install(FILES kbibtex.categories DESTINATION ${KDE_INSTALL_CONFDIR})
+endif()
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

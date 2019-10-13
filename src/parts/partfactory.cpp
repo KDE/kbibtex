@@ -17,15 +17,13 @@
 
 #include "partfactory.h"
 
-#include <QDebug>
-
 #include <KAboutData>
 #include <KLocalizedString>
 
 #include "part.h"
 #include "kbibtex-version.h"
 #include "kbibtex-git-info.h"
-#include "logging_parts.h"
+#include "logging_part.h"
 
 class KBibTeXPartFactory::Private
 {
@@ -38,7 +36,7 @@ public:
         aboutData.setOrganizationDomain(QByteArray("kde.org"));
         aboutData.setDesktopFileName(QStringLiteral("org.kde.kbibtex"));
         aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QStringLiteral("fischer@unix-ag.uni-kl.de"));
-        qCInfo(LOG_KBIBTEX_PARTS) << "Creating KBibTeX Part of version" << aboutData.version();
+        qCInfo(LOG_KBIBTEX_PART) << "Creating KBibTeX Part of version" << aboutData.version();
     }
 };
 

@@ -19,8 +19,9 @@
 
 #include <typeinfo>
 
-#include <QDebug>
 #include <QStringList>
+
+#include "logging_data.h"
 
 /**
  * Private class to store internal variables that should not be visible

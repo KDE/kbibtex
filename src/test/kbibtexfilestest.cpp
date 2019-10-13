@@ -21,7 +21,6 @@
 #include <QCryptographicHash>
 #include <QTemporaryFile>
 
-#include <QDebug>
 #ifdef WRITE_RAWDATAFILE
 #include <QFile>
 #endif // WRITE_RAWDATAFILE
@@ -35,6 +34,7 @@
 #ifndef WRITE_RAWDATAFILE
 #include "kbibtexfilestest-rawdata.h"
 #endif // WRITE_RAWDATAFILE
+#include "logging_test.h"
 
 typedef struct {
     QString filename;
@@ -245,7 +245,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
         const QByteArray fileData = file.readAll();
         file.close();
         const QByteArray hashData = QCryptographicHash::hash(fileData, QCryptographicHash::Md5);
-        qInfo() << "MD5 for file" << absoluteFilename << "is" << hashData.toHex();
+        qCInfo(LOG_KBIBTEX_TEST) << "MD5 for file" << absoluteFilename << "is" << hashData.toHex();
     }
 
     File *bibTeXFile = nullptr;
@@ -253,7 +253,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     bibTeXFile = importer->load(&file);
     file.close();
 
-    qInfo() << (bibTeXFile == nullptr ? "bibTeXFile is NULL" : (bibTeXFile->isEmpty() ? "bibTeXFile is EMPTY" : QString(QStringLiteral("bibTeXFile contains %1 elements")).arg(bibTeXFile->count()).toLatin1()));
+    qCInfo(LOG_KBIBTEX_TEST) << (bibTeXFile == nullptr ? "bibTeXFile is NULL" : (bibTeXFile->isEmpty() ? "bibTeXFile is EMPTY" : QString(QStringLiteral("bibTeXFile contains %1 elements")).arg(bibTeXFile->count()).toLatin1()));
     QVERIFY(bibTeXFile);
     QVERIFY(!bibTeXFile->isEmpty());
 

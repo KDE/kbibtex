@@ -4,7 +4,12 @@ set(
     bibtexentries.cpp
     bibtexfields.cpp
     preferences.cpp
-    logging_config.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtexconfig_SRCS
+    HEADER logging_config.h
+    IDENTIFIER LOG_KBIBTEX_CONFIG
+    CATEGORY_NAME kbibtex.config
 )
 
 if(UNITY_BUILD)
