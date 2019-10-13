@@ -28,7 +28,6 @@
 #include <QHeaderView>
 #include <QPushButton>
 #include <QIcon>
-#include <QDebug>
 
 #include <KParts/Part>
 #include <KParts/ReadOnlyPart>

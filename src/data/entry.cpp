@@ -19,9 +19,8 @@
 
 #include <typeinfo>
 
-#include <QDebug>
-
 #include "file.h"
+#include "logging_data.h"
 
 // FIXME: Check if using those constants in the program is really necessary
 // or can be replace by config files

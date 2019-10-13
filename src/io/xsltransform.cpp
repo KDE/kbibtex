@@ -22,7 +22,6 @@
 #include <QBuffer>
 #include <QCoreApplication>
 #include <QStandardPaths>
-#include <QDebug>
 
 #include "logging_io.h"
 

@@ -7,13 +7,24 @@ set(
     kbibtextest_SRCS
     main.cpp
     kbibtextest.cpp
-    logging_test.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtextest_SRCS
+    HEADER logging_test.h
+    IDENTIFIER LOG_KBIBTEX_TEST
+    CATEGORY_NAME kbibtex.test
 )
 
 set(
     kbibtexfilestest_SRCS
     kbibtexfilestest.cpp
     kbibtexfilestest-rawdata.h
+)
+
+ecm_qt_declare_logging_category(kbibtexfilestest_SRCS
+    HEADER logging_test.h
+    IDENTIFIER LOG_KBIBTEX_TEST
+    CATEGORY_NAME kbibtex.test
 )
 
 set(
@@ -24,6 +35,12 @@ set(
 set(
     kbibtexiotest_SRCS
     kbibtexiotest.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtexiotest_SRCS
+    HEADER logging_test.h
+    IDENTIFIER LOG_KBIBTEX_TEST
+    CATEGORY_NAME kbibtex.test
 )
 
 set(

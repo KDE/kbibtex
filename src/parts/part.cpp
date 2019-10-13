@@ -84,7 +84,7 @@
 #include <preferences/SettingsColorLabelWidget>
 #include <preferences/SettingsFileExporterPDFPSWidget>
 #include <ValueListModel>
-#include "logging_parts.h"
+#include "logging_part.h"
 
 static const char RCFileName[] = "kbibtexpartui.rc";
 class KBibTeXPart::KBibTeXPartPrivate
@@ -341,7 +341,7 @@ public:
                 if (!path.isEmpty())
                     fileSystemWatcher.removePath(path);
                 else
-                    qCWarning(LOG_KBIBTEX_PARTS) << "No filename to stop watching";
+                    qCWarning(LOG_KBIBTEX_PART) << "No filename to stop watching";
             }
             delete bibTeXFile;
             bibTeXFile = nullptr;
@@ -349,7 +349,7 @@ public:
 
         QFile inputfile(localFilePath);
         if (!inputfile.open(QIODevice::ReadOnly)) {
-            qCWarning(LOG_KBIBTEX_PARTS) << "Opening file failed, creating new one instead:" << url.toDisplayString() << "aka" << localFilePath;
+            qCWarning(LOG_KBIBTEX_PART) << "Opening file failed, creating new one instead:" << url.toDisplayString() << "aka" << localFilePath;
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -363,7 +363,7 @@ public:
         delete importer;
 
         if (bibTeXFile == nullptr) {
-            qCWarning(LOG_KBIBTEX_PARTS) << "Opening file failed, creating new one instead:" << url.toDisplayString() << "aka" << localFilePath;
+            qCWarning(LOG_KBIBTEX_PART) << "Opening file failed, creating new one instead:" << url.toDisplayString() << "aka" << localFilePath;
             qApp->restoreOverrideCursor();
             /// Opening file failed, creating new one instead
             initializeNew();
@@ -407,7 +407,7 @@ public:
             return;
         else if (statJob->error() != KIO::Job::NoError) {
             /// Something else went wrong, quit with error
-            qCWarning(LOG_KBIBTEX_PARTS) << "Probing" << url.toDisplayString() << "failed:" << statJob->errorString();
+            qCWarning(LOG_KBIBTEX_PART) << "Probing" << url.toDisplayString() << "failed:" << statJob->errorString();
             return;
         }
 
@@ -772,7 +772,7 @@ bool KBibTeXPart::saveFile()
     if (!watchableFilename.isEmpty())
         d->fileSystemWatcher.removePath(watchableFilename);
     else
-        qCWarning(LOG_KBIBTEX_PARTS) << "watchableFilename is Empty";
+        qCWarning(LOG_KBIBTEX_PART) << "watchableFilename is Empty";
 
     const bool saveOperationSuccess = d->saveFile(url());
 
@@ -787,7 +787,7 @@ bool KBibTeXPart::saveFile()
             d->fileSystemWatcher.addPath(watchableFilename);
         });
     } else
-        qCWarning(LOG_KBIBTEX_PARTS) << "watchableFilename is Empty";
+        qCWarning(LOG_KBIBTEX_PART) << "watchableFilename is Empty";
 
     if (!saveOperationSuccess) {
         KMessageBox::error(widget(), i18n("The document could not be saved, as it was not possible to write to '%1'.\n\nCheck that you have write access to this file or that enough disk space is available.", url().toDisplayString()));
@@ -821,9 +821,9 @@ bool KBibTeXPart::documentSaveAs()
         if (!path.isEmpty())
             d->fileSystemWatcher.removePath(path);
         else
-            qCWarning(LOG_KBIBTEX_PARTS) << "No filename to stop watching";
+            qCWarning(LOG_KBIBTEX_PART) << "No filename to stop watching";
     } else
-        qCWarning(LOG_KBIBTEX_PARTS) << "Not removing" << url().url(QUrl::PreferLocalFile) << "from fileSystemWatcher";
+        qCWarning(LOG_KBIBTEX_PART) << "Not removing" << url().url(QUrl::PreferLocalFile) << "from fileSystemWatcher";
 
     // TODO how does SaveAs dialog know which mime types to support?
     if (KParts::ReadWritePart::saveAs(newUrl)) {
@@ -1019,7 +1019,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
         return;
     /// Should never happen: triggering this slot for filenames not being the opened file
     if (path != url().toLocalFile()) {
-        qCWarning(LOG_KBIBTEX_PARTS) << "Got file modification warning for wrong file: " << path << "!=" << url().toLocalFile();
+        qCWarning(LOG_KBIBTEX_PART) << "Got file modification warning for wrong file: " << path << "!=" << url().toLocalFile();
         return;
     }
 
@@ -1027,7 +1027,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     if (!path.isEmpty())
         d->fileSystemWatcher.removePath(path);
     else
-        qCWarning(LOG_KBIBTEX_PARTS) << "No filename to stop watching";
+        qCWarning(LOG_KBIBTEX_PART) << "No filename to stop watching";
 
     if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme(QStringLiteral("edit-redo"))), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Continue) {
         d->openFile(QUrl::fromLocalFile(path), path);
@@ -1039,7 +1039,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
         if (!path.isEmpty())
             d->fileSystemWatcher.addPath(path);
         else
-            qCWarning(LOG_KBIBTEX_PARTS) << "path is Empty";
+            qCWarning(LOG_KBIBTEX_PART) << "path is Empty";
     }
 }
 

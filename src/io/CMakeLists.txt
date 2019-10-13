@@ -24,7 +24,12 @@ set(
     textencoder.cpp
     bibutils.cpp
     xsltransform.cpp
-    logging_io.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtexio_SRCS
+    HEADER logging_io.h
+    IDENTIFIER LOG_KBIBTEX_IO
+    CATEGORY_NAME kbibtex.io
 )
 
 if(UNITY_BUILD)

@@ -37,7 +37,12 @@ set(
     italictextitemmodel.cpp
     valuelistmodel.cpp
     delayedexecutiontimer.cpp
-    logging_gui.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtexgui_SRCS
+    HEADER logging_gui.h
+    IDENTIFIER LOG_KBIBTEX_GUI
+    CATEGORY_NAME kbibtex.gui
 )
 
 if(UNITY_BUILD)

@@ -35,6 +35,8 @@
 #include <FileExporterXML>
 #include <FileExporterXSLT>
 
+#include "logging_test.h"
+
 Q_DECLARE_METATYPE(QMimeType)
 Q_DECLARE_METATYPE(QSharedPointer<Element>)
 
@@ -121,7 +123,7 @@ void KBibTeXIOTest::encoderConvertToPlainAscii()
     /// Depending on the chosen implementation for Encoder::instance().convertToPlainAscii(),
     /// the ASCII variant may slightly differ (both alternatives are considered valid).
     if (converted != asciialternative1 && converted != asciialternative2)
-        qWarning() << "converted=" << converted << "  asciialternative1=" << asciialternative1 << "  asciialternative2=" << asciialternative2;
+        qCWarning(LOG_KBIBTEX_TEST) << "converted=" << converted << "  asciialternative1=" << asciialternative1 << "  asciialternative2=" << asciialternative2;
     QVERIFY(converted == asciialternative1 || converted == asciialternative2);
 }
 
@@ -341,7 +343,7 @@ void KBibTeXIOTest::fileExporterXMLsave()
     QStringList errorLog;
     const QString generatedData = fileExporterXML.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
     for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qDebug() << logLine;
+        qCDebug(LOG_KBIBTEX_TEST) << logLine;
 
     QCOMPARE(generatedData, xmlData);
 }
@@ -371,7 +373,7 @@ void KBibTeXIOTest::fileExporterXSLTstandardSaveFile()
     QStringList errorLog;
     const QString generatedData = fileExporterXSLT.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
     for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qDebug() << logLine;
+        qCDebug(LOG_KBIBTEX_TEST) << logLine;
 
     for (const QString &fragment : expectedFragments)
         QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data")).arg(fragment).toLatin1().constData());
@@ -401,7 +403,7 @@ void KBibTeXIOTest::fileExporterXSLTstandardSaveElement()
     QStringList errorLog;
     const QString generatedData = fileExporterXSLT.toString(element, nullptr, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
     for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qDebug() << logLine;
+        qCDebug(LOG_KBIBTEX_TEST) << logLine;
 
     for (const QString &fragment : expectedFragments)
         QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data")).arg(fragment).toLatin1().constData());
@@ -432,7 +434,7 @@ void KBibTeXIOTest::fileExporterRISsave()
     QStringList errorLog;
     const QString generatedData = fileExporterRIS.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
     for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qDebug() << logLine;
+        qCDebug(LOG_KBIBTEX_TEST) << logLine;
 
     QCOMPARE(generatedData, risData);
 }
@@ -462,7 +464,7 @@ void KBibTeXIOTest::fileExporterBibTeXsave()
     QStringList errorLog;
     const QString generatedData = fileExporterBibTeX.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
     for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qDebug() << logLine;
+        qCDebug(LOG_KBIBTEX_TEST) << logLine;
 
     QCOMPARE(generatedData, bibTeXdata);
 }
@@ -659,7 +661,7 @@ void KBibTeXIOTest::partialBibTeXInput()
     connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
         gotErrors |= messageSeverity >= FileImporter::SeverityError;
         Q_UNUSED(messageText);
-        //qDebug()<<"FileImporterBibTeX issues message during 'partialBibTeXInput' test: "<<messageText;
+        //qCDebug(LOG_KBIBTEX_TEST)<<"FileImporterBibTeX issues message during 'partialBibTeXInput' test: "<<messageText;
     });
     QScopedPointer<File> bibTeXfile(importer.fromString(text));
 
@@ -700,7 +702,7 @@ void KBibTeXIOTest::partialRISInput()
     connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
         gotErrors |= messageSeverity >= FileImporter::SeverityError;
         Q_UNUSED(messageText);
-        //qDebug()<<"FileImporterRIS issues message during 'partialBibTeXInput' test: "<<messageText;
+        //qCDebug(LOG_KBIBTEX_TEST)<<"FileImporterRIS issues message during 'partialBibTeXInput' test: "<<messageText;
     });
     QScopedPointer<File> bibTeXfile(importer.fromString(text));
 

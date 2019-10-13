@@ -160,7 +160,7 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
         KJobWidgets::setWindow(moveCopyJob, widget);
         success &= moveCopyJob->exec();
     } else {
-        qWarning() << "Either sourceUrl or targetUrl is invalid";
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Either sourceUrl or targetUrl is invalid";
         return QUrl();
     }
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,7 +25,6 @@
 #include <QAbstractItemModel>
 #include <QRadioButton>
 #include <QPushButton>
-#include <QDebug>
 #include <QPointer>
 #include <QLineEdit>
 #include <QComboBox>
@@ -44,6 +43,7 @@
 #include "zotero/tagmodel.h"
 #include "zotero/api.h"
 #include "zotero/oauthwizard.h"
+#include "logging_program.h"
 
 using KWallet::Wallet;
 
@@ -408,13 +408,13 @@ void ZoteroBrowser::readOAuthCredentials(bool ok) {
                     updateButtons();
                     retrieveGroupList();
                 } else
-                    qWarning() << "Failed to locate Zotero Id and/or API key in KWallet";
+                    qCWarning(LOG_KBIBTEX_PROGRAM) << "Failed to locate Zotero Id and/or API key in KWallet";
             } else
-                qWarning() << "Failed to access Zotero data in KWallet";
+                qCWarning(LOG_KBIBTEX_PROGRAM) << "Failed to access Zotero data in KWallet";
         } else
-            qDebug() << "No Zotero credentials stored in KWallet";
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "No Zotero credentials stored in KWallet";
     } else
-        qWarning() << "Accessing KWallet to sync API key did not succeed";
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Accessing KWallet to sync API key did not succeed";
     reenableWidget();
 }
 
@@ -426,9 +426,9 @@ void ZoteroBrowser::writeOAuthCredentials(bool ok) {
         map.insert(ZoteroBrowser::Private::walletKeyZoteroId, d->lineEditNumericUserId->text());
         map.insert(ZoteroBrowser::Private::walletKeyZoteroApiKey, d->lineEditApiKey->text());
         if (d->wallet->writeMap(ZoteroBrowser::Private::walletEntryKBibTeXZotero, map) != 0)
-            qWarning() << "Writing API key to KWallet failed";
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "Writing API key to KWallet failed";
     } else
-        qWarning() << "Accessing KWallet to sync API key did not succeed";
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Accessing KWallet to sync API key did not succeed";
     reenableWidget();
 }
 

@@ -2,7 +2,12 @@ set(
     kbibtexpart_SRCS
     part.cpp
     partfactory.cpp
-    logging_parts.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtexpart_SRCS
+    HEADER logging_part.h
+    IDENTIFIER LOG_KBIBTEX_PART
+    CATEGORY_NAME kbibtex.part
 )
 
 if(UNITY_BUILD)

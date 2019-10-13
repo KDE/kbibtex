@@ -124,7 +124,7 @@ Person *FileImporter::splitName(const QString &name)
             firstName = segments[1].trimmed();
             suffix = segments[2].trimmed();
         } else
-            qWarning() << "Too many commas in name:" << name;
+            qCWarning(LOG_KBIBTEX_IO) << "Too many commas in name:" << name;
     }
 
     return new Person(firstName, lastName, suffix);

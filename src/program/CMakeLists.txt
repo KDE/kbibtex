@@ -14,7 +14,12 @@ set(
     docklets/filesettings.cpp
     docklets/zoterobrowser.cpp
     openfileinfo.cpp
-    logging_program.cpp
+)
+
+ecm_qt_declare_logging_category(kbibtexprogram_SRCS
+    HEADER logging_program.h
+    IDENTIFIER LOG_KBIBTEX_PROGRAM
+    CATEGORY_NAME kbibtex.program
 )
 
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows

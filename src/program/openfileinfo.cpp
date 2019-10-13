@@ -22,7 +22,6 @@
 #include <QFileInfo>
 #include <QWidget>
 #include <QUrl>
-#include <QDebug>
 #include <QApplication>
 
 #include <KLocalizedString>
