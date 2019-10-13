@@ -1,16 +1,16 @@
 set(
-    kbibtexglobal_LIB_SRCS
+    kbibtexglobal_SRCS
     kbibtex.cpp
     logging_global.cpp
 )
 
 if(UNITY_BUILD)
-    enable_unity_build(kbibtexglobal kbibtexglobal_LIB_SRCS)
+    enable_unity_build(kbibtexglobal kbibtexglobal_SRCS)
 endif(UNITY_BUILD)
 
 add_library(kbibtexglobal
     SHARED
-    ${kbibtexglobal_LIB_SRCS}
+    ${kbibtexglobal_SRCS}
 )
 generate_export_header(kbibtexglobal)
 add_library(KBibTeX::Global ALIAS kbibtexglobal)

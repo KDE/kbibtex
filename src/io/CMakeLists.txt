@@ -1,5 +1,5 @@
 set(
-    kbibtexio_LIB_SRCS
+    kbibtexio_SRCS
     encoder.cpp
     encoderlatex.cpp
     encoderxml.cpp
@@ -28,12 +28,12 @@ set(
 )
 
 if(UNITY_BUILD)
-    enable_unity_build(kbibtexio kbibtexio_LIB_SRCS)
+    enable_unity_build(kbibtexio kbibtexio_SRCS)
 endif(UNITY_BUILD)
 
 add_library(kbibtexio
     SHARED
-    ${kbibtexio_LIB_SRCS}
+    ${kbibtexio_SRCS}
 )
 generate_export_header(kbibtexio)
 add_library(KBibTeX::IO ALIAS kbibtexio)

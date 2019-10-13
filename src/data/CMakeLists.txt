@@ -1,7 +1,7 @@
 # KBibTeXData library
 
 set(
-    kbibtexdata_LIB_SRCS
+    kbibtexdata_SRCS
     comment.cpp
     element.cpp
     entry.cpp
@@ -14,12 +14,12 @@ set(
 )
 
 if(UNITY_BUILD)
-    enable_unity_build(kbibtexdata kbibtexdata_LIB_SRCS)
+    enable_unity_build(kbibtexdata kbibtexdata_SRCS)
 endif(UNITY_BUILD)
 
 add_library(kbibtexdata
     SHARED
-    ${kbibtexdata_LIB_SRCS}
+    ${kbibtexdata_SRCS}
 )
 generate_export_header(kbibtexdata)
 add_library(KBibTeX::Data ALIAS kbibtexdata)

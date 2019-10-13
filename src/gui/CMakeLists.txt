@@ -1,5 +1,5 @@
 set(
-    kbibtexgui_LIB_SRCS
+    kbibtexgui_SRCS
     element/associatedfilesui.cpp
     element/elementeditor.cpp
     element/elementwidgets.cpp
@@ -41,12 +41,12 @@ set(
 )
 
 if(UNITY_BUILD)
-    enable_unity_build(kbibtexgui kbibtexgui_LIB_SRCS)
+    enable_unity_build(kbibtexgui kbibtexgui_SRCS)
 endif(UNITY_BUILD)
 
 add_library(kbibtexgui
     SHARED
-    ${kbibtexgui_LIB_SRCS}
+    ${kbibtexgui_SRCS}
 )
 generate_export_header(kbibtexgui)
 add_library(KBibTeX::GUI ALIAS kbibtexgui)
