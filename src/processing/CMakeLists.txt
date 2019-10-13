@@ -1,5 +1,5 @@
 set(
-    kbibtexprocessing_LIB_SRCS
+    kbibtexprocessing_SRCS
     findduplicates.cpp
     idsuggestions.cpp
     lyx.cpp
@@ -10,12 +10,12 @@ set(
 )
 
 if(UNITY_BUILD)
-    enable_unity_build(kbibtexproc kbibtexprocessing_LIB_SRCS)
+    enable_unity_build(kbibtexproc kbibtexprocessing_SRCS)
 endif(UNITY_BUILD)
 
 add_library(kbibtexprocessing
     SHARED
-    ${kbibtexprocessing_LIB_SRCS}
+    ${kbibtexprocessing_SRCS}
 )
 generate_export_header(kbibtexprocessing)
 add_library(KBibTeX::Processing ALIAS kbibtexprocessing)

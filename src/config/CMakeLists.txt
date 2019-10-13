@@ -1,5 +1,5 @@
 set(
-    kbibtexconfig_LIB_SRCS
+    kbibtexconfig_SRCS
     notificationhub.cpp
     bibtexentries.cpp
     bibtexfields.cpp
@@ -8,12 +8,12 @@ set(
 )
 
 if(UNITY_BUILD)
-    enable_unity_build(kbibtexconfig kbibtexconfig_LIB_SRCS)
+    enable_unity_build(kbibtexconfig kbibtexconfig_SRCS)
 endif(UNITY_BUILD)
 
 add_library(kbibtexconfig
     SHARED
-    ${kbibtexconfig_LIB_SRCS}
+    ${kbibtexconfig_SRCS}
 )
 
 generate_export_header(kbibtexconfig)

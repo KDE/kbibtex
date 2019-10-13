@@ -1,5 +1,5 @@
 set(
-    kbibtexnetworking_LIB_SRCS
+    kbibtexnetworking_SRCS
     onlinesearch/onlinesearchabstract.cpp
     onlinesearch/onlinesearchbibsonomy.cpp
     onlinesearch/onlinesearcharxiv.cpp
@@ -38,12 +38,12 @@ set(
 )
 
 if(UNITY_BUILD)
-    enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
+    enable_unity_build(kbibtexnetworking kbibtexnetworking_SRCS)
 endif(UNITY_BUILD)
 
 add_library(kbibtexnetworking
     SHARED
-    ${kbibtexnetworking_LIB_SRCS}
+    ${kbibtexnetworking_SRCS}
 )
 generate_export_header(kbibtexnetworking)
 add_library(KBibTeX::Networking ALIAS kbibtexnetworking)

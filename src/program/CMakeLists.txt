@@ -1,5 +1,5 @@
 set(
-    kbibtex_SRCS
+    kbibtexprogram_SRCS
     program.cpp
     mainwindow.cpp
     documentlist.cpp
@@ -18,11 +18,11 @@ set(
 )
 
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
-    enable_unity_build(kbibtex kbibtex_SRCS)
+    enable_unity_build(kbibtex kbibtexprogram_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
 
-ecm_add_app_icon(kbibtex_SRCS
+ecm_add_app_icon(kbibtexprogram_SRCS
     ICONS
     ${CMAKE_SOURCE_DIR}/icons/16-apps-kbibtex.png
     ${CMAKE_SOURCE_DIR}/icons/22-apps-kbibtex.png
@@ -33,7 +33,7 @@ ecm_add_app_icon(kbibtex_SRCS
 )
 
 add_executable(kbibtex
-    ${kbibtex_SRCS}
+    ${kbibtexprogram_SRCS}
 )
 
 add_dependencies(kbibtex
