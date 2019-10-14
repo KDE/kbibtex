@@ -246,7 +246,7 @@ void EntryConfiguredWidget::createGUI()
 
     if (!etl->infoMessages.isEmpty())
         for (const QString &infoMessage : etl->infoMessages) {
-            KMessageWidget *infoMessagesWidget = new KMessageWidget(infoMessage, this);
+            KMessageWidget *infoMessagesWidget = new KMessageWidget(i18n(infoMessage.toUtf8().constData()), this);
             connect(infoMessagesWidget, &KMessageWidget::linkActivated, this, &EntryConfiguredWidget::infoMessageLinkActivated);
             vboxLayout->addWidget(infoMessagesWidget, 1);
         }

@@ -7,6 +7,9 @@
 #   QString translated = i18n(configGroup.readEntry("uiCaption", QString()).toUtf8().constData());
 find config -name \*.kbstyle -exec sed -ne '/Label=\|uiLabel\|uiCaption/p' {} \; | sed 's/.*=\([A-Za-z\(\)\/].*\)/i18n("\1");/' >>rc.cpp
 
+# Extract strings for infoMessages as well
+find config -name \*.kbstyle -exec sed -ne '/infoMessage/p' {} \; | sed 's/\"/\\"/g' | sed 's/[^=]*=\([A-Za-z\(\)\/].*\)/i18n("\1");/' >>rc.cpp
+
 # Taking instructions from
 # http://techbase.kde.org/Development/Tutorials/Localization/i18n_Build_Systems
 
