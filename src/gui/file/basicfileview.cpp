@@ -37,12 +37,12 @@ private:
     const QString name;
 
 public:
-
+    bool automaticBalancing;
     FileModel *fileModel;
     QSortFilterProxyModel *sortFilterProxyModel;
 
     Private(const QString &n, BasicFileView *parent)
-            : p(parent), name(n), fileModel(nullptr), sortFilterProxyModel(nullptr) {
+            : p(parent), name(n), automaticBalancing(true), fileModel(nullptr), sortFilterProxyModel(nullptr) {
         /// nothing
     }
 
@@ -54,7 +54,9 @@ public:
         if (p->header()->count() != BibTeXFields::instance().count()) {
             qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
             return;
-        }
+        } else if (!automaticBalancing)
+            return;
+
         int defaultWidthSumVisible = 0;
         int col = 0;
         for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
@@ -78,12 +80,20 @@ public:
             qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
             return;
         }
+        automaticBalancing = true;
+        p->header()->setSectionsMovable(false);
+        p->header()->setSectionResizeMode(QHeaderView::Fixed);
         int col = 0;
         for (BibTeXFields::Iterator it = BibTeXFields::instance().begin(), endIt = BibTeXFields::instance().end(); it != endIt; ++it) {
             auto &fd = *it;
             fd.visible.remove(name);
             const bool visibility = fd.defaultVisible;
             p->header()->setSectionHidden(col, !visibility);
+
+            /// Move columns in their original order, i.e. visual index == logical index
+            const int vi = p->header()->visualIndex(col);
+            if (vi != col) p->header()->moveSection(vi, col);
+
             ++col;
         }
         BibTeXFields::instance().save();
@@ -126,7 +136,7 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setFrameStyle(QFrame::NoFrame);
     setAlternatingRowColors(true);
     setAllColumnsShowFocus(true);
@@ -196,11 +206,13 @@ void BasicFileView::keyPressEvent(QKeyEvent *event)
 }
 
 void BasicFileView::resizeEvent(QResizeEvent *event) {
-    Q_UNUSED(event)
-    const int w = qMax(width() - 20, 0);
+    const int w = qMax(event->size().width() - verticalScrollBar()->width(), 0);
     header()->setMinimumWidth(w);
-    header()->setMaximumWidth(w);
-    d->balanceColumns();
+    if (d->automaticBalancing) {
+        header()->setMaximumWidth(w);
+        d->balanceColumns();
+    } else
+        header()->setMaximumWidth(w * 3);
 }
 
 void BasicFileView::headerActionToggled()
@@ -269,6 +281,21 @@ void BasicFileView::showHeaderContextMenu(const QPoint &pos)
     action = new QAction(i18n("Reset to defaults"), &menu);
     connect(action, &QAction::triggered, this, [this]() {
         d->resetColumnProperties();
+    });
+    menu.addAction(action);
+
+    /// Add action to allow manual resizing of columns
+    action = new QAction(i18n("Allow manual column resizing"), &menu);
+    action->setCheckable(true);
+    action->setChecked(!d->automaticBalancing);
+    connect(action, &QAction::triggered, this, [this, action]() {
+        d->automaticBalancing = !action->isChecked();
+        if (d->automaticBalancing)
+            d->resetColumnProperties(); ///< this will set the header's section resize mode to QHeaderView::Fixed
+        else {
+            header()->setSectionsMovable(true);
+            header()->setSectionResizeMode(QHeaderView::Interactive);
+        }
     });
     menu.addAction(action);
 
