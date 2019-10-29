@@ -19,7 +19,7 @@
 
 #include <KLocalizedString>
 
-OnlineSearchSOANASAADS::OnlineSearchSOANASAADS(QWidget *parent)
+OnlineSearchSOANASAADS::OnlineSearchSOANASAADS(QObject *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
 {
     /// nothing

@@ -51,7 +51,7 @@ public:
 const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryFormUrl = QStringLiteral("https://mathscinet.ams.org/mathscinet/");
 const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryUrlStem = QStringLiteral("https://mathscinet.ams.org/mathscinet/search/publications.html?client=KBibTeX");
 
-OnlineSearchMathSciNet::OnlineSearchMathSciNet(QWidget *parent)
+OnlineSearchMathSciNet::OnlineSearchMathSciNet(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchMathSciNetPrivate(this))
 {
     /// nothing

@@ -32,7 +32,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchCERNDS : public OnlineSearchSimpleBib
     Q_OBJECT
 
 public:
-    explicit OnlineSearchCERNDS(QWidget *parent);
+    explicit OnlineSearchCERNDS(QObject *parent);
 
     QString label() const override;
     QUrl homepage() const override;

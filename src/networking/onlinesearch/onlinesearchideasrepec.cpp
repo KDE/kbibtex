@@ -75,7 +75,7 @@ public:
 
 };
 
-OnlineSearchIDEASRePEc::OnlineSearchIDEASRePEc(QWidget *parent)
+OnlineSearchIDEASRePEc::OnlineSearchIDEASRePEc(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchIDEASRePEc::OnlineSearchIDEASRePEcPrivate())
 {
     /// nothing

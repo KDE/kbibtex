@@ -127,7 +127,7 @@ public:
 };
 
 
-OnlineSearchDOI::OnlineSearchDOI(QWidget *parent)
+OnlineSearchDOI::OnlineSearchDOI(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchDOIPrivate(this))
 {
     // TODO

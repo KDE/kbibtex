@@ -32,7 +32,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchBioRxiv : public OnlineSearchAbstract
     Q_OBJECT
 
 public:
-    explicit OnlineSearchBioRxiv(QWidget *parent);
+    explicit OnlineSearchBioRxiv(QObject *parent);
     ~OnlineSearchBioRxiv() override;
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;

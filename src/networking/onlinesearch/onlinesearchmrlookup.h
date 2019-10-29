@@ -34,7 +34,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchMRLookup : public OnlineSearchAbstrac
     Q_OBJECT
 
 public:
-    explicit OnlineSearchMRLookup(QWidget *parent);
+    explicit OnlineSearchMRLookup(QObject *parent);
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;
     QString label() const override;

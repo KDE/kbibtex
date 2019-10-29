@@ -38,7 +38,7 @@ public:
     }
 };
 
-OnlineSearchBioRxiv::OnlineSearchBioRxiv(QWidget *parent)
+OnlineSearchBioRxiv::OnlineSearchBioRxiv(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchBioRxiv::Private(this))
 {
     /// nothing
