@@ -68,7 +68,6 @@ target_include_directories(kbibtexnetworking
 target_link_libraries(kbibtexnetworking
     PUBLIC
         Qt5::Core
-        Qt5::Gui
         Qt5::Network
         Qt5::Widgets
         KBibTeX::Data
@@ -77,7 +76,6 @@ target_link_libraries(kbibtexnetworking
         Qt5::DBus
         Qt5::NetworkAuth
         KF5::ConfigCore
-        KF5::ConfigGui
         KF5::WidgetsAddons
         KF5::I18n
         KF5::KIOCore

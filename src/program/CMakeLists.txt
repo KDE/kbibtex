@@ -53,7 +53,6 @@ target_include_directories(kbibtex
 target_link_libraries(kbibtex
     PRIVATE
         Qt5::Core
-        Qt5::Gui
         KF5::CoreAddons
         KF5::Crash
         KF5::I18n

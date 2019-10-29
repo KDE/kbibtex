@@ -71,14 +71,13 @@ target_include_directories(kbibtexgui
 target_link_libraries(kbibtexgui
     PUBLIC
         Qt5::Core
-        Qt5::Gui
         Qt5::Widgets
     PRIVATE
         Poppler::Qt5
+        Qt5::Gui
         Qt5::Concurrent
         Qt5::XmlPatterns
         KF5::ConfigCore
-        KF5::ConfigGui
         KF5::I18n
         KF5::IconThemes
         KF5::WidgetsAddons
