@@ -32,7 +32,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchIDEASRePEc : public OnlineSearchAbstr
     Q_OBJECT
 
 public:
-    explicit OnlineSearchIDEASRePEc(QWidget *parent);
+    explicit OnlineSearchIDEASRePEc(QObject *parent);
     ~OnlineSearchIDEASRePEc() override;
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;

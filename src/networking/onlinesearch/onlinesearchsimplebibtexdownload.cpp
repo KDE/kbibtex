@@ -25,7 +25,7 @@
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 
-OnlineSearchSimpleBibTeXDownload::OnlineSearchSimpleBibTeXDownload(QWidget *parent)
+OnlineSearchSimpleBibTeXDownload::OnlineSearchSimpleBibTeXDownload(QObject *parent)
         : OnlineSearchAbstract(parent)
 {
     /// nothing

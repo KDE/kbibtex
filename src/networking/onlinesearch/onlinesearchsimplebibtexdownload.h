@@ -32,7 +32,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchSimpleBibTeXDownload : public OnlineS
     Q_OBJECT
 
 public:
-    explicit OnlineSearchSimpleBibTeXDownload(QWidget *parent);
+    explicit OnlineSearchSimpleBibTeXDownload(QObject *parent);
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;
 

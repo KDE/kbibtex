@@ -19,7 +19,7 @@
 
 #include <KLocalizedString>
 
-OnlineSearchInspireHep::OnlineSearchInspireHep(QWidget *parent)
+OnlineSearchInspireHep::OnlineSearchInspireHep(QObject *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
 {
     /// nothing

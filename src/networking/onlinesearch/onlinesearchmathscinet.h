@@ -33,7 +33,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchMathSciNet : public OnlineSearchAbstr
     Q_OBJECT
 
 public:
-    explicit OnlineSearchMathSciNet(QWidget *parent);
+    explicit OnlineSearchMathSciNet(QObject *parent);
     ~OnlineSearchMathSciNet() override;
 
     void startSearch(const QMap<QString, QString> &query, int numResults) override;

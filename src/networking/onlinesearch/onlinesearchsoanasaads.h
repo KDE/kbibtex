@@ -32,7 +32,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchSOANASAADS : public OnlineSearchSimpl
     Q_OBJECT
 
 public:
-    explicit OnlineSearchSOANASAADS(QWidget *parent);
+    explicit OnlineSearchSOANASAADS(QObject *parent);
 
     QString label() const override;
     QUrl homepage() const override;

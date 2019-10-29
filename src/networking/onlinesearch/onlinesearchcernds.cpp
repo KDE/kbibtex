@@ -24,7 +24,7 @@
 
 #include "logging_networking.h"
 
-OnlineSearchCERNDS::OnlineSearchCERNDS(QWidget *parent)
+OnlineSearchCERNDS::OnlineSearchCERNDS(QObject *parent)
         : OnlineSearchSimpleBibTeXDownload(parent)
 {
     /// nothing

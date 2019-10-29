@@ -34,7 +34,7 @@
 
 const QString OnlineSearchMRLookup::queryUrlStem = QStringLiteral("https://mathscinet.ams.org/mrlookup");
 
-OnlineSearchMRLookup::OnlineSearchMRLookup(QWidget *parent)
+OnlineSearchMRLookup::OnlineSearchMRLookup(QObject *parent)
         : OnlineSearchAbstract(parent)
 {
     /// nothing

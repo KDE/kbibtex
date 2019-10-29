@@ -32,7 +32,7 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchInspireHep : public OnlineSearchSimpl
     Q_OBJECT
 
 public:
-    explicit OnlineSearchInspireHep(QWidget *parent);
+    explicit OnlineSearchInspireHep(QObject *parent);
 
     QString label() const override;
     QUrl homepage() const override;
