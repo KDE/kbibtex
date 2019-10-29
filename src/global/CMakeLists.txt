@@ -37,10 +37,8 @@ target_include_directories(kbibtexglobal
 target_link_libraries(kbibtexglobal
     PUBLIC
         Qt5::Core
-        Qt5::Gui
     PRIVATE
         KF5::ConfigCore
-        KF5::ConfigGui
         KF5::I18n
 )
 

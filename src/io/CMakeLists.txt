@@ -58,7 +58,6 @@ target_include_directories(kbibtexio
 target_link_libraries(kbibtexio
     PUBLIC
         Qt5::Core
-        Qt5::Gui
         KBibTeX::Data
         KBibTeX::Global
     PRIVATE

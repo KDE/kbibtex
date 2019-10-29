@@ -47,9 +47,7 @@ target_link_libraries(kbibtexdata
         Qt5::Core
         KBibTeX::Config
     PRIVATE
-        Qt5::Gui
         KF5::ConfigCore
-        KF5::ConfigGui
         KF5::I18n
         KBibTeX::Global
 )

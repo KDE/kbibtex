@@ -44,7 +44,6 @@ target_link_libraries(kbibtexprocessing
     PRIVATE
         Qt5::Widgets
         KF5::ConfigCore
-        KF5::ConfigGui
         KF5::I18n
         KF5::Parts
         KF5::WidgetsAddons
