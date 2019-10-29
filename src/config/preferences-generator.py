@@ -316,7 +316,7 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
     for setting in settings:
         stem = setting['stem']
         configgroup = setting['configgroup'] if 'configgroup' in setting else 'General'
-        type = type = setting['type']
+        type = setting['type']
         typeInConfig = "int" if type in enums.keys() else type
         if 'podtype' in setting:
             typeInConfig = setting['podtype']
