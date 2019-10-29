@@ -1,8 +1,5 @@
 {
     "headerincludes": [
-        "<QPageSize>",
-        "<QColor>",
-        "",
         "<KBibTeX>"
     ],
     "implementationincludes": [
@@ -57,6 +54,7 @@
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
+            "headerincludes": ["<QPageSize>"],
             "stem": "PageSize",
             "type": "QPageSize::PageSizeId",
             "podtype": "int",
@@ -192,6 +190,7 @@
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
+            "headerincludes": ["<QColor>"],
             "stem": "ColorCodes",
             "type": "QVector<QPair<QColor, QString>>",
             "configgroup": "Color Labels",

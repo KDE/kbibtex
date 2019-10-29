@@ -492,6 +492,10 @@ enums = jsondata['enums'] \
 settings = jsondata['settings'] \
     if 'settings' in jsondata else {}
 
+for setting in settings:
+    if 'headerincludes' in setting:
+        headerincludes.extend(setting['headerincludes'])
+
 with open("/tmp/preferences.h", "w") as headerfile:
     print_header(headerincludes, implementationincludes,
                  enums, settings, outputdevice=headerfile)
