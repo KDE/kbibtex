@@ -23,10 +23,10 @@
 #include <QTimer>
 #include <QStandardPaths>
 #include <QRegularExpression>
-#ifdef HAVE_QTWIDGETS
-#include <QListWidgetItem>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#ifdef HAVE_QTWIDGETS
+#include <QListWidgetItem>
 #endif // HAVE_QTWIDGETS
 
 #ifdef HAVE_KF5
