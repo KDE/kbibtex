@@ -24,6 +24,7 @@
 #include <QSpinBox>
 #include <QPushButton>
 #include <QInputDialog>
+#include <QSignalBlocker>
 
 #include <KLocalizedString>
 
@@ -69,14 +70,17 @@ public:
         switch (fieldInputType) {
         case KBibTeX::MultiLine:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, true, p);
+            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
             break;
         case KBibTeX::List:
             fieldListEdit = new FieldListEdit(preferredTypeFlag, typeFlags, p);
+            connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldListEdit);
             break;
         case KBibTeX::Month: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
+            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
             QPushButton *monthSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("view-calendar-month")), QString());
             monthSelector->setToolTip(i18n("Select a predefined month"));
@@ -94,6 +98,7 @@ public:
         break;
         case KBibTeX::Edition: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
+            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
             QPushButton *editionSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("clock")), QString());
             editionSelector->setToolTip(i18n("Select a predefined edition"));
@@ -112,6 +117,7 @@ public:
         break;
         case KBibTeX::CrossRef: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
+            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
             QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("flag-green")), QString()); ///< find better icon
             referenceSelector->setToolTip(i18n("Select an existing entry"));
@@ -121,63 +127,70 @@ public:
         break;
         case KBibTeX::Color: {
             colorWidget = new ColorLabelWidget(p);
+            connect(colorWidget, &ColorLabelWidget::modified, p, &FieldInput::modified);
             layout->addWidget(colorWidget, 0);
         }
         break;
         case KBibTeX::StarRating: {
             starRatingWidget = new StarRatingFieldInput(8 /* = #stars */, p);
+            connect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
             layout->addWidget(starRatingWidget, 0);
         }
         break;
         case KBibTeX::PersonList:
             fieldListEdit = new PersonListEdit(preferredTypeFlag, typeFlags, p);
+            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldListEdit);
             break;
         case KBibTeX::UrlList:
             fieldListEdit = new UrlListEdit(p);
+            connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldListEdit);
             break;
         case KBibTeX::KeywordList:
             fieldListEdit = new KeywordListEdit(p);
+            connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldListEdit);
             break;
         default:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
+            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
         }
-
-        enableModifiedSignal();
     }
 
     void clear() {
-        disableModifiedSignal();
-        if (fieldLineEdit != nullptr)
+        if (fieldLineEdit != nullptr) {
+            const QSignalBlocker blocker(fieldLineEdit);
             fieldLineEdit->setText(QString());
-        else if (fieldListEdit != nullptr)
+        } else if (fieldListEdit != nullptr) {
+            const QSignalBlocker blocker(fieldListEdit);
             fieldListEdit->clear();
-        else if (colorWidget != nullptr)
+        } else if (colorWidget != nullptr) {
+            const QSignalBlocker blocker(colorWidget);
             colorWidget->clear();
-        else if (starRatingWidget != nullptr)
+        } else if (starRatingWidget != nullptr) {
+            const QSignalBlocker blocker(starRatingWidget);
             starRatingWidget->unsetValue();
-        enableModifiedSignal();
+        }
     }
 
     bool reset(const Value &value) {
-        /// if signals are not deactivated, the "modified" signal would be emitted when
-        /// resetting the widget's value
-        disableModifiedSignal();
-
         bool result = false;
-        if (fieldLineEdit != nullptr)
+        if (fieldLineEdit != nullptr) {
+            const QSignalBlocker blocker(fieldLineEdit);
             result = fieldLineEdit->reset(value);
-        else if (fieldListEdit != nullptr)
+        } else if (fieldListEdit != nullptr) {
+            const QSignalBlocker blocker(fieldListEdit);
             result = fieldListEdit->reset(value);
-        else if (colorWidget != nullptr)
+        } else if (colorWidget != nullptr) {
+            const QSignalBlocker blocker(colorWidget);
             result = colorWidget->reset(value);
-        else if (starRatingWidget != nullptr)
+        } else if (starRatingWidget != nullptr) {
+            const QSignalBlocker blocker(starRatingWidget);
             result = starRatingWidget->reset(value);
+        }
 
-        enableModifiedSignal();
         return result;
     }
 
@@ -270,28 +283,6 @@ public:
             return true;
         }
         return false;
-    }
-
-    void enableModifiedSignal() {
-        if (fieldLineEdit != nullptr)
-            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
-        if (fieldListEdit != nullptr)
-            connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
-        if (colorWidget != nullptr)
-            connect(colorWidget, &ColorLabelWidget::modified, p, &FieldInput::modified);
-        if (starRatingWidget != nullptr)
-            connect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
-    }
-
-    void disableModifiedSignal() {
-        if (fieldLineEdit != nullptr)
-            disconnect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
-        if (fieldListEdit != nullptr)
-            disconnect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
-        if (colorWidget != nullptr)
-            disconnect(colorWidget, &ColorLabelWidget::modified, p, &FieldInput::modified);
-        if (starRatingWidget != nullptr)
-            disconnect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
     }
 
     void setMonth(int month)

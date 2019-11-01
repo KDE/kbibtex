@@ -222,7 +222,8 @@ public:
     }
 
     void updateTabVisibility() {
-        disconnect(tab, &HidingTabWidget::currentChanged, p, &ElementEditor::tabChanged);
+        const QSignalBlocker blocker(tab);
+
         if (element.isNull()) {
             p->setEnabled(false);
         } else {
@@ -247,7 +248,6 @@ public:
             if (firstEnabledTab < 1024)
                 tab->setCurrentIndex(firstEnabledTab);
         }
-        connect(tab, &HidingTabWidget::currentChanged, p, &ElementEditor::tabChanged);
     }
 
     /**
