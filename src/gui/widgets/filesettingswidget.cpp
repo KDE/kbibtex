@@ -91,11 +91,6 @@ void FileSettingsWidget::loadProperties(File *file)
     }
 }
 
-void FileSettingsWidget::applyProperties()
-{
-    saveProperties(m_file);
-}
-
 void FileSettingsWidget::saveProperties(File *file)
 {
     m_file = file;

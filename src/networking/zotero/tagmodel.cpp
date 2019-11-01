@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,7 +41,9 @@ TagModel::TagModel(Tags *tags, QObject *parent)
         : QAbstractItemModel(parent), d(new Zotero::TagModel::Private(tags, this))
 {
     beginResetModel();
-    connect(tags, &Tags::finishedLoading, this, &TagModel::fetchingDone);
+    connect(tags, &Tags::finishedLoading, this, [this]() {
+        endResetModel();
+    });
 }
 
 QVariant TagModel::data(const QModelIndex &index, int role) const
@@ -110,9 +112,4 @@ int TagModel::columnCount(const QModelIndex &) const
 bool TagModel::hasChildren(const QModelIndex &) const
 {
     return false;
-}
-
-void TagModel::fetchingDone()
-{
-    endResetModel();
 }

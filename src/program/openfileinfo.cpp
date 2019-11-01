@@ -492,7 +492,9 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
         : QObject(parent), d(new OpenFileInfoManagerPrivate(this))
 {
-    QTimer::singleShot(300, this, &OpenFileInfoManager::delayedReadConfig);
+    QTimer::singleShot(300, this, [this]() {
+        d->readConfig();
+    });
 }
 
 OpenFileInfoManager &OpenFileInfoManager::instance() {
@@ -708,9 +710,4 @@ void OpenFileInfoManager::deferredListsChanged()
     statusFlags |= OpenFileInfo::RecentlyUsed;
     statusFlags |= OpenFileInfo::Favorite;
     emit flagsChanged(statusFlags);
-}
-
-void OpenFileInfoManager::delayedReadConfig()
-{
-    d->readConfig();
 }

@@ -223,7 +223,9 @@ public:
         action = p->actionCollection()->addAction(KStandardAction::Open);
         connect(action, &QAction::triggered, p, &KBibTeXMainWindow::openDocumentDialog);
         actionClose = p->actionCollection()->addAction(KStandardAction::Close);
-        connect(actionClose, &QAction::triggered, p, &KBibTeXMainWindow::closeDocument);
+        connect(actionClose, &QAction::triggered, p, []() {
+            OpenFileInfoManager::instance().close(OpenFileInfoManager::instance().currentFile());
+        });
         actionClose->setEnabled(false);
         action = p->actionCollection()->addAction(KStandardAction::Quit);
         connect(action, &QAction::triggered, p, &KBibTeXMainWindow::queryCloseAll);
@@ -347,11 +349,6 @@ void KBibTeXMainWindow::openDocument(const QUrl &url)
 {
     OpenFileInfo *openFileInfo = OpenFileInfoManager::instance().open(url);
     OpenFileInfoManager::instance().setCurrentFile(openFileInfo);
-}
-
-void KBibTeXMainWindow::closeDocument()
-{
-    OpenFileInfoManager::instance().close(OpenFileInfoManager::instance().currentFile());
 }
 
 void KBibTeXMainWindow::closeEvent(QCloseEvent *event)

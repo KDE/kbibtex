@@ -140,7 +140,9 @@ public:
         whichEnginesLabel->setWordWrap(true);
         vLayout->addWidget(whichEnginesLabel);
         vLayout->setStretchFactor(whichEnginesLabel, 0);
-        connect(whichEnginesLabel, &QLabel::linkActivated, p, &SearchForm::switchToEngines);
+        connect(whichEnginesLabel, &QLabel::linkActivated, p, [this]() {
+            switchToEngines();
+        });
 
         vLayout->addSpacing(8);
 
@@ -168,11 +170,15 @@ public:
         enginesList = new QListWidget(listContainer);
         layout->addWidget(enginesList, 0, 0, 1, 1);
         connect(enginesList, &QListWidget::itemChanged, p, &SearchForm::itemCheckChanged);
-        connect(enginesList, &QListWidget::currentItemChanged, p, &SearchForm::enginesListCurrentChanged);
+        connect(enginesList, &QListWidget::currentItemChanged, p, [this](QListWidgetItem * current, QListWidgetItem *) {
+            enginesListCurrentChanged(current);
+        });
         enginesList->setSelectionMode(QAbstractItemView::NoSelection);
 
         actionOpenHomepage = new QAction(QIcon::fromTheme(QStringLiteral("internet-web-browser")), i18n("Go to Homepage"), p);
-        connect(actionOpenHomepage, &QAction::triggered, p, &SearchForm::openHomepage);
+        connect(actionOpenHomepage, &QAction::triggered, p, [this]() {
+            openHomepage();
+        });
         enginesList->addAction(actionOpenHomepage);
         enginesList->setContextMenuPolicy(Qt::ActionsContextMenu);
 
@@ -198,7 +204,9 @@ public:
         QWidget *listContainer = createEnginesGUI(tabWidget);
         tabWidget->addTab(listContainer, QIcon::fromTheme(QStringLiteral("applications-engineering")), i18n("Engines"));
 
-        connect(tabWidget, &QTabWidget::currentChanged, p, &SearchForm::tabSwitched);
+        connect(tabWidget, &QTabWidget::currentChanged, p, [this]() {
+            updateGUI();
+        });
 
         useEntryButton = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), i18n("Use Entry"), p);
         layout->addWidget(useEntryButton, 1, 0, 1, 1);
@@ -268,7 +276,9 @@ public:
         }
 
         itemToOnlineSearch.insert(item, engine);
-        connect(engine, &OnlineSearchAbstract::foundEntry, p, &SearchForm::foundEntry);
+        connect(engine, &OnlineSearchAbstract::foundEntry, p, [this](QSharedPointer<Entry> entry) {
+            sr->insertElement(entry);
+        });
         connect(engine, &OnlineSearchAbstract::stoppedSearch, p, &SearchForm::stoppedSearch);
         connect(engine, &OnlineSearchAbstract::progress, p, &SearchForm::updateProgress);
 
@@ -365,20 +375,10 @@ SearchForm::~SearchForm()
     delete d;
 }
 
-void SearchForm::updatedConfiguration()
-{
-    d->loadEngines();
-}
-
 void SearchForm::setElement(QSharedPointer<Element> element, const File *)
 {
     d->currentEntry = element.dynamicCast<const Entry>();
     d->useEntryButton->setEnabled(!d->currentEntry.isNull() && d->tabWidget->currentIndex() == 0);
-}
-
-void SearchForm::switchToEngines()
-{
-    d->switchToEngines();
 }
 
 void SearchForm::startSearch()
@@ -427,11 +427,6 @@ void SearchForm::startSearch()
     d->switchToCancel();
 }
 
-void SearchForm::foundEntry(QSharedPointer<Entry> entry)
-{
-    d->sr->insertElement(entry);
-}
-
 void SearchForm::stoppedSearch(int)
 {
     OnlineSearchAbstract *engine = static_cast<OnlineSearchAbstract *>(sender());
@@ -455,12 +450,6 @@ void SearchForm::stoppedSearch(int)
     }
 }
 
-void SearchForm::tabSwitched(int newTab)
-{
-    Q_UNUSED(newTab)
-    d->updateGUI();
-}
-
 void SearchForm::itemCheckChanged(QListWidgetItem *item)
 {
     int numCheckedEngines = 0;
@@ -476,16 +465,6 @@ void SearchForm::itemCheckChanged(QListWidgetItem *item)
         configGroup.writeEntry(name, item->checkState() == Qt::Checked);
         d->config->sync();
     }
-}
-
-void SearchForm::openHomepage()
-{
-    d->openHomepage();
-}
-
-void SearchForm::enginesListCurrentChanged(QListWidgetItem *current, QListWidgetItem *)
-{
-    d->enginesListCurrentChanged(current);
 }
 
 void SearchForm::copyFromEntry()

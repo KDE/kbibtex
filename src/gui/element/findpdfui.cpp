@@ -528,7 +528,3 @@ void FindPDFUI::stopSearch() {
     d->findpdf->abort();
     searchFinished();
 }
-
-void FindPDFUI::abort() {
-    d->findpdf->abort();
-}

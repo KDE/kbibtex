@@ -66,10 +66,7 @@ public slots:
 private slots:
     void tabChanged();
     void switchToTab(const QString &tabIdentifier);
-    void checkBibTeX();
     void childModified(bool);
-    void updateReqOptWidgets();
-    void limitKeyboardTabStops();
 
 private:
     class ElementEditorPrivate;

@@ -255,8 +255,12 @@ public:
 
         loadState();
 
-        connect(externalViewerButton, &QPushButton::clicked, p, &DocumentPreview::openExternally);
-        connect(urlComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), p, &DocumentPreview::comboBoxChanged);
+        connect(externalViewerButton, &QPushButton::clicked, p, [this]() {
+            openExternally();
+        });
+        connect(urlComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated), p, [this](int index) {
+            comboBoxChanged(index);
+        });
         connect(onlyLocalFilesButton, &QPushButton::toggled, p, &DocumentPreview::onlyLocalFilesChanged);
     }
 
@@ -606,7 +610,9 @@ const QString DocumentPreview::DocumentPreviewPrivate::onlyLocalFilesCheckConfig
 DocumentPreview::DocumentPreview(QDockWidget *parent)
         : QWidget(parent), d(new DocumentPreviewPrivate(this))
 {
-    connect(parent, &QDockWidget::visibilityChanged, this, &DocumentPreview::visibilityChanged);
+    connect(parent, &QDockWidget::visibilityChanged, this, [this]() {
+        d->update();
+    });
 }
 
 DocumentPreview::~DocumentPreview()
@@ -620,11 +626,6 @@ void DocumentPreview::setElement(QSharedPointer<Element> element, const File *)
     d->update();
 }
 
-void DocumentPreview::openExternally()
-{
-    d->openExternally();
-}
-
 void DocumentPreview::setBibTeXUrl(const QUrl &url)
 {
     d->baseUrl = url;
@@ -634,16 +635,6 @@ void DocumentPreview::onlyLocalFilesChanged()
 {
     d->saveState();
     d->update();
-}
-
-void DocumentPreview::visibilityChanged(bool)
-{
-    d->update();
-}
-
-void DocumentPreview::comboBoxChanged(int index)
-{
-    d->comboBoxChanged(index);
 }
 
 void DocumentPreview::statFinished(KJob *kjob)

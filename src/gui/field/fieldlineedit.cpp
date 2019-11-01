@@ -73,9 +73,13 @@ public:
         buttonOpenUrl->setVisible(false);
         buttonOpenUrl->setProperty("isConst", true);
         parent->appendWidget(buttonOpenUrl);
-        connect(buttonOpenUrl, &QPushButton::clicked, parent, &FieldLineEdit::slotOpenUrl);
+        connect(buttonOpenUrl, &QPushButton::clicked, parent, [this]() {
+            openUrl();
+        });
 
-        connect(p, &FieldLineEdit::textChanged, p, &FieldLineEdit::slotTextChanged);
+        connect(p, &FieldLineEdit::textChanged, p, [this](const QString & text) {
+            textChanged(text);
+        });
 
         Value value;
         typeFlag = determineTypeFlag(value, preferredTypeFlag, typeFlags);
@@ -505,16 +509,6 @@ void FieldLineEdit::setElement(const Element *element)
 void FieldLineEdit::setFieldKey(const QString &fieldKey)
 {
     d->fieldKey = fieldKey;
-}
-
-void FieldLineEdit::slotOpenUrl()
-{
-    d->openUrl();
-}
-
-void FieldLineEdit::slotTextChanged(const QString &text)
-{
-    d->textChanged(text);
 }
 
 void FieldLineEdit::dragEnterEvent(QDragEnterEvent *event)

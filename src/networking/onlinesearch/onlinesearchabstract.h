@@ -182,7 +182,6 @@ private slots:
 #ifdef HAVE_QTWIDGETS
     void iconDownloadFinished();
 #endif // HAVE_QTWIDGETS
-    void delayedStoppedSearchTimer();
 
 signals:
     void foundEntry(QSharedPointer<Entry>);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -100,7 +100,9 @@ public:
 
         connect(checkBoxAutoApply, &QCheckBox::toggled, p, &ElementForm::autoApplyToggled);
         connect(buttonApply, &QPushButton::clicked, p, &ElementForm::validateAndOnlyThenApply);
-        connect(buttonReset, &QPushButton::clicked, p, &ElementForm::reset);
+        connect(buttonReset, &QPushButton::clicked, p, [this]() {
+            reset();
+        });
     }
 
     ~ElementFormPrivate() {
@@ -164,7 +166,9 @@ const QString ElementForm::ElementFormPrivate::configKeyAutoApply = QStringLiter
 ElementForm::ElementForm(MDIWidget *mdiWidget, QDockWidget *parent)
         : QWidget(parent), d(new ElementFormPrivate(mdiWidget, this))
 {
-    connect(parent, &QDockWidget::visibilityChanged, this, &ElementForm::visibilityChanged);
+    connect(parent, &QDockWidget::visibilityChanged, this, [this]() {
+        d->refreshElement();
+    });
 }
 
 ElementForm::~ElementForm()
@@ -186,11 +190,6 @@ void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
         /// Ignore loading the same element again
         d->loadElement(element, file);
     }
-}
-
-void ElementForm::refreshElement()
-{
-    d->refreshElement();
 }
 
 /**
@@ -231,16 +230,6 @@ bool ElementForm::validateAndOnlyThenApply()
     if (isValid)
         apply();
     return isValid;
-}
-
-void ElementForm::reset()
-{
-    d->reset();
-}
-
-void ElementForm::visibilityChanged(bool)
-{
-    d->refreshElement();
 }
 
 /**
