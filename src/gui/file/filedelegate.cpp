@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,6 +18,7 @@
 #include "filedelegate.h"
 
 #include <KIconLoader>
+#include <KRatingPainter>
 
 #include <BibTeXFields>
 #include <Entry>
@@ -33,7 +34,13 @@ void FileDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, 
     double percent = index.data(FileModel::NumberRole).toDouble(&ok);
     if (ok) {
         const FieldDescription &fd = BibTeXFields::instance().at(index.column());
-        if (fd.upperCamelCase.toLower() == Entry::ftStarRating)
-            StarRating::paintStars(painter, KIconLoader::DefaultState, numTotalStars, percent, option.rect);
+        if (fd.upperCamelCase.toLower() == Entry::ftStarRating) {
+            static KRatingPainter ratingPainter;
+            ratingPainter.setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+            ratingPainter.setHalfStepsEnabled(false);
+            ratingPainter.setMaxRating(numTotalStars);
+            ratingPainter.setLayoutDirection(qobject_cast<QWidget *>(parent())->layoutDirection());
+            ratingPainter.paint(painter, option.rect, static_cast<int>(percent / 100.0 * numTotalStars));
+        }
     }
 }
