@@ -377,8 +377,8 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widgets' values
-    disconnect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
-    disconnect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+    const QSignalBlocker blockerEntryTypeLineEdit(entryType->lineEdit());
+    const QSignalBlocker blockerEntryIdLineEdit(entryId);
 
     bool result = false;
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
@@ -419,9 +419,6 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
             result = true;
         }
     }
-
-    connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
-    connect(entryType->lineEdit(), &QLineEdit::textChanged, this, &ReferenceWidget::gotModified);
 
     return result;
 }
@@ -615,10 +612,9 @@ void ReferenceWidget::setEntryIdByDefault()
         const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
 
         if (!defaultSuggestion.isEmpty()) {
-            disconnect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
+            const QSignalBlocker blocker(entryId);
             /// Apply default suggestion to widget
             entryId->setText(defaultSuggestion);
-            connect(entryId, &QLineEdit::textEdited, this, &ReferenceWidget::entryIdManuallyChanged);
         }
     }
 }
@@ -1246,7 +1242,7 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widget's value
-    disconnect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
+    const QSignalBlocker blocker(document);
 
     FileExporterBibTeX exporter(this);
     exporter.setEncoding(QStringLiteral("utf-8"));
@@ -1263,8 +1259,6 @@ bool SourceWidget::reset(QSharedPointer<const Element> element)
         document->setReadWrite(originalReadWriteStatus);
     } else
         qCWarning(LOG_KBIBTEX_GUI) << "Converting entry to BibTeX source resulting in empty text";
-
-    connect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
 
     return !exportedText.isEmpty();
 }
@@ -1370,12 +1364,10 @@ void SourceWidget::reset()
 {
     /// if signals are not deactivated, the "modified" signal would be emitted when
     /// resetting the widget's value
-    disconnect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
+    const QSignalBlocker blocker(document);
 
     document->setText(originalText);
     setModified(false);
-
-    connect(document, &KTextEditor::Document::textChanged, this, &SourceWidget::gotModified);
 }
 
 void SourceWidget::addMessage(const FileImporter::MessageSeverity severity, const QString &messageText)
