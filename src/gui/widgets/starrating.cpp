@@ -28,6 +28,7 @@
 #include <QPushButton>
 
 #include <KLocalizedString>
+#include <KRatingPainter>
 
 class StarRating::Private
 {
@@ -108,15 +109,21 @@ void StarRating::paintEvent(QPaintEvent *ev)
     const QRect r = d->starsInside();
     const double percent = d->mouseLocation.isNull() ? d->percent : d->percentForPosition(d->mouseLocation, d->maxNumberOfStars, r);
 
+    static KRatingPainter ratingPainter;
+    ratingPainter.setAlignment(Qt::AlignVCenter | Qt::AlignLeft);
+    ratingPainter.setHalfStepsEnabled(false);
+    ratingPainter.setMaxRating(d->maxNumberOfStars);
+    ratingPainter.setLayoutDirection(qobject_cast<QWidget *>(parent())->layoutDirection());
+
     if (percent >= 0.0) {
-        paintStars(&p, KIconLoader::DefaultState, d->maxNumberOfStars, percent, d->starsInside());
+        ratingPainter.paint(&p, d->starsInside(), static_cast<int>(percent / 100.0 * d->maxNumberOfStars));
         if (d->maxNumberOfStars < 10)
             d->labelPercent->setText(QString::number(percent * d->maxNumberOfStars / 100.0, 'f', 1));
         else
             d->labelPercent->setText(QString::number(percent * d->maxNumberOfStars / 100));
     } else {
-        p.setOpacity(0.7);
-        paintStars(&p, KIconLoader::DisabledState, d->maxNumberOfStars, 0.0, d->starsInside());
+        p.setOpacity(0.5);
+        ratingPainter.paint(&p, d->starsInside(), static_cast<int>(percent / 100.0 * d->maxNumberOfStars));
         d->labelPercent->setText(d->unsetStarsText);
     }
 
@@ -215,58 +222,6 @@ void StarRating::buttonHeight()
     const QSizePolicy sp = d->clearButton->sizePolicy();
     /// Allow clear button to take as much vertical space as available
     d->clearButton->setSizePolicy(sp.horizontalPolicy(), QSizePolicy::MinimumExpanding);
-}
-
-void StarRating::paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, double percent, const QRect inside)
-{
-    painter->save(); ///< Save the current painter's state; at this function's end restored
-
-    /// Calculate a single star's width/height
-    /// so that all stars fit into the "inside" rectangle
-    const int starSize = qMin(inside.height() - 2 * Private::paintMargin, (inside.width() - 2 * Private::paintMargin) / numTotalStars);
-
-    /// First, draw active/golden/glowing stars (on the left side)
-
-    /// Create a pixmap of a single active/golden/glowing star
-    QPixmap starPixmap = KIconLoader::global()->loadIcon(QStringLiteral("rating"), KIconLoader::Small, starSize, defaultState);
-    /// Calculate vertical position (same for all stars)
-    const int y = inside.top() + (inside.height() - starSize) / 2;
-
-    /// Number of full golden stars
-    int numActiveStars = static_cast<int>(percent * numTotalStars / 100);
-    /// Number of golden pixels of the star that is
-    /// partially golden and partially grey
-    int coloredPartWidth = static_cast<int>((percent * numTotalStars / 100 - numActiveStars) * starSize);
-
-    /// Horizontal position of first star
-    int x = inside.left() + Private::paintMargin;
-
-    int i = 0; ///< start with first star
-    /// Draw active (colored) stars
-    for (; i < numActiveStars; ++i, x += starSize)
-        painter->drawPixmap(x, y, starPixmap);
-
-    if (coloredPartWidth > 0) {
-        /// One star is partially colored, so draw star's golden left half
-        painter->drawPixmap(x, y, starPixmap, 0, 0, coloredPartWidth, 0);
-    }
-
-    /// Second, draw grey/disabled stars (on the right side)
-    /// To do so, replace the previously used golden star pixmal with a grey/disabled one
-    starPixmap = KIconLoader::global()->loadIcon(QStringLiteral("rating"), KIconLoader::Small, starSize, KIconLoader::DisabledState);
-
-    if (coloredPartWidth > 0) {
-        /// One star is partially grey, so draw star's grey right half
-        painter->drawPixmap(x + coloredPartWidth, y, starPixmap, coloredPartWidth, 0, starSize - coloredPartWidth, 0);
-        x += starSize;
-        ++i;
-    }
-
-    /// Draw the remaining inactive (grey) stars
-    for (; i < numTotalStars; ++i, x += starSize)
-        painter->drawPixmap(x, y, starPixmap);
-
-    painter->restore(); ///< Restore the painter's state as saved at this function's beginning
 }
 
 bool StarRatingFieldInput::reset(const Value &value)

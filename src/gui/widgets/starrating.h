@@ -21,8 +21,6 @@
 
 #include <QWidget>
 
-#include <KIconLoader>
-
 #include <Value>
 
 #include "kbibtexgui_export.h"
@@ -31,8 +29,6 @@ class QLabel;
 class QPaintEvent;
 class QMouseEvent;
 class QPushButton;
-
-// TODO replace StarRating and StarRatingFieldInput with KRatingWidget and KRatingPainter
 
 /**
  * A widget which shows a number of stars in a horizonal row.
@@ -83,17 +79,6 @@ public:
      * @param isReadOnly @c true if widget is to be read-only, @c false if modifyable
      */
     void setReadOnly(bool isReadOnly);
-
-    /**
-     * Paint a horizonal sequence of stars on a painter.
-     *
-     * @param painter painter to draw on
-     * @param defaultState how icons shall be drawn; common values are KIconLoader::DefaultState and KIconLoader::DisabledState
-     * @param numTotalStars maximum/total number of stars
-     * @param percent percent value of "glowing" starts, to be >=0.0 and <= 100.0
-     * @param inside fit and paint stars inside this rectangle on the painter
-     */
-    static void paintStars(QPainter *painter, KIconLoader::States defaultState, int numTotalStars, double percent, const QRect inside);
 
 signals:
     void modified();
