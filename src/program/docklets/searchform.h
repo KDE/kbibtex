@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -57,12 +57,6 @@ signals:
 
 public slots:
     /**
-     * Notify this widget about changes in the configuration settings,
-     * e.g. to update its list of search engines.
-     */
-    void updatedConfiguration();
-
-    /**
      * Notify this widget about a new current element selected in the
      * main list view. Allows the widget to put use in the "Use Entry"
      * button, i.e. copy title, author, etc from the entry to the search
@@ -77,14 +71,9 @@ private:
     SearchFormPrivate *d;
 
 private slots:
-    void switchToEngines();
     void startSearch();
-    void foundEntry(QSharedPointer<Entry> entry);
     void stoppedSearch(int resultCode);
-    void tabSwitched(int newTab);
     void itemCheckChanged(QListWidgetItem *);
-    void openHomepage();
-    void enginesListCurrentChanged(QListWidgetItem *, QListWidgetItem *);
     void copyFromEntry();
     void updateProgress(int, int);
 };

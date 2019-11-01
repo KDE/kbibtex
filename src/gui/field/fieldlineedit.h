@@ -66,10 +66,6 @@ private:
 
     class FieldLineEditPrivate;
     FieldLineEdit::FieldLineEditPrivate *d;
-
-private slots:
-    void slotTextChanged(const QString &);
-    void slotOpenUrl();
 };
 
 #endif // KBIBTEX_GUI_FIELDLINEEDIT_H

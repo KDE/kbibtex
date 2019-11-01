@@ -236,19 +236,9 @@ void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
     processNextSearch();
 }
 
-void KBibTeXTest::onlineSearchFoundEntry()
-{
-    ++m_currentOnlineSearchNumFoundEntries;
-}
-
 void KBibTeXTest::progress(int pos, int total)
 {
     m_testWidget->setProgress(pos, total);
-}
-
-void KBibTeXTest::resetProgress()
-{
-    m_testWidget->setProgress(-1, -1);
 }
 
 void KBibTeXTest::processNextSearch()
@@ -261,14 +251,18 @@ void KBibTeXTest::processNextSearch()
         QMap<QString, QString> query;
         query.insert(OnlineSearchAbstract::queryKeyAuthor, QStringLiteral("smith"));
         connect(*m_currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
-        connect(*m_currentOnlineSearch, &OnlineSearchAbstract::foundEntry, this, &KBibTeXTest::onlineSearchFoundEntry);
+        connect(*m_currentOnlineSearch, &OnlineSearchAbstract::foundEntry, this, [this]() {
+            ++m_currentOnlineSearchNumFoundEntries;
+        });
         connect(*m_currentOnlineSearch, &OnlineSearchAbstract::progress, this, &KBibTeXTest::progress);
         (*m_currentOnlineSearch)->startSearch(query, 3);
     } else {
         addMessage(QStringLiteral("Done testing"), statusInfo);
         setBusy(false);
         m_running = false;
-        QTimer::singleShot(500, this, &KBibTeXTest::resetProgress);
+        QTimer::singleShot(500, this, [this]() {
+            m_testWidget->setProgress(-1, -1);
+        });
     }
 }
 

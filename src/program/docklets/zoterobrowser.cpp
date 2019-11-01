@@ -126,7 +126,9 @@ public:
         comboBoxGroupList->addItem(i18n("No groups available"));
         connect(radioGroupLibrary, &QRadioButton::toggled, p, &ZoteroBrowser::radioButtonsToggled);
         connect(radioPersonalLibrary, &QRadioButton::toggled, p, &ZoteroBrowser::radioButtonsToggled);
-        connect(comboBoxGroupList, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &ZoteroBrowser::groupListChanged);
+        connect(comboBoxGroupList, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, [this]() {
+            needToApplyCredentials = true;
+        });
 
         containerLayout->addStretch(10);
 

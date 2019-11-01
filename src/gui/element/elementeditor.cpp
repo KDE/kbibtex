@@ -171,7 +171,9 @@ public:
         referenceWidget = new ReferenceWidget(p);
         referenceWidget->setApplyElementInterface(this);
         connect(referenceWidget, &ElementWidget::modified, p, &ElementEditor::childModified);
-        connect(referenceWidget, &ReferenceWidget::entryTypeChanged, p, &ElementEditor::updateReqOptWidgets);
+        connect(referenceWidget, &ReferenceWidget::entryTypeChanged, p, [this]() {
+            updateReqOptWidgets();
+        });
         vLayout->addWidget(referenceWidget, 0);
         widgets << referenceWidget;
 
@@ -212,7 +214,9 @@ public:
 
         buttonCheckWithBibTeX = new QPushButton(QIcon::fromTheme(QStringLiteral("tools-check-spelling")), i18n("Check with BibTeX"), p);
         hLayout->addWidget(buttonCheckWithBibTeX, 0);
-        connect(buttonCheckWithBibTeX, &QPushButton::clicked, p, &ElementEditor::checkBibTeX);
+        connect(buttonCheckWithBibTeX, &QPushButton::clicked, p, [this]() {
+            checkBibTeX();
+        });
 
         addTabWidgets();
     }
@@ -673,11 +677,6 @@ void ElementEditor::switchToTab(const QString &tabIdentifier)
     }
 }
 
-void ElementEditor::checkBibTeX()
-{
-    d->checkBibTeX();
-}
-
 void ElementEditor::childModified(bool m)
 {
     if (m) {
@@ -685,14 +684,4 @@ void ElementEditor::childModified(bool m)
         d->referenceWidgetSetEntryIdByDefault();
     }
     emit modified(m);
-}
-
-void ElementEditor::updateReqOptWidgets()
-{
-    d->updateReqOptWidgets();
-}
-
-void ElementEditor::limitKeyboardTabStops()
-{
-    d->limitKeyboardTabStops();
 }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -195,7 +195,9 @@ MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
 {
     if (d->m_singleLineEditText != nullptr) {
         /// Only for single-line variants stretch buttons vertically
-        QTimer::singleShot(250, this, &MenuLineEdit::slotVerticallyStretchButtons);
+        QTimer::singleShot(250, this, [this]() {
+            d->verticallyStretchButtons();
+        });
     }
 }
 
@@ -313,9 +315,4 @@ void MenuLineEdit::slotTextChanged()
 {
     Q_ASSERT_X(d->m_multiLineEditText != nullptr, "MenuLineEdit::slotTextChanged", "d->m_multiLineEditText is NULL");
     emit textChanged(d->m_multiLineEditText->toPlainText());
-}
-
-void MenuLineEdit::slotVerticallyStretchButtons()
-{
-    d->verticallyStretchButtons();
 }

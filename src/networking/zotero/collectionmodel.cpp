@@ -43,7 +43,9 @@ CollectionModel::CollectionModel(Collection *collection, QObject *parent)
         : QAbstractItemModel(parent), d(new Zotero::CollectionModel::Private(collection, this))
 {
     beginResetModel();
-    connect(collection, &Collection::finishedLoading, this, &CollectionModel::fetchingDone);
+    connect(collection, &Collection::finishedLoading, this, [this]() {
+        endResetModel();
+    });
 }
 
 QVariant CollectionModel::data(const QModelIndex &index, int role) const
@@ -133,9 +135,4 @@ bool CollectionModel::hasChildren(const QModelIndex &parent) const
         return false;
 
     return rowCount(parent) > 0;
-}
-
-void CollectionModel::fetchingDone()
-{
-    endResetModel();
 }

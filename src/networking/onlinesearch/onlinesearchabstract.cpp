@@ -523,12 +523,9 @@ void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &te
 void OnlineSearchAbstract::delayedStoppedSearch(int returnCode)
 {
     m_delayedStoppedSearchReturnCode = returnCode;
-    QTimer::singleShot(500, this, &OnlineSearchAbstract::delayedStoppedSearchTimer);
-}
-
-void OnlineSearchAbstract::delayedStoppedSearchTimer()
-{
-    stopSearch(m_delayedStoppedSearchReturnCode);
+    QTimer::singleShot(500, this, [this]() {
+        stopSearch(m_delayedStoppedSearchReturnCode);
+    });
 }
 
 void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)

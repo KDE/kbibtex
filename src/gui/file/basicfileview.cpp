@@ -215,11 +215,6 @@ void BasicFileView::headerActionToggled()
     d->balanceColumns();
 }
 
-void BasicFileView::headerResetToDefaults()
-{
-    d->resetColumnProperties();
-}
-
 void BasicFileView::sort(int t, Qt::SortOrder s)
 {
     SortFilterFileModel *sortedModel = qobject_cast<SortFilterFileModel *>(model());
@@ -259,7 +254,9 @@ void BasicFileView::showHeaderContextMenu(const QPoint &pos)
 
     /// Add action to reset to defaults (regarding column visibility) to header's context menu
     action = new QAction(i18n("Reset to defaults"), &menu);
-    connect(action, &QAction::triggered, this, &BasicFileView::headerResetToDefaults);
+    connect(action, &QAction::triggered, this, [this]() {
+        d->resetColumnProperties();
+    });
     menu.addAction(action);
 
     /// Add separator to header's context menu

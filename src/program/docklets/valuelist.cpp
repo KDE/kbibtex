@@ -230,7 +230,9 @@ public:
 ValueList::ValueList(QWidget *parent)
         : QWidget(parent), d(new ValueListPrivate(this))
 {
-    QTimer::singleShot(500, this, &ValueList::delayedResize);
+    QTimer::singleShot(500, this, [this]() {
+        resizeEvent(nullptr);
+    });
 }
 
 ValueList::~ValueList()
@@ -451,11 +453,6 @@ void ValueList::sortByCountToggled()
     KConfigGroup configGroup(d->config, d->configGroupName);
     configGroup.writeEntry(d->configKeySortByCountAction, d->sortByCountAction->isChecked());
     d->config->sync();
-}
-
-void ValueList::delayedResize()
-{
-    resizeEvent(nullptr);
 }
 
 void ValueList::columnsChanged()
