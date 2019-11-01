@@ -150,9 +150,6 @@ BasicFileView::~BasicFileView()
 
 void BasicFileView::setModel(QAbstractItemModel *model)
 {
-    if (d->fileModel != nullptr)
-        disconnect(d->fileModel, &FileModel::headerDataChanged, this, &BasicFileView::headerResetToDefaults);
-
     d->sortFilterProxyModel = nullptr;
     d->fileModel = dynamic_cast<FileModel *>(model);
     if (d->fileModel == nullptr) {
@@ -164,9 +161,6 @@ void BasicFileView::setModel(QAbstractItemModel *model)
     }
     if (d->fileModel == nullptr)
         qCWarning(LOG_KBIBTEX_GUI) << "Failed to dynamically cast model to FileModel*";
-    else
-        /// On header data change, e.g. triggered by change of bibliographic system, reset visibile columns
-        connect(d->fileModel, &FileModel::headerDataChanged, this, &BasicFileView::headerResetToDefaults);
 
     QTreeView::setModel(model);
 
