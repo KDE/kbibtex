@@ -169,7 +169,11 @@ if(BUILD_TESTING)
     )
 endif()
 
-
+if(TESTSET_DIRECTORY AND ( NOT EXISTS "${TESTSET_DIRECTORY}/bib/minix.bib" OR NOT EXISTS "${TESTSET_DIRECTORY}/bib/backslash.bib" ))
+    message("Variable TESTSET_DIRECTORY is set to '${TESTSET_DIRECTORY}' but various BibTeX files were not found. Unsetting TESTSET_DIRECTORY.")
+    unset(TESTSET_DIRECTORY)
+    unset(TESTSET_DIRECTORY CACHE)
+endif()
 
 
 add_subdirectory(
