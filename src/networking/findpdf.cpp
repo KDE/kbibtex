@@ -204,7 +204,7 @@ public:
             resultItem.tempFilename = new QTemporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QStringLiteral("kbibtex_findpdf_XXXXXX.pdf"));
             resultItem.tempFilename->setAutoRemove(true);
             if (resultItem.tempFilename->open()) {
-                const int lenDataWritten = resultItem.tempFilename->write(data);
+                const int lenDataWritten = static_cast<int>(resultItem.tempFilename->write(data));
                 resultItem.tempFilename->close();
                 if (lenDataWritten != data.length()) {
                     /// Failed to write to temporary file

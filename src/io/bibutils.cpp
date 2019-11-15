@@ -167,7 +167,7 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format sourceFormat, Q
             const QByteArray stdOut = bibUtilsProcess.readAllStandardOutput();
             if (!stdOut.isEmpty()) {
                 /// Write transformed data to destination device
-                const int amountWritten = destination.write(stdOut);
+                const int amountWritten = static_cast<int>(destination.write(stdOut));
                 /// Check that the same amount of bytes is written
                 /// as received from the BibUtils program
                 result = amountWritten == stdOut.size();
