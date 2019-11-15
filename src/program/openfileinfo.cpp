@@ -116,7 +116,7 @@ public:
         }
 
         QString errorString;
-        part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
+        part = newServicePtr->createInstance<KParts::ReadWritePart>(newWidgetParent, qobject_cast<QObject *>(newWidgetParent), QVariantList(), &errorString);
         if (part == nullptr) {
             qCDebug(LOG_KBIBTEX_PROGRAM) << "PATH=" << getenv("PATH");
             qCDebug(LOG_KBIBTEX_PROGRAM) << "LD_LIBRARY_PATH=" << getenv("LD_LIBRARY_PATH");
@@ -125,7 +125,7 @@ public:
             qCDebug(LOG_KBIBTEX_PROGRAM) << "KDEDIRS=" << getenv("KDEDIRS");
             qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not instantiate read-write part for service" << newServicePtr->name() << "(mimeType=" << mimeType << ", library=" << newServicePtr->library() << ", error msg=" << errorString << ")";
             /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
-            part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, (QObject *)newWidgetParent, QVariantList(), &errorString);
+            part = newServicePtr->createInstance<KParts::ReadOnlyPart>(newWidgetParent, qobject_cast<QObject *>(newWidgetParent), QVariantList(), &errorString);
         }
         if (part == nullptr) {
             /// still cannot create part, must be error
