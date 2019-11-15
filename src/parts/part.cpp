@@ -272,11 +272,11 @@ public:
             return new FileImporterRIS(p);
         } else if (BibUtils::available() && ending == QStringLiteral("isi")) {
             FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils(p);
-            fileImporterBibUtils->setFormat(BibUtils::ISI);
+            fileImporterBibUtils->setFormat(BibUtils::Format::ISI);
             return fileImporterBibUtils;
         } else {
             FileImporterBibTeX *fileImporterBibTeX = new FileImporterBibTeX(p);
-            fileImporterBibTeX->setCommentHandling(FileImporterBibTeX::KeepComments);
+            fileImporterBibTeX->setCommentHandling(FileImporterBibTeX::CommentHandling::Keep);
             return fileImporterBibTeX;
         }
     }
@@ -294,14 +294,14 @@ public:
             return new FileExporterPS(p);
         } else if (BibUtils::available() && ending == QStringLiteral("isi")) {
             FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils(p);
-            fileExporterBibUtils->setFormat(BibUtils::ISI);
+            fileExporterBibUtils->setFormat(BibUtils::Format::ISI);
             return fileExporterBibUtils;
         } else if (ending == QStringLiteral("rtf")) {
             return new FileExporterRTF(p);
         } else if (ending == QStringLiteral("html") || ending == QStringLiteral("htm")) {
             return new FileExporterBibTeX2HTML(p);
         } else if (ending == QStringLiteral("bbl")) {
-            return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::BibTeXBlockList, p);
+            return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::OutputType::BibTeXBlockList, p);
         } else {
             return new FileExporterBibTeX(p);
         }
@@ -392,11 +392,11 @@ public:
         const int numberOfBackups = Preferences::instance().numberOfBackups();
 
         /// Stop right here if no backup is requested
-        if (Preferences::instance().backupScope() == Preferences::NoBackup)
+        if (Preferences::instance().backupScope() == Preferences::BackupScope::None)
             return;
 
         /// For non-local files, proceed only if backups to remote storage is allowed
-        if (Preferences::instance().backupScope() != Preferences::BothLocalAndRemote && !url.isLocalFile())
+        if (Preferences::instance().backupScope() != Preferences::BackupScope::BothLocalAndRemote && !url.isLocalFile())
             return;
 
         /// Do not make backup copies if destination file does not exist yet
@@ -639,7 +639,7 @@ public:
         /// Test and continue if there was an Entry to retrieve
         if (!entry.isNull()) {
             /// Get list of URLs associated with this entry
-            const auto urlList = FileInfo::entryUrls(entry, bibliographyFile->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
+            const auto urlList = FileInfo::entryUrls(entry, bibliographyFile->property(File::Url).toUrl(), FileInfo::TestExistence::Yes);
             if (!urlList.isEmpty()) {
                 /// Memorize first action, necessary to set menu title
                 QAction *firstAction = nullptr;
@@ -703,10 +703,10 @@ public:
         disconnect(partWidget->fileView(), &FileView::elementExecuted, partWidget->fileView(), &FileView::editElement);
         disconnect(partWidget->fileView(), &FileView::elementExecuted, p, &KBibTeXPart::elementViewDocument);
         switch (Preferences::instance().fileViewDoubleClickAction()) {
-        case Preferences::ActionOpenEditor:
+        case Preferences::FileViewDoubleClickAction::OpenEditor:
             connect(partWidget->fileView(), &FileView::elementExecuted, partWidget->fileView(), &FileView::editElement);
             break;
-        case Preferences::ActionViewDocument:
+        case Preferences::FileViewDoubleClickAction::ViewDocument:
             connect(partWidget->fileView(), &FileView::elementExecuted, p, &KBibTeXPart::elementViewDocument);
             break;
         }

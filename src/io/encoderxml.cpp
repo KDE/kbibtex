@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -109,7 +109,7 @@ QString EncoderXML::encode(const QString &text, const TargetEncoding targetEncod
     for (const auto &item : charmappingdataxml)
         result.replace(item.unicode, item.xml);
 
-    if (targetEncoding == TargetEncodingASCII) {
+    if (targetEncoding == TargetEncoding::ASCII) {
         /// Replace all problematic or non-ASCII characters (code < 32 or code > 127)
         /// with an entity code, for example a-umlaut becomes '&#228;'.
         for (int i = result.length() - 1; i >= 0; --i) {

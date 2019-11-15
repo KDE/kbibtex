@@ -37,10 +37,10 @@ class KBIBTEXIO_EXPORT FileImporter : public QObject
     Q_OBJECT
 
 public:
-    enum MessageSeverity {
-        SeverityInfo, ///< Messages that are of informative type, such as additional comma for last key-value pair in BibTeX entry
-        SeverityWarning, ///< Messages that are of warning type, such as automatic corrections of BibTeX code without loss of information
-        SeverityError ///< Messages that are of error type, which point to issue where information may get lost, e.g. invalid syntax or incomplete data
+    enum class MessageSeverity {
+        Info, ///< Messages that are of informative type, such as additional comma for last key-value pair in BibTeX entry
+        Warning, ///< Messages that are of warning type, such as automatic corrections of BibTeX code without loss of information
+        Error ///< Messages that are of error type, which point to issue where information may get lost, e.g. invalid syntax or incomplete data
     };
 
     explicit FileImporter(QObject *parent);

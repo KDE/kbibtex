@@ -187,7 +187,7 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
 }
 
 ValueListModel::ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent)
-        : QAbstractTableModel(parent), file(bibtexFile), fName(fieldName.toLower()), showCountColumn(true), sortBy(SortByText)
+        : QAbstractTableModel(parent), file(bibtexFile), fName(fieldName.toLower()), showCountColumn(true), sortBy(SortBy::Text)
 {
     readConfiguration();
     updateValues();
@@ -226,7 +226,7 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
         QString buffer = values[index.row()].sortBy.isEmpty() ? values[index.row()].text : values[index.row()].sortBy;
         buffer = buffer.remove(ignoredInSorting).toLower();
 
-        if ((showCountColumn && index.column() == 1) || (!showCountColumn && sortBy == SortByCount)) {
+        if ((showCountColumn && index.column() == 1) || (!showCountColumn && sortBy == SortBy::Count)) {
             /// Sort by string consisting of a zero-padded count and the lower-case text,
             /// for example "0000000051keyword"
             /// Used if (a) two columns are shown (showCountColumn is true) and column 1
@@ -295,7 +295,7 @@ QVariant ValueListModel::headerData(int section, Qt::Orientation orientation, in
 {
     if (section >= 2 || orientation != Qt::Horizontal || role != Qt::DisplayRole)
         return QVariant();
-    else if ((section == 0 && columnCount() == 2) || (columnCount() == 1 && sortBy == SortByText))
+    else if ((section == 0 && columnCount() == 2) || (columnCount() == 1 && sortBy == SortBy::Text))
         return QVariant(i18n("Value"));
     else
         return QVariant(i18n("Count"));

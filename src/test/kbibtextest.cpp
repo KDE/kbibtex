@@ -153,7 +153,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
 
     connect(this, &KBibTeXTest::rejected, this, &KBibTeXTest::aboutToQuit);
 
-    addMessage(QString(QStringLiteral("Compiled for %1")).arg(KAboutData::applicationData().version()), statusInfo);
+    addMessage(QString(QStringLiteral("Compiled for %1")).arg(KAboutData::applicationData().version()), MessageStatus::Info);
 }
 
 void KBibTeXTest::addMessage(const QString &message, const MessageStatus messageStatus)
@@ -165,22 +165,22 @@ void KBibTeXTest::addMessage(const QString &message, const MessageStatus message
     static const QIcon iconNETWORK = QIcon::fromTheme(QStringLiteral("dialog-cancel")); // FIXME "dialog-cancel" should be overlay on "network-wired"
     QIcon icon;
     switch (messageStatus) {
-    case statusInfo: icon = iconINFO; break;
-    case statusOk: icon = iconOK; break;
-    case statusError: icon = iconERROR; break;
-    case statusAuth: icon = iconAUTH; break;
-    case statusNetwork: icon = iconNETWORK; break;
+    case MessageStatus::Info: icon = iconINFO; break;
+    case MessageStatus::Ok: icon = iconOK; break;
+    case MessageStatus::Error: icon = iconERROR; break;
+    case MessageStatus::Auth: icon = iconAUTH; break;
+    case MessageStatus::Network: icon = iconNETWORK; break;
     }
 
     QListWidgetItem *item = icon.isNull() ? new QListWidgetItem(message) : new QListWidgetItem(icon, message);
     item->setToolTip(item->text());
     const QColor originalBgColor = QGuiApplication::palette().color(QPalette::Base);
     switch (messageStatus) {
-    case statusInfo: break; ///< nothing to do
-    case statusOk: item->setBackground(QBrush(blendColors(originalBgColor, Qt::green, .1))); break;
-    case statusError: item->setBackground(QBrush(blendColors(originalBgColor, Qt::red, .1))); break;
-    case statusAuth: item->setBackground(QBrush(blendColors(originalBgColor, Qt::yellow, .1))); break;
-    case statusNetwork: item->setBackground(QBrush(blendColors(originalBgColor, Qt::yellow, .1))); break;
+    case MessageStatus::Info: break; ///< nothing to do
+    case MessageStatus::Ok: item->setBackground(QBrush(blendColors(originalBgColor, Qt::green, .1))); break;
+    case MessageStatus::Error: item->setBackground(QBrush(blendColors(originalBgColor, Qt::red, .1))); break;
+    case MessageStatus::Auth: item->setBackground(QBrush(blendColors(originalBgColor, Qt::yellow, .1))); break;
+    case MessageStatus::Network: item->setBackground(QBrush(blendColors(originalBgColor, Qt::yellow, .1))); break;
     }
 
     m_testWidget->messageList->addItem(item);
@@ -220,15 +220,15 @@ void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
     if (searchResult == OnlineSearchAbstract::resultNoError) {
         if (m_currentOnlineSearchNumFoundEntries == 0)
-            addMessage(QString(QStringLiteral("Got no error message searching '%1', but found NO entries")).arg((*m_currentOnlineSearch)->label()), statusError);
+            addMessage(QString(QStringLiteral("Got no error message searching '%1', but found NO entries")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Error);
         else
-            addMessage(QString(QStringLiteral("No error searching '%1', found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), statusOk);
+            addMessage(QString(QStringLiteral("No error searching '%1', found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), MessageStatus::Ok);
     } else if (searchResult == OnlineSearchAbstract::resultAuthorizationRequired) {
-        addMessage(QString(QStringLiteral("Authorization required for '%1'")).arg((*m_currentOnlineSearch)->label()), statusAuth);
+        addMessage(QString(QStringLiteral("Authorization required for '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Auth);
     } else if (searchResult == OnlineSearchAbstract::resultNetworkError) {
-        addMessage(QString(QStringLiteral("Network error for '%1'")).arg((*m_currentOnlineSearch)->label()), statusNetwork);
+        addMessage(QString(QStringLiteral("Network error for '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Network);
     } else {
-        addMessage(QString(QStringLiteral("Error searching '%1'")).arg((*m_currentOnlineSearch)->label()), statusError);
+        addMessage(QString(QStringLiteral("Error searching '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Error);
     }
     m_currentOnlineSearch++;
 
@@ -246,7 +246,7 @@ void KBibTeXTest::processNextSearch()
     if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
         setBusy(true);
         m_currentOnlineSearchNumFoundEntries = 0;
-        addMessage(QString(QStringLiteral("Searching '%1'")).arg((*m_currentOnlineSearch)->label()), statusInfo);
+        addMessage(QString(QStringLiteral("Searching '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Info);
 
         QMap<QString, QString> query;
         query.insert(OnlineSearchAbstract::queryKeyAuthor, QStringLiteral("smith"));
@@ -257,7 +257,7 @@ void KBibTeXTest::processNextSearch()
         connect(*m_currentOnlineSearch, &OnlineSearchAbstract::progress, this, &KBibTeXTest::progress);
         (*m_currentOnlineSearch)->startSearch(query, 3);
     } else {
-        addMessage(QStringLiteral("Done testing"), statusInfo);
+        addMessage(QStringLiteral("Done testing"), MessageStatus::Info);
         setBusy(false);
         m_running = false;
         QTimer::singleShot(500, this, [this]() {

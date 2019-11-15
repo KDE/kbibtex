@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,7 +30,7 @@ public:
     BibUtils::Format format;
 
     Private(BibUtils *parent)
-            : format(BibUtils::MODS)
+            : format(BibUtils::Format::MODS)
     {
         Q_UNUSED(parent)
     }
@@ -81,15 +81,15 @@ bool BibUtils::available() {
 bool BibUtils::convert(QIODevice &source, const BibUtils::Format sourceFormat, QIODevice &destination, const BibUtils::Format destinationFormat) const {
     /// To proceed, either the source format or the destination format
     /// has to be MODS, otherwise ...
-    if (sourceFormat != MODS && destinationFormat != MODS) {
+    if (sourceFormat != BibUtils::Format::MODS && destinationFormat != BibUtils::Format::MODS) {
         /// Add indirection: convert source format to MODS,
         /// then convert MODS data to destination format
 
         /// Intermediate buffer to hold MODS data
         QBuffer buffer;
-        bool result = convert(source, sourceFormat, buffer, BibUtils::MODS);
+        bool result = convert(source, sourceFormat, buffer, BibUtils::Format::MODS);
         if (result)
-            result = convert(buffer, BibUtils::MODS, destination, destinationFormat);
+            result = convert(buffer, BibUtils::Format::MODS, destination, destinationFormat);
         return result;
     }
 
@@ -98,17 +98,17 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format sourceFormat, Q
 
     /// Determine part of BibUtils program name that represents source format
     switch (sourceFormat) {
-    case MODS: bibUtilsProgram = QStringLiteral("xml"); utf8Argument = QStringLiteral("-nb"); break;
-    case BibTeX: bibUtilsProgram = QStringLiteral("bib"); break;
-    case BibLaTeX: bibUtilsProgram = QStringLiteral("biblatex"); break;
-    case ISI: bibUtilsProgram = QStringLiteral("isi"); break;
-    case RIS: bibUtilsProgram = QStringLiteral("ris"); break;
-    case EndNote: bibUtilsProgram = QStringLiteral("end"); break;
-    case EndNoteXML: bibUtilsProgram = QStringLiteral("endx"); break;
+    case BibUtils::Format::MODS: bibUtilsProgram = QStringLiteral("xml"); utf8Argument = QStringLiteral("-nb"); break;
+    case BibUtils::Format::BibTeX: bibUtilsProgram = QStringLiteral("bib"); break;
+    case BibUtils::Format::BibLaTeX: bibUtilsProgram = QStringLiteral("biblatex"); break;
+    case BibUtils::Format::ISI: bibUtilsProgram = QStringLiteral("isi"); break;
+    case BibUtils::Format::RIS: bibUtilsProgram = QStringLiteral("ris"); break;
+    case BibUtils::Format::EndNote: bibUtilsProgram = QStringLiteral("end"); break;
+    case BibUtils::Format::EndNoteXML: bibUtilsProgram = QStringLiteral("endx"); break;
     /// case ADS not supported by BibUtils
-    case WordBib: bibUtilsProgram = QStringLiteral("wordbib"); break;
-    case Copac: bibUtilsProgram = QStringLiteral("copac"); break;
-    case Med: bibUtilsProgram = QStringLiteral("med"); break;
+    case BibUtils::Format::WordBib: bibUtilsProgram = QStringLiteral("wordbib"); break;
+    case BibUtils::Format::Copac: bibUtilsProgram = QStringLiteral("copac"); break;
+    case BibUtils::Format::Med: bibUtilsProgram = QStringLiteral("med"); break;
     default:
         qCWarning(LOG_KBIBTEX_IO) << "Unsupported BibUtils input format:" << sourceFormat;
         return false;
@@ -118,15 +118,15 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format sourceFormat, Q
 
     /// Determine part of BibUtils program name that represents destination format
     switch (destinationFormat) {
-    case MODS: bibUtilsProgram.append(QStringLiteral("xml")); break;
-    case BibTeX: bibUtilsProgram.append(QStringLiteral("bib")); break;
+    case BibUtils::Format::MODS: bibUtilsProgram.append(QStringLiteral("xml")); break;
+    case BibUtils::Format::BibTeX: bibUtilsProgram.append(QStringLiteral("bib")); break;
     /// case BibLaTeX not supported by BibUtils
-    case ISI: bibUtilsProgram.append(QStringLiteral("isi")); break;
-    case RIS: bibUtilsProgram.append(QStringLiteral("ris")); break;
-    case EndNote: bibUtilsProgram.append(QStringLiteral("end")); break;
+    case BibUtils::Format::ISI: bibUtilsProgram.append(QStringLiteral("isi")); break;
+    case BibUtils::Format::RIS: bibUtilsProgram.append(QStringLiteral("ris")); break;
+    case BibUtils::Format::EndNote: bibUtilsProgram.append(QStringLiteral("end")); break;
     /// case EndNoteXML not supported by BibUtils
-    case ADS: bibUtilsProgram.append(QStringLiteral("ads")); break;
-    case WordBib: bibUtilsProgram.append(QStringLiteral("wordbib")); break;
+    case BibUtils::Format::ADS: bibUtilsProgram.append(QStringLiteral("ads")); break;
+    case BibUtils::Format::WordBib: bibUtilsProgram.append(QStringLiteral("wordbib")); break;
     /// case Copac not supported by BibUtils
     /// case Med not supported by BibUtils
     default:
@@ -186,4 +186,25 @@ bool BibUtils::convert(QIODevice &source, const BibUtils::Format sourceFormat, Q
     destination.close();
 
     return result;
+}
+
+QDebug operator<<(QDebug dbg, const BibUtils::Format &format)
+{
+    static const auto pairs = QHash<int, const char *> {
+        {static_cast<int>(BibUtils::Format::MODS), "MODS"},
+        {static_cast<int>(BibUtils::Format::BibTeX), "BibTeX"},
+        {static_cast<int>(BibUtils::Format::BibLaTeX), "BibLaTeX"},
+        {static_cast<int>(BibUtils::Format::ISI), "ISI"},
+        {static_cast<int>(BibUtils::Format::RIS), "RIS"},
+        {static_cast<int>(BibUtils::Format::EndNote), "EndNote"},
+        {static_cast<int>(BibUtils::Format::EndNoteXML), "EndNoteXML"},
+        {static_cast<int>(BibUtils::Format::ADS), "ADS"},
+        {static_cast<int>(BibUtils::Format::WordBib), "WordBib"},
+        {static_cast<int>(BibUtils::Format::Copac), "Copac"},
+        {static_cast<int>(BibUtils::Format::Med), "Med"}
+    };
+    dbg.nospace();
+    const int formatInt = static_cast<int>(format);
+    dbg << (pairs.contains(formatInt) ? pairs[formatInt] : "???");
+    return dbg;
 }

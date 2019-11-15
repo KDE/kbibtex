@@ -64,7 +64,7 @@ public:
     }
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override {
-        OpenFileInfoManager::OpenFileInfoList ofiList = OpenFileInfoManager::instance().filteredItems(OpenFileInfo::RecentlyUsed);
+        OpenFileInfoManager::OpenFileInfoList ofiList = OpenFileInfoManager::instance().filteredItems(OpenFileInfo::StatusFlag::RecentlyUsed);
         if (index.row() < ofiList.count()) {
             OpenFileInfo *ofiItem = ofiList[index.row()];
             if (index.column() == 0) {
@@ -109,7 +109,7 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override {
         if (parent == QModelIndex())
-            return OpenFileInfoManager::instance().filteredItems(OpenFileInfo::RecentlyUsed).count();
+            return OpenFileInfoManager::instance().filteredItems(OpenFileInfo::StatusFlag::RecentlyUsed).count();
         else
             return 0;
     }
@@ -226,7 +226,7 @@ public:
             OpenFileInfoManager::instance().changeUrl(ofi, newUrl);
 
             /// completely opened or saved files should be marked as "recently used"
-            ofi->addFlags(OpenFileInfo::RecentlyUsed);
+            ofi->addFlags(OpenFileInfo::StatusFlag::RecentlyUsed);
 
             /// Instead of an 'emit' ...
             QMetaObject::invokeMethod(p, "setCaption", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QString, QString(QStringLiteral("%1 [%2]")).arg(ofi->shortCaption(), squeeze_text(ofi->fullCaption(), 64))));
@@ -324,7 +324,7 @@ OpenFileInfo *MDIWidget::currentFile()
 
 void MDIWidget::slotStatusFlagsChanged(OpenFileInfo::StatusFlags statusFlags)
 {
-    if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed))
+    if (statusFlags.testFlag(OpenFileInfo::StatusFlag::RecentlyUsed))
         d->updateLRU();
 }
 

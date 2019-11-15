@@ -34,7 +34,14 @@ class KBIBTEXIO_EXPORT FileExporterPDF : public FileExporterToolchain
     Q_OBJECT
 
 public:
-    enum FileEmbedding { NoFileEmbedding = 0, EmbedBibTeXFile = 1, EmbedReferences = 2, EmbedBibTeXFileAndReferences = EmbedBibTeXFile | EmbedReferences};
+    enum class FileEmbedding {
+        None = 0,
+        BibTeXFile = 1,
+        References = 2,
+        BibTeXFileAndReferences = BibTeXFile | References
+    };
+    Q_DECLARE_FLAGS(FileEmbeddings, FileEmbedding)
+
     explicit FileExporterPDF(QObject *parent);
     ~FileExporterPDF() override;
 
@@ -42,12 +49,12 @@ public:
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
     void setDocumentSearchPaths(const QStringList &searchPaths);
-    void setFileEmbedding(FileEmbedding fileEmbedding);
+    void setFileEmbedding(const FileEmbeddings fileEmbedding);
 
 private:
     QString m_fileBasename;
     QString m_fileStem;
-    FileEmbedding m_fileEmbedding;
+    FileEmbeddings m_fileEmbeddings;
     QStringList m_embeddedFileList;
     QStringList m_searchPaths;
 

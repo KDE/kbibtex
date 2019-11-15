@@ -171,15 +171,15 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
     case Qt::DecorationRole: {
         /// determine mime type-based icon and overlays (e.g. for modified files)
         QStringList overlays;
-        if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
+        if (openFileInfo->flags().testFlag(OpenFileInfo::StatusFlag::Favorite))
             overlays << QStringLiteral("favorites");
         else
             overlays << QString();
-        if (openFileInfo->flags().testFlag(OpenFileInfo::RecentlyUsed))
+        if (openFileInfo->flags().testFlag(OpenFileInfo::StatusFlag::RecentlyUsed))
             overlays << QStringLiteral("document-open-recent");
         else
             overlays << QString();
-        if (openFileInfo->flags().testFlag(OpenFileInfo::Open))
+        if (openFileInfo->flags().testFlag(OpenFileInfo::StatusFlag::Open))
             overlays << QStringLiteral("folder-open");
         else
             overlays << QString();
@@ -199,11 +199,11 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
             htmlText.append(i18n("<br/><small>located in <b>%1</b></small>", path));
         }
         QStringList flagListItems;
-        if (openFileInfo->flags().testFlag(OpenFileInfo::Favorite))
+        if (openFileInfo->flags().testFlag(OpenFileInfo::StatusFlag::Favorite))
             flagListItems << i18n("Favorite");
-        if (openFileInfo->flags().testFlag(OpenFileInfo::RecentlyUsed))
+        if (openFileInfo->flags().testFlag(OpenFileInfo::StatusFlag::RecentlyUsed))
             flagListItems << i18n("Recently Used");
-        if (openFileInfo->flags().testFlag(OpenFileInfo::Open))
+        if (openFileInfo->flags().testFlag(OpenFileInfo::StatusFlag::Open))
             flagListItems << i18n("Open");
         if (openFileInfo->isModified())
             flagListItems << i18n("Modified");
@@ -271,7 +271,7 @@ DocumentListView::DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget 
     setContextMenuPolicy(Qt::ActionsContextMenu);
     setItemDelegate(new DocumentListDelegate(this));
 
-    if (statusFlag == OpenFileInfo::Open) {
+    if (statusFlag == OpenFileInfo::StatusFlag::Open) {
         d->actionCloseFile = new QAction(QIcon::fromTheme(QStringLiteral("document-close")), i18n("Close File"), this);
         connect(d->actionCloseFile, &QAction::triggered, this, &DocumentListView::closeFile);
         addAction(d->actionCloseFile);
@@ -284,7 +284,7 @@ DocumentListView::DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget 
     d->actionOpenMenu = new KActionMenu(QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open with"), this);
     addAction(d->actionOpenMenu);
 
-    if (statusFlag == OpenFileInfo::Favorite) {
+    if (statusFlag == OpenFileInfo::StatusFlag::Favorite) {
         d->actionRemFromFav = new QAction(QIcon::fromTheme(QStringLiteral("favorites")), i18n("Remove from Favorites"), this);
         connect(d->actionRemFromFav, &QAction::triggered, this, &DocumentListView::removeFromFavorites);
         addAction(d->actionRemFromFav);
@@ -309,7 +309,7 @@ void DocumentListView::addToFavorites()
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-        ofi->addFlags(OpenFileInfo::Favorite);
+        ofi->addFlags(OpenFileInfo::StatusFlag::Favorite);
     }
 }
 
@@ -318,7 +318,7 @@ void DocumentListView::removeFromFavorites()
     QModelIndex modelIndex = currentIndex();
     if (modelIndex != QModelIndex()) {
         OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-        ofi->removeFlags(OpenFileInfo::Favorite);
+        ofi->removeFlags(OpenFileInfo::StatusFlag::Favorite);
     }
 }
 
@@ -344,9 +344,9 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
 {
     bool hasCurrent = current != QModelIndex();
     OpenFileInfo *ofi = hasCurrent ? qvariant_cast<OpenFileInfo *>(current.data(Qt::UserRole)) : nullptr;
-    bool isOpen = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::Open) : false;
-    bool isFavorite = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::Favorite) : false;
-    bool hasName = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::HasName) : false;
+    bool isOpen = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::StatusFlag::Open) : false;
+    bool isFavorite = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::StatusFlag::Favorite) : false;
+    bool hasName = hasCurrent ? ofi->flags().testFlag(OpenFileInfo::StatusFlag::HasName) : false;
 
     if (d->actionOpenFile != nullptr)
         d->actionOpenFile->setEnabled(hasCurrent && !isOpen);
@@ -384,18 +384,18 @@ public:
     DirOperatorWidget *dirOperator;
 
     DocumentListPrivate(DocumentList *p) {
-        listOpenFiles = new DocumentListView(OpenFileInfo::Open, p);
-        DocumentListModel *model = new DocumentListModel(OpenFileInfo::Open, listOpenFiles);
+        listOpenFiles = new DocumentListView(OpenFileInfo::StatusFlag::Open, p);
+        DocumentListModel *model = new DocumentListModel(OpenFileInfo::StatusFlag::Open, listOpenFiles);
         listOpenFiles->setModel(model);
         p->addTab(listOpenFiles, QIcon::fromTheme(QStringLiteral("document-open")), i18n("Open Files"));
 
-        listRecentFiles = new DocumentListView(OpenFileInfo::RecentlyUsed, p);
-        model = new DocumentListModel(OpenFileInfo::RecentlyUsed, listRecentFiles);
+        listRecentFiles = new DocumentListView(OpenFileInfo::StatusFlag::RecentlyUsed, p);
+        model = new DocumentListModel(OpenFileInfo::StatusFlag::RecentlyUsed, listRecentFiles);
         listRecentFiles->setModel(model);
         p->addTab(listRecentFiles, QIcon::fromTheme(QStringLiteral("document-open-recent")), i18n("Recently Used"));
 
-        listFavorites = new DocumentListView(OpenFileInfo::Favorite, p);
-        model = new DocumentListModel(OpenFileInfo::Favorite, listFavorites);
+        listFavorites = new DocumentListView(OpenFileInfo::StatusFlag::Favorite, p);
+        model = new DocumentListModel(OpenFileInfo::StatusFlag::Favorite, listFavorites);
         listFavorites->setModel(model);
         p->addTab(listFavorites, QIcon::fromTheme(QStringLiteral("favorites")), i18n("Favorites"));
 

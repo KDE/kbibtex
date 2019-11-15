@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -44,10 +44,10 @@ class KBIBTEXNETWORKING_EXPORT FindPDF : public QObject
 public:
     /// Used in a later stage (user interface, @see FindPDFUI);
     /// tells the system if ...
-    enum DownloadMode {
-        NoDownload = 0, ///< Ignore this result item (no PDF file downloading)
-        Download, ///< Download and store this PDF file in a user-specified location
-        URLonly ///< Keep only the URL of the PDF; this URL will be inserted in the bib entry
+    enum class DownloadMode {
+        No = 0, ///< Ignore this result item (no PDF file downloading)
+        PDFfile = 1, ///< Download and store this PDF file in a user-specified location
+        URLonly = 2 ///< Keep only the URL of the PDF; this URL will be inserted in the bib entry
     };
 
     /// Structure to store data about every found PDF (potential search hit)

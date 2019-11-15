@@ -192,9 +192,9 @@ void EntryConfiguredWidget::setFile(const File *file)
             QStringList list = file->uniqueEntryValuesList(it.key());
             /// for crossref fields, add all entries' ids
             if (it.key().toLower() == Entry::ftCrossRef)
-                list.append(file->allKeys(File::etEntry));
+                list.append(file->allKeys(File::ElementType::Entry));
             /// add macro keys
-            list.append(file->allKeys(File::etMacro));
+            list.append(file->allKeys(File::ElementType::Macro));
 
             it.value()->setCompletionItems(list);
         }
@@ -230,7 +230,7 @@ void EntryConfiguredWidget::createGUI()
         connect(labeledFieldInput->fieldInput, &FieldInput::modified, this, &EntryConfiguredWidget::gotModified);
 
         /// memorize if field input should grow vertically (e.g. is a list)
-        labeledFieldInput->isVerticallyMinimumExpaning = sfl.fieldInputLayout == KBibTeX::MultiLine || sfl.fieldInputLayout == KBibTeX::List || sfl.fieldInputLayout == KBibTeX::PersonList || sfl.fieldInputLayout == KBibTeX::KeywordList;
+        labeledFieldInput->isVerticallyMinimumExpaning = sfl.fieldInputLayout == KBibTeX::FieldInputType::MultiLine || sfl.fieldInputLayout == KBibTeX::FieldInputType::List || sfl.fieldInputLayout == KBibTeX::FieldInputType::PersonList || sfl.fieldInputLayout == KBibTeX::FieldInputType::KeywordList;
 
         /// create a label next to the editing widget
         labeledFieldInput->label = new QLabel(QString(QStringLiteral("%1:")).arg(sfl.uiLabel), this);
@@ -385,7 +385,7 @@ bool ReferenceWidget::reset(QSharedPointer<const Element> element)
     if (!entry.isNull()) {
         entryType->setEnabled(!isReadOnly);
         buttonSuggestId->setEnabled(!isReadOnly);
-        QString type = BibTeXEntries::instance().format(entry->type(), KBibTeX::cUpperCamelCase);
+        QString type = BibTeXEntries::instance().format(entry->type(), KBibTeX::Casing::UpperCamelCase);
         int index = entryType->findData(type);
         if (index == -1) {
             const QString typeLower(type.toLower());
@@ -622,7 +622,7 @@ void ReferenceWidget::setEntryIdByDefault()
 QString ReferenceWidget::computeType() const
 {
     if (entryType->currentIndex() < 0 || entryType->lineEdit()->isModified())
-        return BibTeXEntries::instance().format(entryType->lineEdit()->text(), KBibTeX::cUpperCamelCase);
+        return BibTeXEntries::instance().format(entryType->lineEdit()->text(), KBibTeX::Casing::UpperCamelCase);
     else
         return entryType->itemData(entryType->currentIndex()).toString();
 }
@@ -631,7 +631,7 @@ FilesWidget::FilesWidget(QWidget *parent)
         : ElementWidget(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
-    fileList = new FieldInput(KBibTeX::UrlList, KBibTeX::tfVerbatim /* eventually ignored, see constructor of UrlListEdit */, KBibTeX::tfVerbatim /* eventually ignored, see constructor of UrlListEdit */, this);
+    fileList = new FieldInput(KBibTeX::FieldInputType::UrlList, KBibTeX::TypeFlag::Verbatim /* eventually ignored, see constructor of UrlListEdit */, KBibTeX::TypeFlag::Verbatim /* eventually ignored, see constructor of UrlListEdit */, this);
     fileList->setFieldKey(QStringLiteral("^external"));
     layout->addWidget(fileList);
     connect(fileList, &FieldInput::modified, this, &FilesWidget::gotModified);
@@ -699,10 +699,10 @@ bool FilesWidget::apply(QSharedPointer<Element> element) const
     if (localFileValue.isEmpty()) {
         entry->remove(Entry::ftFile);
         entry->remove(Entry::ftLocalFile);
-    } else if (Preferences::instance().bibliographySystem() == Preferences::BibLaTeX) {
+    } else if (Preferences::instance().bibliographySystem() == Preferences::BibliographySystem::BibLaTeX) {
         entry->remove(Entry::ftLocalFile);
         entry->insert(Entry::ftFile, localFileValue);
-    } else if (Preferences::instance().bibliographySystem() == Preferences::BibTeX) {
+    } else if (Preferences::instance().bibliographySystem() == Preferences::BibliographySystem::BibTeX) {
         entry->remove(Entry::ftFile);
         entry->insert(Entry::ftLocalFile, localFileValue);
     }
@@ -954,7 +954,7 @@ void OtherFieldsWidget::createGUI()
     label = new QLabel(i18n("Content:"), this);
     layout->addWidget(label, 1, 0, 1, 1);
     label->setAlignment(static_cast<Qt::Alignment>(label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)));
-    fieldContent = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this);
+    fieldContent = new FieldInput(KBibTeX::FieldInputType::MultiLine, KBibTeX::TypeFlag::Source, KBibTeX::TypeFlag::Source, this);
     layout->addWidget(fieldContent, 1, 1, 1, 2);
     label->setBuddy(fieldContent->buddy());
 
@@ -1082,7 +1082,7 @@ void MacroWidget::createGUI()
     QLabel *label = new QLabel(i18n("Value:"), this);
     layout->addWidget(label, 0);
     label->setAlignment(static_cast<Qt::Alignment>(label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)));
-    fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfPlainText, KBibTeX::tfPlainText | KBibTeX::tfSource, this);
+    fieldInputValue = new FieldInput(KBibTeX::FieldInputType::MultiLine, KBibTeX::TypeFlag::PlainText, KBibTeX::TypeFlag::PlainText | KBibTeX::TypeFlag::Source, this);
     layout->addWidget(fieldInputValue, 1);
     label->setBuddy(fieldInputValue->buddy());
 
@@ -1152,7 +1152,7 @@ void PreambleWidget::createGUI()
     QLabel *label = new QLabel(i18n("Value:"), this);
     layout->addWidget(label, 0);
     label->setAlignment(static_cast<Qt::Alignment>(label->style()->styleHint(QStyle::SH_FormLayoutLabelAlignment)));
-    fieldInputValue = new FieldInput(KBibTeX::MultiLine, KBibTeX::tfSource, KBibTeX::tfSource, this); // FIXME: other editing modes beyond Source applicable?
+    fieldInputValue = new FieldInput(KBibTeX::FieldInputType::MultiLine, KBibTeX::TypeFlag::Source, KBibTeX::TypeFlag::Source, this); // FIXME: other editing modes beyond Source applicable?
     layout->addWidget(fieldInputValue, 1);
     label->setBuddy(fieldInputValue->buddy());
 
@@ -1175,13 +1175,13 @@ public:
 
     void addMessage(const FileImporter::MessageSeverity severity, const QString &messageText)
     {
-        const QIcon icon = severity == FileImporter::SeverityInfo ? QIcon::fromTheme(QStringLiteral("dialog-information")) : (severity == FileImporter::SeverityWarning ? QIcon::fromTheme(QStringLiteral("dialog-warning")) : (severity == FileImporter::SeverityError ? QIcon::fromTheme(QStringLiteral("dialog-error")) : QIcon::fromTheme(QStringLiteral("dialog-question"))));
+        const QIcon icon = severity == FileImporter::MessageSeverity::Info ? QIcon::fromTheme(QStringLiteral("dialog-information")) : (severity == FileImporter::MessageSeverity::Warning ? QIcon::fromTheme(QStringLiteral("dialog-warning")) : (severity == FileImporter::MessageSeverity::Error ? QIcon::fromTheme(QStringLiteral("dialog-error")) : QIcon::fromTheme(QStringLiteral("dialog-question"))));
         messages->addItem(icon, messageText);
     }
 };
 
 SourceWidget::SourceWidget(QWidget *parent)
-        : ElementWidget(parent), elementClass(elementInvalid), d(new SourceWidget::Private(this))
+        : ElementWidget(parent), elementClass(ElementClass::Invalid), d(new SourceWidget::Private(this))
 {
     createGUI();
 
@@ -1213,21 +1213,21 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
     QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
     QSharedPointer<Entry> readEntry = file->first().dynamicCast<Entry>();
     if (!readEntry.isNull() && !entry.isNull()) {
-        if (elementClass != elementEntry) return false; ///< Source widget should only edit Entry objects
+        if (elementClass != ElementClass::Entry) return false; ///< Source widget should only edit Entry objects
         entry->operator =(*readEntry.data()); //entry = readEntry;
         return true;
     } else {
         QSharedPointer<Macro> macro = element.dynamicCast<Macro>();
         QSharedPointer<Macro> readMacro = file->first().dynamicCast<Macro>();
         if (!readMacro.isNull() && !macro.isNull()) {
-            if (elementClass != elementMacro) return false; ///< Source widget should only edit Macro objects
+            if (elementClass != ElementClass::Macro) return false; ///< Source widget should only edit Macro objects
             macro->operator =(*readMacro.data());
             return true;
         } else {
             QSharedPointer<Preamble> preamble = element.dynamicCast<Preamble>();
             QSharedPointer<Preamble> readPreamble = file->first().dynamicCast<Preamble>();
             if (!readPreamble.isNull() && !preamble.isNull()) {
-                if (elementClass != elementPreamble) return false; ///< Source widget should only edit Preamble objects
+                if (elementClass != ElementClass::Preamble) return false; ///< Source widget should only edit Preamble objects
                 preamble->operator =(*readPreamble.data());
                 return true;
             } else {
@@ -1280,35 +1280,40 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
 
     bool result = false;
     switch (elementClass) {
-    case elementEntry: {
+    case ElementClass::Entry: {
         QSharedPointer<Entry> entry = file->first().dynamicCast<Entry>();
         result = !entry.isNull();
         if (!result) message = i18n("Given source code does not parse as one single BibTeX entry.");
     }
     break;
-    case elementMacro: {
+    case ElementClass::Macro: {
         QSharedPointer<Macro> macro = file->first().dynamicCast<Macro>();
         result = !macro.isNull();
         if (!result) message = i18n("Given source code does not parse as one single BibTeX macro.");
     }
     break;
-    case elementPreamble: {
+    case ElementClass::Preamble: {
         QSharedPointer<Preamble> preamble = file->first().dynamicCast<Preamble>();
         result = !preamble.isNull();
         if (!result) message = i18n("Given source code does not parse as one single BibTeX preamble.");
     }
     break;
-    // case elementComment // TODO?
-    default:
-        message = QString(QStringLiteral("elementClass is unknown: %1")).arg(elementClass);
+    case ElementClass::Comment: {
+        message = i18n("Comments not supported");
         result = false;
+    }
+    break;
+    case ElementClass::Invalid: {
+        message = i18n("Element class not properly set");
+        result = false;
+    }
     }
 
     if (!result && widgetWithIssue != nullptr)
         *widgetWithIssue = document->views().at(0); ///< We create one view initially, so this should never fail
 
     if (message.isEmpty() && d->messages->count() == 0)
-        d->addMessage(FileImporter::SeverityInfo, i18n("No issues detected"));
+        d->addMessage(FileImporter::MessageSeverity::Info, i18n("No issues detected"));
 
     return result;
 }
@@ -1382,9 +1387,9 @@ void SourceWidget::updateMessage()
 
     if (!message.isEmpty()) {
         if (validationResult)
-            addMessage(FileImporter::SeverityInfo, message);
+            addMessage(FileImporter::MessageSeverity::Info, message);
         else
-            addMessage(FileImporter::SeverityError, message);
+            addMessage(FileImporter::MessageSeverity::Error, message);
     }
 }
 

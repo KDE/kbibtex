@@ -30,7 +30,7 @@ class KBIBTEXNETWORKING_EXPORT UrlChecker : public QObject
 {
     Q_OBJECT
 public:
-    enum Status {UrlValid = 0, UnexpectedFileType, Error404, NetworkError, UnknownError};
+    enum class Status {UrlValid = 0, UnexpectedFileType, Error404, NetworkError, UnknownError};
 
     explicit UrlChecker(QObject *parent = nullptr);
     ~UrlChecker();

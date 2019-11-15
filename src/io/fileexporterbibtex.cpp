@@ -58,7 +58,7 @@ public:
     QTextCodec *destinationCodec;
 
     FileExporterBibTeXPrivate(FileExporterBibTeX *parent)
-            : p(parent), keywordCasing(KBibTeX::cLowerCase), quoteComment(Preferences::qcNone), protectCasing(Qt::PartiallyChecked), cancelFlag(false), destinationCodec(nullptr)
+            : p(parent), keywordCasing(KBibTeX::Casing::LowerCase), quoteComment(Preferences::QuoteComment::None), protectCasing(Qt::PartiallyChecked), cancelFlag(false), destinationCodec(nullptr)
     {
         /// nothing
     }
@@ -81,7 +81,7 @@ public:
         protectCasing = Preferences::instance().bibTeXProtectCasing() ? Qt::Checked : Qt::Unchecked;
         listSeparator =  Preferences::instance().bibTeXListSeparator();
 #else // HAVE_KF5
-        keywordCasing = KBibTeX::cLowerCase;
+        keywordCasing = KBibTeX::Casing::LowerCase;
         quoteComment = qcNone;
         protectCasing = Qt::PartiallyChecked;
         listSeparator = QStringLiteral("; ");
@@ -132,7 +132,7 @@ public:
             Value value = it.value();
             if (value.isEmpty()) continue; ///< ignore empty key-value pairs
 
-            QString text = p->internalValueToBibTeX(value, key, leUTF8);
+            QString text = p->internalValueToBibTeX(value, key, UseLaTeXEncoding::UTF8);
             if (text.isEmpty()) {
                 /// ignore empty key-value pairs
                 qCWarning(LOG_KBIBTEX_IO) << "Value for field " << key << " is empty" << endl;
@@ -166,7 +166,7 @@ public:
     }
 
     bool writeMacro(QIODevice *iodevice, const Macro &macro) {
-        QString text = p->internalValueToBibTeX(macro.value(), QString(), leUTF8);
+        QString text = p->internalValueToBibTeX(macro.value(), QString(), UseLaTeXEncoding::UTF8);
         if (protectCasing == Qt::Checked)
             addProtectiveCasing(text);
         else if (protectCasing == Qt::Unchecked)
@@ -190,7 +190,7 @@ public:
     bool writeComment(QIODevice *iodevice, const Comment &comment) {
         QString text = comment.text() ;
 
-        if (comment.useCommand() || quoteComment == Preferences::qcCommand) {
+        if (comment.useCommand() || quoteComment == Preferences::QuoteComment::Command) {
             iodevice->putChar('@');
             iodevice->write(BibTeXEntries::instance().format(QStringLiteral("Comment"), keywordCasing).toLatin1().data());
             iodevice->putChar('{');
@@ -198,7 +198,7 @@ public:
             iodevice->putChar('}');
             iodevice->putChar('\n');
             iodevice->putChar('\n');
-        } else if (quoteComment == Preferences::qcPercentSign) {
+        } else if (quoteComment == Preferences::QuoteComment::PercentSign) {
             QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
             for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); ++it) {
                 const QByteArray line = TextEncoder::encode(*it, destinationCodec);
@@ -226,7 +226,7 @@ public:
         iodevice->putChar('{');
         /// Remember: strings from preamble do not get encoded,
         /// may contain raw LaTeX commands and code
-        iodevice->write(TextEncoder::encode(p->internalValueToBibTeX(preamble.value(), QString(), leRaw), destinationCodec));
+        iodevice->write(TextEncoder::encode(p->internalValueToBibTeX(preamble.value(), QString(), UseLaTeXEncoding::Raw), destinationCodec));
         iodevice->putChar('}');
         iodevice->putChar('\n');
         iodevice->putChar('\n');
@@ -540,8 +540,8 @@ QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key
 
 QString FileExporterBibTeX::applyEncoder(const QString &input, UseLaTeXEncoding useLaTeXEncoding) const {
     switch (useLaTeXEncoding) {
-    case leLaTeX: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncodingASCII);
-    case leUTF8: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncodingUTF8);
+    case UseLaTeXEncoding::LaTeX: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncoding::ASCII);
+    case UseLaTeXEncoding::UTF8: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncoding::UTF8);
     default: return input;
     }
 }

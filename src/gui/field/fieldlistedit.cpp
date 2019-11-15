@@ -345,7 +345,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
         if (file != nullptr && !entry.isNull() && d->fieldKey == QStringLiteral("^external")) {
             /// handle "external" list differently
-            const auto urlList = FileInfo::entryUrls(entry, QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistenceNo);
+            const auto urlList = FileInfo::entryUrls(entry, QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistence::No);
             Value v;
             v.reserve(urlList.size());
             for (const QUrl &url : urlList) {
@@ -457,7 +457,7 @@ void PersonListEdit::slotAddNamesFromClipboard()
 
 
 UrlListEdit::UrlListEdit(QWidget *parent)
-        : FieldListEdit(KBibTeX::tfVerbatim, KBibTeX::tfVerbatim, parent)
+        : FieldListEdit(KBibTeX::TypeFlag::Verbatim, KBibTeX::TypeFlag::Verbatim, parent)
 {
     m_buttonAddFile = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add file..."), this);
     addButton(m_buttonAddFile);
@@ -614,7 +614,7 @@ void UrlListEdit::setReadOnly(bool isReadOnly)
 const QString KeywordListEdit::keyGlobalKeywordList = QStringLiteral("globalKeywordList");
 
 KeywordListEdit::KeywordListEdit(QWidget *parent)
-        : FieldListEdit(KBibTeX::tfKeyword, KBibTeX::tfKeyword | KBibTeX::tfSource, parent), m_config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), m_configGroupName(QStringLiteral("Global Keywords"))
+        : FieldListEdit(KBibTeX::TypeFlag::Keyword, KBibTeX::TypeFlag::Keyword | KBibTeX::TypeFlag::Source, parent), m_config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), m_configGroupName(QStringLiteral("Global Keywords"))
 {
     m_buttonAddKeywordsFromList = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add Keywords from List"), this);
     m_buttonAddKeywordsFromList->setToolTip(i18n("Add keywords as selected from a pre-defined list of keywords"));

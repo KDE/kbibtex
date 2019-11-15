@@ -94,8 +94,8 @@ public:
         /// Load and set configuration as stored in settings
         properties.insert(File::Encoding, Preferences::instance().bibTeXEncoding());
         properties.insert(File::StringDelimiter, Preferences::instance().bibTeXStringDelimiter());
-        properties.insert(File::QuoteComment,  Preferences::instance().bibTeXQuoteComment());
-        properties.insert(File::KeywordCasing, Preferences::instance().bibTeXKeywordCasing());
+        properties.insert(File::QuoteComment,  static_cast<int>(Preferences::instance().bibTeXQuoteComment()));
+        properties.insert(File::KeywordCasing, static_cast<int>(Preferences::instance().bibTeXKeywordCasing()));
         properties.insert(File::NameFormatting, Preferences::instance().personNameFormat());
         properties.insert(File::ProtectCasing, static_cast<int>(Preferences::instance().bibTeXProtectCasing() ? Qt::Checked : Qt::Unchecked));
         properties.insert(File::ListSeparator,  Preferences::instance().bibTeXListSeparator());
@@ -212,12 +212,12 @@ const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes
     if (!d->checkValidity())
         qCCritical(LOG_KBIBTEX_DATA) << "const QSharedPointer<Element> File::containsKey(const QString &key, ElementTypes elementTypes) const" << "This File object is not valid";
     for (const auto &element : const_cast<const File &>(*this)) {
-        const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
+        const QSharedPointer<Entry> entry = elementTypes.testFlag(ElementType::Entry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull()) {
             if (entry->id() == key)
                 return entry;
         } else {
-            const QSharedPointer<Macro> macro = elementTypes.testFlag(etMacro) ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
+            const QSharedPointer<Macro> macro = elementTypes.testFlag(ElementType::Macro) ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
             if (!macro.isNull()) {
                 if (macro->key() == key)
                     return macro;
@@ -235,11 +235,11 @@ QStringList File::allKeys(ElementTypes elementTypes) const
     QStringList result;
     result.reserve(size());
     for (const auto &element : const_cast<const File &>(*this)) {
-        const QSharedPointer<Entry> entry = elementTypes.testFlag(etEntry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
+        const QSharedPointer<Entry> entry = elementTypes.testFlag(ElementType::Entry) ? element.dynamicCast<Entry>() : QSharedPointer<Entry>();
         if (!entry.isNull())
             result.append(entry->id());
         else {
-            const QSharedPointer<Macro> macro = elementTypes.testFlag(etMacro) ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
+            const QSharedPointer<Macro> macro = elementTypes.testFlag(ElementType::Macro) ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
             if (!macro.isNull())
                 result.append(macro->key());
         }

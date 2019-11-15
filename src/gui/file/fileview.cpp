@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -112,7 +112,7 @@ void FileView::viewCurrentElement()
 
 void FileView::viewElement(const QSharedPointer<Element> element)
 {
-    prepareEditorDialog(DialogTypeView);
+    prepareEditorDialog(DialogType::View);
     FileModel *model = fileModel();
     File *bibliographyFile = model != nullptr ? model->bibliographyFile() : nullptr;
     m_elementEditor->setElement(element, bibliographyFile);
@@ -129,7 +129,7 @@ void FileView::editCurrentElement()
 
 bool FileView::editElement(QSharedPointer<Element> element)
 {
-    prepareEditorDialog(DialogTypeEdit);
+    prepareEditorDialog(DialogType::Edit);
     FileModel *model = fileModel();
     File *bibliographyFile = model != nullptr ? model->bibliographyFile() : nullptr;
     m_elementEditor->setElement(element, bibliographyFile);
@@ -300,9 +300,9 @@ void FileView::itemActivated(const QModelIndex &index)
 
 void FileView::prepareEditorDialog(DialogType dialogType)
 {
-    if (dialogType != DialogTypeView && isReadOnly()) {
+    if (dialogType != DialogType::View && isReadOnly()) {
         qCWarning(LOG_KBIBTEX_GUI) << "In read-only mode, you may only view elements, not edit them";
-        dialogType = DialogTypeView;
+        dialogType = DialogType::View;
     }
 
     /// Create both the dialog window and the editing widget only once
@@ -317,7 +317,7 @@ void FileView::prepareEditorDialog(DialogType dialogType)
         m_dbb = nullptr;
     }
 
-    if (dialogType == DialogTypeView) {
+    if (dialogType == DialogType::View) {
         /// View mode, as use in read-only situations
         m_elementEditor->setReadOnly(true);
         m_elementEditorDialog->setWindowTitle(i18n("View Element"));
@@ -325,7 +325,7 @@ void FileView::prepareEditorDialog(DialogType dialogType)
         QBoxLayout *boxLayout = qobject_cast<QBoxLayout *>(m_elementEditorDialog->layout());
         boxLayout->addWidget(m_dbb);
         connect(m_dbb, &QDialogButtonBox::clicked, this, &FileView::dialogButtonClicked);
-    } else if (dialogType == DialogTypeEdit) {
+    } else if (dialogType == DialogType::Edit) {
         /// Edit mode, used in normal operations
         m_elementEditor->setReadOnly(false);
         m_elementEditorDialog->setWindowTitle(i18n("Edit Element"));

@@ -389,7 +389,7 @@ Preferences::~Preferences()
     delete d;
 }
 
-const QVector<QPair<Preferences::BibliographySystem, QString>> Preferences::availableBibliographySystems {{Preferences::BibTeX, i18n("BibTeX")}, {Preferences::BibLaTeX, i18n("BibLaTeX")}};
+const QVector<QPair<Preferences::BibliographySystem, QString>> Preferences::availableBibliographySystems {{Preferences::BibliographySystem::BibTeX, i18n("BibTeX")}, {Preferences::BibliographySystem::BibLaTeX, i18n("BibLaTeX")}};
 const Preferences::BibliographySystem Preferences::defaultBibliographySystem = Preferences::availableBibliographySystems.front().first;
 
 Preferences::BibliographySystem Preferences::bibliographySystem()
@@ -553,7 +553,7 @@ bool Preferences::setPageSize(const QPageSize::PageSizeId newValue)
 }
 #endif // HAVE_KF5
 
-const QVector<QPair<Preferences::BackupScope, QString>> Preferences::availableBackupScopes {{Preferences::NoBackup, i18n("No backups")}, {Preferences::LocalOnly, i18n("Local files only")}, {Preferences::BothLocalAndRemote, i18n("Both local and remote files")}};
+const QVector<QPair<Preferences::BackupScope, QString>> Preferences::availableBackupScopes {{Preferences::BackupScope::None, i18n("No backups")}, {Preferences::BackupScope::LocalOnly, i18n("Local files only")}, {Preferences::BackupScope::BothLocalAndRemote, i18n("Both local and remote files")}};
 const Preferences::BackupScope Preferences::defaultBackupScope = Preferences::availableBackupScopes.front().first;
 
 Preferences::BackupScope Preferences::backupScope()
@@ -879,7 +879,7 @@ bool Preferences::setBibTeXStringDelimiter(const QString &newValue)
 }
 #endif // HAVE_KF5
 
-const QVector<QPair<Preferences::QuoteComment, QString>> Preferences::availableBibTeXQuoteComments {{Preferences::qcNone, i18nc("Comment Quoting", "None")}, {Preferences::qcCommand, i18nc("Comment Quoting", "@comment{\342\200\246}")}, {Preferences::qcPercentSign, i18nc("Comment Quoting", "% \342\200\246")}};
+const QVector<QPair<Preferences::QuoteComment, QString>> Preferences::availableBibTeXQuoteComments {{Preferences::QuoteComment::None, i18nc("Comment Quoting", "None")}, {Preferences::QuoteComment::Command, i18nc("Comment Quoting", "@comment{\342\200\246}")}, {Preferences::QuoteComment::PercentSign, i18nc("Comment Quoting", "% \342\200\246")}};
 const Preferences::QuoteComment Preferences::defaultBibTeXQuoteComment = Preferences::availableBibTeXQuoteComments.front().first;
 
 Preferences::QuoteComment Preferences::bibTeXQuoteComment()
@@ -918,7 +918,7 @@ bool Preferences::setBibTeXQuoteComment(const Preferences::QuoteComment newValue
 }
 #endif // HAVE_KF5
 
-const QVector<QPair<KBibTeX::Casing, QString>> Preferences::availableBibTeXKeywordCasings {{KBibTeX::cLowerCase, i18nc("Casing of strings", "lowercase")}, {KBibTeX::cInitialCapital, i18nc("Casing of strings", "Initial capital")}, {KBibTeX::cUpperCamelCase, i18nc("Casing of strings", "UpperCamelCase")}, {KBibTeX::cLowerCamelCase, i18nc("Casing of strings", "lowerCamelCase")}, {KBibTeX::cUpperCase, i18nc("Casing of strings", "UPPERCASE")}};
+const QVector<QPair<KBibTeX::Casing, QString>> Preferences::availableBibTeXKeywordCasings {{KBibTeX::Casing::LowerCase, i18nc("Casing of strings", "lowercase")}, {KBibTeX::Casing::InitialCapital, i18nc("Casing of strings", "Initial capital")}, {KBibTeX::Casing::UpperCamelCase, i18nc("Casing of strings", "UpperCamelCase")}, {KBibTeX::Casing::LowerCamelCase, i18nc("Casing of strings", "lowerCamelCase")}, {KBibTeX::Casing::UpperCase, i18nc("Casing of strings", "UPPERCASE")}};
 const KBibTeX::Casing Preferences::defaultBibTeXKeywordCasing = Preferences::availableBibTeXKeywordCasings.front().first;
 
 KBibTeX::Casing Preferences::bibTeXKeywordCasing()
@@ -1117,7 +1117,7 @@ bool Preferences::setBibTeXBibliographyStyle(const QString &newValue)
 }
 #endif // HAVE_KF5
 
-const QVector<QPair<Preferences::FileViewDoubleClickAction, QString>> Preferences::availableFileViewDoubleClickActions {{Preferences::ActionOpenEditor, i18nc("What to do if double-clicking on a file view item", "Open Editor")}, {Preferences::ActionViewDocument, i18nc("What to do if double-clicking on a file view item", "View Document")}};
+const QVector<QPair<Preferences::FileViewDoubleClickAction, QString>> Preferences::availableFileViewDoubleClickActions {{Preferences::FileViewDoubleClickAction::OpenEditor, i18nc("What to do if double-clicking on a file view item", "Open Editor")}, {Preferences::FileViewDoubleClickAction::ViewDocument, i18nc("What to do if double-clicking on a file view item", "View Document")}};
 const Preferences::FileViewDoubleClickAction Preferences::defaultFileViewDoubleClickAction = Preferences::availableFileViewDoubleClickActions.front().first;
 
 Preferences::FileViewDoubleClickAction Preferences::fileViewDoubleClickAction()

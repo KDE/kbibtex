@@ -192,21 +192,21 @@ AssociatedFilesUI::~AssociatedFilesUI()
 
 AssociatedFiles::RenameOperation AssociatedFilesUI::renameOperation() const {
     if (d->radioRenameToEntryId->isChecked())
-        return AssociatedFiles::roEntryId;
+        return AssociatedFiles::RenameOperation::EntryId;
     else if (d->radioKeepFilename->isChecked() || d->lineEditUserDefinedName->text().isEmpty())
-        return AssociatedFiles::roKeepName;
+        return AssociatedFiles::RenameOperation::KeepName;
     else
-        return AssociatedFiles::roUserDefined;
+        return AssociatedFiles::RenameOperation::UserDefined;
 }
 
 AssociatedFiles::MoveCopyOperation AssociatedFilesUI::moveCopyOperation() const {
-    if (d->radioNoCopyMove->isChecked()) return AssociatedFiles::mcoNoCopyMove;
-    else if (d->radioMoveFile->isChecked()) return AssociatedFiles::mcoMove;
-    else return AssociatedFiles::mcoCopy;
+    if (d->radioNoCopyMove->isChecked()) return AssociatedFiles::MoveCopyOperation::None;
+    else if (d->radioMoveFile->isChecked()) return AssociatedFiles::MoveCopyOperation::Move;
+    else return AssociatedFiles::MoveCopyOperation::Copy;
 }
 
 AssociatedFiles::PathType AssociatedFilesUI::pathType() const {
-    return d->radioAbsolutePath->isChecked() ? AssociatedFiles::ptAbsolute : AssociatedFiles::ptRelative;
+    return d->radioAbsolutePath->isChecked() ? AssociatedFiles::PathType::Absolute : AssociatedFiles::PathType::Relative;
 }
 
 QString AssociatedFilesUI::userDefinedFilename() const {

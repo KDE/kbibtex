@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,7 +34,7 @@ public:
     QDateTime backoffElapseTime;
 
     Private(RequestScope requestScope, int prefix, const QString &_apiKey, Zotero::API *parent)
-            : apiBaseUrl(QUrl(QString(QStringLiteral("https://api.zotero.org/%1/%2")).arg(requestScope == GroupRequest ? QStringLiteral("groups") : QStringLiteral("users")).arg(prefix))),
+            : apiBaseUrl(QUrl(QString(QStringLiteral("https://api.zotero.org/%1/%2")).arg(requestScope == RequestScope::Group ? QStringLiteral("groups") : QStringLiteral("users")).arg(prefix))),
           userOrGroupPrefix(prefix),
           apiKey(_apiKey), backoffElapseTime(QDateTime::currentDateTime().addSecs(-5)) {
         Q_UNUSED(parent)

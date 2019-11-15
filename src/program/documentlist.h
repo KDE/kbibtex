@@ -90,7 +90,7 @@ class DocumentList : public QTabWidget
     Q_OBJECT
 
 public:
-    enum Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
+    enum class Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
 
     explicit DocumentList(QWidget *parent = nullptr);
 

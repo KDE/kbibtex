@@ -148,7 +148,7 @@ public:
 
     SortFilterFileModel::FilterQuery filter() {
         SortFilterFileModel::FilterQuery result;
-        result.combination = comboBoxCombination->currentIndex() == 0 ? SortFilterFileModel::AnyTerm : SortFilterFileModel::EveryTerm;
+        result.combination = comboBoxCombination->currentIndex() == 0 ? SortFilterFileModel::FilterCombination::AnyTerm : SortFilterFileModel::FilterCombination::EveryTerm;
         result.terms.clear();
         if (comboBoxCombination->currentIndex() == 2) /// exact phrase
             result.terms << comboBoxFilterText->lineEdit()->text();
@@ -167,7 +167,7 @@ public:
         comboBoxCombination->blockSignals(true);
         /// Set check state for action for either "any word",
         /// "every word", or "exact phrase", respectively
-        const int combinationIndex = fq.combination == SortFilterFileModel::AnyTerm ? 0 : (fq.terms.count() < 2 ? 2 : 1);
+        const int combinationIndex = fq.combination == SortFilterFileModel::FilterCombination::AnyTerm ? 0 : (fq.terms.count() < 2 ? 2 : 1);
         comboBoxCombination->setCurrentIndex(combinationIndex);
         /// Reset activation block
         comboBoxCombination->blockSignals(false);

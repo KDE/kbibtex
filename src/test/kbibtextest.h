@@ -41,7 +41,7 @@ private slots:
     void progress(int, int);
 
 private:
-    enum MessageStatus { statusInfo, statusOk, statusError, statusAuth, statusNetwork };
+    enum class MessageStatus { Info, Ok, Error, Auth, Network };
 
     bool m_running;
     TestWidget *m_testWidget;

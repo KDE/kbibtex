@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -71,7 +71,7 @@ FilterBar *PartWidget::filterBar() {
 
 void PartWidget::searchFor(const QString &text) {
     SortFilterFileModel::FilterQuery fq;
-    fq.combination = SortFilterFileModel::EveryTerm;
+    fq.combination = SortFilterFileModel::FilterCombination::EveryTerm;
     fq.field = QString();
     fq.searchPDFfiles = false;
     fq.terms = QStringList() << text;

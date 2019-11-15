@@ -33,7 +33,7 @@
 class KBIBTEXIO_EXPORT Encoder
 {
 public:
-    enum TargetEncoding {TargetEncodingASCII = 0, TargetEncodingUTF8 = 1};
+    enum class TargetEncoding {ASCII, UTF8};
 
     static const Encoder &instance();
     virtual ~Encoder();

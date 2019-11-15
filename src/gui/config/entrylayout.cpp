@@ -41,47 +41,47 @@ public:
 
     static QString convert(KBibTeX::FieldInputType fil) {
         switch (fil) {
-        case KBibTeX::SingleLine : return QStringLiteral("SingleLine");
-        case KBibTeX::MultiLine : return QStringLiteral("MultiLine");
-        case KBibTeX::List : return QStringLiteral("List");
-        case KBibTeX::URL : return QStringLiteral("URL");
-        case KBibTeX::Month : return QStringLiteral("Month");
-        case KBibTeX::Edition : return QStringLiteral("Edition");
-        case KBibTeX::Color : return QStringLiteral("Color");
-        case KBibTeX::PersonList : return QStringLiteral("PersonList");
-        case KBibTeX::KeywordList : return QStringLiteral("KeywordList");
-        case KBibTeX::CrossRef : return QStringLiteral("CrossRef");
-        case KBibTeX::StarRating : return QStringLiteral("StarRating");
-        case KBibTeX::UrlList : return QStringLiteral("UrlList");
+        case KBibTeX::FieldInputType::SingleLine : return QStringLiteral("SingleLine");
+        case KBibTeX::FieldInputType::MultiLine : return QStringLiteral("MultiLine");
+        case KBibTeX::FieldInputType::List : return QStringLiteral("List");
+        case KBibTeX::FieldInputType::Url : return QStringLiteral("URL");
+        case KBibTeX::FieldInputType::Month : return QStringLiteral("Month");
+        case KBibTeX::FieldInputType::Edition : return QStringLiteral("Edition");
+        case KBibTeX::FieldInputType::Color : return QStringLiteral("Color");
+        case KBibTeX::FieldInputType::PersonList : return QStringLiteral("PersonList");
+        case KBibTeX::FieldInputType::KeywordList : return QStringLiteral("KeywordList");
+        case KBibTeX::FieldInputType::CrossRef : return QStringLiteral("CrossRef");
+        case KBibTeX::FieldInputType::StarRating : return QStringLiteral("StarRating");
+        case KBibTeX::FieldInputType::UrlList : return QStringLiteral("UrlList");
         }
         return QString();
     }
 
     static KBibTeX::FieldInputType convert(const QString &text) {
         if (text == QStringLiteral("List"))
-            return KBibTeX::List;
+            return KBibTeX::FieldInputType::List;
         else if (text == QStringLiteral("MultiLine"))
-            return KBibTeX::MultiLine;
+            return KBibTeX::FieldInputType::MultiLine;
         else if (text == QStringLiteral("URL"))
-            return KBibTeX::URL;
+            return KBibTeX::FieldInputType::Url;
         else if (text == QStringLiteral("UrlList"))
-            return KBibTeX::UrlList;
+            return KBibTeX::FieldInputType::UrlList;
         else if (text == QStringLiteral("Month"))
-            return KBibTeX::Month;
+            return KBibTeX::FieldInputType::Month;
         else if (text == QStringLiteral("Edition"))
-            return KBibTeX::Edition;
+            return KBibTeX::FieldInputType::Edition;
         else if (text == QStringLiteral("Color"))
-            return KBibTeX::Color;
+            return KBibTeX::FieldInputType::Color;
         else if (text == QStringLiteral("PersonList"))
-            return KBibTeX::PersonList;
+            return KBibTeX::FieldInputType::PersonList;
         else if (text == QStringLiteral("KeywordList"))
-            return KBibTeX::KeywordList;
+            return KBibTeX::FieldInputType::KeywordList;
         else if (text == QStringLiteral("CrossRef"))
-            return KBibTeX::CrossRef;
+            return KBibTeX::FieldInputType::CrossRef;
         else if (text == QStringLiteral("StarRating"))
-            return KBibTeX::StarRating;
+            return KBibTeX::FieldInputType::StarRating;
         else
-            return KBibTeX::SingleLine;
+            return KBibTeX::FieldInputType::SingleLine;
     }
 
     void load(const QString &style)
@@ -146,5 +146,5 @@ EntryLayout::~EntryLayout()
 const EntryLayout &EntryLayout::instance()
 {
     static const EntryLayout singletonBibTeX(QStringLiteral("bibtex")), singletonBibLaTeX(QStringLiteral("biblatex"));
-    return Preferences::instance().bibliographySystem() == Preferences::BibLaTeX ? singletonBibLaTeX : singletonBibTeX;
+    return Preferences::instance().bibliographySystem() == Preferences::BibliographySystem::BibLaTeX ? singletonBibLaTeX : singletonBibTeX;
 }

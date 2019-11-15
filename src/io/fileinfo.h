@@ -38,9 +38,9 @@ public:
     static const QString mimetypeRIS;
     static const QString mimetypePDF;
 
-    enum TestExistence {
-        TestExistenceYes, ///< Test if file exists
-        TestExistenceNo ///< Skip test if file exists
+    enum class TestExistence {
+        Yes, ///< Test if file exists
+        No ///< Skip test if file exists
     };
 
     /**

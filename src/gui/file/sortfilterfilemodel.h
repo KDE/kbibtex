@@ -32,7 +32,7 @@ class KBIBTEXGUI_EXPORT SortFilterFileModel : public QSortFilterProxyModel
     Q_OBJECT
 
 public:
-    enum FilterCombination {AnyTerm = 0, EveryTerm = 1 };
+    enum class FilterCombination {AnyTerm, EveryTerm };
     struct FilterQuery {
         QStringList terms;
         FilterCombination combination;

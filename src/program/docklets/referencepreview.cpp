@@ -400,7 +400,7 @@ void ReferencePreview::linkClicked(const QUrl &url)
             int p = text.indexOf(QStringLiteral("="));
             SortFilterFileModel::FilterQuery fq;
             fq.terms << text.mid(p + 1);
-            fq.combination = SortFilterFileModel::EveryTerm;
+            fq.combination = SortFilterFileModel::FilterCombination::EveryTerm;
             fq.field = text.left(p);
             fq.searchPDFfiles = false;
             d->fileView->setFilterBarFilter(fq);

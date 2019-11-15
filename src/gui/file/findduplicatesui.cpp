@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -157,7 +157,7 @@ public:
                 else if (fieldName == QStringLiteral("^type"))
                     return i18n("Type");
                 else
-                    return BibTeXEntries::instance().format(fieldName, KBibTeX::cUpperCamelCase);
+                    return BibTeXEntries::instance().format(fieldName, KBibTeX::Casing::UpperCamelCase);
             case RadioButtonTreeView::IsRadioRole:
                 /// this is not to be a radio widget
                 return QVariant::fromValue(false);
@@ -183,7 +183,7 @@ public:
                 if (index.row() < values.count()) {
                     QString text = PlainTextValue::text(values.at(index.row()));
                     if (fieldName == QStringLiteral("^type"))
-                        text = BibTeXEntries::instance().format(text, KBibTeX::cUpperCamelCase);
+                        text = BibTeXEntries::instance().format(text, KBibTeX::Casing::UpperCamelCase);
 
                     /// textual representation of the alternative's value
                     return text;
@@ -260,9 +260,9 @@ public:
                 return true;
             } else if (role == Qt::CheckStateRole && isInt && selectionType(fieldName) == SelectionTypeCheck) {
                 if (checkState == Qt::Checked)
-                    currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::AddValue);
+                    currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::ValueOperation::AddValue);
                 else if (checkState == Qt::Unchecked)
-                    currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::RemoveValue);
+                    currentClique->setChosenValue(fieldName, values[index.row()], EntryClique::ValueOperation::RemoveValue);
                 else
                     return false; ///< tertium non datur
 

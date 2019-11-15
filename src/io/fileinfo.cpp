@@ -135,7 +135,7 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
         internalText = text;
 
         /// If testing for the actual existence of a filename found in the text ...
-        if (testExistence == TestExistenceYes) {
+        if (testExistence == TestExistence::Yes) {
             /// If a base directory (e.g. the location of the parent .bib file) is given
             /// and the potential filename fragment is NOT an absolute path, ...
             if (internalText.startsWith(QStringLiteral("~") + QDir::separator())) {
@@ -182,7 +182,7 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
             pos = urlRegExpMatch.capturedStart(0);
             const QString match = urlRegExpMatch.captured(0);
             QUrl url(match);
-            if (url.isValid() && (testExistence == TestExistenceNo || !url.isLocalFile() || QFileInfo::exists(url.toLocalFile())) && !result.contains(url))
+            if (url.isValid() && (testExistence == TestExistence::No || !url.isLocalFile() || QFileInfo::exists(url.toLocalFile())) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());
@@ -211,7 +211,7 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
             const QString match = fileRegExpMatch.captured(0);
             const QFileInfo fi(match);
             const QUrl url = QUrl::fromLocalFile(!match.startsWith(QStringLiteral("/")) && !match.startsWith(QStringLiteral("http")) && fi.isRelative() && !baseDirectory.isEmpty() ? baseDirectory + QStringLiteral("/") + match : match);
-            if (url.isValid() && (testExistence == TestExistenceNo || QFileInfo::exists(url.toLocalFile())) && !result.contains(url))
+            if (url.isValid() && (testExistence == TestExistence::No || QFileInfo::exists(url.toLocalFile())) && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates
             internalText = internalText.left(pos) + internalText.mid(pos + match.length());

@@ -49,7 +49,7 @@ class KBIBTEXIO_EXPORT FileImporterBibTeX : public FileImporter
     Q_OBJECT
 
 public:
-    enum CommentHandling {IgnoreComments = 0, KeepComments = 1};
+    enum class CommentHandling {Ignore, Keep};
 
     /**
      * Creates an importer class to read a BibTeX file.
@@ -104,10 +104,10 @@ public slots:
     void cancel() override;
 
 private:
-    enum Token {
-        tAt = 1, tBracketOpen = 2, tBracketClose = 3, tAlphaNumText = 4, tComma = 5, tAssign = 6, tDoublecross = 7, tEOF = 0xffff, tUnknown = -1
+    enum class Token {
+        At = 1, BracketOpen = 2, BracketClose = 3, AlphaNumText = 4, Comma = 5, Assign = 6, Doublecross = 7, EndOfFile = 0xffff, Unknown = -1
     };
-    enum CommaContainment { ccNoComma = 0, ccContainsComma = 1 };
+    enum class CommaContainment { None, Contains };
 
     struct {
         int countCurlyBrackets, countQuotationMarks;
@@ -126,7 +126,7 @@ private:
 
     /// low-level character operations
     QChar m_prevChar, m_nextChar;
-    unsigned int m_lineNo;
+    int m_lineNo;
     QString m_prevLine, m_currentLine;
     bool readChar();
     bool readCharUntil(const QString &until);

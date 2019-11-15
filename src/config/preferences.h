@@ -38,10 +38,10 @@ public:
     static Preferences &instance();
     ~Preferences();
 
-    enum BackupScope { NoBackup, LocalOnly, BothLocalAndRemote };
-    enum BibliographySystem { BibTeX = 0, BibLaTeX = 1 };
-    enum FileViewDoubleClickAction { ActionOpenEditor = 0, ActionViewDocument = 1 };
-    enum QuoteComment { qcNone = 0, qcCommand = 1, qcPercentSign = 2 };
+    enum class BackupScope { None, LocalOnly, BothLocalAndRemote };
+    enum class BibliographySystem { BibTeX, BibLaTeX };
+    enum class FileViewDoubleClickAction { OpenEditor, ViewDocument };
+    enum class QuoteComment { None, Command, PercentSign };
 
 
     /// *** BibliographySystem of type BibliographySystem ***

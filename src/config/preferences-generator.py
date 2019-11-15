@@ -87,7 +87,7 @@ def print_header(headerincludes, implementationincludes, enums, settings, output
     print(file=outputdevice)
 
     for enum in sorted(enums):
-        print("    enum " + enum + " {", end="", file=outputdevice)
+        print("    enum class " + enum + " {", end="", file=outputdevice)
         first = True
         for enumvaluepair in enums[enum]:
             if not first:

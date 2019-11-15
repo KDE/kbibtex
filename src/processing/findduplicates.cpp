@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -91,12 +91,12 @@ QVector<Value> EntryClique::chosenValues(const QString &field) const
 void EntryClique::setChosenValue(const QString &field, const Value &value, ValueOperation valueOperation)
 {
     switch (valueOperation) {
-    case SetValue: {
+    case ValueOperation::SetValue: {
         chosenValueMap[field].clear();
         chosenValueMap[field] << value;
         break;
     }
-    case AddValue: {
+    case ValueOperation::AddValue: {
         QString text = PlainTextValue::text(value);
         for (const Value &value : const_cast<const QVector<Value> &>(chosenValueMap[field]))
             if (PlainTextValue::text(value) == text)
@@ -104,7 +104,7 @@ void EntryClique::setChosenValue(const QString &field, const Value &value, Value
         chosenValueMap[field] << value;
         break;
     }
-    case RemoveValue: {
+    case ValueOperation::RemoveValue: {
         QString text = PlainTextValue::text(value);
         for (QVector<Value>::Iterator it = chosenValueMap[field].begin(); it != chosenValueMap[field].end(); ++it)
             if (PlainTextValue::text(*it) == text) {
