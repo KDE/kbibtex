@@ -70,7 +70,7 @@ void FileSettings::currentFileChangedSlot() {
 
 void FileSettings::flagsChangedSlot(const OpenFileInfo::StatusFlags statusFlags)
 {
-    if (statusFlags.testFlag(OpenFileInfo::Open)) {
+    if (statusFlags.testFlag(OpenFileInfo::StatusFlag::Open)) {
         File *file = m_fileView != nullptr && m_fileView->fileModel() != nullptr ? m_fileView->fileModel()->bibliographyFile() : nullptr;
         loadProperties(file);
     }

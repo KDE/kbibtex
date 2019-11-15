@@ -258,7 +258,7 @@ KBibTeXMainWindow::KBibTeXMainWindow(QWidget *parent)
     connect(&OpenFileInfoManager::instance(), &OpenFileInfoManager::flagsChanged, this, &KBibTeXMainWindow::documentListsChanged);
     connect(d->mdiWidget, &MDIWidget::setCaption, this, static_cast<void(KMainWindow::*)(const QString &)>(&KMainWindow::setCaption)); ///< actually: KMainWindow::setCaption
 
-    documentListsChanged(OpenFileInfo::RecentlyUsed); /// force initialization of menu of recently used files
+    documentListsChanged(OpenFileInfo::StatusFlag::RecentlyUsed); /// force initialization of menu of recently used files
 
     setupControllers();
     setupGUI(KXmlGuiWindow::Create | KXmlGuiWindow::Save | KXmlGuiWindow::Keys | KXmlGuiWindow::ToolBar);
@@ -419,8 +419,8 @@ void KBibTeXMainWindow::showSearchResults()
 
 void KBibTeXMainWindow::documentListsChanged(OpenFileInfo::StatusFlags statusFlags)
 {
-    if (statusFlags.testFlag(OpenFileInfo::RecentlyUsed)) {
-        const OpenFileInfoManager::OpenFileInfoList list = OpenFileInfoManager::instance().filteredItems(OpenFileInfo::RecentlyUsed);
+    if (statusFlags.testFlag(OpenFileInfo::StatusFlag::RecentlyUsed)) {
+        const OpenFileInfoManager::OpenFileInfoList list = OpenFileInfoManager::instance().filteredItems(OpenFileInfo::StatusFlag::RecentlyUsed);
         d->actionMenuRecentFilesMenu->clear();
         for (OpenFileInfo *cur : list) {
             /// Fixing bug 19511: too long filenames make menu too large,

@@ -80,22 +80,22 @@ public:
                 result.append(tti.inBetween);
 
             QString titleComponent = lowerText.left(tti.len);
-            if (tti.caseChange == IdSuggestions::ccToCamelCase)
+            if (tti.caseChange == IdSuggestions::CaseChange::ToCamelCase)
                 titleComponent = titleComponent[0].toUpper() + titleComponent.mid(1);
 
             result.append(titleComponent);
         }
 
         switch (tti.caseChange) {
-        case IdSuggestions::ccToUpper:
+        case IdSuggestions::CaseChange::ToUpper:
             result = result.toUpper();
             break;
-        case IdSuggestions::ccToLower:
+        case IdSuggestions::CaseChange::ToLower:
             result = result.toLower();
             break;
-        case IdSuggestions::ccToCamelCase:
-            /// already processed above
-        case IdSuggestions::ccNoChange:
+        case IdSuggestions::CaseChange::ToCamelCase:
+        /// already processed above
+        case IdSuggestions::CaseChange::None:
             /// nothing
             break;
         }
@@ -116,7 +116,7 @@ public:
             /// Get current author, normalize name (remove unwanted characters), cut to maximum length
             QString author = normalizeText(*it).left(ati.len);
             /// Check if camel case is requests
-            if (ati.caseChange == IdSuggestions::ccToCamelCase) {
+            if (ati.caseChange == IdSuggestions::CaseChange::ToCamelCase) {
                 /// Get components of the author's last name
                 const QStringList nameComponents = author.split(QStringLiteral(" "), QString::SkipEmptyParts);
                 QStringList newNameComponents;
@@ -140,16 +140,16 @@ public:
         }
 
         switch (ati.caseChange) {
-        case IdSuggestions::ccToUpper:
+        case IdSuggestions::CaseChange::ToUpper:
             result = result.toUpper();
             break;
-        case IdSuggestions::ccToLower:
+        case IdSuggestions::CaseChange::ToLower:
             result = result.toLower();
             break;
-        case IdSuggestions::ccToCamelCase:
+        case IdSuggestions::CaseChange::ToCamelCase:
             /// already processed above
             break;
-        case IdSuggestions::ccNoChange:
+        case IdSuggestions::CaseChange::None:
             /// nothing
             break;
         }
@@ -182,22 +182,22 @@ public:
             while (journalComponent[countCaptialCharsAtStart].isUpper()) ++countCaptialCharsAtStart;
             journalComponent = journalComponent.left(qMax(jti.len, countCaptialCharsAtStart));
 
-            if (jti.caseChange == IdSuggestions::ccToCamelCase)
+            if (jti.caseChange == IdSuggestions::CaseChange::ToCamelCase)
                 journalComponent = journalComponent[0].toUpper() + journalComponent.mid(1);
 
             result.append(journalComponent);
         }
 
         switch (jti.caseChange) {
-        case IdSuggestions::ccToUpper:
+        case IdSuggestions::CaseChange::ToUpper:
             result = result.toUpper();
             break;
-        case IdSuggestions::ccToLower:
+        case IdSuggestions::CaseChange::ToLower:
             result = result.toLower();
             break;
-        case IdSuggestions::ccToCamelCase:
-            /// already processed above
-        case IdSuggestions::ccNoChange:
+        case IdSuggestions::CaseChange::ToCamelCase:
+        /// already processed above
+        case IdSuggestions::CaseChange::None:
             /// nothing
             break;
         }
@@ -209,11 +209,11 @@ public:
         QString entryType(entry.type());
 
         switch (eti.caseChange) {
-        case IdSuggestions::ccToUpper:
+        case IdSuggestions::CaseChange::ToUpper:
             return entryType.toUpper().left(eti.len);
-        case IdSuggestions::ccToLower:
+        case IdSuggestions::CaseChange::ToLower:
             return entryType.toLower().left(eti.len);
-        case IdSuggestions::ccToCamelCase:
+        case IdSuggestions::CaseChange::ToCamelCase:
         {
             if (entryType.isEmpty()) return QString(); ///< empty entry type? Return immediately to avoid problems with entryType[0]
             /// Apply some heuristic replacements to make the entry type look like CamelCase
@@ -371,16 +371,16 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
             if (info.len > 0 && info.len < std::numeric_limits<int>::max()) text.append(i18np(", but only first letter of each last name", ", but only first %1 letters of each last name", info.len));
 
             switch (info.caseChange) {
-            case IdSuggestions::ccToUpper:
+            case IdSuggestions::CaseChange::ToUpper:
                 text.append(i18n(", in upper case"));
                 break;
-            case IdSuggestions::ccToLower:
+            case IdSuggestions::CaseChange::ToLower:
                 text.append(i18n(", in lower case"));
                 break;
-            case IdSuggestions::ccToCamelCase:
+            case IdSuggestions::CaseChange::ToCamelCase:
                 text.append(i18n(", in CamelCase"));
                 break;
-            case IdSuggestions::ccNoChange:
+            case IdSuggestions::CaseChange::None:
                 break;
             }
 
@@ -403,16 +403,16 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
 
             switch (info.caseChange) {
-            case IdSuggestions::ccToUpper:
+            case IdSuggestions::CaseChange::ToUpper:
                 text.append(i18n(", in upper case"));
                 break;
-            case IdSuggestions::ccToLower:
+            case IdSuggestions::CaseChange::ToLower:
                 text.append(i18n(", in lower case"));
                 break;
-            case IdSuggestions::ccToCamelCase:
+            case IdSuggestions::CaseChange::ToCamelCase:
                 text.append(i18n(", in CamelCase"));
                 break;
-            case IdSuggestions::ccNoChange:
+            case IdSuggestions::CaseChange::None:
                 break;
             }
 
@@ -425,16 +425,16 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
             if (info.len > 0 && info.len < std::numeric_limits<int>::max())
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
             switch (info.caseChange) {
-            case IdSuggestions::ccToUpper:
+            case IdSuggestions::CaseChange::ToUpper:
                 text.append(i18n(", in upper case"));
                 break;
-            case IdSuggestions::ccToLower:
+            case IdSuggestions::CaseChange::ToLower:
                 text.append(i18n(", in lower case"));
                 break;
-            case IdSuggestions::ccToCamelCase:
+            case IdSuggestions::CaseChange::ToCamelCase:
                 text.append(i18n(", in CamelCase"));
                 break;
-            case IdSuggestions::ccNoChange:
+            case IdSuggestions::CaseChange::None:
                 break;
             }
         } else if (token[0] == 'e') {
@@ -443,13 +443,13 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
             if (info.len > 0 && info.len < std::numeric_limits<int>::max())
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
             switch (info.caseChange) {
-            case IdSuggestions::ccToUpper:
+            case IdSuggestions::CaseChange::ToUpper:
                 text.append(i18n(", in upper case"));
                 break;
-            case IdSuggestions::ccToLower:
+            case IdSuggestions::CaseChange::ToLower:
                 text.append(i18n(", in lower case"));
                 break;
-            case IdSuggestions::ccToCamelCase:
+            case IdSuggestions::CaseChange::ToCamelCase:
                 text.append(i18n(", in CamelCase"));
                 break;
             default:
@@ -511,7 +511,7 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     result.startWord = 0;
     result.endWord = std::numeric_limits<int>::max();
     result.lastWord = false;
-    result.caseChange = IdSuggestions::ccNoChange;
+    result.caseChange = IdSuggestions::CaseChange::None;
     result.inBetween = QString();
 
     if (token.length() > pos) {
@@ -525,19 +525,19 @@ struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QStri
     if (token.length() > pos) {
         switch (token[pos].unicode()) {
         case 0x006c: // 'l'
-            result.caseChange = IdSuggestions::ccToLower;
+            result.caseChange = IdSuggestions::CaseChange::ToLower;
             ++pos;
             break;
         case 0x0075: // 'u'
-            result.caseChange = IdSuggestions::ccToUpper;
+            result.caseChange = IdSuggestions::CaseChange::ToUpper;
             ++pos;
             break;
         case 0x0063: // 'c'
-            result.caseChange = IdSuggestions::ccToCamelCase;
+            result.caseChange = IdSuggestions::CaseChange::ToCamelCase;
             ++pos;
             break;
         default:
-            result.caseChange = IdSuggestions::ccNoChange;
+            result.caseChange = IdSuggestions::CaseChange::None;
         }
     }
 

@@ -129,7 +129,7 @@ bool FileExporterXML::write(QTextStream &stream, const Element *element, const F
 
 bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
 {
-    stream << " <entry id=\"" << EncoderXML::instance().encode(entry->id(), Encoder::TargetEncodingUTF8) << "\" type=\"" << entry->type().toLower() << "\">" << endl;
+    stream << " <entry id=\"" << EncoderXML::instance().encode(entry->id(), Encoder::TargetEncoding::UTF8) << "\" type=\"" << entry->type().toLower() << "\">" << endl;
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         const QString key = it.key().toLower();
         const Value value = it.value();
@@ -212,7 +212,7 @@ bool FileExporterXML::writeMacro(QTextStream &stream, const Macro *macro)
 bool FileExporterXML::writeComment(QTextStream &stream, const Comment *comment)
 {
     stream << " <comment>" ;
-    stream << EncoderXML::instance().encode(comment->text(), Encoder::TargetEncodingUTF8);
+    stream << EncoderXML::instance().encode(comment->text(), Encoder::TargetEncoding::UTF8);
     stream << "</comment>" << endl;
 
     return true;
@@ -230,22 +230,22 @@ QString FileExporterXML::valueToXML(const Value &value, const QString &)
 
         QSharedPointer<const PlainText> plainText = valueItem.dynamicCast<const PlainText>();
         if (!plainText.isNull())
-            result.append("<text>" +  cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncodingUTF8)) + "</text>");
+            result.append("<text>" +  cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncoding::UTF8)) + "</text>");
         else {
             QSharedPointer<const Person> p = valueItem.dynamicCast<const Person>();
             if (!p.isNull()) {
                 result.append("<person>");
                 if (!p->firstName().isEmpty())
-                    result.append("<firstname>" +  cleanXML(EncoderXML::instance().encode(p->firstName(), Encoder::TargetEncodingUTF8)) + "</firstname>");
+                    result.append("<firstname>" +  cleanXML(EncoderXML::instance().encode(p->firstName(), Encoder::TargetEncoding::UTF8)) + "</firstname>");
                 if (!p->lastName().isEmpty())
-                    result.append("<lastname>" +  cleanXML(EncoderXML::instance().encode(p->lastName(), Encoder::TargetEncodingUTF8)) + "</lastname>");
+                    result.append("<lastname>" +  cleanXML(EncoderXML::instance().encode(p->lastName(), Encoder::TargetEncoding::UTF8)) + "</lastname>");
                 if (!p->suffix().isEmpty())
-                    result.append("<suffix>" +  cleanXML(EncoderXML::instance().encode(p->suffix(), Encoder::TargetEncodingUTF8)) + "</suffix>");
+                    result.append("<suffix>" +  cleanXML(EncoderXML::instance().encode(p->suffix(), Encoder::TargetEncoding::UTF8)) + "</suffix>");
                 result.append("</person>");
             }
             // TODO: Other data types
             else
-                result.append("<text>" + cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncodingUTF8)) + "</text>");
+                result.append("<text>" + cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncoding::UTF8)) + "</text>");
         }
     }
 

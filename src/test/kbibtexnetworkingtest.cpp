@@ -236,30 +236,30 @@ void KBibTeXNetworkingTest::associatedFilescomputeAssociateURL_data()
 
     File *bibTeXFile = new File();
     bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
-    QTest::newRow("Remote URL, relative path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("../documents/paper.pdf");
+    QTest::newRow("Remote URL, relative path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::PathType::Relative << QStringLiteral("../documents/paper.pdf");
 
     bibTeXFile = new File();
     bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
-    QTest::newRow("Remote URL, absolute path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptAbsolute << QStringLiteral("https://www.example.com/documents/paper.pdf");
+    QTest::newRow("Remote URL, absolute path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::PathType::Absolute << QStringLiteral("https://www.example.com/documents/paper.pdf");
 
     bibTeXFile = new File();
-    QTest::newRow("Empty base URL, relative path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("https://www.example.com/documents/paper.pdf");
+    QTest::newRow("Empty base URL, relative path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::PathType::Relative << QStringLiteral("https://www.example.com/documents/paper.pdf");
 
     bibTeXFile = new File();
     bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
-    QTest::newRow("Empty document URL, relative path requested") << QUrl() << bibTeXFile << AssociatedFiles::ptRelative << QString();
+    QTest::newRow("Empty document URL, relative path requested") << QUrl() << bibTeXFile << AssociatedFiles::PathType::Relative << QString();
 
     bibTeXFile = new File();
     bibTeXFile->setProperty(File::Url, QUrl(QStringLiteral("bibliography/all.bib")));
-    QTest::newRow("Document URL and base URL are relative, relative path requested") << QUrl(QStringLiteral("documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("documents/paper.pdf");
+    QTest::newRow("Document URL and base URL are relative, relative path requested") << QUrl(QStringLiteral("documents/paper.pdf")) << bibTeXFile << AssociatedFiles::PathType::Relative << QStringLiteral("documents/paper.pdf");
 
     bibTeXFile = new File();
     bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
-    QTest::newRow("Document URL and base URL have different protocols, relative path requested") << QUrl::fromUserInput(QStringLiteral("ftp://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("ftp://www.example.com/documents/paper.pdf");
+    QTest::newRow("Document URL and base URL have different protocols, relative path requested") << QUrl::fromUserInput(QStringLiteral("ftp://www.example.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::PathType::Relative << QStringLiteral("ftp://www.example.com/documents/paper.pdf");
 
     bibTeXFile = new File();
     bibTeXFile->setProperty(File::Url, QUrl::fromUserInput(QStringLiteral("https://www.example.com/bibliography/all.bib")));
-    QTest::newRow("Document URL and base URL have different hosts, relative path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example2.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::ptRelative << QStringLiteral("https://www.example2.com/documents/paper.pdf");
+    QTest::newRow("Document URL and base URL have different hosts, relative path requested") << QUrl::fromUserInput(QStringLiteral("https://www.example2.com/documents/paper.pdf")) << bibTeXFile << AssociatedFiles::PathType::Relative << QStringLiteral("https://www.example2.com/documents/paper.pdf");
 }
 
 void KBibTeXNetworkingTest::associatedFilescomputeAssociateURL()

@@ -235,7 +235,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
     FileImporterBibTeX *importer = nullptr;
     if (currentTestFile.filename.endsWith(QStringLiteral(".bib"))) {
         importer = new FileImporterBibTeX(this);
-        importer->setCommentHandling(FileImporterBibTeX::KeepComments);
+        importer->setCommentHandling(FileImporterBibTeX::CommentHandling::Keep);
     } else {
         QFAIL(qPrintable(QString::fromLatin1("Don't know format of '%1'").arg(currentTestFile.filename)));
     }

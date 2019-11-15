@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -42,7 +42,7 @@ class KBIBTEXPROCESSING_EXPORT EntryClique
 public:
     EntryClique();
 
-    enum ValueOperation { SetValue, AddValue, RemoveValue };
+    enum class ValueOperation { SetValue, AddValue, RemoveValue };
 
     int entryCount() const;
     QList<QSharedPointer<Entry> > entryList() const;
@@ -55,7 +55,7 @@ public:
     QVector<Value> &values(const QString &field);
     Value chosenValue(const QString &field) const;
     QVector<Value> chosenValues(const QString &field) const;
-    void setChosenValue(const QString &field, const Value &value, ValueOperation valueOperation = SetValue);
+    void setChosenValue(const QString &field, const Value &value, ValueOperation valueOperation = ValueOperation::SetValue);
 
     QString dump() const;
 

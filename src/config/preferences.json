@@ -8,22 +8,22 @@
     ],
     "enums": {
         "BibliographySystem": [
-            ["BibTeX", 0],
-            ["BibLaTeX", 1]
+            "BibTeX",
+            "BibLaTeX"
         ],
         "BackupScope": [
-            "NoBackup",
+            "None",
             "LocalOnly",
             "BothLocalAndRemote"
         ],
         "QuoteComment": [
-            ["qcNone", 0],
-            ["qcCommand", 1],
-            ["qcPercentSign", 2]
+            "None",
+            "Command",
+            "PercentSign"
         ],
         "FileViewDoubleClickAction": [
-            ["ActionOpenEditor", 0],
-            ["ActionViewDocument", 1]
+            "OpenEditor",
+            "ViewDocument"
         ]
     },
     "settings": [
@@ -31,7 +31,7 @@
             "stem": "BibliographySystem",
             "type": "BibliographySystem",
             "availabletype": "QVector<QPair<Preferences::BibliographySystem, QString>>",
-            "available": "{{Preferences::BibTeX, i18n(\"BibTeX\")}, {Preferences::BibLaTeX, i18n(\"BibLaTeX\")}}",
+            "available": "{{Preferences::BibliographySystem::BibTeX, i18n(\"BibTeX\")}, {Preferences::BibliographySystem::BibLaTeX, i18n(\"BibLaTeX\")}}",
             "notificationevent": "NotificationHub::EventBibliographySystemChanged"
         },
         {
@@ -67,7 +67,7 @@
             "type": "BackupScope",
             "configgroup": "InputOutput",
             "availabletype": "QVector<QPair<Preferences::BackupScope, QString>>",
-            "available": "{{Preferences::NoBackup, i18n(\"No backups\")}, {Preferences::LocalOnly, i18n(\"Local files only\")}, {Preferences::BothLocalAndRemote, i18n(\"Both local and remote files\")}}",
+            "available": "{{Preferences::BackupScope::None, i18n(\"No backups\")}, {Preferences::BackupScope::LocalOnly, i18n(\"Local files only\")}, {Preferences::BackupScope::BothLocalAndRemote, i18n(\"Both local and remote files\")}}",
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
@@ -137,7 +137,7 @@
             "type": "QuoteComment",
             "configgroup": "FileExporterBibTeX",
             "availabletype": "QVector<QPair<Preferences::QuoteComment, QString>>",
-            "available": "{{Preferences::qcNone, i18nc(\"Comment Quoting\", \"None\")}, {Preferences::qcCommand, i18nc(\"Comment Quoting\", \"@comment{\\342\\200\\246}\")}, {Preferences::qcPercentSign, i18nc(\"Comment Quoting\", \"% \\342\\200\\246\")}}",
+            "available": "{{Preferences::QuoteComment::None, i18nc(\"Comment Quoting\", \"None\")}, {Preferences::QuoteComment::Command, i18nc(\"Comment Quoting\", \"@comment{\\342\\200\\246}\")}, {Preferences::QuoteComment::PercentSign, i18nc(\"Comment Quoting\", \"% \\342\\200\\246\")}}",
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
@@ -146,7 +146,7 @@
             "podtype": "int",
             "configgroup": "FileExporterBibTeX",
             "availabletype": "QVector<QPair<KBibTeX::Casing, QString>>",
-            "available": "{{KBibTeX::cLowerCase, i18nc(\"Casing of strings\", \"lowercase\")}, {KBibTeX::cInitialCapital, i18nc(\"Casing of strings\", \"Initial capital\")}, {KBibTeX::cUpperCamelCase, i18nc(\"Casing of strings\", \"UpperCamelCase\")}, {KBibTeX::cLowerCamelCase, i18nc(\"Casing of strings\", \"lowerCamelCase\")}, {KBibTeX::cUpperCase, i18nc(\"Casing of strings\", \"UPPERCASE\")}}",
+            "available": "{{KBibTeX::Casing::LowerCase, i18nc(\"Casing of strings\", \"lowercase\")}, {KBibTeX::Casing::InitialCapital, i18nc(\"Casing of strings\", \"Initial capital\")}, {KBibTeX::Casing::UpperCamelCase, i18nc(\"Casing of strings\", \"UpperCamelCase\")}, {KBibTeX::Casing::LowerCamelCase, i18nc(\"Casing of strings\", \"lowerCamelCase\")}, {KBibTeX::Casing::UpperCase, i18nc(\"Casing of strings\", \"UPPERCASE\")}}",
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
@@ -186,7 +186,7 @@
             "podtype": "int",
             "configgroup": "User Interface",
             "availabletype": "QVector<QPair<Preferences::FileViewDoubleClickAction, QString>>",
-            "available": "{{Preferences::ActionOpenEditor, i18nc(\"What to do if double-clicking on a file view item\", \"Open Editor\")}, {Preferences::ActionViewDocument, i18nc(\"What to do if double-clicking on a file view item\", \"View Document\")}}",
+            "available": "{{Preferences::FileViewDoubleClickAction::OpenEditor, i18nc(\"What to do if double-clicking on a file view item\", \"Open Editor\")}, {Preferences::FileViewDoubleClickAction::ViewDocument, i18nc(\"What to do if double-clicking on a file view item\", \"View Document\")}}",
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {

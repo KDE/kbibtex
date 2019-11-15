@@ -131,10 +131,10 @@ public:
         labelAuthorRange->setMinimumWidth(maxWidth);
 
         comboBoxChangeCase = new QComboBox(this);
-        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
-        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
-        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
-        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
+        comboBoxChangeCase->addItem(i18n("No change"), static_cast<int>(IdSuggestions::CaseChange::None));
+        comboBoxChangeCase->addItem(i18n("To upper case"), static_cast<int>(IdSuggestions::CaseChange::ToUpper));
+        comboBoxChangeCase->addItem(i18n("To lower case"), static_cast<int>(IdSuggestions::CaseChange::ToLower));
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), static_cast<int>(IdSuggestions::CaseChange::ToCamelCase));
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
         comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
@@ -170,11 +170,11 @@ public:
             result.append(QString::number(spinBoxLength->value()));
 
         const IdSuggestions::CaseChange caseChange = static_cast<IdSuggestions::CaseChange>(comboBoxChangeCase->currentIndex());
-        if (caseChange == IdSuggestions::ccToLower)
+        if (caseChange == IdSuggestions::CaseChange::ToLower)
             result.append(QStringLiteral("l"));
-        else if (caseChange == IdSuggestions::ccToUpper)
+        else if (caseChange == IdSuggestions::CaseChange::ToUpper)
             result.append(QStringLiteral("u"));
-        else if (caseChange == IdSuggestions::ccToCamelCase)
+        else if (caseChange == IdSuggestions::CaseChange::ToCamelCase)
             result.append(QStringLiteral("c"));
 
         if (rangeWidgetAuthor->lowerValue() > 0 || rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum())
@@ -342,10 +342,10 @@ public:
         checkBoxRemoveSmallWords->setChecked(removeSmallWords);
 
         comboBoxChangeCase = new QComboBox(this);
-        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
-        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
-        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
-        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
+        comboBoxChangeCase->addItem(i18n("No change"), static_cast<int>(IdSuggestions::CaseChange::None));
+        comboBoxChangeCase->addItem(i18n("To upper case"), static_cast<int>(IdSuggestions::CaseChange::ToUpper));
+        comboBoxChangeCase->addItem(i18n("To lower case"), static_cast<int>(IdSuggestions::CaseChange::ToLower));
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), static_cast<int>(IdSuggestions::CaseChange::ToCamelCase));
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
         comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
@@ -380,11 +380,11 @@ public:
             result.append(QString::number(spinBoxLength->value()));
 
         const IdSuggestions::CaseChange caseChange = static_cast<IdSuggestions::CaseChange>(comboBoxChangeCase->currentIndex());
-        if (caseChange == IdSuggestions::ccToLower)
+        if (caseChange == IdSuggestions::CaseChange::ToLower)
             result.append(QStringLiteral("l"));
-        else if (caseChange == IdSuggestions::ccToUpper)
+        else if (caseChange == IdSuggestions::CaseChange::ToUpper)
             result.append(QStringLiteral("u"));
-        else if (caseChange == IdSuggestions::ccToCamelCase)
+        else if (caseChange == IdSuggestions::CaseChange::ToCamelCase)
             result.append(QStringLiteral("c"));
 
         if (rangeWidgetAuthor->lowerValue() > 0 || rangeWidgetAuthor->upperValue() < rangeWidgetAuthor->maximum())
@@ -426,10 +426,10 @@ public:
         checkBoxRemoveSmallWords->setChecked(removeSmallWords);
 
         comboBoxChangeCase = new QComboBox(this);
-        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
-        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
-        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
-        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
+        comboBoxChangeCase->addItem(i18n("No change"), static_cast<int>(IdSuggestions::CaseChange::None));
+        comboBoxChangeCase->addItem(i18n("To upper case"), static_cast<int>(IdSuggestions::CaseChange::ToUpper));
+        comboBoxChangeCase->addItem(i18n("To lower case"), static_cast<int>(IdSuggestions::CaseChange::ToLower));
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), static_cast<int>(IdSuggestions::CaseChange::ToCamelCase));
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
         comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
@@ -458,11 +458,11 @@ public:
             result.append(QString::number(spinBoxLength->value()));
 
         const IdSuggestions::CaseChange caseChange = static_cast<IdSuggestions::CaseChange>(comboBoxChangeCase->currentIndex());
-        if (caseChange == IdSuggestions::ccToLower)
+        if (caseChange == IdSuggestions::CaseChange::ToLower)
             result.append(QStringLiteral("l"));
-        else if (caseChange == IdSuggestions::ccToUpper)
+        else if (caseChange == IdSuggestions::CaseChange::ToUpper)
             result.append(QStringLiteral("u"));
-        else if (caseChange == IdSuggestions::ccToCamelCase)
+        else if (caseChange == IdSuggestions::CaseChange::ToCamelCase)
             result.append(QStringLiteral("c"));
 
         const QString text = lineEditTextInBetween->text();
@@ -495,10 +495,10 @@ public:
         boxLayout->setMargin(0);
 
         comboBoxChangeCase = new QComboBox(this);
-        comboBoxChangeCase->addItem(i18n("No change"), IdSuggestions::ccNoChange);
-        comboBoxChangeCase->addItem(i18n("To upper case"), IdSuggestions::ccToUpper);
-        comboBoxChangeCase->addItem(i18n("To lower case"), IdSuggestions::ccToLower);
-        comboBoxChangeCase->addItem(i18n("To CamelCase"), IdSuggestions::ccToCamelCase);
+        comboBoxChangeCase->addItem(i18n("No change"), static_cast<int>(IdSuggestions::CaseChange::None));
+        comboBoxChangeCase->addItem(i18n("To upper case"), static_cast<int>(IdSuggestions::CaseChange::ToUpper));
+        comboBoxChangeCase->addItem(i18n("To lower case"), static_cast<int>(IdSuggestions::CaseChange::ToLower));
+        comboBoxChangeCase->addItem(i18n("To CamelCase"), static_cast<int>(IdSuggestions::CaseChange::ToCamelCase));
         formLayout->addRow(i18n("Change casing:"), comboBoxChangeCase);
         comboBoxChangeCase->setCurrentIndex(static_cast<int>(info.caseChange)); /// enum has numbers assigned to cases and combo box has same indices
 
@@ -521,11 +521,11 @@ public:
             result.append(QString::number(spinBoxLength->value()));
 
         const IdSuggestions::CaseChange caseChange = static_cast<IdSuggestions::CaseChange>(comboBoxChangeCase->currentIndex());
-        if (caseChange == IdSuggestions::ccToLower)
+        if (caseChange == IdSuggestions::CaseChange::ToLower)
             result.append(QStringLiteral("l"));
-        else if (caseChange == IdSuggestions::ccToUpper)
+        else if (caseChange == IdSuggestions::CaseChange::ToUpper)
             result.append(QStringLiteral("u"));
-        else if (caseChange == IdSuggestions::ccToCamelCase)
+        else if (caseChange == IdSuggestions::CaseChange::ToCamelCase)
             result.append(QStringLiteral("c"));
 
         return result;
@@ -707,7 +707,7 @@ public:
             info.startWord = 0;
             info.endWord = std::numeric_limits<int>::max();
             info.lastWord = false;
-            info.caseChange = IdSuggestions::ccNoChange;
+            info.caseChange = IdSuggestions::CaseChange::None;
             tokenWidget = new TitleWidget(info, true, p, container);
         }
         break;
@@ -718,7 +718,7 @@ public:
             info.startWord = 0;
             info.endWord = std::numeric_limits<int>::max();
             info.lastWord = false;
-            info.caseChange = IdSuggestions::ccNoChange;
+            info.caseChange = IdSuggestions::CaseChange::None;
             tokenWidget = new AuthorWidget(info, p, container);
         }
         break;
@@ -732,7 +732,7 @@ public:
             info.startWord = 0;
             info.endWord = std::numeric_limits<int>::max();
             info.lastWord = false;
-            info.caseChange = IdSuggestions::ccNoChange;
+            info.caseChange = IdSuggestions::CaseChange::None;
             tokenWidget = new JournalWidget(info, true, p, container);
         }
         break;
@@ -743,7 +743,7 @@ public:
             info.startWord = 0;
             info.endWord = std::numeric_limits<int>::max();
             info.lastWord = false;
-            info.caseChange = IdSuggestions::ccNoChange;
+            info.caseChange = IdSuggestions::CaseChange::None;
             tokenWidget = new TypeWidget(info, p, container);
         }
         break;

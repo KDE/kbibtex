@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,7 +41,7 @@ public:
     BibUtils &operator= (const BibUtils &other) = delete;
     ~BibUtils();
 
-    enum Format { MODS = 0, BibTeX = 1, BibLaTeX = 2, ISI = 5, RIS = 6, EndNote = 10, EndNoteXML = 11, ADS = 15, WordBib = 16, Copac = 17, Med = 18 };
+    enum class Format { MODS = 0, BibTeX = 1, BibLaTeX = 2, ISI = 5, RIS = 6, EndNote = 10, EndNoteXML = 11, ADS = 15, WordBib = 16, Copac = 17, Med = 18 };
 
     BibUtils::Format format() const;
     void setFormat(const BibUtils::Format format);
@@ -65,5 +65,7 @@ private:
     class Private;
     Private *const d;
 };
+
+KBIBTEXIO_EXPORT QDebug operator<<(QDebug dbg, const BibUtils::Format &format);
 
 #endif // KBIBTEX_IO_BIBUTILS_H

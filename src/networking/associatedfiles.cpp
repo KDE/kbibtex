@@ -88,7 +88,7 @@ QString AssociatedFiles::insertUrl(const QUrl &documentUrl, QSharedPointer<Entry
         }
     }
     if (!alreadyContained) {
-        const QString field = documentUrl.isLocalFile() ? (Preferences::instance().bibliographySystem() == Preferences::instance().BibTeX ? Entry::ftLocalFile : Entry::ftFile) : Entry::ftUrl;
+        const QString field = documentUrl.isLocalFile() ? (Preferences::instance().bibliographySystem() == Preferences::BibliographySystem::BibTeX ? Entry::ftLocalFile : Entry::ftFile) : Entry::ftUrl;
         Value value = entry->value(field);
         value.append(QSharedPointer<VerbatimText>(new VerbatimText(finalUrl)));
         entry->insert(field, value);
@@ -101,13 +101,13 @@ QString AssociatedFiles::computeAssociateUrl(const QUrl &documentUrl, const File
     Q_ASSERT(bibTeXFile != nullptr); // FIXME more graceful?
 
     const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
-    if (!baseUrl.isValid() && pathType == ptRelative) {
+    if (!baseUrl.isValid() && pathType == PathType::Relative) {
         /// If no base URL was given but still a relative path was requested,
         /// revert choice and enforce the generation of an absolute one
-        pathType = ptAbsolute;
+        pathType = PathType::Absolute;
     }
 
-    const QString finalUrl = pathType == ptAbsolute ? absoluteFilename(documentUrl, baseUrl) : relativeFilename(documentUrl, baseUrl);
+    const QString finalUrl = pathType == PathType::Absolute ? absoluteFilename(documentUrl, baseUrl) : relativeFilename(documentUrl, baseUrl);
     return finalUrl;
 }
 
@@ -115,10 +115,10 @@ QPair<QUrl, QUrl> AssociatedFiles::computeSourceDestinationUrls(const QUrl &sour
 {
     Q_ASSERT(bibTeXFile != nullptr); // FIXME more graceful?
 
-    if (entryId.isEmpty() && renameOperation == roEntryId) {
+    if (entryId.isEmpty() && renameOperation == RenameOperation::EntryId) {
         /// If no entry id was given but still a rename after entry id was requested,
         /// revert choice and enforce keeping the original name
-        renameOperation = roKeepName;
+        renameOperation = RenameOperation::KeepName;
     }
 
     const QUrl baseUrl = bibTeXFile->property(File::Url).toUrl();
@@ -137,7 +137,7 @@ QPair<QUrl, QUrl> AssociatedFiles::computeSourceDestinationUrls(const QUrl &sour
     QUrl targetUrl = bibTeXFile->property(File::Url).toUrl();
     if (!targetUrl.isValid()) return QPair<QUrl, QUrl>(); /// no valid URL set of BibTeX file object
     const QString targetPath = QFileInfo(targetUrl.path()).absolutePath();
-    targetUrl.setPath(targetPath + QDir::separator() + (renameOperation == roEntryId ? entryId + QStringLiteral(".") + suffix : (renameOperation == roUserDefined ? userDefinedFilename : filename)));
+    targetUrl.setPath(targetPath + QDir::separator() + (renameOperation == RenameOperation::EntryId ? entryId + QStringLiteral(".") + suffix : (renameOperation == RenameOperation::UserDefined ? userDefinedFilename : filename)));
 
     return QPair<QUrl, QUrl>(internalSourceUrl, targetUrl);
 }
@@ -151,12 +151,12 @@ QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId
     if (internalSourceUrl.isLocalFile() && targetUrl.isLocalFile()) {
         QFile(targetUrl.path()).remove();
         success &= QFile::copy(internalSourceUrl.path(), targetUrl.path());
-        if (success && moveCopyOperation == mcoMove) {
+        if (success && moveCopyOperation == MoveCopyOperation::Move) {
             success &= QFile(internalSourceUrl.path()).remove();
         }
     } else if (internalSourceUrl.isValid() && targetUrl.isValid()) {
         // FIXME non-blocking
-        KIO::CopyJob *moveCopyJob = moveCopyOperation == mcoMove ? KIO::move(sourceUrl, targetUrl, KIO::HideProgressInfo | KIO::Overwrite) : KIO::copy(sourceUrl, targetUrl, KIO::HideProgressInfo | KIO::Overwrite);
+        KIO::CopyJob *moveCopyJob = moveCopyOperation == MoveCopyOperation::Move ? KIO::move(sourceUrl, targetUrl, KIO::HideProgressInfo | KIO::Overwrite) : KIO::copy(sourceUrl, targetUrl, KIO::HideProgressInfo | KIO::Overwrite);
         KJobWidgets::setWindow(moveCopyJob, widget);
         success &= moveCopyJob->exec();
     } else {

@@ -52,7 +52,7 @@ public:
     const Element *element;
 
     FieldInputPrivate(FieldInput *parent)
-            : p(parent), colorWidget(nullptr), starRatingWidget(nullptr), fieldLineEdit(nullptr), fieldListEdit(nullptr), fieldInputType(KBibTeX::SingleLine), preferredTypeFlag(KBibTeX::tfSource), bibtexFile(nullptr), element(nullptr) {
+            : p(parent), colorWidget(nullptr), starRatingWidget(nullptr), fieldLineEdit(nullptr), fieldListEdit(nullptr), fieldInputType(KBibTeX::FieldInputType::SingleLine), preferredTypeFlag(KBibTeX::TypeFlag::Source), bibtexFile(nullptr), element(nullptr) {
         /// nothing
     }
 
@@ -68,17 +68,17 @@ public:
         layout->setMargin(0);
 
         switch (fieldInputType) {
-        case KBibTeX::MultiLine:
+        case KBibTeX::FieldInputType::MultiLine:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, true, p);
             connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
             break;
-        case KBibTeX::List:
+        case KBibTeX::FieldInputType::List:
             fieldListEdit = new FieldListEdit(preferredTypeFlag, typeFlags, p);
             connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldListEdit);
             break;
-        case KBibTeX::Month: {
+        case KBibTeX::FieldInputType::Month: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
@@ -96,7 +96,7 @@ public:
             monthSelector->setMenu(monthMenu);
         }
         break;
-        case KBibTeX::Edition: {
+        case KBibTeX::FieldInputType::Edition: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
@@ -115,7 +115,7 @@ public:
             editionSelector->setMenu(editionMenu);
         }
         break;
-        case KBibTeX::CrossRef: {
+        case KBibTeX::FieldInputType::CrossRef: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
             connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
@@ -125,29 +125,29 @@ public:
             connect(referenceSelector, &QPushButton::clicked, p, &FieldInput::selectCrossRef);
         }
         break;
-        case KBibTeX::Color: {
+        case KBibTeX::FieldInputType::Color: {
             colorWidget = new ColorLabelWidget(p);
             connect(colorWidget, &ColorLabelWidget::modified, p, &FieldInput::modified);
             layout->addWidget(colorWidget, 0);
         }
         break;
-        case KBibTeX::StarRating: {
+        case KBibTeX::FieldInputType::StarRating: {
             starRatingWidget = new StarRatingFieldInput(8 /* = #stars */, p);
             connect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
             layout->addWidget(starRatingWidget, 0);
         }
         break;
-        case KBibTeX::PersonList:
+        case KBibTeX::FieldInputType::PersonList:
             fieldListEdit = new PersonListEdit(preferredTypeFlag, typeFlags, p);
             connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
             layout->addWidget(fieldListEdit);
             break;
-        case KBibTeX::UrlList:
+        case KBibTeX::FieldInputType::UrlList:
             fieldListEdit = new UrlListEdit(p);
             connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldListEdit);
             break;
-        case KBibTeX::KeywordList:
+        case KBibTeX::FieldInputType::KeywordList:
             fieldListEdit = new KeywordListEdit(p);
             connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldListEdit);
@@ -266,7 +266,7 @@ public:
 
         /// create a standard input dialog with a list of all keys (ids of entries)
         bool ok = false;
-        QStringList list = bibtexFile->allKeys(File::etEntry);
+        QStringList list = bibtexFile->allKeys(File::ElementType::Entry);
         list.sort();
 
         /// remove own id

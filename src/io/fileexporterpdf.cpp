@@ -37,7 +37,7 @@ FileExporterPDF::FileExporterPDF(QObject *parent)
     m_fileBasename = QStringLiteral("bibtex-to-pdf");
     m_fileStem = tempDir.path() + QDir::separator() + m_fileBasename;
 
-    setFileEmbedding(FileExporterPDF::EmbedBibTeXFileAndReferences);
+    setFileEmbedding(FileExporterPDF::FileEmbedding::BibTeXFileAndReferences);
 }
 
 FileExporterPDF::~FileExporterPDF()
@@ -54,9 +54,9 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 
     bool result = false;
     m_embeddedFileList.clear();
-    if (m_fileEmbedding & EmbedBibTeXFile)
+    if (m_fileEmbeddings.testFlag(FileEmbedding::BibTeXFile))
         m_embeddedFileList.append(QString(QStringLiteral("%1|%2|%3")).arg(QStringLiteral("BibTeX source"), m_fileStem + KBibTeX::extensionBibTeX, m_fileBasename + KBibTeX::extensionBibTeX));
-    if (m_fileEmbedding & EmbedReferences)
+    if (m_fileEmbeddings.testFlag(FileEmbedding::References))
         fillEmbeddedFileList(bibtexfile);
 
     QFile output(m_fileStem + KBibTeX::extensionBibTeX);
@@ -109,13 +109,13 @@ void FileExporterPDF::setDocumentSearchPaths(const QStringList &searchPaths)
     m_searchPaths = searchPaths;
 }
 
-void FileExporterPDF::setFileEmbedding(FileEmbedding fileEmbedding) {
+void FileExporterPDF::setFileEmbedding(const FileEmbeddings fileEmbedding) {
     /// If there is not embedfile.sty file, disable embedding
     /// irrespective of user's wishes
     if (!kpsewhich(QStringLiteral("embedfile.sty")))
-        m_fileEmbedding = NoFileEmbedding;
+        m_fileEmbeddings = FileEmbedding::None;
     else
-        m_fileEmbedding = fileEmbedding;
+        m_fileEmbeddings = fileEmbedding;
 }
 
 bool FileExporterPDF::generatePDF(QIODevice *iodevice, QStringList *errorLog)
@@ -191,7 +191,7 @@ void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> e
     const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
     if (!entry.isNull()) {
         const QString title = PlainTextValue::text(entry->value(Entry::ftTitle));
-        const auto urlList = FileInfo::entryUrls(entry, bibtexfile->property(File::Url).toUrl(), FileInfo::TestExistenceYes);
+        const auto urlList = FileInfo::entryUrls(entry, bibtexfile->property(File::Url).toUrl(), FileInfo::TestExistence::Yes);
         for (const QUrl &url : urlList) {
             if (!url.isLocalFile()) continue;
             const QString filename = url.toLocalFile();

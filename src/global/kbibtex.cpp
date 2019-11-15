@@ -19,6 +19,8 @@
 
 #include <QString>
 #include <QRegularExpression>
+#include <QHash>
+#include <QDebug>
 
 const QString KBibTeX::extensionTeX = QStringLiteral(".tex");
 const QString KBibTeX::extensionAux = QStringLiteral(".aux");
@@ -82,4 +84,44 @@ int KBibTeX::validateCurlyBracketContext(const QString &text)
     }
 
     return openingCB - closingCB;
+}
+
+QDebug operator<<(QDebug dbg, const KBibTeX::TypeFlag &typeFlag)
+{
+    static const auto pairs = QHash<int, const char *> {
+        {static_cast<int>(KBibTeX::TypeFlag::Invalid), "Invalid"},
+        {static_cast<int>(KBibTeX::TypeFlag::PlainText), "PlainText"},
+        {static_cast<int>(KBibTeX::TypeFlag::Reference), "Reference"},
+        {static_cast<int>(KBibTeX::TypeFlag::Person), "Person"},
+        {static_cast<int>(KBibTeX::TypeFlag::Keyword), "Keyword"},
+        {static_cast<int>(KBibTeX::TypeFlag::Verbatim), "Verbatim"},
+        {static_cast<int>(KBibTeX::TypeFlag::Source), "Source"}
+    };
+    dbg.nospace();
+    const int typeFlagInt = static_cast<int>(typeFlag);
+    dbg << (pairs.contains(typeFlagInt) ? pairs[typeFlagInt] : "???");
+    return dbg;
+}
+
+QDebug operator<<(QDebug dbg, const KBibTeX::TypeFlags &typeFlags)
+{
+    static const auto pairs = QHash<const char *, KBibTeX::TypeFlag> {
+        {"Invalid", KBibTeX::TypeFlag::Invalid},
+        {"PlainText", KBibTeX::TypeFlag::PlainText},
+        {"Reference", KBibTeX::TypeFlag::Reference},
+        {"Person", KBibTeX::TypeFlag::Person},
+        {"Keyword", KBibTeX::TypeFlag::Keyword},
+        {"Verbatim", KBibTeX::TypeFlag::Verbatim},
+        {"Source", KBibTeX::TypeFlag::Source}
+    };
+    dbg.nospace();
+    bool first = true;
+    for (QHash<const char *, KBibTeX::TypeFlag>::ConstIterator it = pairs.constBegin(); it != pairs.constEnd(); ++it) {
+        if (typeFlags.testFlag(it.value())) {
+            if (first) dbg << "|";
+            dbg << it.key();
+            first = false;
+        }
+    }
+    return dbg;
 }

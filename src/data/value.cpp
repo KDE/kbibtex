@@ -90,9 +90,9 @@ QString Keyword::text() const
 
 void Keyword::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (replaceMode == ValueItem::AnySubstring)
+    if (replaceMode == ValueItem::ReplaceMode::AnySubstring)
         m_text = m_text.replace(before, after);
-    else if (replaceMode == ValueItem::CompleteMatch && m_text == before)
+    else if (replaceMode == ValueItem::ReplaceMode::CompleteMatch && m_text == before)
         m_text = after;
 }
 
@@ -145,11 +145,11 @@ QString Person::suffix() const
 
 void Person::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (replaceMode == ValueItem::AnySubstring) {
+    if (replaceMode == ValueItem::ReplaceMode::AnySubstring) {
         m_firstName = m_firstName.replace(before, after);
         m_lastName = m_lastName.replace(before, after);
         m_suffix = m_suffix.replace(before, after);
-    } else if (replaceMode == ValueItem::CompleteMatch) {
+    } else if (replaceMode == ValueItem::ReplaceMode::CompleteMatch) {
         if (m_firstName == before)
             m_firstName = after;
         if (m_lastName == before)
@@ -250,9 +250,9 @@ bool MacroKey::isValid()
 
 void MacroKey::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (replaceMode == ValueItem::AnySubstring)
+    if (replaceMode == ValueItem::ReplaceMode::AnySubstring)
         m_text = m_text.replace(before, after);
-    else if (replaceMode == ValueItem::CompleteMatch && m_text == before)
+    else if (replaceMode == ValueItem::ReplaceMode::CompleteMatch && m_text == before)
         m_text = after;
 }
 
@@ -305,9 +305,9 @@ QString PlainText::text() const
 
 void PlainText::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (replaceMode == ValueItem::AnySubstring)
+    if (replaceMode == ValueItem::ReplaceMode::AnySubstring)
         m_text = m_text.replace(before, after);
-    else if (replaceMode == ValueItem::CompleteMatch && m_text == before)
+    else if (replaceMode == ValueItem::ReplaceMode::CompleteMatch && m_text == before)
         m_text = after;
 }
 
@@ -360,9 +360,9 @@ QString VerbatimText::text() const
 
 void VerbatimText::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (replaceMode == ValueItem::AnySubstring)
+    if (replaceMode == ValueItem::ReplaceMode::AnySubstring)
         m_text = m_text.replace(before, after);
-    else if (replaceMode == ValueItem::CompleteMatch && m_text == before)
+    else if (replaceMode == ValueItem::ReplaceMode::CompleteMatch && m_text == before)
         m_text = after;
 }
 
@@ -600,19 +600,19 @@ QDebug operator<<(QDebug dbg, const Value &value) {
 
 QString PlainTextValue::text(const Value &value)
 {
-    ValueItemType vit = VITOther;
-    ValueItemType lastVit = VITOther;
+    ValueItemType vit = ValueItemType::Other;
+    ValueItemType lastVit = ValueItemType::Other;
 
     QString result;
     for (const auto &valueItem : value) {
         QString nextText = text(*valueItem, vit);
         if (!nextText.isEmpty()) {
-            if (lastVit == VITPerson && vit == VITPerson)
+            if (lastVit == ValueItemType::Person && vit == ValueItemType::Person)
                 result.append(i18n(" and ")); // TODO proper list of authors/editors, not just joined by "and"
-            else if (lastVit == VITPerson && vit == VITOther && nextText == QStringLiteral("others")) {
+            else if (lastVit == ValueItemType::Person && vit == ValueItemType::Other && nextText == QStringLiteral("others")) {
                 /// "and others" case: replace text to be appended by translated variant
                 nextText = i18n(" and others");
-            } else if (lastVit == VITKeyword && vit == VITKeyword)
+            } else if (lastVit == ValueItemType::Keyword && vit == ValueItemType::Keyword)
                 result.append("; ");
             else if (!result.isEmpty())
                 result.append(" ");
@@ -639,7 +639,7 @@ QString PlainTextValue::text(const ValueItem &valueItem)
 QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
 {
     QString result;
-    vit = VITOther;
+    vit = ValueItemType::Other;
 
     bool isVerbatim = false;
     const PlainText *plainText = dynamic_cast<const PlainText *>(&valueItem);
@@ -653,12 +653,12 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
             const Person *person = dynamic_cast<const Person *>(&valueItem);
             if (person != nullptr) {
                 result = Person::transcribePersonName(person, Preferences::instance().personNameFormat());
-                vit = VITPerson;
+                vit = ValueItemType::Person;
             } else {
                 const Keyword *keyword = dynamic_cast<const Keyword *>(&valueItem);
                 if (keyword != nullptr) {
                     result = keyword->text();
-                    vit = VITKeyword;
+                    vit = ValueItemType::Keyword;
                 } else {
                     const VerbatimText *verbatimText = dynamic_cast<const VerbatimText *>(&valueItem);
                     if (verbatimText != nullptr) {

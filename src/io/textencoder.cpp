@@ -60,7 +60,7 @@ QByteArray TextEncoder::encode(const QString &input, const QTextCodec *destinati
             /// 'LaTeX encoder', which may translate 0x00c5 (A with ring above) into
             /// '\AA'. LaTeX encoder returns UTF-8 representation if given character
             /// cannot be encoded
-            result.append(laTeXEncoder.encode(QString(c), Encoder::TargetEncodingASCII).toUtf8());
+            result.append(laTeXEncoder.encode(QString(c), Encoder::TargetEncoding::ASCII).toUtf8());
         }
     }
 

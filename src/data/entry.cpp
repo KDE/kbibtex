@@ -209,7 +209,7 @@ Entry *Entry::resolveCrossref(const File *bibTeXfile) const
         if (crossRefValue.isEmpty())
             continue;
 
-        const QSharedPointer<Entry> crossRefEntry = bibTeXfile->containsKey(crossRefField, File::etEntry).dynamicCast<Entry>();
+        const QSharedPointer<Entry> crossRefEntry = bibTeXfile->containsKey(crossRefField, File::ElementType::Entry).dynamicCast<Entry>();
         if (!crossRefEntry.isNull()) {
             /// Copy all fields from crossref'ed entry to new entry which do not (yet) exist in the new entry
             for (Entry::ConstIterator it = crossRefEntry->constBegin(); it != crossRefEntry->constEnd(); ++it)

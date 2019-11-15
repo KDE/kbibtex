@@ -35,7 +35,7 @@ class File;
 class KBIBTEXDATA_EXPORT ValueItem
 {
 public:
-    enum ReplaceMode {CompleteMatch, AnySubstring};
+    enum class ReplaceMode {CompleteMatch, AnySubstring};
 
     ValueItem();
     virtual ~ValueItem();
@@ -284,7 +284,7 @@ public:
     static QString text(const QSharedPointer<const ValueItem> &valueItem);
 
 private:
-    enum ValueItemType { VITOther = 0, VITPerson, VITKeyword};
+    enum class ValueItemType { Other = 0, Person, Keyword};
 
     static QString text(const ValueItem &valueItem, ValueItemType &vit);
 };

@@ -166,7 +166,7 @@ void KBibTeXIOTest::encoderXMLencode()
     QFETCH(QString, xml);
     QFETCH(QString, unicode);
 
-    QCOMPARE(EncoderXML::instance().encode(unicode, Encoder::TargetEncodingASCII), xml);
+    QCOMPARE(EncoderXML::instance().encode(unicode, Encoder::TargetEncoding::ASCII), xml);
 }
 
 void KBibTeXIOTest::encoderLaTeXdecode_data()
@@ -199,7 +199,7 @@ void KBibTeXIOTest::encoderLaTeXencode()
     QFETCH(QString, unicode);
     QFETCH(QString, alternativelatex);
 
-    const QString generatedLatex = EncoderLaTeX::instance().encode(unicode, Encoder::TargetEncodingASCII);
+    const QString generatedLatex = EncoderLaTeX::instance().encode(unicode, Encoder::TargetEncoding::ASCII);
     if (generatedLatex != latex && !alternativelatex.isEmpty())
         QCOMPARE(generatedLatex, alternativelatex);
     else
@@ -277,7 +277,7 @@ void KBibTeXIOTest::fileInfoUrlsInText()
     QFETCH(QSet<QUrl>, expectedUrls);
 
     QSet<QUrl> extractedUrls;
-    FileInfo::urlsInText(text, FileInfo::TestExistenceNo, QString(), extractedUrls);
+    FileInfo::urlsInText(text, FileInfo::TestExistence::No, QString(), extractedUrls);
 
     QCOMPARE(extractedUrls.count(), expectedUrls.count());
     for (const QUrl &expectedUrl : const_cast<const QSet<QUrl> &>(expectedUrls))
@@ -662,7 +662,7 @@ void KBibTeXIOTest::partialBibTeXInput()
     bool gotErrors = false;
     FileImporterBibTeX importer(this);
     connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
-        gotErrors |= messageSeverity >= FileImporter::SeverityError;
+        gotErrors |= messageSeverity >= FileImporter::MessageSeverity::Error;
         Q_UNUSED(messageText)
         //qCDebug(LOG_KBIBTEX_TEST)<<"FileImporterBibTeX issues message during 'partialBibTeXInput' test: "<<messageText;
     });
@@ -703,7 +703,7 @@ void KBibTeXIOTest::partialRISInput()
     bool gotErrors = false;
     FileImporterRIS importer(this);
     connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
-        gotErrors |= messageSeverity >= FileImporter::SeverityError;
+        gotErrors |= messageSeverity >= FileImporter::MessageSeverity::Error;
         Q_UNUSED(messageText)
         //qCDebug(LOG_KBIBTEX_TEST)<<"FileImporterRIS issues message during 'partialBibTeXInput' test: "<<messageText;
     });

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2014 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,7 +34,7 @@ class File;
 class KBIBTEXPROCESSING_EXPORT CheckBibTeX
 {
 public:
-    enum CheckBibTeXResult { NoProblem, BibTeXWarning, BibTeXError, InvalidData, FailedToCheck };
+    enum class CheckBibTeXResult { NoProblem, BibTeXWarning, BibTeXError, InvalidData, FailedToCheck };
 
     static CheckBibTeXResult checkBibTeX(QSharedPointer<Element> &element, const File *file, QWidget *parent);
     static CheckBibTeXResult checkBibTeX(QSharedPointer<Entry> &entry, const File *file, QWidget *parent);

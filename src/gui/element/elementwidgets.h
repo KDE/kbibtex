@@ -308,7 +308,7 @@ class SourceWidget : public ElementWidget
     Q_OBJECT
 
 public:
-    enum ElementClass { elementInvalid = -1, elementEntry = 0, elementMacro, elementPreamble, elementComment };
+    enum class ElementClass { Invalid = -1, Entry = 0, Macro, Preamble, Comment };
 
 private:
     KTextEditor::Document *document;

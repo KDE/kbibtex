@@ -1332,7 +1332,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
 
         const QChar c = input[i];
 
-        if (targetEncoding == TargetEncodingASCII && c.unicode() > 127) {
+        if (targetEncoding == TargetEncoding::ASCII && c.unicode() > 127) {
             /// If current char is outside ASCII boundaries ...
             bool found = false;
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -90,7 +90,7 @@ protected slots:
     void dialogButtonClicked(QAbstractButton *);
 
 private:
-    enum DialogType { DialogTypeView, DialogTypeEdit };
+    enum class DialogType { View, Edit };
 
     QSharedPointer<Element> m_current;
     QList<QSharedPointer<Element> > m_selection;

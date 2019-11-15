@@ -228,7 +228,7 @@ public:
                 delete page;
             }
             resultItem.textPreview.remove(QStringLiteral("Microsoft Word - ")); ///< Some word processors need to put their name everywhere ...
-            resultItem.downloadMode = NoDownload;
+            resultItem.downloadMode = DownloadMode::No;
             resultItem.relevance = origin == Entry::ftDOI ? 1.0 : (origin == QStringLiteral("eprint") ? 0.75 : 0.5);
             result << resultItem;
             progress = true;

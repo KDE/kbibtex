@@ -30,7 +30,7 @@
 SortFilterFileModel::SortFilterFileModel(QObject *parent)
         : QSortFilterProxyModel(parent), m_internalModel(nullptr)
 {
-    m_filterQuery.combination = AnyTerm;
+    m_filterQuery.combination = FilterCombination::AnyTerm;
     setSortRole(FileModel::SortRole);
 }
 
@@ -185,7 +185,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
 
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) {///< not filtering for any specific field
-            const auto entryUrlList = FileInfo::entryUrls(entry, fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistenceYes);
+            const auto entryUrlList = FileInfo::entryUrls(entry, fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistence::Yes);
             for (const QUrl &url : entryUrlList) {
                 if (url.isLocalFile() && url.fileName().endsWith(QStringLiteral(".pdf"))) {
                     const QString text = FileInfo::pdfToText(url.toLocalFile());
@@ -256,7 +256,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
         any |= eachTerm[i];
     }
 
-    if (m_filterQuery.combination == SortFilterFileModel::AnyTerm)
+    if (m_filterQuery.combination == SortFilterFileModel::FilterCombination::AnyTerm)
         return any;
     else
         return every;

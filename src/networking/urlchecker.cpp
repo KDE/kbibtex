@@ -79,13 +79,13 @@ public:
             const QUrl url = reply->url();
             if (reply->error() != QNetworkReply::NoError) {
                 /// Instead of an 'emit' ...
-                QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::NetworkError), Q_ARG(QString, reply->errorString()));
+                QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::NetworkError), Q_ARG(QString, reply->errorString()));
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "NetworkError:" << reply->errorString() << url.toDisplayString();
             } else {
                 const QByteArray data = reply->read(1024);
                 if (data.isEmpty()) {
                     /// Instead of an 'emit' ...
-                    QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::UnknownError), Q_ARG(QString, QStringLiteral("No data received")));
+                    QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnknownError), Q_ARG(QString, QStringLiteral("No data received")));
                     qCWarning(LOG_KBIBTEX_NETWORKING) << "UnknownError: No data received" << url.toDisplayString();
                 } else {
                     const QString filename = url.fileName().toLower();
@@ -97,39 +97,39 @@ public:
                     const bool containsPostScript = data.startsWith("%!");
                     if (filenameSuggestsPDF && containsPDF) {
                         /// Instead of an 'emit' ...
-                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::UrlValid), Q_ARG(QString, QString()));
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "UrlValid: Looks and smells like a PDF" << url.toDisplayString();
                     } else if (filenameSuggestsPostScript && containsPostScript) {
                         /// Instead of an 'emit' ...
-                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::UrlValid), Q_ARG(QString, QString()));
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "UrlValid: Looks and smells like a PostScript" << url.toDisplayString();
                     } else if (containsHTML) {
                         static const QRegularExpression error404(QStringLiteral("\\b404\\b"));
                         const QRegularExpressionMatch error404match = error404.match(data);
                         if (error404match.hasMatch()) {
                             /// Instead of an 'emit' ...
-                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Error404), Q_ARG(QString, QStringLiteral("Got error 404")));
+                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::Error404), Q_ARG(QString, QStringLiteral("Got error 404")));
                             qCWarning(LOG_KBIBTEX_NETWORKING) << "Error404" << url.toDisplayString();
                         } else if (filenameSuggestsHTML) {
                             /// Instead of an 'emit' ...
-                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::UrlValid), Q_ARG(QString, QString()));
+                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
                             qCWarning(LOG_KBIBTEX_NETWORKING) << "UrlValid: Looks and smells like a HTML" << url.toDisplayString();
                         } else {
                             /// Instead of an 'emit' ...
-                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
+                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
                             qCWarning(LOG_KBIBTEX_NETWORKING) << "NotExpectedFileType (HTML): Filename's extension does not match content" << url.toDisplayString();
                         }
                     } else if (filenameSuggestsPDF != containsPDF) {
                         /// Instead of an 'emit' ...
-                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "NotExpectedFileType (PDF): Filename's extension does not match content" << url.toDisplayString();
                     } else if (filenameSuggestsPostScript != containsPostScript) {
                         /// Instead of an 'emit' ...
-                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "NotExpectedFileType (PostScript): Filename's extension does not match content" << url.toDisplayString();
                     } else {
                         /// Instead of an 'emit' ...
-                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::UrlValid), Q_ARG(QString, QString()));
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "UrlValid: Cannot see any issued with this URL" << url.toDisplayString();
                     }
                 }
@@ -167,7 +167,7 @@ void UrlChecker::startChecking(const File &bibtexFile)
         if (entry.isNull()) continue;
 
         /// Retrieve set of URLs per entry and add to set of URLS to be checked
-        const QSet<QUrl> thisEntryUrls = FileInfo::entryUrls(entry, bibtexFile.property(File::Url).toUrl(), FileInfo::TestExistenceNo);
+        const QSet<QUrl> thisEntryUrls = FileInfo::entryUrls(entry, bibtexFile.property(File::Url).toUrl(), FileInfo::TestExistence::No);
         for (const QUrl &u : thisEntryUrls)
             d->urlsToCheck.insert(u); ///< better?
     }

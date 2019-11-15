@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -43,7 +43,7 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
     Q_OBJECT
 
 public:
-    enum UseLaTeXEncoding {leUTF8, leLaTeX, leRaw};
+    enum class UseLaTeXEncoding {UTF8, LaTeX, Raw};
 
     explicit FileExporterBibTeX(QObject *parent);
     ~FileExporterBibTeX() override;
@@ -53,7 +53,7 @@ public:
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
-    static QString valueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
+    static QString valueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = UseLaTeXEncoding::LaTeX);
 
     /**
      * Cheap and fast test if another FileExporter is a FileExporterBibTeX object.
@@ -70,7 +70,7 @@ private:
     FileExporterBibTeXPrivate *d;
 
     inline QString applyEncoder(const QString &input, UseLaTeXEncoding useLaTeXEncoding) const;
-    QString internalValueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = leLaTeX);
+    QString internalValueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = UseLaTeXEncoding::LaTeX);
 
     static FileExporterBibTeX *staticFileExporterBibTeX;
 };

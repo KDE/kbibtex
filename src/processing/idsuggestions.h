@@ -30,7 +30,7 @@
 class KBIBTEXPROCESSING_EXPORT IdSuggestions
 {
 public:
-    enum CaseChange {ccNoChange = 0, ccToUpper = 1, ccToLower = 2, ccToCamelCase = 3};
+    enum class CaseChange {None, ToUpper, ToLower, ToCamelCase};
 
     struct IdSuggestionTokenInfo {
         int len;

@@ -296,13 +296,13 @@ public:
             /// Very simple if source view is active: BibTeX code contains
             /// all necessary data
             if (!e.isNull())
-                sourceWidget->setElementClass(SourceWidget::elementEntry);
+                sourceWidget->setElementClass(SourceWidget::ElementClass::Entry);
             else if (!m.isNull())
-                sourceWidget->setElementClass(SourceWidget::elementMacro);
+                sourceWidget->setElementClass(SourceWidget::ElementClass::Macro);
             else if (!p.isNull())
-                sourceWidget->setElementClass(SourceWidget::elementPreamble);
+                sourceWidget->setElementClass(SourceWidget::ElementClass::Preamble);
             else
-                sourceWidget->setElementClass(SourceWidget::elementInvalid);
+                sourceWidget->setElementClass(SourceWidget::ElementClass::Invalid);
             sourceWidget->apply(element);
         } else {
             /// Start by assigning the current internal element's
@@ -374,22 +374,22 @@ public:
         QSharedPointer<const Entry> e = element.dynamicCast<const Entry>();
         if (!e.isNull()) {
             internalEntry = QSharedPointer<Entry>(new Entry(*e.data()));
-            sourceWidget->setElementClass(SourceWidget::elementEntry);
+            sourceWidget->setElementClass(SourceWidget::ElementClass::Entry);
         } else {
             QSharedPointer<const Macro> m = element.dynamicCast<const Macro>();
             if (!m.isNull()) {
                 internalMacro = QSharedPointer<Macro>(new Macro(*m.data()));
-                sourceWidget->setElementClass(SourceWidget::elementMacro);
+                sourceWidget->setElementClass(SourceWidget::ElementClass::Macro);
             } else {
                 QSharedPointer<const Comment> c = element.dynamicCast<const Comment>();
                 if (!c.isNull()) {
                     internalComment = QSharedPointer<Comment>(new Comment(*c.data()));
-                    sourceWidget->setElementClass(SourceWidget::elementComment);
+                    sourceWidget->setElementClass(SourceWidget::ElementClass::Comment);
                 } else {
                     QSharedPointer<const Preamble> p = element.dynamicCast<const Preamble>();
                     if (!p.isNull()) {
                         internalPreamble = QSharedPointer<Preamble>(new Preamble(*p.data()));
-                        sourceWidget->setElementClass(SourceWidget::elementPreamble);
+                        sourceWidget->setElementClass(SourceWidget::ElementClass::Preamble);
                     } else
                         Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::reset(QSharedPointer<const Element> element)", "element is not NULL but could not be cast on a valid Element sub-class");
                 }

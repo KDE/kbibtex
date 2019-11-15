@@ -306,7 +306,7 @@ bool ZoteroBrowser::applyCredentials()
         d->api.clear();
 
         const bool makeGroupRequest = d->radioGroupLibrary->isChecked() && groupId > 0;
-        d->api = QSharedPointer<Zotero::API>(new Zotero::API(makeGroupRequest ? Zotero::API::GroupRequest : Zotero::API::UserRequest, makeGroupRequest ? groupId : userId, d->lineEditApiKey->text(), this));
+        d->api = QSharedPointer<Zotero::API>(new Zotero::API(makeGroupRequest ? Zotero::API::RequestScope::Group : Zotero::API::RequestScope::User, makeGroupRequest ? groupId : userId, d->lineEditApiKey->text(), this));
         d->items = new Zotero::Items(d->api, this);
         d->tags = new Zotero::Tags(d->api, this);
         d->tagModel = new Zotero::TagModel(d->tags, this);
@@ -352,7 +352,7 @@ void ZoteroBrowser::retrieveGroupList() {
         d->groups->deleteLater();
         d->api.clear();
 
-        d->api = QSharedPointer<Zotero::API>(new Zotero::API(Zotero::API::UserRequest, userId, d->lineEditApiKey->text(), this));
+        d->api = QSharedPointer<Zotero::API>(new Zotero::API(Zotero::API::RequestScope::User, userId, d->lineEditApiKey->text(), this));
         d->groups = new Zotero::Groups(d->api, this);
 
         connect(d->groups, &Zotero::Groups::finishedLoading, this, &ZoteroBrowser::gotGroupList);

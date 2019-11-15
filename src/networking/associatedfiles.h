@@ -44,19 +44,19 @@ class File;
 class KBIBTEXNETWORKING_EXPORT AssociatedFiles
 {
 public:
-    enum PathType {
-        ptAbsolute = 0, ///< Use absolute filenames/paths if possible
-        ptRelative = 1 ///< Use relative filenames/paths if possible
+    enum class PathType {
+        Absolute, ///< Use absolute filenames/paths if possible
+        Relative ///< Use relative filenames/paths if possible
     };
-    enum RenameOperation {
-        roKeepName = 0, ///< Do not rename a file
-        roEntryId = 1, ///< Rename the file following the entry's id
-        roUserDefined = 2 ///< Rename after a string provided by the user
+    enum class RenameOperation {
+        KeepName, ///< Do not rename a file
+        EntryId, ///< Rename the file following the entry's id
+        UserDefined ///< Rename after a string provided by the user
     };
-    enum MoveCopyOperation {
-        mcoNoCopyMove = 0, ///< Do not move or copy a file, use a reference only
-        mcoCopy = 1, ///< Copy the file next to the bibiliograpy file
-        mcoMove = 2 /// Same as copy, but delete original
+    enum class MoveCopyOperation {
+        None, ///< Do not move or copy a file, use a reference only
+        Copy, ///< Copy the file next to the bibiliograpy file
+        Move /// Same as copy, but delete original
     };
 
     /**

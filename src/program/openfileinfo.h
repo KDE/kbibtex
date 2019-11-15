@@ -39,7 +39,7 @@ class OpenFileInfo : public QObject
     Q_OBJECT
 
 public:
-    enum StatusFlag {
+    enum class StatusFlag {
         Open = 0x1,
         RecentlyUsed = 0x2,
         Favorite = 0x4,
@@ -145,7 +145,7 @@ public:
     bool queryCloseAll();
 
     void setCurrentFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
-    OpenFileInfoList filteredItems(OpenFileInfo::StatusFlags required, OpenFileInfo::StatusFlags forbidden = nullptr);
+    OpenFileInfoList filteredItems(OpenFileInfo::StatusFlag required, OpenFileInfo::StatusFlags forbidden = nullptr);
 
     friend class OpenFileInfo;
 
