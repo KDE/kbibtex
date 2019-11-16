@@ -78,6 +78,7 @@ else
 fi | \
 # Sort files alphabetically, omit duplicates
 sort -u | \
+grep --color=NEVER -vE 'src/config/preferences.(cpp|h)$' | \
 while read filename ; do
 	if [[ ! -s "${filename}" ]] ; then
 		echo "${MY_NAME}: File not found: \"${filename}\"" >&2
