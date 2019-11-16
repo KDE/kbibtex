@@ -1042,5 +1042,3 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
             qCWarning(LOG_KBIBTEX_PART) << "path is Empty";
     }
 }
-
-#include "part.moc"

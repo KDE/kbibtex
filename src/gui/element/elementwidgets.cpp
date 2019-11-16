@@ -1392,5 +1392,3 @@ void SourceWidget::updateMessage()
             addMessage(FileImporter::MessageSeverity::Error, message);
     }
 }
-
-#include "elementwidgets.moc"
