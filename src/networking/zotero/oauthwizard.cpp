@@ -190,5 +190,3 @@ QString OAuthWizard::apiKey() const
 {
     return d->apiKey;
 }
-
-#include "oauthwizard.moc"
