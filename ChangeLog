@@ -1,5 +1,11 @@
 ChangeLog
 
+Diff 0.9 to 0.9.1
+
+- Fixing GUI issues in preferences/settings
+- Fixing id extraction during duplicate search
+- Various minor fixes
+
 Diff 0.8.2 to 0.9
 
 - Can be compiled under Windows via Craft
