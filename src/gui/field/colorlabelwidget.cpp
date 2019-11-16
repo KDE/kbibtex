@@ -28,13 +28,13 @@
 #include <NotificationHub>
 #include <Preferences>
 
-static const QColor NoColor = Qt::black;
-
 class ColorLabelComboBoxModel : public QAbstractItemModel
 {
     Q_OBJECT
 
 public:
+    static const QColor NoColor;
+
     enum ColorLabelComboBoxModelRole {
         /// Color of a color-label pair
         ColorRole = Qt::UserRole + 1721
@@ -116,6 +116,9 @@ public:
     }
 };
 
+const QColor ColorLabelComboBoxModel::NoColor = Qt::black;
+
+
 class ColorLabelWidget::ColorLabelWidgetPrivate : private NotificationListener
 {
 private:
@@ -138,7 +141,7 @@ public:
 
             const QColor currentColor = parent->currentColor();
             model->reset();
-            model->userColor = NoColor;
+            model->userColor = ColorLabelComboBoxModel::NoColor;
             selectColor(currentColor);
         }
     }
@@ -151,7 +154,7 @@ public:
     int selectColor(const QColor &color)
     {
         int rowIndex = 0;
-        if (color != NoColor) {
+        if (color != ColorLabelComboBoxModel::NoColor) {
             /// Find row that matches given color
             for (rowIndex = 0; rowIndex < model->rowCount(); ++rowIndex)
                 if (model->data(model->index(rowIndex, 0, QModelIndex()), ColorLabelComboBoxModel::ColorRole).value<QColor>() == color)
@@ -184,7 +187,7 @@ void ColorLabelWidget::clear()
     /// Avoid triggering signal when current index is set by the program
     const QSignalBlocker blocker(this);
 
-    d->model->userColor = NoColor;
+    d->model->userColor = ColorLabelComboBoxModel::NoColor;
     setCurrentIndex(0); ///< index 0 should be "no color"
 }
 
@@ -213,7 +216,7 @@ bool ColorLabelWidget::apply(Value &value) const
 {
     const QColor color = currentColor();
     value.clear();
-    if (color != NoColor)
+    if (color != ColorLabelComboBoxModel::NoColor)
         value.append(QSharedPointer<VerbatimText>(new VerbatimText(color.name())));
     return true;
 }

@@ -667,7 +667,7 @@ void ElementEditor::switchToTab(const QString &tabIdentifier)
     else if (tabIdentifier == QStringLiteral("external"))
         setCurrentPage(d->filesWidget);
     else {
-        for (ElementWidget *widget : d->widgets) {
+        for (ElementWidget *widget : const_cast<const ElementEditor::ElementEditorPrivate::WidgetList &>(d->widgets)) {
             EntryConfiguredWidget *ecw = qobject_cast<EntryConfiguredWidget *>(widget);
             if (ecw != nullptr && ecw->identifier() == tabIdentifier) {
                 setCurrentPage(ecw);
