@@ -34,7 +34,7 @@
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 
-int maxDepth = 5;
+static const int maxDepth = 5;
 static const char *depthProperty = "depth";
 static const char *termProperty = "term";
 static const char *originProperty = "origin";
