@@ -7,7 +7,7 @@ variables:
   LD_LIBRARY_PATH: "$INSTALL_DIR/lib"
   QT_ASSUME_STDERR_HAS_CONSOLE: 1
   QT_DEPRECATED_WARNINGS: 1
-  QT_DISABLE_DEPRECATED: 0x050900
+  QT_DISABLE_DEPRECATED: 0x050C00
   QT_MESSAGE_PATTERN: "[%{type}] %{appname} (%{file}:%{line}) - %{message}"
   QT_PLUGIN_PATH: "$INSTALL_DIR/lib/plugins/"
   XDG_CACHE_HOME: "$INSTALL_DIR/home/cache"
@@ -26,11 +26,11 @@ before_script:
 
 automated-tests:
   script:
+    - mkdir -p $(dirname $TESTSET_DIR) && cd $(dirname $TESTSET_DIR) && git clone --depth 1 "https://anongit.kde.org/kbibtex-testset.git" $(basename $TESTSET_DIR)
     - mkdir -p $BUILD_DIR/$CI_JOB_NAME && cd $BUILD_DIR/$CI_JOB_NAME
     - cmake -GNinja -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=$INSTALL_DIR -DBUILD_TESTING:BOOL=ON -DTESTSET_DIRECTORY:PATH=$TESTSET_DIR $CI_PROJECT_DIR
     - ninja
     - ninja install
-    - cd $(dirname $TESTSET_DIR) && git clone --depth 1 "https://anongit.kde.org/kbibtex-testset.git" $(basename $TESTSET_DIR)
     - cd $BUILD_DIR/$CI_JOB_NAME/bin/
     - ./kbibtexiotest -platform offscreen
     - ./kbibtexdatatest -platform offscreen
