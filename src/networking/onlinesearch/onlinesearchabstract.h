@@ -122,8 +122,6 @@ protected:
 
     QMap<QString, QString> formParameters(const QString &htmlText, int startPos) const;
 
-    void dumpToFile(const QString &filename, const QString &text);
-
     /**
      * Delay sending of stop signal by a few milliseconds.
      * Necessary if search stops (is cancelled) already in one

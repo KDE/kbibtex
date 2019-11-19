@@ -193,6 +193,19 @@ public:
         return false;
     }
 
+    int validateCurlyBracketContext(const QString &text) const {
+        int openingCB = 0, closingCB = 0;
+
+        for (int i = 0; i < text.length(); ++i) {
+            if (i == 0 || text[i - 1] != QLatin1Char('\\')) {
+                if (text[i] == QLatin1Char('{')) ++openingCB;
+                else if (text[i] == QLatin1Char('}')) ++closingCB;
+            }
+        }
+
+        return openingCB - closingCB;
+    }
+
     bool validate(QWidget **widgetWithIssue, QString &message) const {
         message.clear();
 
@@ -209,7 +222,7 @@ public:
 
         bool result = false;
         if (typeFlag == KBibTeX::TypeFlag::PlainText || typeFlag == KBibTeX::TypeFlag::Person || typeFlag == KBibTeX::TypeFlag::Keyword) {
-            result = KBibTeX::validateCurlyBracketContext(text) == 0;
+            result = validateCurlyBracketContext(text) == 0;
             if (!result) message = i18n("Opening and closing curly brackets do not match.");
         } else if (typeFlag == KBibTeX::TypeFlag::Reference) {
             static const QRegularExpression validReferenceRegExp(QStringLiteral("^[-_:/a-zA-Z0-9]+$"));
@@ -227,7 +240,7 @@ public:
             result = !entry.isNull() && entry->count() == 1;
             if (!result) message = i18n("Source code could not be parsed correctly.");
         } else if (typeFlag == KBibTeX::TypeFlag::Verbatim) {
-            result = KBibTeX::validateCurlyBracketContext(text) == 0;
+            result = validateCurlyBracketContext(text) == 0;
             if (!result) message = i18n("Opening and closing curly brackets do not match.");
         }
 

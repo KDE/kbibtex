@@ -74,7 +74,7 @@ private:
     QMap<QString, QString> colorToLabel;
 
     void readConfiguration();
-
+    static QString leftSqueezeText(const QString &text, int n);
     QString entryText(const Entry *entry, const QString &raw, const QString &rawAlt, const QStringList &rawAliases, int role, bool followCrossRef) const;
 };
 

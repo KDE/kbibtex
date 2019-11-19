@@ -69,22 +69,6 @@ public:
     static const QRegularExpression domainNameRegExp;
     static const QRegularExpression htmlRegExp;
     static const QString doiUrlPrefix; ///< use FileInfo::doiUrlPrefix() instead
-
-    static bool isLocalOrRelative(const QUrl &url);
-
-    /**
-     * Poor man's variant of a text-squeezing function.
-     * Effect is similar as observed in KSqueezedTextLabel:
-     * If the text is longer as n characters, the middle part
-     * will be cut away and replaced by "..." to get a
-     * string of max n characters.
-     */
-    static QString squeezeText(const QString &text, int n);
-
-    static QString leftSqueezeText(const QString &text, int n);
-
-    static int validateCurlyBracketContext(const QString &text);
-
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KBibTeX::TypeFlags)

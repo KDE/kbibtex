@@ -264,8 +264,13 @@ public:
         connect(onlyLocalFilesButton, &QPushButton::toggled, p, &DocumentPreview::onlyLocalFilesChanged);
     }
 
+    constexpr bool isLocalOrRelative(const QUrl &url) const
+    {
+        return url.isLocalFile() || url.isRelative() || url.scheme().isEmpty();
+    }
+
     bool addUrl(const struct UrlInfo &urlInfo) {
-        bool isLocal = KBibTeX::isLocalOrRelative(urlInfo.url);
+        bool isLocal = isLocalOrRelative(urlInfo.url);
         anyLocal |= isLocal;
 
         if (!onlyLocalFilesButton->isChecked() && !isLocal) return true; ///< ignore URL if only local files are allowed
@@ -333,7 +338,7 @@ public:
         if (isVisible()) {
             const auto urlList = FileInfo::entryUrls(entry, baseUrl, FileInfo::TestExistence::Yes);
             for (const QUrl &url : urlList) {
-                bool isLocal = KBibTeX::isLocalOrRelative(url);
+                bool isLocal = isLocalOrRelative(url);
                 anyRemote |= !isLocal;
                 if (!onlyLocalFilesButton->isChecked() && !isLocal) continue;
 
@@ -551,7 +556,7 @@ public:
         UrlInfo result;
         result.url = url;
 
-        if (!KBibTeX::isLocalOrRelative(url) && url.fileName().isEmpty()) {
+        if (!isLocalOrRelative(url) && url.fileName().isEmpty()) {
             /// URLs not pointing to a specific file should be opened with a web browser component
             result.icon = QIcon::fromTheme(QStringLiteral("text-html"));
             result.mimeType = QStringLiteral("text/html");

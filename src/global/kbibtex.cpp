@@ -50,42 +50,6 @@ const QRegularExpression KBibTeX::domainNameRegExp(QStringLiteral("[a-z0-9.-]+\\
 const QRegularExpression KBibTeX::htmlRegExp(QStringLiteral("</?(a|pre|p|br|span|i|b|italic)\\b[^>{}]{,32}>"), QRegularExpression::CaseInsensitiveOption);
 const QString KBibTeX::doiUrlPrefix(QStringLiteral("https://dx.doi.org/")); ///< for internal use in FileInfo::doiUrlPrefix, use FileInfo::doiUrlPrefix() instead
 
-bool KBibTeX::isLocalOrRelative(const QUrl &url)
-{
-    return url.isLocalFile() || url.isRelative() || url.scheme().isEmpty();
-}
-
-/**
- * Poor man's variant of a text-squeezing function.
- * Effect is similar as observed in KSqueezedTextLabel:
- * If the text is longer as n characters, the middle part
- * will be cut away and replaced by "..." to get a
- * string of max n characters.
- */
-QString KBibTeX::squeezeText(const QString &text, int n)
-{
-    return text.length() <= n ? text : text.left(n / 2 - 1) + QStringLiteral("...") + text.right(n / 2 - 2);
-}
-
-QString KBibTeX::leftSqueezeText(const QString &text, int n)
-{
-    return text.length() <= n ? text : text.left(n) + QStringLiteral("...");
-}
-
-int KBibTeX::validateCurlyBracketContext(const QString &text)
-{
-    int openingCB = 0, closingCB = 0;
-
-    for (int i = 0; i < text.length(); ++i) {
-        if (i == 0 || text[i - 1] != QLatin1Char('\\')) {
-            if (text[i] == QLatin1Char('{')) ++openingCB;
-            else if (text[i] == QLatin1Char('}')) ++closingCB;
-        }
-    }
-
-    return openingCB - closingCB;
-}
-
 QDebug operator<<(QDebug dbg, const KBibTeX::TypeFlag &typeFlag)
 {
     static const auto pairs = QHash<int, const char *> {

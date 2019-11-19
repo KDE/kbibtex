@@ -76,6 +76,11 @@ void FileModel::readConfiguration()
         colorToLabel.insert(it->first.name(), it->second);
 }
 
+QString FileModel::leftSqueezeText(const QString &text, int n)
+{
+    return text.length() <= n ? text : text.left(n) + QStringLiteral("...");
+}
+
 QString FileModel::entryText(const Entry *entry, const QString &raw, const QString &rawAlt, const QStringList &rawAliases, int role, bool followCrossRef) const
 {
     if (role != Qt::DisplayRole && role != Qt::ToolTipRole && role != SortRole)
@@ -125,7 +130,7 @@ QString FileModel::entryText(const Entry *entry, const QString &raw, const QStri
             return text.toLower();
         else if (role == Qt::ToolTipRole) {
             // TODO: find a better solution, such as line-wrapping tooltips
-            return KBibTeX::leftSqueezeText(text, 128);
+            return leftSqueezeText(text, 128);
         } else
             return text;
     }

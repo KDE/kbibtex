@@ -268,7 +268,6 @@ void OnlineSearchSemanticScholar::downloadDone()
             QJsonParseError parseError;
             const auto buffer = reply->readAll();
             const QString jsonText = QString::fromUtf8(buffer);
-            dumpToFile(QStringLiteral("semanticscholar.json"), jsonText);
             const QJsonDocument document = QJsonDocument::fromJson(buffer, &parseError);
             if (parseError.error == QJsonParseError::NoError) {
                 if (document.isObject()) {

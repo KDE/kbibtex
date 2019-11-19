@@ -508,18 +508,6 @@ void OnlineSearchAbstract::iconDownloadFinished()
 }
 #endif // HAVE_QTWIDGETS
 
-void OnlineSearchAbstract::dumpToFile(const QString &filename, const QString &text)
-{
-    const QString usedFilename = QDir::tempPath() + QLatin1Char('/') + filename;
-
-    QFile f(usedFilename);
-    if (f.open(QFile::WriteOnly)) {
-        qCDebug(LOG_KBIBTEX_NETWORKING) << "Dumping text" << KBibTeX::squeezeText(text, 96) << "to" << usedFilename;
-        f.write(text.toUtf8());
-        f.close();
-    }
-}
-
 void OnlineSearchAbstract::delayedStoppedSearch(int returnCode)
 {
     m_delayedStoppedSearchReturnCode = returnCode;
