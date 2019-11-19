@@ -42,6 +42,7 @@ Diff 0.9.2 to 0.10
 Diff 0.9.1 to 0.9.2
 
 - KDE Bug 414375, 414385: Fixing potential crash due to defining TRANSLATION_DOMAIN
+- KDE Bug 414195: Deselecting all fields on BibTeX Viewer hides the field sorting header
 
 Diff 0.9 to 0.9.1
 
