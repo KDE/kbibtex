@@ -203,6 +203,13 @@ void BasicFileView::headerActionToggled()
     const int col = action->data().toInt(&ok);
     if (!ok) return;
 
+    if (header()->hiddenSectionCount() + 1 >= header()->count() && !header()->isSectionHidden(col)) {
+        /// If only one last column is visible and the current action likes to hide
+        /// this column, abort so that the column cannot be hidden by the user
+        qWarning() << "Already too many columns hidden, won't hide more";
+        return;
+    }
+
     header()->setSectionHidden(col, !header()->isSectionHidden(col));
     d->balanceColumns();
 }
@@ -234,11 +241,17 @@ void BasicFileView::showHeaderContextMenu(const QPoint &pos)
     QMenu menu;
 
     int col = 0;
+    const bool onlyOneLastColumnVisible = header()->hiddenSectionCount() + 1 >= header()->count();
     for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
         QAction *action = new QAction(fd.label, &menu);
         action->setData(col);
         action->setCheckable(true);
         action->setChecked(!header()->isSectionHidden(col));
+        if (onlyOneLastColumnVisible && action->isChecked()) {
+            /// If only one last column is visible and the current field is this column,
+            /// disable action so that the column cannot be hidden by the user
+            action->setEnabled(false);
+        }
         connect(action, &QAction::triggered, this, &BasicFileView::headerActionToggled);
         menu.addAction(action);
         ++col;
