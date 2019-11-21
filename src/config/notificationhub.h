@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
  *   it under the terms of the GNU General Public License as published by    *
@@ -20,6 +20,8 @@
 
 #include "kbibtexconfig_export.h"
 
+#include <QtGlobal>
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -36,8 +38,6 @@ public:
 class KBIBTEXCONFIG_EXPORT NotificationHub
 {
 public:
-    NotificationHub(const NotificationHub &other) = delete;
-    NotificationHub &operator= (const NotificationHub &other) = delete;
     ~NotificationHub();
 
     static const int EventAny;
@@ -51,6 +51,8 @@ public:
     static void publishEvent(int eventId);
 
 private:
+    Q_DISABLE_COPY(NotificationHub)
+
     class NotificationHubPrivate;
     NotificationHubPrivate *const d;
 

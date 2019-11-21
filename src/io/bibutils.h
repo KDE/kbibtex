@@ -37,8 +37,6 @@
 class KBIBTEXIO_EXPORT BibUtils
 {
 public:
-    BibUtils(const BibUtils &other) = delete;
-    BibUtils &operator= (const BibUtils &other) = delete;
     ~BibUtils();
 
     enum class Format { MODS = 0, BibTeX = 1, BibLaTeX = 2, ISI = 5, RIS = 6, EndNote = 10, EndNoteXML = 11, ADS = 15, WordBib = 16, Copac = 17, Med = 18 };
@@ -62,6 +60,8 @@ protected:
     bool convert(QIODevice &source, const BibUtils::Format sourceFormat, QIODevice &destination, const BibUtils::Format destinationFormat) const;
 
 private:
+    Q_DISABLE_COPY(BibUtils)
+
     class Private;
     Private *const d;
 };

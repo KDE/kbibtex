@@ -64,6 +64,8 @@ protected:
     Encoder();
 
 private:
+    Q_DISABLE_COPY(Encoder)
+
     class Private;
     Private *const d;
 };

@@ -53,6 +53,8 @@ protected:
     explicit EntryLayout(const QString &style);
 
 private:
+    Q_DISABLE_COPY(EntryLayout)
+
     class EntryLayoutPrivate;
     EntryLayoutPrivate *d;
 };

@@ -67,8 +67,6 @@ uint qHash(const FieldDescription &a);
 class KBIBTEXCONFIG_EXPORT BibTeXFields : public QVector<FieldDescription>
 {
 public:
-    BibTeXFields(const BibTeXFields &other) = delete;
-    BibTeXFields &operator= (const BibTeXFields &other) = delete;
     ~BibTeXFields();
 
     /**
@@ -95,6 +93,8 @@ public:
     const FieldDescription find(const QString &name) const;
 
 private:
+    Q_DISABLE_COPY(BibTeXFields)
+
     explicit BibTeXFields(const QString &style, const QVector<FieldDescription> &other);
 
     class BibTeXFieldsPrivate;

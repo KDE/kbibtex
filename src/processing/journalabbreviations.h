@@ -40,6 +40,8 @@ protected:
     ~JournalAbbreviations();
 
 private:
+    Q_DISABLE_COPY(JournalAbbreviations)
+
     class Private;
     Private *const d;
 };
