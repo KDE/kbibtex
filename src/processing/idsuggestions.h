@@ -40,14 +40,9 @@ public:
         QString inBetween;
     };
 
-    IdSuggestions();
-    IdSuggestions(const IdSuggestions &) = delete;
-    IdSuggestions &operator= (const IdSuggestions &other) = delete;
-    ~IdSuggestions();
-
-    QString formatId(const Entry &entry, const QString &formatStr) const;
-    QString defaultFormatId(const Entry &entry) const;
-    bool hasDefaultFormat() const;
+    static QString formatId(const Entry &entry, const QString &formatStr);
+    static QString defaultFormatId(const Entry &entry);
+    static bool hasDefaultFormat();
 
     /**
       * Apply the default formatting string to the entry.
@@ -59,20 +54,18 @@ public:
       * @param entry entry where the id has to be set
       * @return true if the id was set, false otherwise
       */
-    bool applyDefaultFormatId(Entry &entry) const;
+    static bool applyDefaultFormatId(Entry &entry);
 
-    QStringList formatIdList(const Entry &entry) const;
+    static QStringList formatIdList(const Entry &entry);
 
-    QStringList formatStrToHuman(const QString &formatStr) const;
+    static QStringList formatStrToHuman(const QString &formatStr);
 
     static QString formatAuthorRange(int minValue, int maxValue, bool lastAuthor);
 
-protected:
-    struct IdSuggestionTokenInfo evalToken(const QString &token) const;
+    static struct IdSuggestionTokenInfo evalToken(const QString &token);
 
 private:
     class IdSuggestionsPrivate;
-    IdSuggestionsPrivate *d;
 };
 
 #endif // KBIBTEX_PROCESSING_IDSUGGESTIONS_H

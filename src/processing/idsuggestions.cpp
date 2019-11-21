@@ -38,12 +38,12 @@ public:
         /// nothing
     }
 
-    QString normalizeText(const QString &input) const {
+    static QString normalizeText(const QString &input) {
         static const QRegularExpression unwantedChars(QStringLiteral("[^-_:/=+a-zA-Z0-9]+"));
         return Encoder::instance().convertToPlainAscii(input).remove(unwantedChars);
     }
 
-    int numberFromEntry(const Entry &entry, const QString &field) const {
+    static int numberFromEntry(const Entry &entry, const QString &field) {
         static const QRegularExpression firstDigits(QStringLiteral("^[0-9]+"));
         const QString text = PlainTextValue::text(entry.value(field));
         const QRegularExpressionMatch match = firstDigits.match(text);
@@ -54,7 +54,7 @@ public:
         return ok ? result : -1;
     }
 
-    QString pageNumberFromEntry(const Entry &entry) const {
+    static QString pageNumberFromEntry(const Entry &entry) {
         static const QRegularExpression whitespace(QStringLiteral("[ \t]+"));
         static const QRegularExpression pageNumber(QStringLiteral("[a-z0-9+:]+"), QRegularExpression::CaseInsensitiveOption);
         const QString text = PlainTextValue::text(entry.value(Entry::ftPages)).remove(whitespace).remove(QStringLiteral("mbox"));
@@ -63,7 +63,7 @@ public:
         return match.captured(0);
     }
 
-    QString translateTitleToken(const Entry &entry, const struct IdSuggestionTokenInfo &tti, bool removeSmallWords) const {
+    static QString translateTitleToken(const Entry &entry, const struct IdSuggestionTokenInfo &tti, bool removeSmallWords) {
         QString result;
         bool first = true;
         static const QRegularExpression sequenceOfSpaces(QStringLiteral("\\s+"));
@@ -103,7 +103,7 @@ public:
         return result;
     }
 
-    QString translateAuthorsToken(const Entry &entry, const struct IdSuggestionTokenInfo &ati) const {
+    static QString translateAuthorsToken(const Entry &entry, const struct IdSuggestionTokenInfo &ati) {
         QString result;
         /// Already some author inserted into result?
         bool firstInserted = false;
@@ -157,7 +157,7 @@ public:
         return result;
     }
 
-    QString translateJournalToken(const Entry &entry, const struct IdSuggestionTokenInfo &jti, bool removeSmallWords) const {
+    static QString translateJournalToken(const Entry &entry, const struct IdSuggestionTokenInfo &jti, bool removeSmallWords) {
         static const QRegularExpression sequenceOfSpaces(QStringLiteral("\\s+"));
         QString journalName = PlainTextValue::text(entry.value(Entry::ftJournal));
         journalName = JournalAbbreviations::instance().toShortName(journalName);
@@ -205,7 +205,7 @@ public:
         return result;
     }
 
-    QString translateTypeToken(const Entry &entry, const struct IdSuggestionTokenInfo &eti) const {
+    static QString translateTypeToken(const Entry &entry, const struct IdSuggestionTokenInfo &eti) {
         QString entryType(entry.type());
 
         switch (eti.caseChange) {
@@ -229,24 +229,24 @@ public:
         }
     }
 
-    QString translateToken(const Entry &entry, const QString &token) const {
+    static QString translateToken(const Entry &entry, const QString &token) {
         switch (token[0].toLatin1()) {
         case 'a': ///< deprecated but still supported case
         {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
-            struct IdSuggestionTokenInfo ati = p->evalToken(token.mid(1));
+            struct IdSuggestionTokenInfo ati = IdSuggestions::evalToken(token.mid(1));
             ati.startWord = ati.endWord = 0; ///< only first author
             return translateAuthorsToken(entry, ati);
         }
         case 'A': {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
-            const struct IdSuggestionTokenInfo ati = p->evalToken(token.mid(1));
+            const struct IdSuggestionTokenInfo ati = IdSuggestions::evalToken(token.mid(1));
             return translateAuthorsToken(entry, ati);
         }
         case 'z': ///< deprecated but still supported case
         {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
-            struct IdSuggestionTokenInfo ati = p->evalToken(token.mid(1));
+            struct IdSuggestionTokenInfo ati = IdSuggestions::evalToken(token.mid(1));
             /// All but first author
             ati.startWord = 1;
             ati.endWord = std::numeric_limits<int>::max();
@@ -267,18 +267,18 @@ public:
         case 't':
         case 'T': {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo jti
-            const struct IdSuggestionTokenInfo tti = p->evalToken(token.mid(1));
+            const struct IdSuggestionTokenInfo tti = IdSuggestions::evalToken(token.mid(1));
             return translateTitleToken(entry, tti, token[0].isUpper());
         }
         case 'j':
         case 'J': {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo jti
-            const struct IdSuggestionTokenInfo jti = p->evalToken(token.mid(1));
+            const struct IdSuggestionTokenInfo jti = IdSuggestions::evalToken(token.mid(1));
             return translateJournalToken(entry, jti, token[0].isUpper());
         }
         case 'e': {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo eti
-            const struct IdSuggestionTokenInfo eti = p->evalToken(token.mid(1));
+            const struct IdSuggestionTokenInfo eti = IdSuggestions::evalToken(token.mid(1));
             return translateTypeToken(entry, eti);
         }
         case 'v': {
@@ -298,40 +298,28 @@ public:
 /// https://www.oclc.org/developer/develop/web-services/worldcat-search-api/bibliographic-resource.en.html
 const QStringList IdSuggestions::IdSuggestionsPrivate::smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QStringLiteral("|"), QString::SkipEmptyParts);
 
-
-IdSuggestions::IdSuggestions()
-        : d(new IdSuggestionsPrivate(this))
-{
-    /// nothing
-}
-
-IdSuggestions::~IdSuggestions()
-{
-    delete d;
-}
-
-QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr) const
+QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr)
 {
     QString id;
     const QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
     for (const QString &token : tokenList) {
-        id.append(d->translateToken(entry, token));
+        id.append(IdSuggestionsPrivate::translateToken(entry, token));
     }
 
     return id;
 }
 
-QString IdSuggestions::defaultFormatId(const Entry &entry) const
+QString IdSuggestions::defaultFormatId(const Entry &entry)
 {
     return formatId(entry, Preferences::instance().activeIdSuggestionFormatString());
 }
 
-bool IdSuggestions::hasDefaultFormat() const
+bool IdSuggestions::hasDefaultFormat()
 {
     return !Preferences::instance().activeIdSuggestionFormatString().isEmpty();
 }
 
-bool IdSuggestions::applyDefaultFormatId(Entry &entry) const
+bool IdSuggestions::applyDefaultFormatId(Entry &entry)
 {
     const QString dfs = Preferences::instance().activeIdSuggestionFormatString();
     if (!dfs.isEmpty()) {
@@ -341,7 +329,7 @@ bool IdSuggestions::applyDefaultFormatId(Entry &entry) const
         return false;
 }
 
-QStringList IdSuggestions::formatIdList(const Entry &entry) const
+QStringList IdSuggestions::formatIdList(const Entry &entry)
 {
     const QStringList formatStrings = Preferences::instance().idSuggestionFormatStrings();
     QStringList result;
@@ -352,7 +340,7 @@ QStringList IdSuggestions::formatIdList(const Entry &entry) const
     return result;
 }
 
-QStringList IdSuggestions::formatStrToHuman(const QString &formatStr) const
+QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
 {
     QStringList result;
     const QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
@@ -504,7 +492,7 @@ QString IdSuggestions::formatAuthorRange(int minValue, int maxValue, bool lastAu
     }
 }
 
-struct IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &token) const {
+IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &token) {
     int pos = 0;
     struct IdSuggestionTokenInfo result;
     result.len = std::numeric_limits<int>::max();

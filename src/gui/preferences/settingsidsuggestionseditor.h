@@ -24,8 +24,6 @@
 #include <QDialog>
 #include <QGroupBox>
 
-#include <IdSuggestions>
-
 #include "kbibtexgui_export.h"
 
 class Entry;
@@ -50,7 +48,7 @@ protected:
 /**
  * @author Thomas Fischer
  */
-class IdSuggestionsEditWidget : public QWidget, public IdSuggestions
+class IdSuggestionsEditWidget : public QWidget
 {
     Q_OBJECT
 

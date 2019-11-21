@@ -37,14 +37,12 @@ class IdSuggestionsModel : public QAbstractListModel
 private:
     QStringList m_formatStringList;
     int m_defaultFormatStringRow;
-    IdSuggestions *m_idSuggestions;
     static const QString exampleBibTeXEntryString;
     static QSharedPointer<const Entry> exampleBibTeXEntry;
 
 public:
     IdSuggestionsModel(QObject *parent = nullptr)
             : QAbstractListModel(parent) {
-        m_idSuggestions = new IdSuggestions();
         m_defaultFormatStringRow = -1;
 
         if (exampleBibTeXEntry.isNull()) {
@@ -56,10 +54,6 @@ public:
                 delete file;
             }
         }
-    }
-
-    ~IdSuggestionsModel() override {
-        delete m_idSuggestions;
     }
 
     enum IdSuggestionsModelRole {
@@ -115,9 +109,9 @@ public:
             else
                 return QIcon::fromTheme(QStringLiteral("view-filter"));
         case Qt::ToolTipRole:
-            return i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", m_idSuggestions->formatStrToHuman(m_formatStringList[index.row()]).join(QStringLiteral("</li><li>")), m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]));
+            return i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", IdSuggestions::formatStrToHuman(m_formatStringList[index.row()]).join(QStringLiteral("</li><li>")), IdSuggestions::formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]));
         case Qt::DisplayRole:
-            return m_idSuggestions->formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]);
+            return IdSuggestions::formatId(*exampleBibTeXEntry, m_formatStringList[index.row()]);
         case Qt::UserRole:
         case FormatStringRole:
             return m_formatStringList[index.row()];

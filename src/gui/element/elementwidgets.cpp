@@ -537,15 +537,14 @@ void ReferenceWidget::prepareSuggestionsMenu()
     m_applyElement->apply(guiDataEntry);
     QSharedPointer<Entry> crossrefResolvedEntry(guiDataEntry->resolveCrossref(m_file));
 
-    static const IdSuggestions *idSuggestions = new IdSuggestions();
     QMenu *suggestionsMenu = buttonSuggestId->menu();
     suggestionsMenu->clear();
 
     /// Keep track of shown suggestions to avoid duplicates
     QSet<QString> knownIdSuggestion;
-    const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
+    const QString defaultSuggestion = IdSuggestions::defaultFormatId(*crossrefResolvedEntry.data());
 
-    const auto formatIdList = idSuggestions->formatIdList(*crossrefResolvedEntry.data());
+    const auto formatIdList = IdSuggestions::formatIdList(*crossrefResolvedEntry.data());
     for (const QString &suggestionBase : formatIdList) {
         bool isDefault = suggestionBase == defaultSuggestion;
         QString suggestion = suggestionBase;
@@ -601,15 +600,14 @@ void ReferenceWidget::setEntryIdByDefault()
         return;
     }
 
-    static const IdSuggestions *idSuggestions = new IdSuggestions();
     /// If there is a default suggestion format set ...
-    if (idSuggestions->hasDefaultFormat())  {
+    if (IdSuggestions::hasDefaultFormat())  {
         /// Collect information on the current entry as it is edited
         QSharedPointer<Entry> guiDataEntry(new Entry());
         m_applyElement->apply(guiDataEntry);
         QSharedPointer<Entry> crossrefResolvedEntry(guiDataEntry->resolveCrossref(m_file));
         /// Determine default suggestion based on current data
-        const QString defaultSuggestion = idSuggestions->defaultFormatId(*crossrefResolvedEntry.data());
+        const QString defaultSuggestion = IdSuggestions::defaultFormatId(*crossrefResolvedEntry.data());
 
         if (!defaultSuggestion.isEmpty()) {
             const QSignalBlocker blocker(entryId);

@@ -37,6 +37,7 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 
+#include <IdSuggestions>
 #include "widgets/rangewidget.h"
 
 /**
@@ -778,7 +779,7 @@ public:
             TokenWidget *tokenWidget = nullptr;
 
             if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
-                struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
+                IdSuggestions::IdSuggestionTokenInfo info = IdSuggestions::evalToken(token.mid(1));
                 /// Support deprecated 'a' and 'z' cases
                 if (token[0] == 'a')
                     info.startWord = info.endWord = 0;
@@ -798,17 +799,17 @@ public:
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 't' || token[0] == 'T') {
-                struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
+                IdSuggestions::IdSuggestionTokenInfo info = IdSuggestions::evalToken(token.mid(1));
                 tokenWidget = new TitleWidget(info, token[0].isUpper(), p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'j' || token[0] == 'J') {
-                struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
+                IdSuggestions::IdSuggestionTokenInfo info = IdSuggestions::evalToken(token.mid(1));
                 tokenWidget = new JournalWidget(info, token[0].isUpper(), p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
             } else if (token[0] == 'e') {
-                struct IdSuggestions::IdSuggestionTokenInfo info = p->evalToken(token.mid(1));
+                IdSuggestions::IdSuggestionTokenInfo info = IdSuggestions::evalToken(token.mid(1));
                 tokenWidget = new TypeWidget(info, p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
@@ -895,7 +896,7 @@ public:
 
 
 IdSuggestionsEditWidget::IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent, Qt::WindowFlags f)
-        : QWidget(parent, f), IdSuggestions(), d(new IdSuggestionsEditWidgetPrivate(previewEntry, this))
+        : QWidget(parent, f), d(new IdSuggestionsEditWidgetPrivate(previewEntry, this))
 {
     /// nothing
 }
@@ -918,8 +919,8 @@ QString IdSuggestionsEditWidget::formatString() const
 void IdSuggestionsEditWidget::updatePreview()
 {
     const QString formatString = d->apply();
-    d->labelPreview->setText(formatId(*d->previewEntry, formatString));
-    d->labelPreview->setToolTip(i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", formatStrToHuman(formatString).join(QStringLiteral("</li><li>")), formatId(*d->previewEntry, formatString)));
+    d->labelPreview->setText(IdSuggestions::formatId(*d->previewEntry, formatString));
+    d->labelPreview->setToolTip(i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", IdSuggestions::formatStrToHuman(formatString).join(QStringLiteral("</li><li>")), IdSuggestions::formatId(*d->previewEntry, formatString)));
 }
 
 IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent, Qt::WindowFlags flags)
