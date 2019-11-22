@@ -1,6 +1,6 @@
 ChangeLog
 
-Diff 0.9.1 to 0.10
+Diff 0.9.2 to 0.10
 
 - New online search: Semantic Scholar
 - Use Qt's own QOAuth1 class instead of external library QOAuth
@@ -40,6 +40,10 @@ Diff 0.9.1 to 0.10
 - Numerous other fixes, clean-ups, refactoring, ...
 
 81%
+
+Diff 0.9.1 to 0.9.2
+
+- KDE Bug 414375, 414385: Fixing potential crash due to defining TRANSLATION_DOMAIN
 
 Diff 0.9 to 0.9.1
 

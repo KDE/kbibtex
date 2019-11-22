@@ -16,10 +16,6 @@ set(QT_MIN_VERSION 5.9.0)
 set(KF5_MIN_VERSION 5.51)
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 
-add_definitions(
-    -DTRANSLATION_DOMAIN="kbibtex"
-)
-
 set(
     CMAKE_MODULE_PATH
     ${ECM_MODULE_PATH}

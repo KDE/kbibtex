@@ -118,9 +118,12 @@ public:
                 etl->singleFieldLayouts.append(sfl);
             }
 
-            const QString infoMessagePipeSeparated = i18n(configGroup.readEntry("infoMessage", QString()).toUtf8().constData());
-            if (!infoMessagePipeSeparated.isEmpty())
-                etl->infoMessages = infoMessagePipeSeparated.split(QLatin1Char('|'));
+            const QString untranslatedInfoMessage = configGroup.readEntry("infoMessage", QString());
+            if (!untranslatedInfoMessage.isEmpty()) {
+                const QString infoMessagePipeSeparated = i18n(untranslatedInfoMessage.toUtf8().constData());
+                if (!infoMessagePipeSeparated.isEmpty())
+                    etl->infoMessages = infoMessagePipeSeparated.split(QLatin1Char('|'));
+            }
 
             p->append(etl);
         }
