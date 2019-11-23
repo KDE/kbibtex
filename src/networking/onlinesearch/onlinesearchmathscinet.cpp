@@ -120,7 +120,7 @@ QString OnlineSearchMathSciNet::label() const
 
 QString OnlineSearchMathSciNet::favIconUrl() const
 {
-    return QStringLiteral("http://www.ams.org/favicon.ico");
+    return QStringLiteral("https://www.ams.org/favicon.ico");
 }
 
 QUrl OnlineSearchMathSciNet::homepage() const

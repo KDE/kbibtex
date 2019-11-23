@@ -173,7 +173,7 @@ public:
     QUrl buildQueryUrl() {
         if (form == nullptr) return QUrl();
 
-        QUrl queryUrl = QUrl(QString(QStringLiteral("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
         QString queryString = form->lineEditFreeText->text();
 
@@ -206,7 +206,7 @@ public:
 #endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query) {
-        QUrl queryUrl = QUrl(QString(QStringLiteral("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
         QString queryString = query[queryKeyFreeText];
 
@@ -303,7 +303,7 @@ QString OnlineSearchSpringerLink::label() const
 
 QString OnlineSearchSpringerLink::favIconUrl() const
 {
-    return QStringLiteral("http://link.springer.com/static/0.6623/sites/link/images/favicon.ico");
+    return QStringLiteral("https://link.springer.com/static/0.6623/sites/link/images/favicon.ico");
 }
 
 #ifdef HAVE_QTWIDGETS
@@ -317,7 +317,7 @@ OnlineSearchAbstract::Form *OnlineSearchSpringerLink::customWidget(QWidget *pare
 
 QUrl OnlineSearchSpringerLink::homepage() const
 {
-    return QUrl(QStringLiteral("http://www.springerlink.com/"));
+    return QUrl(QStringLiteral("https://link.springer.com/"));
 }
 
 void OnlineSearchSpringerLink::doneFetchingPAM()
@@ -329,7 +329,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
 
         const QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(xmlSource).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")));
         if (bibTeXcode.isEmpty()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL transformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             stopSearch(resultInvalidArguments);
         } else {
             FileImporterBibTeX importer(this);

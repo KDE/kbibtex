@@ -224,7 +224,7 @@ public:
 
     /**
       * Determine the Levenshtein distance between two words.
-      * See also http://en.wikipedia.org/wiki/Levenshtein_distance
+      * See also https://en.wikipedia.org/wiki/Levenshtein_distance
       * @param s first word, all chars already in lower case
       * @param t second word, all chars already in lower case
       * @return distance between both words
@@ -257,7 +257,7 @@ public:
 
     /**
      * Determine the Levenshtein distance between two sentences (list of words).
-     * See also http://en.wikipedia.org/wiki/Levenshtein_distance
+     * See also https://en.wikipedia.org/wiki/Levenshtein_distance
      * @param s first sentence
      * @param t second sentence
      * @return distance between both sentences
@@ -295,7 +295,7 @@ public:
     /**
      * Determine the Levenshtein distance between two sentences,
      * where each sentence is in a string (not split into single words).
-     * See also http://en.wikipedia.org/wiki/Levenshtein_distance
+     * See also https://en.wikipedia.org/wiki/Levenshtein_distance
      * @param s first sentence
      * @param t second sentence
      * @return distance between both sentences

@@ -65,7 +65,7 @@ public:
      *
      * @param documentUrl URL to a document like 'http://www.example.com/publication.pdf'
      * @param entry bibliography entry where the URL is to be associated with
-     * @param bibTeXFile valid bibliography, preferrably with property 'File::Url' set
+     * @param bibTeXFile valid bibliography, preferably with property 'File::Url' set
      * @param pathType request either a relative or an absolute path
      * @return the computed URL string
      */
@@ -74,9 +74,9 @@ public:
     /**
      * Compute how the URL string to be associated to a bibliographic entry may look
      * like for a given document URL, a given bibliography, and whether the URL string
-     * should be preferrably relative or absolute.
+     * should be preferably relative or absolute.
      * @param documentUrl URL to a document like 'http://www.example.com/publication.pdf'
-     * @param bibTeXFile valid bibliography, preferrably with property 'File::Url' set
+     * @param bibTeXFile valid bibliography, preferably with property 'File::Url' set
      * @param pathType request either a relative or an absolute path
      * @return the computed URL string
      */

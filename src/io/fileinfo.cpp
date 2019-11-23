@@ -248,7 +248,7 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
     if (entry->contains(etEPrint)) {
         const QString eprint = PlainTextValue::text(entry->value(etEPrint));
         if (!eprint.isEmpty()) {
-            QUrl url(QStringLiteral("http://arxiv.org/search?query=") + eprint);
+            QUrl url(QStringLiteral("https://arxiv.org/search?query=") + eprint);
             result.insert(url);
         }
     }

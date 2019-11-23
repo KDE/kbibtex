@@ -1029,9 +1029,9 @@ void FileImporterBibTeX::parsePersonList(const QString &text, Value &value, Comm
             if (parent != nullptr)
                 QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Person list starts with 'others' near line %1")).arg(line_number)));
         } else if (tokens[tokens.count() - 1] == tokenOthers && (tokens.count() < 3 || tokens[tokens.count() - 2] != tokenAnd)) {
-            qCInfo(LOG_KBIBTEX_IO) << "Person list ends with" << tokenOthers << "but is not preceeded with name and" << tokenAnd << "near line" << line_number;
+            qCInfo(LOG_KBIBTEX_IO) << "Person list ends with" << tokenOthers << "but is not preceded with name and" << tokenAnd << "near line" << line_number;
             if (parent != nullptr)
-                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Person list ends with 'others' but is not preceeded with name and 'and' near line %1")).arg(line_number)));
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, SeverityWarning), Q_ARG(QString, QString(QStringLiteral("Person list ends with 'others' but is not preceded with name and 'and' near line %1")).arg(line_number)));
         }
     }
 

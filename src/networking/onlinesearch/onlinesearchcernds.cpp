@@ -37,18 +37,18 @@ QString OnlineSearchCERNDS::label() const
 
 QUrl OnlineSearchCERNDS::homepage() const
 {
-    return QUrl(QStringLiteral("http://cds.cern.ch/"));
+    return QUrl(QStringLiteral("https://cds.cern.ch/"));
 }
 
 QString OnlineSearchCERNDS::favIconUrl() const
 {
-    return QStringLiteral("http://cds.cern.ch/favicon.ico");
+    return QStringLiteral("https://cds.cern.ch/favicon.ico");
 }
 
 QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
 {
     /// Example for a search URL:
-    /// http://cds.cern.ch/search?action_search=Search&sf=&so=d&rm=&sc=0&of=hx&f=&rg=10&ln=en&as=1&m1=a&p1=stone&f1=title&op1=a&m2=a&p2=smith&f2=author&op2=a&m3=a&p3=&f3=
+    /// https://cds.cern.ch/search?action_search=Search&sf=&so=d&rm=&sc=0&of=hx&f=&rg=10&ln=en&as=1&m1=a&p1=stone&f1=title&op1=a&m2=a&p2=smith&f2=author&op2=a&m3=a&p3=&f3=
 
     /// of=hx  asks for BibTeX results
     /// rg=10  asks for 10 results
@@ -60,7 +60,7 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     ///   fX   ""=any field; title; author; reportnumber; year; fulltext
 
     /// Build URL
-    QUrl url = QUrl(QStringLiteral("http://cds.cern.ch/search?ln=en&action_search=Search&c=Articles+%26+Preprints&as=1&sf=&so=d&rm=&sc=0&of=hx&f="));
+    QUrl url = QUrl(QStringLiteral("https://cds.cern.ch/search?ln=en&action_search=Search&c=Articles+%26+Preprints&as=1&sf=&so=d&rm=&sc=0&of=hx&f="));
     QUrlQuery q(url);
     /// Set number of expected results
     q.addQueryItem(QStringLiteral("rg"), QString::number(numResults));

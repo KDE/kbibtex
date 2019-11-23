@@ -47,7 +47,6 @@
 #include "docklets/searchform.h"
 #include "docklets/searchresults.h"
 #include "docklets/elementform.h"
-#include "docklets/documentpreview.h"
 #include "docklets/statistics.h"
 #include "docklets/filesettings.h"
 #include "docklets/valuelist.h"

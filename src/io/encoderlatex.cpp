@@ -51,7 +51,7 @@ enum EncoderLaTeXCommandDirection { DirectionCommandToUnicode = 1, DirectionUnic
 
 /**
  * General documentation on this topic:
- *   http://www.tex.ac.uk/CTAN/macros/latex/doc/encguide.pdf
+ *   https://www.latex-project.org/help/documentation/encguide.pdf
  *   https://mirror.hmc.edu/ctan/macros/xetex/latex/xecjk/xunicode-symbols.pdf
  *   ftp://ftp.dante.de/tex-archive/biblio/biber/documentation/utf8-macro-map.html
  */

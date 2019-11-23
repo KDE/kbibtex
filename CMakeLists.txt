@@ -72,7 +72,7 @@ endif()
 
 option(
     UNITY_BUILD
-    "Compile multiple C++ files in one big, merged file (\"Unity build\")\nSee also http://t-fischer.dreamwidth.org/3054.html"
+    "Compile multiple C++ files in one big, merged file (\"Unity build\")\nSee also https://t-fischer.dreamwidth.org/3054.html"
 )
 if(UNITY_BUILD)
     message(STATUS "Unity build enabled")

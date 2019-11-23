@@ -27,7 +27,7 @@
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *
- * See also: http://dev.springer.com/
+ * See also: https://dev.springernature.com/
  *
  * On the subject of having multiple "constraints" (search terms) in
  * a search, Springer's documentation states: "Each constraint that
@@ -35,7 +35,7 @@
  * For instance, a request including constraints: "title:bone+name:Jones"
  * is the equivilent to the request containing constraints concatenated by
  * the AND operator: "title:bone%20AND%20name:Jones".
- * (source: http://dev.springer.com/docs/read/Filters_Facets_and_Constraints)
+ * (source: https://dev.springernature.com/adding-constraints)
  */
 class KBIBTEXNETWORKING_EXPORT OnlineSearchSpringerLink : public OnlineSearchAbstract
 {

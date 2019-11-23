@@ -27,10 +27,6 @@
 
 #include <Entry>
 
-#ifdef HAVE_KF5
-#include "kbibtexnetworking_export.h"
-#endif // HAVE_KF5
-
 class QNetworkAccessManager;
 class QNetworkReply;
 class QTemporaryFile;

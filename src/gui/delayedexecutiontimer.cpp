@@ -26,7 +26,7 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*
-Found at  http://qt-project.org/wiki/Delay_action_to_wait_for_user_interaction
+Found at https://wiki.qt.io/Delay_action_to_wait_for_user_interaction
 modified/simplified by Thomas Fischer
 */
 

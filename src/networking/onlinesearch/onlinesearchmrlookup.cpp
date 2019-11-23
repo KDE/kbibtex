@@ -76,7 +76,7 @@ QString OnlineSearchMRLookup::label() const
 
 QString OnlineSearchMRLookup::favIconUrl() const
 {
-    return QStringLiteral("http://www.ams.org/favicon.ico");
+    return QStringLiteral("https://www.ams.org/favicon.ico");
 }
 
 QUrl OnlineSearchMRLookup::homepage() const

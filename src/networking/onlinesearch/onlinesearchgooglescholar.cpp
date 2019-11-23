@@ -48,8 +48,8 @@ public:
             : numResults(0)
     {
         importer = new FileImporterBibTeX(parent);
-        startPageUrl = QStringLiteral("http://scholar.google.com/");
-        queryPageUrl = QStringLiteral("http://%1/scholar");
+        startPageUrl = QStringLiteral("https://scholar.google.com/");
+        queryPageUrl = QStringLiteral("https://%1/scholar");
     }
 
     ~OnlineSearchGoogleScholarPrivate() {

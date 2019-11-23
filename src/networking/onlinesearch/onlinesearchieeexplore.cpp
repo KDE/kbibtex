@@ -190,7 +190,7 @@ QString OnlineSearchIEEEXplore::label() const
 
 QString OnlineSearchIEEEXplore::favIconUrl() const
 {
-    return QStringLiteral("http://ieeexplore.ieee.org/favicon.ico");
+    return QStringLiteral("https://ieeexplore.ieee.org/favicon.ico");
 }
 
 QUrl OnlineSearchIEEEXplore::homepage() const

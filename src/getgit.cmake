@@ -16,7 +16,7 @@
 #############################################################################
 
 # Inspired by:
-# http://stackoverflow.com/questions/3780667/use-cmake-to-get-build-time-svn-revision
+# https://stackoverflow.com/questions/3780667/use-cmake-to-get-build-time-svn-revision
 
 if(DEFINED ENV{GIT_REV} AND DEFINED ENV{GIT_BRANCH} AND NOT("${GIT_REV}" STREQUAL "" OR "${GIT_BRANCH}" STREQUAL ""))
     message (STATUS "Git information set by environment variables GIT_REV and GIT_BRANCH")
