@@ -1,8 +1,53 @@
 ChangeLog
 
-Diff 0.9 to 0.10
+Diff 0.9.2 to 0.10
 
 - New online search: Semantic Scholar
+- Use Qt's own QOAuth1 class instead of external library QOAuth
+- Providing .gitlab-ci.yml to enable continuous integration at GitLab
+  (see https://gitlab.com/tfischer/kbibtex-ci/pipelines)
+- Greatly refactoring and modernizing CMakeLists.txt files, generation of camel-case
+  headers, private/public linking to libraries, ...
+- Tabs in the entry editor can show short messages to use, e.g. in which tab DOIs or URLs
+  are to be entered
+- Updating BibSearch code: cover page improved, preparing code for translations,
+  adding progress bar
+- Refactoring most regular 'enum's to become 'enum class'es
+- Preferences class greatly refactored: Based on JSON description, a Python script will
+  generate a C++ class/header pair providing all necessary functions and enums
+- Cleaning header includes and include guards
+- Preferring Qt classes over KDE counterparts, e.g. KLineEdit -> QLineEdit
+  or KComboBox -> QComboBox
+- Migrating many old-style casts like '(int)' to new-style casts like 'static_cast<..>(..)'
+- Fixing missing <bibliography> tag in XML export
+- Fixing UI issues with ColorLabelWidget
+- Preferring QSignalBlocker over manually temporarily disconnecting/disabling signals
+- Refactoring QSignalMapper into many small lambda-based 'connect's
+- Refactoring small slot functions into lambda functions
+- Using KRatingPainter instead of home-made StarRating's paint function
+- Various improvements and refactoring when (PDF) files get associated with an entry
+- Having ICU as an optional dependency only, provide internal, static translation from
+  Basic Multilingual Plane (BMP) characters to ASCII-only representations
+- Adding and extending numerous automated tests
+- Code modernizations such as using QFontMetrics' 'horizontalAdvance(..)'
+  instead of 'width(..)'
+- Using QUrl's 'isValid()' instead of 'isEmpty()'
+- Cleaner code, e.g. using std::numeric_limits<int>::max() instead of magic constant
+  0x00ffffff
+- QDebug output uses categories consistently
+- Across classes, moving code into private subclasses to minimize public interface
+- Updating translations (contributions by various authors)
+- Numerous other fixes, clean-ups, refactoring, ...
+
+Diff 0.9.1 to 0.9.2
+
+- KDE Bug 414375, 414385: Fixing potential crash due to defining TRANSLATION_DOMAIN
+
+Diff 0.9 to 0.9.1
+
+- Fixing GUI issues in preferences/settings
+- Fixing id extraction during duplicate search
+- Various minor fixes
 
 Diff 0.8.2 to 0.9
 
