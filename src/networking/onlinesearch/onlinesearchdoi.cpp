@@ -199,7 +199,7 @@ QUrl OnlineSearchDOI::homepage() const
 
 QString OnlineSearchDOI::favIconUrl() const
 {
-    return QStringLiteral("https://dx.doi.org/favicon.ico");
+    return QStringLiteral("https://dx.doi.org/static/img/favicon.png");
 }
 
 void OnlineSearchDOI::downloadDone()

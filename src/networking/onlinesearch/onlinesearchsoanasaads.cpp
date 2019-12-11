@@ -32,12 +32,12 @@ QString OnlineSearchSOANASAADS::label() const
 
 QUrl OnlineSearchSOANASAADS::homepage() const
 {
-    return QUrl(QStringLiteral("http://adswww.harvard.edu/"));
+    return QUrl(QStringLiteral("https://ui.adsabs.harvard.edu/"));
 }
 
 QString OnlineSearchSOANASAADS::favIconUrl() const
 {
-    return QStringLiteral("http://adsabs.harvard.edu/favicon.ico");
+    return QStringLiteral("https://ui.adsabs.harvard.edu/styles/img/favicon.ico");
 }
 
 QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)

@@ -368,7 +368,7 @@ QString OnlineSearchIngentaConnect::label() const
 
 QString OnlineSearchIngentaConnect::favIconUrl() const
 {
-    return QStringLiteral("http://www.ingentaconnect.com/favicon.ico");
+    return QStringLiteral("https://www.ingentaconnect.com/images/ic.ico");
 }
 
 #ifdef HAVE_QTWIDGETS

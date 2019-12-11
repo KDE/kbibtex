@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                 2018 Alexander Dunlap <alexander.dunlap@gmail.com>      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -120,7 +120,7 @@ QString OnlineSearchMathSciNet::label() const
 
 QString OnlineSearchMathSciNet::favIconUrl() const
 {
-    return QStringLiteral("http://www.ams.org/favicon.ico");
+    return QStringLiteral("https://mathscinet.ams.org/mathscinet/images/bubbles.png");
 }
 
 QUrl OnlineSearchMathSciNet::homepage() const

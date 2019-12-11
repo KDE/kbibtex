@@ -465,7 +465,7 @@ QString OnlineSearchGoogleScholar::label() const
 
 QString OnlineSearchGoogleScholar::favIconUrl() const
 {
-    return QStringLiteral("https://scholar.google.com/favicon-png.ico");
+    return QStringLiteral("https://scholar.google.com/favicon.ico");
 }
 
 QUrl OnlineSearchGoogleScholar::homepage() const

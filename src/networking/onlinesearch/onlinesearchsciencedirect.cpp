@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -221,7 +221,7 @@ QString OnlineSearchScienceDirect::label() const
 
 QString OnlineSearchScienceDirect::favIconUrl() const
 {
-    return QStringLiteral("https://sdfestaticassets-us-east-1.sciencedirectassets.com/shared-assets/11/images/favSD.ico");
+    return QStringLiteral("https://sdfestaticassets-eu-west-1.sciencedirectassets.com/shared-assets/18/images/favSD.ico");
 }
 
 QUrl OnlineSearchScienceDirect::homepage() const

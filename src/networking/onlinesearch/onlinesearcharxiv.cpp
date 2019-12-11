@@ -679,7 +679,7 @@ QString OnlineSearchArXiv::label() const
 
 QString OnlineSearchArXiv::favIconUrl() const
 {
-    return QStringLiteral("https://arxiv.org/favicon.ico");
+    return QStringLiteral("https://static.arxiv.org/static/browse/0.2.6/images/icons/favicon.ico");
 }
 
 #ifdef HAVE_QTWIDGETS

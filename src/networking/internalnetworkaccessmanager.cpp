@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -123,6 +123,12 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
         request.setRawHeader(QByteArray("Accept"), QByteArray("text/*, */*;q=0.7"));
     request.setRawHeader(QByteArray("Accept-Charset"), QByteArray("utf-8, us-ascii, ISO-8859-1;q=0.7, ISO-8859-15;q=0.7, windows-1252;q=0.3"));
     request.setRawHeader(QByteArray("Accept-Language"), QByteArray("en-US, en;q=0.9"));
+    /// Set 'Referer' and 'Origin' to match the request URL's domain, i.e. URL with empty path
+    QUrl domainUrl = request.url();
+    domainUrl.setPath(QString());
+    const QByteArray domain = removeApiKey(domainUrl).toDisplayString().toLatin1();
+    request.setRawHeader(QByteArray("Referer"), domain);
+    request.setRawHeader(QByteArray("Origin"), domain);
     request.setRawHeader(QByteArray("User-Agent"), userAgent().toLatin1());
     if (oldUrl.isValid())
         request.setRawHeader(QByteArray("Referer"), removeApiKey(oldUrl).toDisplayString().toLatin1());
