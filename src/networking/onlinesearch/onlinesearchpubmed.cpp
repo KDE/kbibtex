@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -148,11 +148,6 @@ QString OnlineSearchPubMed::label() const
     //= onlinesearch-pubmed-label
     return QObject::tr("PubMed");
 #endif // HAVE_KF5
-}
-
-QString OnlineSearchPubMed::favIconUrl() const
-{
-    return QStringLiteral("https://www.ncbi.nlm.nih.gov/favicon.ico");
 }
 
 QUrl OnlineSearchPubMed::homepage() const

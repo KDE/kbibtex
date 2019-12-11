@@ -55,9 +55,6 @@ public:
 #endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
 
-protected:
-    QString favIconUrl() const override;
-
 private slots:
     void doneFetchingPAM();
 

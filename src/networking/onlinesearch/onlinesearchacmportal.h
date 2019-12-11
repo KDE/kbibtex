@@ -41,9 +41,6 @@ public:
     QString label() const override;
     QUrl homepage() const override;
 
-protected:
-    QString favIconUrl() const override;
-
 private slots:
     void doneFetchingStartPage();
     void doneFetchingSearchPage();

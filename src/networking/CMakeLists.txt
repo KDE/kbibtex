@@ -32,6 +32,7 @@ set(
     zotero/tagmodel.cpp
     associatedfiles.cpp
     findpdf.cpp
+    faviconlocator.cpp
     internalnetworkaccessmanager.cpp
     urlchecker.cpp
 )
@@ -100,6 +101,7 @@ ecm_generate_headers(kbibtexnetworking_HEADERS
     HEADER_NAMES
         AssociatedFiles
         FindPDF
+        FavIconLocator
         InternalNetworkAccessManager
         UrlChecker
         onlinesearch/OnlineSearchAbstract

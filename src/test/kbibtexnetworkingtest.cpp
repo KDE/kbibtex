@@ -36,9 +36,6 @@ public:
 
     QMap<QString, QString> formParameters_public(const QString &htmlText, int startPos);
     void sanitizeEntry_public(QSharedPointer<Entry> entry);
-
-protected:
-    QString favIconUrl() const override;
 };
 
 class KBibTeXNetworkingTest : public QObject
@@ -77,11 +74,6 @@ QString OnlineSearchDummy::label() const
 QUrl OnlineSearchDummy::homepage() const
 {
     return QUrl::fromUserInput(QStringLiteral("https://www.kde.org"));
-}
-
-QString OnlineSearchDummy::favIconUrl() const
-{
-    return QStringLiteral("https://www.kde.org/favicon.ico");
 }
 
 QMap<QString, QString> OnlineSearchDummy::formParameters_public(const QString &htmlText, int startPos)

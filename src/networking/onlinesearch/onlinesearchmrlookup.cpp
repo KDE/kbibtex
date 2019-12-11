@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                 2014 Pavel Zorin-Kranich <pzorin@math.uni-bonn.de>      *
  *                 2018 Alexander Dunlap <alexander.dunlap@gmail.com>      *
  *                                                                         *
@@ -72,11 +72,6 @@ void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
 QString OnlineSearchMRLookup::label() const
 {
     return i18n("MR Lookup");
-}
-
-QString OnlineSearchMRLookup::favIconUrl() const
-{
-    return QStringLiteral("https://www.ams.org/favicon.ico");
 }
 
 QUrl OnlineSearchMRLookup::homepage() const

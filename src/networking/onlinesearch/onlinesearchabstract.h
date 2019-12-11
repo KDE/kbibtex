@@ -72,7 +72,7 @@ public:
     virtual QString label() const = 0;
     QString name();
 #ifdef HAVE_QTWIDGETS
-    virtual QIcon icon(QListWidgetItem *listWidgetItem = nullptr);
+    virtual QIcon icon(QListWidgetItem *listWidgetItem);
     virtual OnlineSearchAbstract::Form *customWidget(QWidget *parent);
 #endif // HAVE_QTWIDGETS
     virtual QUrl homepage() const = 0;
@@ -86,8 +86,6 @@ protected:
     bool m_hasBeenCanceled;
 
     int numSteps, curStep;
-
-    virtual QString favIconUrl() const = 0;
 
     /**
      * Split a string along spaces, but keep text in quotation marks together
@@ -175,11 +173,6 @@ private:
 
     QString htmlAttribute(const QString &htmlCode, const int startPos, const QString &attribute) const;
     bool htmlAttributeIsSelected(const QString &htmlCode, const int startPos, const QString &attribute) const;
-
-private slots:
-#ifdef HAVE_QTWIDGETS
-    void iconDownloadFinished();
-#endif // HAVE_QTWIDGETS
 
 signals:
     void foundEntry(QSharedPointer<Entry>);

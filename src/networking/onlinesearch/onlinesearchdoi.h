@@ -45,9 +45,6 @@ public:
 #endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
 
-protected:
-    QString favIconUrl() const override;
-
 private:
 #ifdef HAVE_QTWIDGETS
     class Form;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2016-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -83,10 +83,6 @@ QString OnlineSearchBioRxiv::label() const {
 
 QUrl OnlineSearchBioRxiv::homepage() const {
     return QUrl(QStringLiteral("https://www.biorxiv.org/"));
-}
-
-QString OnlineSearchBioRxiv::favIconUrl() const {
-    return QStringLiteral("https://www.biorxiv.org/sites/default/files/images/favicon.ico");
 }
 
 void OnlineSearchBioRxiv::resultsPageDone() {

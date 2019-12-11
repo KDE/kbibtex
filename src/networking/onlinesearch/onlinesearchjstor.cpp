@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -119,11 +119,6 @@ QString OnlineSearchJStor::label() const
     //= onlinesearch-jstor-label
     return QObject::tr("JSTOR");
 #endif // HAVE_KF5
-}
-
-QString OnlineSearchJStor::favIconUrl() const
-{
-    return QStringLiteral("https://www.jstor.org/assets/search_20151218T0921/files/search/images/favicon.ico");
 }
 
 QUrl OnlineSearchJStor::homepage() const

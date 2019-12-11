@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                 2018 Alexander Dunlap <alexander.dunlap@gmail.com>      *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -116,11 +116,6 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
 QString OnlineSearchMathSciNet::label() const
 {
     return i18n("MathSciNet");
-}
-
-QString OnlineSearchMathSciNet::favIconUrl() const
-{
-    return QStringLiteral("https://www.ams.org/favicon.ico");
 }
 
 QUrl OnlineSearchMathSciNet::homepage() const

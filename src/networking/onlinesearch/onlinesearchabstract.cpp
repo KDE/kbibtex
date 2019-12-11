@@ -38,6 +38,7 @@
 #include <Encoder>
 #include "internalnetworkaccessmanager.h"
 #include "onlinesearchabstract_p.h"
+#include "faviconlocator.h"
 #include "logging_networking.h"
 
 const QString OnlineSearchAbstract::queryKeyFreeText = QStringLiteral("free");
@@ -111,25 +112,11 @@ OnlineSearchAbstract::OnlineSearchAbstract(QObject *parent)
 #ifdef HAVE_QTWIDGETS
 QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
-    static const QRegularExpression invalidChars(QStringLiteral("[^-a-z0-9_]"), QRegularExpression::CaseInsensitiveOption);
-    const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/favicons/");
-    QDir().mkpath(cacheDirectory);
-    const QString fileNameStem = cacheDirectory + QString(favIconUrl()).remove(invalidChars);
-    const QStringList fileNameExtensions {QStringLiteral(".ico"), QStringLiteral(".png"), QString()};
-
-    for (const QString &extension : fileNameExtensions) {
-        const QString fileName = fileNameStem + extension;
-        if (QFileInfo::exists(fileName))
-            return QIcon(fileName);
-    }
-
-    QNetworkRequest request(favIconUrl());
-    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
-    reply->setObjectName(fileNameStem);
-    if (listWidgetItem != nullptr)
-        m_iconReplyToListWidgetItem.insert(reply, listWidgetItem);
-    connect(reply, &QNetworkReply::finished, this, &OnlineSearchAbstract::iconDownloadFinished);
-    return QIcon::fromTheme(QStringLiteral("applications-internet"));
+    FavIconLocator *fil = new FavIconLocator(homepage(), this);
+    connect(fil, &FavIconLocator::gotIcon, this, [listWidgetItem](const QIcon &icon) {
+        listWidgetItem->setIcon(icon);
+    });
+    return fil->icon();
 }
 
 OnlineSearchAbstract::Form *OnlineSearchAbstract::customWidget(QWidget *) {
@@ -439,74 +426,6 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
 
     return result;
 }
-
-#ifdef HAVE_QTWIDGETS
-void OnlineSearchAbstract::iconDownloadFinished()
-{
-    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
-
-    if (reply->error() == QNetworkReply::NoError) {
-        const QUrl redirUrl = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-        if (redirUrl.isValid()) {
-            QNetworkRequest request(redirUrl);
-            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request);
-            newReply->setObjectName(reply->objectName());
-            QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, nullptr);
-            m_iconReplyToListWidgetItem.remove(reply);
-            if (listWidgetItem != nullptr)
-                m_iconReplyToListWidgetItem.insert(newReply, listWidgetItem);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchAbstract::iconDownloadFinished);
-            return;
-        }
-
-        const QByteArray iconData = reply->readAll();
-        if (iconData.size() < 10) {
-            /// Unlikely that an icon's data is less than 10 bytes,
-            /// must be an error.
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Received invalid icon data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
-            return;
-        }
-
-        QString extension;
-        if (iconData[1] == 'P' && iconData[2] == 'N' && iconData[3] == 'G') {
-            /// PNG files have string "PNG" at second to fourth byte
-            extension = QStringLiteral(".png");
-        } else if (iconData[0] == static_cast<char>(0x00) && iconData[1] == static_cast<char>(0x00) && iconData[2] == static_cast<char>(0x01) && iconData[3] == static_cast<char>(0x00)) {
-            /// Microsoft Icon have first two bytes always 0x0000,
-            /// third and fourth byte is 0x0001 (for .ico)
-            extension = QStringLiteral(".ico");
-        } else if (iconData[0] == '<') {
-            /// HTML or XML code
-            const QString htmlCode = QString::fromUtf8(iconData);
-            qCDebug(LOG_KBIBTEX_NETWORKING) << "Received XML or HTML data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString() << ": " << htmlCode.left(128);
-            return;
-        } else {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
-            return;
-        }
-        const QString filename = reply->objectName() + extension;
-
-        QFile iconFile(filename);
-        if (iconFile.open(QFile::WriteOnly)) {
-            iconFile.write(iconData);
-            iconFile.close();
-
-            QListWidgetItem *listWidgetItem = m_iconReplyToListWidgetItem.value(reply, nullptr);
-            if (listWidgetItem != nullptr) {
-                /// Disable signals while updating the widget and its items
-                blockSignals(true);
-                listWidgetItem->setIcon(QIcon(filename));
-                /// Re-enable signals after updating the widget and its items
-                blockSignals(false);
-            }
-        } else {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not save icon data from URL" << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString() << "to file" << filename;
-            return;
-        }
-    } else
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon from URL " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString() << ": " << reply->errorString();
-}
-#endif // HAVE_QTWIDGETS
 
 void OnlineSearchAbstract::delayedStoppedSearch(int returnCode)
 {

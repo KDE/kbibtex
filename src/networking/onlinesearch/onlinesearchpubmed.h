@@ -42,9 +42,6 @@ public:
     static const int maxNumResults;
     static const uint queryChokeTimeout;
 
-protected:
-    QString favIconUrl() const override;
-
 private slots:
     void eSearchDone();
     void eFetchDone();

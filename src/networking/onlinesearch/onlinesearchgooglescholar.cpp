@@ -463,11 +463,6 @@ QString OnlineSearchGoogleScholar::label() const
 #endif // HAVE_KF5
 }
 
-QString OnlineSearchGoogleScholar::favIconUrl() const
-{
-    return QStringLiteral("https://scholar.google.com/favicon-png.ico");
-}
-
 QUrl OnlineSearchGoogleScholar::homepage() const
 {
     return QUrl(QStringLiteral("https://scholar.google.com/"));

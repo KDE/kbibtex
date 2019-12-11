@@ -197,11 +197,6 @@ QUrl OnlineSearchDOI::homepage() const
     return QUrl(QStringLiteral("https://dx.doi.org/"));
 }
 
-QString OnlineSearchDOI::favIconUrl() const
-{
-    return QStringLiteral("https://dx.doi.org/favicon.ico");
-}
-
 void OnlineSearchDOI::downloadDone()
 {
     emit progress(++curStep, numSteps);

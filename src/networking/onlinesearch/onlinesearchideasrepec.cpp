@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -104,11 +104,6 @@ void OnlineSearchIDEASRePEc::startSearch(const QMap<QString, QString> &query, in
 QString OnlineSearchIDEASRePEc::label() const
 {
     return i18n("IDEAS (RePEc)");
-}
-
-QString OnlineSearchIDEASRePEc::favIconUrl() const
-{
-    return QStringLiteral("https://ideas.repec.org/favicon.ico");
 }
 
 QUrl OnlineSearchIDEASRePEc::homepage() const

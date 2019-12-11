@@ -38,7 +38,6 @@ public:
     QUrl homepage() const override;
 
 protected:
-    QString favIconUrl() const override;
     QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) override;
     QString processRawDownload(const QString &download) override;
 };

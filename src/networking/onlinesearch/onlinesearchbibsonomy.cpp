@@ -233,11 +233,6 @@ QString OnlineSearchBibsonomy::label() const
 #endif // HAVE_KF5
 }
 
-QString OnlineSearchBibsonomy::favIconUrl() const
-{
-    return QStringLiteral("https://www.bibsonomy.org/resources/image/favicon.png");
-}
-
 #ifdef HAVE_QTWIDGETS
 OnlineSearchAbstract::Form *OnlineSearchBibsonomy::customWidget(QWidget *parent)
 {

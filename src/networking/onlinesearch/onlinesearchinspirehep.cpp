@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -33,11 +33,6 @@ QString OnlineSearchInspireHep::label() const
 QUrl OnlineSearchInspireHep::homepage() const
 {
     return QUrl(QStringLiteral("https://inspirehep.net/"));
-}
-
-QString OnlineSearchInspireHep::favIconUrl() const
-{
-    return QStringLiteral("https://inspirehep.net/favicon.ico");
 }
 
 QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, int numResults)

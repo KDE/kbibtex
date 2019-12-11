@@ -1,5 +1,5 @@
 /****************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>  *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>  *
  *   Copyright (C) 2013 Yngve I. Levinsen <yngve.inntjore.levinsen@cern.ch> *
  *                                                                          *
  *   This program is free software; you can redistribute it and/or modify   *
@@ -38,11 +38,6 @@ QString OnlineSearchCERNDS::label() const
 QUrl OnlineSearchCERNDS::homepage() const
 {
     return QUrl(QStringLiteral("https://cds.cern.ch/"));
-}
-
-QString OnlineSearchCERNDS::favIconUrl() const
-{
-    return QStringLiteral("https://cds.cern.ch/favicon.ico");
 }
 
 QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)

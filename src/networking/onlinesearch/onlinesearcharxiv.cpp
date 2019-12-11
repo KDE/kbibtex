@@ -677,11 +677,6 @@ QString OnlineSearchArXiv::label() const
 #endif // HAVE_KF5
 }
 
-QString OnlineSearchArXiv::favIconUrl() const
-{
-    return QStringLiteral("https://arxiv.org/favicon.ico");
-}
-
 #ifdef HAVE_QTWIDGETS
 OnlineSearchAbstract::Form *OnlineSearchArXiv::customWidget(QWidget *parent)
 {

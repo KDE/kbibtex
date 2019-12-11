@@ -301,11 +301,6 @@ QString OnlineSearchSpringerLink::label() const
 #endif // HAVE_KF5
 }
 
-QString OnlineSearchSpringerLink::favIconUrl() const
-{
-    return QStringLiteral("https://link.springer.com/static/0.6623/sites/link/images/favicon.ico");
-}
-
 #ifdef HAVE_QTWIDGETS
 OnlineSearchAbstract::Form *OnlineSearchSpringerLink::customWidget(QWidget *parent)
 {

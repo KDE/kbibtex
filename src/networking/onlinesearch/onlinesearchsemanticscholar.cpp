@@ -244,11 +244,6 @@ QUrl OnlineSearchSemanticScholar::homepage() const
     return QUrl(QStringLiteral("https://www.semanticscholar.org/"));
 }
 
-QString OnlineSearchSemanticScholar::favIconUrl() const
-{
-    return QStringLiteral("https://www.semanticscholar.org/img/favicon.png");
-}
-
 void OnlineSearchSemanticScholar::downloadDone()
 {
     emit progress(++curStep, numSteps);

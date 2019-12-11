@@ -46,7 +46,6 @@ public:
     QUrl homepage() const override;
 
 protected:
-    QString favIconUrl() const override;
     void sanitizeEntry(QSharedPointer<Entry> entry) override;
 
 private:

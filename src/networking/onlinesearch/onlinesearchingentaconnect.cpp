@@ -366,11 +366,6 @@ QString OnlineSearchIngentaConnect::label() const
 #endif // HAVE_KF5
 }
 
-QString OnlineSearchIngentaConnect::favIconUrl() const
-{
-    return QStringLiteral("https://www.ingentaconnect.com/favicon.ico");
-}
-
 #ifdef HAVE_QTWIDGETS
 OnlineSearchAbstract::Form *OnlineSearchIngentaConnect::customWidget(QWidget *parent)
 {
