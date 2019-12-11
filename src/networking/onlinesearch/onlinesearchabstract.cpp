@@ -478,7 +478,7 @@ void OnlineSearchAbstract::iconDownloadFinished()
         } else if (iconData[0] == '<') {
             /// HTML or XML code
             const QString htmlCode = QString::fromUtf8(iconData);
-            qCDebug(LOG_KBIBTEX_NETWORKING) << "Received XML or HTML data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString() << ": " << htmlCode.left(128);
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "Received XML or HTML data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             return;
         } else {
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();

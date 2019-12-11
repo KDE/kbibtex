@@ -118,7 +118,7 @@ public:
             entry->insert(Entry::ftUrl, Value() << QSharedPointer<VerbatimText>(new VerbatimText(url)));
 
         const QJsonObject pages = object.value(QStringLiteral("pages")).toObject();
-        bool firstPageOk = false, lastPageOk = false;;
+        bool firstPageOk = false, lastPageOk = false;
         const int firstPage = pages.value(QStringLiteral("first")).toString().toInt(&firstPageOk);
         const int lastPage = firstPageOk ? pages.value(QStringLiteral("last")).toString().toInt(&lastPageOk) : -1;
         if (firstPageOk && lastPageOk && firstPage <= lastPage)
