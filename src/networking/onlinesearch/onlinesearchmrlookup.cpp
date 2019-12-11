@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                 2014 Pavel Zorin-Kranich <pzorin@math.uni-bonn.de>      *
  *                 2018 Alexander Dunlap <alexander.dunlap@gmail.com>      *
  *                                                                         *
@@ -76,7 +76,7 @@ QString OnlineSearchMRLookup::label() const
 
 QString OnlineSearchMRLookup::favIconUrl() const
 {
-    return QStringLiteral("http://www.ams.org/favicon.ico");
+    return QStringLiteral("https://mathscinet.ams.org/favicon.ico");
 }
 
 QUrl OnlineSearchMRLookup::homepage() const

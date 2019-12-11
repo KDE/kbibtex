@@ -297,7 +297,7 @@ QString OnlineSearchSpringerLink::label() const
 
 QString OnlineSearchSpringerLink::favIconUrl() const
 {
-    return QStringLiteral("http://link.springer.com/static/0.6623/sites/link/images/favicon.ico");
+    return QStringLiteral("https://link.springer.com/static/3138de5f8939a9343008da2788dddc18466e88eb/sites/link/images/favicon-32x32.png");
 }
 
 #ifdef HAVE_QTWIDGETS
