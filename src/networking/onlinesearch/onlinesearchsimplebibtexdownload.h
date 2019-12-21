@@ -34,10 +34,10 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchSimpleBibTeXDownload : public OnlineS
 public:
     explicit OnlineSearchSimpleBibTeXDownload(QObject *parent);
 
-    void startSearch(const QMap<QString, QString> &query, int numResults) override;
+    void startSearch(const QMap<QueryKey, QString> &query, int numResults) override;
 
 protected:
-    virtual QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) = 0;
+    virtual QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) = 0;
     virtual QString processRawDownload(const QString &download);
 
 private slots:

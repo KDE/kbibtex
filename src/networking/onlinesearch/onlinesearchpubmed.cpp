@@ -56,16 +56,16 @@ public:
             qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file '" << xsltFilenameBase << "'";
     }
 
-    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) {
         /// used to auto-detect PMIDs (unique identifiers for documents) in free text search
         static const QRegularExpression pmidRegExp(QStringLiteral("^[0-9]{6,}$"));
 
         QString url = pubMedUrlPrefix + QStringLiteral("esearch.fcgi?db=pubmed&tool=kbibtex&term=");
 
-        const QStringList freeTextWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyFreeText]);
-        const QStringList yearWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyYear]);
-        const QStringList titleWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyTitle]);
-        const QStringList authorWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList freeTextWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::FreeText]);
+        const QStringList yearWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Year]);
+        const QStringList titleWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Title]);
+        const QStringList authorWords = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Author]);
 
         /// append search terms
         QStringList queryFragments;
@@ -117,7 +117,7 @@ OnlineSearchPubMed::~OnlineSearchPubMed()
     delete d;
 }
 
-void OnlineSearchPubMed::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchPubMed::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = 2);

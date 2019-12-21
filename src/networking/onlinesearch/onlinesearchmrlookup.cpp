@@ -40,7 +40,7 @@ OnlineSearchMRLookup::OnlineSearchMRLookup(QObject *parent)
     /// nothing
 }
 
-void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
+void OnlineSearchMRLookup::startSearch(const QMap<QueryKey, QString> &query, int)
 {
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = 1);
@@ -48,13 +48,13 @@ void OnlineSearchMRLookup::startSearch(const QMap<QString, QString> &query, int)
     QUrl url(queryUrlStem);
     QUrlQuery q(url);
 
-    const QString title = query[queryKeyTitle];
+    const QString title = query[QueryKey::Title];
     q.addQueryItem(QStringLiteral("ti"), title);
 
-    const QString authors = query[queryKeyAuthor];
+    const QString authors = query[QueryKey::Author];
     q.addQueryItem(QStringLiteral("au"), authors);
 
-    const QString year = query[queryKeyYear];
+    const QString year = query[QueryKey::Year];
     if (!year.isEmpty())
         q.addQueryItem(QStringLiteral("year"), year);
 

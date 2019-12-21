@@ -35,14 +35,14 @@ QUrl OnlineSearchInspireHep::homepage() const
     return QUrl(QStringLiteral("https://inspirehep.net/"));
 }
 
-QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
+QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults)
 {
     static const QString typedSearch = QStringLiteral("%1 %2"); ///< no quotation marks for search term?
 
-    const QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    const QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
-    const QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
-    const QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    const QStringList freeTextWords = splitRespectingQuotationMarks(query[QueryKey::FreeText]);
+    const QStringList yearWords = splitRespectingQuotationMarks(query[QueryKey::Year]);
+    const QStringList titleWords = splitRespectingQuotationMarks(query[QueryKey::Title]);
+    const QStringList authorWords = splitRespectingQuotationMarks(query[QueryKey::Author]);
 
     /// append search terms
     QStringList queryFragments;

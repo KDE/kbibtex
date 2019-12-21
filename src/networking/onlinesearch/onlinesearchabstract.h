@@ -53,10 +53,7 @@ public:
     class Form;
 #endif // HAVE_QTWIDGETS
 
-    static const QString queryKeyFreeText;
-    static const QString queryKeyTitle;
-    static const QString queryKeyAuthor;
-    static const QString queryKeyYear;
+    enum class QueryKey {FreeText, Title, Author, Year};
 
     static const int resultCancelled;
     static const int resultNoError;
@@ -68,7 +65,7 @@ public:
 #ifdef HAVE_QTWIDGETS
     virtual void startSearchFromForm();
 #endif // HAVE_QTWIDGETS
-    virtual void startSearch(const QMap<QString, QString> &query, int numResults) = 0;
+    virtual void startSearch(const QMap<QueryKey, QString> &query, int numResults) = 0;
     virtual QString label() const = 0;
     QString name();
 #ifdef HAVE_QTWIDGETS

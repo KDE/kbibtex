@@ -270,12 +270,12 @@ public:
     }
 #endif // HAVE_QTWIDGETS
 
-    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) {
         QUrl queryUrl(ingentaConnectBaseUrl);
         QUrlQuery q(queryUrl);
 
         int index = 1;
-        const QStringList chunksFreeText = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        const QStringList chunksFreeText = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::FreeText]);
         for (const QString &chunk : chunksFreeText) {
             if (index > 1)
                 q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -284,7 +284,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksAuthor = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList chunksAuthor = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Author]);
         for (const QString &chunk : chunksAuthor) {
             if (index > 1)
                 q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -293,7 +293,7 @@ public:
             ++index;
         }
 
-        const QStringList chunksTitle = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyTitle]);
+        const QStringList chunksTitle = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Title]);
         for (const QString &chunk : chunksTitle) {
             if (index > 1)
                 q.addQueryItem(QString(QStringLiteral("operator%1")).arg(index), QStringLiteral("AND"));
@@ -326,7 +326,7 @@ OnlineSearchIngentaConnect::~OnlineSearchIngentaConnect()
     delete d;
 }
 
-void OnlineSearchIngentaConnect::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchIngentaConnect::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = 1);

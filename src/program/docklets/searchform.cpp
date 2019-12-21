@@ -396,7 +396,7 @@ void SearchForm::startSearch()
     if (currentForm == d->generalQueryTermsForm) {
         /// start search using the general-purpose form's values
 
-        QMap<QString, QString> queryTerms = d->generalQueryTermsForm->getQueryTerms();
+        QMap<OnlineSearchAbstract::QueryKey, QString> queryTerms = d->generalQueryTermsForm->getQueryTerms();
         int numResults = d->generalQueryTermsForm->getNumResults();
         for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = d->itemToOnlineSearch.constBegin(); it != d->itemToOnlineSearch.constEnd(); ++it)
             if (it.key()->checkState() == Qt::Checked) {

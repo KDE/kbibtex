@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -58,23 +58,23 @@ public:
         else return 100;
     }
 
-    QByteArray buildJsonQuery(const QMap<QString, QString> &query, int numResults) const {
+    QByteArray buildJsonQuery(const QMap<QueryKey, QString> &query, int numResults) const {
         QString jsonQueryText = QStringLiteral("{\n");
 
         /// Free text
-        const QStringList freeTextFragments = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyFreeText]);
+        const QStringList freeTextFragments = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::FreeText]);
         if (!freeTextFragments.isEmpty())
             jsonQueryText.append(QStringLiteral("  \"qs\": \"\\\"") + freeTextFragments.join(QStringLiteral("\\\" AND \\\"")) + QStringLiteral("\\\"\""));
 
         /// Title
-        const QStringList title = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyTitle]);
+        const QStringList title = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Title]);
         if (!title.isEmpty()) {
             if (jsonQueryText != QStringLiteral("{\n")) jsonQueryText.append(QStringLiteral(",\n"));
             jsonQueryText.append(QStringLiteral("  \"title\": \"\\\"") + title.join(QStringLiteral("\\\" AND \\\"")) + QStringLiteral("\\\"\""));
         }
 
         /// Authors
-        const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Author]);
         if (!authors.isEmpty()) {
             if (jsonQueryText != QStringLiteral("{\n")) jsonQueryText.append(QStringLiteral(",\n"));
             jsonQueryText.append(QStringLiteral("  \"authors\": \"\\\"") + authors.join(QStringLiteral("\\\" AND \\\"")) + QStringLiteral("\\\"\""));
@@ -82,7 +82,7 @@ public:
 
         /// Year
         static const QRegularExpression yearRangeRegExp(QStringLiteral("(18|19|20)[0-9]{2}(-+(18|19|20)[0-9]{2})?"));
-        const QRegularExpressionMatch yearRangeRegExpMatch = yearRangeRegExp.match(query[queryKeyYear]);
+        const QRegularExpressionMatch yearRangeRegExpMatch = yearRangeRegExp.match(query[QueryKey::Year]);
         if (yearRangeRegExpMatch.hasMatch()) {
             if (jsonQueryText != QStringLiteral("{\n")) jsonQueryText.append(QStringLiteral(",\n"));
             jsonQueryText.append(QStringLiteral("  \"date\": \"") + yearRangeRegExpMatch.captured() + QStringLiteral("\""));
@@ -190,7 +190,7 @@ OnlineSearchScienceDirect::~OnlineSearchScienceDirect()
     delete d;
 }
 
-void OnlineSearchScienceDirect::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchScienceDirect::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     emit progress(curStep = 0, numSteps = 1);
 

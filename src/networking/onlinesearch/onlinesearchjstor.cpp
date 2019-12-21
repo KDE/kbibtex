@@ -59,7 +59,7 @@ OnlineSearchJStor::~OnlineSearchJStor()
     delete d;
 }
 
-void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchJStor::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = 3);
@@ -76,30 +76,30 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     q.addQueryItem(QStringLiteral("jo"), QString()); /// no specific journal
     q.addQueryItem(QStringLiteral("hp"), QString::number(numResults)); /// hits per page
     int queryNumber = 0;
-    const QStringList elementsTitle = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    const QStringList elementsTitle = splitRespectingQuotationMarks(query[QueryKey::Title]);
     for (const QString &element : elementsTitle) {
         if (queryNumber > 0) q.addQueryItem(QString(QStringLiteral("c%1")).arg(queryNumber), QStringLiteral("AND")); ///< join search terms with an AND operation
         q.addQueryItem(QString(QStringLiteral("f%1")).arg(queryNumber), QStringLiteral("ti"));
         q.addQueryItem(QString(QStringLiteral("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
-    const QStringList elementsAuthor = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    const QStringList elementsAuthor = splitRespectingQuotationMarks(query[QueryKey::Author]);
     for (const QString &element : elementsAuthor) {
         if (queryNumber > 0) q.addQueryItem(QString(QStringLiteral("c%1")).arg(queryNumber), QStringLiteral("AND")); ///< join search terms with an AND operation
         q.addQueryItem(QString(QStringLiteral("f%1")).arg(queryNumber), QStringLiteral("au"));
         q.addQueryItem(QString(QStringLiteral("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
-    const QStringList elementsFreeText = splitRespectingQuotationMarks(query[queryKeyFreeText]);
+    const QStringList elementsFreeText = splitRespectingQuotationMarks(query[QueryKey::FreeText]);
     for (const QString &element : elementsFreeText) {
         if (queryNumber > 0) q.addQueryItem(QString(QStringLiteral("c%1")).arg(queryNumber), QStringLiteral("AND")); ///< join search terms with an AND operation
         q.addQueryItem(QString(QStringLiteral("f%1")).arg(queryNumber), QStringLiteral("all"));
         q.addQueryItem(QString(QStringLiteral("q%1")).arg(queryNumber), element);
         ++queryNumber;
     }
-    if (!query[queryKeyYear].isEmpty()) {
-        q.addQueryItem(QStringLiteral("sd"), query[queryKeyYear]);
-        q.addQueryItem(QStringLiteral("ed"), query[queryKeyYear]);
+    if (!query[QueryKey::Year].isEmpty()) {
+        q.addQueryItem(QStringLiteral("sd"), query[QueryKey::Year]);
+        q.addQueryItem(QStringLiteral("ed"), query[QueryKey::Year]);
     }
     d->queryUrl.setQuery(q);
 

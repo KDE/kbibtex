@@ -118,14 +118,14 @@ OnlineSearchGoogleScholar::~OnlineSearchGoogleScholar()
     delete d;
 }
 
-void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchGoogleScholar::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     d->numResults = numResults;
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = numResults + 4);
 
-    const auto respectingQuotationMarksFreeText = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    const auto respectingQuotationMarksTitle = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    const auto respectingQuotationMarksFreeText = splitRespectingQuotationMarks(query[QueryKey::FreeText]);
+    const auto respectingQuotationMarksTitle = splitRespectingQuotationMarks(query[QueryKey::Title]);
     QStringList queryFragments;
     queryFragments.reserve(respectingQuotationMarksFreeText.size() + respectingQuotationMarksTitle.size());
     for (const QString &queryFragment : respectingQuotationMarksFreeText) {
@@ -135,14 +135,14 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QString, QString> &query,
         queryFragments.append(encodeURL(queryFragment));
     }
     d->queryFreetext = queryFragments.join(QStringLiteral("+"));
-    const auto respectingQuotationMarksAuthor = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    const auto respectingQuotationMarksAuthor = splitRespectingQuotationMarks(query[QueryKey::Author]);
     queryFragments.clear();
     queryFragments.reserve(respectingQuotationMarksAuthor.size());
     for (const QString &queryFragment : respectingQuotationMarksAuthor) {
         queryFragments.append(encodeURL(queryFragment));
     }
     d->queryAuthor = queryFragments.join(QStringLiteral("+"));
-    d->queryYear = encodeURL(query[queryKeyYear]);
+    d->queryYear = encodeURL(query[QueryKey::Year]);
 
     QUrl url(d->startPageUrl);
     QNetworkRequest request(url);

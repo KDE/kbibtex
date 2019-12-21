@@ -83,7 +83,7 @@ OnlineSearchAcmPortal::~OnlineSearchAcmPortal()
     delete d;
 }
 
-void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchAcmPortal::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     d->joinedQueryString.clear();
@@ -92,7 +92,7 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QString, QString> &query, int
     d->numFoundResults = 0;
     emit progress(curStep = 0, numSteps = numResults * 2 + 2);
 
-    for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
+    for (QMap<QueryKey, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
         // FIXME: Is there a need for percent encoding?
         d->joinedQueryString.append(it.value() + QStringLiteral(" "));
     }

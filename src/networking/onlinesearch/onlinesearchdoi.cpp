@@ -114,10 +114,10 @@ public:
     }
 #endif // HAVE_QTWIDGETS
 
-    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) {
         Q_UNUSED(numResults)
 
-        const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(query[queryKeyFreeText]);
+        const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(query[QueryKey::FreeText]);
         if (doiRegExpMatch.hasMatch()) {
             return QUrl(QStringLiteral("https://dx.doi.org/") + doiRegExpMatch.captured(0));
         }
@@ -160,7 +160,7 @@ void OnlineSearchDOI::startSearchFromForm()
 }
 #endif // HAVE_QTWIDGETS
 
-void OnlineSearchDOI::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchDOI::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = 1);

@@ -248,8 +248,8 @@ void KBibTeXTest::processNextSearch()
         m_currentOnlineSearchNumFoundEntries = 0;
         addMessage(QString(QStringLiteral("Searching '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Info);
 
-        QMap<QString, QString> query;
-        query.insert(OnlineSearchAbstract::queryKeyAuthor, QStringLiteral("smith"));
+        QMap<OnlineSearchAbstract::QueryKey, QString> query;
+        query.insert(OnlineSearchAbstract::QueryKey::Author, QStringLiteral("smith"));
         connect(*m_currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
         connect(*m_currentOnlineSearch, &OnlineSearchAbstract::foundEntry, this, [this]() {
             ++m_currentOnlineSearchNumFoundEntries;

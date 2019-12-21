@@ -121,14 +121,14 @@ public:
     }
 #endif // HAVE_QTWIDGETS
 
-    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) {
         Q_UNUSED(numResults)
 
-        const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(query[queryKeyFreeText]);
+        const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(query[QueryKey::FreeText]);
         if (doiRegExpMatch.hasMatch())
             return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + doiRegExpMatch.captured(0));
         else {
-            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithoutPrefix.match(query[queryKeyFreeText]);
+            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithoutPrefix.match(query[QueryKey::FreeText]);
             if (arXivRegExpMatch.hasMatch())
                 return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + arXivRegExpMatch.captured(0));
         }
@@ -208,7 +208,7 @@ void OnlineSearchSemanticScholar::startSearchFromForm()
 }
 #endif // HAVE_QTWIDGETS
 
-void OnlineSearchSemanticScholar::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchSemanticScholar::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = 1);

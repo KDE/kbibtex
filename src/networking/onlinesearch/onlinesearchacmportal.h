@@ -37,7 +37,7 @@ public:
     explicit OnlineSearchAcmPortal(QObject *parent);
     ~OnlineSearchAcmPortal() override;
 
-    void startSearch(const QMap<QString, QString> &query, int numResults) override;
+    void startSearch(const QMap<QueryKey, QString> &query, int numResults) override;
     QString label() const override;
     QUrl homepage() const override;
 

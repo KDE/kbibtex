@@ -38,7 +38,7 @@ public:
     QUrl homepage() const override;
 
 protected:
-    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) override;
+    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) override;
 };
 
 #endif // KBIBTEX_NETWORKING_ONLINESEARCHINSPIREHEP_H

@@ -140,10 +140,10 @@ public:
     }
 #endif // HAVE_QTWIDGETS
 
-    QUrl buildQueryUrl(const QMap<QString, QString> &query, int numResults) {
+    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) {
         /// format search terms
         QStringList queryFragments;
-        for (QMap<QString, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
+        for (QMap<QueryKey, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
             const auto respectingQuotationMarks = OnlineSearchAbstract::splitRespectingQuotationMarks(it.value());
             for (const auto &queryFragment : respectingQuotationMarks)
                 queryFragments.append(OnlineSearchAbstract::encodeURL(queryFragment));
@@ -654,7 +654,7 @@ void OnlineSearchArXiv::startSearchFromForm()
 }
 #endif // HAVE_QTWIDGETS
 
-void OnlineSearchArXiv::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchArXiv::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = 1);

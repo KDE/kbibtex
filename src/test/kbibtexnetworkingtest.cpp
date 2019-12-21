@@ -30,7 +30,7 @@ class OnlineSearchDummy : public OnlineSearchAbstract
 
 public:
     explicit OnlineSearchDummy(QObject *parent);
-    void startSearch(const QMap<QString, QString> &query, int numResults) override;
+    void startSearch(const QMap<QueryKey, QString> &query, int numResults) override;
     QString label() const override;
     QUrl homepage() const override;
 
@@ -55,12 +55,12 @@ private:
 };
 
 OnlineSearchDummy::OnlineSearchDummy(QObject *parent)
-    : OnlineSearchAbstract(parent)
+        : OnlineSearchAbstract(parent)
 {
     /// nothing
 }
 
-void OnlineSearchDummy::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchDummy::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     Q_UNUSED(query)
     Q_UNUSED(numResults)

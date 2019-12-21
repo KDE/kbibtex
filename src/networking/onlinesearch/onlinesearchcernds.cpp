@@ -40,7 +40,7 @@ QUrl OnlineSearchCERNDS::homepage() const
     return QUrl(QStringLiteral("https://cds.cern.ch/"));
 }
 
-QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
+QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults)
 {
     /// Example for a search URL:
     /// https://cds.cern.ch/search?action_search=Search&sf=&so=d&rm=&sc=0&of=hx&f=&rg=10&ln=en&as=1&m1=a&p1=stone&f1=title&op1=a&m2=a&p2=smith&f2=author&op2=a&m3=a&p3=&f3=
@@ -64,7 +64,7 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     int argumentCount = 0;
 
     /// add words from "free text" field
-    const QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
+    const QStringList freeTextWords = splitRespectingQuotationMarks(query[QueryKey::FreeText]);
     for (const QString &word : freeTextWords) {
         ++argumentCount;
         q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
@@ -74,7 +74,7 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     }
 
     /// add words from "author" field
-    const QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    const QStringList authorWords = splitRespectingQuotationMarks(query[QueryKey::Author]);
     for (const QString &word : authorWords) {
         ++argumentCount;
         q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
@@ -84,7 +84,7 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     }
 
     /// add words from "title" field
-    const QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
+    const QStringList titleWords = splitRespectingQuotationMarks(query[QueryKey::Title]);
     for (const QString &word : titleWords) {
         ++argumentCount;
         q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), word);
@@ -94,7 +94,7 @@ QUrl OnlineSearchCERNDS::buildQueryUrl(const QMap<QString, QString> &query, int 
     }
 
     /// add words from "title" field
-    const QString year = query[queryKeyYear];
+    const QString year = query[QueryKey::Year];
     if (!year.isEmpty()) {
         ++argumentCount;
         q.addQueryItem(QString(QStringLiteral("p%1")).arg(argumentCount), year);

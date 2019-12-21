@@ -40,7 +40,7 @@ public:
     virtual bool readyToStart() const override;
     virtual void copyFromEntry(const Entry &) override;
 
-    QMap<QString, QString> getQueryTerms();
+    QMap<OnlineSearchAbstract::QueryKey, QString> getQueryTerms();
     int getNumResults();
 
 private:

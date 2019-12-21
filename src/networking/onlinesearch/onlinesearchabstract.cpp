@@ -41,11 +41,6 @@
 #include "faviconlocator.h"
 #include "logging_networking.h"
 
-const QString OnlineSearchAbstract::queryKeyFreeText = QStringLiteral("free");
-const QString OnlineSearchAbstract::queryKeyTitle = QStringLiteral("title");
-const QString OnlineSearchAbstract::queryKeyAuthor = QStringLiteral("author");
-const QString OnlineSearchAbstract::queryKeyYear = QStringLiteral("year");
-
 const int OnlineSearchAbstract::resultNoError = 0;
 const int OnlineSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
 const int OnlineSearchAbstract::resultUnspecifiedError = 1;

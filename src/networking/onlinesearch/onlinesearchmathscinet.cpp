@@ -62,7 +62,7 @@ OnlineSearchMathSciNet::~OnlineSearchMathSciNet()
     delete d;
 }
 
-void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchMathSciNet::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = 3);
@@ -71,7 +71,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
     d->numResults = qMin(50, numResults); /// limit query to max 50 elements
     int index = 1;
 
-    const QString freeText = query[queryKeyFreeText];
+    const QString freeText = query[QueryKey::FreeText];
     const QStringList elementsFreeText = splitRespectingQuotationMarks(freeText);
     for (const QString &element : elementsFreeText) {
         d->queryParameters.insert(QString(QStringLiteral("pg%1")).arg(index), QStringLiteral("ALLF"));
@@ -79,7 +79,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
         ++index;
     }
 
-    const QString title = query[queryKeyTitle];
+    const QString title = query[QueryKey::Title];
     const QStringList elementsTitle = splitRespectingQuotationMarks(title);
     for (const QString &element : elementsTitle) {
         d->queryParameters.insert(QString(QStringLiteral("pg%1")).arg(index), QStringLiteral("TI"));
@@ -87,7 +87,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
         ++index;
     }
 
-    const QString authors = query[queryKeyAuthor];
+    const QString authors = query[QueryKey::Author];
     const QStringList elementsAuthor = splitRespectingQuotationMarks(authors);
     for (const QString &element : elementsAuthor) {
         d->queryParameters.insert(QString(QStringLiteral("pg%1")).arg(index), QStringLiteral("ICN"));
@@ -95,7 +95,7 @@ void OnlineSearchMathSciNet::startSearch(const QMap<QString, QString> &query, in
         ++index;
     }
 
-    const QString year = query[queryKeyYear];
+    const QString year = query[QueryKey::Year];
     if (year.isEmpty()) {
         d->queryParameters.insert(QStringLiteral("dr"), QStringLiteral("all"));
     } else {

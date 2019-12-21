@@ -48,24 +48,24 @@ OnlineSearchBioRxiv::~OnlineSearchBioRxiv() {
     /// nothing
 }
 
-void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int numResults) {
+void OnlineSearchBioRxiv::startSearch(const QMap<QueryKey, QString> &query, int numResults) {
     m_hasBeenCanceled = false;
     emit progress(curStep = 0, numSteps = numResults * 2 + 1);
 
     QString urlText(QString(QStringLiteral("https://www.biorxiv.org/search/numresults:%1 sort:relevance-rank title_flags:match-phrase format_result:standard ")).arg(numResults));
-    urlText.append(query[queryKeyFreeText]);
+    urlText.append(query[QueryKey::FreeText]);
 
     bool ok = false;
-    int year = query[queryKeyYear].toInt(&ok);
+    int year = query[QueryKey::Year].toInt(&ok);
     if (ok && year >= 1800 && year < 2100)
         urlText.append(QString(QStringLiteral(" limit_from:%1-01-01 limit_to:%1-12-31")).arg(year));
 
-    const QStringList authors = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    const QStringList authors = splitRespectingQuotationMarks(query[QueryKey::Author]);
     int authorIndex = 1;
     for (QStringList::ConstIterator it = authors.constBegin(); it != authors.constEnd(); ++it, ++authorIndex)
         urlText.append(QString(QStringLiteral(" author%1:%2")).arg(authorIndex).arg(QString(*it).replace(QStringLiteral(" "), QStringLiteral("+"))));
 
-    const QString title = QString(query[queryKeyTitle]).replace(QStringLiteral(" "), QStringLiteral("+"));
+    const QString title = QString(query[QueryKey::Title]).replace(QStringLiteral(" "), QStringLiteral("+"));
     if (!title.isEmpty())
         urlText.append(QString(QStringLiteral(" title:%1")).arg(title));
 

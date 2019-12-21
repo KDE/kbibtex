@@ -35,7 +35,7 @@ QUrl OnlineSearchSOANASAADS::homepage() const
     return QUrl(QStringLiteral("http://adswww.harvard.edu/"));
 }
 
-QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
+QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults)
 {
     static const QString globalSearch = QStringLiteral("\"%1\"");
     static const QString rangeSearch = QStringLiteral("%1:\"%2\"");
@@ -43,10 +43,10 @@ QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QString, QString> &query, 
     // TODO
     /// http://adsabs.harvard.edu/cgi-bin/basic_connect?qsearch=Hansen&version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&nr_to_return=5
 
-    const QStringList freeTextWords = splitRespectingQuotationMarks(query[queryKeyFreeText]);
-    const QStringList yearWords = splitRespectingQuotationMarks(query[queryKeyYear]);
-    const QStringList titleWords = splitRespectingQuotationMarks(query[queryKeyTitle]);
-    const QStringList authorWords = splitRespectingQuotationMarks(query[queryKeyAuthor]);
+    const QStringList freeTextWords = splitRespectingQuotationMarks(query[QueryKey::FreeText]);
+    const QStringList yearWords = splitRespectingQuotationMarks(query[QueryKey::Year]);
+    const QStringList titleWords = splitRespectingQuotationMarks(query[QueryKey::Title]);
+    const QStringList authorWords = splitRespectingQuotationMarks(query[QueryKey::Author]);
 
     /// append search terms
     QStringList queryFragments;

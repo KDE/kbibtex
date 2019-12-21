@@ -205,22 +205,22 @@ public:
     }
 #endif // HAVE_QTWIDGETS
 
-    QUrl buildQueryUrl(const QMap<QString, QString> &query) {
+    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query) {
         QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
 
-        QString queryString = query[queryKeyFreeText];
+        QString queryString = query[QueryKey::FreeText];
 
-        const QStringList titleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyTitle]);
+        const QStringList titleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Title]);
         for (const QString &titleChunk : titleChunks) {
             queryString += QString(QStringLiteral(" title:%1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
         }
 
-        const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[queryKeyAuthor]);
+        const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Author]);
         for (const QString &author : authors) {
             queryString += QString(QStringLiteral(" name:%1")).arg(Encoder::instance().convertToPlainAscii(author));
         }
 
-        QString year = query[queryKeyYear];
+        QString year = query[QueryKey::Year];
         if (!year.isEmpty()) {
             static const QRegularExpression yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
             const QRegularExpressionMatch yearRegExpMatch = yearRegExp.match(year);
@@ -273,7 +273,7 @@ void OnlineSearchSpringerLink::startSearchFromForm()
 }
 #endif // HAVE_QTWIDGETS
 
-void OnlineSearchSpringerLink::startSearch(const QMap<QString, QString> &query, int numResults)
+void OnlineSearchSpringerLink::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
 
