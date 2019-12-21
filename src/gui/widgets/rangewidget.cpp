@@ -1,5 +1,5 @@
 /*****************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
+ *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>   *
  *                                                                           *
  *                                                                           *
  *   This program is free software; you can redistribute it and/or modify    *
@@ -84,8 +84,7 @@ public:
         Q_ASSERT_X(upperValue <= maximum, "RangeWidget::Private::adjustSpinBoxes", "upperValue<=maximum");
 
         /// Disable signals being emitted when the combo boxes get updated
-        const bool previousBlockSignalsValueLower = lowerComboBox->blockSignals(true);
-        const bool previousBlockSignalsValueUpper = upperComboBox->blockSignals(true);
+        QSignalBlocker lowerComboBoxSignalBlocker(lowerComboBox), upperComboBoxSignalBlocker(upperComboBox);
 
         /// Compute a temporary QStringList containing only values from minimum to current upper value
         const QStringList lowerValues = stringListRange(values, minimum, upperValue, LowerAlternativ);
@@ -96,10 +95,6 @@ public:
         const QStringList upperValues = stringListRange(values, lowerValue, maximum, UpperAlternative);
         qobject_cast<QStringListModel *>(upperComboBox->model())->setStringList(upperValues);
         upperComboBox->setCurrentIndex(upperValue - lowerValue);
-
-        /// Re-enable signal for the combo boxes
-        lowerComboBox->blockSignals(previousBlockSignalsValueLower);
-        upperComboBox->blockSignals(previousBlockSignalsValueUpper);
     }
 };
 

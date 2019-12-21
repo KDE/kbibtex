@@ -257,7 +257,7 @@ public:
         KConfigGroup configGroup(config, configGroupName);
 
         /// Disable signals while updating the widget and its items
-        enginesList->blockSignals(true);
+        QSignalBlocker enginesListSignalBlocker(enginesList);
 
         QListWidgetItem *item = new QListWidgetItem(engine->label(), enginesList);
         static const QSet<QString> enginesEnabledByDefault {QStringLiteral("GoogleScholar"), QStringLiteral("Bibsonomy")};
@@ -281,9 +281,6 @@ public:
         });
         connect(engine, &OnlineSearchAbstract::stoppedSearch, p, &SearchForm::stoppedSearch);
         connect(engine, &OnlineSearchAbstract::progress, p, &SearchForm::updateProgress);
-
-        /// Re-enable signals after updating the widget and its items
-        enginesList->blockSignals(false);
     }
 
     void switchToSearch() {

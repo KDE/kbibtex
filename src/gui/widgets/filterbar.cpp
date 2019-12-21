@@ -164,16 +164,14 @@ public:
 
     void setFilter(const SortFilterFileModel::FilterQuery &fq) {
         /// Avoid triggering loops of activation
-        comboBoxCombination->blockSignals(true);
+        QSignalBlocker comboBoxCombinationSignalBlocker(comboBoxCombination);
         /// Set check state for action for either "any word",
         /// "every word", or "exact phrase", respectively
         const int combinationIndex = fq.combination == SortFilterFileModel::FilterCombination::AnyTerm ? 0 : (fq.terms.count() < 2 ? 2 : 1);
         comboBoxCombination->setCurrentIndex(combinationIndex);
-        /// Reset activation block
-        comboBoxCombination->blockSignals(false);
 
         /// Avoid triggering loops of activation
-        comboBoxField->blockSignals(true);
+        QSignalBlocker comboBoxFieldSignalBlocker(comboBoxField);
         /// Find and check action that corresponds to field name ("author", ...)
         const QString lower = fq.field.toLower();
         for (int idx = comboBoxField->count() - 1; idx >= 0; --idx) {
@@ -182,22 +180,16 @@ public:
                 break;
             }
         }
-        /// Reset activation block
-        comboBoxField->blockSignals(false);
 
         /// Avoid triggering loops of activation
-        buttonSearchPDFfiles->blockSignals(true);
+        QSignalBlocker buttonSearchPDFfilesSignalBlocker(buttonSearchPDFfiles);
         /// Set flag if associated PDF files have to be searched
         buttonSearchPDFfiles->setChecked(fq.searchPDFfiles);
-        /// Reset activation block
-        buttonSearchPDFfiles->blockSignals(false);
 
         /// Avoid triggering loops of activation
-        comboBoxFilterText->lineEdit()->blockSignals(true);
+        QSignalBlocker comboBoxFilterTextSignalBlocker(comboBoxFilterText);
         /// Set filter text widget's content
         comboBoxFilterText->lineEdit()->setText(fq.terms.join(QStringLiteral(" ")));
-        /// Reset activation block
-        comboBoxFilterText->lineEdit()->blockSignals(false);
     }
 
     bool modelContainsText(QAbstractItemModel *model, const QString &text) {
