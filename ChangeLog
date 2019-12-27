@@ -48,6 +48,8 @@ Diff 0.9.2 to 0.10
 Diff 0.9.1 to 0.9.2
 
 - Updating favicon URLs
+- KDE Bug 409281: (PDF) files associated with newly saved bibliography files can only be
+  associated with absolute URLs, not relative URLs as should be possible
 - KDE Bug 414375, 414385: Fixing potential crash due to defining TRANSLATION_DOMAIN
 - KDE Bug 414195: Deselecting all fields on BibTeX Viewer hides the field sorting header
 - KDE Bug 417164: File URLs passed by command line preceed over LRU
