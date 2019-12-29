@@ -51,7 +51,7 @@ private:
     Private *d;
 
 private slots:
-    void headerActionToggled();
+    void headerColumnVisibilityToggled();
     void sort(int, Qt::SortOrder);
     void noSorting();
     void showHeaderContextMenu(const QPoint &pos);

@@ -52,6 +52,8 @@ typedef struct {
     QString label;
     KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
+    QMap<QString, int> visualIndex;
+    QMap<QString, int> width;
     int defaultWidth;
     QMap<QString, bool> visible;
     bool defaultVisible;

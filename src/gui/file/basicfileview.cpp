@@ -22,6 +22,7 @@
 #include <QKeyEvent>
 #include <QAction>
 #include <QMenu>
+#include <QTimer>
 
 #include <KLocalizedString>
 
@@ -34,9 +35,9 @@ class BasicFileView::Private
 {
 private:
     BasicFileView *p;
-    const QString name;
 
 public:
+    const QString name;
     bool automaticBalancing;
     FileModel *fileModel;
     QSortFilterProxyModel *sortFilterProxyModel;
@@ -51,12 +52,17 @@ public:
     }
 
     void balanceColumns() {
+        QSignalBlocker headerViewSignalBlocker(p->header());
+
         if (p->header()->count() != BibTeXFields::instance().count()) {
             qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
             return;
-        } else if (!automaticBalancing)
+        } else if (!automaticBalancing) {
+            qCWarning(LOG_KBIBTEX_GUI) << "Will not automaticlly balance columns if automatic balancing is disabled";
             return;
+        }
 
+        /// Automatic balancing of colums is enabled
         int defaultWidthSumVisible = 0;
         int col = 0;
         for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
@@ -75,11 +81,8 @@ public:
         }
     }
 
-    void resetColumnProperties() {
-        if (p->header()->count() != BibTeXFields::instance().count()) {
-            qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
-            return;
-        }
+    void enableAutomaticBalancing()
+    {
         automaticBalancing = true;
         p->header()->setSectionsMovable(false);
         p->header()->setSectionResizeMode(QHeaderView::Fixed);
@@ -90,28 +93,97 @@ public:
             const bool visibility = fd.defaultVisible;
             p->header()->setSectionHidden(col, !visibility);
 
+            /// Later, when loading config, Width of 0 for all fields means 'enable auto-balancing'
+            fd.width[name] = 0;
+
             /// Move columns in their original order, i.e. visual index == logical index
             const int vi = p->header()->visualIndex(col);
+            fd.visualIndex[name] = col;
             if (vi != col) p->header()->moveSection(vi, col);
 
             ++col;
         }
-        BibTeXFields::instance().save();
+
         balanceColumns();
     }
 
+    enum class ColumnSizingOrigin { FromCurrentLayout, FromStoredSettings };
+
+    void enableManualColumnSizing(const ColumnSizingOrigin &columnSizingOrigin)
+    {
+        const int columnCount = p->header()->count();
+        if (columnCount != BibTeXFields::instance().count()) {
+            qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            return;
+        }
+
+        automaticBalancing = false;
+
+        p->header()->setSectionsMovable(true);
+        p->header()->setSectionResizeMode(QHeaderView::Interactive);
+
+        if (columnSizingOrigin == ColumnSizingOrigin::FromCurrentLayout) {
+            /// Memorize each columns current width (for future reference)
+            for (int logicalIndex = 0; logicalIndex < columnCount; ++logicalIndex)
+                BibTeXFields::instance()[logicalIndex].width[name] = p->header()->sectionSize(logicalIndex);
+        } else if (columnSizingOrigin == ColumnSizingOrigin::FromStoredSettings) {
+            QSignalBlocker headerViewSignalBlocker(p->header());
+
+            /// Manual columns widths are to be restored
+            int col = 0;
+            for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
+                /// Take column width from stored settings, but as a fall-back/default value
+                /// take the default width (usually <10) and multiply it by the average character
+                /// width and 4 (magic constant)
+                p->header()->resizeSection(col, fd.width.value(name, fd.defaultWidth * 4 * p->fontMetrics().averageCharWidth()));
+                ++col;
+            }
+        }
+    }
+
+    void resetColumnProperties() {
+        enableAutomaticBalancing();
+        BibTeXFields::instance().save();
+    }
+
     void loadColumnProperties() {
+        const int columnCount = p->header()->count();
+        if (columnCount != BibTeXFields::instance().count()) {
+            qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
+            return;
+        }
+
+        QSignalBlocker headerViewSignalBlocker(p->header());
+
         if (p->header()->count() != BibTeXFields::instance().count()) {
             qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
             return;
         }
         int col = 0;
+        automaticBalancing = true;
         for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
-            const bool visibility = fd.visible.contains(name) ? fd.visible[name] : fd.defaultVisible;
+            const bool visibility = fd.visible.value(name, fd.defaultVisible);
+            /// Width of 0 for all fields means 'enable auto-balancing'
+            automaticBalancing &= fd.width.value(name, 0) == 0;
             p->header()->setSectionHidden(col, !visibility);
             ++col;
         }
-        balanceColumns();
+        if (automaticBalancing)
+            enableAutomaticBalancing();
+        else {
+            enableManualColumnSizing(ColumnSizingOrigin::FromStoredSettings);
+
+            /// In case no automatic balancing was set, move columns to their positions from previous session
+            /// (columns' widths got already restored in 'enableManualColumnSizingPositioning')
+            col = 0;
+            QHash<int, int> moveTarget;
+            for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
+                moveTarget[fd.visualIndex[name]] = col;
+                ++col;
+            }
+            for (int visualIndex = 0; visualIndex < columnCount; ++visualIndex)
+                if (moveTarget[visualIndex] != visualIndex) p->header()->moveSection(moveTarget[visualIndex], visualIndex);
+        }
     }
 
     void saveColumnProperties() {
@@ -123,6 +195,9 @@ public:
         for (BibTeXFields::Iterator it = BibTeXFields::instance().begin(), endIt = BibTeXFields::instance().end(); it != endIt; ++it) {
             auto &fd = *it;
             fd.visible[name] = !p->header()->isSectionHidden(col);
+            /// Width of 0 for all fields means 'enable auto-balancing'
+            fd.width[name] = automaticBalancing ? 0 : p->header()->sectionSize(col);
+            fd.visualIndex[name] = automaticBalancing ? col : p->header()->visualIndex(col);
             ++col;
         }
         BibTeXFields::instance().save();
@@ -146,11 +221,18 @@ BasicFileView::BasicFileView(const QString &name, QWidget *parent)
     header()->setSectionsClickable(true);
     header()->setSortIndicatorShown(true);
     header()->setSortIndicator(-1, Qt::AscendingOrder);
-    header()->setSectionsMovable(false);
-    header()->setSectionResizeMode(QHeaderView::Fixed);
     connect(header(), &QHeaderView::sortIndicatorChanged, this, &BasicFileView::sort);
     header()->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(header(), &QHeaderView::customContextMenuRequested, this, &BasicFileView::showHeaderContextMenu);
+    QTimer::singleShot(250, this, [this]() {
+        /// Delayed initialization to prevent early triggering of the following slot
+        connect(header(), &QHeaderView::sectionResized, this, [this](int logicalIndex, int oldSize, int newSize) {
+            Q_UNUSED(oldSize)
+            if (!d->automaticBalancing && !d->name.isEmpty() && newSize > 0 && logicalIndex >= 0 && logicalIndex < BibTeXFields::instance().count()) {
+                BibTeXFields::instance()[logicalIndex].width[d->name] = newSize;
+            }
+        });
+    });
 }
 
 BasicFileView::~BasicFileView()
@@ -215,7 +297,7 @@ void BasicFileView::resizeEvent(QResizeEvent *event) {
         header()->setMaximumWidth(w * 3);
 }
 
-void BasicFileView::headerActionToggled()
+void BasicFileView::headerColumnVisibilityToggled()
 {
     QAction *action = qobject_cast<QAction *>(sender());
     if (action == nullptr) return;
@@ -231,7 +313,8 @@ void BasicFileView::headerActionToggled()
     }
 
     header()->setSectionHidden(col, !header()->isSectionHidden(col));
-    d->balanceColumns();
+    if (d->automaticBalancing)
+        d->balanceColumns();
 }
 
 void BasicFileView::sort(int t, Qt::SortOrder s)
@@ -253,7 +336,7 @@ void BasicFileView::noSorting()
 void BasicFileView::showHeaderContextMenu(const QPoint &pos)
 {
     const QPoint globalPos = viewport()->mapToGlobal(pos);
-    QMenu menu;
+    QMenu menu(this);
 
     int col = 0;
     const bool onlyOneLastColumnVisible = header()->hiddenSectionCount() + 1 >= header()->count();
@@ -267,7 +350,7 @@ void BasicFileView::showHeaderContextMenu(const QPoint &pos)
             /// disable action so that the column cannot be hidden by the user
             action->setEnabled(false);
         }
-        connect(action, &QAction::triggered, this, &BasicFileView::headerActionToggled);
+        connect(action, &QAction::triggered, this, &BasicFileView::headerColumnVisibilityToggled);
         menu.addAction(action);
         ++col;
     }
@@ -285,17 +368,14 @@ void BasicFileView::showHeaderContextMenu(const QPoint &pos)
     menu.addAction(action);
 
     /// Add action to allow manual resizing of columns
-    action = new QAction(i18n("Allow manual column resizing"), &menu);
+    action = new QAction(i18n("Allow manual column resizing/positioning"), &menu);
     action->setCheckable(true);
     action->setChecked(!d->automaticBalancing);
     connect(action, &QAction::triggered, this, [this, action]() {
-        d->automaticBalancing = !action->isChecked();
-        if (d->automaticBalancing)
-            d->resetColumnProperties(); ///< this will set the header's section resize mode to QHeaderView::Fixed
-        else {
-            header()->setSectionsMovable(true);
-            header()->setSectionResizeMode(QHeaderView::Interactive);
-        }
+        if (action->isChecked())
+            d->enableManualColumnSizing(BasicFileView::Private::ColumnSizingOrigin::FromCurrentLayout);
+        else
+            d->enableAutomaticBalancing();
     });
     menu.addAction(action);
 
