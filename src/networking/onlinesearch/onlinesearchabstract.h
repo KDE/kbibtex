@@ -104,6 +104,7 @@ protected:
     * this function will notify the user if necessary (KMessageBox), emit a
     * "stoppedSearch" signal (by invoking "stopSearch"), and return false.
     * @see handleErrors(KJob*)
+    * @param reply The reply the function will handle errors for
     * @param newUrl will be set to the new URL if reply contains a redirection, otherwise reply's original URL
     */
     bool handleErrors(QNetworkReply *reply, QUrl &newUrl);

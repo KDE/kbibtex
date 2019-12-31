@@ -72,14 +72,14 @@ public:
     /**
      * Check if a given key (e.g. a key for a macro or an id for an entry)
      * is contained in the file object.
-     * @see #allKeys() const
-     * @return @c the object addressed by the key @c, NULL if no such file has been found
+     * @see allKeys
+     * @return the object addressed by the key, @c nullptr if no such file has been found
      */
     const QSharedPointer<Element> containsKey(const QString &key, ElementTypes elementTypes = ElementType::All) const;
 
     /**
      * Retrieves a list of all keys for example from macros or entries.
-     * @see #const containsKey(const QString &) const
+     * @see containsKey
      * @return list of keys
      */
     QStringList allKeys(ElementTypes elementTypes = ElementType::All) const;

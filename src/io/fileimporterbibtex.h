@@ -71,8 +71,9 @@ public:
     /**
      * Split a list of keyword separated by ";" or "," into single Keyword objects.
      * @param text Text containing the keyword list
+     * @param usedSplitChar The split char that is used to separate the keywords
      * @return A list of Keyword object containing the keywords
-      * @see Keyword
+     * @see Keyword
      */
     static QList<QSharedPointer<Keyword> > splitKeywords(const QString &text, char *usedSplitChar = nullptr);
 
@@ -81,6 +82,8 @@ public:
      * Examples: "Smith, John, Fulkerson, Ford, and Johnson, Tim"
      * or "John Smith and Tim Johnson"
      * @param text Text containing the persons' names
+     * @param line_number Line number to use in error message if splitting failed
+     * @param parent The parent object
      * @return A list of Person object containing the names
      * @see Person
      */
@@ -91,6 +94,8 @@ public:
      * This is a functions specialized on the properties of (La)TeX code considering
      * e.g. curly brackets.
      * @param name The persons name
+     * @param line_number Line number to use in error message if splitting failed
+     * @param parent The parent object
      * @return A Person object containing the name
      * @see Person
      */

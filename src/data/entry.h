@@ -125,6 +125,7 @@ public:
      * allowing to call the constructor as Entry() only.
      * Both type and id can be set and retrieved later.
      * @param type type of this entry
+     * @param id identifier of this entry
      */
     explicit Entry(const QString &type = QString(), const QString &id = QString());
 
@@ -175,7 +176,7 @@ public:
      * Re-implementation of QMap's value function, but performing a case-insensitive
      * match on the key. E.g. querying for key "title" will find a key-value pair with
      * key "TITLE".
-     * @see #contains(const QString&)
+     * @see contains
      * @param key field name to search for
      * @return found value or Value() if nothing found
      */
@@ -187,7 +188,7 @@ public:
      * Re-implementation of QMap's contains function, but performing a case-insensitive
      * match on the key. E.g. querying for key "title" will find a key-value pair with
      * key "TITLE".
-     * @see #value(const QString&)
+     * @see value
      * @param key field name to search for
      * @return true if value with key found, else false
      */

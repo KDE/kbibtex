@@ -219,7 +219,7 @@ public:
         editCutAction = p->actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
         editCopyAction = p->actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
 
-        /// Action to copy references, e.g. '\cite{fordfulkerson1959}'
+        /// Action to copy references, e.g. '\\cite{fordfulkerson1959}'
         editCopyReferencesAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy References"), p);
         p->actionCollection()->setDefaultShortcut(editCopyReferencesAction, Qt::CTRL + Qt::SHIFT + Qt::Key_C);
         p->actionCollection()->addAction(QStringLiteral("edit_copy_references"), editCopyReferencesAction);
