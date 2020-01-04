@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -95,6 +95,14 @@ public:
     QSpinBox *numResultsField;
     const QString configGroupName;
 
+/// GCC's C++ compiler may complain about that the following function does reach
+/// its end without returning anything. Seemingly, the compiler is not aware that
+/// the switch covers all cases of the OnlineSearchAbstract::QueryKey enum.
+/// Unfortunately, this problem causes the C++ compiler inside GitLab's CI to stop
+/// and issue an error, making the CI to abort.
+/// Thus, this particular check gets temporarily disabled.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wreturn-type"
     static QString queryKeyToString(const OnlineSearchAbstract::QueryKey &queryKey)
     {
         switch (queryKey) {
@@ -104,6 +112,7 @@ public:
         case OnlineSearchAbstract::QueryKey::Year: return QStringLiteral("year");
         }
     }
+#pragma GCC diagnostic pop
 
     void loadState()
     {
