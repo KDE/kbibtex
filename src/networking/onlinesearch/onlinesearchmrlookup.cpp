@@ -131,7 +131,7 @@ void OnlineSearchMRLookup::sanitizeEntry(QSharedPointer<Entry> entry)
     /// Remove URL from entry if contains a DOI and the DOI field is present
     if (entry->contains(Entry::ftDOI) && entry->contains(Entry::ftUrl)) {
         Value v = entry->value(Entry::ftUrl);
-        if (v.containsPattern(QStringLiteral("http://dx.doi.org"))) {
+        if (v.containsPattern(QStringLiteral("https://dx.doi.org"))) {
             entry->remove(Entry::ftUrl);
         }
     }

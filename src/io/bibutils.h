@@ -26,7 +26,7 @@
 
 /**
  * This class encapsulates calling the various binary programs of the BibUtils program set.
- * BibUtils is available at http://sourceforge.net/projects/bibutils/
+ * BibUtils is available at https://sourceforge.net/projects/bibutils/
  *
  * This class is inherited by @see FileImporterBibUtils and @see FileExporterBibUtils,
  * which make use of its protected functions.

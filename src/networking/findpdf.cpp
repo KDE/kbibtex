@@ -245,14 +245,14 @@ public:
             return url;
 
         /// Assuming URL looks like this:
-        ///    http://ieeexplore.ieee.org/document/8092651/
-        static const QRegularExpression documentIdRegExp(QStringLiteral("/(\\d{6,})/$"));
+        ///    https://ieeexplore.ieee.org/document/8092651
+        static const QRegularExpression documentIdRegExp(QStringLiteral("/(\\d{6,})[/]?$"));
         const QRegularExpressionMatch documentIdRegExpMatch = documentIdRegExp.match(url.path());
         if (!documentIdRegExpMatch.hasMatch())
             return url;
 
         /// Use document id extracted above to build URL to PDF file
-        return QUrl(QStringLiteral("http://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=") + documentIdRegExpMatch.captured(1));
+        return QUrl(QStringLiteral("https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=") + documentIdRegExpMatch.captured(1));
     }
 };
 
@@ -318,7 +318,7 @@ bool FindPDF::search(const Entry &entry)
         /// check eprint fields as used for arXiv
         const QString eprintId = PlainTextValue::text(entry.value(QStringLiteral("eprint")));
         if (!eprintId.isEmpty()) {
-            const QUrl arxivUrl = QUrl::fromUserInput(QStringLiteral("http://arxiv.org/find/all/1/all:+") + eprintId + QStringLiteral("/0/1/0/all/0/1"));
+            const QUrl arxivUrl = QUrl::fromUserInput(QStringLiteral("https://arxiv.org/search/advanced?terms-0-term=") + eprintId + QStringLiteral("&terms-0-field=report_num&size=50&order=-announced_date_first"));
             d->queueUrl(arxivUrl, eprintId, QStringLiteral("eprint"), maxDepth);
         }
     }
@@ -337,7 +337,7 @@ bool FindPDF::search(const Entry &entry)
         d->queueUrl(bingUrl, searchWords, QStringLiteral("bing"), maxDepth);
 
         /// Search in CiteSeerX
-        const QUrl citeseerXurl = QUrl::fromUserInput(QStringLiteral("http://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc&q=") + searchWords);
+        const QUrl citeseerXurl = QUrl::fromUserInput(QStringLiteral("https://citeseerx.ist.psu.edu/search?submit=Search&sort=rlv&t=doc&q=") + searchWords);
         d->queueUrl(citeseerXurl, searchWords, QStringLiteral("citeseerx"), maxDepth);
 
         /// Search in StartPage
