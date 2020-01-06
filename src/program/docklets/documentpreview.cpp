@@ -264,7 +264,7 @@ public:
         connect(onlyLocalFilesButton, &QPushButton::toggled, p, &DocumentPreview::onlyLocalFilesChanged);
     }
 
-    constexpr bool isLocalOrRelative(const QUrl &url) const
+    inline bool isLocalOrRelative(const QUrl &url) const
     {
         return url.isLocalFile() || url.isRelative() || url.scheme().isEmpty();
     }
