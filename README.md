@@ -45,22 +45,22 @@ KBibTeX makes heavily use of KDE Frameworks 5 and therefore Qt 5.
 In detail, the following dependencies exist:
 
 * Compile time
-  - Qt 5.9 or later,
-    required components: Core, Widgets, Network, XmlPatterns,
-    Concurrent, and NetworkAuth,
-    optionally either Qt5WebEngineWidgets or Qt5WebKitWidgets,
-    and Test
-  - KDE Frameworks 5.51 or later,
-    required components: I18n, XmlGui, KIO, IconThemes, ItemViews,
-    Parts, CoreAddons, Service, TextEditor,, DocTools, Wallet, Crash,
-    and has helper package: extra-cmake-modules (ECM)
-  - Poppler (any recent version should suffice) with Qt5 bindings,
-  - Optionally, ICU (any recent version should suffice),
-    required components: uc and i18n
+    - Qt 5.9 or later,
+      required components: Core, Widgets, Network, XmlPatterns,
+      Concurrent, and NetworkAuth,
+      optionally either Qt5WebEngineWidgets or Qt5WebKitWidgets,
+      and Test
+    - KDE Frameworks 5.51 or later,
+      required components: I18n, XmlGui, KIO, IconThemes, ItemViews,
+      Parts, CoreAddons, Service, TextEditor,, DocTools, Wallet, Crash,
+      and has helper package: extra-cmake-modules (ECM)
+    - Poppler (any recent version should suffice) with Qt5 bindings,
+    - Optionally, ICU (any recent version should suffice),
+      required components: uc and i18n
 
 * Runtime
-  - BibUtils to import/export various bibliography formats
-  - A TeX distribution including pdflatex, bibtex, ...
+    - BibUtils to import/export various bibliography formats
+    - A TeX distribution including pdflatex, bibtex, ...
 
 In case this list is incomplete, wrong, or out-dated, please file
 a bug for KBibTeX at [https://bugs.kde.org/enter_bug.cgi?product=KBibTeX]().
