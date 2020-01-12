@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,7 +18,7 @@
 #ifndef KBIBTEX_NETWORKING_ONLINESEARCHSOANASAADS_H
 #define KBIBTEX_NETWORKING_ONLINESEARCHSOANASAADS_H
 
-#include <onlinesearch/OnlineSearchSimpleBibTeXDownload>
+#include <onlinesearch/OnlineSearchAbstract>
 
 #ifdef HAVE_KF5
 #include "kbibtexnetworking_export.h"
@@ -27,19 +27,25 @@
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT OnlineSearchSOANASAADS : public OnlineSearchSimpleBibTeXDownload
+class KBIBTEXNETWORKING_EXPORT OnlineSearchSOANASAADS : public OnlineSearchAbstract
 {
     Q_OBJECT
 
 public:
     explicit OnlineSearchSOANASAADS(QObject *parent);
+    virtual ~OnlineSearchSOANASAADS() override;
 
+    void startSearch(const QMap<QueryKey, QString> &query, int numResults) override;
     QString label() const override;
     QUrl homepage() const override;
 
-protected:
-    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) override;
-    QString processRawDownload(const QString &download) override;
+private slots:
+    void doneFetchingSearchJSON();
+    void doneFetchingExportBibTeX();
+
+private:
+    class Private;
+    Private *const d;
 };
 
 #endif // KBIBTEX_NETWORKING_ONLINESEARCHSOANASAADS_H

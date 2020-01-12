@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,75 +17,223 @@
 
 #include "onlinesearchsoanasaads.h"
 
+#include <QNetworkReply>
+#include <QUrlQuery>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
+#include <QJsonArray>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
+#include <QFile>
+
+#ifdef HAVE_KF5
 #include <KLocalizedString>
+#endif // HAVE_KF5
+
+#include <FileImporterBibTeX>
+#include "internalnetworkaccessmanager.h"
+#include "logging_networking.h"
+
+class OnlineSearchSOANASAADS::Private
+{
+private:
+    static const QUrl apiSearchUrl;
+
+public:
+    static const QUrl apiExportUrl;
+    static const QByteArray apiKey;
+
+    QUrl buildSearchUrl(const QMap<QueryKey, QString> &query, int numResults)
+    {
+        QUrl url(apiSearchUrl);
+        QUrlQuery urlQuery;
+
+        QString q;
+
+        /// Free text
+        const QStringList freeTextFragments = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::FreeText]);
+        if (!freeTextFragments.isEmpty())
+            q.append(QStringLiteral("\"") + freeTextFragments.join(QStringLiteral("\" \"")) + QStringLiteral("\""));
+
+        if (!q.isEmpty()) q.append(' ');
+
+        /// Title
+        const QStringList title = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Title]);
+        if (!title.isEmpty()) {
+            q.append(QStringLiteral("title:\"") + title.join(QStringLiteral("\" title:\"")) + QStringLiteral("\""));
+        }
+
+        if (!q.isEmpty()) q.append(' ');
+
+        /// Authors
+        const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Author]);
+        if (!authors.isEmpty()) {
+            q.append(QStringLiteral("author:\"") + authors.join(QStringLiteral("\" author:\"")) + QStringLiteral("\""));
+        }
+
+        if (!q.isEmpty()) q.append(' ');
+
+        QString year = query[QueryKey::Year];
+        if (!year.isEmpty()) {
+            static const QRegularExpression yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
+            const QRegularExpressionMatch yearRegExpMatch = yearRegExp.match(year);
+            if (yearRegExpMatch.hasMatch()) {
+                year = yearRegExpMatch.captured(0);
+                q.append(QStringLiteral(" year:") + year);
+            }
+        }
+
+        urlQuery.addQueryItem(QStringLiteral("fl"), QStringLiteral("bibcode"));
+        urlQuery.addQueryItem(QStringLiteral("q"), q);
+        urlQuery.addQueryItem(QStringLiteral("rows"), QString::number(numResults));
+
+        url.setQuery(urlQuery);
+        return url;
+    }
+};
+
+const QUrl OnlineSearchSOANASAADS::Private::apiSearchUrl(QStringLiteral("https://api.adsabs.harvard.edu/v1/search/query"));
+const QUrl OnlineSearchSOANASAADS::Private::apiExportUrl(QStringLiteral("https://api.adsabs.harvard.edu/v1/export/bibtexabs"));
+const QByteArray OnlineSearchSOANASAADS::Private::apiKey(InternalNetworkAccessManager::reverseObfuscate("\xa3\xe4\xf4\x9b\xe9\xd8\xdb\xb3\x74\x3a\x28\x61\x1d\x51\x35\x6d\x7b\x48\xd0\x8a\xe4\xd7\x82\xfa\x1d\x4e\x33\x76\xca\x90\x65\x52\xd\x5e\x73\x1b\x94\xf7\x79\x49\xdf\xa6\xb0\xe4\x9c\xc6\x8a\xbc\x6e\x24\x56\x5\xa2\xd2\xaf\xf7\xc4\xf4\x8\x5a\x62\x54\x60\x21\x92\xf7\xc6\xa7\xe6\xaf\x68\x5b\x8c\xcb\xdd\xb1\x5c\x2a\xd\x5c").toLatin1());
 
 OnlineSearchSOANASAADS::OnlineSearchSOANASAADS(QObject *parent)
-        : OnlineSearchSimpleBibTeXDownload(parent)
+        : OnlineSearchAbstract(parent), d(new Private)
 {
     /// nothing
 }
 
+OnlineSearchSOANASAADS::~OnlineSearchSOANASAADS()
+{
+    delete d;
+}
+
+void OnlineSearchSOANASAADS::startSearch(const QMap<QueryKey, QString> &query, int numResults)
+{
+    emit progress(curStep = 0, numSteps = 2);
+
+    QUrl url = d->buildSearchUrl(query, numResults);
+    QNetworkRequest request(url);
+    request.setRawHeader(QByteArray("Authorization"), QByteArray("Bearer ") + Private::apiKey);
+
+    QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
+    connect(reply, &QNetworkReply::finished, this, &OnlineSearchSOANASAADS::doneFetchingSearchJSON);
+
+    refreshBusyProperty();
+}
+
 QString OnlineSearchSOANASAADS::label() const
 {
-    return i18n("SAO/NASA Astrophysics Data System (ADS)");
+    return i18n("NASA Astrophysics Data System (ADS)");
 }
 
 QUrl OnlineSearchSOANASAADS::homepage() const
 {
-    return QUrl(QStringLiteral("http://adswww.harvard.edu/"));
+    return QUrl(QStringLiteral("https://ui.adsabs.harvard.edu/"));
 }
 
-QUrl OnlineSearchSOANASAADS::buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults)
+void OnlineSearchSOANASAADS::doneFetchingSearchJSON()
 {
-    static const QString globalSearch = QStringLiteral("\"%1\"");
-    static const QString rangeSearch = QStringLiteral("%1:\"%2\"");
+    emit progress(++curStep, numSteps);
 
-    // TODO
-    /// http://adsabs.harvard.edu/cgi-bin/basic_connect?qsearch=Hansen&version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&nr_to_return=5
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    const QStringList freeTextWords = splitRespectingQuotationMarks(query[QueryKey::FreeText]);
-    const QStringList yearWords = splitRespectingQuotationMarks(query[QueryKey::Year]);
-    const QStringList titleWords = splitRespectingQuotationMarks(query[QueryKey::Title]);
-    const QStringList authorWords = splitRespectingQuotationMarks(query[QueryKey::Author]);
+    if (handleErrors(reply)) {
+        const QByteArray data = reply->readAll();
+        QJsonParseError parseError;
+        const QJsonDocument document = QJsonDocument::fromJson(data, &parseError);
+        if (parseError.error == QJsonParseError::NoError) {
+            if (document.isObject()) {
+                const QJsonValue responseValue = document.object().value(QStringLiteral("response"));
+                if (responseValue.isObject()) {
+                    const QJsonValue docsValue = responseValue.toObject().value(QStringLiteral("docs"));
+                    if (docsValue.isArray()) {
+                        const QJsonArray docsArray = docsValue.toArray();
+                        QStringList bibcodeList;
+                        for (const QJsonValue &itemValue : docsArray) {
+                            if (itemValue.isObject()) {
+                                const QJsonValue bibcodeValue = itemValue.toObject().value(QString("bibcode"));
+                                if (bibcodeValue.isString()) {
+                                    bibcodeList.append(bibcodeValue.toString());
+                                }
+                            } else {
+                                qCDebug(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from Astrophysics Data System: No 'bibcode' found";
+                            }
+                        }
 
-    /// append search terms
-    QStringList queryFragments;
-    queryFragments.reserve(freeTextWords.size() + yearWords.size() + titleWords.size() + authorWords.size());
-
-    /// add words from "free text" field
-    for (const QString &word : freeTextWords)
-        queryFragments.append(globalSearch.arg(word));
-
-    /// add words from "year" field
-    for (const QString &word : yearWords)
-        queryFragments.append(word); ///< no quotation marks around years
-
-    /// add words from "title" field
-    for (const QString &word : titleWords)
-        queryFragments.append(rangeSearch.arg(QStringLiteral("intitle"), word));
-
-    /// add words from "author" field
-    for (const QString &word : authorWords)
-        queryFragments.append(rangeSearch.arg(QStringLiteral("author"), word));
-
-    /// Build URL
-    QString urlText = QStringLiteral("http://adsabs.harvard.edu/cgi-bin/basic_connect?version=1&data_type=BIBTEXPLUS&type=FILE&sort=NDATE&qsearch=");
-    urlText.append(queryFragments.join(QStringLiteral("+")).replace(QLatin1Char('"'), QStringLiteral("%22")));
-    /// set number of expected results
-    urlText.append(QString(QStringLiteral("&nr_to_return=%1")).arg(numResults));
-
-    return QUrl(urlText);
-}
-
-QString OnlineSearchSOANASAADS::processRawDownload(const QString &download) {
-    /// Skip HTML header and some other non-BibTeX content
-    const int p1 = download.indexOf(QStringLiteral("abstracts, starting"));
-    if (p1 > 1) {
-        const int p2 = download.indexOf(QStringLiteral("\n"), p1);
-        if (p2 > p1)
-            return download.mid(p2 + 1);
+                        if (bibcodeList.isEmpty()) {
+                            qCInfo(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from Astrophysics Data System: No bibcode identifiers for query found";
+                            stopSearch(resultNoError);
+                        } else {
+                            const QString exportJson = QStringLiteral("{\"bibcode\":[\"") + bibcodeList.join(QStringLiteral("\",\"")) + QStringLiteral("\"]}");
+                            QNetworkRequest request(Private::apiExportUrl);
+                            request.setRawHeader(QByteArray("Authorization"), QByteArray("Bearer ") + Private::apiKey);
+                            request.setRawHeader(QByteArray("Content-Type"), QByteArray("application/json"));
+                            QNetworkReply *newReply = InternalNetworkAccessManager::instance().post(request, exportJson.toUtf8());
+                            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+                            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchSOANASAADS::doneFetchingExportBibTeX);
+                        }
+                    } else {
+                        qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from Astrophysics Data System: No 'docs' found";
+                        stopSearch(resultNoError);
+                    }
+                } else {
+                    qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from Astrophysics Data System: No 'response' found";
+                    stopSearch(resultNoError);
+                }
+            } else {
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from Astrophysics Data System: Document is not an object";
+                stopSearch(resultUnspecifiedError);
+            }
+        } else {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from Astrophysics Data System: " << parseError.errorString();
+            stopSearch(resultUnspecifiedError);
+        }
     }
 
-    /// Skipping header failed, return input text as it was
-    return download;
+    refreshBusyProperty();
+}
+
+void OnlineSearchSOANASAADS::doneFetchingExportBibTeX()
+{
+    emit progress(++curStep, numSteps);
+
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+
+    if (handleErrors(reply)) {
+        const QByteArray data = reply->readAll();
+        QJsonParseError parseError;
+        const QJsonDocument document = QJsonDocument::fromJson(data, &parseError);
+        if (parseError.error == QJsonParseError::NoError) {
+            if (document.isObject()) {
+                const QJsonValue exportValue = document.object().value(QStringLiteral("export"));
+                if (exportValue.isString()) {
+                    FileImporterBibTeX importer(this);
+                    File *bibtexFile = importer.fromString(exportValue.toString());
+
+                    if (bibtexFile != nullptr) {
+                        for (const auto &element : const_cast<const File &>(*bibtexFile)) {
+                            QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+                            if (!publishEntry(entry))
+                                qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to publish entry";
+                        }
+                        delete bibtexFile;
+                    }
+                    stopSearch(resultNoError);
+                } else {
+                    qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from Astrophysics Data System: No 'export' found";
+                    stopSearch(resultUnspecifiedError);
+                }
+            } else {
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from Astrophysics Data System: Document is not an object";
+                stopSearch(resultUnspecifiedError);
+            }
+        } else {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data from Astrophysics Data System: " << parseError.errorString();
+            stopSearch(resultUnspecifiedError);
+        }
+    }
+
+    refreshBusyProperty();
 }
