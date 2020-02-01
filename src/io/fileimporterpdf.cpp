@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -42,6 +42,10 @@ File *FileImporterPDF::load(QIODevice *iodevice)
 {
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
         qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
+        return nullptr;
+    } else if (iodevice->atEnd() || iodevice->size() <= 0) {
+        qCWarning(LOG_KBIBTEX_IO) << "Input device at end or does not contain any data";
+        emit message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
         return nullptr;
     }
 
