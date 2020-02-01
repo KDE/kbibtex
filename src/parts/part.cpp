@@ -275,9 +275,8 @@ public:
     }
 
     FileImporter *fileImporterFactory(const QUrl &url) {
-        QString ending = url.path().toLower();
-        const auto pos = ending.lastIndexOf(QStringLiteral("."));
-        ending = ending.mid(pos + 1);
+        const QFileInfo filenameInfo(url.fileName());
+        const QString ending = filenameInfo.completeSuffix();
 
         if (ending == QStringLiteral("pdf")) {
             return new FileImporterPDF(p);
@@ -605,9 +604,8 @@ public:
         Q_ASSERT_X(url.isValid(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url, const FileScope&)", "url must be valid");
 
         /// Extract filename extension (e.g. 'bib') to determine which FileExporter to use
-        static const QRegularExpression suffixRegExp(QStringLiteral("\\.([^.]{1,4})$"));
-        const QRegularExpressionMatch suffixRegExpMatch = suffixRegExp.match(url.fileName());
-        const QString ending = suffixRegExpMatch.hasMatch() ? suffixRegExpMatch.captured(1) : QStringLiteral("bib");
+        const QFileInfo filenameInfo(url.fileName());
+        const QString ending = filenameInfo.completeSuffix();
         FileExporter *exporter = saveFileExporter(ending);
 
         /// String list to collect error message from FileExporer

@@ -288,20 +288,23 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
             }
         }
 
-        /// check if in the same directory as the BibTeX file there is a subdirectory
+        /// Check if in the same directory as the BibTeX file there is a subdirectory
         /// similar to the BibTeX file's name and which contains a PDF file exists
         /// which filename is based on the entry's id
-        static const QRegularExpression filenameExtension(QStringLiteral("\\.[^.]{2,5}$"));
-        const QString basename = bibTeXUrl.fileName().remove(filenameExtension);
-        QString directory = baseDirectory + QDir::separator() + basename;
-        for (const QString &extension : documentFileExtensions) {
-            const QFileInfo fi(directory + QDir::separator() + entry->id() + extension);
-            if (fi.exists()) {
-                const QUrl url = QUrl::fromLocalFile(fi.canonicalFilePath());
-                if (!result.contains(url))
-                    result << url;
+        const QFileInfo filenameInfo(bibTeXUrl.fileName());
+        const QString ending = filenameInfo.completeSuffix();
+        QString directory = baseDirectory + QDir::separator() + bibTeXUrl.fileName();
+        directory.chop(ending.length() + 1);
+        const QFileInfo fi(directory);
+        if (fi.isDir())
+            for (const QString &extension : documentFileExtensions) {
+                const QFileInfo fi(directory + QDir::separator() + entry->id() + extension);
+                if (fi.exists()) {
+                    const QUrl url = QUrl::fromLocalFile(fi.canonicalFilePath());
+                    if (!result.contains(url))
+                        result << url;
+                }
             }
-        }
     }
 
     return result;
