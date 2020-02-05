@@ -163,7 +163,6 @@ private:
 
 private slots:
     void deferredListsChanged();
-    void delayedReadConfig();
 };
 
 #endif // KBIBTEX_PROGRAM_OPENFILEINFO_H
