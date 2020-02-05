@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -418,22 +418,35 @@ public:
         return left->lastAccess() > right->lastAccess(); /// reverse sorting!
     }
 
-    void readConfig() {
+    void readConfig(QUrl &recentlyOpenURL) {
         readConfig(OpenFileInfo::StatusFlag::RecentlyUsed, configGroupNameRecentlyUsed, maxNumRecentlyUsedFiles);
         readConfig(OpenFileInfo::StatusFlag::Favorite, configGroupNameFavorites, maxNumFavoriteFiles);
         readConfig(OpenFileInfo::StatusFlag::Open, configGroupNameOpen, maxNumOpenFiles);
+
+        KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
+        KConfigGroup cg(config, configGroupNameOpen);
+        static const QString recentlyOpenURLkey = OpenFileInfo::OpenFileInfoPrivate::keyURL + QStringLiteral("-current");
+        recentlyOpenURL = cg.hasKey(recentlyOpenURLkey) ? QUrl(cg.readEntry(recentlyOpenURLkey)) : QUrl();
     }
 
     void writeConfig() {
         writeConfig(OpenFileInfo::StatusFlag::RecentlyUsed, configGroupNameRecentlyUsed, maxNumRecentlyUsedFiles);
         writeConfig(OpenFileInfo::StatusFlag::Favorite, configGroupNameFavorites, maxNumFavoriteFiles);
         writeConfig(OpenFileInfo::StatusFlag::Open, configGroupNameOpen, maxNumOpenFiles);
+
+        KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
+        KConfigGroup cg(config, configGroupNameOpen);
+        static const QString recentlyOpenURLkey = OpenFileInfo::OpenFileInfoPrivate::keyURL + QStringLiteral("-current");
+        if (currentFileInfo != nullptr && currentFileInfo->url().isValid())
+            /// If there is a currently active and open file, remember that file's URL
+            cg.writeEntry(recentlyOpenURLkey, currentFileInfo->url().url(QUrl::PreferLocalFile));
+        else
+            cg.deleteEntry(recentlyOpenURLkey);
     }
 
     void readConfig(OpenFileInfo::StatusFlag statusFlag, const QString &configGroupName, int maxNumFiles) {
         KSharedConfigPtr config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));
 
-        bool isFirst = true;
         KConfigGroup cg(config, configGroupName);
         for (int i = 0; i < maxNumFiles; ++i) {
             QUrl fileUrl = QUrl(cg.readEntry(QString(QStringLiteral("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyURL).arg(i), ""));
@@ -454,11 +467,6 @@ public:
             ofi->addFlags(statusFlag);
             ofi->addFlags(OpenFileInfo::StatusFlag::HasName);
             ofi->setLastAccess(QDateTime::fromString(cg.readEntry(QString(QStringLiteral("%1-%2")).arg(OpenFileInfo::OpenFileInfoPrivate::keyLastAccess).arg(i), ""), OpenFileInfo::OpenFileInfoPrivate::dateTimeFormat));
-            if (isFirst) {
-                isFirst = false;
-                if (statusFlag == OpenFileInfo::StatusFlag::Open)
-                    p->setCurrentFile(ofi);
-            }
         }
     }
 
@@ -492,8 +500,27 @@ const int OpenFileInfoManager::OpenFileInfoManagerPrivate::maxNumOpenFiles = 16;
 OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
         : QObject(parent), d(new OpenFileInfoManagerPrivate(this))
 {
-    QTimer::singleShot(300, this, [this]() {
-        d->readConfig();
+    QUrl recentlyOpenURL;
+    d->readConfig(recentlyOpenURL);
+
+    QTimer::singleShot(250, this, [this, recentlyOpenURL]() {
+        /// In case there is at least one file marked as 'open' but it is not yet actually open,
+        /// set it as current file now. The file to be opened (identified by URL) should be
+        /// preferrably the file that was actively open at the end of last KBibTeX session.
+        /// Slightly delaying the actually opening of files is necessary to give precendence
+        /// to bibliography files passed as command line arguments (see program.cpp) over files
+        /// that where open when the previous KBibTeX session was quit.
+        /// See KDE bug 417164.
+        /// TODO still necessary to refactor the whole 'file opening' control flow to avoid hacks like this one
+        if (d->currentFileInfo == nullptr) {
+            OpenFileInfo *ofiToUse = nullptr;
+            /// Go over the list of files that are flagged as 'open' ...
+            for (auto *ofi : const_cast<const OpenFileInfoManager::OpenFileInfoList &>(d->openFileInfoList))
+                if (ofi->flags().testFlag(OpenFileInfo::StatusFlag::Open) && (ofiToUse == nullptr || (recentlyOpenURL.isValid() && ofi->url() == recentlyOpenURL)))
+                    ofiToUse = ofi;
+            if (ofiToUse != nullptr)
+                setCurrentFile(ofiToUse);
+        }
     });
 }
 
