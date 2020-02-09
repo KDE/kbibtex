@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -69,7 +69,7 @@ public:
         /// If the correct URL with an authorization token is requested from this
         /// local webserver, the credentials will be stored and this wizard dialog
         /// be closed.
-        const quint16 port = static_cast<quint16>(qrand() % 50000) + 15000;
+        const quint16 port = static_cast<quint16>(QRandomGenerator::global()->bounded(1025, 65533) & 0xffff);
         QOAuthHttpServerReplyHandler *replyHandler = new QOAuthHttpServerReplyHandler(port, parent);
         replyHandler->setCallbackPath("kbibtex-zotero-oauth");
         replyHandler->setCallbackText(i18n("<html><head><title>KBibTeX authorized to use Zotero</title></head><body><p>KBibTeX got successfully authorized to read your Zotero database.</p></body></html>"));

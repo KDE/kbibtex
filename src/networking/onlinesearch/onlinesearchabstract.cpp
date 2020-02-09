@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,7 @@
 #include <QRegularExpression>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#include <QRandomGenerator>
 #ifdef HAVE_QTWIDGETS
 #include <QListWidgetItem>
 #endif // HAVE_QTWIDGETS
@@ -436,7 +437,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
 
     /// Sometimes, there is no identifier, so set a random one
     if (entry->id().isEmpty())
-        entry->setId(QString(QStringLiteral("entry-%1")).arg(QString::number(qrand(), 36)));
+        entry->setId(QString(QStringLiteral("entry-%1")).arg(QString::number(QRandomGenerator::global()->generate(), 36)));
     /// Missing entry type? Set it to 'misc'
     if (entry->type().isEmpty())
         entry->setType(Entry::etMisc);
