@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -236,6 +236,9 @@ void AssociatedFilesUI::updateUIandPreview() {
         d->lineMoveCopyLocation->show();
         d->lineMoveCopyLocation->setText(d->bibTeXfile->property(File::Url).toUrl().path());
     }
+    d->groupBoxRename->setEnabled(!d->radioNoCopyMove->isChecked());
+    if (d->radioNoCopyMove->isChecked())
+        d->radioKeepFilename->setChecked(true);
 
     if (d->bibTeXfile != nullptr && d->sourceUrl.isValid() && !entryId.isEmpty()) {
         const QPair<QUrl, QUrl> newURLs = AssociatedFiles::computeSourceDestinationUrls(d->sourceUrl, entryId, d->bibTeXfile, renameOperation(), d->lineEditUserDefinedName->text());
@@ -243,8 +246,6 @@ void AssociatedFilesUI::updateUIandPreview() {
             preview = AssociatedFiles::computeAssociateUrl(newURLs.second, d->bibTeXfile, pathType());
     }
     d->linePreview->setText(preview);
-
-    d->groupBoxRename->setEnabled(!d->radioNoCopyMove->isChecked());
 }
 
 void AssociatedFilesUI::setupForRemoteUrl(const QUrl &url, const QString &entryId) {
