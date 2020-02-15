@@ -56,29 +56,26 @@ public:
         if (!freeTextFragments.isEmpty())
             q.append(QStringLiteral("\"") + freeTextFragments.join(QStringLiteral("\" \"")) + QStringLiteral("\""));
 
-        if (!q.isEmpty()) q.append(' ');
-
         /// Title
         const QStringList title = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Title]);
         if (!title.isEmpty()) {
+            if (!q.isEmpty()) q.append(' ');
             q.append(QStringLiteral("title:\"") + title.join(QStringLiteral("\" title:\"")) + QStringLiteral("\""));
         }
-
-        if (!q.isEmpty()) q.append(' ');
 
         /// Authors
         const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Author]);
         if (!authors.isEmpty()) {
+            if (!q.isEmpty()) q.append(' ');
             q.append(QStringLiteral("author:\"") + authors.join(QStringLiteral("\" author:\"")) + QStringLiteral("\""));
         }
-
-        if (!q.isEmpty()) q.append(' ');
 
         QString year = query[QueryKey::Year];
         if (!year.isEmpty()) {
             static const QRegularExpression yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
             const QRegularExpressionMatch yearRegExpMatch = yearRegExp.match(year);
             if (yearRegExpMatch.hasMatch()) {
+                if (!q.isEmpty()) q.append(' ');
                 year = yearRegExpMatch.captured(0);
                 q.append(QStringLiteral(" year:") + year);
             }
