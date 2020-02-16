@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -69,91 +69,86 @@ public:
         return text;
     }
 
+    bool insertUrl(const QString &text, QSharedPointer<Entry> entry) {
+        const QUrl url = QUrl::fromUserInput(text);
+        return insertUrl(url, entry);
+    }
+
     /**
      * Makes an attempt to insert the passed text as an URL to the given
      * element. May fail for various reasons, such as the text not being
      * a valid URL or the element being invalid.
      */
-    bool insertUrl(const QString &text, QSharedPointer<Element> element) {
-        const QUrl url = QUrl::fromUserInput(text);
-        return insertUrl(url, element);
-    }
-
-    bool insertUrl(const QUrl &url, QSharedPointer<Element> element) {
-        if (element.isNull()) return false;
-        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+    bool insertUrl(const QUrl &url, QSharedPointer<Entry> entry) {
         if (entry.isNull()) return false;
         if (!url.isValid()) return false;
         FileModel *model = fileView->fileModel();
         if (model == nullptr) return false;
 
-        qCDebug(LOG_KBIBTEX_GUI) << "About to add URL " << url.toDisplayString() << " to entry" << entry->id();
         return !AssociatedFilesUI::associateUrl(url, entry, model->bibliographyFile(), true, fileView).isEmpty();
     }
 
-    bool insertText(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
-        bool insertUrlPreviouslyCalled = false;
+    /**
+     * Given a fragment of BibTeX code, insert the elements contained in
+     * this code into the current file
+     * @param code BibTeX code in text form
+     * @return true if at least one element got inserted and no error occurred
+     */
+    bool insertBibTeX(const QString &code) {
+        /// Use BibTeX importer to generate representation from plain text
+        FileImporterBibTeX importer(fileView);
+        QScopedPointer<File> file(importer.fromString(code));
+        if (!file.isNull() && !file->isEmpty()) {
+            FileModel *fileModel = fileView->fileModel();
+            QSortFilterProxyModel *sfpModel = fileView->sortFilterProxyModel();
 
-        if (text.startsWith(QStringLiteral("http://")) || text.startsWith(QStringLiteral("https://")) || text.startsWith(QStringLiteral("file://"))) {
-            /// Quick check if passed text looks like an URL;
-            /// in this case try to add it to the current/selected entry
-            if (insertUrl(text, element))
+            /// Insert new elements one by one
+            const int startRow = fileModel->rowCount(); ///< Memorize row where insertion started
+            for (const auto &element : const_cast<const File &>(*file))
+                fileModel->insertRow(element, fileView->model()->rowCount());
+            const int endRow = fileModel->rowCount() - 1; ///< Memorize row where insertion ended
+
+            /// Select newly inserted elements
+            QItemSelectionModel *ism = fileView->selectionModel();
+            ism->clear();
+            /// Keep track of the insert element which is most upwards in the list when inserted
+            QModelIndex minRowTargetModelIndex;
+            /// Highlight those rows in the editor which correspond to newly inserted elements
+            for (int i = startRow; i <= endRow; ++i) {
+                QModelIndex targetModelIndex = sfpModel->mapFromSource(fileModel->index(i, 0));
+                ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
+
+                /// Update the most upward inserted element
+                if (!minRowTargetModelIndex.isValid() || minRowTargetModelIndex.row() > targetModelIndex.row())
+                    minRowTargetModelIndex = targetModelIndex;
+            }
+            /// Scroll tree view to show top-most inserted element
+            fileView->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
+
+            /// Return true if at least one element was inserted
+            if (startRow <= endRow)
                 return true;
-            else
-                insertUrlPreviouslyCalled = true;
         }
 
-        FileModel *fileModel = fileView->fileModel();
-        if (fileModel == nullptr) return false;
+        return false;
+    }
+
+    bool insertText(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
+        /// Cast current element into an entry which then may be used in case an URL needs to be inserted into it
+        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+        const QRegularExpressionMatch urlRegExpMatch = KBibTeX::urlRegExp.match(text);
+        /// Quick check if passed text's beginning looks like an URL;
+        /// in this case try to add it to the current/selected entry
+        if (urlRegExpMatch.hasMatch() && urlRegExpMatch.capturedStart() == 0 && !entry.isNull()) {
+            if (insertUrl(urlRegExpMatch.captured(0), entry))
+                return true;
+        }
 
         /// Assumption: user dropped a piece of BibTeX code,
-        /// use BibTeX importer to generate representation from plain text
-        FileImporterBibTeX importer(fileView);
-        File *file = importer.fromString(text);
-        if (file != nullptr) {
-            if (!file->isEmpty()) {
-                QSortFilterProxyModel *sfpModel = fileView->sortFilterProxyModel();
+        if (insertBibTeX(text))
+            return true;
 
-                /// Insert new elements one by one
-                const int startRow = fileModel->rowCount(); ///< Memorize row where insertion started
-                for (const auto &element : const_cast<const File &>(*file))
-                    fileModel->insertRow(element, fileView->model()->rowCount());
-                const int endRow = fileModel->rowCount() - 1; ///< Memorize row where insertion ended
-
-                /// Select newly inserted elements
-                QItemSelectionModel *ism = fileView->selectionModel();
-                ism->clear();
-                /// Keep track of the insert element which is most upwards in the list when inserted
-                QModelIndex minRowTargetModelIndex;
-                /// Highlight those rows in the editor which correspond to newly inserted elements
-                for (int i = startRow; i <= endRow; ++i) {
-                    QModelIndex targetModelIndex = sfpModel->mapFromSource(fileModel->index(i, 0));
-                    ism->select(targetModelIndex, QItemSelectionModel::Rows | QItemSelectionModel::Select);
-
-                    /// Update the most upward inserted element
-                    if (!minRowTargetModelIndex.isValid() || minRowTargetModelIndex.row() > targetModelIndex.row())
-                        minRowTargetModelIndex = targetModelIndex;
-                }
-                /// Scroll tree view to show top-most inserted element
-                fileView->scrollTo(minRowTargetModelIndex, QAbstractItemView::PositionAtTop);
-
-                /// Clean up
-                delete file;
-                /// Return true if at least one element was inserted
-                if (startRow <= endRow)
-                    return true;
-            } else
-                delete file; ///< clean up
-        }
-
-        if (!insertUrlPreviouslyCalled) {
-            /// If not tried above (e.g. if another protocol as the
-            /// ones listed above is passed), call insertUrl(..) now
-            if (insertUrl(text, element))
-                return true;
-        }
-
-        qCDebug(LOG_KBIBTEX_GUI) << "Don't know what to do with " << text;
+        qCInfo(LOG_KBIBTEX_GUI) << "This text cannot be in inserted, looks neither like a URL nor like BibTeX code: " << text;
 
         return false;
     }
@@ -285,7 +280,10 @@ void Clipboard::editorDropEvent(QDropEvent *event)
             element = d->fileView->currentElement();
         }
 
-        const bool modified = !urls.isEmpty() ? d->insertUrl(urls.first(), element) : (!text.isEmpty() ? d->insertText(text, element) : false);
+        /// Cast current element into an entry which then may be used in case an URL needs to be inserted into it
+        QSharedPointer<Entry> entry = element.isNull() ? QSharedPointer<Entry>() : element.dynamicCast<Entry>();
+
+        const bool modified = !urls.isEmpty() && !entry.isNull() ? d->insertUrl(urls.first(), entry) : (!text.isEmpty() ? d->insertText(text, element) : false);
         if (modified)
             d->fileView->externalModification();
     }
