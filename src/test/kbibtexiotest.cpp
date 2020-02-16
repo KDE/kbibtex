@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -176,8 +176,17 @@ void KBibTeXIOTest::encoderLaTeXdecode_data()
     QTest::addColumn<QString>("alternativelatex");
 
     QTest::newRow("Just ASCII") << QStringLiteral("Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur.") << QStringLiteral("Gallia est omnis divisa in partes tres, quarum unam incolunt Belgae, aliam Aquitani, tertiam qui ipsorum lingua Celtae, nostra Galli appellantur.") << QString();
-    QTest::newRow("Dotless i and j characters") << QStringLiteral("{\\`\\i}{\\'\\i}{\\^\\i}{\\\"\\i}{\\~\\i}{\\=\\i}{\\u\\i}{\\k\\i}{\\^\\j}{\\v\\i}{\\v\\j}") << QString(QChar(0x00EC)) + QChar(0x00ED) + QChar(0x00EE) + QChar(0x00EF) + QChar(0x0129) + QChar(0x012B) + QChar(0x012D) + QChar(0x012F) + QChar(0x0135) + QChar(0x01D0) + QChar(0x01F0) << QString();
+    QTest::newRow("Dotless i and j characters") << QStringLiteral("{\\`\\i}{\\`{\\i}}{\\'\\i}{\\^\\i}{\\\"\\i}{\\~\\i}{\\=\\i}{\\u\\i}{\\k\\i}{\\^\\j}{\\m\\i}{\\v\\i}{\\v\\j}\\m\\i") << QString(QChar(0x00EC)) + QChar(0x00EC) + QChar(0x00ED) + QChar(0x00EE) + QChar(0x00EF) + QChar(0x0129) + QChar(0x012B) + QChar(0x012D) + QChar(0x012F) + QChar(0x0135) + QStringLiteral("{\\m\\i}")  + QChar(0x01D0) + QChar(0x01F0) + QStringLiteral("\\m\\i") <<  QStringLiteral("{\\`\\i}{\\`\\i}{\\'\\i}{\\^\\i}{\\\"\\i}{\\~\\i}{\\=\\i}{\\u\\i}{\\k\\i}{\\^\\j}{\\m\\i}{\\v\\i}{\\v\\j}\\m\\i");
     QTest::newRow("\\l and \\ldots") << QStringLiteral("\\l\\ldots\\l\\ldots") << QString(QChar(0x0142)) + QChar(0x2026) + QChar(0x0142) + QChar(0x2026) << QStringLiteral("{\\l}{\\ldots}{\\l}{\\ldots}");
+    QTest::newRow("Various two-letter commands (1)") << QStringLiteral("\\AA\\mu") << QString(QChar(0x00c5)) + QChar(0x03bc) << QStringLiteral("{\\AA}\\ensuremath{\\mu}");
+    QTest::newRow("Various two-letter commands (2)") << QStringLiteral("{\\AA}{\\mu}") << QString(QChar(0x00c5)) + QChar(0x03bc) << QStringLiteral("{\\AA}\\ensuremath{\\mu}");
+    QTest::newRow("Various two-letter commands (3)") << QStringLiteral("\\AA \\mu ") << QString(QChar(0x00c5)) + QChar(0x03bc) << QStringLiteral("{\\AA}\\ensuremath{\\mu}");
+    QTest::newRow("Inside curly brackets: modifier plus letter") << QStringLiteral("aa{\\\"A}bb{\\\"T}") << QStringLiteral("aa") + QChar(0x00c4) + QStringLiteral("bb{\\\"T}") << QString();
+    QTest::newRow("Inside curly brackets: modifier plus, inside curly brackets, letter") << QStringLiteral("aa{\\\"{A}}bb{\\\"{T}}") << QStringLiteral("aa") + QChar(0x00c4) + QStringLiteral("bb{\\\"{T}}") <<  QStringLiteral("aa{\\\"A}bb{\\\"{T}}");
+    QTest::newRow("Modifier plus letter") << QStringLiteral("\\\"A aa\\\"Abb\\\"T") << QChar(0x00c4) + QStringLiteral(" aa") + QChar(0x00c4) + QStringLiteral("bb\\\"T") << QStringLiteral("{\\\"A} aa{\\\"A}bb\\\"T");
+    QTest::newRow("Modifier plus, inside curly brackets, letter") << QStringLiteral("\\\"{A} aa\\\"{A}bb\\\"{T}") << QChar(0x00c4) + QStringLiteral(" aa") + QChar(0x00c4) + QStringLiteral("bb\\\"{T}") << QStringLiteral("{\\\"A} aa{\\\"A}bb\\\"{T}");
+    QTest::newRow("Single-letter commands") << QStringLiteral("\\,\\&\\_") << QChar(0x2009) + QStringLiteral("&_") << QString();
+    QTest::newRow("\\noopsort{\\noopsort}") << QStringLiteral("\\noopsort{\\noopsort}") << QStringLiteral("\\noopsort{\\noopsort}") << QString();
 }
 
 void KBibTeXIOTest::encoderLaTeXdecode()

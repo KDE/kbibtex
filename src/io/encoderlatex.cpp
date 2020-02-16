@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -957,6 +957,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 int skipSpaces = 0;
                 while (i + 3 + skipSpaces < len && input[i + 3 + skipSpaces] == QLatin1Char(' ') && skipSpaces < 16) ++skipSpaces;
 
+                bool found = false;
                 if (lookupTablePos >= 0 && i + skipSpaces < len - 4 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 3 + skipSpaces])) >= 0 && input[i + 4 + skipSpaces] == QLatin1Char('}')) {
                     /// If we found a modifier which is followed by
                     /// a letter followed by a closing curly bracket,
@@ -964,27 +965,31 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Use lookup table to see what Unicode char this
                     /// represents
                     const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[cachedAsciiLetterOrDigitToPos];
-                    if (unicodeLetter.unicode() < 127) {
-                        /// This combination of modifier and letter is not known,
-                        /// so try to preserve it
-                        output.append(input.midRef(i, 5 + skipSpaces));
-                        qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 5 + skipSpaces);
-                    } else
+                    if (unicodeLetter.unicode() >= 127) {
                         output.append(unicodeLetter);
-                    /// Step over those additional characters
-                    i += 4 + skipSpaces;
+                        /// Step over those additional characters
+                        i += 4 + skipSpaces;
+                        found = true;
+                    }
+                    /// Don't print any warnings yet, as this if-case may got triggered by e.g. \mu
+                    /// ('m' is a potential modifier, yet \mu should be recognized as Greek letter later)
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
                     /// This is the case for {\'\i} or alike.
-                    bool found = false;
                     for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                         if (dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
                             output.append(QChar(dotlessIJCharacter.unicode));
-                            i += 5 + skipSpaces;
                             found = true;
                             break;
                         }
-                    if (!found)
+                    if (!found) {
+                        /// This combination of modifier and letter is not known,
+                        /// so try to preserve it
+                        output.append(input.midRef(i, 6 + skipSpaces));
                         qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4 + skipSpaces];
+                    }
+                    /// Step over those additional characters
+                    i += 5 + skipSpaces;
+                    found = true;
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 6 && input[i + 3 + skipSpaces] == QLatin1Char('{') && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 4 + skipSpaces])) >= 0 && input[i + 5 + skipSpaces] == QLatin1Char('}') && input[i + 6 + skipSpaces] == QLatin1Char('}')) {
                     /// If we found a modifier which is followed by
                     /// an opening curly bracket followed by a letter
@@ -997,37 +1002,47 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
                         output.append(input.midRef(i, 7 + skipSpaces));
+                        qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
                         qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 7 + skipSpaces);
                     } else
                         output.append(unicodeLetter);
                     /// Step over those additional characters
                     i += 6 + skipSpaces;
+                    found = true;
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 7 && input[i + 3 + skipSpaces] == QLatin1Char('{') && input[i + 4 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 5 + skipSpaces]) && input[i + 6 + skipSpaces] == QLatin1Char('}') && input[i + 7 + skipSpaces] == QLatin1Char('}')) {
                     /// This is the case for {\'{\i}} or alike.
-                    bool found = false;
                     for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                         if (dotlessIJCharacter.letter == input[i + 5 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
                             output.append(QChar(dotlessIJCharacter.unicode));
-                            i += 7 + skipSpaces;
                             found = true;
                             break;
                         }
-                    if (!found)
+                    if (!found) {
+                        /// This combination of modifier and letter is not known,
+                        /// so try to preserve it
+                        output.append(input.midRef(i, 8 + skipSpaces));
+                        qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
                         qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5 + skipSpaces] << "}";
-                } else {
-                    /// Now, the case of something like {\AA} is left
-                    /// to check for
+                    }
+                    /// Step over those additional characters
+                    i += 7 + skipSpaces;
+                    found = true;
+                }
+
+                if (!found) {
+                    /// Now, either some two-letter command like {\AA} or {\mu} is left
+                    /// to check for or there is completely unsuppored command sequence,
+                    /// but which then should be kept unmodified
                     const QString alpha = readAlphaCharacters(input, i + 2);
                     int nextPosAfterAlpha = i + 2 + alpha.size();
                     if (nextPosAfterAlpha < input.length() && input[nextPosAfterAlpha] == QLatin1Char('}')) {
-                        /// We are dealing actually with a string like {\AA}
-                        /// Check which command it is,
-                        /// insert corresponding Unicode character
-                        bool foundCommand = false;
+                        /// We may deal with a string like {\AA} or {\mu}
+                        /// Check which command it is, then insert corresponding Unicode character
+                        found = false;
                         for (const EncoderLaTeXCharacterCommand &encoderLaTeXCharacterCommand : encoderLaTeXCharacterCommands) {
                             if (encoderLaTeXCharacterCommand.command == alpha) {
                                 output.append(QChar(encoderLaTeXCharacterCommand.unicode));
-                                foundCommand = true;
+                                found = true;
                                 break;
                             }
                         }
@@ -1035,26 +1050,21 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// Check if a math command has been read,
                         /// like \subset
                         /// (automatically skipped if command was found above)
-                        for (const MathCommand &mathCommand : mathCommands) {
-                            if (mathCommand.command == alpha) {
-                                if (output.endsWith(QStringLiteral("\\ensuremath"))) {
-                                    /// Remove "\ensuremath" right before this math command,
-                                    /// it will be re-inserted when exporting/saving the document
-                                    output = output.left(output.length() - 11);
+                        if (!found)
+                            for (const MathCommand &mathCommand : mathCommands) {
+                                if (mathCommand.command == alpha) {
+                                    output.append(QChar(mathCommand.unicode));
+                                    found = true;
+                                    break;
                                 }
-                                output.append(QChar(mathCommand.unicode));
-                                foundCommand = true;
-                                break;
                             }
-                        }
 
-                        if (foundCommand)
-                            i = nextPosAfterAlpha;
-                        else {
-                            /// Dealing with a string line {\noopsort}
+                        if (!found) {
+                            /// Dealing with a string like {\noopsort}
                             /// (see BibTeX documentation where this gets explained)
-                            output.append(c);
+                            output.append(input.midRef(i, 3 + alpha.size()));
                         }
+                        i = nextPosAfterAlpha;
                     } else {
                         /// Could be something like {\tt filename.txt}
                         /// Keep it as it is
@@ -1081,6 +1091,7 @@ QString EncoderLaTeX::decode(const QString &input) const
             int skipSpaces = 0;
             while (i + 2 + skipSpaces < len && input[i + 2 + skipSpaces] == QLatin1Char(' ') && skipSpaces < 16) ++skipSpaces;
 
+            bool found = false;
             if (lookupTablePos >= 0 && i + skipSpaces <= len - 3 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 2 + skipSpaces])) >= 0 && (i + skipSpaces == len - 3 || input[i + 1] == QLatin1Char('"') || input[i + 1] == QLatin1Char('\'') || input[i + 1] == QLatin1Char('`') || input[i + 1] == QLatin1Char('='))) { // TODO more special cases?
                 /// We found a special modifier which is followed by
                 /// a letter followed by normal text without any
@@ -1089,43 +1100,36 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// Use lookup table to see what Unicode char this
                 /// represents
                 const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[cachedAsciiLetterOrDigitToPos];
-                if (unicodeLetter.unicode() < 127) {
-                    /// This combination of modifier and letter is not known,
-                    /// so try to preserve it
-                    output.append(input.midRef(i, 3 + skipSpaces));
-                    qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 3 + skipSpaces);
-                } else
+                if (unicodeLetter.unicode() > 127) {
                     output.append(unicodeLetter);
-                /// Step over those additional characters
-                i += 2 + skipSpaces;
-            } else if (lookupTablePos >= 0 && i + skipSpaces <= len - 3 && i + skipSpaces <= len - 3 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 2 + skipSpaces])) >= 0 && (i + skipSpaces == len - 3 || input[i + 3 + skipSpaces] == QLatin1Char('}') || input[i + 3 + skipSpaces] == QLatin1Char('{') || input[i + 3 + skipSpaces] == QLatin1Char(' ') || input[i + 3 + skipSpaces] == QLatin1Char('\t') || input[i + 3 + skipSpaces] == QLatin1Char('\\') || input[i + 3 + skipSpaces] == QLatin1Char('\r') || input[i + 3 + skipSpaces] == QLatin1Char('\n'))) {
+                    /// Step over those additional characters
+                    i += 2 + skipSpaces;
+                    found = true;
+                }
+                /// Don't print any warnings yet, as this if-case may got triggered by e.g. \mu
+                /// ('m' is a potential modifier, yet \mu should be recognized as Greek letter later)
+            } else if (lookupTablePos >= 0 && i + skipSpaces <= len - 3 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 2 + skipSpaces])) >= 0 && (i + skipSpaces == len - 3 || input[i + 3 + skipSpaces] == QLatin1Char('}') || input[i + 3 + skipSpaces] == QLatin1Char('{') || input[i + 3 + skipSpaces] == QLatin1Char(' ') || input[i + 3 + skipSpaces] == QLatin1Char('\t') || input[i + 3 + skipSpaces] == QLatin1Char('\\') || input[i + 3 + skipSpaces] == QLatin1Char('\r') || input[i + 3 + skipSpaces] == QLatin1Char('\n'))) {
                 /// We found a modifier which is followed by
                 /// a letter followed by a command delimiter such
                 /// as a whitespace, so we are looking at something
-                /// like \"u followed by a space
+                /// like \"u followed by a space or another delimiter
                 /// Use lookup table to see what Unicode char this
                 /// represents
                 const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[cachedAsciiLetterOrDigitToPos];
-                if (unicodeLetter.unicode() < 127) {
-                    /// This combination of modifier and letter is not known,
-                    /// so try to preserve it
-                    output.append(input.midRef(i, 3));
-                    qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 3);
-                } else
+                if (unicodeLetter.unicode() >= 127) {
                     output.append(unicodeLetter);
-                /// Step over those additional characters
-                i += 2 + skipSpaces;
+                    /// Step over those additional characters
+                    i += 2 + skipSpaces;
+                    found = true;
 
-                /// Now, after this command, a whitespace may follow
-                /// which has to get "eaten" as it acts as a command
-                /// delimiter
-                if (input[i + 1] == QLatin1Char(' ') || input[i + 1] == QLatin1Char('\r') || input[i + 1] == QLatin1Char('\n'))
-                    ++i;
-                else {
-                    /// If no whitespace follows, still
-                    /// check for extra curly brackets
-                    checkForExtraCurlyAtEnd = true;
+                    if (input[i + 1] != QLatin1Char(' ') && input[i + 1] != QLatin1Char('\r') && input[i + 1] != QLatin1Char('\n')) {
+                        /// If no whitespace follows, still
+                        /// check for extra curly brackets
+                        checkForExtraCurlyAtEnd = true;
+                    }
                 }
+                /// Don't print any warnings yet, as this if-case may got triggered by e.g. \mu
+                /// ('m' is a potential modifier, yet \mu should be recognized as Greek letter later)
             } else if (lookupTablePos >= 0 && i + skipSpaces < len - 4 && input[i + 2 + skipSpaces] == QLatin1Char('{') && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 3 + skipSpaces])) >= 0 && input[i + 4 + skipSpaces] == QLatin1Char('}')) {
                 /// We found a modifier which is followed by an opening
                 /// curly bracket followed a letter followed by a closing
@@ -1138,104 +1142,129 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
                     output.append(input.midRef(i, 5 + skipSpaces));
+                    qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
                     qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 5 + skipSpaces);
                 } else
                     output.append(unicodeLetter);
                 /// Step over those additional characters
                 i += 4 + skipSpaces;
+                found = true;
             } else if (lookupTablePos >= 0 && i + skipSpaces < len - 3 && input[i + 2 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 3 + skipSpaces])) {
                 /// This is the case for \'\i or alike.
-                bool found = false;
                 for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                     if (dotlessIJCharacter.letter == input[i + 3 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
                         output.append(QChar(dotlessIJCharacter.unicode));
-                        i += 3 + skipSpaces;
                         found = true;
                         break;
                     }
-                if (!found)
+                if (!found) {
+                    /// This combination of modifier and letter is not known,
+                    /// so try to preserve it
+                    output.append(input.midRef(i, 4 + skipSpaces));
                     qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3 + skipSpaces];
+                }
+                /// Step over those additional characters
+                i += 3 + skipSpaces;
+                found = true;
             } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 2 + skipSpaces] == QLatin1Char('{') && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
                 /// This is the case for \'{\i} or alike.
-                bool found = false;
                 for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                     if (dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
                         output.append(QChar(dotlessIJCharacter.unicode));
-                        i += 5 + skipSpaces;
                         found = true;
                         break;
                     }
-                if (!found)
+                if (!found) {
+                    /// This combination of modifier and letter is not known,
+                    /// so try to preserve it
+                    output.append(input.midRef(i, 6 + skipSpaces));
                     qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4 + skipSpaces] << "}";
-            } else if (i < len - 1) {
+                }
+                /// Step over those additional characters
+                i += 5 + skipSpaces;
+                found = true;
+            }
+
+            if (!found && i < len - 1) {
                 /// Now, the case of something like \AA is left
                 /// to check for
                 const QString alpha = readAlphaCharacters(input, i + 1);
-                int nextPosAfterAlpha = i + 1 + alpha.size();
+                int nextPosAfterAlpha = i + alpha.size();
                 if (alpha.size() >= 1 && alpha.at(0).isLetter()) {
                     /// We are dealing actually with a string like \AA or \o
                     /// Check which command it is,
                     /// insert corresponding Unicode character
-                    bool foundCommand = false;
                     for (const EncoderLaTeXCharacterCommand &encoderLaTeXCharacterCommand : encoderLaTeXCharacterCommands) {
                         if (encoderLaTeXCharacterCommand.command == alpha) {
                             output.append(QChar(encoderLaTeXCharacterCommand.unicode));
-                            foundCommand = true;
+                            found = true;
                             break;
                         }
                     }
 
-                    if (foundCommand) {
+                    /// Check if a math command has been read,
+                    /// like \subset
+                    /// (automatically skipped if command was found above)
+                    if (!found)
+                        for (const MathCommand &mathCommand : mathCommands) {
+                            if (mathCommand.command == alpha) {
+                                output.append(QChar(mathCommand.unicode));
+                                found = true;
+                                break;
+                            }
+                        }
+
+                    if (found) {
                         /// Now, after a command, a whitespace may follow
                         /// which has to get "eaten" as it acts as a command
                         /// delimiter
-                        if (nextPosAfterAlpha < input.length() && (input[nextPosAfterAlpha] == QLatin1Char(' ') || input[nextPosAfterAlpha] == QLatin1Char('\r') || input[nextPosAfterAlpha] == QLatin1Char('\n')))
+                        if (nextPosAfterAlpha + 1 < input.length() && (input[nextPosAfterAlpha + 1] == QLatin1Char(' ') || input[nextPosAfterAlpha + 1] == QLatin1Char('\r') || input[nextPosAfterAlpha + 1] == QLatin1Char('\n')))
                             ++nextPosAfterAlpha;
                         else {
                             /// If no whitespace follows, still
                             /// check for extra curly brackets
                             checkForExtraCurlyAtEnd = true;
                         }
-                        i = nextPosAfterAlpha - 1;
                     } else {
                         /// No command found? Just copy input char to output
-                        output.append(c);
+                        output.append(input.midRef(i, 1 + alpha.size()));
                     }
+                    i = nextPosAfterAlpha;
                 } else {
                     /// Maybe we are dealing with a string like \& or \_
                     /// Check which command it is
-                    bool foundCommand = false;
+                    found = false;
                     for (const QChar &encoderLaTeXProtectedSymbol : encoderLaTeXProtectedSymbols)
                         if (encoderLaTeXProtectedSymbol == input[i + 1]) {
                             output.append(encoderLaTeXProtectedSymbol);
-                            foundCommand = true;
+                            found = true;
                             break;
                         }
 
-                    if (!foundCommand && !inMathMode)
+                    if (!found && !inMathMode)
                         for (const QChar &encoderLaTeXProtectedTextOnlySymbol : encoderLaTeXProtectedTextOnlySymbols)
                             if (encoderLaTeXProtectedTextOnlySymbol == input[i + 1]) {
                                 output.append(encoderLaTeXProtectedTextOnlySymbol);
-                                foundCommand = true;
+                                found = true;
                                 break;
                             }
 
                     /// If command has been found, nothing has to be done
                     /// except for hopping over this backslash
-                    if (foundCommand)
+                    if (found)
                         ++i;
                     else if (i < len - 1 && input[i + 1] == QChar(0x002c /* comma */)) {
                         /// Found a thin space: \,
                         /// Replacing Latex-like thin space with Unicode thin space
                         output.append(QChar(0x2009));
-                        // foundCommand = true; ///< only necessary if more tests will follow in the future
+                        // found = true; ///< only necessary if more tests will follow in the future
                         ++i;
                     } else {
                         /// Nothing special, copy input char to output
                         output.append(c);
                     }
                 }
-            } else {
+            } else if (!found) {
                 /// Nothing special, copy input char to output
                 output.append(c);
             }
@@ -1399,6 +1428,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             }
 
             if (!found) {
+                qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
                 qCWarning(LOG_KBIBTEX_IO) << "Don't know how to encode Unicode char" << QString(QStringLiteral("0x%1")).arg(c.unicode(), 4, 16, QLatin1Char('0'));
                 output.append(c);
             }
