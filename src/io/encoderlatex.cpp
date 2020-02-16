@@ -18,6 +18,7 @@
 #include "encoderlatex.h"
 
 #include <QString>
+#include <QStack>
 
 #include "logging_io.h"
 
@@ -926,7 +927,13 @@ QString EncoderLaTeX::decode(const QString &input) const
     const int len = input.length();
     QString output;
     output.reserve(len);
-    bool inMathMode = false;
+    enum MathMode {
+        MathModeNone = 0, MathModeDollar, MathModeEnsureMath
+    };
+    QStack<MathMode> currentMathMode;
+#define currentMathModeTop()  (currentMathMode.empty()?MathModeNone:currentMathMode.top())
+    int openCurlyBracketCounterEnsureMath = 0;
+    QStack<int> popEnsureMathAtOpenCurlyBacketCounter;
     int cachedAsciiLetterOrDigitToPos = -1;
 
     /// Go through input char by char
@@ -1228,6 +1235,14 @@ QString EncoderLaTeX::decode(const QString &input) const
                     } else {
                         /// No command found? Just copy input char to output
                         output.append(input.midRef(i, 1 + alpha.size()));
+
+                        if (alpha == QStringLiteral("ensuremath") && input[nextPosAfterAlpha + 1] == QLatin1Char('{')) {
+                            currentMathMode.push(MathModeEnsureMath);
+                            popEnsureMathAtOpenCurlyBacketCounter.push(openCurlyBracketCounterEnsureMath);
+                            ++openCurlyBracketCounterEnsureMath;
+                            output.append(QLatin1Char('{'));
+                            ++nextPosAfterAlpha;
+                        }
                     }
                     i = nextPosAfterAlpha;
                 } else {
@@ -1241,7 +1256,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                             break;
                         }
 
-                    if (!found && !inMathMode)
+                    if (!found && currentMathModeTop() == MathModeNone)
                         for (const QChar &encoderLaTeXProtectedTextOnlySymbol : encoderLaTeXProtectedTextOnlySymbols)
                             if (encoderLaTeXProtectedTextOnlySymbol == input[i + 1]) {
                                 output.append(encoderLaTeXProtectedTextOnlySymbol);
@@ -1304,8 +1319,22 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// Still, check if input character is a dollar sign
                 /// without a preceding backslash, means toggling between
                 /// text mode and math mode
-                if (c == QLatin1Char('$') && (i == 0 || input[i - 1] != QLatin1Char('\\')))
-                    inMathMode = !inMathMode;
+                if (c == QLatin1Char('$') && (i == 0 || input[i - 1] != QLatin1Char('\\'))) {
+                    if (currentMathModeTop() == MathModeDollar)
+                        currentMathMode.pop();
+                    else
+                        currentMathMode.push(MathModeDollar);
+                }
+                if (currentMathModeTop() == MathModeEnsureMath) {
+                    if (c == QLatin1Char('{'))
+                        ++openCurlyBracketCounterEnsureMath;
+                    else if (c == QLatin1Char('}'))
+                        --openCurlyBracketCounterEnsureMath;
+                    if (!popEnsureMathAtOpenCurlyBacketCounter.empty() && openCurlyBracketCounterEnsureMath == popEnsureMathAtOpenCurlyBacketCounter.top()) {
+                        popEnsureMathAtOpenCurlyBacketCounter.pop();
+                        currentMathMode.pop();
+                    }
+                }
             }
         }
     }
@@ -1347,7 +1376,13 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
     int len = input.length();
     QString output;
     output.reserve(len);
-    bool inMathMode = false;
+    enum MathMode {
+        MathModeNone = 0, MathModeDollar, MathModeEnsureMath
+    };
+    QStack<MathMode> currentMathMode;
+#define currentMathModeTop()  (currentMathMode.empty()?MathModeNone:currentMathMode.top())
+    int openCurlyBracketCounterEnsureMath = 0;
+    QStack<int> popEnsureMathAtOpenCurlyBacketCounter;
 
     /// Go through input char by char
     for (int i = 0; i < len; ++i) {
@@ -1412,9 +1447,14 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// Ok, test for math commands
                 for (const MathCommand &mathCommand : mathCommands)
                     if (mathCommand.unicode == c.unicode() && (mathCommand.direction & DirectionUnicodeToCommand)) {
-                        if (inMathMode)
-                            output.append(QString(QStringLiteral("\\%1{}")).arg(mathCommand.command));
-                        else
+                        if (!currentMathMode.empty()) {
+                            output.append(QString(QStringLiteral("\\%1")).arg(mathCommand.command));
+                            const QChar peekAhead = i < len - 1 ? input[i + 1] : QChar();
+                            if (peekAhead != QLatin1Char('\\') && peekAhead != QLatin1Char('}') && peekAhead != QLatin1Char('$')) {
+                                /// Between current command and following character a separator is necessary
+                                output.append(QStringLiteral("{}"));
+                            }
+                        } else
                             output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand.command));
                         found = true;
                         break;
@@ -1447,7 +1487,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                     break;
                 }
 
-            if (!found && !inMathMode)
+            if (!found && currentMathMode.empty())
                 for (const QChar &encoderLaTeXProtectedTextOnlySymbol : encoderLaTeXProtectedTextOnlySymbols)
                     if (encoderLaTeXProtectedTextOnlySymbol == c) {
                         output.append(QLatin1Char('\\'));
@@ -1460,8 +1500,30 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             /// Finally, check if input character is a dollar sign
             /// without a preceding backslash, means toggling between
             /// text mode and math mode
-            if (c == QLatin1Char('$') && (i == 0 || input[i - 1] != QLatin1Char('\\')))
-                inMathMode = !inMathMode;
+            if (c == QLatin1Char('$') && (i == 0 || input[i - 1] != QLatin1Char('\\'))) {
+                if (currentMathMode.empty())
+                    currentMathMode.push(MathModeDollar);
+                else if (currentMathModeTop() == MathModeDollar)
+                    currentMathMode.pop();
+                else if (currentMathModeTop() == MathModeEnsureMath)
+                    currentMathMode.push(MathModeDollar);
+            } else if (output.right(12) == QStringLiteral("\\ensuremath{")) {
+                currentMathMode.push(MathModeEnsureMath);
+                popEnsureMathAtOpenCurlyBacketCounter.push(openCurlyBracketCounterEnsureMath);
+                // ++openCurlyBracketCounterEnsureMath; //< not necessary as right below both
+                /// 'currentMathModeTop() == MathModeEnsureMath' and 'c == QLatin1Char('{')'
+                /// will be true
+            }
+            if (currentMathModeTop() == MathModeEnsureMath) {
+                if (c == QLatin1Char('{'))
+                    ++openCurlyBracketCounterEnsureMath;
+                else if (c == QLatin1Char('}'))
+                    --openCurlyBracketCounterEnsureMath;
+                if (!popEnsureMathAtOpenCurlyBacketCounter.empty() && openCurlyBracketCounterEnsureMath == popEnsureMathAtOpenCurlyBacketCounter.top()) {
+                    popEnsureMathAtOpenCurlyBacketCounter.pop();
+                    currentMathMode.pop();
+                }
+            }
         }
     }
 

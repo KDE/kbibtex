@@ -187,6 +187,7 @@ void KBibTeXIOTest::encoderLaTeXdecode_data()
     QTest::newRow("Modifier plus, inside curly brackets, letter") << QStringLiteral("\\\"{A} aa\\\"{A}bb\\\"{T}") << QChar(0x00c4) + QStringLiteral(" aa") + QChar(0x00c4) + QStringLiteral("bb\\\"{T}") << QStringLiteral("{\\\"A} aa{\\\"A}bb\\\"{T}");
     QTest::newRow("Single-letter commands") << QStringLiteral("\\,\\&\\_") << QChar(0x2009) + QStringLiteral("&_") << QString();
     QTest::newRow("\\noopsort{\\noopsort}") << QStringLiteral("\\noopsort{\\noopsort}") << QStringLiteral("\\noopsort{\\noopsort}") << QString();
+    QTest::newRow("\\ensuremath") << QStringLiteral("\\ensuremath{${\\alpha}$}${\\ensuremath{\\delta}}$-spot \\ensuremath{26^{\\mathrm{th}}} {\\ensuremath{-}}") << QStringLiteral("\\ensuremath{$") + QChar(0x03b1) + ("$}${\\ensuremath{") + QChar(0x03b4) + QStringLiteral("}}$-spot \\ensuremath{26^{\\mathrm{th}}} {\\ensuremath{-}}") << QStringLiteral("\\ensuremath{$\\alpha$}${\\ensuremath{\\delta}}$-spot \\ensuremath{26^{\\mathrm{th}}} {\\ensuremath{-}}");
 }
 
 void KBibTeXIOTest::encoderLaTeXdecode()
