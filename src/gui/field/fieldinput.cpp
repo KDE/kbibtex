@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -139,7 +139,7 @@ public:
         break;
         case KBibTeX::FieldInputType::PersonList:
             fieldListEdit = new PersonListEdit(preferredTypeFlag, typeFlags, p);
-            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
+            connect(fieldListEdit, &PersonListEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldListEdit);
             break;
         case KBibTeX::FieldInputType::UrlList:
