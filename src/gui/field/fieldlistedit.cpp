@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -465,8 +465,12 @@ UrlListEdit::UrlListEdit(QWidget *parent)
     m_buttonAddFile->setMenu(menuAddFile);
     connect(m_buttonAddFile, &QPushButton::clicked, m_buttonAddFile, &QPushButton::showMenu);
 
-    menuAddFile->addAction(QIcon::fromTheme(QStringLiteral("emblem-symbolic-link")), i18n("Add reference ..."), this, SLOT(slotAddReference()));
-    menuAddFile->addAction(QIcon::fromTheme(QStringLiteral("emblem-symbolic-link")), i18n("Add reference from clipboard"), this, SLOT(slotAddReferenceFromClipboard()));
+    menuAddFile->addAction(QIcon::fromTheme(QStringLiteral("emblem-symbolic-link")), i18n("Add reference ..."), this, [this]() {
+        slotAddReference();
+    });
+    menuAddFile->addAction(QIcon::fromTheme(QStringLiteral("emblem-symbolic-link")), i18n("Add reference from clipboard"), this, [this]() {
+        slotAddReferenceFromClipboard();
+    });
 }
 
 void UrlListEdit::slotAddReference()

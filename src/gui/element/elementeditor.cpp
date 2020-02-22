@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -201,12 +201,16 @@ public:
         buttonOptions->setMenu(menuOptions);
 
         /// Option to show all fields or only those require for current entry type
-        actionForceShowAllWidgets = menuOptions->addAction(i18n("Show all fields"), p, SLOT(updateReqOptWidgets()));
+        actionForceShowAllWidgets = menuOptions->addAction(i18n("Show all fields"), p, [this]() {
+            updateReqOptWidgets();
+        });
         actionForceShowAllWidgets->setCheckable(true);
         actionForceShowAllWidgets->setChecked(showAll);
 
         /// Option to disable tab key focus to reach/visit various non-editable widgets
-        actionLimitKeyboardTabStops = menuOptions->addAction(i18n("Tab key visits only editable fields"), p, SLOT(limitKeyboardTabStops()));
+        actionLimitKeyboardTabStops = menuOptions->addAction(i18n("Tab key visits only editable fields"), p, [this]() {
+            this->limitKeyboardTabStops(); /// naming conflict between local variable 'limitKeyboardTabStops' and function 'limitKeyboardTabStops'
+        });
         actionLimitKeyboardTabStops->setCheckable(true);
         actionLimitKeyboardTabStops->setChecked(limitKeyboardTabStops);
 

@@ -226,8 +226,10 @@ public:
         Clipboard *clipboard = new Clipboard(partWidget->fileView());
 
         /// Actions to cut and copy selected elements as BibTeX code
-        editCutAction = p->actionCollection()->addAction(KStandardAction::Cut, clipboard, SLOT(cut()));
-        editCopyAction = p->actionCollection()->addAction(KStandardAction::Copy, clipboard, SLOT(copy()));
+        editCutAction = p->actionCollection()->addAction(KStandardAction::Cut);
+        connect(editCutAction, &QAction::triggered, clipboard, &Clipboard::cut);
+        editCopyAction = p->actionCollection()->addAction(KStandardAction::Copy);
+        connect(editCopyAction, &QAction::triggered, clipboard, &Clipboard::copy);
 
         /// Action to copy references, e.g. '\\cite{fordfulkerson1959}'
         editCopyReferencesAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy References"), p);
@@ -236,7 +238,8 @@ public:
         connect(editCopyReferencesAction, &QAction::triggered, clipboard, &Clipboard::copyReferences);
 
         /// Action to paste BibTeX code
-        editPasteAction = p->actionCollection()->addAction(KStandardAction::Paste, clipboard, SLOT(paste()));
+        action = editPasteAction = p->actionCollection()->addAction(KStandardAction::Paste);
+        connect(action, &QAction::triggered, clipboard, &Clipboard::paste);
 
         /// Action to delete selected rows/elements
         editDeleteAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-table-delete-row")), i18n("Delete"), p);
