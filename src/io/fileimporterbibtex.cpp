@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -230,13 +230,13 @@ Comment *FileImporterBibTeX::readCommentElement()
 
 Comment *FileImporterBibTeX::readPlainCommentElement(const QString &prefix)
 {
-    QString result = EncoderLaTeX::instance().decode(prefix + readLine());
+    QString result = rstrip(EncoderLaTeX::instance().decode(prefix + readLine()));
     while (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r')) readChar();
     while (!m_nextChar.isNull() && m_nextChar != QLatin1Char('@')) {
         const QChar nextChar = m_nextChar;
         const QString line = readLine();
         while (m_nextChar == QLatin1Char('\n') || m_nextChar == QLatin1Char('\r')) readChar();
-        result.append(EncoderLaTeX::instance().decode((nextChar == QLatin1Char('%') ? QString() : QString(nextChar)) + line));
+        result.append(rstrip(EncoderLaTeX::instance().decode((nextChar == QLatin1Char('%') ? QString() : QString(nextChar)) + line)));
     }
 
     if (result.startsWith(QStringLiteral("x-kbibtex"))) {
@@ -1276,6 +1276,14 @@ QString FileImporterBibTeX::bibtexAwareSimplify(const QString &text)
     }
 
     return result;
+}
+
+QString FileImporterBibTeX::rstrip(const QString &text)
+{
+    for (int p = text.length() - 1; p >= 0; --p)
+        if (!text.at(p).isSpace())
+            return text.left(p + 1);
+    return QString();
 }
 
 bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line, File *file)
