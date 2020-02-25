@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -49,6 +49,7 @@
 #include <Entry>
 #include <Macro>
 #include <Preamble>
+#include <Comment>
 #include <File>
 #include <FileInfo>
 #include <FileImporterBibTeX>
@@ -1168,7 +1169,7 @@ public:
 
     Private(SourceWidget *parent)
             : messages(nullptr), buttonRestore(nullptr), importerBibTeX(new FileImporterBibTeX(parent)), delayedExecutionTimer(new DelayedExecutionTimer(1500, 500, parent)) {
-        /// nothing
+        importerBibTeX->setCommentHandling(FileImporterBibTeX::CommentHandling::Keep);
     }
 
     void addMessage(const FileImporter::MessageSeverity severity, const QString &messageText)
@@ -1297,8 +1298,9 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
     }
     break;
     case ElementClass::Comment: {
-        message = i18n("Comments not supported");
-        result = false;
+        QSharedPointer<Comment> comment = file->first().dynamicCast<Comment>();
+        result = !comment.isNull();
+        if (!result) message = i18n("Given source code does not parse as one single BibTeX comment.");
     }
     break;
     case ElementClass::Invalid: {
