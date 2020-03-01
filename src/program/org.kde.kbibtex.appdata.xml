@@ -272,7 +272,7 @@
   </description>
   <url type="homepage">https://userbase.kde.org/KBibTeX</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?format=guided&amp;product=kbibtex</url>
-  <url type="help">http://docs.kde.org/development/en/extragear-office/kbibtex/index.html</url>
+  <url type="help">https://docs.kde.org/?application=kbibtex</url>
   <screenshots>
     <screenshot type="default">
       <caption>KBibTeX main window</caption>
