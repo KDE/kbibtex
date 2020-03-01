@@ -170,7 +170,7 @@ QString AssociatedFilesUI::associateUrl(const QUrl &url, QSharedPointer<Entry> &
         const QUrl newUrl = AssociatedFiles::copyDocument(url, entry->id(), bibTeXfile, ui->renameOperation(), ui->moveCopyOperation(), dlg, ui->userDefinedFilename());
         success = newUrl.isValid();
         if (success) {
-            referenceString = doInsertUrl ? AssociatedFiles::insertUrl(newUrl, entry, bibTeXfile, ui->pathType()) : AssociatedFiles::computeAssociateUrl(newUrl, bibTeXfile, ui->pathType());
+            referenceString = doInsertUrl ? AssociatedFiles::insertUrl(newUrl, entry, bibTeXfile, ui->pathType()) : AssociatedFiles::computeAssociateString(newUrl, bibTeXfile, ui->pathType());
             success &= !referenceString.isEmpty();
         }
     }
@@ -220,30 +220,56 @@ void AssociatedFilesUI::updateUIandPreview() {
     QString preview = i18n("No preview available");
     const QString entryId = d->entryId.isEmpty() && !d->entry.isNull() ? d->entry->id() : d->entryId;
 
+    const QUrl bibTeXfileUrl = d->bibTeXfile != nullptr && d->bibTeXfile->hasProperty(File::Url) ? d->bibTeXfile->property(File::Url).toUrl() : QUrl();
+
     if (entryId.isEmpty()) {
+        /// If current entry has no identifier, then renaming after entry id is not possible
         d->radioRenameToEntryId->setEnabled(false);
+        /// ... and the current filename should be kept
         d->radioKeepFilename->setChecked(true);
     } else
+        /// But if the entry has an identifier, prefer to rename after it
         d->radioRenameToEntryId->setEnabled(true);
-    if (d->bibTeXfile == nullptr || !d->bibTeXfile->hasProperty(File::Url)) {
+    if (!bibTeXfileUrl.isValid()) {
+        /// If current file has no URL, e.g. because it hasn't been saved,
+        /// no relative path can be assembled, i.e. only an absolute one is possible
         d->radioRelativePath->setEnabled(false);
         d->radioAbsolutePath->setChecked(true);
-        d->labelMoveCopyLocation->hide();
-        d->lineMoveCopyLocation->hide();
+    } else if (bibTeXfileUrl.isValid() && !d->sourceUrl.isRelative() && (bibTeXfileUrl.scheme() != d->sourceUrl.scheme() || (bibTeXfileUrl.scheme() == d->sourceUrl.scheme() && bibTeXfileUrl.host() != d->sourceUrl.host()))) {
+        /// If URL to be associated is not relative, i.e. has a scheme and this scheme is
+        /// different from the current bibliography file's scheme or the scheme is the same
+        /// but the host is different, then no relative path is possible
+        d->radioRelativePath->setEnabled(false);
+        d->radioAbsolutePath->setChecked(true);
     } else {
+        /// If the file has a valid URL, prefer to use relative paths for association
         d->radioRelativePath->setEnabled(true);
+    }
+    if (bibTeXfileUrl.isValid()) {
+        /// Show the URL of the current bibliography file
+        d->lineMoveCopyLocation->setText(bibTeXfileUrl.path());
+        d->lineMoveCopyLocation->setToolTip(d->lineMoveCopyLocation->text());
         d->labelMoveCopyLocation->show();
         d->lineMoveCopyLocation->show();
-        d->lineMoveCopyLocation->setText(d->bibTeXfile->property(File::Url).toUrl().path());
+    } else {
+        d->labelMoveCopyLocation->hide();
+        d->lineMoveCopyLocation->hide();
     }
+    /// Renaming is only possible if remote file is either copied or moved
     d->groupBoxRename->setEnabled(!d->radioNoCopyMove->isChecked());
     if (d->radioNoCopyMove->isChecked())
+        /// Not moving/copying remote file implies that filename is kept
         d->radioKeepFilename->setChecked(true);
 
-    if (d->bibTeXfile != nullptr && d->sourceUrl.isValid() && !entryId.isEmpty()) {
+    if (d->radioMoveFile->isChecked() || d->radioCopyFile->isChecked()) {
+        /// Assuming that the remote URL is to be copied next to the bibliography file,
+        /// compute the destination a.k.a. target URL of the copied file
         const QPair<QUrl, QUrl> newURLs = AssociatedFiles::computeSourceDestinationUrls(d->sourceUrl, entryId, d->bibTeXfile, renameOperation(), d->lineEditUserDefinedName->text());
         if (newURLs.second.isValid())
-            preview = AssociatedFiles::computeAssociateUrl(newURLs.second, d->bibTeXfile, pathType());
+            preview = AssociatedFiles::computeAssociateString(newURLs.second, d->bibTeXfile, pathType());
+    } else if (d->radioNoCopyMove->isChecked()) {
+        if (d->sourceUrl.isValid())
+            preview = AssociatedFiles::computeAssociateString(d->sourceUrl, d->bibTeXfile, pathType());
     }
     d->linePreview->setText(preview);
 }
