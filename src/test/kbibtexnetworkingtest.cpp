@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -269,7 +269,7 @@ void KBibTeXNetworkingTest::associatedFilescomputeAssociateURL()
     QFETCH(AssociatedFiles::PathType, pathType);
     QFETCH(QString, expectedResult);
 
-    const QString computedResult = AssociatedFiles::computeAssociateUrl(documentUrl, bibTeXFile, pathType);
+    const QString computedResult = AssociatedFiles::computeAssociateString(documentUrl, bibTeXFile, pathType);
     QCOMPARE(expectedResult, computedResult);
     delete bibTeXFile;
 }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -80,7 +80,7 @@ public:
      * @param pathType request either a relative or an absolute path
      * @return the computed URL string
      */
-    static QString computeAssociateUrl(const QUrl &documentUrl, const File *bibTeXFile, PathType pathType);
+    static QString computeAssociateString(const QUrl &documentUrl, const File *bibTeXFile, PathType pathType);
 
     /**
      * For a given (remote) source URL and given various information such as which
