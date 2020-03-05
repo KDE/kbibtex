@@ -232,12 +232,6 @@ public:
         action = p->actionCollection()->addAction(KStandardAction::Preferences);
         connect(action, &QAction::triggered, p, &KBibTeXMainWindow::showPreferences);
     }
-
-    ~KBibTeXMainWindowPrivate() {
-        elementForm->deleteLater();
-        delete mdiWidget;
-        // TODO other deletes
-    }
 };
 
 KBibTeXMainWindow::KBibTeXMainWindow(QWidget *parent)
