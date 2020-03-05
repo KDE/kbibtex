@@ -23,12 +23,14 @@
 #include <QBuffer>
 #include <QMouseEvent>
 #include <QDrag>
+#include <QMimeType>
 
 #include <Preferences>
 #include <models/FileModel>
 #include <FileImporterBibTeX>
 #include <FileExporterBibTeX>
 #include <File>
+#include <FileInfo>
 #include "fileview.h"
 #include "element/associatedfilesui.h"
 #include "logging_gui.h"
@@ -133,7 +135,7 @@ public:
         return false;
     }
 
-    bool insertText(const QString &text, QSharedPointer<Element> element = QSharedPointer<Element>()) {
+    bool insertText(const QString &text, QSharedPointer<Element> element) {
         /// Cast current element into an entry which then may be used in case an URL needs to be inserted into it
         QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         const QRegularExpressionMatch urlRegExpMatch = KBibTeX::urlRegExp.match(text);
@@ -152,15 +154,121 @@ public:
 
         return false;
     }
+
+    static QSet<QUrl> urlsInMimeData(const QMimeData *mimeData, const QStringList &acceptableMimeTypes) {
+        QSet<QUrl> result;
+        if (mimeData->hasUrls()) {
+            const QList<QUrl> urls = mimeData->urls();
+            for (const QUrl &url : urls) {
+                if (url.isValid()) {
+                    if (acceptableMimeTypes.isEmpty())
+                        /// No limitations regarding which mime types are allowed?
+                        /// Then accept any URL
+                        result.insert(url);
+                    const QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+                    if (acceptableMimeTypes.contains(mimeType.name())) {
+                        /// So, there is a list of acceptable mime types.
+                        /// Only if URL points to a file that matches a mime type
+                        /// from list return URL
+                        result.insert(url);
+                    }
+                }
+            }
+        } else if (mimeData->hasText()) {
+            const QString text = QString::fromUtf8(mimeData->data(QStringLiteral("text/plain")));
+            QRegularExpressionMatchIterator urlRegExpMatchIt = KBibTeX::urlRegExp.globalMatch(text);
+            while (urlRegExpMatchIt.hasNext()) {
+                const QRegularExpressionMatch urlRegExpMatch = urlRegExpMatchIt.next();
+                const QUrl url = QUrl::fromUserInput(urlRegExpMatch.captured());
+                if (url.isValid()) {
+                    if (acceptableMimeTypes.isEmpty())
+                        /// No limitations regarding which mime types are allowed?
+                        /// Then accept any URL
+                        result.insert(url);
+                    const QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
+                    if (acceptableMimeTypes.contains(mimeType.name())) {
+                        /// So, there is a list of acceptable mime types.
+                        /// Only if URL points to a file that matches a mime type
+                        /// from list return URL
+                        result.insert(url);
+                    }
+                }
+            }
+        }
+
+        /// Return all found URLs (if any)
+        return result;
+    }
+
+    static QSet<QUrl> urlsToOpen(const QMimeData *mimeData) {
+        static const QStringList mimeTypesThatCanBeOpened{QStringLiteral("text/x-bibtex")}; // TODO share list of mime types with file-open dialogs?
+        return urlsInMimeData(mimeData, mimeTypesThatCanBeOpened);
+    }
+
+    static QSet<QUrl> urlsToAssociate(const QMimeData *mimeData) {
+        /// UNUSED static const QStringList mimeTypesThatCanBeAssociated{QStringLiteral("application/pdf")}; // TODO more mime types
+        return urlsInMimeData(mimeData, QStringList() /** accepting any MIME type */);
+    }
+
+    QSharedPointer<Entry> dropTarget(const QPoint &pos) const {
+        /// Locate element drop was performed on
+        const QModelIndex dropIndex = fileView->indexAt(pos);
+        if (dropIndex.isValid())
+            return fileView->elementAt(dropIndex).dynamicCast<Entry>();
+        return QSharedPointer<Entry>();
+    }
+
+    enum LooksLike {LooksLikeUnknown = 0, LooksLikeBibTeX, LooksLikeURL};
+
+    LooksLike looksLikeWhat(const QMimeData *mimeData) const {
+        if (mimeData->hasText()) {
+            QString text = QString::fromUtf8(mimeData->data(QStringLiteral("text/plain")));
+            const int p1 = text.indexOf(QLatin1Char('@'));
+            const int p2 = text.lastIndexOf(QLatin1Char('}'));
+            const int p3 = text.lastIndexOf(QLatin1Char(')'));
+            if (p1 >= 0 && (p2 >= 0 || p3 >= 0)) {
+                text = text.mid(p1, qMax(p2, p3) - p1 + 1);
+                static const QRegularExpression bibTeXElement(QStringLiteral("^@([a-z]{5,})[{()]"), QRegularExpression::CaseInsensitiveOption);
+                const QRegularExpressionMatch bibTeXElementMatch = bibTeXElement.match(text.left(64));
+                if (bibTeXElementMatch.hasMatch() && bibTeXElementMatch.captured(1) != QStringLiteral("import") /** ignore '@import' */)
+                    return LooksLikeBibTeX;
+            }
+            // TODO more tests for more bibliography formats
+            else {
+                const QRegularExpressionMatch urlRegExpMatch = KBibTeX::urlRegExp.match(text.left(256));
+                if (urlRegExpMatch.hasMatch() && urlRegExpMatch.capturedStart() == 0)
+                    return LooksLikeURL;
+            }
+        } else if (mimeData->hasUrls() && !mimeData->urls().isEmpty())
+            return LooksLikeURL;
+
+        return LooksLikeUnknown;
+    }
+
+    bool acceptableDropAction(const QMimeData *mimeData, const QPoint &pos) {
+        if (!urlsToOpen(mimeData).isEmpty())
+            /// Data to be dropped is an URL that should be opened,
+            /// which is a job for the shell, but not for this part
+            /// where this Clipboard belongs to. By ignoring this event,
+            /// it will be delegated to the underlying shell, similarly
+            /// as if the URL would be dropped on a KBibTeX program
+            /// window with no file open.
+            return false;
+        else if (looksLikeWhat(mimeData) != LooksLikeUnknown || (!dropTarget(pos).isNull() && !urlsToAssociate(mimeData).isEmpty()))
+            /// The dropped data is either text in a known bibliography
+            /// format or the drop happens on an entry and the dropped
+            /// data is an URL that can be associated with this entry
+            /// (e.g. an URL to a PDF document).
+            return true;
+        else
+            return false;
+    }
 };
 
 Clipboard::Clipboard(FileView *fileView)
         : QObject(fileView), d(new ClipboardPrivate(fileView, this))
 {
-    connect(fileView, &FileView::editorMouseEvent, this, &Clipboard::editorMouseEvent);
-    connect(fileView, &FileView::editorDragEnterEvent, this, &Clipboard::editorDragEnterEvent);
-    connect(fileView, &FileView::editorDragMoveEvent, this, &Clipboard::editorDragMoveEvent);
-    connect(fileView, &FileView::editorDropEvent, this, &Clipboard::editorDropEvent);
+    fileView->setClipboard(this);
     fileView->setAcceptDrops(!fileView->isReadOnly());
 }
 
@@ -227,7 +335,7 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
 
         QDrag *drag = new QDrag(d->fileView);
         QMimeData *mimeData = new QMimeData();
-        QByteArray data = text.toLatin1();
+        QByteArray data = text.toUtf8();
         mimeData->setData(QStringLiteral("text/plain"), data);
         drag->setMimeData(mimeData);
 
@@ -239,24 +347,22 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
 
 void Clipboard::editorDragEnterEvent(QDragEnterEvent *event)
 {
-    if (d->fileView->isReadOnly()) {
+    if (d->fileView->isReadOnly())
         event->ignore();
-        return;
-    }
-
-    if (event->mimeData()->hasText() || event->mimeData()->hasUrls())
+    else if (d->acceptableDropAction(event->mimeData(), event->pos()))
         event->acceptProposedAction();
+    else
+        event->ignore();
 }
 
 void Clipboard::editorDragMoveEvent(QDragMoveEvent *event)
 {
-    if (d->fileView->isReadOnly()) {
+    if (d->fileView->isReadOnly())
         event->ignore();
-        return;
-    }
-
-    if (event->mimeData()->hasText() || event->mimeData()->hasUrls())
+    else if (d->acceptableDropAction(event->mimeData(), event->pos()))
         event->acceptProposedAction();
+    else
+        event->ignore();
 }
 
 void Clipboard::editorDropEvent(QDropEvent *event)
@@ -266,25 +372,30 @@ void Clipboard::editorDropEvent(QDropEvent *event)
         return;
     }
 
-    if (event->mimeData()->hasText() || event->mimeData()->hasUrls()) {
-        const QString text = event->mimeData()->text();
-        const QList<QUrl> urls = event->mimeData()->urls();
-
-        QSharedPointer<Element> element;
-        /// Locate element drop was performed on (if dropped, and not some copy&paste)
-        QModelIndex dropIndex = d->fileView->indexAt(event->pos());
-        if (dropIndex.isValid())
-            element = d->fileView->elementAt(dropIndex);
-        if (element.isNull()) {
-            /// Still invalid element? Use current one
-            element = d->fileView->currentElement();
+    bool modified = false;
+    const ClipboardPrivate::LooksLike looksLike = d->looksLikeWhat(event->mimeData());
+    if (looksLike == ClipboardPrivate::LooksLikeBibTeX) {
+        /// The dropped data looks like BibTeX code
+        modified = d->insertBibTeX(event->mimeData()->text());
+    } else if (looksLike == ClipboardPrivate::LooksLikeURL) {
+        /// Dropped data does not look like a known bibliography
+        /// format.
+        /// Check if dropped data looks like an URL (e.g. pointing
+        /// to a PDF document) and if the drop happens onto an
+        /// bibliography entry (and not a comment or an empty area
+        /// in the list view, for example)
+        const QSharedPointer<Entry> dropTarget = d->dropTarget(event->pos());
+        if (!dropTarget.isNull()) {
+            for (const QUrl &urlToAssociate : d->urlsToAssociate(event->mimeData()))
+                modified |= d->insertUrl(urlToAssociate, dropTarget);
         }
-
-        /// Cast current element into an entry which then may be used in case an URL needs to be inserted into it
-        QSharedPointer<Entry> entry = element.isNull() ? QSharedPointer<Entry>() : element.dynamicCast<Entry>();
-
-        const bool modified = !urls.isEmpty() && !entry.isNull() ? d->insertUrl(urls.first(), entry) : (!text.isEmpty() ? d->insertText(text, element) : false);
-        if (modified)
-            d->fileView->externalModification();
     }
+
+    if (modified)
+        d->fileView->externalModification();
+}
+
+QSet<QUrl> Clipboard::urlsToOpen(const QMimeData *mimeData)
+{
+    return ClipboardPrivate::urlsToOpen(mimeData);
 }

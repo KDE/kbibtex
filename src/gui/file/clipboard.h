@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -26,6 +26,7 @@ class QMouseEvent;
 class QDragEnterEvent;
 class QDragMoveEvent;
 class QDropEvent;
+class QMimeData;
 
 class FileView;
 
@@ -46,11 +47,13 @@ public slots:
     void copyReferences();
     void paste();
 
-private slots:
+public:
     void editorMouseEvent(QMouseEvent *event);
     void editorDragEnterEvent(QDragEnterEvent *event);
     void editorDragMoveEvent(QDragMoveEvent *event);
     void editorDropEvent(QDropEvent *event);
+
+    static QSet<QUrl> urlsToOpen(const QMimeData *mimeData);
 
 private:
     class ClipboardPrivate;

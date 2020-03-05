@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,6 +17,7 @@
 
 #include "fileview.h"
 
+#include <QMimeData>
 #include <QDropEvent>
 #include <QTimer>
 #include <QDialog>
@@ -34,6 +35,7 @@
 
 #include <Entry>
 #include <Macro>
+#include <file/Clipboard>
 #include <models/FileModel>
 #include <FileExporterBibTeX>
 #include "element/elementeditor.h"
@@ -100,7 +102,7 @@ private:
 const QString ElementEditorDialog::configGroupNameWindowSize = QStringLiteral("ElementEditorDialog");
 
 FileView::FileView(const QString &name, QWidget *parent)
-        : BasicFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(nullptr), m_lastEditorPage(nullptr), m_elementEditorDialog(nullptr), m_elementEditor(nullptr), m_dbb(nullptr)
+        : BasicFileView(name, parent), m_isReadOnly(false), m_current(QSharedPointer<Element>()), m_filterBar(nullptr), m_clipboard(nullptr), m_lastEditorPage(nullptr), m_elementEditorDialog(nullptr), m_elementEditor(nullptr), m_dbb(nullptr)
 {
     connect(this, &FileView::doubleClicked, this, &FileView::itemActivated);
 }
@@ -266,6 +268,11 @@ void FileView::setFilterBar(FilterBar *filterBar)
     m_filterBar = filterBar;
 }
 
+void FileView::setClipboard(Clipboard *clipboard)
+{
+    m_clipboard = clipboard;
+}
+
 void FileView::setFilterBarFilter(const SortFilterFileModel::FilterQuery &fq)
 {
     if (m_filterBar != nullptr)
@@ -274,23 +281,26 @@ void FileView::setFilterBarFilter(const SortFilterFileModel::FilterQuery &fq)
 
 void FileView::mouseMoveEvent(QMouseEvent *event)
 {
-    emit editorMouseEvent(event);
+    if (m_clipboard != nullptr)
+        m_clipboard->editorMouseEvent(event);
 }
 
 void FileView::dragEnterEvent(QDragEnterEvent *event)
 {
-    emit editorDragEnterEvent(event);
+    if (m_clipboard != nullptr)
+        m_clipboard->editorDragEnterEvent(event);
 }
 
 void FileView::dropEvent(QDropEvent *event)
 {
-    if (event->source() != this)
-        emit editorDropEvent(event);
+    if (event->source() != this && m_clipboard != nullptr)
+        m_clipboard->editorDropEvent(event);
 }
 
 void FileView::dragMoveEvent(QDragMoveEvent *event)
 {
-    emit editorDragMoveEvent(event);
+    if (m_clipboard != nullptr)
+        m_clipboard->editorDragMoveEvent(event);
 }
 
 void FileView::itemActivated(const QModelIndex &index)

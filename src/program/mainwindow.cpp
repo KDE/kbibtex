@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,6 +39,7 @@
 #include <KBibTeX>
 #include <preferences/KBibTeXPreferencesDialog>
 #include <file/FileView>
+#include <file/Clipboard>
 #include <XSLTransform>
 #include <BibliographyService>
 #include <BibUtils>
@@ -284,22 +285,14 @@ void KBibTeXMainWindow::setupControllers()
 
 void KBibTeXMainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
-    if (event->mimeData()->hasUrls())
+    if (!Clipboard::urlsToOpen(event->mimeData()).isEmpty())
         event->acceptProposedAction();
 }
 
 void KBibTeXMainWindow::dropEvent(QDropEvent *event)
 {
-    QList<QUrl> urlList = event->mimeData()->urls();
-
-    if (urlList.isEmpty()) {
-        const QUrl url(event->mimeData()->text());
-        if (url.isValid()) urlList << url;
-    }
-
-    if (!urlList.isEmpty())
-        for (const QUrl &url : const_cast<const QList<QUrl> &>(urlList))
-            openDocument(url);
+    for (const QUrl &url : Clipboard::urlsToOpen(event->mimeData()))
+        openDocument(url);
 }
 
 void KBibTeXMainWindow::newDocument()
