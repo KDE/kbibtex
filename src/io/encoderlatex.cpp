@@ -1349,7 +1349,7 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
     int openedClosedCurlyBrackets = 0;
 
     /// check for \url
-    if (pos < input.length() - 6 && input.mid(pos, 5) == QStringLiteral("\\url{")) {
+    if (pos < input.length() - 6 && input.midRef(pos, 5) == QStringLiteral("\\url{")) {
         copyBytesCount = 5;
         openedClosedCurlyBrackets = 1;
     }

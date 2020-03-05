@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -78,7 +78,7 @@ FavIconLocator::FavIconLocator(const QUrl &webpageUrl, QObject *parent)
                                 if (p5 > p1 && p5 < p2) {
                                     const int p6 = htmlCode.indexOf(QChar('"'), p5 + 6);
                                     if (p6 > p5 + 5 && p6 < p2) {
-                                        QString hrefValue = htmlCode.mid(p5 + 6, p6 - p5 - 6).replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;");
+                                        QString hrefValue = htmlCode.mid(p5 + 6, p6 - p5 - 6).replace(QLatin1Char('&'), QLatin1String("&amp;")).replace(QLatin1Char('>'), QLatin1String("&gt;")).replace(QLatin1Char('<'), QLatin1String("&lt;"));
                                         /// Do some resolving in case favicon URL in HTML code is relative
                                         favIconUrl = reply->url().resolved(QUrl(hrefValue));
                                         if (favIconUrl.isValid()) {
