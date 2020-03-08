@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -55,6 +55,7 @@
 #include "entry.h"
 #include "macro.h"
 #include "preamble.h"
+#include "comment.h"
 #include "fieldlineedit.h"
 #include "delayedexecutiontimer.h"
 #include "logging_gui.h"
@@ -1155,7 +1156,7 @@ public:
 
     Private(SourceWidget *parent)
             : messages(nullptr), buttonRestore(nullptr), importerBibTeX(new FileImporterBibTeX(parent)), delayedExecutionTimer(new DelayedExecutionTimer(1500, 500, parent)) {
-        /// nothing
+        importerBibTeX->setCommentHandling(FileImporterBibTeX::KeepComments);
     }
 
     void addMessage(const FileImporter::MessageSeverity severity, const QString &messageText)
@@ -1216,8 +1217,16 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
                 preamble->operator =(*readPreamble.data());
                 return true;
             } else {
-                qCWarning(LOG_KBIBTEX_GUI) << "Do not know how to apply source code";
-                return false;
+                QSharedPointer<Comment> comment = element.dynamicCast<Comment>();
+                QSharedPointer<Comment> readComment = file->first().dynamicCast<Comment>();
+                if (!readComment.isNull() && !comment.isNull()) {
+                    if (elementClass != elementComment) return false; ///< Source widget should only edit Comment objects
+                    comment->operator =(*readComment.data());
+                    return true;
+                } else {
+                    qCWarning(LOG_KBIBTEX_GUI) << "Do not know how to apply source code";
+                    return false;
+                }
             }
         }
     }
@@ -1285,7 +1294,12 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
         if (!result) message = i18n("Given source code does not parse as one single BibTeX preamble.");
     }
     break;
-    // case elementComment // TODO?
+    case elementComment: {
+        QSharedPointer<Comment> comment = file->first().dynamicCast<Comment>();
+        result = !comment.isNull();
+        if (!result) message = i18n("Given source code does not parse as one single BibTeX comment.");
+    }
+    break;
     default:
         message = QString(QStringLiteral("elementClass is unknown: %1")).arg(elementClass);
         result = false;

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -294,6 +294,8 @@ public:
                 sourceWidget->setElementClass(SourceWidget::elementMacro);
             else if (!p.isNull())
                 sourceWidget->setElementClass(SourceWidget::elementPreamble);
+            else if (!c.isNull())
+                sourceWidget->setElementClass(SourceWidget::elementComment);
             else
                 sourceWidget->setElementClass(SourceWidget::elementInvalid);
             sourceWidget->apply(element);
