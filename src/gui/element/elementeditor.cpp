@@ -305,6 +305,8 @@ public:
                 sourceWidget->setElementClass(SourceWidget::ElementClass::Macro);
             else if (!p.isNull())
                 sourceWidget->setElementClass(SourceWidget::ElementClass::Preamble);
+            else if (!c.isNull())
+                sourceWidget->setElementClass(SourceWidget::ElementClass::Comment);
             else
                 sourceWidget->setElementClass(SourceWidget::ElementClass::Invalid);
             sourceWidget->apply(element);
