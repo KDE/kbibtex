@@ -1230,8 +1230,16 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
                 preamble->operator =(*readPreamble.data());
                 return true;
             } else {
-                qCWarning(LOG_KBIBTEX_GUI) << "Do not know how to apply source code";
-                return false;
+                QSharedPointer<Comment> comment = element.dynamicCast<Comment>();
+                QSharedPointer<Comment> readComment = file->first().dynamicCast<Comment>();
+                if (!readComment.isNull() && !comment.isNull()) {
+                    if (elementClass != ElementClass::Comment) return false; ///< Source widget should only edit Comment objects
+                    comment->operator =(*readComment.data());
+                    return true;
+                } else {
+                    qCWarning(LOG_KBIBTEX_GUI) << "Do not know how to apply source code";
+                    return false;
+                }
             }
         }
     }
