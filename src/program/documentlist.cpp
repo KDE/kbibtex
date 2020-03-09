@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -217,7 +217,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
         htmlText.append(QStringLiteral("</qt>"));
         return htmlText;
     }
-    case Qt::UserRole: return qVariantFromValue(openFileInfo);
+    case Qt::UserRole: return QVariant::fromValue(openFileInfo);
     default: return QVariant();
     }
 }
