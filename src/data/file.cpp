@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -287,7 +287,11 @@ QStringList File::uniqueEntryValuesList(const QString &fieldName) const
     if (!d->checkValidity())
         qCCritical(LOG_KBIBTEX_DATA) << "QStringList File::uniqueEntryValuesList(const QString &fieldName) const" << "This File object is not valid";
     QSet<QString> valueSet = uniqueEntryValuesSet(fieldName);
+#if QT_VERSION >= 0x050e00
+    QStringList list(valueSet.constBegin(), valueSet.constEnd()); ///< This function was introduced in Qt 5.14
+#else // QT_VERSION < 0x050e00
     QStringList list = valueSet.toList();
+#endif // QT_VERSION >= 0x050e00
     list.sort();
     return list;
 }

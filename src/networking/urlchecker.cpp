@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -45,19 +45,43 @@ public:
 
     void queueMoreOrFinish()
     {
-        if (busyCounter.load() <= 0 && urlsToCheck.isEmpty()) {
+        if (
+#if QT_VERSION >= 0x050e00
+            busyCounter.loadRelaxed() <= 0 ///< This function was introduced in Qt 5.14.
+#else // QT_VERSION < 0x050e00
+            busyCounter.load() <= 0
+#endif // QT_VERSION >= 0x050e00
+            && urlsToCheck.isEmpty()) {
             /// In case there are no running checks and the queue of URLs to check is empty,
             /// wait for a brief moment of time, then fire a 'finished' signal.
             QTimer::singleShot(100, p, [this]() {
-                if (busyCounter.load() <= 0 && urlsToCheck.isEmpty())
+                if (
+#if QT_VERSION >= 0x050e00
+                    busyCounter.loadRelaxed() <= 0 ///< This function was introduced in Qt 5.14.
+#else // QT_VERSION < 0x050e00
+                    busyCounter.load() <= 0
+#endif // QT_VERSION >= 0x050e00
+                    && urlsToCheck.isEmpty())
                     QMetaObject::invokeMethod(p, "finished", Qt::DirectConnection, QGenericReturnArgument());
                 else
                     /// It should not happen that when this timer is triggered the original condition is violated
-                    qCCritical(LOG_KBIBTEX_NETWORKING) << "This cannot happen:" << busyCounter.load() << urlsToCheck.count();
+                    qCCritical(LOG_KBIBTEX_NETWORKING) << "This cannot happen:" <<
+#if QT_VERSION >= 0x050e00
+                                                       busyCounter.loadRelaxed()
+#else // QT_VERSION < 0x050e00
+                                                       busyCounter.load()
+#endif // QT_VERSION >= 0x050e00
+                                                       << urlsToCheck.count();
             });
         } else {
             /// Initiate as many checks as possible
-            while (!urlsToCheck.isEmpty() && busyCounter.load() <= 4)
+            while (!urlsToCheck.isEmpty() &&
+#if QT_VERSION >= 0x050e00
+                    busyCounter.loadRelaxed() <= 4 ///< This function was introduced in Qt 5.14.
+#else // QT_VERSION < 0x050e00
+                    busyCounter.load() <= 4
+#endif // QT_VERSION >= 0x050e00
+                  )
                 checkNextUrl();
         }
     }
