@@ -10,6 +10,7 @@ Diff 0.9.1 to 0.9.2
 - KDE Bug 417164: File URLs passed by command line preceed over LRU
 - KDE Bug 401553: View documents containing question mark characters
 - Fix bug preventing editing of comments
+- KDE Bug 417210: Edit Element dialog closes without confirming, possibly losing edits
 
 Diff 0.9 to 0.9.1
 

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -78,22 +78,18 @@ public:
         boxLayout->addWidget(this->elementEditor);
     }
 
-protected:
-    void closeEvent(QCloseEvent *e) override {
-        /// strangely enough, close events have always to be rejected ...
-        e->setAccepted(false);
-        QDialog::closeEvent(e);
+public:
+    void reject() override {
+        /// If there unapplied changes in the editor widget ask user for consent
+        /// to discard changes; only then allow to close this dialog
+        if (!elementEditor->elementUnapplied() || KMessageBox::warningContinueCancel(this, i18n("The current entry has been modified. Do you want to discard your changes?"), i18n("Discard changes?"), KStandardGuiItem::discard(), KGuiItem(i18n("Continue Editing"), QStringLiteral("edit-rename"))) == KMessageBox::Continue)
+            QDialog::reject();
     }
 
-private:
-    bool allowedToClose() {
-        /// save window size
+protected:
+    void closeEvent(QCloseEvent *) override {
+        /// Save window size
         KWindowConfig::saveWindowSize(windowHandle(), configGroup);
-
-        /// if there unapplied changes in the editor widget ...
-        /// ... ask user for consent to discard changes ...
-        /// only the allow to close this dialog
-        return !elementEditor->elementUnapplied() || KMessageBox::warningContinueCancel(this, i18n("The current entry has been modified. Do you want do discard your changes?"), i18n("Discard changes?"), KStandardGuiItem::discard(), KGuiItem(i18n("Continue Editing"), QStringLiteral("edit-rename"))) == KMessageBox::Continue;
     }
 };
 
@@ -135,7 +131,7 @@ bool FileView::editElement(QSharedPointer<Element> element)
     m_elementEditor->setElement(element, bibliographyFile);
 
     m_elementEditor->setCurrentPage(m_lastEditorPage);
-    m_elementEditorDialog->exec();
+    m_elementEditorDialog->exec(); ///< no need to take of result code, got handled in FileView::dialogButtonClicked
     m_lastEditorPage = m_elementEditor->currentPage();
 
     if (!isReadOnly()) {
@@ -352,8 +348,14 @@ void FileView::dialogButtonClicked(QAbstractButton *button) {
         if (m_elementEditor->validate())
             m_elementEditor->apply();
         break;
-    case QDialogButtonBox::Close: ///< fall-through is intentional
+    case QDialogButtonBox::Close:
+        /// Close button exists only in read-only mode. Reject/close immediately.
+        m_elementEditorDialog->reject();
+        break;
     case QDialogButtonBox::Cancel:
+        /// Trigger ElementEditorDialog::reject which in its turn checks
+        /// if there are unapplied modifications. If user does not want to
+        /// discard changes, stop closing this dialog and do not reject changes.
         m_elementEditorDialog->reject();
         break;
     case QDialogButtonBox::Reset:
