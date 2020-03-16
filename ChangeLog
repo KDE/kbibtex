@@ -11,6 +11,7 @@ Diff 0.10 to 0.11
 Diff 0.9.2 to 0.10
 
 - New online search: Semantic Scholar
+- Fixing and revamping ACM's Digital Library (a.k.a. ACM Portal) online search
 - Refactoring NSA ADS to use official API
 - Use Qt's own QOAuth1 class instead of external library QOAuth
 - Providing .gitlab-ci.yml to enable continuous integration at GitLab
