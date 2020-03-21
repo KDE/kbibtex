@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -262,7 +262,6 @@ void OnlineSearchSemanticScholar::downloadDone()
         } else {
             QJsonParseError parseError;
             const auto buffer = reply->readAll();
-            const QString jsonText = QString::fromUtf8(buffer);
             const QJsonDocument document = QJsonDocument::fromJson(buffer, &parseError);
             if (parseError.error == QJsonParseError::NoError) {
                 if (document.isObject()) {
