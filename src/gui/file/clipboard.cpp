@@ -386,7 +386,8 @@ void Clipboard::editorDropEvent(QDropEvent *event)
         /// in the list view, for example)
         const QSharedPointer<Entry> dropTarget = d->dropTarget(event->pos());
         if (!dropTarget.isNull()) {
-            for (const QUrl &urlToAssociate : d->urlsToAssociate(event->mimeData()))
+            const QSet<QUrl> urls = d->urlsToAssociate(event->mimeData());
+            for (const QUrl &urlToAssociate : urls)
                 modified |= d->insertUrl(urlToAssociate, dropTarget);
         }
     }

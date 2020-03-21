@@ -285,7 +285,8 @@ void KBibTeXMainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void KBibTeXMainWindow::dropEvent(QDropEvent *event)
 {
-    for (const QUrl &url : Clipboard::urlsToOpen(event->mimeData()))
+    const QSet<QUrl> urls = Clipboard::urlsToOpen(event->mimeData());
+    for (const QUrl &url : urls)
         openDocument(url);
 }
 
