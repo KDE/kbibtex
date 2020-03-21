@@ -185,9 +185,9 @@ void UrlChecker::startChecking(const File &bibtexFile)
         return;
     }
 
-    for (QSharedPointer<Element> element : bibtexFile) {
+    for (const QSharedPointer<Element> &element : bibtexFile) {
         /// Process only entries, not comments, preambles or macros
-        QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+        const QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
         if (entry.isNull()) continue;
 
         /// Retrieve set of URLs per entry and add to set of URLS to be checked
