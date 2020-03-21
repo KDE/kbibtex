@@ -149,7 +149,7 @@ public:
         gridLayout->setRowMinimumHeight(4, p->fontMetrics().xHeight() * 2);
         QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, p);
         gridLayout->addWidget(buttonBox, 5, 0, 1, 3);
-        connect(buttonBox, &QDialogButtonBox::clicked, [this, buttonBox](QAbstractButton *button) {
+        connect(buttonBox, &QDialogButtonBox::clicked, p, [this, buttonBox](QAbstractButton *button) {
             if (button == buttonBox->button(QDialogButtonBox::Close))
                 p->reject();
         });
