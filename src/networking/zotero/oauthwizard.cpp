@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -149,7 +149,7 @@ public:
         gridLayout->setRowMinimumHeight(4, p->fontMetrics().xHeight() * 2);
         QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, p);
         gridLayout->addWidget(buttonBox, 5, 0, 1, 3);
-        connect(buttonBox, &QDialogButtonBox::clicked, [this, buttonBox](QAbstractButton *button) {
+        connect(buttonBox, &QDialogButtonBox::clicked, p, [this, buttonBox](QAbstractButton *button) {
             if (button == buttonBox->button(QDialogButtonBox::Close))
                 p->reject();
         });
