@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -477,7 +477,6 @@ void OnlineSearchAbstract::iconDownloadFinished()
             extension = QStringLiteral(".ico");
         } else if (iconData[0] == '<') {
             /// HTML or XML code
-            const QString htmlCode = QString::fromUtf8(iconData);
             qCDebug(LOG_KBIBTEX_NETWORKING) << "Received XML or HTML data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             return;
         } else {
