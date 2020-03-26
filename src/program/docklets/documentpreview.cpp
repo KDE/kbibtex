@@ -562,25 +562,25 @@ public:
             return result;
         }
 
+        /// Generic guess for URL's MIME type
         const QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         result.mimeType = mimeType.name();
-        result.icon = QIcon::fromTheme(mimeType.iconName());
 
+        /// Guesses made for local file systems may not be applicable for URLs to web pages
         if (result.mimeType == QStringLiteral("application/octet-stream")) {
             /// application/octet-stream is a fall-back if KDE did not know better
-            result.icon = QIcon::fromTheme(QStringLiteral("text-html"));
             result.mimeType = QStringLiteral("text/html");
         } else if ((result.mimeType.isEmpty() || result.mimeType == QStringLiteral("inode/directory")) && (result.url.scheme() == QStringLiteral("http") || result.url.scheme() == QStringLiteral("https"))) {
             /// directory via http means normal webpage (not browsable directory)
-            result.icon = QIcon::fromTheme(QStringLiteral("text-html"));
             result.mimeType = QStringLiteral("text/html");
         }
 
+        /// Make more specific guesses on an URL's MIME type
         if (QRegularExpression(QStringLiteral("^http[s]?://arxiv.org/pdf/")).match(url.url(QUrl::PreferLocalFile)).hasMatch()) {
-            result.icon = QIcon::fromTheme(QStringLiteral("application-pdf"));
             result.mimeType = QStringLiteral("application/pdf");
         }
 
+        result.icon = QIcon::fromTheme(mimeType.iconName());
         return result;
     }
 
