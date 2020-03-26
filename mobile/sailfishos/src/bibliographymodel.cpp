@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2016-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -300,7 +300,7 @@ QVariant BibliographyModel::data(const QModelIndex &index, int role) const {
             }
         } else if (role == UrlRole) {
             const QStringList doiList = valueToList(curEntry->operator[](Entry::ftDOI));
-            if (!doiList.isEmpty()) return QStringLiteral("http://dx.doi.org/") + doiList.first();
+            if (!doiList.isEmpty()) return QStringLiteral("https://dx.doi.org/") + doiList.first();
             const QStringList urlList = valueToList(curEntry->operator[](Entry::ftUrl));
             if (!urlList.isEmpty()) return urlList.first();
             const QStringList bibUrlList = valueToList(curEntry->operator[](QStringLiteral("biburl")));

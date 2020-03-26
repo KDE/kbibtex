@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -193,10 +193,11 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
         QRegularExpressionMatch domainNameRegExpMatch;
         while ((domainNameRegExpMatch = KBibTeX::domainNameRegExp.match(internalText, pos)).hasMatch()) {
             pos = domainNameRegExpMatch.capturedStart(0);
+            /// URL ends either at space or at string's end
             int pos2 = internalText.indexOf(QStringLiteral(" "), pos + 1);
             if (pos2 < 0) pos2 = internalText.length();
             QString match = internalText.mid(pos, pos2 - pos);
-            const QUrl url(QStringLiteral("http://") + match); // FIXME what about HTTPS?
+            const QUrl url(QStringLiteral("https://") + match);
             if (url.isValid() && !result.contains(url))
                 result << url;
             /// remove match from internal text to avoid duplicates

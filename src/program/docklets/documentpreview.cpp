@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -119,7 +119,6 @@ private:
     QMap<int, struct UrlInfo> cbxEntryToUrlInfo;
     QMutex addingUrlMutex;
 
-    static const QString arXivPDFUrlStart;
     bool anyLocal;
 
     QMenuBar *menuBar;
@@ -577,7 +576,7 @@ public:
             result.mimeType = QStringLiteral("text/html");
         }
 
-        if (url.url(QUrl::PreferLocalFile).startsWith(arXivPDFUrlStart)) {
+        if (QRegularExpression(QStringLiteral("^http[s]?://arxiv.org/pdf/")).match(url.url(QUrl::PreferLocalFile)).hasMatch()) {
             result.icon = QIcon::fromTheme(QStringLiteral("application-pdf"));
             result.mimeType = QStringLiteral("application/pdf");
         }
@@ -608,7 +607,6 @@ public:
     }
 };
 
-const QString DocumentPreview::DocumentPreviewPrivate::arXivPDFUrlStart = QStringLiteral("http://arxiv.org/pdf/");
 const QString DocumentPreview::DocumentPreviewPrivate::configGroupName = QStringLiteral("URL Preview");
 const QString DocumentPreview::DocumentPreviewPrivate::onlyLocalFilesCheckConfig = QStringLiteral("OnlyLocalFiles");
 
