@@ -934,7 +934,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
     return result;
 }
 
-QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &text, const int line_number, QObject *parent)
+QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &text)
 {
     /// Case: Smith, John and Johnson, Tim
     /// Case: Smith, John and Fulkerson, Ford and Johnson, Tim
@@ -979,7 +979,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     if (containsSpace) {
         /// Tokens look like "John Smith"
         for (const QString &authorToken : authorTokenList) {
-            QSharedPointer<Person> person = personFromString(authorToken, nullptr, line_number, parent);
+            QSharedPointer<Person> person = personFromString(authorToken, nullptr, 1, nullptr);
             if (!person.isNull())
                 result.append(person);
         }
@@ -991,7 +991,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
             ++it;
             if (it != authorTokenList.constEnd()) {
                 lastname += QStringLiteral(", ") + (*it);
-                QSharedPointer<Person> person = personFromString(lastname, nullptr, line_number, parent);
+                QSharedPointer<Person> person = personFromString(lastname, nullptr, 1, nullptr);
                 if (!person.isNull())
                     result.append(person);
             } else
