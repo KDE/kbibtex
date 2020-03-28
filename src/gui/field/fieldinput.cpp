@@ -70,7 +70,7 @@ public:
         switch (fieldInputType) {
         case KBibTeX::FieldInputType::MultiLine:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, true, p);
-            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
+            connect(fieldLineEdit, &FieldLineEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
             break;
         case KBibTeX::FieldInputType::List:
@@ -80,7 +80,7 @@ public:
             break;
         case KBibTeX::FieldInputType::Month: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
-            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
+            connect(fieldLineEdit, &FieldLineEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
             QPushButton *monthSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("view-calendar-month")), QString());
             monthSelector->setToolTip(i18n("Select a predefined month"));
@@ -98,7 +98,7 @@ public:
         break;
         case KBibTeX::FieldInputType::Edition: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
-            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
+            connect(fieldLineEdit, &FieldLineEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
             QPushButton *editionSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("clock")), QString());
             editionSelector->setToolTip(i18n("Select a predefined edition"));
@@ -117,7 +117,7 @@ public:
         break;
         case KBibTeX::FieldInputType::CrossRef: {
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
-            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
+            connect(fieldLineEdit, &FieldLineEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
             QPushButton *referenceSelector = new QPushButton(QIcon::fromTheme(QStringLiteral("flag-green")), QString()); ///< find better icon
             referenceSelector->setToolTip(i18n("Select an existing entry"));
@@ -154,7 +154,7 @@ public:
             break;
         default:
             fieldLineEdit = new FieldLineEdit(preferredTypeFlag, typeFlags, false, p);
-            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
+            connect(fieldLineEdit, &FieldLineEdit::modified, p, &FieldInput::modified);
             layout->addWidget(fieldLineEdit);
         }
     }
@@ -162,7 +162,7 @@ public:
     void clear() {
         if (fieldLineEdit != nullptr) {
             const QSignalBlocker blocker(fieldLineEdit);
-            fieldLineEdit->setText(QString());
+            fieldLineEdit->clear();
         } else if (fieldListEdit != nullptr) {
             const QSignalBlocker blocker(fieldListEdit);
             fieldListEdit->clear();

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -52,20 +52,19 @@ class FieldLineEdit::FieldLineEditPrivate
 {
 private:
     FieldLineEdit *parent;
-    Value currentValue;
-    KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
     QPushButton *buttonOpenUrl;
 
 public:
     QMenu *menuTypes;
+    const KBibTeX::TypeFlag preferredTypeFlag;
+    KBibTeX::TypeFlag typeFlag;
     QUrl urlToOpen;
     const File *file;
     QString fieldKey;
-    KBibTeX::TypeFlag typeFlag;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
-            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), file(nullptr) {
+            : parent(p), typeFlags(tf), preferredTypeFlag(ptf), file(nullptr) {
         menuTypes = new QMenu(parent);
         setupMenu();
 
@@ -86,10 +85,10 @@ public:
         updateGUI(typeFlag);
     }
 
-    bool reset(const Value &value) {
+    bool reset(const Value &value, const KBibTeX::TypeFlag preferredTypeFlag) {
         bool result = false;
         QString text;
-        typeFlag = determineTypeFlag(value, typeFlag, typeFlags);
+        typeFlag = determineTypeFlag(value, preferredTypeFlag, typeFlags);
         updateGUI(typeFlag);
 
         if (!value.isEmpty()) {
@@ -248,6 +247,12 @@ public:
             *widgetWithIssue = parent;
 
         return result;
+    }
+
+    void clear() {
+        const KBibTeX::TypeFlag newTypeFlag = typeFlags.testFlag(preferredTypeFlag) ? preferredTypeFlag : KBibTeX::TypeFlag::Source;
+        if (newTypeFlag != typeFlag)
+            updateGUI(typeFlag = newTypeFlag);
     }
 
     KBibTeX::TypeFlag determineTypeFlag(const Value &value, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags availableTypeFlags) {
@@ -467,8 +472,8 @@ public:
         apply(value);
 
         if (convertValueType(value, newTypeFlag)) {
-            typeFlag = newTypeFlag;
-            reset(value);
+            reset(value, newTypeFlag);
+            QMetaObject::invokeMethod(parent, "modified", Qt::DirectConnection, QGenericReturnArgument());
         } else
             KMessageBox::error(parent, i18n("The current text cannot be used as value of type '%1'.\n\nSwitching back to type '%2'.", BibTeXFields::typeFlagToString(newTypeFlag), BibTeXFields::typeFlagToString(typeFlag)));
     }
@@ -496,12 +501,18 @@ bool FieldLineEdit::apply(Value &value) const
 
 bool FieldLineEdit::reset(const Value &value)
 {
-    return d->reset(value);
+    return d->reset(value, d->preferredTypeFlag);
 }
 
 bool FieldLineEdit::validate(QWidget **widgetWithIssue, QString &message) const
 {
     return d->validate(widgetWithIssue, message);
+}
+
+void FieldLineEdit::clear()
+{
+    MenuLineEdit::clear();
+    d->clear();
 }
 
 void FieldLineEdit::setReadOnly(bool isReadOnly)

@@ -171,7 +171,7 @@ public:
             }
         });
 
-        connect(le, &FieldLineEdit::textChanged, p, &FieldListEdit::modified);
+        connect(le, &FieldLineEdit::modified, p, &FieldListEdit::modified);
 
         return le;
     }
