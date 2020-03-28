@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,6 +14,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_GUI_MENULINEEDIT_H
 #define KBIBTEX_GUI_MENULINEEDIT_H
 
@@ -62,6 +63,7 @@ public:
     void appendWidget(QWidget *widget);
     void setInnerWidgetsTransparency(bool makeInnerWidgetsTransparent);
 
+    virtual void clear();
     bool isModified() const;
     void setCompletionItems(const QStringList &items);
 
@@ -70,6 +72,7 @@ protected:
 
 signals:
     void textChanged(const QString &);
+    void modified();
 
 private slots:
     void slotTextChanged();
