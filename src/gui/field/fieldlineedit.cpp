@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -56,8 +56,6 @@ class FieldLineEdit::FieldLineEditPrivate
 {
 private:
     FieldLineEdit *parent;
-    Value currentValue;
-    KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
     QSignalMapper *menuTypesSignalMapper;
     QPushButton *buttonOpenUrl;
@@ -68,13 +66,14 @@ private:
 
 public:
     QMenu *menuTypes;
+    const KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlag typeFlag;
     QUrl urlToOpen;
     const File *file;
     QString fieldKey;
 
     FieldLineEditPrivate(KBibTeX::TypeFlag ptf, KBibTeX::TypeFlags tf, FieldLineEdit *p)
-            : parent(p), preferredTypeFlag(ptf), typeFlags(tf), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupNameGeneral(QStringLiteral("General")), file(nullptr) {
+            : parent(p), typeFlags(tf), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupNameGeneral(QStringLiteral("General")), preferredTypeFlag(ptf), file(nullptr) {
         menuTypes = new QMenu(parent);
         menuTypesSignalMapper = new QSignalMapper(parent);
         setupMenu();
@@ -96,10 +95,10 @@ public:
         personNameFormatting = configGroup.readEntry(Preferences::keyPersonNameFormatting, Preferences::defaultPersonNameFormatting);
     }
 
-    bool reset(const Value &value) {
+    bool reset(const Value &value, const KBibTeX::TypeFlag preferredTypeFlag) {
         bool result = false;
         QString text;
-        typeFlag = determineTypeFlag(value, typeFlag, typeFlags);
+        typeFlag = determineTypeFlag(value, preferredTypeFlag, typeFlags);
         updateGUI(typeFlag);
 
         if (!value.isEmpty()) {
@@ -245,6 +244,12 @@ public:
             *widgetWithIssue = parent;
 
         return result;
+    }
+
+    void clear() {
+        const KBibTeX::TypeFlag newTypeFlag = typeFlags.testFlag(preferredTypeFlag) ? preferredTypeFlag : KBibTeX::tfSource;
+        if (newTypeFlag != typeFlag)
+            updateGUI(typeFlag = newTypeFlag);
     }
 
     KBibTeX::TypeFlag determineTypeFlag(const Value &value, KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeFlags availableTypeFlags) {
@@ -472,12 +477,18 @@ bool FieldLineEdit::apply(Value &value) const
 
 bool FieldLineEdit::reset(const Value &value)
 {
-    return d->reset(value);
+    return d->reset(value, d->preferredTypeFlag);
 }
 
 bool FieldLineEdit::validate(QWidget **widgetWithIssue, QString &message) const
 {
     return d->validate(widgetWithIssue, message);
+}
+
+void FieldLineEdit::clear()
+{
+    MenuLineEdit::clear();
+    d->clear();
 }
 
 void FieldLineEdit::setReadOnly(bool isReadOnly)
@@ -493,8 +504,8 @@ void FieldLineEdit::slotTypeChanged(int newTypeFlagInt)
     d->apply(value);
 
     if (d->convertValueType(value, newTypeFlag)) {
-        d->typeFlag = newTypeFlag;
-        d->reset(value);
+        d->reset(value, newTypeFlag);
+        emit modified();
     } else
         KMessageBox::error(this, i18n("The current text cannot be used as value of type '%1'.\n\nSwitching back to type '%2'.", BibTeXFields::typeFlagToString(newTypeFlag), BibTeXFields::typeFlagToString(d->typeFlag)));
 }

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -14,6 +14,7 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
 #ifndef KBIBTEX_GUI_FIELDLINEEDIT_H
 #define KBIBTEX_GUI_FIELDLINEEDIT_H
 
@@ -44,6 +45,7 @@ public:
     bool reset(const Value &value);
     bool apply(Value &value) const;
     bool validate(QWidget **widgetWithIssue, QString &message) const;
+    void clear() override;
     void setReadOnly(bool) override;
 
     void setFile(const File *file);

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -197,6 +197,7 @@ MenuLineEdit::MenuLineEdit(bool isMultiLine, QWidget *parent)
         /// Only for single-line variants stretch buttons vertically
         QTimer::singleShot(250, this, &MenuLineEdit::slotVerticallyStretchButtons);
     }
+    connect(this, &MenuLineEdit::textChanged, this, &MenuLineEdit::modified);
 }
 
 MenuLineEdit::~MenuLineEdit()
@@ -284,6 +285,14 @@ void MenuLineEdit::appendWidget(QWidget *widget)
 void MenuLineEdit::setInnerWidgetsTransparency(bool makeInnerWidgetsTransparent)
 {
     d->setStyleSheet(makeInnerWidgetsTransparent);
+}
+
+void MenuLineEdit::clear()
+{
+    if (d->m_singleLineEditText != nullptr)
+        d->m_singleLineEditText->clear();
+    else if (d->m_multiLineEditText != nullptr)
+        d->m_multiLineEditText->document()->clear();
 }
 
 bool MenuLineEdit::isModified() const

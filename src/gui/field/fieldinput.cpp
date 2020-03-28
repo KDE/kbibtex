@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2018 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -153,7 +153,7 @@ public:
     void clear() {
         disableModifiedSignal();
         if (fieldLineEdit != nullptr)
-            fieldLineEdit->setText(QString());
+            fieldLineEdit->clear();
         else if (fieldListEdit != nullptr)
             fieldListEdit->clear();
         else if (colorWidget != nullptr)
@@ -275,7 +275,7 @@ public:
 
     void enableModifiedSignal() {
         if (fieldLineEdit != nullptr)
-            connect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
+            connect(fieldLineEdit, &FieldLineEdit::modified, p, &FieldInput::modified);
         if (fieldListEdit != nullptr)
             connect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
         if (colorWidget != nullptr)
@@ -286,7 +286,7 @@ public:
 
     void disableModifiedSignal() {
         if (fieldLineEdit != nullptr)
-            disconnect(fieldLineEdit, &FieldLineEdit::textChanged, p, &FieldInput::modified);
+            disconnect(fieldLineEdit, &FieldLineEdit::modified, p, &FieldInput::modified);
         if (fieldListEdit != nullptr)
             disconnect(fieldListEdit, &FieldListEdit::modified, p, &FieldInput::modified);
         if (colorWidget != nullptr)

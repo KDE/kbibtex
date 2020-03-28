@@ -165,7 +165,7 @@ public:
         connect(goUp, &QPushButton::clicked, smGoUp, static_cast<void(QSignalMapper::*)()>(&QSignalMapper::map));
         smGoUp->setMapping(goUp, le);
 
-        connect(le, &FieldLineEdit::textChanged, p, &FieldListEdit::modified);
+        connect(le, &FieldLineEdit::modified, p, &FieldListEdit::modified);
 
         return le;
     }
