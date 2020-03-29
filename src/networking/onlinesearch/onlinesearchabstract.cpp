@@ -27,7 +27,9 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #endif // HAVE_KF5
+#if QT_VERSION >= 0x050a00
 #include <QRandomGenerator>
+#endif // QT_VERSION
 #ifdef HAVE_QTWIDGETS
 #include <QListWidgetItem>
 #endif // HAVE_QTWIDGETS
@@ -43,6 +45,12 @@
 #include "onlinesearchabstract_p.h"
 #include "faviconlocator.h"
 #include "logging_networking.h"
+
+#if QT_VERSION >= 0x050a00
+#define randomGeneratorGlobalGenerate()  QRandomGenerator::global()->generate()
+#else // QT_VERSION
+#define randomGeneratorGlobalGenerate()  (qrand())
+#endif // QT_VERSION
 
 const int OnlineSearchAbstract::resultNoError = 0;
 const int OnlineSearchAbstract::resultCancelled = 0; /// may get redefined in the future!
@@ -439,7 +447,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
 
     /// Sometimes, there is no identifier, so set a random one
     if (entry->id().isEmpty())
-        entry->setId(QString(QStringLiteral("entry-%1")).arg(QString::number(QRandomGenerator::global()->generate(), 36)));
+        entry->setId(QString(QStringLiteral("entry-%1")).arg(QString::number(randomGeneratorGlobalGenerate(), 36)));
     /// Missing entry type? Set it to 'misc'
     if (entry->type().isEmpty())
         entry->setType(Entry::etMisc);
