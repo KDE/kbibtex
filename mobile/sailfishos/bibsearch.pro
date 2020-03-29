@@ -28,9 +28,9 @@ SOURCES += src/main.cpp src/searchenginelist.cpp \
     ../../src/config/preferences.cpp \
     ../../src/config/bibtexfields.cpp \
     ../../src/config/bibtexentries.cpp \
-    ../../src/config/logging_config.cpp \
-    ../../src/networking/logging_networking.cpp \
-    ../../src/data/logging_data.cpp ../../src/io/logging_io.cpp
+    $${OUT_PWD}/src/config/logging_config.cpp \
+    $${OUT_PWD}/src/networking/logging_networking.cpp \
+    $${OUT_PWD}/src/data/logging_data.cpp $${OUT_PWD}/src/io/logging_io.cpp
 
 HEADERS += src/bibliographymodel.h src/searchenginelist.h \
     src/kbibtexnamespace.h ../../src/data/entry.h \

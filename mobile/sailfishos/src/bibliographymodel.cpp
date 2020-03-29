@@ -323,10 +323,10 @@ const QSharedPointer<const Entry> BibliographyModel::entry(int row) const {
 }
 
 void BibliographyModel::startSearch(const QString &freeText, const QString &title, const QString &author) {
-    QMap<QString, QString> query;
-    query[OnlineSearchAbstract::queryKeyFreeText] = freeText;
-    query[OnlineSearchAbstract::queryKeyTitle] = title;
-    query[OnlineSearchAbstract::queryKeyAuthor] = author;
+    QMap<OnlineSearchAbstract::QueryKey, QString> query;
+    query[OnlineSearchAbstract::QueryKey::FreeText] = freeText;
+    query[OnlineSearchAbstract::QueryKey::Title] = title;
+    query[OnlineSearchAbstract::QueryKey::Author] = author;
 
     m_searchEngineList->resetProgress();
 
