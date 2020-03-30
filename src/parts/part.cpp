@@ -704,6 +704,7 @@ public:
                     const QFileInfo fi(url.toLocalFile());
                     const QString label = QString(QStringLiteral("%1 [%2]")).arg(fi.fileName(), fi.absolutePath());
                     QAction *action = new QAction(QIcon::fromTheme(FileInfo::mimeTypeForUrl(url).iconName()), label, p);
+                    action->setData(QUrl::fromLocalFile(fi.absoluteFilePath()));
                     action->setToolTip(fi.absoluteFilePath());
                     /// Open URL when action is triggered
                     connect(action, &QAction::triggered, p, [this, fi]() {
@@ -728,6 +729,7 @@ public:
                     /// Build a nice menu item (label, icon, ...)
                     const QString prettyUrl = url.toDisplayString();
                     QAction *action = new QAction(QIcon::fromTheme(FileInfo::mimeTypeForUrl(url).iconName()), prettyUrl, p);
+                    action->setData(url);
                     action->setToolTip(prettyUrl);
                     /// Open URL when action is triggered
                     connect(action, &QAction::triggered, p, [this, url]() {
@@ -916,9 +918,8 @@ void KBibTeXPart::elementViewDocument()
     /// Go through all actions (i.e. document URLs) for this element
     for (const QAction *action : actionList) {
         /// Make URL from action's data ...
-        const QString actionData = action->data().toString();
-        if (actionData.isEmpty()) continue; ///< No URL from empty string
-        const QUrl tmpUrl = QUrl::fromUserInput(actionData);
+        const QUrl tmpUrl = action->data().toUrl();
+        if (!tmpUrl.isValid()) continue;
         /// ... but skip this action if the URL is invalid
         if (!tmpUrl.isValid()) continue;
         if (tmpUrl.isLocalFile()) {
