@@ -36,7 +36,6 @@ set(
     guihelper.cpp
     italictextitemmodel.cpp
     valuelistmodel.cpp
-    delayedexecutiontimer.cpp
 )
 
 ecm_qt_declare_logging_category(kbibtexgui_SRCS

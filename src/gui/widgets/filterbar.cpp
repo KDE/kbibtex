@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -32,7 +32,6 @@
 #include <KSharedConfig>
 
 #include <BibTeXFields>
-#include "delayedexecutiontimer.h"
 
 static bool sortStringsLocaleAware(const QString &s1, const QString &s2) {
     return QString::localeAwareCompare(s1, s2) < 0;
@@ -53,18 +52,14 @@ public:
     QComboBox *comboBoxField;
     QPushButton *buttonSearchPDFfiles;
     QPushButton *buttonClearAll;
-    DelayedExecutionTimer *delayedTimer;
+    QTimer *delayedTimer;
 
     FilterBarPrivate(FilterBar *parent)
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
-          configGroupName(QStringLiteral("Filter Bar")), maxNumStoredFilterTexts(12) {
-        delayedTimer = new DelayedExecutionTimer(p);
+          configGroupName(QStringLiteral("Filter Bar")), maxNumStoredFilterTexts(12), delayedTimer(new QTimer(parent)) {
+        delayedTimer->setSingleShot(true);
         setupGUI();
-        connect(delayedTimer, &DelayedExecutionTimer::triggered, p, &FilterBar::publishFilter);
-    }
-
-    ~FilterBarPrivate() {
-        delete delayedTimer;
+        connect(delayedTimer, &QTimer::timeout, p, &FilterBar::publishFilter);
     }
 
     void setupGUI() {
@@ -135,14 +130,15 @@ public:
         comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
         comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
 
-        connect(comboBoxFilterText->lineEdit(), &QLineEdit::textChanged, delayedTimer, &DelayedExecutionTimer::trigger);
+#define connectStartingDelayedTimer(instance,signal) connect((instance),(signal),p,[this](){delayedTimer->start(500);})
+        connectStartingDelayedTimer(comboBoxFilterText->lineEdit(), &QLineEdit::textChanged);
         connect(comboBoxFilterText->lineEdit(), &QLineEdit::returnPressed, p, &FilterBar::userPressedEnter);
         connect(comboBoxCombination, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &FilterBar::comboboxStatusChanged);
         connect(comboBoxField, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &FilterBar::comboboxStatusChanged);
         connect(buttonSearchPDFfiles, &QPushButton::toggled, p, &FilterBar::comboboxStatusChanged);
-        connect(comboBoxCombination, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), delayedTimer, &DelayedExecutionTimer::trigger);
-        connect(comboBoxField, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), delayedTimer, &DelayedExecutionTimer::trigger);
-        connect(buttonSearchPDFfiles, &QPushButton::toggled, delayedTimer, &DelayedExecutionTimer::trigger);
+        connectStartingDelayedTimer(comboBoxCombination, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged));
+        connectStartingDelayedTimer(comboBoxField, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged));
+        connectStartingDelayedTimer(buttonSearchPDFfiles, &QPushButton::toggled);
         connect(buttonClearAll, &QPushButton::clicked, p, &FilterBar::resetState);
     }
 
