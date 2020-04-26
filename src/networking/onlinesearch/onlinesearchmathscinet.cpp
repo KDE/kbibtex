@@ -1,6 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
- *                 2018 Alexander Dunlap <alexander.dunlap@gmail.com>      *
+ *   SPDX-License-Identifier: GPL-2.0-or-later
+ *                                                                         *
+ *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2018 Alexander Dunlap <alexander.dunlap@gmail.com>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

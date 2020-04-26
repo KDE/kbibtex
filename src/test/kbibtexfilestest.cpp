@@ -1,6 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
- *   Copyright (C) 2014 by Pino Toscano <pino@kde.org>                     *
+ *   SPDX-License-Identifier: GPL-2.0-or-later
+ *                                                                         *
+ *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2014 Pino Toscano <pino@kde.org>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

@@ -1,5 +1,7 @@
 ###########################################################################
-#   Copyright (C) 2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de>      #
+#   SPDX-License-Identifier: GPL-2.0-or-later
+#                                                                         #
+#   SPDX-FileCopyrightText: 2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 #                                                                         #
 #   This script is free software; you can redistribute it and/or modify   #
 #   it under the terms of the GNU General Public License as published by  #
@@ -24,7 +26,9 @@ def print_copyright_header(outputdevice=sys.stdout):
     """Print the default copyright statement to the output device."""
 
     print("""/***************************************************************************
- *   Copyright (C) 2004-{year} by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   SPDX-License-Identifier: GPL-2.0-or-later
+ *                                                                         *
+ *   SPDX-FileCopyrightText: 2004-{year} Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *

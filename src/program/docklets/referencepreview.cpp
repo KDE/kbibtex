@@ -1,5 +1,7 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   SPDX-License-Identifier: GPL-2.0-or-later
+ *                                                                         *
+ *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                              and contributors                           *
  *                                                                         *
  *   Contributions to this file were made by                               *

@@ -6,6 +6,11 @@ Copyright: 2004–2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
 Author/Maintainer: Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
+This software, unless noted differently for individual files, materials,
+or contributions, is licensed under the terms of the GNU General Public
+License as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
 
 ## Description
 
