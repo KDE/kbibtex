@@ -33,6 +33,7 @@
 #include <QPushButton>
 #include <QFontDatabase>
 #include <QRegularExpression>
+#include <QTimer>
 
 #include <KLocalizedString>
 #include <KRun>
@@ -58,7 +59,6 @@
 #include <IdSuggestions>
 #include "field/fieldinput.h"
 #include "field/fieldlineedit.h"
-#include "delayedexecutiontimer.h"
 #include "logging_gui.h"
 
 static const unsigned int interColumnSpace = 16;
@@ -1165,10 +1165,11 @@ public:
     QComboBox *messages;
     QPushButton *buttonRestore;
     FileImporterBibTeX *importerBibTeX;
-    DelayedExecutionTimer *delayedExecutionTimer;
+    QTimer *delayedTimer;
 
     Private(SourceWidget *parent)
-            : messages(nullptr), buttonRestore(nullptr), importerBibTeX(new FileImporterBibTeX(parent)), delayedExecutionTimer(new DelayedExecutionTimer(1500, 500, parent)) {
+            : messages(nullptr), buttonRestore(nullptr), importerBibTeX(new FileImporterBibTeX(parent)), delayedTimer(new QTimer(parent)) {
+        delayedTimer->setSingleShot(true);
         importerBibTeX->setCommentHandling(FileImporterBibTeX::CommentHandling::Keep);
     }
 
@@ -1184,9 +1185,11 @@ SourceWidget::SourceWidget(QWidget *parent)
 {
     createGUI();
 
-    connect(document, &KTextEditor::Document::textChanged, d->delayedExecutionTimer, &DelayedExecutionTimer::trigger);
+    connect(document, &KTextEditor::Document::textChanged, this, [this]() {
+        d->delayedTimer->start(500);
+    });
     connect(document, &KTextEditor::Document::textChanged, d->messages, &QComboBox::clear);
-    connect(d->delayedExecutionTimer, &DelayedExecutionTimer::triggered, this, &SourceWidget::updateMessage);
+    connect(d->delayedTimer, &QTimer::timeout, this, &SourceWidget::updateMessage);
 }
 
 SourceWidget::~SourceWidget()
