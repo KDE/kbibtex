@@ -1,4 +1,4 @@
-image: kdeneon/plasma:dev-unstable
+image: kdeneon/plasma:dev-stable
 
 variables:
   BUILD_DIR: "/tmp/build-kbibtex"
@@ -7,7 +7,7 @@ variables:
   LD_LIBRARY_PATH: "$INSTALL_DIR/lib"
   QT_ASSUME_STDERR_HAS_CONSOLE: 1
   QT_DEPRECATED_WARNINGS: 1
-  QT_DISABLE_DEPRECATED: 0x050C00
+  QT_DISABLE_DEPRECATED: 0x050D00
   QT_MESSAGE_PATTERN: "[%{type}] %{appname} (%{file}:%{line}) - %{message}"
   QT_PLUGIN_PATH: "$INSTALL_DIR/lib/plugins/"
   XDG_CACHE_HOME: "$INSTALL_DIR/home/cache"
