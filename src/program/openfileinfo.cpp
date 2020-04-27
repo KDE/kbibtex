@@ -508,7 +508,7 @@ OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
     QTimer::singleShot(250, this, [this, recentlyOpenURL]() {
         /// In case there is at least one file marked as 'open' but it is not yet actually open,
         /// set it as current file now. The file to be opened (identified by URL) should be
-        /// preferrably the file that was actively open at the end of last KBibTeX session.
+        /// preferably the file that was actively open at the end of last KBibTeX session.
         /// Slightly delaying the actually opening of files is necessary to give precendence
         /// to bibliography files passed as command line arguments (see program.cpp) over files
         /// that where open when the previous KBibTeX session was quit.

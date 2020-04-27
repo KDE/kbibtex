@@ -64,7 +64,7 @@ public:
             return;
         }
 
-        /// Automatic balancing of colums is enabled
+        /// Automatic balancing of columns is enabled
         int defaultWidthSumVisible = 0;
         int col = 0;
         for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
