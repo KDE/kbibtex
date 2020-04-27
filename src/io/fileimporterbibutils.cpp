@@ -19,6 +19,7 @@
 
 #include <QBuffer>
 
+#include <File>
 #include "fileimporterbibtex.h"
 #include "logging_io.h"
 
@@ -61,7 +62,7 @@ File *FileImporterBibUtils::load(QIODevice *iodevice)
     } else if (iodevice->atEnd() || iodevice->size() <= 0) {
         qCWarning(LOG_KBIBTEX_IO) << "Input device at end or does not contain any data";
         emit message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
-        return nullptr;
+        return new File();
     }
 
     QBuffer buffer;
