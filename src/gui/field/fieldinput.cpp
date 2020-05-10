@@ -296,11 +296,14 @@ public:
 
     void setEdition(int edition)
     {
-        Value value;
-        value.append(QSharedPointer<MacroKey>(new MacroKey(QString::number(edition))));
-        reset(value);
-        /// Instead of an 'emit' ...
-        QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+        const QString editionString = Entry::editionNumberToString(edition);
+        if (!editionString.isEmpty()) {
+            Value value;
+            value.append(QSharedPointer<PlainText>(new PlainText(editionString)));
+            reset(value);
+            /// Instead of an 'emit' ...
+            QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+        }
     }
 };
 
