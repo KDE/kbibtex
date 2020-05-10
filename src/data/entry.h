@@ -24,6 +24,7 @@
 
 #include <Element>
 #include <Value>
+#include <Preferences>
 
 class File;
 
@@ -55,6 +56,8 @@ public:
     static const QString ftCrossRef;
     /** Representation of the BibTeX field key "doi" */
     static const QString ftDOI;
+    /** Representation of the BibTeX field key "edition" */
+    static const QString ftEdition;
     /** Representation of the BibTeX field key "editor" */
     static const QString ftEditor;
     /** Representation of the BibTeX field key "file" */
@@ -217,6 +220,35 @@ public:
     QStringList authorsLastName() const;
 
     quint64 uniqueId() const;
+
+    /**
+     * Convert a textual representation of an edition string into a number.
+     * Examples for supported string patterns include '4', '4th', or 'fourth'.
+     * Success of the conversion is returned via the @c ok variable, where the
+     * function caller has to provide a pointer to a boolean variable.
+     * In case of success, the function's result is the edition, in case
+     * of failure, i.e. @c *ok==false, the result is undefined.
+     * @param[in] editionString A string representing an edition number
+     * @param[out] ok Pointer to a boolean variable used to return the success (@c true) or failure (@c false) state of the conversion; must not be @c nullptr
+     * @return In case of success, the edition as a positive int, else undefined
+     */
+    static int editionStringToNumber(const QString &editionString, bool *ok);
+
+    /**
+     * Convert a positive int into a textual representation.
+     * If the requested bibliography system is BibTeX, conversion follows BibTeX's
+     * documentation: editions 1 to 5 get rewritten into text like 'fourth',
+     * larger editions are numbers followed by an English ordinal suffix,
+     * resulting in, for example, '42nd'.
+     * If the requested bibliography system is BibLaTeX, conversion follows this
+     * system's documentation: edition numbers are simply converted into a string
+     * for use in a @c PlainText.
+     * If conversion fails, e.g. for negative values of @c edition, an empty
+     * string is returned.
+     * @param[in] edition edition as positive number
+     * @return Textual representation of the ordinal value or empty string if conversion failed
+     */
+    static QString editionNumberToString(const int edition, const Preferences::BibliographySystem bibliographySystem = Preferences::instance().bibliographySystem());
 
     /**
      * Cheap and fast test if another Element is a Entry object.

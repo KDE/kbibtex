@@ -21,6 +21,8 @@
 
 #include <typeinfo>
 
+#include <QRegularExpression>
+
 #include "file.h"
 #include "logging_data.h"
 
@@ -35,6 +37,7 @@ const QString Entry::ftColor = QStringLiteral("x-color");
 const QString Entry::ftComment = QStringLiteral("comment");
 const QString Entry::ftCrossRef = QStringLiteral("crossref");
 const QString Entry::ftDOI = QStringLiteral("doi");
+const QString Entry::ftEdition = QStringLiteral("edition");
 const QString Entry::ftEditor = QStringLiteral("editor");
 const QString Entry::ftFile = QStringLiteral("file");
 const QString Entry::ftISSN = QStringLiteral("issn");
@@ -265,6 +268,126 @@ QStringList Entry::authorsLastName(const Entry &entry)
 QStringList Entry::authorsLastName() const
 {
     return authorsLastName(*this);
+}
+
+int Entry::editionStringToNumber(const QString &editionString, bool *ok)
+{
+    // TODO   This function is not really used (much) yet. It can clean up
+    // several types of non-standard variations used to describe the edition
+    // of a publication, but the question is whether this re-write should be
+    // done without the user's approval.
+    // Thus, the intention is to make use of this function in a future 'clean
+    // BibTeX file' feature which is to be triggered by the user and which
+    // would rewrite and update a bibliography file. Ideas would include not
+    // just rewriting the edition, but, for example updating URLs from HTTP
+    // to HTTPS, retrieving new or updated data, etc.
+
+    *ok = true; // Assume the best for now as this function only returns if successful (except for last return)
+
+    // Test if string is just digits that can be converted into a positive int
+    bool toIntok = false;
+    int edition = editionString.toInt(&toIntok);
+    if (toIntok && edition >= 1)
+        return edition;
+
+    const QString editionStringLower = editionString.toLower().trimmed();
+
+    // Test if string starts with digits, followed by English ordinal suffices
+    static const QRegularExpression englishOrdinal(QStringLiteral("^([1-9][0-9]*)(st|nd|rd|th)($| edition)"));
+    const QRegularExpressionMatch englishOrdinalMatch = englishOrdinal.match(editionStringLower);
+    if (englishOrdinalMatch.hasMatch()) {
+        bool toIntok = false;
+        int edition = englishOrdinalMatch.captured(1).toInt(&toIntok);
+        if (toIntok && edition >= 1)
+            return edition;
+    }
+
+    // Test if string is a spelled-out English ordinal (in some cases consider mis-spellings)
+    if (editionStringLower == QLatin1String("first"))
+        return 1;
+    else if (editionStringLower == QLatin1String("second"))
+        return 2;
+    else if (editionStringLower == QLatin1String("third"))
+        return 3;
+    else if (editionStringLower == QLatin1String("fourth"))
+        return 4;
+    else if (editionStringLower == QLatin1String("fifth") || editionStringLower == QLatin1String("fivth"))
+        return 5;
+    else if (editionStringLower == QLatin1String("sixth"))
+        return 6;
+    else if (editionStringLower == QLatin1String("seventh"))
+        return 7;
+    else if (editionStringLower == QLatin1String("eighth") || editionStringLower == QLatin1String("eigth"))
+        return 8;
+    else if (editionStringLower == QLatin1String("nineth") || editionStringLower == QLatin1String("ninth"))
+        return 9;
+    else if (editionStringLower == QLatin1String("tenth"))
+        return 10;
+    else if (editionStringLower == QLatin1String("eleventh"))
+        return 11;
+    else if (editionStringLower == QLatin1String("twelvth") || editionStringLower == QLatin1String("twelfth"))
+        return 12;
+    else if (editionStringLower == QLatin1String("thirdteeth"))
+        return 13;
+    else if (editionStringLower == QLatin1String("fourteenth"))
+        return 14;
+    else if (editionStringLower == QLatin1String("fifteenth"))
+        return 15;
+    else if (editionStringLower == QLatin1String("sixteenth"))
+        return 16;
+
+    // No test above succeeded, so communicate that conversion failed
+    *ok = false;
+    return 0;
+}
+
+QString Entry::editionNumberToString(const int edition, const Preferences::BibliographySystem bibliographySystem)
+{
+    if (edition <= 0) {
+        qCWarning(LOG_KBIBTEX_DATA) << "Cannot convert a non-positive number (" << edition << ") into a textual representation";
+        return QString();
+    }
+
+    // According to http://mirrors.ctan.org/biblio/bibtex/contrib/doc/btxFAQ.pdf,
+    // edition values should look like this:
+    //  - for first to fifth, write "First" to "Fifth"
+    //  - starting from sixth, use numeric form like "17th"
+    // According to http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf,
+    // edition values should by just numbers (digits) without text,
+    // such as '1' in a @sa PlainText.
+
+    if (bibliographySystem == Preferences::BibliographySystem::BibLaTeX)
+        return QString::number(edition);
+
+    // BibLaTeX was simple, now it becomes complex for BibTeX
+
+    if (edition == 1)
+        return QStringLiteral("First");
+    else if (edition == 2)
+        return QStringLiteral("Second");
+    else if (edition == 3)
+        return QStringLiteral("Third");
+    else if (edition == 4)
+        return QStringLiteral("Fourth");
+    else if (edition == 5)
+        return QStringLiteral("Fifth");
+    else if (edition >= 20 && edition % 10 == 1) {
+        // 21, 31, 41, ...
+        return QString(QStringLiteral("%1st")).arg(edition);
+    } else if (edition >= 20 && edition % 10 == 2) {
+        // 22, 32, 42, ...
+        return QString(QStringLiteral("%1nd")).arg(edition);
+    } else if (edition >= 20 && edition % 10 == 3) {
+        // 23, 33, 43, ...
+        return QString(QStringLiteral("%1rd")).arg(edition);
+    } else if (edition >= 6) {
+        // Remaining editions: 6, 7, ..., 19, 20, 24, 25, ...
+        return QString(QStringLiteral("%1th")).arg(edition);
+    } else {
+        // Unsupported editions, like -23
+        qCWarning(LOG_KBIBTEX_DATA) << "Don't know how to convert number" << edition << "into an ordinal string for edition";
+    }
+    return QString();
 }
 
 bool Entry::isEntry(const Element &other) {
