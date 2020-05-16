@@ -49,6 +49,7 @@ Diff 0.9.2 to 0.10
 - Cleaner code, e.g. using std::numeric_limits<int>::max() instead of magic constant
   0x00ffffff
 - QDebug output uses categories consistently
+- KDE Bug 421612: When suggesting entry ids, do not count 'small words'
 - Across classes, moving code into private subclasses to minimize public interface
 - Updating translations (contributions by various authors)
 - Numerous other fixes, clean-ups, refactoring, ...

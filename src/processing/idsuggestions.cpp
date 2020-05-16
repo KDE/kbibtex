@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -75,10 +75,11 @@ public:
         const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
 #endif // QT_VERSION >= 0x050e00
         int index = 0;
-        for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it, ++index) {
+        for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it) {
             const QString lowerText = normalizeText(*it).toLower();
             if ((removeSmallWords && smallWords.contains(lowerText)) || index < tti.startWord || index > tti.endWord)
                 continue;
+            ++index; ///< only increase index if actually considering current title word (not a 'small word')
 
             if (first)
                 first = false;
