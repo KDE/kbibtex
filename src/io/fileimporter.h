@@ -48,7 +48,18 @@ public:
     explicit FileImporter(QObject *parent);
     ~FileImporter() override;
 
+    /**
+     * @brief Load a bibliography from a textual representation.
+     * @param text textual representation of the bibliography
+     * @return bibliography object if sucessful, @c nullptr on failure
+     */
     File *fromString(const QString &text);
+
+    /**
+     * @brief Load a bibliography from a @c QIODevice like file.
+     * @param iodevice Device to read the bibliography's data from
+     * @return bibliography object if sucessful, @c nullptr on failure
+     */
     virtual File *load(QIODevice *iodevice) = 0;
 
     /**

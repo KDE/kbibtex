@@ -50,17 +50,39 @@ public:
     explicit FileExporterBibTeX(QObject *parent);
     ~FileExporterBibTeX() override;
 
+    /**
+     * Set the text encoding used in the resulting bibliography file.
+     * Example values for encoding include 'UTF-8' or 'US-ASCII'.
+     * Special encoding 'LaTeX' corresponds to 'UTF-8' but tries to
+     * replace non-ASCII characters with LaTeX equivalents (which are
+     * ASCII only).
+     * This setting both overrules the Preferences' global setting
+     * as well as the encoding that may have been set in the bibliography's
+     * properties (which may got set when loading the bibliography from
+     * a file).
+     *
+     * @param[in] encoding encoding to be forced upon the output by this exporter
+     */
     void setEncoding(const QString &encoding);
 
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
+    /**
+     * Write a Value object into a BibTeX or BibLaTeX strign representation.
+     * The transcription may follow field type-specific rules. The generated string
+     * may keep non-ASCII characters or have them rewritten into a LaTeX representation.
+     * @param[in] value Value to be written out
+     * @param[in] fieldType optionally specified field type, e.g. @c url to enable field type-specific rules
+     * @param[in] useLaTeXEncoding optional parameter how to handle non-ASCII characters
+     * @return string representation of the Value object
+     */
     static QString valueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = UseLaTeXEncoding::LaTeX);
 
     /**
      * Cheap and fast test if another FileExporter is a FileExporterBibTeX object.
-     * @param other another FileExporter object to test
-     * @return true if FileExporter is actually a FileExporterBibTeX
+     * @param other another FileExporter object to test against
+     * @return @c true if FileExporter is actually a FileExporterBibTeX, else @c false
      */
     static bool isFileExporterBibTeX(const FileExporter &other);
 
