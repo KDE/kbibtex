@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -65,6 +65,9 @@ public:
      */
     void setEncoding(const QString &encoding);
 
+    QString toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    QString toString(const File *bibtexfile, QStringList *errorLog = nullptr) override;
+
     bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
 
@@ -90,13 +93,8 @@ public slots:
     void cancel() override;
 
 private:
-    class FileExporterBibTeXPrivate;
-    FileExporterBibTeXPrivate *d;
-
-    inline QString applyEncoder(const QString &input, UseLaTeXEncoding useLaTeXEncoding) const;
-    QString internalValueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = UseLaTeXEncoding::LaTeX);
-
-    static FileExporterBibTeX *staticFileExporterBibTeX;
+    class Private;
+    Private *d;
 };
 
 #endif // KBIBTEX_IO_FILEEXPORTERBIBTEX_H

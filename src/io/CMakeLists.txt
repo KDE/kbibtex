@@ -21,7 +21,6 @@ set(
     fileimporterpdf.cpp
     fileimporterris.cpp
     fileinfo.cpp
-    textencoder.cpp
     bibutils.cpp
     xsltransform.cpp
 )
@@ -111,7 +110,6 @@ ecm_generate_headers(kbibtexio_HEADERS
         FileImporterPDF
         FileImporterRIS
         FileInfo
-        TextEncoder
         XSLTransform
     REQUIRED_HEADERS kbibtexio_HEADERS
 )

@@ -49,7 +49,7 @@ public:
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
      * @return String representation of provided element
      */
-    QString toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    virtual QString toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
 
     /**
      * @brief Convert a bibliography into a string representation.
@@ -57,7 +57,7 @@ public:
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
      * @return String representation of provided bibliography
      */
-    QString toString(const File *bibtexfile, QStringList *errorLog = nullptr);
+    virtual QString toString(const File *bibtexfile, QStringList *errorLog = nullptr);
 
     /**
      * @brief Write a bibliography into a @c QIODevice like a file.

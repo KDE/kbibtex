@@ -9,6 +9,8 @@ Diff 0.10 to 0.11
 - KDE Bug 400672: Save only selected elements in a new bibliography file
 - Adding SPDX identifiers to source files (SPDX-License-Identifier and
   SPDX-FileCopyrightText)
+- Refactoring FileExporterBibTeX class, among others for better handling of text
+  encodings incompatible with ASCII, such as UTF-16
 
 Diff 0.9.2 to 0.10
 
