@@ -36,7 +36,6 @@ class Element;
 class Comment;
 class Preamble;
 class Macro;
-class Entry;
 class Value;
 class Keyword;
 
@@ -57,6 +56,9 @@ public:
      * Creates an importer class to read a BibTeX file.
      */
     explicit FileImporterBibTeX(QObject *parent);
+    ~FileImporterBibTeX();
+
+    virtual File *fromString(const QString &text) override;
 
     /**
      * Read data from the given device and construct a File object holding
@@ -111,52 +113,15 @@ public slots:
     void cancel() override;
 
 private:
-    enum class Token {
-        At = 1, BracketOpen = 2, BracketClose = 3, AlphaNumText = 4, Comma = 5, Assign = 6, Doublecross = 7, EndOfFile = 0xffff, Unknown = -1
-    };
-    enum class CommaContainment { None, Contains };
-
-    struct {
-        int countCurlyBrackets, countQuotationMarks;
-        int countFirstNameFirst, countLastNameFirst;
-        int countNoCommentQuote, countCommentPercent, countCommentCommand;
-        int countProtectedTitle, countUnprotectedTitle;
-        QString mostRecentListSeparator;
-    } m_statistics;
+    class Private;
+    Private *d;
 
     bool m_cancelFlag;
-    QTextStream *m_textStream;
-    CommentHandling m_commentHandling;
-    KBibTeX::Casing m_keywordCasing;
-    QStringList m_keysForPersonDetection;
-    QSet<QString> m_knownElementIds;
 
-    /// low-level character operations
-    QChar m_prevChar, m_nextChar;
-    int m_lineNo;
-    QString m_prevLine, m_currentLine;
-    bool readChar();
-    bool readCharUntil(const QString &until);
-    bool skipWhiteChar();
-    QString readLine();
 
     /// high-level parsing functions
     Comment *readCommentElement();
     Comment *readPlainCommentElement(const QString &prefix);
-    Macro *readMacroElement();
-    Preamble *readPreambleElement();
-    Entry *readEntryElement(const QString &typeString);
-    Element *nextElement();
-    Token nextToken();
-    QString readString(bool &isStringKey);
-    QString readSimpleString(const QString &until = QString(), const bool readNestedCurlyBrackets = false);
-    QString readQuotedString();
-    QString readBracketString();
-    Token readValue(Value &value, const QString &fieldType);
-
-    static QSharedPointer<Person> personFromString(const QString &name, CommaContainment *comma, const int line_number, QObject *parent);
-    static QSharedPointer<Person> personFromTokenList(const QStringList &tokens, CommaContainment *comma, const int line_number, QObject *parent);
-    static void parsePersonList(const QString &text, Value &value, CommaContainment *comma, const int line_number, QObject *parent);
 
     /**
      * Split a string into white-space separated chunks,
@@ -173,7 +138,6 @@ private:
     static QString rstrip(const QString &text);
 
     bool evaluateParameterComments(QTextStream *textStream, const QString &line, File *file);
-    QString tokenidToString(Token token);
 };
 
 #endif // KBIBTEX_IO_FILEIMPORTERBIBTEX_H

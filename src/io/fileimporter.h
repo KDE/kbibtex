@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -53,7 +53,7 @@ public:
      * @param text textual representation of the bibliography
      * @return bibliography object if sucessful, @c nullptr on failure
      */
-    File *fromString(const QString &text);
+    virtual File *fromString(const QString &text);
 
     /**
      * @brief Load a bibliography from a @c QIODevice like file.
