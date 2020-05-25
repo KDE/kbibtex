@@ -337,7 +337,7 @@ public:
                 anyRemote |= !isLocal;
                 if (!onlyLocalFilesButton->isChecked() && !isLocal) continue;
 
-                KIO::StatJob *job = KIO::stat(url, KIO::StatJob::SourceSide, 3, KIO::HideProgressInfo);
+                KIO::StatJob *job = KIO::mostLocalUrl(url, KIO::HideProgressInfo);
                 runningJobs << job;
                 KJobWidgets::setWindow(job, p);
                 connect(job, &KIO::StatJob::result, p, &DocumentPreview::statFinished);

@@ -402,7 +402,11 @@ public:
             return;
 
         /// Do not make backup copies if destination file does not exist yet
+#if KIO_VERSION >= 0x054500 // >= 5.69.0
+        KIO::StatJob *statJob = KIO::statDetails(url, KIO::StatJob::DestinationSide, KIO::StatNoDetails /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+#else // KIO_VERSION < 0x054500 // < 5.69.0
         KIO::StatJob *statJob = KIO::stat(url, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+#endif // KIO_VERSION
         KJobWidgets::setWindow(statJob, p->widget());
         statJob->exec();
         if (statJob->error() == KIO::ERR_DOES_NOT_EXIST)
@@ -421,7 +425,11 @@ public:
             QUrl olderBackupUrl = url;
             constructBackupUrl(level, olderBackupUrl);
 
+#if KIO_VERSION >= 0x054500 // >= 5.69.0
+            statJob = KIO::statDetails(newerBackupUrl, KIO::StatJob::DestinationSide, KIO::StatNoDetails /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+#else // KIO_VERSION < 0x054500 // < 5.69.0
             statJob = KIO::stat(newerBackupUrl, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+#endif // KIO_VERSION
             KJobWidgets::setWindow(statJob, p->widget());
             if (statJob->exec() && statJob->error() == KIO::Job::NoError) {
                 KIO::CopyJob *moveJob = nullptr; ///< guaranteed to be initialized in either branch of the following code
