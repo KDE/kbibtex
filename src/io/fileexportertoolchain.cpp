@@ -117,23 +117,34 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
 
 bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevice *device)
 {
+    bool result = false;
     QFile file(filename);
     if (file.open(QIODevice::ReadOnly)) {
-        bool result = true;
         static const qint64 buffersize = 0x10000;
-        qint64 amount = 0;
         char buffer[buffersize];
-        do {
-            result = ((amount = file.read(buffer, buffersize)) > -1) && (device->write(buffer, amount) > -1);
-        } while (result && amount > 0);
+        result = true;
+        while (result) {
+            const qint64 indata_size = file.read(buffer, buffersize);
+            result &= indata_size >= 0;
+            if (!result || indata_size == 0) break; //< on error or end of data
+
+            qint64 remainingdata_size = buffersize;
+            qint64 outdata_size = 0;
+            int buffer_offset = 0;
+            while (result && outdata_size < remainingdata_size) {
+                buffer_offset += outdata_size;
+                remainingdata_size -= outdata_size;
+                outdata_size = device->write(buffer + buffer_offset, remainingdata_size);
+                result &= outdata_size >= 0;
+            }
+        }
 
         file.close();
-        return result;
     }
 
     if (!result)
         qCWarning(LOG_KBIBTEX_IO) << "Writing to file" << filename << "failed";
-    return false;
+    return result;
 }
 
 QString FileExporterToolchain::pageSizeToLaTeXName(const QPageSize::PageSizeId pageSizeId) const
