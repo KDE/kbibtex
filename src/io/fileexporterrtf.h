@@ -39,14 +39,14 @@ public:
     explicit FileExporterRTF(QObject *parent);
     ~FileExporterRTF() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const File *bibtexfile) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
 
 private:
     QString m_fileBasename;
     QString m_fileStem;
 
-    bool generateRTF(QIODevice *iodevice, QStringList *errorLog);
+    bool generateRTF(QIODevice *iodevice);
     bool writeLatexFile(const QString &filename);
 };
 

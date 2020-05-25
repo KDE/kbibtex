@@ -35,11 +35,11 @@ FileExporter::~FileExporter()
     /// nothing
 }
 
-QString FileExporter::toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+QString FileExporter::toString(const QSharedPointer<const Element> element, const File *bibtexfile)
 {
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);
-    if (save(&buffer, element, bibtexfile, errorLog)) {
+    if (save(&buffer, element, bibtexfile)) {
         buffer.close();
         if (buffer.open(QBuffer::ReadOnly)) {
             QTextStream ts(&buffer);
@@ -51,11 +51,11 @@ QString FileExporter::toString(const QSharedPointer<const Element> element, cons
     return QString();
 }
 
-QString FileExporter::toString(const File *bibtexfile, QStringList *errorLog)
+QString FileExporter::toString(const File *bibtexfile)
 {
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);
-    if (save(&buffer, bibtexfile, errorLog)) {
+    if (save(&buffer, bibtexfile)) {
         buffer.close();
         if (buffer.open(QBuffer::ReadOnly)) {
             QTextStream ts(&buffer);

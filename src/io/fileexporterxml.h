@@ -45,8 +45,8 @@ public:
     explicit FileExporterXML(QObject *parent);
     ~FileExporterXML() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const File *bibtexfile) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
 
     static QString valueToXML(const Value &value, const QString &fieldType = QString());
 

@@ -46,7 +46,7 @@ FileExporterXSLT::~FileExporterXSLT()
     /// nothing
 }
 
-bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -62,7 +62,7 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QString
 
     QBuffer buffer;
     buffer.open(QIODevice::WriteOnly);
-    if (xmlExporter.save(&buffer, bibtexfile, errorLog)) {
+    if (xmlExporter.save(&buffer, bibtexfile)) {
         buffer.close();
         buffer.open(QIODevice::ReadOnly);
         const QString xml = QString::fromUtf8(buffer.readAll().constData());
@@ -78,7 +78,7 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QString
     return false;
 }
 
-bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -94,7 +94,7 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Elem
 
     QBuffer buffer;
     buffer.open(QIODevice::WriteOnly);
-    if (xmlExporter.save(&buffer, element, bibtexfile, errorLog)) {
+    if (xmlExporter.save(&buffer, element, bibtexfile)) {
         buffer.close();
         buffer.open(QIODevice::ReadOnly);
         const QString xml = QString::fromUtf8(buffer.readAll().constData());

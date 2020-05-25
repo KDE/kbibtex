@@ -40,15 +40,15 @@ public:
     explicit FileExporterBibTeXOutput(OutputType outputType, QObject *parent);
     ~FileExporterBibTeXOutput() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const File *bibtexfile) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
 
 private:
     OutputType m_outputType;
     QString m_fileBasename;
     QString m_fileStem;
 
-    bool generateOutput(QStringList *errorLog);
+    bool generateOutput();
     bool writeLatexFile(const QString &filename);
 };
 

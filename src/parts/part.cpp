@@ -570,7 +570,7 @@ public:
         return exporter;
     }
 
-    bool saveFile(QFile &file, const FileScope fileScope, FileExporter *exporter, QStringList *errorLog = nullptr) {
+    bool saveFile(QFile &file, const FileScope fileScope, FileExporter *exporter) {
         SortFilterFileModel *model = qobject_cast<SortFilterFileModel *>(partWidget->fileView()->model());
         Q_ASSERT_X(model != nullptr, "FileExporter *KBibTeXPart::KBibTeXPartPrivate:saveFile(...)", "SortFilterFileModel *model from editor->model() is invalid");
         Q_ASSERT_X(model->fileSourceModel()->bibliographyFile() == bibTeXFile, "FileExporter *KBibTeXPart::KBibTeXPartPrivate:saveFile(...)", "SortFilterFileModel's BibTeX File does not match Part's BibTeX File");
@@ -578,7 +578,7 @@ public:
         switch (fileScope) {
         case scopeAllElements: {
             /// Save complete file
-            return exporter->save(&file, bibTeXFile, errorLog);
+            return exporter->save(&file, bibTeXFile);
         } ///< no break required as there is an unconditional 'return' further above
         case scopeSelectedElements: {
             /// Save only selected elements
@@ -592,7 +592,7 @@ public:
                 const QSharedPointer<Element> &element = (*bibTeXFile)[row];
                 fileWithSelectedElements << element;
             }
-            return exporter->save(&file, &fileWithSelectedElements, errorLog);
+            return exporter->save(&file, &fileWithSelectedElements);
         } ///< no break required as there is an unconditional 'return' further above
         }
 
@@ -609,9 +609,12 @@ public:
         const QFileInfo filenameInfo(url.fileName());
         const QString ending = filenameInfo.completeSuffix();
         FileExporter *exporter = saveFileExporter(ending);
-
-        /// String list to collect error message from FileExporer
         QStringList errorLog;
+        QObject::connect(exporter, &FileExporter::message, p, [&errorLog](const FileExporter::MessageSeverity severity, const QString & messageText) {
+            if (severity >= FileExporter::MessageSeverity::Warning)
+                errorLog.append(messageText);
+        });
+
         qApp->setOverrideCursor(Qt::WaitCursor);
 
         if (url.isLocalFile()) {
@@ -630,12 +633,12 @@ public:
 
                 QFile file(filename);
                 if (file.open(QIODevice::WriteOnly)) {
-                    result = saveFile(file, fileScope, exporter, &errorLog);
+                    result = saveFile(file, fileScope, exporter);
                     file.close();
                     if (!result)
-                        errorLog.append(i18n("Could not write bibliographic data to file."));
+                        qCWarning(LOG_KBIBTEX_PART) << "Could not write bibliographic data to file.";
                 } else
-                    errorLog.append(i18n("Could not open local file '%1' for writing.", filename));
+                    qCWarning(LOG_KBIBTEX_PART) << QString(QStringLiteral("Could not open local file '%1' for writing.")).arg(filename);
             }
         } else {
             /// URL points to a remote location
@@ -644,7 +647,7 @@ public:
             QTemporaryFile temporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QStringLiteral("kbibtex_savefile_XXXXXX") + ending);
             temporaryFile.setAutoRemove(true);
             if (temporaryFile.open()) {
-                result = saveFile(temporaryFile, fileScope, exporter, &errorLog);
+                result = saveFile(temporaryFile, fileScope, exporter);
 
                 /// Close/flush temporary file
                 temporaryFile.close();
@@ -657,11 +660,11 @@ public:
                     KJobWidgets::setWindow(copyJob, p->widget());
                     result &= copyJob->exec() && copyJob->error() == KIO::Job::NoError;
                     if (!result)
-                        errorLog.append(i18n("Failed to upload temporary file to final destination '%1'", url.toDisplayString()));
+                        qCWarning(LOG_KBIBTEX_PART) << QString(QStringLiteral("Failed to upload temporary file to final destination '%1'")).arg(url.toDisplayString());
                 } else
-                    errorLog.append(i18n("Could not write bibliographic data to temporary file."));
+                    qCWarning(LOG_KBIBTEX_PART) << QStringLiteral("Could not write bibliographic data to temporary file.");
             } else
-                errorLog.append(i18n("Could not open temporary file for writing."));
+                qCWarning(LOG_KBIBTEX_PART) << QStringLiteral("Could not open temporary file for writing.");
         }
 
         qApp->restoreOverrideCursor();

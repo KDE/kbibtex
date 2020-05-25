@@ -47,8 +47,8 @@ public:
     explicit FileExporterPDF(QObject *parent);
     ~FileExporterPDF() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const File *bibtexfile) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
 
     void setDocumentSearchPaths(const QStringList &searchPaths);
     void setFileEmbedding(const FileEmbeddings fileEmbedding);
@@ -60,7 +60,7 @@ private:
     QStringList m_embeddedFileList;
     QStringList m_searchPaths;
 
-    bool generatePDF(QIODevice *iodevice, QStringList *errorLog);
+    bool generatePDF(QIODevice *iodevice);
     bool writeLatexFile(const QString &filename);
     void fillEmbeddedFileList(const File *bibtexfile);
     void fillEmbeddedFileList(const QSharedPointer<const Element> element, const File *bibtexfile);

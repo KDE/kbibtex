@@ -73,17 +73,23 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
                 dummyFile << element;
 
     /// run special exporter to get BibTeX's output
-    QStringList bibtexOuput;
+    QStringList bibtexOutput;
     QByteArray ba;
     QBuffer buffer(&ba);
     buffer.open(QIODevice::WriteOnly);
     FileExporterBibTeXOutput exporter(FileExporterBibTeXOutput::OutputType::BibTeXLogFile, parent);
-    bool exporterResult = exporter.save(&buffer, &dummyFile, &bibtexOuput);
+    QObject::connect(&exporter, &FileExporterBibTeXOutput::processStandardOut, parent, [&bibtexOutput](const QString & line) {
+        bibtexOutput.append(line);
+    });
+    QObject::connect(&exporter, &FileExporterBibTeXOutput::processStandardError, parent, [&bibtexOutput](const QString & line) {
+        bibtexOutput.append(line);
+    });
+    bool exporterResult = exporter.save(&buffer, &dummyFile);
     buffer.close();
 
     if (!exporterResult) {
         QApplication::restoreOverrideCursor();
-        KMessageBox::errorList(parent, i18n("Running BibTeX failed.\n\nSee the following output to trace the error:"), bibtexOuput, i18n("Running BibTeX failed."));
+        KMessageBox::errorList(parent, i18n("Running BibTeX failed.\n\nSee the following output to trace the error:"), bibtexOutput, i18n("Running BibTeX failed."));
         return CheckBibTeXResult::FailedToCheck;
     }
 
@@ -100,7 +106,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     /// go line-by-line through BibTeX output and collect warnings/errors
     QStringList warnings;
     QString errorPlainText;
-    for (const QString &line : const_cast<const QStringList &>(bibtexOuput)) {
+    for (const QString &line : const_cast<const QStringList &>(bibtexOutput)) {
         QRegularExpressionMatch match;
         if ((match = errorLine.match(line)).hasMatch()) {
             buffer.open(QIODevice::ReadOnly);

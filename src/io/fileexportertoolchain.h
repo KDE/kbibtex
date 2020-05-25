@@ -43,12 +43,16 @@ public:
 
     static bool kpsewhich(const QString &filename);
 
+signals:
+    void processStandardOut(const QString);
+    void processStandardError(const QString);
+
 protected:
     QTemporaryDir tempDir;
 
-    bool runProcesses(const QStringList &progs, QStringList *errorLog = nullptr);
-    bool runProcess(const QString &cmd, const QStringList &args, QStringList *errorLog = nullptr);
-    bool writeFileToIODevice(const QString &filename, QIODevice *device, QStringList *errorLog = nullptr);
+    bool runProcesses(const QStringList &progs, bool doEmitProcessOutput = false);
+    bool runProcess(const QString &cmd, const QStringList &args, bool doEmitProcessOutput = false);
+    bool writeFileToIODevice(const QString &filename, QIODevice *device);
 
     QString pageSizeToLaTeXName(const QPageSize::PageSizeId pageSizeId) const;
 };

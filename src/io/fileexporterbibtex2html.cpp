@@ -43,7 +43,7 @@ public:
         bibStyle = QStringLiteral("plain");
     }
 
-    bool generateHTML(QIODevice *iodevice, QStringList *errorLog) {
+    bool generateHTML(QIODevice *iodevice) {
         if (!checkBSTexists(iodevice)) return false;
         if (!checkBibTeX2HTMLexists(iodevice)) return false;
 
@@ -61,7 +61,7 @@ public:
         args << QStringLiteral("-debug"); /// verbose mode (to find incorrect BibTeX entries)
         args << bibTeXFilename;
 
-        bool result = p->runProcess(QStringLiteral("bibtex2html"), args, errorLog) && p->writeFileToIODevice(outputFilename, iodevice, errorLog);
+        bool result = p->runProcess(QStringLiteral("bibtex2html"), args) && p->writeFileToIODevice(outputFilename, iodevice);
 
         return result;
     }
@@ -103,7 +103,7 @@ FileExporterBibTeX2HTML::~FileExporterBibTeX2HTML()
     delete d;
 }
 
-bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -116,17 +116,17 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile, 
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter.save(&output, bibtexfile, errorLog);
+        result = bibtexExporter.save(&output, bibtexfile);
         output.close();
     }
 
     if (result)
-        result = d->generateHTML(iodevice, errorLog);
+        result = d->generateHTML(iodevice);
 
     return result;
 }
 
-bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -139,12 +139,12 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<con
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter.save(&output, element, bibtexfile, errorLog);
+        result = bibtexExporter.save(&output, element, bibtexfile);
         output.close();
     }
 
     if (result)
-        result = d->generateHTML(iodevice, errorLog);
+        result = d->generateHTML(iodevice);
 
     return result;
 }

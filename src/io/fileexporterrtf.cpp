@@ -42,7 +42,7 @@ FileExporterRTF::~FileExporterRTF()
     /// nothing
 }
 
-bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -55,17 +55,17 @@ bool FileExporterRTF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter.save(&output, bibtexfile, errorLog);
+        result = bibtexExporter.save(&output, bibtexfile);
         output.close();
     }
 
     if (result)
-        result = generateRTF(iodevice, errorLog);
+        result = generateRTF(iodevice);
 
     return result;
 }
 
-bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -78,21 +78,21 @@ bool FileExporterRTF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter.save(&output, element, bibtexfile, errorLog);
+        result = bibtexExporter.save(&output, element, bibtexfile);
         output.close();
     }
 
     if (result)
-        result = generateRTF(iodevice, errorLog);
+        result = generateRTF(iodevice);
 
     return result;
 }
 
-bool FileExporterRTF::generateRTF(QIODevice *iodevice, QStringList *errorLog)
+bool FileExporterRTF::generateRTF(QIODevice *iodevice)
 {
     QStringList cmdLines {QStringLiteral("latex -halt-on-error bibtex-to-rtf.tex"), QStringLiteral("bibtex bibtex-to-rtf"), QStringLiteral("latex -halt-on-error bibtex-to-rtf.tex"), QString(QStringLiteral("latex2rtf -i %1 bibtex-to-rtf.tex")).arg(Preferences::instance().laTeXBabelLanguage())};
 
-    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + KBibTeX::extensionRTF, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines) && writeFileToIODevice(m_fileStem + KBibTeX::extensionRTF, iodevice);
 }
 
 bool FileExporterRTF::writeLatexFile(const QString &filename)

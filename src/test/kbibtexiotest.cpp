@@ -423,10 +423,7 @@ void KBibTeXIOTest::fileExporterXMLsave()
     QFETCH(QString, xmlData);
 
     FileExporterXML fileExporterXML(this);
-    QStringList errorLog;
-    const QString generatedData = fileExporterXML.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
-    for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qCDebug(LOG_KBIBTEX_TEST) << logLine;
+    const QString generatedData = fileExporterXML.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
 
     QCOMPARE(generatedData, xmlData);
 }
@@ -453,10 +450,7 @@ void KBibTeXIOTest::fileExporterXSLTstandardSaveFile()
     QFETCH(QSet<QString>, expectedFragments);
 
     FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/standard.xsl")), this);
-    QStringList errorLog;
-    const QString generatedData = fileExporterXSLT.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
-    for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qCDebug(LOG_KBIBTEX_TEST) << logLine;
+    const QString generatedData = fileExporterXSLT.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
 
     for (const QString &fragment : expectedFragments)
         QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data")).arg(fragment).toLatin1().constData());
@@ -483,10 +477,7 @@ void KBibTeXIOTest::fileExporterXSLTstandardSaveElement()
     QFETCH(QSet<QString>, expectedFragments);
 
     FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/standard.xsl")), this);
-    QStringList errorLog;
-    const QString generatedData = fileExporterXSLT.toString(element, nullptr, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
-    for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qCDebug(LOG_KBIBTEX_TEST) << logLine;
+    const QString generatedData = fileExporterXSLT.toString(element, nullptr).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
 
     for (const QString &fragment : expectedFragments)
         QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data")).arg(fragment).toLatin1().constData());
@@ -514,10 +505,7 @@ void KBibTeXIOTest::fileExporterRISsave()
     QFETCH(QString, risData);
 
     FileExporterRIS fileExporterRIS(this);
-    QStringList errorLog;
-    const QString generatedData = fileExporterRIS.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
-    for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qCDebug(LOG_KBIBTEX_TEST) << logLine;
+    const QString generatedData = fileExporterRIS.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
 
     QCOMPARE(generatedData, risData);
 }
@@ -544,10 +532,7 @@ void KBibTeXIOTest::fileExporterBibTeXsave()
     QFETCH(QString, bibTeXdata);
 
     FileExporterBibTeX fileExporterBibTeX(this);
-    QStringList errorLog;
-    const QString generatedData = fileExporterBibTeX.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
-    for (const QString &logLine : const_cast<const QStringList &>(errorLog))
-        qCDebug(LOG_KBIBTEX_TEST) << logLine;
+    const QString generatedData = fileExporterBibTeX.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
 
     QCOMPARE(generatedData, bibTeXdata);
 }
@@ -671,7 +656,7 @@ void KBibTeXIOTest::fileExporterBibTeXEncoding()
     generatedOutput.reserve(8192);
     QBuffer buffer(&generatedOutput);
     buffer.open(QBuffer::WriteOnly);
-    QVERIFY(exporter.save(&buffer, bibTeXfile, nullptr));
+    QVERIFY(exporter.save(&buffer, bibTeXfile));
     buffer.close();
 
     QCOMPARE(generatedOutput, expectedOutput);

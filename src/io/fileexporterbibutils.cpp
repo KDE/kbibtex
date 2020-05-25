@@ -55,7 +55,7 @@ FileExporterBibUtils::~FileExporterBibUtils()
     delete d;
 }
 
-bool FileExporterBibUtils::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterBibUtils::save(QIODevice *iodevice, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -63,20 +63,20 @@ bool FileExporterBibUtils::save(QIODevice *iodevice, const File *bibtexfile, QSt
     }
 
     QBuffer buffer;
-    bool result = d->bibtexExporter->save(&buffer, bibtexfile, errorLog);
+    bool result = d->bibtexExporter->save(&buffer, bibtexfile);
     if (result)
         result = convert(buffer, BibUtils::Format::BibTeX, *iodevice, format());
 
     return result;
 }
 
-bool FileExporterBibUtils::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterBibUtils::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable())
         return false;
 
     QBuffer buffer;
-    bool result = d->bibtexExporter->save(&buffer, element, bibtexfile, errorLog);
+    bool result = d->bibtexExporter->save(&buffer, element, bibtexfile);
     if (result)
         result = convert(buffer, BibUtils::Format::BibTeX, *iodevice, format());
 

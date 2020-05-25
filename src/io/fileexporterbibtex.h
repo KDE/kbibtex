@@ -65,11 +65,11 @@ public:
      */
     void setEncoding(const QString &encoding);
 
-    QString toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
-    QString toString(const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    QString toString(const QSharedPointer<const Element> element, const File *bibtexfile) override;
+    QString toString(const File *bibtexfile) override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const File *bibtexfile) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
 
     /**
      * Write a Value object into a BibTeX or BibLaTeX strign representation.

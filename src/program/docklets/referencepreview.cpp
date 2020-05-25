@@ -283,7 +283,6 @@ void ReferencePreview::renderHTML()
         buffer.open(QBuffer::WriteOnly);
 
         bool exporterResult = false;
-        QStringList errorLog;
         QSharedPointer<const Entry> entry = d->element.dynamicCast<const Entry>();
         /** NOT USED
         if (crossRefHandling == add && !entry.isNull()) {
@@ -293,15 +292,15 @@ void ReferencePreview::renderHTML()
                 File file;
                 file.append(QSharedPointer<Entry>(new Entry(*entry)));
                 file.append(QSharedPointer<Entry>(new Entry(*crossRefEntry)));
-                exporterResult = exporter->save(&buffer, &file, &errorLog);
+                exporterResult = exporter->save(&buffer, &file);
             } else
-                exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
+                exporterResult = exporter->save(&buffer, d->element, d->file);
         } else */
         if (crossRefHandling == merge && !entry.isNull()) {
             QSharedPointer<Entry> merged = QSharedPointer<Entry>(entry->resolveCrossref(d->file));
-            exporterResult = exporter->save(&buffer, merged, d->file, &errorLog);
+            exporterResult = exporter->save(&buffer, merged, d->file);
         } else
-            exporterResult = exporter->save(&buffer, d->element, d->file, &errorLog);
+            exporterResult = exporter->save(&buffer, d->element, d->file);
         buffer.close();
         delete exporter;
 
@@ -315,7 +314,6 @@ void ReferencePreview::renderHTML()
             /// something went wrong, no output ...
             text = d->notAvailableMessage.arg(i18n("No output generated"));
             buttonsEnabled = false;
-            qCDebug(LOG_KBIBTEX_PROGRAM) << errorLog.join(QStringLiteral("\n"));
         } else {
             /// beautify text
             text.replace(QStringLiteral("``"), QStringLiteral("&ldquo;"));

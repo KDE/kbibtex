@@ -39,14 +39,14 @@ public:
     explicit FileExporterPS(QObject *parent);
     ~FileExporterPS() override;
 
-    bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) override;
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) override;
+    bool save(QIODevice *iodevice, const File *bibtexfile) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
 
 private:
     QString m_fileBasename;
     QString m_fileStem;
 
-    bool generatePS(QIODevice *iodevice, QStringList *errorLog);
+    bool generatePS(QIODevice *iodevice);
     bool writeLatexFile(const QString &filename);
     bool beautifyPostscriptFile(const QString &filename, const QString &title);
 };

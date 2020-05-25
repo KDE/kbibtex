@@ -47,7 +47,7 @@ FileExporterPDF::~FileExporterPDF()
     /// nothing
 }
 
-bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -65,20 +65,17 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile, QStringL
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter.save(&output, bibtexfile, errorLog);
+        result = bibtexExporter.save(&output, bibtexfile);
         output.close();
     }
 
     if (result)
-        result = generatePDF(iodevice, errorLog);
-
-    if (errorLog != nullptr)
-        qCDebug(LOG_KBIBTEX_IO) << "errorLog" << errorLog->join(QStringLiteral(";"));
+        result = generatePDF(iodevice);
 
     return result;
 }
 
-bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -94,12 +91,12 @@ bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter.save(&output, element, bibtexfile, errorLog);
+        result = bibtexExporter.save(&output, element, bibtexfile);
         output.close();
     }
 
     if (result)
-        result = generatePDF(iodevice, errorLog);
+        result = generatePDF(iodevice);
 
     return result;
 }
@@ -118,11 +115,11 @@ void FileExporterPDF::setFileEmbedding(const FileEmbeddings fileEmbedding) {
         m_fileEmbeddings = fileEmbedding;
 }
 
-bool FileExporterPDF::generatePDF(QIODevice *iodevice, QStringList *errorLog)
+bool FileExporterPDF::generatePDF(QIODevice *iodevice)
 {
     QStringList cmdLines {QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX, QStringLiteral("bibtex ") + m_fileStem + KBibTeX::extensionAux, QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX, QStringLiteral("pdflatex -halt-on-error ") + m_fileStem + KBibTeX::extensionTeX};
 
-    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && writeFileToIODevice(m_fileStem + KBibTeX::extensionPDF, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines) && writeFileToIODevice(m_fileStem + KBibTeX::extensionPDF, iodevice);
 }
 
 bool FileExporterPDF::writeLatexFile(const QString &filename)

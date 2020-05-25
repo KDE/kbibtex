@@ -36,10 +36,9 @@ FileExporterRIS::~FileExporterRIS()
     /// nothing
 }
 
-bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
 {
     Q_UNUSED(bibtexfile)
-    Q_UNUSED(errorLog)
 
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCDebug(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -57,10 +56,8 @@ bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     return result && !m_cancelFlag;
 }
 
-bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile)
 {
-    Q_UNUSED(errorLog)
-
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCDebug(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;

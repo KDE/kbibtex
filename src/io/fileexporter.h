@@ -39,6 +39,12 @@ class KBIBTEXIO_EXPORT FileExporter : public QObject
     Q_OBJECT
 
 public:
+    enum class MessageSeverity {
+        Info, ///< Messages that are of informative type
+        Warning, ///< Messages that are of warning type
+        Error ///< Messages that are of error type
+    };
+
     explicit FileExporter(QObject *parent);
     ~FileExporter() override;
 
@@ -49,7 +55,7 @@ public:
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
      * @return String representation of provided element
      */
-    virtual QString toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr);
+    virtual QString toString(const QSharedPointer<const Element> element, const File *bibtexfile);
 
     /**
      * @brief Convert a bibliography into a string representation.
@@ -57,7 +63,7 @@ public:
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
      * @return String representation of provided bibliography
      */
-    virtual QString toString(const File *bibtexfile, QStringList *errorLog = nullptr);
+    virtual QString toString(const File *bibtexfile);
 
     /**
      * Write a bibliography into a @c QIODevice like a file.
@@ -67,7 +73,7 @@ public:
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
      * @return @c true if writing the bibliography succeeded, else @c false
      */
-    virtual bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) = 0;
+    virtual bool save(QIODevice *iodevice, const File *bibtexfile) = 0;
 
     /**
      * Write an element into a @c QIODevice like a file.
@@ -78,7 +84,7 @@ public:
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
      * @return @c true if writing the element succeeded, else @c false
      */
-    virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog = nullptr) = 0;
+    virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) = 0;
 
 signals:
     /**
@@ -88,10 +94,27 @@ signals:
      */
     void progress(int current, int total);
 
+    /**
+     * Signal to notify the user of a FileExporter class about issues detected
+     * during loading and parsing bibliographic data. Messages may be of various
+     * severity levels. The message text may reveal additional information on
+     * what the issue is and where it has been found (e.g. line number).
+     * Implementations of FileExporter are recommended to print a similar message
+     * as debug output.
+     * TODO messages shall get i18n'ized if the code is compiled with/linked against
+     * KDE Frameworks libraries.
+     *
+     * @param severity The message's severity level
+     * @param messageText The message's text
+     */
+    void message(const FileExporter::MessageSeverity severity, const QString &messageText);
+
 public slots:
     virtual void cancel() {
         // nothing
     }
 };
+
+Q_DECLARE_METATYPE(FileExporter::MessageSeverity)
 
 #endif // KBIBTEX_IO_FILEEXPORTER_H

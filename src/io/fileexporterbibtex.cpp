@@ -655,10 +655,8 @@ void FileExporterBibTeX::setEncoding(const QString &encoding)
     d->forcedEncoding = encoding;
 }
 
-QString FileExporterBibTeX::toString(const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+QString FileExporterBibTeX::toString(const QSharedPointer<const Element> element, const File *bibtexfile)
 {
-    Q_UNUSED(errorLog)
-
     d->cancelFlag = false;
 
     d->loadPreferencesAndProperties(bibtexfile);
@@ -675,10 +673,8 @@ QString FileExporterBibTeX::toString(const QSharedPointer<const Element> element
     return outputString.normalized(QString::NormalizationForm_C);
 }
 
-QString FileExporterBibTeX::toString(const File *bibtexfile, QStringList *errorLog)
+QString FileExporterBibTeX::toString(const File *bibtexfile)
 {
-    Q_UNUSED(errorLog)
-
     d->cancelFlag = false;
 
     if (bibtexfile == nullptr) {
@@ -704,7 +700,7 @@ QString FileExporterBibTeX::toString(const File *bibtexfile, QStringList *errorL
 }
 
 
-bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile)
 {
     d->cancelFlag = false;
 
@@ -724,13 +720,13 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     // then rewrite the output either protect only sensitive text (e.g. '&')
     // or rewrite all known non-ASCII characters to their LaTeX equivalents
     // (e.g. U+00E4 to '{\"a}')
-    const QString outputString = d->applyEncoder(toString(bibtexfile, errorLog), d->encoding.toLower() == QStringLiteral("latex") || d->forcedEncoding.toLower() == QStringLiteral("latex") ? UseLaTeXEncoding::LaTeX : UseLaTeXEncoding::UTF8);
+    const QString outputString = d->applyEncoder(toString(bibtexfile), d->encoding.toLower() == QStringLiteral("latex") || d->forcedEncoding.toLower() == QStringLiteral("latex") ? UseLaTeXEncoding::LaTeX : UseLaTeXEncoding::UTF8);
     const bool result = d->writeOutString(outputString, iodevice);
 
     return result && !d->cancelFlag;
 }
 
-bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
 {
     d->cancelFlag = false;
 
@@ -739,7 +735,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const El
         return false;
     }
 
-    const QString outputString = d->applyEncoder(toString(element, bibtexfile, errorLog), d->encoding.toLower() == QStringLiteral("latex") ? UseLaTeXEncoding::LaTeX : UseLaTeXEncoding::UTF8);
+    const QString outputString = d->applyEncoder(toString(element, bibtexfile), d->encoding.toLower() == QStringLiteral("latex") ? UseLaTeXEncoding::LaTeX : UseLaTeXEncoding::UTF8);
     const bool result = d->writeOutString(outputString, iodevice);
 
     iodevice->close();

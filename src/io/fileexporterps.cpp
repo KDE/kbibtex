@@ -42,7 +42,7 @@ FileExporterPS::~FileExporterPS()
     /// nothing
 }
 
-bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -55,17 +55,17 @@ bool FileExporterPS::save(QIODevice *iodevice, const File *bibtexfile, QStringLi
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter.save(&output, bibtexfile, errorLog);
+        result = bibtexExporter.save(&output, bibtexfile);
         output.close();
     }
 
     if (result)
-        result = generatePS(iodevice, errorLog);
+        result = generatePS(iodevice);
 
     return result;
 }
 
-bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
+bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -78,21 +78,21 @@ bool FileExporterPS::save(QIODevice *iodevice, const QSharedPointer<const Elemen
     if (output.open(QIODevice::WriteOnly)) {
         FileExporterBibTeX bibtexExporter(this);
         bibtexExporter.setEncoding(QStringLiteral("latex"));
-        result = bibtexExporter.save(&output, element, bibtexfile, errorLog);
+        result = bibtexExporter.save(&output, element, bibtexfile);
         output.close();
     }
 
     if (result)
-        result = generatePS(iodevice, errorLog);
+        result = generatePS(iodevice);
 
     return result;
 }
 
-bool FileExporterPS::generatePS(QIODevice *iodevice, QStringList *errorLog)
+bool FileExporterPS::generatePS(QIODevice *iodevice)
 {
     QStringList cmdLines {QStringLiteral("latex -halt-on-error bibtex-to-ps.tex"), QStringLiteral("bibtex bibtex-to-ps"), QStringLiteral("latex -halt-on-error bibtex-to-ps.tex"), QStringLiteral("latex -halt-on-error bibtex-to-ps.tex"), QStringLiteral("dvips -R2 -o bibtex-to-ps.ps bibtex-to-ps.dvi")};
 
-    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines, errorLog) && beautifyPostscriptFile(m_fileStem + KBibTeX::extensionPostScript, QStringLiteral("Exported Bibliography")) && writeFileToIODevice(m_fileStem + KBibTeX::extensionPostScript, iodevice, errorLog);
+    return writeLatexFile(m_fileStem + KBibTeX::extensionTeX) && runProcesses(cmdLines) && beautifyPostscriptFile(m_fileStem + KBibTeX::extensionPostScript, QStringLiteral("Exported Bibliography")) && writeFileToIODevice(m_fileStem + KBibTeX::extensionPostScript, iodevice);
 }
 
 bool FileExporterPS::writeLatexFile(const QString &filename)
