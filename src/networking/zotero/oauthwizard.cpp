@@ -30,9 +30,13 @@
 #include <QRegularExpression>
 #include <QtNetworkAuth>
 
-#include <KLocalizedString>
-#include <KRun>
 #include <kio_version.h>
+#include <KLocalizedString>
+#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#include <KIO/OpenUrlJob>
+#else // < 5.71.0
+#include <KRun>
+#endif // KIO_VERSION >= 0x054700
 
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
@@ -143,7 +147,13 @@ public:
         buttonOpenAuthorizationUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open-remote")), i18n("Open URL"), p);
         gridLayout->addWidget(buttonOpenAuthorizationUrl, 3, 2, 1, 1);
         connect(buttonOpenAuthorizationUrl, &QPushButton::clicked, p, [this]() {
+#if KIO_VERSION < 0x054700 // < 5.71.0
             KRun::runUrl(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), p, KRun::RunFlags());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+            KIO::OpenUrlJob *job = new KIO::OpenUrlJob(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"));
+            job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, o));
+            job->start();
+#endif // KIO_VERSION < 0x054700
         });
 
         gridLayout->setRowMinimumHeight(4, p->fontMetrics().xHeight() * 2);

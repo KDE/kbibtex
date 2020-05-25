@@ -40,8 +40,12 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KSqueezedTextLabel>
-#include <KRun>
 #include <kio_version.h>
+#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#include <KIO/OpenUrlJob>
+#else // < 5.71.0
+#include <KRun>
+#endif // KIO_VERSION >= 0x054700
 
 #include <Preferences>
 #include <FileInfo>
