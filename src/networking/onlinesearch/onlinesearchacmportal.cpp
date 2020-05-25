@@ -64,7 +64,12 @@ public:
         /// to KBibTeX's authors along with information which ACM records were search
         /// for or actually found.
         static const QSet<QString> evaluatedOrIgnoredValues{QStringLiteral("id"), QStringLiteral("call-number"), QStringLiteral("DOI"), QStringLiteral("ISBN"), QStringLiteral("ISSN"), QStringLiteral("URL"), QStringLiteral("type"), QStringLiteral("author"), QStringLiteral("issued"), QStringLiteral("original-date"), QStringLiteral("number-of-pages"), QStringLiteral("page"), QStringLiteral("number"), QStringLiteral("issue"), QStringLiteral("volume"), QStringLiteral("publisher"), QStringLiteral("publisher-place"), QStringLiteral("title"), QStringLiteral("collection-title"), QStringLiteral("container-title"), QStringLiteral("event-place"), QStringLiteral("keyword"), QStringLiteral("accessed")};
+#if QT_VERSION >= 0x050e00
         const QSet<QString> objectsValues = QSet<QString>(object.keys().begin(), object.keys().end());
+#else // QT_VERSION < 0x050e00
+        QSet<QString> objectsValues;
+        for (const QString &objectValue : object.keys()) objectsValues.insert(objectValue);
+#endif // QT_VERSION
         const QSet<QString> unusedValues = objectsValues - evaluatedOrIgnoredValues;
         for (const QString &unusedValue : unusedValues) {
             const QString valueString = object.value(unusedValue).toString();
