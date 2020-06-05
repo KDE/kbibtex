@@ -48,7 +48,7 @@ FileExporterXSLT::~FileExporterXSLT()
 
 bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog)
 {
-    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+    if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     } else if (m_xsltFilename.isEmpty() || !QFile(m_xsltFilename).exists()) {
@@ -71,18 +71,16 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const File *bibtexfile, QString
         const QString html = xsltransformer.transform(xml);
         if (!html.isEmpty()) {
             iodevice->write(html.toUtf8());
-            iodevice->close();
             return !m_cancelFlag;
         }
     }
 
-    iodevice->close();
     return false;
 }
 
 bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile, QStringList *errorLog)
 {
-    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+    if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     } else if (m_xsltFilename.isEmpty() || !QFile(m_xsltFilename).exists()) {
@@ -105,12 +103,10 @@ bool FileExporterXSLT::save(QIODevice *iodevice, const QSharedPointer<const Elem
         const QString html = xsltransformer.transform(xml);
         if (!html.isEmpty()) {
             iodevice->write(html.toUtf8());
-            iodevice->close();
             return !m_cancelFlag;
         }
     }
 
-    iodevice->close();
     return false;
 }
 

@@ -708,7 +708,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
 {
     d->cancelFlag = false;
 
-    if (iodevice == nullptr || (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly))) {
+    if (iodevice == nullptr || !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     } else if (bibtexfile == nullptr) {
@@ -727,7 +727,6 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile, QStri
     const QString outputString = d->applyEncoder(toString(bibtexfile, errorLog), d->encoding.toLower() == QStringLiteral("latex") || d->forcedEncoding.toLower() == QStringLiteral("latex") ? UseLaTeXEncoding::LaTeX : UseLaTeXEncoding::UTF8);
     const bool result = d->writeOutString(outputString, iodevice);
 
-    iodevice->close();
     return result && !d->cancelFlag;
 }
 

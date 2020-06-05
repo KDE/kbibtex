@@ -45,7 +45,7 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 {
     Q_UNUSED(errorLog)
 
-    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+    if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
@@ -65,7 +65,6 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile, QStringL
 
     stream << "</bibliography>" << endl;
 
-    iodevice->close();
     return result && !m_cancelFlag;
 }
 
@@ -74,7 +73,7 @@ bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     Q_UNUSED(bibtexfile)
     Q_UNUSED(errorLog)
 
-    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
+    if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
         return false;
     }
@@ -91,7 +90,6 @@ bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 
     stream << "</bibliography>" << endl;
 
-    iodevice->close();
     return result;
 }
 

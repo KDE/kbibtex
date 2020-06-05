@@ -60,7 +60,9 @@ public:
     virtual QString toString(const File *bibtexfile, QStringList *errorLog = nullptr);
 
     /**
-     * @brief Write a bibliography into a @c QIODevice like a file.
+     * Write a bibliography into a @c QIODevice like a file.
+     * This function requires the @c iodevice to be open for write operations (@c QIODevice::WriteOnly).
+     * The function will not close the @c iodevice upon return.
      * @param[in] element Bibliography to be written into the @c QIODevice
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
      * @return @c true if writing the bibliography succeeded, else @c false
@@ -68,7 +70,9 @@ public:
     virtual bool save(QIODevice *iodevice, const File *bibtexfile, QStringList *errorLog = nullptr) = 0;
 
     /**
-     * @brief Write an element into a @c QIODevice like a file.
+     * Write an element into a @c QIODevice like a file.
+     * This function requires the @c iodevice to be open for write operations (@c QIODevice::WriteOnly).
+     * The function will not close the @c iodevice upon return.
      * @param[in] element Element to be written into the @c QIODevice
      * @param[in] bibtexfile Bibliography which may provide additional insights; may be @c nullptr
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
