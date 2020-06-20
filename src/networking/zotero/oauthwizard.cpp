@@ -34,6 +34,7 @@
 #include <KLocalizedString>
 #if KIO_VERSION >= 0x054700 // >= 5.71.0
 #include <KIO/OpenUrlJob>
+#include <KIO/JobUiDelegate>
 #else // < 5.71.0
 #include <KRun>
 #endif // KIO_VERSION >= 0x054700
@@ -151,7 +152,7 @@ public:
             KRun::runUrl(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), p, KRun::RunFlags());
 #else // KIO_VERSION < 0x054700 // >= 5.71.0
             KIO::OpenUrlJob *job = new KIO::OpenUrlJob(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"));
-            job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, o));
+            job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, p));
             job->start();
 #endif // KIO_VERSION < 0x054700
         });
