@@ -336,16 +336,17 @@ void FieldListEdit::dragEnterEvent(QDragEnterEvent *event)
 
 void FieldListEdit::dropEvent(QDropEvent *event)
 {
-    const QString clipboardText = event->mimeData()->text();
+    const QString clipboardText = QString::fromUtf8(event->mimeData()->data(QStringLiteral("text/plain")));
+    event->acceptProposedAction();
     if (clipboardText.isEmpty()) return;
 
-    const File *file = nullptr;
+    bool success = false;
     if (!d->fieldKey.isEmpty() && clipboardText.startsWith(QStringLiteral("@"))) {
         FileImporterBibTeX importer(this);
-        file = importer.fromString(clipboardText);
-        const QSharedPointer<Entry> entry = (file != nullptr && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
+        QScopedPointer<const File> file(importer.fromString(clipboardText));
+        const QSharedPointer<Entry> entry = (!file.isNull() && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
 
-        if (file != nullptr && !entry.isNull() && d->fieldKey == QStringLiteral("^external")) {
+        if (!entry.isNull() && d->fieldKey == QStringLiteral("^external")) {
             /// handle "external" list differently
             const auto urlList = FileInfo::entryUrls(entry, QUrl(file->property(File::Url).toUrl()), FileInfo::TestExistence::No);
             Value v;
@@ -355,17 +356,18 @@ void FieldListEdit::dropEvent(QDropEvent *event)
             }
             reset(v);
             emit modified();
-            return;
+            success = true;
         } else if (!entry.isNull() && entry->contains(d->fieldKey)) {
             /// case for "normal" lists like for authors, editors, ...
             reset(entry->value(d->fieldKey));
             emit modified();
-            return;
+            success = true;
         }
     }
 
-    if (file == nullptr || file->count() == 0) {
-        /// fall-back case: single field line edit with text
+    if (!success) {
+        /// In case above cases were not met and thus 'success' is still false,
+        /// clear this list edit and use the clipboad text as its single and only list element
         d->removeAllFieldLineEdits();
         FieldLineEdit *fle = addFieldLineEdit();
         fle->setText(clipboardText);
