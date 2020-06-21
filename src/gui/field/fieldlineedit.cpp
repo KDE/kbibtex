@@ -530,7 +530,8 @@ void FieldLineEdit::dragEnterEvent(QDragEnterEvent *event)
 
 void FieldLineEdit::dropEvent(QDropEvent *event)
 {
-    const QString clipboardText = event->mimeData()->text();
+    const QString clipboardText = QString::fromUtf8(event->mimeData()->data(QStringLiteral("text/plain")));
+    event->acceptProposedAction();
     if (clipboardText.isEmpty()) return;
 
     bool success = false;
@@ -538,6 +539,7 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
         FileImporterBibTeX importer(this);
         QScopedPointer<File> file(importer.fromString(clipboardText));
         const QSharedPointer<Entry> entry = (!file.isNull() && file->count() == 1) ? file->first().dynamicCast<Entry>() : QSharedPointer<Entry>();
+
         if (!entry.isNull() && d->fieldKey == Entry::ftCrossRef) {
             /// handle drop on crossref line differently (use dropped entry's id)
             Value v;
@@ -554,7 +556,8 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
     }
 
     if (!success) {
-        /// fall-back case: just copy whole text into edit widget
+        /// In case above cases were not met and thus 'success' is still false,
+        /// clear this line edit and use the clipboad text as its content
         setText(clipboardText);
         emit textChanged(clipboardText);
     }
