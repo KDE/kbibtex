@@ -93,7 +93,7 @@ public:
     bool cancelFlag;
 
     Private(FileExporterBibTeX *p)
-            : parent(p)
+            : parent(p), cancelFlag(false)
     {
         /// Initialize variables like 'keywordCasing' or 'quoteComment' from Preferences
         loadPreferencesAndProperties(nullptr /** no File object to evaluate properties from */);
