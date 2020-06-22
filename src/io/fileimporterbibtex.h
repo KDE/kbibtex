@@ -136,8 +136,6 @@ private:
 
     static QString bibtexAwareSimplify(const QString &text);
     static QString rstrip(const QString &text);
-
-    bool evaluateParameterComments(QTextStream *textStream, const QString &line, File *file);
 };
 
 #endif // KBIBTEX_IO_FILEIMPORTERBIBTEX_H

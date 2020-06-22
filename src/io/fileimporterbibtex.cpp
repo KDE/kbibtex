@@ -1254,7 +1254,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         /// Assuming that encoding is ASCII-compatible, thus it is possible
         /// to search for a byte sequence containin ASCII text
         const QByteArray rawDataBeginning = rawData.left(1024);
-        const int xkbibtexencodingpos = rawDataBeginning.indexOf("@comment{x-kbibtex-encoding=");
+        const int xkbibtexencodingpos = qMax(rawDataBeginning.indexOf("@comment{x-kbibtex-encoding="), rawDataBeginning.indexOf("@Comment{x-kbibtex-encoding="));
         if (xkbibtexencodingpos >= 0) {
             int i = xkbibtexencodingpos + 28, l = 0;
             encoding.clear();
@@ -1266,7 +1266,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
             }
             rawData = rawData.left(xkbibtexencodingpos) + rawData.mid(i + 1); ///< remove encoding comment
         } else {
-            const int jabrefencodingpos = rawDataBeginning.indexOf("% Encoding:");
+            const int jabrefencodingpos = qMax(rawDataBeginning.indexOf("% Encoding:"), rawDataBeginning.indexOf("% encoding:"));
             if (jabrefencodingpos >= 0) {
                 int i = jabrefencodingpos + 11, l = 0;
                 encoding.clear();
@@ -1292,6 +1292,14 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         return nullptr;
     }
     QString rawText = codec->toUnicode(rawData);
+
+    /// Remove deprecated 'x-kbibtex-personnameformatting' from BibTeX raw text
+    const int posPersonNameFormatting = rawText.indexOf(QStringLiteral("@comment{x-kbibtex-personnameformatting="));
+    if (posPersonNameFormatting >= 0) {
+        const int endOfPersonNameFormatting = rawText.indexOf(QLatin1Char('}'), posPersonNameFormatting + 39);
+        if (endOfPersonNameFormatting > 0)
+            rawText = rawText.left(posPersonNameFormatting) + rawText.mid(endOfPersonNameFormatting + 1);
+    }
 
     File *result = fromString(rawText);
     /// In the File object's property, store the encoding used to load the data
@@ -1492,34 +1500,6 @@ QString FileImporterBibTeX::rstrip(const QString &text)
         if (!text.at(p).isSpace())
             return text.left(p + 1);
     return QString();
-}
-
-bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, const QString &line, File *file)
-{
-    /// Assertion: variable "line" is all lower-case
-
-    /** check if this file requests a special encoding */
-    if (line.startsWith(QStringLiteral("@comment{x-kbibtex-encoding=")) && line.endsWith(QLatin1Char('}'))) {
-        const QString encoding = line.mid(28, line.length() - 29).toLower();
-        textStream->setCodec(encoding.toLower() == QStringLiteral("latex") ? "us-ascii" : encoding.toLatin1());
-        file->setProperty(File::Encoding, encoding.toLower() == QStringLiteral("latex") ? encoding : QString::fromLatin1(textStream->codec()->name()));
-        return true;
-    } else if (line.startsWith(QStringLiteral("@comment{x-kbibtex-personnameformatting=")) && line.endsWith(QLatin1Char('}'))) {
-        // TODO usage of x-kbibtex-personnameformatting is deprecated,
-        // as automatic detection is in place
-        QString personNameFormatting = line.mid(40, line.length() - 41);
-        file->setProperty(File::NameFormatting, personNameFormatting);
-        return true;
-    } else if (line.startsWith(QStringLiteral("% encoding:"))) {
-        /// Interprete JabRef's encoding information
-        QString encoding = line.mid(12);
-        qCDebug(LOG_KBIBTEX_IO) << "Using JabRef's encoding:" << encoding;
-        textStream->setCodec(encoding.toLatin1());
-        file->setProperty(File::Encoding, QString::fromLatin1(textStream->codec()->name()));
-        return true;
-    }
-
-    return false;
 }
 
 void FileImporterBibTeX::setCommentHandling(CommentHandling commentHandling) {
