@@ -1474,7 +1474,9 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 qCWarning(LOG_KBIBTEX_IO) << "Don't know how to encode Unicode char" << QString(QStringLiteral("0x%1")).arg(c.unicode(), 4, 16, QLatin1Char('0'));
                 output.append(c);
             }
-        } else {
+        } else if ((targetEncoding == TargetEncoding::ASCII && c.unicode() <= 127)
+                   || targetEncoding == TargetEncoding::UTF8
+                   /** but not  targetEncoding == TargetEncoding::RAW */) {
             /// Current character is normal ASCII
             /// and targetEncoding was set to accept only ASCII characters
             /// -- or -- targetEncoding was set to accept UTF-8 characters

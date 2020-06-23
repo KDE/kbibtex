@@ -52,7 +52,7 @@ private:
      * settings passed to this FileExporterBibTeX instance.
      * @return a valid QTextCodec instance or 'nullptr' if UTF-8 is to be used
      */
-    QTextCodec *determineTargetCodec() {
+    QPair<QString, QTextCodec *> determineTargetCodec() {
         QString encoding = QStringLiteral("utf-8"); ///< default encoding if nothing else is set
         if (!this->encoding.isEmpty())
             /// Encoding as loaded in loadPreferencesAndProperties(..) has low priority
@@ -62,11 +62,11 @@ private:
             encoding = forcedEncoding;
         encoding = encoding.toLower();
         if (encoding == QStringLiteral("utf-8") || encoding == QStringLiteral("utf8"))
-            return nullptr; ///< a 'nullptr' encoder signifies UTF-8
+            return QPair<QString, QTextCodec *>(QStringLiteral("utf-8"), nullptr); ///< a 'nullptr' encoder signifies UTF-8
         else if (encoding == QStringLiteral("latex"))
-            return nullptr; ///< "LaTeX" encoding is actually just UTF-8
+            return QPair<QString, QTextCodec *>(encoding, nullptr); ///< "LaTeX" encoding is actually just UTF-8
         else
-            return QTextCodec::codecForName(encoding.toLatin1().constData());
+            return QPair<QString, QTextCodec *>(encoding, QTextCodec::codecForName(encoding.toLatin1().constData()));
     }
 
     inline bool canEncode(const QChar &c, QTextCodec *codec) {
@@ -154,7 +154,7 @@ public:
         }
     }
 
-    QString internalValueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
+    QString internalValueToBibTeX(const Value &value, const Encoder::TargetEncoding targetEncoding, const QString &key = QString())
     {
         if (value.isEmpty())
             return QString();
@@ -174,7 +174,7 @@ public:
             } else {
                 QSharedPointer<const PlainText> plainText = valueItem.dynamicCast<const PlainText>();
                 if (!plainText.isNull()) {
-                    QString textBody = applyEncoder(plainText->text(), useLaTeXEncoding);
+                    QString textBody = EncoderLaTeX::instance().encode(plainText->text(), targetEncoding);
                     if (!isOpen) {
                         if (!result.isEmpty()) result.append(" # ");
                         result.append(stringOpenDelimiter);
@@ -233,7 +233,7 @@ public:
                             /// if name contains a suffix like "Jr."
                             /// Otherwise name could not be parsed again reliable
                             const QString pnf = suffix.isEmpty() ? personNameFormatting : Preferences::personNameFormatLastFirst;
-                            QString thisName = applyEncoder(Person::transcribePersonName(pnf, firstName, lastName, suffix), useLaTeXEncoding);
+                            QString thisName = EncoderLaTeX::instance().encode(Person::transcribePersonName(pnf, firstName, lastName, suffix), targetEncoding);
 
                             if (!isOpen) {
                                 if (!result.isEmpty()) result.append(" # ");
@@ -252,7 +252,7 @@ public:
                         } else {
                             QSharedPointer<const Keyword> keyword = valueItem.dynamicCast<const Keyword>();
                             if (!keyword.isNull()) {
-                                QString textBody = applyEncoder(keyword->text(), useLaTeXEncoding);
+                                QString textBody = EncoderLaTeX::instance().encode(keyword->text(), targetEncoding);
                                 if (!isOpen) {
                                     if (!result.isEmpty()) result.append(" # ");
                                     result.append(stringOpenDelimiter);
@@ -281,7 +281,7 @@ public:
         return result;
     }
 
-    bool writeEntry(QString &output, const Entry &entry) {
+    bool writeEntry(QString &output, const Entry &entry, const Encoder::TargetEncoding &targetEncoding) {
         /// write start of a entry (entry type and id) in plain ASCII
         output.append(QLatin1Char('@')).append(BibTeXEntries::instance().format(entry.type(), keywordCasing));
         output.append(QLatin1Char('{')).append(Encoder::instance().convertToPlainAscii(entry.id()));
@@ -291,7 +291,7 @@ public:
             Value value = it.value();
             if (value.isEmpty()) continue; ///< ignore empty key-value pairs
 
-            QString text = internalValueToBibTeX(value, key, UseLaTeXEncoding::UTF8);
+            QString text = internalValueToBibTeX(value, targetEncoding, key);
             if (text.isEmpty()) {
                 /// ignore empty key-value pairs
                 qCWarning(LOG_KBIBTEX_IO) << "Value for field " << key << " is empty" << endl;
@@ -316,8 +316,8 @@ public:
         return true;
     }
 
-    bool writeMacro(QString &output, const Macro &macro) {
-        QString text = internalValueToBibTeX(macro.value(), QString(), UseLaTeXEncoding::UTF8);
+    bool writeMacro(QString &output, const Macro &macro, const Encoder::TargetEncoding &targetEncoding) {
+        QString text = internalValueToBibTeX(macro.value(), targetEncoding);
         if (protectCasing == Qt::Checked)
             addProtectiveCasing(text);
         else if (protectCasing == Qt::Unchecked)
@@ -360,7 +360,7 @@ public:
     bool writePreamble(QString &output, const Preamble &preamble) {
         output.append(QLatin1Char('@')).append(BibTeXEntries::instance().format(QStringLiteral("Preamble"), keywordCasing)).append(QLatin1Char('{'));
         /// Strings from preamble do not get LaTeX-encoded, may contain raw LaTeX commands and code
-        output.append(normalizeText(internalValueToBibTeX(preamble.value(), QString(), UseLaTeXEncoding::Raw)));
+        output.append(normalizeText(internalValueToBibTeX(preamble.value(), Encoder::TargetEncoding::RAW)));
         output.append(QStringLiteral("}\n\n"));
 
         return true;
@@ -462,6 +462,8 @@ public:
     }
 
     bool saveAsString(QString &output, const File *bibtexfile) {
+        const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
+
         /// Memorize which entries are used in a crossref field
         QHash<QString, QStringList> crossRefMap;
         for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && !cancelFlag; ++it) {
@@ -511,7 +513,7 @@ public:
                         } else {
                             QSharedPointer<const Macro> macro = (*msit).dynamicCast<const Macro>();
                             if (!macro.isNull()) {
-                                result &= writeMacro(output, *macro);
+                                result &= writeMacro(output, *macro, targetEncoding);
                                 /// Instead of an 'emit' ...
                                 QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
                             }
@@ -520,7 +522,7 @@ public:
                     allPreamblesAndMacrosProcessed = true;
                 }
 
-                result &= writeEntry(output, *entry);
+                result &= writeEntry(output, *entry, targetEncoding);
                 /// Instead of an 'emit' ...
                 QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
             } else {
@@ -538,7 +540,7 @@ public:
                     } else {
                         QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
                         if (!macro.isNull()) {
-                            result &= writeMacro(output, *macro);
+                            result &= writeMacro(output, *macro, targetEncoding);
                             /// Instead of an 'emit' ...
                             QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
                         }
@@ -554,7 +556,7 @@ public:
                 if (entry.isNull()) continue;
                 if (!crossRefMap.contains(entry->id())) continue;
 
-                result &= writeEntry(output, *entry);
+                result &= writeEntry(output, *entry, targetEncoding);
                 /// Instead of an 'emit' ...
                 QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
             }
@@ -563,13 +565,15 @@ public:
     }
 
     bool saveInString(QString &output, const QSharedPointer<const Element> element) {
+        const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
+
         const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
         if (!entry.isNull())
-            return writeEntry(output, *entry);
+            return writeEntry(output, *entry, targetEncoding);
         else {
             const QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
             if (!macro.isNull())
-                return writeMacro(output, *macro);
+                return writeMacro(output, *macro, targetEncoding);
             else {
                 const QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
                 if (!comment.isNull())
@@ -588,7 +592,7 @@ public:
     }
 
     QByteArray applyEncoding(const QString &input) {
-        QTextCodec *codec = determineTargetCodec();
+        QTextCodec *codec = determineTargetCodec().second;
 
         bool containsNonASCIIcharacters = false;
         QString rewrittenInput;
@@ -609,14 +613,6 @@ public:
         rewrittenInput.squeeze();
 
         return codec == nullptr ? rewrittenInput.toUtf8() : codec->fromUnicode(rewrittenInput);
-    }
-
-    inline QString applyEncoder(const QString &input, UseLaTeXEncoding useLaTeXEncoding) const {
-        switch (useLaTeXEncoding) {
-        case UseLaTeXEncoding::LaTeX: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncoding::ASCII);
-        case UseLaTeXEncoding::UTF8: return EncoderLaTeX::instance().encode(input, Encoder::TargetEncoding::UTF8);
-        default: return input;
-        }
     }
 
     bool writeOutString(const QString &outputString, QIODevice *iodevice) {
@@ -720,8 +716,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile)
     // then rewrite the output either protect only sensitive text (e.g. '&')
     // or rewrite all known non-ASCII characters to their LaTeX equivalents
     // (e.g. U+00E4 to '{\"a}')
-    const QString outputString = d->applyEncoder(toString(bibtexfile), d->encoding.toLower() == QStringLiteral("latex") || d->forcedEncoding.toLower() == QStringLiteral("latex") ? UseLaTeXEncoding::LaTeX : UseLaTeXEncoding::UTF8);
-    const bool result = d->writeOutString(outputString, iodevice);
+    const bool result = d->writeOutString(toString(bibtexfile), iodevice);
 
     return result && !d->cancelFlag;
 }
@@ -735,8 +730,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const El
         return false;
     }
 
-    const QString outputString = d->applyEncoder(toString(element, bibtexfile), d->encoding.toLower() == QStringLiteral("latex") ? UseLaTeXEncoding::LaTeX : UseLaTeXEncoding::UTF8);
-    const bool result = d->writeOutString(outputString, iodevice);
+    const bool result = d->writeOutString(toString(element, bibtexfile), iodevice);
 
     iodevice->close();
     return result && !d->cancelFlag;
@@ -747,11 +741,11 @@ void FileExporterBibTeX::cancel()
     d->cancelFlag = true;
 }
 
-QString FileExporterBibTeX::valueToBibTeX(const Value &value, const QString &key, UseLaTeXEncoding useLaTeXEncoding)
+QString FileExporterBibTeX::valueToBibTeX(const Value &value, Encoder::TargetEncoding targetEncoding, const QString &key)
 {
     FileExporterBibTeX staticFileExporterBibTeX(nullptr);
     staticFileExporterBibTeX.d->cancelFlag = false;
-    return staticFileExporterBibTeX.d->internalValueToBibTeX(value, key, useLaTeXEncoding);
+    return staticFileExporterBibTeX.d->internalValueToBibTeX(value, targetEncoding, key);
 }
 
 bool FileExporterBibTeX::isFileExporterBibTeX(const FileExporter &other) {

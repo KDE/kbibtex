@@ -37,6 +37,8 @@ class Preamble;
 class Macro;
 class Entry;
 
+#include "encoder.h"
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -45,7 +47,6 @@ class KBIBTEXIO_EXPORT FileExporterBibTeX : public FileExporter
     Q_OBJECT
 
 public:
-    enum class UseLaTeXEncoding {UTF8, LaTeX, Raw};
 
     explicit FileExporterBibTeX(QObject *parent);
     ~FileExporterBibTeX() override;
@@ -80,7 +81,7 @@ public:
      * @param[in] useLaTeXEncoding optional parameter how to handle non-ASCII characters
      * @return string representation of the Value object
      */
-    static QString valueToBibTeX(const Value &value, const QString &fieldType = QString(), UseLaTeXEncoding useLaTeXEncoding = UseLaTeXEncoding::LaTeX);
+    static QString valueToBibTeX(const Value &value, Encoder::TargetEncoding targetEncoding, const QString &fieldType = QString());
 
     /**
      * Cheap and fast test if another FileExporter is a FileExporterBibTeX object.

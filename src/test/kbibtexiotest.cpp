@@ -65,6 +65,7 @@ private slots:
     void encoderLaTeXdecode();
     void encoderLaTeXencode_data();
     void encoderLaTeXencode();
+    void encoderLaTeXencodeHash();
     void fileImporterSplitName_data();
     void fileImporterSplitName();
     void fileInfoMimeTypeForUrl_data();
@@ -226,6 +227,61 @@ void KBibTeXIOTest::encoderLaTeXencode()
         QCOMPARE(generatedLatex, alternativelatex);
     else
         QCOMPARE(generatedLatex, latex);
+}
+
+void KBibTeXIOTest::encoderLaTeXencodeHash()
+{
+    /// File with single entry, inspired by 'Moby Dick'
+    QScopedPointer<File> file(new File());
+    QSharedPointer<Entry> entry(new Entry(Entry::etBook, QStringLiteral("latex-encoder-test")));
+    file->append(entry);
+    static const QString titleText(QStringLiteral("{This is a Title with a \\#}"));
+    entry->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(titleText)));
+    static const QString authorLastNameText(QStringLiteral("{Flash the \\#}"));
+    entry->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QString(), authorLastNameText)));
+    static const QString urlText(QStringLiteral("https://127.0.0.1/#hashtag"));
+    entry->insert(Entry::ftUrl, Value() << QSharedPointer<VerbatimText>(new VerbatimText(urlText)));
+    file->setProperty(File::ProtectCasing, Qt::Checked);
+    file->setProperty(File::Encoding, QStringLiteral("latex"));
+
+    QBuffer fileBuffer;
+    fileBuffer.open(QBuffer::WriteOnly);
+    FileExporterBibTeX exporter(this);
+    exporter.save(&fileBuffer, file.data());
+    fileBuffer.close();
+
+    fileBuffer.open(QBuffer::ReadOnly);
+    FileImporterBibTeX importer(this);
+    QScopedPointer<File> importedFile(importer.load(&fileBuffer));
+    fileBuffer.close();
+
+    QVERIFY(!importedFile.isNull());
+    QVERIFY(importedFile->count() == 1);
+    QSharedPointer<Entry> importedEntry = importedFile->first().dynamicCast<Entry>();
+    QVERIFY(!importedEntry.isNull());
+    QVERIFY(importedEntry->count() == 3);
+    QVERIFY(importedEntry->contains(Entry::ftTitle));
+    QVERIFY(importedEntry->value(Entry::ftTitle).count() == 1);
+    const QSharedPointer<PlainText> titlePlainText = importedEntry->value(Entry::ftTitle).first().dynamicCast<PlainText>();
+    QVERIFY(!titlePlainText.isNull());
+    const QString importedTitleText = titlePlainText->text();
+    QVERIFY(!importedTitleText.isEmpty());
+    QVERIFY(importedEntry->contains(Entry::ftAuthor));
+    QVERIFY(importedEntry->value(Entry::ftAuthor).count() == 1);
+    const QSharedPointer<Person> authorPerson = importedEntry->value(Entry::ftAuthor).first().dynamicCast<Person>();
+    QVERIFY(!authorPerson.isNull());
+    const QString importedAuthorLastNameText = authorPerson->lastName();
+    QVERIFY(!importedAuthorLastNameText.isEmpty());
+    QVERIFY(importedEntry->contains(Entry::ftUrl));
+    QVERIFY(importedEntry->value(Entry::ftUrl).count() == 1);
+    const QSharedPointer<VerbatimText> urlVerbatimText = importedEntry->value(Entry::ftUrl).first().dynamicCast<VerbatimText>();
+    QVERIFY(!urlVerbatimText.isNull());
+    const QString importedUrlText = urlVerbatimText->text();
+    QVERIFY(!importedUrlText.isEmpty());
+
+    QVERIFY(importedTitleText == titleText);
+    QVERIFY(importedAuthorLastNameText == authorLastNameText);
+    QVERIFY(importedUrlText == urlText);
 }
 
 void KBibTeXIOTest::fileImporterSplitName_data()

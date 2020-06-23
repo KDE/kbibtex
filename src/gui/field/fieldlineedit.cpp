@@ -97,7 +97,7 @@ public:
             if (typeFlag == KBibTeX::TypeFlag::Source) {
                 /// simple case: field's value is to be shown as BibTeX code, including surrounding curly braces
                 FileExporterBibTeX exporter(parent);
-                text = exporter.valueToBibTeX(value);
+                text = exporter.valueToBibTeX(value, Encoder::TargetEncoding::UTF8);
                 result = true;
             } else {
                 /// except for the source view type flag, type flag views do not support composed values,
