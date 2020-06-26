@@ -1,7 +1,7 @@
 ###########################################################################
 #   SPDX-License-Identifier: GPL-2.0-or-later
 #                                                                         #
-#   SPDX-FileCopyrightText: 2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+#   SPDX-FileCopyrightText: 2019-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 #                                                                         #
 #   This script is free software; you can redistribute it and/or modify   #
 #   it under the terms of the GNU General Public License as published by  #
@@ -57,6 +57,24 @@ def needsReference(type):
     """Check if given Qt/C++ data type should be passed by reference rather than by value."""
     return type in ["QString", "QStringList"] \
         or type.startswith(('QPair<', 'QVector<', 'QSet<', 'QList<', 'QLinkedList<', 'QMap<', 'QVector<', 'QHash<'))
+
+
+def rewriteobsoletecode(input, indent):
+    inputlist = input if isinstance(input, list) else ([input] if isinstance(input, str) else None)
+    if not isinstance(inputlist, list):
+        return None
+
+    result = []
+    for line in inputlist:
+        if "::KeepEmptyParts" in line or "::SkipEmptyParts" in line:
+            result.append("#if QT_VERSION >= 0x050e00")
+            result.append(indent + line.replace("QString::KeepEmptyParts", "Qt::KeepEmptyParts").replace("QString::SkipEmptyParts", "Qt::SkipEmptyParts"))
+            result.append("#else // QT_VERSION < 0x050e00")
+            result.append(indent + line.replace("Qt::KeepEmptyParts", "QString::KeepEmptyParts").replace("Qt::SkipEmptyParts", "QString::SkipEmptyParts"))
+            result.append("#endif // QT_VERSION >= 0x050e00")
+        else:
+            result.append(indent + line)
+    return result
 
 
 def print_header(headerincludes, implementationincludes, enums, settings, outputdevice=sys.stdout):
@@ -254,11 +272,10 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
             print('    ' + type + ' readEntry' + stem +
                   '(const KConfigGroup &configGroup, const QString &key) const', file=outputdevice)
             print('    {', file=outputdevice)
-            if isinstance(setting['readEntry'], list):
-                for line in setting['readEntry']:
-                    print('        ' + line, file=outputdevice)
-            elif isinstance(setting['readEntry'], str):
-                print('        ' + setting['readEntry'], file=outputdevice)
+            readEntryList = rewriteobsoletecode(setting['readEntry'], '        ')
+            if isinstance(readEntryList, list):
+                for line in readEntryList:
+                    print(line, file=outputdevice)
             print('    }', file=outputdevice)
 
         if 'writeEntry' in setting:

@@ -519,7 +519,11 @@ public:
         QPointer<QFileDialog> saveDlg = new QFileDialog(p->widget(), i18n("Save file") /* TODO better text */, startDir, supportedMimeTypes);
         /// Setting list of mime types for the second time,
         /// essentially calling this function only to set the "default mime type" parameter
+#if QT_VERSION >= 0x050e00
+        saveDlg->setMimeTypeFilters(supportedMimeTypes.split(QLatin1Char(' '), Qt::SkipEmptyParts));
+#else // QT_VERSION < 0x050e00
         saveDlg->setMimeTypeFilters(supportedMimeTypes.split(QLatin1Char(' '), QString::SkipEmptyParts));
+#endif // QT_VERSION >= 0x050e00
         /// Setting the dialog into "Saving" mode make the "add extension" checkbox available
         saveDlg->setAcceptMode(QFileDialog::AcceptSave);
         /// Mime type 'text/x-bibtex' is guaranteed to be pre-selected, so set default filename suffix accordingly

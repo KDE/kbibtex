@@ -123,7 +123,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
                 if (!person.isNull())
                     result &= writeKeyValue(stream, QStringLiteral("AU"), PlainTextValue::text(**it));
                 else
-                    qCWarning(LOG_KBIBTEX_IO) << "Cannot write value " << PlainTextValue::text(**it) << " for field AU (author), not supported by RIS format" << endl;
+                    qCWarning(LOG_KBIBTEX_IO) << "Cannot write value " << PlainTextValue::text(**it) << " for field AU (author), not supported by RIS format";
             }
         } else if (key.toLower() == Entry::ftEditor) {
             for (Value::ConstIterator it = value.constBegin(); result && it != value.constEnd(); ++it) {
@@ -131,7 +131,7 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
                 if (!person.isNull())
                     result &= writeKeyValue(stream, QStringLiteral("ED"), PlainTextValue::text(**it));
                 else
-                    qCWarning(LOG_KBIBTEX_IO) << "Cannot write value " << PlainTextValue::text(**it) << " for field ED (editor), not supported by RIS format" << endl;
+                    qCWarning(LOG_KBIBTEX_IO) << "Cannot write value " << PlainTextValue::text(**it) << " for field ED (editor), not supported by RIS format";
             }
         } else if (key == Entry::ftTitle)
             result &= writeKeyValue(stream, QStringLiteral("TI"), PlainTextValue::text(value));
@@ -190,7 +190,11 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
     }
 
     result &= writeKeyValue(stream, QStringLiteral("ER"), QString());
+#if QT_VERSION >= 0x050e00
+    stream << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << endl;
+#endif // QT_VERSION >= 0x050e00
 
     return result;
 }
@@ -200,7 +204,11 @@ bool FileExporterRIS::writeKeyValue(QTextStream &stream, const QString &key, con
     stream << key << "  - ";
     if (!value.isEmpty())
         stream << value;
+#if QT_VERSION >= 0x050e00
+    stream << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << endl;
+#endif // QT_VERSION >= 0x050e00
 
     return true;
 }

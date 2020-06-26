@@ -178,19 +178,18 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         QString downloadUrl;
         static const QString downloadFormStart = QStringLiteral("<FORM METHOD=GET ACTION=\"/cgi-bin/get_doc.pl\"");
         if (htmlCode.contains(downloadFormStart)) {
-            QMap<QString, QString> form = formParameters(htmlCode, htmlCode.indexOf(downloadFormStart, Qt::CaseInsensitive));
-            downloadUrl = form[QStringLiteral("url")];
+            QMultiMap<QString, QString> form = formParameters(htmlCode, htmlCode.indexOf(downloadFormStart, Qt::CaseInsensitive));
+            downloadUrl = form.value(QStringLiteral("url"));
         }
 
-        QMap<QString, QString> form = formParameters(htmlCode, htmlCode.indexOf(QStringLiteral("<form method=\"post\" action=\"/cgi-bin/refs.cgi\""), Qt::CaseInsensitive));
-        form[QStringLiteral("output")] = QStringLiteral("2"); ///< enforce BibTeX output
+        QMultiMap<QString, QString> form = formParameters(htmlCode, htmlCode.indexOf(QStringLiteral("<form method=\"post\" action=\"/cgi-bin/refs.cgi\""), Qt::CaseInsensitive));
+        form.replace(QStringLiteral("output"), QStringLiteral("2")); ///< enforce BibTeX output
 
         QString body;
-        QMap<QString, QString>::ConstIterator it = form.constBegin();
-        while (it != form.constEnd()) {
+        for (const QString &key : form.keys()) {
             if (!body.isEmpty()) body += QLatin1Char('&');
-            body += it.key() + QLatin1Char('=') + QString(QUrl::toPercentEncoding(it.value()));
-            ++it;
+            for (const QString &value : form.values(key))
+                body += key + QLatin1Char('=') + QString(QUrl::toPercentEncoding(value));
         }
 
         const QUrl url = QUrl(QStringLiteral("https://ideas.repec.org/cgi-bin/refs.cgi"));

@@ -128,26 +128,65 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
     if (latexFile.open(QIODevice::WriteOnly)) {
         QTextStream ts(&latexFile);
         ts.setCodec("UTF-8");
+#if QT_VERSION >= 0x050e00
+        ts << "\\documentclass{article}" << Qt::endl;
+        ts << "\\usepackage[T1]{fontenc}" << Qt::endl;
+        ts << "\\usepackage[utf8]{inputenc}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
         ts << "\\documentclass{article}" << endl;
         ts << "\\usepackage[T1]{fontenc}" << endl;
         ts << "\\usepackage[utf8]{inputenc}" << endl;
+#endif // QT_VERSION >= 0x050e00
         if (kpsewhich(QStringLiteral("babel.sty")))
+#if QT_VERSION >= 0x050e00
+            ts << "\\usepackage[" << Preferences::instance().laTeXBabelLanguage() << "]{babel}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             ts << "\\usepackage[" << Preferences::instance().laTeXBabelLanguage() << "]{babel}" << endl;
+#endif // QT_VERSION >= 0x050e00
         if (kpsewhich(QStringLiteral("hyperref.sty")))
+#if QT_VERSION >= 0x050e00
+            ts << "\\usepackage[pdfborder={0 0 0},pdfproducer={KBibTeX: https://userbase.kde.org/KBibTeX},pdftex]{hyperref}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             ts << "\\usepackage[pdfborder={0 0 0},pdfproducer={KBibTeX: https://userbase.kde.org/KBibTeX},pdftex]{hyperref}" << endl;
+#endif // QT_VERSION >= 0x050e00
         else if (kpsewhich(QStringLiteral("url.sty")))
+#if QT_VERSION >= 0x050e00
+            ts << "\\usepackage{url}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             ts << "\\usepackage{url}" << endl;
+#endif // QT_VERSION >= 0x050e00
         const QString bibliographyStyle = Preferences::instance().bibTeXBibliographyStyle();
         if (bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))
+#if QT_VERSION >= 0x050e00
+            ts << "\\usepackage[bibnewpage]{apacite}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             ts << "\\usepackage[bibnewpage]{apacite}" << endl;
+#endif // QT_VERSION >= 0x050e00
         if ((bibliographyStyle == QStringLiteral("agsm") || bibliographyStyle == QStringLiteral("dcu") || bibliographyStyle == QStringLiteral("jmr") || bibliographyStyle == QStringLiteral("jphysicsB") || bibliographyStyle == QStringLiteral("kluwer") || bibliographyStyle == QStringLiteral("nederlands") || bibliographyStyle == QStringLiteral("dcu") || bibliographyStyle == QStringLiteral("dcu")) && kpsewhich(QStringLiteral("harvard.sty")) && kpsewhich(QStringLiteral("html.sty")))
+#if QT_VERSION >= 0x050e00
+            ts << "\\usepackage{html}" << Qt::endl << "\\usepackage[dcucite]{harvard}" << Qt::endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             ts << "\\usepackage{html}" << endl << "\\usepackage[dcucite]{harvard}" << endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << endl;
+#endif // QT_VERSION >= 0x050e00
         if (kpsewhich(QStringLiteral("embedfile.sty")))
+#if QT_VERSION >= 0x050e00
+            ts << "\\usepackage{embedfile}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             ts << "\\usepackage{embedfile}" << endl;
+#endif // QT_VERSION >= 0x050e00
         if (kpsewhich(QStringLiteral("geometry.sty")))
+#if QT_VERSION >= 0x050e00
+            ts << "\\usepackage[paper=" << pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             ts << "\\usepackage[paper=" << pageSizeToLaTeXName(Preferences::instance().pageSize()) << "]{geometry}" << endl;
+#endif // QT_VERSION >= 0x050e00
+#if QT_VERSION >= 0x050e00
+        ts << "\\bibliographystyle{" << bibliographyStyle << "}" << Qt::endl;
+        ts << "\\begin{document}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
         ts << "\\bibliographystyle{" << bibliographyStyle << "}" << endl;
         ts << "\\begin{document}" << endl;
+#endif // QT_VERSION >= 0x050e00
 
         if (!m_embeddedFileList.isEmpty())
             for (const QString &embeddedFile : const_cast<const QStringList &>(m_embeddedFileList)) {
@@ -160,12 +199,22 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
                     ts << ",mimetype={text/x-bibtex}";
                 else if (param[2].endsWith(KBibTeX::extensionPDF))
                     ts << ",mimetype={application/pdf}";
+#if QT_VERSION >= 0x050e00
+                ts << "]{" << param[1] << "}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
                 ts << "]{" << param[1] << "}" << endl;
+#endif // QT_VERSION >= 0x050e00
             }
 
+#if QT_VERSION >= 0x050e00
+        ts << "\\nocite{*}" << Qt::endl;
+        ts << QStringLiteral("\\bibliography{") << m_fileBasename << QStringLiteral("}") << Qt::endl;
+        ts << "\\end{document}" << Qt::endl;
+#else // QT_VERSION < 0x050e00
         ts << "\\nocite{*}" << endl;
         ts << QStringLiteral("\\bibliography{") << m_fileBasename << QStringLiteral("}") << endl;
         ts << "\\end{document}" << endl;
+#endif // QT_VERSION >= 0x050e00
         latexFile.close();
         return true;
     } else

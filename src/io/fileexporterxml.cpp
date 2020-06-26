@@ -53,15 +53,26 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile)
     QTextStream stream(iodevice);
     stream.setCodec("UTF-8");
 
+#if QT_VERSION >= 0x050e00
+    stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << Qt::endl;
+    stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX -->" << Qt::endl;
+    stream << "<!-- https://userbase.kde.org/KBibTeX -->" << Qt::endl;
+    stream << "<bibliography>" << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
     stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX -->" << endl;
     stream << "<!-- https://userbase.kde.org/KBibTeX -->" << endl;
     stream << "<bibliography>" << endl;
+#endif // QT_VERSION >= 0x050e00
 
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !m_cancelFlag; ++it)
         result &= write(stream, (*it).data(), bibtexfile);
 
+#if QT_VERSION >= 0x050e00
+    stream << "</bibliography>" << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << "</bibliography>" << endl;
+#endif // QT_VERSION >= 0x050e00
 
     return result && !m_cancelFlag;
 }
@@ -78,14 +89,25 @@ bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     QTextStream stream(iodevice);
     stream.setCodec("UTF-8");
 
+#if QT_VERSION >= 0x050e00
+    stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << Qt::endl;
+    stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX -->" << Qt::endl;
+    stream << "<!-- https://userbase.kde.org/KBibTeX -->" << Qt::endl;
+    stream << "<bibliography>" << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << endl;
     stream << "<!-- XML document written by KBibTeXIO as part of KBibTeX -->" << endl;
     stream << "<!-- https://userbase.kde.org/KBibTeX -->" << endl;
     stream << "<bibliography>" << endl;
+#endif // QT_VERSION >= 0x050e00
 
     const bool result = write(stream, element.data());
 
+#if QT_VERSION >= 0x050e00
+    stream << "</bibliography>" << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << "</bibliography>" << endl;
+#endif // QT_VERSION >= 0x050e00
 
     return result;
 }
@@ -126,7 +148,11 @@ bool FileExporterXML::write(QTextStream &stream, const Element *element, const F
 
 bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
 {
+#if QT_VERSION >= 0x050e00
+    stream << " <entry id=\"" << EncoderXML::instance().encode(entry->id(), Encoder::TargetEncoding::UTF8) << "\" type=\"" << entry->type().toLower() << "\">" << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << " <entry id=\"" << EncoderXML::instance().encode(entry->id(), Encoder::TargetEncoding::UTF8) << "\" type=\"" << entry->type().toLower() << "\">" << endl;
+#endif // QT_VERSION >= 0x050e00
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
         const QString key = it.key().toLower();
         const Value value = it.value();
@@ -145,15 +171,25 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
                     stream << " etal=\"true\"";
                 }
             }
+#if QT_VERSION >= 0x050e00
+            stream << ">" << Qt::endl;
+            stream << valueToXML(internal, key) << Qt::endl;
+            stream << "  </" << key << "s>" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             stream << ">" << endl;
             stream << valueToXML(internal, key) << endl;
             stream << "  </" << key << "s>" << endl;
+#endif // QT_VERSION >= 0x050e00
         } else if (key == Entry::ftAbstract) {
             static const QRegularExpression abstractRegExp(QStringLiteral("\\bAbstract[:]?([ ]|&nbsp;|&amp;nbsp;)*"), QRegularExpression::CaseInsensitiveOption);
             /// clean up HTML artifacts
             QString text = valueToXML(value);
             text = text.remove(abstractRegExp);
+#if QT_VERSION >= 0x050e00
+            stream << "  <" << key << ">" << text << "</" << key << ">" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             stream << "  <" << key << ">" << text << "</" << key << ">" << endl;
+#endif // QT_VERSION >= 0x050e00
         } else if (key == Entry::ftMonth) {
             stream << "  <month";
             bool ok = false;
@@ -186,13 +222,25 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             if (month > 0)
                 stream << " month=\"" << month << "\"";
             stream << '>' << content;
+#if QT_VERSION >= 0x050e00
+            stream << "</month>" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             stream << "</month>" << endl;
+#endif // QT_VERSION >= 0x050e00
         } else {
+#if QT_VERSION >= 0x050e00
+            stream << "  <" << key << ">" << valueToXML(value) << "</" << key << ">" << Qt::endl;
+#else // QT_VERSION < 0x050e00
             stream << "  <" << key << ">" << valueToXML(value) << "</" << key << ">" << endl;
+#endif // QT_VERSION >= 0x050e00
         }
 
     }
+#if QT_VERSION >= 0x050e00
+    stream << " </entry>" << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << " </entry>" << endl;
+#endif // QT_VERSION >= 0x050e00
 
     return true;
 }
@@ -201,7 +249,11 @@ bool FileExporterXML::writeMacro(QTextStream &stream, const Macro *macro)
 {
     stream << " <string key=\"" << macro->key() << "\">";
     stream << valueToXML(macro->value());
+#if QT_VERSION >= 0x050e00
+    stream << "</string>" << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << "</string>" << endl;
+#endif // QT_VERSION >= 0x050e00
 
     return true;
 }
@@ -210,7 +262,11 @@ bool FileExporterXML::writeComment(QTextStream &stream, const Comment *comment)
 {
     stream << " <comment>" ;
     stream << EncoderXML::instance().encode(comment->text(), Encoder::TargetEncoding::UTF8);
+#if QT_VERSION >= 0x050e00
+    stream << "</comment>" << Qt::endl;
+#else // QT_VERSION < 0x050e00
     stream << "</comment>" << endl;
+#endif // QT_VERSION >= 0x050e00
 
     return true;
 }

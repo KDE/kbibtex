@@ -294,7 +294,7 @@ public:
             QString text = internalValueToBibTeX(value, targetEncoding, key);
             if (text.isEmpty()) {
                 /// ignore empty key-value pairs
-                qCWarning(LOG_KBIBTEX_IO) << "Value for field " << key << " is empty" << endl;
+                qCWarning(LOG_KBIBTEX_IO) << "Value for field " << key << " is empty";
                 continue;
             }
 
@@ -339,7 +339,11 @@ public:
             output.append(QLatin1Char('{')).append(normalizeText(text));
             output.append(QLatin1Char('}')).append(QStringLiteral("\n\n"));
         } else if (quoteComment == Preferences::QuoteComment::PercentSign) {
+#if QT_VERSION >= 0x050e00
+            QStringList commentLines = text.split('\n', Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
             QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
             for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); ++it) {
                 const QString &line = *it;
                 if (line.length() == 0 || line[0] != QLatin1Char('%')) {

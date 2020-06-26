@@ -113,7 +113,7 @@ public:
             qCDebug(LOG_KBIBTEX_PROGRAM) << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
             qCDebug(LOG_KBIBTEX_PROGRAM) << "QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
             qCDebug(LOG_KBIBTEX_PROGRAM) << "KDEDIRS=" << getenv("KDEDIRS");
-            qCCritical(LOG_KBIBTEX_PROGRAM) << "Cannot find service to handle mimetype " << mimeType << endl;
+            qCCritical(LOG_KBIBTEX_PROGRAM) << "Cannot find service to handle mimetype " << mimeType;
             return nullptr;
         }
 
@@ -579,7 +579,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
 
     /// check if old url differs from new url and old url is valid
     if (previouslyContained != nullptr && previouslyContained->flags().testFlag(OpenFileInfo::StatusFlag::Open) && previouslyContained != openFileInfo) {
-        qCWarning(LOG_KBIBTEX_PROGRAM) << "Open file with same URL already exists, forcefully closing it" << endl;
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Open file with same URL already exists, forcefully closing it";
         close(previouslyContained);
     }
 

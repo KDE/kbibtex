@@ -155,7 +155,11 @@ public:
             } else if ((*it).key == QStringLiteral("KW")) {
                 QString text = (*it).value;
                 const QRegularExpression splitRegExp(text.contains(QStringLiteral(";")) ? QStringLiteral("\\s*[;\\n]\\s*") : (text.contains(QStringLiteral(",")) ? QStringLiteral("\\s*[,\\n]\\s*") : QStringLiteral("\\n")));
+#if QT_VERSION >= 0x050e00
+                QStringList newKeywords = text.split(splitRegExp, Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
                 QStringList newKeywords = text.split(splitRegExp, QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
                 for (QStringList::Iterator it = newKeywords.begin(); it != newKeywords.end(); ++it)
                     appendValue(entry, Entry::ftKeywords, QSharedPointer<Keyword>(new Keyword(*it)));
             } else if ((*it).key == QStringLiteral("TI") || (*it).key == QStringLiteral("T1")) {
@@ -228,7 +232,11 @@ public:
             entry->insert(Entry::ftPages, value);
         }
 
+#if QT_VERSION >= 0x050e00
+        QStringList dateFragments = date.split(QStringLiteral("/"), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
         QStringList dateFragments = date.split(QStringLiteral("/"), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
         if (dateFragments.count() > 0) {
             bool ok;
             int year = dateFragments[0].toInt(&ok);

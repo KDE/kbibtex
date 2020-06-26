@@ -73,7 +73,11 @@ public:
         QTextStream ts(iodevice);
         ts << QStringLiteral("<div style=\"color: red; background: white;\">");
         ts << i18n("The program <strong>bibtex2html</strong> is not available.");
+#if QT_VERSION >= 0x050e00
+        ts << QStringLiteral("</div>") << Qt::endl;
+#else // QT_VERSION < 0x050e00
         ts << QStringLiteral("</div>") << endl;
+#endif // QT_VERSION >= 0x050e00
         ts.flush();
         return false;
     }
@@ -86,7 +90,11 @@ public:
         QTextStream ts(iodevice);
         ts << QStringLiteral("<div style=\"color: red; background: white;\">");
         ts << i18n("The BibTeX style <strong>%1</strong> is not available.", bibStyle);
+#if QT_VERSION >= 0x050e00
+        ts << QStringLiteral("</div>") << Qt::endl;
+#else // QT_VERSION < 0x050e00
         ts << QStringLiteral("</div>") << endl;
+#endif // QT_VERSION >= 0x050e00
         ts.flush();
         return false;
     }

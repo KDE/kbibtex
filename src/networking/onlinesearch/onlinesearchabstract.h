@@ -118,7 +118,7 @@ protected:
 
     static QString decodeURL(QString rawText);
 
-    QMap<QString, QString> formParameters(const QString &htmlText, int startPos) const;
+    QMultiMap<QString, QString> formParameters(const QString &htmlText, int startPos) const;
 
     /**
      * Delay sending of stop signal by a few milliseconds.

@@ -69,7 +69,11 @@ public:
         QString result;
         bool first = true;
         static const QRegularExpression sequenceOfSpaces(QStringLiteral("\\s+"));
+#if QT_VERSION >= 0x050e00
+        const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
         const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
         int index = 0;
         for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it, ++index) {
             const QString lowerText = normalizeText(*it).toLower();
@@ -120,7 +124,11 @@ public:
             /// Check if camel case is requests
             if (ati.caseChange == IdSuggestions::CaseChange::ToCamelCase) {
                 /// Get components of the author's last name
+#if QT_VERSION >= 0x050e00
+                const QStringList nameComponents = author.split(QStringLiteral(" "), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
                 const QStringList nameComponents = author.split(QStringLiteral(" "), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
                 QStringList newNameComponents;
                 newNameComponents.reserve(nameComponents.size());
                 /// Camel-case each name component
@@ -163,7 +171,11 @@ public:
         static const QRegularExpression sequenceOfSpaces(QStringLiteral("\\s+"));
         QString journalName = PlainTextValue::text(entry.value(Entry::ftJournal));
         journalName = JournalAbbreviations::instance().toShortName(journalName);
+#if QT_VERSION >= 0x050e00
+        const QStringList journalWords = journalName.split(sequenceOfSpaces, Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
         const QStringList journalWords = journalName.split(sequenceOfSpaces, QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
         bool first = true;
         int index = 0;
         QString result;
@@ -298,12 +310,20 @@ public:
 
 /// List of small words taken from OCLC:
 /// https://www.oclc.org/developer/develop/web-services/worldcat-search-api/bibliographic-resource.en.html
+#if QT_VERSION >= 0x050e00
+const QStringList IdSuggestions::IdSuggestionsPrivate::smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QStringLiteral("|"), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
 const QStringList IdSuggestions::IdSuggestionsPrivate::smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QStringLiteral("|"), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
 
 QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr)
 {
     QString id;
+#if QT_VERSION >= 0x050e00
+    const QStringList tokenList = formatStr.split(QStringLiteral("|"), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
     const QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
     for (const QString &token : tokenList) {
         id.append(IdSuggestionsPrivate::translateToken(entry, token));
     }
@@ -345,7 +365,11 @@ QStringList IdSuggestions::formatIdList(const Entry &entry)
 QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
 {
     QStringList result;
+#if QT_VERSION >= 0x050e00
+    const QStringList tokenList = formatStr.split(QStringLiteral("|"), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
     const QStringList tokenList = formatStr.split(QStringLiteral("|"), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
     for (const QString &token : tokenList) {
         QString text;
         if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {

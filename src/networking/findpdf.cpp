@@ -283,7 +283,11 @@ bool FindPDF::search(const Entry &entry)
     /// Generate a string which contains the title's beginning
     QString searchWords;
     if (entry.contains(Entry::ftTitle)) {
+#if QT_VERSION >= 0x050e00
+        const QStringList titleChunks = PlainTextValue::text(entry.value(Entry::ftTitle)).split(QStringLiteral(" "), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
         const QStringList titleChunks = PlainTextValue::text(entry.value(Entry::ftTitle)).split(QStringLiteral(" "), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
         if (!titleChunks.isEmpty()) {
             searchWords = titleChunks[0];
             for (int i = 1; i < titleChunks.count() && searchWords.length() < 64; ++i)
