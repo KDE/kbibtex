@@ -32,12 +32,21 @@
 #include <QTimer>
 #include <QUrl>
 #include <QUrlQuery>
+#if QT_VERSION >= 0x050a00
+#include <QRandomGenerator>
+#endif // QT_VERSION
 
 #ifdef HAVE_KF5
 #include <KProtocolManager>
 #endif // HAVE_KF5
 
 #include "logging_networking.h"
+
+#if QT_VERSION >= 0x050a00
+#define randomGeneratorGlobalBounded(min,max)  QRandomGenerator::global()->bounded((min),(max))
+#else // QT_VERSION
+#define randomGeneratorGlobalBounded(min,max)  ((min)+(qrand()%((max)-(min)+1)))
+#endif // QT_VERSION
 
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
@@ -76,6 +85,9 @@ InternalNetworkAccessManager::InternalNetworkAccessManager(QObject *parent)
         : QNetworkAccessManager(parent)
 {
     cookieJar = new HTTPEquivCookieJar(this);
+#if QT_VERSION < 0x050a00
+    qsrand(static_cast<int>(QDateTime::currentDateTime().toMSecsSinceEpoch() % 0x7fffffffl));
+#endif // QT_VERSION
 }
 
 
@@ -101,7 +113,11 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
     if (!proxyHostName.isEmpty() && proxyHostName != QStringLiteral("DIRECT")) {
         /// Extract both hostname and port number for proxy
         proxyHostName = proxyHostName.mid(proxyHostName.indexOf(QStringLiteral("://")) + 3);
+#if QT_VERSION >= 0x050e00
+        QStringList proxyComponents = proxyHostName.split(QStringLiteral(":"), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
         QStringList proxyComponents = proxyHostName.split(QStringLiteral(":"), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
         if (proxyComponents.length() == 1) {
             /// Proxy configuration is missing a port number,
             /// using 8080 as default
@@ -183,8 +199,7 @@ QString InternalNetworkAccessManager::userAgent()
     };
 
     if (userAgentString.isEmpty()) {
-        qsrand(time(nullptr));
-        userAgentString = userAgentList[qrand() % userAgentList.length()];
+        userAgentString = userAgentList[randomGeneratorGlobalBounded(0, userAgentList.length() - 1)];
     }
     return userAgentString;
 }

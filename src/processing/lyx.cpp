@@ -120,7 +120,11 @@ void LyX::sendReferenceToLyX()
     QTextStream ts(&pipe);
     QString msg = QString(QStringLiteral("LYXCMD:kbibtex:citation-insert:%1")).arg(d->references.join(QStringLiteral(",")));
 
+#if QT_VERSION >= 0x050e00
+    ts << msg << Qt::endl;
+#else // QT_VERSION < 0x050e00
     ts << msg << endl;
+#endif // QT_VERSION >= 0x050e00
     ts.flush();
 
     pipe.close();

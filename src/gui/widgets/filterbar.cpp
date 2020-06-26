@@ -150,7 +150,11 @@ public:
             result.terms << comboBoxFilterText->lineEdit()->text();
         else { /// any or every word
             static const QRegularExpression sequenceOfSpacesRegExp(QStringLiteral("\\s+"));
+#if QT_VERSION >= 0x050e00
+            result.terms = comboBoxFilterText->lineEdit()->text().split(sequenceOfSpacesRegExp, Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
             result.terms = comboBoxFilterText->lineEdit()->text().split(sequenceOfSpacesRegExp, QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
         }
         result.field = comboBoxField->currentIndex() == 0 ? QString() : comboBoxField->itemData(comboBoxField->currentIndex(), Qt::UserRole).toString();
         result.searchPDFfiles = buttonSearchPDFfiles->isChecked();

@@ -229,18 +229,19 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
                 return;
             }
 
-            QMap<QString, QString> inputMap = formParameters(htmlText, formOpeningTagPos);
-            inputMap[QStringLiteral("hl")] = QStringLiteral("en");
-            inputMap[QStringLiteral("scis")] = QStringLiteral("yes");
-            inputMap[QStringLiteral("scisf")] = QStringLiteral("4");
-            inputMap[QStringLiteral("num")] = QString::number(d->numResults);
-            inputMap[QStringLiteral("submit")] = QString();
+            QMultiMap<QString, QString> inputMap = formParameters(htmlText, formOpeningTagPos);
+            inputMap.replace(QStringLiteral("hl"), QStringLiteral("en"));
+            inputMap.replace(QStringLiteral("scis"), QStringLiteral("yes"));
+            inputMap.replace(QStringLiteral("scisf"), QStringLiteral("4"));
+            inputMap.replace(QStringLiteral("num"), QString::number(d->numResults));
+            inputMap.replace(QStringLiteral("submit"), QString());
 
             QUrl url = reply->url().resolved(QUrl(decodeURL(formOpeningTagMatch.captured(1))));
             QUrlQuery query(url);
-            for (QMap<QString, QString>::ConstIterator it = inputMap.constBegin(); it != inputMap.constEnd(); ++it) {
-                query.removeQueryItem(it.key());
-                query.addQueryItem(it.key(), it.value());
+            for (const QString &key : inputMap.keys()) {
+                query.removeQueryItem(key);
+                for (const QString &value : inputMap.values(key))
+                    query.addQueryItem(key, value);
             }
             url.setQuery(query);
 

@@ -89,7 +89,11 @@ public:
         radioMoveFile = new QRadioButton(i18n("Move document next to bibliography file"), groupBox);
         groupBoxLayout->addWidget(radioMoveFile);
         buttonGroup->addButton(radioMoveFile);
+#if QT_VERSION >= 0x050f00
+        connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::idClicked), p, &AssociatedFilesUI::updateUIandPreview);
+#else // QT_VERSION < 0x050f00
         connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), p, &AssociatedFilesUI::updateUIandPreview);
+#endif // QT_VERSION >= 0x050f00
         radioNoCopyMove->setChecked(true); /// by default
         groupBoxLayout->addSpacing(4);
         labelMoveCopyLocation = new QLabel(i18n("Path and filename of bibliography file:"), groupBox);
@@ -117,7 +121,11 @@ public:
         lineEditUserDefinedName = new QLineEdit(groupBoxRename);
         gridLayout->addWidget(lineEditUserDefinedName, 3, 1, 1, 1);
         connect(lineEditUserDefinedName, &QLineEdit::textEdited, p, &AssociatedFilesUI::updateUIandPreview);
+#if QT_VERSION >= 0x050f00
+        connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::idClicked), p, &AssociatedFilesUI::updateUIandPreview);
+#else // QT_VERSION < 0x050f00
         connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), p, &AssociatedFilesUI::updateUIandPreview);
+#endif // QT_VERSION >= 0x050f00
         radioRenameToEntryId->setChecked(true); /// by default
 
         groupBoxPathType = new QGroupBox(i18n("Path as Inserted into Entry"), p);
@@ -130,7 +138,11 @@ public:
         radioAbsolutePath = new QRadioButton(i18n("Absolute Path"), groupBoxPathType);
         groupBoxLayout->addWidget(radioAbsolutePath);
         buttonGroup->addButton(radioAbsolutePath);
+#if QT_VERSION >= 0x050f00
+        connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::idClicked), p, &AssociatedFilesUI::updateUIandPreview);
+#else // QT_VERSION < 0x050f00
         connect(buttonGroup, static_cast<void(QButtonGroup::*)(int)>(&QButtonGroup::buttonClicked), p, &AssociatedFilesUI::updateUIandPreview);
+#endif // QT_VERSION >= 0x050f00
         radioRelativePath->setChecked(true); /// by default
 
         layout->addSpacing(8);

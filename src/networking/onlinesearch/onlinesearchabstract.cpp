@@ -25,6 +25,9 @@
 #include <QRegularExpression>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#if QT_VERSION >= 0x050a00
+#include <QRandomGenerator>
+#endif // QT_VERSION
 #ifdef HAVE_QTWIDGETS
 #include <QListWidgetItem>
 #endif // HAVE_QTWIDGETS
@@ -39,6 +42,12 @@
 #include "internalnetworkaccessmanager.h"
 #include "onlinesearchabstract_p.h"
 #include "logging_networking.h"
+
+#if QT_VERSION >= 0x050a00
+#define randomGeneratorGlobalGenerate()  QRandomGenerator::global()->generate()
+#else // QT_VERSION
+#define randomGeneratorGlobalGenerate()  (qrand())
+#endif // QT_VERSION
 
 const QString OnlineSearchAbstract::queryKeyFreeText = QStringLiteral("free");
 const QString OnlineSearchAbstract::queryKeyTitle = QStringLiteral("title");
@@ -363,7 +372,7 @@ QString OnlineSearchAbstract::decodeURL(QString rawText)
     return rawText;
 }
 
-QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, int startPos) const
+QMultiMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, int startPos) const
 {
     /// how to recognize HTML tags
     static const QString formTagEnd = QStringLiteral("</form>");
@@ -373,7 +382,7 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
     static const QString optionTagBegin = QStringLiteral("<option ");
 
     /// initialize result map
-    QMap<QString, QString> result;
+    QMultiMap<QString, QString> result;
 
     /// determined boundaries of (only) "form" tag
     int endPos = htmlText.indexOf(formTagEnd, startPos, Qt::CaseInsensitive);
@@ -393,17 +402,17 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
         if (!inputName.isEmpty()) {
             /// get value of input types
             if (inputType == QStringLiteral("hidden") || inputType == QStringLiteral("text") || inputType == QStringLiteral("submit"))
-                result[inputName] = inputValue;
+                result.replace(inputName, inputValue);
             else if (inputType == QStringLiteral("radio")) {
                 /// must be selected
                 if (htmlAttributeIsSelected(htmlText, p, QStringLiteral("checked"))) {
-                    result[inputName] = inputValue;
+                    result.replace(inputName, inputValue);
                 }
             } else if (inputType == QStringLiteral("checkbox")) {
                 /// must be checked
                 if (htmlAttributeIsSelected(htmlText, p, QStringLiteral("checked"))) {
                     /// multiple checkbox values with the same name are possible
-                    result.insertMulti(inputName, inputValue);
+                    result.insert(inputName, inputValue);
                 }
             }
         }
@@ -427,7 +436,7 @@ QMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlT
             if (!selectName.isEmpty() && !optionValue.isEmpty()) {
                 /// if this "option" tag is "selected", store value
                 if (htmlAttributeIsSelected(htmlText, popt, QStringLiteral("selected"))) {
-                    result[selectName] = optionValue;
+                    result.replace(selectName, optionValue);
                 }
             }
 
@@ -533,7 +542,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
 
     /// Sometimes, there is no identifier, so set a random one
     if (entry->id().isEmpty())
-        entry->setId(QString(QStringLiteral("entry-%1")).arg(QString::number(qrand(), 36)));
+        entry->setId(QString(QStringLiteral("entry-%1")).arg(QString::number(randomGeneratorGlobalGenerate(), 36)));
     /// Missing entry type? Set it to 'misc'
     if (entry->type().isEmpty())
         entry->setType(Entry::etMisc);

@@ -303,7 +303,11 @@ public:
     double levenshteinDistance(const QString &s, const QString &t) {
         static const QRegularExpression nonWordRegExp(QStringLiteral("[^a-z']+"), QRegularExpression::CaseInsensitiveOption);
         if (s.isEmpty() || t.isEmpty()) return 1.0;
+#if QT_VERSION >= 0x050e00
+        return levenshteinDistance(s.toLower().split(nonWordRegExp, Qt::SkipEmptyParts), t.toLower().split(nonWordRegExp, Qt::SkipEmptyParts));
+#else // QT_VERSION < 0x050e00
         return levenshteinDistance(s.toLower().split(nonWordRegExp, QString::SkipEmptyParts), t.toLower().split(nonWordRegExp, QString::SkipEmptyParts));
+#endif // QT_VERSION >= 0x050e00
     }
 
     /**

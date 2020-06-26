@@ -25,6 +25,9 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QMenu>
+#if QT_VERSION >= 0x050a00
+#include <QRandomGenerator>
+#endif // QT_VERSION
 
 #include <KColorButton>
 #include <KActionMenu>
@@ -35,6 +38,12 @@
 #include <Entry>
 #include "file/fileview.h"
 #include "field/colorlabelwidget.h"
+
+#if QT_VERSION >= 0x050a00
+#define randomGeneratorGlobalBounded(min,max)  QRandomGenerator::global()->bounded((min),(max))
+#else // QT_VERSION
+#define randomGeneratorGlobalBounded(min,max)  ((min)+(qrand()%((max)-(min)+1)))
+#endif // QT_VERSION
 
 class ColorLabelSettingsDelegate : public QStyledItemDelegate
 {
@@ -341,9 +350,6 @@ public:
 SettingsColorLabelWidget::SettingsColorLabelWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new Private(this))
 {
-    /// Seed random number generator
-    qsrand(time(nullptr));
-
     /// Setup GUI elements
     d->setupGUI();
     /// Connect signals
@@ -384,7 +390,7 @@ void SettingsColorLabelWidget::addColor()
 {
     /// Create a randomized color, but guarantee
     /// some minimum value for each color component
-    const QColor newColor((qrand() & 0xff) | 0x30, (qrand() & 0xff) | 0x30, (qrand() & 0xff) | 0x30);
+    const QColor newColor(randomGeneratorGlobalBounded(0, 0xff) | 0x30, randomGeneratorGlobalBounded(0, 0xff) | 0x30, randomGeneratorGlobalBounded(0, 0xff) | 0x30);
     /// Set the new label to be the color's hex string
     const QString newColorName(newColor.name().remove(QLatin1Char('#')));
     /// Add new color-label pair to model's data

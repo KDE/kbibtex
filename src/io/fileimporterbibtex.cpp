@@ -204,13 +204,25 @@ Element *FileImporterBibTeX::nextElement()
         return readPlainCommentElement(QString());
     } else if (token == Token::Unknown) {
         if (m_nextChar.isLetter()) {
+#if QT_VERSION >= 0x050e00
+            qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << m_nextChar << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << ")" << ", treating as comment";
+#else // QT_VERSION < 0x050e00
             qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << m_nextChar << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Info, QString(QStringLiteral("Unknown character '%1' near line %2, treating as comment")).arg(m_nextChar).arg(m_lineNo));
         } else if (m_nextChar.isPrint()) {
+#if QT_VERSION >= 0x050e00
+            qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << m_nextChar << "(" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ") near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << ")" << ", treating as comment";
+#else // QT_VERSION < 0x050e00
             qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << m_nextChar << "(" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ") near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Info, QString(QStringLiteral("Unknown character '%1' (0x%2) near line %3, treating as comment")).arg(m_nextChar).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(m_lineNo));
         } else {
+#if QT_VERSION >= 0x050e00
+            qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << ")" << ", treating as comment";
+#else // QT_VERSION < 0x050e00
             qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << ", treating as comment";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Info, QString(QStringLiteral("Unknown character 0x%1 near line %2, treating as comment")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(m_lineNo));
         }
         ++m_statistics.countNoCommentQuote;
@@ -218,7 +230,11 @@ Element *FileImporterBibTeX::nextElement()
     }
 
     if (token != Token::EndOfFile) {
+#if QT_VERSION >= 0x050e00
+        qCWarning(LOG_KBIBTEX_IO) << "Don't know how to parse next token of type" << tokenidToString(token) << "in line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << ")" << Qt::endl;
+#else // QT_VERSION < 0x050e00
         qCWarning(LOG_KBIBTEX_IO) << "Don't know how to parse next token of type" << tokenidToString(token) << "in line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << ")" << endl;
+#endif // QT_VERSION >= 0x050e00
         emit message(MessageSeverity::Error, QString(QStringLiteral("Don't know how to parse next token of type %1 in line %2")).arg(tokenidToString(token)).arg(m_lineNo));
     }
 
@@ -258,7 +274,11 @@ Macro *FileImporterBibTeX::readMacroElement()
     Token token = nextToken();
     while (token != Token::BracketOpen) {
         if (token == Token::EndOfFile) {
+#if QT_VERSION >= 0x050e00
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing macro near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Opening curly brace '{' expected";
+#else // QT_VERSION < 0x050e00
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing macro near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Opening curly brace '{' expected";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing macro near line %1: Opening curly brace '{' expected")).arg(m_lineNo));
             return nullptr;
         }
@@ -293,7 +313,11 @@ Macro *FileImporterBibTeX::readMacroElement()
     m_knownElementIds.insert(key);
 
     if (nextToken() != Token::Assign) {
+#if QT_VERSION >= 0x050e00
+        qCCritical(LOG_KBIBTEX_IO) << "Error in parsing macro" << key << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Assign symbol '=' expected";
+#else // QT_VERSION < 0x050e00
         qCCritical(LOG_KBIBTEX_IO) << "Error in parsing macro" << key << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Assign symbol '=' expected";
+#endif // QT_VERSION >= 0x050e00
         emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing macro '%1' near line %2: Assign symbol '=' expected")).arg(key).arg(m_lineNo));
         return nullptr;
     }
@@ -303,7 +327,11 @@ Macro *FileImporterBibTeX::readMacroElement()
         bool isStringKey = false;
         QString text = readString(isStringKey);
         if (text.isNull()) {
+#if QT_VERSION >= 0x050e00
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing macro" << key << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Could not read macro's text";
+#else // QT_VERSION < 0x050e00
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing macro" << key << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Could not read macro's text";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing macro '%1' near line %2: Could not read macro's text")).arg(key).arg(m_lineNo));
             delete macro;
             return nullptr;
@@ -325,7 +353,11 @@ Preamble *FileImporterBibTeX::readPreambleElement()
     Token token = nextToken();
     while (token != Token::BracketOpen) {
         if (token == Token::EndOfFile) {
+#if QT_VERSION >= 0x050e00
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing preamble near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Opening curly brace '{' expected";
+#else // QT_VERSION < 0x050e00
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing preamble near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Opening curly brace '{' expected";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing preamble near line %1: Opening curly brace '{' expected")).arg(m_lineNo));
             return nullptr;
         }
@@ -337,7 +369,11 @@ Preamble *FileImporterBibTeX::readPreambleElement()
         bool isStringKey = false;
         QString text = readString(isStringKey);
         if (text.isNull()) {
+#if QT_VERSION >= 0x050e00
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing preamble near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Could not read preamble's text";
+#else // QT_VERSION < 0x050e00
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing preamble near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Could not read preamble's text";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing preamble near line %1: Could not read preamble's text")).arg(m_lineNo));
             delete preamble;
             return nullptr;
@@ -361,7 +397,11 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
     Token token = nextToken();
     while (token != Token::BracketOpen) {
         if (token == Token::EndOfFile) {
+#if QT_VERSION >= 0x050e00
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Opening curly brace '{' expected";
+#else // QT_VERSION < 0x050e00
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Opening curly brace '{' expected";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry near line %1: Opening curly brace '{' expected")).arg(m_lineNo));
             return nullptr;
         }
@@ -376,7 +416,11 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
             id = QStringLiteral("EmptyId");
         }
         else {
+#if QT_VERSION >= 0x050e00
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry near line" << m_lineNo << ":" << m_prevLine << Qt::endl << m_currentLine << "): Could not read entry id";
+#else // QT_VERSION < 0x050e00
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine << "): Could not read entry id";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing preambentryle near line %1: Could not read entry id")).arg(m_lineNo));
             return nullptr;
         }
@@ -423,19 +467,35 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
         if (token == Token::BracketClose)
             break;
         else if (token == Token::EndOfFile) {
+#if QT_VERSION >= 0x050e00
+            qCWarning(LOG_KBIBTEX_IO) << "Unexpected end of data in entry" << id << "near line" << m_lineNo << ":" << m_prevLine << Qt::endl << m_currentLine;
+#else // QT_VERSION < 0x050e00
             qCWarning(LOG_KBIBTEX_IO) << "Unexpected end of data in entry" << id << "near line" << m_lineNo << ":" << m_prevLine << endl << m_currentLine;
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Error, QString(QStringLiteral("Unexpected end of data in entry '%1' near line %2")).arg(id).arg(m_lineNo));
             delete entry;
             return nullptr;
         } else if (token != Token::Comma) {
             if (m_nextChar.isLetter()) {
+#if QT_VERSION >= 0x050e00
+                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Comma symbol ',' expected but got character" << m_nextChar << "(token" << tokenidToString(token) << ")";
+#else // QT_VERSION < 0x050e00
                 qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Comma symbol ',' expected but got character" << m_nextChar << "(token" << tokenidToString(token) << ")";
+#endif // QT_VERSION >= 0x050e00
                 emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (token %4)")).arg(id).arg(m_lineNo).arg(m_nextChar).arg(tokenidToString(token)));
             } else if (m_nextChar.isPrint()) {
+#if QT_VERSION >= 0x050e00
+                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Comma symbol ',' expected but got character" << m_nextChar << "(" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
+#else // QT_VERSION < 0x050e00
                 qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Comma symbol ',' expected but got character" << m_nextChar << "(" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
+#endif // QT_VERSION >= 0x050e00
                 emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (0x%4, token %5)")).arg(id).arg(m_lineNo).arg(m_nextChar).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token)));
             } else {
+#if QT_VERSION >= 0x050e00
+                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
+#else // QT_VERSION < 0x050e00
                 qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
+#endif // QT_VERSION >= 0x050e00
                 emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character 0x%3 (token %4)")).arg(id).arg(m_lineNo).arg(m_nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token)));
             }
             delete entry;
@@ -449,12 +509,20 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
                 /// Most often it is the case that the previous line ended with a comma,
                 /// implying that this entry continues, but instead it gets closed by
                 /// a closing curly bracket.
+#if QT_VERSION >= 0x050e00
+                qCDebug(LOG_KBIBTEX_IO) << "Issue while parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Last key-value pair ended with a non-conformant comma, ignoring that";
+#else // QT_VERSION < 0x050e00
                 qCDebug(LOG_KBIBTEX_IO) << "Issue while parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Last key-value pair ended with a non-conformant comma, ignoring that";
+#endif // QT_VERSION >= 0x050e00
                 emit message(MessageSeverity::Info, QString(QStringLiteral("Issue while parsing entry '%1' near line %2: Last key-value pair ended with a non-conformant comma, ignoring that")).arg(id).arg(m_lineNo));
                 break;
             } else {
                 /// Something looks terribly wrong
+#if QT_VERSION >= 0x050e00
+                qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "): Closing curly bracket expected, but found" << tokenidToString(token);
+#else // QT_VERSION < 0x050e00
                 qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "): Closing curly bracket expected, but found" << tokenidToString(token);
+#endif // QT_VERSION >= 0x050e00
                 emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Closing curly bracket expected, but found %3")).arg(id).arg(m_lineNo).arg(tokenidToString(token)));
                 delete entry;
                 return nullptr;
@@ -470,7 +538,11 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 
         token = nextToken();
         if (token != Token::Assign) {
+#if QT_VERSION >= 0x050e00
+            qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << ", field name" << keyName << "near line" << m_lineNo  << "(" << m_prevLine << Qt::endl << m_currentLine << "): Assign symbol '=' expected after field name";
+#else // QT_VERSION < 0x050e00
             qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << ", field name" << keyName << "near line" << m_lineNo  << "(" << m_prevLine << endl << m_currentLine << "): Assign symbol '=' expected after field name";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1', field name '%2' near line %3: Assign symbol '=' expected after field name")).arg(id, keyName).arg(m_lineNo));
             delete entry;
             return nullptr;
@@ -497,7 +569,11 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
                     ++i;
                     appendix = QString::number(i);
                 }
+#if QT_VERSION >= 0x050e00
+                qCDebug(LOG_KBIBTEX_IO) << "Entry" << id << "already contains a key" << keyName << "near line" << m_lineNo << "(" << m_prevLine << Qt::endl << m_currentLine << "), using" << (keyName + appendix);
+#else // QT_VERSION < 0x050e00
                 qCDebug(LOG_KBIBTEX_IO) << "Entry" << id << "already contains a key" << keyName << "near line" << m_lineNo << "(" << m_prevLine << endl << m_currentLine << "), using" << (keyName + appendix);
+#endif // QT_VERSION >= 0x050e00
                 emit message(MessageSeverity::Warning, QString(QStringLiteral("Entry '%1' already contains a key '%2' near line %4, using '%3'")).arg(id, keyName, keyName + appendix).arg(m_lineNo));
                 keyName += appendix;
             }
@@ -505,7 +581,11 @@ Entry *FileImporterBibTeX::readEntryElement(const QString &typeString)
 
         token = readValue(value, keyName);
         if (token != Token::BracketClose && token != Token::Comma) {
+#if QT_VERSION >= 0x050e00
+            qCWarning(LOG_KBIBTEX_IO) << "Failed to read value in entry" << id << ", field name" << keyName << "near line" << m_lineNo  << "(" << m_prevLine << Qt::endl << m_currentLine << ")";
+#else // QT_VERSION < 0x050e00
             qCWarning(LOG_KBIBTEX_IO) << "Failed to read value in entry" << id << ", field name" << keyName << "near line" << m_lineNo  << "(" << m_prevLine << endl << m_currentLine << ")";
+#endif // QT_VERSION >= 0x050e00
             emit message(MessageSeverity::Error, QString(QStringLiteral("Failed to read value in entry '%1', field name '%2' near line %3")).arg(id, keyName).arg(m_lineNo));
             delete entry;
             return nullptr;
@@ -764,7 +844,11 @@ FileImporterBibTeX::Token FileImporterBibTeX::readValue(Value &value, const QStr
             else {
                 /// Assumption: in fields like Url or LocalFile, file names are separated by ;
                 static const QRegularExpression semicolonSpace = QRegularExpression(QStringLiteral("[;]\\s*"));
+#if QT_VERSION >= 0x050e00
+                const QStringList fileList = rawText.split(semicolonSpace, Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
                 const QStringList fileList = rawText.split(semicolonSpace, QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
                 for (const QString &filename : fileList) {
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
                 }
@@ -917,7 +1001,11 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
             /// split text along a pattern like spaces-splitchar-spaces
             /// extract keywords
             static const QRegularExpression unneccessarySpacing(QStringLiteral("[ \n\r\t]+"));
+#if QT_VERSION >= 0x050e00
+            const QStringList keywords = text.split(it.value(), Qt::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QStringLiteral(" "));
+#else // QT_VERSION < 0x050e00
             const QStringList keywords = text.split(it.value(), QString::SkipEmptyParts).replaceInStrings(unneccessarySpacing, QStringLiteral(" "));
+#endif // QT_VERSION >= 0x050e00
             /// build QList of Keyword objects from keywords
             for (const QString &keyword : keywords) {
                 result.append(QSharedPointer<Keyword>(new Keyword(keyword)));
@@ -972,7 +1060,11 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     /// Split input string into tokens which are either name components (first or last name)
     /// or full names (composed of first and last name), depending on the input string's structure
     static const QRegularExpression split(QStringLiteral("\\s*([,]+|[,]*\\b[au]nd\\b|[;]|&|\\n|\\s{4,})\\s*"));
+#if QT_VERSION >= 0x050e00
+    const QStringList authorTokenList = internalText.split(split, Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
     const QStringList authorTokenList = internalText.split(split, QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
 
     bool containsSpace = true;
     for (QStringList::ConstIterator it = authorTokenList.constBegin(); containsSpace && it != authorTokenList.constEnd(); ++it)

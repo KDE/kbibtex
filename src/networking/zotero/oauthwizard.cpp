@@ -29,6 +29,9 @@
 #include <QUrlQuery>
 #include <QRegularExpression>
 #include <QtNetworkAuth>
+#if QT_VERSION >= 0x050a00
+#include <QRandomGenerator>
+#endif // QT_VERSION
 
 #include <kio_version.h>
 #include <KLocalizedString>
@@ -41,6 +44,12 @@
 
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
+
+#if QT_VERSION >= 0x050a00
+#define randomGeneratorGlobalBounded(min,max)  QRandomGenerator::global()->bounded((min),(max))
+#else // QT_VERSION
+#define randomGeneratorGlobalBounded(min,max)  ((min)+(qrand()%((max)-(min)+1)))
+#endif // QT_VERSION
 
 using namespace Zotero;
 
@@ -74,7 +83,7 @@ public:
         /// If the correct URL with an authorization token is requested from this
         /// local webserver, the credentials will be stored and this wizard dialog
         /// be closed.
-        const quint16 port = static_cast<quint16>(qrand() % 50000) + 15000;
+        const quint16 port = static_cast<quint16>(randomGeneratorGlobalBounded(15000, 65000));
         QOAuthHttpServerReplyHandler *replyHandler = new QOAuthHttpServerReplyHandler(port, parent);
         replyHandler->setCallbackPath("kbibtex-zotero-oauth");
         replyHandler->setCallbackText(i18n("<html><head><title>KBibTeX authorized to use Zotero</title></head><body><p>KBibTeX got successfully authorized to read your Zotero database.</p></body></html>"));

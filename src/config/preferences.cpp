@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -242,11 +242,19 @@ public:
     {
         const QString rawEntry = configGroup.readEntry(key, QString());
         if (rawEntry.isEmpty()) return Preferences::defaultColorCodes;
+#if QT_VERSION >= 0x050e00
+        const QStringList pairs = rawEntry.split(QStringLiteral("\0\0"), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
         const QStringList pairs = rawEntry.split(QStringLiteral("\0\0"), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
         if (pairs.isEmpty()) return Preferences::defaultColorCodes;
         QVector<QPair<QColor, QString>> result;
         for (const QString &pair : pairs) {
+#if QT_VERSION >= 0x050e00
+            const QStringList colorLabelPair = pair.split(QStringLiteral("\0"), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
             const QStringList colorLabelPair = pair.split(QStringLiteral("\0"), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
             if (colorLabelPair.length() != 2) return Preferences::defaultColorCodes;
             result.append(qMakePair(QColor(colorLabelPair[0]), colorLabelPair[1]));
         }

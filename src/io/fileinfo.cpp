@@ -130,7 +130,11 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
             internalText = internalText.left(pos) + internalText.mid(pos + doiMatch.length());
     }
 
+#if QT_VERSION >= 0x050e00
+    const QStringList fileList = internalText.split(KBibTeX::fileListSeparatorRegExp, Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
     const QStringList fileList = internalText.split(KBibTeX::fileListSeparatorRegExp, QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
     for (const QString &text : fileList) {
         internalText = text;
 

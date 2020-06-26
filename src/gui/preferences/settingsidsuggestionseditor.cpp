@@ -773,7 +773,11 @@ public:
         while (!widgetList.isEmpty())
             delete widgetList.takeFirst();
 
+#if QT_VERSION >= 0x050e00
+        const QStringList tokenList = formatString.split(QStringLiteral("|"), Qt::SkipEmptyParts);
+#else // QT_VERSION < 0x050e00
         const QStringList tokenList = formatString.split(QStringLiteral("|"), QString::SkipEmptyParts);
+#endif // QT_VERSION >= 0x050e00
         for (const QString &token : tokenList) {
             TokenWidget *tokenWidget = nullptr;
 

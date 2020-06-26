@@ -20,9 +20,10 @@
 #include <onlinesearch/OnlineSearchAbstract>
 #include <AssociatedFiles>
 
-Q_DECLARE_METATYPE(AssociatedFiles::PathType)
+typedef QMultiMap<QString, QString> FormData;
 
-typedef QMap<QString, QString> FormData;
+Q_DECLARE_METATYPE(AssociatedFiles::PathType)
+Q_DECLARE_METATYPE(FormData)
 
 class OnlineSearchDummy : public OnlineSearchAbstract
 {
@@ -34,7 +35,7 @@ public:
     QString label() const override;
     QUrl homepage() const override;
 
-    QMap<QString, QString> formParameters_public(const QString &htmlText, int startPos);
+    QMultiMap<QString, QString> formParameters_public(const QString &htmlText, int startPos);
     void sanitizeEntry_public(QSharedPointer<Entry> entry);
 
 protected:
@@ -84,7 +85,7 @@ QString OnlineSearchDummy::favIconUrl() const
     return QStringLiteral("https://www.kde.org/favicon.ico");
 }
 
-QMap<QString, QString> OnlineSearchDummy::formParameters_public(const QString &htmlText, int startPos)
+QMultiMap<QString, QString> OnlineSearchDummy::formParameters_public(const QString &htmlText, int startPos)
 {
     return formParameters(htmlText, startPos);
 }
@@ -100,17 +101,17 @@ void KBibTeXNetworkingTest::onlineSearchAbstractFormParameters_data()
     QTest::addColumn<int>("startPos");
     QTest::addColumn<FormData>("expectedResult");
 
-    QTest::newRow("Empty Form (1)") << QString() << 0 << QMap<QString, QString>();
-    QTest::newRow("Empty Form (2)") << QStringLiteral("<form></form>") << 0 << QMap<QString, QString>();
-    QTest::newRow("Form with text") << QStringLiteral("<form><input type=\"text\" name=\"abc\" value=\"ABC\" /></form>") << 0 << QMap<QString, QString> {{QStringLiteral("abc"), QStringLiteral("ABC")}};
-    QTest::newRow("Form with text but without quotation marks") << QStringLiteral("<form><input type=text name=abc value=ABC /></form>") << 0 << QMap<QString, QString> {{QStringLiteral("abc"), QStringLiteral("ABC")}};
-    QTest::newRow("Form with text and single quotation marks") << QStringLiteral("<form><input type='text' name='abc' value='ABC' /></form>") << 0 << QMap<QString, QString> {{QStringLiteral("abc"), QStringLiteral("ABC")}};
-    QTest::newRow("Form with radio button (none selected)") << QStringLiteral("<form><input type=\"radio\" name=\"direction\" value=\"right\" /><input type=\"radio\" name=\"direction\" value=\"left\"/></form>") << 0 << QMap<QString, QString>();
-    QTest::newRow("Form with radio button (old-style)") << QStringLiteral("<form><input type=\"radio\" name=\"direction\" value=\"right\" /><input type=\"radio\" name=\"direction\" value=\"left\" checked/></form>") << 0 << QMap<QString, QString> {{QStringLiteral("direction"), QStringLiteral("left")}};
-    QTest::newRow("Form with radio button (modern)") << QStringLiteral("<form><input type=\"radio\" name=\"direction\" value=\"right\" checked=\"checked\"/><input type=\"radio\" name=\"direction\" value=\"left\"/></form>") << 0 << QMap<QString, QString> {{QStringLiteral("direction"), QStringLiteral("right")}};
-    QTest::newRow("Form with select/option (none selected)") << QStringLiteral("<form><select name=\"direction\"><option value=\"left\">Left</option><option value=\"right\">Right</option></select></form>") << 0 << QMap<QString, QString>();
-    QTest::newRow("Form with select/option (old-style)") << QStringLiteral("<form><select name=\"direction\"><option value=\"left\" selected >Left</option><option value=\"right\">Right</option></select></form>") << 0 << QMap<QString, QString> {{QStringLiteral("direction"), QStringLiteral("left")}};
-    QTest::newRow("Form with select/option (modern)") << QStringLiteral("<form><select name=\"direction\"><option value=\"left\" >Left</option><option selected=\"selected\" value=\"right\">Right</option></select></form>") << 0 << QMap<QString, QString> {{QStringLiteral("direction"), QStringLiteral("right")}};
+    QTest::newRow("Empty Form (1)") << QString() << 0 << FormData();
+    QTest::newRow("Empty Form (2)") << QStringLiteral("<form></form>") << 0 << FormData();
+    QTest::newRow("Form with text") << QStringLiteral("<form><input type=\"text\" name=\"abc\" value=\"ABC\" /></form>") << 0 << FormData {{QStringLiteral("abc"), QStringLiteral("ABC")}};
+    QTest::newRow("Form with text but without quotation marks") << QStringLiteral("<form><input type=text name=abc value=ABC /></form>") << 0 << FormData {{QStringLiteral("abc"), QStringLiteral("ABC")}};
+    QTest::newRow("Form with text and single quotation marks") << QStringLiteral("<form><input type='text' name='abc' value='ABC' /></form>") << 0 << FormData {{QStringLiteral("abc"), QStringLiteral("ABC")}};
+    QTest::newRow("Form with radio button (none selected)") << QStringLiteral("<form><input type=\"radio\" name=\"direction\" value=\"right\" /><input type=\"radio\" name=\"direction\" value=\"left\"/></form>") << 0 << FormData();
+    QTest::newRow("Form with radio button (old-style)") << QStringLiteral("<form><input type=\"radio\" name=\"direction\" value=\"right\" /><input type=\"radio\" name=\"direction\" value=\"left\" checked/></form>") << 0 << FormData {{QStringLiteral("direction"), QStringLiteral("left")}};
+    QTest::newRow("Form with radio button (modern)") << QStringLiteral("<form><input type=\"radio\" name=\"direction\" value=\"right\" checked=\"checked\"/><input type=\"radio\" name=\"direction\" value=\"left\"/></form>") << 0 << FormData {{QStringLiteral("direction"), QStringLiteral("right")}};
+    QTest::newRow("Form with select/option (none selected)") << QStringLiteral("<form><select name=\"direction\"><option value=\"left\">Left</option><option value=\"right\">Right</option></select></form>") << 0 << FormData();
+    QTest::newRow("Form with select/option (old-style)") << QStringLiteral("<form><select name=\"direction\"><option value=\"left\" selected >Left</option><option value=\"right\">Right</option></select></form>") << 0 << FormData {{QStringLiteral("direction"), QStringLiteral("left")}};
+    QTest::newRow("Form with select/option (modern)") << QStringLiteral("<form><select name=\"direction\"><option value=\"left\" >Left</option><option selected=\"selected\" value=\"right\">Right</option></select></form>") << 0 << FormData {{QStringLiteral("direction"), QStringLiteral("right")}};
 }
 
 void KBibTeXNetworkingTest::onlineSearchAbstractFormParameters()
