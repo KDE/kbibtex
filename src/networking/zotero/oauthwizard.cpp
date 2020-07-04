@@ -154,7 +154,7 @@ public:
             KRun::runUrl(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), p, KRun::RunFlags());
 #else // KIO_VERSION < 0x054700 // >= 5.71.0
             KIO::OpenUrlJob *job = new KIO::OpenUrlJob(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"));
-            job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, p));
+            job->setUiDelegate(new KIO::JobUiDelegate());
             job->start();
 #endif // KIO_VERSION < 0x054700
         });

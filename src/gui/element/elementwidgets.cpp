@@ -37,8 +37,14 @@
 #include <QRegularExpression>
 #include <QTimer>
 
+#include <kio_version.h>
 #include <KLocalizedString>
+#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#include <KIO/OpenUrlJob>
+#include <KIO/JobUiDelegate>
+#else // < 5.71.0
 #include <KRun>
+#endif // KIO_VERSION >= 0x054700
 #include <KTextEditor/Document>
 #include <KTextEditor/Editor>
 #include <KTextEditor/View>
@@ -923,7 +929,13 @@ void OtherFieldsWidget::actionOpen()
         QMimeType mimeType = FileInfo::mimeTypeForUrl(currentUrl);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x054700 // < 5.71.0
         KRun::runUrl(currentUrl, mimeTypeName, this, KRun::RunFlags());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+        KIO::OpenUrlJob *job = new KIO::OpenUrlJob(currentUrl, mimeTypeName);
+        job->setUiDelegate(new KIO::JobUiDelegate());
+        job->start();
+#endif // KIO_VERSION < 0x054700
     }
 }
 

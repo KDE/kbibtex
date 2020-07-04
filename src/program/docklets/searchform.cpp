@@ -36,14 +36,19 @@
 #include <QIcon>
 #include <QPushButton>
 
+#include <kio_version.h>
 #include <KLocalizedString>
+#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#include <KIO/OpenUrlJob>
+#include <KIO/JobUiDelegate>
+#else // < 5.71.0
 #include <KRun>
+#endif // KIO_VERSION >= 0x054700
 #include <KMessageBox>
 #include <KParts/Part>
 #include <KParts/ReadOnlyPart>
 #include <KConfigGroup>
 #include <KSharedConfig>
-#include <kio_version.h>
 
 #include <Element>
 #include <File>
@@ -353,7 +358,13 @@ public:
             QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x054700 // < 5.71.0
             KRun::runUrl(url, mimeTypeName, p, KRun::RunFlags());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+            KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
+            job->setUiDelegate(new KIO::JobUiDelegate());
+            job->start();
+#endif // KIO_VERSION < 0x054700
         }
     }
 

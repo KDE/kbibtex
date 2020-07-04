@@ -37,14 +37,19 @@
 #include <QFontDatabase>
 #include <QComboBox>
 
+#include <kio_version.h>
 #include <KLocalizedString>
+#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#include <KIO/OpenUrlJob>
+#include <KIO/JobUiDelegate>
+#else // < 5.71.0
 #include <KRun>
+#endif // KIO_VERSION >= 0x054700
 #include <KIO/CopyJob>
 #include <KJobWidgets>
 #include <KSharedConfig>
 #include <KConfigGroup>
 #include <KTextEdit>
-#include <kio_version.h>
 
 #include <Element>
 #include <Entry>
@@ -381,7 +386,13 @@ void ReferencePreview::openAsHTML()
 
     /// Ask KDE subsystem to open url in viewer matching mime type
     QUrl url(file.fileName());
+#if KIO_VERSION < 0x054700 // < 5.71.0
     KRun::runUrl(url, QStringLiteral("text/html"), this, KRun::RunFlags());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+    KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, QStringLiteral("text/html"));
+    job->setUiDelegate(new KIO::JobUiDelegate());
+    job->start();
+#endif // KIO_VERSION < 0x054700
 }
 
 void ReferencePreview::saveAsHTML()
