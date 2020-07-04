@@ -43,9 +43,15 @@
 #endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
 
+#include <kio_version.h>
 #include <KLocalizedString>
 #include <KJobWidgets>
+#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#include <KIO/OpenUrlJob>
+#include <KIO/JobUiDelegate>
+#else // < 5.71.0
 #include <KRun>
+#endif // KIO_VERSION >= 0x054700
 #include <KMimeTypeTrader>
 #include <KService>
 #include <KParts/Part>
@@ -57,7 +63,6 @@
 #include <KActionCollection>
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <kio_version.h>
 
 #include <KBibTeX>
 #include <Element>
@@ -544,7 +549,13 @@ public:
         QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x054700 // < 5.71.0
         KRun::runUrl(url, mimeTypeName, p, KRun::RunFlags());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+        KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
+        job->setUiDelegate(new KIO::JobUiDelegate());
+        job->start();
+#endif // KIO_VERSION < 0x054700
     }
 
     UrlInfo urlMetaInfo(const QUrl &url) {
@@ -685,7 +696,13 @@ void DocumentPreview::linkActivated(const QString &link)
             QMimeType mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x054700 // < 5.71.0
             KRun::runUrl(urlToOpen, mimeTypeName, this, KRun::RunFlags());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+            KIO::OpenUrlJob *job = new KIO::OpenUrlJob(urlToOpen, mimeTypeName);
+            job->setUiDelegate(new KIO::JobUiDelegate());
+            job->start();
+#endif // KIO_VERSION < 0x054700
         }
     }
 }

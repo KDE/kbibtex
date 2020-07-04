@@ -37,14 +37,16 @@
 #include <QMimeType>
 #include <QTemporaryFile>
 
+#include <kio_version.h>
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KSqueezedTextLabel>
-#include <kio_version.h>
 #if KIO_VERSION >= 0x054700 // >= 5.71.0
 #include <KIO/OpenUrlJob>
-#endif // KIO_VERSION >= 0x054700
+#include <KIO/JobUiDelegate>
+#else // < 5.71.0
 #include <KRun>
+#endif // KIO_VERSION >= 0x054700
 
 #include <Preferences>
 #include <FileInfo>
@@ -241,13 +243,26 @@ void PDFItemDelegate::slotViewPDF()
             QMimeType mimeType = FileInfo::mimeTypeForUrl(tempUrl);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x054700 // < 5.71.0
             KRun::runUrl(tempUrl, mimeTypeName, itemView(), KRun::RunFlags(), url.toDisplayString());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+            KIO::OpenUrlJob *job = new KIO::OpenUrlJob(tempUrl, mimeTypeName);
+            job->setUiDelegate(new KIO::JobUiDelegate());
+            job->setSuggestedFileName(url.toDisplayString());
+            job->start();
+#endif // KIO_VERSION < 0x054700
         } else if (url.isValid()) {
             /// Guess mime type for url to open
             QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x054700 // < 5.71.0
             KRun::runUrl(url, mimeTypeName, itemView(), KRun::RunFlags());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+            KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
+            job->setUiDelegate(new KIO::JobUiDelegate());
+            job->start();
+#endif // KIO_VERSION < 0x054700
         }
     }
 }

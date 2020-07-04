@@ -36,6 +36,7 @@
 #include <QTimer>
 #include <QStandardPaths>
 
+#include <kio_version.h>
 #include <KMessageBox> // FIXME deprecated
 #include <KLocalizedString>
 #include <KActionCollection>
@@ -43,13 +44,17 @@
 #include <KActionMenu>
 #include <KSelectAction>
 #include <KToggleAction>
+#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#include <KIO/OpenUrlJob>
+#include <KIO/JobUiDelegate>
+#else // < 5.71.0
 #include <KRun>
+#endif // KIO_VERSION >= 0x054700
 #include <KPluginFactory>
 #include <KIO/StatJob>
 #include <KIO/CopyJob>
 #include <KIO/Job>
 #include <KJobWidgets>
-#include <kio_version.h>
 
 #include <Preferences>
 #include <File>
@@ -740,7 +745,13 @@ public:
         const QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x054700 // < 5.71.0
         KRun::runUrl(url, mimeTypeName, p->widget(), KRun::RunFlags());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+        KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
+        job->setUiDelegate(new KIO::JobUiDelegate());
+        job->start();
+#endif // KIO_VERSION < 0x054700
     }
 
 };
@@ -896,7 +907,13 @@ void KBibTeXPart::elementViewDocument()
         QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
+#if KIO_VERSION < 0x054700 // < 5.71.0
         KRun::runUrl(url, mimeTypeName, widget(), KRun::RunFlags());
+#else // KIO_VERSION < 0x054700 // >= 5.71.0
+        KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
+        job->setUiDelegate(new KIO::JobUiDelegate());
+        job->start();
+#endif // KIO_VERSION < 0x054700
     }
 }
 
