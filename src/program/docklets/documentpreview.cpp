@@ -73,8 +73,8 @@
 #include <FileInfo>
 #include "logging_program.h"
 
-ImageLabel::ImageLabel(const QString &text, QWidget *parent, Qt::WindowFlags f)
-        : QLabel(text, parent, f)
+ImageLabel::ImageLabel(const QString &text, QWidget *parent)
+        : QLabel(text, parent)
 {
     /// nothing
 }

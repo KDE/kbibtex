@@ -43,7 +43,7 @@ public:
     static QString editSuggestion(const Entry *previewEntry, const QString &suggestion, QWidget *parent);
 
 protected:
-    explicit IdSuggestionsEditDialog(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
+    explicit IdSuggestionsEditDialog(QWidget *parent = nullptr);
 };
 
 /**
@@ -54,7 +54,7 @@ class IdSuggestionsEditWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent = nullptr, Qt::WindowFlags f = 0);
+    explicit IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent = nullptr);
     ~IdSuggestionsEditWidget() override;
 
     void setFormatString(const QString &formatString);

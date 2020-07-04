@@ -901,8 +901,8 @@ public:
 };
 
 
-IdSuggestionsEditWidget::IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent, Qt::WindowFlags f)
-        : QWidget(parent, f), d(new IdSuggestionsEditWidgetPrivate(previewEntry, this))
+IdSuggestionsEditWidget::IdSuggestionsEditWidget(const Entry *previewEntry, QWidget *parent)
+        : QWidget(parent), d(new IdSuggestionsEditWidgetPrivate(previewEntry, this))
 {
     /// nothing
 }
@@ -929,8 +929,8 @@ void IdSuggestionsEditWidget::updatePreview()
     d->labelPreview->setToolTip(i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", IdSuggestions::formatStrToHuman(formatString).join(QStringLiteral("</li><li>")), IdSuggestions::formatId(*d->previewEntry, formatString)));
 }
 
-IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent, Qt::WindowFlags flags)
-        : QDialog(parent, flags)
+IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent)
+        : QDialog(parent)
 {
     setWindowTitle(i18n("Edit Id Suggestion"));
 }

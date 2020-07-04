@@ -34,7 +34,7 @@ class KBIBTEXGUI_EXPORT KBibTeXPreferencesDialog : public KPageDialog
     Q_OBJECT
 
 public:
-    explicit KBibTeXPreferencesDialog(QWidget *parent, Qt::WindowFlags flags = 0);
+    explicit KBibTeXPreferencesDialog(QWidget *parent);
     ~KBibTeXPreferencesDialog() override;
 
 protected:
