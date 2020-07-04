@@ -161,8 +161,8 @@ public:
     }
 };
 
-KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent, Qt::WindowFlags flags)
-        : KPageDialog(parent, flags), d(new KBibTeXPreferencesDialogPrivate(this))
+KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent)
+        : KPageDialog(parent), d(new KBibTeXPreferencesDialogPrivate(this))
 {
     setFaceType(KPageDialog::Tree);
     setWindowTitle(i18n("Preferences"));

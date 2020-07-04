@@ -235,7 +235,7 @@ public:
 };
 
 KBibTeXMainWindow::KBibTeXMainWindow(QWidget *parent)
-        : KParts::MainWindow(parent, static_cast<Qt::WindowFlags>(KDE_DEFAULT_WINDOWFLAGS)), d(new KBibTeXMainWindowPrivate(this))
+        : KParts::MainWindow(parent), d(new KBibTeXMainWindowPrivate(this))
 {
     setObjectName(QStringLiteral("KBibTeXShell"));
 

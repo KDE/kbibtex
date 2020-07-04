@@ -40,7 +40,7 @@ class ImageLabel : public QLabel
     Q_OBJECT
 
 public:
-    explicit ImageLabel(const QString &text, QWidget *parent = nullptr, Qt::WindowFlags f = 0);
+    explicit ImageLabel(const QString &text, QWidget *parent = nullptr);
     void setPixmap(const QPixmap &pixmap);
 
 protected:

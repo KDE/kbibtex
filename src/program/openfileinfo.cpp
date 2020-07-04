@@ -59,7 +59,7 @@ public:
     QUrl url;
 
     OpenFileInfoPrivate(OpenFileInfoManager *openFileInfoManager, const QUrl &url, const QString &mimeType, OpenFileInfo *p)
-        :  m_counter(-1), p(p), part(nullptr), internalServicePtr(KService::Ptr()), internalWidgetParent(nullptr), flags(nullptr) {
+        :  m_counter(-1), p(p), part(nullptr), internalServicePtr(KService::Ptr()), internalWidgetParent(nullptr) {
         this->openFileInfoManager = openFileInfoManager;
         this->url = url;
         if (this->url.isValid() && this->url.scheme().isEmpty())

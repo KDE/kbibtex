@@ -145,7 +145,7 @@ public:
     bool queryCloseAll();
 
     void setCurrentFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
-    OpenFileInfoList filteredItems(OpenFileInfo::StatusFlag required, OpenFileInfo::StatusFlags forbidden = nullptr);
+    OpenFileInfoList filteredItems(OpenFileInfo::StatusFlag required, OpenFileInfo::StatusFlags forbidden = OpenFileInfo::StatusFlags());
 
     friend class OpenFileInfo;
 
