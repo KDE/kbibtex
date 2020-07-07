@@ -10,7 +10,7 @@
 
 <xsl:output method="text" standalone="yes" omit-xml-declaration="yes" encoding="UTF-8" media-type="text/plain" />
 
-<xsl:template match="/entry">
+<xsl:template match="entry">
 <xsl:text>{{cite </xsl:text>
 
 <xsl:choose>
@@ -191,7 +191,7 @@
 </xsl:template>
 
 <xsl:template match="bibliography">
-<xsl:text>a</xsl:text><xsl:apply-templates select="entry" />
+<xsl:apply-templates />
 </xsl:template>
 
 
