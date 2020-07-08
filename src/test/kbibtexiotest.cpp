@@ -65,10 +65,11 @@ private slots:
     QVector<QPair<const char *, File *> > fileImporterExporterTestCases();
     void fileExporterXMLsave_data();
     void fileExporterXMLsave();
-    void fileExporterXSLTstandardSaveFile_data();
-    void fileExporterXSLTstandardSaveFile();
-    void fileExporterXSLTstandardSaveElement_data();
-    void fileExporterXSLTstandardSaveElement();
+    QHash<QString, QHash<const char *, QSet<QString>>> fileExporterXSLTtestCases();
+    void fileExporterXSLTsaveFile_data();
+    void fileExporterXSLTsaveFile();
+    void fileExporterXSLTsaveElement_data();
+    void fileExporterXSLTsaveElement();
     void fileExporterRISsave_data();
     void fileExporterRISsave();
     void fileExporterBibTeXsave_data();
@@ -361,30 +362,63 @@ void KBibTeXIOTest::fileExporterXMLsave()
     QCOMPARE(generatedData, xmlData);
 }
 
-void KBibTeXIOTest::fileExporterXSLTstandardSaveFile_data()
+QHash<QString, QHash<const char *, QSet<QString>>> KBibTeXIOTest::fileExporterXSLTtestCases()
 {
-    QTest::addColumn<File *>("bibTeXfile");
-    QTest::addColumn<QSet<QString>>("expectedFragments");
-
-    static const QHash<const char *, QSet<QString>> keyToXsltData {
-        {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body/>")}},
-        {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral(">1851<"), QStringLiteral(">Call me Ishmael<"), QStringLiteral("</b>"), QStringLiteral("</body>")}}
+    static const QHash<QString, QHash<const char *, QSet<QString>>> xsltTokeyToXsltData {
+        {
+            QStringLiteral("kbibtex/standard.xsl"),
+            {
+                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body/>")}},
+                {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral(">1851<"), QStringLiteral(">Call me Ishmael<"), QStringLiteral("</b>"), QStringLiteral("</body>")}}
+            }
+        },
+        {
+            QStringLiteral("kbibtex/fancy.xsl"),
+            {
+                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body style=\"margin:0px; padding: 0px;\"/>")}},
+                {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral(" style=\"text-decoration: "), QStringLiteral("<span style=\""), QStringLiteral("ref=\"kbibtex:filter:year=1851\">1851</a>"), QStringLiteral("ef=\"kbibtex:filter:title=Call me Ishmael\">Call me Ishmael<"), QStringLiteral("ef=\"kbibtex:filter:author=Melville\">Melville, H.</a>")}}
+            }
+        },
+        {
+            QStringLiteral("kbibtex/wikipedia-cite.xsl"),
+            {
+                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("|")}},
+                {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("{cite journal|"), QStringLiteral("|title=Call me Ishmael|"), QStringLiteral("|last1=Melville"), QStringLiteral("|first2=Moby"), QStringLiteral("|year=1851|")}}
+            }
+        }
     };
-    static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
-
-    for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
-        if (keyToXsltData.contains(it->first))
-            QTest::newRow(it->first) << it->second << keyToXsltData.value(it->first);
+    return xsltTokeyToXsltData;
 }
 
-void KBibTeXIOTest::fileExporterXSLTstandardSaveFile()
+void KBibTeXIOTest::fileExporterXSLTsaveFile_data()
+{
+    QTest::addColumn<File *>("bibTeXfile");
+    QTest::addColumn<QString>("xslTranslationFile");
+    QTest::addColumn<QSet<QString>>("expectedFragments");
+
+    static const auto &xsltToKeyToXsltData = fileExporterXSLTtestCases();
+    static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
+
+    for (const QString &xslTranslationFile : xsltToKeyToXsltData.keys()) {
+        const QHash<const char *, QSet<QString>> &keyToXsltData = xsltToKeyToXsltData.value(xslTranslationFile);
+        for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
+            if (keyToXsltData.contains(it->first)) {
+                const QString label = QString(QStringLiteral("'%1' with XSLT '%2'")).arg(QString::fromLatin1(it->first)).arg(xslTranslationFile);
+                QTest::newRow(label.toUtf8().constData()) << it->second << xslTranslationFile << keyToXsltData.value(it->first);
+            }
+    }
+}
+
+void KBibTeXIOTest::fileExporterXSLTsaveFile()
 {
     QFETCH(File *, bibTeXfile);
+    QFETCH(QString, xslTranslationFile);
     QFETCH(QSet<QString>, expectedFragments);
 
-    FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/standard.xsl")), this);
+    FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xslTranslationFile), this);
     QStringList errorLog;
-    const QString generatedData = fileExporterXSLT.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
+    static const QRegularExpression removeSpaceBeforeTagRegExp(QStringLiteral("\\s+(<[/a-z])"));
+    const QString generatedData = fileExporterXSLT.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|')).replace(removeSpaceBeforeTagRegExp, QStringLiteral("\\1")).replace(QStringLiteral("|||"), QStringLiteral("|")).replace(QStringLiteral("||"), QStringLiteral("|"));
     for (const QString &logLine : const_cast<const QStringList &>(errorLog))
         qCDebug(LOG_KBIBTEX_TEST) << logLine;
 
@@ -392,29 +426,35 @@ void KBibTeXIOTest::fileExporterXSLTstandardSaveFile()
         QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data")).arg(fragment).toLatin1().constData());
 }
 
-void KBibTeXIOTest::fileExporterXSLTstandardSaveElement_data()
+void KBibTeXIOTest::fileExporterXSLTsaveElement_data()
 {
     QTest::addColumn<QSharedPointer<Element>>("element");
+    QTest::addColumn<QString>("xslTranslationFile");
     QTest::addColumn<QSet<QString>>("expectedFragments");
 
-    static const QHash<const char *, QSet<QString>> keyToXsltData {
-        {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral(">1851<"), QStringLiteral(">Call me Ishmael<"), QStringLiteral("</b>"), QStringLiteral("</body>")}}
-    };
+    static const auto &xsltToKeyToXsltData = fileExporterXSLTtestCases();
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
-    for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
-        if (!it->second->isEmpty() && keyToXsltData.contains(it->first))
-            QTest::newRow(it->first) << it->second->first() << keyToXsltData.value(it->first);
+    for (const QString &xslTranslationFile : xsltToKeyToXsltData.keys()) {
+        const QHash<const char *, QSet<QString>> &keyToXsltData = xsltToKeyToXsltData.value(xslTranslationFile);
+        for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
+            if (!it->second->isEmpty() && keyToXsltData.contains(it->first)) {
+                const QString label = QString(QStringLiteral("'%1' with XSLT '%2'")).arg(QString::fromLatin1(it->first)).arg(xslTranslationFile);
+                QTest::newRow(label.toUtf8().constData()) << it->second->first() << xslTranslationFile << keyToXsltData.value(it->first);
+            }
+    }
 }
 
-void KBibTeXIOTest::fileExporterXSLTstandardSaveElement()
+void KBibTeXIOTest::fileExporterXSLTsaveElement()
 {
     QFETCH(QSharedPointer<Element>, element);
+    QFETCH(QString, xslTranslationFile);
     QFETCH(QSet<QString>, expectedFragments);
 
-    FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kbibtex/standard.xsl")), this);
+    FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xslTranslationFile), this);
     QStringList errorLog;
-    const QString generatedData = fileExporterXSLT.toString(element, nullptr, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
+    static const QRegularExpression removeSpaceBeforeTagRegExp(QStringLiteral("\\s+(<[/a-z])"));
+    const QString generatedData = fileExporterXSLT.toString(element, nullptr, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|')).replace(removeSpaceBeforeTagRegExp, QStringLiteral("\\1")).replace(QStringLiteral("|||"), QStringLiteral("|")).replace(QStringLiteral("||"), QStringLiteral("|"));
     for (const QString &logLine : const_cast<const QStringList &>(errorLog))
         qCDebug(LOG_KBIBTEX_TEST) << logLine;
 
