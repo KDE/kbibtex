@@ -68,11 +68,11 @@ public:
     static QString translateTitleToken(const Entry &entry, const struct IdSuggestionTokenInfo &tti, bool removeSmallWords) {
         QString result;
         bool first = true;
-        static const QRegularExpression sequenceOfSpaces(QStringLiteral("\\s+"));
+        static const QRegularExpression wordSeparator(QStringLiteral("\\W+"), QRegularExpression::UseUnicodePropertiesOption);
 #if QT_VERSION >= 0x050e00
-        const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, Qt::SkipEmptyParts);
+        const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(wordSeparator, Qt::SkipEmptyParts);
 #else // QT_VERSION < 0x050e00
-        const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(sequenceOfSpaces, QString::SkipEmptyParts);
+        const QStringList titleWords = PlainTextValue::text(entry.value(Entry::ftTitle)).split(wordSeparator, QString::SkipEmptyParts);
 #endif // QT_VERSION >= 0x050e00
         int index = 0;
         for (QStringList::ConstIterator it = titleWords.begin(); it != titleWords.end(); ++it) {
@@ -169,13 +169,13 @@ public:
     }
 
     static QString translateJournalToken(const Entry &entry, const struct IdSuggestionTokenInfo &jti, bool removeSmallWords) {
-        static const QRegularExpression sequenceOfSpaces(QStringLiteral("\\s+"));
+        static const QRegularExpression wordSeparator(QStringLiteral("\\W+"), QRegularExpression::UseUnicodePropertiesOption);
         QString journalName = PlainTextValue::text(entry.value(Entry::ftJournal));
         journalName = JournalAbbreviations::instance().toShortName(journalName);
 #if QT_VERSION >= 0x050e00
-        const QStringList journalWords = journalName.split(sequenceOfSpaces, Qt::SkipEmptyParts);
+        const QStringList journalWords = journalName.split(wordSeparator, Qt::SkipEmptyParts);
 #else // QT_VERSION < 0x050e00
-        const QStringList journalWords = journalName.split(sequenceOfSpaces, QString::SkipEmptyParts);
+        const QStringList journalWords = journalName.split(wordSeparator, QString::SkipEmptyParts);
 #endif // QT_VERSION >= 0x050e00
         bool first = true;
         int index = 0;
