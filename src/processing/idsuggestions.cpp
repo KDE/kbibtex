@@ -311,11 +311,13 @@ public:
 
 /// List of small words taken from OCLC:
 /// https://www.oclc.org/developer/develop/web-services/worldcat-search-api/bibliographic-resource.en.html
+const QStringList IdSuggestions::IdSuggestionsPrivate::smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you|und|and|ein|eine|einer|eines").split(QStringLiteral("|"),
 #if QT_VERSION >= 0x050e00
-const QStringList IdSuggestions::IdSuggestionsPrivate::smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QStringLiteral("|"), Qt::SkipEmptyParts);
+  Qt::SkipEmptyParts
 #else // QT_VERSION < 0x050e00
-const QStringList IdSuggestions::IdSuggestionsPrivate::smallWords = i18nc("Small words that can be removed from titles when generating id suggestions; separated by pipe symbol", "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|wird|with|you").split(QStringLiteral("|"), QString::SkipEmptyParts);
+  QString::SkipEmptyParts
 #endif // QT_VERSION >= 0x050e00
+);
 
 QString IdSuggestions::formatId(const Entry &entry, const QString &formatStr)
 {
