@@ -47,7 +47,7 @@ Page {
                 }
 
                 Image {
-                    source: "qrc:/icons/128/harbour-bibsearch.png"
+                    source: "qrc:/icons/172/harbour-bibsearch.png"
                     anchors {
                         horizontalCenter: parent.horizontalCenter
                     }
