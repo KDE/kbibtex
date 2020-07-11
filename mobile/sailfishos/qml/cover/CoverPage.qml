@@ -21,20 +21,22 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 CoverBackground {
+    id: cover
+
     Column {
-        id: cover
         anchors.centerIn: parent
 
         Image {
             id: logo
             source: 'qrc:/icons/kbibtex.svg'
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
+            width: cover.width * 2 / 3
             height: sourceSize.height * width / sourceSize.width
         }
 
         Label {
             id: label
+            anchors.horizontalCenter: parent.horizontalCenter
             text: qsTr("BibSearch")
         }
     }
