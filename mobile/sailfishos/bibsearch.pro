@@ -24,7 +24,7 @@ SOURCES += src/main.cpp src/searchenginelist.cpp \
     ../../src/io/encoderlatex.cpp \
     ../../src/io/fileimporter.cpp \
     ../../src/io/fileimporterbibtex.cpp \
-    ../../src/io/textencoder.cpp ../../src/io/xsltransform.cpp \
+    ../../src/io/xsltransform.cpp \
     ../../src/config/preferences.cpp \
     ../../src/config/bibtexfields.cpp \
     ../../src/config/bibtexentries.cpp \
@@ -53,7 +53,7 @@ HEADERS += src/bibliographymodel.h src/searchenginelist.h \
     ../../src/io/encoderxml.h ../../src/io/encoder.h \
     ../../src/io/encoderlatex.h ../../src/io/fileimporter.h \
     ../../src/io/fileimporterbibtex.h \
-    ../../src/io/textencoder.h ../../src/io/xsltransform.h \
+    ../../src/io/xsltransform.h \
     ../../src/config/preferences.h \
     ../../src/config/bibtexfields.h ../../src/config/bibtexentries.h
 
@@ -81,12 +81,6 @@ TRANSLATIONS += \
     translations/$${TARGET}-en.ts
 CODECFORTR = UTF-8
 
-DISTFILES += \
-    qml/pages/BibliographyListView.qml \
-    qml/pages/EntryView.qml \
-    qml/pages/SearchForm.qml \
-    qml/pages/SettingsPage.qml \
-    qml/pages/AboutPage.qml
 
 xslt.files = ../../xslt/pam2bibtex.xsl ../../xslt/ieeexploreapiv1-to-bibtex.xsl \
     ../../xslt/arxiv2bibtex.xsl ../../xslt/pubmed2bibtex.xsl
