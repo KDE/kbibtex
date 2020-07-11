@@ -109,7 +109,7 @@ Page {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: qsTr("Git Repository")
                     onClicked: {
-                        Qt.openUrlExternally("https://cgit.kde.org/kbibtex.git")
+                        Qt.openUrlExternally("https://invent.kde.org/office/kbibtex")
                     }
                 }
 
