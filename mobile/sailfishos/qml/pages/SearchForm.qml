@@ -40,21 +40,16 @@ Page {
             width: parent.width
 
             PageHeader {
-                //% "Search Parameters"
-                title: qsTrId("searchparameters-title")
+                title: qsTr("Search Parameters")
             }
 
             ValueButton {
-                //% "Search Engines"
-                label: qsTrId("label-search-engines")
+                label: qsTr("Search Engines")
                 value: searchEngineList.searchEngineCount === 0
-                       //% "None selected"
-                       ? qsTrId("selected-count-none")
-                       //% "%1 selected"
-                       : qsTrId("selected-count-numarg").arg(searchEngineList.searchEngineCount)
+                       ? qsTr("None selected")
+                       : qsTr("%1 selected").arg(searchEngineList.searchEngineCount)
                 description: searchEngineList.searchEngineCount === 0
-                             //% "At least one search engine must be selected."
-                             ? qsTrId("label-selected-atleastone")
+                             ? qsTr("At least one search engine must be selected.")
                              : searchEngineList.humanReadableSearchEngines()
 
                 onClicked: {
@@ -64,8 +59,7 @@ Page {
 
             TextField {
                 id: inputFreeText
-                //% "Free Text"
-                label: qsTrId("label-free-text")
+                label: qsTr("Free Text")
                 placeholderText: label
                 width: parent.width
                 focus: true
@@ -78,8 +72,7 @@ Page {
 
             TextField {
                 id: inputTitle
-                //% "Title"
-                label: qsTrId("label-title")
+                label: qsTr("Title")
                 placeholderText: label
                 width: parent.width
                 enabled: searchEngineList.searchEngineCount > 0
@@ -91,8 +84,7 @@ Page {
 
             TextField {
                 id: inputAuthor
-                //% "Author"
-                label: qsTrId("label-author")
+                label: qsTr("Author")
                 placeholderText: label
                 width: parent.width
                 enabled: searchEngineList.searchEngineCount > 0
@@ -106,8 +98,7 @@ Page {
         PullDownMenu {
             MenuItem {
                 id: menuItemStartSearching
-                //% "Start Searching"
-                text: qsTrId("pulldownmenu-start-searching")
+                text: qsTr("Start Searching")
                 enabled: (inputFreeText.text.length > 0
                           || inputTitle.text.length > 0
                           || inputAuthor.text.length > 0)

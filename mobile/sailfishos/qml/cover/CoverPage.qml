@@ -35,8 +35,7 @@ CoverBackground {
 
         Label {
             id: label
-            //% "BibSearch"
-            text: qsTrId("bibsearch-application-title")
+            text: qsTr("BibSearch")
         }
     }
 

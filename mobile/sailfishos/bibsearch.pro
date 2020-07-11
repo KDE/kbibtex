@@ -57,7 +57,7 @@ HEADERS += src/bibliographymodel.h src/searchenginelist.h \
     ../../src/config/preferences.h \
     ../../src/config/bibtexfields.h ../../src/config/bibtexentries.h
 
-OTHER_FILES += qml/pages/SearchForm.qml qml/pages/EntryView.qml \
+DISTFILES += qml/pages/SearchForm.qml qml/pages/EntryView.qml \
     qml/pages/AboutPage.qml qml/pages/BibliographyListView.qml \
     qml/cover/CoverPage.qml qml/BibSearch.qml \
     qml/pages/AboutPage.qml qml/pages/SearchEngineListView.qml \
@@ -74,11 +74,12 @@ DEFINES += KBIBTEXGLOBAL_EXPORT= KBIBTEXCONFIG_EXPORT= KBIBTEXDATA_EXPORT= KBIBT
 
 INCLUDEPATH +=  ../../src/global $${OUT_PWD}/src/global ../../src/config $${OUT_PWD}/src/config ../../src/data $${OUT_PWD}/src/data ../../src/io $${OUT_PWD}/src/io ../../src/networking ../../src/networking/onlinesearch $${OUT_PWD}/src/networking
 
-CONFIG += sailfishapp_i18n sailfishapp_i18n_idbased
+# Do not forget to run  lupdate bibsearch.pro && lrelease bibsearch.pro  to update .qm files
 
 TRANSLATIONS += \
     translations/$${TARGET}-de.ts \
     translations/$${TARGET}-en.ts
+CODECFORTR = UTF-8
 
 DISTFILES += \
     qml/pages/BibliographyListView.qml \

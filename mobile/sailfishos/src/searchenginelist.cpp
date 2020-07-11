@@ -169,28 +169,22 @@ QString SearchEngineList::humanReadableSearchEngines() const {
     case 1: return enabledSearchEnginesLabels.first(); ///< just one search engine selected
     case 2:
         //: Two search engines selected
-        //% "%1 and %2"
-        return qtTrId("human-readable-two-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1));
+        return tr("%1 and %2").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1));
     case 3:
         //: Three search engines selected
-        //% "%1, %2, and %3"
-        return qtTrId("human-readable-three-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2));
+        return tr("%1, %2, and %3").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2));
     case 4:
         //: Four search engines selected
-        //% "%1, %2, %3, and %4"
-        return qtTrId("human-readable-four-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3));
+        return tr("%1, %2, %3, and %4").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3));
     case 5:
         //: Five search engines selected
-        //% "%1, %2, %3, %4, and %5"
-        return qtTrId("human-readable-five-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3),enabledSearchEnginesLabels.at(4));
+        return tr("%1, %2, %3, %4, and %5").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3),enabledSearchEnginesLabels.at(4));
     case 6:
         //: Six search engines selected
-        //% "%1, %2, %3, %4, %5, and %6"
-        return qtTrId("human-readable-six-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3),enabledSearchEnginesLabels.at(4),enabledSearchEnginesLabels.at(5));
+        return tr("%1, %2, %3, %4, %5, and %6").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3),enabledSearchEnginesLabels.at(4),enabledSearchEnginesLabels.at(5));
     case 7:
         //: Seven search engines selected
-        //% "%1, %2, %3, %4, %5, %6, and %7"
-        return qtTrId("human-readable-seven-search-engines").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3),enabledSearchEnginesLabels.at(4),enabledSearchEnginesLabels.at(5),enabledSearchEnginesLabels.at(6));
+        return tr("%1, %2, %3, %4, %5, %6, and %7").arg(enabledSearchEnginesLabels.at(0),enabledSearchEnginesLabels.at(1),enabledSearchEnginesLabels.at(2),enabledSearchEnginesLabels.at(3),enabledSearchEnginesLabels.at(4),enabledSearchEnginesLabels.at(5),enabledSearchEnginesLabels.at(6));
     default:
         return enabledSearchEnginesLabels.join(", ");
     }

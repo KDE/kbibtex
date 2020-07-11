@@ -2,7 +2,5 @@
     <qresource prefix="/">
         <file>icons/128/harbour-bibsearch.png</file>
         <file>icons/kbibtex.svg</file>
-        <file>translations/harbour-bibsearch-de.qm</file>
-        <file>translations/harbour-bibsearch-en.qm</file>
     </qresource>
 </RCC>
