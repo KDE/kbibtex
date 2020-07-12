@@ -52,6 +52,7 @@ public:
      * @param parent parent widget
      */
     explicit StarRating(int maxNumberOfStars, QWidget *parent = nullptr);
+    ~StarRating();
 
     /**
      * Get the current rating in percent (i.e >=0.0 and <=100.0).

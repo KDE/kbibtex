@@ -102,6 +102,11 @@ StarRating::StarRating(int maxNumberOfStars, QWidget *parent)
     setMouseTracking(true);
 }
 
+StarRating::~StarRating()
+{
+    delete d;
+}
+
 void StarRating::paintEvent(QPaintEvent *ev)
 {
     QWidget::paintEvent(ev);
