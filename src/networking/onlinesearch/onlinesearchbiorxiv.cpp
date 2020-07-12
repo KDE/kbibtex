@@ -45,7 +45,7 @@ OnlineSearchBioRxiv::OnlineSearchBioRxiv(QObject *parent)
 }
 
 OnlineSearchBioRxiv::~OnlineSearchBioRxiv() {
-    /// nothing
+    delete d;
 }
 
 void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int numResults) {

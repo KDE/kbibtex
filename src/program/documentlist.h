@@ -93,6 +93,7 @@ public:
     enum class Category { OpenFiles = 0, RecentFiles = 1, Favorites = 2 };
 
     explicit DocumentList(QWidget *parent = nullptr);
+    ~DocumentList();
 
 signals:
     void openFile(const QUrl &url);

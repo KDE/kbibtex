@@ -109,6 +109,9 @@ EntryConfiguredWidget::EntryConfiguredWidget(const QSharedPointer<const EntryTab
 
 EntryConfiguredWidget::~EntryConfiguredWidget()
 {
+    for (int i = fieldInputCount - 1; i >= 0; --i)
+        if (listOfLabeledFieldInput[i] != nullptr)
+            delete listOfLabeledFieldInput[i];
     delete[] listOfLabeledFieldInput;
 }
 

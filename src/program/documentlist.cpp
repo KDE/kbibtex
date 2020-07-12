@@ -411,6 +411,11 @@ DocumentList::DocumentList(QWidget *parent)
     setDocumentMode(true);
 }
 
+DocumentList::~DocumentList()
+{
+    delete d;
+}
+
 void DocumentList::fileSelected(const KFileItem &item)
 {
     if (item.isFile() && item.isReadable())
