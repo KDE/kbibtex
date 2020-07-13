@@ -48,8 +48,6 @@ public:
     bool save(QIODevice *iodevice, const File *bibtexfile) override;
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
 
-    static QString valueToXML(const Value &value, const QString &fieldType = QString());
-
 public slots:
     void cancel() override;
 
@@ -61,6 +59,8 @@ private:
     bool writeMacro(QTextStream &stream, const Macro *macro);
     bool writeComment(QTextStream &stream, const Comment *comment);
 
+    static QString valueToXML(const Value &value);
+    static QString valueItemToXML(const QSharedPointer<ValueItem> &valueItem);
     static QString cleanXML(const QString &text);
 };
 

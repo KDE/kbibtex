@@ -173,11 +173,11 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             }
 #if QT_VERSION >= 0x050e00
             stream << ">" << Qt::endl;
-            stream << valueToXML(internal, key) << Qt::endl;
+            stream << valueToXML(internal) << Qt::endl;
             stream << "  </" << key << "s>" << Qt::endl;
 #else // QT_VERSION < 0x050e00
             stream << ">" << endl;
-            stream << valueToXML(internal, key) << endl;
+            stream << valueToXML(internal) << endl;
             stream << "  </" << key << "s>" << endl;
 #endif // QT_VERSION >= 0x050e00
         } else if (key == Entry::ftAbstract) {
@@ -271,38 +271,39 @@ bool FileExporterXML::writeComment(QTextStream &stream, const Comment *comment)
     return true;
 }
 
-QString FileExporterXML::valueToXML(const Value &value, const QString &)
+QString FileExporterXML::valueToXML(const Value &value)
 {
     QString result;
-    bool isFirst = true;
 
-    for (const auto &valueItem : value) {
-        if (!isFirst)
-            result.append(' ');
-        isFirst = false;
-
-        QSharedPointer<const PlainText> plainText = valueItem.dynamicCast<const PlainText>();
-        if (!plainText.isNull())
-            result.append("<text>" +  cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncoding::UTF8)) + "</text>");
-        else {
-            QSharedPointer<const Person> p = valueItem.dynamicCast<const Person>();
-            if (!p.isNull()) {
-                result.append("<person>");
-                if (!p->firstName().isEmpty())
-                    result.append("<firstname>" +  cleanXML(EncoderXML::instance().encode(p->firstName(), Encoder::TargetEncoding::UTF8)) + "</firstname>");
-                if (!p->lastName().isEmpty())
-                    result.append("<lastname>" +  cleanXML(EncoderXML::instance().encode(p->lastName(), Encoder::TargetEncoding::UTF8)) + "</lastname>");
-                if (!p->suffix().isEmpty())
-                    result.append("<suffix>" +  cleanXML(EncoderXML::instance().encode(p->suffix(), Encoder::TargetEncoding::UTF8)) + "</suffix>");
-                result.append("</person>");
-            }
-            // TODO: Other data types
-            else
-                result.append("<text>" + cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncoding::UTF8)) + "</text>");
-        }
-    }
+    for (const auto &valueItem : value)
+        result.append(valueItemToXML(valueItem));
 
     return result;
+}
+
+QString FileExporterXML::valueItemToXML(const QSharedPointer<ValueItem> &valueItem)
+{
+
+    QSharedPointer<const PlainText> plainText = valueItem.dynamicCast<const PlainText>();
+    if (!plainText.isNull())
+        return QStringLiteral("<text>") +  cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncoding::UTF8)) + QStringLiteral("</text>");
+    else {
+        QSharedPointer<const Person> p = valueItem.dynamicCast<const Person>();
+        if (!p.isNull()) {
+            QString result(QStringLiteral("<person>"));
+            if (!p->firstName().isEmpty())
+                result.append(QStringLiteral("<firstname>") + cleanXML(EncoderXML::instance().encode(p->firstName(), Encoder::TargetEncoding::UTF8)) + QStringLiteral("</firstname>"));
+            if (!p->lastName().isEmpty())
+                result.append(QStringLiteral("<lastname>") + cleanXML(EncoderXML::instance().encode(p->lastName(), Encoder::TargetEncoding::UTF8)) + QStringLiteral("</lastname>"));
+            if (!p->suffix().isEmpty())
+                result.append(QStringLiteral("<suffix>") + cleanXML(EncoderXML::instance().encode(p->suffix(), Encoder::TargetEncoding::UTF8)) + QStringLiteral("</suffix>"));
+            result.append(QStringLiteral("</person>"));
+            return result;
+        }
+        // TODO: Other data types
+        else
+            return QStringLiteral("<text>") + cleanXML(EncoderXML::instance().encode(PlainTextValue::text(valueItem), Encoder::TargetEncoding::UTF8)) + QStringLiteral("</text>");
+    }
 }
 
 QString FileExporterXML::cleanXML(const QString &text)
