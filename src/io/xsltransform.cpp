@@ -97,7 +97,5 @@ QString XSLTransform::locateXSLTfile(const QString &stem)
         qCWarning(LOG_KBIBTEX_IO) << "Generated XSLT filename is empty for stem " << stem;
     else if (!QFileInfo::exists(xsltFilename))
         qCWarning(LOG_KBIBTEX_IO) << "Generated XSLT filename " << xsltFilename << " refers to non-existing file";
-    else
-        qCDebug(LOG_KBIBTEX_IO) << "Generated XSLT filename is " << xsltFilename << " for stem " << stem;
     return xsltFilename;
 }
