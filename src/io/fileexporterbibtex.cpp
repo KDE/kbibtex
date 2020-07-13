@@ -752,6 +752,30 @@ QString FileExporterBibTeX::valueToBibTeX(const Value &value, Encoder::TargetEnc
     return staticFileExporterBibTeX.d->internalValueToBibTeX(value, targetEncoding, key);
 }
 
+QString FileExporterBibTeX::editionNumberToString(const int edition, const Preferences::BibliographySystem bibliographySystem)
+{
+    if (edition <= 0) {
+        qCWarning(LOG_KBIBTEX_IO) << "Cannot convert a non-positive number (" << edition << ") into a textual representation";
+        return QString();
+    }
+
+    // According to http://mirrors.ctan.org/biblio/bibtex/contrib/doc/btxFAQ.pdf,
+    // edition values should look like this:
+    //  - for first to fifth, write "First" to "Fifth"
+    //  - starting from sixth, use numeric form like "17th"
+    // According to http://mirrors.ctan.org/macros/latex/contrib/biblatex/doc/biblatex.pdf,
+    // edition values should by just numbers (digits) without text,
+    // such as '1' in a @sa PlainText.
+
+    if (bibliographySystem == Preferences::BibliographySystem::BibLaTeX)
+        return QString::number(edition);
+    else if (bibliographySystem == Preferences::BibliographySystem::BibTeX)
+        // BibTeX uses ordinals
+        return numberToOrdinal(edition);
+    else
+        return QString();
+}
+
 bool FileExporterBibTeX::isFileExporterBibTeX(const FileExporter &other) {
     return typeid(other) == typeid(FileExporterBibTeX);
 }

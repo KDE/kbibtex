@@ -23,6 +23,7 @@
 #include <QTextStream>
 
 #include <Element>
+#include "logging_io.h"
 
 FileExporter::FileExporter(QObject *parent)
         : QObject(parent)
@@ -65,4 +66,36 @@ QString FileExporter::toString(const File *bibtexfile)
     }
 
     return QString();
+}
+
+QString FileExporter::numberToOrdinal(const int number)
+{
+    if (number == 1)
+        return QStringLiteral("First");
+    else if (number == 2)
+        return QStringLiteral("Second");
+    else if (number == 3)
+        return QStringLiteral("Third");
+    else if (number == 4)
+        return QStringLiteral("Fourth");
+    else if (number == 5)
+        return QStringLiteral("Fifth");
+    else if (number >= 20 && number % 10 == 1) {
+        // 21, 31, 41, ...
+        return QString(QStringLiteral("%1st")).arg(number);
+    } else if (number >= 20 && number % 10 == 2) {
+        // 22, 32, 42, ...
+        return QString(QStringLiteral("%1nd")).arg(number);
+    } else if (number >= 20 && number % 10 == 3) {
+        // 23, 33, 43, ...
+        return QString(QStringLiteral("%1rd")).arg(number);
+    } else if (number >= 6) {
+        // Remaining editions: 6, 7, ..., 19, 20, 24, 25, ...
+        return QString(QStringLiteral("%1th")).arg(number);
+    } else {
+        // Unsupported editions, like -23
+        qCWarning(LOG_KBIBTEX_IO) << "Don't know how to convert number" << number << "into an ordinal string for edition";
+        return QString();
+    }
+
 }

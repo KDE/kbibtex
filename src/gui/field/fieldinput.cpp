@@ -32,6 +32,7 @@
 
 #include <File>
 #include <Entry>
+#include <FileExporterBibTeX>
 #include "fieldlineedit.h"
 #include "fieldlistedit.h"
 #include "colorlabelwidget.h"
@@ -298,7 +299,7 @@ public:
 
     void setEdition(int edition)
     {
-        const QString editionString = Entry::editionNumberToString(edition);
+        const QString editionString = FileExporterBibTeX::editionNumberToString(edition);
         if (!editionString.isEmpty()) {
             Value value;
             value.append(QSharedPointer<PlainText>(new PlainText(editionString)));

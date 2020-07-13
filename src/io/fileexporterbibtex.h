@@ -22,6 +22,7 @@
 
 #include <QTextStream>
 
+#include <Preferences>
 #include <Element>
 #include <Value>
 #include <FileExporter>
@@ -82,6 +83,22 @@ public:
      * @return string representation of the Value object
      */
     static QString valueToBibTeX(const Value &value, Encoder::TargetEncoding targetEncoding, const QString &fieldType = QString());
+
+    /**
+     * Convert a positive int into a textual representation.
+     * If the requested bibliography system is BibTeX, conversion follows BibTeX's
+     * documentation: editions 1 to 5 get rewritten into text like 'fourth',
+     * larger editions are numbers followed by an English ordinal suffix,
+     * resulting in, for example, '42nd'.
+     * If the requested bibliography system is BibLaTeX, conversion follows this
+     * system's documentation: edition numbers are simply converted into a string
+     * for use in a @c PlainText.
+     * If conversion fails, e.g. for negative values of @c edition, an empty
+     * string is returned.
+     * @param[in] edition edition as positive number
+     * @return Textual representation of the ordinal value or empty string if conversion failed
+     */
+    static QString editionNumberToString(const int edition, const Preferences::BibliographySystem bibliographySystem = Preferences::instance().bibliographySystem());
 
     /**
      * Cheap and fast test if another FileExporter is a FileExporterBibTeX object.

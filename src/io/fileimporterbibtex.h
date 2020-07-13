@@ -107,6 +107,19 @@ public:
 
     static void parsePersonList(const QString &text, Value &value, const int line_number = 1, QObject *parent = nullptr);
 
+    /**
+     * Convert a textual representation of an edition string into a number.
+     * Examples for supported string patterns include '4', '4th', or 'fourth'.
+     * Success of the conversion is returned via the @c ok variable, where the
+     * function caller has to provide a pointer to a boolean variable.
+     * In case of success, the function's result is the edition, in case
+     * of failure, i.e. @c *ok==false, the result is undefined.
+     * @param[in] editionString A string representing an edition number
+     * @param[out] ok Pointer to a boolean variable used to return the success (@c true) or failure (@c false) state of the conversion; must not be @c nullptr
+     * @return In case of success, the edition as a positive int, else undefined
+     */
+    static int editionStringToNumber(const QString &editionString, bool *ok);
+
     void setCommentHandling(CommentHandling commentHandling);
 
 public slots:

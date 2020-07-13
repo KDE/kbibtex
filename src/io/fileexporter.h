@@ -86,6 +86,8 @@ public:
      */
     virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) = 0;
 
+    static QString numberToOrdinal(const int number);
+
 signals:
     /**
      * @brief Signal to notify the caller of this class's functions about the progress.
