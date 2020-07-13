@@ -131,8 +131,8 @@
 <xsl:if test="string-length(year)>0">
 <xsl:if test="string-length(month)>0"><xsl:value-of select="month" /><xsl:text> </xsl:text></xsl:if>
 <xsl:apply-templates select="year" />
-<xsl:apply-templates select="pages" />
 </xsl:if>
+<xsl:apply-templates select="pages" />
 <xsl:apply-templates select="note" />
 </div>
 </xsl:if>

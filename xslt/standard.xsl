@@ -99,16 +99,6 @@
 <a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:publisher=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
 </xsl:template>
 
-<xsl:template match="volume">
-<xsl:if test="string-length(../journal)=0">
-<!-- do not print volume if there is "journal" field,
-     which prints the volume, too.                     -->
-<xsl:text>, </xsl:text>
-<xsl:text>volume </xsl:text>
-<a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:volume=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/></a>
-</xsl:if>
-</xsl:template>
-
 <xsl:template match="edition">
 <xsl:text>, </xsl:text>
 <a style="text-decoration: none; color: black;"><xsl:attribute name="href"><xsl:text>kbibtex:filter:edition=</xsl:text><xsl:value-of select="."/></xsl:attribute><xsl:value-of select="."/>
@@ -145,7 +135,6 @@
 <xsl:apply-templates select="journal" />
 <xsl:apply-templates select="type" />
 <xsl:apply-templates select="school" />
-<xsl:apply-templates select="volume" />
 <xsl:apply-templates select="edition" />
 <xsl:apply-templates select="publisher" />
 <xsl:apply-templates select="institution" />
