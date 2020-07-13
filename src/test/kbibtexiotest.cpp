@@ -491,14 +491,14 @@ QHash<QString, QHash<const char *, QSet<QString>>> KBibTeXIOTest::fileExporterXS
         {
             QStringLiteral("kbibtex/standard.xsl"),
             {
-                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body/>")}},
+                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body>|</body>")}},
                 {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral(">1851<"), QStringLiteral(">Call me Ishmael<"), QStringLiteral("</b>"), QStringLiteral("</body>")}}
             }
         },
         {
             QStringLiteral("kbibtex/fancy.xsl"),
             {
-                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body style=\"margin:0px; padding: 0px;\"/>")}},
+                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body style=\"margin:0px; padding: 0px;\">|</body>")}},
                 {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral(" style=\"text-decoration: "), QStringLiteral("<span style=\""), QStringLiteral("ref=\"kbibtex:filter:year=1851\">1851</a>"), QStringLiteral("ef=\"kbibtex:filter:title=Call me Ishmael\">Call me Ishmael<"), QStringLiteral("ef=\"kbibtex:filter:author=Melville\">Melville, H.</a>")}}
             }
         },

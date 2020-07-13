@@ -21,6 +21,7 @@
 
 #include <QFileInfo>
 #include <QXmlQuery>
+#include <QXmlSerializer>
 #include <QBuffer>
 #include <QCoreApplication>
 #include <QStandardPaths>
@@ -81,11 +82,20 @@ QString XSLTransform::transform(const QString &xmlText) const
         return QString();
     }
 
-    QString result;
-    if (query.evaluateTo(&result)) {
+    static QByteArray ba(1 << 24, '\0');
+    QBuffer buffer(&ba);
+    if (!buffer.open(QBuffer::WriteOnly)) {
+        qCWarning(LOG_KBIBTEX_IO) << "Could not open buffer to receive data";
+        return QString();
+    }
+
+    QXmlSerializer serializer(query, &buffer);
+    if (query.evaluateTo(&serializer)) {
+        const int size_written_data = static_cast<int>(buffer.pos() & 0x7fffffff);
+        buffer.close();
         /// Return result of XSL transformation and replace
         /// the usual XML suspects with its plain counterparts
-        return result;
+        return QString::fromUtf8(ba.constData(), size_written_data);
     } else {
         qCWarning(LOG_KBIBTEX_IO) << "Invoking QXmlQuery::evaluateTo(...) failed";
         return QString();
