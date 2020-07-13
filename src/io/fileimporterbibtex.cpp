@@ -379,16 +379,6 @@ public:
                         statistics.mostRecentListSeparator = QStringLiteral(", ");
 
                 }
-            } else if (iKey == QStringLiteral("edition")/* FIXME Entry::ftEdition*/) {
-                /* FIXME
-                bool editionOk = false;
-                const int edition = Entry::editionStringToNumber(text, &editionOk);
-                const QString refinedText = editionOk ? Entry::editionNumberToString(edition) : QString();
-                if (!refinedText.isEmpty())
-                    /// unless something went wrong with editionNumberToString or editionStringToNumber ...
-                    text = refinedText;
-                value.append(QSharedPointer<PlainText>(new PlainText(text)));
-                */
             } else if (verbatimKeys.contains(iKey)) {
                 if (isStringKey)
                     value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
