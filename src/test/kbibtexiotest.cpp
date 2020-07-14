@@ -394,6 +394,7 @@ File *KBibTeXIOTest::latinUmlautBibliography()
         entry->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QString(QStringLiteral("{%1ber das Relativit%2tsprinzip und die aus demselben gezogenen Folgerungen}")).arg(QChar(0x00DC)).arg(QChar(0x00E4)))));
         entry->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Albert"), QStringLiteral("Einstein"))));
         entry->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("1907/08"))));
+        entry->insert(Entry::ftPages, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("23") + QChar(0x2013) + QStringLiteral("42"))));
         latinUmlautFile->setProperty(File::ProtectCasing, Qt::Checked);
     }
     return latinUmlautFile;
@@ -735,10 +736,9 @@ void KBibTeXIOTest::fileExporterBibTeXEncoding_data()
     QTest::newRow("Moby Dick (ASCII only) encoded in 'UTF-16'") << mobyDickBibliography() << QStringLiteral("UTF-16") << mobyDickExpectedOutputUTF16;
     static const QByteArray mobyDickExpectedOutputUTF32 {"\xFF\xFE\0\0@\0\0\0""b\0\0\0o\0\0\0o\0\0\0k\0\0\0{\0\0\0t\0\0\0h\0\0\0""e\0\0\0-\0\0\0w\0\0\0h\0\0\0""a\0\0\0l\0\0\0""e\0\0\0-\0\0\0""1\0\0\0""8\0\0\0""5\0\0\0""1\0\0\0,\0\0\0\n\0\0\0\x09\0\0\0""a\0\0\0u\0\0\0t\0\0\0h\0\0\0o\0\0\0r\0\0\0 \0\0\0=\0\0\0 \0\0\0{\0\0\0M\0\0\0""e\0\0\0l\0\0\0v\0\0\0i\0\0\0l\0\0\0l\0\0\0""e\0\0\0,\0\0\0 \0\0\0H\0\0\0""e\0\0\0r\0\0\0m\0\0\0""a\0\0\0n\0\0\0 \0\0\0""a\0\0\0n\0\0\0""d\0\0\0 \0\0\0""D\0\0\0i\0\0\0""c\0\0\0k\0\0\0,\0\0\0 \0\0\0M\0\0\0o\0\0\0""b\0\0\0y\0\0\0}\0\0\0,\0\0\0\n\0\0\0\x09\0\0\0m\0\0\0o\0\0\0n\0\0\0t\0\0\0h\0\0\0 \0\0\0=\0\0\0 \0\0\0j\0\0\0u\0\0\0n\0\0\0,\0\0\0\n\0\0\0\x09\0\0\0t\0\0\0i\0\0\0t\0\0\0l\0\0\0""e\0\0\0 \0\0\0=\0\0\0 \0\0\0{\0\0\0{\0\0\0""C\0\0\0""a\0\0\0l\0\0\0l\0\0\0 \0\0\0m\0\0\0""e\0\0\0 \0\0\0I\0\0\0s\0\0\0h\0\0\0m\0\0\0""a\0\0\0""e\0\0\0l\0\0\0}\0\0\0}\0\0\0,\0\0\0\n\0\0\0\x09\0\0\0y\0\0\0""e\0\0\0""a\0\0\0r\0\0\0 \0\0\0=\0\0\0 \0\0\0{\0\0\0""1\0\0\0""8\0\0\0""5\0\0\0""1\0\0\0}\0\0\0\n\0\0\0}\0\0\0\n\0\0\0\n\0\0\0", 520};
     QTest::newRow("Moby Dick (ASCII only) encoded in 'UTF-32'") << mobyDickBibliography() << QStringLiteral("UTF-32") << mobyDickExpectedOutputUTF32;
-
-    static const QByteArray latinUmlautExpectedOutputLaTeX {"@article{einstein1907relativitaetsprinzip,\n\tauthor = {Einstein, Albert},\n\ttitle = {{{\\\"U}ber das Relativit{\\\"a}tsprinzip und die aus demselben gezogenen Folgerungen}},\n\tyear = {1907/08}\n}\n\n"};
+    static const QByteArray latinUmlautExpectedOutputLaTeX {"@article{einstein1907relativitaetsprinzip,\n\tauthor = {Einstein, Albert},\n\tpages = {23--42},\n\ttitle = {{{\\\"U}ber das Relativit{\\\"a}tsprinzip und die aus demselben gezogenen Folgerungen}},\n\tyear = {1907/08}\n}\n\n"};
     QTest::newRow("Albert Einstein (latin umlaut) data encoded in 'LaTeX'") << latinUmlautBibliography() << QStringLiteral("LaTeX") << latinUmlautExpectedOutputLaTeX;
-    static const QByteArray latinUmlautExpectedOutputUTF8 {"@comment{x-kbibtex-encoding=utf-8}\n\n@article{einstein1907relativitaetsprinzip,\n\tauthor = {Einstein, Albert},\n\ttitle = {{\xC3\x9C""ber das Relativit\xC3\xA4tsprinzip und die aus demselben gezogenen Folgerungen}},\n\tyear = {1907/08}\n}\n\n"};
+    static const QByteArray latinUmlautExpectedOutputUTF8 {"@comment{x-kbibtex-encoding=utf-8}\n\n@article{einstein1907relativitaetsprinzip,\n\tauthor = {Einstein, Albert},\n\tpages = {23\xE2\x80\x93""42},\n\ttitle = {{\xC3\x9C""ber das Relativit\xC3\xA4tsprinzip und die aus demselben gezogenen Folgerungen}},\n\tyear = {1907/08}\n}\n\n"};
     QTest::newRow("Albert Einstein (latin umlaut) encoded in 'UTF-8'") << latinUmlautBibliography() << QStringLiteral("UTF-8") << latinUmlautExpectedOutputUTF8;
 }
 
