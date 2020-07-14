@@ -62,32 +62,36 @@
 #include <file/FileView>
 #include "logging_program.h"
 
-static const struct PreviewStyles {
+typedef struct {
     QString label, style, type;
-}
-previewStyles[] = {
-    {i18n("Source (BibTeX)"), QStringLiteral("bibtex"), QStringLiteral("exporter")},
-    {i18n("Source (RIS)"), QStringLiteral("ris"), QStringLiteral("exporter")},
-    {QStringLiteral("abbrv"), QStringLiteral("abbrv"), QStringLiteral("bibtex2html")},
-    {QStringLiteral("acm"), QStringLiteral("acm"), QStringLiteral("bibtex2html")},
-    {QStringLiteral("alpha"), QStringLiteral("alpha"), QStringLiteral("bibtex2html")},
-    {QStringLiteral("apalike"), QStringLiteral("apalike"), QStringLiteral("bibtex2html")},
-    {QStringLiteral("ieeetr"), QStringLiteral("ieeetr"), QStringLiteral("bibtex2html")},
-    {QStringLiteral("plain"), QStringLiteral("plain"), QStringLiteral("bibtex2html")},
-    {QStringLiteral("siam"), QStringLiteral("siam"), QStringLiteral("bibtex2html")},
-    {QStringLiteral("unsrt"), QStringLiteral("unsrt"), QStringLiteral("bibtex2html")},
-    {i18n("Standard"), QStringLiteral("standard"), QStringLiteral("xml")},
-    {i18n("Fancy"), QStringLiteral("fancy"), QStringLiteral("xml")},
-    {i18n("Wikipedia Citation"), QStringLiteral("wikipedia-cite"), QStringLiteral("plain_xml")},
-    {i18n("Abstract-only"), QStringLiteral("abstractonly"), QStringLiteral("xml")}
-};
+} PreviewStyle;
 
-Q_DECLARE_METATYPE(PreviewStyles)
+Q_DECLARE_METATYPE(PreviewStyle)
 
 class ReferencePreview::ReferencePreviewPrivate
 {
 private:
     ReferencePreview *p;
+
+    QVector<PreviewStyle> previewStyles() const {
+        static QVector<PreviewStyle> listOfStyles;
+        if (listOfStyles.isEmpty()) {
+            listOfStyles = {
+                {i18n("Source (BibTeX)"), QStringLiteral("bibtex"), QStringLiteral("exporter")},
+                {i18n("Source (RIS)"), QStringLiteral("ris"), QStringLiteral("exporter")}
+            };
+            /// Query from FileExporterBibTeX2HTML which BibTeX styles are available
+            for (const QString &bibtex2htmlStyle : FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles())
+                listOfStyles.append({bibtex2htmlStyle, bibtex2htmlStyle, QStringLiteral("bibtex2html")});
+            listOfStyles.append({
+                {i18n("Standard"), QStringLiteral("standard"), QStringLiteral("xml")},
+                {i18n("Fancy"), QStringLiteral("fancy"), QStringLiteral("xml")},
+                {i18n("Wikipedia Citation"), QStringLiteral("wikipedia-cite"), QStringLiteral("plain_xml")},
+                {i18n("Abstract-only"), QStringLiteral("abstractonly"), QStringLiteral("xml")}
+            });
+        }
+        return listOfStyles;
+    }
 
 public:
     KSharedConfigPtr config;
@@ -185,7 +189,7 @@ public:
         comboBox->clear();
 
         int styleIndex = 0, c = 0;
-        for (const PreviewStyles &previewStyle : previewStyles) {
+        for (const PreviewStyle &previewStyle : previewStyles()) {
             if (!hasBibTeX2HTML && previewStyle.type.contains(QStringLiteral("bibtex2html"))) continue;
             comboBox->addItem(previewStyle.label, QVariant::fromValue(previewStyle));
             if (previousStyle == previewStyle.style)
@@ -197,7 +201,7 @@ public:
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(configKeyName, comboBox->itemData(comboBox->currentIndex()).value<PreviewStyles>().style);
+        configGroup.writeEntry(configKeyName, comboBox->itemData(comboBox->currentIndex()).value<PreviewStyle>().style);
         config->sync();
     }
 };
@@ -260,7 +264,7 @@ void ReferencePreview::renderHTML()
 
     FileExporter *exporter = nullptr;
 
-    const PreviewStyles previewStyle = d->comboBox->itemData(d->comboBox->currentIndex()).value<PreviewStyles>();
+    const PreviewStyle previewStyle = d->comboBox->itemData(d->comboBox->currentIndex()).value<PreviewStyle>();
 
     if (previewStyle.type == QStringLiteral("exporter")) {
         if (previewStyle.style == QStringLiteral("bibtex")) {

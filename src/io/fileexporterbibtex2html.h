@@ -42,6 +42,8 @@ public:
 
     void setLaTeXBibliographyStyle(const QString &bibStyle);
 
+    static QStringList availableLaTeXBibliographyStyles();
+
 private:
     class FileExporterBibTeX2HTMLPrivate;
     FileExporterBibTeX2HTMLPrivate *d;

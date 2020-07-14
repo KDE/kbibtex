@@ -161,3 +161,15 @@ void FileExporterBibTeX2HTML::setLaTeXBibliographyStyle(const QString &bibStyle)
 {
     d->bibStyle = bibStyle;
 }
+
+QStringList FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles()
+{
+    static QStringList listOfBibStyles;
+    if (listOfBibStyles.isEmpty()) {
+        static const QStringList stylesToTestFor {QStringLiteral("abbrv"), QStringLiteral("acm"), QStringLiteral("alpha"), QStringLiteral("apalike"), QStringLiteral("ieeetr"), QStringLiteral("plain"), QStringLiteral("siam"), QStringLiteral("unsrt")};
+        for (const QString &bibStyle : stylesToTestFor)
+            if (kpsewhich(bibStyle + ".bst"))
+                listOfBibStyles.append(bibStyle);
+    }
+    return listOfBibStyles;
+}
