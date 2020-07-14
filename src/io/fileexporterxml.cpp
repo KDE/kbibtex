@@ -228,6 +228,22 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
 #else // QT_VERSION < 0x050e00
             stream << endl;
 #endif // QT_VERSION >= 0x050e00
+        } else if (key == Entry::ftYear) {
+            // Guess an int representing the year
+            const QString textualRepresentation = value.count() > 0 ? PlainTextValue::text(value.first()) : QString();
+            static const QRegularExpression yearRegExp(QStringLiteral("^(1[2-9]|2[01])\\d{2}$"));
+            bool ok = false;
+            const int asInt = yearRegExp.match(textualRepresentation).hasMatch() ? textualRepresentation.toInt(&ok) : -1;
+
+            stream << "  <year";
+            if (ok && asInt > 0)
+                stream << " number=\"" << asInt << "\"";
+            stream << '>' << valueToXML(value) << "</year>";
+#if QT_VERSION >= 0x050e00
+            stream << Qt::endl;
+#else // QT_VERSION < 0x050e00
+            stream << endl;
+#endif // QT_VERSION >= 0x050e00
         } else if (key == Entry::ftMonth) {
             int asInt = -1;
             QString triple, content;

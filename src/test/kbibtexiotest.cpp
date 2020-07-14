@@ -465,7 +465,7 @@ void KBibTeXIOTest::fileExporterXMLsave_data()
 
     static const QHash<const char *, QString> keyToXmlData {
         {fileImporterExporterTestCases_Label_Empty_file, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>|</bibliography>|")},
-        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>| <entry id=\"the-whale-1851\" type=\"book\">|  <authors>|<person><firstname>Herman</firstname><lastname>Melville</lastname></person><person><firstname>Moby</firstname><lastname>Dick</lastname></person>|  </authors>|  <title><text>Call me Ishmael</text></title>|  <year><text>1851</text></year>| </entry>|</bibliography>|")}
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>| <entry id=\"the-whale-1851\" type=\"book\">|  <authors>|<person><firstname>Herman</firstname><lastname>Melville</lastname></person><person><firstname>Moby</firstname><lastname>Dick</lastname></person>|  </authors>|  <title><text>Call me Ishmael</text></title>|  <year number=\"1851\"><text>1851</text></year>| </entry>|</bibliography>|")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
