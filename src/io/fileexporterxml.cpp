@@ -272,10 +272,20 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             stream << endl;
 #endif // QT_VERSION >= 0x050e00
         } else {
+            // Guess an int representing of this value
+            const QString textualRepresentation = value.count() > 0 ? PlainTextValue::text(value.first()) : QString();
+            static const QRegularExpression numberRegExp(QStringLiteral("^[1-9]\\d*$"));
+            bool ok = false;
+            const int asInt = numberRegExp.match(textualRepresentation).hasMatch() ? textualRepresentation.toInt(&ok) : -1;
+
+            stream << "  <" << key;
+            if (ok && asInt > 0)
+                stream << " number=\"" << asInt << "\"";
+            stream << '>' << valueToXML(value) << "</" << key << ">";
 #if QT_VERSION >= 0x050e00
-            stream << "  <" << key << ">" << valueToXML(value) << "</" << key << ">" << Qt::endl;
+            stream << Qt::endl;
 #else // QT_VERSION < 0x050e00
-            stream << "  <" << key << ">" << valueToXML(value) << "</" << key << ">" << endl;
+            stream << endl;
 #endif // QT_VERSION >= 0x050e00
         }
 
