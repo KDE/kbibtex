@@ -377,6 +377,7 @@ File *KBibTeXIOTest::mobyDickBibliography()
         mobyDickFile->append(entry);
         entry->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("{Call me Ishmael}"))));
         entry->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Herman"), QStringLiteral("Melville"))) << QSharedPointer<Person>(new Person(QStringLiteral("Moby"), QStringLiteral("Dick"))));
+        entry->insert(Entry::ftMonth, Value() << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("jun"))));
         entry->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("1851"))));
         mobyDickFile->setProperty(File::ProtectCasing, Qt::Checked);
     }
@@ -465,7 +466,7 @@ void KBibTeXIOTest::fileExporterXMLsave_data()
 
     static const QHash<const char *, QString> keyToXmlData {
         {fileImporterExporterTestCases_Label_Empty_file, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>|</bibliography>|")},
-        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>| <entry id=\"the-whale-1851\" type=\"book\">|  <authors>|<person><firstname>Herman</firstname><lastname>Melville</lastname></person><person><firstname>Moby</firstname><lastname>Dick</lastname></person>|  </authors>|  <title><text>Call me Ishmael</text></title>|  <year number=\"1851\"><text>1851</text></year>| </entry>|</bibliography>|")}
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>| <entry id=\"the-whale-1851\" type=\"book\">|  <authors>|<person><firstname>Herman</firstname><lastname>Melville</lastname></person><person><firstname>Moby</firstname><lastname>Dick</lastname></person>|  </authors>|  <month triple=\"jun\" number=\"6\"><text>June</text></month>|  <title><text>Call me Ishmael</text></title>|  <year number=\"1851\"><text>1851</text></year>| </entry>|</bibliography>|")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -587,7 +588,7 @@ void KBibTeXIOTest::fileExporterRISsave_data()
 
     static const QHash<const char *, QString> keyToRisData {
         {fileImporterExporterTestCases_Label_Empty_file, QString()},
-        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("TY  - BOOK|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851///|ER  - ||")}
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("TY  - BOOK|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851/06//|ER  - ||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -614,7 +615,7 @@ void KBibTeXIOTest::fileExporterBibTeXsave_data()
 
     static const QHash<const char *, QString> keyToBibTeXData {
         {fileImporterExporterTestCases_Label_Empty_file, QString()},
-        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("@book{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("@book{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\tmonth = jun,|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -641,7 +642,7 @@ void KBibTeXIOTest::fileImporterRISload_data()
 
     static const QHash<const char *, QString> keyToRisData {
         {fileImporterExporterTestCases_Label_Empty_file, QString()},
-        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("TY  - BOOK|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851///|ER  - ||")}
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("TY  - BOOK|ID  - the-whale-1851|AU  - Melville, Herman|AU  - Dick, Moby|TI  - Call me Ishmael|PY  - 1851/06//|ER  - ||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -671,7 +672,7 @@ void KBibTeXIOTest::fileImporterBibTeXload_data()
 
     static const QHash<const char *, QString> keyToBibTeXData {
         {fileImporterExporterTestCases_Label_Empty_file, QString()},
-        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("@book{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
+        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("@book{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\tmonth = jun,|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -725,14 +726,14 @@ void KBibTeXIOTest::fileExporterBibTeXEncoding_data()
     QTest::addColumn<QString>("encoding");
     QTest::addColumn<QByteArray>("expectedOutput");
 
-    static const QByteArray mobyDickExpectedOutput {"@book{the-whale-1851,\n\tauthor = {Melville, Herman and Dick, Moby},\n\ttitle = {{Call me Ishmael}},\n\tyear = {1851}\n}\n\n"};
+    static const QByteArray mobyDickExpectedOutput {"@book{the-whale-1851,\n\tauthor = {Melville, Herman and Dick, Moby},\n\tmonth = jun,\n\ttitle = {{Call me Ishmael}},\n\tyear = {1851}\n}\n\n"};
     static const QStringList listOfASCIIcompatibleEncodings {QStringLiteral("US-ASCII"), QStringLiteral("LaTeX"), QStringLiteral("UTF-8"), QStringLiteral("ISO-8859-1"), QStringLiteral("Windows-1254"), QStringLiteral("ISO 2022-JP") /** technically not ASCII-compatible, but works for this case here */};
     for (const QString &encoding : listOfASCIIcompatibleEncodings)
         QTest::newRow(QString(QStringLiteral("Moby Dick (ASCII only) encoded in '%1'")).arg(encoding).toLatin1().constData()) << mobyDickBibliography() << encoding << mobyDickExpectedOutput;
 
-    static const QByteArray mobyDickExpectedOutputUTF16 {"\xFF\xFE@\0""b\0o\0o\0k\0{\0t\0h\0""e\0-\0w\0h\0""a\0l\0""e\0-\0""1\0""8\0""5\0""1\0,\0\n\0\t\0""a\0u\0t\0h\0o\0r\0 \0=\0 \0{\0M\0""e\0l\0v\0i\0l\0l\0""e\0,\0 \0H\0""e\0r\0m\0""a\0n\0 \0""a\0n\0d\0 \0D\0i\0c\0k\0,\0 \0M\0o\0""b\0y\0}\0,\0\n\0\t\0t\0i\0t\0l\0""e\0 \0=\0 \0{\0{\0C\0""a\0l\0l\0 \0m\0""e\0 \0I\0s\0h\0m\0""a\0""e\0l\0}\0}\0,\0\n\0\t\0y\0""e\0""a\0r\0 \0=\0 \0{\0""1\0""8\0""5\0""1\0}\0\n\0}\0\n\0\n\0", 232};
+    static const QByteArray mobyDickExpectedOutputUTF16 {"\xFF\xFE@\0""b\0o\0o\0k\0{\0t\0h\0""e\0-\0w\0h\0""a\0l\0""e\0-\0""1\0""8\0""5\0""1\0,\0\n\0\x09\0""a\0u\0t\0h\0o\0r\0 \0=\0 \0{\0M\0""e\0l\0v\0i\0l\0l\0""e\0,\0 \0H\0""e\0r\0m\0""a\0n\0 \0""a\0n\0""d\0 \0""D\0i\0""c\0k\0,\0 \0M\0o\0""b\0y\0}\0,\0\n\0\x09\0m\0o\0n\0t\0h\0 \0=\0 \0j\0u\0n\0,\0\n\0\x09\0t\0i\0t\0l\0""e\0 \0=\0 \0{\0{\0""C\0""a\0l\0l\0 \0m\0""e\0 \0I\0s\0h\0m\0""a\0""e\0l\0}\0}\0,\0\n\0\x09\0y\0""e\0""a\0r\0 \0=\0 \0{\0""1\0""8\0""5\0""1\0}\0\n\0}\0\n\0\n\0", 260};
     QTest::newRow("Moby Dick (ASCII only) encoded in 'UTF-16'") << mobyDickBibliography() << QStringLiteral("UTF-16") << mobyDickExpectedOutputUTF16;
-    static const QByteArray mobyDickExpectedOutputUTF32 {"\xFF\xFE\0\0@\0\0\0""b\0\0\0o\0\0\0o\0\0\0k\0\0\0{\0\0\0t\0\0\0h\0\0\0""e\0\0\0-\0\0\0w\0\0\0h\0\0\0""a\0\0\0l\0\0\0""e\0\0\0-\0\0\0""1\0\0\0""8\0\0\0""5\0\0\0""1\0\0\0,\0\0\0\n\0\0\0\t\0\0\0""a\0\0\0u\0\0\0t\0\0\0h\0\0\0o\0\0\0r\0\0\0 \0\0\0=\0\0\0 \0\0\0{\0\0\0M\0\0\0""e\0\0\0l\0\0\0v\0\0\0i\0\0\0l\0\0\0l\0\0\0""e\0\0\0,\0\0\0 \0\0\0H\0\0\0""e\0\0\0r\0\0\0m\0\0\0""a\0\0\0n\0\0\0 \0\0\0""a\0\0\0n\0\0\0d\0\0\0 \0\0\0D\0\0\0i\0\0\0c\0\0\0k\0\0\0,\0\0\0 \0\0\0M\0\0\0o\0\0\0""b\0\0\0y\0\0\0}\0\0\0,\0\0\0\n\0\0\0\t\0\0\0t\0\0\0i\0\0\0t\0\0\0l\0\0\0""e\0\0\0 \0\0\0=\0\0\0 \0\0\0{\0\0\0{\0\0\0C\0\0\0""a\0\0\0l\0\0\0l\0\0\0 \0\0\0m\0\0\0""e\0\0\0 \0\0\0I\0\0\0s\0\0\0h\0\0\0m\0\0\0""a\0\0\0""e\0\0\0l\0\0\0}\0\0\0}\0\0\0,\0\0\0\n\0\0\0\t\0\0\0y\0\0\0""e\0\0\0""a\0\0\0r\0\0\0 \0\0\0=\0\0\0 \0\0\0{\0\0\0""1\0\0\0""8\0\0\0""5\0\0\0""1\0\0\0}\0\0\0\n\0\0\0}\0\0\0\n\0\0\0\n\0\0\0", 464};
+    static const QByteArray mobyDickExpectedOutputUTF32 {"\xFF\xFE\0\0@\0\0\0""b\0\0\0o\0\0\0o\0\0\0k\0\0\0{\0\0\0t\0\0\0h\0\0\0""e\0\0\0-\0\0\0w\0\0\0h\0\0\0""a\0\0\0l\0\0\0""e\0\0\0-\0\0\0""1\0\0\0""8\0\0\0""5\0\0\0""1\0\0\0,\0\0\0\n\0\0\0\x09\0\0\0""a\0\0\0u\0\0\0t\0\0\0h\0\0\0o\0\0\0r\0\0\0 \0\0\0=\0\0\0 \0\0\0{\0\0\0M\0\0\0""e\0\0\0l\0\0\0v\0\0\0i\0\0\0l\0\0\0l\0\0\0""e\0\0\0,\0\0\0 \0\0\0H\0\0\0""e\0\0\0r\0\0\0m\0\0\0""a\0\0\0n\0\0\0 \0\0\0""a\0\0\0n\0\0\0""d\0\0\0 \0\0\0""D\0\0\0i\0\0\0""c\0\0\0k\0\0\0,\0\0\0 \0\0\0M\0\0\0o\0\0\0""b\0\0\0y\0\0\0}\0\0\0,\0\0\0\n\0\0\0\x09\0\0\0m\0\0\0o\0\0\0n\0\0\0t\0\0\0h\0\0\0 \0\0\0=\0\0\0 \0\0\0j\0\0\0u\0\0\0n\0\0\0,\0\0\0\n\0\0\0\x09\0\0\0t\0\0\0i\0\0\0t\0\0\0l\0\0\0""e\0\0\0 \0\0\0=\0\0\0 \0\0\0{\0\0\0{\0\0\0""C\0\0\0""a\0\0\0l\0\0\0l\0\0\0 \0\0\0m\0\0\0""e\0\0\0 \0\0\0I\0\0\0s\0\0\0h\0\0\0m\0\0\0""a\0\0\0""e\0\0\0l\0\0\0}\0\0\0}\0\0\0,\0\0\0\n\0\0\0\x09\0\0\0y\0\0\0""e\0\0\0""a\0\0\0r\0\0\0 \0\0\0=\0\0\0 \0\0\0{\0\0\0""1\0\0\0""8\0\0\0""5\0\0\0""1\0\0\0}\0\0\0\n\0\0\0}\0\0\0\n\0\0\0\n\0\0\0", 520};
     QTest::newRow("Moby Dick (ASCII only) encoded in 'UTF-32'") << mobyDickBibliography() << QStringLiteral("UTF-32") << mobyDickExpectedOutputUTF32;
 
     static const QByteArray latinUmlautExpectedOutputLaTeX {"@article{einstein1907relativitaetsprinzip,\n\tauthor = {Einstein, Albert},\n\ttitle = {{{\\\"U}ber das Relativit{\\\"a}tsprinzip und die aus demselben gezogenen Folgerungen}},\n\tyear = {1907/08}\n}\n\n"};
