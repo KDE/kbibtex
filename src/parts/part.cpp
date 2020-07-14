@@ -516,7 +516,7 @@ public:
                 supportedMimeTypes += QStringLiteral(" application/pdf");
             if (!QStandardPaths::findExecutable(QStringLiteral("dvips")).isEmpty())
                 supportedMimeTypes += QStringLiteral(" application/postscript");
-            supportedMimeTypes += QStringLiteral(" text/html");
+            supportedMimeTypes += QStringLiteral(" text/html application/xml");
             if (!QStandardPaths::findExecutable(QStringLiteral("latex2rtf")).isEmpty())
                 supportedMimeTypes += QStringLiteral(" application/rtf");
         }
