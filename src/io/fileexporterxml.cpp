@@ -191,41 +191,31 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             stream << "  <" << key << ">" << text << "</" << key << ">" << endl;
 #endif // QT_VERSION >= 0x050e00
         } else if (key == Entry::ftMonth) {
-            stream << "  <month";
-            bool ok = false;
-
-            int month = -1;
-            QString tag;
-            QString content;
+            int asInt = -1;
+            QString triple, content;
             for (const auto &valueItem : value) {
-                QSharedPointer<const MacroKey> macro = valueItem.dynamicCast<const MacroKey>();
-                if (!macro.isNull())
-                    for (int i = 0; i < 12; i++) {
-                        if (QString::compare(macro->text(), KBibTeX::MonthsTriple[ i ]) == 0) {
-                            if (month < 1) {
-                                tag = KBibTeX::MonthsTriple[ i ];
-                                month = i + 1;
-                            }
-                            content.append(KBibTeX::Months[ i ]);
-                            ok = true;
-                            break;
-                        }
+                bool gotMonthFromThisValueItem = false;
+                const QString textualRepresentation = PlainTextValue::text(valueItem);
+                for (int i = 0; asInt < 0 && i < 12; i++)
+                    if (textualRepresentation == KBibTeX::MonthsTriple[ i ]) {
+                        triple = KBibTeX::MonthsTriple[ i ];
+                        asInt = i + 1;
+                        gotMonthFromThisValueItem = true;
                     }
+                if (gotMonthFromThisValueItem)
+                    content.append(QStringLiteral("<text>") + KBibTeX::Months[asInt - 1] + QStringLiteral("</text>"));
                 else
-                    content.append(PlainTextValue::text(valueItem));
+                    content.append(valueItemToXML(valueItem));
             }
 
-            if (!ok)
-                content = valueToXML(value) ;
-            if (!tag.isEmpty())
-                stream << " tag=\"" << key << "\"";
-            if (month > 0)
-                stream << " month=\"" << month << "\"";
-            stream << '>' << content;
+            stream << "  <month";
+            if (asInt >= 1 && asInt <= 12)
+                stream << " triple=\"" << triple << "\" number=\"" << asInt << "\"";
+            stream << '>' << content << "</month>";
 #if QT_VERSION >= 0x050e00
-            stream << "</month>" << Qt::endl;
+            stream  << Qt::endl;
 #else // QT_VERSION < 0x050e00
-            stream << "</month>" << endl;
+            stream << endl;
 #endif // QT_VERSION >= 0x050e00
         } else {
 #if QT_VERSION >= 0x050e00
