@@ -31,7 +31,7 @@
   <name xml:lang="x-test">xxKBibTeXxx</name>
   <name xml:lang="zh-CN">KBibTeX</name>
   <summary>BibTeX editor by KDE to edit bibliographies used with LaTeX</summary>
-  <summary xml:lang="ca">Editor de BibTeX, creat per la comunitat KDE, per editar bibliografies emprant LaTeX</summary>
+  <summary xml:lang="ca">Editor de BibTeX, creat per la comunitat KDE, per a editar bibliografies emprant LaTeX</summary>
   <summary xml:lang="ca-valencia">Editor de BibTeX, creat per la comunitat KDE, per editar bibliografies emprant LaTeX</summary>
   <summary xml:lang="de">BibTeX-Editor von KDE zum Bearbeiten von Bibliografien mit LaTeX</summary>
   <summary xml:lang="en-GB">BibTeX editor by KDE to edit bibliographies used with LaTeX</summary>
@@ -59,7 +59,7 @@
       KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.
     </p>
     <p xml:lang="bs">KBibTeX je aplikacija za upravljanje referencom koja može biti upotrijebljena za skupljanje TeX/LaTeX bibliografijama i izvoziti ih u raznim formatima.</p>
-    <p xml:lang="ca">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
+    <p xml:lang="ca">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per a recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
     <p xml:lang="ca-valencia">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
     <p xml:lang="de">KBibTeX ist ein Programm zur Verwaltung von Referenzen und kann dazu benutzt werden, TeX/LaTeX-Bibliografien zusammenzustellen und sie in verschiedenen Formaten zu exportieren.</p>
     <p xml:lang="en-GB">KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.</p>
