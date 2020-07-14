@@ -21,6 +21,7 @@
 #include <QStringList>
 
 #include <Entry>
+#include <KBibTeX>
 #include "logging_io.h"
 
 FileExporterRIS::FileExporterRIS(QObject *parent)
@@ -189,7 +190,14 @@ bool FileExporterRIS::writeEntry(QTextStream &stream, const Entry *entry)
     }
 
     if (!year.isEmpty() || !month.isEmpty()) {
-        result &= writeKeyValue(stream, QStringLiteral("PY"), QString(QStringLiteral("%1/%2//")).arg(year, month));
+        int monthAsInt = -1;
+        for (int i = 0; monthAsInt < 0 && i < 12; ++i)
+            if (KBibTeX::MonthsTriple[i] == month)
+                monthAsInt = i + 1;
+        if (monthAsInt > 0)
+            result &= writeKeyValue(stream, QStringLiteral("PY"), QString(QStringLiteral("%1/%2//")).arg(year).arg(monthAsInt, 2, 10, QLatin1Char('0')));
+        else
+            result &= writeKeyValue(stream, QStringLiteral("PY"), QString(QStringLiteral("%1///%2")).arg(year, month));
     }
 
     result &= writeKeyValue(stream, QStringLiteral("ER"), QString());
