@@ -27,6 +27,7 @@
 #include <Entry>
 #include <Macro>
 #include <Comment>
+#include "fileimporterbibtex.h"
 #include "encoderxml.h"
 #include "logging_io.h"
 
@@ -189,6 +190,43 @@ bool FileExporterXML::writeEntry(QTextStream &stream, const Entry *entry)
             stream << "  <" << key << ">" << text << "</" << key << ">" << Qt::endl;
 #else // QT_VERSION < 0x050e00
             stream << "  <" << key << ">" << text << "</" << key << ">" << endl;
+#endif // QT_VERSION >= 0x050e00
+        } else if (key == Entry::ftPages) {
+            // Guess a ints representing first and last page
+            const QString textualRepresentation = PlainTextValue::text(value);
+            static const QRegularExpression fromPageRegExp(QStringLiteral("^\\s*([1-9]\\d*)\\b"));
+            static const QRegularExpression toPageRegExp(QStringLiteral("\\b([1-9]\\d*)\\s*$"));
+            const QRegularExpressionMatch fromPageMatch = fromPageRegExp.match(textualRepresentation);
+            const QRegularExpressionMatch toPageMatch = toPageRegExp.match(textualRepresentation);
+            bool okFromPage = false, okToPage = false;
+            const int fromPage = fromPageMatch.hasMatch() ? fromPageMatch.captured(1).toInt(&okFromPage) : -1;
+            const int toPage = toPageMatch.hasMatch() ? toPageMatch.captured(1).toInt(&okToPage) : -1;
+
+            stream << "  <pages";
+            if (okFromPage && fromPage > 0)
+                stream << " firstpage=\"" << fromPage << "\"";
+            if (okToPage && toPage > 0)
+                stream << " lastpage=\"" << toPage << "\"";
+            stream << '>' << valueToXML(value) << "</pages>";
+#if QT_VERSION >= 0x050e00
+            stream << Qt::endl;
+#else // QT_VERSION < 0x050e00
+            stream << endl;
+#endif // QT_VERSION >= 0x050e00
+        } else if (key == Entry::ftEdition) {
+            const QString textualRepresentation = PlainTextValue::text(value);
+            bool ok = false;
+            const int asInt = FileImporterBibTeX::editionStringToNumber(textualRepresentation, &ok);
+            const QString asText = ok && asInt > 0 ? QStringLiteral("<text>") + FileExporter::numberToOrdinal(asInt) + QStringLiteral("</text>") : valueToXML(value);
+
+            stream << "  <edition";
+            if (ok && asInt > 0)
+                stream << " number=\"" << asInt << "\"";
+            stream << '>' << asText << "</edition>";
+#if QT_VERSION >= 0x050e00
+            stream << Qt::endl;
+#else // QT_VERSION < 0x050e00
+            stream << endl;
 #endif // QT_VERSION >= 0x050e00
         } else if (key == Entry::ftMonth) {
             int asInt = -1;
