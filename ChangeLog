@@ -41,6 +41,7 @@ Diff 0.9.2 to 0.10
 - Refactoring small slot functions into lambda functions
 - Using KRatingPainter instead of home-made StarRating's paint function
 - Various improvements and refactoring when (PDF) files get associated with an entry
+- KDE Bug 424033: Can't associate a file with a relative path without having the file copied
 - Having ICU as an optional dependency only, provide internal, static translation from
   Basic Multilingual Plane (BMP) characters to ASCII-only representations
 - Adding and extending numerous automated tests
