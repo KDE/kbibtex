@@ -137,6 +137,10 @@ QPair<QUrl, QUrl> AssociatedFiles::computeSourceDestinationUrls(const QUrl &sour
 
 QUrl AssociatedFiles::copyDocument(const QUrl &sourceUrl, const QString &entryId, const File *bibTeXFile, RenameOperation renameOperation, MoveCopyOperation moveCopyOperation, QWidget *widget, const QString &userDefinedFilename)
 {
+    if (moveCopyOperation == MoveCopyOperation::None)
+        /// If nothing to be copied or moved, the target URL is equal to the source URL
+        return sourceUrl;
+
     const QPair<QUrl, QUrl> r = computeSourceDestinationUrls(sourceUrl, entryId, bibTeXFile, renameOperation, userDefinedFilename);
     const QUrl internalSourceUrl = r.first, targetUrl = r.second;
 
