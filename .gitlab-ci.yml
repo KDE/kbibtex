@@ -38,6 +38,8 @@ automated-tests:
     - ./kbibtexnetworkingtest -platform offscreen
 
 coverity-scan:
+  rules:
+    - if: $COVERITYSCAN_TOKEN != null
   script:
     - mkdir -p $COVERITYSCAN_USR_DIR $COVERITYSCAN_OUTPUT_DIR/cov-int
     - wget --no-check-certificate --post-data "project=KBibTeX&token="$COVERITYSCAN_TOKEN https://scan.coverity.com/download/cxx/linux64 -O - | tar -zxv -C $COVERITYSCAN_USR_DIR
