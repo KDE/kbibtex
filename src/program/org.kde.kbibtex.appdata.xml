@@ -7,12 +7,14 @@
   <name xml:lang="ca">KBibTeX</name>
   <name xml:lang="ca-valencia">KBibTeX</name>
   <name xml:lang="cs">KBibTeX</name>
+  <name xml:lang="da">KBibTeX</name>
   <name xml:lang="de">KBibTeX</name>
   <name xml:lang="en-GB">KBibTeX</name>
   <name xml:lang="es">KBibTeX</name>
   <name xml:lang="fi">KBibTeX</name>
   <name xml:lang="fr">KBibTeX</name>
   <name xml:lang="gl">KBibTeX</name>
+  <name xml:lang="ia">KBibTeX</name>
   <name xml:lang="id">KBibTeX</name>
   <name xml:lang="it">KBibTeX</name>
   <name xml:lang="ko">KBibTeX</name>
@@ -79,6 +81,7 @@
     <p xml:lang="fi">KBibTeXilla voit tehdä seuraavia asioita:</p>
     <p xml:lang="fr">KBibTeX peut faire les choses suivantes : </p>
     <p xml:lang="gl">KBibTeX pode facer o seguinte:</p>
+    <p xml:lang="ia">KBibTex pote facer le sequente cosas:</p>
     <p xml:lang="id">KBibTeX bisa melakukan hal-hal berikut ini:</p>
     <p xml:lang="it">KBibTeX è in grado di svolgere i seguenti compiti:</p>
     <p xml:lang="ko">KBibTeX는 다음 기능을 지원합니다:</p>
