@@ -110,8 +110,9 @@ find_package(
     Service
     Wallet
     Crash
-    DocTools
     TextEditor
+    OPTIONAL_COMPONENTS
+    DocTools
 )
 add_definitions(-DHAVE_KF5)
 
