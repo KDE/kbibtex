@@ -95,7 +95,9 @@ find_package(
     WebKitWidgets
     Test
 )
-add_definitions(-DHAVE_QTWIDGETS)
+if (Qt5Widgets_FOUND)
+    add_definitions(-DHAVE_QTWIDGETS)
+endif()
 
 find_package(
     KF5 ${KF5_MIN_VERSION}
@@ -114,7 +116,9 @@ find_package(
     OPTIONAL_COMPONENTS
     DocTools
 )
-add_definitions(-DHAVE_KF5)
+if (KF5_FOUND)
+    add_definitions(-DHAVE_KF5)
+endif()
 
 find_package(
     Poppler
