@@ -66,12 +66,8 @@ public:
         /// to KBibTeX's authors along with information which ACM records were search
         /// for or actually found.
         static const QSet<QString> evaluatedOrIgnoredValues{QStringLiteral("id"), QStringLiteral("call-number"), QStringLiteral("DOI"), QStringLiteral("ISBN"), QStringLiteral("ISSN"), QStringLiteral("URL"), QStringLiteral("type"), QStringLiteral("author"), QStringLiteral("issued"), QStringLiteral("original-date"), QStringLiteral("number-of-pages"), QStringLiteral("page"), QStringLiteral("number"), QStringLiteral("issue"), QStringLiteral("volume"), QStringLiteral("publisher"), QStringLiteral("publisher-place"), QStringLiteral("title"), QStringLiteral("collection-title"), QStringLiteral("container-title"), QStringLiteral("event-place"), QStringLiteral("keyword"), QStringLiteral("accessed")};
-#if QT_VERSION >= 0x050e00
-        const QSet<QString> objectsValues = QSet<QString>(object.keys().begin(), object.keys().end());
-#else // QT_VERSION < 0x050e00
         QSet<QString> objectsValues;
         for (const QString &objectValue : object.keys()) objectsValues.insert(objectValue);
-#endif // QT_VERSION
         const QSet<QString> unusedValues = objectsValues - evaluatedOrIgnoredValues;
         for (const QString &unusedValue : unusedValues) {
             const QString valueString = object.value(unusedValue).toString();
@@ -367,11 +363,11 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
         const QString htmlSource = QString::fromUtf8(reply->readAll().constData());
 
         QVector<QString> dois;
-        static const QRegularExpression citationUrlRegExp(QStringLiteral("/doi/abs/(") + KBibTeX::doiRegExp.pattern() + QStringLiteral(")"), QRegularExpression::CaseInsensitiveOption);
+        static const QRegularExpression citationUrlRegExp(QStringLiteral("/doi(/abs)?/(") + KBibTeX::doiRegExp.pattern() + QStringLiteral(")"), QRegularExpression::CaseInsensitiveOption);
         QRegularExpressionMatchIterator citationUrlRegExpMatchIt = citationUrlRegExp.globalMatch(htmlSource);
         while (citationUrlRegExpMatchIt.hasNext()) {
             const QRegularExpressionMatch citationUrlRegExpMatch = citationUrlRegExpMatchIt.next();
-            dois.append(citationUrlRegExpMatch.captured(1));
+            dois.append(citationUrlRegExpMatch.captured(2));
             if (d->currentSearchPosition + dois.length() > d->numExpectedResults)
                 break;
         }
