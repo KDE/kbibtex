@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -220,6 +220,8 @@ void KBibTeXTest::startOnlineSearchTests()
 
 void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
+    if (m_currentOnlineSearch != m_onlineSearchList.constEnd())
+        disconnect(*m_currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
     if (searchResult == OnlineSearchAbstract::resultNoError) {
         if (m_currentOnlineSearchNumFoundEntries == 0)
             addMessage(QString(QStringLiteral("Got no error message searching '%1', but found NO entries")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Error);
