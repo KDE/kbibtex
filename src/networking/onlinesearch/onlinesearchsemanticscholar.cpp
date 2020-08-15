@@ -130,9 +130,14 @@ public:
         if (doiRegExpMatch.hasMatch())
             return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + doiRegExpMatch.captured(0));
         else {
-            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithoutPrefix.match(query[QueryKey::FreeText]);
+            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithPrefix.match(query[QueryKey::FreeText]);
             if (arXivRegExpMatch.hasMatch())
                 return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + arXivRegExpMatch.captured(0));
+            else {
+                const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithoutPrefix.match(query[QueryKey::FreeText]);
+                if (arXivRegExpMatch.hasMatch())
+                    return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/arXiv:") + arXivRegExpMatch.captured(0));
+            }
         }
         return QUrl();
     }
@@ -263,8 +268,7 @@ void OnlineSearchSemanticScholar::downloadDone()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchSemanticScholar::downloadDone);
         } else {
             QJsonParseError parseError;
-            const auto buffer = reply->readAll();
-            const QJsonDocument document = QJsonDocument::fromJson(buffer, &parseError);
+            const QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &parseError);
             if (parseError.error == QJsonParseError::NoError) {
                 if (document.isObject()) {
                     Entry *entry = d->entryFromJsonObject(document.object());

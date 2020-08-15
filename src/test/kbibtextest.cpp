@@ -254,8 +254,13 @@ void KBibTeXTest::processNextSearch()
         addMessage(QString(QStringLiteral("Searching '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Info);
 
         QMap<OnlineSearchAbstract::QueryKey, QString> query;
-        static const QStringList lastNames{QStringLiteral("Smith"), QStringLiteral("Jones"), QStringLiteral("Andersson"), QStringLiteral("Ivanova"), QStringLiteral("Wang"), QStringLiteral("Gonzalez"), QStringLiteral("Garcia"), QStringLiteral("Lopez"), QStringLiteral("Ahmed"), QStringLiteral("Nkosi"), QStringLiteral("Kim"), QStringLiteral("Chen"), QStringLiteral("Devi"), QStringLiteral("Khan"), QStringLiteral("Johansson"), QStringLiteral("Sharipov"), QStringLiteral("Korhonen"), QStringLiteral("Muller"), QStringLiteral("Murphy"), QStringLiteral("Papadopoulos"), QStringLiteral("Rossi"), QStringLiteral("Hernandez"), QStringLiteral("Williams"), QStringLiteral("Zhang"), QStringLiteral("Singh"), QStringLiteral("Kumar")};
-        query.insert(OnlineSearchAbstract::QueryKey::Author, lastNames[QRandomGenerator::global()->bounded(lastNames.count())]);
+        if (qobject_cast<OnlineSearchSemanticScholar *>(*m_currentOnlineSearch) != nullptr)
+            /// Semantic Scholar cannot search for last names, but for DOIs or arXiv IDs instead
+            query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1002/smj.863"));
+        else {
+            static const QStringList lastNames{QStringLiteral("Smith"), QStringLiteral("Jones"), QStringLiteral("Andersson"), QStringLiteral("Ivanova"), QStringLiteral("Wang"), QStringLiteral("Gonzalez"), QStringLiteral("Garcia"), QStringLiteral("Lopez"), QStringLiteral("Ahmed"), QStringLiteral("Nkosi"), QStringLiteral("Kim"), QStringLiteral("Chen"), QStringLiteral("Devi"), QStringLiteral("Khan"), QStringLiteral("Johansson"), QStringLiteral("Sharipov"), QStringLiteral("Korhonen"), QStringLiteral("Muller"), QStringLiteral("Murphy"), QStringLiteral("Papadopoulos"), QStringLiteral("Rossi"), QStringLiteral("Hernandez"), QStringLiteral("Williams"), QStringLiteral("Zhang"), QStringLiteral("Singh"), QStringLiteral("Kumar")};
+            query.insert(OnlineSearchAbstract::QueryKey::Author, lastNames[QRandomGenerator::global()->bounded(lastNames.count())]);
+        }
         connect(*m_currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
         connect(*m_currentOnlineSearch, &OnlineSearchAbstract::foundEntry, this, [this]() {
             ++m_currentOnlineSearchNumFoundEntries;
