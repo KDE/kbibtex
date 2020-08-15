@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2016-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -50,6 +50,7 @@ OnlineSearchBioRxiv::~OnlineSearchBioRxiv() {
 
 void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int numResults) {
     m_hasBeenCanceled = false;
+    d->resultPageUrls.clear();
     emit progress(curStep = 0, numSteps = numResults * 2 + 1);
 
     QString urlText(QString(QStringLiteral("https://www.biorxiv.org/search/numresults:%1 sort:relevance-rank title_flags:match-phrase format_result:standard ")).arg(numResults));
@@ -97,7 +98,7 @@ void OnlineSearchBioRxiv::resultsPageDone() {
         /// ensure proper treatment of UTF-8 characters
         const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
 
-        static const QRegularExpression contentRegExp(QStringLiteral("/content/early/[12]\\d{3}/[01]\\d/\\d{2}/\\d+"));
+        static const QRegularExpression contentRegExp(QStringLiteral("[^\"]*/content/(early/[12]\\d{3}/[01]\\d/\\d{2}/\\d+|(") + KBibTeX::doiRegExp.pattern() + QStringLiteral("))"));
         QRegularExpressionMatchIterator contentRegExpMatchIt = contentRegExp.globalMatch(htmlCode);
         while (contentRegExpMatchIt.hasNext()) {
             const QRegularExpressionMatch contentRegExpMatch = contentRegExpMatchIt.next();
