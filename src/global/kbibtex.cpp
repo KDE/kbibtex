@@ -44,7 +44,7 @@ const QString KBibTeX::MonthsTriple[] = {
 const QRegularExpression KBibTeX::fileListSeparatorRegExp(QStringLiteral("[ \\t]*[;\\n]+[ \\t]*"));
 const QRegularExpression KBibTeX::fileRegExp(QStringLiteral("(\\bfile:)?[^{}\\t]+\\.\\w{2,4}\\b"), QRegularExpression::CaseInsensitiveOption);
 const QRegularExpression KBibTeX::urlRegExp(QStringLiteral("\\b((http|s?ftp|(web)?dav|imap|ipp|ldap|rtsp|sip|stun|turn)s?|mailto|jabber|xmpp|info|file)://[^ {}\"]+(\\b|[/])"), QRegularExpression::CaseInsensitiveOption);
-const QRegularExpression KBibTeX::doiRegExp(QStringLiteral("10([.][0-9]+)+/[/-a-z0-9.()<>_:;\\\\]+"), QRegularExpression::CaseInsensitiveOption);
+const QRegularExpression KBibTeX::doiRegExp(QStringLiteral("10([.][0-9]+)+/[-/a-z0-9.()<>_:;\\\\]+"), QRegularExpression::CaseInsensitiveOption);
 const QRegularExpression KBibTeX::arXivRegExpWithPrefix(QStringLiteral("arXiv:(([0-9]+[.][0-9]+|[a-z-]+/[0-9]+)(v[0-9]+)?)"));
 const QRegularExpression KBibTeX::arXivRegExpWithoutPrefix(QStringLiteral("([0-9]+[.][0-9]+|[a-z-]+/[0-9]+)(v[0-9]+)?"));
 const QRegularExpression KBibTeX::mendeleyFileRegExp(QStringLiteral(":(.*):pdf"), QRegularExpression::CaseInsensitiveOption);
