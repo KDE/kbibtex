@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -231,6 +231,12 @@ QUrl InternalNetworkAccessManager::removeApiKey(QUrl url)
     urlQuery.removeQueryItem(QStringLiteral("api_key"));
     url.setQuery(urlQuery);
     return url;
+}
+
+QString InternalNetworkAccessManager::removeApiKey(const QString &text)
+{
+    static const QRegularExpression apiKeyRegExp(QStringLiteral("\\bapi_?key=[^\"&? ]"));
+    return QString(text).remove(apiKeyRegExp);
 }
 
 void InternalNetworkAccessManager::networkReplyTimeout()
