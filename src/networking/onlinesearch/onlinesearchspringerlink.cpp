@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -175,7 +175,7 @@ public:
     QUrl buildQueryUrl() {
         if (form == nullptr) return QUrl();
 
-        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springernature.com/metadata/pam?api_key=")).append(springerMetadataKey));
 
         QString queryString = form->lineEditFreeText->text();
 
@@ -208,7 +208,7 @@ public:
 #endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QueryKey, QString> &query) {
-        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springernature.com/metadata/pam?api_key=")).append(springerMetadataKey));
 
         QString queryString = query[QueryKey::FreeText];
 
