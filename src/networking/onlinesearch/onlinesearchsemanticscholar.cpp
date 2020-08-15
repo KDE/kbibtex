@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -128,9 +128,14 @@ public:
         if (doiRegExpMatch.hasMatch())
             return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + doiRegExpMatch.captured(0));
         else {
-            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithoutPrefix.match(query[queryKeyFreeText]);
+            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithPrefix.match(query[queryKeyFreeText]);
             if (arXivRegExpMatch.hasMatch())
                 return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + arXivRegExpMatch.captured(0));
+            else {
+                const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithoutPrefix.match(query[queryKeyFreeText]);
+                if (arXivRegExpMatch.hasMatch())
+                    return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/arXiv:") + arXivRegExpMatch.captured(0));
+            }
         }
         return QUrl();
     }
@@ -266,10 +271,7 @@ void OnlineSearchSemanticScholar::downloadDone()
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchSemanticScholar::downloadDone);
         } else {
             QJsonParseError parseError;
-            const auto buffer = reply->readAll();
-            const QString jsonText = QString::fromUtf8(buffer);
-            dumpToFile(QStringLiteral("semanticscholar.json"), jsonText);
-            const QJsonDocument document = QJsonDocument::fromJson(buffer, &parseError);
+            const QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &parseError);
             if (parseError.error == QJsonParseError::NoError) {
                 if (document.isObject()) {
                     Entry *entry = d->entryFromJsonObject(document.object());
