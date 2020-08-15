@@ -217,6 +217,12 @@ QUrl InternalNetworkAccessManager::removeApiKey(QUrl url)
     return url;
 }
 
+QString InternalNetworkAccessManager::removeApiKey(const QString &text)
+{
+    static const QRegularExpression apiKeyRegExp(QStringLiteral("\\bapi_?key=[^\"&? ]"));
+    return QString(text).remove(apiKeyRegExp);
+}
+
 void InternalNetworkAccessManager::networkReplyTimeout()
 {
     QTimer *timer = static_cast<QTimer *>(sender());

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2018 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -68,6 +68,14 @@ public:
      * @return a reference to the URL passed to this function
      */
     static QUrl removeApiKey(QUrl url);
+
+    /**
+     * Remove API keys from a string such an error message.
+     *
+     * @param text string where API keys have to be removed
+     * @return string with the API keys removed (unmodified if not API keys were contained)
+     */
+    static QString removeApiKey(const QString &text);
 
 protected:
     InternalNetworkAccessManager(QObject *parent = nullptr);
