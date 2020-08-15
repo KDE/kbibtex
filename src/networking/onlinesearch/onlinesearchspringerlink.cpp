@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -173,7 +173,7 @@ public:
     QUrl buildQueryUrl() {
         if (form == nullptr) return QUrl();
 
-        QUrl queryUrl = QUrl(QString(QStringLiteral("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springernature.com/metadata/pam?api_key=")).append(springerMetadataKey));
 
         QString queryString = form->lineEditFreeText->text();
 
@@ -206,7 +206,7 @@ public:
 #endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QString, QString> &query) {
-        QUrl queryUrl = QUrl(QString(QStringLiteral("http://api.springer.com/metadata/pam/?api_key=")).append(springerMetadataKey));
+        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springernature.com/metadata/pam?api_key=")).append(springerMetadataKey));
 
         QString queryString = query[queryKeyFreeText];
 
@@ -303,7 +303,7 @@ QString OnlineSearchSpringerLink::label() const
 
 QString OnlineSearchSpringerLink::favIconUrl() const
 {
-    return QStringLiteral("https://link.springer.com/static/3138de5f8939a9343008da2788dddc18466e88eb/sites/link/images/favicon-32x32.png");
+    return QStringLiteral("https://link.springer.com/static/0bb40b789c9676ecaca0931d990e98738a4c5461/sites/link/images/favicon-32x32.png");
 }
 
 #ifdef HAVE_QTWIDGETS
@@ -317,7 +317,7 @@ OnlineSearchAbstract::Form *OnlineSearchSpringerLink::customWidget(QWidget *pare
 
 QUrl OnlineSearchSpringerLink::homepage() const
 {
-    return QUrl(QStringLiteral("http://www.springerlink.com/"));
+    return QUrl(QStringLiteral("https://link.springer.com/"));
 }
 
 void OnlineSearchSpringerLink::doneFetchingPAM()
