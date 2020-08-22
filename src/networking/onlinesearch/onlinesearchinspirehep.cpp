@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -67,7 +67,9 @@ QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QueryKey, QString> &query,
         queryFragments.append(typedSearch.arg(QStringLiteral("a"), text));
 
     /// Build URL
-    QString urlText = QStringLiteral("https://inspirehep.net/search?ln=en&ln=en&of=hx&action_search=Search&sf=&so=d&rm=&sc=0");
+    // TODO as of August 2020, there is no new API in place, but the old one
+    // is still reachable at 'old.inspirehep.net'
+    QString urlText = QStringLiteral("https://old.inspirehep.net/search?ln=en&ln=en&of=hx&action_search=Search&sf=&so=d&rm=&sc=0");
     /// Set number of expected results
     urlText.append(QString(QStringLiteral("&rg=%1")).arg(numResults));
     /// Append actual query
