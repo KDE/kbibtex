@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -32,12 +32,12 @@ QString OnlineSearchInspireHep::label() const
 
 QUrl OnlineSearchInspireHep::homepage() const
 {
-    return QUrl(QStringLiteral("http://inspirehep.net/"));
+    return QUrl(QStringLiteral("https://inspirehep.net/"));
 }
 
 QString OnlineSearchInspireHep::favIconUrl() const
 {
-    return QStringLiteral("http://inspirehep.net/favicon.ico");
+    return QStringLiteral("https://inspirehep.net/favicon.ico");
 }
 
 QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, int numResults)
@@ -70,7 +70,9 @@ QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QString, QString> &query, 
         queryFragments.append(typedSearch.arg(QStringLiteral("a"), text));
 
     /// Build URL
-    QString urlText = QStringLiteral("http://inspirehep.net/search?ln=en&ln=en&of=hx&action_search=Search&sf=&so=d&rm=&sc=0");
+    // TODO as of August 2020, there is no new API in place, but the old one
+    // is still reachable at 'old.inspirehep.net'
+    QString urlText = QStringLiteral("https://old.inspirehep.net/search?ln=en&ln=en&of=hx&action_search=Search&sf=&so=d&rm=&sc=0");
     /// Set number of expected results
     urlText.append(QString(QStringLiteral("&rg=%1")).arg(numResults));
     /// Append actual query
