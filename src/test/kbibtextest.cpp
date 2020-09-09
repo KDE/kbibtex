@@ -40,7 +40,9 @@
 #include <onlinesearch/OnlineSearchIngentaConnect>
 #include <onlinesearch/OnlineSearchInspireHep>
 #include <onlinesearch/OnlineSearchIDEASRePEc>
+#ifdef HAVE_WEBENGINEWIDGETS
 #include <onlinesearch/OnlineSearchJStor>
+#endif // HAVE_WEBENGINEWIDGETS
 #include <onlinesearch/OnlineSearchMathSciNet>
 #include <onlinesearch/OnlineSearchMRLookup>
 #include <onlinesearch/OnlineSearchPubMed>
@@ -129,7 +131,9 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchIEEEXplore(this);
     m_onlineSearchList << new OnlineSearchIngentaConnect(this);
     m_onlineSearchList << new OnlineSearchInspireHep(this);
+#ifdef HAVE_WEBENGINEWIDGETS
     m_onlineSearchList << new OnlineSearchJStor(this);
+#endif // HAVE_WEBENGINEWIDGETS
     m_onlineSearchList << new OnlineSearchMathSciNet(this);
     m_onlineSearchList << new OnlineSearchMRLookup(this);
     m_onlineSearchList << new OnlineSearchPubMed(this);

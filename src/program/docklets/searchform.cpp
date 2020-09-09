@@ -62,7 +62,9 @@
 #include <onlinesearch/OnlineSearchScienceDirect>
 #include <onlinesearch/OnlineSearchSpringerLink>
 #include <onlinesearch/OnlineSearchArXiv>
+#ifdef HAVE_WEBENGINEWIDGETS
 #include <onlinesearch/OnlineSearchJStor>
+#endif // HAVE_WEBENGINEWIDGETS
 #include <onlinesearch/OnlineSearchMathSciNet>
 #include <onlinesearch/OnlineSearchMRLookup>
 #include <onlinesearch/OnlineSearchInspireHep>
@@ -240,7 +242,9 @@ public:
         addEngine(new OnlineSearchGoogleScholar(p));
         addEngine(new OnlineSearchIEEEXplore(p));
         addEngine(new OnlineSearchIngentaConnect(p));
+#ifdef HAVE_WEBENGINEWIDGETS
         addEngine(new OnlineSearchJStor(p));
+#endif // HAVE_WEBENGINEWIDGETS
         addEngine(new OnlineSearchMathSciNet(p));
         addEngine(new OnlineSearchMRLookup(p));
         addEngine(new OnlineSearchInspireHep(p));
