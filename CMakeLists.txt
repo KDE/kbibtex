@@ -98,6 +98,12 @@ find_package(
 if (Qt5Widgets_FOUND)
     add_definitions(-DHAVE_QTWIDGETS)
 endif()
+if(Qt5WebEngineWidgets_FOUND)
+    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
+    add_definitions(
+        -DHAVE_WEBENGINEWIDGETS
+    )
+endif()
 
 find_package(
     KF5 ${KF5_MIN_VERSION}

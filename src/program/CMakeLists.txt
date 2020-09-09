@@ -71,9 +71,6 @@ target_link_libraries(kbibtex
 if(Qt5WebEngineWidgets_FOUND)
     message(STATUS "Using QtWebEngine to render complex HTML content")
     # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-    add_definitions(
-        -DHAVE_WEBENGINEWIDGETS
-    )
     target_link_libraries(kbibtex
         PRIVATE
             Qt5::WebEngineWidgets

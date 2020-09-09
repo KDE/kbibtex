@@ -9,7 +9,6 @@ set(
     onlinesearch/onlinesearchpubmed.cpp
     onlinesearch/onlinesearchacmportal.cpp
     onlinesearch/onlinesearchspringerlink.cpp
-    onlinesearch/onlinesearchjstor.cpp
     onlinesearch/onlinesearchmathscinet.cpp
     onlinesearch/onlinesearchmrlookup.cpp
     onlinesearch/onlinesearchinspirehep.cpp
@@ -36,6 +35,17 @@ set(
     internalnetworkaccessmanager.cpp
     urlchecker.cpp
 )
+
+if(Qt5WebEngineWidgets_FOUND)
+    # See also below for a similar if-clause
+    message(STATUS "Using QtWebEngine parse JStor pages")
+    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
+    set(
+        kbibtexnetworking_SRCS
+        ${kbibtexnetworking_SRCS}
+        onlinesearch/onlinesearchjstor.cpp
+    )
+endif()
 
 ecm_qt_declare_logging_category(kbibtexnetworking_SRCS
     HEADER logging_networking.h
@@ -85,6 +95,14 @@ target_link_libraries(kbibtexnetworking
         KBibTeX::Global
         KBibTeX::IO
 )
+
+if(Qt5WebEngineWidgets_FOUND)
+    # See also above for a similar if-clause
+    target_link_libraries(kbibtexnetworking
+        PRIVATE
+            Qt5::WebEngineWidgets
+    )
+endif()
 
 install(
     TARGETS kbibtexnetworking
