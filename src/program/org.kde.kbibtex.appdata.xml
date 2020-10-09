@@ -82,6 +82,7 @@
     <p xml:lang="tr">KBibTex, TeX/LaTeX kaynakçalarını toplamak ve çeşitli formatlarda dışa aktarmak için kullanılabilecek bir başvuru yönetim uygulamasıdır.</p>
     <p xml:lang="uk">KBibTeX — програма для керування посиланнями, якою можна скористатися для створення бібліографій TeX/LaTeX та експортування даних бібліографій у різноманітних форматах.</p>
     <p xml:lang="x-test">xxKBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.xx</p>
+    <p xml:lang="zh-CN">KBibTeX 是一个参考文献管理应用程序，可以用来收集 TeX/LaTeX 文献目录并以各种格式导出。</p>
     <p>KBibTeX can do the following things:</p>
     <p xml:lang="bs">KBibTeX može uraditi sljedeće stvari:</p>
     <p xml:lang="ca">KBibTeX pot fer les següents coses:</p>
@@ -132,6 +133,7 @@
       <li xml:lang="tr">Kaynakça girdilerini çeşitli biçimlerde önizleyin Kaynak (BibTeX), Kaynak (RIS), Wikipedia, standart (XML/XSLT), süslü (XML/XSLT) ve salt özet (XML/XSLT). Bibtex2html kurulduğunda ek önizleme stilleri kullanılabilir hale gelir.</li>
       <li xml:lang="uk">Виконувати попередній перегляд і зберігати записи бібліографії у різних форматах (початковий код (BibTeX), початковий код (RIS), Вікіпедія, standard (XML/XSLT), fancy (XML/XSLT) та abstract-only (XML/XSLT)). Доступ до додаткових стилів попереднього перегляду можна отримати після встановлення програми bibtex2html.</li>
       <li xml:lang="x-test">xxPreview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.xx</li>
+      <li xml:lang="zh-CN">以各种格式预览参考文献条目(资料库(BibTeX)、资料源(RIS)、维基百科(标准(XML/XSLT)、花旗(XML/XSLT)、抽象(XML/XSLT))。 安装了 bibtex2html 时可以使用额外的预览样式。</li>
       <li>Import data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.</li>
       <li xml:lang="bs">Uvoz podataka u raznim bibliografskim formatima datoteke kao što su BibTeX, RIS i ISI (zahtijeva bibutils) i izvoz podataka u PDF(zahtijeva pdflatex), PostScript(zahtijeva latex), RTF(zahtijeva latex2rtf) i HTML.</li>
       <li xml:lang="ca">Importar les dades en diversos formats de fitxer per a bibliografies, tals com BibTeX, RIS i ISI (requereix «bibutils») i exporta les dades a PDF (requereix «pdflatex»), PostScript (requereix «latex»), RTF (requereix «latex2rtf»), i HTML.</li>
@@ -156,6 +158,7 @@
       <li xml:lang="tr">BibTeX, RIS ve ISI (bibutils gerektirir) gibi çeşitli kaynakça dosya formatlarına verileri içe aktarın ve PDF  (pdflatex gerektirir), PostScript (lateks gerektirir), RTF (latex2rtf gerektirir) ve HTML'e verileri dışa aktarın.</li>
       <li xml:lang="uk">Імпортувати дані у різноманітних форматах файлів бібліографії, зокрема BibTeX, RIS та ISI (слід встановити bibutils) та експортувати дані до PDF (потребує встановлення pdflatex), PostScript (потребує встановлення latex), RTF (потребує встановлення latex2rtf) та HTML.</li>
       <li xml:lang="x-test">xxImport data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.xx</li>
+      <li xml:lang="zh-CN">以各种参考文献文件格式导入数据，如BibTeX、RIS和ISI(需要bibutils)，并导出数据到 PDF (需要pdftex)， PostScript (需要 latex), RTF (需要 latex2rtf), 和 HTML。</li>
       <li>Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="bs">Pretraga za ulazne podatke bibliografije u online bazama podataka (npr. Google Scholar, ACM, IEEE,arXiv, itd.)</li>
       <li xml:lang="ca">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
@@ -180,6 +183,7 @@
       <li xml:lang="tr">Çevrimiçi veritabanlarında kaynakça girdi verilerini arayın (Ör. Google Scholar, ACM, IEEE, arXiv, vb.)</li>
       <li xml:lang="uk">Виконувати пошук даних записів бібліографії у базах даних у інтернеті (зокрема у Google Scholar, ACM, IEEE, arXiv тощо).</li>
       <li xml:lang="x-test">xxSearch for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)xx</li>
+      <li xml:lang="zh-CN">搜索在线数据库中的参考文献条目数据(如 Google Scholar、ACM、IEEE、arXiv 等)</li>
       <li>Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
       <li xml:lang="bs">Pregled lokalnih ili udaljenih (online) resursa , npr. PDF datoteke, povezane u BibTEX ulazu.</li>
       <li xml:lang="ca">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
@@ -204,6 +208,7 @@
       <li xml:lang="tr">Yerel veya uzak (çevrimiçi) kaynakları önizleyin, ör. BibTEX girdisinde bağlantı verilen PDF dosyaları.</li>
       <li xml:lang="uk">Попередньо переглядати локальні та інтернет-ресурси, зокрема файли PDF, пов’язані із записом бібліографії BibTeX.</li>
       <li xml:lang="x-test">xxPreview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.xx</li>
+      <li xml:lang="zh-CN">预览本地或远程 (在线) 资源，例如 PDF 文件，在 BibTEX 条目中的链接。</li>
       <li>Find and merge duplicate entries in bibliography.</li>
       <li xml:lang="bs">Potraži i spoji duplikate ulaza u bibliografiju.</li>
       <li xml:lang="ca">Cerca i fusiona les entrades duplicades a la bibliografia.</li>
