@@ -466,7 +466,7 @@ public:
     }
 
     bool saveAsString(QString &output, const File *bibtexfile) {
-        const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
+        const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") || determineTargetCodec().first == QStringLiteral("us-ascii") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
 
         /// Memorize which entries are used in a crossref field
         QHash<QString, QStringList> crossRefMap;

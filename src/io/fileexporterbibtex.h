@@ -54,7 +54,7 @@ public:
 
     /**
      * Set the text encoding used in the resulting bibliography file.
-     * Example values for encoding include 'UTF-8' or 'US-ASCII'.
+     * Example values for encoding include 'UTF-8' or 'ISO-8859-1'.
      * Special encoding 'LaTeX' corresponds to 'UTF-8' but tries to
      * replace non-ASCII characters with LaTeX equivalents (which are
      * ASCII only).

@@ -1359,7 +1359,13 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     if (encoding.isEmpty())
         encoding = Preferences::instance().bibTeXEncoding(); ///< just in case something went wrong
     encoding = encoding.toLower();
-    QTextCodec *codec = QTextCodec::codecForName(encoding.toLatin1());
+    if (encoding == QStringLiteral("us-ascii")) {
+        qDebug(LOG_KBIBTEX_IO) << "Replacing deprecated encoding 'US-ASCII' with 'LaTeX'";
+        encoding = QStringLiteral("latex"); //< encoding 'US-ASCII' is deprecated in favour of 'LaTeX'
+    }
+    // For encoding 'LaTeX', fall back to encoding 'UTF-8' when creating
+    // a QTextCodec instance, but keep 'LaTeX' as the bibliography's 'actual' encoding (used as its encoding property)
+    QTextCodec *codec = QTextCodec::codecForName(encoding == QStringLiteral("latex") ? "utf-8" : encoding.toLatin1());
     if (codec == nullptr) {
         qCWarning(LOG_KBIBTEX_IO) << "Could not determine codec for encoding" << encoding;
         emit message(MessageSeverity::Warning, QString(QStringLiteral("Could not determine codec for encoding '%1'")).arg(encoding));
