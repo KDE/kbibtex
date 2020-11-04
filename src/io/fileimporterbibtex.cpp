@@ -1389,8 +1389,8 @@ bool FileImporterBibTeX::evaluateParameterComments(QTextStream *textStream, cons
     /** check if this file requests a special encoding */
     if (line.startsWith(QStringLiteral("@comment{x-kbibtex-encoding=")) && line.endsWith(QLatin1Char('}'))) {
         const QString encoding = line.mid(28, line.length() - 29).toLower();
-        textStream->setCodec(encoding.toLower() == QStringLiteral("latex") ? "us-ascii" : encoding.toLatin1());
-        file->setProperty(File::Encoding, encoding.toLower() == QStringLiteral("latex") ? encoding : QString::fromLatin1(textStream->codec()->name()));
+        textStream->setCodec(encoding.toLower() == QStringLiteral("latex") ? "utf-8" : encoding.toLatin1());
+        file->setProperty(File::Encoding, encoding.toLower() == QStringLiteral("latex") || encoding.toLower() == QStringLiteral("us-ascii") ? QStringLiteral("latex") : QString::fromLatin1(textStream->codec()->name()));
         return true;
     } else if (line.startsWith(QStringLiteral("@comment{x-kbibtex-personnameformatting=")) && line.endsWith(QLatin1Char('}'))) {
         // TODO usage of x-kbibtex-personnameformatting is deprecated,
