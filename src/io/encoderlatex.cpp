@@ -25,7 +25,12 @@
 #include "logging_io.h"
 
 inline bool isAsciiLetter(const QChar c) {
-    return (c.unicode() >= static_cast<ushort>('A') && c.unicode() <= static_cast<ushort>('Z')) || (c.unicode() >= static_cast<ushort>('a') && c.unicode() <= static_cast<ushort>('z'));
+    static const ushort upperCaseLetterA = QLatin1Char('A').unicode();
+    static const ushort upperCaseLetterZ = QLatin1Char('Z').unicode();
+    static const ushort lowerCaseLetterA = QLatin1Char('a').unicode();
+    static const ushort lowerCaseLetterZ = QLatin1Char('z').unicode();
+    const ushort unicode = c.unicode();
+    return (unicode >= upperCaseLetterA && unicode <= upperCaseLetterZ) || (unicode >= lowerCaseLetterA && unicode <= lowerCaseLetterZ);
 }
 
 inline int asciiLetterOrDigitToPos(const QChar c) {
@@ -50,7 +55,11 @@ inline bool isIJ(const QChar c) {
     return c == upperCaseLetterI || c == upperCaseLetterJ || c == lowerCaseLetterI || c == lowerCaseLetterJ;
 }
 
-enum EncoderLaTeXCommandDirection { DirectionCommandToUnicode = 1, DirectionUnicodeToCommand = 2, DirectionBoth = DirectionCommandToUnicode | DirectionUnicodeToCommand };
+enum EncoderLaTeXCommandDirection {
+    DirectionCommandToUnicode = 1, //< A mapping between command and unicode value may be used in the direction from command to unicode value
+    DirectionUnicodeToCommand = 2, //< A mapping between command and unicode value may be used in the direction from unicode value to command
+    DirectionBoth = DirectionCommandToUnicode | DirectionUnicodeToCommand
+};
 
 /**
  * General documentation on this topic:
@@ -1289,7 +1298,8 @@ QString EncoderLaTeX::decode(const QString &input) const
 
             /// Finally, check if there may be extra curly brackets
             /// like {} and hop over them
-            if (checkForExtraCurlyAtEnd && i < len - 2 && input[i + 1] == QLatin1Char('{') && input[i + 2] == QLatin1Char('}')) i += 2;
+            if (checkForExtraCurlyAtEnd && i < len - 2 && input[i + 1] == QLatin1Char('{') && input[i + 2] == QLatin1Char('}'))
+                i += 2;
         } else {
             /// So far, no opening curly bracket and no backslash
             /// May still be a symbol sequence like ---
