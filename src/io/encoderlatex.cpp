@@ -1229,6 +1229,8 @@ QString EncoderLaTeX::decode(const QString &input) const
                     if (!found)
                         for (const MathCommand &mathCommand : mathCommands) {
                             if ((mathCommand.direction & DirectionCommandToUnicode) && mathCommand.command == alpha) {
+                                if (currentMathModeTop() == MathModeNone)
+                                    qDebug() << "Found math mode command" << QString(QStringLiteral("\\%1")).arg(alpha) << "outside of a math expression";
                                 output.append(QChar(mathCommand.unicode));
                                 found = true;
                                 break;
@@ -1288,9 +1290,11 @@ QString EncoderLaTeX::decode(const QString &input) const
                         output.append(QChar(0x2009));
                         // found = true; ///< only necessary if more tests will follow in the future
                         ++i;
+                        found = true;
                     } else {
                         /// Nothing special, copy input char to output
                         output.append(c);
+                        found = true;
                     }
                 }
             } else if (!found) {
@@ -1335,9 +1339,9 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// text mode and math mode
                 if (c == QLatin1Char('$') && (i == 0 || input[i - 1] != QLatin1Char('\\'))) {
                     if (currentMathModeTop() == MathModeDollar)
-                        currentMathMode.pop();
+                        currentMathMode.pop(); //< the Dollar sign that got just read closes the math mode
                     else
-                        currentMathMode.push(MathModeDollar);
+                        currentMathMode.push(MathModeDollar); //< the Dollar sign that got just read starts a new math mode
                 }
                 if (currentMathModeTop() == MathModeEnsureMath) {
                     if (c == QLatin1Char('{'))
@@ -1414,6 +1418,21 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             /// If current char is outside ASCII boundaries ...
             bool found = false;
 
+            if (!found && !currentMathMode.empty()) {
+                /// Ok, test for math commands if already in math mode
+                for (const MathCommand &mathCommand : mathCommands)
+                    if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
+                        output.append(QString(QStringLiteral("\\%1")).arg(mathCommand.command));
+                        const QChar peekAhead = i < len - 1 ? input[i + 1] : QChar();
+                        if (peekAhead != QLatin1Char('\\') && peekAhead != QLatin1Char('}') && peekAhead != QLatin1Char('$')) {
+                            // Between current command and following character a separator is necessary
+                            output.append(QStringLiteral("{}"));
+                        }
+                        found = true;
+                        break;
+                    }
+            }
+
             /// Handle special cases of i without a dot (\i)
             for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                 if ((dotlessIJCharacter.direction & DirectionUnicodeToCommand) && c.unicode() == dotlessIJCharacter.unicode) {
@@ -1457,19 +1476,11 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                     }
             }
 
-            if (!found) {
-                /// Ok, test for math commands
+            if (!found && currentMathMode.empty()) {
+                /// Ok, test for math commands, even if outside of a math mode, then enter math mode for this character
                 for (const MathCommand &mathCommand : mathCommands)
                     if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
-                        if (!currentMathMode.empty()) {
-                            output.append(QString(QStringLiteral("\\%1")).arg(mathCommand.command));
-                            const QChar peekAhead = i < len - 1 ? input[i + 1] : QChar();
-                            if (peekAhead != QLatin1Char('\\') && peekAhead != QLatin1Char('}') && peekAhead != QLatin1Char('$')) {
-                                /// Between current command and following character a separator is necessary
-                                output.append(QStringLiteral("{}"));
-                            }
-                        } else
-                            output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand.command));
+                        output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand.command));
                         found = true;
                         break;
                     }
@@ -1496,20 +1507,50 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             bool found = false;
             for (const QChar &encoderLaTeXProtectedSymbol : encoderLaTeXProtectedSymbols)
                 if (encoderLaTeXProtectedSymbol == c) {
-                    output.append(QLatin1Char('\\'));
+                    output.append(QLatin1Char('\\')).append(c);
                     found = true;
                     break;
                 }
 
+            if (!found && !currentMathMode.empty()) {
+                /// Ok, test for math commands if already in math mode
+                for (const MathCommand &mathCommand : mathCommands)
+                    if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
+                        output.append(QString(QStringLiteral("\\%1")).arg(mathCommand.command));
+                        const QChar peekAhead = i < len - 1 ? input[i + 1] : QChar();
+                        if (peekAhead != QLatin1Char('\\') && peekAhead != QLatin1Char('}') && peekAhead != QLatin1Char('$')) {
+                            // Between current command and following character a separator is necessary
+                            output.append(QStringLiteral("{}"));
+                        }
+                        found = true;
+                        break;
+                    }
+            }
+
             if (!found && currentMathMode.empty())
                 for (const QChar &encoderLaTeXProtectedTextOnlySymbol : encoderLaTeXProtectedTextOnlySymbols)
                     if (encoderLaTeXProtectedTextOnlySymbol == c) {
-                        output.append(QLatin1Char('\\'));
+                        output.append(QLatin1Char('\\')).append(c);
+                        found = true;
                         break;
                     }
 
-            /// Dump character to output
-            output.append(c);
+            if (!found && currentMathMode.empty()) {
+                /// Ok, test for math commands, even if outside of a math mode, then enter math mode for this character
+                for (const MathCommand &mathCommand : mathCommands)
+                    if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
+                        output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand.command));
+                        found = true;
+                        break;
+                    }
+            }
+
+            if (!found) {
+                /// Well, either this is not a special character or
+                /// we do not know what to do with it, so just dump it into the output
+                output.append(c);
+                found = true;
+            }
 
             /// Finally, check if input character is a dollar sign
             /// without a preceding backslash, means toggling between
