@@ -661,7 +661,12 @@ encoderLaTeXCharacterCommands[] = {
     /** 0x00B2 */
     /** 0x00B3 */
     /** 0x00B4 */
-    {QStringLiteral("textmu"), 0x00B5, DirectionBoth},
+    // Notes about Unicode U+00B5 ('micro sign'):
+    // - Derived from the Greek 'mu' but used as a SI prefix meaning 'one millionth'
+    // - Unicode differs between this symbol and a 'real' Greek 'mu' which has position U+03BC
+    // - There are more lower case 'mu' in Unicode for mathematics (bold, italics, sans-serif, ...)
+    //   at position U+1D6CD and later; those are not supported at all by KBibTeX
+    {QStringLiteral("textmugreek"), 0x00B5, DirectionUnicodeToCommand},
     {QStringLiteral("textparagraph"), 0x00B6, DirectionBoth},
     {QStringLiteral("textpilcrow"), 0x00B6, DirectionBoth},
     {QStringLiteral("textperiodcentered"), 0x00B7, DirectionCommandToUnicode},
@@ -808,6 +813,15 @@ encoderLaTeXCharacterCommands[] = {
     {QStringLiteral("dz"), 0x01F3, DirectionCommandToUnicode},
     {QStringLiteral("HV"), 0x01F6, DirectionCommandToUnicode},
     {QStringLiteral("j"), 0x0237, DirectionBoth},
+    // Notes about Unicode U+03BC ('Greek small letter mu'):
+    // - Unicode differs between this symbol and a 'micro' (SI-prefix) which has position U+00B5
+    // - There are more lower case 'mu' in Unicode for mathematics (bold, italics, sans-serif, ...)
+    //   at position U+1D6CD and later; those are not supported at all by KBibTeX
+    // - LaTeX package 'textcomp' provides command '\textmu' but no other Greek letters
+    // - LaTeX package 'textgreek' provides commands for all Greek letters (e.g. '\textpi') but
+    //   to avoid conflicts with 'textcomp', the command for 'mu' is '\textmugreek'
+    {QStringLiteral("textmugreek"), 0x03BC, DirectionBoth},
+    {QStringLiteral("textmu"), 0x03BC, DirectionCommandToUnicode},
     {QStringLiteral("ldots"), 0x2026, DirectionBoth},
     {QStringLiteral("grqq"), 0x201C, DirectionCommandToUnicode},
     {QStringLiteral("textquotedblleft"), 0x201C, DirectionCommandToUnicode},
