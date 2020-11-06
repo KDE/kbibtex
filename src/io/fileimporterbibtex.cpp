@@ -1333,7 +1333,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
             int i = xkbibtexencodingpos + 28, l = 0;
             encoding.clear();
             encoding.reserve(32);
-            while (l < 32 && rawData.at(i) > 0x20 && rawData.at(i) != '\n' && rawData.at(i) != '\r' && rawData.at(i) != '}' && rawData.at(i) != ')' && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
+            while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != '\n' && rawData.at(i) != '\r' && rawData.at(i) != '}' && rawData.at(i) != ')' && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
                 encoding.append(QLatin1Char(rawData.at(i)));
                 ++i;
                 ++l;
