@@ -548,7 +548,7 @@ mathCommands[] = {
     {QStringLiteral("theta"), 0x03B8, DirectionBoth},
     {QStringLiteral("iota"), 0x03B9, DirectionBoth},
     {QStringLiteral("kappa"), 0x03BA, DirectionBoth},
-    {QStringLiteral("lamda"), 0x03BB, DirectionBoth}, ///< \lamda does not exist, this is mostly for spelling errors
+    {QStringLiteral("lamda"), 0x03BB, DirectionCommandToUnicode}, ///< \lamda does not exist, this is mostly for spelling errors
     {QStringLiteral("lambda"), 0x03BB, DirectionBoth},
     {QStringLiteral("mu"), 0x03BC, DirectionBoth},
     {QStringLiteral("nu"), 0x03BD, DirectionBoth},
@@ -983,7 +983,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
                     /// This is the case for {\'\i} or alike.
                     for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
-                        if (dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
+                        if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
                             output.append(QChar(dotlessIJCharacter.unicode));
                             found = true;
                             break;
@@ -1019,7 +1019,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 7 && input[i + 3 + skipSpaces] == QLatin1Char('{') && input[i + 4 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 5 + skipSpaces]) && input[i + 6 + skipSpaces] == QLatin1Char('}') && input[i + 7 + skipSpaces] == QLatin1Char('}')) {
                     /// This is the case for {\'{\i}} or alike.
                     for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
-                        if (dotlessIJCharacter.letter == input[i + 5 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
+                        if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 5 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
                             output.append(QChar(dotlessIJCharacter.unicode));
                             found = true;
                             break;
@@ -1047,7 +1047,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// Check which command it is, then insert corresponding Unicode character
                         found = false;
                         for (const EncoderLaTeXCharacterCommand &encoderLaTeXCharacterCommand : encoderLaTeXCharacterCommands) {
-                            if (encoderLaTeXCharacterCommand.command == alpha) {
+                            if ((encoderLaTeXCharacterCommand.direction & DirectionCommandToUnicode) && encoderLaTeXCharacterCommand.command == alpha) {
                                 output.append(QChar(encoderLaTeXCharacterCommand.unicode));
                                 found = true;
                                 break;
@@ -1059,7 +1059,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// (automatically skipped if command was found above)
                         if (!found)
                             for (const MathCommand &mathCommand : mathCommands) {
-                                if (mathCommand.command == alpha) {
+                                if ((mathCommand.direction & DirectionCommandToUnicode) && mathCommand.command == alpha) {
                                     output.append(QChar(mathCommand.unicode));
                                     found = true;
                                     break;
@@ -1159,7 +1159,7 @@ QString EncoderLaTeX::decode(const QString &input) const
             } else if (lookupTablePos >= 0 && i + skipSpaces < len - 3 && input[i + 2 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 3 + skipSpaces])) {
                 /// This is the case for \'\i or alike.
                 for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
-                    if (dotlessIJCharacter.letter == input[i + 3 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
+                    if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 3 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
                         output.append(QChar(dotlessIJCharacter.unicode));
                         found = true;
                         break;
@@ -1176,7 +1176,7 @@ QString EncoderLaTeX::decode(const QString &input) const
             } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 2 + skipSpaces] == QLatin1Char('{') && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
                 /// This is the case for \'{\i} or alike.
                 for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
-                    if (dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
+                    if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
                         output.append(QChar(dotlessIJCharacter.unicode));
                         found = true;
                         break;
@@ -1202,7 +1202,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Check which command it is,
                     /// insert corresponding Unicode character
                     for (const EncoderLaTeXCharacterCommand &encoderLaTeXCharacterCommand : encoderLaTeXCharacterCommands) {
-                        if (encoderLaTeXCharacterCommand.command == alpha) {
+                        if ((encoderLaTeXCharacterCommand.direction & DirectionCommandToUnicode) && encoderLaTeXCharacterCommand.command == alpha) {
                             output.append(QChar(encoderLaTeXCharacterCommand.unicode));
                             found = true;
                             break;
@@ -1214,7 +1214,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// (automatically skipped if command was found above)
                     if (!found)
                         for (const MathCommand &mathCommand : mathCommands) {
-                            if (mathCommand.command == alpha) {
+                            if ((mathCommand.direction & DirectionCommandToUnicode) && mathCommand.command == alpha) {
                                 output.append(QChar(mathCommand.unicode));
                                 found = true;
                                 break;
@@ -1402,7 +1402,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
 
             /// Handle special cases of i without a dot (\i)
             for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
-                if (c.unicode() == dotlessIJCharacter.unicode && (dotlessIJCharacter.direction & DirectionUnicodeToCommand)) {
+                if ((dotlessIJCharacter.direction & DirectionUnicodeToCommand) && c.unicode() == dotlessIJCharacter.unicode) {
                     output.append(QString(QStringLiteral("{\\%1\\%2}")).arg(dotlessIJCharacter.modifier, dotlessIJCharacter.letter));
                     found = true;
                     break;
@@ -1435,7 +1435,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// Ok, neither a character command. Let's test
                 /// escaped characters with modifiers like \"a
                 for (const EncoderLaTeXEscapedCharacter &encoderLaTeXEscapedCharacter : encoderLaTeXEscapedCharacters)
-                    if (encoderLaTeXEscapedCharacter.unicode == c.unicode() && (encoderLaTeXEscapedCharacter.direction & DirectionUnicodeToCommand)) {
+                    if ((encoderLaTeXEscapedCharacter.direction & DirectionUnicodeToCommand) && encoderLaTeXEscapedCharacter.unicode == c.unicode()) {
                         const QString formatString = isAsciiLetter(encoderLaTeXEscapedCharacter.modifier) ? QStringLiteral("{\\%1 %2}") : QStringLiteral("{\\%1%2}");
                         output.append(formatString.arg(encoderLaTeXEscapedCharacter.modifier).arg(encoderLaTeXEscapedCharacter.letter));
                         found = true;
@@ -1446,7 +1446,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             if (!found) {
                 /// Ok, test for math commands
                 for (const MathCommand &mathCommand : mathCommands)
-                    if (mathCommand.unicode == c.unicode() && (mathCommand.direction & DirectionUnicodeToCommand)) {
+                    if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
                         if (!currentMathMode.empty()) {
                             output.append(QString(QStringLiteral("\\%1")).arg(mathCommand.command));
                             const QChar peekAhead = i < len - 1 ? input[i + 1] : QChar();
