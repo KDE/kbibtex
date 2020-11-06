@@ -157,8 +157,8 @@ encoderLaTeXEscapedCharacters[] = {
     {QLatin1Char('v'), QLatin1Char('c'), 0x010D, DirectionBoth},
     {QLatin1Char('v'), QLatin1Char('D'), 0x010E, DirectionBoth},
     {QLatin1Char('v'), QLatin1Char('d'), 0x010F, DirectionBoth},
-    {QLatin1Char('B'), QLatin1Char('D'), 0x0110, DirectionCommandToUnicode},
-    {QLatin1Char('B'), QLatin1Char('d'), 0x0111, DirectionCommandToUnicode},
+    {QLatin1Char('B'), QLatin1Char('D'), 0x0110, DirectionCommandToUnicode}, //< 'African D', command provided by package 'fc' (command seems to be the same as \M{D})
+    {QLatin1Char('B'), QLatin1Char('d'), 0x0111, DirectionCommandToUnicode}, //< 'African d' (?), command provided by package 'fc'
     {QLatin1Char('='), QLatin1Char('E'), 0x0112, DirectionBoth},
     {QLatin1Char('='), QLatin1Char('e'), 0x0113, DirectionBoth},
     {QLatin1Char('u'), QLatin1Char('E'), 0x0114, DirectionBoth},
@@ -278,7 +278,7 @@ encoderLaTeXEscapedCharacters[] = {
     {QLatin1Char('m'), QLatin1Char('O'), 0x0186, DirectionCommandToUnicode},
     {QLatin1Char('m'), QLatin1Char('C'), 0x0187, DirectionCommandToUnicode},
     {QLatin1Char('m'), QLatin1Char('c'), 0x0188, DirectionCommandToUnicode},
-    {QLatin1Char('M'), QLatin1Char('D'), 0x0189, DirectionCommandToUnicode},
+    {QLatin1Char('M'), QLatin1Char('D'), 0x0189, DirectionBoth}, //< 'African D', command provided by package 'fc' (command seems to be the same as \B{D})
     {QLatin1Char('m'), QLatin1Char('D'), 0x018A, DirectionCommandToUnicode},
     /** 0x018B */
     /** 0x018C */
@@ -362,6 +362,7 @@ encoderLaTeXEscapedCharacters[] = {
     {QLatin1Char('='), QLatin1Char('y'), 0x0233, DirectionBoth},
     {QLatin1Char('.'), QLatin1Char('O'), 0x022E, DirectionBoth},
     {QLatin1Char('.'), QLatin1Char('o'), 0x022F, DirectionBoth},
+    {QLatin1Char('M'), QLatin1Char('d'), 0x0256, DirectionBoth}, //< 'African d', command provided by package 'fc' (may be same as \B{d} ?)
     {QLatin1Char('.'), QLatin1Char('B'), 0x1E02, DirectionBoth},
     {QLatin1Char('.'), QLatin1Char('b'), 0x1E03, DirectionBoth},
     {QLatin1Char('d'), QLatin1Char('B'), 0x1E04, DirectionBoth},
