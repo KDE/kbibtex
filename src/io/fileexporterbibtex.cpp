@@ -598,21 +598,56 @@ public:
     QByteArray applyEncoding(const QString &input) {
         QTextCodec *codec = determineTargetCodec().second;
 
-        bool containsNonASCIIcharacters = false;
         QString rewrittenInput;
         rewrittenInput.reserve(input.length() * 12 / 10 /* add 20% */ + 1024 /* plus 1K */);
         const Encoder &laTeXEncoder = EncoderLaTeX::instance();
         for (const QChar &c : input) {
-            if (codec == nullptr /** meaning UTF-8, which can encode anything */ || canEncode(c, codec)) {
+            if (codec == nullptr /** meaning UTF-8, which can encode anything */ || canEncode(c, codec))
                 rewrittenInput.append(c);
-                containsNonASCIIcharacters |= c.unicode() > 127;
-            } else
+            else
                 rewrittenInput.append(laTeXEncoder.encode(QString(c), Encoder::TargetEncoding::ASCII));
         }
 
-        if (containsNonASCIIcharacters)
-            /// Add a comment at the beginning of the file to tell which encoding was used
-            rewrittenInput.prepend(QString(QStringLiteral("@comment{x-kbibtex-encoding=%1}\n\n")).arg(QLatin1String(codec == nullptr ? "utf-8" : codec->name())));
+        if (codec == nullptr || (codec->name().toLower() != "utf-16" && codec->name().toLower() != "utf-32")) {
+            // Unless encoding is UTF-16 or UTF-32 (those have BOM to detect encoding) ...
+
+            // Determine which (if at all) encoding comment to be included in BibTeX data
+            QString encodingForComment; //< empty by default
+            if (!forcedEncoding.isEmpty())
+                // For this exporter instance, a specific encoding was forced upon
+                encodingForComment = forcedEncoding;
+            else if (!encoding.isEmpty())
+                // File had an encoding in its properties
+                // (variable 'encoding' was set in 'loadPreferencesAndProperties')
+                encodingForComment = encoding;
+
+            if (!encodingForComment.isEmpty()) {
+                // Verify that 'encodingForComment', which labels an encoding,
+                // is compatible with the target codec
+#define normalizeCodecName(codecname) codecname.toLower().remove(QLatin1Char(' ')).remove(QLatin1Char('-')).remove(QLatin1Char('_')).replace(QStringLiteral("euckr"),QStringLiteral("windows949"))
+                const QString lowerNormalizedEncodingForComment = normalizeCodecName(encodingForComment);
+                const QString lowerNormalizedCodecName = codec != nullptr ? normalizeCodecName(QString::fromLatin1(codec->name())) : QString();
+                if (codec == nullptr) {
+                    if (lowerNormalizedEncodingForComment != QStringLiteral("utf8") && lowerNormalizedEncodingForComment != QStringLiteral("latex")) {
+                        qWarning() << "No codec (means UTF-8 encoded output) does not match with encoding" << encodingForComment;
+                        return QByteArray();
+                    }
+                } else if (lowerNormalizedCodecName != lowerNormalizedEncodingForComment) {
+                    qWarning() << "Codec with name" << codec->name() << "does not match with encoding" << encodingForComment;
+                    return QByteArray();
+                }
+            }
+
+            if (!encodingForComment.isEmpty() && encodingForComment.toLower() != QStringLiteral("latex") && encodingForComment.toLower() != QStringLiteral("us-ascii"))
+                // Only if encoding is not pure ASCII (i.e. 'LaTeX' or 'US-ASCII') add
+                // a comment at the beginning of the file to tell which encoding was used
+                rewrittenInput.prepend(QString(QStringLiteral("@comment{x-kbibtex-encoding=%1}\n\n")).arg(encodingForComment));
+        } else {
+            // For UTF-16 and UTF-32, no special comment needs to be added:
+            // Those encodings are recognized by their BOM or the regular
+            // occurrence of 0x00 bytes which is typically if encoding
+            // ASCII text.
+        }
 
         rewrittenInput.squeeze();
 
