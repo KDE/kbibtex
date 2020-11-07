@@ -793,26 +793,61 @@ void KBibTeXIOTest::fileImportExportBibTeXroundtrip()
     QFETCH(File *, bibliography);
     QFETCH(QString, encoding);
 
+    FileImporterBibTeX importer(this);
+
+    // The point with this test is to apply various encodings (e.g. 'UTF-8', 'ISO 2022-JP')
+    // to example bibliography files when writing to a buffer (a in-memory representation of
+    // a real .bib file).
+    // The encoding can by set in two different ways:
+    // 1. As a property of the File object
+    // 2. Enforced upon a FileExporterBibTeX instance, ignoring the File's encoding property
+
+    // Fist, the forced-upon case will be executed
+
     QByteArray ba(1 << 12, '\0');
     QBuffer buffer(&ba);
 
     buffer.open(QBuffer::WriteOnly);
-    FileExporterBibTeX exporter(this);
-    exporter.setEncoding(encoding);
-    QVERIFY(exporter.save(&buffer, bibliography));
-    const qint64 bytesWritten = buffer.pos();
-    QVERIFY(bytesWritten > 32); //< all bibliographies in test have a certain minimum size
+    FileExporterBibTeX exporterWithForcedEncoding(this);
+    exporterWithForcedEncoding.setEncoding(encoding); //< Force the encoding on the FileExporterBibTeX instance
+    QVERIFY(exporterWithForcedEncoding.save(&buffer, bibliography));
+    const qint64 bytesWrittenWithForcedEncoding = buffer.pos();
+    QVERIFY(bytesWrittenWithForcedEncoding > 32); //< All bibliographies in test have a certain minimum size
     buffer.close();
 
-    ba.resize(static_cast<int>(bytesWritten & 0x7fffffff));
+    ba.resize(static_cast<int>(bytesWrittenWithForcedEncoding & 0x7fffffff));
 
     buffer.open(QBuffer::ReadOnly);
-    FileImporterBibTeX importer(this);
     File *loadedFile = importer.load(&buffer);
     buffer.close();
 
     QVERIFY(loadedFile != nullptr);
+    QVERIFY(loadedFile->length() == 1);
     QVERIFY(bibliography->operator ==(*loadedFile));
+    delete loadedFile;
+
+    // Second, the File encoding property case will be executed
+
+    ba.fill('\0', 1 << 12); //< reset and clear buffer from above execution
+
+    buffer.open(QBuffer::WriteOnly);
+    FileExporterBibTeX exporterWithFileEncoding(this);
+    bibliography->setProperty(File::Encoding, encoding); //< set the File's encoding property
+    QVERIFY(exporterWithFileEncoding.save(&buffer, bibliography));
+    const qint64 bytesWrittenWithFileEncoding = buffer.pos();
+    QVERIFY(bytesWrittenWithFileEncoding > 32); //< All bibliographies in test have a certain minimum size
+    buffer.close();
+
+    ba.resize(static_cast<int>(bytesWrittenWithFileEncoding & 0x7fffffff));
+
+    buffer.open(QBuffer::ReadOnly);
+    loadedFile = importer.load(&buffer);
+    buffer.close();
+
+    QVERIFY(loadedFile != nullptr);
+    QVERIFY(loadedFile->length() == 1);
+    QVERIFY(bibliography->operator ==(*loadedFile));
+    delete loadedFile;
 }
 
 void KBibTeXIOTest::protectiveCasingEntryFromData()
