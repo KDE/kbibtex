@@ -568,7 +568,7 @@ public:
         return result;
     }
 
-    bool saveInString(QString &output, const QSharedPointer<const Element> element) {
+    bool saveAsString(QString &output, const QSharedPointer<const Element> element) {
         const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
 
         const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
@@ -663,7 +663,7 @@ QString FileExporterBibTeX::toString(const QSharedPointer<const Element> element
 
     QString outputString;
     outputString.reserve(1024);
-    bool result = d->saveInString(outputString, element);
+    bool result = d->saveAsString(outputString, element);
     if (!result) {
         qCWarning(LOG_KBIBTEX_IO) << "saveInString(..) failed";
         return QString();
