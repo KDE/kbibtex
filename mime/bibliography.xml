@@ -10,6 +10,7 @@
         <alias type="text/x-research-info-systems"/>
         <comment>RIS bibliography file</comment>
         <comment xml:lang="ca">Fitxer de bibliografia RIS</comment>
+        <comment xml:lang="en_GB">RIS bibliography file</comment>
         <comment xml:lang="es">Archivo de bibliografía RIS</comment>
         <comment xml:lang="it">File bibliografico RIS</comment>
         <comment xml:lang="nl">RIS-bibliografiebestand</comment>
@@ -27,6 +28,7 @@
         <sub-class-of type="text/plain"/>
         <comment>ISI bibliography file</comment>
         <comment xml:lang="ca">Fitxer de bibliografia ISI</comment>
+        <comment xml:lang="en_GB">ISI bibliography file</comment>
         <comment xml:lang="es">Archivo de bibliografía ISI</comment>
         <comment xml:lang="it">File bibliografico ISI</comment>
         <comment xml:lang="nl">ISI-bibliografiebestand</comment>
@@ -46,6 +48,7 @@
         <alias type="application/x-endnote-library"/>
         <comment>EndNote library</comment>
         <comment xml:lang="ca">Biblioteca EndNote</comment>
+        <comment xml:lang="en_GB">EndNote library</comment>
         <comment xml:lang="es">Biblioteca de EndNote</comment>
         <comment xml:lang="it">Biblioteca EndNote</comment>
         <comment xml:lang="nl">EndNote-bibliotheek</comment>
