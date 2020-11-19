@@ -1291,39 +1291,49 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     QByteArray rawData = iodevice->readAll();
     iodevice->close();
 
+    bool encodingMayGetDeterminedByRawData = true;
     QString encoding(Preferences::instance().bibTeXEncoding()); ///< default value taken from Preferences
-    if (rawData.length() >= 8 && rawData.at(0) != 0 && rawData.at(1) == 0 && rawData.at(2) == 0 && rawData.at(3) == 0 && rawData.at(4) != 0 && rawData.at(5) == 0 && rawData.at(6) == 0 && rawData.at(7) == 0)
+    if (rawData.length() >= 8 && rawData.at(0) != 0 && rawData.at(1) == 0 && rawData.at(2) == 0 && rawData.at(3) == 0 && rawData.at(4) != 0 && rawData.at(5) == 0 && rawData.at(6) == 0 && rawData.at(7) == 0) {
         /// UTF-32LE (Little Endian)
         encoding = QStringLiteral("UTF-32LE");
-    else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0xff && static_cast<unsigned char>(rawData.at(1)) == 0xfe && rawData.at(2) == 0 && rawData.at(3) == 0) {
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0xff && static_cast<unsigned char>(rawData.at(1)) == 0xfe && rawData.at(2) == 0 && rawData.at(3) == 0) {
         /// UTF-32LE (Little Endian) with BOM
         encoding = QStringLiteral("UTF-32LE");
         rawData = rawData.mid(4); ///< skip BOM
-    } else if (rawData.length() >= 8 && rawData.at(0) == 0 && rawData.at(1) == 0 && rawData.at(2) == 0 && rawData.at(3) != 0 && rawData.at(4) == 0 && rawData.at(5) == 0 && rawData.at(6) == 0 && rawData.at(7) != 0)
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 8 && rawData.at(0) == 0 && rawData.at(1) == 0 && rawData.at(2) == 0 && rawData.at(3) != 0 && rawData.at(4) == 0 && rawData.at(5) == 0 && rawData.at(6) == 0 && rawData.at(7) != 0) {
         /// UTF-32BE (Big Endian)
         encoding = QStringLiteral("UTF-32BE");
-    else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0 && static_cast<unsigned char>(rawData.at(1)) == 0 && static_cast<unsigned char>(rawData.at(2)) == 0xfe && static_cast<unsigned char>(rawData.at(3)) == 0xff) {
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0 && static_cast<unsigned char>(rawData.at(1)) == 0 && static_cast<unsigned char>(rawData.at(2)) == 0xfe && static_cast<unsigned char>(rawData.at(3)) == 0xff) {
         /// UTF-32BE (Big Endian) with BOM
         encoding = QStringLiteral("UTF-32BE");
         rawData = rawData.mid(4); ///< skip BOM
-    } else if (rawData.length() >= 6 && rawData.at(0) != 0 && rawData.at(1) == 0 && rawData.at(2) != 0 && rawData.at(3) == 0 && rawData.at(4) != 0 && rawData.at(5) == 0)
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 6 && rawData.at(0) != 0 && rawData.at(1) == 0 && rawData.at(2) != 0 && rawData.at(3) == 0 && rawData.at(4) != 0 && rawData.at(5) == 0) {
         /// UTF-16LE (Little Endian)
         encoding = QStringLiteral("UTF-16LE");
-    else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0xff && static_cast<unsigned char>(rawData.at(1)) == 0xfe && rawData.at(2) != 0 && rawData.at(3) == 0) {
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0xff && static_cast<unsigned char>(rawData.at(1)) == 0xfe && rawData.at(2) != 0 && rawData.at(3) == 0) {
         /// UTF-16LE (Little Endian) with BOM
         encoding = QStringLiteral("UTF-16LE");
         rawData = rawData.mid(2); ///< skip BOM
-    } else if (rawData.length() >= 6 && rawData.at(0) == 0 && rawData.at(1) != 0 && rawData.at(2) == 0 && rawData.at(3) != 0 && rawData.at(4) == 0 && rawData.at(5) != 0)
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 6 && rawData.at(0) == 0 && rawData.at(1) != 0 && rawData.at(2) == 0 && rawData.at(3) != 0 && rawData.at(4) == 0 && rawData.at(5) != 0) {
         /// UTF-16BE (Big Endian)
         encoding = QStringLiteral("UTF-16BE");
-    else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0xfe && static_cast<unsigned char>(rawData.at(1)) == 0xff && rawData.at(2) == 0 && rawData.at(3) != 0) {
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0xfe && static_cast<unsigned char>(rawData.at(1)) == 0xff && rawData.at(2) == 0 && rawData.at(3) != 0) {
         /// UTF-16BE (Big Endian) with BOM
         encoding = QStringLiteral("UTF-16BE");
         rawData = rawData.mid(2); ///< skip BOM
+        encodingMayGetDeterminedByRawData = false;
     } else if (rawData.length() >= 3 && static_cast<unsigned char>(rawData.at(0)) == 0xef && static_cast<unsigned char>(rawData.at(1)) == 0xbb && static_cast<unsigned char>(rawData.at(2)) == 0xbf) {
         /// UTF-8 BOM
         encoding = QStringLiteral("UTF-8");
         rawData = rawData.mid(3); ///< skip BOM
+        encodingMayGetDeterminedByRawData = false;
     } else {
         /// Assuming that encoding is ASCII-compatible, thus it is possible
         /// to search for a byte sequence containin ASCII text
@@ -1339,6 +1349,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
                 ++l;
             }
             rawData = rawData.left(xkbibtexencodingpos) + rawData.mid(i + 1); ///< remove encoding comment
+            encodingMayGetDeterminedByRawData = encoding.isEmpty();
         } else {
             const int jabrefencodingpos = qMax(rawDataBeginning.indexOf("% Encoding:"), rawDataBeginning.indexOf("% encoding:"));
             if (jabrefencodingpos >= 0) {
@@ -1352,12 +1363,60 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
                 }
                 encoding = encoding.trimmed();
                 rawData = rawData.left(jabrefencodingpos) + rawData.mid(i + 1); ///< remove encoding comment
+                encodingMayGetDeterminedByRawData = encoding.isEmpty();
             }
         }
     }
 
-    if (encoding.isEmpty())
+    if (encoding.isEmpty()) {
         encoding = Preferences::instance().bibTeXEncoding(); ///< just in case something went wrong
+        encodingMayGetDeterminedByRawData = true;
+    }
+
+    if (encodingMayGetDeterminedByRawData) {
+        // Unclear which encoding raw data makes use of, so test for
+        // two popular choices: (1) only ASCII (means 'LaTeX' encoding)
+        // and (2) UTF-8
+        bool hasUTF8 = false;
+        bool outsideUTF8 = false;
+        const int len = qMin(2048, rawData.length() - 3);
+        for (int i = 0; i < len; ++i) {
+            const char c1 = rawData.at(i);
+            if ((c1 & 0x80) == 0) {
+                // This character is probably ASCII, so ignore it
+            } else {
+                const char c2 = rawData.at(i + 1);
+                if ((c1 & 0xe0) == 0xc0 && (c2 & 0xc0) == 0x80) {
+                    // This is a two-byte UTF-8 symbol
+                    hasUTF8 = true;
+                    ++i;
+                } else {
+                    const char c3 = rawData.at(i + 2);
+                    if ((c1 & 0xf0) == 0xe0 && (c2 & 0xc0) == 0x80 && (c3 & 0xc0) == 0x80) {
+                        // This is a three-byte UTF-8 symbol
+                        hasUTF8 = true;
+                        i += 2;
+                    } else {
+                        const char c4 = rawData.at(i + 3);
+                        if ((c1 & 0xf8) == 0xf0 && (c2 & 0xc0) == 0x80 && (c3 & 0xc0) == 0x80 && (c4 & 0xc0) == 0x80) {
+                            // This is a four-byte UTF-8 symbol
+                            hasUTF8 = true;
+                            i += 3;
+                        } else {
+                            outsideUTF8 = true;
+                            break; //< No point in further testing more raw data
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!outsideUTF8) {
+            encoding = hasUTF8 ? QStringLiteral("UTF-8") : QStringLiteral("LaTeX");
+            encodingMayGetDeterminedByRawData = false; //< Now the encoding is known
+        }
+    }
+
     encoding = encoding.toLower();
     if (encoding == QStringLiteral("us-ascii")) {
         qDebug(LOG_KBIBTEX_IO) << "Replacing deprecated encoding 'US-ASCII' with 'LaTeX'";
