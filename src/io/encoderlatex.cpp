@@ -1437,6 +1437,11 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                         const QChar peekAhead = i < len - 1 ? input[i + 1] : QChar();
                         if (peekAhead != QLatin1Char('\\') && peekAhead != QLatin1Char('}') && peekAhead != QLatin1Char('$')) {
                             // Between current command and following character a separator is necessary
+                            // FIXME This peek-ahead won't do its job properly, as it is not yet known
+                            // whether the next character will be kept as-is or rewritten to, for example, a LaTeX command
+                            // Example: if the complete input string is '$µµ$' and the current variable 'c' comes from
+                            // the first 'µ', it will assume that curly brackets are necessary, thus the final output
+                            // becomes '$\mu{}\mu$ despite that '$\mu\mu$' would have been a better output.
                             output.append(QStringLiteral("{}"));
                         }
                         found = true;
@@ -1447,6 +1452,8 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             /// Handle special cases of i without a dot (\i)
             for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                 if ((dotlessIJCharacter.direction & DirectionUnicodeToCommand) && c.unicode() == dotlessIJCharacter.unicode) {
+                    // FIXME Find a better solution, as the curly brackets are unnecessary in some situations
+                    // e.g. '{\'\i}{\'\i}' should better be '{\'\i\'\i}'
                     output.append(QString(QStringLiteral("{\\%1\\%2}")).arg(dotlessIJCharacter.modifier, dotlessIJCharacter.letter));
                     found = true;
                     break;
@@ -1469,6 +1476,8 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// commands like \ss
                 for (const EncoderLaTeXCharacterCommand &encoderLaTeXCharacterCommand : encoderLaTeXCharacterCommands)
                     if (encoderLaTeXCharacterCommand.unicode == c.unicode() && (encoderLaTeXCharacterCommand.direction & DirectionUnicodeToCommand)) {
+                        // FIXME Find a better solution, as the curly brackets are unnecessary in some situations
+                        // e.g. '{\command}{\command}' should better be '{\command\command}'
                         output.append(QString(QStringLiteral("{\\%1}")).arg(encoderLaTeXCharacterCommand.command));
                         found = true;
                         break;
@@ -1480,6 +1489,8 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// escaped characters with modifiers like \"a
                 for (const EncoderLaTeXEscapedCharacter &encoderLaTeXEscapedCharacter : encoderLaTeXEscapedCharacters)
                     if ((encoderLaTeXEscapedCharacter.direction & DirectionUnicodeToCommand) && encoderLaTeXEscapedCharacter.unicode == c.unicode()) {
+                        // FIXME Find a better solution, as the curly brackets are unnecessary in some situations
+                        // e.g. '{\"a}{\"a}' should better be '{\"a\"a}'
                         const QString formatString = isAsciiLetter(encoderLaTeXEscapedCharacter.modifier) ? QStringLiteral("{\\%1 %2}") : QStringLiteral("{\\%1%2}");
                         output.append(formatString.arg(encoderLaTeXEscapedCharacter.modifier).arg(encoderLaTeXEscapedCharacter.letter));
                         found = true;
@@ -1491,6 +1502,8 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// Ok, test for math commands, even if outside of a math mode, then enter math mode for this character
                 for (const MathCommand &mathCommand : mathCommands)
                     if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
+                        // FIXME Find a better solution, as the \ensuremath should span several characters
+                        // e.g. '\ensuremath{\alpha}\ensuremath{\alpha}' should better be '\ensuremath{\alpha\alpha}'
                         output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand.command));
                         found = true;
                         break;
@@ -1533,6 +1546,11 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                         const QChar peekAhead = i < len - 1 ? input[i + 1] : QChar();
                         if (peekAhead != QLatin1Char('\\') && peekAhead != QLatin1Char('}') && peekAhead != QLatin1Char('$')) {
                             // Between current command and following character a separator is necessary
+                            // FIXME This peek-ahead won't do its job properly, as it is not yet known
+                            // whether the next character will be kept as-is or rewritten to, for example, a LaTeX command
+                            // Example: if the complete input string is '$µµ$' and the current variable 'c' comes from
+                            // the first 'µ', it will assume that curly brackets are necessary, thus the final output
+                            // becomes '$\mu{}\mu$ despite that '$\mu\mu$' would have been a better output.
                             output.append(QStringLiteral("{}"));
                         }
                         found = true;
@@ -1552,6 +1570,8 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 /// Ok, test for math commands, even if outside of a math mode, then enter math mode for this character
                 for (const MathCommand &mathCommand : mathCommands)
                     if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
+                        // FIXME Find a better solution, as the \ensuremath should span several characters
+                        // e.g. '\ensuremath{\alpha}\ensuremath{\alpha}' should better be '\ensuremath{\alpha\alpha}'
                         output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand.command));
                         found = true;
                         break;
