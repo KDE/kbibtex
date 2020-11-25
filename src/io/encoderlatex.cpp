@@ -952,7 +952,7 @@ QString EncoderLaTeX::decode(const QString &input) const
 {
     const int len = input.length();
     QString output;
-    output.reserve(len);
+    output.reserve(((len >> 10) + 2) << 10); // reserving multiples of 1024 Bytes
     enum MathMode {
         MathModeNone = 0, MathModeDollar, MathModeEnsureMath
     };
@@ -1404,7 +1404,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
 
     int len = input.length();
     QString output;
-    output.reserve(len);
+    output.reserve(((len >> 10) + 2) << 10); // reserving multiples of 1024 Bytes
     enum MathMode {
         MathModeNone = 0, MathModeDollar, MathModeEnsureMath
     };
