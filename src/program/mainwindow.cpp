@@ -34,7 +34,6 @@
 #include <KActionMenu>
 #include <KActionCollection>
 #include <KPluginFactory>
-#include <KPluginLoader>
 #include <KLocalizedString>
 #include <KMessageBox>
 
