@@ -160,6 +160,7 @@ public:
 
 QString AssociatedFilesUI::associateUrl(const QUrl &url, QSharedPointer<Entry> &entry, const File *bibTeXfile, const bool doInsertUrl, QWidget *parent) {
     QPointer<QDialog> dlg = new QDialog(parent);
+    dlg->setWindowTitle(i18n("Associate Document with Entry"));
     QBoxLayout *layout = new QVBoxLayout(dlg);
     QPointer<AssociatedFilesUI> ui = new AssociatedFilesUI(entry->id(), bibTeXfile, dlg);
     layout->addWidget(ui);
