@@ -203,7 +203,7 @@ void KBibTeXIOTest::encoderLaTeXdecode_data()
     QTest::newRow("\\noopsort{\\noopsort}") << QStringLiteral("\\noopsort{\\noopsort}") << QStringLiteral("\\noopsort{\\noopsort}") << QString();
     QTest::newRow("\\ensuremath") << QStringLiteral("\\ensuremath{${\\alpha}$}${\\ensuremath{\\delta}}$-spot \\ensuremath{26^{\\mathrm{th}}} {\\ensuremath{-}}") << QStringLiteral("\\ensuremath{$") + QChar(0x03b1) + ("$}${\\ensuremath{") + QChar(0x03b4) + QStringLiteral("}}$-spot \\ensuremath{26^{\\mathrm{th}}} {\\ensuremath{-}}") << QStringLiteral("\\ensuremath{$\\alpha$}${\\ensuremath{\\delta}}$-spot \\ensuremath{26^{\\mathrm{th}}} {\\ensuremath{-}}");
     QTest::newRow("Greek mu with 'Dollar' math") << QString(QStringLiteral("%1\\mu\\textmu$%1\\mu$")).arg(QChar(0x03bc)) << QString(QStringLiteral("%1%1%1$%1%1$")).arg(QChar(0x03bc)) << QStringLiteral("{\\textmugreek}{\\textmugreek}{\\textmugreek}$\\mu{}\\mu$");
-    QTest::newRow("Greek mu with '\\ensuremath'") << QString(QStringLiteral("%1\\mu\\textmu\\ensuremath{%1\\mu}")).arg(QChar(0x03bc)) << QString(QStringLiteral("%1%1%1\\ensuremath{%1%1}")).arg(QChar(0x03bc)) << QString(QStringLiteral("{\\textmugreek}{\\textmugreek}{\\textmugreek}\\ensuremath{\\mu{}\\mu}")).arg(QChar(0x03bc));
+    QTest::newRow("Greek mu with '\\ensuremath'") << QString(QStringLiteral("%1\\mu\\textmu\\ensuremath{%1\\mu}")).arg(QChar(0x03bc)) << QString(QStringLiteral("%1%1%1\\ensuremath{%1%1}")).arg(QChar(0x03bc)) << QString(QStringLiteral("{\\textmugreek}{\\textmugreek}{\\textmugreek}\\ensuremath{\\mu{}\\mu}"));
 }
 
 void KBibTeXIOTest::encoderLaTeXdecode()
