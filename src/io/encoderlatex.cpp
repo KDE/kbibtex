@@ -1302,9 +1302,11 @@ QString EncoderLaTeX::decode(const QString &input) const
                         output.append(QChar(0x2009));
                         // found = true; ///< only necessary if more tests will follow in the future
                         ++i;
+                        found = true;
                     } else {
                         /// Nothing special, copy input char to output
                         output.append(c);
+                        found = true;
                     }
                 }
             } else if (!found) {
@@ -1533,7 +1535,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             bool found = false;
             for (const QChar &encoderLaTeXProtectedSymbol : encoderLaTeXProtectedSymbols)
                 if (encoderLaTeXProtectedSymbol == c) {
-                    output.append(QLatin1Char('\\'));
+                    output.append(QLatin1Char('\\')).append(c);
                     found = true;
                     break;
                 }
@@ -1561,7 +1563,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             if (!found && currentMathMode.empty())
                 for (const QChar &encoderLaTeXProtectedTextOnlySymbol : encoderLaTeXProtectedTextOnlySymbols)
                     if (encoderLaTeXProtectedTextOnlySymbol == c) {
-                        output.append(QLatin1Char('\\'));
+                        output.append(QLatin1Char('\\')).append(c);
                         found = true;
                         break;
                     }
