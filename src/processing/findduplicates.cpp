@@ -383,7 +383,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QVector<EntryClique *> &en
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QScopedPointer<QProgressDialog> progressDlg(new QProgressDialog(i18n("Searching ..."), i18n("Cancel"), 0, 100000 /* to be set later to actual value */, d->widget));
     progressDlg->setModal(true);
-    progressDlg->setWindowTitle(i18n("Finding Duplicates"));
+    progressDlg->setWindowTitle(i18nc("@title:window", "Finding Duplicates"));
     progressDlg->setMinimumWidth(d->widget->fontMetrics().averageCharWidth() * 48);
     progressDlg->setAutoReset(false);
     entryCliqueList.clear();

@@ -709,7 +709,7 @@ void FindDuplicatesUI::startDuplicatesSearch()
         /// Why is a QPointer used here you may wonder? Check here in case the link still works:
         ///   https://blogs.kde.org/2009/03/26/how-crash-almost-every-qtkde-application-and-how-fix-it-0
         QPointer<QDialog> dlg = new QDialog(d->part->widget());
-        dlg->setWindowTitle(i18n("Merge Duplicates"));
+        dlg->setWindowTitle(i18nc("@title:window", "Merge Duplicates"));
         MergeWidget *mw = new MergeWidget(workingSetFile, cliques, dlg);
         mw->layout()->setMargin(0);
         QBoxLayout *layout = new QVBoxLayout(dlg);

@@ -328,7 +328,7 @@ void FileView::prepareEditorDialog(DialogType dialogType)
     if (dialogType == DialogType::View) {
         /// View mode, as use in read-only situations
         m_elementEditor->setReadOnly(true);
-        m_elementEditorDialog->setWindowTitle(i18n("View Element"));
+        m_elementEditorDialog->setWindowTitle(i18nc("@title:window", "View Element"));
         m_dbb = new QDialogButtonBox(QDialogButtonBox::Close, m_elementEditorDialog);
         QBoxLayout *boxLayout = qobject_cast<QBoxLayout *>(m_elementEditorDialog->layout());
         boxLayout->addWidget(m_dbb);
@@ -336,7 +336,7 @@ void FileView::prepareEditorDialog(DialogType dialogType)
     } else if (dialogType == DialogType::Edit) {
         /// Edit mode, used in normal operations
         m_elementEditor->setReadOnly(false);
-        m_elementEditorDialog->setWindowTitle(i18n("Edit Element"));
+        m_elementEditorDialog->setWindowTitle(i18nc("@title:window", "Edit Element"));
         m_dbb = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel | QDialogButtonBox::Reset, m_elementEditorDialog);
         QBoxLayout *boxLayout = qobject_cast<QBoxLayout *>(m_elementEditorDialog->layout());
         boxLayout->addWidget(m_dbb);

@@ -437,7 +437,7 @@ void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget
 {
     QPointer<QDialog> dlg = new QDialog(parent);
     QPointer<FindPDFUI> widget = new FindPDFUI(entry, dlg);
-    dlg->setWindowTitle(i18n("Find PDF"));
+    dlg->setWindowTitle(i18nc("@title:window", "Find PDF"));
     QBoxLayout *layout = new QVBoxLayout(dlg);
     layout->addWidget(widget);
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Abort | QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dlg);

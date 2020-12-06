@@ -932,7 +932,7 @@ void IdSuggestionsEditWidget::updatePreview()
 IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent)
         : QDialog(parent)
 {
-    setWindowTitle(i18n("Edit Id Suggestion"));
+    setWindowTitle(i18nc("@title:window", "Edit Id Suggestion"));
 }
 
 IdSuggestionsEditDialog::~IdSuggestionsEditDialog()

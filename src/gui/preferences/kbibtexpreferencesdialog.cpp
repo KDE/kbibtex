@@ -167,7 +167,7 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent)
         : KPageDialog(parent), d(new KBibTeXPreferencesDialogPrivate(this))
 {
     setFaceType(KPageDialog::Tree);
-    setWindowTitle(i18n("Preferences"));
+    setWindowTitle(i18nc("@title:window", "Preferences"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset | QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, Qt::Horizontal, this);
     buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     buttonBox->button(QDialogButtonBox::Reset)->setEnabled(false);

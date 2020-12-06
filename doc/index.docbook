@@ -65,12 +65,12 @@
     <itemizedlist>
       <listitem>
 	<para>
-	  <ulink url="http://www.kde.org/">&kf5-full; libraries</ulink>.
+	  <ulink url="https://www.kde.org/">&kf5-full; libraries</ulink>.
 	</para>
       </listitem>
       <listitem>
 	<para>
-	  <ulink url="http://www.ctan.org/">&latex;</ulink>: high-quality document typesetting program. Most likely you want the &texlive; (or on older systems the &tetex;) package, if you are on a Unix-like system. It is an optional dependency, but without it &kbibtex; provides very limited functionality.
+	  <ulink url="https://www.ctan.org/">&latex;</ulink>: high-quality document typesetting program. Most likely you want the &texlive; (or on older systems the &tetex;) package, if you are on a Unix-like system. It is an optional dependency, but without it &kbibtex; provides very limited functionality.
 	</para>
       </listitem>
       <listitem>
@@ -132,7 +132,7 @@
 	pages = {R49},
 	publisher = {Springer},
 	title = {{The calculation of crack opening area and crack opening volume from stress intensity factors}},
-	url = {http://dx.doi.org/10.1007/BF00048294},
+	url = {https://dx.doi.org/10.1007/BF00048294},
 	volume = {76},
 	x-fetchedfrom = {SpringerLink},
 	year = {1995}
@@ -319,7 +319,7 @@
 \bibliographystyle{plain}
 </programlisting>
     <para>
-      Here, <replaceable>foo</replaceable> is the name of your <filename role="extension">bib</filename> file created with &kbibtex; and <quote>plain</quote> is the name of bibliography style.
+    Here, <replaceable>foo</replaceable> is the name of your <filename role="extension">bib</filename> file created with &kbibtex; and <quote><literal>plain</literal></quote> is the name of bibliography style.
     </para>
     <para>
       There is a plenty of specific bibliography styles. Please consult your publisher for the one to choose or try and find the one that suits the best for your purposes.
@@ -330,7 +330,7 @@
     <variablelist>
       <varlistentry>
 	<term>
-	  plain
+      <literal>plain</literal>
 	</term>
 	<listitem>
 	  <para>
@@ -340,31 +340,31 @@
       </varlistentry>
       <varlistentry>
 	<term>
-	  unsrt
+	  <literal>unsrt</literal>
 	</term>
 	<listitem>
 	  <para>
-	    same as plain except entries appear in order of citation
+	    same as <literal>plain</literal> except entries appear in order of citation
 	  </para>
 	</listitem>
       </varlistentry>
       <varlistentry>
 	<term>
-	  alpha
+	  <literal>alpha</literal>
 	</term>
 	<listitem>
 	  <para>
-	    same as plain except entry identifiers are used
+	    same as <literal>plain</literal> except entry identifiers are used
 	  </para>
 	</listitem>
       </varlistentry>
       <varlistentry>
 	<term>
-	  abbrv
+	  <literal>abbrv</literal>
 	</term>
 	<listitem>
 	  <para>
-	    same as plain except uses abbreviations for first names, month names, and journal names
+	    same as <literal>plain</literal> except uses abbreviations for first names, month names, and journal names
 	  </para>
 	</listitem>
       </varlistentry>
@@ -392,7 +392,7 @@
       Now that you have the basis for a document, you have to run both <application>latex</application> and <application>bibtex</application> to process it.
     </para>
     <para>
-      First, you should run <application>latex</application> (to create a foo.aux file, which <application>bibtex</application> reads). Then run <application>bibtex</application> once to get some of the citations and create a <filename role="extension">bbl</filename> file. Then run <application>latex</application> again so that the cross references between the text file and the bibliography are correct. You may want to repeat running <application>bibtex</application> and <application>latex</application> on the file to make sure that all cross references are correct. Be warned that adding/deleting citations and sources will require running <application>bibtex</application> again.
+      First, you should run <application>latex</application> (to create a <filename>foo.aux</filename> file, which <application>bibtex</application> reads). Then run <application>bibtex</application> once to get some of the citations and create a <filename role="extension">bbl</filename> file. Then run <application>latex</application> again so that the cross references between the text file and the bibliography are correct. You may want to repeat running <application>bibtex</application> and <application>latex</application> on the file to make sure that all cross references are correct. Be warned that adding/deleting citations and sources will require running <application>bibtex</application> again.
     </para>
     <para>
       Thus, the following commands can be used to compile the document from console:
@@ -654,7 +654,7 @@ latex example</screen>
 	      <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/>
 	    </imageobject>
 	  </inlinemediaobject>
-	  Get Credentials</guibutton> button on <guilabel>Credentials</guilabel> tab to start the Zotero authorization wizard. Follow the instructions to allow &kbibtex; access your Zotero library.
+	  Get New Credentials</guibutton> button on <guilabel>Credentials</guilabel> tab to start the Zotero authorization wizard. Follow the instructions to allow &kbibtex; access your Zotero library.
 	</para>
 	<para>
 	  To access the library entries double-click on the corresponding item on <guilabel>Collections</guilabel> or <guilabel>Tags</guilabel> tabs. The entries that satisfy the chosen criteria will be shown on the <link linkend="search-results">Search Results panel</link>.
@@ -806,7 +806,7 @@ latex example</screen>
 	  button to open the page or the document in the default external application.
         </para>
 	<para>
-	  The address drop down box can be used to switch between the pages and documents.
+	  The <guilabel>Address</guilabel> drop down box can be used to switch between the pages and documents.
 	</para>
     </sect2>
   </sect1>
@@ -818,7 +818,7 @@ latex example</screen>
       &kbibtex; has two completely customizable toolbars located on the top part of its window.
     </para>
     <para>
-      More information on customizing the toolbars can be found in the <ulink url="Help:/fundamentals/config.html#toolbars">corresponding section of &kde; Fundamentals manual</ulink>. Below is the short description of the default buttons of &kbibtex; toolbars.
+      More information on customizing the toolbars can be found in the <ulink url="help:/fundamentals/config.html#toolbars">corresponding section of &kde; Fundamentals manual</ulink>. Below is the short description of the default buttons of &kbibtex; toolbars.
     </para>
     <sect2 id="main-toolbar">
       <title>
@@ -1249,7 +1249,7 @@ latex example</screen>
       &kbibtex;'s Configuration Dialog
     </title>
     <para>
-      Several &kbibtex; parameters can be configured via the <guilabel>Preferences</guilabel> dialog. This dialog can be opened using the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kbibtex;</guimenuitem></menuchoice> menu item. Below you can find a description of &kbibtex; configuration pages.
+      Several &kbibtex; parameters can be configured via the <guilabel>Preferences</guilabel> dialog. This dialog can be opened using the <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kbibtex;...</guimenuitem></menuchoice> menu item. Below you can find a description of &kbibtex; configuration pages.
     </para>
     <para>
       Click the <guibutton>
@@ -1468,7 +1468,7 @@ latex example</screen>
 	  </mediaobject>
 	</screenshot>
 	<para>
-	  This configuration page can be used to choose some options for <link linkend="element-editor">previewing of &kbibtex; entries</link>. You can select <guilabel>Paper Size</guilabel>, language for <ulink url="http://www.ctan.org/pkg/babel">babel</ulink> &latex; package and the <link linkend="quick-using">bibliography style</link>.
+	  This configuration page can be used to choose some options for <link linkend="element-editor">previewing of &kbibtex; entries</link>. You can select <guilabel>Paper Size</guilabel>, language for <ulink url="https://www.ctan.org/pkg/babel">babel</ulink> &latex; package and the <link linkend="quick-using">bibliography style</link>.
 	</para>
       </sect2>
   </sect1>
@@ -1622,7 +1622,7 @@ latex example</screen>
       Integration with &lyx;
     </title>
     <para>
-      <ulink url="http://www.lyx.org/">&lyx;</ulink> is a document processor that encourages an approach to writing based on the structure of your documents (WYSIWYM) and not simply their appearance (WYSIWYG).
+      <ulink url="https://www.lyx.org/">&lyx;</ulink> is a document processor that encourages an approach to writing based on the structure of your documents (WYSIWYM) and not simply their appearance (WYSIWYG).
     </para>
     <para>
       &kbibtex; can be integrated into &lyx; via &lyx; input/output pipe.

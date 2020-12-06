@@ -551,7 +551,7 @@ public:
 
             if (FileExporterBibTeX::isFileExporterBibTeX(*exporter)) {
                 QPointer<QDialog> dlg = new QDialog(p->widget());
-                dlg->setWindowTitle(i18n("BibTeX File Settings"));
+                dlg->setWindowTitle(i18nc("@title:window", "BibTeX File Settings"));
                 QBoxLayout *layout = new QVBoxLayout(dlg);
                 FileSettingsWidget *settingsWidget = new FileSettingsWidget(dlg);
                 layout->addWidget(settingsWidget);
@@ -568,7 +568,7 @@ public:
                 delete dlg;
             } else if ((fet = qobject_cast<FileExporterToolchain *>(exporter)) != nullptr) {
                 QPointer<QDialog> dlg = new QDialog(p->widget());
-                dlg->setWindowTitle(i18n("PDF/PostScript File Settings"));
+                dlg->setWindowTitle(i18nc("@title:window", "PDF/PostScript File Settings"));
                 QBoxLayout *layout = new QVBoxLayout(dlg);
                 SettingsFileExporterPDFPSWidget *settingsWidget = new SettingsFileExporterPDFPSWidget(dlg);
                 layout->addWidget(settingsWidget);

@@ -167,7 +167,7 @@ public:
                 p->reject();
         });
 
-        p->setWindowTitle(i18n("Zotero OAuth Key Exchange"));
+        p->setWindowTitle(i18nc("@title:window", "Zotero OAuth Key Exchange"));
     }
 };
 
