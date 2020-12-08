@@ -56,6 +56,8 @@ public:
      */
     explicit FileImporterBibTeX(QObject *parent);
 
+    virtual File *fromString(const QString &text) override;
+
     /**
      * Read data from the given device and construct a File object holding
      * the bibliographic data.

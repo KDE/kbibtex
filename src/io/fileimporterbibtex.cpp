@@ -47,21 +47,9 @@ FileImporterBibTeX::FileImporterBibTeX(QObject *parent)
     m_keysForPersonDetection.append(QStringLiteral("bookauthor")); /// used by JSTOR
 }
 
-File *FileImporterBibTeX::load(QIODevice *iodevice)
+File *FileImporterBibTeX::fromString(const QString &text)
 {
     m_cancelFlag = false;
-
-    if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
-        emit message(MessageSeverity::Error, QStringLiteral("Input device not readable"));
-        return nullptr;
-    } else if (iodevice->atEnd() || iodevice->size() <= 0) {
-        qCWarning(LOG_KBIBTEX_IO) << "Input device at end or does not contain any data";
-        emit message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
-        return new File();
-    }
-
-    File *result = new File();
 
     /// Used to determine if file prefers quotation marks over
     /// curly brackets or the other way around
@@ -76,43 +64,23 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     m_statistics.countUnprotectedTitle = 0;
     m_statistics.mostRecentListSeparator.clear();
 
-    m_textStream = new QTextStream(iodevice);
-    m_textStream->setCodec(Preferences::defaultBibTeXEncoding.toLatin1()); ///< unless we learn something else, assume default codec
-    result->setProperty(File::Encoding, Preferences::defaultBibTeXEncoding);
-
-    QString rawText;
-    rawText.reserve(qint64toint(iodevice->size()));
-    while (!m_textStream->atEnd()) {
-        QString line = m_textStream->readLine();
-        bool skipline = evaluateParameterComments(m_textStream, line.toLower(), result);
-        // FIXME XML data should be removed somewhere else? onlinesearch ...
-        if (line.startsWith(QStringLiteral("<?xml")) && line.endsWith(QStringLiteral("?>")))
-            /// Hop over XML declarations
-            skipline = true;
-        if (!skipline)
-            rawText.append(line).append("\n");
-    }
-
-    delete m_textStream;
-
     /** Remove HTML code from the input source */
     // FIXME HTML data should be removed somewhere else? onlinesearch ...
-    const int originalLength = rawText.length();
-    rawText = rawText.remove(KBibTeX::htmlRegExp);
+    const int originalLength = text.length();
+    QString rawText = QString(text).remove(KBibTeX::htmlRegExp);
     const int afterHTMLremovalLength = rawText.length();
     if (originalLength != afterHTMLremovalLength) {
         qCInfo(LOG_KBIBTEX_IO) << (originalLength - afterHTMLremovalLength) << "characters of HTML tags have been removed";
         emit message(MessageSeverity::Info, QString(QStringLiteral("%1 characters of HTML tags have been removed")).arg(originalLength - afterHTMLremovalLength));
     }
 
-    // TODO really necessary to pipe data through several QTextStreams?
+    File *result = new File();
     m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
-    m_textStream->setCodec(Preferences::defaultBibTeXEncoding.toLower() == QStringLiteral("latex") ? "us-ascii" : Preferences::defaultBibTeXEncoding.toLatin1());
     m_lineNo = 1;
     m_prevLine = m_currentLine = QString();
     m_knownElementIds.clear();
-    readChar();
 
+    readChar();
     while (!m_nextChar.isNull() && !m_cancelFlag && !m_textStream->atEnd()) {
         emit progress(qint64toint(m_textStream->pos()), rawText.length());
         Element *element = nextElement();
@@ -156,7 +124,179 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         // TODO gather more statistics for keyword casing etc.
     }
 
+    return result;
+}
+
+File *FileImporterBibTeX::load(QIODevice *iodevice)
+{
+    m_cancelFlag = false;
+
+    if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
+        qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
+        emit message(MessageSeverity::Error, QStringLiteral("Input device not readable"));
+        return nullptr;
+    } else if (iodevice->atEnd() || iodevice->size() <= 0) {
+        qCWarning(LOG_KBIBTEX_IO) << "Input device at end or does not contain any data";
+        emit message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
+        return new File();
+    }
+
+    QByteArray rawData = iodevice->readAll();
     iodevice->close();
+
+    bool encodingMayGetDeterminedByRawData = true;
+    QString encoding(Preferences::instance().bibTeXEncoding()); ///< default value taken from Preferences
+    if (rawData.length() >= 8 && rawData.at(0) != 0 && rawData.at(1) == 0 && rawData.at(2) == 0 && rawData.at(3) == 0 && rawData.at(4) != 0 && rawData.at(5) == 0 && rawData.at(6) == 0 && rawData.at(7) == 0) {
+        /// UTF-32LE (Little Endian)
+        encoding = QStringLiteral("UTF-32LE");
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0xff && static_cast<unsigned char>(rawData.at(1)) == 0xfe && rawData.at(2) == 0 && rawData.at(3) == 0) {
+        /// UTF-32LE (Little Endian) with BOM
+        encoding = QStringLiteral("UTF-32LE");
+        rawData = rawData.mid(4); ///< skip BOM
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 8 && rawData.at(0) == 0 && rawData.at(1) == 0 && rawData.at(2) == 0 && rawData.at(3) != 0 && rawData.at(4) == 0 && rawData.at(5) == 0 && rawData.at(6) == 0 && rawData.at(7) != 0) {
+        /// UTF-32BE (Big Endian)
+        encoding = QStringLiteral("UTF-32BE");
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0 && static_cast<unsigned char>(rawData.at(1)) == 0 && static_cast<unsigned char>(rawData.at(2)) == 0xfe && static_cast<unsigned char>(rawData.at(3)) == 0xff) {
+        /// UTF-32BE (Big Endian) with BOM
+        encoding = QStringLiteral("UTF-32BE");
+        rawData = rawData.mid(4); ///< skip BOM
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 6 && rawData.at(0) != 0 && rawData.at(1) == 0 && rawData.at(2) != 0 && rawData.at(3) == 0 && rawData.at(4) != 0 && rawData.at(5) == 0) {
+        /// UTF-16LE (Little Endian)
+        encoding = QStringLiteral("UTF-16LE");
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0xff && static_cast<unsigned char>(rawData.at(1)) == 0xfe && rawData.at(2) != 0 && rawData.at(3) == 0) {
+        /// UTF-16LE (Little Endian) with BOM
+        encoding = QStringLiteral("UTF-16LE");
+        rawData = rawData.mid(2); ///< skip BOM
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 6 && rawData.at(0) == 0 && rawData.at(1) != 0 && rawData.at(2) == 0 && rawData.at(3) != 0 && rawData.at(4) == 0 && rawData.at(5) != 0) {
+        /// UTF-16BE (Big Endian)
+        encoding = QStringLiteral("UTF-16BE");
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 4 && static_cast<unsigned char>(rawData.at(0)) == 0xfe && static_cast<unsigned char>(rawData.at(1)) == 0xff && rawData.at(2) == 0 && rawData.at(3) != 0) {
+        /// UTF-16BE (Big Endian) with BOM
+        encoding = QStringLiteral("UTF-16BE");
+        rawData = rawData.mid(2); ///< skip BOM
+        encodingMayGetDeterminedByRawData = false;
+    } else if (rawData.length() >= 3 && static_cast<unsigned char>(rawData.at(0)) == 0xef && static_cast<unsigned char>(rawData.at(1)) == 0xbb && static_cast<unsigned char>(rawData.at(2)) == 0xbf) {
+        /// UTF-8 BOM
+        encoding = QStringLiteral("UTF-8");
+        rawData = rawData.mid(3); ///< skip BOM
+        encodingMayGetDeterminedByRawData = false;
+    } else {
+        /// Assuming that encoding is ASCII-compatible, thus it is possible
+        /// to search for a byte sequence containin ASCII text
+        const QByteArray rawDataBeginning = rawData.left(1024);
+        const int xkbibtexencodingpos = qMax(rawDataBeginning.indexOf("@comment{x-kbibtex-encoding="), rawDataBeginning.indexOf("@Comment{x-kbibtex-encoding="));
+        if (xkbibtexencodingpos >= 0) {
+            int i = xkbibtexencodingpos + 28, l = 0;
+            encoding.clear();
+            encoding.reserve(32);
+            while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != '\n' && rawData.at(i) != '\r' && rawData.at(i) != '}' && rawData.at(i) != ')' && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
+                encoding.append(QLatin1Char(rawData.at(i)));
+                ++i;
+                ++l;
+            }
+            rawData = rawData.left(xkbibtexencodingpos) + rawData.mid(i + 1); ///< remove encoding comment
+            encodingMayGetDeterminedByRawData = encoding.isEmpty();
+        } else {
+            const int jabrefencodingpos = qMax(rawDataBeginning.indexOf("% Encoding:"), rawDataBeginning.indexOf("% encoding:"));
+            if (jabrefencodingpos >= 0) {
+                int i = jabrefencodingpos + 11, l = 0;
+                encoding.clear();
+                encoding.reserve(32);
+                while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != '\n' && rawData.at(i) != '\r' && rawData.at(i) != '}' && rawData.at(i) != ')' && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
+                    encoding.append(QLatin1Char(rawData.at(i)));
+                    ++i;
+                    ++l;
+                }
+                encoding = encoding.trimmed();
+                rawData = rawData.left(jabrefencodingpos) + rawData.mid(i + 1); ///< remove encoding comment
+                encodingMayGetDeterminedByRawData = encoding.isEmpty();
+            }
+        }
+    }
+
+    if (encoding.isEmpty()) {
+        encoding = Preferences::instance().bibTeXEncoding(); ///< just in case something went wrong
+        encodingMayGetDeterminedByRawData = true;
+    }
+
+    if (encodingMayGetDeterminedByRawData) {
+        // Unclear which encoding raw data makes use of, so test for
+        // two popular choices: (1) only ASCII (means 'LaTeX' encoding)
+        // and (2) UTF-8
+        bool hasUTF8 = false;
+        bool outsideUTF8 = false;
+        const int len = qMin(2048, rawData.length() - 3);
+        for (int i = 0; i < len; ++i) {
+            const char c1 = rawData.at(i);
+            if ((c1 & 0x80) == 0) {
+                // This character is probably ASCII, so ignore it
+            } else {
+                const char c2 = rawData.at(i + 1);
+                if ((c1 & 0xe0) == 0xc0 && (c2 & 0xc0) == 0x80) {
+                    // This is a two-byte UTF-8 symbol
+                    hasUTF8 = true;
+                    ++i;
+                } else {
+                    const char c3 = rawData.at(i + 2);
+                    if ((c1 & 0xf0) == 0xe0 && (c2 & 0xc0) == 0x80 && (c3 & 0xc0) == 0x80) {
+                        // This is a three-byte UTF-8 symbol
+                        hasUTF8 = true;
+                        i += 2;
+                    } else {
+                        const char c4 = rawData.at(i + 3);
+                        if ((c1 & 0xf8) == 0xf0 && (c2 & 0xc0) == 0x80 && (c3 & 0xc0) == 0x80 && (c4 & 0xc0) == 0x80) {
+                            // This is a four-byte UTF-8 symbol
+                            hasUTF8 = true;
+                            i += 3;
+                        } else {
+                            outsideUTF8 = true;
+                            break; //< No point in further testing more raw data
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!outsideUTF8) {
+            encoding = hasUTF8 ? QStringLiteral("UTF-8") : QStringLiteral("LaTeX");
+            encodingMayGetDeterminedByRawData = false; //< Now the encoding is known
+        }
+    }
+
+    encoding = encoding.toLower();
+    if (encoding == QStringLiteral("us-ascii")) {
+        qDebug(LOG_KBIBTEX_IO) << "Replacing deprecated encoding 'US-ASCII' with 'LaTeX'";
+        encoding = QStringLiteral("latex"); //< encoding 'US-ASCII' is deprecated in favour of 'LaTeX'
+    }
+    // For encoding 'LaTeX', fall back to encoding 'UTF-8' when creating
+    // a QTextCodec instance, but keep 'LaTeX' as the bibliography's 'actual' encoding (used as its encoding property)
+    QTextCodec *codec = QTextCodec::codecForName(encoding == QStringLiteral("latex") ? "utf-8" : encoding.toLatin1());
+    if (codec == nullptr) {
+        qCWarning(LOG_KBIBTEX_IO) << "Could not determine codec for encoding" << encoding;
+        emit message(MessageSeverity::Warning, QString(QStringLiteral("Could not determine codec for encoding '%1'")).arg(encoding));
+        return nullptr;
+    }
+    QString rawText = codec->toUnicode(rawData);
+
+    /// Remove deprecated 'x-kbibtex-personnameformatting' from BibTeX raw text
+    const int posPersonNameFormatting = rawText.indexOf(QStringLiteral("@comment{x-kbibtex-personnameformatting="));
+    if (posPersonNameFormatting >= 0) {
+        const int endOfPersonNameFormatting = rawText.indexOf(QLatin1Char('}'), posPersonNameFormatting + 39);
+        if (endOfPersonNameFormatting > 0)
+            rawText = rawText.left(posPersonNameFormatting) + rawText.mid(endOfPersonNameFormatting + 1);
+    }
+
+    File *result = fromString(rawText);
+    /// In the File object's property, store the encoding used to load the data
+    result->setProperty(File::Encoding, encoding);
+
     return result;
 }
 
