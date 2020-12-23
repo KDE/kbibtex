@@ -58,11 +58,11 @@ class FieldListEdit::FieldListEditProtected
 private:
     FieldListEdit *p;
     const int innerSpacing;
-    QVBoxLayout *layout;
     KBibTeX::TypeFlag preferredTypeFlag;
     KBibTeX::TypeFlags typeFlags;
 
 public:
+    QVBoxLayout *layout;
     QList<FieldLineEdit *> lineEditList;
     QWidget *pushButtonContainer;
     QBoxLayout *pushButtonContainerLayout;
@@ -229,7 +229,7 @@ FieldListEdit::FieldListEdit(KBibTeX::TypeFlag preferredTypeFlag, KBibTeX::TypeF
         : QWidget(parent), d(new FieldListEditProtected(preferredTypeFlag, typeFlags, this))
 {
     setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
-    setMinimumSize(fontMetrics().averageCharWidth() * 30, fontMetrics().averageCharWidth() * 10);
+    setMinimumSize(fontMetrics().averageCharWidth() * 40, fontMetrics().averageCharWidth() * 10);
     setAcceptDrops(true);
 }
 
@@ -240,14 +240,24 @@ FieldListEdit::~FieldListEdit()
 
 bool FieldListEdit::reset(const Value &value)
 {
-    d->removeAllFieldLineEdits();
+    int pos = 0;
     for (const auto &valueItem : value) {
         Value v;
         v.append(valueItem);
-        FieldLineEdit *fieldLineEdit = addFieldLineEdit();
+        // Re-use existing FieldInput widgets and only create new ones if necessary
+        FieldLineEdit *fieldLineEdit = pos < d->lineEditList.count() ? d->lineEditList.at(pos) : addFieldLineEdit();
         fieldLineEdit->setFile(d->file);
         fieldLineEdit->reset(v);
+        ++pos;
     }
+    // Remove unused FieldInput widgets
+    for (int i = d->lineEditList.count() - 1; i >= pos; --i) {
+        FieldLineEdit *fieldLineEdit = d->lineEditList.last();
+        d->layout->removeWidget(fieldLineEdit);
+        d->lineEditList.removeLast();
+        delete fieldLineEdit;
+    }
+
     QSize size(d->container->width(), d->recommendedHeight());
     d->container->resize(size);
 
@@ -366,11 +376,19 @@ void FieldListEdit::dropEvent(QDropEvent *event)
     }
 
     if (!success) {
-        /// In case above cases were not met and thus 'success' is still false,
-        /// clear this list edit and use the clipboad text as its single and only list element
-        d->removeAllFieldLineEdits();
-        FieldLineEdit *fle = addFieldLineEdit();
+        // In case above cases were not met and thus 'success' is still false,
+        // keep a single FieldLineEdit and use the clipboad text as its content
+        FieldLineEdit *fle = d->lineEditList.count() > 0 ? d->lineEditList.first() : addFieldLineEdit();
         fle->setText(clipboardText);
+
+        // Remove unused FieldInput widgets
+        for (int i = d->lineEditList.count() - 1; i > 0; --i) {
+            FieldLineEdit *fieldLineEdit = d->lineEditList.last();
+            d->layout->removeWidget(fieldLineEdit);
+            d->lineEditList.removeLast();
+            delete fieldLineEdit;
+        }
+
         emit modified();
     }
 }

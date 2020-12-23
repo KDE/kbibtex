@@ -140,10 +140,12 @@ bool EntryConfiguredWidget::reset(QSharedPointer<const Element> element)
     QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
     if (entry.isNull()) return false;
 
-    /// clear all widgets
+    // Remember all widgets that won't get reset in the following step,
+    // so that they may get manually cleared at the end
+    QSet<FieldInput *> fieldInputWidgetsToBeCleared;
     for (QMap<QString, FieldInput *>::Iterator it = bibtexKeyToWidget.begin(); it != bibtexKeyToWidget.end(); ++it) {
         it.value()->setFile(m_file);
-        it.value()->clear();
+        fieldInputWidgetsToBeCleared.insert(it.value());
     }
 
     for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
@@ -152,8 +154,13 @@ bool EntryConfiguredWidget::reset(QSharedPointer<const Element> element)
             FieldInput *fieldInput = bibtexKeyToWidget[key];
             fieldInput->setElement(element.data());
             fieldInput->reset(it.value());
+            fieldInputWidgetsToBeCleared.remove(fieldInput);
         }
     }
+
+    // Finally, clear all widgets not being reset
+    for (FieldInput *widget : fieldInputWidgetsToBeCleared)
+        widget->clear();
 
     return true;
 }
