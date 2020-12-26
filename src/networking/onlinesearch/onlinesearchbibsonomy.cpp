@@ -91,7 +91,7 @@ public:
         layout->addWidget(label, 1, 0, 1, 1);
         numResultsField = new QSpinBox(this);
         numResultsField->setMinimum(3);
-        numResultsField->setMaximum(100);
+        numResultsField->setMaximum(1000);
         numResultsField->setValue(20);
         layout->addWidget(numResultsField, 1, 1, 1, 1);
         label->setBuddy(numResultsField);
