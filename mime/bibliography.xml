@@ -18,6 +18,7 @@
         <comment xml:lang="it">File bibliografico RIS</comment>
         <comment xml:lang="nl">RIS-bibliografiebestand</comment>
         <comment xml:lang="nn">RIS-litteraturliste-fil</comment>
+        <comment xml:lang="pl">Plik bibliografii RIS</comment>
         <comment xml:lang="pt_BR">Arquivo de bibliografia RIS</comment>
         <comment xml:lang="sv">RIS-bibliografifil</comment>
         <comment xml:lang="uk">файл бібліографії RIS</comment>
@@ -41,6 +42,7 @@
         <comment xml:lang="it">File bibliografico ISI</comment>
         <comment xml:lang="nl">ISI-bibliografiebestand</comment>
         <comment xml:lang="nn">ISI-litteraturliste-fil</comment>
+        <comment xml:lang="pl">Plik bibliografii ISI</comment>
         <comment xml:lang="pt_BR">Arquivo de bibliografia ISI</comment>
         <comment xml:lang="sv">ISI-bibliografifil</comment>
         <comment xml:lang="uk">файл бібліографії ISI</comment>
@@ -66,6 +68,7 @@
         <comment xml:lang="it">Biblioteca EndNote</comment>
         <comment xml:lang="nl">EndNote-bibliotheek</comment>
         <comment xml:lang="nn">EndNote-bibliotek</comment>
+        <comment xml:lang="pl">Biblioteka EndNote</comment>
         <comment xml:lang="pt_BR">Biblioteca EndNote</comment>
         <comment xml:lang="sv">EndNote-bibliotek</comment>
         <comment xml:lang="uk">бібліотека EndNote</comment>
