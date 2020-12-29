@@ -1237,6 +1237,8 @@ File *FileImporterBibTeX::fromString(const QString &rawText)
     if (!gotAtLeastOneElement) {
         qCWarning(LOG_KBIBTEX_IO) << "In non-empty input, did not find a single BibTeX element";
         emit message(MessageSeverity::Error, QStringLiteral("In non-empty input, did not find a single BibTeX element"));
+        delete result;
+        result = nullptr;
     }
 
     emit progress(100, 100);
