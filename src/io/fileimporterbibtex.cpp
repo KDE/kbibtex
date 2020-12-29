@@ -75,10 +75,14 @@ File *FileImporterBibTeX::fromString(const QString &text)
     }
 
     File *result = new File();
-    m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
     m_lineNo = 1;
     m_prevLine = m_currentLine = QString();
     m_knownElementIds.clear();
+    if (afterHTMLremovalLength == 0) {
+        // On empty input, stop here and return empty File object
+        return result;
+    }
+    m_textStream = new QTextStream(&rawText, QIODevice::ReadOnly);
 
     readChar();
     while (!m_nextChar.isNull() && !m_cancelFlag && !m_textStream->atEnd()) {
@@ -104,24 +108,33 @@ File *FileImporterBibTeX::fromString(const QString &text)
     delete m_textStream;
 
     if (result != nullptr) {
-        /// Set the file's preferences for string delimiters
-        /// deduced from statistics built while parsing the file
-        result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QStringLiteral("\"\"") : QStringLiteral("{}"));
-        /// Set the file's preferences for name formatting
-        result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? Preferences::personNameFormatFirstLast : Preferences::personNameFormatLastFirst);
-        /// Set the file's preferences for title protected
-        Qt::CheckState triState = (m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle * 4) ? Qt::Checked : ((m_statistics.countProtectedTitle * 4 < m_statistics.countUnprotectedTitle) ? Qt::Unchecked : Qt::PartiallyChecked);
-        result->setProperty(File::ProtectCasing, static_cast<int>(triState));
-        /// Set the file's preferences for quoting of comments
-        if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
-            result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::None));
-        else if (m_statistics.countCommentCommand > m_statistics.countNoCommentQuote && m_statistics.countCommentCommand > m_statistics.countCommentPercent)
-            result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::Command));
-        else
-            result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::PercentSign));
-        if (!m_statistics.mostRecentListSeparator.isEmpty())
-            result->setProperty(File::ListSeparator, m_statistics.mostRecentListSeparator);
-        // TODO gather more statistics for keyword casing etc.
+        if (result->isEmpty()) {
+            // We checked for empty input earlier, so why is the File object still empty?
+            // Probably invalid data which cannot even be parsed into a comment string
+            qCWarning(LOG_KBIBTEX_IO) << "No bibliographic elements loaded from non-empty input data";
+            emit message(MessageSeverity::Error, QStringLiteral("No bibliographic elements loaded from non-empty input data"));
+            delete result;
+            result = nullptr;
+        } else {
+            // Set the file's preferences for string delimiters
+            // deduced from statistics built while parsing the file
+            result->setProperty(File::StringDelimiter, m_statistics.countQuotationMarks > m_statistics.countCurlyBrackets ? QStringLiteral("\"\"") : QStringLiteral("{}"));
+            // Set the file's preferences for name formatting
+            result->setProperty(File::NameFormatting, m_statistics.countFirstNameFirst > m_statistics.countLastNameFirst ? Preferences::personNameFormatFirstLast : Preferences::personNameFormatLastFirst);
+            // Set the file's preferences for title protected
+            Qt::CheckState triState = (m_statistics.countProtectedTitle > m_statistics.countUnprotectedTitle * 4) ? Qt::Checked : ((m_statistics.countProtectedTitle * 4 < m_statistics.countUnprotectedTitle) ? Qt::Unchecked : Qt::PartiallyChecked);
+            result->setProperty(File::ProtectCasing, static_cast<int>(triState));
+            // Set the file's preferences for quoting of comments
+            if (m_statistics.countNoCommentQuote > m_statistics.countCommentCommand && m_statistics.countNoCommentQuote > m_statistics.countCommentPercent)
+                result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::None));
+            else if (m_statistics.countCommentCommand > m_statistics.countNoCommentQuote && m_statistics.countCommentCommand > m_statistics.countCommentPercent)
+                result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::Command));
+            else
+                result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::PercentSign));
+            if (!m_statistics.mostRecentListSeparator.isEmpty())
+                result->setProperty(File::ListSeparator, m_statistics.mostRecentListSeparator);
+            // TODO gather more statistics for keyword casing etc.
+        }
     }
 
     return result;
