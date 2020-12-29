@@ -13,6 +13,7 @@
         <comment xml:lang="ca@valencia">Fitxer de bibliografia RIS</comment>
         <comment xml:lang="en_GB">RIS bibliography file</comment>
         <comment xml:lang="es">Archivo de bibliografía RIS</comment>
+        <comment xml:lang="fi">RIS-lähdeluettelotiedosto</comment>
         <comment xml:lang="fr">Fichier de bibliographie pour RIS</comment>
         <comment xml:lang="ia">File de bibliographia RIS</comment>
         <comment xml:lang="it">File bibliografico RIS</comment>
@@ -37,6 +38,7 @@
         <comment xml:lang="ca@valencia">Fitxer de bibliografia ISI</comment>
         <comment xml:lang="en_GB">ISI bibliography file</comment>
         <comment xml:lang="es">Archivo de bibliografía ISI</comment>
+        <comment xml:lang="fi">ISI-lähdeluettelotiedosto</comment>
         <comment xml:lang="fr">Fichier de bibliographie pour ISI</comment>
         <comment xml:lang="ia">File de bibliographia ISI</comment>
         <comment xml:lang="it">File bibliografico ISI</comment>
@@ -63,6 +65,7 @@
         <comment xml:lang="ca@valencia">Biblioteca EndNote</comment>
         <comment xml:lang="en_GB">EndNote library</comment>
         <comment xml:lang="es">Biblioteca de EndNote</comment>
+        <comment xml:lang="fi">EndNote-kirjasto</comment>
         <comment xml:lang="fr">Bibliothèque pour EndNote</comment>
         <comment xml:lang="ia">Biliotheca de Fin Nota (EndNote)</comment>
         <comment xml:lang="it">Biblioteca EndNote</comment>
