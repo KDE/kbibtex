@@ -55,6 +55,9 @@ Diff 0.9.2 to 0.10
 - Across classes, moving code into private subclasses to minimize public interface
 - Updating translations (contributions by various authors)
 - Numerous other fixes, clean-ups, refactoring, ...
+- KDE Bug 423976: When formatting IDs, non-word characters should be used as word separators
+- KDE Bug 426856: File encoding is not always stored
+- KDE Bug 379443: Slowdown when loading citation with many authors
 
 Diff 0.9.1 to 0.9.2
 
