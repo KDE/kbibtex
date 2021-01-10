@@ -59,8 +59,6 @@ public:
     }
 
     Entry *entryFromJsonObject(const QJsonObject &object) const {
-        QJsonDocument doc(object);
-
         /// Assemble information which key-value pairs are contained in JSON object
         /// but not evalued in this code. Debug output reported here should be send
         /// to KBibTeX's authors along with information which ACM records were search

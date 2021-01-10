@@ -76,7 +76,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     qCInfo(LOG_KBIBTEX_IO) << "Running command" << fullCommandLine << "using working directory" << process.workingDirectory();
     process.start(cmd, args);
 
-    connect(&process, &QProcess::readyReadStandardOutput, [this, &doEmitProcessOutput, &process] {
+    connect(&process, &QProcess::readyReadStandardOutput, this, [this, &doEmitProcessOutput, &process] {
         QTextStream ts(process.readAllStandardOutput());
         while (!ts.atEnd()) {
             const QString line = ts.readLine();
@@ -85,7 +85,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
                 emit processStandardOut(line);
         }
     });
-    connect(&process, &QProcess::readyReadStandardError, [this, &doEmitProcessOutput, &process] {
+    connect(&process, &QProcess::readyReadStandardError, this, [this, &doEmitProcessOutput, &process] {
         QTextStream ts(process.readAllStandardError());
         while (!ts.atEnd()) {
             const QString line = ts.readLine();

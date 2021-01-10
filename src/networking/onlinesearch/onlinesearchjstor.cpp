@@ -78,7 +78,7 @@ void OnlineSearchJStor::startSearch(const QMap<QueryKey, QString> &query, int nu
     d->queryUrl.setPath(QStringLiteral("/action/doAdvancedSearch"));
     q.addQueryItem(QStringLiteral("Search"), QStringLiteral("Search"));
     q.addQueryItem(QStringLiteral("acc"), QStringLiteral("off")); /// all content, not just what you can access
-    q.addQueryItem(QStringLiteral("la"), QStringLiteral("")); /// no specific language
+    q.addQueryItem(QStringLiteral("la"), QLatin1String("")); /// no specific language
     q.addQueryItem(QStringLiteral("group"), QStringLiteral("none")); /// not sure what that means
     // TODO how to set number of results? 25 seems to be hard-coded standard
     // Unused query keys:
