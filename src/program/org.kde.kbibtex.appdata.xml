@@ -37,7 +37,7 @@
   <summary xml:lang="es">Editor de BibTeX creado por KDE para editar las bibliografías usadas con LaTeX</summary>
   <summary xml:lang="et">KDE BibTeXi redaktor bibliograafiate muutmiseks LaTeXi kõlblikuks</summary>
   <summary xml:lang="fi">KDE:n BibTeX-muokkain LaTeXissa käytettävien lähdeluettelojen muokkaamiseen</summary>
-  <summary xml:lang="fr">Éditeur BixTeX par KDE pour modifier des bibliographies utilisées avec LaTeX</summary>
+  <summary xml:lang="fr">Éditeur « BibTeX » par KDE pour modifier des bibliographies utilisées avec LaTeX</summary>
   <summary xml:lang="gl">Editor de BibTeX de KDE, para editar bibliografías que se usen con LaTeX</summary>
   <summary xml:lang="id">BibTeX editor oleh KDE untuk mengedit bibliografis yang digunakan menggunakan LaTeX</summary>
   <summary xml:lang="it">Editor BibTeX di KDE per la modifica delle bibliografie usate con LaTeX</summary>
@@ -108,7 +108,7 @@
       <li xml:lang="es">Previsualizar las entradas de bibliografías en varios formatos (Fuente (BibTeX), fuente (RIS), Wikipedia, estándar (XML/XSLT), elegante (XML/XSLT), y solo abstracto (XML/XSLT)). Al instalar bibtex2html dispondrá de estilos de previsualización adicionales.</li>
       <li xml:lang="et">Bibliograafiakirjete eelvaatlus eri vormingutes (lähtetekst (BibTeX), lähtetekst (RIS). Wikipedia, standardne (XML/XSLT), ilus (XML/XSLT) ja puhtabstraktne (XML/XSLT). Paketi bibtex2html paigaldamisel on eelvaatluse stiile veel rohkem.</li>
       <li xml:lang="fi">Esikatsella lähdetietueita eri muodoissa (BibTeX- tai RIS-lähdekoodina, Wikipedia-muodossa, vakio- tai tyylitellyssä muodossa (XML/XSLT) sekä vain tiivistelminä (XML/XSLT)). Lisäesikatselutyylit tulevat käyttöön, kun bibtex2html on asennettu.</li>
-      <li xml:lang="fr">Prévisualiser des entrées bibliographiques dans divers formats (Source (BibTeX), Source (RIS), Wikipédia, standard (XML/XSLT), sophistiqué (XML/XSLT), et abstrait (XML/XSLT)). Des styles d'aperçus supplémentaires sont disponibles après de l'installation de bibtex2html.</li>
+      <li xml:lang="fr">Afficher un aperçu des entrées bibliographiques dans divers formats (Source (BibTeX), Source (RIS), Wikipédia, standard (XML/XSLT), sophistiqué (XML/XSLT), et abstrait (XML/XSLT)). Des styles d'aperçus supplémentaires sont disponibles après de l'installation de bibtex2html.</li>
       <li xml:lang="gl">Obteña unha vista previa de entradas bibliográficas en varios formatos: fonte (BibTeX ou RIS), Wikipedia, estándar (XML/XSLT), elegante (XML/XSLT), e só resumo (XML/XSLT). Se ten «bibtex2html» instalado, disporá de estilos de vista previa adicionais.</li>
       <li xml:lang="id">Mempratinjau entry-entry bibliografi dalam beberapa format (Source (BibTeX), Source (RIS), Wikipedia, (XML/XSLT) standar, (XML/XSLT) fancy, dan (XML/XSLT) hanya-abstrak). Gaya pratinjau tambahan menjadi tersedia ketika bibtex2html telah terinstal.</li>
       <li xml:lang="it">Visualizzare in anteprima le voci bibliografiche in vari formati (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), e in formato solo sommario (XML/XSLT)). Saranno disponibili stili aggiuntivi di anteprima se si installa il pacchetto bibtex2html.</li>
@@ -174,7 +174,7 @@
       <li xml:lang="es">Previsualiza los recursos locales o remotos (en línea), por ejemplo archivos PDF, que estén enlazados en una entrada BibTEX.</li>
       <li xml:lang="et">BibTeXi kirjega seotud kohalike või võrguressursside, nt PDF-failide eelvaatlus.</li>
       <li xml:lang="fi">Esikatsella BibTeX-tietueeseen kytkettyjä paikallisia tai etäresursseja, esim. PDF-tiedostoja.</li>
-      <li xml:lang="fr">Prévisualiser des ressources locales ou distantes (en ligne), par exemple des fichiers PDF ou des liens dans l'entrée BibTeX.</li>
+      <li xml:lang="fr">Afficher un aperçu des ressources locales ou distantes (en ligne), par exemple des fichiers « PDF » ou des liens dans l'entrée « BibTeX ».</li>
       <li xml:lang="gl">Obteña unha vista previa de recursos locais ou en Internet, como ficheiros PDF, que estean ligados desde a entrada de BibTeX.</li>
       <li xml:lang="id">Mempratinjau sumberdaya lokal atau jarak jauh, misalnya file PDF, tertaut dalam entri BibTEX.</li>
       <li xml:lang="it">Visualizzare in anteprima risorse locali o remote (in linea), per es. file PDF, collegate nella voce BibTEX.</li>
