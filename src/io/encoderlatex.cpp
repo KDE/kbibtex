@@ -522,6 +522,7 @@ static const struct MathCommand {
 }
 mathCommands[] = {
     {QStringLiteral("pm"), 0x00B1, DirectionBoth},
+    {QStringLiteral("mu"), 0x00B5, DirectionUnicodeToCommand}, //< Unicode's micro symbol becomes Greek letter
     {QStringLiteral("times"), 0x00D7, DirectionBoth},
     {QStringLiteral("div"), 0x00F7, DirectionBoth},
     {QStringLiteral("phi"), 0x0278, DirectionBoth}, ///< see also 0x03C6 (GREEK SMALL LETTER PHI)
@@ -678,7 +679,7 @@ encoderLaTeXCharacterCommands[] = {
     // - Unicode differs between this symbol and a 'real' Greek 'mu' which has position U+03BC
     // - There are more lower case 'mu' in Unicode for mathematics (bold, italics, sans-serif, ...)
     //   at position U+1D6CD and later; those are not supported at all by KBibTeX
-    {QStringLiteral("textmugreek"), 0x00B5, DirectionUnicodeToCommand},
+    {QStringLiteral("textmu"), 0x00B5, DirectionUnicodeToCommand},
     {QStringLiteral("textparagraph"), 0x00B6, DirectionBoth},
     {QStringLiteral("textpilcrow"), 0x00B6, DirectionBoth},
     {QStringLiteral("textperiodcentered"), 0x00B7, DirectionCommandToUnicode},
@@ -832,8 +833,8 @@ encoderLaTeXCharacterCommands[] = {
     // - LaTeX package 'textcomp' provides command '\textmu' but no other Greek letters
     // - LaTeX package 'textgreek' provides commands for all Greek letters (e.g. '\textpi') but
     //   to avoid conflicts with 'textcomp', the command for 'mu' is '\textmugreek'
-    {QStringLiteral("textmugreek"), 0x03BC, DirectionBoth},
-    {QStringLiteral("textmu"), 0x03BC, DirectionCommandToUnicode},
+    {QStringLiteral("textmugreek"), 0x03BC, DirectionCommandToUnicode},
+    {QStringLiteral("textmu"), 0x03BC, DirectionBoth},
     {QStringLiteral("ldots"), 0x2026, DirectionBoth},
     {QStringLiteral("grqq"), 0x201C, DirectionCommandToUnicode},
     {QStringLiteral("textquotedblleft"), 0x201C, DirectionCommandToUnicode},
@@ -1567,18 +1568,6 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                         found = true;
                         break;
                     }
-
-            if (!found && currentMathMode.empty()) {
-                /// Ok, test for math commands, even if outside of a math mode, then enter math mode for this character
-                for (const MathCommand &mathCommand : mathCommands)
-                    if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
-                        // FIXME Find a better solution, as the \ensuremath should span several characters
-                        // e.g. '\ensuremath{\alpha}\ensuremath{\alpha}' should better be '\ensuremath{\alpha\alpha}'
-                        output.append(QString(QStringLiteral("\\ensuremath{\\%1}")).arg(mathCommand.command));
-                        found = true;
-                        break;
-                    }
-            }
 
             if (!found) {
                 /// Well, either this is not a special character or
