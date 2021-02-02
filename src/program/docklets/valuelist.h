@@ -45,21 +45,16 @@ protected slots:
 
 private slots:
     void listItemActivated(const QModelIndex &);
-    void searchSelection();
-    void assignSelection();
-    void removeSelection();
-    void startItemRenaming();
+    void listItemStartRenaming();
     void deleteAllOccurrences();
     void showCountColumnToggled();
     void sortByCountToggled();
     void columnsChanged();
-    void editorSelectionChanged();
     void editorDestroyed();
-    void fieldNamesChanged(int);
 
 private:
-    class ValueListPrivate;
-    ValueListPrivate *d;
+    class Private;
+    Private *const d;
 };
 
 #endif // KBIBTEX_PROGRAM_DOCKLET_VALUELIST_H

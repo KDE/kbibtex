@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,13 +34,9 @@ class KBIBTEXGUI_EXPORT ValueListDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
 
-private:
-    QString m_fieldName;
-    QTreeView *m_parent;
-
 public:
-    explicit ValueListDelegate(QTreeView *parent = nullptr)
-            : QStyledItemDelegate(parent), m_fieldName(QString()), m_parent(parent) {}
+    explicit ValueListDelegate(QTreeView *parent = nullptr);
+    ~ValueListDelegate();
 
     QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &, const QModelIndex &index) const override;
     void setEditorData(QWidget *editor, const QModelIndex &index) const override;
@@ -49,12 +45,11 @@ public:
     void initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const override;
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    void setFieldName(const QString &fieldName) {
-        m_fieldName = fieldName;
-    }
+    void setFieldName(const QString &fieldName);
 
-private slots:
-    void commitAndCloseEditor();
+private:
+    class Private;
+    Private *const d;
 };
 
 class KBIBTEXGUI_EXPORT ValueListModel : public QAbstractTableModel, private NotificationListener

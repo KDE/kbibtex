@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -44,10 +44,34 @@
 #include "field/fieldlineedit.h"
 #include "logging_gui.h"
 
+class ValueListDelegate::Private {
+public:
+    QTreeView *treeView;
+    ValueListDelegate *parent;
+    QString fieldName;
+
+    Private(QTreeView *_treeView, ValueListDelegate *_parent)
+            : treeView(_treeView), parent(_parent)
+    {
+        // nothing
+    }
+};
+
+ValueListDelegate::ValueListDelegate(QTreeView *parent)
+        : QStyledItemDelegate(parent), d(new ValueListDelegate::Private(parent, this))
+{
+    // nothing
+}
+
+ValueListDelegate::~ValueListDelegate()
+{
+    delete d;
+}
+
 QWidget *ValueListDelegate::createEditor(QWidget *parent, const QStyleOptionViewItem &sovi, const QModelIndex &index) const
 {
     if (index.column() == 0) {
-        const FieldDescription &fd = BibTeXFields::instance().find(m_fieldName);
+        const FieldDescription &fd = BibTeXFields::instance().find(d->fieldName);
         FieldLineEdit *fieldLineEdit = new FieldLineEdit(fd.preferredTypeFlag, fd.typeFlags, false, parent);
         fieldLineEdit->setAutoFillBackground(true);
         return fieldLineEdit;
@@ -82,13 +106,6 @@ QSize ValueListDelegate::sizeHint(const QStyleOptionViewItem &option, const QMod
     return size;
 }
 
-void ValueListDelegate::commitAndCloseEditor()
-{
-    QLineEdit *editor = qobject_cast<QLineEdit *>(sender());
-    emit commitData(editor);
-    emit closeEditor(editor);
-}
-
 void ValueListDelegate::initStyleOption(QStyleOptionViewItem *option, const QModelIndex &index) const
 {
     QStyledItemDelegate::initStyleOption(option, index);
@@ -118,7 +135,7 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
     QString field = option.text;
 
     /// now calculate the rectangle for the text
-    QStyle *s = m_parent->style();
+    QStyle *s = d->treeView->style();
     const QWidget *widget = option.widget;
     const QRect textRect = s->subElementRect(QStyle::SE_ItemViewItemText, &option, widget);
 
@@ -153,7 +170,7 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
     fieldRect.setTop(top);
     fieldRect.setHeight(fm.height());
 
-    if (m_parent->header()->visualIndex(index.column()) == 0) {
+    if (d->treeView->header()->visualIndex(index.column()) == 0) {
         /// left-align text
         fieldRect.setLeft(fieldRect.left() + 4); ///< hm, indent necessary?
         fieldRect.setRight(fieldRect.left() + fieldWidth);
@@ -186,6 +203,10 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
 
     /// restore painter's state
     painter->restore();
+}
+
+void ValueListDelegate::setFieldName(const QString &fieldName) {
+    d->fieldName = fieldName;
 }
 
 ValueListModel::ValueListModel(const File *bibtexFile, const QString &fieldName, QObject *parent)
@@ -253,9 +274,9 @@ bool ValueListModel::setData(const QModelIndex &index, const QVariant &value, in
 {
     Q_ASSERT_X(file != nullptr, "ValueListModel::setData", "You cannot set data if there is no BibTeX file associated with this value list.");
 
-    /// Continue only if in edit role and first column is to be changed
+    // Continue only if in edit role and first column is to be changed
     if (role == Qt::EditRole && index.column() == 0) {
-        /// Fetch the string as it was shown before the editing started
+        // Fetch the string as it was shown before the editing started
         QString origText = data(index, Qt::DisplayRole).toString();
         /// Special treatment for colors
         if (fName == Entry::ftColor) {
@@ -334,7 +355,7 @@ void ValueListModel::notificationEvent(int eventId)
 
 void ValueListModel::readConfiguration()
 {
-    /// load mapping from color value to label
+    // Load mapping from color value to label from Preferences
     colorToLabel.clear();
     for (QVector<QPair<QColor, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); it != Preferences::instance().colorCodes().constEnd(); ++it)
         colorToLabel.insert(it->first.name(), it->second);
@@ -398,7 +419,7 @@ int ValueListModel::indexOf(const QString &text)
         qCWarning(LOG_KBIBTEX_GUI) << "Should never happen";
 
     int i = 0;
-    /// this is really slow for large data sets: O(n^2)
+    /// TODO this is really slow for large data sets: O(n^2)
     /// maybe use a hash table instead?
     for (const ValueLine &valueLine : const_cast<const ValueLineList &>(values)) {
         if (valueLine.text == cmpText)
