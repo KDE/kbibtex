@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -66,6 +66,7 @@ void FileModel::notificationEvent(int eventId)
     } else if (eventId == NotificationHub::EventBibliographySystemChanged) {
         beginResetModel();
         endResetModel();
+        emit bibliographySystemChanged();
     }
 }
 
