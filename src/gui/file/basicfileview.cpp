@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2021 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -150,6 +150,12 @@ BasicFileView::~BasicFileView()
 
 void BasicFileView::setModel(QAbstractItemModel *model)
 {
+    /// Using a lambda context variable (a few lines later to be set in the 'connect' invocation)
+    /// takes care that at most one connect between any given model and the lambda function exists
+    static QObject *lambdaContext = nullptr;
+    if (d->fileModel != nullptr)
+        delete lambdaContext;
+
     d->sortFilterProxyModel = nullptr;
     d->fileModel = dynamic_cast<FileModel *>(model);
     if (d->fileModel == nullptr) {
@@ -161,6 +167,13 @@ void BasicFileView::setModel(QAbstractItemModel *model)
     }
     if (d->fileModel == nullptr)
         qCWarning(LOG_KBIBTEX_GUI) << "Failed to dynamically cast model to FileModel*";
+    else {
+        connect(d->fileModel, &FileModel::bibliographySystemChanged, lambdaContext = new QObject(this), [this]() {
+            /// When the bibliography system is switched (e.g. from BibTeX to BibLaTeX),
+            /// re-load the column properties, e.g. to hide or rebalance columns
+            d->loadColumnProperties();
+        });
+    }
 
     QTreeView::setModel(model);
 
