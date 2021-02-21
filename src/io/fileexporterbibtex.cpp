@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -629,11 +629,11 @@ public:
                 const QString lowerNormalizedCodecName = codec != nullptr ? normalizeCodecName(QString::fromLatin1(codec->name())) : QString();
                 if (codec == nullptr) {
                     if (lowerNormalizedEncodingForComment != QStringLiteral("utf8") && lowerNormalizedEncodingForComment != QStringLiteral("latex")) {
-                        qWarning() << "No codec (means UTF-8 encoded output) does not match with encoding" << encodingForComment;
+                        qCWarning(LOG_KBIBTEX_IO) << "No codec (means UTF-8 encoded output) does not match with encoding" << encodingForComment;
                         return QByteArray();
                     }
                 } else if (lowerNormalizedCodecName != lowerNormalizedEncodingForComment) {
-                    qWarning() << "Codec with name" << codec->name() << "does not match with encoding" << encodingForComment;
+                    qCWarning(LOG_KBIBTEX_IO) << "Codec with name" << codec->name() << "does not match with encoding" << encodingForComment;
                     return QByteArray();
                 }
             }

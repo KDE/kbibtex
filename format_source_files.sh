@@ -118,7 +118,7 @@ while read filename ; do
 	sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' ${TEMPFILE}
 
 	# Check if copyright year is up to date
-	head -n 5 ${TEMPFILE} | grep -Eo --color=NEVER '20[0-9][0-9] by ' | head -n 1 | while read year rest ; do
+	head -n 5 ${TEMPFILE} | grep -Eo --color=NEVER '20[0-9][0-9] Thomas' | head -n 1 | while read year rest ; do
 		[ "${year}" = $(date '+%Y') ] || echo "File '${filename}' has an outdated copyright year: ${year}"
 	done
 
@@ -131,5 +131,5 @@ done
 year=$(date '+%Y')
 test -s README && { grep -q "2004-${year} Thomas Fischer" README || echo "README should have current year in copyright: ${year}" ; }
 for copyrightfile in src/program/program.cpp src/test/main.cpp src/parts/partfactory.cpp ; do
-    test -s "${copyrightfile}" && { grep -q "\"Copyright 2004-${year} Thomas Fischer" "${copyrightfile}" || echo "'${copyrightfile}' should have current year in copyright: ${year}" ; }
+    test -s "${copyrightfile}" && { grep -q "SPDX-FileCopyrightText: 2004-${year} Thomas Fischer" "${copyrightfile}" || echo "'${copyrightfile}' should have current year in copyright: ${year}" ; }
 done

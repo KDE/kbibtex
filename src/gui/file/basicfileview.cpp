@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -315,7 +315,7 @@ void BasicFileView::headerColumnVisibilityToggled()
     if (header()->hiddenSectionCount() + 1 >= header()->count() && !header()->isSectionHidden(col)) {
         /// If only one last column is visible and the current action likes to hide
         /// this column, abort so that the column cannot be hidden by the user
-        qWarning() << "Already too many columns hidden, won't hide more";
+        qCWarning(LOG_KBIBTEX_GUI) << "Already too many columns hidden, won't hide more";
         return;
     }
 

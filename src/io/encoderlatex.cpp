@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -1242,7 +1242,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         for (const MathCommand &mathCommand : mathCommands) {
                             if ((mathCommand.direction & DirectionCommandToUnicode) && mathCommand.command == alpha) {
                                 if (currentMathModeTop() == MathModeNone)
-                                    qDebug() << "Found math mode command" << QString(QStringLiteral("\\%1")).arg(alpha) << "outside of a math expression";
+                                    qCDebug(LOG_KBIBTEX_IO) << "Found math mode command" << QString(QStringLiteral("\\%1")).arg(alpha) << "outside of a math expression";
                                 output.append(QChar(mathCommand.unicode));
                                 found = true;
                                 break;
