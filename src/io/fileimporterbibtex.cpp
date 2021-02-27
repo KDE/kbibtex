@@ -265,12 +265,12 @@ public:
             if (rawText.isNull())
                 return Token::EndOfFile;
             QString text = EncoderLaTeX::instance().decode(rawText);
-            /// for all entries except for abstracts ...
+            /// For all entries except for abstracts and a few more 'verbatim-y' fields ...
             if (iKey != Entry::ftAbstract && !(iKey.startsWith(Entry::ftUrl) && !iKey.startsWith(Entry::ftUrlDate)) && !iKey.startsWith(Entry::ftLocalFile) && !iKey.startsWith(Entry::ftFile)) {
                 /// ... remove redundant spaces including newlines
                 text = bibtexAwareSimplify(text);
             }
-            /// abstracts will keep their formatting (regarding line breaks)
+            /// Abstracts will keep their formatting (regarding line breaks)
             /// as requested by Thomas Jensch via mail (20 October 2010)
 
             /// Maintain statistics on if (book) titles are protected
