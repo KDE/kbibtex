@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -97,6 +97,8 @@ private slots:
     void partialBibTeXInput();
     void partialRISInput_data();
     void partialRISInput();
+    void fieldTypeFileVsLocalfile_data();
+    void fieldTypeFileVsLocalfile();
 
 private:
 };
@@ -1004,6 +1006,55 @@ void KBibTeXIOTest::partialRISInput()
 
     QVERIFY(text.isEmpty() || isValid != gotErrors);
     QVERIFY(isValid ? (!bibTeXfile.isNull() && bibTeXfile->count() == 1) : (bibTeXfile.isNull() || bibTeXfile->count() == 0));
+}
+
+void KBibTeXIOTest::fieldTypeFileVsLocalfile_data()
+{
+    QTest::addColumn<File *>("inputBibliography");
+
+    File *file = new File();
+    QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("fieldTypeFileVsLocalfile")));
+    Value value;
+    value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("localfile.pdf"))));
+    entry->insert(Entry::ftLocalFile, value);
+    file->append(entry);
+    QTest::newRow("Just a 'localfile' field") << file;
+
+    file = new File();
+    entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("fieldTypeFileVsLocalfile")));
+    value.clear();
+    value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("file.pdf"))));
+    entry->insert(Entry::ftFile, value);
+    file->append(entry);
+    QTest::newRow("Just a 'file' field") << file;
+
+    file = new File();
+    entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("fieldTypeFileVsLocalfile")));
+    value.clear();
+    value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("file.pdf"))));
+    entry->insert(Entry::ftFile, value);
+    value.clear();
+    value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("localfile.pdf"))));
+    entry->insert(Entry::ftLocalFile, value);
+    file->append(entry);
+    QTest::newRow("Both a 'file' field and a 'localfile' field") << file;
+}
+
+void KBibTeXIOTest::fieldTypeFileVsLocalfile()
+{
+    QFETCH(File *, inputBibliography);
+
+    QVector<QPair<FileExporter *, FileImporter *>> listOfExImporter {qMakePair(new FileExporterBibTeX(this), new FileImporterBibTeX(this))};
+    for (auto &pair : listOfExImporter) {
+        auto exporter = pair.first;
+        auto importer = pair.second;
+        const QString inputAsString = exporter->toString(inputBibliography);
+        qCInfo(LOG_KBIBTEX_TEST) << inputAsString;
+        File *reimportedBibliography = importer->fromString(inputAsString);
+
+        /// Thorough check if both files contain the same elements/entries and if those are identical
+        QVERIFY(reimportedBibliography->operator ==(*inputBibliography));
+    }
 }
 
 void KBibTeXIOTest::initTestCase()
