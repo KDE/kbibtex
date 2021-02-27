@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -63,9 +63,18 @@ bool FileExporterBibUtils::save(QIODevice *iodevice, const File *bibtexfile)
     }
 
     QBuffer buffer;
-    bool result = d->bibtexExporter->save(&buffer, bibtexfile);
-    if (result)
-        result = convert(buffer, BibUtils::Format::BibTeX, *iodevice, format());
+    bool result = buffer.open(QIODevice::WriteOnly);
+    if (result) {
+        result = d->bibtexExporter->save(&buffer, bibtexfile);
+        buffer.close();
+    }
+    if (result) {
+        if (buffer.open(QIODevice::ReadOnly)) {
+            result = convert(buffer, BibUtils::Format::BibTeX, *iodevice, format());
+            buffer.close();
+        } else
+            result = false;
+    }
 
     return result;
 }
@@ -76,9 +85,17 @@ bool FileExporterBibUtils::save(QIODevice *iodevice, const QSharedPointer<const 
         return false;
 
     QBuffer buffer;
-    bool result = d->bibtexExporter->save(&buffer, element, bibtexfile);
-    if (result)
-        result = convert(buffer, BibUtils::Format::BibTeX, *iodevice, format());
+    bool result = buffer.open(QIODevice::WriteOnly);
+    if (result) {
+        result = d->bibtexExporter->save(&buffer, element, bibtexfile);
+        buffer.close();
+    }
+    if (result) {
+        if (buffer.open(QIODevice::ReadOnly)) {
+            result = convert(buffer, BibUtils::Format::BibTeX, *iodevice, format());
+        } else
+            result = false;
+    }
 
     return result;
 }
