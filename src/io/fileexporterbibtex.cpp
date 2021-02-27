@@ -195,12 +195,12 @@ public:
                 } else {
                     QSharedPointer<const VerbatimText> verbatimText = valueItem.dynamicCast<const VerbatimText>();
                     if (!verbatimText.isNull()) {
+                        const QString keyToLower(key.toLower());
                         QString textBody = verbatimText->text();
                         if (!isOpen) {
                             if (!result.isEmpty()) result.append(" # ");
                             result.append(stringOpenDelimiter);
                         } else if (!prev.dynamicCast<const VerbatimText>().isNull()) {
-                            const QString keyToLower(key.toLower());
                             if (keyToLower.startsWith(Entry::ftUrl) || keyToLower.startsWith(Entry::ftLocalFile) || keyToLower.startsWith(Entry::ftFile) || keyToLower.startsWith(Entry::ftDOI))
                                 /// Filenames and alike have be separated by a semicolon,
                                 /// as a plain comma may be part of the filename or URL
@@ -214,7 +214,19 @@ public:
 
                         if (stringOpenDelimiter == QLatin1Char('"'))
                             protectQuotationMarks(textBody);
-                        result.append(textBody);
+                        if (keyToLower == Entry::ftFile && verbatimText->hasComment()) {
+                            /// Special case: This verbatim text is for a 'file' field and contains a comment.
+                            /// This means it most probably came from JabRef which makes use of the non-standard
+                            /// format of   comment:filename:filetype
+                            /// To be compatible with JabRef, rebuild a string that matches what JabRef would
+                            /// generate. As filetype is not stored, make an educated guess here.
+                            /// Also, filenames are not verbatim for JabRef, so  _  must be written as  \_
+                            const int p = qMin(textBody.length(), qMin(8, qMax(2, textBody.lastIndexOf(QLatin1Char('.')))));
+                            const QString extension = textBody.right(p).toLower();
+                            const QString filetype = extension == QStringLiteral(".pdf") ? QStringLiteral("PDF") : extension == QStringLiteral(".html") || extension == QStringLiteral(".htm") ? QStringLiteral("HTML") : extension == QStringLiteral(".doc") ? QStringLiteral("DOC") : extension == QStringLiteral(".docx") ? QStringLiteral("DOCX") : QStringLiteral("BINARY");
+                            result.append(verbatimText->comment()).append(QLatin1Char(':')).append(EncoderLaTeX::instance().encode(textBody, EncoderLaTeX::TargetEncoding::ASCII)).append(QLatin1Char(':')).append(filetype);
+                        } else
+                            result.append(textBody);
                         prev = verbatimText;
                     } else {
                         QSharedPointer<const Person> person = valueItem.dynamicCast<const Person>();

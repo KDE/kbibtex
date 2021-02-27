@@ -313,32 +313,41 @@ public:
 #else // QT_VERSION < 0x050e00
                     const QStringList fileList = rawText.split(semicolonSpace, QString::SkipEmptyParts);
 #endif // QT_VERSION >= 0x050e00
-                    for (const QString &filename : fileList) {
-                        value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
-                    }
-                }
-            } else if (iKey.startsWith(Entry::ftFile)) {
-                if (isStringKey)
-                    value.append(QSharedPointer<MacroKey>(new MacroKey(text)));
-                else {
-                    /// Assumption: this field was written by Mendeley, which uses
-                    /// a very strange format for file names:
-                    ///  :C$\backslash$:/Users/BarisEvrim/Documents/Mendeley Desktop/GeversPAMI10.pdf:pdf
-                    ///  ::
-                    ///  :Users/Fred/Library/Application Support/Mendeley Desktop/Downloaded/Hasselman et al. - 2011 - (Still) Growing Up What should we be a realist about in the cognitive and behavioural sciences Abstract.pdf:pdf
-                    const QRegularExpressionMatch match = KBibTeX::mendeleyFileRegExp.match(rawText);
-                    if (match.hasMatch()) {
-                        static const QString backslashLaTeX = QStringLiteral("$\\backslash$");
-                        QString filename = match.captured(1).remove(backslashLaTeX);
-                        if (filename.startsWith(QStringLiteral("home/")) || filename.startsWith(QStringLiteral("Users/"))) {
-                            /// Mendeley doesn't have a slash at the beginning of absolute paths,
-                            /// so, insert one
-                            /// See bug 19833, comment 5: https://gna.org/bugs/index.php?19833#comment5
-                            filename.prepend(QLatin1Char('/'));
+                    for (QString filename : fileList) {
+                        QString comment;
+                        bool hasComment = false; ///< need to have extra flag for comment, as even an empty comment counts as comment
+                        if (iKey == Entry::ftFile) {
+                            /// Check 'file' field for a JabRef-specific formatting, extract filename
+                            /// Example of JabRef-specific value:
+                            ///     Some optional text:path/to/file\_name.pdf:PDF
+                            /// Regular expression will try to extract filename, then decode some LaTeX-isms
+                            /// to get  path/to/file_name.pdf  for in above example
+                            static const QRegularExpression jabrefFileRegExp(QStringLiteral("^([^:]*):(.*?):([A-Z]+|pdf)$"));
+                            const QRegularExpressionMatch jabrefFileRegExpMatch = jabrefFileRegExp.match(filename);
+                            if (jabrefFileRegExpMatch.hasMatch()) {
+                                hasComment = true;
+                                comment =  EncoderLaTeX::instance().decode(jabrefFileRegExpMatch.captured(1));
+                                filename =  EncoderLaTeX::instance().decode(jabrefFileRegExpMatch.captured(2));
+
+                                /// Furthermore, if the file came from Windows, drive letters may have been written as follows:
+                                ///    C$\backslash$:/Users/joedoe/filename.pdf
+                                static const QRegularExpression windowsDriveBackslashRegExp(QStringLiteral("^([A-Z])\\$\\\\backslash\\$(:.*)$"));
+                                const QRegularExpressionMatch windowsDriveBackslashRegExpMatch = windowsDriveBackslashRegExp.match(filename);
+                                if (windowsDriveBackslashRegExpMatch.hasMatch()) {
+                                    filename = windowsDriveBackslashRegExpMatch.captured(1) + windowsDriveBackslashRegExpMatch.captured(2);
+                                } else if (filename.startsWith(QStringLiteral("home/"))) {
+                                    /// If filename is a relative path but by name looks almost like it should be an absolute path
+                                    /// (starting with some suspicious strings), prepend a slash
+                                    filename.prepend(QLatin1Char('/'));
+                                }
+                            }
                         }
-                        value.append(QSharedPointer<VerbatimText>(new VerbatimText(filename)));
-                    } else
-                        value.append(QSharedPointer<VerbatimText>(new VerbatimText(text)));
+
+                        VerbatimText *verbatimText = new VerbatimText(filename);
+                        if (hasComment)
+                            verbatimText->setComment(comment);
+                        value.append(QSharedPointer<VerbatimText>(verbatimText));
+                    }
                 }
             } else if (iKey == Entry::ftMonth) {
                 if (isStringKey) {

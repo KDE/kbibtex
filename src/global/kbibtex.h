@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -67,7 +67,6 @@ public:
     static const QRegularExpression doiRegExp;
     static const QRegularExpression arXivRegExpWithPrefix;
     static const QRegularExpression arXivRegExpWithoutPrefix;
-    static const QRegularExpression mendeleyFileRegExp;
     static const QRegularExpression domainNameRegExp;
     static const QRegularExpression htmlRegExp;
     static const QString doiUrlPrefix; ///< use FileInfo::doiUrlPrefix() instead

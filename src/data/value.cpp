@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -340,13 +340,13 @@ QDebug operator<<(QDebug dbg, const PlainText &plainText) {
 
 
 VerbatimText::VerbatimText(const VerbatimText &other)
-        : m_text(other.text())
+        : m_hasComment(other.hasComment()), m_text(other.text()), m_comment(other.comment())
 {
     /// nothing
 }
 
 VerbatimText::VerbatimText(const QString &text)
-        : m_text(text)
+        : m_hasComment(false), m_text(text)
 {
     /// nothing
 }
@@ -361,12 +361,39 @@ QString VerbatimText::text() const
     return m_text;
 }
 
+bool VerbatimText::hasComment() const
+{
+    return m_hasComment;
+}
+
+void VerbatimText::removeComment()
+{
+    m_hasComment = false;
+    m_comment.clear();
+}
+
+void VerbatimText::setComment(const QString &comment)
+{
+    m_hasComment = true;
+    m_comment = comment;
+}
+
+QString VerbatimText::comment() const
+{
+    return m_comment;
+}
+
 void VerbatimText::replace(const QString &before, const QString &after, ValueItem::ReplaceMode replaceMode)
 {
-    if (replaceMode == ValueItem::ReplaceMode::AnySubstring)
+    if (replaceMode == ValueItem::ReplaceMode::AnySubstring) {
         m_text = m_text.replace(before, after);
-    else if (replaceMode == ValueItem::ReplaceMode::CompleteMatch && m_text == before)
-        m_text = after;
+        m_comment = m_comment.replace(before, after);
+    } else if (replaceMode == ValueItem::ReplaceMode::CompleteMatch) {
+        if (m_text == before)
+            m_text = after;
+        if (m_hasComment && m_comment == before)
+            m_comment = after;
+    }
 }
 
 bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity caseSensitive) const
@@ -382,6 +409,12 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
             contained = text.compare(it->first.name(), Qt::CaseInsensitive) == 0 && it->second.contains(pattern, Qt::CaseInsensitive);
     }
 
+    if (!contained && m_hasComment) {
+        const QString comment = QString(m_comment).remove(ignoredInSorting);
+        contained = comment.contains(pattern, caseSensitive);
+        /// Do not test for colors in comment
+    }
+
     return contained;
 }
 
@@ -389,7 +422,7 @@ bool VerbatimText::operator==(const ValueItem &other) const
 {
     const VerbatimText *otherVerbatimText = dynamic_cast<const VerbatimText *>(&other);
     if (otherVerbatimText != nullptr) {
-        return otherVerbatimText->text() == text();
+        return otherVerbatimText->text() == text() && (!m_hasComment || otherVerbatimText->comment() == comment());
     } else
         return false;
 }
@@ -399,7 +432,7 @@ bool VerbatimText::isVerbatimText(const ValueItem &other) {
 }
 
 QDebug operator<<(QDebug dbg, const VerbatimText &verbatimText) {
-    dbg.nospace() << "VerbatimText " << verbatimText.text();
+    dbg.nospace() << "VerbatimText " << verbatimText.text() << " (" << (verbatimText.hasComment() ? "" : "NO ") << "comment: " << verbatimText.comment() << ")";
     return dbg;
 }
 

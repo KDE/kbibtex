@@ -29,11 +29,14 @@
 #include <FileInfo>
 #include <EncoderXML>
 #include <EncoderLaTeX>
+#include <BibUtils>
 #include <FileImporter>
 #include <FileImporterBibTeX>
 #include <FileImporterRIS>
+#include <FileImporterBibUtils>
 #include <FileExporterBibTeX>
 #include <FileExporterRIS>
+#include <FileExporterBibUtils>
 #include <FileExporterXML>
 #include <FileExporterXSLT>
 
@@ -97,8 +100,8 @@ private slots:
     void partialBibTeXInput();
     void partialRISInput_data();
     void partialRISInput();
-    void fieldTypeFileVsLocalfile_data();
-    void fieldTypeFileVsLocalfile();
+    void jabRefFieldFile_data();
+    void jabRefFieldFile();
 
 private:
 };
@@ -956,7 +959,7 @@ void KBibTeXIOTest::partialBibTeXInput()
 
     bool gotErrors = false;
     FileImporterBibTeX importer(this);
-    connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
+    connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString & messageText) {
         gotErrors |= messageSeverity >= FileImporter::MessageSeverity::Error;
         Q_UNUSED(messageText)
         //qCDebug(LOG_KBIBTEX_TEST)<<"FileImporterBibTeX issues message during 'partialBibTeXInput' test: "<<messageText;
@@ -997,7 +1000,7 @@ void KBibTeXIOTest::partialRISInput()
 
     bool gotErrors = false;
     FileImporterRIS importer(this);
-    connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString &messageText) {
+    connect(&importer, &FileImporter::message, [&gotErrors](const FileImporter::MessageSeverity messageSeverity, const QString & messageText) {
         gotErrors |= messageSeverity >= FileImporter::MessageSeverity::Error;
         Q_UNUSED(messageText)
         //qCDebug(LOG_KBIBTEX_TEST)<<"FileImporterRIS issues message during 'partialBibTeXInput' test: "<<messageText;
@@ -1008,53 +1011,85 @@ void KBibTeXIOTest::partialRISInput()
     QVERIFY(isValid ? (!bibTeXfile.isNull() && bibTeXfile->count() == 1) : (bibTeXfile.isNull() || bibTeXfile->count() == 0));
 }
 
-void KBibTeXIOTest::fieldTypeFileVsLocalfile_data()
+void KBibTeXIOTest::jabRefFieldFile_data()
 {
+    QTest::addColumn<FileExporter *>("exporter");
+    QTest::addColumn<FileImporter *>("importer");
     QTest::addColumn<File *>("inputBibliography");
 
-    File *file = new File();
-    QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("fieldTypeFileVsLocalfile")));
-    Value value;
-    value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("localfile.pdf"))));
-    entry->insert(Entry::ftLocalFile, value);
-    file->append(entry);
-    QTest::newRow("Just a 'localfile' field") << file;
-
-    file = new File();
-    entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("fieldTypeFileVsLocalfile")));
-    value.clear();
-    value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("file.pdf"))));
-    entry->insert(Entry::ftFile, value);
-    file->append(entry);
-    QTest::newRow("Just a 'file' field") << file;
-
-    file = new File();
-    entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("fieldTypeFileVsLocalfile")));
-    value.clear();
-    value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("file.pdf"))));
-    entry->insert(Entry::ftFile, value);
-    value.clear();
-    value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("localfile.pdf"))));
-    entry->insert(Entry::ftLocalFile, value);
-    file->append(entry);
-    QTest::newRow("Both a 'file' field and a 'localfile' field") << file;
-}
-
-void KBibTeXIOTest::fieldTypeFileVsLocalfile()
-{
-    QFETCH(File *, inputBibliography);
-
-    QVector<QPair<FileExporter *, FileImporter *>> listOfExImporter {qMakePair(new FileExporterBibTeX(this), new FileImporterBibTeX(this))};
+    static const size_t buffersize = 1024;
+    char buffer[buffersize], bibutilsbuffer[buffersize];
+    QVector<QPair<FileExporter *, FileImporter *>> listOfExImporter {
+        qMakePair(new FileExporterBibTeX(this), new FileImporterBibTeX(this))
+    };
+    if (BibUtils::available()) {
+        /// BibUtils does not (yet) support all variations like JabRef (and KBibTeX's own BibTeX exporter/importer) does
+        static const QVector<BibUtils::Format> bibUtilFormats{/* BibUtils::Format::BibTeX */};
+        for (const auto format : bibUtilFormats) {
+            FileExporterBibUtils *exporter = new FileExporterBibUtils(this);
+            exporter->setFormat(format);
+            FileImporterBibUtils *importer = new  FileImporterBibUtils(this);
+            importer->setFormat(format);
+            listOfExImporter.append(qMakePair(exporter, importer));
+        }
+    }
     for (auto &pair : listOfExImporter) {
         auto exporter = pair.first;
         auto importer = pair.second;
-        const QString inputAsString = exporter->toString(inputBibliography);
-        qCInfo(LOG_KBIBTEX_TEST) << inputAsString;
-        File *reimportedBibliography = importer->fromString(inputAsString);
+        const BibUtils::Format bibutilsformat = strncmp(exporter->metaObject()->className() + 12, "BibUtils", 8) == 0 ? qobject_cast<FileExporterBibUtils *>(exporter)->format() : BibUtils::Format::InvalidFormat;
+        if (bibutilsformat == BibUtils::Format::InvalidFormat)
+            bibutilsbuffer[0] = '\0';
+        else
+            snprintf(bibutilsbuffer, buffersize, ", format=%s", bibutilsformat == BibUtils::Format::BibTeX ? "BibTeX" : bibutilsformat == BibUtils::Format::BibLaTeX ? "BibLaTeX" : bibutilsformat == BibUtils::Format::RIS ? "RIS" : bibutilsformat == BibUtils::Format::WordBib ? "WordBib" : "???");
 
-        /// Thorough check if both files contain the same elements/entries and if those are identical
-        QVERIFY(reimportedBibliography->operator ==(*inputBibliography));
+        File *file = new File();
+        QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("jabRefFieldFile")));
+        Value value;
+        value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("file.pdf"))));
+        entry->insert(Entry::ftFile, value);
+        file->append(entry);
+        snprintf(buffer, buffersize, "Field 'file' with just a filename (exporter=%s, importer=%s%s)", exporter->metaObject()->className(), importer->metaObject()->className(), bibutilsbuffer);
+        QTest::newRow(buffer) << exporter << importer << file;
+
+        file = new File();
+        entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("jabRefFieldFile")));
+        value.clear();
+        VerbatimText *verbatimText = new VerbatimText(QStringLiteral("file.pdf"));
+        verbatimText->setComment(QStringLiteral("Some PDF file"));
+        value.append(QSharedPointer<VerbatimText>(verbatimText));
+        entry->insert(Entry::ftFile, value);
+        file->append(entry);
+        snprintf(buffer, buffersize, "Field 'file' with a JabRef-like value (exporter=%s, importer=%s%s)", exporter->metaObject()->className(), importer->metaObject()->className(), bibutilsbuffer);
+        QTest::newRow(buffer) << exporter << importer << file;
+
+        file = new File();
+        entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("jabRefFieldFile")));
+        value.clear();
+        verbatimText = new VerbatimText(QStringLiteral("file.pdf"));
+        verbatimText->setComment();
+        value.append(QSharedPointer<VerbatimText>(verbatimText));
+        entry->insert(Entry::ftFile, value);
+        file->append(entry);
+        snprintf(buffer, buffersize, "Field 'file' with a JabRef-like value and empty comment (exporter=%s, importer=%s%s)", exporter->metaObject()->className(), importer->metaObject()->className(), bibutilsbuffer);
+        QTest::newRow(buffer) << exporter << importer << file;
+
     }
+}
+
+void KBibTeXIOTest::jabRefFieldFile()
+{
+    QFETCH(FileExporter *, exporter);
+    QFETCH(FileImporter *, importer);
+    QFETCH(File *, inputBibliography);
+
+    const QString inputAsString = exporter->toString(inputBibliography);
+    QVERIFY(!inputAsString.isEmpty());
+
+    File *reimportedBibliography = importer->fromString(inputAsString);
+    QVERIFY(reimportedBibliography != nullptr);
+
+    /// Thorough check if both files contain the same elements/entries and if those are identical
+    QVERIFY(reimportedBibliography->operator ==(*inputBibliography));
 }
 
 void KBibTeXIOTest::initTestCase()
