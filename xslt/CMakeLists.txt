@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2010-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+
 install(
     FILES
     fancy.xsl

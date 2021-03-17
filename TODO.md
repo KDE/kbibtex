@@ -13,7 +13,10 @@
   for automatic processing when preparing for a release.
 * Whenever making changes, write automated tests that confirm that a
   feature works as expected with known input/output or if a bug is
-  actually fixed.s
+  actually fixed.
+* Code and other data must be properly attributed, i.e. which license
+  applies and is/are the author(s). Attribution must follow the REUSE
+  Specification and must be automatically checked using  reuse lint
 
 ## Code Simplifications
 

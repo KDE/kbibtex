@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2009-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileContributor: 2020 Pino Toscano <pino@kde.org>
+
 # Create and install documentation (handbook)
 
 kdoctools_create_handbook(

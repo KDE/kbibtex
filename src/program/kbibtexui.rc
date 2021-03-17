@@ -1,4 +1,8 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<!--
+  SPDX-License-Identifier: GPL-2.0-or-later
+  SPDX-FileCopyrightText: 2009-2014 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+  -->
 <kpartgui name="KBibTeX" version="1">
 <MenuBar>
   <Menu name="file"><text>File</text>

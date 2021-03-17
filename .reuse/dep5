@@ -1,0 +1,12 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: KBibTeX
+Upstream-Contact: Thomas Fischer <fischer@unix-ag.uni-kl.de>
+Source: https://invent.kde.org/office/kbibtex
+
+Files: TODO.md README.md ChangeLog
+Copyright: 2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+License: GPL-2.0-or-later
+
+Files: src/config/cmake/KBibTeXConfig-config.cmake.in src/data/cmake/KBibTeXData-config.cmake.in src/global/cmake/KBibTeXGlobal-config.cmake.in src/gui/cmake/KBibTeXGUI-config.cmake.in src/io/cmake/KBibTeXIO-config.cmake.in src/networking/cmake/KBibTeXNetworking-config.cmake.in src/processing/cmake/KBibTeXProcessing-config.cmake.in
+Copyright: 2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+License: GPL-2.0-or-later

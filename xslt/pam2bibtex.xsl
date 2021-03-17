@@ -5,9 +5,8 @@
   - as provided by Springer in the format PAM (PRISM Aggregator Message)
   - into BibTeX files.
   -
-  - This file was written by Thomas Fischer <fischer@unix-ag.uni-kl.de>
-  - It is released under the GNU Public License version 2 or later.
-  -
+  - SPDX-FileCopyrightText: 2012-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+  - SPDX-License-Identifier: GPL-2.0-or-later
   -->
 
 <xsl:output method="text" omit-xml-declaration="yes" indent="no" encoding="UTF-8"/>

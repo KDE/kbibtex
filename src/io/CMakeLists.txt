@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2012-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileContributor: 2013-2017 Pino Toscano <pino@kde.org>
+# SPDX-FileContributor: 2019 Jonathan Riddell <jr@jriddell.org>
+
 set(
     kbibtexio_SRCS
     encoder.cpp

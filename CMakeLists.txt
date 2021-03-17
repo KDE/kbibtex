@@ -1,3 +1,10 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2008-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileContributor: 2013-2021 Pino Toscano <pino@kde.org>
+# SPDX-FileContributor: 2014-2021 Yuri Chornoivan <yurchor@ukr.net>
+# SPDX-FileContributor: 2015-2021 David Faure <faure@kde.org>
+# SPDX-FileContributor: 2016-2021 Andreas Sturmlechner <andreas.sturmlechner@gmail.com>
+
 cmake_minimum_required(VERSION 3.7.2)
 
 if(POLICY CMP0048)

@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  SPDX-License-Identifier: CC0-1.0
+  SPDX-FileCopyrightText: 2017 Luigi Toscano <luigi.toscano@tiscali.it>
+  SPDX-FileCopyrightText: 2020 Pino Toscano <pino@kde.org>
+  SPDX-FileCopyrightText: 2015-2018 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+  SPDX-FileCopyrightText: 2018 Yuri Chornoivan <yurchor@ukr.net>
+  SPDX-FileCopyrightText: 2015-2021 Various KDE Translators
+  -->
 <component type="desktop">
   <id>org.kde.kbibtex.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>

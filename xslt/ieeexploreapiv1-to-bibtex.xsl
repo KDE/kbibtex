@@ -5,9 +5,8 @@
   - as provided through IEEE Xplore's Metadata Search API v1 accessible via
   - https://ieeexploreapi.ieee.org/api/v1/search/articles
   -
-  - This file was written by Thomas Fischer <fischer@unix-ag.uni-kl.de>
-  - It is released under the GNU Public License version 3 or later.
-  -
+  - SPDX-FileCopyrightText: 2018-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+  - SPDX-License-Identifier: GPL-2.0-or-later
   -->
 
 <xsl:output method="text" omit-xml-declaration="yes" indent="no" encoding="UTF-8"/>

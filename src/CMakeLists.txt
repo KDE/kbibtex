@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2008-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileContributor: 2017 Andreas Sturmlechner <andreas.sturmlechner@gmail.com>
+
 # "Unity build" found at
 # https://cheind.wordpress.com/2009/12/10/reducing-compilation-time-unity-builds/
 function(enable_unity_build UB_SUFFIX SOURCE_VARIABLE_NAME)

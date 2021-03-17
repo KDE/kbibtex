@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2012-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileContributor: 2018 David Faure <faure@kde.org>
+# SPDX-FileContributor: 2014-2016 Pino Toscano <pino@kde.org>
+
 include(AddFileDependencies)
 include(ECMMarkAsTest)
 

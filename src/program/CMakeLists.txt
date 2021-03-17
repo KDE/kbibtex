@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2009-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileContributor: 2017 Pino Toscano <pino@kde.org>
+
 set(
     kbibtexprogram_SRCS
     program.cpp

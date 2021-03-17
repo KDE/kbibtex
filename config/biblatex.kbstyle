@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2011-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2013 Yuri Chornoivan <yurchor@ukr.net>
+
 [EntryType]
 count=29
 

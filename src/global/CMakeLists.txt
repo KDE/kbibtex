@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+
 set(
     kbibtexglobal_SRCS
     kbibtex.cpp

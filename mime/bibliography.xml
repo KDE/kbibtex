@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  -  This file is part of KBibTeX: https://userbase.kde.org/KBibTeX
-  -  Released under the GNU Public License version 2 or later
-  -  Original author: Thomas Fischer <fischer@unix-ag.uni-kl.de>
+  SPDX-License-Identifier: GPL-2.0-or-later
+  SPDX-FileCopyrightText: 2011-2017 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+  SPDX-FileCopyrightText: Various authors
+
+  This file is part of KBibTeX: https://userbase.kde.org/KBibTeX
+  Released under the GNU Public License version 2 or later
+  Original author: Thomas Fischer <fischer@unix-ag.uni-kl.de>
   -->
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
     <mime-type type="application/x-research-info-systems">

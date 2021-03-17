@@ -1,3 +1,11 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: 2011-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileContributor: 2014 Christophe Giboudeaux <cgiboudeaux@gmx.com>
+# SPDX-FileContributor: 2014 Pavel Zorin-Kranich <pzorin@math.uni-bonn.de>
+# SPDX-FileContributor: 2016 Christoph Feck <cfeck@kde.org>
+# SPDX-FileContributor: 2017 Pino Toscano <pino@kde.org>
+# SPDX-FileContributor: 2019 Jonathan Riddell <jr@jriddell.org>
+
 set(
     kbibtexnetworking_SRCS
     onlinesearch/onlinesearchabstract.cpp
