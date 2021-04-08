@@ -40,8 +40,8 @@ SortFilterFileModel::SortFilterFileModel(QObject *parent)
 
 void SortFilterFileModel::setSourceModel(QAbstractItemModel *model)
 {
-    QSortFilterProxyModel::setSourceModel(model);
     m_internalModel = dynamic_cast<FileModel *>(model);
+    QSortFilterProxyModel::setSourceModel(model);
 }
 
 FileModel *SortFilterFileModel::fileSourceModel() const
