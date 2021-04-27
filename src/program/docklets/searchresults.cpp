@@ -77,7 +77,7 @@ public:
         layoutCannotImport->addStretch(10);
         QLabel *label = new QLabel(widgetCannotImport);
         label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
-        label->setPixmap(KIconLoader::global()->loadIcon(QStringLiteral("dialog-warning"), KIconLoader::Dialog, KIconLoader::SizeSmall));
+        label->setPixmap(QIcon::fromTheme(QStringLiteral("dialog-warning")).pixmap(KIconLoader::SizeSmall));
         layoutCannotImport->addWidget(label);
         labelCannotImportMsg = new QLabel(widgetCannotImport);
         labelCannotImportMsg->setAlignment(Qt::AlignRight | Qt::AlignVCenter);

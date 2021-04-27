@@ -88,7 +88,7 @@ public:
         layoutUnmodifiedChanges->addSpacing(32);
         QLabel *label = new QLabel(widgetUnmodifiedChanges);
         label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
-        label->setPixmap(KIconLoader::global()->loadIcon(QStringLiteral("dialog-information"), KIconLoader::Dialog, KIconLoader::SizeSmall));
+        label->setPixmap(QIcon::fromTheme(QStringLiteral("dialog-information")).pixmap(KIconLoader::SizeSmall));
         layoutUnmodifiedChanges->addWidget(label);
         label = new QLabel(i18n("There are unsaved changes. Please press either 'Apply' or 'Reset'."), widgetUnmodifiedChanges);
         label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
