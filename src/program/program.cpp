@@ -41,6 +41,8 @@ int main(int argc, char *argv[])
         QLoggingCategory::setFilterRules(QStringLiteral("kbibtex.*.debug = true"));
     }
 
+    QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+
     QApplication programCore(argc, argv);
 
     KCrash::initialize();
