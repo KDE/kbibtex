@@ -1,8 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: 2019-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
-image: kdeneon/plasma:dev-stable
-
 variables:
   BUILD_DIR: "/tmp/build-kbibtex"
   INSTALL_DIR: "/tmp/usr"
@@ -23,11 +21,17 @@ variables:
   COVERITYSCAN_COVINT_TARBALL: "/tmp/cov-scan.tar.gz"
   COVERITYSCAN_VERSION: "2019.03"
 
-before_script:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y -qq cmake ninja-build build-essential extra-cmake-modules libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5test5 libqt5webenginewidgets5 libqt5webkit5 libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5itemviews-dev libkf5completion-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev libkf5syntaxhighlighting-dev libpoppler-qt5-dev gettext libicu-dev libqca-qt5-2-dev git
+prepare_kdeneon:
+  stage: build
+  image: kdeneon/plasma:dev-stable
+  script:
+    - sudo apt-get update -qq
+    - sudo apt-get install -y -qq cmake ninja-build build-essential extra-cmake-modules libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5test5 libqt5webenginewidgets5 libqt5webkit5 libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5itemviews-dev libkf5completion-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev libkf5syntaxhighlighting-dev libpoppler-qt5-dev gettext libicu-dev libqca-qt5-2-dev git
 
 automated-tests:
+  stage: test
+  dependencies:
+  - prepare_kdeneon
   script:
     - mkdir -p $(dirname $TESTSET_DIR) && cd $(dirname $TESTSET_DIR) && git clone --depth 1 "https://anongit.kde.org/kbibtex-testset.git" $(basename $TESTSET_DIR)
     - mkdir -p $BUILD_DIR/$CI_JOB_NAME && cd $BUILD_DIR/$CI_JOB_NAME
@@ -41,6 +45,9 @@ automated-tests:
     - ./kbibtexnetworkingtest -platform offscreen
 
 coverity-scan:
+  stage: test
+  dependencies:
+  - prepare_kdeneon
   rules:
     - if: $COVERITYSCAN_TOKEN != null
   script:
@@ -52,3 +59,11 @@ coverity-scan:
     - $COVERITYSCAN_USR_DIR/cov-analysis-linux64-$COVERITYSCAN_VERSION/bin/cov-build --dir $COVERITYSCAN_OUTPUT_DIR/cov-int ninja
     - tar -cavf $COVERITYSCAN_COVINT_TARBALL -C $COVERITYSCAN_OUTPUT_DIR cov-int
     - curl --insecure --verbose --progress-bar --form "token="$COVERITYSCAN_TOKEN --form "email=fischer@unix-ag.uni-kl.de"  --form "file=@"$COVERITYSCAN_COVINT_TARBALL --form "version=GitLab" --form "description=Automatically built on GitLab" "https://scan.coverity.com/builds?project=KBibTeX"
+
+reuse:
+  stage: build
+  image:
+    name: fsfe/reuse:latest
+    entrypoint: [""]
+  script:
+    - reuse lint
