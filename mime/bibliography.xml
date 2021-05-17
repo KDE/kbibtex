@@ -19,6 +19,7 @@
         <comment xml:lang="fr">Fichier de bibliographie pour RIS</comment>
         <comment xml:lang="ia">File de bibliographia RIS</comment>
         <comment xml:lang="it">File bibliografico RIS</comment>
+        <comment xml:lang="ko">RIS 서지 정보 파일</comment>
         <comment xml:lang="nl">RIS-bibliografiebestand</comment>
         <comment xml:lang="nn">RIS-litteraturliste-fil</comment>
         <comment xml:lang="pl">Plik bibliografii RIS</comment>
@@ -47,6 +48,7 @@
         <comment xml:lang="fr">Fichier de bibliographie pour ISI</comment>
         <comment xml:lang="ia">File de bibliographia ISI</comment>
         <comment xml:lang="it">File bibliografico ISI</comment>
+        <comment xml:lang="ko">ISI 서지 정보 파일</comment>
         <comment xml:lang="nl">ISI-bibliografiebestand</comment>
         <comment xml:lang="nn">ISI-litteraturliste-fil</comment>
         <comment xml:lang="pl">Plik bibliografii ISI</comment>
@@ -77,6 +79,7 @@
         <comment xml:lang="fr">Bibliothèque pour EndNote</comment>
         <comment xml:lang="ia">Biliotheca de Fin Nota (EndNote)</comment>
         <comment xml:lang="it">Biblioteca EndNote</comment>
+        <comment xml:lang="ko">EndNote 라이브러리</comment>
         <comment xml:lang="nl">EndNote-bibliotheek</comment>
         <comment xml:lang="nn">EndNote-bibliotek</comment>
         <comment xml:lang="pl">Biblioteka EndNote</comment>
