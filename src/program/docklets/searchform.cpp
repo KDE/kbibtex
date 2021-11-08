@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -77,6 +77,7 @@
 #include <onlinesearch/OnlineSearchDOI>
 #include <onlinesearch/OnlineSearchBioRxiv>
 #include <onlinesearch/OnlineSearchSemanticScholar>
+#include <onlinesearch/OnlineSearchZbMath>
 #include <file/FileView>
 #include <models/FileModel>
 #include "openfileinfo.h"
@@ -259,6 +260,7 @@ public:
         addEngine(new OnlineSearchIDEASRePEc(p));
         addEngine(new OnlineSearchDOI(p));
         addEngine(new OnlineSearchSemanticScholar(p));
+        addEngine(new OnlineSearchZbMath(p));
 
         p->itemCheckChanged(nullptr);
         updateGUI();

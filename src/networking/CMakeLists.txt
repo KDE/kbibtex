@@ -29,6 +29,7 @@ set(
     onlinesearch/onlinesearchdoi.cpp
     onlinesearch/onlinesearchbiorxiv.cpp
     onlinesearch/onlinesearchsemanticscholar.cpp
+    onlinesearch/onlinesearchzbmath.cpp
     zotero/api.cpp
     zotero/collectionmodel.cpp
     zotero/collection.cpp
@@ -152,6 +153,7 @@ ecm_generate_headers(kbibtexnetworking_HEADERS
         onlinesearch/OnlineSearchSimpleBibTeXDownload
         onlinesearch/OnlineSearchSOANASAADS
         onlinesearch/OnlineSearchSpringerLink
+        onlinesearch/OnlineSearchZbMath
         zotero/API
         zotero/Collection
         zotero/CollectionModel
