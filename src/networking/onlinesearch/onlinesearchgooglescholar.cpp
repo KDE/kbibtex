@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -327,7 +327,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 #ifdef HAVE_KF5
             if (htmlText.contains(QStringLiteral("enable JavaScript")) || htmlText.contains(QStringLiteral("re not a robot"))) {
                 qCInfo(LOG_KBIBTEX_NETWORKING) << "'Google Scholar' denied scrapping data because it thinks KBibTeX is a robot.";
-                sendVisualNotification(i18n("'Google Scholar' denied scrapping data because it thinks you are a robot."), label(), QStringLiteral("kbibtex"), 7 * 1000);
+                sendVisualNotification(i18n("'Google Scholar' denied scrapping data because it thinks you are a robot."), label(), 10);
             } else {
 #endif // HAVE_KF5
                 static const QRegularExpression linkToBib("/scholar.bib\\?[^\" >]+");

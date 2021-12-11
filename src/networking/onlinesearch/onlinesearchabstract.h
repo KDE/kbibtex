@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -159,7 +159,14 @@ protected:
     void refreshBusyProperty();
 
 #ifdef HAVE_KF5
-    void sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout);
+    /**
+     * @brief Send a visual notification to the desktop, similar to KNotification
+     * @param text Message to be shown
+     * @param title Title of the message, such as which OnlineSearch engine
+     * @param timeout time after which the message will automatically disappear (in seconds)
+     * @param icon Name of icon to be shown
+     */
+    void sendVisualNotification(const QString &text, const QString &title, int timeout = 10, const QString &icon = QStringLiteral("kbibtex"));
 #endif // HAVE_KF5
 
 private:

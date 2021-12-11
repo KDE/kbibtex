@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -213,7 +213,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
             qCDebug(LOG_KBIBTEX_NETWORKING) << "RECVD " << rawHeaderName << ":" << reply->rawHeader(rawHeaderName);
         }
 #ifdef HAVE_KF5
-        sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), InternalNetworkAccessManager::removeApiKey(errorString)), label(), QStringLiteral("kbibtex"), 7 * 1000);
+        sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), InternalNetworkAccessManager::removeApiKey(errorString)), label(), 10);
 #endif // HAVE_KF5
 
         int resultCode = resultUnspecifiedError;
@@ -295,41 +295,35 @@ bool OnlineSearchAbstract::htmlAttributeIsSelected(const QString &htmlCode, cons
  * Display a passive notification popup using the D-Bus interface.
  * Copied from KDialog with modifications.
  */
-void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QString &title, const QString &icon, int timeout)
+void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QString &title, int timeout, const QString &icon)
 {
-    static const QString dbusServiceName = QStringLiteral("org.freedesktop.Notifications");
-    static const QString dbusInterfaceName = QStringLiteral("org.freedesktop.Notifications");
-    static const QString dbusPath = QStringLiteral("/org/freedesktop/Notifications");
+    static const QString dbusServiceName {QStringLiteral("org.freedesktop.Notifications")};
+    static const QString dbusInterfaceName {QStringLiteral("org.freedesktop.Notifications")};
+    static const QString dbusPath {QStringLiteral("/org/freedesktop/Notifications")};
 
-    // check if service already exists on plugin instantiation
+    // Check if service already exists on plugin instantiation
     QDBusConnectionInterface *interface = QDBusConnection::sessionBus().interface();
     if (interface == nullptr || !interface->isServiceRegistered(dbusServiceName)) {
         return;
     }
 
     if (timeout <= 0)
+        // For non-positive timeout values, fall back to 10s
         timeout = 10 * 1000;
+    else if (timeout < 100)
+        // 'timeout' is less than 100, so presumably the caller meant seconds instead of milliseconds
+        timeout *= 1000;
+    if (timeout > 30000)
+        // Limit 'timeout' to 30 seconds
+        timeout = 30000;
 
     QDBusMessage m = QDBusMessage::createMethodCall(dbusServiceName, dbusPath, dbusInterfaceName, QStringLiteral("Notify"));
-    const QList<QVariant> args {QStringLiteral("kdialog"), 0U, icon, title, text, QStringList(), QVariantMap(), timeout};
+    const QList<QVariant> args {i18n("KBibTeX"), 0U, icon, title, text, QStringList(), QVariantMap(), timeout};
     m.setArguments(args);
 
-    QDBusMessage replyMsg = QDBusConnection::sessionBus().call(m);
-    if (replyMsg.type() == QDBusMessage::ReplyMessage) {
-        if (!replyMsg.arguments().isEmpty()) {
-            return;
-        }
-        // Not displaying any error messages as this is optional for kdialog
-        // and KPassivePopup is a perfectly valid fallback.
-        //else {
-        //  qCDebug(LOG_KBIBTEX_NETWORKING) << "Error: received reply with no arguments.";
-        //}
-    } else if (replyMsg.type() == QDBusMessage::ErrorMessage) {
-        //qCDebug(LOG_KBIBTEX_NETWORKING) << "Error: failed to send D-Bus message";
-        //qCDebug(LOG_KBIBTEX_NETWORKING) << replyMsg;
-    } else {
-        //qCDebug(LOG_KBIBTEX_NETWORKING) << "Unexpected reply type";
-    }
+    const QDBusMessage replyMsg = QDBusConnection::sessionBus().call(m);
+    if (replyMsg.type() == QDBusMessage::ErrorMessage)
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Error: failed to send D-Bus message:" << text;
 }
 #endif // HAVE_KF5
 
