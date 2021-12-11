@@ -121,7 +121,8 @@ void OnlineSearchZbMath::startSearch(const QMap<QueryKey, QString> &query, int n
     d->resumptionCounter = 0;
 
     QUrl u(Private::helperFilterUrl);
-    QUrlQuery urlQuery({{QStringLiteral("metadataPrefix"), QStringLiteral("oai_zb_preview")}});
+    QUrlQuery urlQuery;
+    urlQuery.addQueryItem(QStringLiteral("metadataPrefix"), QStringLiteral("oai_zb_preview"));
     const QString filterString = d->filterString(query);
     if (!filterString.isEmpty())
         urlQuery.addQueryItem(QStringLiteral("filter"), filterString);
