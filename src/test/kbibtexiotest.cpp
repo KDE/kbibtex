@@ -211,6 +211,9 @@ void KBibTeXIOTest::encoderLaTeXdecode_data()
     QTest::newRow("Greek mu with '\\ensuremath'") << QString(QStringLiteral("%1\\mu\\textmu\\ensuremath{%1\\mu}")).arg(QChar(0x03bc)) << QString(QStringLiteral("%1%1%1\\ensuremath{%1%1}")).arg(QChar(0x03bc)) << QString(QStringLiteral("{\\textmu}{\\textmu}{\\textmu}\\ensuremath{\\mu{}\\mu}"));
     QTest::newRow("Micro sign with 'Dollar' math") << QString(QStringLiteral("%1$%1$")).arg(QChar(0x00b5)) << QString(QStringLiteral("%1$%1$")).arg(QChar(0x00b5)) << QStringLiteral("{\\textmu}$\\mu$");
     QTest::newRow("Micro sign with '\\ensuremath'") << QString(QStringLiteral("%1\\ensuremath{%1}")).arg(QChar(0x00b5)) << QString(QStringLiteral("%1\\ensuremath{%1}")).arg(QChar(0x00b5)) << QString(QStringLiteral("{\\textmu}\\ensuremath{\\mu}"));
+    QTest::newRow("\\uu") << QStringLiteral("u\\uu\\u uu\\u u u u{\\uu}{\\u u}u{\\u u} u") << QString(QStringLiteral("u\\uu%1u%1 u u{\\uu}%1u%1 u")).arg(QChar(0x016d)) << QStringLiteral("u\\uu{\\u u}u{\\u u} u u{\\uu}{\\u u}u{\\u u} u");
+    QTest::newRow("mhchem") << QStringLiteral("\\ce{H2O}") << QStringLiteral("\\ce{H2O}") << QString();
+    QTest::newRow("Latin small letter e with ogonek versus mhchem") << QStringLiteral("{\\c e} vs \\ce{H2O}") << QString(QStringLiteral("%1 vs \\ce{H2O}")).arg(QChar(0x0229)) << QStringLiteral("\\c{e} vs \\ce{H2O}");
 }
 
 void KBibTeXIOTest::encoderLaTeXdecode()

@@ -984,7 +984,8 @@ QString EncoderLaTeX::decode(const QString &input) const
 
                 /// Next, check if there follows a modifier after the backslash
                 /// For example an quotation mark as used in {\"a}
-                const int lookupTablePos = modifierInLookupTable(input[i + 2].toLatin1());
+                const QChar modifier = input[i + 2];
+                const int lookupTablePos = modifierInLookupTable(modifier.toLatin1());
 
                 /// Check for spaces between modifier and character, for example
                 /// like {\H o}
@@ -992,7 +993,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 while (i + 3 + skipSpaces < len && input[i + 3 + skipSpaces] == QLatin1Char(' ') && skipSpaces < 16) ++skipSpaces;
 
                 bool found = false;
-                if (lookupTablePos >= 0 && i + skipSpaces < len - 4 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 3 + skipSpaces])) >= 0 && input[i + 4 + skipSpaces] == QLatin1Char('}')) {
+                if (lookupTablePos >= 0 && (skipSpaces > 0 || !modifier.isLetter()) && i + skipSpaces < len - 4 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 3 + skipSpaces])) >= 0 && input[i + 4 + skipSpaces] == QLatin1Char('}')) {
                     /// If we found a modifier which is followed by
                     /// a letter followed by a closing curly bracket,
                     /// we are looking at something like {\"A}
@@ -1010,7 +1011,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
                     /// This is the case for {\'\i} or alike.
                     for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
-                        if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
+                        if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == modifier) {
                             output.append(QChar(dotlessIJCharacter.unicode));
                             found = true;
                             break;
@@ -1019,7 +1020,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
                         output.append(input.midRef(i, 6 + skipSpaces));
-                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4 + skipSpaces];
+                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << modifier << "BACKSLASH" << input[i + 4 + skipSpaces];
                     }
                     /// Step over those additional characters
                     i += 5 + skipSpaces;
@@ -1046,7 +1047,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 } else if (lookupTablePos >= 0 && i + skipSpaces < len - 7 && input[i + 3 + skipSpaces] == QLatin1Char('{') && input[i + 4 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 5 + skipSpaces]) && input[i + 6 + skipSpaces] == QLatin1Char('}') && input[i + 7 + skipSpaces] == QLatin1Char('}')) {
                     /// This is the case for {\'{\i}} or alike.
                     for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
-                        if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 5 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
+                        if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 5 + skipSpaces] && dotlessIJCharacter.modifier == modifier) {
                             output.append(QChar(dotlessIJCharacter.unicode));
                             found = true;
                             break;
@@ -1056,7 +1057,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// so try to preserve it
                         output.append(input.midRef(i, 8 + skipSpaces));
                         qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
-                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5 + skipSpaces] << "}";
+                        qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << modifier << "BACKSLASH {" << input[i + 5 + skipSpaces] << "}";
                     }
                     /// Step over those additional characters
                     i += 7 + skipSpaces;
@@ -1118,15 +1119,16 @@ QString EncoderLaTeX::decode(const QString &input) const
 
             /// Check if there follows a modifier after the backslash
             /// For example an quotation mark as used in \"a
-            const int lookupTablePos = modifierInLookupTable(input[i + 1]);
+            const QChar modifier = input[i + 1];
+            const int lookupTablePos = modifierInLookupTable(modifier);
 
             /// Check for spaces between modifier and character, for example
             /// like \H o
             int skipSpaces = 0;
-            while (i + 2 + skipSpaces < len && input[i + 2 + skipSpaces] == QLatin1Char(' ') && skipSpaces < 16) ++skipSpaces;
+            while (i + 2 + skipSpaces < len && skipSpaces < 16 && input[i + 2 + skipSpaces] == QLatin1Char(' ')) ++skipSpaces;
 
             bool found = false;
-            if (lookupTablePos >= 0 && i + skipSpaces <= len - 3 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 2 + skipSpaces])) >= 0 && (i + skipSpaces == len - 3 || input[i + 1] == QLatin1Char('"') || input[i + 1] == QLatin1Char('\'') || input[i + 1] == QLatin1Char('`') || input[i + 1] == QLatin1Char('='))) { // TODO more special cases?
+            if (lookupTablePos >= 0 && (skipSpaces > 0 || !modifier.isLetter()) && i + skipSpaces <= len - 3 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 2 + skipSpaces])) >= 0) {
                 /// We found a special modifier which is followed by
                 /// a letter followed by normal text without any
                 /// delimiter, so we are looking at something like
@@ -1139,28 +1141,6 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Step over those additional characters
                     i += 2 + skipSpaces;
                     found = true;
-                }
-                /// Don't print any warnings yet, as this if-case may got triggered by e.g. \mu
-                /// ('m' is a potential modifier, yet \mu should be recognized as Greek letter later)
-            } else if (lookupTablePos >= 0 && i + skipSpaces <= len - 3 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 2 + skipSpaces])) >= 0 && (i + skipSpaces == len - 3 || input[i + 3 + skipSpaces] == QLatin1Char('}') || input[i + 3 + skipSpaces] == QLatin1Char('{') || input[i + 3 + skipSpaces] == QLatin1Char(' ') || input[i + 3 + skipSpaces] == QLatin1Char('\t') || input[i + 3 + skipSpaces] == QLatin1Char('\\') || input[i + 3 + skipSpaces] == QLatin1Char('\r') || input[i + 3 + skipSpaces] == QLatin1Char('\n'))) {
-                /// We found a modifier which is followed by
-                /// a letter followed by a command delimiter such
-                /// as a whitespace, so we are looking at something
-                /// like \"u followed by a space or another delimiter
-                /// Use lookup table to see what Unicode char this
-                /// represents
-                const QChar unicodeLetter = lookupTable[lookupTablePos]->unicode[cachedAsciiLetterOrDigitToPos];
-                if (unicodeLetter.unicode() >= 127) {
-                    output.append(unicodeLetter);
-                    /// Step over those additional characters
-                    i += 2 + skipSpaces;
-                    found = true;
-
-                    if (input[i + 1] != QLatin1Char(' ') && input[i + 1] != QLatin1Char('\r') && input[i + 1] != QLatin1Char('\n')) {
-                        /// If no whitespace follows, still
-                        /// check for extra curly brackets
-                        checkForExtraCurlyAtEnd = true;
-                    }
                 }
                 /// Don't print any warnings yet, as this if-case may got triggered by e.g. \mu
                 /// ('m' is a potential modifier, yet \mu should be recognized as Greek letter later)
