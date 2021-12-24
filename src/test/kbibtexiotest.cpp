@@ -1048,8 +1048,9 @@ void KBibTeXIOTest::jabRefFieldFile_data()
         value.append(QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("file.pdf"))));
         entry->insert(Entry::ftFile, value);
         file->append(entry);
-        snprintf(buffer, buffersize, "Field 'file' with just a filename (exporter=%s, importer=%s%s)", exporter->metaObject()->className(), importer->metaObject()->className(), bibutilsbuffer);
-        QTest::newRow(buffer) << exporter << importer << file;
+        int ret = snprintf(buffer, buffersize, "Field 'file' with just a filename (exporter=%s, importer=%s%s)", exporter->metaObject()->className(), importer->metaObject()->className(), bibutilsbuffer);
+        if (ret > 0)
+            QTest::newRow(buffer) << exporter << importer << file;
 
         file = new File();
         entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("jabRefFieldFile")));
@@ -1059,8 +1060,9 @@ void KBibTeXIOTest::jabRefFieldFile_data()
         value.append(QSharedPointer<VerbatimText>(verbatimText));
         entry->insert(Entry::ftFile, value);
         file->append(entry);
-        snprintf(buffer, buffersize, "Field 'file' with a JabRef-like value (exporter=%s, importer=%s%s)", exporter->metaObject()->className(), importer->metaObject()->className(), bibutilsbuffer);
-        QTest::newRow(buffer) << exporter << importer << file;
+        ret = snprintf(buffer, buffersize, "Field 'file' with a JabRef-like value (exporter=%s, importer=%s%s)", exporter->metaObject()->className(), importer->metaObject()->className(), bibutilsbuffer);
+        if (ret > 0)
+            QTest::newRow(buffer) << exporter << importer << file;
 
         file = new File();
         entry = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("jabRefFieldFile")));
@@ -1070,8 +1072,9 @@ void KBibTeXIOTest::jabRefFieldFile_data()
         value.append(QSharedPointer<VerbatimText>(verbatimText));
         entry->insert(Entry::ftFile, value);
         file->append(entry);
-        snprintf(buffer, buffersize, "Field 'file' with a JabRef-like value and empty comment (exporter=%s, importer=%s%s)", exporter->metaObject()->className(), importer->metaObject()->className(), bibutilsbuffer);
-        QTest::newRow(buffer) << exporter << importer << file;
+        ret = snprintf(buffer, buffersize, "Field 'file' with a JabRef-like value and empty comment (exporter=%s, importer=%s%s)", exporter->metaObject()->className(), importer->metaObject()->className(), bibutilsbuffer);
+        if (ret > 0)
+            QTest::newRow(buffer) << exporter << importer << file;
 
     }
 }
