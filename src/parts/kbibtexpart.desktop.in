@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: CC0-1.0
-# SPDX-FileCopyrightText: 2010-2012 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2010-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileCopyrightText: 2013-2021 Various KDE Translators
 [Desktop Entry]
 Type=Service
@@ -70,6 +70,14 @@ Comment[uk]=Компонент KParts для перегляду та редаг�
 Comment[x-test]=xxKParts component to view and edit bibliographic filesxx
 Comment[zh_CN]=用于显示和编辑参考文献文件的 KParts 组件
 Comment[zh_TW]=檢視與編輯 bibliographic 檔的部件
-X-KDE-ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart,Browser/View
-X-KDE-Library=kbibtexpart
+X-KDE-ServiceTypes=KParts/ReadOnlyPart,KParts/ReadWritePart
+X-KDE-Library=kf5/parts/kbibtexpart
+X-KDE-PluginInfo-Name=kbibtexpart
+X-KDE-PluginInfo-Category=Office
+X-KDE-PluginInfo-Version=@kbibtex_VERSION@
+X-KDE-PluginInfo-License=GPLv2
+X-KDE-PluginInfo-Copyright=Copyright 2004-2022 Thomas Fischer
+X-KDE-PluginInfo-Author=Thomas Fischer
+X-KDE-PluginInfo-Email=fischer@unix-ag.uni-kl.de
+X-KDE-ParentApp=kbibtex
 MimeType=text/x-bibtex;text/x-endnote-refer;application/x-isi-export-format;

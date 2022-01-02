@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: 2009-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
+configure_file(kbibtexpart.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/kbibtexpart.desktop @ONLY)
+
 set(
     kbibtexpart_SRCS
     part.cpp
@@ -48,10 +50,10 @@ install(
     ${KDE_INSTALL_PLUGINDIR}
 )
 
-kcoreaddons_desktop_to_json(kbibtexpart kbibtexpart.desktop SERVICE_TYPES kpart.desktop)
+kcoreaddons_desktop_to_json(kbibtexpart ${CMAKE_CURRENT_BINARY_DIR}/kbibtexpart.desktop)
 install(
     FILES
-    kbibtexpart.desktop
+    ${CMAKE_CURRENT_BINARY_DIR}/kbibtexpart.desktop
     DESTINATION
     ${KDE_INSTALL_KSERVICES5DIR}
 )
