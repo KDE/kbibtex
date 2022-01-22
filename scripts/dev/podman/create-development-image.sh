@@ -133,8 +133,8 @@ function build_archlinux() {
 	WORKINGCONTAINERNAME="working-$(sed -r 's!docker://!!g;s![^a-z0-9.-]+!-!g' <<<"${FROMIMAGE}")"
 
 	# Remove any residual images of the same name, ignore errors such as if no such image
-	buildahsetx rm "${WORKINGCONTAINERNAME}" 2>/dev/null >&2
-	podmansetx rmi -f "${IMAGENAME}" 2>/dev/null >&2
+	buildah rm "${WORKINGCONTAINERNAME}" 2>/dev/null >&2
+	podman rmi -f "${IMAGENAME}" 2>/dev/null >&2
 
 	# Pull base image from remote repository
 	id=$(buildahsetx from --name "${WORKINGCONTAINERNAME}" "${FROMIMAGE}") || exit 1
@@ -171,8 +171,8 @@ function build_debian10() {
 	WORKINGCONTAINERNAME="working-$(sed -r 's!docker://!!g;s![^a-z0-9.-]+!-!g' <<<"${FROMIMAGE}")"
 
 	# Remove any residual images of the same name, ignore errors such as if no such image
-	buildahsetx rm "${WORKINGCONTAINERNAME}" 2>/dev/null >&2
-	podmansetx rmi -f "${IMAGENAME}" 2>/dev/null >&2
+	buildah rm "${WORKINGCONTAINERNAME}" 2>/dev/null >&2
+	podman rmi -f "${IMAGENAME}" 2>/dev/null >&2
 
 	# Pull base image from remote repository
 	id=$(buildahsetx from --name "${WORKINGCONTAINERNAME}" "${FROMIMAGE}") || exit 1
@@ -213,8 +213,8 @@ function build_debian11() {
 	WORKINGCONTAINERNAME="working-$(sed -r 's!docker://!!g;s![^a-z0-9.-]+!-!g' <<<"${FROMIMAGE}")"
 
 	# Remove any residual images of the same name, ignore errors such as if no such image
-	buildahsetx rm "${WORKINGCONTAINERNAME}" 2>/dev/null >&2
-	podmansetx rmi -f "${IMAGENAME}" 2>/dev/null >&2
+	buildah rm "${WORKINGCONTAINERNAME}" 2>/dev/null >&2
+	podman rmi -f "${IMAGENAME}" 2>/dev/null >&2
 
 	# Pull base image from remote repository
 	id=$(buildahsetx from --name "${WORKINGCONTAINERNAME}" "${FROMIMAGE}") || exit 1
@@ -297,8 +297,8 @@ function build_kdeneon() {
 	WORKINGCONTAINERNAME="working-$(sed -r 's!docker://!!g;s![^a-z0-9.-]+!-!g' <<<"${FROMIMAGE}")"
 
 	# Remove any residual images of the same name, ignore errors such as if no such image
-	buildahsetx rm "${WORKINGCONTAINERNAME}" 2>/dev/null >&2
-	podmansetx rmi -f "${IMAGENAME}" 2>/dev/null >&2
+	buildah rm "${WORKINGCONTAINERNAME}" #2>/dev/null >&2
+	podman rmi -f "${IMAGENAME}" 2>/dev/null >&2
 
 	# Pull base image from remote repository
 	id=$(buildahsetx from --name "${WORKINGCONTAINERNAME}" "${FROMIMAGE}") || exit 1
@@ -337,8 +337,8 @@ function build_fedora() {
 	WORKINGCONTAINERNAME="working-$(sed -r 's!docker://!!g;s![^a-z0-9.-]+!-!g' <<<"${FROMIMAGE}")"
 
 	# Remove any residual images of the same name, ignore errors such as if no such image
-	buildahsetx rm "${WORKINGCONTAINERNAME}" 2>/dev/null >&2
-	podmansetx rmi -f "${IMAGENAME}" 2>/dev/null >&2
+	buildah rm "${WORKINGCONTAINERNAME}" 2>/dev/null >&2
+	podman rmi -f "${IMAGENAME}" 2>/dev/null >&2
 
 	# Pull base image from remote repository
 	id=$(buildahsetx from --name "${WORKINGCONTAINERNAME}" "${FROMIMAGE}") || exit 1

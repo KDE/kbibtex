@@ -36,7 +36,6 @@ function prepare_image() {
 	local imagename="$2"
 
 	buildahsetx rm "working-${imagename}" 2>/dev/null >&2
-	echo "podman rmi -f '${imagename}'" >&2
 	podmansetx rmi -f "${imagename}" 2>/dev/null >&2
 	
 	buildahsetx from --name "working-${imagename}" "${fromimage}" || exit 1
