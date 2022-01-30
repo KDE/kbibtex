@@ -12,6 +12,7 @@
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
   <name>KBibTeX</name>
+  <name xml:lang="ar">كبتخ</name>
   <name xml:lang="bs">KBibTeX</name>
   <name xml:lang="ca">KBibTeX</name>
   <name xml:lang="ca-valencia">KBibTeX</name>
@@ -41,6 +42,7 @@
   <name xml:lang="x-test">xxKBibTeXxx</name>
   <name xml:lang="zh-CN">KBibTeX</name>
   <summary>BibTeX editor by KDE to edit bibliographies used with LaTeX</summary>
+  <summary xml:lang="ar">محرر بب تخ بواسطة كدي لتحرير المراجع المستخدمة مع لاتخ</summary>
   <summary xml:lang="ca">Editor de BibTeX, creat per la comunitat KDE, per a editar bibliografies emprant LaTeX</summary>
   <summary xml:lang="ca-valencia">Editor de BibTeX, creat per la comunitat KDE, per a editar bibliografies emprant LaTeX</summary>
   <summary xml:lang="de">BibTeX-Editor von KDE zum Bearbeiten von Bibliografien mit LaTeX</summary>
@@ -68,6 +70,7 @@
     <p>
       KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.
     </p>
+    <p xml:lang="ar">كبتخ هو تطبيق لإدارة المراجع يمكن استخدامه لتجميع ببليوغرافيات لاتخ/تخ وتصديرها بتنسيقات مختلفة.</p>
     <p xml:lang="bs">KBibTeX je aplikacija za upravljanje referencom koja može biti upotrijebljena za skupljanje TeX/LaTeX bibliografijama i izvoziti ih u raznim formatima.</p>
     <p xml:lang="ca">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per a recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
     <p xml:lang="ca-valencia">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per a recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
@@ -93,6 +96,7 @@
     <p xml:lang="x-test">xxKBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.xx</p>
     <p xml:lang="zh-CN">KBibTeX 是一个参考文献管理应用程序，可以用来收集 TeX/LaTeX 文献目录并以各种格式导出。</p>
     <p>KBibTeX can do the following things:</p>
+    <p xml:lang="ar">يستطيع كبتخ فعل التالي:</p>
     <p xml:lang="bs">KBibTeX može uraditi sljedeće stvari:</p>
     <p xml:lang="ca">KBibTeX pot fer les següents coses:</p>
     <p xml:lang="ca-valencia">KBibTeX pot fer les següents coses:</p>
@@ -120,6 +124,7 @@
     <p xml:lang="zh-CN">KBibTeX 可以完成以下工作：</p>
     <ul>
       <li>Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
+      <li xml:lang="ar">معاينة إدخالات المراجع بتنسيقات مختلفة (المصدر (BibTeX)، المصدر (RIS)، ويكيبديا، القياسي (XML / XSLT)، fancy (XML / XSLT) ، والملخص فقط (XML / XSLT)). تصبح أنماط المعاينة الإضافية متاحة عند تثبيت bibtex2html.</li>
       <li xml:lang="bs">Pregled ulaza bibliografija u raznim formatima (Source(BibTeX), Source(RIS), Wikipedia, standard(XML/XSLT), fancy(XML/XSLT) i abstract-only(XML/XSLT)). Dodatni pregled stilova postaje dostupan kada je bibtex2html instaliran.</li>
       <li xml:lang="ca">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
       <li xml:lang="ca-valencia">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
@@ -145,6 +150,7 @@
       <li xml:lang="x-test">xxPreview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.xx</li>
       <li xml:lang="zh-CN">以各种格式预览参考文献条目 (资料来源 (BibTeX)、资料来源 (RIS)、维基百科、标准 (XML/XSLT)、美观 (XML/XSLT)、抽象 (XML/XSLT) 等)。安装了 bibtex2html 后还可以使用更多预览样式。</li>
       <li>Import data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.</li>
+      <li xml:lang="ar">استيراد البيانات بتنسيقات ملفات ببليوغرافية متنوعة مثل BibTeX و RIS و ISI (تتطلب bibutils) وتصدير البيانات إلى PDF (يتطلب pdflatex) و PostScript (يتطلب لاتكس) و RTF (يتطلب latex2rtf) و HTML. </li>
       <li xml:lang="bs">Uvoz podataka u raznim bibliografskim formatima datoteke kao što su BibTeX, RIS i ISI (zahtijeva bibutils) i izvoz podataka u PDF(zahtijeva pdflatex), PostScript(zahtijeva latex), RTF(zahtijeva latex2rtf) i HTML.</li>
       <li xml:lang="ca">Importar les dades en diversos formats de fitxer per a bibliografies, tals com BibTeX, RIS i ISI (requereix «bibutils») i exporta les dades a PDF (requereix «pdflatex»), PostScript (requereix «latex»), RTF (requereix «latex2rtf»), i HTML.</li>
       <li xml:lang="ca-valencia">Importar les dades en diversos formats de fitxer per a bibliografies, tals com BibTeX, RIS i ISI (requereix «bibutils») i exporta les dades a PDF (requereix «pdflatex»), PostScript (requereix «latex»), RTF (requereix «latex2rtf»), i HTML.</li>
@@ -170,6 +176,7 @@
       <li xml:lang="x-test">xxImport data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.xx</li>
       <li xml:lang="zh-CN">导入各种参考文献文件格式的数据，如BibTeX、RIS 和 ISI (需要bibutils)，并导出数据到 PDF (需要 pdftex)、PostScript (需要 latex)、RTF (需要 latex2rtf) 和 HTML。</li>
       <li>Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li xml:lang="ar">البحث عن بيانات إدخالات الببليوغرافيا في قواعد البيانات عبر الإنترنت (على سبيل المثال، الباحث العلمي من غوغل و ACM، و IEEE، و arXiv، وما إلى ذلك)</li>
       <li xml:lang="bs">Pretraga za ulazne podatke bibliografije u online bazama podataka (npr. Google Scholar, ACM, IEEE,arXiv, itd.)</li>
       <li xml:lang="ca">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="ca-valencia">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
@@ -195,6 +202,7 @@
       <li xml:lang="x-test">xxSearch for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)xx</li>
       <li xml:lang="zh-CN">搜索在线数据库中的参考文献条目数据 (如 Google Scholar、ACM、IEEE、arXiv 等)</li>
       <li>Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
+      <li xml:lang="ar">معاينة الموارد المحلية أو البعيدة (عبر الإنترنت) ، على سبيل المثال ملفات PDF ، المرتبطة في إدخال BibTEX.</li>
       <li xml:lang="bs">Pregled lokalnih ili udaljenih (online) resursa , npr. PDF datoteke, povezane u BibTEX ulazu.</li>
       <li xml:lang="ca">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
       <li xml:lang="ca-valencia">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
@@ -220,6 +228,7 @@
       <li xml:lang="x-test">xxPreview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.xx</li>
       <li xml:lang="zh-CN">预览本地或远程 (在线) 资源，例如在 BibTEX 条目中链接的 PDF 文件。</li>
       <li>Find and merge duplicate entries in bibliography.</li>
+      <li xml:lang="ar">ابحث عن الإدخالات المكررة ودمجها في قائمة المراجع.</li>
       <li xml:lang="bs">Potraži i spoji duplikate ulaza u bibliografiju.</li>
       <li xml:lang="ca">Cerca i fusiona les entrades duplicades a la bibliografia.</li>
       <li xml:lang="ca-valencia">Cerca i fusiona les entrades duplicades a la bibliografia.</li>
@@ -245,6 +254,7 @@
       <li xml:lang="x-test">xxFind and merge duplicate entries in bibliography.xx</li>
       <li xml:lang="zh-CN">查找和合并参考文献中的重复条目。</li>
       <li>Integrate your bibliographies with LaTeX editors such as Kile and LyX.</li>
+      <li xml:lang="ar">ادمج المراجع الخاصة بك مع محرري لاتخ مثل Kile و LyX.</li>
       <li xml:lang="bs">Integriraj vaše bibliografije sa LaTeX uređivačima kao što su Kile i LyX.</li>
       <li xml:lang="ca">Integra les vostres bibliografies amb editors de LaTeX com Kile i LyX.</li>
       <li xml:lang="ca-valencia">Integra les vostres bibliografies amb editors de LaTeX com Kile i LyX.</li>
@@ -270,6 +280,7 @@
       <li xml:lang="x-test">xxIntegrate your bibliographies with LaTeX editors such as Kile and LyX.xx</li>
       <li xml:lang="zh-CN">将参考文献与 LaTeX 编辑器整合，例如 Kile 和 LyX。</li>
       <li>Import your Zotero library.</li>
+      <li xml:lang="ar">استيراد مكتبة Zotero الخاصة بك.</li>
       <li xml:lang="bs">Uvoz vaše Zotero biblioteke.</li>
       <li xml:lang="ca">Importa la vostra biblioteca de Zotero.</li>
       <li xml:lang="ca-valencia">Importa la vostra biblioteca de Zotero.</li>
@@ -303,6 +314,7 @@
   <screenshots>
     <screenshot type="default">
       <caption>KBibTeX main window</caption>
+      <caption xml:lang="ar">النّافذة الرّئيسيّة لكبتخ</caption>
       <caption xml:lang="ca">Finestra principal del KBibTeX</caption>
       <caption xml:lang="ca-valencia">Finestra principal del KBibTeX</caption>
       <caption xml:lang="cs">Hlavní okno KBibTeX</caption>
