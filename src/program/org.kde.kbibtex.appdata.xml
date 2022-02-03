@@ -59,6 +59,7 @@
   <summary xml:lang="pl">Edytor BibTeX autorstwa KDE do edytowania bibliografii używanych w edytorach LaTeX</summary>
   <summary xml:lang="pt">O BibTeX é um editor do KDE, onde se podem editar bibliografias usadas com o LaTeX</summary>
   <summary xml:lang="pt-BR">BibTeX é um editor do KDE para edição das bibliografias usadas com o LaTeX</summary>
+  <summary xml:lang="ru">Редактор BibTeX для KDE для редактирования библиографических списков, используемых в LaTeX</summary>
   <summary xml:lang="sk">Editor BibTeX pre KDE na editáciu použitých bibliografií s LaTeXom</summary>
   <summary xml:lang="sl">Urejevalnik BibTeX na KDE za urejanje bibliografij, ki jih uporablja LaTeX</summary>
   <summary xml:lang="sv">Bibtex-editor av KDE för att redigera bibliografier använda med Latex</summary>
@@ -88,6 +89,7 @@
     <p xml:lang="pl">KBibTeX jest programem do zarządzania odsyłaczami, którego można użyć do zbierania bibliografii TeX/LaTeX i eksportowania ich w różnych postaciach.</p>
     <p xml:lang="pt">O KBibTeX é uma aplicação de gestão de referências que pode ser usada para recolher as bibliografias de TeX/LaTeX e exportá-las em vários formatos.</p>
     <p xml:lang="pt-BR">KBibTeX é um aplicativo para gerenciamento de referências que pode ser usado para coletar as bibliografias TeX/LaTeX e exportá-las para vários formatos.</p>
+    <p xml:lang="ru">KBibTeX — это приложение для управления ссылками, используемыми для сбора библиографии TeX/LaTeX, и их экспорта в различные форматы.</p>
     <p xml:lang="sk">KBibTeX je aplikácia na správu referencií, ktorú je možné použiť na zbieranie bibliografií TeX/LaTeX a exportovať ich v rôznych formátoch.</p>
     <p xml:lang="sl">KBibTeX je aplikacija za upravljanje referenc, ki jo je mogoče uporabiti za zbiranje TeX/LaTeX bibliografij in jih izvažati v različnih oblikah.</p>
     <p xml:lang="sv">Kbibtex är ett referenshanteringsprogram som kan användas för att samla Tex/Latex-bibliografier och exportera dem med diverse format.</p>
@@ -115,6 +117,7 @@
     <p xml:lang="pl">KBibTeX ma następujące możliwości:</p>
     <p xml:lang="pt">O KBibTeX pode fazer as seguintes coisas:</p>
     <p xml:lang="pt-BR">O KBibTeX pode fazer o seguinte:</p>
+    <p xml:lang="ru">KBibTeX обладает следующим функционалом:</p>
     <p xml:lang="sk">KBibTeX dokáže nasledovné veci:</p>
     <p xml:lang="sl">KBibTeX lahko naredi naslednje:</p>
     <p xml:lang="sv">Kbibtex kan göra följande saker:</p>
@@ -142,6 +145,7 @@
       <li xml:lang="pl">Podgląd wpisów bibliograficznych w rozmaitych formatach (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), elegancki (XML/XSLT) i tylko streszczenia (XML/XSLT)). Dodatkowo, dostępne stają się style podglądu, gdy wgrany jest pakiet bibtex2html.</li>
       <li xml:lang="pt">Antever os itens bibliográficos em diversos formatos (Código (BibTeX), Código (RIS), Wikipédia, normal (XML/XSLT), bonito (XML/XSLT) e apenas o resumo (XML/XSLT)). Ficam disponíveis mais estilos de antevisão quando instalar o 'bibtex2html'.</li>
       <li xml:lang="pt-BR">Visualizar os itens bibliográficos em diversos formatos (Código (BibTeX), Código (RIS), Wikipédia, normal (XML/XSLT), bonito (XML/XSLT) e apenas resumo (XML/XSLT)). Ficam disponíveis mais estilos de visualização quando o 'bibtex2html' estiver instalado.</li>
+      <li xml:lang="ru">Просмотр библиографических списков в разных форматах (исходный (BibTeX), исходный (RIS), Википедия, стандартный (XML/XSLT), изысканный (XML/XSLT) и только аннотация (XML/XSLT)). Дополнительные стили предварительного просмотра доступны при установке пакета bibtex2html.</li>
       <li xml:lang="sk">Vytvoriť náhľad bibliografií v rôznych formátoch (zdroj (BibTeX), zdroj (RIS), Wikipédia, štandard (XML/XSLT), pekné (XML/XSLT), a iba abstraktné (XML/XSLT)). Dodatočné štýly je možné použiť po inštalácii bibtex2html.</li>
       <li xml:lang="sl">Predogled bibliografskih vnosov v različnih oblikah (Vir (BibTeX), vir (RIS), Wikipedija, standardna (XML/XSLT), modna (XML/XSLT) in samo abstraktna(XML/XSLT)). Dodatni slogi predogleda postanejo na voljo, ko je nameščen bibtex2html.</li>
       <li xml:lang="sv">Förhandsgranska bibliografier med olika format (källa (Bibtex), källa (RIS), Wikipedia, standard (XML/XSLT), snygg (XML/XSLT) och bara sammandrag (XML/XSLT)). Ytterligare förhandsgranskningsstilar är tillgängliga om bibtex2html är installerat.</li>
@@ -168,6 +172,7 @@
       <li xml:lang="pl">Importowanie danych w rozmaitych formatach plików bibliografii takich jak BibTeX, RIS oraz ISI (wymaga bibutils) i eksportowanie danych do PDF (wymaga pdflatex), PostScript (wymaga latex), RTF (wymaga latex2rtf) oraz HTML.</li>
       <li xml:lang="pt">Importar os dados em diversos formatos de ficheiros bibliográficos, como o BibTeX, RIS e ISI (precisa das 'bibutils') e exportar os dados para PDF (precisa do 'pdflatex'), PostScript (precisa do 'latex'), RTF (precisa do 'latex2rtf') e HTML.</li>
       <li xml:lang="pt-BR">Importar os dados em diversos formatos de arquivos bibliográficos, como o BibTeX, RIS e ISI (precisa da 'bibutils') e exportar os dados para PDF (precisa do 'pdflatex'), PostScript (precisa do 'latex'), RTF (precisa do 'latex2rtf') e HTML.</li>
+      <li xml:lang="ru">Импорт данных в различных файлах библиографического формата наподобие BibTeX RIS и ISI (требуются соответствующие утилиты) и экспорт данных в формат PDF (требуется пакет pdflatex), PostScript (требуется пакет latex), RTF (требуется пакет latex2rtf) и HTML.</li>
       <li xml:lang="sk">Importovať údaje v rôznych bibliografických súborových formátoch ako BibTeX, RIS a ISI (vyžaduje bibutils) a exportovať údaje do PDF (vyžaduje pdflatex), PostScript (vyžaduje latex), RTF (vyžaduje latex2rtf) a HTML.</li>
       <li xml:lang="sl">Uvozite podatke v različnih formatih datotek za bibliografijo, kot so BibTeX, RIS in ISI (zahteva bibutil) in izvoz podatkov v PDF (zahteva pdflatex), PostScript (zahteva lateks), RTF (zahteva latex2rtf) in HTML.</li>
       <li xml:lang="sv">Importera data med diverse bibliografi-filformat såsom Bibtex, RIS och ISI (kräver bibutils) och exportera data till PDF (kräver pdflatex), PostScript (kräver latex), RTF (kräver latex2rtf), och HTML.</li>
@@ -194,6 +199,7 @@
       <li xml:lang="pl">Wyszukiwanie wpisów bibliograficznych w bazach internetowych (np. Google Scholar, ACM, IEEE, arXiv, itp.)</li>
       <li xml:lang="pt">Procurar por dados de itens bibliográficos nas bases de dados 'online' (p.ex. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="pt-BR">Procurar por dados de itens bibliográficos nos banco de dados online (p.ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li xml:lang="ru">Поиск данных библиографических записей в онлайн-базах данных (например, Google Scholar, ACM, IEEE, arXiv и так далее)</li>
       <li xml:lang="sk">Hľadať dáta položkie bibliografie v online databázach (napr. Google Scholar, ACM, IEEE, arXiv, atď.)</li>
       <li xml:lang="sl">Poiščite podatke o vnosih bibliografije v spletnih bazah podatkov (npr. Google Scholar, ACM, IEEE, arXiv itd.)</li>
       <li xml:lang="sv">Söka efter bibliografiposternas data i databaser på nätet (t.ex. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
@@ -220,6 +226,7 @@
       <li xml:lang="pl">Podgląd lokalnych lub zdalnych (internetowych) zasobów, np. plików PDF, do których odwołuje się wpis BibTEX.</li>
       <li xml:lang="pt">Fazer uma antevisão dos recursos locais ou remotos ('online'), p.ex. ficheiros PDF, associada aos itens do BibTEX.</li>
       <li xml:lang="pt-BR">Visualizar os recursos locais ou remotos (online), p.ex., arquivos PDF, associados aos itens do BibTEX.</li>
+      <li xml:lang="ru">Просмотр локальных или удалённых (онлайн) ресурсов, например, файлов в формате PDF, на которые ссылаются некоторые записи BibTEX.</li>
       <li xml:lang="sk">Vytvoriť náhľad miestnych alebo vzdialených (online) zdrojov, napr. PDF súborov, odkázaných v položke BibTEX.</li>
       <li xml:lang="sl">Predogled lokalnih ali oddaljenih (spletnih) virov, npr. Datoteke PDF, povezave v vnose BibTEX.</li>
       <li xml:lang="sv">Förhandsgranska lokala eller fjärresurser (på nätet), t.ex. PDF-filer, länkade i Bibtex-posten.</li>
@@ -246,6 +253,7 @@
       <li xml:lang="pl">Znajdywanie i scalanie powielonych wpisów w bibliografii.</li>
       <li xml:lang="pt">Procurar e reunir itens duplicados na bibliografia.</li>
       <li xml:lang="pt-BR">Procurar e mesclar os itens duplicados na bibliografia.</li>
+      <li xml:lang="ru">Поиск и объединение дублирующихся библиографических записей.</li>
       <li xml:lang="sk">Nájsť a zlúčiť duplicitné položky v bibliografii.</li>
       <li xml:lang="sl">Poišče in združuje podvojene vnose v bibliografiji.</li>
       <li xml:lang="sv">Hitta och sammanfoga duplicerade poster i bibliografin.</li>
@@ -272,6 +280,7 @@
       <li xml:lang="pl">Integracja bibliografii z edytorami LaTeX takimi jak Kile i LyX.</li>
       <li xml:lang="pt">Integrar as suas bibliografias com os editores de LaTeX, como o Kile e o LyX.</li>
       <li xml:lang="pt-BR">Integrar suas bibliografias com os editores de LaTeX, como o Kile e o LyX.</li>
+      <li xml:lang="ru">Интеграция библиографического списка в LaTeX-редакторы наподобие Kile и LyX.</li>
       <li xml:lang="sk">Integrovať vaše bibliografie s editormi LaTeX ako Kile a LyX.</li>
       <li xml:lang="sl">Povežite svoje bibliografije z urejevalniki LaTeX, kot sta Kile in LyX.</li>
       <li xml:lang="sv">Integrera bibliografierna med Latex-editorer såsom Kile och LyX</li>
@@ -299,6 +308,7 @@
       <li xml:lang="pl">Importowanie bibliotek Zotero.</li>
       <li xml:lang="pt">Importar a sua biblioteca do Zotero.</li>
       <li xml:lang="pt-BR">Importar sua biblioteca do Zotero.</li>
+      <li xml:lang="ru">Импорт библиотеки Zotero.</li>
       <li xml:lang="sk">Importovať vašu knižnicu Zotero.</li>
       <li xml:lang="sl">Uvozite knjižnico Zotero.</li>
       <li xml:lang="sv">Importera ett Zotero-bibliotek.</li>
@@ -332,6 +342,7 @@
       <caption xml:lang="pl">Okno główne KBibTeX</caption>
       <caption xml:lang="pt">Janela principal do KBibTeX</caption>
       <caption xml:lang="pt-BR">Janela principal do KBibTeX</caption>
+      <caption xml:lang="ru">Главное окно KBibTeX</caption>
       <caption xml:lang="sl">Glavno okno KBibTeX</caption>
       <caption xml:lang="sv">Huvudfönstret i Kbibtex</caption>
       <caption xml:lang="uk">Головне вікно KBibTeX</caption>
