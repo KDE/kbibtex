@@ -184,7 +184,7 @@
       <li xml:lang="ar">البحث عن بيانات إدخالات الببليوغرافيا في قواعد البيانات عبر الإنترنت (على سبيل المثال، الباحث العلمي من غوغل و ACM، و IEEE، و arXiv، وما إلى ذلك)</li>
       <li xml:lang="bs">Pretraga za ulazne podatke bibliografije u online bazama podataka (npr. Google Scholar, ACM, IEEE,arXiv, itd.)</li>
       <li xml:lang="ca">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
-      <li xml:lang="ca-valencia">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li xml:lang="ca-valencia">Busca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="de">Suche nach Daten mit Bibliografie-Einträgen in Online-Datenbanken (z. B. Google Scholar, ACM, IEEE, arXiv, usw.)</li>
       <li xml:lang="en-GB">Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="es">Busca datos de las entradas bibliográficas en bases de datos en línea (por ejemplo Google Scholar, ACM, IEEE, arXiv, etc.)</li>
@@ -238,7 +238,7 @@
       <li xml:lang="ar">ابحث عن الإدخالات المكررة ودمجها في قائمة المراجع.</li>
       <li xml:lang="bs">Potraži i spoji duplikate ulaza u bibliografiju.</li>
       <li xml:lang="ca">Cerca i fusiona les entrades duplicades a la bibliografia.</li>
-      <li xml:lang="ca-valencia">Cerca i fusiona les entrades duplicades a la bibliografia.</li>
+      <li xml:lang="ca-valencia">Busca i fusiona les entrades duplicades a la bibliografia.</li>
       <li xml:lang="de"> Suchen und zusammenführen von doppelten Einträgen in Bibliografien.</li>
       <li xml:lang="en-GB">Find and merge duplicate entries in bibliography.</li>
       <li xml:lang="es">Busca y fusiona las entradas duplicadas en la bibliografía.</li>
