@@ -34,6 +34,7 @@
         <comment xml:lang="ru">Файл библиографии RIS</comment>
         <comment xml:lang="sl">RIS datoteka bibliografije</comment>
         <comment xml:lang="sv">RIS-bibliografifil</comment>
+        <comment xml:lang="tr">RIS kaynakça dosyası</comment>
         <comment xml:lang="uk">файл бібліографії RIS</comment>
         <comment xml:lang="zh_CN">RIS 参考文献文件</comment>
         <acronym>RIS</acronym>
@@ -67,6 +68,7 @@
         <comment xml:lang="ru">Файл библиографии ISI</comment>
         <comment xml:lang="sl">ISI datoteka bibliografije</comment>
         <comment xml:lang="sv">ISI-bibliografifil</comment>
+        <comment xml:lang="tr">ISI kaynakça dosyası</comment>
         <comment xml:lang="uk">файл бібліографії ISI</comment>
         <comment xml:lang="zh_CN">ISI 参考文献文件</comment>
         <acronym>ISI</acronym>
@@ -102,6 +104,7 @@
         <comment xml:lang="ru">Библиотека EndNote</comment>
         <comment xml:lang="sl">Knjižnica EndNote</comment>
         <comment xml:lang="sv">EndNote-bibliotek</comment>
+        <comment xml:lang="tr">EndNote kitaplığı</comment>
         <comment xml:lang="uk">бібліотека EndNote</comment>
         <comment xml:lang="zh_CN">EndNote 库</comment>
         <glob pattern="*.enl"/>

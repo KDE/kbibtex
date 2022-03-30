@@ -93,7 +93,7 @@
     <p xml:lang="sk">KBibTeX je aplikácia na správu referencií, ktorú je možné použiť na zbieranie bibliografií TeX/LaTeX a exportovať ich v rôznych formátoch.</p>
     <p xml:lang="sl">KBibTeX je aplikacija za upravljanje referenc, ki jo je mogoče uporabiti za zbiranje TeX/LaTeX bibliografij in jih izvažati v različnih oblikah.</p>
     <p xml:lang="sv">Kbibtex är ett referenshanteringsprogram som kan användas för att samla Tex/Latex-bibliografier och exportera dem med diverse format.</p>
-    <p xml:lang="tr">KBibTex, TeX/LaTeX kaynakçalarını toplamak ve çeşitli formatlarda dışa aktarmak için kullanılabilecek bir başvuru yönetim uygulamasıdır.</p>
+    <p xml:lang="tr">KBibTex, TeX/LaTeX kaynakçalarını toplamak ve çeşitli biçimlerde dışa aktarmak için kullanılabilecek bir başvuru yönetim uygulamasıdır.</p>
     <p xml:lang="uk">KBibTeX — програма для керування посиланнями, якою можна скористатися для створення бібліографій TeX/LaTeX та експортування даних бібліографій у різноманітних форматах.</p>
     <p xml:lang="x-test">xxKBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.xx</p>
     <p xml:lang="zh-CN">KBibTeX 是一个参考文献管理应用程序，可以用来收集 TeX/LaTeX 文献目录并以各种格式导出。</p>
@@ -149,7 +149,7 @@
       <li xml:lang="sk">Vytvoriť náhľad bibliografií v rôznych formátoch (zdroj (BibTeX), zdroj (RIS), Wikipédia, štandard (XML/XSLT), pekné (XML/XSLT), a iba abstraktné (XML/XSLT)). Dodatočné štýly je možné použiť po inštalácii bibtex2html.</li>
       <li xml:lang="sl">Predogled bibliografskih vnosov v različnih oblikah (Vir (BibTeX), vir (RIS), Wikipedija, standardna (XML/XSLT), modna (XML/XSLT) in samo abstraktna(XML/XSLT)). Dodatni slogi predogleda postanejo na voljo, ko je nameščen bibtex2html.</li>
       <li xml:lang="sv">Förhandsgranska bibliografier med olika format (källa (Bibtex), källa (RIS), Wikipedia, standard (XML/XSLT), snygg (XML/XSLT) och bara sammandrag (XML/XSLT)). Ytterligare förhandsgranskningsstilar är tillgängliga om bibtex2html är installerat.</li>
-      <li xml:lang="tr">Kaynakça girdilerini çeşitli biçimlerde önizleyin Kaynak (BibTeX), Kaynak (RIS), Wikipedia, standart (XML/XSLT), süslü (XML/XSLT) ve salt özet (XML/XSLT). Bibtex2html kurulduğunda ek önizleme stilleri kullanılabilir hale gelir.</li>
+      <li xml:lang="tr">Kaynakça girdilerini çeşitli biçimlerde önizleyin Kaynak (BibTeX), Kaynak (RIS), Wikipedia, standart (XML/XSLT), süslü (XML/XSLT) ve salt özet (XML/XSLT). Bibtex2html kurulduğunda ek önizleme biçemleri kullanılabilir hale gelir.</li>
       <li xml:lang="uk">Виконувати попередній перегляд і зберігати записи бібліографії у різних форматах (початковий код (BibTeX), початковий код (RIS), Вікіпедія, standard (XML/XSLT), fancy (XML/XSLT) та abstract-only (XML/XSLT)). Доступ до додаткових стилів попереднього перегляду можна отримати після встановлення програми bibtex2html.</li>
       <li xml:lang="x-test">xxPreview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.xx</li>
       <li xml:lang="zh-CN">以各种格式预览参考文献条目 (资料来源 (BibTeX)、资料来源 (RIS)、维基百科、标准 (XML/XSLT)、美观 (XML/XSLT)、抽象 (XML/XSLT) 等)。安装了 bibtex2html 后还可以使用更多预览样式。</li>
@@ -176,7 +176,7 @@
       <li xml:lang="sk">Importovať údaje v rôznych bibliografických súborových formátoch ako BibTeX, RIS a ISI (vyžaduje bibutils) a exportovať údaje do PDF (vyžaduje pdflatex), PostScript (vyžaduje latex), RTF (vyžaduje latex2rtf) a HTML.</li>
       <li xml:lang="sl">Uvozite podatke v različnih formatih datotek za bibliografijo, kot so BibTeX, RIS in ISI (zahteva bibutil) in izvoz podatkov v PDF (zahteva pdflatex), PostScript (zahteva lateks), RTF (zahteva latex2rtf) in HTML.</li>
       <li xml:lang="sv">Importera data med diverse bibliografi-filformat såsom Bibtex, RIS och ISI (kräver bibutils) och exportera data till PDF (kräver pdflatex), PostScript (kräver latex), RTF (kräver latex2rtf), och HTML.</li>
-      <li xml:lang="tr">BibTeX, RIS ve ISI (bibutils gerektirir) gibi çeşitli kaynakça dosya formatlarına verileri içe aktarın ve PDF  (pdflatex gerektirir), PostScript (lateks gerektirir), RTF (latex2rtf gerektirir) ve HTML'e verileri dışa aktarın.</li>
+      <li xml:lang="tr">BibTeX, RIS ve ISI (bibutils gerektirir) gibi çeşitli kaynakça dosya biçimlerine verileri içe aktarın ve PDF  (pdflatex gerektirir), PostScript (lateks gerektirir), RTF (latex2rtf gerektirir) ve HTML'e verileri dışa aktarın.</li>
       <li xml:lang="uk">Імпортувати дані у різноманітних форматах файлів бібліографії, зокрема BibTeX, RIS та ISI (слід встановити bibutils) та експортувати дані до PDF (потребує встановлення pdflatex), PostScript (потребує встановлення latex), RTF (потребує встановлення latex2rtf) та HTML.</li>
       <li xml:lang="x-test">xxImport data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.xx</li>
       <li xml:lang="zh-CN">导入各种参考文献文件格式的数据，如BibTeX、RIS 和 ISI (需要bibutils)，并导出数据到 PDF (需要 pdftex)、PostScript (需要 latex)、RTF (需要 latex2rtf) 和 HTML。</li>
@@ -312,7 +312,7 @@
       <li xml:lang="sk">Importovať vašu knižnicu Zotero.</li>
       <li xml:lang="sl">Uvozite knjižnico Zotero.</li>
       <li xml:lang="sv">Importera ett Zotero-bibliotek.</li>
-      <li xml:lang="tr">Zotero kütüphanenizi İçe Aktarın.</li>
+      <li xml:lang="tr">Zotero kütüphanenizi içe aktarın.</li>
       <li xml:lang="uk">Імпортувати дані з вашої бібліотеки Zotero.</li>
       <li xml:lang="x-test">xxImport your Zotero library.xx</li>
       <li xml:lang="zh-CN">导入您的 Zotero 库。</li>
@@ -345,6 +345,7 @@
       <caption xml:lang="ru">Главное окно KBibTeX</caption>
       <caption xml:lang="sl">Glavno okno KBibTeX</caption>
       <caption xml:lang="sv">Huvudfönstret i Kbibtex</caption>
+      <caption xml:lang="tr">KBibTeX ana penceresi</caption>
       <caption xml:lang="uk">Головне вікно KBibTeX</caption>
       <caption xml:lang="x-test">xxKBibTeX main windowxx</caption>
       <caption xml:lang="zh-CN">KBibTeX 主窗口</caption>
