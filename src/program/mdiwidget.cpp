@@ -102,7 +102,7 @@ public:
     }
 
     QModelIndex index(int row, int column, const QModelIndex &) const override {
-        return createIndex(row, column, row);
+        return createIndex(row, column, static_cast<quintptr>(row));
     }
 
     QModelIndex parent(const QModelIndex &) const override {
