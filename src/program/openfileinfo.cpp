@@ -157,6 +157,11 @@ public:
         part = loadResult.plugin;
 
         if (part == nullptr) {
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "name:" << partMetaData.name();
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "version:" << partMetaData.version();
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "category:" << partMetaData.category();
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "description:" << partMetaData.description();
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "fileName:" << partMetaData.fileName();
             qCDebug(LOG_KBIBTEX_PROGRAM) << "PATH=" << getenv("PATH");
             qCDebug(LOG_KBIBTEX_PROGRAM) << "LD_LIBRARY_PATH=" << getenv("LD_LIBRARY_PATH");
             qCDebug(LOG_KBIBTEX_PROGRAM) << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
