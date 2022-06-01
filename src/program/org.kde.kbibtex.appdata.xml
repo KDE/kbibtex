@@ -157,7 +157,7 @@
       <li xml:lang="zh-CN">导入各种参考文献文件格式的数据，如BibTeX、RIS 和 ISI (需要bibutils)，并导出数据到 PDF (需要 pdftex)、PostScript (需要 latex)、RTF (需要 latex2rtf) 和 HTML。</li>
       <li>Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="ca">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
-      <li xml:lang="ca-valencia">Busca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li xml:lang="ca-valencia">Busca dades d'entrades bibliogràfiques a les bases de dades en llínea (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="de">Suche nach Daten mit Bibliografie-Einträgen in Online-Datenbanken (z. B. Google Scholar, ACM, IEEE, arXiv, usw.)</li>
       <li xml:lang="en-GB">Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="es">Busca datos de las entradas bibliográficas en bases de datos en línea (por ejemplo Google Scholar, ACM, IEEE, arXiv, etc.)</li>
