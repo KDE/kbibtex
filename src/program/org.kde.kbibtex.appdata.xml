@@ -157,7 +157,7 @@
       <li xml:lang="ar">استيراد البيانات بتنسيقات ملفات ببليوغرافية متنوعة مثل BibTeX و RIS و ISI (تتطلب bibutils) وتصدير البيانات إلى PDF (يتطلب pdflatex) و PostScript (يتطلب لاتكس) و RTF (يتطلب latex2rtf) و HTML. </li>
       <li xml:lang="bs">Uvoz podataka u raznim bibliografskim formatima datoteke kao što su BibTeX, RIS i ISI (zahtijeva bibutils) i izvoz podataka u PDF(zahtijeva pdflatex), PostScript(zahtijeva latex), RTF(zahtijeva latex2rtf) i HTML.</li>
       <li xml:lang="ca">Importar les dades en diversos formats de fitxer per a bibliografies, tals com BibTeX, RIS i ISI (requereix «bibutils») i exporta les dades a PDF (requereix «pdflatex»), PostScript (requereix «latex»), RTF (requereix «latex2rtf»), i HTML.</li>
-      <li xml:lang="ca-valencia">Importar les dades en diversos formats de fitxer per a bibliografies, tals com BibTeX, RIS i ISI (requereix «bibutils») i exporta les dades a PDF (requereix «pdflatex»), PostScript (requereix «latex»), RTF (requereix «latex2rtf»), i HTML.</li>
+      <li xml:lang="ca-valencia">Importar les dades en diversos formats de ficher per a bibliografies, tals com BibTeX, RIS i ISI (requereix «bibutils») i exporta les dades a PDF (requereix «pdflatex»), PostScript (requereix «latex»), RTF (requereix «latex2rtf»), i HTML.</li>
       <li xml:lang="de">Import von Daten aus verschiedenen Bibliografie-Dateiformaten wie BibTeX, RIS und ISI (benötigt bibutils) und Export von Daten in die Formate PDF (benötigt pdflatex), PostScript (benötigt latex), RTF (benötigt latex2rtf) und HTML.</li>
       <li xml:lang="en-GB">Import data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.</li>
       <li xml:lang="es">Importa datos en varios formatos de archivo de bibliografía, como por ejemplo BibTeX, RIS y ISI (requiere bibutils) y exporta datos a PDF (requiere pdflatex), PostScript (requiere latex), RTF (requiere latex2rtf), y HTML.</li>
@@ -211,7 +211,7 @@
       <li xml:lang="ar">معاينة الموارد المحلية أو البعيدة (عبر الإنترنت) ، على سبيل المثال ملفات PDF ، المرتبطة في إدخال BibTEX.</li>
       <li xml:lang="bs">Pregled lokalnih ili udaljenih (online) resursa , npr. PDF datoteke, povezane u BibTEX ulazu.</li>
       <li xml:lang="ca">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
-      <li xml:lang="ca-valencia">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
+      <li xml:lang="ca-valencia">Vista prèvia de recursos locals o remots (connectats), p. ex., fichers PDF, vinculats amb l'entrada de BibTeX.</li>
       <li xml:lang="de">Anzeige von lokalen und entfernten (Online-) Ressourcen wie zum Beispiel PDF-Dateien, die mit einem BibTEX Eintrag verknüpft sind.</li>
       <li xml:lang="en-GB">Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
       <li xml:lang="es">Previsualiza los recursos locales o remotos (en línea), por ejemplo archivos PDF, que estén enlazados en una entrada BibTEX.</li>
