@@ -10,7 +10,7 @@
         <alias type="text/x-research-info-systems"/>
         <comment>RIS bibliography file</comment>
         <comment xml:lang="ca">Fitxer de bibliografia RIS</comment>
-        <comment xml:lang="ca@valencia">Fitxer de bibliografia RIS</comment>
+        <comment xml:lang="ca@valencia">Ficher de bibliografia RIS</comment>
         <comment xml:lang="cs">Soubor se seznamem použité literatury RIS</comment>
         <comment xml:lang="de">RIS-Bibliografiedatei</comment>
         <comment xml:lang="en_GB">RIS bibliography file</comment>
@@ -42,7 +42,7 @@
         <sub-class-of type="text/plain"/>
         <comment>ISI bibliography file</comment>
         <comment xml:lang="ca">Fitxer de bibliografia ISI</comment>
-        <comment xml:lang="ca@valencia">Fitxer de bibliografia ISI</comment>
+        <comment xml:lang="ca@valencia">Ficher de bibliografia ISI</comment>
         <comment xml:lang="cs">Soubor se seznamem použité literatury ISI</comment>
         <comment xml:lang="de">ISI-Bibliografiedatei</comment>
         <comment xml:lang="en_GB">ISI bibliography file</comment>
