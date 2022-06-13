@@ -74,7 +74,7 @@
     <p xml:lang="ar">كبتخ هو تطبيق لإدارة المراجع يمكن استخدامه لتجميع ببليوغرافيات لاتخ/تخ وتصديرها بتنسيقات مختلفة.</p>
     <p xml:lang="bs">KBibTeX je aplikacija za upravljanje referencom koja može biti upotrijebljena za skupljanje TeX/LaTeX bibliografijama i izvoziti ih u raznim formatima.</p>
     <p xml:lang="ca">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per a recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
-    <p xml:lang="ca-valencia">KBibTeX és una aplicació per a la gestió de referències que es pot utilisar per a recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
+    <p xml:lang="ca-valencia">KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per a recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
     <p xml:lang="de">KBibTeX ist ein Programm zur Verwaltung von Referenzen und kann dazu benutzt werden, TeX/LaTeX-Bibliografien zusammenzustellen und sie in verschiedenen Formaten zu exportieren.</p>
     <p xml:lang="en-GB">KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.</p>
     <p xml:lang="es">KBibTeX es una aplicación de gestión de referencias que se puede utilizar para recoger bibliografías TeX/LaTeX y exportarlas en varios formatos.</p>
@@ -130,7 +130,7 @@
       <li xml:lang="ar">معاينة إدخالات المراجع بتنسيقات مختلفة (المصدر (BibTeX)، المصدر (RIS)، ويكيبديا، القياسي (XML / XSLT)، fancy (XML / XSLT) ، والملخص فقط (XML / XSLT)). تصبح أنماط المعاينة الإضافية متاحة عند تثبيت bibtex2html.</li>
       <li xml:lang="bs">Pregled ulaza bibliografija u raznim formatima (Source(BibTeX), Source(RIS), Wikipedia, standard(XML/XSLT), fancy(XML/XSLT) i abstract-only(XML/XSLT)). Dodatni pregled stilova postaje dostupan kada je bibtex2html instaliran.</li>
       <li xml:lang="ca">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
-      <li xml:lang="ca-valencia">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia adicionals quan s'instala «bibtex2html».</li>
+      <li xml:lang="ca-valencia">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
       <li xml:lang="de">Vorschau und Speichern von Bibliografie-Einträgen in verschiedenen Formaten (Quelltext (BibTeX), Quelltext (RIS), Wikipedia, Standard (XML/XSLT), fancy (XML/XSLT) und abstract-only (XML/XSLT)). Zusätzliche Vorschaustile sind verfügbar, wenn Sie „bibtex2html“ installiert haben.</li>
       <li xml:lang="en-GB">Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
       <li xml:lang="es">Previsualizar las entradas de bibliografías en varios formatos (Fuente (BibTeX), fuente (RIS), Wikipedia, estándar (XML/XSLT), elegante (XML/XSLT), y solo abstracto (XML/XSLT)). Al instalar bibtex2html dispondrá de estilos de previsualización adicionales.</li>
@@ -184,7 +184,7 @@
       <li xml:lang="ar">البحث عن بيانات إدخالات الببليوغرافيا في قواعد البيانات عبر الإنترنت (على سبيل المثال، الباحث العلمي من غوغل و ACM، و IEEE، و arXiv، وما إلى ذلك)</li>
       <li xml:lang="bs">Pretraga za ulazne podatke bibliografije u online bazama podataka (npr. Google Scholar, ACM, IEEE,arXiv, itd.)</li>
       <li xml:lang="ca">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
-      <li xml:lang="ca-valencia">Busca dades d'entrades bibliogràfiques a les bases de dades en llínea (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
+      <li xml:lang="ca-valencia">Busca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="de">Suche nach Daten mit Bibliografie-Einträgen in Online-Datenbanken (z. B. Google Scholar, ACM, IEEE, arXiv, usw.)</li>
       <li xml:lang="en-GB">Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="es">Busca datos de las entradas bibliográficas en bases de datos en línea (por ejemplo Google Scholar, ACM, IEEE, arXiv, etc.)</li>
