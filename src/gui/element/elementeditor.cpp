@@ -540,7 +540,7 @@ void ElementEditor::apply()
         if (newId.isEmpty() && !originalId.isEmpty()) {
             /// New id/key is empty (invalid by definition), so just notify use and revert back to original id/key
             /// (assuming that original id/key is valid)
-            KMessageBox::sorry(this, i18n("No id was entered, so the previous id '%1' will be restored.", originalId), i18n("No id given"));
+            KMessageBox::information(this, i18n("No id was entered, so the previous id '%1' will be restored.", originalId), i18n("No id given"));
             idToUse = UseOriginalId;
         } else if (!newId.isEmpty()) { // FIXME test if !originalId.isEmpty() ?
             /// If new id/key is not empty, then check if it is identical to another entry/macro in the current file

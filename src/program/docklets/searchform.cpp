@@ -401,7 +401,7 @@ void SearchForm::startSearch()
 {
     OnlineSearchAbstract::Form *currentForm = d->currentQueryForm();
     if (!currentForm->readyToStart()) {
-        KMessageBox::sorry(this, i18n("Could not start searching the Internet:\nThe search terms are not complete or invalid."), i18n("Searching the Internet"));
+        KMessageBox::error(this, i18n("Could not start searching the Internet:\nThe search terms are not complete or invalid."), i18n("Searching the Internet"));
         return;
     }
 
