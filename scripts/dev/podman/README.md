@@ -1,23 +1,24 @@
 # Scripts to Run KBibTeX in a Podman Container
 
 *Podman* is a Linux container solution (operating system-level virtualization) that is an alternative to Docker, but is daemonless by design and allows rootless containers.
+It is well supported on Linux distributions like Fedora or Arch.
 For further information, please visit Podman's webpage at [podman.io](https://podman.io/).
 
 Before proceeding with this README, please ensure that you have a working Podman installation and that you as a non-priviledged user can pull images from Docker's hub and run container instances.
 Please refer to your Linux distribution's manual and Podman's official documentation.
 
 There are two scripts that prepare images for KBibTeX and allow running KBibTeX or any of its automated tests.
-The first script prepares a container image that contains all necessary tools and libraries to compile KBibTeX.
+The first script prepares a container image that contains all necessary tools and development libraries to compile KBibTeX.
 This container image only needs to be rebuilt once in a while (e.g. on a weekly or monthly base).
 The second script prepares a container image that contains KBibTeX's sources and compiles KBibTeX for its execution.
-This image needs to be rebuilt whenever a new revision of the source code needs to be tests.
+This image needs to be rebuilt whenever a new revision of the source code needs to be tested.
 
 ## Preparing a Developer Image
 
-The first script is `create-development-image.sh` which creates a developer image.
+The first script is called `create-development-image.sh` which creates a developer image.
 Several distributions' base systems are available to choose from.
 Simply pass one of the pre-configured distributions are an argument to this script.
-Available alternatives are `debian10`, `debian11`, `fedora`, `archlinux`, `kdeneon`.
+Available alternatives are `debian10`, `debian11`, `ubuntu`, `fedora`, `archlinux`, `kdeneon`.
 
 Example invocation:
 

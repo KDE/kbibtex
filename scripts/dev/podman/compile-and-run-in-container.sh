@@ -94,8 +94,9 @@ function run_test_programs() {
 	local username="$2"
 
 	mkdir -p /tmp/kbibtex-podman
-	for testbinary in kbibtexfilestest kbibtexnetworkingtest kbibtexiotest kbibtexdatatest ; do
-		podmansetx container run --net=host -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img sudo -u ${username} /tmp/build/bin/${testbinary} -platform offscreen 2>&1 | tee -a /tmp/kbibtex-podman/output-${testbinary}.txt || exit 1
+	# FIXME kbibtexfilestest  requires to have testsets files available
+	for testbinary in kbibtexnetworkingtest kbibtexiotest kbibtexdatatest ; do
+		podmansetx container run --rm --net=host -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img sudo -u ${username} /tmp/build/bin/${testbinary} -platform offscreen 2>&1 | tee -a /tmp/kbibtex-podman/output-${testbinary}.txt || exit 1
 	done
 }
 
@@ -105,7 +106,7 @@ function run_kbibtex_program() {
 
 	mkdir -p /tmp/kbibtex-podman
 	xhost local:root
-	podmansetx container run --net=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v ${HOME}/.Xauthority:/.Xauthority -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img sudo -u ${username} /usr/bin/kbibtex 2>&1 | tee -a /tmp/kbibtex-podman/output-kbibtex.txt || exit 1
+	podmansetx container run --rm --net=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v ${HOME}/.Xauthority:/.Xauthority -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img sudo -u ${username} /usr/bin/kbibtex 2>&1 | tee -a /tmp/kbibtex-podman/output-kbibtex.txt || exit 1
 	xhost -local:root
 }
 
@@ -114,11 +115,11 @@ function run_bash() {
 	local username="$2"
 
 	mkdir -p /tmp/kbibtex-podman
-	podmansetx container run --net=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v ${HOME}/.Xauthority:/.Xauthority -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img sudo -u ${username} /bin/bash || exit 1
+	podmansetx container run --rm --net=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v ${HOME}/.Xauthority:/.Xauthority -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img sudo -u ${username} /bin/bash || exit 1
 }
 
 if (( $# == 1 )) ; then
-	if [[ $1 == "archlinux" || $1 == "debian10" || $1 == "debian11" || $1 == "fedora" || $1 == "kdeneon" ]] ; then
+	if [[ $1 == "archlinux" || $1 == "debian10" || $1 == "debian11" || $1 == "fedora" || $1 == "ubuntu" || $1 == "kdeneon" ]] ; then
 		SUDOCMD=""
 		[[ $1 == "kdeneon" ]] && SUDOCMD="sudo"
 		USERNAME="kdeuser"
@@ -152,12 +153,12 @@ if (( $# == 1 )) ; then
 		echo "  sudo rm -rf ~/.local/share/containers ~/.config/containers"
 		exit 0
 	else
-		echo "Unknown argument, expecting one of the following:  archlinux  debian10  debian11  fedora  kdeneon" >&2
+		echo "Unknown argument, expecting one of the following:  archlinux  debian10  debian11  fedora  ubuntu  kdeneon" >&2
 		echo "To get help how to clean up previously created images or containers, run  $(basename $0) --cleanup" >&2
 		exit 1
 	fi
 else
-	echo "Missing argument, expecting one of the following:  archlinux  debian10  debian11  fedora  kdeneon" >&2
+	echo "Missing argument, expecting one of the following:  archlinux  debian10  debian11  fedora  ubuntu  kdeneon" >&2
 	echo "To get help how to clean up previously created images or containers, run  $(basename $0) --cleanup" >&2
 	exit 1
 fi
