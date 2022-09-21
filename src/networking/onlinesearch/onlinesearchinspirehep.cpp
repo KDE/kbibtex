@@ -39,7 +39,9 @@ QUrl OnlineSearchInspireHep::homepage() const
 
 QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults)
 {
-    static const QString typedSearch = QStringLiteral("%1 %2"); ///< no quotation marks for search term?
+    static const QString typedSearch = QStringLiteral("%1 %2");
+    static const QString typedSearchWithQuote = QStringLiteral("%1 \"%2\"");
+#define generateTypedSearch(kw,txt) (txt.contains(QChar(0x20))?typedSearchWithQuote.arg(kw,txt):typedSearch.arg(kw,txt))
 
     const QStringList freeTextWords = splitRespectingQuotationMarks(query[QueryKey::FreeText]);
     const QStringList yearWords = splitRespectingQuotationMarks(query[QueryKey::Year]);
@@ -52,31 +54,23 @@ QUrl OnlineSearchInspireHep::buildQueryUrl(const QMap<QueryKey, QString> &query,
 
     /// add words from "free text" field
     for (const QString &text : freeTextWords)
-        queryFragments.append(typedSearch.arg(QStringLiteral("ft"), text));
+        queryFragments.append(generateTypedSearch(QStringLiteral("ft"), text));
 
     /// add words from "year" field
     for (const QString &text : yearWords)
-        queryFragments.append(typedSearch.arg(QStringLiteral("d"), text));
+        queryFragments.append(generateTypedSearch(QStringLiteral("d"), text));
 
     /// add words from "title" field
     for (const QString &text : titleWords)
-        queryFragments.append(typedSearch.arg(QStringLiteral("t"), text));
+        queryFragments.append(generateTypedSearch(QStringLiteral("t"), text));
 
     /// add words from "author" field
     for (const QString &text : authorWords)
-        queryFragments.append(typedSearch.arg(QStringLiteral("a"), text));
+        queryFragments.append(generateTypedSearch(QStringLiteral("a"), text));
 
     /// Build URL
-    // TODO as of August 2020, there is no new API in place, but the old one
-    // is still reachable at 'old.inspirehep.net'
-    QString urlText = QStringLiteral("https://old.inspirehep.net/search?ln=en&ln=en&of=hx&action_search=Search&sf=&so=d&rm=&sc=0");
-    /// Set number of expected results
-    urlText.append(QString(QStringLiteral("&rg=%1")).arg(numResults));
-    /// Append actual query
-    urlText.append(QStringLiteral("&p="));
-    urlText.append(queryFragments.join(QStringLiteral(" and ")));
-    /// URL-encode text
-    urlText = urlText.replace(QLatin1Char(' '), QStringLiteral("%20")).replace(QLatin1Char('"'), QStringLiteral("%22"));
-
-    return QUrl(urlText);
+    /// Documentation on REST API can be found here:
+    ///   https://github.com/inspirehep/rest-api-doc
+    ///   https://help.inspirehep.net/knowledge-base/inspire-paper-search/
+    return QUrl::fromUserInput(QString(QStringLiteral("https://inspirehep.net/api/literature?size=%2&format=bibtex&sort=mostrecent&q=%1")).arg(queryFragments.join(QStringLiteral(" and ")), QString::number(numResults)));
 }
