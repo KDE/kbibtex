@@ -29,6 +29,8 @@
 class Encoder::Private
 {
 public:
+    static bool firstEncoderInitialization;
+
 #ifdef HAVE_ICU
     icu::Transliterator *translit;
 #else // HAVE_ICU
@@ -62,6 +64,8 @@ public:
 #endif // HAVE_ICU
     }
 };
+
+bool Encoder::Private::firstEncoderInitialization = true;
 
 #ifndef HAVE_ICU
 /// The following array contains only 65536-2048 entries
@@ -2422,11 +2426,14 @@ const char *Encoder::Private::unidecode_text =
 Encoder::Encoder()
         : d(new Encoder::Private())
 {
+    if (Encoder::Private::firstEncoderInitialization) {
 #ifdef HAVE_ICU
-    qCInfo(LOG_KBIBTEX_IO) << "Using ICU in Encoder class";
+        qCInfo(LOG_KBIBTEX_IO) << "Using ICU in Encoder class";
 #else // HAVE_ICU
-    qCInfo(LOG_KBIBTEX_IO) << "Using built-in translation table in Encoder class";
+        qCInfo(LOG_KBIBTEX_IO) << "Using built-in translation table in Encoder class";
 #endif // HAVE_ICU
+    }
+    Encoder::Private::firstEncoderInitialization = false;
 }
 
 Encoder::~Encoder()
