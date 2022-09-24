@@ -130,7 +130,7 @@
       <li xml:lang="ar">معاينة إدخالات المراجع بتنسيقات مختلفة (المصدر (BibTeX)، المصدر (RIS)، ويكيبديا، القياسي (XML / XSLT)، fancy (XML / XSLT) ، والملخص فقط (XML / XSLT)). تصبح أنماط المعاينة الإضافية متاحة عند تثبيت bibtex2html.</li>
       <li xml:lang="bs">Pregled ulaza bibliografija u raznim formatima (Source(BibTeX), Source(RIS), Wikipedia, standard(XML/XSLT), fancy(XML/XSLT) i abstract-only(XML/XSLT)). Dodatni pregled stilova postaje dostupan kada je bibtex2html instaliran.</li>
       <li xml:lang="ca">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
-      <li xml:lang="ca-valencia">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
+      <li xml:lang="ca-valencia">Vista prèvia de les entrades en la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
       <li xml:lang="de">Vorschau und Speichern von Bibliografie-Einträgen in verschiedenen Formaten (Quelltext (BibTeX), Quelltext (RIS), Wikipedia, Standard (XML/XSLT), fancy (XML/XSLT) und abstract-only (XML/XSLT)). Zusätzliche Vorschaustile sind verfügbar, wenn Sie „bibtex2html“ installiert haben.</li>
       <li xml:lang="en-GB">Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
       <li xml:lang="es">Previsualizar las entradas de bibliografías en varios formatos (Fuente (BibTeX), fuente (RIS), Wikipedia, estándar (XML/XSLT), elegante (XML/XSLT), y solo abstracto (XML/XSLT)). Al instalar bibtex2html dispondrá de estilos de previsualización adicionales.</li>
@@ -238,7 +238,7 @@
       <li xml:lang="ar">ابحث عن الإدخالات المكررة ودمجها في قائمة المراجع.</li>
       <li xml:lang="bs">Potraži i spoji duplikate ulaza u bibliografiju.</li>
       <li xml:lang="ca">Cerca i fusiona les entrades duplicades a la bibliografia.</li>
-      <li xml:lang="ca-valencia">Busca i fusiona les entrades duplicades a la bibliografia.</li>
+      <li xml:lang="ca-valencia">Busca i fusiona les entrades duplicades en la bibliografia.</li>
       <li xml:lang="de"> Suchen und zusammenführen von doppelten Einträgen in Bibliografien.</li>
       <li xml:lang="en-GB">Find and merge duplicate entries in bibliography.</li>
       <li xml:lang="es">Busca y fusiona las entradas duplicadas en la bibliografía.</li>
