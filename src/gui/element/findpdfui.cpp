@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -445,6 +445,7 @@ void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget
     dlg->setLayout(layout);
 
     buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+    buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
     connect(widget.data(), &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Ok), &QWidget::setEnabled);
     connect(widget.data(), &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Abort), &QWidget::setDisabled);
     connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);

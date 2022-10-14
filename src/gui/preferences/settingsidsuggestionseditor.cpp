@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -948,6 +948,7 @@ QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const
     boxLayout->addWidget(widget);
     QDialogButtonBox *dbb = new QDialogButtonBox(dlg);
     dbb->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    dbb->button(QDialogButtonBox::Ok)->setDefault(true);
     boxLayout->addWidget(dbb);
     connect(dbb->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
     connect(dbb->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -341,6 +341,7 @@ void FileView::prepareEditorDialog(DialogType dialogType)
         QBoxLayout *boxLayout = qobject_cast<QBoxLayout *>(m_elementEditorDialog->layout());
         boxLayout->addWidget(m_dbb);
         m_dbb->button(QDialogButtonBox::Apply)->setEnabled(false);
+        m_dbb->button(QDialogButtonBox::Ok)->setDefault(true);
 
         /// Establish signal-slot connections for modification/editing events
         connect(m_elementEditor, &ElementEditor::modified, m_dbb->button(QDialogButtonBox::Apply), &QPushButton::setEnabled);

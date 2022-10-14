@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -169,6 +169,7 @@ KBibTeXPreferencesDialog::KBibTeXPreferencesDialog(QWidget *parent)
     setFaceType(KPageDialog::Tree);
     setWindowTitle(i18nc("@title:window", "Preferences"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::RestoreDefaults | QDialogButtonBox::Reset | QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, Qt::Horizontal, this);
+    buttonBox->button(QDialogButtonBox::Apply)->setDefault(true);
     buttonBox->button(QDialogButtonBox::Apply)->setEnabled(false);
     buttonBox->button(QDialogButtonBox::Reset)->setEnabled(false);
     connect(buttonBox, &QDialogButtonBox::clicked, this, &KBibTeXPreferencesDialog::buttonClicked);
