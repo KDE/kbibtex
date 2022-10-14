@@ -90,6 +90,7 @@ public:
     Qt::CheckState protectCasing;
     QString personNameFormatting;
     QString listSeparator;
+    bool sortedByIdentifier;
     bool cancelFlag;
 
     Private(FileExporterBibTeX *p)
@@ -116,11 +117,13 @@ public:
         quoteComment = Preferences::instance().bibTeXQuoteComment();
         protectCasing = Preferences::instance().bibTeXProtectCasing() ? Qt::Checked : Qt::Unchecked;
         listSeparator =  Preferences::instance().bibTeXListSeparator();
+        sortedByIdentifier = Preferences::instance().bibTeXEntriesSortedByIdentifier();
 #else // HAVE_KF5
         keywordCasing = KBibTeX::Casing::LowerCase;
         quoteComment = Preferences::QuoteComment::None;
         protectCasing = Qt::PartiallyChecked;
         listSeparator = QStringLiteral("; ");
+        sortedByIdentifier = false;
 #endif // HAVE_KF5
         personNameFormatting = Preferences::instance().personNameFormat();
 
@@ -151,6 +154,8 @@ public:
             }
             if (bibtexfile->hasProperty(File::ListSeparator))
                 listSeparator = bibtexfile->property(File::ListSeparator).toString();
+            if (bibtexfile->hasProperty(File::SortedByIdentifier))
+                sortedByIdentifier = bibtexfile->property(File::SortedByIdentifier).toBool();
         }
     }
 
@@ -480,9 +485,11 @@ public:
     bool saveAsString(QString &output, const File *bibtexfile) {
         const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") || determineTargetCodec().first == QStringLiteral("us-ascii") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
 
+        const File *_bibtexfile = sortedByIdentifier ? File::sortByIdentifier(bibtexfile) : bibtexfile;
+
         /// Memorize which entries are used in a crossref field
         QHash<QString, QStringList> crossRefMap;
-        for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && !cancelFlag; ++it) {
+        for (File::ConstIterator it = _bibtexfile->constBegin(); it != _bibtexfile->constEnd() && !cancelFlag; ++it) {
             QSharedPointer<const Entry> entry = (*it).dynamicCast<const Entry>();
             if (!entry.isNull()) {
                 const QString crossRef = PlainTextValue::text(entry->value(Entry::ftCrossRef));
@@ -494,11 +501,11 @@ public:
             }
         }
 
-        int currentPos = 0, totalElements = bibtexfile->count();
+        int currentPos = 0, totalElements = _bibtexfile->count();
         bool result = true;
         bool allPreamblesAndMacrosProcessed = false;
         QSet<QString> processedEntryIds;
-        for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !cancelFlag; ++it) {
+        for (File::ConstIterator it = _bibtexfile->constBegin(); it != _bibtexfile->constEnd() && result && !cancelFlag; ++it) {
             QSharedPointer<const Element> element = (*it);
             QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
 
@@ -520,7 +527,7 @@ public:
                 if (!allPreamblesAndMacrosProcessed) {
                     /// Guarantee that all macros and the preamble are written
                     /// before the first entry (@article, ...) is written
-                    for (File::ConstIterator msit = it + 1; msit != bibtexfile->constEnd() && result && !cancelFlag; ++msit) {
+                    for (File::ConstIterator msit = it + 1; msit != _bibtexfile->constEnd() && result && !cancelFlag; ++msit) {
                         QSharedPointer<const Preamble> preamble = (*msit).dynamicCast<const Preamble>();
                         if (!preamble.isNull()) {
                             result &= writePreamble(output, *preamble);
@@ -567,7 +574,7 @@ public:
 
         /// Crossref'ed entries are written last
         if (!crossRefMap.isEmpty())
-            for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !cancelFlag; ++it) {
+            for (File::ConstIterator it = _bibtexfile->constBegin(); it != _bibtexfile->constEnd() && result && !cancelFlag; ++it) {
                 QSharedPointer<const Entry> entry = (*it).dynamicCast<const Entry>();
                 if (entry.isNull()) continue;
                 if (!crossRefMap.contains(entry->id())) continue;
@@ -576,6 +583,12 @@ public:
                 /// Instead of an 'emit' ...
                 QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
             }
+
+        if (_bibtexfile != bibtexfile)
+            /// _bibtexfile is not the origianl bibtexfile passed to this function,
+            /// but was generated as part of the sorting by identifier,
+            /// thus destroy it now
+            delete _bibtexfile;
 
         return result;
     }

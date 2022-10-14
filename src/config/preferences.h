@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -246,6 +246,18 @@ public:
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBibTeXListSeparator(const QString &bibTeXListSeparator);
+#endif // HAVE_KF5
+
+
+    /// *** bibTeXEntriesSortedByIdentifier of type bool ***
+
+    static const bool defaultbibTeXEntriesSortedByIdentifier;
+    bool bibTeXEntriesSortedByIdentifier();
+#ifdef HAVE_KF5
+    /*!
+     * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
+     */
+    bool setbibTeXEntriesSortedByIdentifier(const bool bibTeXEntriesSortedByIdentifier);
 #endif // HAVE_KF5
 
 

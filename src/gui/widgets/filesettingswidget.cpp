@@ -84,6 +84,10 @@ void FileSettingsWidget::loadProperties(File *file)
         QSignalBlocker comboBoxListSeparatorSignalBlocker(m_comboBoxListSeparator);
         m_comboBoxListSeparator->setCurrentIndex(m_comboBoxListSeparator->findData(file->property(File::ListSeparator)));
     }
+    if (file->hasProperty(File::SortedByIdentifier)) {
+        QSignalBlocker checkBoxSortedByIdentifierSignalBlocker(m_checkBoxSortedByIdentifier);
+        m_checkBoxSortedByIdentifier->setChecked(file->property(File::SortedByIdentifier).toBool());
+    }
 }
 
 void FileSettingsWidget::saveProperties(File *file)
@@ -103,6 +107,7 @@ void FileSettingsWidget::saveProperties(File *file)
     file->setProperty(File::ProtectCasing, static_cast<int>(m_checkBoxProtectCasing->checkState()));
     file->setProperty(File::NameFormatting, m_comboBoxPersonNameFormatting->itemData(m_comboBoxPersonNameFormatting->currentIndex(), ItalicTextItemModel::IdentifierRole));
     file->setProperty(File::ListSeparator, m_comboBoxListSeparator->itemData(m_comboBoxListSeparator->currentIndex()).toString());
+    file->setProperty(File::SortedByIdentifier, m_checkBoxSortedByIdentifier->isChecked());
 }
 
 void FileSettingsWidget::resetToDefaults()
@@ -167,4 +172,8 @@ void FileSettingsWidget::setupGUI()
     connect(m_comboBoxListSeparator, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
     m_comboBoxListSeparator->addItem(QStringLiteral(";"), QVariant::fromValue<QString>(QStringLiteral("; ")));
     m_comboBoxListSeparator->addItem(QStringLiteral(","), QVariant::fromValue<QString>(QStringLiteral(", ")));
+
+    m_checkBoxSortedByIdentifier = new QCheckBox(i18n("Sort by identifier"), this);
+    layout->addRow(i18n("Entry Sorting"), m_checkBoxSortedByIdentifier);
+    connect(m_checkBoxSortedByIdentifier, &QCheckBox::stateChanged, this, &FileSettingsWidget::widgetsChanged);
 }

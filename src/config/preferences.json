@@ -165,6 +165,13 @@
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
+            "stem": "bibTeXEntriesSortedByIdentifier",
+            "type": "bool",
+            "default": "false",
+            "configgroup": "FileExporterBibTeX",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
             "stem": "LaTeXBabelLanguage",
             "type": "QString",
             "configgroup": "FileExporterLaTeXbased",

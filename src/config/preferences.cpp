@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -82,6 +82,8 @@ public:
     bool cachedBibTeXProtectCasing;
     bool dirtyFlagBibTeXListSeparator;
     QString cachedBibTeXListSeparator;
+    bool dirtyFlagbibTeXEntriesSortedByIdentifier;
+    bool cachedbibTeXEntriesSortedByIdentifier;
     bool dirtyFlagLaTeXBabelLanguage;
     QString cachedLaTeXBabelLanguage;
     bool dirtyFlagBibTeXBibliographyStyle;
@@ -129,6 +131,8 @@ public:
         cachedBibTeXProtectCasing = Preferences::defaultBibTeXProtectCasing;
         dirtyFlagBibTeXListSeparator = true;
         cachedBibTeXListSeparator = Preferences::defaultBibTeXListSeparator;
+        dirtyFlagbibTeXEntriesSortedByIdentifier = true;
+        cachedbibTeXEntriesSortedByIdentifier = Preferences::defaultbibTeXEntriesSortedByIdentifier;
         dirtyFlagLaTeXBabelLanguage = true;
         cachedLaTeXBabelLanguage = Preferences::defaultLaTeXBabelLanguage;
         dirtyFlagBibTeXBibliographyStyle = true;
@@ -216,6 +220,11 @@ public:
 
     inline bool validateValueForBibTeXListSeparator(const QString &valueToBeChecked) {
         return Preferences::availableBibTeXListSeparators.contains(valueToBeChecked);
+    }
+
+    inline bool validateValueForbibTeXEntriesSortedByIdentifier(const bool valueToBeChecked) {
+        Q_UNUSED(valueToBeChecked)
+        return true;
     }
 
     inline bool validateValueForLaTeXBabelLanguage(const QString &valueToBeChecked) {
@@ -365,6 +374,11 @@ Preferences::Preferences()
         if (group.name() == QStringLiteral("FileExporterBibTeX") && names.contains("BibTeXListSeparator")) {
             /// Configuration setting BibTeXListSeparator got changed by another Preferences instance";
             d->dirtyFlagBibTeXListSeparator = true;
+            eventsToPublish.insert(NotificationHub::EventConfigurationChanged);
+        }
+        if (group.name() == QStringLiteral("FileExporterBibTeX") && names.contains("bibTeXEntriesSortedByIdentifier")) {
+            /// Configuration setting bibTeXEntriesSortedByIdentifier got changed by another Preferences instance";
+            d->dirtyFlagbibTeXEntriesSortedByIdentifier = true;
             eventsToPublish.insert(NotificationHub::EventConfigurationChanged);
         }
         if (group.name() == QStringLiteral("FileExporterLaTeXbased") && names.contains("LaTeXBabelLanguage")) {
@@ -1046,6 +1060,44 @@ bool Preferences::setBibTeXListSeparator(const QString &newValue)
     const QString valueFromConfig = configGroup.readEntry(QStringLiteral("BibTeXListSeparator"), Preferences::defaultBibTeXListSeparator);
     if (valueFromConfig == sanitizedNewValue) return false;
     configGroup.writeEntry(QStringLiteral("BibTeXListSeparator"), sanitizedNewValue, KConfig::Notify);
+    d->config->sync();
+    return true;
+}
+#endif // HAVE_KF5
+
+const bool Preferences::defaultbibTeXEntriesSortedByIdentifier = false;
+
+bool Preferences::bibTeXEntriesSortedByIdentifier()
+{
+#ifdef HAVE_KF5
+    if (d->dirtyFlagbibTeXEntriesSortedByIdentifier) {
+        d->config->reparseConfiguration();
+        static const KConfigGroup configGroup(d->config, QStringLiteral("FileExporterBibTeX"));
+        const bool valueFromConfig = configGroup.readEntry(QStringLiteral("bibTeXEntriesSortedByIdentifier"), Preferences::defaultbibTeXEntriesSortedByIdentifier);
+        if (d->validateValueForbibTeXEntriesSortedByIdentifier(valueFromConfig)) {
+            d->cachedbibTeXEntriesSortedByIdentifier = valueFromConfig;
+            d->dirtyFlagbibTeXEntriesSortedByIdentifier = false;
+        } else {
+            /// Configuration file setting for bibTeXEntriesSortedByIdentifier has an invalid value, using default as fallback
+            setbibTeXEntriesSortedByIdentifier(Preferences::defaultbibTeXEntriesSortedByIdentifier);
+        }
+    }
+    return d->cachedbibTeXEntriesSortedByIdentifier;
+#else // HAVE_KF5
+    return defaultbibTeXEntriesSortedByIdentifier;
+#endif // HAVE_KF5
+}
+
+#ifdef HAVE_KF5
+bool Preferences::setbibTeXEntriesSortedByIdentifier(const bool newValue)
+{
+    if (!d->validateValueForbibTeXEntriesSortedByIdentifier(newValue)) return false;
+    d->dirtyFlagbibTeXEntriesSortedByIdentifier = false;
+    d->cachedbibTeXEntriesSortedByIdentifier = newValue;
+    static KConfigGroup configGroup(d->config, QStringLiteral("FileExporterBibTeX"));
+    const bool valueFromConfig = configGroup.readEntry(QStringLiteral("bibTeXEntriesSortedByIdentifier"), Preferences::defaultbibTeXEntriesSortedByIdentifier);
+    if (valueFromConfig == newValue) return false;
+    configGroup.writeEntry(QStringLiteral("bibTeXEntriesSortedByIdentifier"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
 }

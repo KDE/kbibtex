@@ -38,6 +38,8 @@ public:
         /* nothing */
     }
 
+    bool operator<(const Element &other) const;
+
 private:
     int uniqueId;
 };

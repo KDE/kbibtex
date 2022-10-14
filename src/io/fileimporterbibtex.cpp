@@ -66,12 +66,14 @@ public:
         int countQuotationMarks, countFirstNameFirst, countLastNameFirst;
         int countNoCommentQuote, countCommentPercent, countCommentCommand;
         int countProtectedTitle, countUnprotectedTitle;
+        int countSortedByIdentifier, countNotSortedByIdentifier;
         QString mostRecentListSeparator;
 
         Statistics()
                 : countCurlyBrackets(0), countQuotationMarks(0), countFirstNameFirst(0),
               countLastNameFirst(0), countNoCommentQuote(0), countCommentPercent(0),
-              countCommentCommand(0), countProtectedTitle(0), countUnprotectedTitle(0)
+              countCommentCommand(0), countProtectedTitle(0), countUnprotectedTitle(0),
+              countSortedByIdentifier(0), countNotSortedByIdentifier(0)
         {
             /// nothing
         }
@@ -1230,15 +1232,27 @@ File *FileImporterBibTeX::fromString(const QString &rawText)
     d->readChar(state);
 
     bool gotAtLeastOneElement = false;
+    QString previousEntryId;
     while (!state.nextChar.isNull() && !m_cancelFlag && !state.textStream->atEnd()) {
         emit progress(qint64toint(state.textStream->pos()), internalRawText.length());
         Element *element = d->nextElement(statistics, state);
 
         if (element != nullptr) {
             gotAtLeastOneElement = true;
-            if (d->commentHandling == CommentHandling::Keep || !Comment::isComment(*element))
+            if (d->commentHandling == CommentHandling::Keep || !Comment::isComment(*element)) {
                 result->append(QSharedPointer<Element>(element));
-            else
+
+                Entry *currentEntry = dynamic_cast<Entry *>(element);
+                if (currentEntry != nullptr) {
+                    if (!previousEntryId.isEmpty()) {
+                        if (currentEntry->id() >= previousEntryId)
+                            ++statistics.countSortedByIdentifier;
+                        else
+                            ++statistics.countNotSortedByIdentifier;
+                    }
+                    previousEntryId = currentEntry->id();
+                }
+            } else
                 delete element;
         }
     }
@@ -1279,6 +1293,8 @@ File *FileImporterBibTeX::fromString(const QString &rawText)
             result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::PercentSign));
         if (!statistics.mostRecentListSeparator.isEmpty())
             result->setProperty(File::ListSeparator, statistics.mostRecentListSeparator);
+        /// Set the file's preference to have the entries sorted by identifier
+        result->setProperty(File::SortedByIdentifier, statistics.countSortedByIdentifier >= statistics.countNotSortedByIdentifier * 3);
         // TODO gather more statistics for keyword casing etc.
     }
 

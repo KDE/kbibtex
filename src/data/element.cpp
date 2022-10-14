@@ -31,6 +31,11 @@ Element::Element()
     uniqueId = ++idCounter;
 }
 
+bool Element::operator<(const Element &other) const
+{
+    return uniqueId < other.uniqueId;
+}
+
 QDebug operator<<(QDebug dbg, const Element &element) {
     if (Macro::isMacro(element))
         return operator<<(dbg, *dynamic_cast<const Macro *>(&element));

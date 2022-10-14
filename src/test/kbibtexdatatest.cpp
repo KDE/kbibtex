@@ -38,6 +38,9 @@ private slots:
      */
     void createAndRemoveValueFromEntries();
 
+    void sortFileByIdentifier_data();
+    void sortFileByIdentifier();
+
     void rearrangingCrossRefEntries_data();
     void rearrangingCrossRefEntries();
 
@@ -57,6 +60,108 @@ void KBibTeXDataTest::createAndRemoveValueFromEntries()
             entry.insert(key, v);
         }
     }
+}
+
+void KBibTeXDataTest::sortFileByIdentifier_data()
+{
+    QTest::addColumn<File *>("unsortedBibTeXfile");
+    QTest::addColumn<File *>("sortedBibTeXfile");
+
+    QSharedPointer<Macro> mA{new Macro(QStringLiteral("mA"), Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Macro A"))))};
+    QSharedPointer<Macro> mB{new Macro(QStringLiteral("mB"), Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Macro B"))))};
+    QSharedPointer<Macro> mC{new Macro(QStringLiteral("mC"), Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Macro C"))))};
+    QSharedPointer<Macro> mD{new Macro(QStringLiteral("mD"), Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Macro D"))))};
+
+    QSharedPointer<Entry> aaabbb{new Entry(Entry::etBook, QStringLiteral("aaabbb"))};
+    aaabbb->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("{Companion of the Duality of Polymorphism}"))));
+    aaabbb->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Winston"), QStringLiteral("Smith"))));
+    aaabbb->insert(Entry::ftPublisher, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Black Books"))));
+    aaabbb->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2005"))));
+    QSharedPointer<Entry> bbbccc{new Entry(Entry::etArticle, QStringLiteral("bbbccc"))};
+    bbbccc->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("{Glibberish}"))));
+    bbbccc->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Bernard"), QStringLiteral("Marx"))));
+    bbbccc->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2022"))));
+    bbbccc->insert(Entry::ftJournal, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("New Swabia Journal of Incomplete Algorithms"))));
+    QSharedPointer<Entry> cccddd{new Entry(Entry::etArticle, QStringLiteral("cccddd"))};
+    cccddd->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("{Nonsense}"))));
+    cccddd->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Lenina"), QStringLiteral("Crowne"))));
+    cccddd->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2019"))));
+    cccddd->insert(Entry::ftJournal, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("International Journal for the Advancement of Reversal"))));
+    QSharedPointer<Entry> dddeee{new Entry(Entry::etArticle, QStringLiteral("dddeee"))};
+    dddeee->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("{Bulls**t}"))));
+    dddeee->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Thomas"), QStringLiteral("Grahambell"))));
+    dddeee->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2021"))));
+    dddeee->insert(Entry::ftJournal, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Kot und K{\\\"o}ter"))));
+    QSharedPointer<Entry> eeefff{new Entry(Entry::etArticle, QStringLiteral("eeefff"))};
+    eeefff->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("{Bla Bla}"))));
+    eeefff->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Helmholtz"), QStringLiteral("Watson"))));
+    eeefff->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("1998"))));
+    eeefff->insert(Entry::ftJournal, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("New Journal of Old Things"))));
+    QSharedPointer<Entry> fffggg{new Entry(Entry::etInBook, QStringLiteral("fffggg"))};
+    fffggg->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("{Subsurface String Theory}"))));
+    fffggg->insert(Entry::ftCrossRef, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("aaabbb"))));
+    fffggg->insert(Entry::ftPages, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("42--56"))));
+
+    File *unsortedFile = new File();
+    unsortedFile->append(mD);
+    unsortedFile->append(mA);
+    unsortedFile->append(mB);
+    unsortedFile->append(mC);
+    File *sortedFile = new File();
+    sortedFile->append(mA);
+    sortedFile->append(mB);
+    sortedFile->append(mC);
+    sortedFile->append(mD);
+    QTest::newRow("Only macros") << unsortedFile << sortedFile;
+
+    unsortedFile = new File();
+    unsortedFile->append(eeefff);
+    unsortedFile->append(dddeee);
+    unsortedFile->append(fffggg);
+    unsortedFile->append(aaabbb);
+    unsortedFile->append(bbbccc);
+    unsortedFile->append(cccddd);
+    sortedFile = new File();
+    sortedFile->append(aaabbb);
+    sortedFile->append(bbbccc);
+    sortedFile->append(cccddd);
+    sortedFile->append(dddeee);
+    sortedFile->append(eeefff);
+    sortedFile->append(fffggg);
+    QTest::newRow("Only entries") << unsortedFile << sortedFile;
+
+    unsortedFile = new File();
+    unsortedFile->append(mD);
+    unsortedFile->append(mA);
+    unsortedFile->append(eeefff);
+    unsortedFile->append(dddeee);
+    unsortedFile->append(mB);
+    unsortedFile->append(fffggg);
+    unsortedFile->append(aaabbb);
+    unsortedFile->append(bbbccc);
+    unsortedFile->append(cccddd);
+    unsortedFile->append(mC);
+    sortedFile = new File();
+    sortedFile->append(aaabbb);
+    sortedFile->append(bbbccc);
+    sortedFile->append(cccddd);
+    sortedFile->append(dddeee);
+    sortedFile->append(eeefff);
+    sortedFile->append(fffggg);
+    sortedFile->append(mA);
+    sortedFile->append(mB);
+    sortedFile->append(mC);
+    sortedFile->append(mD);
+    QTest::newRow("unsorted-entries.bib -> sorted-entries.bib") << unsortedFile << sortedFile;
+}
+
+void KBibTeXDataTest::sortFileByIdentifier()
+{
+    QFETCH(File *, unsortedBibTeXfile);
+    QFETCH(File *, sortedBibTeXfile);
+
+    const File *newlySortedBibTeXfile = File::sortByIdentifier(unsortedBibTeXfile);
+    QCOMPARE(*sortedBibTeXfile, *newlySortedBibTeXfile);
 }
 
 void KBibTeXDataTest::rearrangingCrossRefEntries_data()

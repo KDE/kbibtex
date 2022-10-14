@@ -40,6 +40,7 @@ const QString File::KeywordCasing = QStringLiteral("KeywordCasing");
 const QString File::ProtectCasing = QStringLiteral("ProtectCasing");
 const QString File::NameFormatting = QStringLiteral("NameFormatting");
 const QString File::ListSeparator = QStringLiteral("ListSeparator");
+const QString File::SortedByIdentifier = QStringLiteral("SortedByIdentifier");
 
 const quint64 valid = 0x08090a0b0c0d0e0f;
 const quint64 invalid = 0x0102030405060708;
@@ -101,6 +102,7 @@ public:
         properties.insert(File::NameFormatting, Preferences::instance().personNameFormat());
         properties.insert(File::ProtectCasing, static_cast<int>(Preferences::instance().bibTeXProtectCasing() ? Qt::Checked : Qt::Unchecked));
         properties.insert(File::ListSeparator,  Preferences::instance().bibTeXListSeparator());
+        properties.insert(File::SortedByIdentifier, Preferences::instance().bibTeXEntriesSortedByIdentifier());
     }
 
     bool checkValidity() const {
@@ -336,6 +338,45 @@ void File::setPropertiesToDefault()
 bool File::checkValidity() const
 {
     return d->checkValidity();
+}
+
+const File *File::sortByIdentifier(const File *bibtexfile)
+{
+    File *newFile = new File(*bibtexfile);
+
+    std::sort(newFile->begin(), newFile->end(), [](const QSharedPointer<Element> &a, const QSharedPointer<Element> &b)->bool {
+        QSharedPointer<const Entry> ae = a.dynamicCast<const Entry>();
+        if (!ae.isNull()) {
+            QSharedPointer<const Entry> be = b.dynamicCast<const Entry>();
+            if (!be.isNull())
+                /// If two elements to be compared are actually two Entry objects,
+                /// compare both by their ids
+                return ae->id() < be->id();
+            else {
+                QSharedPointer<const Macro> bm = b.dynamicCast<const Macro>();
+                if (!bm.isNull())
+                    return ae->id() < bm->key();
+            }
+        } else {
+            QSharedPointer<const Macro> am = a.dynamicCast<const Macro>();
+            if (!am.isNull()) {
+                QSharedPointer<const Macro> bm = b.dynamicCast<const Macro>();
+                if (!bm.isNull())
+                    /// If two elements to be compared are actually two Macro objects,
+                    /// compare both by their keys
+                    return am->key() < bm->key();
+                else {
+                    QSharedPointer<const Entry> be = b.dynamicCast<const Entry>();
+                    if (!be.isNull())
+                        return am->key() < be->id();
+                }
+            }
+        }
+        /// If no other comparison was available, use the Element's own comparison operator
+        return a < b;
+    });
+
+    return newFile;
 }
 
 QDebug operator<<(QDebug dbg, const File &file) {

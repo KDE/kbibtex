@@ -57,6 +57,7 @@ public:
     const static QString ProtectCasing;
     const static QString NameFormatting;
     const static QString ListSeparator;
+    const static QString SortedByIdentifier;
 
     explicit File();
     explicit File(const File &other);
@@ -115,6 +116,13 @@ public:
      * @return True if validity checks succeed, false otherwise
      */
     bool checkValidity() const;
+
+    /**
+     * Sort a BibTeX file by identifier if comparing two entries
+     * @param bibtexfile The original File object, will not be modified
+     * @return Sorted copy of the original File object
+     */
+    static const File *sortByIdentifier(const File *bibtexfile);
 
 private:
     class FilePrivate;

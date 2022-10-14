@@ -59,6 +59,7 @@ private:
     QCheckBox *m_checkBoxProtectCasing;
     QComboBox *m_comboBoxPersonNameFormatting;
     QComboBox *m_comboBoxListSeparator;
+    QCheckBox *m_checkBoxSortedByIdentifier;
 
     const Person dummyPerson;
     File *m_file;
