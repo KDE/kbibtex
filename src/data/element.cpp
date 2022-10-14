@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2017 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,10 +17,31 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
+#include <QDebug>
+
 #include "element.h"
+#include "macro.h"
+#include "entry.h"
+#include "preamble.h"
+#include "comment.h"
 
 Element::Element()
 {
     static int idCounter = 0;
     uniqueId = ++idCounter;
+}
+
+QDebug operator<<(QDebug dbg, const Element &element) {
+    if (Macro::isMacro(element))
+        return operator<<(dbg, *dynamic_cast<const Macro *>(&element));
+    else if (Entry::isEntry(element))
+        return operator<<(dbg, *dynamic_cast<const Entry *>(&element));
+    else if (Preamble::isPreamble(element))
+        return operator<<(dbg, *dynamic_cast<const Preamble *>(&element));
+    else if (Comment::isComment(element))
+        return operator<<(dbg, *dynamic_cast<const Comment *>(&element));
+    else {
+        dbg.nospace() << "Element object of unsupported type";
+        return dbg;
+    }
 }
