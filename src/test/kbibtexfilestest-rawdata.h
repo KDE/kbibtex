@@ -1,7 +1,7 @@
 /********************************************************************************
 
 SPDX-License-Identifier: BSD-2-Clause
-SPDX-FileCopyrightText: 2021 Thomas Fischer <fischer@unix-ag.uni-kl.de> and others
+SPDX-FileCopyrightText: 2022 Thomas Fischer <fischer@unix-ag.uni-kl.de> and others
 
 ********************************************************************************/
 
@@ -25,7 +25,7 @@ static const int duplicatesNumEntries = 23;
 static const QString duplicatesLastEntryId = QStringLiteral("books/aw/Sedgewick88");
 static const QString duplicatesLastAuthor = QStringLiteral("Sedgewick");
 static const QByteArray duplicatesLastAuthors = QByteArray::fromHex("ab50e9b4ced3aac2060f9a4fea2c6f5d");
-static const QByteArray duplicatesFilesUrlsDoi = QByteArray::fromHex("b8a7d0f38c03ada4615989c626a77a1f");
+static const QByteArray duplicatesFilesUrlsDoi = QByteArray::fromHex("01edc7d816a17b872743c7eedb9be849");
 static const int minixNumElements = 163;
 static const int minixNumEntries = 123;
 static const QString minixLastEntryId = QStringLiteral("Jesshope:2006:ACS");
