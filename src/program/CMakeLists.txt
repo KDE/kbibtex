@@ -20,6 +20,11 @@ set(
     openfileinfo.cpp
 )
 
+set(
+    kbibtexcliprogram_SRCS
+    commandline.cpp
+)
+
 ecm_qt_declare_logging_category(kbibtexprogram_SRCS
     HEADER logging_program.h
     IDENTIFIER LOG_KBIBTEX_PROGRAM
@@ -28,6 +33,7 @@ ecm_qt_declare_logging_category(kbibtexprogram_SRCS
 
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtex kbibtexprogram_SRCS)
+    enable_unity_build(kbibtex kbibtexcliprogram_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
 
@@ -45,11 +51,20 @@ add_executable(kbibtex
     ${kbibtexprogram_SRCS}
 )
 
+add_executable(kbibtex-cli
+    ${kbibtexcliprogram_SRCS}
+)
+
 add_dependencies(kbibtex
     generate-kbibtex-git-info
 )
 
 target_include_directories(kbibtex
+    PRIVATE
+        ${CMAKE_BINARY_DIR}
+)
+
+target_include_directories(kbibtex-cli
     PRIVATE
         ${CMAKE_BINARY_DIR}
 )
@@ -95,10 +110,23 @@ else()
     endif()
 endif()
 
+target_link_libraries(kbibtex-cli
+    PRIVATE
+        Qt5::Core
+        KBibTeX::Data
+        KBibTeX::IO
+)
+
 
 install(
     TARGETS
     kbibtex
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+install(
+    TARGETS
+    kbibtex-cli
     ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
