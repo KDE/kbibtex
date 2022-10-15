@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,6 +27,7 @@
 #endif // HAVE_KF5
 
 class QIODevice;
+class QFileInfo;
 
 class File;
 class Person;
@@ -47,6 +48,9 @@ public:
 
     explicit FileImporter(QObject *parent);
     ~FileImporter() override;
+
+    static FileImporter *factory(const QFileInfo &fileInfo, QObject *parent);
+    static FileImporter *factory(const QUrl &url, QObject *parent);
 
     /**
      * @brief Load a bibliography from a textual representation.

@@ -65,20 +65,11 @@
 #include <Preamble>
 #include <Comment>
 #include <FileInfo>
-#include <FileExporterBibTeXOutput>
-#include <FileImporterBibTeX>
+#include <FileImporter>
+#include <FileExporter>
 #include <FileExporterBibTeX>
-#include <FileImporterRIS>
-#include <FileImporterBibUtils>
-#include <FileExporterRIS>
-#include <FileExporterBibUtils>
-#include <FileImporterPDF>
-#include <FileExporterPS>
-#include <FileExporterPDF>
-#include <FileExporterRTF>
-#include <FileExporterBibTeX2HTML>
-#include <FileExporterXML>
-#include <FileExporterXSLT>
+#include <FileExporterToolchain>
+#include <BibUtils>
 #include <models/FileModel>
 #include <IdSuggestions>
 #include <LyX>
@@ -281,51 +272,6 @@ public:
         connect(partWidget->fileView(), &FileView::currentElementChanged, p, &KBibTeXPart::updateActions);
     }
 
-    FileImporter *fileImporterFactory(const QUrl &url) {
-        const QFileInfo filenameInfo(url.fileName());
-        const QString ending = filenameInfo.completeSuffix();
-
-        if (ending == QStringLiteral("pdf")) {
-            return new FileImporterPDF(p);
-        } else if (ending == QStringLiteral("ris")) {
-            return new FileImporterRIS(p);
-        } else if (BibUtils::available() && ending == QStringLiteral("isi")) {
-            FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils(p);
-            fileImporterBibUtils->setFormat(BibUtils::Format::ISI);
-            return fileImporterBibUtils;
-        } else {
-            FileImporterBibTeX *fileImporterBibTeX = new FileImporterBibTeX(p);
-            fileImporterBibTeX->setCommentHandling(FileImporterBibTeX::CommentHandling::Keep);
-            return fileImporterBibTeX;
-        }
-    }
-
-    FileExporter *fileExporterFactory(const QString &ending) {
-        if (ending == QStringLiteral("html")) {
-            return new FileExporterHTML(p);
-        } else if (ending == QStringLiteral("xml")) {
-            return new FileExporterXML(p);
-        } else if (ending == QStringLiteral("ris")) {
-            return new FileExporterRIS(p);
-        } else if (ending == QStringLiteral("pdf")) {
-            return new FileExporterPDF(p);
-        } else if (ending == QStringLiteral("ps")) {
-            return new FileExporterPS(p);
-        } else if (BibUtils::available() && ending == QStringLiteral("isi")) {
-            FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils(p);
-            fileExporterBibUtils->setFormat(BibUtils::Format::ISI);
-            return fileExporterBibUtils;
-        } else if (ending == QStringLiteral("rtf")) {
-            return new FileExporterRTF(p);
-        } else if (ending == QStringLiteral("html") || ending == QStringLiteral("htm")) {
-            return new FileExporterBibTeX2HTML(p);
-        } else if (ending == QStringLiteral("bbl")) {
-            return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::OutputType::BibTeXBlockList, p);
-        } else {
-            return new FileExporterBibTeX(p);
-        }
-    }
-
     QString findUnusedId() {
         int i = 1;
         while (true) {
@@ -375,7 +321,7 @@ public:
             return false;
         }
 
-        FileImporter *importer = fileImporterFactory(url);
+        FileImporter *importer = FileImporter::factory(url, p);
         importer->showImportDialog(p->widget());
         bibTeXFile = importer->load(&inputfile);
         inputfile.close();
@@ -542,8 +488,8 @@ public:
         return selectedUrls.isEmpty() ? QUrl() : selectedUrls.first();
     }
 
-    FileExporter *saveFileExporter(const QString &ending) {
-        FileExporter *exporter = fileExporterFactory(ending);
+    FileExporter *saveFileExporter(const QUrl &url) {
+        FileExporter *exporter = FileExporter::factory(url, p);
 
         if (isSaveAsOperation) {
             /// only show export dialog at SaveAs or SaveCopyAs operations
@@ -624,9 +570,7 @@ public:
         Q_ASSERT_X(url.isValid(), "bool KBibTeXPart::KBibTeXPartPrivate:saveFile(const QUrl &url, const FileScope&)", "url must be valid");
 
         /// Extract filename extension (e.g. 'bib') to determine which FileExporter to use
-        const QFileInfo filenameInfo(url.fileName());
-        const QString ending = filenameInfo.completeSuffix();
-        FileExporter *exporter = saveFileExporter(ending);
+        FileExporter *exporter = saveFileExporter(url);
         QStringList errorLog;
         QObject::connect(exporter, &FileExporter::message, p, [&errorLog](const FileExporter::MessageSeverity severity, const QString & messageText) {
             if (severity >= FileExporter::MessageSeverity::Warning)
@@ -662,6 +606,7 @@ public:
             /// URL points to a remote location
 
             /// Configure and open temporary file
+            const QString ending = QFileInfo(url.fileName()).completeSuffix();
             QTemporaryFile temporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QStringLiteral("kbibtex_savefile_XXXXXX") + ending);
             temporaryFile.setAutoRemove(true);
             if (temporaryFile.open()) {

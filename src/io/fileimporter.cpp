@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,8 +23,13 @@
 #include <QTextStream>
 #include <QStringList>
 #include <QRegularExpression>
+#include <QFileInfo>
 
 #include <Value>
+#include "fileimporterbibtex.h"
+#include "fileimporterpdf.h"
+#include "fileimporterris.h"
+#include "fileimporterbibutils.h"
 #include "logging_io.h"
 
 FileImporter::FileImporter(QObject *parent)
@@ -36,6 +41,31 @@ FileImporter::FileImporter(QObject *parent)
 FileImporter::~FileImporter()
 {
     /// nothing
+}
+
+FileImporter *FileImporter::factory(const QFileInfo &fileInfo, QObject *parent)
+{
+    const QString ending = fileInfo.completeSuffix().toLower();
+
+    if (ending.endsWith(QStringLiteral("pdf"))) {
+        return new FileImporterPDF(parent);
+    } else if (ending.endsWith(QStringLiteral("ris"))) {
+        return new FileImporterRIS(parent);
+    } else if (BibUtils::available() && ending.endsWith(QStringLiteral("isi"))) {
+        FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils(parent);
+        fileImporterBibUtils->setFormat(BibUtils::Format::ISI);
+        return fileImporterBibUtils;
+    } else {
+        FileImporterBibTeX *fileImporterBibTeX = new FileImporterBibTeX(parent);
+        fileImporterBibTeX->setCommentHandling(FileImporterBibTeX::CommentHandling::Keep);
+        return fileImporterBibTeX;
+    }
+}
+
+FileImporter *FileImporter::factory(const QUrl &url, QObject *parent)
+{
+    const QFileInfo fileInfo(url.fileName());
+    return factory(fileInfo, parent);
 }
 
 File *FileImporter::fromString(const QString &text)
