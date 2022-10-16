@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,7 +25,12 @@
 #include <QFile>
 #include <QString>
 
+#ifdef HAVE_KF5I18N
 #include <KLocalizedString>
+#else // HAVE_KF5I18N
+#include <QObject>
+#define i18n(text) QObject::tr(text)
+#endif // HAVE_KF5I18N
 
 #include <BibTeXEntries>
 #include <BibTeXFields>
@@ -73,8 +78,8 @@ void FileModel::notificationEvent(int eventId)
 void FileModel::readConfiguration()
 {
     colorToLabel.clear();
-    for (QVector<QPair<QColor, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); it != Preferences::instance().colorCodes().constEnd(); ++it)
-        colorToLabel.insert(it->first.name(), it->second);
+    for (QVector<QPair<QString, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); it != Preferences::instance().colorCodes().constEnd(); ++it)
+        colorToLabel.insert(it->first, it->second);
 }
 
 QString FileModel::leftSqueezeText(const QString &text, int n)

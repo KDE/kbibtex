@@ -26,9 +26,6 @@
 #ifndef KBIBTEX_CONFIG_PREFERENCES_H
 #define KBIBTEX_CONFIG_PREFERENCES_H
 
-#include <QPageSize>
-#include <QColor>
-
 #include <KBibTeX>
 
 #ifdef HAVE_KF5
@@ -43,6 +40,7 @@ public:
     enum class BackupScope { None, LocalOnly, BothLocalAndRemote };
     enum class BibliographySystem { BibTeX, BibLaTeX };
     enum class FileViewDoubleClickAction { OpenEditor, ViewDocument };
+    enum class PageSize { A4, Legal, Letter };
     enum class QuoteComment { None, Command, PercentSign };
 
 
@@ -86,16 +84,16 @@ public:
 #endif // HAVE_KF5
 
 
-    /// *** PageSize of type QPageSize::PageSizeId ***
+    /// *** PageSize of type PageSize ***
 
-    static const QPageSize::PageSizeId defaultPageSize;
-    static const QVector<QPair<QPageSize::PageSizeId, QString>> availablePageSizes;
-    QPageSize::PageSizeId pageSize();
+    static const PageSize defaultPageSize;
+    static const QVector<QPair<Preferences::PageSize, QString>> availablePageSizes;
+    PageSize pageSize();
 #ifdef HAVE_KF5
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
-    bool setPageSize(const QPageSize::PageSizeId pageSize);
+    bool setPageSize(const PageSize pageSize);
 #endif // HAVE_KF5
 
 
@@ -298,15 +296,15 @@ public:
 #endif // HAVE_KF5
 
 
-    /// *** ColorCodes of type QVector<QPair<QColor, QString>> ***
+    /// *** ColorCodes of type QVector<QPair<QString, QString>> ***
 
-    static const QVector<QPair<QColor, QString>> defaultColorCodes;
-    const QVector<QPair<QColor, QString>> &colorCodes();
+    static const QVector<QPair<QString, QString>> defaultColorCodes;
+    const QVector<QPair<QString, QString>> &colorCodes();
 #ifdef HAVE_KF5
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
-    bool setColorCodes(const QVector<QPair<QColor, QString>> &colorCodes);
+    bool setColorCodes(const QVector<QPair<QString, QString>> &colorCodes);
 #endif // HAVE_KF5
 
 private:
@@ -317,5 +315,32 @@ private:
     class Private;
     Private *const d;
 };
+
+// qHash functions useful if an enum class is used as key in a QHash
+
+inline uint qHash(const Preferences::BackupScope &backupScope, uint seed)
+{
+    return qHash(static_cast<int>(backupScope), seed);
+}
+
+inline uint qHash(const Preferences::BibliographySystem &bibliographySystem, uint seed)
+{
+    return qHash(static_cast<int>(bibliographySystem), seed);
+}
+
+inline uint qHash(const Preferences::FileViewDoubleClickAction &fileViewDoubleClickAction, uint seed)
+{
+    return qHash(static_cast<int>(fileViewDoubleClickAction), seed);
+}
+
+inline uint qHash(const Preferences::PageSize &pageSize, uint seed)
+{
+    return qHash(static_cast<int>(pageSize), seed);
+}
+
+inline uint qHash(const Preferences::QuoteComment &quoteComment, uint seed)
+{
+    return qHash(static_cast<int>(quoteComment), seed);
+}
 
 #endif // KBIBTEX_CONFIG_PREFERENCES_H

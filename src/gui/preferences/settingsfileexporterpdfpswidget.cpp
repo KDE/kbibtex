@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,7 +20,6 @@
 #include "settingsfileexporterpdfpswidget.h"
 
 #include <QFormLayout>
-#include <QPageSize>
 #include <QLineEdit>
 #include <QComboBox>
 
@@ -62,7 +61,7 @@ public:
 
     bool saveState() {
         bool settingsGotChanged = false;
-        settingsGotChanged |= Preferences::instance().setPageSize(static_cast<QPageSize::PageSizeId>(comboBoxPaperSize->currentData().toInt()));
+        settingsGotChanged |= Preferences::instance().setPageSize(static_cast<Preferences::PageSize>(comboBoxPaperSize->currentData().toInt()));
         settingsGotChanged |= Preferences::instance().setLaTeXBabelLanguage(comboBoxBabelLanguage->lineEdit()->text());
         settingsGotChanged |= Preferences::instance().setBibTeXBibliographyStyle(comboBoxBibliographyStyle->lineEdit()->text());
         return settingsGotChanged;
@@ -83,8 +82,9 @@ public:
         comboBoxPaperSize = new QComboBox(p);
         comboBoxPaperSize->setObjectName(QStringLiteral("comboBoxPaperSize"));
         layout->addRow(i18n("Paper Size:"), comboBoxPaperSize);
+        static const QHash<Preferences::PageSize, QString> pageSizeName {{Preferences::PageSize::A4, i18nc("Paper size", "A4")}, {Preferences::PageSize::Legal, i18nc("Paper size", "Legal")}, {Preferences::PageSize::Letter, i18nc("Paper size", "Letter")}};
         for (const auto &dbItem : Preferences::availablePageSizes)
-            comboBoxPaperSize->addItem(QPageSize::name(dbItem.first), dbItem.second);
+            comboBoxPaperSize->addItem(pageSizeName.value(dbItem.first, QStringLiteral("???")), dbItem.second);
         connect(comboBoxPaperSize, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsAbstractWidget::changed);
 
         comboBoxBabelLanguage = new QComboBox(p);

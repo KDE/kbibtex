@@ -25,15 +25,19 @@
 
 #include <Preferences>
 
+#include <set>
+
 #include <QCoreApplication>
-#ifdef HAVE_KF5
+#ifdef HAVE_KF5I18N
 #include <KLocalizedString>
+#else // HAVE_KF5I18N
+#define i18n(text) QStringLiteral(text)
+#define i18nc(comment,text) QStringLiteral(text)
+#endif // HAVE_KF5I18N
+#ifdef HAVE_KF5
 #include <KSharedConfig>
 #include <KConfigWatcher>
 #include <KConfigGroup>
-#else // HAVE_KF5
-#define i18n(text) QStringLiteral(text)
-#define i18nc(comment,text) QStringLiteral(text)
 #endif // HAVE_KF5
 
 #ifdef HAVE_KF5
@@ -57,7 +61,7 @@ public:
     bool dirtyFlagCopyReferenceCommand;
     QString cachedCopyReferenceCommand;
     bool dirtyFlagPageSize;
-    QPageSize::PageSizeId cachedPageSize;
+    Preferences::PageSize cachedPageSize;
     bool dirtyFlagBackupScope;
     Preferences::BackupScope cachedBackupScope;
     bool dirtyFlagNumberOfBackups;
@@ -91,7 +95,7 @@ public:
     bool dirtyFlagFileViewDoubleClickAction;
     Preferences::FileViewDoubleClickAction cachedFileViewDoubleClickAction;
     bool dirtyFlagColorCodes;
-    QVector<QPair<QColor, QString>> cachedColorCodes;
+    QVector<QPair<QString, QString>> cachedColorCodes;
 #endif // HAVE_KF5
 
     Private(Preferences *)
@@ -159,8 +163,8 @@ public:
         return Preferences::availableCopyReferenceCommands.contains(valueToBeChecked);
     }
 
-    inline bool validateValueForPageSize(const QPageSize::PageSizeId valueToBeChecked) {
-        for (QVector<QPair<QPageSize::PageSizeId, QString>>::ConstIterator it = Preferences::availablePageSizes.constBegin(); it != Preferences::availablePageSizes.constEnd(); ++it)
+    inline bool validateValueForPageSize(const Preferences::PageSize valueToBeChecked) {
+        for (QVector<QPair<Preferences::PageSize, QString>>::ConstIterator it = Preferences::availablePageSizes.constBegin(); it != Preferences::availablePageSizes.constEnd(); ++it)
             if (it->first == valueToBeChecked) return true;
         return false;
     }
@@ -241,15 +245,15 @@ public:
         return false;
     }
 
-    inline bool validateValueForColorCodes(const QVector<QPair<QColor, QString>> &valueToBeChecked) {
-        static const QColor white(Qt::white), black(Qt::black);
-        for (QVector<QPair<QColor, QString>>::ConstIterator it = valueToBeChecked.constBegin(); it != valueToBeChecked.constEnd(); ++it)
-            if (it->first == white || it->first == black || it->second.isEmpty())
+    inline bool validateValueForColorCodes(const QVector<QPair<QString, QString>> &valueToBeChecked) {
+        static const QString white{QStringLiteral("#ffffff")}, black{QStringLiteral("#000000")};
+        for (QVector<QPair<QString, QString>>::ConstIterator it = valueToBeChecked.constBegin(); it != valueToBeChecked.constEnd(); ++it)
+            if (it->first.isEmpty() || it->second.isEmpty() || it->first == white || it->first == black)
                 return false;
         return true;
     }
 
-    QVector<QPair<QColor, QString>> readEntryColorCodes(const KConfigGroup &configGroup, const QString &key) const
+    QVector<QPair<QString, QString>> readEntryColorCodes(const KConfigGroup &configGroup, const QString &key) const
     {
         const QString rawEntry = configGroup.readEntry(key, QString());
         if (rawEntry.isEmpty()) return Preferences::defaultColorCodes;
@@ -259,7 +263,7 @@ public:
         const QStringList pairs = rawEntry.split(QStringLiteral("\0\0"), QString::SkipEmptyParts);
 #endif // QT_VERSION >= 0x050e00
         if (pairs.isEmpty()) return Preferences::defaultColorCodes;
-        QVector<QPair<QColor, QString>> result;
+        QVector<QPair<QString, QString>> result;
         for (const QString &pair : pairs) {
 #if QT_VERSION >= 0x050e00
             const QStringList colorLabelPair = pair.split(QStringLiteral("\0"), Qt::SkipEmptyParts);
@@ -267,17 +271,17 @@ public:
             const QStringList colorLabelPair = pair.split(QStringLiteral("\0"), QString::SkipEmptyParts);
 #endif // QT_VERSION >= 0x050e00
             if (colorLabelPair.length() != 2) return Preferences::defaultColorCodes;
-            result.append(qMakePair(QColor(colorLabelPair[0]), colorLabelPair[1]));
+            result.append(qMakePair(colorLabelPair[0], colorLabelPair[1]));
         }
         return result;
     }
 
-    void writeEntryColorCodes(KConfigGroup &configGroup, const QString &key, const QVector<QPair<QColor, QString>> &valueToBeWritten)
+    void writeEntryColorCodes(KConfigGroup &configGroup, const QString &key, const QVector<QPair<QString, QString>> &valueToBeWritten)
     {
         QString rawEntry;
-        for (QVector<QPair<QColor, QString>>::ConstIterator it = valueToBeWritten.constBegin(); it != valueToBeWritten.constEnd(); ++it) {
+        for (QVector<QPair<QString, QString>>::ConstIterator it = valueToBeWritten.constBegin(); it != valueToBeWritten.constEnd(); ++it) {
             if (!rawEntry.isEmpty()) rawEntry.append(QStringLiteral("\0\0"));
-            rawEntry = rawEntry.append(it->first.name(QColor::HexRgb)).append(QStringLiteral("\0")).append(it->second);
+            rawEntry = rawEntry.append(it->first).append(QStringLiteral("\0")).append(it->second);
         }
         configGroup.writeEntry(key, rawEntry, KConfig::Notify);
     }
@@ -295,7 +299,7 @@ Preferences::Preferences()
 {
 #ifdef HAVE_KF5
     QObject::connect(d->watcher.data(), &KConfigWatcher::configChanged, QCoreApplication::instance(), [this](const KConfigGroup &group, const QByteArrayList &names) {
-        QSet<int> eventsToPublish;
+        std::set<int> eventsToPublish;
         if (group.name() == QStringLiteral("General") && names.contains("BibliographySystem")) {
             /// Configuration setting BibliographySystem got changed by another Preferences instance";
             d->dirtyFlagBibliographySystem = true;
@@ -538,16 +542,16 @@ bool Preferences::setCopyReferenceCommand(const QString &newValue)
 }
 #endif // HAVE_KF5
 
-const QVector<QPair<QPageSize::PageSizeId, QString>> Preferences::availablePageSizes {{QPageSize::A4, QStringLiteral("a4paper")}, {QPageSize::Letter, QStringLiteral("letter")}, {QPageSize::Legal, QStringLiteral("legal")}};
-const QPageSize::PageSizeId Preferences::defaultPageSize = Preferences::availablePageSizes.front().first;
+const QVector<QPair<Preferences::PageSize, QString>> Preferences::availablePageSizes {{Preferences::PageSize::A4, QStringLiteral("a4paper")}, {Preferences::PageSize::Letter, QStringLiteral("letter")}, {Preferences::PageSize::Legal, QStringLiteral("legal")}};
+const Preferences::PageSize Preferences::defaultPageSize = Preferences::availablePageSizes.front().first;
 
-QPageSize::PageSizeId Preferences::pageSize()
+Preferences::PageSize Preferences::pageSize()
 {
 #ifdef HAVE_KF5
     if (d->dirtyFlagPageSize) {
         d->config->reparseConfiguration();
         static const KConfigGroup configGroup(d->config, QStringLiteral("General"));
-        const QPageSize::PageSizeId valueFromConfig = static_cast<QPageSize::PageSizeId>(configGroup.readEntry(QStringLiteral("PageSize"), static_cast<int>(Preferences::defaultPageSize)));
+        const Preferences::PageSize valueFromConfig = static_cast<Preferences::PageSize>(configGroup.readEntry(QStringLiteral("PageSize"), static_cast<int>(Preferences::defaultPageSize)));
         if (d->validateValueForPageSize(valueFromConfig)) {
             d->cachedPageSize = valueFromConfig;
             d->dirtyFlagPageSize = false;
@@ -563,13 +567,13 @@ QPageSize::PageSizeId Preferences::pageSize()
 }
 
 #ifdef HAVE_KF5
-bool Preferences::setPageSize(const QPageSize::PageSizeId newValue)
+bool Preferences::setPageSize(const Preferences::PageSize newValue)
 {
     if (!d->validateValueForPageSize(newValue)) return false;
     d->dirtyFlagPageSize = false;
     d->cachedPageSize = newValue;
     static KConfigGroup configGroup(d->config, QStringLiteral("General"));
-    const QPageSize::PageSizeId valueFromConfig = static_cast<QPageSize::PageSizeId>(configGroup.readEntry(QStringLiteral("PageSize"), static_cast<int>(Preferences::defaultPageSize)));
+    const Preferences::PageSize valueFromConfig = static_cast<Preferences::PageSize>(configGroup.readEntry(QStringLiteral("PageSize"), static_cast<int>(Preferences::defaultPageSize)));
     if (valueFromConfig == newValue) return false;
     configGroup.writeEntry(QStringLiteral("PageSize"), static_cast<int>(newValue), KConfig::Notify);
     d->config->sync();
@@ -1218,15 +1222,15 @@ bool Preferences::setFileViewDoubleClickAction(const Preferences::FileViewDouble
 }
 #endif // HAVE_KF5
 
-const QVector<QPair<QColor, QString>> Preferences::defaultColorCodes {{QColor(0xcc, 0x33, 0x00), i18nc("Color Labels", "Important")}, {QColor(0x00, 0x33, 0xff), i18nc("Color Labels", "Unread")}, {QColor(0x00, 0x99, 0x66), i18nc("Color Labels", "Read")}, {QColor(0xf0, 0xd0, 0x00), i18nc("Color Labels", "Watch")}};
+const QVector<QPair<QString, QString>> Preferences::defaultColorCodes {{QStringLiteral("#c30"), i18nc("Color Labels", "Important")}, {QStringLiteral("#03f"), i18nc("Color Labels", "Unread")}, {QStringLiteral("#096"), i18nc("Color Labels", "Read")}, {QStringLiteral("#fd0"), i18nc("Color Labels", "Watch")}};
 
-const QVector<QPair<QColor, QString>> &Preferences::colorCodes()
+const QVector<QPair<QString, QString>> &Preferences::colorCodes()
 {
 #ifdef HAVE_KF5
     if (d->dirtyFlagColorCodes) {
         d->config->reparseConfiguration();
         static const KConfigGroup configGroup(d->config, QStringLiteral("Color Labels"));
-        const QVector<QPair<QColor, QString>> valueFromConfig = d->readEntryColorCodes(configGroup, QStringLiteral("ColorCodes"));
+        const QVector<QPair<QString, QString>> valueFromConfig = d->readEntryColorCodes(configGroup, QStringLiteral("ColorCodes"));
         if (d->validateValueForColorCodes(valueFromConfig)) {
             d->cachedColorCodes = valueFromConfig;
             d->dirtyFlagColorCodes = false;
@@ -1242,13 +1246,13 @@ const QVector<QPair<QColor, QString>> &Preferences::colorCodes()
 }
 
 #ifdef HAVE_KF5
-bool Preferences::setColorCodes(const QVector<QPair<QColor, QString>> &newValue)
+bool Preferences::setColorCodes(const QVector<QPair<QString, QString>> &newValue)
 {
     if (!d->validateValueForColorCodes(newValue)) return false;
     d->dirtyFlagColorCodes = false;
     d->cachedColorCodes = newValue;
     static KConfigGroup configGroup(d->config, QStringLiteral("Color Labels"));
-    const QVector<QPair<QColor, QString>> valueFromConfig = d->readEntryColorCodes(configGroup, QStringLiteral("ColorCodes"));
+    const QVector<QPair<QString, QString>> valueFromConfig = d->readEntryColorCodes(configGroup, QStringLiteral("ColorCodes"));
     if (valueFromConfig == newValue) return false;
     d->writeEntryColorCodes(configGroup, QStringLiteral("ColorCodes"), newValue);
     d->config->sync();

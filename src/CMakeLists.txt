@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2008-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2008-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileContributor: 2017 Andreas Sturmlechner <andreas.sturmlechner@gmail.com>
 
 # "Unity build" found at
@@ -51,11 +51,17 @@ add_subdirectory(global)
 add_subdirectory(config)
 add_subdirectory(data)
 add_subdirectory(io)
-add_subdirectory(processing)
-add_subdirectory(networking)
-add_subdirectory(gui)
-add_subdirectory(program)
-add_subdirectory(parts)
+if(BUILD_KPART OR BUILD_TESTING)
+    add_subdirectory(processing)
+    add_subdirectory(networking)
+    add_subdirectory(gui)
+endif()
+if(BUILD_APP_DESKTOP OR BUILD_APP_COMMAND_LINE)
+    add_subdirectory(program)
+endif()
+if(BUILD_KPART)
+    add_subdirectory(parts)
+endif()
 if(BUILD_TESTING)
     add_subdirectory(test)
 endif()

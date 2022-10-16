@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,9 +29,13 @@
 #include <QProcessEnvironment>
 #include <QVector>
 
+#ifdef HAVE_KF5I18N
 #include <KLocalizedString>
+#else // HAVE_KF5I18N
+#include <QObject>
+#define i18n(text) QObject::tr(text)
+#endif // HAVE_KF5I18N
 
-#include <Preferences>
 #include "logging_io.h"
 
 FileExporterToolchain::FileExporterToolchain(QObject *parent)
@@ -147,12 +151,12 @@ bool FileExporterToolchain::writeFileToIODevice(const QString &filename, QIODevi
     return result;
 }
 
-QString FileExporterToolchain::pageSizeToLaTeXName(const QPageSize::PageSizeId pageSizeId) const
+QString FileExporterToolchain::pageSizeToLaTeXName(const Preferences::PageSize pageSize) const
 {
     for (const auto &dbItem : Preferences::availablePageSizes)
-        if (dbItem.first == pageSizeId)
+        if (dbItem.first == pageSize)
             return dbItem.second;
-    return QPageSize::name(pageSizeId).toLower(); ///< just a wild guess
+    return pageSizeToLaTeXName(Preferences::defaultPageSize);
 }
 
 bool FileExporterToolchain::kpsewhich(const QString &filename)

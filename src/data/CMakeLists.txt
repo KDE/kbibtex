@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2012-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2012-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileContributor: 2013 Pino Toscano <pino@kde.org>
 # SPDX-FileContributor: 2019 Jonathan Riddell <jr@jriddell.org>
 
@@ -14,8 +14,15 @@ set(
     macro.cpp
     preamble.cpp
     value.cpp
-    models/filemodel.cpp
 )
+
+if(Qt5Gui_FOUND)
+    set(
+        kbibtexdata_SRCS
+        ${kbibtexdata_SRCS}
+        models/filemodel.cpp
+    )
+endif()
 
 ecm_qt_declare_logging_category(kbibtexdata_SRCS
     HEADER logging_data.h
@@ -53,9 +60,16 @@ target_link_libraries(kbibtexdata
         KBibTeX::Config
     PRIVATE
         KF5::ConfigCore
-        KF5::I18n
         KBibTeX::Global
 )
+
+if(BUILD_APP_DESKTOP OR BUILD_KPART)
+    target_link_libraries(kbibtexdata
+        PRIVATE
+            Qt5::Gui
+            KF5::I18n
+    )
+endif(BUILD_APP_DESKTOP OR BUILD_KPART)
 
 install(
     TARGETS kbibtexdata
@@ -77,9 +91,16 @@ ecm_generate_headers(kbibtexdata_HEADERS
         Macro
         Preamble
         Value
-        models/FileModel
     REQUIRED_HEADERS kbibtexdata_HEADERS
 )
+
+if(Qt5Gui_FOUND)
+    ecm_generate_headers(kbibtexdata_HEADERS
+        HEADER_NAMES
+            models/FileModel
+        REQUIRED_HEADERS kbibtexdata_HEADERS
+    )
+endif()
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kbibtexdata_export.h

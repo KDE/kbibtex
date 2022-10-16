@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,7 +22,12 @@
 #include <QFile>
 #include <QStandardPaths>
 
+#ifdef HAVE_KF5I18N
 #include <KLocalizedString>
+#else // HAVE_KF5I18N
+#include <QObject>
+#define i18n(text) QObject::tr(text)
+#endif // HAVE_KF5I18N
 
 #include "fileexporterbibtex.h"
 #include "logging_io.h"
@@ -89,7 +94,11 @@ public:
 
         QTextStream ts(iodevice);
         ts << QStringLiteral("<div style=\"color: red; background: white;\">");
+#ifdef HAVE_KF5I18N
         ts << i18n("The BibTeX style <strong>%1</strong> is not available.", bibStyle);
+#else // HAVE_KF5I18N
+        ts << i18n("The BibTeX style <strong>PLACEHOLDER</strong> is not available.").replace(QStringLiteral("PLACEHOLDER"), bibStyle);
+#endif // HAVE_KF5I18N
 #if QT_VERSION >= 0x050e00
         ts << QStringLiteral("</div>") << Qt::endl;
 #else // QT_VERSION < 0x050e00

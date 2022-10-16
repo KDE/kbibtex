@@ -27,7 +27,9 @@
 
 #include <Value>
 #include "fileimporterbibtex.h"
+#ifdef HAVE_POPPLERQT5
 #include "fileimporterpdf.h"
+#endif // HAVE_POPPLERQT5
 #include "fileimporterris.h"
 #include "fileimporterbibutils.h"
 #include "logging_io.h"
@@ -47,19 +49,22 @@ FileImporter *FileImporter::factory(const QFileInfo &fileInfo, QObject *parent)
 {
     const QString ending = fileInfo.completeSuffix().toLower();
 
+#ifdef HAVE_POPPLERQT5
     if (ending.endsWith(QStringLiteral("pdf"))) {
         return new FileImporterPDF(parent);
-    } else if (ending.endsWith(QStringLiteral("ris"))) {
-        return new FileImporterRIS(parent);
-    } else if (BibUtils::available() && ending.endsWith(QStringLiteral("isi"))) {
-        FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils(parent);
-        fileImporterBibUtils->setFormat(BibUtils::Format::ISI);
-        return fileImporterBibUtils;
-    } else {
-        FileImporterBibTeX *fileImporterBibTeX = new FileImporterBibTeX(parent);
-        fileImporterBibTeX->setCommentHandling(FileImporterBibTeX::CommentHandling::Keep);
-        return fileImporterBibTeX;
-    }
+    } else
+#endif // HAVE_POPPLERQT5
+        if (ending.endsWith(QStringLiteral("ris"))) {
+            return new FileImporterRIS(parent);
+        } else if (BibUtils::available() && ending.endsWith(QStringLiteral("isi"))) {
+            FileImporterBibUtils *fileImporterBibUtils = new FileImporterBibUtils(parent);
+            fileImporterBibUtils->setFormat(BibUtils::Format::ISI);
+            return fileImporterBibUtils;
+        } else {
+            FileImporterBibTeX *fileImporterBibTeX = new FileImporterBibTeX(parent);
+            fileImporterBibTeX->setCommentHandling(FileImporterBibTeX::CommentHandling::Keep);
+            return fileImporterBibTeX;
+        }
 }
 
 FileImporter *FileImporter::factory(const QUrl &url, QObject *parent)

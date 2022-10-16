@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -155,7 +155,7 @@ bool ColorLabelSettingsModel::setData(const QModelIndex &index, const QVariant &
             const QColor color = value.value<QColor>();
             if (color != Qt::black && (color.red() > 0 || color.green() > 0 || color.blue() > 0)) {
                 /// ... store this color in the data structure
-                colorLabelPairs[index.row()].first = color;
+                colorLabelPairs[index.row()].first = color.name(QColor::HexRgb);
                 /// Notify everyone about the changes
                 emit dataChanged(left, right);
                 emit modified();
@@ -211,11 +211,11 @@ void ColorLabelSettingsModel::loadState()
  */
 bool ColorLabelSettingsModel::saveState()
 {
-    const QVector<QPair<QColor, QString>> oldColorCodes = Preferences::instance().colorCodes();
+    const QVector<QPair<QString, QString>> oldColorCodes = Preferences::instance().colorCodes();
     Preferences::instance().setColorCodes(colorLabelPairs);
 
-    QVector<QPair<QColor, QString>>::ConstIterator itOld = oldColorCodes.constBegin();
-    QVector<QPair<QColor, QString>>::ConstIterator itNew = colorLabelPairs.constBegin();
+    QVector<QPair<QString, QString>>::ConstIterator itOld = oldColorCodes.constBegin();
+    QVector<QPair<QString, QString>>::ConstIterator itNew = colorLabelPairs.constBegin();
     for (; itOld != oldColorCodes.constEnd() && itNew != colorLabelPairs.constEnd(); ++itOld, ++itNew)
         if (itOld->first != itNew->first || itOld->second != itNew->second)
             return true;
@@ -244,7 +244,7 @@ void ColorLabelSettingsModel::addColorLabel(const QColor &color, const QString &
 {
     const int newRow = colorLabelPairs.size();
     beginInsertRows(QModelIndex(), newRow, newRow);
-    colorLabelPairs.append(qMakePair(color, label));
+    colorLabelPairs.append(qMakePair(color.name(QColor::HexRgb), label));
     endInsertRows();
 
     emit modified();
@@ -434,10 +434,10 @@ public:
 
         /// Add color-label pairs to menu as stored
         /// in the user's configuration file
-        for (QVector<QPair<QColor, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); it != Preferences::instance().colorCodes().constEnd(); ++it) {
-            QAction *action = new QAction(QIcon(ColorLabelWidget::createSolidIcon(it->first)), it->second, menu);
+        for (QVector<QPair<QString, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); it != Preferences::instance().colorCodes().constEnd(); ++it) {
+            QAction *action = new QAction(QIcon(ColorLabelWidget::createSolidIcon(QColor(it->first))), it->second, menu);
             menu->addAction(action);
-            const QString colorCode = it->first.name();
+            const QString colorCode = it->first;
             connect(action, &QAction::triggered, p, [this, colorCode]() {
                 colorActivated(colorCode);
             });

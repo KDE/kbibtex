@@ -16,6 +16,11 @@
             "LocalOnly",
             "BothLocalAndRemote"
         ],
+        "PageSize": [
+            "A4",
+            "Legal",
+            "Letter"
+        ],
         "QuoteComment": [
             "None",
             "Command",
@@ -54,12 +59,11 @@
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
-            "headerincludes": ["<QPageSize>"],
             "stem": "PageSize",
-            "type": "QPageSize::PageSizeId",
+            "type": "PageSize",
             "podtype": "int",
-            "availabletype": "QVector<QPair<QPageSize::PageSizeId, QString>>",
-            "available": "{{QPageSize::A4, QStringLiteral(\"a4paper\")}, {QPageSize::Letter, QStringLiteral(\"letter\")}, {QPageSize::Legal, QStringLiteral(\"legal\")}}",
+            "availabletype": "QVector<QPair<Preferences::PageSize, QString>>",
+            "available": "{{Preferences::PageSize::A4, QStringLiteral(\"a4paper\")}, {Preferences::PageSize::Letter, QStringLiteral(\"letter\")}, {Preferences::PageSize::Legal, QStringLiteral(\"legal\")}}",
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
@@ -197,15 +201,14 @@
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
-            "headerincludes": ["<QColor>"],
             "stem": "ColorCodes",
-            "type": "QVector<QPair<QColor, QString>>",
+            "type": "QVector<QPair<QString, QString>>",
             "configgroup": "Color Labels",
-            "default": "{{QColor(0xcc, 0x33, 0x00), i18nc(\"Color Labels\", \"Important\")}, {QColor(0x00, 0x33, 0xff), i18nc(\"Color Labels\", \"Unread\")}, {QColor(0x00, 0x99, 0x66), i18nc(\"Color Labels\", \"Read\")}, {QColor(0xf0, 0xd0, 0x00), i18nc(\"Color Labels\", \"Watch\")}}",
-            "validationcode": ["static const QColor white(Qt::white), black(Qt::black);", "for (QVector<QPair<QColor, QString>>::ConstIterator it = valueToBeChecked.constBegin(); it != valueToBeChecked.constEnd(); ++it)", "    if (it->first == white || it->first == black || it->second.isEmpty())", "        return false;", "return true;"],
+            "default": "{{QStringLiteral(\"#c30\"), i18nc(\"Color Labels\", \"Important\")}, {QStringLiteral(\"#03f\"), i18nc(\"Color Labels\", \"Unread\")}, {QStringLiteral(\"#096\"), i18nc(\"Color Labels\", \"Read\")}, {QStringLiteral(\"#fd0\"), i18nc(\"Color Labels\", \"Watch\")}}",
+            "validationcode": ["static const QString white{QStringLiteral(\"#ffffff\")}, black{QStringLiteral(\"#000000\")};", "for (QVector<QPair<QString, QString>>::ConstIterator it = valueToBeChecked.constBegin(); it != valueToBeChecked.constEnd(); ++it)", "    if (it->first.isEmpty() || it->second.isEmpty() || it->first == white || it->first == black)", "        return false;", "return true;"],
             "notificationevent": "NotificationHub::EventConfigurationChanged",
-            "readEntry": ["const QString rawEntry = configGroup.readEntry(key, QString());", "if (rawEntry.isEmpty()) return Preferences::defaultColorCodes;", "const QStringList pairs = rawEntry.split(QStringLiteral(\"\\0\\0\"), Qt::SkipEmptyParts);", "if (pairs.isEmpty()) return Preferences::defaultColorCodes;", "QVector<QPair<QColor, QString>> result;", "for (const QString &pair : pairs) {", "    const QStringList colorLabelPair = pair.split(QStringLiteral(\"\\0\"), Qt::SkipEmptyParts);", "    if (colorLabelPair.length() != 2) return Preferences::defaultColorCodes;", "    result.append(qMakePair(QColor(colorLabelPair[0]), colorLabelPair[1]));", "}", "return result;"],
-            "writeEntry": ["QString rawEntry;", "for (QVector<QPair<QColor, QString>>::ConstIterator it = valueToBeWritten.constBegin(); it != valueToBeWritten.constEnd(); ++it) {", "    if (!rawEntry.isEmpty()) rawEntry.append(QStringLiteral(\"\\0\\0\"));", "    rawEntry = rawEntry.append(it->first.name(QColor::HexRgb)).append(QStringLiteral(\"\\0\")).append(it->second);", "}", "configGroup.writeEntry(key, rawEntry, KConfig::Notify);"]
+            "readEntry": ["const QString rawEntry = configGroup.readEntry(key, QString());", "if (rawEntry.isEmpty()) return Preferences::defaultColorCodes;", "const QStringList pairs = rawEntry.split(QStringLiteral(\"\\0\\0\"), Qt::SkipEmptyParts);", "if (pairs.isEmpty()) return Preferences::defaultColorCodes;", "QVector<QPair<QString, QString>> result;", "for (const QString &pair : pairs) {", "    const QStringList colorLabelPair = pair.split(QStringLiteral(\"\\0\"), Qt::SkipEmptyParts);", "    if (colorLabelPair.length() != 2) return Preferences::defaultColorCodes;", "    result.append(qMakePair(colorLabelPair[0], colorLabelPair[1]));", "}", "return result;"],
+            "writeEntry": ["QString rawEntry;", "for (QVector<QPair<QString, QString>>::ConstIterator it = valueToBeWritten.constBegin(); it != valueToBeWritten.constEnd(); ++it) {", "    if (!rawEntry.isEmpty()) rawEntry.append(QStringLiteral(\"\\0\\0\"));", "    rawEntry = rawEntry.append(it->first).append(QStringLiteral(\"\\0\")).append(it->second);", "}", "configGroup.writeEntry(key, rawEntry, KConfig::Notify);"]
         }
     ]
 }

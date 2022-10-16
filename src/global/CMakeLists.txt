@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2019-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
 set(
     kbibtexglobal_SRCS
@@ -42,7 +42,6 @@ target_link_libraries(kbibtexglobal
         Qt5::Core
     PRIVATE
         KF5::ConfigCore
-        KF5::I18n
 )
 
 install(

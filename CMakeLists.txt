@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2008-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2008-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileContributor: 2013-2021 Pino Toscano <pino@kde.org>
 # SPDX-FileContributor: 2014-2021 Yuri Chornoivan <yurchor@ukr.net>
 # SPDX-FileContributor: 2015-2021 David Faure <faure@kde.org>
@@ -86,24 +86,56 @@ else(UNITY_BUILD)
     message(STATUS "Unity build disabled (default), use option UNITY_BUILD to enable it")
 endif(UNITY_BUILD)
 
+
+option(
+    BUILD_APP_DESKTOP
+    "Build the desktop app which makes use of widgets"
+    ON
+)
+option(
+    BUILD_APP_COMMAND_LINE
+    "Build the command line program with minimal dependencies only"
+    ON
+)
+option(
+    BUILD_KPART
+    "Build KBibTeX's KPart (will be set ON automatically if desktop app is built)"
+    OFF
+)
+if(BUILD_APP_DESKTOP)
+    set(BUILD_KPART ON)
+endif()
+
+
 find_package(
     Qt5 ${QT_MIN_VERSION}
     CONFIG
     COMPONENTS
     Core
-    Widgets
-    Network
     XmlPatterns
-    Concurrent
-    NetworkAuth
-    OPTIONAL_COMPONENTS
-    WebEngineWidgets
-    WebKitWidgets
-    Test
 )
-if (Qt5Widgets_FOUND)
-    add_definitions(-DHAVE_QTWIDGETS)
+
+if(BUILD_APP_DESKTOP OR BUILD_KPART)
+    find_package(
+        Qt5 ${QT_MIN_VERSION}
+        CONFIG
+        COMPONENTS
+        Gui
+        Widgets
+        Network
+        Concurrent
+        NetworkAuth
+        OPTIONAL_COMPONENTS
+        WebEngineWidgets
+        WebKitWidgets
+        Test
+    )
+    if (Qt5Widgets_FOUND)
+        # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
+        add_definitions(-DHAVE_QTWIDGETS)
+    endif()
 endif()
+
 if(Qt5WebEngineWidgets_FOUND)
     # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
     add_definitions(
@@ -115,21 +147,34 @@ find_package(
     KF5 ${KF5_MIN_VERSION}
     MODULE
     REQUIRED
-    I18n
-    XmlGui
-    KIO
-    IconThemes
-    Parts
-    CoreAddons
-    Service
-    Wallet
-    Crash
-    TextEditor
-    OPTIONAL_COMPONENTS
-    DocTools
+    Config
 )
+if(BUILD_APP_DESKTOP OR BUILD_KPART)
+    find_package(
+        KF5 ${KF5_MIN_VERSION}
+        MODULE
+        REQUIRED
+        I18n
+        KIO
+        IconThemes
+        CoreAddons
+        Service
+        Wallet
+        Crash
+        TextEditor
+        COMPONENTS
+        XmlGui
+        Parts
+        #DocTools
+    )
+endif()
 if (KF5_FOUND)
+    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
     add_definitions(-DHAVE_KF5)
+endif()
+if (KF5I18n_FOUND)
+    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
+    add_definitions(-DHAVE_KF5I18N)
 endif()
 
 find_package(
@@ -138,6 +183,10 @@ find_package(
     REQUIRED
     Qt5
 )
+if (PKG_Poppler_Qt5_FOUND)
+    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
+    add_definitions(-DHAVE_POPPLERQT5)
+endif()
 
 find_package(
     ICU
@@ -145,7 +194,9 @@ find_package(
     OPTIONAL_COMPONENTS
     uc i18n
 )
+
 if(ICU_FOUND)
+    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
     add_definitions(-DHAVE_ICU)
 endif()
 

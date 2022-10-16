@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -78,7 +78,7 @@ public:
             else if (index.row() == rowCount() - 1)
                 return userColor;
             else
-                return Preferences::instance().colorCodes().at(cci).first;
+                return QColor(Preferences::instance().colorCodes().at(cci).first);
         } else if (role == Qt::FontRole && (index.row() == 0 || index.row() == rowCount() - 1)) {
             /// Set first item's text ("No color") and last item's text ("User-defined color") in italics
             QFont font;

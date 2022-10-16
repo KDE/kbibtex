@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2011-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2011-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileContributor: 2014 Christophe Giboudeaux <cgiboudeaux@gmx.com>
 # SPDX-FileContributor: 2014 Pavel Zorin-Kranich <pzorin@math.uni-bonn.de>
 # SPDX-FileContributor: 2016 Christoph Feck <cfeck@kde.org>
@@ -48,7 +48,6 @@ set(
 if(Qt5WebEngineWidgets_FOUND)
     # See also below for a similar if-clause
     message(STATUS "Using QtWebEngine parse JStor pages")
-    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
     set(
         kbibtexnetworking_SRCS
         ${kbibtexnetworking_SRCS}

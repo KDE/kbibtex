@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,10 +25,13 @@
 #ifdef HAVE_KF5
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KLocalizedString>
-#else // HAVE_KF5
-#define i18n(text) QObject::tr(text)
 #endif // HAVE KF5
+#ifdef HAVE_KF5I18N
+#include <KLocalizedString>
+#else // HAVE_KF5I18N
+#include <QObject>
+#define i18n(text) QObject::tr(text)
+#endif // HAVE_KF5I18N
 
 #include "preferences.h"
 #include "logging_config.h"

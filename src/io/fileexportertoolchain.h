@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,9 +21,9 @@
 #define KBIBTEX_IO_FILEEXPORTERTOOLCHAIN_H
 
 #include <QTemporaryDir>
-#include <QPageSize>
 
 #include <FileExporter>
+#include <Preferences>
 
 #ifdef HAVE_KF5
 #include "kbibtexio_export.h"
@@ -54,7 +54,7 @@ protected:
     bool runProcess(const QString &cmd, const QStringList &args, bool doEmitProcessOutput = false);
     bool writeFileToIODevice(const QString &filename, QIODevice *device);
 
-    QString pageSizeToLaTeXName(const QPageSize::PageSizeId pageSizeId) const;
+    QString pageSizeToLaTeXName(const Preferences::PageSize pageSize) const;
 };
 
 #endif // KBIBTEX_IO_FILEEXPORTERTOOLCHAIN_H

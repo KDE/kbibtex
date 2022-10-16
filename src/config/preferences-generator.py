@@ -1,7 +1,7 @@
 ###########################################################################
 #   SPDX-License-Identifier: GPL-2.0-or-later
 #                                                                         #
-#   SPDX-FileCopyrightText: 2019-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+#   SPDX-FileCopyrightText: 2019-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 #                                                                         #
 #   This script is free software; you can redistribute it and/or modify   #
 #   it under the terms of the GNU General Public License as published by  #
@@ -163,6 +163,16 @@ def print_header(headerincludes, implementationincludes, enums, settings, output
     print("    Private *const d;", file=outputdevice)
     print("};", file=outputdevice)
     print(file=outputdevice)
+    if len(enums) > 0:
+        print("// qHash functions useful if an enum class is used as key in a QHash", file=outputdevice)
+        print(file=outputdevice)
+    for enum in sorted(enums):
+        varName = enum[0].lower() + enum[1:]
+        print("inline uint qHash(const Preferences::" + enum + " &" + varName + ", uint seed)", file=outputdevice)
+        print("{", file=outputdevice)
+        print("    return qHash(static_cast<int>(" + varName + "), seed);", file=outputdevice)
+        print("}", file=outputdevice)
+        print(file=outputdevice)
     print("#endif // KBIBTEX_CONFIG_PREFERENCES_H", file=outputdevice)
 
 

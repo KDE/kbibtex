@@ -19,7 +19,9 @@
 
 #include "fileinfo.h"
 
+#ifdef HAVE_POPPLERQT5
 #include <poppler-qt5.h>
+#endif // HAVE_POPPLERQT5
 
 #include <QFileInfo>
 #include <QMimeDatabase>
@@ -27,7 +29,9 @@
 #include <QTextStream>
 #include <QStandardPaths>
 #include <QRegularExpression>
+#ifdef HAVE_QTCONCURRENT
 #include <QtConcurrentRun>
+#endif // HAVE_QTCONCURRENT
 
 #include <KBibTeX>
 #include <Entry>
@@ -326,6 +330,7 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
     return result;
 }
 
+#ifdef HAVE_POPPLERQT5
 QString FileInfo::pdfToText(const QString &pdfFilename)
 {
     /// Build filename for text file where PDF file's plain text is cached
@@ -345,9 +350,14 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
             f.close();
             return text;
         }
-    } else
+    } else {
+#ifdef HAVE_QTCONCURRENT
         /// No cache file exists, so run text extraction in another thread
         QtConcurrent::run(extractPDFTextToCache, pdfFilename, textFilename);
+#else // HAVE_QTCONCURRENT
+        extractPDFTextToCache(pdfFilename, textFilename);
+#endif // HAVE_QTCONCURRENT
+    }
 
     return QString();
 }
@@ -390,3 +400,4 @@ void FileInfo::extractPDFTextToCache(const QString &pdfFilename, const QString &
         f.close();
     }
 }
+#endif // HAVE_POPPLERQT5

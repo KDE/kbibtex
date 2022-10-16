@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2009-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2009-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileContributor: 2017 Pino Toscano <pino@kde.org>
 
 set(
@@ -47,107 +47,109 @@ ecm_add_app_icon(kbibtexprogram_SRCS
     ${CMAKE_SOURCE_DIR}/icons/128-apps-kbibtex.png
 )
 
-add_executable(kbibtex
-    ${kbibtexprogram_SRCS}
-)
+if(BUILD_APP_DESKTOP)
+    add_executable(kbibtex
+        ${kbibtexprogram_SRCS}
+    )
 
-add_executable(kbibtex-cli
-    ${kbibtexcliprogram_SRCS}
-)
+    add_dependencies(kbibtex
+        generate-kbibtex-git-info
+    )
 
-add_dependencies(kbibtex
-    generate-kbibtex-git-info
-)
+    target_include_directories(kbibtex
+        PRIVATE
+            ${CMAKE_BINARY_DIR}
+    )
 
-target_include_directories(kbibtex
-    PRIVATE
-        ${CMAKE_BINARY_DIR}
-)
-
-target_include_directories(kbibtex-cli
-    PRIVATE
-        ${CMAKE_BINARY_DIR}
-)
-
-target_link_libraries(kbibtex
-    PRIVATE
-        Qt5::Core
-        KF5::CoreAddons
-        KF5::Crash
-        KF5::I18n
-        KF5::IconThemes
-        KF5::KIOCore
-        KF5::KIOFileWidgets
-        KF5::Parts
-        KF5::Wallet
-        KBibTeX::Global
-        KBibTeX::GUI
-        KBibTeX::IO
-        KBibTeX::Networking
-        KBibTeX::Processing
-)
-
-if(Qt5WebEngineWidgets_FOUND)
-    message(STATUS "Using QtWebEngine to render complex HTML content")
-    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
     target_link_libraries(kbibtex
         PRIVATE
-            Qt5::WebEngineWidgets
+            Qt5::Core
+            KF5::CoreAddons
+            KF5::Crash
+            KF5::I18n
+            KF5::IconThemes
+            KF5::KIOCore
+            KF5::KIOFileWidgets
+            KF5::Parts
+            KF5::Wallet
+            KBibTeX::Global
+            KBibTeX::GUI
+            KBibTeX::IO
+            KBibTeX::Networking
+            KBibTeX::Processing
     )
-else()
-    if(Qt5WebKitWidgets_FOUND)
-        message(STATUS "Using QtWebKit to render complex HTML content")
-        # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-        add_definitions(
-            -DHAVE_WEBKITWIDGETS
-        )
+
+    if(Qt5WebEngineWidgets_FOUND)
+        message(STATUS "Using QtWebEngine to render complex HTML content")
         target_link_libraries(kbibtex
             PRIVATE
-                Qt5::WebKitWidgets
-         )
+                Qt5::WebEngineWidgets
+        )
     else()
-        message(STATUS "If available, using a KPart to render complex HTML content")
+        if(Qt5WebKitWidgets_FOUND)
+            message(STATUS "Using QtWebKit to render complex HTML content")
+            # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
+            add_definitions(
+                -DHAVE_WEBKITWIDGETS
+            )
+            target_link_libraries(kbibtex
+                PRIVATE
+                    Qt5::WebKitWidgets
+            )
+        else()
+            message(STATUS "If available, using a KPart to render complex HTML content")
+        endif()
     endif()
-endif()
 
-target_link_libraries(kbibtex-cli
-    PRIVATE
-        Qt5::Core
-        KBibTeX::Data
-        KBibTeX::IO
-)
+    install(
+        TARGETS
+        kbibtex
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+    )
 
+    install(
+        PROGRAMS
+        org.kde.kbibtex.desktop
+        DESTINATION
+        ${KDE_INSTALL_APPDIR}
+    )
+    install(
+        FILES
+        kbibtexui.rc
+        DESTINATION
+        ${KDE_INSTALL_KXMLGUI5DIR}/kbibtex
+    )
+    install(
+        FILES
+        org.kde.kbibtex.appdata.xml
+        DESTINATION
+        ${KDE_INSTALL_METAINFODIR}
+    )
+endif(BUILD_APP_DESKTOP)
 
-install(
-    TARGETS
-    kbibtex
-    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
-)
+if(BUILD_APP_COMMAND_LINE)
+    add_executable(kbibtex-cli
+        ${kbibtexcliprogram_SRCS}
+    )
 
-install(
-    TARGETS
-    kbibtex-cli
-    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
-)
+    target_include_directories(kbibtex-cli
+        PRIVATE
+            ${CMAKE_BINARY_DIR}
+    )
 
-install(
-    PROGRAMS
-    org.kde.kbibtex.desktop
-    DESTINATION
-    ${KDE_INSTALL_APPDIR}
-)
-install(
-    FILES
-    kbibtexui.rc
-    DESTINATION
-    ${KDE_INSTALL_KXMLGUI5DIR}/kbibtex
-)
-install(
-    FILES
-    org.kde.kbibtex.appdata.xml
-    DESTINATION
-    ${KDE_INSTALL_METAINFODIR}
-)
+    target_link_libraries(kbibtex-cli
+        PRIVATE
+            Qt5::Core
+            KBibTeX::Data
+            KBibTeX::IO
+    )
+
+    install(
+        TARGETS
+        kbibtex-cli
+        ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+    )
+endif(BUILD_APP_COMMAND_LINE)
 
 ecm_install_icons(
     ICONS

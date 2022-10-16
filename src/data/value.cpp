@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,13 +30,15 @@
 #ifdef HAVE_KF5
 #include <KSharedConfig>
 #include <KConfigGroup>
-#include <KLocalizedString>
-#else // HAVE_KF5
-#define i18n(text) QObject::tr(text)
 #endif // HAVE_KF5
+#ifdef HAVE_KF5I18N
+#include <KLocalizedString>
+#else // HAVE_KF5I18N
+#include <QObject>
+#define i18n(text) QObject::tr(text)
+#endif // HAVE_KF5I18N
 
 #include <Preferences>
-#include "file.h"
 #include "logging_data.h"
 
 quint64 ValueItem::internalIdCounter = 0;
@@ -405,8 +407,8 @@ bool VerbatimText::containsPattern(const QString &pattern, Qt::CaseSensitivity c
         /// Only if simple text match failed, check color labels
         /// For a match, the user's pattern has to be the start of the color label
         /// and this verbatim text has to contain the color as hex string
-        for (QVector<QPair<QColor, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); !contained && it != Preferences::instance().colorCodes().constEnd(); ++it)
-            contained = text.compare(it->first.name(), Qt::CaseInsensitive) == 0 && it->second.contains(pattern, Qt::CaseInsensitive);
+        for (QVector<QPair<QString, QString>>::ConstIterator it = Preferences::instance().colorCodes().constBegin(); !contained && it != Preferences::instance().colorCodes().constEnd(); ++it)
+            contained = text.compare(it->first, Qt::CaseInsensitive) == 0 && it->second.contains(pattern, Qt::CaseInsensitive);
     }
 
     if (!contained && m_hasComment) {

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2012-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2012-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileContributor: 2013-2017 Pino Toscano <pino@kde.org>
 # SPDX-FileContributor: 2019 Jonathan Riddell <jr@jriddell.org>
 
@@ -29,6 +29,14 @@ set(
     bibutils.cpp
     xsltransform.cpp
 )
+
+if(Popper_Qt5_FOUND)
+    set(
+        kbibtexio_SRCS
+        ${kbibtexio_SRCS}
+        fileimporterpdf.cpp
+    )
+endif()
 
 ecm_qt_declare_logging_category(kbibtexio_SRCS
     HEADER logging_io.h
@@ -65,18 +73,36 @@ target_link_libraries(kbibtexio
         KBibTeX::Data
         KBibTeX::Global
     PRIVATE
-        Poppler::Qt5
-        Qt5::Concurrent
         Qt5::XmlPatterns
-        KF5::I18n
         KBibTeX::Config
 )
+
+if(BUILD_APP_DESKTOP OR BUILD_KPART)
+    target_link_libraries(kbibtexio
+        PRIVATE
+            Qt5::Concurrent
+            KF5::I18n
+    )
+endif(BUILD_APP_DESKTOP OR BUILD_KPART)
+if(Qt5Concurrent_FOUND)
+    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
+    add_definitions(
+        -DHAVE_QTCONCURRENT
+    )
+endif()
 
 if(ICU_FOUND)
     target_link_libraries(kbibtexio
         PRIVATE
             ICU::uc
             ICU::i18n
+    )
+endif()
+
+if(PKG_Poppler_Qt5_FOUND)
+    target_link_libraries(kbibtexio
+        PRIVATE
+            Poppler::Qt5
     )
 endif()
 

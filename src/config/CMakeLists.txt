@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2012-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2012-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileContributor: 2019 Jonathan Riddell <jr@jriddell.org>
 
 set(
@@ -43,12 +43,17 @@ target_include_directories(kbibtexconfig
 target_link_libraries(kbibtexconfig
     PUBLIC
         Qt5::Core
-        Qt5::Gui
         KBibTeX::Global
     PRIVATE
         KF5::ConfigCore
-        KF5::I18n
 )
+
+if(BUILD_APP_DESKTOP OR BUILD_KPART)
+    target_link_libraries(kbibtexconfig
+        PRIVATE
+            KF5::I18n
+    )
+endif(BUILD_APP_DESKTOP OR BUILD_KPART)
 
 install(
     TARGETS kbibtexconfig
