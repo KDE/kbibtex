@@ -1,4 +1,4 @@
-image: kdeneon/plasma:dev-unstable
+image: kdeneon/plasma:testing
 
 variables:
   BUILD_DIR: "/tmp/build-kbibtex"
@@ -7,7 +7,7 @@ variables:
   LD_LIBRARY_PATH: "$INSTALL_DIR/lib"
   QT_ASSUME_STDERR_HAS_CONSOLE: 1
   QT_DEPRECATED_WARNINGS: 1
-  QT_DISABLE_DEPRECATED: 0x050C00
+  QT_DISABLE_DEPRECATED: 0x050F00
   QT_MESSAGE_PATTERN: "[%{type}] %{appname} (%{file}:%{line}) - %{message}"
   QT_PLUGIN_PATH: "$INSTALL_DIR/lib/plugins/"
   XDG_CACHE_HOME: "$INSTALL_DIR/home/cache"
@@ -18,7 +18,7 @@ variables:
   COVERITYSCAN_USR_DIR: "/tmp/coverity-scan-usr"
   COVERITYSCAN_OUTPUT_DIR: "/tmp/coverity-scan-output"
   COVERITYSCAN_COVINT_TARBALL: "/tmp/cov-scan.tar.gz"
-  COVERITYSCAN_VERSION: "2019.03"
+  COVERITYSCAN_VERSION: "2022.6.0"
 
 before_script:
   - sudo apt-get update -qq
@@ -48,4 +48,4 @@ coverity-scan:
     - ninja clean
     - $COVERITYSCAN_USR_DIR/cov-analysis-linux64-$COVERITYSCAN_VERSION/bin/cov-build --dir $COVERITYSCAN_OUTPUT_DIR/cov-int ninja
     - tar -cavf $COVERITYSCAN_COVINT_TARBALL -C $COVERITYSCAN_OUTPUT_DIR cov-int
-    - curl --insecure --verbose --progress-bar --form "token="$COVERITYSCAN_TOKEN --form "email=fischer@unix-ag.uni-kl.de"  --form "file=@"$COVERITYSCAN_COVINT_TARBALL --form "version=GitLab" --form "description=Automatically built on GitLab" "https://scan.coverity.com/builds?project=KBibTeX"
+    - curl --insecure --progress-bar --form "token="$COVERITYSCAN_TOKEN --form "email=fischer@unix-ag.uni-kl.de" --form "file=@"$COVERITYSCAN_COVINT_TARBALL --form "version=GitLab" --form "description=Automatically built on GitLab" "https://scan.coverity.com/builds?project=KBibTeX"
