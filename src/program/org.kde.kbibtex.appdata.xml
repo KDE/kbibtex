@@ -18,6 +18,7 @@
   <name xml:lang="ia">KBibTeX</name>
   <name xml:lang="id">KBibTeX</name>
   <name xml:lang="it">KBibTeX</name>
+  <name xml:lang="ka">KBibTeX</name>
   <name xml:lang="ko">KBibTeX</name>
   <name xml:lang="nl">KBibTeX</name>
   <name xml:lang="pl">KBibTeX</name>
@@ -42,6 +43,7 @@
   <summary xml:lang="gl">Editor de BibTeX de KDE, para editar bibliografías que se usen con LaTeX</summary>
   <summary xml:lang="id">BibTeX editor oleh KDE untuk mengedit bibliografis yang digunakan menggunakan LaTeX</summary>
   <summary xml:lang="it">Editor BibTeX di KDE per la modifica delle bibliografie usate con LaTeX</summary>
+  <summary xml:lang="ka">BibTeX -ი რედაქტორია KDE -სთვის LaTeX-ით შექმნილი ბიბლიოგრაფიების ჩასასწორებლად</summary>
   <summary xml:lang="ko">LaTeX에서 사용하는 서지 정보를 편집하는 KDE의 BibTeX 편집기</summary>
   <summary xml:lang="nl">BibTeX-bewerker door KDE om bibliografieën te bewerken met LaTeX</summary>
   <summary xml:lang="pl">Edytor BibTeX autorstwa KDE do edytowania bibliografii używanych w edytorach LaTeX</summary>
@@ -94,6 +96,7 @@
     <p xml:lang="ia">KBibTex pote facer le sequente cosas:</p>
     <p xml:lang="id">KBibTeX bisa melakukan hal-hal berikut ini:</p>
     <p xml:lang="it">KBibTeX è in grado di svolgere i seguenti compiti:</p>
+    <p xml:lang="ka">KBibTeX შეუძლია ქნას შემდეგი:</p>
     <p xml:lang="ko">KBibTeX는 다음 기능을 지원합니다:</p>
     <p xml:lang="nl">KBibTeX kan het volgende doen:</p>
     <p xml:lang="pl">KBibTeX ma następujące możliwości:</p>
@@ -215,6 +218,7 @@
       <li xml:lang="gl">Atope e fusione entradas duplicadas da bibliografía.</li>
       <li xml:lang="id">Menemukan dan menggabungkan entri-entri duplikat dalam bibliografi.</li>
       <li xml:lang="it">Trovare e unire voci duplicate nella bibliografia.</li>
+      <li xml:lang="ka">ბიბლიოგრაფიებში დუბლირებული ჩანაწერების პოვნა და შერწყმა.</li>
       <li xml:lang="ko">서지 정보 목록에서 중복 항목을 찾아 합칩니다.</li>
       <li xml:lang="nl">Zoeken en mengen van dubbele items in een bibliografie.</li>
       <li xml:lang="pl">Znajdywanie i scalanie powielonych wpisów w bibliografii.</li>
@@ -264,6 +268,7 @@
       <li xml:lang="gl">Importe a súa biblioteca de Zotero.</li>
       <li xml:lang="id">Impor pustaka Zotero-mu.</li>
       <li xml:lang="it">Importare la tua raccolta Zotero.</li>
+      <li xml:lang="ka">თქვენი Zotero-ის ბიბლიოთეკის შემოტანა.</li>
       <li xml:lang="ko">Zotero 라이브러리를 가져옵니다.</li>
       <li xml:lang="nl">Uw Zotero bibliotheek importeren.</li>
       <li xml:lang="pl">Importowanie bibliotek Zotero.</li>
@@ -296,6 +301,7 @@
       <caption xml:lang="gl">Xanela principal de KBibTeX</caption>
       <caption xml:lang="id">Jendela utama KBibTeX</caption>
       <caption xml:lang="it">Finestra principale di KBibTeX</caption>
+      <caption xml:lang="ka">KBibTeX -ის მთავარი ფანჯარა</caption>
       <caption xml:lang="ko">KBibTeX 주 창</caption>
       <caption xml:lang="nl">Hoofdvenster van KBibTeX</caption>
       <caption xml:lang="pl">Okno główne KBibTeX</caption>
