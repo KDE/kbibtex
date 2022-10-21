@@ -1294,7 +1294,7 @@ File *FileImporterBibTeX::fromString(const QString &rawText)
         if (!statistics.mostRecentListSeparator.isEmpty())
             result->setProperty(File::ListSeparator, statistics.mostRecentListSeparator);
         /// Set the file's preference to have the entries sorted by identifier
-        result->setProperty(File::SortedByIdentifier, statistics.countSortedByIdentifier >= statistics.countNotSortedByIdentifier * 3);
+        result->setProperty(File::SortedByIdentifier, statistics.countSortedByIdentifier >= statistics.countNotSortedByIdentifier * 10);
         // TODO gather more statistics for keyword casing etc.
     }
 
