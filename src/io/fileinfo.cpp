@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -232,6 +232,16 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
     if (entry.isNull() || entry->isEmpty())
         return result;
 
+    const QString id = entry->id();
+    if (id.length() > 4) {
+        /// Sometimes the entry id contains or is actually a DOI number
+        const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(id);
+        if (doiRegExpMatch.hasMatch()) {
+            QString match = doiRegExpMatch.captured(0);
+            QUrl url(KBibTeX::doiUrlPrefix + match.remove(QStringLiteral("\\")));
+            result.insert(url);
+        }
+    }
     if (entry->contains(Entry::ftDOI)) {
         const QString doi = PlainTextValue::text(entry->value(Entry::ftDOI));
         QRegularExpressionMatch doiRegExpMatch;
