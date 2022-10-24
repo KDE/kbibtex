@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -49,12 +49,16 @@
 #include <kservice_version.h>
 #include <KLocalizedString>
 #include <KJobWidgets>
-#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 #include <KIO/OpenUrlJob>
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 98, 0)
+#include <KIO/JobUiDelegateFactory>
+#else // < 5.98.0
 #include <KIO/JobUiDelegate>
+#endif // QT_VERSION_CHECK(5, 98, 0)
 #else // < 5.71.0
 #include <KRun>
-#endif // KIO_VERSION >= 0x054700
+#endif // KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 #if KSERVICE_VERSION < 0x055200 // < 5.82.0
 #include <KMimeTypeTrader>
 #endif // KSERVICE_VERSION < 0x055200 // < 5.82.0
@@ -568,13 +572,17 @@ public:
         QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x054700 // < 5.71.0
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
         KRun::runUrl(url, mimeTypeName, p, KRun::RunFlags());
-#else // KIO_VERSION < 0x054700 // >= 5.71.0
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
         KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
         job->setUiDelegate(new KIO::JobUiDelegate());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
+        job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, p));
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
         job->start();
-#endif // KIO_VERSION < 0x054700
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
     }
 
     UrlInfo urlMetaInfo(const QUrl &url) {
@@ -714,13 +722,17 @@ void DocumentPreview::linkActivated(const QString &link)
             QMimeType mimeType = FileInfo::mimeTypeForUrl(urlToOpen);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x054700 // < 5.71.0
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
             KRun::runUrl(urlToOpen, mimeTypeName, this, KRun::RunFlags());
-#else // KIO_VERSION < 0x054700 // >= 5.71.0
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
             KIO::OpenUrlJob *job = new KIO::OpenUrlJob(urlToOpen, mimeTypeName);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
             job->setUiDelegate(new KIO::JobUiDelegate());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
+            job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, this));
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
             job->start();
-#endif // KIO_VERSION < 0x054700
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
         }
     }
 }

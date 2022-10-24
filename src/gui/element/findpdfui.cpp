@@ -43,12 +43,16 @@
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KSqueezedTextLabel>
-#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 #include <KIO/OpenUrlJob>
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 98, 0)
+#include <KIO/JobUiDelegateFactory>
+#else // < 5.98.0
 #include <KIO/JobUiDelegate>
+#endif // QT_VERSION_CHECK(5, 98, 0)
 #else // < 5.71.0
 #include <KRun>
-#endif // KIO_VERSION >= 0x054700
+#endif // KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 
 #include <Preferences>
 #include <FileInfo>
@@ -245,26 +249,33 @@ void PDFItemDelegate::slotViewPDF()
             QMimeType mimeType = FileInfo::mimeTypeForUrl(tempUrl);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x054700 // < 5.71.0
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
             KRun::runUrl(tempUrl, mimeTypeName, itemView(), KRun::RunFlags(), url.toDisplayString());
-#else // KIO_VERSION < 0x054700 // >= 5.71.0
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
             KIO::OpenUrlJob *job = new KIO::OpenUrlJob(tempUrl, mimeTypeName);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
             job->setUiDelegate(new KIO::JobUiDelegate());
-            job->setSuggestedFileName(url.toDisplayString());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
+            job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, m_parent));
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
             job->start();
-#endif // KIO_VERSION < 0x054700
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
         } else if (url.isValid()) {
             /// Guess mime type for url to open
             QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x054700 // < 5.71.0
-            KRun::runUrl(url, mimeTypeName, itemView(), KRun::RunFlags());
-#else // KIO_VERSION < 0x054700 // >= 5.71.0
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
+            KRun::runUrl(url, mimeTypeName, itemView(), KRun::RunFlags(), url.toDisplayString());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
             KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
             job->setUiDelegate(new KIO::JobUiDelegate());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
+            job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, m_parent));
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
             job->start();
-#endif // KIO_VERSION < 0x054700
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
         }
     }
 }
