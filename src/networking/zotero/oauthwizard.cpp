@@ -35,12 +35,16 @@
 
 #include <kio_version.h>
 #include <KLocalizedString>
-#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 #include <KIO/OpenUrlJob>
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 98, 0)
+#include <KIO/JobUiDelegateFactory>
+#else // < 5.98.0
 #include <KIO/JobUiDelegate>
+#endif // QT_VERSION_CHECK(5, 98, 0)
 #else // < 5.71.0
 #include <KRun>
-#endif // KIO_VERSION >= 0x054700
+#endif // KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
@@ -157,13 +161,17 @@ public:
         buttonOpenAuthorizationUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open-remote")), i18n("Open URL"), p);
         gridLayout->addWidget(buttonOpenAuthorizationUrl, 3, 2, 1, 1);
         connect(buttonOpenAuthorizationUrl, &QPushButton::clicked, p, [this]() {
-#if KIO_VERSION < 0x054700 // < 5.71.0
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
             KRun::runUrl(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), p, KRun::RunFlags());
-#else // KIO_VERSION < 0x054700 // >= 5.71.0
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
             KIO::OpenUrlJob *job = new KIO::OpenUrlJob(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"));
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
             job->setUiDelegate(new KIO::JobUiDelegate());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
+            job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, p));
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
             job->start();
-#endif // KIO_VERSION < 0x054700
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
         });
 
         gridLayout->setRowMinimumHeight(4, p->fontMetrics().xHeight() * 2);

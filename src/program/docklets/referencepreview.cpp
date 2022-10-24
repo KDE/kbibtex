@@ -37,12 +37,16 @@
 
 #include <kio_version.h>
 #include <KLocalizedString>
-#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 #include <KIO/OpenUrlJob>
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 98, 0)
+#include <KIO/JobUiDelegateFactory>
+#else // < 5.98.0
 #include <KIO/JobUiDelegate>
+#endif // QT_VERSION_CHECK(5, 98, 0)
 #else // < 5.71.0
 #include <KRun>
-#endif // KIO_VERSION >= 0x054700
+#endif // KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 #include <KIO/CopyJob>
 #include <KJobWidgets>
 #include <KSharedConfig>
@@ -387,14 +391,18 @@ void ReferencePreview::openAsHTML()
     d->saveHTML(file);
 
     /// Ask KDE subsystem to open url in viewer matching mime type
-    QUrl url(file.fileName());
-#if KIO_VERSION < 0x054700 // < 5.71.0
+    const QUrl url{QUrl::fromLocalFile(file.fileName())};
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
     KRun::runUrl(url, QStringLiteral("text/html"), this, KRun::RunFlags());
-#else // KIO_VERSION < 0x054700 // >= 5.71.0
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
     KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, QStringLiteral("text/html"));
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
     job->setUiDelegate(new KIO::JobUiDelegate());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
+    job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, this));
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
     job->start();
-#endif // KIO_VERSION < 0x054700
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
 }
 
 void ReferencePreview::saveAsHTML()

@@ -44,12 +44,16 @@
 #include <KActionMenu>
 #include <KSelectAction>
 #include <KToggleAction>
-#if KIO_VERSION >= 0x054700 // >= 5.71.0
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 #include <KIO/OpenUrlJob>
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 98, 0)
+#include <KIO/JobUiDelegateFactory>
+#else // < 5.98.0
 #include <KIO/JobUiDelegate>
+#endif // QT_VERSION_CHECK(5, 98, 0)
 #else // < 5.71.0
 #include <KRun>
-#endif // KIO_VERSION >= 0x054700
+#endif // KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
 #include <KPluginFactory>
 #include <KIO/StatJob>
 #include <KIO/CopyJob>
@@ -745,13 +749,17 @@ public:
         const QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x054700 // < 5.71.0
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
         KRun::runUrl(url, mimeTypeName, p->widget(), KRun::RunFlags());
-#else // KIO_VERSION < 0x054700 // >= 5.71.0
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
         KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
         job->setUiDelegate(new KIO::JobUiDelegate());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
+        job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, p->widget()));
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
         job->start();
-#endif // KIO_VERSION < 0x054700
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
     }
 
 };
@@ -907,13 +915,17 @@ void KBibTeXPart::elementViewDocument()
         QMimeType mimeType = FileInfo::mimeTypeForUrl(url);
         const QString mimeTypeName = mimeType.name();
         /// Ask KDE subsystem to open url in viewer matching mime type
-#if KIO_VERSION < 0x054700 // < 5.71.0
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
         KRun::runUrl(url, mimeTypeName, widget(), KRun::RunFlags());
-#else // KIO_VERSION < 0x054700 // >= 5.71.0
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
         KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
         job->setUiDelegate(new KIO::JobUiDelegate());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
+        job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, widget()));
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
         job->start();
-#endif // KIO_VERSION < 0x054700
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
     }
 }
 
