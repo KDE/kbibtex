@@ -21,7 +21,7 @@
 
 #include <QCoreApplication>
 #include <QCommandLineParser>
-#include <QLoggingCategory>
+#include <QSet>
 #include <QFile>
 #include <QFileInfo>
 #include <QTimer>
@@ -30,6 +30,7 @@
 #include <FileImporter>
 #include <FileExporter>
 #include <FileExporterBibTeX>
+#include <IdSuggestions>
 
 int main(int argc, char *argv[])
 {
@@ -42,6 +43,8 @@ int main(int argc, char *argv[])
     cmdLineParser.addVersionOption();
     QCommandLineOption outputFileCLO{{QStringLiteral("o"), QStringLiteral("output")}, QStringLiteral("Write output to file, stdout if not specified"), QStringLiteral("outputfilename")};
     cmdLineParser.addOption(outputFileCLO);
+    QCommandLineOption idSuggestionFormatStringCLO{{QStringLiteral("format-id")}, QStringLiteral("Reformat all entry ids using this format string"), QStringLiteral("formatstring")};
+    cmdLineParser.addOption(idSuggestionFormatStringCLO);
     cmdLineParser.addPositionalArgument(QStringLiteral("file"), QStringLiteral("Read from this file"));
 
     cmdLineParser.process(coreApp);
@@ -68,6 +71,40 @@ int main(int argc, char *argv[])
                     std::cerr << "Failed to load file: " << inputFileInfo.filePath().toLocal8Bit().constData() << std::endl;
                     coreApp.exit(exitCode = 1);
                 } else {
+                    if (cmdLineParser.isSet(idSuggestionFormatStringCLO)) {
+                        /// If the user requested applying a certain format string to all entry ids, perform this change here.
+                        QSet<QString> previousNewId; //< Track newly generated entry ids to detect duplicates
+                        const QString formatString{cmdLineParser.value(idSuggestionFormatStringCLO)}; //< extract format string from command line argument
+                        if (formatString.isEmpty()) {
+                            std::cerr << "Got empty format string" << std::endl;
+                            coreApp.exit(exitCode = 1);
+                        } else {
+                            std::cerr << "Using the following format string:" << std::endl;
+                            for (const QString &fse : IdSuggestions::formatStrToHuman(formatString))
+                                std::cerr << " * " << fse.toLocal8Bit().constData() << std::endl;
+                            for (QSharedPointer<Element> &element : *file) {
+                                /// For every element in the loaded bibliography file ...
+                                /// Check if element is an entry (something that has an 'id')
+                                QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
+                                if (!entry.isNull()) {
+                                    /// Generate new id based on entry and format string
+                                    const QString newId{IdSuggestions::formatId(*(entry.data()), formatString)};
+                                    if (newId.isEmpty()) {
+                                        std::cerr << "New id generated from entry '" << entry->id().toLocal8Bit().constData() << "' and format string '" << formatString.toLocal8Bit().constData() << "' is empty." << std::endl;
+                                        coreApp.exit(exitCode = 1);
+                                        break;
+                                    }
+                                    if (previousNewId.contains(newId))
+                                        std::cerr << "New entry id '" << newId.toLocal8Bit().constData() << "' generated from entry '" << entry->id().toLocal8Bit().constData() << "' and format string '" << formatString.toLocal8Bit().constData() << "' matches a previously generated id, but applying it anyway." << std::endl;
+                                    else
+                                        previousNewId.insert(newId);
+                                    /// Apply newly-generated entry id
+                                    entry->setId(newId);
+                                }
+                            }
+                        }
+                    }
+
                     if (exitCode == 0) {
                         if (cmdLineParser.isSet(outputFileCLO)) {
                             const QFileInfo outputFileInfo{cmdLineParser.value(outputFileCLO)};

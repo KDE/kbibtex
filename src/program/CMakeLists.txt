@@ -142,6 +142,7 @@ if(BUILD_APP_COMMAND_LINE)
             Qt5::Core
             KBibTeX::Data
             KBibTeX::IO
+            KBibTeX::Processing
     )
 
     install(
