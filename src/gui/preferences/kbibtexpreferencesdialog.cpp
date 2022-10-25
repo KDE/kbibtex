@@ -209,8 +209,11 @@ void KBibTeXPreferencesDialog::buttonClicked(QAbstractButton *button) {
     case QDialogButtonBox::Reset:
         d->reset();
         break;
+    case QDialogButtonBox::Cancel:
+        // Nothing to do for 'cancel'
+        break;
     default:
-        qCWarning(LOG_KBIBTEX_GUI) << "There should be no use for a default case here!";
+        qCWarning(LOG_KBIBTEX_GUI) << "There should be no use for a default case here!" << button->text();
     }
 }
 
