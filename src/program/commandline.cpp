@@ -33,6 +33,7 @@
 
 int main(int argc, char *argv[])
 {
+    int exitCode = 0;
     QCoreApplication coreApp(argc, argv);
     QCoreApplication::setApplicationName(QStringLiteral("kbibtex-cli"));
 
@@ -47,15 +48,15 @@ int main(int argc, char *argv[])
 
     if (cmdLineParser.positionalArguments().length() < 1) {
         std::cerr << "No file to read from specified. Use  --help  for instructions." << std::endl;
-        coreApp.exit(1);
+        coreApp.exit(exitCode = 1);
     } else if (cmdLineParser.positionalArguments().length() > 1) {
         std::cerr << "More than one input file specified. Use  --help  for instructions." << std::endl;
-        coreApp.exit(1);
+        coreApp.exit(exitCode = 1);
     } else {
         const QFileInfo inputFileInfo{cmdLineParser.positionalArguments().constFirst()};
         if (!inputFileInfo.exists() || inputFileInfo.size() <= 0 || !inputFileInfo.isFile() || !inputFileInfo.isReadable()) {
             std::cerr << "Argument is not an existing, readable, non-empty file: " << inputFileInfo.filePath().toLocal8Bit().constData() << std::endl;
-            coreApp.exit(1);
+            coreApp.exit(exitCode = 1);
         } else {
             QFile inputFile(inputFileInfo.filePath());
             if (inputFile.open(QFile::ReadOnly)) {
@@ -65,35 +66,37 @@ int main(int argc, char *argv[])
 
                 if (file == nullptr) {
                     std::cerr << "Failed to load file: " << inputFileInfo.filePath().toLocal8Bit().constData() << std::endl;
-                    coreApp.exit(1);
+                    coreApp.exit(exitCode = 1);
                 } else {
-                    if (cmdLineParser.isSet(outputFileCLO)) {
-                        const QFileInfo outputFileInfo{cmdLineParser.value(outputFileCLO)};
-                        QFile outputfile(outputFileInfo.filePath());
-                        if (outputfile.open(QFile::WriteOnly)) {
-                            FileExporter *exporter = FileExporter::factory(outputFileInfo, &coreApp);
-                            const bool ok = exporter->save(&outputfile, file);
-                            outputfile.close();
-                            if (!ok) {
-                                std::cerr << "Failed to write to this file: " << outputFileInfo.filePath().toLocal8Bit().constData() << std::endl;
-                                coreApp.exit(1);
+                    if (exitCode == 0) {
+                        if (cmdLineParser.isSet(outputFileCLO)) {
+                            const QFileInfo outputFileInfo{cmdLineParser.value(outputFileCLO)};
+                            QFile outputfile(outputFileInfo.filePath());
+                            if (outputfile.open(QFile::WriteOnly)) {
+                                FileExporter *exporter = FileExporter::factory(outputFileInfo, &coreApp);
+                                const bool ok = exporter->save(&outputfile, file);
+                                outputfile.close();
+                                if (!ok) {
+                                    std::cerr << "Failed to write to this file: " << outputFileInfo.filePath().toLocal8Bit().constData() << std::endl;
+                                    coreApp.exit(exitCode = 1);
+                                }
+                            } else {
+                                std::cerr << "Cannot write to this file: " << outputFileInfo.filePath().toLocal8Bit().constData() << std::endl;
+                                coreApp.exit(exitCode = 1);
                             }
                         } else {
-                            std::cerr << "Cannot write to this file: " << outputFileInfo.filePath().toLocal8Bit().constData() << std::endl;
-                            coreApp.exit(1);
+                            /// No output filename specified, so dump BibTeX code to stdout
+                            FileExporter *exporter = new FileExporterBibTeX(&coreApp);
+                            const QString output{exporter->toString(file)};
+                            std::cout << output.toLocal8Bit().constData() << std::endl;
                         }
-                    } else {
-                        /// No output filename specified, so dump BibTeX code to stdout
-                        FileExporter *exporter = new FileExporterBibTeX(&coreApp);
-                        const QString output{exporter->toString(file)};
-                        std::cout << output.toLocal8Bit().constData() << std::endl;
                     }
+
                     delete file;
-                    coreApp.exit(0);
                 }
             } else {
-                std::cerr << "Cannot read from this file: " << inputFileInfo.filePath().toLocal8Bit().constData() << std::endl;
-                coreApp.exit(1);
+                std::cerr << "Cannot read from file '" << inputFileInfo.filePath().toLocal8Bit().constData() << "'" << std::endl;
+                coreApp.exit(exitCode = 1);
             }
         }
     }
@@ -101,5 +104,9 @@ int main(int argc, char *argv[])
     QTimer::singleShot(100, QCoreApplication::instance(), []() {
         QCoreApplication::instance()->quit();
     });
-    return coreApp.exec();
+
+    coreApp.exit(exitCode);
+
+    const int r = coreApp.exec();
+    return qMax(r, exitCode);
 }
