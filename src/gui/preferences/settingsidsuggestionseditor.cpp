@@ -35,6 +35,8 @@
 #include <QPushButton>
 #include <QAction>
 #include <QDialogButtonBox>
+#include <QGuiApplication>
+#include <QClipboard>
 
 #include <KLocalizedString>
 #include <KIconLoader>
@@ -575,7 +577,7 @@ public:
     QWidget *container;
     QBoxLayout *containerLayout;
     QList<TokenWidget *> widgetList;
-    QLabel *labelPreview;
+    QLabel *labelPreview, *labelFormatString;
     QPushButton *buttonAddTokenAtTop, *buttonAddTokenAtBottom;
     const Entry *previewEntry;
     QScrollArea *area;
@@ -586,14 +588,35 @@ public:
     }
 
     void setupGUI() {
-        QGridLayout *layout = new QGridLayout(p);
+        QBoxLayout *boxLayout = new QVBoxLayout(p);
+        QFormLayout *formLayout = new QFormLayout();
+        boxLayout->addLayout(formLayout);
 
         labelPreview = new QLabel(p);
-        layout->addWidget(labelPreview, 0, 0, 1, 1);
-        layout->setColumnStretch(0, 100);
+        formLayout->addRow(i18n("Preview:"), labelPreview);
+        QFont f = labelPreview->font();
+        f.setBold(true);
+        labelPreview->setFont(f);
+
+        QBoxLayout *formRowLayout = new QHBoxLayout();
+        labelFormatString = new QLabel(p);
+        f = QFont(QStringLiteral("monospace"));
+        f.setStyleHint(QFont::Monospace, QFont::PreferMatch);
+        labelFormatString->setFont(f);
+        formRowLayout->addWidget(labelFormatString);
+        formRowLayout->setStretch(0, 100);
+
+        QPushButton *buttonCopyFormatString = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-copy")), QString(), p);
+        buttonCopyFormatString->setToolTip(i18n("Copy format string to clipboard"));
+        formRowLayout->addWidget(buttonCopyFormatString);
+        connect(buttonCopyFormatString, &QPushButton::clicked, p, [this]() {
+            QGuiApplication::clipboard()->setText(labelFormatString->text(), QClipboard::Clipboard);
+        });
+
+        formLayout->addRow(i18n("Format string:"), formRowLayout);
 
         area = new QScrollArea(p);
-        layout->addWidget(area, 1, 0, 1, 1);
+        boxLayout->addWidget(area);
         area->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
@@ -926,7 +949,10 @@ void IdSuggestionsEditWidget::updatePreview()
 {
     const QString formatString = d->apply();
     d->labelPreview->setText(IdSuggestions::formatId(*d->previewEntry, formatString));
-    d->labelPreview->setToolTip(i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", IdSuggestions::formatStrToHuman(formatString).join(QStringLiteral("</li><li>")), IdSuggestions::formatId(*d->previewEntry, formatString)));
+    const QString tooltip{i18n("<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>", IdSuggestions::formatStrToHuman(formatString).join(QStringLiteral("</li><li>")), IdSuggestions::formatId(*d->previewEntry, formatString))};
+    d->labelPreview->setToolTip(tooltip);
+    d->labelFormatString->setText(formatString);
+    d->labelFormatString->setToolTip(tooltip);
 }
 
 IdSuggestionsEditDialog::IdSuggestionsEditDialog(QWidget *parent)
