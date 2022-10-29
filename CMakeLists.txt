@@ -18,9 +18,10 @@ project(
 )
 
 set(CMAKE_CXX_STANDARD 11)
-set(QT_MIN_VERSION 5.9.0)
+set(QT_MIN_VERSION 5.15.2)
 # Somewhat arbitrary chosen version number ...
-set(KF5_MIN_VERSION 5.51)
+set(KF5_MIN_VERSION 5.86)
+set(KDE_COMPILERSETTINGS_LEVEL 5.84)
 find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
 
 set(

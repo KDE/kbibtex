@@ -57,7 +57,7 @@ public slots:
      * Retrieving the part to be used will be delegated to the
      * OpenFileInfo object.
      */
-    void setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
+    void setFile(OpenFileInfo *openFileInfo, const KPluginMetaData &service);
 
 signals:
     void setCaption(const QString &);

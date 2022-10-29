@@ -256,7 +256,7 @@ public:
         /// nothing
     }
 
-    void openFileWithService(KService::Ptr service)
+    void openFileWithService(const KPluginMetaData &service)
     {
         const QModelIndex modelIndex = p->currentIndex();
         if (modelIndex != QModelIndex()) {
@@ -363,14 +363,14 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
         d->actionOpenMenu->removeAction(action);
     }
     if (ofi != nullptr) {
-        const KService::List services = ofi->listOfServices();
-        for (KService::Ptr servicePtr : services) {
-            QAction *menuItem = new QAction(QIcon::fromTheme(servicePtr->icon()), servicePtr->name(), this);
+        const QVector<KPluginMetaData> services = ofi->listOfServices();
+        for (const KPluginMetaData &service : services) {
+            QAction *menuItem = new QAction(QIcon::fromTheme(service.iconName()), service.name(), this);
             d->actionOpenMenu->addAction(menuItem);
             d->openMenuActions << menuItem;
 
-            connect(menuItem, &QAction::triggered, this, [this, servicePtr]() {
-                d->openFileWithService(servicePtr);
+            connect(menuItem, &QAction::triggered, this, [this, service]() {
+                d->openFileWithService(service);
             });
         }
     }
