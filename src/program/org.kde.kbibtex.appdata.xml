@@ -27,6 +27,7 @@
   <name xml:lang="gl">KBibTeX</name>
   <name xml:lang="ia">KBibTeX</name>
   <name xml:lang="id">KBibTeX</name>
+  <name xml:lang="ie">KBibTeX</name>
   <name xml:lang="it">KBibTeX</name>
   <name xml:lang="ka">KBibTeX</name>
   <name xml:lang="ko">KBibTeX</name>
@@ -306,6 +307,7 @@
       <li xml:lang="fr">Importer une bibliothèque Zotero.</li>
       <li xml:lang="gl">Importe a súa biblioteca de Zotero.</li>
       <li xml:lang="id">Impor pustaka Zotero-mu.</li>
+      <li xml:lang="ie">Importar vor biblioteca de Zotero</li>
       <li xml:lang="it">Importare la tua raccolta Zotero.</li>
       <li xml:lang="ka">თქვენი Zotero-ის ბიბლიოთეკის შემოტანა.</li>
       <li xml:lang="ko">Zotero 라이브러리를 가져옵니다.</li>
@@ -341,6 +343,7 @@
       <caption xml:lang="fr">La fenêtre principale de KBibTeX</caption>
       <caption xml:lang="gl">Xanela principal de KBibTeX</caption>
       <caption xml:lang="id">Jendela utama KBibTeX</caption>
+      <caption xml:lang="ie">Fenestre principal de KBibTex</caption>
       <caption xml:lang="it">Finestra principale di KBibTeX</caption>
       <caption xml:lang="ka">KBibTeX -ის მთავარი ფანჯარა</caption>
       <caption xml:lang="ko">KBibTeX 주 창</caption>
