@@ -2,8 +2,10 @@
 
 set -euo pipefail
 
+export TEMPDIR="$(mktemp --tmpdir -d "$(basename "${0/.sh}")"-XXXXX.d)"
 function cleanup_on_exit {
 	xhost -local:root
+	rm -rf ${TEMPDIR}
 }
 trap cleanup_on_exit EXIT
 
@@ -32,14 +34,31 @@ function prepare_image() {
 	echo "podman rmi -f '${imagename}'" >&2
 	podmansetx rmi -f "${imagename}" 2>/dev/null >&2
 	
-	buildahsetx from --name "working-${imagename}" "${fromimage}" | tee /dev/stderr
+	buildahsetx from --name "working-${imagename}" "${fromimage}" || exit 1
 }
 
 function prepare_environment() {
 	local id="$1"
+	local checkout
+	checkout="$2"
+
+	cat <<EOF >${TEMPDIR}/runtestprograms.sh
+set -x
+# FIXME kbibtexfilestest  requires to have testsets files available
+/tmp/build/bin/kbibtexnetworkingtest -platform offscreen || exit 1
+/tmp/build/bin/kbibtexiotest -platform offscreen || exit 1
+/tmp/build/bin/kbibtexdatatest -platform offscreen || exit 1
+set +x
+EOF
+	buildahsetx copy ${id} ${TEMPDIR}/runtestprograms.sh /tmp/ || exit 1
 
 	buildahsetx copy ${id} ../../../ /tmp/source || exit 1
-	buildahsetx config --env DISPLAY=${DISPLAY} --env QT_X11_NO_MITSHM=1 --env KDEDIRS=/usr --env XDG_RUNTIME_DIR=/tmp/xdg-runtime-dir --env XDG_CACHE_HOME=/tmp/xdg-cache-home --env XDG_CONFIG_HOME=/tmp/xdg-config-home --env XDG_DATA_DIRS=/usr/share --env XDG_DATA_HOME=/tmp/xdg-data-home --env XDG_CURRENT_DESKTOP=KDE ${id} || exit 1
+	buildahsetx run --workingdir /tmp/source ${id} -- git config --global --add safe.directory /tmp/source || exit 1
+	if [[ -n "${checkout}" ]] ; then
+		buildahsetx run --workingdir /tmp/source ${id} -- git reset --hard || exit 1
+		buildahsetx run --workingdir /tmp/source ${id} -- git clean -fd || exit 1
+		buildahsetx run --workingdir /tmp/source ${id} -- git checkout "${checkout}" || exit 1
+	fi
 }
 
 function build_sources() {
@@ -47,8 +66,8 @@ function build_sources() {
 	local sudocmd="$2"
 
 	buildahsetx config --workingdir /tmp/build ${id} || exit 1
-	buildahsetx run ${id} -- ${sudocmd} cmake -DBUILD_TESTING:BOOL=ON -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=/usr ../source || exit 1
-	buildahsetx run ${id} -- ${sudocmd} make -j$(( $(nproc) - 1 )) || exit 1
+	buildahsetx run ${id} -- ${sudocmd} /usr/bin/cmake -DBUILD_TESTING:BOOL=ON -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=/usr ../source || exit 1
+	buildahsetx run ${id} -- ${sudocmd} /usr/bin/make -j$(( $(nproc) - 1 )) || exit 1
 }
 
 function install_program() {
@@ -71,12 +90,11 @@ function setting_ownerships() {
 	local username="$2"
 	local sudocmd="$3"
 
-	for d in build xdg-config-home ; do
+	for d in build xdg-config-home source ; do
 		buildahsetx run ${id} -- ${sudocmd} chown -R ${username}:${username} "/tmp/${d}" || exit 1
 	done
 	for d in runtime cache config ; do
-		echo "buildah run ${id} -- ${sudocmd} chown -R ${username}:${username} '/tmp/xdg-${d}-dir'" >&2
-		buildah run ${id} -- ${sudocmd} chown -R ${username}:${username} "/tmp/xdg-${d}-dir" || exit 1
+		buildahsetx run ${id} -- ${sudocmd} chown -R ${username}:${username} "/tmp/xdg-${d}-dir" || exit 1
 	done
 }
 
@@ -85,7 +103,7 @@ function finalizing_image() {
 	local username="$2"
 
 	buildahsetx config --workingdir /tmp ${id} || exit 1
-	buildahsetx config --cmd "sudo -u ${username} /usr/bin/kbibtex" ${id} || exit 1
+	buildahsetx config --cmd "/usr/bin/sudo -u ${username} /usr/bin/kbibtex" ${id} || exit 1
 	buildahsetx commit ${id} ${id}_img || exit 1
 }
 
@@ -94,10 +112,9 @@ function run_test_programs() {
 	local username="$2"
 
 	mkdir -p /tmp/kbibtex-podman
-	# FIXME kbibtexfilestest  requires to have testsets files available
-	for testbinary in kbibtexnetworkingtest kbibtexiotest kbibtexdatatest ; do
-		podmansetx container run --rm --net=host -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img sudo -u ${username} /tmp/build/bin/${testbinary} -platform offscreen 2>&1 | tee -a /tmp/kbibtex-podman/output-${testbinary}.txt || exit 1
-	done
+	rm -f /tmp/kbibtex-podman/output-{kbibtexnetworkingtest,kbibtexiotest,kbibtexdatatest}.txt
+
+	podmansetx container run --net=host -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img /usr/bin/sudo -u ${username} /bin/bash /tmp/runtestprograms.sh 2>&1 | tee -a /tmp/kbibtex-podman/output-testprograms.txt || { echo "For log output, see '/tmp/kbibtex-podman/output-testprograms.txt'" >&2 ; exit 1 ; }
 }
 
 function run_kbibtex_program() {
@@ -106,7 +123,7 @@ function run_kbibtex_program() {
 
 	mkdir -p /tmp/kbibtex-podman
 	xhost local:root
-	podmansetx container run --rm --net=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v ${HOME}/.Xauthority:/.Xauthority -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img sudo -u ${username} /usr/bin/kbibtex 2>&1 | tee -a /tmp/kbibtex-podman/output-kbibtex.txt || exit 1
+	podmansetx container run --rm --net=host -v /tmp/.X11-unix:/tmp/.X11-unix -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --env DISPLAY --tty --interactive ${id}_img /usr/bin/sudo -u ${username} /usr/bin/kbibtex 2>&1 | tee /tmp/kbibtex-podman/output-kbibtex.txt || { echo "For log output, see '/tmp/kbibtex-podman/output-kbibtex.txt'" >&2 ; exit 1 ; }
 	xhost -local:root
 }
 
@@ -115,20 +132,22 @@ function run_bash() {
 	local username="$2"
 
 	mkdir -p /tmp/kbibtex-podman
-	podmansetx container run --rm --net=host -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v ${HOME}/.Xauthority:/.Xauthority -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img sudo -u ${username} /bin/bash || exit 1
+	podmansetx container run --rm --net=host -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive ${id}_img /usr/bin/sudo -u ${username} /bin/bash || exit 1
 }
 
-if (( $# == 1 )) ; then
-	if [[ $1 == "archlinux" || $1 == "debian10" || $1 == "debian11" || $1 == "fedora" || $1 == "ubuntu" || $1 == "kdeneon" ]] ; then
+if (( $# == 1 || $# == 2)) ; then
+	if [[ $1 == "archlinux" || $1 == "debian10" || $1 == "debian11" || $1 == "debian12" || $1 == "fedora" || $1 == "ubuntu"* || $1 == "kdeneon" ]] ; then
+		DIST="$1"
+		[[ ${DIST} == "ubuntu" ]] && DIST="ubuntu2210"
 		SUDOCMD=""
-		[[ $1 == "kdeneon" ]] && SUDOCMD="sudo"
+		[[ ${DIST} == "kdeneon" ]] && SUDOCMD="sudo"
 		USERNAME="kdeuser"
-		[[ $1 == "kdeneon" ]] && USERNAME="neon"
+		[[ ${DIST} == "kdeneon" ]] && USERNAME="neon"
 
-		FROMIMAGE="localhost/${1}-kde-devel"
+		FROMIMAGE="localhost/${DIST}-kde-devel"
 		IMAGENAME="$(create_imagename "${FROMIMAGE}")"
 		ID="$(prepare_image "${FROMIMAGE}" "${IMAGENAME}")"
-		prepare_environment "${ID}" "${SUDOCMD}" || exit 1
+		prepare_environment "${ID}" "${2}" || exit 1
 		build_sources "${ID}" "${SUDOCMD}" || exit 1
 		install_program "${ID}" "${SUDOCMD}" || exit 1
 		cleaning "${ID}" "${SUDOCMD}" || exit 1
@@ -153,12 +172,12 @@ if (( $# == 1 )) ; then
 		echo "  sudo rm -rf ~/.local/share/containers ~/.config/containers"
 		exit 0
 	else
-		echo "Unknown argument, expecting one of the following:  archlinux  debian10  debian11  fedora  ubuntu  kdeneon" >&2
+		echo "Unknown argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  ubuntu2204  ubuntu2210  kdeneon" >&2
 		echo "To get help how to clean up previously created images or containers, run  $(basename $0) --cleanup" >&2
 		exit 1
 	fi
 else
-	echo "Missing argument, expecting one of the following:  archlinux  debian10  debian11  fedora  ubuntu  kdeneon" >&2
+	echo "Missing argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  ubuntu2204  ubuntu2210  kdeneon" >&2
 	echo "To get help how to clean up previously created images or containers, run  $(basename $0) --cleanup" >&2
 	exit 1
 fi
