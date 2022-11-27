@@ -207,10 +207,13 @@ add_subdirectory(
 )
 if(KF5DocTools_FOUND)
     add_subdirectory(doc)
+    kdoctools_install(po)
 endif()
 # macro_optional_add_subdirectory(
 #     po
 # )
+
+ki18n_install(po)
 
 if (ECM_VERSION VERSION_GREATER_EQUAL "5.59.0")
     install(FILES kbibtex.categories DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
