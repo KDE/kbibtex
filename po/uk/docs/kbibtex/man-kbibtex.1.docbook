@@ -1,0 +1,124 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Ukrainian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Інструкція користувача KBibTeX</title>
+<author
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+> <contrib
+>Сторінка підручника KBibTeX.</contrib
+> <email
+>fischer@unix-ag.uni-kl.de</email
+></author>
+<date
+>29 червня 2016 року</date>
+<productname
+>KBibTeX</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>kbibtex</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>kbibtex</command
+></refname>
+<refpurpose
+>редактор BibTeX від KDE, створений Томасом Фішером (Thomas Fischer) і випущений за умов дотримання GPL версії 2 або пізнішої.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>kbibtex</command
+> <arg choice="opt"
+><replaceable
+>адреса</replaceable
+></arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Опис</title>
+<para
+>KBibTeX — редактор BibTeX від KDE, створений Томасом Фішером (Thomas Fischer) і випущений за умов дотримання GPL версії 2 або пізнішої. </para>
+<para
+>KBibTeX можна запускати як окрему програму або вбудовувати як KPart до майже усіх програм &kde; (наприклад, до Konqueror). </para>
+</refsect1>
+
+<refsect1 id="arguments"
+><title
+>Аргументи</title>
+<variablelist>
+  <varlistentry>
+    <term
+><option
+>адреса</option
+></term>
+  <listitem>
+    <para
+>Адреса або декілька адрес файлів бібліографій, які слід відкрити.</para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Також прочитайте</title>
+<simplelist>
+<member
+>Докладніша документація для користувачів доступна у <ulink url="help:/kbibtex"
+>help:/kbibtex</ulink
+> (або введіть цю адресу <acronym
+>URL</acronym
+> у поле адреси &konqueror;, або віддайте команду <userinput
+><command
+>khelpcenter</command
+> <parameter
+>help:/kbibtex</parameter
+></userinput
+>).</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+<member
+>Додаткові відомості можна знайти на <ulink url="https://userbase.kde.org/Special:MyLanguage/KBibTeX"
+>офіційному сайті KBibTeX</ulink
+>.</member>
+</simplelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Автори</title>
+<para
+>KBibTeX створено <personname
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+></personname
+> <email
+>fischer@unix-ag.uni-kl.de</email
+>. </para>
+</refsect1>
+
+</refentry>

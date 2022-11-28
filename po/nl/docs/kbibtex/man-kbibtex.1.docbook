@@ -1,0 +1,124 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Dutch "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>KBibTeX gebruikershandleiding</title>
+<author
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+> <contrib
+>KBibTeX manpagina.</contrib
+> <email
+>fischer@unix-ag.uni-kl.de</email
+></author>
+<date
+>2016-06-29</date>
+<productname
+>KBibTeX</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>kbibtex</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>kbibtex</command
+></refname>
+<refpurpose
+>een BibTeX editor door KDE geschreven door Thomas Fischer en vrijgegeven onder GPL versie 2 of later.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>kbibtex</command
+> <arg choice="opt"
+><replaceable
+>URL</replaceable
+></arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beschrijving</title>
+<para
+>KBibTeX is een BibTeX editor door KDE geschreven door Thomas Fischer en vrijgegeven onder de GPL versie 2 of later. </para>
+<para
+>KBibTeX kan gestart worden als alleenstaand programma of ingebed als een KPart in bijna elk &kde; programma (&eg; Konqueror). </para>
+</refsect1>
+
+<refsect1 id="arguments"
+><title
+>Argumenten</title>
+<variablelist>
+  <varlistentry>
+    <term
+><option
+>URL</option
+></term>
+  <listitem>
+    <para
+>Een adres of verschillende adressen van de te openen bibliografiedocumenten.</para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Zie ook</title>
+<simplelist>
+<member
+>Meer uitgebreide informatie vindt u in <ulink url="help:/kbibtex"
+>help:/kbibtex</ulink
+> (voer deze <acronym
+>URL</acronym
+> in in &konqueror;, of typ <userinput
+><command
+>khelpcenter</command
+> <parameter
+>help:/kbibtex</parameter
+></userinput
+> in op de opdrachtregel)</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+<member
+>Er is ook verdere informatie beschikbaar op de <ulink url="https://userbase.kde.org/KBibTeX/"
+>officiële website van KBibTeX</ulink
+>.</member>
+</simplelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Auteurs</title>
+<para
+>KBibTeX is geschreven door <personname
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+></personname
+> <email
+>fischer@unix-ag.uni-kl.de</email
+>. </para>
+</refsect1>
+
+</refentry>

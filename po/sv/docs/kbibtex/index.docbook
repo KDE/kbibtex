@@ -1,0 +1,2235 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY pdflatex "PDFL<superscript
+>A</superscript
+>T<subscript
+>E</subscript
+>X">
+  <!ENTITY tex "T<subscript
+>E</subscript
+>X">
+  <!ENTITY tetex "<application
+>teT<subscript
+>E</subscript
+>X</application
+>">
+  <!ENTITY texlive "<application
+>TeX Live</application
+>">
+  <!ENTITY bibtex "BibT<subscript
+>E</subscript
+>X">
+  <!ENTITY biblatex "<application
+>biblatex</application
+>">
+  <!ENTITY lyx "<application
+>LyX</application
+>">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Swedish "INCLUDE">
+]>
+
+<book id="kbibtex" lang="&language;">
+
+<bookinfo>
+<title
+>Handbok &kbibtex;</title>
+
+<authorgroup>
+  <author
+><firstname
+>Yuri</firstname
+><surname
+>Chornoivan</surname
+> <affiliation
+> <address
+> <email
+>yurchor@ukr.net</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+> <firstname
+>Stefan</firstname
+> <surname
+>Asserhäll</surname
+> <affiliation
+><address
+><email
+>stefan.asserhall@bredband.net</email
+></address
+></affiliation
+> <contrib
+>Översättare</contrib
+></othercredit
+> 
+</authorgroup>
+
+<copyright>
+<year
+>2004</year
+><year
+>2014</year>
+<holder
+>Thomas Fischer</holder>
+</copyright>
+
+<date
+>2019-05-07</date>
+<releaseinfo
+>0.9</releaseinfo>
+
+<legalnotice>
+  &FDLNotice;
+</legalnotice>
+
+<abstract>
+  <para
+>&kbibtex; är en grafisk &bibtex;-editor och skal. </para>
+</abstract>
+
+<keywordset>
+  <keyword
+>KDE</keyword>
+  <keyword
+>kbibtex</keyword>
+  <keyword
+>Latex</keyword>
+  <keyword
+>Tex</keyword>
+  <keyword
+>bibliografi</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="preface">
+  <title
+>Förord</title>
+  <sect1 id="preface_sect">
+    <title
+>Krav</title>
+    <para
+>För att köra &kbibtex; behöver du ha följande komponenter installerade på din dator: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+><ulink url="https://www.kde.org/"
+>&kde; Ramverk 5 biblioteken</ulink
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.ctan.org/"
+>&latex;</ulink
+>: Typsättningsprogram för dokument med hög kvalitet. Troligen ska du använda paketet &texlive; (eller &tetex; på äldre system), om du har ett Unix-liknande system. Det är ett valfritt beroende, men utan det ger &kbibtex; mycket begränsad funktionalitet. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.lri.fr/~filliatr/bibtex2html/"
+>bibtex2html</ulink
+>: Verktygssamling för översättning från &bibtex; till &HTML; för att förbättra &kbibtex; möjlighet till förhandsgranskning av poster (valfritt beroende). </para>
+      </listitem>
+    </itemizedlist>
+    <para
+>De flesta av dessa objekt, samt &kbibtex; själv, kan ingå i din &Linux;-distribution, kontrollera distributionens dokumentation eller installations-cd eller dvd för att lägga till paketen i datorn. </para>
+  </sect1>
+  <sect1 id="preface_audience">
+    <title
+>Tilltänkt publik </title>
+    <para
+>Den här handboken är avsedd för vem som helst, oavsett vilken erfarenhet de har av &latex;, &kde;, &kbibtex; eller &Linux;. </para>
+    <para
+>Avancerade användare läser troligen inte handboken, men alla förslag om dokumentationen tas hänsyn till. Om du skulle vilja bidra till projektet eller dokumentationen, konsultera <ulink url="https://userbase.kde.org/KBibTeX"
+>&kbibtex;s webbsida</ulink
+>. </para>
+  </sect1>
+
+</chapter>
+
+<chapter id="introduction">
+  <title
+>Inledning </title>
+  <sect1 id="intro_about">
+    <title
+>Om &kbibtex; </title>
+    <para
+>&kbibtex; är en integrerad miljö för att skapa och redigera bibliografier med &bibtex;-format. &kbibtex; ger möjlighet att använda hela funktionaliteten hos &bibtex; i ett grafiskt gränssnitt, vilket ger enkel, omedelbar och anpassad åtkomst till lokala bibliografier och bibliografier på nätet, med möjlighet att komplettera, kompilera, förhandsgranska och söka poster. </para>
+    <sect2 id="intro-bibtex">
+      <title
+>Om &bibtex;</title>
+      <para
+>&bibtex; är ett program och filformat konstruerat av Oren Patashnik och Leslie Lamport 1985 för dokumentframtagningssystemet &latex; <citation
+>Lamport86</citation
+>. </para>
+      <para
+>Formatet är helt och hållet teckenbaserat, så det kan användas av alla program (även om den standardiserade teckenuppsättningen för accenter är &tex;). Det är fält-baserat (tagg-baserat) och &bibtex;-programmet ignorerar okända fält, så det är möjligt att expandera. Det är troligen det vanligaste formatet för bibliografier på Internet. </para>
+      <para
+>&bibtex;-programmet använder stilfiler, en lista med citeringar från &latex; och &bibtex;-databasen för att skapa en &latex;-fil som listar de angivna referenserna. Idén med stilfiler är att den slutliga kopian med något tidskriftsspecifikt format kan skapas automatiskt. </para>
+      <para
+>Ett exempel på en post i &bibtex; databas: </para>
+<programlisting
+>@article{PAM_doi:10.1007/BF00048294,
+        author = {Streitenberger, P. and Knott, John F.},
+        doi = {10.1007/BF00048294},
+        issn = {1573-2673},
+        journal = {{International Journal of Fracture}},
+        number = {3},
+        pages = {R49},
+        publisher = {Springer},
+        title = {{The calculation of crack opening area and crack opening volume from stress intensity factors}},
+        url = {https://dx.doi.org/10.1007/BF00048294},
+        volume = {76},
+        x-fetchedfrom = {SpringerLink},
+        year = {1995}
+}
+</programlisting>
+  </sect2>
+  <sect2 id="kbibtex-and-latex-editors">
+    <title
+>&kbibtex;- och &latex;-editorer</title>
+    <para
+>&latex;-kod kan redigeras med ett sort antal verktyg, från enkla minimala texteditorer till kraftfulla visuella paket. För en jämförelse av &latex;-editorer, se <ulink url="https://en.wikipedia.org/wiki/Comparison_of_TeX_editors"
+>den här sidan</ulink
+>. </para>
+    <para
+>&kbibtex; tillhandahåller direkt <link linkend="integration"
+>integrering med &kile; och &lyx;</link
+> även om det kan användas framgångsrikt med vilken &latex;-editor som helst. </para>
+  </sect2>
+  </sect1>
+  <sect1 id="intro_mainfeat">
+    <title
+>&kbibtex; huvudfunktioner </title>
+    <para
+>&kbibtex; tillåter följande åtgärder: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+>Skriv in en ingress som definierar hur specialtext ska formateras i bibliografin genom att använda menyalternativet <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nytt element</guisubmenu
+> <guimenuitem
+>Ny ingress</guimenuitem
+></menuchoice
+> eller <link linkend="main-toolbar"
+>huvudverktygsraden</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Välj en kodning av poster med alternativet <guilabel
+>Kodning</guilabel
+> i dialogrutan <guilabel
+>Spara som</guilabel
+> eller <link linkend="file-settings"
+>panelen Filinställningar</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Skriv in kommentarer som inte tas hänsyn till av &bibtex; genom att använda menyalternativet <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nytt element</guisubmenu
+> <guimenuitem
+>Ny kommentar</guimenuitem
+></menuchoice
+> eller <link linkend="main-toolbar"
+>huvudverktygsraden</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Förhandsgranska och spara bibliografier med olika format (källa (&bibtex;), källa (RIS), Wikipedia, standard (&XML;/XSLT), snygg (&XML;/XSLT) och bara sammandrag (&XML;/XSLT)) genom att använda <link linkend="reference-preview"
+>panelen Förhandsgranskning av referenser</link
+>. Ytterligare förhandsgranskningsstilar är tillgängliga om <application
+>bibtex2html</application
+> är installerat. </para>
+      </listitem>
+      <listitem>
+	<para
+>Sök efter bibliografiposternas data i databaser på nätet genom att använda <link linkend="online-search"
+>panelen Sökning på nätet</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Visa lokala eller fjärresurser (på nätet), såsom filer, <link linkend="adding-link"
+>länkade</link
+> i &bibtex;-posten genom att använda <link linkend="document-preview"
+>panelen Förhandsgranskning av dokument</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Hitta och rätta duplicerade poster i bibliografin genom att använda menyalternativet <menuchoice
+><guimenu
+>Redigera</guimenu
+> <guimenuitem
+>Sök dubbletter</guimenuitem
+></menuchoice
+> eller <link linkend="main-toolbar"
+>huvudverktygsraden</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Importera ett <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+>-bibliotek genom att använda <link linkend="zotero"
+>Zotero-panelen</link
+>. </para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>
+
+<chapter id="quickstart">
+  <title
+>Komma igång </title>
+  <sect1 id="quick_begin">
+    <title
+>Skriva en bibliografifil för nybörjare </title>
+    <!-- 1) No request from kbibtex from Distro user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distro user has a mimeapps.list in home, but no kbibtex in it
+         2b) Devel user has no mimeapps.list in home
+         2c) Systemsettings -> File Associations is the place to edit/change this in a kde desktop
+         update after rebuilding post 2014-01-12
+         Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
+         (why? from installation of distro?)
+         This dialog even pops up when opening a .bib file with LMB click in file manager
+    -->
+    <para
+>Efter första körning föreslår &kbibtex; att programmet ska göras till standardeditor för bibliografiformat. Vi rekommenderar att du gör det.<footnote
+><para
+>Om du av någon anledning bestämmer dig för att ångra det, ta då bort strängarna med <literal
+>kbibtex</literal
+> som delsträng från filen <filename
+>mimeapps.list</filename
+> i katalogen <filename role="directory"
+>.local/share/applications</filename
+> under din hemkatalog.</para
+></footnote>
+    </para>
+    <para
+>Därefter visas ett fönster som liknar det här: </para>
+    <screenshot>
+      <screeninfo
+>&kbibtex; fönster efter första starten</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="first-run.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>&kbibtex; fönster efter första starten</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Klicka på knappen <guibutton
+>Ny</guibutton
+> i högra panelen, knappen <guibutton
+>Ny</guibutton
+> i verktygsraden, eller välj menyalternativet <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>N</keycap
+></keycombo
+></shortcut
+><guimenu
+>Arkiv</guimenu
+> <guimenuitem
+>Ny</guimenuitem
+></menuchoice
+> för att påbörja ett nytt bibliografidokument. </para>
+    <para
+>Nu är det dags att lägga till några poster. </para>
+    <para
+>Användare av &kbibtex; har två val när det gäller att lägga till en ny post: de kan använda <link linkend="online-search"
+>panelen Sökning på nätet</link
+> för att hitta postens data på nätet eller skriva in koden för hand. </para>
+    <para
+>Låt oss försöka lägga till en bokpost manuellt. </para>
+    <procedure>
+      <step id="element-editing">
+	<para
+>Välj <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nytt element</guisubmenu
+> <guimenuitem
+>Ny post</guimenuitem
+></menuchoice
+> i &kbibtex; meny. &kbibtex; ska öppna fönstret <guilabel
+>Redigera element</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>Elementets redigeringsfönster i &kbibtex;</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="element-editor.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Elementets redigeringsfönster i &kbibtex;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Välj <guimenuitem
+>Bok</guimenuitem
+> i kombinationslistan <guilabel
+>Typ:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Skriv in <userinput
+>Lamport68</userinput
+> i fältet <guilabel
+>Identifierare:</guilabel
+>. </para>
+	<tip>
+	  <para
+><quote
+>Identifierare</quote
+> används för att referera till bibliografiposten i huvuddokumentet. </para>
+	</tip>
+      </step>
+      <step>
+	<para
+>Gå till fliken <guilabel
+>Titel</guilabel
+> och skriv in <userinput
+>Latex: Ett dokumentframtagningssystem</userinput
+> i textrutan <guilabel
+>Titel:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Gå till fliken <guilabel
+>Författare, redaktör</guilabel
+>, klicka på knappen <guibutton
+>Lägg till</guibutton
+> och skriv in <userinput
+>Lamport, Leslie</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Gå till fliken <guilabel
+>Publikation</guilabel
+> och skriv in <userinput
+>1986</userinput
+> i textrutan <guilabel
+>År:</guilabel
+> och <userinput
+>Addison-Wesley</userinput
+> i textrutan <guilabel
+>Förlag:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Klicka på <guibutton
+>Ok</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Välj menyalternativet <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>S</keycap
+></keycombo
+></shortcut
+><guimenu
+>Arkiv</guimenu
+><guimenuitem
+>Spara</guimenuitem
+></menuchoice
+> och spara bibliografifilen som <filename
+>exempel.bib</filename
+> i katalogen där artikeln du ska skriva ska finnas. </para>
+      </step>
+    </procedure>
+  </sect1>
+
+  <sect1 id="quick-using">
+    <title
+>Använda bibliografin i ett &latex;-dokument </title>
+    <para
+>För att verkligen använda bibliografin i din artikel, måste du lägga till följande kommandon i &latex;-filen (dessa kommandon kan oftast hittas i slutet av dokumentet, där avsnittet <quote
+>Referenser</quote
+> finns): </para>
+<programlisting
+>\bibliography{<replaceable
+>exempel</replaceable
+>}
+\bibliographystyle{plain}
+</programlisting>
+    <para
+>Här är <replaceable
+>exempel</replaceable
+> namnet på den <filename role="extension"
+>bib</filename
+>-fil skapad med &kbibtex; och <quote
+><literal
+>plain</literal
+></quote
+> är namnet på bibliografistilen. </para>
+    <para
+>Det finns en mängd specifika bibliografistilar. Rådfråga ditt förlag för vilken som ska väljas, eller försök hitta den som best passar ditt syfte. </para>
+    <para
+>Nedan är en lista med några generella stilar tillgängliga överallt: </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+      <literal
+>plain</literal>
+	</term>
+	<listitem>
+	  <para
+>normal stil, listade i alfabetisk ordning och med numeriska beteckningar </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>unsrt</literal>
+	</term>
+	<listitem>
+	  <para
+>samma som <literal
+>plain</literal
+>, utom att poster visas i citeringsordning </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>alpha</literal>
+	</term>
+	<listitem>
+	  <para
+>samma som <literal
+>plain</literal
+>, utom att postidentifierare används </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>abbrv</literal>
+	</term>
+	<listitem>
+	  <para
+>samma som <literal
+>plain</literal
+>, utom att förkortningar används för förnamn, månadsnamn och tidskriftsnamn </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    <para
+>Du kan alltså använda &latex; editorns möjligheter (konsultera editorns dokumentation angående det) eller bara skriva in följande kod i en generell texteditor och spara filen med filändelsen <filename role="extension"
+>tex</filename
+>. </para>
+<programlisting
+>\documentclass{article}
+ \begin{document}
+ \bibliographystyle{plain}% Välj en bibliografisk stil
+ Testfil med en referens (se~\cite{Lamport86}).
+ \bibliography{exempel}
+ \end{document}
+</programlisting>
+    <para
+>Låt oss namnge filen <userinput
+>exempel.tex</userinput
+> i vårt provsyfte. </para>
+    <note>
+      <para
+>Spara filen i samma katalog som <filename
+>exempel.bib</filename
+>. </para>
+    </note>
+    <para
+>Nu när vi har dokumentets bas, måste vi köra både <application
+>latex</application
+> och <application
+>bibtex</application
+> för att behandla det. </para>
+    <para
+>Först ska du köra <application
+>latex</application
+> (för att skapa filen <filename
+>exempel.aux</filename
+>, som <application
+>bibtex</application
+> läser). Kör därefter <application
+>bibtex</application
+> en gång för att hämta några av hänvisningarna och skapa en <filename role="extension"
+>bbl</filename
+>-fil. Kör därefter <application
+>latex</application
+> igen så att korsreferenserna mellan textfilen och bibliografin är riktiga. Du kan upprepa körningen av <application
+>bibtex</application
+> och <application
+>latex</application
+> med filen för att försäkra dig om att alla korsreferenser är riktiga. Se upp med att tillägg eller borttagning av hänvisningar och källor kräver att <application
+>bibtex</application
+> körs igen. </para>
+    <para
+>Följande kommandon kan sålunda användas i terminalen för att kompilera dokumentet: </para>
+    <screen
+>latex exempel
+bibtex exempel
+latex exempel
+latex exempel</screen>
+    <tip>
+      <para
+>Om du använder något avancerat &latex;-skall som &kile; eller &lyx; finns ingen anledning att bekymra sig om att köra alla dessa kommandon från terminalen, använd bara en snabbtangent (<keycombo
+>&Alt;<keycap
+>6</keycap
+></keycombo
+> i &kile;) eller en knapp i verktygsraden för att se resultaten. </para>
+    </tip>
+    <para
+>Nu kan vi titta på resultatet som en &DVI;- eller &PDF;-fil (formatet beror på dina inställningar), lagrad i samma katalog som källfilerna. </para>
+    <note>
+      <para
+>Gratulerar! Du har precis skapad ditt första dokument med en &bibtex;-bibliografi. </para>
+    </note>
+  </sect1>
+</chapter>
+
+<chapter id="interface">
+  <title
+>Gränssnittet i &kbibtex; </title>
+    <sect1 id="panels">
+    <title
+>Panelerna i &kbibtex; </title>
+    <para
+>Huvudfunktionerna i &kbibtex; är tillgängliga via de nio panelerna. Det är möjligt att arrangera om panelerna eller till och med koppla loss dem från huvudfönstret genom att klicka med vänster musknapp på panelens rubrik och dra det till dess nya plats. </para>
+    <para
+>Du kan göra panelerna i &kbibtex; synliga eller dölja dem med undermenyn <menuchoice
+><guimenu
+>Inställningar</guimenu
+><guimenuitem
+>Visa paneler</guimenuitem
+></menuchoice
+>. Det är tillräckligt att markera alternativet för panelen för att göra den synlig, eller avmarkera det för att dölja panelen. </para>
+    <sect2 id="list-of-documents">
+      <title
+>Panelen Dokumentlista </title>
+	<para
+>Panelen <guilabel
+>Dokumentlista</guilabel
+> gör det möjligt att byta mellan de öppna bibliografidokumenten (fliken <guilabel
+>Öppna filer</guilabel
+>), öppna senast använda dokument (fliken <guilabel
+>Favoriter</guilabel
+>), öppna huvudbibliografidokumenten (fliken <guilabel
+>Favoriter</guilabel
+>) eller bläddra i datorns filsystem för att hitta bibliografidokumentet (fliken <guilabel
+>FIlsystembläddrare</guilabel
+>). </para>
+	<tip>
+	  <para
+>För att lägga till en bibliografifil i favoriter, markera den under någon flik utom <guilabel
+>Favoriter</guilabel
+>, klicka med höger musknapp och välj <guimenuitem
+>Lägg till i favoriter</guimenuitem
+>. För att ta bort bibliografin från favoriter, markera den under fliken <guilabel
+>Favoriter</guilabel
+>, klicka med höger musknapp och välj <guimenuitem
+>Ta bort från favoriter</guimenuitem
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Panelen Dokumentlista</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-documents.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Panelen Dokumentlista</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="list-of-values">
+      <title
+>Panelen Värdelista </title>
+	<para
+>Panelen <guilabel
+>Värdelista</guilabel
+> kan användas för att enkelt visa upp statistik om användning av värdena i postfälten och redigera värdena tillsammans. </para>
+	<para
+>Den övre kombinationsrutan används för att välja bibliografifält vars statistikinformation ska visas (det antal poster som har samma värde för fältet) i den nedre listan. </para>
+	<para
+>Det går att klicka med höger musknapp på en post i den nedre listan för att komma åt möjligheten att redigera tillsammans. Det är möjligt att välja <guimenuitem
+>Ersätt alla förekomster</guimenuitem
+>, <guimenuitem
+>Ta bort alla förekomster</guimenuitem
+> för värdet, välja <guimenuitem
+>Sök efter markerade värden</guimenuitem
+> med användning av <link linkend="filter-toolbar"
+>filterverktygsraden</link
+> eller <guimenuitem
+>Lägg till värde i markerade poster</guimenuitem
+>, <guimenuitem
+>Ersätt värde i markerade poster</guimenuitem
+> eller <guimenuitem
+>Ta bort värde från markerade poster</guimenuitem
+> (vissa poster måste väljas i huvudlistan över poster först). </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Panelen Värdelista</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-values.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Panelen Värdelista</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="statistics">
+      <title
+>Statistikpanelen </title>
+      <para
+><guilabel
+>Statistikpanelen</guilabel
+> är konstruerad för att visa en omfattande lista med statistisk information om det aktuella bibliografidokumentet. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Statistikpanelen</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="statistics.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Statistikpanelen</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="reference-preview">
+      <title
+>Panelen Förhandsgranskning av referenser </title>
+	<para
+><guilabel
+>Förhandsgranskning av referenser</guilabel
+> används för att förhandsgranska och spara bibliografiposten som för närvarande är vald med &HTML;-format. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Panelen Förhandsgranskning av referenser</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="reference-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Panelen Förhandsgranskning av referenser</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Det är möjligt att förhandsgranska referenserna med formaten Källa (&bibtex;), Källa (RIS), Wikipedia, standard (&XML;/XSLT), snygg (&XML;/XSLT) och bada sammanfattning (&XML;/XSLT). Ytterligare alternativ blir tillgängliga när <application
+>bibtex2html</application
+> är installerat. </para>
+	<tip>
+	  <para
+>När man klickar på referensernas element i &XML;-baserade format utför &kbibtex; motsvarande <link linkend="filter-toolbar"
+>filtrering</link
+> av bibliografilistan: </para>
+	</tip>
+	<para
+>Klicka på knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Öppna</guibutton
+> för att öppna referensen i standardwebbläsaren. Knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Spara som &HTML;</guibutton
+> kan användas för att spara referensen som &HTML; för vidare användning på en webbplats. </para>
+	<para
+>Man kan klicka med höger musknapp på panelen för att välja <guimenuitem
+>Uppdatera</guimenuitem
+> och uppdatera referenserna enligt de senaste ändringarna av posten. </para>
+    </sect2>
+    <sect2 id="file-settings">
+      <title
+>Panelen Filinställningar </title>
+	<para
+>Panelen <guilabel
+>Filinställningar</guilabel
+> kan användas för att definiera några parametrar för den aktuella bibliografins <filename role="extension"
+>bib</filename
+>-fil. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Panelen Filinställningar</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="file-settings.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Panelen Filinställningar</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Det är möjligt att välja <guilabel
+>Kodning</guilabel
+>, <guilabel
+>Strängavgränsare</guilabel
+>, <guilabel
+>Citationstecken för kommentarer</guilabel
+>, <guilabel
+>Skiftläge för nyckelord</guilabel
+>, och <guilabel
+>Formatering av personnamn</guilabel
+>. </para>
+	<para
+>Normalt ändrar &bibtex; alla mellanliggande ord till små bokstäver i meningar. Markera kryssrutan <guilabel
+>Skydda titlar</guilabel
+> för att skydda skiftläget i postens titlar. </para>
+    </sect2>
+    <sect2 id="online-search">
+      <title
+>Panelen Sökning på nätet </title>
+	<para
+>Panelen <guilabel
+>Sökning på nätet</guilabel
+> kan användas för att utföra en sökning i bibliografidatabaser på Internet för att hitta nödvändiga poster eller för att erhålla den fullständiga datamängden för en manuellt inmatad post. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Panelen Sökning på nätet</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="online-search.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Panelen Sökning på nätet</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Posterna kan sökas enligt <guilabel
+>Fri text</guilabel
+>, <guilabel
+>Titel</guilabel
+>, <guilabel
+>Författare</guilabel
+> eller <guilabel
+>År</guilabel
+>. Antal resultat som visas i panelen <link linkend="search-results"
+>Sökresultat</link
+> kan justeras genom att använda nummerrutan <guilabel
+>Antal resultat</guilabel
+>. </para>
+	<para
+>Klicka på knappen <guibutton
+><inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Använd post</guibutton
+> för att fylla i fälten med sökkriterier från bibliografiposten som för närvarande är markerad. På så sätt kan den befintliga posten kompletteras med data från Internet-databasen. Knappen <guibutton
+><inlinemediaobject
+> <imageobject
+> <imagedata fileref="media-playback-start.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Sök</guibutton
+> kan användas för att starta sökningen. </para>
+	<para
+>&kbibtex; kan utföra en sökning i de mest populära Internet-databaserna. För att välja uppsättningen databaser för sökning byt till fliken <guilabel
+>Söktjänster</guilabel
+> eller klicka med vänster musknapp på länken <guilabel
+>ändra</guilabel
+> under fliken <guilabel
+>Frågebegrepp</guilabel
+>. </para>
+	<para
+>För att besöka databasens hemsida på Internet, klicka med höger musknapp på dess post under fliken <guilabel
+>Söktjänster</guilabel
+> och välj <guimenuitem
+>Gå till hemsida</guimenuitem
+>. </para>
+    </sect2>
+    <sect2 id="zotero">
+      <title
+>Zotero-panelen </title>
+	<para
+><guilabel
+>Zotero</guilabel
+>-panelen kan användas för att importera ett <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+>-bibliotek. </para>
+	<para
+>Zotero använder specialiserade tillägg i webbläsare för att spara bibliografiposter från Internet-sidor. Data lagras i en nätdatabas som kan nås var som helst. Dokumentation för Zotero finns <ulink url="https://www.zotero.org/support/"
+>här</ulink
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Zotero-panelen</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="zotero.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Zotero-panelen</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Klicka på knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Hämta ny inloggningsinformation</guibutton
+> under fliken <guilabel
+>Inloggningsinformation</guilabel
+> för att starta guiden för behörighetskontroll på Zotero. Följ instruktionerna för att låta &kbibtex; komma åt Zotero-biblioteket. </para>
+	<para
+>För att komma åt biblioteksposterna, dubbelklicka på motsvarande objekt under flikarna <guilabel
+>Samlingar</guilabel
+> eller <guilabel
+>Etiketter</guilabel
+>. Posterna som uppfyller valda kriterier visas i panelen <link linkend="search-results"
+>Sökresultat</link
+>. </para>
+    </sect2>
+    <sect2 id="search-results">
+      <title
+>Panelen Sökresultat </title>
+	<para
+>Panelen <guilabel
+>Sökresultat</guilabel
+> används för att hantera sökresultaten som erhålls genom att använda panelen <link linkend="online-search"
+>Sökning på nätet</link
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Panelen Sökresultat</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="search-results.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Panelen Sökresultat</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Klicka på knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="svn-update.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Importera</guibutton
+> för att importera sökresultaten som för närvarande är markerade till bibliografin. </para>
+	<para
+>För att komma åt andra åtgärder för sökresultatet som för närvarande är markerat, klicka på det med höger musknapp. I menyn som visas kan du granska resultatet (<guimenuitem
+>Visa element</guimenuitem
+>) eller kopiera det för att senare klistra in det med &bibtex;-format på andra ställen med <keycombo
+>&Ctrl;<keycap
+>V</keycap
+></keycombo
+> (alternativet <guimenuitem
+>Kopiera</guimenuitem
+>). </para>
+    </sect2>
+    <sect2 id="element-editor">
+      <title
+>Panelen Elementeditor </title>
+	<para
+>Panelen <guilabel
+>Elementeditor</guilabel
+> kan användas för att redigera bibliografielementet som för närvarande är markerat. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Panelen Elementeditor</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="element-editor.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Panelen Elementeditor</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Klicka på knappen <inlinemediaobject
+> <imageobject
+> <imagedata fileref="view-filter.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> för att välja en <link linkend="config-id-suggestions"
+>föreslagen identifierare</link
+> för elementet. </para>
+	<para
+>Skriv in respektive data i redigeringsfälten. Fältens dataformat kan bytas mellan <guimenuitem
+>Text</guimenuitem
+>, <guimenuitem
+>Referens</guimenuitem
+> och <guimenuitem
+>Källkod</guimenuitem
+> med kombinationsrutan till vänster om textrutan. </para>
+	<para
+>Klicka på knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="configure.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Alternativ</guibutton
+> för att visa en kombinationsmeny med två alternativ. </para>
+	<para
+>Alternativet <guimenuitem
+>Visa alla fält</guimenuitem
+> kan användas för att visa eller dölja alla tomma fält i det aktuella elementet. </para>
+	<para
+>Det är möjligt att byta tangentbordsfokus mellan fälten med tabulatortangenten. Det andra menyalternativet, <guimenuitem
+>Tabulatortangenten besöker bara redigerbara fält</guimenuitem
+>, kan alltså användas för att stänga av eller sätta på enbart förflyttning mellan redigerbara fält. </para>
+	<para
+>klicka på knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="tools-check-spelling.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Kontrollera med &bibtex;</guibutton
+> för att förhandsgranska redigeringsposten som den kommer att visas i den kompilerade &PDF;-filen. </para>
+	<para
+>Markera rutan <guilabel
+>Verkställ ändringar automatiskt</guilabel
+> för att låta alla ändringar automatiskt användas för posten utan behov av att klicka på knappen <guibutton
+>Verkställ</guibutton
+>. </para>
+	<para
+>Klicka på knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Återställ</guibutton
+> för att ångra alla ändringar. </para>
+      </sect2>
+      <sect2 id="document-preview">
+      <title
+>Panelen Förhandsgranskning av dokument </title>
+	<para
+>Panelen <guilabel
+>Förhandsgranskning av dokument</guilabel
+> kan användas för att förhandsgranska sidor eller dokument <link linkend="adding-link"
+>länkade</link
+> till bibliografiposten som för närvarande är markerad. </para>
+	<tip>
+	  <para
+>Normalt öppnas <guilabel
+>Förhandsgranskning av dokument</guilabel
+> genom att trycka på snabbtangenten <keycombo
+>&Ctrl;&Shift;<keycap
+>D</keycap
+></keycombo
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Panelen Förhandsgranskning av dokument</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="document-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Panelen Förhandsgranskning av dokument</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Klicka på knappen <inlinemediaobject
+> <imageobject
+> <imagedata fileref="applications-internet.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> för att välja mellan bara lokala filer och alla dokument inklusive fjärrdokument. </para>
+	<para
+>Klicka på knappen <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> för att öppna sidan eller dokumentet i det externa standardprogrammet. </para>
+	<para
+>Kombinationsrutan <guilabel
+>Adress</guilabel
+> kan användas för att byta mellan sidorna och dokumenten. </para>
+    </sect2>
+  </sect1>
+  <sect1 id="toolbars">
+    <title
+>Verktygsraderna i &kbibtex; </title>
+    <para
+>&kbibtex; har två fullständigt anpassningsbara verktygsrader, placerade i den övre delen av fönstret. </para>
+    <para
+>Mer information om att anpassa verktygsraderna finns i <ulink url="help:/fundamentals/config.html#toolbars"
+>motsvarande avsnitt i handboken &kde;:s grunder</ulink
+>. Nedan finns en kort beskrivning av standardknapparna på &kbibtex; verktygsrader. </para>
+    <sect2 id="main-toolbar">
+      <title
+>Huvudverktygsrad </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Huvudverktygsrad</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="main-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Huvudverktygsrad</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>Den vanliga huvudverktygsraden i &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para
+><guibutton
+>Ny</guibutton
+>: skapar ett nytt bibliografidokument. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Öppna</guibutton
+>: Visar den <ulink url="help:/fundamentals/files.html"
+>generella dialogrutan för att öppna eller spara i &kde;</ulink
+> för att öppna en befintlig bibliografi att redigera. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Stäng</guibutton
+>: Stänger bibliografidokumentet som för närvarande är aktivt. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Spara</guibutton
+>: Sparar bibliografidokumentet som för närvarande är aktivt. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Spara som</guibutton
+>: Gör det möjligt att spara bibliografidokumentet som för närvarande är öppet med ett nytt namn genom att använda den <ulink url="help:/fundamentals/files.html"
+>generella dialogrutan för att öppna eller spara i &kde;</ulink
+>. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Nytt element</guibutton
+>: Gör det möjligt att skapa den nya posten, kommentaren, ingressen eller det nya <link linkend="macros"
+>makrot</link
+> i det aktuella bibliografidokumentet. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Sök dubbletter</guibutton
+>: Söker efter och rättar duplicerade element i det aktuella bibliografidokumentet. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Skicka till &lyx; eller &kile;</guibutton
+>: Skickar en referens till bibliografiposten som för närvarande är markerad till &lyx; eller &kile;. Mer om detta i <link linkend="integration"
+>motsvarande kapitel i handboken</link
+>. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+    <sect2 id="filter-toolbar">
+      <title
+>Filterverktygsrad </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Filterverktygsrad</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="filter-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Filterverktygsrad</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>Den vanliga filterverktygsraden i &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Det enklaste sättet att navigera i stora bibliografier är att använda <guilabel
+>Filterverktygsraden</guilabel
+>: &kbibtex; filtrerar den visade listan enligt inmatningen. Om du söker efter ett visst element, men inte vet den exakta positionen i listan, skriv bara in några bokstäver från dess data i textrutan <guilabel
+>Filter</guilabel
+>. </para>
+	<para
+>När du skriver in de första bokstäverna, ser du att listan ändras. Ju fler bokstäver du skriver in, desto mer reduceras listan som visas. Filtreringen sker omedelbart medan du skriver. </para>
+	<para
+>Om du tittar på högra delen av <guilabel
+>Filterverktygsraden</guilabel
+>, märker du två kombinationsmenyer. Kombinationsmenyerna är konstruerade för att du ska snabbt kunna skräddarsy filterkriterier efter behov. Den första kombinationsmenyn används för att definiera matchningsläge (<guimenuitem
+>något ord</guimenuitem
+>, <guimenuitem
+>alla ord</guimenuitem
+> eller <guimenuitem
+>exakt mening</guimenuitem
+>). Den andra är till för att definiera fältet där filtreringen ska göras. Du kan välja <guimenuitem
+>alla fält</guimenuitem
+> eller välja ett fält för att begränsa resultatlistan i stora bibliografier. </para>
+	<para
+>Det finns också två knappar på den här verktygsraden: </para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="application-pdf.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>Inkludera &PDF;-filer i fulltextsökning</guibutton
+>: Låter dig inkludera hela &PDF;-texten i filtreringen. </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>Återställ filterkriterier</guibutton
+>: Återställer filtreringskriterier. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+  </sect1>
+  <sect1 id="menus">
+    <title
+>Menyerna i &kbibtex; </title>
+    <para
+>&kbibtex; följer &kde;:s vanliga menyarrangemang. Det har alltså många menyalternativ som är gemensamma för alla &kde;-program. Mer information om dessa menyalternativ finns i <ulink url="help:/fundamentals/menus.html"
+>följande hjälpavsnitt</ulink
+>. </para>
+    <para
+>Nedan hittar du beskrivningar av &kbibtex; specifika menyalternativ. </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Redigera</guimenu
+> <guimenuitem
+>Ta bort</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Ta bort elementet som för närvarande är markerat i bibliografilistan. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Redigera</guimenu
+> <guimenuitem
+>Sök dubbletter</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Låter dig hitta och ta bort dubbletter i bibliografin som för närvarande är öppen. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nytt element</guisubmenu
+> <guimenuitem
+>Ny post</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Öppna fönstret <link linkend="element-editor"
+>Redigera element</link
+> för att skriva in en ny bibliografipost. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nytt element</guisubmenu
+> <guimenuitem
+>Ny kommentar</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Öppna fönstret <link linkend="element-editor"
+>Redigera element</link
+> för att ange en ny kommentar som inte tas hänsyn till av &bibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nytt element</guisubmenu
+> <guimenuitem
+>Nytt makro</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Öppna fönstret <link linkend="element-editor"
+>Redigera element</link
+> för att ange ett <link linkend="macros"
+>makro</link
+>. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nytt element</guisubmenu
+> <guimenuitem
+>Ny ingress</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Öppna fönstret <link linkend="element-editor"
+>Redigera element</link
+> för att skriva in en ny ingress för bibliografin, som definierar hur specialtext ska formateras i bibliografin. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>E</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Element</guimenu
+> <guimenuitem
+>Redigera element</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Öppna fönstret <link linkend="element-editor"
+>Redigera element</link
+> för att redigera bibliografielementet som för närvarande är markerat. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="adding-link">
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>D</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Element</guimenu
+> <guisubmenu
+>Visa dokument</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Öppna lokalt eller fjärrdokument för posten som för närvarande är markerad i bibliografilistan. </para>
+	  <para
+>Länken till dokumentet kan läggas till eller redigeras genom att använda fliken <guilabel
+>Extern</guilabel
+> i fönstret <link linkend="element-editor"
+>Redigera element</link
+>. </para>
+	  <screenshot>
+	    <screeninfo
+>Den externa dokumentfliken i postens redigeringsdialogruta</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="external-tab.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Den externa dokumentfliken i postens redigeringsdialogruta</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>Knappen <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Lägg till</guilabel
+> kan användas för att lägga till en länk till en fjärrsida. </para>
+	  <para
+>Kombinationsrutan <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Lägg till fil...</guilabel
+> används för att välja någon lokal fil, och lägga till en referens eller hela filen i den aktuella bibliografin. </para>
+	  <para
+>Om du klickar på <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> rensas objektet som för närvarande är markerat. </para>
+	  <para
+>Klicka på knappen <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open-remote.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> för att öppna dokumentlänken i webbläsaren. </para>
+	  <para
+>Klicka på knappen <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> för att ta bort dokumentobjektet som för närvarande är markerat. </para>
+	  <para
+>Använd knapparna <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-down.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> och <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> för att arrangera om objekt i dokumentlistan. </para>
+	  <para
+>Till sist, kan knappen  <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> användas för att spara fjärrdokument lokalt. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Sök &PDF;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Försök att hitta några &PDF;-dokument för bibliografiposten som för närvarande är markerad på Internet. </para>
+	  <screenshot>
+	    <screeninfo
+>Dialogrutan Sök &PDF;</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="find-pdf.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Dialogrutan Sök &PDF;</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>Du kan välja <guilabel
+>Ignorera</guilabel
+>, <guilabel
+>Ladda ner</guilabel
+> eller <guilabel
+>Använd bara webbadress</guilabel
+> för posten. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="format-entry-ids">
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Formatera postidentiferare</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Låter dig formatera identifierare för bibliografiposterna som för närvarande är markerade enligt standardformateringen. </para>
+	  <para
+>Standardformateringen för identifierare kan definieras med sidan <link linkend="config-id-suggestions"
+>Identifierarförslag</link
+> i &kbibtex; inställningsdialogruta. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Färg</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Låter dig välja en färgad beteckning för bibliografiposterna som för närvarande är markerade eller ta bort en sådan beteckning (<guimenuitem
+>Ingen färg</guimenuitem
+>). </para>
+	  <para
+>Färgbeteckningarna kan ställas in genom att använda sidan <link linkend="config-color"
+>Färg och beteckningar</link
+> i &kbibtex; inställningsdialogruta. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Skicka till &lyx; eller &kile;</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+><link linkend="integration"
+>Skicka referenser</link
+> till bibliografiposterna som för närvarande är markerade till &lyx; eller &kile;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Inställningar</guimenu
+> <guimenuitem
+>Anpassa &kbibtex;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Visa <link linkend="config-dialog"
+>&kbibtex; inställningsdialogruta</link
+>. </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </sect1>
+  <sect1 id="config-dialog">
+    <title
+>&kbibtex; inställningsdialogruta </title>
+    <para
+>Flera &kbibtex;-parametrar kan ställas in via dialogrutan <guilabel
+>Inställningar</guilabel
+>. Dialogrutan kan öppnas genom att använda menyalternativet <menuchoice
+><guimenu
+>Inställningar</guimenu
+><guimenuitem
+>Anpassa &kbibtex;...</guimenuitem
+></menuchoice
+>. Nedan följer en beskrivning av &kbibtex; inställningssidor. </para>
+    <para
+>Klicka på knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-revert.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Förval</guibutton
+> för att återställa alla alternativ till deras standardvärden. </para>
+    <para
+>Knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Återställ</guibutton
+> kan användas för att återställa alla nuvarande inställningsändringar utan att stänga fönstret <guilabel
+>Inställningar</guilabel
+>. </para>
+    <sect2 id="config-general">
+      <title
+>Allmän inställning </title>
+      <screenshot>
+	<screeninfo
+>Allmän inställning</screeninfo>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="config-general.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase
+>Allmän inställning</phrase>
+	  </textobject>
+	</mediaobject>
+      </screenshot>
+      <para
+>Inställningssidan låter dig ändra standardvärdet på <guilabel
+>Formatering av personnamn</guilabel
+>, vilket automatiskt används för namn som matas in med dialogrutan <link linkend="element-editor"
+>Elementeditor</link
+>. </para>
+      </sect2>
+    <sect2 id="config-keywords">
+      <title
+>Inställning av nyckelord </title>
+      <screenshot>
+	<screeninfo
+>Inställning av nyckelord</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-keywords.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Inställning av nyckelord</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Sidan kan användas för att redigera nyckelordslistan. Nyckelorden som används för bibliografiposter med <link linkend="element-editor"
+>elementeditorn</link
+> är användbara för att strukturera bibliografin. <link linkend="filter-toolbar"
+>Filtrering</link
+> enligt nyckelord kan ge finkorniga resultat enligt ämne. </para>
+	<para
+>Knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Lägg till</guibutton
+> kan användas för att lägga till ett nyckelord i listan. </para>
+	<para
+>Klicka på knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Ta bort</guibutton
+> för att ta bort nyckelordsobjektet som för närvarande är markerat. </para>
+      </sect2>
+      <sect2 id="config-color">
+      <title
+>Inställning av färger och beteckningar </title>
+      <screenshot>
+	<screeninfo
+>Inställning av färger och beteckningar</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-color.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Inställning av färger och beteckningar</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Färgade beteckningar är ett annat användbart sätt att strukturera bibliografin. Inställningssidan kan användas för att definiera beteckningarna och deras färger. </para>
+	<para
+>Knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Lägg till</guibutton
+> kan användas för att lägga till en beteckning i listan. </para>
+	<para
+>Klicka på knappen <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Ta bort</guibutton
+> för att ta bort beteckningen som för närvarande är markerat. </para>
+	<para
+>Dubbelklicka på ett objekt i kolumnen <guilabel
+>Färg</guilabel
+> eller <guilabel
+>Beteckning</guilabel
+> för att börja redigera det. </para>
+      </sect2>
+      <sect2 id="config-id-suggestions">
+      <title
+>Inställning av identifierarförslag </title>
+      <screenshot>
+	<screeninfo
+>Inställning av identifierarförslag</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-id-suggestions.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Inställning av identifierarförslag</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Inställningssidan används för att hantera metoder för förslag av identifierare i <link linkend="element-editor"
+>elementeditorn</link
+>. Det går att lägga till, redigera, ta bort, och arrangera om metoderna med respektive knappar till höger om förslagslistan. </para>
+	<para
+>Klicka på knappen <guibutton
+><inlinemediaobject
+> <imageobject
+> <imagedata fileref="favorites.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Ändra förval</guibutton
+> för att ändra förvald metod för förslag av identifierare till alternativet som för närvarande är markerat. Knappen kan användas för att definiera format för åtgärden <link linkend="format-entry-ids"
+>Formatera postidentiferare</link
+>. </para>
+      </sect2>
+      <sect2 id="config-user-interface">
+      <title
+>Inställning av användargränssnitt </title>
+      <screenshot>
+	<screeninfo
+>Inställning av användargränssnitt</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-user-interface.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Inställning av användargränssnitt</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Genom att använda den här inställningssidan kan du få &kbibtex; att visa eller dölja kommentarer och makron i bibliografilistan, välja bibliografisystem (&bibtex; eller &biblatex;) och definiera vad som ska hända vid dubbelklick på ett element i bibliografilistan (<guimenuitem
+>Öppna editor</guimenuitem
+> eller <link linkend="document-preview"
+><guimenuitem
+>Visa dokument</guimenuitem
+></link
+>). </para>
+	<tip>
+	  <para
+>&biblatex; är en ny implementering av &bibtex;. Med &biblatex; styrs formateringen av bibliografin helt av &latex;-makron, inte <filename role="extension"
+>bst</filename
+>-filer. Det stöder indelade bibliografier, flera bibliografier i ett dokument, och separata listor av bibliografiska kortformer. Bibliografier kan delas upp i delar och/eller segmenteras enligt ämnen. Precis som för bibliografistilerna, kan alla hänvisningskommandon definieras fritt. Paketet &biblatex; är helt landsanpassat och kan samverka med paketet babel.<footnote
+><para
+>Från &biblatex; dokumentation.</para
+></footnote>
+	  </para>
+	  <para
+>&biblatex; kan också använda <ulink url="http://biblatex-biber.sourceforge.net/"
+>biber</ulink
+> som bakgrundsprogram. Det är möjligt att använda UTF-8 symboler i bibliografiposter med &biblatex;. </para>
+	  <para
+>Det går alltså att använda &biblatex; för att skapa raffinerade bibliografier. </para>
+	</tip>
+      </sect2>
+      <sect2 id="config-saving">
+      <title
+>Spara och exportera inställning </title>
+      <screenshot>
+	<screeninfo
+>Spara och exportera inställning</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-saving.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Spara och exportera inställning</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Sidan låter dig välja ett &latex;-kommando (t.ex. <userinput
+>\cite{...}</userinput
+>) som används för att omge referensen som kopieras med alternativet <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;&Shift;<keycap
+>C</keycap
+></keycombo
+></shortcut
+><guimenuitem
+>Kopiera referens</guimenuitem
+></menuchoice
+> i bibliografilistans sammanhangsberoende meny. </para>
+	<para
+>Det är också möjligt att låta &kbibtex; avgöra <link linkend="lyx-integration"
+>&lyx; data-pipe</link
+> automatiskt genom att markera motsvarande ruta. </para>
+	<para
+>När alternativet <guilabel
+>Detektera &lyx;-pipe automatiskt</guilabel
+> inte är markerat, kan du lägga till pipe-adressen manuellt i textrutan <guilabel
+>Ange &lyx;-pipe manuellt</guilabel
+> eller välja den med <ulink url="help:/fundamentals/files.html"
+>generella dialogrutan för att öppna eller spara i &kde;</ulink
+> genom att klicka på knappen till höger om textrutan. </para>
+	<para
+>Slutligen kan du ställa in säkerhetskopior här. Det är möjligt att välja vad som säkerhetskopieras (<guimenuitem
+>Bara lokala filer</guimenuitem
+>, <guimenuitem
+>Ingen säkerhetskopia</guimenuitem
+> eller <guimenuitem
+>Både lokala filer och fjärrfiler</guimenuitem
+>) genom att använda kombinationsrutan <guilabel
+>Säkerhetskopior vid spara</guilabel
+> och antal säkerhetskopior att lagra. </para>
+      </sect2>
+      <sect2 id="config-pdf">
+      <title
+>Inställning av &PDF; och Postscript </title>
+      <screenshot>
+	<screeninfo
+>Inställning av &PDF; och Postscript</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-pdf.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Inställning av &PDF; och Postscript</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Inställningssidan kan användas för att välja vissa alternativ för <link linkend="element-editor"
+>förhandsgranskning av poster i &kbibtex;</link
+>. Du kan välja <guilabel
+>Pappersstorlek</guilabel
+>, språk för &latex;-paketet <ulink url="https://www.ctan.org/pkg/babel"
+>babel</ulink
+> och <link linkend="quick-using"
+>bibliografistilen</link
+>. </para>
+      </sect2>
+  </sect1>
+</chapter>
+
+<chapter id="advanced">
+  <title
+>Avancerad användning </title>
+  <sect1 id="crossreferences">
+    <title
+>Korsreferenser </title>
+    <para
+>Korsreferenser låter dig spara tid genom att skapa länkar mellan en <quote
+>överliggande</quote
+> post (kan behandlas som en konferenspublikation eller artikelsamling) och <quote
+>underliggande</quote
+> poster (rapporter eller artiklar). </para>
+    <para
+>För att skapa en korsreferens, lägg bara till dess identifierare i fältet <guilabel
+>Korsreferens</guilabel
+> under postens flik <guilabel
+>Publikation</guilabel
+>. </para>
+    <screenshot>
+      <screeninfo
+>Publikationsfliken i postens redigeringsdialogruta</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="cross-ref.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>Publikationsfliken i postens redigeringsdialogruta</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Du kan antingen mata in identifieraren direkt eller klicka på knappen <inlinemediaobject
+> <imageobject
+> <imagedata fileref="flag.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> för att välja den i listan över tillgängliga identifierare. </para>
+  </sect1>
+  <sect1 id="macros">
+    <title
+>Makron </title>
+    <para
+>Antag att bibliografin innehåller många referenser till samma tidskrift, och att du inte vill skriva in dess titel gång på gång. Då kan du definiera ett makro för tidskriftens titel. </para>
+    <para
+>Låt oss anta att vi vill definiera ett makro för <quote
+>Engineering Fracture Mechanics</quote
+> vid namn <replaceable
+>efm</replaceable
+>. Då ska vi göra följande: </para>
+    <procedure>
+      <step>
+	<para
+>Välj menyalternativet <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nytt element</guisubmenu
+> <guimenuitem
+>Nytt makro</guimenuitem
+></menuchoice
+>. </para>
+      </step>
+      <step>
+	<para
+>Ange en identifierare (förkortning) för titeln i textrutan <guilabel
+>Identifierare:</guilabel
+>. Förvald identifierare är <userinput
+>Ny 1</userinput
+>. Vi ska skriva in <userinput
+>efm</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Välj <inlinemediaobject
+> <imageobject
+> <imagedata fileref="draw-text.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Vanlig text</guilabel
+>). Det andra alternativet, <inlinemediaobject
+> <imageobject
+> <imagedata fileref="code-context.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Källkod</guilabel
+>) kan användas om man vill infoga ett makro med &latex;-kommandon. </para>
+      </step>
+      <step>
+	<para
+>Skriv in <userinput
+>Engineering Fracture Mechanics</userinput
+> i textrutan <guilabel
+>Värde:</guilabel
+> </para>
+	<screenshot>
+	  <screeninfo
+>Definiera makro</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definiera makro</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Klicka på knappen <guibutton
+>Verkställ</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Byt valfritt till fliken <guilabel
+>Källa</guilabel
+> för att inspektera makrots kod. </para>
+	<screenshot>
+	  <screeninfo
+>Definiera makro (källkod)</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro-source.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definiera makro (källkod)</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Klicka på knappen <guibutton
+>Ok</guibutton
+>. </para>
+      </step>
+    </procedure>
+    <para
+>Samma procedur kan användas för att fixa titlar, författare och månadsnamn, etc. enligt förlagets förkortningsregler för posterna från nätdatabaser. Normalt ska dessa regler (makron) definieras i bibliografins stilfiler (<filename role="extension"
+>bst</filename
+>). </para>
+  </sect1>
+</chapter>
+
+<chapter id="integration">
+  <title
+>Integrering med &kile; och &lyx; </title>
+  <para
+>&kbibtex; kan enkelt integreras med vanliga &latex;-editorer, närmare bestämt &kile; och &lyx;. </para>
+  <sect1 id="kile-intergation">
+    <title
+>Integrering med &kile; </title>
+    <para
+><ulink url="http://kile.sourceforge.net/"
+>&kile;</ulink
+> är en &tex;- och &latex;-källkodseditor och skal. </para>
+    <para
+>&kbibtex; är en standardvisare och editor för &bibtex;-filer i &kile;, så det finns inget behov av ytterligare inställning. </para>
+    <para
+>För att lägga till valda hänvisningar från bibliografifiler, starta &kile;, öppna en &latex;-fil, placera markören där du vill lägga till hänvisningen, byt därefter till &kbibtex; fönster, markera elementen i elementlistan och välj <menuchoice
+><guimenu
+>Element</guimenu
+><guimenuitem
+>Skicka till &lyx; eller &kile;</guimenuitem
+></menuchoice
+> eller använd alternativet <guimenuitem
+>Skicka till &lyx; eller &kile;</guimenuitem
+> i elementets sammanhangsberoende meny (högerklicksmeny). </para>
+    <para
+>Hänvisningarna infogas som <userinput
+>\cite{<replaceable
+>element identifierare</replaceable
+>}</userinput
+> vid markörens position i det aktuella &kile;-dokumentet. </para>
+  </sect1>
+  <sect1 id="lyx-integration">
+    <title
+>Integrering med &lyx; </title>
+    <para
+><ulink url="https://www.lyx.org/"
+>&lyx;</ulink
+> är ett dokumentbehandlingsverktyg som uppmuntrar till ett tillvägagångssätt att skriva baserat på dokumentens struktur (WYSIWYM, vad du ser är vad du menar) och inte bara deras utseende (WYSIWYG, vad du ser är vad du får). </para>
+    <para
+>&kbibtex; kan integreras med &lyx; via &lyx; in/ut-pipe. </para>
+    <procedure>
+      <step>
+	<para
+>Först måste &lyx; ställas in att använda en pipe. Välj <menuchoice
+><guimenu
+>Tools</guimenu
+><guimenuitem
+>Preferences</guimenuitem
+></menuchoice
+> i &lyx; huvudmeny. Öppna sidan <guilabel
+>Paths</guilabel
+> och skriv in en sökväg (t.ex. <filename
+>~/.lyx/lyxpipe</filename
+>) i textrutan <guilabel
+>LyXServer pipe</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>Inställning av &lyx;</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="lyx-preferences.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Inställning av &lyx;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Klicka på <guibutton
+>Spara</guibutton
+> för att spara ändringarna. </para>
+      </step>
+      <step>
+	<para
+>Välj <menuchoice
+><guimenu
+>Verktyg</guimenu
+><guimenuitem
+>Konfigurera om</guimenuitem
+></menuchoice
+> för att konfigurera om &lyx; och starta om det. </para>
+      </step>
+      <step>
+	<para
+>För att lägga till valda hänvisningar från bibliografifiler, öppna ett dokument, placera markören där en bibliografi ska läggas till och välj <menuchoice
+><guimenu
+>Insert</guimenu
+><guisubmenu
+>List / TOC</guisubmenu
+> <guimenuitem
+>&bibtex; Bibliography...</guimenuitem
+></menuchoice
+> i &lyx; huvudmeny. </para>
+      </step>
+      <step>
+	<para
+>Klicka på <guibutton
+>Add...</guibutton
+> och därefter <guibutton
+>Browse...</guibutton
+>. Peka &lyx; på en &kbibtex; <filename role="extension"
+>bib</filename
+>-fil. Klicka på <guibutton
+>Add</guibutton
+> och klicka därefter på <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Placera därefter markören där du vill lägga till hänvisningen och byt till &kbibtex; fönster. Markera element i elementlistan och välj <menuchoice
+><guimenu
+>Element</guimenu
+><guimenuitem
+>Skicka till &lyx; eller &kile;</guimenuitem
+></menuchoice
+> eller använd alternativet <guimenuitem
+>Skicka till &lyx; eller &kile;</guimenuitem
+> i elementets sammanhangsberoende meny (högerklicksmeny). </para>
+      </step>
+      <step>
+	<para
+>Hänvisningarna infogas som en referens vid markörens position i det aktuella &lyx;-dokumentet. </para>
+      </step>
+    </procedure>
+  </sect1>
+</chapter>
+
+<chapter id="credits">
+  <title
+>Tack till och licens</title>
+  <para
+>&kbibtex; </para>
+  <para
+>Program copyright &copy; 2004-2014 Thomas Fischer <email
+>fischer@unix-ag.uni-kl.de</email
+> </para>
+  <para
+>Dokumentation copyright &copy; 2013 Yuri Chornoivan <email
+>yurchor@ukr.net</email
+> </para>
+<para
+>Översättning Stefan Asserhäll <email
+>stefan.asserhall@bredband.net</email
+></para
+> &underFDL; &underGPL; </chapter>
+
+<bibliography>
+  <biblioentry>
+    <abbrev
+>Lamport86</abbrev>
+    <author>
+      <personname
+><firstname
+>Leslie</firstname
+> <surname
+>Lamport</surname
+> </personname>
+    </author>
+    <title
+>Latex: ett dokumentframtagningssystem </title>
+    <pubdate
+>1986</pubdate>
+    <publisher>
+      <publishername
+>Addison-Wesley Publishing Company</publishername>
+    </publisher>
+  </biblioentry>
+</bibliography>
+
+&documentation.index;
+
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+-->

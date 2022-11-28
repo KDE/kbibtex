@@ -1,0 +1,2215 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY pdflatex "PDFL<superscript
+>A</superscript
+>T<subscript
+>E</subscript
+>X">
+  <!ENTITY tex "T<subscript
+>E</subscript
+>X">
+  <!ENTITY tetex "<application
+>teT<subscript
+>E</subscript
+>X</application
+>">
+  <!ENTITY texlive "<application
+>TeX Live</application
+>">
+  <!ENTITY bibtex "BibT<subscript
+>E</subscript
+>X">
+  <!ENTITY biblatex "<application
+>biblatex</application
+>">
+  <!ENTITY lyx "<application
+>LyX</application
+>">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Dutch "INCLUDE">
+]>
+
+<book id="kbibtex" lang="&language;">
+
+<bookinfo>
+<title
+>Het handboek van &kbibtex;</title>
+
+<authorgroup>
+  <author
+><firstname
+>Yuri</firstname
+><surname
+>Chornoivan</surname
+> <affiliation
+> <address
+> <email
+>yurchor@ukr.net</email>
+      </address>
+    </affiliation>
+  </author>
+&Freek.de.Kruijf;&Ronald.Stroethoff; 
+</authorgroup>
+
+<copyright>
+<year
+>2004</year
+><year
+>2014</year>
+<holder
+>Thomas Fischer</holder>
+</copyright>
+
+<date
+>2019-05-07</date>
+<releaseinfo
+>0.9</releaseinfo>
+
+<legalnotice>
+  &FDLNotice;
+</legalnotice>
+
+<abstract>
+  <para
+>&kbibtex; is een grafische &bibtex; editor en shell. </para>
+</abstract>
+
+<keywordset>
+  <keyword
+>KDE</keyword>
+  <keyword
+>kbibtex</keyword>
+  <keyword
+>LaTeX</keyword>
+  <keyword
+>TeX</keyword>
+  <keyword
+>bibliografie</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="preface">
+  <title
+>Voorwoord</title>
+  <sect1 id="preface_sect">
+    <title
+>Vereisten</title>
+    <para
+>Om &kbibtex; uit te voeren, dient u de volgende componenten op uw systeem geïnstalleerd te hebben: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+><ulink url="https://www.kde.org/"
+>&kf5-full; bibliotheken</ulink
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.ctan.org/"
+>&latex;</ulink
+>: programma om documenten van hoogwaardige kwaliteit op te maken. Hoogst waarschijnlijk wilt u het pakket &texlive; (of op oudere systemen &tetex;), aangezien u op een UNIX-gelijkend systeem werkt. Het is een optionele afhankelijkheid, maar zonder dat heeft &kbibtex; een erg beperkte functionaliteit. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.lri.fr/~filliatr/bibtex2html/"
+>bibtex2html</ulink
+> verzameling van hulpmiddelen voor vertalen vanuit &bibtex; naar &HTML; om de eigenschappen voor het bekijken van een voorbeeld bij invoeren van &kbibtex; te verbeteren (optionele afhankelijkheid). </para>
+      </listitem>
+    </itemizedlist>
+    <para
+>De meeste van deze componenten evenals &kbibtex; zelf maken misschien al deel uit van uw &Linux;-distributie; raadpleegt u hiervoor de documentatie bij uw distributie, of raadpleeg de installatie-cd of -dvd, om deze pakketten op uw computer te installeren. </para>
+  </sect1>
+  <sect1 id="preface_audience">
+    <title
+>Beoogde gebruikers </title>
+    <para
+>Dit handboek is bedoeld voor iedereen, ongeacht zijn of haar ervaring met &latex;, &kde;, &kbibtex; of &Linux;. </para>
+    <para
+>Gevorderde gebruikers zullen dit handboek waarschijnlijk niet gebruiken, maar alle suggesties voor de documentatie zullen in ogenschouw genomen worden. Indien u een bijdrage zou willen leveren aan dit project of de documentatie, raadpleeg dan <ulink url="https://userbase.kde.org/KBibTeX/"
+>de webpagina van &kbibtex;</ulink
+>. </para>
+  </sect1>
+
+</chapter>
+
+<chapter id="introduction">
+  <title
+>Inleiding </title>
+  <sect1 id="intro_about">
+    <title
+>Info over &kbibtex; </title>
+    <para
+>&kbibtex; is een geïntegreerde omgeving voor het maken en bewerken van bibliografieën in &bibtex;-formaat. &kbibtex; geeft u de mogelijkheid alle functies van &bibtex; in een grafisch interface te gebruiken, waarmee u gemakkelijk, onmiddellijk en aangepast toegang hebt tot lokale en online bibliografieën met de mogelijkheid om items aan te vullen, te compileren, te bekijken en te doorzoeken. </para>
+    <sect2 id="intro-bibtex">
+      <title
+>Info over &bibtex;</title>
+      <para
+>&bibtex; is een programma en een bestandsformaat ontworpen door Oren Patashnik en Leslie Lamport in 1985 voor de &latex;-documenten met het programma <citation
+>Lamport86</citation
+>. </para>
+      <para
+>Het formaat is geheel op tekens gebaseerd, zodat het gebruikt kan worden door elk programma (hoewel &tex; het standaard tekenset voor accenten is ). Het is gebaseerd op velden (tags) en het programma &bibtex; zal onbekende velden negeren, zodat het is uit te breiden. Het is waarschijnlijk het meest voorkomende formaat voor bibliografieën op het internet. </para>
+      <para
+>Het programma &bibtex; gebruikt stijlbestanden, een lijst met citaten uit &latex; en een &bibtex; database om een &latex; bestand te maken met een lijst ven de geciteerde verwijzingen. Het idee van stijlbestanden is dat de uiteindelijke kopie in elke tijdschrift-specifieke vorm automatisch gedaan kan worden. </para>
+      <para
+>Een voorbeeld van een item in de &bibtex; database: </para>
+<programlisting
+>@article{PAM_doi:10.1007/BF00048294,
+        author = {Streitenberger, P. and Knott, John F.},
+        doi = {10.1007/BF00048294},
+        issn = {1573-2673},
+        journal = {{International Journal of Fracture}},
+        number = {3},
+        pages = {R49},
+        publisher = {Springer},
+        title = {{The calculation of crack opening area and crack opening volume from stress intensity factors}},
+        url = {https://dx.doi.org/10.1007/BF00048294},
+        volume = {76},
+        x-fetchedfrom = {SpringerLink},
+        year = {1995}
+}
+</programlisting>
+  </sect2>
+  <sect2 id="kbibtex-and-latex-editors">
+    <title
+>Bewerkers van &kbibtex; en &latex;</title>
+    <para
+>Code in &latex; kunt u bewerken met een brede variëteit hulpmiddelen van eenvoudige minimalistische tekstbewerkers tot krachtige visuele suites. Een vergelijking van bewerkers van &latex;, leest u op <ulink url="https://en.wikipedia.org/wiki/Comparison_of_TeX_editors"
+>deze pagina</ulink
+>. </para>
+    <para
+>&kbibtex; biedt een directe <link linkend="integration"
+>integratie met &kile; en &lyx;</link
+> hoewel het met succes gebruikt kan worden met elk soort bewerker van &latex;. </para>
+  </sect2>
+  </sect1>
+  <sect1 id="intro_mainfeat">
+    <title
+>Hoofdkenmerken van &kbibtex; </title>
+    <para
+>&kbibtex; stelt u instaat om de volgende dingen te doen: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+>Voer een preamble in die definieert hoe speciale tekst opgemaakt moet worden in uw bibliografie met <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nieuw element</guisubmenu
+><guimenuitem
+>Nieuwe preamble</guimenuitem
+></menuchoice
+> menu-item of <link linkend="main-toolbar"
+>Hoofdwerkbalk</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Kies een codering van een item met het item <guilabel
+>Codering</guilabel
+> in de dialoog <guilabel
+>Opslaan als</guilabel
+> of op de paneel <link linkend="file-settings"
+>Bestandsinstellingen</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Toelichting invoeren die niet door &bibtex; ernstig wordt genomen met <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nieuw element</guisubmenu
+><guimenuitem
+>Nieuwe toelichting</guimenuitem
+></menuchoice
+> menu-item of <link linkend="main-toolbar"
+>Hoofdwerkbalk</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Bibliografische items bekijken en opslaan in verschillende formaten (bron (&bibtex;), bron (RIS), Wikipedia, standaard (&XML;/XSLT), elegant (&XML;/XSLT) en alleen abstract (&XML;/XSLT)) met gebruik van <link linkend="reference-preview"
+>Vooruitblikpaneel voor referenties</link
+>. Extra stijlen voor vooruitblikken komen beschikbaar wanneer <application
+>bibtex2html</application
+> is geïnstalleerd. </para>
+      </listitem>
+      <listitem>
+	<para
+>Naar de bibliografie gegevensitems zoeken in online databases met het <link linkend="online-search"
+>Online zoekpaneel</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Locale of bronnen op afstand (online) bekijken (zoals bestanden) <link linkend="adding-link"
+>linked</link
+> in het &bibtex; item met <link linkend="document-preview"
+>Vooruitblikpaneel voor documenten</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Zoek en repareer dubbele items in de bibliografie met menu-item <menuchoice
+><guimenu
+>Bewerken</guimenu
+><guimenuitem
+>Duplicaten zoeken</guimenuitem
+></menuchoice
+> of <link linkend="main-toolbar"
+>Hoofdwerkbalk</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Uw <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+> bibliotheek importeren met het <link linkend="zotero"
+>Zotero-paneel</link
+>. </para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>
+
+<chapter id="quickstart">
+  <title
+>Snelstart </title>
+  <sect1 id="quick_begin">
+    <title
+>Een bibliografiebestand schrijven voor beginners </title>
+    <!-- 1) No request from kbibtex from Distro user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distro user has a mimeapps.list in home, but no kbibtex in it
+         2b) Devel user has no mimeapps.list in home
+         2c) Systemsettings -> File Associations is the place to edit/change this in a kde desktop
+         update after rebuilding post 2014-01-12
+         Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
+         (why? from installation of distro?)
+         This dialog even pops up when opening a .bib file with LMB click in file manager
+    -->
+    <para
+>Na de eerste activering zal &kbibtex; voorstellen om het de standaard bewerker voor de opmaak van een bibliografie te maken. Wij raden u aan om dit te doen.<footnote
+><para
+>Als u zich om de een of andere reden bedenkt, verwijder dan de tekenreeksen met de subtekenreeks <literal
+>kbibtex</literal
+> uit het bestand <filename
+>mimeapps.list</filename
+> in de map <filename role="directory"
+>.local/share/applications</filename
+> van uw persoonlijke map.</para
+></footnote>
+    </para>
+    <para
+>Daarna ziet u een venster zoals deze: </para>
+    <screenshot>
+      <screeninfo
+>Venster van &kbibtex; na het eerste begin</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="first-run.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>Venster van &kbibtex; na het eerste begin</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Om een nieuw bibliografiedocument te beginnen druk u op de knop <guibutton
+>Nieuw</guibutton
+> in het rechter paneel, de knop <guibutton
+>Nieuw</guibutton
+> op de werkbalk of u kiest het menu-item <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>N</keycap
+></keycombo
+></shortcut
+><guimenu
+>bestand</guimenu
+><guimenuitem
+>Nieuw</guimenuitem
+></menuchoice
+>. </para>
+    <para
+>Het is nu tijd om enige items toe te voegen. </para>
+    <para
+>Gebruikers van &kbibtex; hebben twee keuzes bij toevoegen van een nieuw item: ze kunnen het <link linkend="online-search"
+>Online zoekpaneel</link
+> gebruiken om online itemgegevens te zoeken of ze kunnen de code zelf schijven. </para>
+    <para
+>Laten we proberen een boek-item handmatig toe te voegen. </para>
+    <procedure>
+      <step id="element-editing">
+	<para
+>Kies <guimenu
+>Element</guimenu
+> <guisubmenu
+>Nieuw element</guisubmenu
+> <guimenuitem
+>Nieuw item</guimenuitem
+> uit het menu van &kbibtex;. &kbibtex; zou dan het venster <guilabel
+>Element bewerken</guilabel
+> moeten openen. </para>
+	<screenshot>
+	  <screeninfo
+>Venster voor bewerken van nieuw element in &kbibtex;</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="element-editor.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Venster voor bewerken van nieuw element in &kbibtex;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Selecteer <guimenuitem
+>Boek</guimenuitem
+> uit de keuzelijst <guilabel
+>Type:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Voer in <userinput
+>Lamport86</userinput
+> in het veld <guilabel
+>Id:</guilabel
+>. </para>
+	<tip>
+	  <para
+>Het <quote
+>Id</quote
+> wordt gebruikt voor verwijzing naar het bibliografie-item in uw hoofddocument. </para>
+	</tip>
+      </step>
+      <step>
+	<para
+>Ga naar het tabblad <guilabel
+>Titel</guilabel
+> en voer in <userinput
+>LaTeX: een preparatiesysteem voor documenten</userinput
+> in het tekstvak <guilabel
+>Titel:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Ga naar het tabblad <guilabel
+>Auteur/editor</guilabel
+>, klik op de knop <guibutton
+>Toevoegen</guibutton
+> en voer <userinput
+>Lamport, Leslie</userinput
+> in. </para>
+      </step>
+      <step>
+	<para
+>Ga naar het tabblad <guilabel
+>Publicatie</guilabel
+> en voer <userinput
+>1986</userinput
+> in in het tekstvak <guilabel
+>Jaar:</guilabel
+> en <userinput
+>Addison-Wesley</userinput
+> in het tekstvak <guilabel
+>Uitgever:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Klik op <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Kies menu-item <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>S</keycap
+></keycombo
+></shortcut
+><guimenu
+>Bestand</guimenu
+><guimenuitem
+>Opslaan</guimenuitem
+></menuchoice
+> en sla uw bibliografiebestand op als <filename
+>voorbeeld.bib</filename
+> in uw map te-schrijven-paper. </para>
+      </step>
+    </procedure>
+  </sect1>
+
+  <sect1 id="quick-using">
+    <title
+>De bibliografie in uw &latex;-document gebruiken </title>
+    <para
+>Om de bibliografie in uw paper echt te gebruiken moet u de volgende commando's in uw &latex; bestand toevoegen (deze commando's zijn gebruikelijk te vinden aan het eind van het document - waar de sectie <quote
+>Referenties</quote
+> komt): </para>
+<programlisting
+>\bibliography{<replaceable
+>foo</replaceable
+>}
+\bibliographystyle{plain}
+</programlisting>
+    <para
+>Hier is <replaceable
+>foo</replaceable
+> de naam van uw <filename role="extension"
+>bib</filename
+>-bestand aangemaakt met &kbibtex; en <quote
+><literal
+>plain</literal
+></quote
+> is de naam van de stijl van de bibliografie. </para>
+    <para
+>Er zijn veel bibliografie-stijlen beschikbaar. Vraag aan uw uitgever welke u moet gebruiken of probeer er een te vinden die u voor uw doel het best geschikt acht. </para>
+    <para
+>Hieronder is een lijst met enige algemene overal beschikbare stijlen: </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+      <literal
+>eenvoudig</literal>
+	</term>
+	<listitem>
+	  <para
+>normale stijl, lijst in alfabetische volgorde en met numerieke labels </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>unsrt</literal>
+	</term>
+	<listitem>
+	  <para
+>hetzelfde als <literal
+>plain</literal
+> behalve dat items in volgorde van citeren verschijnen </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>alfa</literal>
+	</term>
+	<listitem>
+	  <para
+>hetzelfde als <literal
+>plain</literal
+> behalve dat identifiers worden gebruikt </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>abbrv</literal>
+	</term>
+	<listitem>
+	  <para
+>hetzelfde als <literal
+>plain</literal
+> behalve dat afkortingen van eerste namen, namen van maanden en namen van tijdschriften worden gebruikt </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    <para
+>U kunt naar keuze de mogelijkheden van uw &latex; editor gebruiken (bestudeer hiervoor de documentatie van de editor) of voer de volgende code in een algemene tekstbewerker, waarna u het bestand opslaat met de bestand-extensie <filename role="extension"
+>tex</filename
+>. </para>
+<programlisting
+>\documentclass{article}
+ \begin{document}
+ \bibliographystyle{plain}% Kies een bibliografische stijl
+ Testbestand met een referentie (zie~\cite{Lamport86}).
+ \bibliography{example}
+ \end{document}
+</programlisting>
+    <para
+>Voor ons testdoel, geef u dit bestand de naam <userinput
+>voorbeeld.tex</userinput
+>. </para>
+    <note>
+      <para
+>Sla het bestand op in dezelfde map als uw <filename
+>voorbeeld.bib</filename
+>. </para>
+    </note>
+    <para
+>Nu u de basis voor een document hebt, moet u zowel <application
+>latex</application
+> als <application
+>bibtex</application
+> uitvoeren om het te verwerken. </para>
+    <para
+>Als eerste moet u <application
+>latex</application
+> opstarten (om een <filename
+>foo.aux</filename
+> bestand te creëren, wat <application
+>bibtex</application
+> kan inlezen). Vervolgens moet u eenmaal<application
+>bibtex</application
+> opstarten om enkele citaten te krijgen en een <filename role="extension"
+>bbl</filename
+>-bestand te creëren. Start daarna <application
+>latex</application
+> nog een keer op zodat de kruisverwijzingen tussen het tekstbestand en de bibliografie correct zijn. Wellicht wilt u het bestand nog een keer door <application
+>bibtex</application
+> en <application
+>latex</application
+> laten bewerken om er zeker van te zijn dat alle kruisverwijzingen correct zijn. Wees gewaarschuwd dat u <application
+>bibtex</application
+> opnieuw moet starten als u citaten heeft toegevoegd of verwijderd. </para>
+    <para
+>U kunt de volgende commando's gebruiken om het document vanaf de console te compileren: </para>
+    <screen
+>latex voorbeeld
+bibtex voorbeeld
+latex voorbeeld
+latex voorbeeld</screen>
+    <tip>
+      <para
+>Als u een geavanceerd &latex; programma zoals &kile; of &lyx; gebruikt, dan hoeft u zich geen zorgen te maken over het opstarten van al deze commando's vanuit een terminalvenster. U hoeft alleen maar een sneltoets (<keycombo
+>&Alt;<keycap
+>6</keycap
+></keycombo
+> in &kile;) of een knop op de werkbalk te gebruiken om resultaat te krijgen. </para>
+    </tip>
+    <para
+>U kunt nu het resultaat als een &DVI; of &PDF;-bestand zien (het formaat hangt af van uw configuratie), opgeslagen in dezelfde map als uw bronbestanden. </para>
+    <note>
+      <para
+>Gefeliciteerd! U hebt zojuist uw eerste document met &bibtex; bibliografie gemaakt. </para>
+    </note>
+  </sect1>
+</chapter>
+
+<chapter id="interface">
+  <title
+>Interface van &kbibtex; </title>
+    <sect1 id="panels">
+    <title
+>Panelen van &kbibtex; </title>
+    <para
+>De hoofdfunctionaliteit van &kbibtex; is beschikbaar via zijn negen panelen. Het is mogelijk om de locatie van deze panelen opnieuw in te delen of om ze zelfs los te maken van het hoofdvenster door te klikken met de &LMB; op de titelbalk van het paneel en ze naar een nieuwe plaats te slepen. </para>
+    <para
+>U kunt de panelen van &kbibtex; verbergen en weer zichtbaar maken via het submenu<menuchoice
+><guimenu
+>Instellingen</guimenu
+><guimenuitem
+>Panelen tonen</guimenuitem
+></menuchoice
+>. U hoeft alleen maar een vinkje te plaatsen bij het panel's item om het paneel zichtbaar te maken en het vinkje te verwijderen om het paneel te verbergen. </para>
+    <sect2 id="list-of-documents">
+      <title
+>Paneel met lijst van documenten </title>
+	<para
+>U kunt via het <guilabel
+>Lijst met documenten</guilabel
+> paneel tussen geopende bibliografiedocumenten schakelen (<guilabel
+>Openen</guilabel
+> tab), recent geopende documenten openen (<guilabel
+>Recent geopend</guilabel
+> tab), open uw belangrijkste bibliografiedocumenten openen (<guilabel
+>Favorieten</guilabel
+> tab), of door het bestandssysteem van uw computer bladeren om naar bepaalde bibliografiedocumenten te zoeken (<guilabel
+>Bestandssysteembrowser</guilabel
+> tab). </para>
+	<tip>
+	  <para
+>Om een bibliografiebestand aan favorieten toe te voegen, kunt u het in elke tab behalve <guilabel
+>Favorieten</guilabel
+> selecteren , u klikt daarna erop met &RMB; en kiest <guimenuitem
+>Aan favorieten toevoegen</guimenuitem
+>. Om de bibliografiebestand uit favorieten te verwijderen, selecteert u het in de <guilabel
+>Favorieten</guilabel
+> tab, klikt erop met &RMB; en kiest <guimenuitem
+>Uit favorieten verwijderen</guimenuitem
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Paneel met lijst van documenten</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-documents.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Paneel met lijst van documenten</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="list-of-values">
+      <title
+>Paneel met lijst met waarden </title>
+	<para
+>U kunt het <guilabel
+>Lijst met waarden</guilabel
+> paneel gebruiken voor het bestuderen van de statistieken voor het gebruik van de waarden in de invoervakken en voor het batch-gewijs bewerken van deze waarden. </para>
+	<para
+>U gebruikt het bovenste keuzevak voor het selecteren van het bibliografie-veld waarvan u de statistische gegevens (het aantal entries met de dezelfde waarde voor dat veld) in de onderste lijst wilt zien. </para>
+	<para
+>Voor batch-bewerkingen, kunt u met de &RMB; in de onderste lijst op een item klikken. Het is mogelijk om de waarde <guimenuitem
+>Alle keren voorkomen vervangen</guimenuitem
+>, <guimenuitem
+>Alle keren voorkomen verwijderen</guimenuitem
+> van de waarde, <guimenuitem
+>Naar geselecteerde waarden zoeken</guimenuitem
+> met de hulp van de <link linkend="filter-toolbar"
+>Filter Werkbalk</link
+>, <guimenuitem
+>Waarde aan geselecteerde items toevoegen</guimenuitem
+>, <guimenuitem
+>Waarde van geselecteerde items vervangen</guimenuitem
+> of <guimenuitem
+>Waarde uit geselecteerde items verwijderen</guimenuitem
+> (U moet eerst in de lijst enkele items geselecteerd hebben). </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Paneel met lijst met waarden</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-values.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Paneel met lijst met waarden</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="statistics">
+      <title
+>Paneel met statistieken </title>
+      <para
+>Het <guilabel
+>Statistieken</guilabel
+> paneel is ontworpen om een korte samenvatting met statistische informatie over het huidige bibliografiebestand te tonen. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Paneel met statistieken</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="statistics.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Paneel met statistieken</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="reference-preview">
+      <title
+>Paneel met vooruitblik van referenties </title>
+	<para
+>U kunt het <guilabel
+>Voorbeeld van referentie</guilabel
+> paneel gebruiken om van het huidig geselecteerde bibliografie-item een voorbeeld te bekijken en in &HTML;-formaat op te slaan. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Paneel met vooruitblik van referenties</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="reference-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Paneel met vooruitblik van referenties</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Het is mogelijk om het voorbeeld van de referentie te bekijken in de opmaken Bron (&bibtex;), Bron (RIS), Wikipedia, standaard (&XML;/XSLT), elegant (&XML;/XSLT) en alleen abstract (&XML;/XSLT). Extra stijlen komen beschikbaar wanneer <application
+>bibtex2html</application
+> is geïnstalleerd. </para>
+	<tip>
+	  <para
+>Als u op een van de elementen van de referentie in een op &XML;-gebaseerde opmaak klikt, dan zal&kbibtex; de bijbehorende <link linkend="filter-toolbar"
+>filtering</link
+> op de bibliografie-lijst toepassen. </para>
+	</tip>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Openen</guibutton
+> om de referentie in de standaard Internet browser te openen. U kunt de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Als &HTML; opslaan</guibutton
+> gebruiken om de referentie in &HTML; op te slaan voor gebruik in uw website. </para>
+	<para
+>Als u met de &RMB; op het paneel klikt dan kunt <guimenuitem
+>Bestand opnieuw laden</guimenuitem
+> selecteren om de referentie bij te werken naar de laatste wijzigingen in het bestand. </para>
+    </sect2>
+    <sect2 id="file-settings">
+      <title
+>Paneel voor bestandsinstellingen </title>
+	<para
+>U kunt het paneel <guilabel
+>Bestandsinstellingen</guilabel
+> gebruiken voor het instellen van enige parameters van het <filename role="extension"
+>bib</filename
+>-bestand van het huidige bibliografie. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Paneel voor bestandsinstellingen</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="file-settings.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Paneel voor bestandsinstellingen</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Het is mogelijk om <guilabel
+>Codering</guilabel
+>, <guilabel
+>Begrenzingstekens</guilabel
+>, <guilabel
+>Aanhalen van commentaar</guilabel
+>, <guilabel
+>Hoofd- kleine letters van trefwoord</guilabel
+>, en <guilabel
+>Opmaak van persoonsnamen</guilabel
+> in te stellen. </para>
+	<para
+>Standaard zal &bibtex; in zinnen alle tussengelegen woorden naar kleine letters omzetten. Schakel <guilabel
+>Titels beschermen</guilabel
+> in om de hoofdletter in de titel te beschermen. </para>
+    </sect2>
+    <sect2 id="online-search">
+      <title
+>Paneel voor online zoeken </title>
+	<para
+>Met het paneel <guilabel
+>Online zoeken</guilabel
+> kunt u een zoekopdracht uitvoeren in de Internet bibliografie databases om de gewenste entries te vinden of om de handmatig ingevoerde entry te complementeren. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Paneel voor online zoeken</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="online-search.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Paneel voor online zoeken</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>U kunt de entries opzoeken op <guilabel
+>Vrije tekst</guilabel
+>, <guilabel
+>Titel</guilabel
+>, <guilabel
+>Auteur</guilabel
+>, of <guilabel
+>Jaar</guilabel
+>. Het aantal getoonde resultaten in het <link linkend="search-results"
+>Paneel Zoekresultaten</link
+> kunt u instellen in het <guilabel
+>Aantal resultaten</guilabel
+> spin box. </para>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Item gebruiken</guibutton
+> om de velden voor zoekcriteria te vullen met de gegevens vanuit het huidig geselecteerd bibliografie-entries. Op deze manier kunt u de bestaande item complementeren met gegevens vanuit de Internet databases. Gebruik de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="media-playback-start.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Zoeken</guibutton
+> om de zoekopdracht te starten. </para>
+	<para
+>&kbibtex; kan een zoekopdracht in de meest populaire Internet databases uitvoeren. Om een groep databases voor uw zoekopdracht te selecteren, gaat u naar de tab <guilabel
+>Engines</guilabel
+> of u klikt met de &LMB; op de <guilabel
+>Wijzigen</guilabel
+> link op de tab <guilabel
+>Zoektermen</guilabel
+>. </para>
+	<para
+>Om de homepagina op het internet van de database te bezoeken, klikt u met de &RMB; op het item in de tab <guilabel
+>Engines</guilabel
+> en selecteert dan <guimenuitem
+>Ga naar homepagina</guimenuitem
+>. </para>
+    </sect2>
+    <sect2 id="zotero">
+      <title
+>Zotero-paneel </title>
+	<para
+>U kunt het <guilabel
+>Zotero</guilabel
+>-paneel gebruiken om uw <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+>-bibliotheek te importeren. </para>
+	<para
+>Zotero gebruikt gespecialiseerde browser-add-ons om bibliografie-items uit Internetpagina's op te slaan. De gegevens worden opgeslagen in een online database die vanaf overal bereikbaar is. Zotero documentatie is <ulink url="https://www.zotero.org/support/"
+>hier</ulink
+> te vinden. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Zotero paneel</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="zotero.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Zotero paneel</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Nieuwe credentials verkrijgen</guibutton
+> op de tab <guilabel
+>Credentials</guilabel
+> om de autorisatie-assistent van Zotero te starten. Volg de instructies om &kbibtex; toegang tot uw Zotero bibliotheek te geven. </para>
+	<para
+>Om toegang te krijgen tot de bibliotheek-entries, dubbelklikt u op het corresponderende item in het tabblad <guilabel
+>Verzamelingen</guilabel
+> of het tabblad <guilabel
+>Tags</guilabel
+>. De entries die overeenkomen met de zoekcriteria krijgt u te zien in het <link linkend="search-results"
+>Paneel met zoekresultaten</link
+>. </para>
+    </sect2>
+    <sect2 id="search-results">
+      <title
+>Paneel Zoekresultaten </title>
+	<para
+>Het paneel <guilabel
+>Zoekresultaten</guilabel
+> wordt gebruikt om de met het <link linkend="online-search"
+>Online zoekpaneel</link
+> verkregen resultaten te behandelen. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Paneel Zoekresultaten</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="search-results.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Paneel Zoekresultaten</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="svn-update.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Importeren</guibutton
+> om het geselecteerde zoekresultaat naar uw bibliografie te importeren. </para>
+	<para
+>Voor andere acties voor het geselecteerde zoekresultaat klikt u erop met de &RMB;. In het geopende menu kunt u het resultaat bestuderen (<guimenuitem
+>Element bekijken</guimenuitem
+>) of het kopiëren om het in &bibtex; opmaak format elders te plakken met <keycombo
+>&Ctrl;<keycap
+>V</keycap
+></keycombo
+> (<guimenuitem
+>kopiëren</guimenuitem
+> item). </para>
+    </sect2>
+    <sect2 id="element-editor">
+      <title
+>Paneel Bewerker van element </title>
+	<para
+>U kunt het paneel <guilabel
+>Bewerker van element</guilabel
+> gebruiken om het geselecteerde bibliografie-element te bewerken. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Paneel Bewerker van element</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="element-editor.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Paneel Bewerker van element</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Klik op de knop <inlinemediaobject
+> <imageobject
+> <imagedata fileref="view-filter.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> om een <link linkend="config-id-suggestions"
+>aanbevolen identifier</link
+> voor het element te selecteren. </para>
+	<para
+>Voer de respectievelijke data in in de invoervakken. U kunt het veld voor het dataformaat omschakelen tussen <guimenuitem
+>Tekst</guimenuitem
+>, <guimenuitem
+>Referentie</guimenuitem
+> en <guimenuitem
+>Broncode</guimenuitem
+> in het keuzevak links van het tekstvak. </para>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="configure.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Opties</guibutton
+> om een keuzelijst met twee items te openen. </para>
+	<para
+>Het item <guimenuitem
+>Alle velden tonen</guimenuitem
+> kunt u gebruiken om alle lege velden van het geselecteerde element zichtbaar te maken of te verbergen. </para>
+	<para
+>Het is mogelijk om tussen de velden de focus te laten wisselen met de &Tab; toets. U kunt daarom het tweede menu item, <guimenuitem
+>Tabtoets bezoekt alleen bewerkbare velden</guimenuitem
+>, gebruiken om de navigatie alleen tussen bewerkbare velden aan en uit te schakelen. </para>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="tools-check-spelling.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Controleren met &bibtex;</guibutton
+> om een voorbeeld van de bewerkte entry te krijgen zoals het te zien is in het gecompileerde &PDF;-bestand. </para>
+	<para
+>Schakel <guilabel
+>Automatisch wijzigingen toepassen</guilabel
+> in om automatisch al uw wijzigingen op de entry toe te passen zonder dat u nog op de knop <guibutton
+>Toepassen</guibutton
+> moet klikken. </para>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Resetten</guibutton
+> om al uw wijzigingen ongedaan te maken. </para>
+      </sect2>
+      <sect2 id="document-preview">
+      <title
+>Paneel Voorbeeld van document </title>
+	<para
+>U kunt het <guilabel
+>Voorbeeld van document</guilabel
+>-paneel gebruiken om pagina's of documenten <link linkend="adding-link"
+>gelinkt</link
+> met huidig geselecteerde bibliografie-item te bekijken. </para>
+	<tip>
+	  <para
+>Standaard kunt u het <guilabel
+>Voorbeeld van document</guilabel
+>-paneel openen door op de sneltoets <keycombo
+>&Ctrl;&Shift;<keycap
+>D</keycap
+></keycombo
+> te drukken. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Paneel Voorbeeld van document</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="document-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Paneel Voorbeeld van document</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Klik op de knop <inlinemediaobject
+> <imageobject
+> <imagedata fileref="applications-internet.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> om te schakelen tussen alleen lokale bestanden en alle documenten inclusief documenten op afstand. </para>
+	<para
+>Klik op de knop <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> om de pagina of het document in het standaard externe programma te openen. </para>
+	<para
+>In de keuzelijst <guilabel
+>Adres</guilabel
+> kunt u tussen de pagina's en de documenten schakelen. </para>
+    </sect2>
+  </sect1>
+  <sect1 id="toolbars">
+    <title
+>Werkbalken in &kbibtex; </title>
+    <para
+>&kbibtex; heeft bovenaan het venster twee compleet aanpasbare werkbalken. </para>
+    <para
+>U kunt meer informatie over het aanpassen van werkbalken vinden in de <ulink url="help:/fundamentals/config.html#toolbars"
+>corresponderende sectie van &kde; Fundamentals handleiding</ulink
+>. Hieronder vindt u een korte beschrijving van de standaard knoppen in de werkbalken van &kbibtex;. </para>
+    <sect2 id="main-toolbar">
+      <title
+>Hoofdwerkbalk </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Hoofdwerkbalk</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="main-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Hoofdwerkbalk</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>De standaard hoofdwerkbalk van &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para
+><guibutton
+>Nieuw</guibutton
+>: creëert een nieuw bibliografiedocument. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Openen</guibutton
+>: opent het <ulink url="help:/fundamentals/files.html"
+>algemene &kde; Openen/Opslaan dialoog</ulink
+> om een bestaand bibliografie voor bewerken te openen. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Sluiten</guibutton
+>: sluit het huidig geopende bibliografiedocument. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Opslaan</guibutton
+>: slaat het huidige bibliografiedocument op. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Opslaan als</guibutton
+>: hiermee kunt u het huidige geopende bibliografiedocument opslaan onder een nieuwe naam met het <ulink url="help:/fundamentals/files.html"
+>algemene &kde; Openen/Opslaan dialoog</ulink
+>. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Nieuw element</guibutton
+>: hiermee kunt u een nieuw entry, commentaar, voorwoord of <link linkend="macros"
+>macro</link
+> in het huidige bibliografiedocument creëren. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Dubbele items zoeken</guibutton
+>: zoekt en repareert duplicate elementen in het huidige bibliografiedocument. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Naar &lyx;/&kile; verzenden</guibutton
+>: verzend een referentie van het huidig geselecteerd bibliografie entry naar &lyx; of &kile;. Meer hierover in het <link linkend="integration"
+>corresponderende hoofdstuk van deze handleiding</link
+>.  </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+    <sect2 id="filter-toolbar">
+      <title
+>Filterwerkbalk </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Filter Werkbalk</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="filter-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Filterwerkbalk</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>De standaard Filter Werkbalk van &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>De eenvoudigste methode om door grote bibliografieën te navigeren is door gebruik van de <guilabel
+>Filter</guilabel
+> werkbalk: &kbibtex; zal de te tonen lijst overeenkomstig uw opdracht filteren. Als u aan het zoeken bent voor een bepaald element, maar u weet niet de exacte positie in de lijst, dan kunt u gewoon van de data enkele letters in het <guilabel
+>Filter</guilabel
+> tekstvak typen. </para>
+	<para
+>Als u de eerste paar letters heeft ingevoerd, dan zal u de lijst zien veranderen. Des te meer letters u invoert, hoe te korter de lijst die u ziet wordt . Dit filteren gebeurt onmiddellijk als u begint met typen. </para>
+	<para
+>Als u aan de rechterkant van de <guilabel
+>Filter</guilabel
+>-werkbalk kijkt, dan zal u twee keuzemenu's zien. De keuzemenu's zijn aangebracht zodat u snel het filter naar uw wensen kunt aanpassen. Het eerste keuzemenu gebruikt u om de soort overeenkomst (<guimenuitem
+>elk woord</guimenuitem
+>, <guimenuitem
+>alle woorden</guimenuitem
+> of <guimenuitem
+>exacte frase</guimenuitem
+>) in te stellen. Bij het tweede stelt u het veld in waarop gefilterd moet worden. U kunt kiezen <guimenuitem
+>elk veld</guimenuitem
+> of een veld selecteren om in grote bibliografieën de lijst met resultaten te beperken. </para>
+	<para
+>Daarnaast zijn er ook twee knoppen op deze werkbalk: </para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="application-pdf.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>&PDF;-bestanden meenemen in zoeken in volledige tekst</guibutton
+>: hiermee kunt u &PDF; met volledige tekst in het filteren meenemen. </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>Filtercriteria resetten</guibutton
+>: reset de filtercriteria. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+  </sect1>
+  <sect1 id="menus">
+    <title
+>Menu's in &kbibtex; </title>
+    <para
+>&kbibtex; volgt het standaard menu-schema van &kde;. Het heeft daarom veel menu-items die in alle &kde;-programma's voorkomen. U kunt meer informatie over deze menu-items vinden in <ulink url="help:/fundamentals/menus.html"
+>deze help-sectie</ulink
+>. </para>
+    <para
+>Hieronder vindt u beschrijvingen voor &kbibtex;-specifieke menu-items. </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Bewerken</guimenu
+> <guimenuitem
+>Verwijderen</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Verwijdert het huidig geselecteerd element uit de bibliografie-lijst. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Bewerken</guimenu
+> <guimenuitem
+>Duplicaten zoeken</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>zoekt en verwijdert duplicate elementen in het huidige geopende bibliografiedocument. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nieuw element</guisubmenu
+> <guimenuitem
+>Nieuw item</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Opent het <link linkend="element-editor"
+>Element bewerken</link
+> venster voor het invoeren van een nieuw bibliografie-element. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nieuw element</guisubmenu
+> <guimenuitem
+>Nieuwe toelichting</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Opent het <link linkend="element-editor"
+>Element bewerken</link
+> venster voor het invoeren van een nieuw commentaar dat door &bibtex; wordt genegeerd. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nieuw element</guisubmenu
+> <guimenuitem
+>Nieuwe macro</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Opent het <link linkend="element-editor"
+>Element bewerken</link
+> venster voor het invoeren van een nieuw <link linkend="macros"
+>macro</link
+>. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nieuw element</guisubmenu
+> <guimenuitem
+>Nieuw voorwoord</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Opent het <link linkend="element-editor"
+>Element bewerken</link
+> venster voor het invoeren van een nieuw bibliografie-voorwoord dat de opmaak definieert van speciale tekst in uw bibliografie. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>E</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Element</guimenu
+> <guimenuitem
+>Element bewerken</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Opent het <link linkend="element-editor"
+>Element bewerken</link
+> venster voor het bewerken van het geselecteerde bibliografie-element. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="adding-link">
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>D</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Element</guimenu
+> <guisubmenu
+>Document bekijken</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Opent lokaal of extern document voor het bewerken van het geselecteerde element in de bibliografie-lijst. </para>
+	  <para
+>Opent de tab <guilabel
+>Extern</guilabel
+> van het venster <link linkend="element-editor"
+>Element bewerken</link
+> om de link naar het document toe te voegen of om deze te bewerken. </para>
+	  <screenshot>
+	    <screeninfo
+>tab voor externe documenten van het dialoog voor bewerken van een element</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="external-tab.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>tab voor externe documenten van het dialoog voor bewerken van een element</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>U kunt de knop <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Toevoegen</guilabel
+> gebruiken om een link naar een extern blad toe te voegen. </para>
+	  <para
+>U kunt het keuzemenu <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Bestand toevoegen...</guilabel
+> gebruiken om een lokaal bestand te selecteren en een referentie daarnaar of het gehele bestand aan de huidige bibliografie toe te voegen. </para>
+	  <para
+>Als u klikt op <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, dan zal het geselecteerde item worden gewist. </para>
+	  <para
+>Klik op de knop <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open-remote.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> om de link naar het document in de browser te openen. </para>
+	  <para
+>Klik op de knop <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> om het geselecteerde document-item te verwijderen. </para>
+	  <para
+>Om de volgorde van de items in de documentenlijst te veranderen, gebruikt u de knoppen <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-down.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> en <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>. </para>
+	  <para
+>U kunt eventueel de knop <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> gebruiken om externe documenten lokaal op te slaan. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>&PDF; zoeken...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Probeert om &PDF;-documenten te vinden op het internet die bij het geselecteerde bibliografie-item horen. </para>
+	  <screenshot>
+	    <screeninfo
+>Dialoog voor het zoeken van &PDF;</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="find-pdf.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>dialoog voor het zoeken van &PDF;</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>U kunt voor het entry <guilabel
+>Negeren</guilabel
+>, <guilabel
+>Downloaden</guilabel
+> of gewoon <guilabel
+>Alleen &URL; gebruiken</guilabel
+> gebruiken. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="format-entry-ids">
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Maak id van items op</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Hiermee kunt u volgens de standaard instellingen identifiers voor de geselecteerde bibliografie entries opmaken. </para>
+	  <para
+>U kunt de standaard opmaak van de identifiers definiëren op de <link linkend="config-id-suggestions"
+>Id-suggesties pagina</link
+> van het configuratie dialoog van &kbibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Kleur</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Hiermee kunt u een kleurlabel voor de geselecteerde bibliografie entries selecteren of een dergelijke label weer verwijderen (<guimenuitem
+>Geen kleur</guimenuitem
+>). </para>
+	  <para
+>U kunt de kleuren-labels instellen op de <link linkend="config-color"
+>Kleur &amp; Labels pagina</link
+> van het configuratie dialoog van &kbibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Naar &lyx;/&kile; verzenden</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+><link linkend="integration"
+>Verzend referenties</link
+> van de geselecteerde bibliografie entries naar &lyx; of &kile;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Instellingen</guimenu
+> <guimenuitem
+>&kbibtex; instellen...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Opent het <link linkend="config-dialog"
+>configuratiescherm van &kbibtex;</link
+>. </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </sect1>
+  <sect1 id="config-dialog">
+    <title
+>Het configuratiescherm van &kbibtex; </title>
+    <para
+>U kunt verschillende parameters van &kbibtex; instellen in het <guilabel
+>Voorkeuren</guilabel
+> dialoog. U opent dit dialoog in <menuchoice
+><guimenu
+>Instellingen</guimenu
+><guimenuitem
+>&kbibtex; configureren...</guimenuitem
+></menuchoice
+> menu-item. Hieronder vind u een beschrijving van de configuratieschermen van &kbibtex;. </para>
+    <para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-revert.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Standaardwaarden</guibutton
+> om alle items weer naar hun standaard waarden terug te zetten. </para>
+    <para
+>U kunt de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Resetten</guibutton
+> gebruiken om alle huidige wijzigingen in de configuratie ongedaan te maken zonder dat u het <guilabel
+>Voorkeuren</guilabel
+>-venster sluit. </para>
+    <sect2 id="config-general">
+      <title
+>Algemene configuratie </title>
+      <screenshot>
+	<screeninfo
+>Algemene configuratie</screeninfo>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="config-general.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase
+>Algemene configuratie</phrase>
+	  </textobject>
+	</mediaobject>
+      </screenshot>
+      <para
+>In dit configuratiescherm kunt u de standaard <guilabel
+>Opmaak van persoonsnamen</guilabel
+> wijzigen die automatisch zullen worden toegepast op de in <link linkend="element-editor"
+>Bewerker van element</link
+> dialoog ingevoerde namen. </para>
+      </sect2>
+    <sect2 id="config-keywords">
+      <title
+>Trefwoorden Configuratie </title>
+      <screenshot>
+	<screeninfo
+>Trefwoorden Configuratie</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-keywords.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Trefwoorden Configuratie</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>U gebruikt deze pagina voor het bewerken van de lijst met trefwoorden. Het toepassen van trefwoorden bij de bibliografie-entries in de <link linkend="element-editor"
+>Bewerker van elementen</link
+> is handig bij het structureren van uw bibliografie. Met trefwoorden <link linkend="filter-toolbar"
+>Filteren</link
+> kan u nauwkeurige resultaten krijgen. </para>
+	<para
+>U kunt de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Toevoegen</guibutton
+> gebruiken om een trefwoord aan de lijst toe te voegen. </para>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Verwijderen</guibutton
+> om het geselecteerde trefwoord te verwijderen. </para>
+      </sect2>
+      <sect2 id="config-color">
+      <title
+>Configuratie van Kleuren &amp; Labels </title>
+      <screenshot>
+	<screeninfo
+>Kleuren &amp; Labels configuratie</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-color.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Kleuren &amp; Labels configuratie</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Kleurlabels zijn een andere handige manier om uw bibliografie te structuren. U kunt deze configuratiepagina gebruiken om deze labels en de kleuren daarvan te definiëren. </para>
+	<para
+>U kunt de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Toevoegen</guibutton
+> gebruiken om een label aan de lijst toe te voegen. </para>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Verwijderen</guibutton
+> om het geselecteerde label te verwijderen. </para>
+	<para
+>Dubbelklik op een item in de kolom <guilabel
+>Kleur</guilabel
+> of <guilabel
+>Label</guilabel
+> om het te bewerken. </para>
+      </sect2>
+      <sect2 id="config-id-suggestions">
+      <title
+>Configuratie van Id-suggesties </title>
+      <screenshot>
+	<screeninfo
+>Id-suggesties configuratie</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-id-suggestions.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Id-suggesties configuratie</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Deze configuratiepagina gebruikt u voor het bewerken van schema's voor Identifier-suggesties voor de <link linkend="element-editor"
+>Bewerker van elementen</link
+>. U kunt schema's toevoegen, bewerken, verwijderen en de volgorde wijzigen via de respectievelijke knoppen aan de rechterkant van de lijst met suggesties. </para>
+	<para
+>Klik op de knop <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="favorites.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Standaard omschakelen</guibutton
+> om de standaard Id-suggestie schema naar het geselecteerde item om te schakelen. Gebruik deze knop om de opmaak voor de <link linkend="format-entry-ids"
+>Maak id van items op</link
+> in te stellen. </para>
+      </sect2>
+      <sect2 id="config-user-interface">
+      <title
+>Gebruikersinterface configuratie </title>
+      <screenshot>
+	<screeninfo
+>Gebruikersinterface configuratie</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-user-interface.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Gebruikersinterface configuratie</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>In deze configuratiepagina kunt u instellen dat in de bibliografie-lijst van &kbibtex; commentaar en macro's zichtbaar of verborgen is, selecteer het bibliografiesysteem (&bibtex; of &biblatex;) en stel in wat er gebeurt als u dubbelklikt op een element in de bibliografie-lijst (<guimenuitem
+>Editor openen</guimenuitem
+> of <link linkend="document-preview"
+><guimenuitem
+>Document bekijken</guimenuitem
+></link
+>). </para>
+	<tip>
+	  <para
+>&biblatex; is een her-implementatie van &bibtex;. Bij &biblatex; wordt de opmaak van de bibliografie geheel geregeld met &latex; macros, en niet met <filename role="extension"
+>bst</filename
+>-bestanden. Het ondersteunt onderverdeelde  bibliografieën, meerdere bibliografieën in een document, en aparte lijsten met bibliografieën. Bibliografieën kunnen op onderwerp onderverdeeld zijn in gedeelten en/of segmenten. Net zoals bij bibiografiestijlen, kunt u ook alle citaat commando's vrij definiëren. Het &biblatex; pakket is compleet gelokaliseerd en heeft een interface met het babel pakket.<footnote
+><para
+>Uit de &biblatex; documentatie.</para
+></footnote>
+	  </para>
+	  <para
+>Ook &biblatex; kan <ulink url="http://biblatex-biber.sourceforge.net/"
+>biber</ulink
+> als backend gebruiken. Met &biblatex; is het mogelijk om in bibliografische entries UTF-8 symbolen te gebruiken. </para>
+	  <para
+>Daarom kunt u dus &biblatex; gebruiken om geavanceerde bibliografieën te creëren. </para>
+	</tip>
+      </sect2>
+      <sect2 id="config-saving">
+      <title
+>Configuratie van opslaan en exporteren </title>
+      <screenshot>
+	<screeninfo
+>opslaan en exporteren configureren</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-saving.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>opslaan en exporteren configureren</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Op deze pagina kunt u een &latex; commando kiezen (&eg; <userinput
+>\cite{...}</userinput
+>) wat dan als een wrapper werkt voor de referentie die u heeft gekopieerd met <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;&Shift;<keycap
+>C</keycap
+></keycombo
+></shortcut
+><guimenuitem
+>Referenties kopiëren</guimenuitem
+></menuchoice
+> item van het contextmenu van het bibliografie-lijst. </para>
+	<para
+>U kunt ook &kbibtex; automatisch de <link linkend="lyx-integration"
+>&lyx; data pipe</link
+> laten bepalen door het betreffende vakje aan te vinken. </para>
+	<para
+>Als u het <guilabel
+>&lyx; -pipe automatisch detecteren</guilabel
+>-item niet heeft aangevinkt, dan kunt u het pipe adres handmatig in het tekstvak <guilabel
+>Handmatige gespecificeerde &lyx; pipe</guilabel
+> invoeren of het selecteren met in het <ulink url="help:/fundamentals/files.html"
+>algemene &kde; Openen/Opslaan dialoog</ulink
+> door op de knop rechts van het tekstvak te drukken. </para>
+	<para
+>Eventueel kunt u hier reservekopieën maken. U kunt hier kiezen uit (<guimenuitem
+>Uitsluitend lokale bestanden</guimenuitem
+>, <guimenuitem
+>Geen reservekopieën</guimenuitem
+> of <guimenuitem
+>Beide lokale en bestanden op afstand</guimenuitem
+>) in de keuzelijst <guilabel
+>Reservekopieën bij opslaan</guilabel
+> en het aantal op te slaan reservekopieën. </para>
+      </sect2>
+      <sect2 id="config-pdf">
+      <title
+>&PDF; &amp; Postscript configuratie </title>
+      <screenshot>
+	<screeninfo
+>&PDF; &amp; Postscript configuratie</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-pdf.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>&PDF; &amp; Postscript configuratie</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>U kunt deze configuratiepagina gebruiken voor het instellen van enkele opties bij <link linkend="element-editor"
+>voorbeeldweergaves van &kbibtex; entries</link
+>. U kunt instellen de <guilabel
+>Papiergrootte</guilabel
+>, de taal voor <ulink url="https://www.ctan.org/pkg/babel"
+>babel</ulink
+> &latex;-pakket en de <link linkend="quick-using"
+>bibliografiestijl</link
+>. </para>
+      </sect2>
+  </sect1>
+</chapter>
+
+<chapter id="advanced">
+  <title
+>Gevorderd gebruik </title>
+  <sect1 id="crossreferences">
+    <title
+>kruisverwijzingen </title>
+    <para
+>Als u kruisverwijzingen gebruikt dan heeft u minder tijd nodig bij het creëren van links tussen een <quote
+>parent</quote
+> entry (dat proceedings of verzameling van artikelen kan zijn) en <quote
+>children</quote
+> entries (rapporten of artikelen). </para>
+    <para
+>Om een kruisverwijzing te creëren, voegt u de identifier daarvan toe in het veld <guilabel
+>Verwijzingen:</guilabel
+> van de entry's in de tab <guilabel
+>Publicatie</guilabel
+>. </para>
+    <screenshot>
+      <screeninfo
+>Publicatie tab van het dialoog voor entries bewerken</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="cross-ref.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>Publicatie tab van het dialoog voor entries bewerken</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>U kunt naar keuze de identifier direct invoeren of op de knop <inlinemediaobject
+> <imageobject
+> <imagedata fileref="flag.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> klikken om het daarna te selecteren in de lijst met beschikbare identifiers. </para>
+  </sect1>
+  <sect1 id="macros">
+    <title
+>Macro's </title>
+    <para
+>Stel dat in uw bibliografie veel referenties naar hetzelfde tijdschrift aanwezig zijn en u wilt niet de titel daarvan iedere keer opnieuw invoeren. Dan kunt u voor de titel een macro aanmaken. </para>
+    <para
+>Laten we aannemen dat u een macro genaamd <replaceable
+>efm</replaceable
+> voor <quote
+>Engineering Fracture Mechanics</quote
+> wilt aanmaken. Dan kunt u dat als volgt doen: </para>
+    <procedure>
+      <step>
+	<para
+>Kies menu-item <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nieuw element</guisubmenu
+><guimenuitem
+>Nieuwe macro</guimenuitem
+></menuchoice
+>. </para>
+      </step>
+      <step>
+	<para
+>Voer een identifier (afkorting) in voor de titel in het tekstvak <guilabel
+>Id:</guilabel
+>. De standaard identifier is <userinput
+>New1</userinput
+>. Hier voeren we in <userinput
+>efm</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Kies <inlinemediaobject
+> <imageobject
+> <imagedata fileref="draw-text.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Platte tekst</guilabel
+>). De ander mogelijkheid, <inlinemediaobject
+> <imageobject
+> <imagedata fileref="code-context.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Broncode</guilabel
+>) kunt u gebruiken als u een macrocode met &latex; commando's wilt invoegen. </para>
+      </step>
+      <step>
+	<para
+>Voer <userinput
+>Engineering Fracture Mechanics</userinput
+> in het tekstvak<guilabel
+>Waarde:</guilabel
+> in. </para>
+	<screenshot>
+	  <screeninfo
+>Definiëren van macro</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definiëren van macro</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Klik op de knop <guibutton
+>Toepassen</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Indien gewenst, kunt u naar de tab <guilabel
+>Bron</guilabel
+> omschakelen om de code van de macro te inspecteren. </para>
+	<screenshot>
+	  <screeninfo
+>Definiëren van macro (broncode)</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro-source.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definiëren van macro (broncode)</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Klik op de knop <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+    </procedure>
+    <para
+>U kunt dezelfde procedure gebruiken voor de titels, de auteur, namen van de maand, &etc; volgens de regels van uw publisher voor afkortingen voor de entries uitonline databases. Standaard zou u deze regels (macros) definiëren in de bibliographie stijlbestanden (<filename role="extension"
+>bst</filename
+>). </para>
+  </sect1>
+</chapter>
+
+<chapter id="integration">
+  <title
+>Integratie met &kile; en &lyx; </title>
+  <para
+>&kbibtex; is gemakkelijk integreerbaar met algemene &latex; editors, zoals &kile; en &lyx;. </para>
+  <sect1 id="kile-intergation">
+    <title
+>Integratie met &kile; </title>
+    <para
+><ulink url="http://kile.sourceforge.net/"
+>&kile;</ulink
+> is een bewerker voor broncode van &tex; en &latex; met een shell. </para>
+    <para
+>&kbibtex; is een standaard viewer/editor voor &bibtex; bestanden in &kile;, extra instellingen zijn dus niet nodig. </para>
+    <para
+>Om de geselecteerde citaten uit bibliografiebestanden toe te voegen, start u &kile;, opent u een &latex;-bestand, plaatst u de cursor op de locatie waar u het citaat wilt plaatsen, schakelt vervolgens om het &kbibtex; venster, selecteert u de elementen in de lijst met elementen en kiest <menuchoice
+><guimenu
+>Element</guimenu
+><guimenuitem
+>Naar &lyx;/&kile; verzenden</guimenuitem
+></menuchoice
+> of u gebruikt <guimenuitem
+>Naar &lyx;/&kile;verzenden</guimenuitem
+> uit het (&RMB;-klik) contextmenu. </para>
+    <para
+>De citaten zullen worden geplaatst als <userinput
+>\cite{<replaceable
+>element identifiers</replaceable
+>}</userinput
+> op de cursorpositie in het huidige &kile;-document. </para>
+  </sect1>
+  <sect1 id="lyx-integration">
+    <title
+>Integratie met &lyx; </title>
+    <para
+><ulink url="https://www.lyx.org/"
+>&lyx;</ulink
+> is een tekstverwerker dat een manier van werken aanmoedigt gebaseerd op de structuur van uw documenten (WYSIWYM) en niet gemakshalve op het uiterlijk daarvan (WYSIWYG). </para>
+    <para
+>&kbibtex; kan geïntegreerd worden in &lyx; via een &lyx; in-/uitvoer-pipe. </para>
+    <procedure>
+      <step>
+	<para
+>Eerst moet u &lyx; zodanig instellen dat het de pipe gebruikt. Selecteer in het hoofdmenu van &lyx;<menuchoice
+><guimenu
+>Gereedschap</guimenu
+><guimenuitem
+>Instellingen</guimenuitem
+></menuchoice
+>. Open het <guilabel
+>Pad</guilabel
+> pagina en voer een pad in (&eg; <filename
+>~/.lyx/lyxpipe</filename
+>) in het <guilabel
+>LyXServer pipe</guilabel
+> tekstvak. </para>
+	<screenshot>
+	  <screeninfo
+>&lyx;-instellingen</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="lyx-preferences.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>&lyx;-instellingen</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Klik op <guibutton
+>Opslaan</guibutton
+> om de wijzigingen op te slaan. </para>
+      </step>
+      <step>
+	<para
+>Kies <menuchoice
+><guimenu
+>Hulpmiddelen</guimenu
+><guimenuitem
+>Opnieuw configureren</guimenuitem
+></menuchoice
+> om &lyx; opnieuw te configureren en start het opnieuw. </para>
+      </step>
+      <step>
+	<para
+>Om de geselecteerde citaten uit bibliografiebestanden toe te voegen, opent u een document, plaatst u de cursor op de locatie waar u de bibliografie wilt plaatsen en kiest u uit het hoofdmenu van &lyx;<menuchoice
+><guimenu
+>Plakken</guimenu
+><guisubmenu
+>List / TOC</guisubmenu
+><guimenuitem
+>&bibtex; Bibliographie...</guimenuitem
+></menuchoice
+>. </para>
+      </step>
+      <step>
+	<para
+>Druk op <guibutton
+>Plakken...</guibutton
+> en daarna <guibutton
+>Bladeren...</guibutton
+>. Selecteer in &lyx; een &kbibtex; <filename role="extension"
+>bib</filename
+>-bestand. Klik op <guibutton
+>Plakken</guibutton
+> en daarna op <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Plaats dan de cursor op de plaats waar u het citaat wilt plaatsen, en schakel om naar het &kbibtex;-venster. selecteer de elementen in de lijst met elementen en kies <menuchoice
+><guimenu
+>Element</guimenu
+><guimenuitem
+>Naar &lyx;/&kile; verzenden</guimenuitem
+></menuchoice
+> of u gebruikt <guimenuitem
+>Naar &lyx;/&kile; verzenden</guimenuitem
+> uit het (&RMB;-klik) contextmenu. </para>
+      </step>
+      <step>
+	<para
+>De citaten zullen ingevoegd worden als een referentie op de cursorpositie in het huidige &lyx;-document. </para>
+      </step>
+    </procedure>
+  </sect1>
+</chapter>
+
+<chapter id="credits">
+  <title
+>Dankbetuigingen en licentie</title>
+  <para
+>&kbibtex; </para>
+  <para
+>Auteursrecht programma &copy; 2004-2014 Thomas Fischer <email
+>fischer@unix-ag.uni-kl.de</email
+> </para>
+  <para
+>Documentatie copyright &copy; 2013 Yuri Chornoivan <email
+>yurchor@ukr.net</email
+> </para>
+&meld.fouten;&vertaling.freek; &underFDL; &underGPL; </chapter>
+
+<bibliography>
+  <biblioentry>
+    <abbrev
+>Lamport86</abbrev>
+    <author>
+      <personname
+><firstname
+>Leslie</firstname
+> <surname
+>Lamport</surname
+> </personname>
+    </author>
+    <title
+>Latex: een systeem voor preparatie van documenten </title>
+    <pubdate
+>1986</pubdate>
+    <publisher>
+      <publishername
+>Addison-Wesley Publishing Company</publishername>
+    </publisher>
+  </biblioentry>
+</bibliography>
+
+&documentation.index;
+
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+-->

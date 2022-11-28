@@ -1,0 +1,124 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Russian "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Руководство пользователя KBibTeX</title>
+<author
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+> <contrib
+>KBibTeX man page.</contrib
+> <email
+>fischer@unix-ag.uni-kl.de</email
+></author>
+<date
+>29 июня 2016 г.</date>
+<productname
+>KBibTeX</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>kbibtex</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>kbibtex</command
+></refname>
+<refpurpose
+>редактор BibTeX для KDE, автором которого является Thomas Fischer; приложение выпущено под лицензии GPL версии 2 или новее.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>kbibtex</command
+> <arg choice="opt"
+><replaceable
+>URL</replaceable
+></arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Описание</title>
+<para
+>KBibTeX — это редактор BibTeX для KDE, автором которого является Thomas Fischer; приложение выпущено под лицензии GPL версии 2 или новее. </para>
+<para
+>KBibTeX возможно запустить как отдельную программу или встроить как KPart практически в любую программу &kde; (например, Konqueror). </para>
+</refsect1>
+
+<refsect1 id="arguments"
+><title
+>Аргументы</title>
+<variablelist>
+  <varlistentry>
+    <term
+><option
+>URL</option
+></term>
+  <listitem>
+    <para
+>Адрес (один или несколько) библиографии документов для открытия.</para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Смотрите также</title>
+<simplelist>
+<member
+>Более подробная документация доступна по адресу <ulink url="help:/kbibtex"
+>help:/kbibtex</ulink
+> (введите данный <acronym
+>URL</acronym
+> в адресную строку &konqueror; или выполните команду <userinput
+><command
+>khelpcenter</command
+> <parameter
+>help:/kbibtex</parameter
+></userinput
+>).</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+<member
+>Дополнительная информауия доступна на <ulink url="https://userbase.kde.org/KBibTeX"
+>официальном сайте KBibTeX</ulink
+>.</member>
+</simplelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Авторы</title>
+<para
+>Автором KBibTeX является <personname
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+></personname
+> <email
+>fischer@unix-ag.uni-kl.de</email
+>. </para>
+</refsect1>
+
+</refentry>

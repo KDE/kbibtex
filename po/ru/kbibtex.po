@@ -1,0 +1,4260 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Michael Uleysky <uleysky@gmail.com>, 2013.
+# Alexander Potashev <aspotashev@gmail.com>, 2017, 2019.
+# Мария Шикунова <translation-team@basealt.ru>, 2021, 2022.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-10-17 00:47+0000\n"
+"PO-Revision-Date: 2022-10-02 14:52+0300\n"
+"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
+"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Lokalize 21.08.3\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Михаил Улейский,Мария Шикунова"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "uleysky@gmail.com,translation-team@basealt.ru"
+
+#, kde-format
+msgid "Author/Editor"
+msgstr "Автор/Редактор"
+
+#, kde-format
+msgid "Publication"
+msgstr "Издание"
+
+#, kde-format
+msgid "Number/Issue"
+msgstr "Номер/Издание"
+
+#, kde-format
+msgid "Cross-Reference"
+msgstr "Перекрёстная ссылка"
+
+#, kde-format
+msgid "Misc"
+msgstr "Прочее"
+
+#, kde-format
+msgid "Star Rating"
+msgstr "Оценка"
+
+#, kde-format
+msgid "Book Title Addon"
+msgstr "Дополнение к названию книги"
+
+#, kde-format
+msgid "Main Title Addon"
+msgstr "Дополнение к заголовку"
+
+#, kde-format
+msgid "Further Persons"
+msgstr "Дальнейшие лица"
+
+#, kde-format
+msgid "Volume Part"
+msgstr "Часть тома"
+
+#, kde-format
+msgid "Total Volumes"
+msgstr "Всего томов"
+
+#, kde-format
+msgid "X-Reference"
+msgstr "Х-ссылка"
+
+#, kde-format
+msgid "Identifiers"
+msgstr "Идентификаторы"
+
+#, kde-format
+msgid "Sorting"
+msgstr "Сортировка"
+
+#, kde-format
+msgid "Sort Name"
+msgstr "Сортировать по имени"
+
+#, kde-format
+msgid "Abbreviations"
+msgstr "Сокращения"
+
+#, kde-format
+msgid "Short Journal"
+msgstr "Небольшой журнал"
+
+#, kde-format
+msgid "Short Series"
+msgstr "Короткая серия"
+
+#, kde-format
+msgid "Short Title"
+msgstr "Краткое название"
+
+#, kde-format
+msgid "Reprint Data"
+msgstr "Данные переиздания"
+
+#, kde-format
+msgid "Local File"
+msgstr "Локальный файл"
+
+#, kde-format
+msgid ""
+"DOIs and URLs get handled in the &lsquo;<a href=\"#tab:external\">External</"
+"a>&rsquo; tab."
+msgstr ""
+"DOI и URL обрабатываются на вкладке &lsquo;<a href=\"#tab:external"
+"\">Внешние</a>&rsquo;."
+
+#: src/config/bibtexentries.cpp:67 src/config/bibtexentries.cpp:83
+#, kde-format
+msgid "Journal Article"
+msgstr "Статья в журнале"
+
+#: src/config/bibtexentries.cpp:68
+#, kde-format
+msgid "Conference"
+msgstr "Конференция"
+
+#: src/config/bibtexentries.cpp:69 src/config/bibtexentries.cpp:100
+#, kde-format
+msgid "Conference or Workshop Proceedings"
+msgstr "Материалы конференции или мастер-класса"
+
+#: src/config/bibtexentries.cpp:70 src/config/bibtexentries.cpp:111
+#, kde-format
+msgid "Technical Report"
+msgstr "Технический отчёт"
+
+#: src/config/bibtexentries.cpp:71 src/config/bibtexentries.cpp:95
+#, kde-format
+msgid "Miscellaneous"
+msgstr "Разное"
+
+#: src/config/bibtexentries.cpp:72 src/config/bibtexentries.cpp:84
+#, kde-format
+msgid "Book"
+msgstr "Книга"
+
+#: src/config/bibtexentries.cpp:73 src/config/bibtexentries.cpp:86
+#, kde-format
+msgid "Part of a Book"
+msgstr "Часть книги"
+
+#: src/config/bibtexentries.cpp:74 src/config/bibtexentries.cpp:92
+#, kde-format
+msgid "Part of a Book with own Title"
+msgstr "Часть книги с собственным заголовком"
+
+#: src/config/bibtexentries.cpp:75 src/config/bibtexentries.cpp:110
+#, kde-format
+msgid "PhD Thesis"
+msgstr "Кандидатская диссертация"
+
+#: src/config/bibtexentries.cpp:76 src/config/bibtexentries.cpp:109
+#, kde-format
+msgid "Master's Thesis"
+msgstr "Дипломная работа"
+
+#: src/config/bibtexentries.cpp:77 src/config/bibtexentries.cpp:108
+#, kde-format
+msgid "Unpublished Material"
+msgstr "Неопубликованный материал"
+
+#: src/config/bibtexentries.cpp:78 src/config/bibtexentries.cpp:94
+#, kde-format
+msgid "Manual"
+msgstr "Руководство"
+
+#: src/config/bibtexentries.cpp:79 src/config/bibtexentries.cpp:89
+#, kde-format
+msgid "Booklet"
+msgstr "Буклет"
+
+#: src/config/bibtexentries.cpp:85
+#, kde-format
+msgid "Multi-volume Book"
+msgstr "Многотомная книга"
+
+#: src/config/bibtexentries.cpp:87
+#, kde-format
+msgid "Former Monograph as Part of a Book"
+msgstr "Бывшая монография как часть книги"
+
+#: src/config/bibtexentries.cpp:88
+#, kde-format
+msgid "Supplemental Material in a Book"
+msgstr "Дополнительный материал к книге"
+
+#: src/config/bibtexentries.cpp:90
+#, kde-format
+msgid "Single-volume Collection"
+msgstr "Однотомная коллекция"
+
+#: src/config/bibtexentries.cpp:91
+#, kde-format
+msgid "Multi-volume Collection"
+msgstr "Многотомная коллекция"
+
+#: src/config/bibtexentries.cpp:93
+#, kde-format
+msgid "Supplemental Material in a Collection"
+msgstr "Дополнительный материал коллекции"
+
+#: src/config/bibtexentries.cpp:96
+#, kde-format
+msgid "Online Resource"
+msgstr "Интернет-источник"
+
+#: src/config/bibtexentries.cpp:97
+#, kde-format
+msgid "Patent"
+msgstr "Патент"
+
+#: src/config/bibtexentries.cpp:98
+#, kde-format
+msgid "Periodical (Complete Issue)"
+msgstr "Периодическое издание (полное)"
+
+#: src/config/bibtexentries.cpp:99
+#, kde-format
+msgid "Supplemental Material in a Periodical"
+msgstr "Дополнительный материал в периодическом издании"
+
+#: src/config/bibtexentries.cpp:101
+#, kde-format
+msgid "Multi-volume Proceedings"
+msgstr "Многотомные материалы"
+
+#: src/config/bibtexentries.cpp:102
+#, kde-format
+msgid "Publication in Conference Proceedings"
+msgstr "Публикация материалов конференции"
+
+#: src/config/bibtexentries.cpp:103
+#, kde-format
+msgid "Single-volume Reference (e.g. Encyclopedia)"
+msgstr "Однотомный справочник (например, энциклопедия)"
+
+#: src/config/bibtexentries.cpp:104
+#, kde-format
+msgid "Multi-volume Reference (e.g. Encyclopedia)"
+msgstr "Многотомный справочник (например, энциклопедия)"
+
+#: src/config/bibtexentries.cpp:105
+#, kde-format
+msgid "Part of a Reference"
+msgstr "Часть справочника"
+
+#: src/config/bibtexentries.cpp:106
+#, kde-format
+msgid "Report"
+msgstr "Отчёт"
+
+#: src/config/bibtexentries.cpp:107
+#, kde-format
+msgid "Thesis"
+msgstr "Диссертация"
+
+#: src/config/bibtexfields.cpp:157 src/config/bibtexfields.cpp:196
+#, kde-format
+msgid "Element Type"
+msgstr "Тип элемента"
+
+#: src/config/bibtexfields.cpp:158 src/config/bibtexfields.cpp:197
+#: src/gui/file/findduplicatesui.cpp:158
+#, kde-format
+msgid "Identifier"
+msgstr "Идентификатор"
+
+#: src/config/bibtexfields.cpp:159 src/config/bibtexfields.cpp:198
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:321
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:616
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:651
+#: src/processing/idsuggestions.cpp:412
+#, kde-format
+msgid "Title"
+msgstr "Название"
+
+#: src/config/bibtexfields.cpp:160 src/config/bibtexfields.cpp:199
+#, kde-format
+msgid "Title or Book Title"
+msgstr "Заголовок или название книги"
+
+#: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:208
+#, kde-format
+msgid "Author or Editor"
+msgstr "Автор или редактор"
+
+#: src/config/bibtexfields.cpp:162 src/config/bibtexfields.cpp:209
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:620
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:655
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:79
+#, kde-format
+msgid "Author"
+msgstr "Автор"
+
+#: src/config/bibtexfields.cpp:163 src/config/bibtexfields.cpp:214
+#, kde-format
+msgid "Editor"
+msgstr "Редактор"
+
+#: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:230
+#, kde-format
+msgid "Month"
+msgstr "Месяц"
+
+#: src/config/bibtexfields.cpp:165 src/config/bibtexfields.cpp:231
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:210
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:624
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:659
+#, kde-format
+msgid "Year"
+msgstr "Год"
+
+#: src/config/bibtexfields.cpp:166
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:422
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:628
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:663
+#: src/processing/idsuggestions.cpp:441
+#, kde-format
+msgid "Journal"
+msgstr "Журнал"
+
+#: src/config/bibtexfields.cpp:167 src/config/bibtexfields.cpp:239
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:242
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:636
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:671
+#: src/processing/idsuggestions.cpp:476
+#, kde-format
+msgid "Volume"
+msgstr "Том"
+
+#: src/config/bibtexfields.cpp:168 src/config/bibtexfields.cpp:241
+#, kde-format
+msgid "Number"
+msgstr "Номер"
+
+#: src/config/bibtexfields.cpp:169 src/config/bibtexfields.cpp:248
+#, kde-format
+msgid "ISSN"
+msgstr "ISSN"
+
+#: src/config/bibtexfields.cpp:170 src/config/bibtexfields.cpp:249
+#, kde-format
+msgid "ISBN"
+msgstr "ISBN"
+
+#: src/config/bibtexfields.cpp:171 src/config/bibtexfields.cpp:250
+#, kde-format
+msgid "ISBN or ISSN"
+msgstr "ISBN или ISSN"
+
+#: src/config/bibtexfields.cpp:172 src/config/bibtexfields.cpp:252
+#, kde-format
+msgid "How Published"
+msgstr "Как издавалась"
+
+#: src/config/bibtexfields.cpp:173 src/config/bibtexfields.cpp:253
+#, kde-format
+msgid "Note"
+msgstr "Заметка"
+
+#: src/config/bibtexfields.cpp:174 src/config/bibtexfields.cpp:256
+#, kde-format
+msgid "Abstract"
+msgstr "Аннотация"
+
+#: src/config/bibtexfields.cpp:175 src/config/bibtexfields.cpp:257
+#, kde-format
+msgid "Pages"
+msgstr "Страницы"
+
+#: src/config/bibtexfields.cpp:176 src/config/bibtexfields.cpp:261
+#, kde-format
+msgid "Publisher"
+msgstr "Издатель"
+
+#: src/config/bibtexfields.cpp:177 src/config/bibtexfields.cpp:263
+#, kde-format
+msgid "Institution"
+msgstr "Учреждение"
+
+#: src/config/bibtexfields.cpp:178 src/config/bibtexfields.cpp:264
+#, kde-format
+msgid "Book Title"
+msgstr "Название книги"
+
+#: src/config/bibtexfields.cpp:179 src/config/bibtexfields.cpp:269
+#, kde-format
+msgid "Series"
+msgstr "Серия"
+
+#: src/config/bibtexfields.cpp:180 src/config/bibtexfields.cpp:271
+#, kde-format
+msgid "Edition"
+msgstr "Редакция"
+
+#: src/config/bibtexfields.cpp:181 src/config/bibtexfields.cpp:272
+#, kde-format
+msgid "Chapter"
+msgstr "Глава"
+
+#: src/config/bibtexfields.cpp:182 src/config/bibtexfields.cpp:273
+#, kde-format
+msgid "Organization"
+msgstr "Организация"
+
+#: src/config/bibtexfields.cpp:183
+#, kde-format
+msgid "School"
+msgstr "Школа"
+
+#: src/config/bibtexfields.cpp:184 src/config/bibtexfields.cpp:277
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:125
+#, kde-format
+msgid "Keywords"
+msgstr "Ключевые слова"
+
+#: src/config/bibtexfields.cpp:185 src/config/bibtexfields.cpp:278
+#, kde-format
+msgid "Cross Reference"
+msgstr "Перекрёстная ссылка"
+
+#: src/config/bibtexfields.cpp:186 src/config/bibtexfields.cpp:280
+#: src/networking/onlinesearch/onlinesearchdoi.cpp:185
+#, kde-format
+msgid "DOI"
+msgstr "DOI"
+
+#: src/config/bibtexfields.cpp:187 src/config/bibtexfields.cpp:284
+#, kde-format
+msgid "URL"
+msgstr "URL"
+
+#: src/config/bibtexfields.cpp:188 src/config/bibtexfields.cpp:287
+#: src/config/bibtexfields.cpp:310
+#, kde-format
+msgid "Location"
+msgstr "Расположение"
+
+#: src/config/bibtexfields.cpp:189
+#, kde-format
+msgid "Address"
+msgstr "Адрес"
+
+#: src/config/bibtexfields.cpp:190 src/config/bibtexfields.cpp:289
+#: src/gui/file/findduplicatesui.cpp:160
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:495
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:632
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:667
+#: src/processing/idsuggestions.cpp:459
+#, kde-format
+msgid "Type"
+msgstr "Тип"
+
+#: src/config/bibtexfields.cpp:191 src/gui/element/elementwidgets.cpp:989
+#, kde-format
+msgid "Key"
+msgstr "Ключ"
+
+#: src/config/bibtexfields.cpp:192 src/config/bibtexfields.cpp:298
+#: src/gui/preferences/settingscolorlabelwidget.cpp:194
+#: src/gui/preferences/settingscolorlabelwidget.cpp:427
+#, kde-format
+msgid "Color"
+msgstr "Цвет"
+
+#: src/config/bibtexfields.cpp:193
+#, kde-format
+msgid "Stars"
+msgstr "Звёзды"
+
+#: src/config/bibtexfields.cpp:200
+#, kde-format
+msgid "Subtitle"
+msgstr "Подзаголовок"
+
+#: src/config/bibtexfields.cpp:201
+#, kde-format
+msgid "Title Addon"
+msgstr "Дополнение к заголовку"
+
+#: src/config/bibtexfields.cpp:202
+#, kde-format
+msgid "Shortitle"
+msgstr "Краткое название"
+
+#: src/config/bibtexfields.cpp:203
+#, kde-format
+msgid "Original Title"
+msgstr "Оригинальное название"
+
+#: src/config/bibtexfields.cpp:204
+#, kde-format
+msgid "Reprint Title"
+msgstr "Заголовок переиздания"
+
+#: src/config/bibtexfields.cpp:205
+#, kde-format
+msgid "Main Title"
+msgstr "Заголовок"
+
+#: src/config/bibtexfields.cpp:206
+#, kde-format
+msgid "Main Subtitle"
+msgstr "Подзаголовок"
+
+#: src/config/bibtexfields.cpp:207
+#, kde-format
+msgid "Maintitle Addon"
+msgstr "Дополнение заголовка"
+
+#: src/config/bibtexfields.cpp:210
+#, kde-format
+msgid "Short Author"
+msgstr "Автор (кратко)"
+
+#: src/config/bibtexfields.cpp:211
+#, kde-format
+msgid "Name Addon"
+msgstr "Дополнение к имени"
+
+#: src/config/bibtexfields.cpp:212
+#, kde-format
+msgid "Author Type"
+msgstr "Тип автора"
+
+#: src/config/bibtexfields.cpp:213
+#, kde-format
+msgid "Book Author"
+msgstr "Автор книги"
+
+#: src/config/bibtexfields.cpp:215
+#, kde-format
+msgid "Short Editor"
+msgstr "Редактор (кратко)"
+
+#: src/config/bibtexfields.cpp:216
+#, kde-format
+msgid "Editor Type"
+msgstr "Тип редактора"
+
+#: src/config/bibtexfields.cpp:217
+#, kde-format
+msgid "Editor A"
+msgstr "Редактор А"
+
+#: src/config/bibtexfields.cpp:218
+#, kde-format
+msgid "Editor A Type"
+msgstr "Тип редактора А"
+
+#: src/config/bibtexfields.cpp:219
+#, kde-format
+msgid "Editor B"
+msgstr "Редактор Б"
+
+#: src/config/bibtexfields.cpp:220
+#, kde-format
+msgid "Editor B Type"
+msgstr "Тип редактора Б"
+
+#: src/config/bibtexfields.cpp:221
+#, kde-format
+msgid "Editor C"
+msgstr "Редактор В"
+
+#: src/config/bibtexfields.cpp:222
+#, kde-format
+msgid "Editor C Type"
+msgstr "Тип редактора В"
+
+#: src/config/bibtexfields.cpp:223
+#, kde-format
+msgid "Translator"
+msgstr "Переводчик"
+
+#: src/config/bibtexfields.cpp:224
+#, kde-format
+msgid "Afterword Author"
+msgstr "Автор послесловия"
+
+#: src/config/bibtexfields.cpp:225
+#, kde-format
+msgid "Introduction Author"
+msgstr "Автор введения"
+
+#: src/config/bibtexfields.cpp:226
+#, kde-format
+msgid "Foreword Author"
+msgstr "Автор предисловия"
+
+#: src/config/bibtexfields.cpp:227
+#, kde-format
+msgid "Annotator"
+msgstr "Автор примечаний"
+
+#: src/config/bibtexfields.cpp:228
+#, kde-format
+msgid "Commentator"
+msgstr "Комментатор"
+
+#: src/config/bibtexfields.cpp:229
+#, kde-format
+msgid "Patent Holder"
+msgstr "Владелец патента"
+
+#: src/config/bibtexfields.cpp:232
+#, kde-format
+msgid "Date"
+msgstr "Дата"
+
+#: src/config/bibtexfields.cpp:233
+#, kde-format
+msgid "Date or Year"
+msgstr "Дата или год"
+
+#: src/config/bibtexfields.cpp:234
+#, kde-format
+msgid "Event Date"
+msgstr "Дата события"
+
+#: src/config/bibtexfields.cpp:235
+#, kde-format
+msgid "Original Date"
+msgstr "Исходная дата"
+
+#: src/config/bibtexfields.cpp:236
+#, kde-format
+msgid "Journal Title"
+msgstr "Название журнала"
+
+#: src/config/bibtexfields.cpp:237
+#, kde-format
+msgid "Journal Subtitle"
+msgstr "Подзаголовок журнала"
+
+#: src/config/bibtexfields.cpp:238
+#, kde-format
+msgid "Journal Shortitle"
+msgstr "Краткое название журнала"
+
+#: src/config/bibtexfields.cpp:240
+#, kde-format
+msgid "Number of Volumes"
+msgstr "Количество томов"
+
+#: src/config/bibtexfields.cpp:242
+#, kde-format
+msgid "Version"
+msgstr "Версия"
+
+#: src/config/bibtexfields.cpp:243
+#, kde-format
+msgid "Part"
+msgstr "Часть"
+
+#: src/config/bibtexfields.cpp:244
+#, kde-format
+msgid "Issue"
+msgstr "Издание"
+
+#: src/config/bibtexfields.cpp:245
+#, kde-format
+msgid "IASN"
+msgstr "IASN"
+
+#: src/config/bibtexfields.cpp:246
+#, kde-format
+msgid "ISMN"
+msgstr "ISMN"
+
+#: src/config/bibtexfields.cpp:247
+#, kde-format
+msgid "ISRN"
+msgstr "ISRN"
+
+#: src/config/bibtexfields.cpp:251
+#, kde-format
+msgid "ISWC"
+msgstr "ISWC"
+
+#: src/config/bibtexfields.cpp:254
+#, kde-format
+msgid "Addendum"
+msgstr "Приложение"
+
+#: src/config/bibtexfields.cpp:255
+#, kde-format
+msgid "Annotation"
+msgstr "Аннотация"
+
+#: src/config/bibtexfields.cpp:258
+#, kde-format
+msgid "Total Pages"
+msgstr "Всего страниц"
+
+#: src/config/bibtexfields.cpp:259
+#, kde-format
+msgid "Pagination"
+msgstr "Нумерация"
+
+#: src/config/bibtexfields.cpp:260
+#, kde-format
+msgid "Book Pagination"
+msgstr "Нумерация книги"
+
+#: src/config/bibtexfields.cpp:262
+#, kde-format
+msgid "Original Publisher"
+msgstr "Оригинальный издатель"
+
+#: src/config/bibtexfields.cpp:265
+#, kde-format
+msgid "Book Subtitle"
+msgstr "Подзаголовок книги"
+
+#: src/config/bibtexfields.cpp:266
+#, kde-format
+msgid "Issue Title"
+msgstr "Заголовок издания"
+
+#: src/config/bibtexfields.cpp:267
+#, kde-format
+msgid "Issue Subtitle"
+msgstr "Подзаголовок издания"
+
+#: src/config/bibtexfields.cpp:268
+#, kde-format
+msgid "Booktitle Addon"
+msgstr "Дополнение к названию книги"
+
+#: src/config/bibtexfields.cpp:270
+#, kde-format
+msgid "Series Shortitle"
+msgstr "Краткое название серии"
+
+#: src/config/bibtexfields.cpp:274
+#, kde-format
+msgid "Event Title"
+msgstr "Заголовок события"
+
+#: src/config/bibtexfields.cpp:275
+#, kde-format
+msgid "Venue"
+msgstr "Место проведения события"
+
+#: src/config/bibtexfields.cpp:276
+#, kde-format
+msgid "Index Title"
+msgstr "Заголовок указателя"
+
+#: src/config/bibtexfields.cpp:279
+#, kde-format
+msgid "XRef"
+msgstr "X-ссылка"
+
+#: src/config/bibtexfields.cpp:281
+#, kde-format
+msgid "E-Print"
+msgstr "Электронная публикация"
+
+#: src/config/bibtexfields.cpp:282
+#, kde-format
+msgid "E-Print Class"
+msgstr "Класс электронной публикации"
+
+#: src/config/bibtexfields.cpp:283
+#, kde-format
+msgid "E-Print Type"
+msgstr "Тип электронной публикации"
+
+#: src/config/bibtexfields.cpp:285
+#, kde-format
+msgid "URL Date"
+msgstr "Дата обращения к URL"
+
+#: src/config/bibtexfields.cpp:286
+#, kde-format
+msgid "Local File URL"
+msgstr "Ссылка на локальный файл"
+
+#: src/config/bibtexfields.cpp:288
+#, kde-format
+msgid "Original Location"
+msgstr "Исходное расположение"
+
+#: src/config/bibtexfields.cpp:290
+#, kde-format
+msgid "EID"
+msgstr "EID"
+
+#: src/config/bibtexfields.cpp:291
+#: src/gui/preferences/settingscolorlabelwidget.cpp:195
+#, kde-format
+msgid "Label"
+msgstr "Метка"
+
+#: src/config/bibtexfields.cpp:292
+#, kde-format
+msgid "Shorthand"
+msgstr "Сокращение"
+
+#: src/config/bibtexfields.cpp:293
+#, kde-format
+msgid "Shorthand Intro"
+msgstr "Краткое вступление"
+
+#: src/config/bibtexfields.cpp:294
+#, kde-format
+msgid "Publication State"
+msgstr "Статус публикации"
+
+#: src/config/bibtexfields.cpp:295
+#, kde-format
+msgid "Language"
+msgstr "Язык"
+
+#: src/config/bibtexfields.cpp:296
+#, kde-format
+msgid "Original Language"
+msgstr "Исходный язык"
+
+#: src/config/bibtexfields.cpp:297 src/networking/zotero/collection.cpp:96
+#: src/program/docklets/zoterobrowser.cpp:108
+#, kde-format
+msgid "Library"
+msgstr "Библиотека"
+
+#: src/config/bibtexfields.cpp:299
+#, kde-format
+msgid "Gender"
+msgstr "Пол"
+
+#: src/config/bibtexfields.cpp:300
+#, kde-format
+msgid "Hyphenation"
+msgstr "Перенос"
+
+#: src/config/bibtexfields.cpp:301
+#, kde-format
+msgid "Index Sorttitle"
+msgstr "Заголовок сортировки по индексу"
+
+#: src/config/bibtexfields.cpp:302
+#, kde-format
+msgid "Entry Options"
+msgstr "Параметры записи"
+
+#: src/config/bibtexfields.cpp:303
+#, kde-format
+msgid "Presort"
+msgstr "Предварительная сортировка"
+
+#: src/config/bibtexfields.cpp:304
+#, kde-format
+msgid "Sort Key"
+msgstr "Программная кнопка"
+
+#: src/config/bibtexfields.cpp:305
+#, kde-format
+msgid "Sort Names"
+msgstr "Сортировать по именам"
+
+#: src/config/bibtexfields.cpp:306
+#, kde-format
+msgid "Sort Shorthand"
+msgstr "Сортировать по сокращениям"
+
+#: src/config/bibtexfields.cpp:307
+#, kde-format
+msgid "Sort Title"
+msgstr "Сортировать по заголовку"
+
+#: src/config/bibtexfields.cpp:308
+#, kde-format
+msgid "Sort Year"
+msgstr "Сортировать по году"
+
+#: src/config/bibtexfields.cpp:309
+#, kde-format
+msgid "ISAN"
+msgstr "ISAN"
+
+#: src/config/preferences.cpp:416
+#, kde-format
+msgid "BibTeX"
+msgstr "BibTeX"
+
+#: src/config/preferences.cpp:416
+#, kde-format
+msgid "BibLaTeX"
+msgstr "BibLaTeX"
+
+#: src/config/preferences.cpp:580
+#, kde-format
+msgid "No backups"
+msgstr "Без резервных копий"
+
+#: src/config/preferences.cpp:580
+#, kde-format
+msgid "Local files only"
+msgstr "Только локальные файлы"
+
+#: src/config/preferences.cpp:580
+#, kde-format
+msgid "Both local and remote files"
+msgstr "Локальные и удалённые файлы"
+
+#: src/config/preferences.cpp:906
+#, kde-format
+msgctxt "Comment Quoting"
+msgid "None"
+msgstr "Нет"
+
+#: src/config/preferences.cpp:906
+#, kde-format
+msgctxt "Comment Quoting"
+msgid "@comment{…}"
+msgstr "@comment{…}"
+
+#: src/config/preferences.cpp:906
+#, kde-format
+msgctxt "Comment Quoting"
+msgid "% …"
+msgstr "% …"
+
+#: src/config/preferences.cpp:945
+#, kde-format
+msgctxt "Casing of strings"
+msgid "lowercase"
+msgstr "нижний регистр"
+
+#: src/config/preferences.cpp:945
+#, kde-format
+msgctxt "Casing of strings"
+msgid "Initial capital"
+msgstr "Первая заглавная"
+
+#: src/config/preferences.cpp:945
+#, kde-format
+msgctxt "Casing of strings"
+msgid "UpperCamelCase"
+msgstr "ВерхнийГорбатыйРегистр"
+
+#: src/config/preferences.cpp:945
+#, kde-format
+msgctxt "Casing of strings"
+msgid "lowerCamelCase"
+msgstr "нижнийГорбатыйРегистр"
+
+#: src/config/preferences.cpp:945
+#, kde-format
+msgctxt "Casing of strings"
+msgid "UPPERCASE"
+msgstr "ВЕРХНИЙ РЕГИСТР"
+
+#: src/config/preferences.cpp:1182
+#, kde-format
+msgctxt "What to do if double-clicking on a file view item"
+msgid "Open Editor"
+msgstr "Открыть редактор"
+
+#: src/config/preferences.cpp:1182
+#, kde-format
+msgctxt "What to do if double-clicking on a file view item"
+msgid "View Document"
+msgstr "Просмотр"
+
+#: src/config/preferences.cpp:1221
+#, kde-format
+msgctxt "Color Labels"
+msgid "Important"
+msgstr "Важное"
+
+#: src/config/preferences.cpp:1221
+#, kde-format
+msgctxt "Color Labels"
+msgid "Unread"
+msgstr "Непрочитанное"
+
+#: src/config/preferences.cpp:1221
+#, kde-format
+msgctxt "Color Labels"
+msgid "Read"
+msgstr "Прочитанное"
+
+#: src/config/preferences.cpp:1221
+#, kde-format
+msgctxt "Color Labels"
+msgid "Watch"
+msgstr "Наблюдать"
+
+#: src/data/models/filemodel.cpp:251 src/gui/element/elementwidgets.cpp:436
+#: src/gui/element/elementwidgets.cpp:1088
+#, kde-format
+msgid "Macro"
+msgstr "Макрос"
+
+#: src/data/models/filemodel.cpp:261
+#, kde-format
+msgid "Comment"
+msgstr "Комментарий"
+
+#: src/data/models/filemodel.cpp:271 src/gui/element/elementwidgets.cpp:1158
+#, kde-format
+msgid "Preamble"
+msgstr "Преамбула"
+
+#: src/data/value.cpp:647
+#, kde-format
+msgid " and "
+msgstr " и "
+
+#: src/data/value.cpp:650
+#, kde-format
+msgid " and others"
+msgstr " и другие"
+
+#: src/gui/element/associatedfilesui.cpp:77
+#, kde-format
+msgid ""
+"The following operations can be performed when associating the document with "
+"the entry:"
+msgstr ""
+"Следующие действия возможно выполнить при связывании документа с записью:"
+
+#: src/gui/element/associatedfilesui.cpp:81
+#, kde-format
+msgid "File operation"
+msgstr "Действия с файлом"
+
+#: src/gui/element/associatedfilesui.cpp:85
+#, kde-format
+msgid "Do not copy or move document, only insert reference to it"
+msgstr "Не копировать/перемещать документ, только вставить ссылку на него"
+
+#: src/gui/element/associatedfilesui.cpp:88
+#, kde-format
+msgid "Copy document next to bibliography file"
+msgstr "Скопировать документ рядом с файлом библиографии"
+
+#: src/gui/element/associatedfilesui.cpp:91
+#, kde-format
+msgid "Move document next to bibliography file"
+msgstr "Переместить документ рядом с файлом библиографии"
+
+#: src/gui/element/associatedfilesui.cpp:101
+#, kde-format
+msgid "Path and filename of bibliography file:"
+msgstr "Путь и название файла библиографии:"
+
+#: src/gui/element/associatedfilesui.cpp:107
+#, kde-format
+msgid "Rename Document?"
+msgstr "Переименовать документ?"
+
+#: src/gui/element/associatedfilesui.cpp:114
+#, kde-format
+msgid "Keep document's original filename"
+msgstr "Оставить исходное название файла"
+
+#: src/gui/element/associatedfilesui.cpp:120
+#, kde-format
+msgid "User-defined name:"
+msgstr "Пользовательское название:"
+
+#: src/gui/element/associatedfilesui.cpp:133
+#, kde-format
+msgid "Path as Inserted into Entry"
+msgstr "Путь, вставленный в запись"
+
+#: src/gui/element/associatedfilesui.cpp:137
+#: src/gui/field/fieldlistedit.cpp:604
+#, kde-format
+msgid "Relative Path"
+msgstr "Относительный путь"
+
+#: src/gui/element/associatedfilesui.cpp:140
+#: src/gui/field/fieldlistedit.cpp:604
+#, kde-format
+msgid "Absolute Path"
+msgstr "Абсолютный путь"
+
+#: src/gui/element/associatedfilesui.cpp:152
+#, kde-format
+msgid "Preview of reference to be inserted:"
+msgstr "Предварительный просмотр ссылки для вставки:"
+
+#: src/gui/element/associatedfilesui.cpp:165
+#, kde-format
+msgctxt "@title:window"
+msgid "Associate Document with Entry"
+msgstr "Связывание документа с записью"
+
+#: src/gui/element/associatedfilesui.cpp:236
+#: src/program/docklets/documentpreview.cpp:232
+#: src/program/docklets/referencepreview.cpp:121
+#, kde-format
+msgid "No preview available"
+msgstr "Предварительный просмотр недоступен"
+
+#: src/gui/element/associatedfilesui.cpp:297
+#, kde-format
+msgid ""
+"The following remote document is about to be associated with the current "
+"entry:"
+msgstr "Следующий удалённый документ будет связан с текущей записью:"
+
+#: src/gui/element/associatedfilesui.cpp:298
+#: src/gui/element/associatedfilesui.cpp:311
+#, kde-format
+msgid "Rename after entry's id"
+msgstr "Переименовать после идентификатора записи"
+
+#: src/gui/element/associatedfilesui.cpp:300
+#, kde-format
+msgid ""
+"The following remote document is about to be associated with entry '%1':"
+msgstr "Следующий удалённый документ будет связан с записью «%1»:"
+
+#: src/gui/element/associatedfilesui.cpp:301
+#: src/gui/element/associatedfilesui.cpp:314
+#, kde-format
+msgid "Rename after entry's id: '%1'"
+msgstr "Переименовать после идентификатора записи: «%1»"
+
+#: src/gui/element/associatedfilesui.cpp:310
+#, kde-format
+msgid ""
+"The following local document is about to be associated with the current "
+"entry:"
+msgstr "Следующий локальный документ будет связан с текущей записью:"
+
+#: src/gui/element/associatedfilesui.cpp:313
+#, kde-format
+msgid "The following local document is about to be associated with entry '%1':"
+msgstr "Следующий локальный документ будет связан с записью «%1»:"
+
+#: src/gui/element/elementeditor.cpp:200
+#, kde-format
+msgid "Options"
+msgstr "Параметры"
+
+#: src/gui/element/elementeditor.cpp:206
+#, kde-format
+msgid "Show all fields"
+msgstr "Показывать все поля"
+
+#: src/gui/element/elementeditor.cpp:213
+#, kde-format
+msgid "Tab key visits only editable fields"
+msgstr "Клавиша Tab открывает только редактируемые поля"
+
+#: src/gui/element/elementeditor.cpp:221
+#, kde-format
+msgid "Check with BibTeX"
+msgstr "Проверить через BibTeX"
+
+#: src/gui/element/elementeditor.cpp:543
+#, kde-format
+msgid "No id was entered, so the previous id '%1' will be restored."
+msgstr "Идентификатор не был введён, будет восстановлен предыдущий «%1»"
+
+#: src/gui/element/elementeditor.cpp:543
+#, kde-format
+msgid "No id given"
+msgstr "Не указан идентификатор"
+
+#: src/gui/element/elementeditor.cpp:550
+#, kde-format
+msgid ""
+"The entered id '%1' is already in use for another element.\n"
+"\n"
+"Keep original id '%2' instead?"
+msgstr ""
+"Введённый идентификатор «%1» уже используется.\n"
+"\n"
+"Сохранить исходный «%2»?"
+
+#: src/gui/element/elementeditor.cpp:550
+#, kde-format
+msgid "Id already in use"
+msgstr "Идентификатор уже используется"
+
+#: src/gui/element/elementeditor.cpp:550
+#, kde-format
+msgid "Keep duplicate ids"
+msgstr "Сохранить повторяющиеся идентификаторы"
+
+#: src/gui/element/elementeditor.cpp:550
+#, kde-format
+msgid "Restore original id"
+msgstr "Восстановить исходный идентификатор"
+
+#: src/gui/element/elementeditor.cpp:579
+#, kde-format
+msgid "Validation for the current element failed."
+msgstr "Проверка текущего элемента не удалась."
+
+#: src/gui/element/elementeditor.cpp:579
+#, kde-format
+msgid ""
+"Validation for the current element failed:\n"
+"%1"
+msgstr ""
+"Проверка текущего элемента не удалась:\n"
+"%1"
+
+#: src/gui/element/elementeditor.cpp:580
+#, kde-format
+msgid "Element validation failed"
+msgstr "Проверка элемента не удалась"
+
+#: src/gui/element/elementwidgets.cpp:454
+#, kde-format
+msgid "Element type '%1' is invalid."
+msgstr "Недопустимый тип элемента «%1»."
+
+#: src/gui/element/elementwidgets.cpp:463
+#, kde-format
+msgid "Id '%1' is invalid"
+msgstr "Недопустимый идентификатор «%1»"
+
+#: src/gui/element/elementwidgets.cpp:515
+#, kde-format
+msgid "Type:"
+msgstr "Тип:"
+
+#: src/gui/element/elementwidgets.cpp:524
+#, kde-format
+msgid "Id:"
+msgstr "ID:"
+
+#: src/gui/element/elementwidgets.cpp:541
+#, kde-format
+msgid "Select a suggested id for this entry"
+msgstr "Выберите предлагаемый идентификатор для этой записи"
+
+#: src/gui/element/elementwidgets.cpp:767
+#, kde-format
+msgid "External"
+msgstr "Внешние"
+
+#: src/gui/element/elementwidgets.cpp:853
+#, kde-format
+msgid "Other Fields"
+msgstr "Другие поля"
+
+#: src/gui/element/elementwidgets.cpp:965
+#, kde-format
+msgid "Name:"
+msgstr "Имя:"
+
+#: src/gui/element/elementwidgets.cpp:973
+#: src/gui/element/elementwidgets.cpp:1036 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:98
+#, kde-format
+msgid "Add"
+msgstr "Добавить"
+
+#: src/gui/element/elementwidgets.cpp:977
+#, kde-format
+msgid "Content:"
+msgstr "Содержимое:"
+
+#: src/gui/element/elementwidgets.cpp:984
+#, kde-format
+msgid "List:"
+msgstr "Список:"
+
+#: src/gui/element/elementwidgets.cpp:989 src/gui/valuelistmodel.cpp:322
+#, kde-format
+msgid "Value"
+msgstr "Значение"
+
+#: src/gui/element/elementwidgets.cpp:994 src/parts/part.cpp:243
+#, kde-format
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/gui/element/elementwidgets.cpp:997
+#: src/program/docklets/referencepreview.cpp:144
+#: src/program/documentlist.cpp:209
+#, kde-format
+msgid "Open"
+msgstr "Открыть"
+
+#: src/gui/element/elementwidgets.cpp:1036
+#: src/program/docklets/elementform.cpp:97
+#, kde-format
+msgid "Apply"
+msgstr "Применить"
+
+#: src/gui/element/elementwidgets.cpp:1105
+#: src/gui/element/elementwidgets.cpp:1175
+#, kde-format
+msgid "Value:"
+msgstr "Значение:"
+
+#: src/gui/element/elementwidgets.cpp:1311
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX element."
+msgstr "Данный исходный код не распознаётся как единственный элемент BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1320
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX entry."
+msgstr "Данный исходный код не распознаётся как единственная запись BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1326
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX macro."
+msgstr "Данный исходный код не распознаётся как единственный макрос BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1332
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX preamble."
+msgstr "Данный исходный код не распознаётся как единственная преамбула BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1338
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX comment."
+msgstr ""
+"Данный исходный код не распознаётся как единственный комментарий BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1342
+#, kde-format
+msgid "Element class not properly set"
+msgstr "Неправильно установлен класс элемента"
+
+#: src/gui/element/elementwidgets.cpp:1351
+#, kde-format
+msgid "No issues detected"
+msgstr "Проблем не обнаружено"
+
+#: src/gui/element/elementwidgets.cpp:1366
+#, kde-format
+msgid "Source"
+msgstr "Источник"
+
+#: src/gui/element/elementwidgets.cpp:1397
+#, kde-format
+msgid "Restore"
+msgstr "Восстановить"
+
+#: src/gui/element/findpdfui.cpp:117 src/gui/element/findpdfui.cpp:166
+#: src/gui/element/findpdfui.cpp:168
+#, kde-format
+msgid "View"
+msgstr "Просмотр"
+
+#: src/gui/element/findpdfui.cpp:126 src/gui/element/findpdfui.cpp:166
+#: src/gui/element/findpdfui.cpp:168
+#, kde-format
+msgid "Ignore"
+msgstr "Игнорировать"
+
+#: src/gui/element/findpdfui.cpp:133 src/gui/element/findpdfui.cpp:166
+#: src/gui/element/findpdfui.cpp:168 src/gui/element/findpdfui.cpp:223
+#: src/gui/element/findpdfui.cpp:225
+#, kde-format
+msgid "Download"
+msgstr "Загрузить"
+
+#: src/gui/element/findpdfui.cpp:140 src/gui/element/findpdfui.cpp:166
+#: src/gui/element/findpdfui.cpp:168
+#, kde-format
+msgid "Use URL only"
+msgstr "Использовать только URL"
+
+#: src/gui/element/findpdfui.cpp:369
+#, kde-format
+msgid "Result"
+msgstr "Результат"
+
+#: src/gui/element/findpdfui.cpp:421
+#, kde-format
+msgid "Starting to search..."
+msgstr "Поиск..."
+
+#: src/gui/element/findpdfui.cpp:440
+#, kde-format
+msgctxt "@title:window"
+msgid "Find PDF"
+msgstr "Поиск PDF"
+
+#: src/gui/element/findpdfui.cpp:495
+#, kde-format
+msgid "Save URL '%1'"
+msgstr "Адрес сохранения «%1»"
+
+#: src/gui/element/findpdfui.cpp:545
+#, kde-format
+msgid ""
+"<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
+"%2</b><br/>Number of found documents: <b>%3</b></qt>"
+msgstr ""
+"<qt>Количество посещённых страниц: <b>%1</b><br/>Количество текущих "
+"загрузок: <b>%2</b><br/>Количество найденных документов: <b>%3</b></qt>"
+
+#: src/gui/field/colorlabelwidget.cpp:93
+#: src/gui/preferences/settingscolorlabelwidget.cpp:452
+#, kde-format
+msgid "No color"
+msgstr "Без цвета"
+
+#: src/gui/field/colorlabelwidget.cpp:95
+#, kde-format
+msgid "User-defined color"
+msgstr "Цвет пользователя"
+
+#: src/gui/field/colorlabelwidget.cpp:106
+#, kde-format
+msgid "Color & Label"
+msgstr "Цвет и метка"
+
+#: src/gui/field/fieldinput.cpp:89
+#, kde-format
+msgid "Select a predefined month"
+msgstr "Выберите месяц"
+
+#: src/gui/field/fieldinput.cpp:107
+#, kde-format
+msgid "Select a predefined edition"
+msgstr "Выберите редакцию"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "1st"
+msgstr "1-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "2nd"
+msgstr "2-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "3rd"
+msgstr "3-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "4th"
+msgstr "4-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "5th"
+msgstr "5-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "6th"
+msgstr "6-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "7th"
+msgstr "7-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "8th"
+msgstr "8-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "9th"
+msgstr "9-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "10th"
+msgstr "10-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "11th"
+msgstr "11-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "12th"
+msgstr "12-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "13th"
+msgstr "13-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "14th"
+msgstr "14-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "15th"
+msgstr "15-я"
+
+#: src/gui/field/fieldinput.cpp:111
+#, kde-format
+msgid "16th"
+msgstr "16-я"
+
+#: src/gui/field/fieldinput.cpp:126
+#, kde-format
+msgid "Select an existing entry"
+msgstr "Выберите существующую запись"
+
+#: src/gui/field/fieldinput.cpp:279
+#, kde-format
+msgid "Select Cross Reference"
+msgstr "Выберите перекрёстную ссылку"
+
+#: src/gui/field/fieldinput.cpp:279
+#, kde-format
+msgid "Select the cross reference to another entry:"
+msgstr "Выберите перекрёстную ссылку на другую запись:"
+
+#: src/gui/field/fieldlineedit.cpp:232 src/gui/field/fieldlineedit.cpp:250
+#, kde-format
+msgid "Opening and closing curly brackets do not match."
+msgstr "Открывающая и закрывающая фигурные скобки не совпадают."
+
+#: src/gui/field/fieldlineedit.cpp:237
+#, kde-format
+msgid "Reference contains characters outside of the allowed set."
+msgstr "Ссылка содержит недопустимые символы."
+
+#: src/gui/field/fieldlineedit.cpp:247
+#, kde-format
+msgid "Source code could not be parsed correctly."
+msgstr "Невозможно корректно обработать исходный код."
+
+#: src/gui/field/fieldlineedit.cpp:307 src/gui/field/fieldlineedit.cpp:362
+#, kde-format
+msgid "Plain Text"
+msgstr "Простой текст"
+
+#: src/gui/field/fieldlineedit.cpp:313 src/gui/field/fieldlineedit.cpp:363
+#, kde-format
+msgid "Reference"
+msgstr "Ссылка"
+
+#: src/gui/field/fieldlineedit.cpp:319 src/gui/field/fieldlineedit.cpp:364
+#, kde-format
+msgid "Person"
+msgstr "Человек"
+
+#: src/gui/field/fieldlineedit.cpp:325 src/gui/field/fieldlineedit.cpp:365
+#, kde-format
+msgid "Keyword"
+msgstr "Ключевое слово"
+
+#: src/gui/field/fieldlineedit.cpp:331 src/gui/field/fieldlineedit.cpp:367
+#, kde-format
+msgid "Source Code"
+msgstr "Исходный код"
+
+#: src/gui/field/fieldlineedit.cpp:337 src/gui/field/fieldlineedit.cpp:370
+#, kde-format
+msgid "Verbatim Text"
+msgstr "Дословный текст"
+
+#: src/gui/field/fieldlineedit.cpp:475
+#, kde-format
+msgid "Open '%1'"
+msgstr "Открыть «%1»"
+
+#: src/gui/field/fieldlineedit.cpp:491
+#, kde-format
+msgid ""
+"The current text cannot be used as value of type '%1'.\n"
+"\n"
+"Switching back to type '%2'."
+msgstr ""
+"Текущий текст не может быть значением типа «%1».\n"
+"\n"
+"Переключаюсь на тип «%2»."
+
+#: src/gui/field/fieldlistedit.cpp:144
+#, kde-format
+msgid "Remove value"
+msgstr "Удалить значение"
+
+#: src/gui/field/fieldlistedit.cpp:155
+#, kde-format
+msgid "Move value down"
+msgstr "Сместить значение ниже"
+
+#: src/gui/field/fieldlistedit.cpp:166
+#, kde-format
+msgid "Move value up"
+msgstr "Сместить значение выше"
+
+#: src/gui/field/fieldlistedit.cpp:416
+#, kde-format
+msgid "... and others (et al.)"
+msgstr "... и другие (и др.)"
+
+#: src/gui/field/fieldlistedit.cpp:421
+#, kde-format
+msgid "Add from Clipboard"
+msgstr "Добавить из буфера обмена"
+
+#: src/gui/field/fieldlistedit.cpp:422
+#, kde-format
+msgid "Add a list of names from clipboard"
+msgstr "Добавить список имён из буфера обмена"
+
+#: src/gui/field/fieldlistedit.cpp:484
+#, kde-format
+msgid "Add file..."
+msgstr "Добавить файл..."
+
+#: src/gui/field/fieldlistedit.cpp:490
+#, kde-format
+msgid "Add reference ..."
+msgstr "Добавить ссылку ..."
+
+#: src/gui/field/fieldlistedit.cpp:493
+#, kde-format
+msgid "Add reference from clipboard"
+msgstr "Добавить ссылку из буфера обмена"
+
+#: src/gui/field/fieldlistedit.cpp:505
+#, kde-format
+msgid "File to Associate"
+msgstr "Файл для связи"
+
+#: src/gui/field/fieldlistedit.cpp:543 src/gui/field/fieldlistedit.cpp:617
+#, kde-format
+msgid "Save file locally"
+msgstr "Сохранить файл локально"
+
+#: src/gui/field/fieldlistedit.cpp:593
+#, kde-format
+msgid "Save file '%1' locally"
+msgstr "Сохранить файл «%1» локально"
+
+#: src/gui/field/fieldlistedit.cpp:604
+#, kde-format
+msgid ""
+"<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
+"path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute "
+"path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
+msgstr ""
+"<qt><p>Использовать название файла относительно к файлу библиографии?</"
+"p><p>Относительный путь будет<br/><tt style=\"font-family: %3;\">%1</tt></"
+"p><p>Абсолютный путь будет<br/><tt style=\"font-family: %3;\">%2</tt></p></"
+"qt>"
+
+#: src/gui/field/fieldlistedit.cpp:645
+#, kde-format
+msgid "Add Keywords from List"
+msgstr "Добавить ключевые слова из списка"
+
+#: src/gui/field/fieldlistedit.cpp:646
+#, kde-format
+msgid "Add keywords as selected from a pre-defined list of keywords"
+msgstr "Добавить ключевые слова из предопределённого списка"
+
+#: src/gui/field/fieldlistedit.cpp:649
+#, kde-format
+msgid "Add Keywords from Clipboard"
+msgstr "Добавить ключевые слова из буфера обмена"
+
+#: src/gui/field/fieldlistedit.cpp:650
+#, kde-format
+msgid "Add a punctuation-separated list of keywords from clipboard"
+msgstr ""
+"Добавить пунктуационно-разделённый список ключевых слов из буфера обмена"
+
+#: src/gui/file/basicfileview.cpp:384
+#, kde-format
+msgid "Reset to defaults"
+msgstr "Выставить по умолчанию"
+
+#: src/gui/file/basicfileview.cpp:391
+#, kde-format
+msgid "Allow manual column resizing/positioning"
+msgstr "Разрешить изменение размеров и расположение столбцов вручную"
+
+#: src/gui/file/basicfileview.cpp:408
+#, kde-format
+msgid "No sorting"
+msgstr "Без сортировки"
+
+#: src/gui/file/fileview.cpp:89
+#, kde-format
+msgid ""
+"The current entry has been modified. Do you want to discard your changes?"
+msgstr "Текущая запись была изменена. Отменить изменения?"
+
+#: src/gui/file/fileview.cpp:89
+#, kde-format
+msgid "Discard changes?"
+msgstr "Отменить изменения?"
+
+#: src/gui/file/fileview.cpp:89
+#, kde-format
+msgid "Continue Editing"
+msgstr "Продолжить редактирование"
+
+#: src/gui/file/fileview.cpp:331
+#, kde-format
+msgctxt "@title:window"
+msgid "View Element"
+msgstr "Просмотр элемента"
+
+#: src/gui/file/fileview.cpp:339
+#, kde-format
+msgctxt "@title:window"
+msgid "Edit Element"
+msgstr "Измение элемента"
+
+#: src/gui/file/findduplicatesui.cpp:142
+#, kde-format
+msgid "Alternatives"
+msgstr "Варианты"
+
+#: src/gui/file/findduplicatesui.cpp:194
+#, kde-format
+msgid "None of the above"
+msgstr "Ни один из перечисленных"
+
+#: src/gui/file/findduplicatesui.cpp:550
+#, kde-format
+msgid "Select your duplicates"
+msgstr "Выберите дубликаты"
+
+#: src/gui/file/findduplicatesui.cpp:570
+#, kde-format
+msgid "Previous Clique"
+msgstr "Предыдущая группа"
+
+#: src/gui/file/findduplicatesui.cpp:572
+#, kde-format
+msgid "Next Clique"
+msgstr "Следующая группа"
+
+#: src/gui/file/findduplicatesui.cpp:651
+#, kde-format
+msgid "Find Duplicates"
+msgstr "Найти дубликаты"
+
+#: src/gui/file/findduplicatesui.cpp:682
+#, kde-format
+msgid ""
+"Multiple elements are selected. Do you want to search for duplicates only "
+"within the selection or in the whole document?"
+msgstr ""
+"Выбрано несколько записей. Искать дубликаты только в них или во всём "
+"документе?"
+
+#: src/gui/file/findduplicatesui.cpp:682
+#, kde-format
+msgid "Search only in selection?"
+msgstr "Искать только в выбранном?"
+
+#: src/gui/file/findduplicatesui.cpp:682
+#, kde-format
+msgid "Only in selection"
+msgstr "Только в выбранном"
+
+#: src/gui/file/findduplicatesui.cpp:682
+#, kde-format
+msgid "Whole document"
+msgstr "Весь документ"
+
+#: src/gui/file/findduplicatesui.cpp:705
+#, kde-format
+msgid "No duplicates were found."
+msgstr "Дубликаты не найдены."
+
+#: src/gui/file/findduplicatesui.cpp:705
+#, kde-format
+msgid "No duplicates found"
+msgstr "Дубликаты не найдены"
+
+#: src/gui/file/findduplicatesui.cpp:712
+#, kde-format
+msgctxt "@title:window"
+msgid "Merge Duplicates"
+msgstr "Объединение дубликатов"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#, kde-format
+msgid ""
+"This will reset the settings to factory defaults. Should this affect only "
+"the current page or all settings?"
+msgstr ""
+"Это сбросит все параметры на значения по умолчанию. Применить только к "
+"текущей странице или ко всем параметрам?"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#, kde-format
+msgid "Reset to Defaults"
+msgstr "Выставить по умолчанию"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#, kde-format
+msgid "All settings"
+msgstr "Все параметры"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#, kde-format
+msgid "Only current page"
+msgstr "Только текущая страница"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:170
+#, kde-format
+msgctxt "@title:window"
+msgid "Preferences"
+msgstr "Параметры"
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:330
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:262
+#, kde-format
+msgid "Add..."
+msgstr "Добавить..."
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:336
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:343
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:427
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:268
+#, kde-format
+msgid "Remove"
+msgstr "Удалить"
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:360
+#, kde-format
+msgid "Color & Labels"
+msgstr "Цвета и метки"
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:392
+#, kde-format
+msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
+msgid "NewColor%1"
+msgstr "НовыйЦвет%1"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
+#, kde-format
+msgid "Paper Size:"
+msgstr "Размер страницы:"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:93
+#, kde-format
+msgid "Language for 'babel':"
+msgstr "Язык для «babel»:"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:102
+#, kde-format
+msgid "Bibliography style:"
+msgstr "Стиль библиографии:"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:124
+#, kde-format
+msgid "PDF & Postscript"
+msgstr "PDF и Postscript"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:123
+#, kde-format
+msgid "Command for 'Copy Reference':"
+msgstr "Команда для «Копировать ссылку»"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:125
+#, kde-format
+msgid "No command"
+msgstr "Без команды"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:133
+#, kde-format
+msgid "Detect LyX pipe automatically:"
+msgstr "Определять каналы LyX автоматически:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:139
+#, kde-format
+msgid "Manually specified LyX pipe:"
+msgstr "Указать канал LyX вручную:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:152
+#, kde-format
+msgid "Backups when saving:"
+msgstr "Резервные копии при сохранении:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:158
+#, kde-format
+msgid "Number of Backups:"
+msgstr "Число резервных копий:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:180
+#, kde-format
+msgid "Saving and Exporting"
+msgstr "Сохранение и экспорт"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:43
+#: src/gui/widgets/filesettingswidget.cpp:36
+#, kde-format
+msgid "John"
+msgstr "Иван"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:43
+#: src/gui/widgets/filesettingswidget.cpp:36
+#, kde-format
+msgid "Doe"
+msgstr "Иванов"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:43
+#: src/gui/widgets/filesettingswidget.cpp:36
+#, kde-format
+msgid "Jr."
+msgstr "Мл."
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:76
+#, kde-format
+msgid "Bibliography System:"
+msgstr "Библиографическая система"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:80
+#: src/gui/widgets/filesettingswidget.cpp:161
+#, kde-format
+msgid "Person Names Formatting:"
+msgstr "Форматирование имён:"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:102
+#, kde-format
+msgid "General"
+msgstr "Общие"
+
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:152
+#, kde-format
+msgid "NewKeyword%1"
+msgstr "КлючевоеСлово%1"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:113
+#, kde-format
+msgid "Authors"
+msgstr "Авторы"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:117
+#, kde-format
+msgid "Author Range:"
+msgstr "Диапазон авторов:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "First author"
+msgstr "Первый автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "Second author"
+msgstr "Второй автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "Third author"
+msgstr "Третий автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "Fourth author"
+msgstr "Четвёртый автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "Fifth author"
+msgstr "Пятый автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "Sixth author"
+msgstr "Шестой автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "Seventh author"
+msgstr "Седьмой автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "Eighth author"
+msgstr "Восьмой автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "Ninth author"
+msgstr "Девятый автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "Tenth author"
+msgstr "Десятый автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#, kde-format
+msgid "|Last author"
+msgstr "|Последний автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:124
+#, kde-format
+msgid "... and last author"
+msgstr "... и последний автор"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:130
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:132
+#: src/processing/idsuggestions.cpp:501
+#, kde-format
+msgid "From first author to author %1 and last author"
+msgstr "От первого автора до автора %1 и последнего автора"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:130
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:132
+#: src/processing/idsuggestions.cpp:510 src/processing/idsuggestions.cpp:518
+#, kde-format
+msgid "From author %1 to author %2 and last author"
+msgstr "От автора %1 до автора %2 и последнего автора"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:137
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:348
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:432
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:501
+#, kde-format
+msgid "No change"
+msgstr "Без изменений"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:138
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:349
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:433
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:502
+#, kde-format
+msgid "To upper case"
+msgstr "В верхний регистр"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:139
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:350
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:434
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:503
+#, kde-format
+msgid "To lower case"
+msgstr "В нижний регистр"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:140
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:351
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:435
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:504
+#, kde-format
+msgid "To CamelCase"
+msgstr "В ГорбатыйРегистр"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:141
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:352
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:436
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:505
+#, kde-format
+msgid "Change casing:"
+msgstr "Изменить регистр:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:145
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:356
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:440
+#, kde-format
+msgid "Text in between:"
+msgstr "Текст между:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:149
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:360
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:444
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:509
+#, kde-format
+msgid "Only first characters:"
+msgstr "Только первые буквы:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:150
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:361
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:445
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:510
+#, kde-format
+msgid "No limitation"
+msgstr "Без ограничений"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:213
+#, kde-format
+msgid "2 digits"
+msgstr "2 цифры"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:214
+#, kde-format
+msgid "4 digits"
+msgstr "4 цифры"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:215
+#, kde-format
+msgid "Digits:"
+msgstr "Цифры:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:246
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:116
+#, kde-format
+msgid "Volume:"
+msgstr "Том:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:268
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:640
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:675
+#, kde-format
+msgid "Page Number"
+msgstr "Номер страницы"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:272
+#, kde-format
+msgid "First page's number:"
+msgstr "Номер первой страницы:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:304
+#, kde-format
+msgid "First word only"
+msgstr "Только первое слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:306
+#, kde-format
+msgid "All but first word"
+msgstr "Все слова, кроме первого"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:308
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:335
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:338
+#, kde-format
+msgid "From first to last word"
+msgstr "От первого до последнего слова"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:310
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:335
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:338
+#, kde-format
+msgid "From word %1 to last word"
+msgstr "От слова %1 до последнего слова"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:312
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:336
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:339
+#, kde-format
+msgid "From first word to word %1"
+msgstr "От первого слова до слова %1"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:314
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:336
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:339
+#, kde-format
+msgid "From word %1 to word %2"
+msgstr "От слова %1 до слова %2"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:325
+#, kde-format
+msgid "Word Range:"
+msgstr "Диапазон слов:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "First word"
+msgstr "Первое слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "Second word"
+msgstr "Второе слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "Third word"
+msgstr "Третье слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "Fourth word"
+msgstr "Четвёртое слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "Fifth word"
+msgstr "Пятое слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "Sixth word"
+msgstr "Шестое слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "Seventh word"
+msgstr "Седьмое слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "Eighth word"
+msgstr "Восьмое слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "Ninth word"
+msgstr "Девятое слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "Tenth word"
+msgstr "Десятое слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#, kde-format
+msgid "|Last word"
+msgstr "|Последнее слово"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:344
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:428
+#, kde-format
+msgid "Small words:"
+msgstr "Короткие слова:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:552
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:644
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:679
+#, kde-format
+msgid "Text"
+msgstr "Текст"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:555
+#, kde-format
+msgid "Text:"
+msgstr "Текст:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:606
+#, kde-format
+msgid "Add at top"
+msgstr "Добавить в начало"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:611
+#, kde-format
+msgid "Add at bottom"
+msgstr "Добавить в конец"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:929
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:114
+#, kde-format
+msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
+msgstr "<qt>Структура:<ul><li>%1</li></ul>Пример: %2</qt>"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:935
+#, kde-format
+msgctxt "@title:window"
+msgid "Edit Id Suggestion"
+msgstr "Изменение предлагаемых идентификаторов"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:166
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:305
+#, kde-format
+msgid "Id Suggestions"
+msgstr "Предлагаемые идентификаторы"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:265
+#, kde-format
+msgid "Edit..."
+msgstr "Изменить..."
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:271
+#, kde-format
+msgid "Up"
+msgstr "Вверх"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:274
+#, kde-format
+msgid "Down"
+msgstr "Вниз"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:277
+#, kde-format
+msgid "Toggle Default"
+msgstr "Выбрать по умолчанию"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#, kde-format
+msgid ""
+"All token have been removed from this suggestion. Remove suggestion itself "
+"or restore original suggestion?"
+msgstr ""
+"Все части были удалены. Удалить предлагаемый идентификатор полностью или "
+"восстановить в исходном виде?"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#, kde-format
+msgid "Remove suggestion?"
+msgstr "Удалить предложение?"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#, kde-format
+msgid "Remove suggestion"
+msgstr "Удалить предложение"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#, kde-format
+msgid "Revert changes"
+msgstr "Восстановить изменения"
+
+#: src/gui/preferences/settingsuserinterfacewidget.cpp:69
+#, kde-format
+msgid "When double-clicking an element:"
+msgstr "При двойном щелчке по элементу:"
+
+#: src/gui/preferences/settingsuserinterfacewidget.cpp:83
+#, kde-format
+msgid "User Interface"
+msgstr "Пользовательский интерфейс"
+
+#: src/gui/valuelistmodel.cpp:324 src/program/docklets/valuelist.cpp:73
+#: src/program/docklets/valuelist.cpp:75
+#, kde-format
+msgid "Count"
+msgstr "Количество"
+
+#: src/gui/widgets/filesettingswidget.cpp:127
+#, kde-format
+msgid "Encoding:"
+msgstr "Кодировка:"
+
+#: src/gui/widgets/filesettingswidget.cpp:133
+#, kde-format
+msgid "String Delimiters:"
+msgstr "Разделители строки:"
+
+#: src/gui/widgets/filesettingswidget.cpp:140
+#, kde-format
+msgid "Comment Quoting:"
+msgstr "Выделение комментариев:"
+
+#: src/gui/widgets/filesettingswidget.cpp:146
+#, kde-format
+msgid "Keyword Casing:"
+msgstr "Регистр ключевых слов:"
+
+#: src/gui/widgets/filesettingswidget.cpp:147
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "lowercase"
+msgstr "нижний"
+
+#: src/gui/widgets/filesettingswidget.cpp:148
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "Initial capital"
+msgstr "Первая заглавная"
+
+#: src/gui/widgets/filesettingswidget.cpp:149
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "UpperCamelCase"
+msgstr "ВерхнийГорбатыйРегистр"
+
+#: src/gui/widgets/filesettingswidget.cpp:150
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "lowerCamelCase"
+msgstr "нижнийГорбатыйРегистр"
+
+#: src/gui/widgets/filesettingswidget.cpp:151
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "UPPERCASE"
+msgstr "ВЕРХНИЙ"
+
+#: src/gui/widgets/filesettingswidget.cpp:154
+#, kde-format
+msgid "Protect Titles"
+msgstr "Защита названий"
+
+#: src/gui/widgets/filesettingswidget.cpp:156
+#, kde-format
+msgid "Protect Casing?"
+msgstr "Защитить регистр?"
+
+#: src/gui/widgets/filesettingswidget.cpp:165
+#, kde-format
+msgid "Use global settings"
+msgstr "Использовать глобальные параметры"
+
+#: src/gui/widgets/filesettingswidget.cpp:171
+#, kde-format
+msgid "List Separator"
+msgstr "Разделитель элементов списка"
+
+#: src/gui/widgets/filesettingswidget.cpp:176
+#, fuzzy, kde-format
+#| msgid "Sort by Count"
+msgid "Sort by identifier"
+msgstr "Сортировать по количеству"
+
+#: src/gui/widgets/filesettingswidget.cpp:177
+#, fuzzy, kde-format
+#| msgid "Sorting"
+msgid "Entry Sorting"
+msgstr "Сортировка"
+
+#: src/gui/widgets/filterbar.cpp:71
+#, kde-format
+msgid "Filter:"
+msgstr "Фильтр:"
+
+#: src/gui/widgets/filterbar.cpp:87
+#, kde-format
+msgid "Filter bibliographic entries"
+msgstr "Фильтровать библиографические записи"
+
+#: src/gui/widgets/filterbar.cpp:91
+#, kde-format
+msgid "any word"
+msgstr "любое слово"
+
+#: src/gui/widgets/filterbar.cpp:92
+#, kde-format
+msgid "every word"
+msgstr "каждое слово"
+
+#: src/gui/widgets/filterbar.cpp:93
+#, kde-format
+msgid "exact phrase"
+msgstr "точная фраза"
+
+#: src/gui/widgets/filterbar.cpp:98
+#, kde-format
+msgid "any field"
+msgstr "любое поле"
+
+#: src/gui/widgets/filterbar.cpp:116
+#, kde-format
+msgid "Include PDF files in full-text search"
+msgstr "Включить PDF-файлы в полнотекстовый поиск"
+
+#: src/gui/widgets/filterbar.cpp:122
+#, kde-format
+msgid "Reset filter criteria"
+msgstr "Сбросить фильтр"
+
+#: src/gui/widgets/starrating.cpp:53
+#, kde-format
+msgid "Not set"
+msgstr "Не установлено"
+
+#: src/io/fileexporterbibtex2html.cpp:75
+#, kde-format
+msgid "The program <strong>bibtex2html</strong> is not available."
+msgstr "Программа <strong>bibtex2html</strong> не найдена."
+
+#: src/io/fileexporterbibtex2html.cpp:92
+#, kde-format
+msgid "The BibTeX style <strong>%1</strong> is not available."
+msgstr "Стиль BibTeX <strong>%1</strong> недоступен."
+
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#, kde-format
+msgid "Searching '%1' failed for unknown reason."
+msgstr "Поиск «%1» не удался по неизвестным причинам."
+
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#, kde-format
+msgid ""
+"Searching '%1' failed with error message:\n"
+"\n"
+"%2"
+msgstr ""
+"Поиск «%1» не удался. Сообщение об ошибке:\n"
+"\n"
+"%2"
+
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:321
+#: src/program/mainwindow.cpp:365 src/program/program.cpp:52
+#, kde-format
+msgid "KBibTeX"
+msgstr "KBibTeX"
+
+#: src/networking/onlinesearch/onlinesearchacmportal.cpp:303
+#, kde-format
+msgid "ACM Digital Library"
+msgstr "Цифровая библиотека ACM"
+
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:70
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
+#, kde-format
+msgid "Free text:"
+msgstr "Искать текст:"
+
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:79
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:90
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:81
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:125
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:115
+#, kde-format
+msgid "Number of Results:"
+msgstr "Число результатов:"
+
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:675
+#, kde-format
+msgid "arXiv.org"
+msgstr "arXiv.org"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:76
+#, kde-format
+msgid "Tag"
+msgstr "Тэг"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:77
+#, kde-format
+msgid "User"
+msgstr "Пользователь"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:78
+#, kde-format
+msgid "Group"
+msgstr "Группа"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:80
+#, kde-format
+msgid "Concept"
+msgstr "Концепция"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:81
+#, kde-format
+msgid "BibTeX Key"
+msgstr "Ключ BibTeX"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:82
+#, kde-format
+msgid "Everywhere"
+msgstr "Везде"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
+#, kde-format
+msgid "Bibsonomy"
+msgstr "Bibsonomy"
+
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
+#, kde-format
+msgid "bioRxiv"
+msgstr "bioRxiv"
+
+#: src/networking/onlinesearch/onlinesearchcernds.cpp:37
+#, kde-format
+msgid "CERN Document Server"
+msgstr "Сервер документов ЦЕРН"
+
+#: src/networking/onlinesearch/onlinesearchdoi.cpp:63
+#, kde-format
+msgid "DOI:"
+msgstr "DOI:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:88
+#, kde-format
+msgid "Title:"
+msgstr "Название:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:65
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:96
+#, kde-format
+msgid "Author:"
+msgstr "Автор:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:73
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:109
+#, kde-format
+msgid "Year:"
+msgstr "Год:"
+
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:330
+#, kde-format
+msgid ""
+"'Google Scholar' denied scrapping data because it thinks you are a robot."
+msgstr ""
+"«Академия Google» отказывается от сбора данных, потому что считает вас "
+"роботом."
+
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:462
+#, kde-format
+msgid "Google Scholar"
+msgstr "Академия Google"
+
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:108
+#, kde-format
+msgid "IDEAS (RePEc)"
+msgstr "IDEAS (RePEc)"
+
+#: src/networking/onlinesearch/onlinesearchieeexplore.cpp:186
+#, kde-format
+msgid "IEEEXplore"
+msgstr "IEEEXplore"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:86
+#, kde-format
+msgid "Full text:"
+msgstr "Полный текст:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:101
+#, kde-format
+msgid "Abstract/Keywords:"
+msgstr "Аннотация/Ключевые слова:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:106
+#, kde-format
+msgid "Publication:"
+msgstr "Публикация:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:111
+#, kde-format
+msgid "ISSN/ISBN/DOI:"
+msgstr "ISSN/ISBN/DOI:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:121
+#, kde-format
+msgid "Issue/Number:"
+msgstr "Выпуск/Издание:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:364
+#, kde-format
+msgid "IngentaConnect"
+msgstr "IngentaConnect"
+
+#: src/networking/onlinesearch/onlinesearchinspirehep.cpp:32
+#, kde-format
+msgid "Inspire High-Energy Physics Literature Database"
+msgstr "База данных INSPIRE-HEP"
+
+#: src/networking/onlinesearch/onlinesearchjstor.cpp:126
+#, kde-format
+msgid "JSTOR"
+msgstr "JSTOR"
+
+#: src/networking/onlinesearch/onlinesearchmathscinet.cpp:120
+#, kde-format
+msgid "MathSciNet"
+msgstr "MathSciNet"
+
+#: src/networking/onlinesearch/onlinesearchmrlookup.cpp:76
+#, kde-format
+msgid "MR Lookup"
+msgstr "MR Lookup"
+
+#: src/networking/onlinesearch/onlinesearchpubmed.cpp:148
+#, kde-format
+msgid "PubMed"
+msgstr "PubMed"
+
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:217
+#, kde-format
+msgid "ScienceDirect"
+msgstr "ScienceDirect"
+
+#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:68
+#, kde-format
+msgid "Paper Reference:"
+msgstr "Ссылка на статью:"
+
+#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:237
+#, kde-format
+msgid "Semantic Scholar"
+msgstr "Semantic Scholar"
+
+#: src/networking/onlinesearch/onlinesearchsoanasaads.cpp:127
+#, kde-format
+msgid "NASA Astrophysics Data System (ADS)"
+msgstr "Система астрофизических данных NASA (ADS)"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:81
+#, kde-format
+msgid "Free Text:"
+msgstr "Свободный текст:"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:95
+#, kde-format
+msgid "Book/Journal title:"
+msgstr "Название журнала/книги:"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:102
+#, kde-format
+msgid "Author or Editor:"
+msgstr "Автор или редактор:"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:299
+#, kde-format
+msgid "SpringerLink"
+msgstr "SpringerLink"
+
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#, kde-format
+msgid ""
+"The query to be sent to 'zbMATH Open' lacks author information, which may "
+"result in few or no matching results."
+msgstr ""
+"В запросе, который будет отправлен в «zbMATH Open», не хватает данных об "
+"авторе. Это может привести к тому, что будет найдено только несколько "
+"записей или вообще ничего."
+
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#, kde-format
+msgid ""
+"The query to be sent to 'zbMATH Open' lacks 'year' information, which may "
+"degrade result quality."
+msgstr ""
+"В запросе, который будет отправлен в «zbMATH Open», не хватает информации о "
+"годе, что может ухудшить качество результата."
+
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#, kde-format
+msgid ""
+"The query to be sent to 'zbMATH Open' lacks both author and 'year' "
+"information.\n"
+"This will most likely result in few or no matching results."
+msgstr ""
+"В запросе, который будет отправлен в «zbMATH Open», не хватает данных об "
+"авторе и годе.\n"
+"Это может привести к тому, что будет найдено только несколько записей или "
+"вообще ничего не будет найдено."
+
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:143
+#, kde-format
+msgid "zbMATH Open"
+msgstr "zbMATH Open"
+
+#: src/networking/zotero/collection.cpp:196
+#, kde-format
+msgid "%1's Library"
+msgstr "Библиотека %1"
+
+#: src/networking/zotero/oauthwizard.cpp:82
+#, kde-format
+msgid ""
+"<html><head><title>KBibTeX authorized to use Zotero</title></"
+"head><body><p>KBibTeX got successfully authorized to read your Zotero "
+"database.</p></body></html>"
+msgstr ""
+"<html><head><title>KBibTeX разрешено использовать Zotero</title></"
+"head><body><p>KBibTeX успешно получил разрешение на чтение вашей базы данных "
+"Zotero.</p></body></html>"
+
+#: src/networking/zotero/oauthwizard.cpp:139
+#, kde-format
+msgid ""
+"<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
+"bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
+"process of authorization involves multiple steps:</p><ol><li>Open the URL as "
+"shown below in a web browser.</li><li>Log in at Zotero and approve the "
+"permissions for KBibTeX.</li><li>If successful, you will be redirected to a "
+"web page telling you that KBibTeX got authorized.<br/>This window will be "
+"closed automatically.</li></ol></qt>"
+msgstr ""
+"<qt><p>Чтобы предоставить <strong>KBibTeX</strong> доступ к "
+"<strong>библиографии Zotero</strong>, требуется авторизовать этот экземпляр "
+"KBibTeX.</p><p>Процедура авторизации состоит из нескольких шагов:</"
+"p><ol><li>Откройте URL-адрес, как показано ниже, в веб-браузере.</"
+"li><li>Войдите в Zotero и подтвердите разрешения для KBibTeX.</li><li>При "
+"успешном выполнении этого действия будет осуществлён переход на страницу, "
+"оповещающую о том, что KBibTeX авторизован.<br/>Это окно закроется "
+"автоматически.</li></ol></qt>"
+
+#: src/networking/zotero/oauthwizard.cpp:145
+#, kde-format
+msgid "Copy URL"
+msgstr "Копировать URL"
+
+#: src/networking/zotero/oauthwizard.cpp:150
+#, kde-format
+msgid "Open URL"
+msgstr "Открыть URL"
+
+#: src/networking/zotero/oauthwizard.cpp:170
+#, kde-format
+msgctxt "@title:window"
+msgid "Zotero OAuth Key Exchange"
+msgstr "Обмен ключами Zotero OAuth"
+
+#. i18n: ectx: Menu (file)
+#: src/parts/kbibtexpartui.rc:8 src/program/kbibtexui.rc:8
+#, kde-format
+msgid "File"
+msgstr "Файл"
+
+#. i18n: ectx: Menu (edit)
+#: src/parts/kbibtexpartui.rc:14
+#, kde-format
+msgid "Edit"
+msgstr "Правка"
+
+#. i18n: ectx: Menu (element)
+#: src/parts/kbibtexpartui.rc:21
+#, kde-format
+msgid "Element"
+msgstr "Элемент"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: src/parts/kbibtexpartui.rc:37 src/program/kbibtexui.rc:24
+#, kde-format
+msgid "Main Toolbar"
+msgstr "Основная панель инструментов"
+
+#: src/parts/part.cpp:131 src/parts/part.cpp:208
+#, kde-format
+msgid "View Document"
+msgstr "Просмотр"
+
+#: src/parts/part.cpp:158
+#, kde-format
+msgid "Save Copy As..."
+msgstr "Сохранить копию как..."
+
+#: src/parts/part.cpp:162
+#, kde-format
+msgid "Save Selection..."
+msgstr "Сохранить выделенное..."
+
+#: src/parts/part.cpp:170
+#, kde-format
+msgid "Filter"
+msgstr "Фильтр"
+
+#: src/parts/part.cpp:175
+#, kde-format
+msgid "Filter bibliographic entries (%1)"
+msgstr "Фильтровать библиографические записи (%1)"
+
+#: src/parts/part.cpp:178
+#, kde-format
+msgid "New element"
+msgstr "Новый элемент"
+
+#: src/parts/part.cpp:184
+#, kde-format
+msgid "New entry"
+msgstr "Новая запись"
+
+#: src/parts/part.cpp:189
+#, kde-format
+msgid "New comment"
+msgstr "Новый комментарий"
+
+#: src/parts/part.cpp:193
+#, kde-format
+msgid "New macro"
+msgstr "Новый макрос"
+
+#: src/parts/part.cpp:197
+#, kde-format
+msgid "New preamble"
+msgstr "Новая преамбула"
+
+#: src/parts/part.cpp:202
+#, kde-format
+msgid "Edit Element"
+msgstr "Изменить элемент"
+
+#: src/parts/part.cpp:214
+#, kde-format
+msgid "Find PDF..."
+msgstr "Найти PDF..."
+
+#: src/parts/part.cpp:219
+#, kde-format
+msgid "Format entry ids"
+msgstr "Форматировать идентификаторы записей"
+
+#: src/parts/part.cpp:233
+#, kde-format
+msgid "Copy References"
+msgstr "Копировать ссылки"
+
+#: src/parts/part.cpp:278
+#, kde-format
+msgid "New%1"
+msgstr "New%1"
+
+#: src/parts/part.cpp:437
+#, kde-format
+msgid "Could not create backup copies of document '%1'."
+msgstr "Не удалось создать резервные копии документа «%1»."
+
+#: src/parts/part.cpp:437
+#, kde-format
+msgid "Backup copies"
+msgstr "Резервные копии"
+
+#: src/parts/part.cpp:470
+#, kde-format
+msgid "Save file"
+msgstr "Сохранить файл"
+
+#: src/parts/part.cpp:500
+#, kde-format
+msgctxt "@title:window"
+msgid "BibTeX File Settings"
+msgstr "Параметры файлов BibTeX"
+
+#: src/parts/part.cpp:518
+#, kde-format
+msgctxt "@title:window"
+msgid "PDF/PostScript File Settings"
+msgstr "Параметры файлов PDF/PostScript"
+
+#: src/parts/part.cpp:638
+#, kde-format
+msgid "Saving the bibliography to file '%1' failed."
+msgstr "Не удалось сохранить библиографию в файл «%1»."
+
+#: src/parts/part.cpp:640 src/parts/part.cpp:646
+#, kde-format
+msgid "Saving bibliography failed"
+msgstr "Не удалось сохранить библиографию"
+
+#: src/parts/part.cpp:642
+#, kde-format
+msgid "Saving bibliography failed:"
+msgstr "Не удалось сохранить библиографию:"
+
+#: src/parts/part.cpp:645
+#, kde-format
+msgid "The following output was generated by the export filter:"
+msgstr "Следующий вывод был создан фильтром экспорта:"
+
+#: src/parts/part.cpp:696
+#, kde-format
+msgid "Local Files"
+msgstr "Локальные файлы"
+
+#: src/parts/part.cpp:721
+#, kde-format
+msgid "Remote Files"
+msgstr "Удалённые файлы"
+
+#: src/parts/part.cpp:828
+#, kde-format
+msgid ""
+"The document could not be saved, as it was not possible to write to '%1'.\n"
+"\n"
+"Check that you have write access to this file or that enough disk space is "
+"available."
+msgstr ""
+"Документ не будет сохранён, так как невозможна запись в файл «%1».\n"
+"\n"
+"Проверьте, есть ли у вас права на запись в этот файл и достаточно ли на "
+"диске свободного места."
+
+#: src/parts/part.cpp:957
+#, kde-format
+msgid ""
+"Cannot apply default formatting for entry ids: No default format specified."
+msgstr ""
+"Не удалось применить форматирование по умолчанию к идентификаторам записей:\n"
+"Не указан формат по умолчанию."
+
+#: src/parts/part.cpp:957
+#, kde-format
+msgid "Cannot Apply Default Formatting"
+msgstr "Не удалось определить форматирование по умолчанию"
+
+#: src/parts/part.cpp:1085
+#, kde-format
+msgid ""
+"The file '%1' has changed on disk.\n"
+"\n"
+"Reload file or ignore changes on disk?"
+msgstr ""
+"Файл «%1» был изменён на диске.\n"
+"\n"
+"Перезагрузить файл или игнорировать изменения?"
+
+#: src/parts/part.cpp:1085
+#, kde-format
+msgid "File changed externally"
+msgstr "Файл изменён внешне"
+
+#: src/parts/part.cpp:1085
+#, kde-format
+msgid "Reload file"
+msgstr "Перезагрузить файл"
+
+#: src/parts/part.cpp:1085
+#, kde-format
+msgid "Ignore on-disk changes"
+msgstr "Игнорировать изменения на диске"
+
+#: src/parts/partfactory.cpp:36
+#, kde-format
+msgid "KBibTeXPart"
+msgstr "KBibTeXPart"
+
+#: src/parts/partfactory.cpp:36 src/program/program.cpp:52
+#, kde-format
+msgid "A BibTeX editor by KDE"
+msgstr "Редактор BibTeX от KDE"
+
+#: src/parts/partfactory.cpp:36 src/program/program.cpp:52
+#, kde-format
+msgid "Copyright 2004-2019 Thomas Fischer"
+msgstr "© Thomas Fischer, 2004-2019"
+
+#: src/parts/partfactory.cpp:40 src/program/program.cpp:57
+#, kde-format
+msgid "Thomas Fischer"
+msgstr "Thomas Fischer"
+
+#: src/parts/partfactory.cpp:40 src/program/program.cpp:57
+#, kde-format
+msgid "Maintainer"
+msgstr "Разработчик"
+
+#: src/processing/bibliographyservice.cpp:189
+#, kde-format
+msgid ""
+"Failed to run 'kbuildsycoca5' to update mime type associations.\n"
+"\n"
+"The system may not know how to use KBibTeX to open bibliography files."
+msgstr ""
+"Не удалось запустить «kbuildsycoca5» для обновления ассоциаций MIME-типов.\n"
+"\n"
+"Система может не знать, как использовать KBibTeX для открытия файлов "
+"библиографии."
+
+#: src/processing/bibliographyservice.cpp:189
+#, kde-format
+msgid "Failed to run 'kbuildsycoca5'"
+msgstr "Не удалось запустить «kbuildsycoca5»"
+
+#: src/processing/checkbibtex.cpp:92
+#, kde-format
+msgid ""
+"Running BibTeX failed.\n"
+"\n"
+"See the following output to trace the error:"
+msgstr ""
+"Не удалось запустить BibTeX.\n"
+"\n"
+"Для поиска ошибки смотрите следующий вывод:"
+
+#: src/processing/checkbibtex.cpp:92
+#, kde-format
+msgid "Running BibTeX failed."
+msgstr "Не удалось запустить BibTeX."
+
+#: src/processing/checkbibtex.cpp:124
+#, kde-format
+msgid "Field <b>%1</b> is empty"
+msgstr "Поле <b>%1</b> пусто"
+
+#: src/processing/checkbibtex.cpp:127
+#, kde-format
+msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
+msgstr ""
+"Поля <b>%1</b> и <b>%2</b> пусты, но хотя бы одно должно быть заполнено"
+
+#: src/processing/checkbibtex.cpp:130
+#, kde-format
+msgid "Field <b>%1</b> exists, but <b>%2</b> does not exist"
+msgstr "Поле <b>%1</b> существует, но <b>%2</b> отсутствует"
+
+#: src/processing/checkbibtex.cpp:133
+#, kde-format
+msgid "Fields <b>%1</b> and <b>%2</b> cannot be used at the same time"
+msgstr "Поля <b>%1</b> и <b>%2</b> не могут использоваться одновременно"
+
+#: src/processing/checkbibtex.cpp:136
+#, kde-format
+msgid "Fields <b>%1</b> or <b>%2</b> are required to sort entry"
+msgstr "Для сортировки записи необходимо поле <b>%1</b> или <b>%2</b>"
+
+#: src/processing/checkbibtex.cpp:139
+#, kde-format
+msgid "Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry"
+msgstr "Для сортировки записи необходимы поля <b>%1</b>, <b>%2</b> и <b>%3</b>"
+
+#: src/processing/checkbibtex.cpp:142
+#, kde-format
+msgid "Unknown warning: %1"
+msgstr "Неизвестное предупреждение: %1"
+
+#: src/processing/checkbibtex.cpp:151
+#, kde-format
+msgid "<qt><p>The following error was found:</p><pre>%1</pre></qt>"
+msgstr "<qt><p>Обнаружена следующая ошибка:</p><pre>%1</pre></qt>"
+
+#: src/processing/checkbibtex.cpp:151
+#, kde-format
+msgid "Errors found"
+msgstr "Найдены ошибки"
+
+#: src/processing/checkbibtex.cpp:153
+#, kde-format
+msgid "The following warnings were found:"
+msgstr "Обнаружены следующие предупреждения:"
+
+#: src/processing/checkbibtex.cpp:153
+#, kde-format
+msgid "Warnings found"
+msgstr "Найдены предупреждения"
+
+#: src/processing/checkbibtex.cpp:156
+#, kde-format
+msgid ""
+"\n"
+"\n"
+"Some fields missing in this entry were taken from the crossref'ed entry '%1'."
+msgstr ""
+"\n"
+"\n"
+"Некоторые поля, отсутствующие в данной записи, взяты из перекрёстной ссылки "
+"«%1»."
+
+#: src/processing/checkbibtex.cpp:156
+#, kde-format
+msgid "No warnings or errors were found.%1"
+msgstr "Ошибок и предупреждений не обнаружено.%1"
+
+#: src/processing/checkbibtex.cpp:156
+#, kde-format
+msgid "No Errors or Warnings"
+msgstr "Ошибок и предупреждений не обнаружено"
+
+#: src/processing/findduplicates.cpp:384
+#, kde-format
+msgid "Searching ..."
+msgstr "Идёт поиск..."
+
+#: src/processing/findduplicates.cpp:384
+#, kde-format
+msgid "Cancel"
+msgstr "Отмена"
+
+#: src/processing/findduplicates.cpp:386
+#, kde-format
+msgctxt "@title:window"
+msgid "Finding Duplicates"
+msgstr "Поиск дубликатов"
+
+#: src/processing/idsuggestions.cpp:314
+#, kde-format
+msgctxt ""
+"Small words that can be removed from titles when generating id suggestions; "
+"separated by pipe symbol"
+msgid ""
+"a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|"
+"es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
+"le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
+"which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
+"wird|with|you|und|and|ein|eine|einer|eines"
+msgstr ""
+"a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|"
+"es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
+"le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
+"which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
+"wird|with|you|und|and|ein|eine|einer|eines"
+
+#: src/processing/idsuggestions.cpp:388
+#, kde-format
+msgid ", but only first letter of each last name"
+msgid_plural ", but only first %1 letters of each last name"
+msgstr[0] ", но только первая %1 буква каждой фамилии"
+msgstr[1] ", но только первые %1 буквы каждой фамилии"
+msgstr[2] ", но только первые %1 букв каждой фамилии"
+msgstr[3] ", но только первая %1 буква каждой фамилии"
+
+#: src/processing/idsuggestions.cpp:392 src/processing/idsuggestions.cpp:424
+#: src/processing/idsuggestions.cpp:446 src/processing/idsuggestions.cpp:464
+#, kde-format
+msgid ", in upper case"
+msgstr ", в верхнем регистре"
+
+#: src/processing/idsuggestions.cpp:395 src/processing/idsuggestions.cpp:427
+#: src/processing/idsuggestions.cpp:449 src/processing/idsuggestions.cpp:467
+#, kde-format
+msgid ", in lower case"
+msgstr ", в нижнем регистре"
+
+#: src/processing/idsuggestions.cpp:398 src/processing/idsuggestions.cpp:430
+#: src/processing/idsuggestions.cpp:452 src/processing/idsuggestions.cpp:470
+#, kde-format
+msgid ", in CamelCase"
+msgstr ", в ГорбатомРегистре"
+
+#: src/processing/idsuggestions.cpp:404 src/processing/idsuggestions.cpp:436
+#, kde-format
+msgid ", with '%1' in between"
+msgstr ", с «%1» посередине"
+
+#: src/processing/idsuggestions.cpp:407
+#, kde-format
+msgid "Year (2 digits)"
+msgstr "Год (2 цифры)"
+
+#: src/processing/idsuggestions.cpp:409
+#, kde-format
+msgid "Year (4 digits)"
+msgstr "Год (4 цифры)"
+
+#: src/processing/idsuggestions.cpp:414
+#, kde-format
+msgid ", but only the first word"
+msgid_plural ", but only first %1 words"
+msgstr[0] ", но только первое %1 слово"
+msgstr[1] ", но только первые %1 слова"
+msgstr[2] ", но только первые %1 слов"
+msgstr[3] ", но только первое %1 слово"
+
+#: src/processing/idsuggestions.cpp:416
+#, kde-format
+msgid ", but only starting from word %1"
+msgstr ", но только начиная со слова %1"
+
+#: src/processing/idsuggestions.cpp:418
+#, kde-format
+msgid ", but only from word %1 to word %2"
+msgstr ", но только начиная со слова %1 и заканчивая словом %2"
+
+#: src/processing/idsuggestions.cpp:420 src/processing/idsuggestions.cpp:443
+#: src/processing/idsuggestions.cpp:461
+#, kde-format
+msgid ", but only first letter of each word"
+msgid_plural ", but only first %1 letters of each word"
+msgstr[0] ", но только первая %1 буква каждого слова"
+msgstr[1] ", но только первые %1 буквы каждого слова"
+msgstr[2] ", но только первые %1 букв каждого слова"
+msgstr[3] ", но только первая %1 буква каждого слова"
+
+#: src/processing/idsuggestions.cpp:437
+#, kde-format
+msgid ", small words removed"
+msgstr ", без коротких слов"
+
+#: src/processing/idsuggestions.cpp:478
+#, kde-format
+msgid "First page number"
+msgstr "Номер первой страницы"
+
+#: src/processing/idsuggestions.cpp:480
+#, kde-format
+msgid "Text: '%1'"
+msgstr "Текст: «%1»"
+
+#: src/processing/idsuggestions.cpp:494
+#, kde-format
+msgid "First and last authors only"
+msgstr "Только первый и последний авторы"
+
+#: src/processing/idsuggestions.cpp:496
+#, kde-format
+msgid "First author only"
+msgstr "Только первый автор"
+
+#: src/processing/idsuggestions.cpp:498
+#, kde-format
+msgid "All authors"
+msgstr "Все авторы"
+
+#: src/processing/idsuggestions.cpp:503
+#, kde-format
+msgid "From first author to author %1"
+msgstr "От первого автора до автора %1"
+
+#: src/processing/idsuggestions.cpp:507
+#, kde-format
+msgid "All but first author"
+msgstr "Все авторы, кроме первого"
+
+#: src/processing/idsuggestions.cpp:512 src/processing/idsuggestions.cpp:520
+#, kde-format
+msgid "From author %1 to author %2"
+msgstr "От автора %1 до автора %2"
+
+#: src/processing/idsuggestions.cpp:516
+#, kde-format
+msgid "From author %1 to last author"
+msgstr "От автора %1 до последнего автора"
+
+#: src/processing/lyx.cpp:81
+#, kde-format
+msgid "Send to LyX/Kile"
+msgstr "Отправить в LyX/Kile"
+
+#: src/processing/lyx.cpp:101
+#, kde-format
+msgid ""
+"\n"
+"\n"
+"Check that LyX or Kile are running and configured to receive references."
+msgstr ""
+"\n"
+"\n"
+"Убедитесь, что LyX или Kile запущены и настроены для приёма ссылок."
+
+#: src/processing/lyx.cpp:102
+#, kde-format
+msgid "Send Reference to LyX"
+msgstr "Послать ссылку в LyX"
+
+#: src/processing/lyx.cpp:107
+#, kde-format
+msgid "No 'LyX server pipe' was detected."
+msgstr "Серверный канал LyX не обнаружен."
+
+#: src/processing/lyx.cpp:112
+#, kde-format
+msgid "No references to send to LyX/Kile."
+msgstr "Не обнаружено ссылок для отправки в LyX/Kile."
+
+#: src/processing/lyx.cpp:118
+#, kde-format
+msgid "Could not open LyX server pipe '%1'."
+msgstr "Невозможно открыть серверный канал LyX «%1»."
+
+#: src/program/docklets/documentpreview.cpp:198
+#, kde-format
+msgid "Toggle between local files only and all documents including remote ones"
+msgstr ""
+"Переключиться между отображением только локальных файлов и отображением всех "
+"документов, включая удалённые."
+
+#: src/program/docklets/documentpreview.cpp:209
+#, kde-format
+msgid "Open in external program"
+msgstr "Открыть во внешней программе"
+
+#: src/program/docklets/documentpreview.cpp:343
+#, kde-format
+msgid "Refreshing..."
+msgstr "Обновление..."
+
+#: src/program/docklets/documentpreview.cpp:372
+#, kde-format
+msgid "No documents to show."
+msgstr "Отсутствуют документы для просмотра."
+
+#: src/program/docklets/documentpreview.cpp:379
+#: src/program/docklets/documentpreview.cpp:691
+#, kde-format
+msgid ""
+"<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
+"restriction</a> to local files to see remote documents.</qt>"
+msgstr ""
+"<qt>Отсутствуют документы для просмотра.<br/><a href=\"disableonlylocalfiles"
+"\">Уберите ограничение</a>  для просмотра удалённых документов.</qt>"
+
+#: src/program/docklets/documentpreview.cpp:506
+#, kde-format
+msgid "Cannot show requested part"
+msgstr "Невозможно отобразить запрошенную часть"
+
+#: src/program/docklets/documentpreview.cpp:533
+#: src/program/docklets/documentpreview.cpp:537
+#, kde-format
+msgid "Loading..."
+msgstr "Загрузка..."
+
+#: src/program/docklets/documentpreview.cpp:558
+#, kde-format
+msgctxt ""
+"Additional information in case there is not KPart available for mime type "
+"'application/pdf'"
+msgid ""
+"<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular\">Okular</"
+"a> for KDE Frameworks&nbsp;5 to make use of its PDF viewing component.<br/"
+">Okular for KDE&nbsp;4 will not work."
+msgstr ""
+"<br/><br/>Установите <a href=\"https://userbase.kde.org/Okular\">Okular</a> "
+"для KDE Frameworks&nbsp;5, чтобы воспользоваться его компонентом просмотра "
+"PDF-файлов.<br/>Okular для KDE&nbsp;4 не будет работать."
+
+#: src/program/docklets/documentpreview.cpp:559
+#, kde-format
+msgctxt ""
+"First parameter is mime type, second parameter is optional information (may "
+"be empty)"
+msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
+msgstr "<qt>Неизвестно, как отображать тип MIME «%1».%2</qt>"
+
+#: src/program/docklets/documentpreview.cpp:694
+#, kde-format
+msgid ""
+"No documents to show.\n"
+"Some URLs or files could not be retrieved."
+msgstr ""
+"Отсутствуют документы для просмотра.\n"
+"Не могут быть получены некоторые ссылки или файлы."
+
+#: src/program/docklets/elementform.cpp:77
+#, kde-format
+msgid "Automatically apply changes"
+msgstr "Применять изменения автоматически"
+
+#: src/program/docklets/elementform.cpp:93
+#, kde-format
+msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
+msgstr "Есть несохранённые изменения. Нажмите «Применить» или «Сбросить»."
+
+#: src/program/docklets/elementform.cpp:100
+#, kde-format
+msgid "Reset"
+msgstr "Сбросить"
+
+#: src/program/docklets/elementform.cpp:188
+#, kde-format
+msgid ""
+"The current element got modified.\n"
+"Apply or discard changes?"
+msgstr ""
+"Текущий элемент изменён.\n"
+"Применить или отменить изменения?"
+
+#: src/program/docklets/elementform.cpp:188
+#, kde-format
+msgid "Element modified"
+msgstr "Элемент изменён"
+
+#: src/program/docklets/elementform.cpp:188
+#, kde-format
+msgid "Apply changes"
+msgstr "Применить изменения"
+
+#: src/program/docklets/elementform.cpp:188
+#, kde-format
+msgid "Discard changes"
+msgstr "Отменить изменения"
+
+#: src/program/docklets/referencepreview.cpp:80
+#, kde-format
+msgid "Source (BibTeX)"
+msgstr "Исходный (BibTeX)"
+
+#: src/program/docklets/referencepreview.cpp:81
+#, kde-format
+msgid "Source (RIS)"
+msgstr "Исходный (RIS)"
+
+#: src/program/docklets/referencepreview.cpp:87
+#, kde-format
+msgid "Standard"
+msgstr "Стандартный"
+
+#: src/program/docklets/referencepreview.cpp:88
+#, kde-format
+msgid "Fancy"
+msgstr "Изысканный"
+
+#: src/program/docklets/referencepreview.cpp:89
+#, kde-format
+msgid "Wikipedia Citation"
+msgstr "Цитирование Википедии"
+
+#: src/program/docklets/referencepreview.cpp:90
+#, kde-format
+msgid "Abstract-only"
+msgstr "Только аннотация"
+
+#: src/program/docklets/referencepreview.cpp:121
+#, kde-format
+msgid "Reason:"
+msgstr "Причина:"
+
+#: src/program/docklets/referencepreview.cpp:145
+#, kde-format
+msgid "Open reference in web browser."
+msgstr "Открыть ссылку в веб-браузере."
+
+#: src/program/docklets/referencepreview.cpp:148
+#: src/program/docklets/referencepreview.cpp:419
+#, kde-format
+msgid "Save as HTML"
+msgstr "Сохранить как HTML"
+
+#: src/program/docklets/referencepreview.cpp:149
+#, kde-format
+msgid "Save reference as HTML fragment."
+msgstr "Сохранить ссылку как фрагмент HTML"
+
+#: src/program/docklets/referencepreview.cpp:239
+#, kde-format
+msgid "Preview disabled"
+msgstr "Предпросмотр заблокирован"
+
+#: src/program/docklets/referencepreview.cpp:259
+#, kde-format
+msgid "No element selected"
+msgstr "Не выбран элемент"
+
+#: src/program/docklets/referencepreview.cpp:324
+#: src/program/docklets/referencepreview.cpp:394
+#, kde-format
+msgid "No output generated"
+msgstr "Вывод не создан"
+
+#: src/program/docklets/referencepreview.cpp:353
+#, kde-format
+msgid ""
+"This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
+"command."
+msgstr ""
+"Этот тип элемента не поддерживается командой Википедии <tt>{{cite}}</tt>."
+
+#: src/program/docklets/searchform.cpp:188
+#, kde-format
+msgid "Go to Homepage"
+msgstr "На домашнюю страницу"
+
+#: src/program/docklets/searchform.cpp:212
+#, kde-format
+msgid "Query Terms"
+msgstr "Параметры запроса"
+
+#: src/program/docklets/searchform.cpp:215
+#, kde-format
+msgid "Engines"
+msgstr "Поисковые движки"
+
+#: src/program/docklets/searchform.cpp:221
+#, kde-format
+msgid "Use Entry"
+msgstr "Использовать запись"
+
+#: src/program/docklets/searchform.cpp:231
+#: src/program/docklets/searchform.cpp:304
+#, kde-format
+msgid "Search"
+msgstr "Поиск"
+
+#: src/program/docklets/searchform.cpp:316
+#, kde-format
+msgid "Stop"
+msgstr "Остановить"
+
+#: src/program/docklets/searchform.cpp:339
+#, kde-format
+msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
+msgstr "Не выбран поисковый движок (<a href=\"changeEngine\">выбрать</a>)."
+
+#: src/program/docklets/searchform.cpp:340
+#, kde-format
+msgid ""
+"Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
+msgstr ""
+"Выбран поисковый движок <b>%1</b> (<a href=\"changeEngine\">поменять</a>)."
+
+#: src/program/docklets/searchform.cpp:341
+#, kde-format
+msgid ""
+"Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
+"\">change</a>)."
+msgstr ""
+"Выбраны поисковые движки <b>%1</b> и <b>%2</b> (<a href=\"changeEngine"
+"\">поменять</a>)."
+
+#: src/program/docklets/searchform.cpp:342
+#, kde-format
+msgid ""
+"Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
+"\"changeEngine\">change</a>)."
+msgstr ""
+"Выбраны поисковые движки <b>%1</b>, <b>%2</b> и <b>%3</b> (<a href="
+"\"changeEngine\">поменять</a>)."
+
+#: src/program/docklets/searchform.cpp:343
+#, kde-format
+msgid ""
+"Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
+"\"changeEngine\">change</a>)."
+msgstr ""
+"Выбраны поисковые движки <b>%1</b>, <b>%2</b> и ещё несколько (<a href="
+"\"changeEngine\">поменять</a>)."
+
+#: src/program/docklets/searchform.cpp:404
+#, kde-format
+msgid ""
+"Could not start searching the Internet:\n"
+"The search terms are not complete or invalid."
+msgstr ""
+"Невозможно начать поиск в Интернете:\n"
+"Поисковый запрос не полон или неверен."
+
+#: src/program/docklets/searchform.cpp:404
+#, kde-format
+msgid "Searching the Internet"
+msgstr "Искать в Интернете"
+
+#: src/program/docklets/searchresults.cpp:87
+#: src/program/docklets/searchresults.cpp:102
+#, kde-format
+msgid "Import"
+msgstr "Импортировать"
+
+#: src/program/docklets/searchresults.cpp:97
+#, kde-format
+msgid "View Element"
+msgstr "Просмотреть элемент"
+
+#: src/program/docklets/searchresults.cpp:107
+#, kde-format
+msgid "Copy"
+msgstr "Копировать"
+
+#: src/program/docklets/searchresults.cpp:149
+#, kde-format
+msgid "No results to import and no bibliography open to import to."
+msgstr ""
+"Нет результатов для импорта и не открыта библиография, в которую нужно "
+"импортировать."
+
+#: src/program/docklets/searchresults.cpp:151
+#, kde-format
+msgid "No bibliography open to import to."
+msgstr "Не открыта библиография для импорта."
+
+#: src/program/docklets/searchresults.cpp:153
+#, kde-format
+msgid "No results to import."
+msgstr "Нет результатов для импорта."
+
+#: src/program/docklets/statistics.cpp:53
+#, kde-format
+msgid "Number of Elements:"
+msgstr "Количество элементов:"
+
+#: src/program/docklets/statistics.cpp:57
+#, kde-format
+msgid "Number of Entries:"
+msgstr "Количество записей:"
+
+#: src/program/docklets/statistics.cpp:60
+#, kde-format
+msgid "Journal Articles:"
+msgstr "Статьи журнала:"
+
+#: src/program/docklets/statistics.cpp:63
+#, kde-format
+msgid "Conference Publications:"
+msgstr "Публикации конференций:"
+
+#: src/program/docklets/statistics.cpp:66
+#, kde-format
+msgid "Books:"
+msgstr "Книги:"
+
+#: src/program/docklets/statistics.cpp:69
+#, kde-format
+msgid "Other Entries:"
+msgstr "Другие записи:"
+
+#: src/program/docklets/statistics.cpp:73
+#, kde-format
+msgid "Number of Comments:"
+msgstr "Количество комментариев:"
+
+#: src/program/docklets/statistics.cpp:77
+#, kde-format
+msgid "Number of Macros:"
+msgstr "Количество макросов:"
+
+#: src/program/docklets/valuelist.cpp:93
+#, kde-format
+msgid "Filter value list"
+msgstr "Список значений фильтра"
+
+#: src/program/docklets/valuelist.cpp:109
+#, kde-format
+msgid "Edit to replace all occurrences"
+msgstr "Заменить все повторения"
+
+#: src/program/docklets/valuelist.cpp:113
+#, kde-format
+msgid "Remove all occurrences"
+msgstr "Удалить все повторения"
+
+#: src/program/docklets/valuelist.cpp:126
+#, kde-format
+msgid "Show Count Column"
+msgstr "Показать столбец «Количество»"
+
+#: src/program/docklets/valuelist.cpp:130
+#, kde-format
+msgid "Sort by Count"
+msgstr "Сортировать по количеству"
+
+#: src/program/docklets/zoterobrowser.cpp:117
+#, kde-format
+msgid "Personal library"
+msgstr "Личная библиотека"
+
+#: src/program/docklets/zoterobrowser.cpp:119
+#, kde-format
+msgid "Group library"
+msgstr "Групповая библиотека"
+
+#: src/program/docklets/zoterobrowser.cpp:128
+#, kde-format
+msgid "No groups available"
+msgstr "Группы недоступны"
+
+#: src/program/docklets/zoterobrowser.cpp:144
+#, kde-format
+msgid "Numeric user id:"
+msgstr "Цифровой идентификатор пользователя:"
+
+#: src/program/docklets/zoterobrowser.cpp:150
+#, kde-format
+msgid "API key:"
+msgstr "Ключ API:"
+
+#: src/program/docklets/zoterobrowser.cpp:156
+#, kde-format
+msgid "Get New Credentials"
+msgstr "Получить новые учётные данные"
+
+#: src/program/docklets/zoterobrowser.cpp:163
+#, kde-format
+msgid "Collections"
+msgstr "Коллекции"
+
+#: src/program/docklets/zoterobrowser.cpp:170
+#, kde-format
+msgid "Tags"
+msgstr "Метки"
+
+#: src/program/docklets/zoterobrowser.cpp:241
+#, kde-format
+msgid ""
+"KBibTeX failed to retrieve the bibliography from Zotero. Please check that "
+"the provided user id and API key are valid."
+msgstr ""
+"KBibTeX не удалось получить библиографию из Zotero. Убедитесь, что "
+"предоставленный идентификатор пользователя и ключ API действительны."
+
+#: src/program/docklets/zoterobrowser.cpp:241
+#, kde-format
+msgid "Failed to retrieve data from Zotero"
+msgstr "Не удалось получить данные из Zotero"
+
+#: src/program/docklets/zoterobrowser.cpp:367
+#, kde-format
+msgid "No groups available or no permissions"
+msgstr "Группы недоступны или нет прав доступа"
+
+#: src/program/documentlist.cpp:57
+#, kde-format
+msgid "One level up"
+msgstr "Уровень выше"
+
+#: src/program/documentlist.cpp:61
+#, kde-format
+msgid "Go to Home folder"
+msgstr "В домашнюю папку"
+
+#: src/program/documentlist.cpp:201
+#, kde-format
+msgid "<br/><small>located in <b>%1</b></small>"
+msgstr "<br/><small>находится в <b>%1</b></small>"
+
+#: src/program/documentlist.cpp:205
+#, kde-format
+msgid "Favorite"
+msgstr "Избранное"
+
+#: src/program/documentlist.cpp:207 src/program/documentlist.cpp:397
+#, kde-format
+msgid "Recently Used"
+msgstr "Недавние"
+
+#: src/program/documentlist.cpp:211
+#, kde-format
+msgid "Modified"
+msgstr "Изменённые"
+
+#: src/program/documentlist.cpp:264
+#, kde-format
+msgid ""
+"The current document has to be saved before switching the viewer/editor "
+"component."
+msgstr ""
+"Необходимо сохранить текущий документ перед переключением редактора/средства "
+"просмотра."
+
+#: src/program/documentlist.cpp:264
+#, kde-format
+msgid "Save before switching?"
+msgstr "Сохранить перед переключением?"
+
+#: src/program/documentlist.cpp:264
+#, kde-format
+msgid "Save document"
+msgstr "Сохранить документ"
+
+#: src/program/documentlist.cpp:264
+#, kde-format
+msgid "Do not switch"
+msgstr "Не переключать"
+
+#: src/program/documentlist.cpp:277
+#, kde-format
+msgid "Close File"
+msgstr "Закрыть файл"
+
+#: src/program/documentlist.cpp:281
+#, kde-format
+msgid "Open File"
+msgstr "Открыть файл"
+
+#: src/program/documentlist.cpp:286
+#, kde-format
+msgid "Open with"
+msgstr "Открыть с помощью"
+
+#: src/program/documentlist.cpp:290
+#, kde-format
+msgid "Remove from Favorites"
+msgstr "Убрать из избранного"
+
+#: src/program/documentlist.cpp:294
+#, kde-format
+msgid "Add to Favorites"
+msgstr "Добавить в избранное"
+
+#: src/program/documentlist.cpp:392
+#, kde-format
+msgid "Open Files"
+msgstr "Открыть файлы"
+
+#: src/program/documentlist.cpp:402
+#, kde-format
+msgid "Favorites"
+msgstr "Избранное"
+
+#: src/program/documentlist.cpp:405
+#, kde-format
+msgid "Filesystem Browser"
+msgstr "Обзор файловой системы"
+
+#: src/program/mainwindow.cpp:94
+#, kde-format
+msgid "Show Panels"
+msgstr "Показывать панели"
+
+#: src/program/mainwindow.cpp:99
+#, kde-format
+msgid "Recently used files"
+msgstr "Недавние файлы"
+
+#: src/program/mainwindow.cpp:116
+#, kde-format
+msgid "List of Documents"
+msgstr "Список документов"
+
+#: src/program/mainwindow.cpp:126
+#, kde-format
+msgid "List of Values"
+msgstr "Список значений"
+
+#: src/program/mainwindow.cpp:135
+#, kde-format
+msgid "Statistics"
+msgstr "Статистика"
+
+#: src/program/mainwindow.cpp:144
+#, kde-format
+msgid "Search Results"
+msgstr "Результаты поиска"
+
+#: src/program/mainwindow.cpp:155
+#, kde-format
+msgid "Online Search"
+msgstr "Поиск в Интернете"
+
+#: src/program/mainwindow.cpp:165
+#, kde-format
+msgid "Zotero"
+msgstr "Zotero"
+
+#: src/program/mainwindow.cpp:176
+#, kde-format
+msgid "Reference Preview"
+msgstr "Предпросмотр ссылки"
+
+#: src/program/mainwindow.cpp:185
+#, kde-format
+msgid "Document Preview"
+msgstr "Предпросмотр документа"
+
+#: src/program/mainwindow.cpp:196
+#, kde-format
+msgid "Element Editor"
+msgstr "Редактор элементов"
+
+#: src/program/mainwindow.cpp:206
+#, kde-format
+msgid "File Settings"
+msgstr "Параметры файла"
+
+#: src/program/mainwindow.cpp:301
+#, kde-format
+msgid ""
+"Creating a new document of mime type '%1' failed as no editor component "
+"could be instantiated."
+msgstr ""
+"Не удалось создать новый документ с типом MIME «%1» так как невозможно "
+"запустить соответствующий редактор."
+
+#: src/program/mainwindow.cpp:301
+#, kde-format
+msgid "Creating document failed"
+msgstr "Не удалось создать документ"
+
+#: src/program/mainwindow.cpp:323
+#, kde-format
+msgid "Open file"
+msgstr "Открыть файл"
+
+#: src/program/mainwindow.cpp:365
+#, kde-format
+msgid "%1 - KBibTeX"
+msgstr "%1 — KBibTeX"
+
+#: src/program/mainwindow.cpp:450
+#, kde-format
+msgid ""
+"KBibTeX is not the default editor for its bibliography formats like BibTeX "
+"or RIS."
+msgstr ""
+"KBibTeX не является редактором по умолчанию для библиографических форматов "
+"BibTeX или RIS."
+
+#: src/program/mainwindow.cpp:450
+#, kde-format
+msgid "Default Bibliography Editor"
+msgstr "Библиографический редактор по умолчанию"
+
+#: src/program/mainwindow.cpp:450
+#, kde-format
+msgid "Set as Default Editor"
+msgstr "Использовать по умолчанию"
+
+#: src/program/mainwindow.cpp:450
+#, kde-format
+msgid "Keep settings unchanged"
+msgstr "Не менять параметры"
+
+#: src/program/mdiwidget.cpp:99
+#, kde-format
+msgid "Filename"
+msgstr "Имя файла"
+
+#: src/program/mdiwidget.cpp:100
+#, kde-format
+msgid "Date/time of last use"
+msgstr "Дата и время последнего использования"
+
+#: src/program/mdiwidget.cpp:101
+#, kde-format
+msgid "Full filename"
+msgstr "Полное имя файла"
+
+#: src/program/mdiwidget.cpp:147
+#, kde-format
+msgid "<qt>Welcome to <b>KBibTeX</b></qt>"
+msgstr "<qt>Добро пожаловать в <b>KBibTeX</b></qt>"
+
+#: src/program/mdiwidget.cpp:150
+#, kde-format
+msgid "New"
+msgstr "Создать"
+
+#: src/program/mdiwidget.cpp:154
+#, kde-format
+msgid "Open..."
+msgstr "Открыть..."
+
+#: src/program/mdiwidget.cpp:158
+#, kde-format
+msgid "List of recently used files:"
+msgstr "Список недавно используемых файлов:"
+
+#: src/program/mdiwidget.cpp:270
+#, kde-format
+msgid "No part available for file of mime type '%1'."
+msgstr "Не доступных частей для файла типа MIME «%1»."
+
+#: src/program/mdiwidget.cpp:270 src/program/mdiwidget.cpp:272
+#, kde-format
+msgid "No Part Available"
+msgstr "Нет доступных частей"
+
+#: src/program/mdiwidget.cpp:272
+#, kde-format
+msgid "No part available for file '%1'."
+msgstr "Нет доступных частей для файла «%1»."
+
+#: src/program/openfileinfo.cpp:249
+#, kde-format
+msgid "Unnamed-%1"
+msgstr "Безымянный-%1"
+
+#: src/program/program.cpp:72
+#, kde-format
+msgid "File(s) to load."
+msgstr "Открываемые файлы"
+
+#: src/program/program.cpp:102
+#, kde-format
+msgid ""
+"KBibTeX seems to be not installed completely. KBibTeX could not locate its "
+"own KPart.\n"
+"\n"
+"Only limited functionality will be available."
+msgstr ""
+"Похоже, KBibTeX установлен не полностью. KBibTeX не может найти собственный "
+"KPart.\n"
+"\n"
+"Будет доступна только ограниченная функциональность."
+
+#: src/program/program.cpp:102
+#, kde-format
+msgid "Incomplete KBibTeX Installation"
+msgstr "Неполная установка KBibTeX"
+
+#~ msgid "Delete all occurrences"
+#~ msgstr "Удалить везде"
+
+#~ msgid "Search for selected values"
+#~ msgstr "Искать выбранные значения"
+
+#~ msgid "Replace value of selected entries"
+#~ msgstr "Заменить значения в выделенных записях"
+
+#~ msgid "Running command '%1' using working directory '%2'"
+#~ msgstr "Запущен процесс «%1» в рабочем каталоге «%2»"
+
+#~ msgid "Starting command '%1' failed: %2"
+#~ msgstr "Ошибка начала выполнения команды «%1»: %2"
+
+#~ msgid "Command '%1' succeeded"
+#~ msgstr "Команда «%1» выполнена успешно"
+
+#~ msgid "Command '%1' failed with exit code %2: %3"
+#~ msgstr "Не удалось выполнить команду «%1», код завершения %2: %3"
+
+#~ msgid "Writing to file '%1' succeeded"
+#~ msgstr "Запись в файл «%1» закончилась успешно"
+
+#~ msgid "Writing to file '%1' failed"
+#~ msgstr "Ошибка записи в файл «%1»"
+
+#~ msgid "Could not write bibliographic data to file."
+#~ msgstr "Не удалось записать библиографические данные в файл."
+
+#~ msgid "Could not open local file '%1' for writing."
+#~ msgstr "Не удалось открыть локальный файл «%1» для записи."
+
+#, fuzzy
+#~ msgid "Comments not supported"
+#~ msgstr "Комментатор"
+
+#, fuzzy
+#~ msgid "Authorization URL"
+#~ msgstr "Автор или редактор:"
+
+#~ msgid "Show Comments:"
+#~ msgstr "Показывать комментарии:"
+
+#~ msgid "Show Macros:"
+#~ msgstr "Показывать макросы:"
+
+#~ msgid "A4"
+#~ msgstr "A4"
+
+#~ msgid "Letter"
+#~ msgstr "US Letter"
+
+#~ msgid "Legal"
+#~ msgstr "US Legal"
+
+#~ msgid "Changing this option requires a restart to take effect."
+#~ msgstr "Изменение этой настройки требует перезапуска программы"
+
+#, fuzzy
+#~ msgid "Keep duplicate keys"
+#~ msgstr "Выберите дубликаты"
+
+#~ msgid "Process '%1' failed"
+#~ msgstr "Процесс '%1' завершился неуспешно"
+
+#~ msgid "Discard"
+#~ msgstr "Отменить"
+
+#~ msgid ""
+#~ "A file named '%1' already exists. Are you sure you want to overwrite it?"
+#~ msgstr "Файл с именем '%1' уже существует. Хотите его перезаписать?"
+
+#~ msgid "Overwrite File?"
+#~ msgstr "Перезаписать файл?"
+
+#, fuzzy
+#~ msgid "Load bibliography"
+#~ msgstr "Не удалось сохранить библиографию"
+
+#~ msgid "Searching '%1' failed: Could not extract form from ACM's start page."
+#~ msgstr ""
+#~ "Поиск '%1' не удался: Невозможно извлечь форму из стартовой страницы ACM."
+
+#, fuzzy
+#~ msgid "No Editor Component"
+#~ msgstr "Компонент редактора BibTeX"
+
+#~ msgid "Add Keywords"
+#~ msgstr "Добавить ключевые слова"
+
+#~ msgid "Select keywords to add:"
+#~ msgstr "Выберите ключевые слова:"
+
+#~ msgid "Save as Default"
+#~ msgstr "Сохранить по умолчанию"
+
+#~ msgid "Save this configuration as default for future Save As operations."
+#~ msgstr ""
+#~ "Сохранить эту конфигурацию как используемую по умолчанию для действий "
+#~ "'Сохранить как'."
+
+#~ msgid "No preview available due to missing QtWebKit support on your system."
+#~ msgstr ""
+#~ "Предпросмотр недоступен, так как в вашей системе отсутствует поддержка "
+#~ "QtWebKit."
+
+#~ msgid "No duplicates have been found."
+#~ msgstr "Дубликатов не найдено"
+
+#~ msgid "Adjust Column Widths"
+#~ msgstr "Подобрать ширину столбцов"
+
+#, fuzzy
+#~ msgid "Filter Toolbar"
+#~ msgstr "Главная панель инструментов"
+
+#, fuzzy
+#~ msgid "Insert file..."
+#~ msgstr "Вставить файл..."
+
+#~ msgid "Select File"
+#~ msgstr "Выбрать файл"
+
+#~ msgid ""
+#~ "The current BibTeX document has to be saved first before associating "
+#~ "other files with this document."
+#~ msgstr ""
+#~ "Текущий документ BibTeX должен быть сохранён перед тем, как другие файлы "
+#~ "будут ассоциированными с ним."
+
+#~ msgctxt ""
+#~ "When copying a file to a position relative to the bibliography file"
+#~ msgid "Select Source File"
+#~ msgstr "Выберите исходный файл"
+
+#~ msgctxt ""
+#~ "When copying a file to a position relative to the bibliography file"
+#~ msgid "Select Destination"
+#~ msgstr "Выберите назначение"
+
+#~ msgid "Add ..."
+#~ msgstr "Добавить..."
+
+#~ msgid "Open ..."
+#~ msgstr "Открыть..."
+
+#~ msgid "KBibTeX Test"
+#~ msgstr "Тест KBibTeX"
+
+#~ msgid "Please use https://gna.org/bugs/?group=kbibtex to report bugs.\n"
+#~ msgstr ""
+#~ "Пожалуйста, сообщайте об ошибках на https://gna.org/bugs/?group=kbibtex\n"
+
+#~ msgid ""
+#~ "Please use <a href=\"https://gna.org/bugs/?group=kbibtex\">https://gna."
+#~ "org/bugs/?group=kbibtex</a> to report bugs.\n"
+#~ msgstr ""
+#~ "Пожалуйста, сообщайте об ошибках  на<a href=\"https://gna.org/bugs/?"
+#~ "group=kbibtex\">https://gna.org/bugs/?group=kbibtex</a>\n"
+
+#~ msgctxt "Value types like Source, Verbatim, Person, PlainText, ..."
+#~ msgid "Types"
+#~ msgstr "Типы"
+
+#~ msgid ""
+#~ "Searching ...\n"
+#~ "Number of visited pages: %1\n"
+#~ "Number of found documents: %2"
+#~ msgstr ""
+#~ "Поиск...\n"
+#~ "Просмотрено страниц: %1\n"
+#~ "Найдено документов: %2"
+
+#, fuzzy
+#~ msgid "Fields"
+#~ msgstr "Другие поля"
+
+#, fuzzy
+#~ msgid "Search PDF files"
+#~ msgstr "Результаты поиска"
+
+#~ msgid "New Label"
+#~ msgstr "Новая метка"
+
+#~ msgid "Enter a new label:"
+#~ msgstr "Введите новую метку:"
+
+#~ msgid "Enter a new keyword:"
+#~ msgstr "Введите новое ключевое слово:"
+
+#~ msgid "All except first author"
+#~ msgstr "Все авторы, кроме первого"
+
+#~ msgid "Authors:"
+#~ msgstr "Авторы:"
+
+#~ msgid "Only local files"
+#~ msgstr "Только локальные файлы"
+
+#~ msgid "Failed to upload temporary file to final destination '%1'"
+#~ msgstr "Не удалось загрузить временный файл в место назначения «%1»"
+
+#~ msgid "Could not write bibliographic data to temporary file."
+#~ msgstr "Не удалось записать библиографические данные во временный файл."
+
+#~ msgid "Could not open temporary file for writing."
+#~ msgstr "Не удалось открыть временный файл для записи."
+
+#~ msgid "Add value to selected entries"
+#~ msgstr "Добавить значения для выделенных записей"
+
+#~ msgid "Remove value from selected entries"
+#~ msgstr "Удалить значения из выделенных записей"

@@ -1,0 +1,2217 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY pdflatex "PDFL<superscript
+>A</superscript
+>T<subscript
+>E</subscript
+>X">
+  <!ENTITY tex "T<subscript
+>E</subscript
+>X">
+  <!ENTITY tetex "<application
+>teT<subscript
+>E</subscript
+>X</application
+>">
+  <!ENTITY texlive "<application
+>TeX Live</application
+>">
+  <!ENTITY bibtex "BibT<subscript
+>E</subscript
+>X">
+  <!ENTITY biblatex "<application
+>biblatex</application
+>">
+  <!ENTITY lyx "<application
+>LyX</application
+>">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Catalan  "INCLUDE">
+]>
+
+<book id="kbibtex" lang="&language;">
+
+<bookinfo>
+<title
+>El manual del &kbibtex;</title>
+
+<authorgroup>
+  <author
+><firstname
+>Yuri</firstname
+><surname
+>Chornoivan</surname
+> <affiliation
+> <address
+> <email
+>yurchor@ukr.net</email>
+      </address>
+    </affiliation>
+  </author>
+&traductor.Antoni.Bella; 
+</authorgroup>
+
+<copyright>
+<year
+>2004</year
+><year
+>2014</year>
+<holder
+>Thomas Fischer</holder>
+</copyright>
+
+<date
+>7 de maig de 2019</date>
+<releaseinfo
+>0.9</releaseinfo>
+
+<legalnotice>
+  &FDLNotice;
+</legalnotice>
+
+<abstract>
+  <para
+>El &kbibtex; és un editor i intèrpret d'ordres de &bibtex;. </para>
+</abstract>
+
+<keywordset>
+  <keyword
+>KDE</keyword>
+  <keyword
+>kbibtex</keyword>
+  <keyword
+>LaTeX</keyword>
+  <keyword
+>TeX</keyword>
+  <keyword
+>bibliografia</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="preface">
+  <title
+>Prefaci</title>
+  <sect1 id="preface_sect">
+    <title
+>Requisits</title>
+    <para
+>Per a executar el &kbibtex;, haureu de tenir instal·lats els següents components al sistema: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+><ulink url="https://www.kde.org/"
+>Biblioteques dels &kf5-full;</ulink
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.ctan.org/"
+>&latex;</ulink
+>: és un programa de composició de documents d'alta qualitat. El més probable és que vulgueu el paquet &texlive; (o en sistemes més antics el &tetex;), si esteu en un sistema tipus &UNIX;. És una dependència opcional, però sense ella el &kbibtex; proporcionarà una funcionalitat molt limitada. </para>
+      </listitem>
+      <listitem>
+	<para
+>La col·lecció d'eines <ulink url="https://www.lri.fr/~filliatr/bibtex2html/"
+>bibtex2html</ulink
+> per a traduir des de &bibtex; a &HTML; per a millorar les capacitats de vista prèvia de l'entrada del &kbibtex; (dependència opcional). </para>
+      </listitem>
+    </itemizedlist>
+    <para
+>La majoria d'aquests elements, així com el &kbibtex; mateix, poden estar inclosos en la vostra distribució de &Linux;. Consulteu la documentació de la distribució o el &CD; o DVD d'instal·lació per a afegir aquests paquets al vostre ordinador. </para>
+  </sect1>
+  <sect1 id="preface_audience">
+    <title
+>Persones a les quals va dirigit aquest document </title>
+    <para
+>Aquest manual està dirigit a qualsevol persona, independentment de la seva experiència amb &latex;, &kde;, &kbibtex; o &Linux;. </para>
+    <para
+>No s'espera que els usuaris avançats llegeixin aquest manual, però s'agrairà qualsevol suggeriment sobre la documentació. Si voleu col·laborar amb aquest projecte o la documentació, podeu consultar la <ulink url="https://userbase.kde.org/KBibTeX"
+>pàgina web del &kbibtex;</ulink
+>. </para>
+  </sect1>
+
+</chapter>
+
+<chapter id="introduction">
+  <title
+>Introducció </title>
+  <sect1 id="intro_about">
+    <title
+>Quant al &kbibtex; </title>
+    <para
+>El &kbibtex; és un entorn integrat per a crear i editar bibliografies en el format &bibtex;. El &kbibtex; ofereix la capacitat d'utilitzar totes les funcionalitats de &bibtex; en una interfície gràfica, donant-vos accés fàcil, immediat i personalitzat a les bibliografies locals i en línia amb la capacitat de completar, compilar, previsualitzar i cercar entrades. </para>
+    <sect2 id="intro-bibtex">
+      <title
+>Quant al &bibtex;</title>
+      <para
+>El &bibtex; és un programa i format de fitxer dissenyat per Oren Patashnik i Leslie Lamport el 1985 per al sistema de preparació de documents &latex; <citation
+>Lamport86</citation
+>. </para>
+      <para
+>El format està completament basat en caràcters, de manera que pot ser utilitzat per qualsevol programa (encara que el joc de caràcters estàndard per als accents és &tex;). Està basat en camps (etiquetes) i el programa &bibtex; ignorarà els camps desconeguts, de manera que es pot expandir. Probablement serà el format més comú per a bibliografies que hi ha a Internet. </para>
+      <para
+>El programa &bibtex; utilitza fitxers d'estil, una llista de cites des de &latex; i una base de dades de &bibtex; per a crear un fitxer de &latex; que llista les referències citades. La idea al darrere dels fitxers d'estil és que es pugui realitzar automàticament la còpia final en qualsevol format específic de la revista. </para>
+      <para
+>Un exemple d'entrada a la base de dades de &bibtex;: </para>
+<programlisting
+>@article{PAM_doi:10.1007/BF00048294,
+        author = {Streitenberger, P. and Knott, John F.},
+        doi = {10.1007/BF00048294},
+        issn = {1573-2673},
+        journal = {{International Journal of Fracture}},
+        number = {3},
+        pages = {R49},
+        publisher = {Springer},
+        title = {{The calculation of crack opening area and crack opening volume from stress intensity factors}},
+        url = {https://dx.doi.org/10.1007/BF00048294},
+        volume = {76},
+        x-fetchedfrom = {SpringerLink},
+        year = {1995}
+}
+</programlisting>
+  </sect2>
+  <sect2 id="kbibtex-and-latex-editors">
+    <title
+>Editors &kbibtex; i &latex;</title>
+    <para
+>El codi en &latex; es pot editar amb una àmplia varietat d'eines, des de senzills editors de text minimalistes fins a potents suites visuals. Per a la comparació dels editors de &latex;, vegeu <ulink url="https://en.wikipedia.org/wiki/Comparison_of_TeX_editors"
+>aquesta pàgina</ulink
+>. </para>
+    <para
+>El &kbibtex; proporciona una <link linkend="integration"
+>integració immediata amb el &kile; i &lyx;</link
+>, encara que es pot utilitzar amb èxit amb qualsevol mena d'editor de &latex;. </para>
+  </sect2>
+  </sect1>
+  <sect1 id="intro_mainfeat">
+    <title
+>Característiques principals del &kbibtex; </title>
+    <para
+>El &kbibtex; pot fer les següents coses: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+>Introduir un preàmbul que defineixi com s'ha de donar format al text especial a la vostra bibliografia utilitzant l'element de menú <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Element nou</guisubmenu
+><guimenuitem
+>Preàmbul nou</guimenuitem
+></menuchoice
+> o la <link linkend="main-toolbar"
+>Barra d'eines principal</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Triar una codificació d'entrada utilitzant l'element <guilabel
+>Codificació</guilabel
+> en el diàleg <guilabel
+>Desa com a</guilabel
+> o en el <link linkend="file-settings"
+>plafó Configuració del fitxer</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Introduir comentaris que no tingui en compte el &bibtex; utilitzant l'element de menú <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Element nou</guisubmenu
+><guimenuitem
+>Comentari nou</guimenuitem
+></menuchoice
+> o la <link linkend="main-toolbar"
+>Barra d'eines principal</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (&bibtex;), Origen (RIS), Viquipèdia, estàndard (&XML;/XSLT), elaborat (&XML;/XSLT), i només el resum (&XML;/XSLT)) utilitzant el <link linkend="reference-preview"
+>plafó de Vista prèvia de la referència</link
+>. Hi ha disponibles estils de vista prèvia addicionals quan s'instal·len les <application
+>bibtex2html</application
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Cercar dades d'entrades bibliogràfiques a les bases de dades en línia utilitzant el <link linkend="online-search"
+>plafó de Cerca en línia</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Vista prèvia de recursos locals (com ara fitxers) o remots (en línia) <link linkend="adding-link"
+>vinculats</link
+> amb l'entrada de &bibtex; utilitzant el <link linkend="document-preview"
+>plafó Vista prèvia del document</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Cercar i arreglar les entrades duplicades a la bibliografia utilitzant l'element de menú <menuchoice
+><guimenu
+>Edita</guimenu
+><guimenuitem
+>Cerca els duplicats</guimenuitem
+></menuchoice
+> o la <link linkend="main-toolbar"
+>Barra d'eines principal</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Importar la vostra biblioteca de <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+> utilitzant el <link linkend="zotero"
+>plafó Zotero</link
+>. </para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>
+
+<chapter id="quickstart">
+  <title
+>Inici ràpid </title>
+  <sect1 id="quick_begin">
+    <title
+>Escriure un fitxer de bibliografia per a principiants </title>
+    <!-- 1) No request from kbibtex from Distro user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distro user has a mimeapps.list in home, but no kbibtex in it
+         2b) Devel user has no mimeapps.list in home
+         2c) Systemsettings -> File Associations is the place to edit/change this in a kde desktop
+         update after rebuilding post 2014-01-12
+         Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
+         (why? from installation of distro?)
+         This dialog even pops up when opening a .bib file with LMB click in file manager
+    -->
+    <para
+>Després de la primera execució, el &kbibtex; proposarà convertir-lo en l'editor predeterminat per als formats de bibliografia. Us recomanem fer-ho.<footnote
+><para
+>Si per alguna raó decidiu reconsiderar-ho, elimineu les cadenes amb la subcadena <literal
+>kbibtex</literal
+> del fitxer <filename
+>mimeapps.list</filename
+> a la carpeta <filename role="directory"
+>.local/share/applications</filename
+> de la vostra carpeta d'inici.</para
+></footnote>
+    </para>
+    <para
+>Després veureu una finestra similar a aquesta: </para>
+    <screenshot>
+      <screeninfo
+>La finestra del &kbibtex; després de l'inici</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="first-run.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>La finestra del &kbibtex; després de l'inici</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Per a iniciar un document nou de bibliografia, premeu el botó <guibutton
+>Nou</guibutton
+> en el plafó dret, el botó <guibutton
+>Nou</guibutton
+> de la barra d'eines o trieu l'element de menú <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>N</keycap
+></keycombo
+></shortcut
+><guimenu
+>Fitxer</guimenu
+><guimenuitem
+>Nou</guimenuitem
+></menuchoice
+>. </para>
+    <para
+>Ara és el moment d'afegir algunes entrades. </para>
+    <para
+>Els usuaris del &kbibtex; tenen dues opcions quan afegeixen una entrada nova: poden utilitzar el <link linkend="online-search"
+>plafó Cerca en línia</link
+> per a cercar en línia les dades d'entrada o poden escriure el codi a mà. </para>
+    <para
+>Intentem afegir manualment una entrada de llibre. </para>
+    <procedure>
+      <step id="element-editing">
+	<para
+>Trieu <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Element nou</guisubmenu
+><guimenuitem
+>Entrada nova</guimenuitem
+></menuchoice
+> al menú del &kbibtex;. El &kbibtex; hauria d'obrir la finestra <guilabel
+>Edició de l'element</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>La finestra del &kbibtex; d'edició d'elements</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="element-editor.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>La finestra del &kbibtex; d'edició d'elements</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Trieu el <guimenuitem
+>Llibre</guimenuitem
+> des de la llista desplegable <guilabel
+>Tipus:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Introduïu <userinput
+>Lamport86</userinput
+> en el camp <guilabel
+>ID:</guilabel
+>. </para>
+	<tip>
+	  <para
+>L'<quote
+>ID</quote
+> s'utilitza per a fer referència a l'entrada de bibliografia en el vostre document principal. </para>
+	</tip>
+      </step>
+      <step>
+	<para
+>Aneu a la pestanya <guilabel
+>Títol</guilabel
+> i introduïu <userinput
+>LaTeX: Un sistema per a la preparació de documents</userinput
+> en el quadre de text <guilabel
+>Títol:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Aneu a la pestanya <guilabel
+>Autor/Editor</guilabel
+>, feu clic al botó <guibutton
+>Afegeix</guibutton
+> i introduïu <userinput
+>Lamport, Leslie</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Aneu a la pestanya <guilabel
+>Publicació</guilabel
+>, després introduïu <userinput
+>1986</userinput
+> en el quadre de text <guilabel
+>Any:</guilabel
+> i <userinput
+>Addison-Wesley</userinput
+> en el quadre de text <guilabel
+>Editorial:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Feu clic a <guibutton
+>D'acord</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Trieu l'element de menú <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>S</keycap
+></keycombo
+></shortcut
+><guimenu
+>Fitxer</guimenu
+><guimenuitem
+>Desa</guimenuitem
+></menuchoice
+> i deseu el fitxer de bibliografia com a <filename
+>exemple.bib</filename
+> a la vostra carpeta de document per a escriure. </para>
+      </step>
+    </procedure>
+  </sect1>
+
+  <sect1 id="quick-using">
+    <title
+>Usar la bibliografia en el vostre document en &latex; </title>
+    <para
+>Per a utilitzar realment la bibliografia en el vostre document, haureu d'afegir les següents ordres en el vostre fitxer en &latex; (aquestes ordres generalment es troben al final del document -on apareix la secció <quote
+>Referències</quote
+>-): </para>
+<programlisting
+>\bibliography{<replaceable
+>foo</replaceable
+>}
+\bibliographystyle{plain}
+</programlisting>
+    <para
+>Aquí, <replaceable
+>foo</replaceable
+> és el nom del vostre fitxer <filename role="extension"
+>bib</filename
+> creat amb el &kbibtex; i <quote
+><literal
+>plain</literal
+></quote
+> és el nom de l'estil de la bibliografia. </para>
+    <para
+>Hi ha molts estils de bibliografia específics. Consulteu al vostre editor per a triar o intenteu trobar el que millor s'adapti al vostre propòsit. </para>
+    <para
+>A continuació es mostra una llista d'alguns dels estils genèrics disponibles a tot arreu: </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+      <literal
+>plain</literal>
+	</term>
+	<listitem>
+	  <para
+>Estil normal, llistat en ordre alfabètic i rètols numèrics. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>unsrt</literal>
+	</term>
+	<listitem>
+	  <para
+>Igual que «<literal
+>plain</literal
+>», excepte que les entrades apareixen en l'ordre de citació. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>alpha</literal>
+	</term>
+	<listitem>
+	  <para
+>Igual que «<literal
+>plain</literal
+>», excepte que s'utilitzen els identificadors d'entrada. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>abbrv</literal>
+	</term>
+	<listitem>
+	  <para
+>Igual que «<literal
+>plain</literal
+>», excepte que utilitza abreviatures per als noms, noms dels mesos i noms de revistes. </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    <para
+>Per tant, podeu utilitzar les capacitats de l'editor de &latex; (per a això consulteu la seva documentació) o senzillament introduïu el codi següent en un editor de text genèric i deseu el fitxer amb el nom d'extensió <filename role="extension"
+>tex</filename
+>. </para>
+<programlisting
+>\documentclass{article}
+ \begin{document}
+ \bibliographystyle{plain}% Trieu un estil bibliogràfic
+ Fitxer de prova amb una referència (vegeu~\cite{Lamport86}).
+ \bibliography{example}
+ \end{document}
+</programlisting>
+    <para
+>Per als nostres propòsits de prova, deixeu que aquest fitxer s'anomeni <userinput
+>exemple.tex</userinput
+>. </para>
+    <note>
+      <para
+>Deseu aquest fitxer a la mateixa carpeta que el vostre <filename
+>exemple.bib</filename
+>. </para>
+    </note>
+    <para
+>Ara que teniu la base per a un document, haureu d'executar tant <application
+>latex</application
+> com <application
+>bibtex</application
+> per a processar-lo. </para>
+    <para
+>Primer, haureu d'executar <application
+>latex</application
+> (per a crear un fitxer <filename
+>foo.aux</filename
+>, el qual llegirà el <application
+>bibtex</application
+>). Després executeu <application
+>bibtex</application
+> una vegada per a obtenir algunes de les cites i crear un fitxer <filename role="extension"
+>bbl</filename
+>. Després, executeu <application
+>latex</application
+> de nou perquè les referències creuades entre el fitxer de text i la bibliografia siguin correctes. És possible que vulgueu repetir l'execució de <application
+>bibtex</application
+> i <application
+>latex</application
+> sobre el fitxer per a assegurar-vos que totes les referències creuades siguin correctes. Recordeu que afegir/eliminar cites i fonts requereix executar <application
+>bibtex</application
+> de nou. </para>
+    <para
+>Per tant, es poden utilitzar les següents ordres per a compilar el document des de la consola: </para>
+    <screen
+>latex exemple
+bibtex exemple
+latex exemple
+latex exemple</screen>
+    <tip>
+      <para
+>Si utilitzeu algun intèrpret d'ordres avançat de &latex; com el &kile; o &lyx;, no haureu de preocupar-vos per executar totes aquestes ordres des de l'emulador de consola. Simplement utilitzeu una drecera (<keycombo
+>&Alt;<keycap
+>6</keycap
+></keycombo
+> en el &kile;) o un botó de la barra d'eines per a veure el resultat. </para>
+    </tip>
+    <para
+>Ara, veureu el resultat com a un fitxer &DVI; o &PDF; (el format dependrà de la vostra configuració), emmagatzemat en la mateixa carpeta que els vostres fitxers d'origen. </para>
+    <note>
+      <para
+>Felicitats! Acabeu de crear el vostre primer document amb la bibliografia en &bibtex;. </para>
+    </note>
+  </sect1>
+</chapter>
+
+<chapter id="interface">
+  <title
+>Interfície del &kbibtex; </title>
+    <sect1 id="panels">
+    <title
+>Plafons del &kbibtex; </title>
+    <para
+>La principal funcionalitat del &kbibtex; està disponible a través dels seus nou plafons. És possible reorganitzar-los o fins i tot separar-los de la finestra principal fent clic amb el &BER; sobre la capçalera del plafó i arrossegant-lo cap al lloc nou. </para>
+    <para
+>Podeu fer visibles els plafons del &kbibtex; o ocultar-los utilitzant el submenú <menuchoice
+><guimenu
+>Arranjament</guimenu
+><guimenuitem
+>Mostra els plafons</guimenuitem
+></menuchoice
+>. Només cal marcar l'element per a fer-lo visible o desmarcar-lo per a ocultar el plafó. </para>
+    <sect2 id="list-of-documents">
+      <title
+>El plafó Llista de documents </title>
+	<para
+>El plafó <guilabel
+>Llista de documents</guilabel
+> permet alternar entre els documents bibliogràfics oberts (pestanya <guilabel
+>Fitxers oberts</guilabel
+>), obrir els documents emprats recentment (pestanya <guilabel
+>Usats recentment</guilabel
+>), obrir els principals documents bibliogràfics (pestanya <guilabel
+>Preferits</guilabel
+>) o navegar pel sistema de fitxers de l'ordinador per a trobar els documents bibliogràfics (pestanya <guilabel
+>Navegador del sistema de fitxers</guilabel
+>). </para>
+	<tip>
+	  <para
+>Per a afegir un fitxer de bibliografia als preferits, seleccioneu-lo a qualsevol pestanya excepte <guilabel
+>Preferits</guilabel
+>, feu clic amb el &BDR; i trieu <guimenuitem
+>Afegeix als preferits</guimenuitem
+>. Per a eliminar la bibliografia dels preferits, seleccioneu-la a la pestanya <guilabel
+>Preferits</guilabel
+>, feu clic amb el &BDR; i escolliu <guimenuitem
+>Elimina dels preferits</guimenuitem
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Llista de documents</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-documents.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Llista de documents</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="list-of-values">
+      <title
+>El plafó Llista de valors </title>
+	<para
+>El plafó <guilabel
+>Llista de valors</guilabel
+> es pot utilitzar per a facilitar la visualització de les estadístiques sobre l'ús de valors en els camps d'entrada i l'edició per lots d'aquests valors. </para>
+	<para
+>La llista desplegable de dalt s'utilitza per a triar el camp de bibliografia per a mostrar les dades estadístiques (un recompte de les entrades amb el mateix valor per al camp) a la llista de sota. </para>
+	<para
+>Podeu fer clic amb el &BDR; sobre una entrada de la llista de sota per a accedir a les capacitats de l'edició per lots. És possible fer <guimenuitem
+>Substitueix totes les ocurrències</guimenuitem
+> del valor, <guimenuitem
+>Elimina totes les ocurrències</guimenuitem
+> del valor, <guimenuitem
+>Cerca els valors seleccionats</guimenuitem
+> utilitzant la <link linkend="filter-toolbar"
+>Barra d'eines de filtre</link
+>, <guimenuitem
+>Afegeix un valor a les entrades seleccionades</guimenuitem
+>, <guimenuitem
+>Substitueix un valor a les entrades seleccionades</guimenuitem
+> o <guimenuitem
+>Elimina el valor de les entrades seleccionades</guimenuitem
+> (algunes entrades s'han de seleccionar primer a la llista d'entrada principal). </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Llista de valors</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-values.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Llista de valors</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="statistics">
+      <title
+>El plafó Estadístiques </title>
+      <para
+>El plafó <guilabel
+>Estadístiques</guilabel
+> està dissenyat per a mostrar una llista completa de la informació estadística sobre el document de bibliografia actual. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Estadístiques</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="statistics.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Estadístiques</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="reference-preview">
+      <title
+>El plafó Vista prèvia de la referència </title>
+	<para
+>El plafó <guilabel
+>Vista prèvia de la referència</guilabel
+> s'utilitza per a obtenir una vista prèvia i desar en el format &HTML; l'entrada de bibliografia seleccionada. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Vista prèvia de la referència</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="reference-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Vista prèvia de la referència</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>És possible obtenir una vista prèvia de la referència com a formats Origen (&bibtex;), Origen (RIS), Viquipèdia, estàndard (&XML;/XSLT), elegant (&XML;/XSLT) i només abstracte (&XML;/XSLT). Les opcions addicionals estaran disponibles quan s'instal·len les <application
+>bibtex2html</application
+>. </para>
+	<tip>
+	  <para
+>Quan feu clic sobre els elements de la referència en el format basat en &XML;, el &kbibtex; aplicarà el <link linkend="filter-toolbar"
+>filtratge</link
+> corresponent a la llista de bibliografia. </para>
+	</tip>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Obre</guibutton
+> per a obrir la referència en el navegador web predeterminat. El botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Desa com a &HTML;</guibutton
+> es pot utilitzar per a desar la referència en &HTML; per al seu ús posterior en el vostre lloc web. </para>
+	<para
+>Podeu fer clic amb el &BDR; sobre el plafó per a seleccionar <guimenuitem
+>Recarrega</guimenuitem
+> per a actualitzar la referència d'acord amb els canvis a l'entrada. </para>
+    </sect2>
+    <sect2 id="file-settings">
+      <title
+>El plafó Configuració del fitxer </title>
+	<para
+>El plafó <guilabel
+>Configuració del fitxer</guilabel
+> es pot utilitzar per a definir alguns paràmetres del fitxer <filename role="extension"
+>bib</filename
+> de la bibliografia actual. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Configuració del fitxer</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="file-settings.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Configuració del fitxer</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>És possible seleccionar les opcions <guilabel
+>Codificació:</guilabel
+>, <guilabel
+>Delimitadors de cadena:</guilabel
+>, <guilabel
+>Citació dels comentaris:</guilabel
+>, <guilabel
+>Maj./Min. en les paraules clau:</guilabel
+> i <guilabel
+>Format per als noms de les persones:</guilabel
+>. </para>
+	<para
+>De manera predeterminada, el &bibtex; posarà en minúscules totes les paraules intermèdies que hi hagi en les oracions. Marqueu la casella de selecció <guilabel
+>Protegeix els títols</guilabel
+> per a protegir la coincidència en els títols d'entrada. </para>
+    </sect2>
+    <sect2 id="online-search">
+      <title
+>El plafó Cerca en línia </title>
+	<para
+>El plafó <guilabel
+>Cerca en línia</guilabel
+> es pot utilitzar per a realitzar una cerca a les bases de dades de bibliografia d'Internet per a trobar les entrades necessàries o per a obtenir el conjunt complet de dades per a una entrada introduïda manualment. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Cerca en línia</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="online-search.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Cerca en línia</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Les entrades es poden cercar per <guilabel
+>Text lliure:</guilabel
+>, <guilabel
+>Títol:</guilabel
+>, <guilabel
+>Autor:</guilabel
+> o <guilabel
+>Any:</guilabel
+>. El nombre de resultats que es mostraran en el <link linkend="search-results"
+>plafó Resultat de la cerca</link
+> es pot modificar mitjançant el botó de selecció de valors <guilabel
+>Nombre de resultats:</guilabel
+>. </para>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Usa l'entrada</guibutton
+> per a completar els camps de criteri per a la cerca de l'entrada de bibliografia seleccionada. D'aquesta manera podreu completar l'entrada existent amb les dades de les bases de dades d'Internet. El botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="media-playback-start.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Cerca</guibutton
+> es pot utilitzar per a iniciar la cerca. </para>
+	<para
+>El &kbibtex; pot realitzar una cerca en les bases de dades més populars d'Internet. Per a seleccionar el joc de bases de dades per a la vostra cerca, canvieu a la pestanya <guilabel
+>Motors</guilabel
+> o feu clic amb el &BER; sobre l'enllaç <guilabel
+>canvia</guilabel
+> a la pestanya <guilabel
+>Termes de la consulta</guilabel
+>. </para>
+	<para
+>Per a visitar la pàgina d'inici de la base de dades a Internet, feu clic amb el &BDR; sobre la vostra entrada a la pestanya <guilabel
+>Motors</guilabel
+> i seleccioneu <guimenuitem
+>Ves a la pàgina personal</guimenuitem
+>. </para>
+    </sect2>
+    <sect2 id="zotero">
+      <title
+>El plafó Zotero </title>
+	<para
+>El plafó <guilabel
+>Zotero</guilabel
+> es pot utilitzar per a importar la vostra biblioteca de <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+>. </para>
+	<para
+>El Zotero utilitza complements de navegador especialitzats per a desar les entrades de bibliografia des de les pàgines d'Internet. Les dades s'emmagatzemen en una base de dades en línia a la qual es pot accedir des de qualsevol lloc. La documentació de Zotero es troba <ulink url="https://www.zotero.org/support/"
+>aquí</ulink
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Zotero</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="zotero.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Zotero</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Obtén credencials noves</guibutton
+> a la pestanya <guilabel
+>Credencials</guilabel
+> per a iniciar l'assistent d'autorització de Zotero. Seguiu les instruccions per a permetre que el &kbibtex; accedeixi a la vostra biblioteca de Zotero. </para>
+	<para
+>Per a accedir a les entrades de la biblioteca, feu doble clic sobre l'element corresponent a les pestanyes <guilabel
+>Col·leccions</guilabel
+> o <guilabel
+>Etiquetes</guilabel
+>. Les entrades que satisfacin els criteris escollits es mostraran en el <link linkend="search-results"
+>plafó Resultat de la cerca</link
+>. </para>
+    </sect2>
+    <sect2 id="search-results">
+      <title
+>El plafó Resultat de la cerca </title>
+	<para
+>El plafó <guilabel
+>Resultat de la cerca</guilabel
+> s'utilitza per a gestionar els resultats de la cerca obtinguts mitjançant el <link linkend="online-search"
+>plafó Cerca en línia</link
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Resultat de la cerca</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="search-results.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Resultat de la cerca</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="svn-update.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Importa</guibutton
+> per a importar el resultat de la cerca utilitzat actualment a la vostra bibliografia. </para>
+	<para
+>Per a accedir a altres accions per al resultat de la cerca utilitzat actualment, feu clic sobre seu amb el &BDR;. Des del menú obert, podreu revisar el resultat (element <guimenuitem
+>Visualitza l'element</guimenuitem
+>) o copiar-lo per a seguir enganxant en el format en &bibtex; en un altre lloc amb <keycombo
+>&Ctrl;<keycap
+>V</keycap
+></keycombo
+> (element <guimenuitem
+>Copia</guimenuitem
+>). </para>
+    </sect2>
+    <sect2 id="element-editor">
+      <title
+>El plafó Editor d'elements </title>
+	<para
+>El plafó <guilabel
+>Editor d'elements</guilabel
+> es pot utilitzar per a editar l'element de bibliografia seleccionat. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Editor d'elements</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="element-editor.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Editor d'elements</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Feu clic al botó <inlinemediaobject
+> <imageobject
+> <imagedata fileref="view-filter.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> per a seleccionar un <link linkend="config-id-suggestions"
+>identificador suggerit</link
+> per a l'element. </para>
+	<para
+>Introduïu les dades respectives en els camps de l'editor. El format de dades del camp es pot canviar entre <guimenuitem
+>Text</guimenuitem
+>, <guimenuitem
+>Referència</guimenuitem
+> i <guimenuitem
+>Codi font</guimenuitem
+> utilitzant la llista desplegable que hi ha a l'esquerra del quadre de text. </para>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="configure.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Opcions</guibutton
+> per a obrir un menú desplegable amb dos elements. </para>
+	<para
+>L'element <guimenuitem
+>Mostra tots els camps</guimenuitem
+> es pot utilitzar per a mostrar o ocultar tots els camps buits de l'element actual. </para>
+	<para
+>És possible alternar l'enfocament del teclat entre els camps utilitzant la tecla &Tab;. Per tant, el segon element de menú, <guimenuitem
+>La tecla Tab només visita els camps editables</guimenuitem
+>, es pot utilitzar per a activar i desactivar la navegació només entre els camps editables. </para>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="tools-check-spelling.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Comprova amb el &bibtex;</guibutton
+> per a obtenir una vista prèvia de l'entrada editada tal com es mostrarà al fitxer &PDF; compilat. </para>
+	<para
+>Marqueu la casella <guilabel
+>Aplica automàticament els canvis</guilabel
+> perquè tots els vostres canvis s'apliquin automàticament a l'entrada sense la necessitat de fer clic al botó <guibutton
+>Aplica</guibutton
+>. </para>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Restaura</guibutton
+> per a revertir tots els vostres canvis. </para>
+      </sect2>
+      <sect2 id="document-preview">
+      <title
+>El plafó Vista prèvia del document </title>
+	<para
+>El plafó <guilabel
+>Vista prèvia del document</guilabel
+> es pot utilitzar per a obtenir una vista prèvia de les pàgines o documents <link linkend="adding-link"
+>vinculats</link
+> amb l'entrada de bibliografia seleccionada. </para>
+	<tip>
+	  <para
+>De manera predeterminada, el plafó <guilabel
+>Vista prèvia del document</guilabel
+> es pot obrir prement la drecera de teclat <keycombo
+>&Ctrl;&Maj;<keycap
+>D</keycap
+></keycombo
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>El plafó Vista prèvia del document</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="document-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El plafó Vista prèvia del document</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Feu clic al botó <inlinemediaobject
+> <imageobject
+> <imagedata fileref="applications-internet.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> per a només alternar entre els fitxers locals i tots els documents, inclosos els remots. </para>
+	<para
+>Feu clic al botó <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> per a obrir la pàgina o el document en l'aplicació externa predeterminada. </para>
+	<para
+>La llista desplegable <guilabel
+>Adreça</guilabel
+> es pot utilitzar per a canviar entre les pàgines i els documents. </para>
+    </sect2>
+  </sect1>
+  <sect1 id="toolbars">
+    <title
+>Barres d'eines del &kbibtex; </title>
+    <para
+>El &kbibtex; té dues barres d'eines completament personalitzables ubicades a la part superior de la seva finestra. </para>
+    <para
+>Trobareu més informació sobre com personalitzar les barres d'eines a la <ulink url="help:/fundamentals/config.html#toolbars"
+>secció corresponent del Manual de Fonaments del &kde;</ulink
+>. A continuació es mostra una breu descripció dels botons predeterminats de les barres d'eines del &kbibtex;. </para>
+    <sect2 id="main-toolbar">
+      <title
+>Barra d'eines principal </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Barra d'eines principal</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="main-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Barra d'eines principal</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>La «Barra d'eines principal» predeterminada del &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para
+><guibutton
+>Nou</guibutton
+>: crea un document nou de bibliografia. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Obre</guibutton
+>: obre el <ulink url="help:/fundamentals/files.html"
+>diàleg Obre/Desa genèric del &kde;</ulink
+> per a obrir alguna bibliografia existent per a editar-la. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Tanca</guibutton
+>: tanca el document de bibliografia actiu. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Desa</guibutton
+>: desa el document de bibliografia actiu. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Desa com a</guibutton
+>: permet desar el document de bibliografia obert amb el nom nou utilitzant el <ulink url="help:/fundamentals/files.html"
+>diàleg Obre/Desa genèric del &kde;</ulink
+>. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Element nou</guibutton
+>: permet crear una nova entrada, comentari, preàmbul o <link linkend="macros"
+>macro</link
+> en el document de bibliografia actual. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Cerca els duplicats</guibutton
+>: cerca i corregeix els elements duplicats en el document de bibliografia actual. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Envia al &lyx;/&kile;</guibutton
+>: envia una referència sobre l'entrada de bibliografia seleccionada al &lyx; o &kile;. Més sobre això en el <link linkend="integration"
+>capítol corresponent d'aquest manual</link
+>. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+    <sect2 id="filter-toolbar">
+      <title
+>Barra d'eines de filtre </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Barra d'eines de filtre</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="filter-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Barra d'eines de filtre</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>La «Barra d'eines de filtre» predeterminada del &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>El mètode més senzill per a navegar en grans bibliografies és emprar la barra d'eines de <guilabel
+>Filtre</guilabel
+>: El &kbibtex; filtrarà la llista mostrada d'acord amb la vostra entrada. Si esteu cercant algun element, però no coneixeu la seva posició exacta a la llista, escriviu algunes lletres de les seves dades en el quadre de text <guilabel
+>Filtre</guilabel
+>. </para>
+	<para
+>Quan introduïu les primeres lletres, veureu que la llista canvia. Com més lletres introduïu, més reduïda es veurà la llista. Aquest filtratge es produirà immediatament a mesura que escriviu. </para>
+	<para
+>Si observeu la part dreta de la barra d'eines de <guilabel
+>Filtre</guilabel
+>, veureu dues llistes desplegables. Les llistes desplegables es van dissenyar perquè pugueu adaptar ràpidament els criteris de filtratge a les vostres necessitats. La primera llista desplegable s'utilitza per a definir el mode de coincidència (<guimenuitem
+>qualsevol paraula</guimenuitem
+>, <guimenuitem
+>cada paraula</guimenuitem
+> o <guimenuitem
+>frase exacta</guimenuitem
+>). La segona és per a definir el camp on s'ha de realitzar el filtratge. Podreu triar qualsevol camp o seleccionar un camp per a reduir la llista de resultats en bibliografies grans. </para>
+	<para
+>També hi ha dos botons en aquesta barra d'eines: </para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="application-pdf.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>Inclou els fitxers &PDF; en la cerca de tot el text</guibutton
+>: permet incloure els &PDF; a text complet en el filtratge. </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>Restableix els criteris de filtratge</guibutton
+>: restableix els criteris de filtratge. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+  </sect1>
+  <sect1 id="menus">
+    <title
+>Menús del &kbibtex; </title>
+    <para
+>El &kbibtex; segueix l'esquema de menú estàndard del &kde;. Per tant, conté moltes entrades de menú que són comunes per a totes les aplicacions del &kde;. Trobareu més informació sobre aquestes entrades de menú en <ulink url="help:/fundamentals/menus.html"
+>aquesta secció d'ajuda</ulink
+>. </para>
+    <para
+>A continuació, trobareu les descripcions per a les entrades de menú específiques del &kbibtex;. </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Edita</guimenu
+> <guimenuitem
+>Suprimeix</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Suprimeix l'element seleccionat de la llista de bibliografia. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Edita</guimenu
+> <guimenuitem
+>Cerca els duplicats</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Permet cercar i eliminar duplicats a la bibliografia oberta. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Element nou</guisubmenu
+> <guimenuitem
+>Entrada nova</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Obre la finestra <link linkend="element-editor"
+>Edició de l'element</link
+> per a introduir una entrada nova de bibliografia. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Element nou</guisubmenu
+> <guimenuitem
+>Comentari nou</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Obre la finestra <link linkend="element-editor"
+>Edició de l'element</link
+> per a introduir un comentari nou que el &bibtex; no té en compte. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Element nou</guisubmenu
+> <guimenuitem
+>Macro nova</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Obre la finestra <link linkend="element-editor"
+>Edició de l'element</link
+> per a introduir una <link linkend="macros"
+>macro</link
+> nova. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Element nou</guisubmenu
+> <guimenuitem
+>Preàmbul nou</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Obre la finestra <link linkend="element-editor"
+>Edició de l'element</link
+> per a introduir un preàmbul nou de bibliografia que defineixi com s'ha de donar format al text especial en la vostra bibliografia. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>E</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Element</guimenu
+> <guimenuitem
+>Edite l'element</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Obre la finestra <link linkend="element-editor"
+>Edició de l'element</link
+> per a editar l'element de bibliografia seleccionat. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="adding-link">
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>D</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Element</guimenu
+> <guisubmenu
+>Visualitza el document</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Obre el document local o remot per a l'entrada seleccionada a la llista de bibliografia. </para>
+	  <para
+>L'enllaç cap al document es pot afegir o editar emprant la pestanya <guilabel
+>Externa</guilabel
+> de la finestra <link linkend="element-editor"
+>Edició de l'element</link
+>. </para>
+	  <screenshot>
+	    <screeninfo
+>La pestanya «Documents externs» del diàleg d'edició de l'entrada</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="external-tab.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>La pestanya «Documents externs» del diàleg d'edició de l'entrada</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>El botó <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Afegeix</guilabel
+> es pot utilitzar per a afegir un enllaç a la pàgina remota. </para>
+	  <para
+>La llista desplegable <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Afegeix un fitxer...</guilabel
+> s'utilitza per a seleccionar algun fitxer local i afegir una referència o tot el fitxer a la bibliografia actual. </para>
+	  <para
+>Si feu clic a <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, es netejarà l'element seleccionat. </para>
+	  <para
+>Feu clic al botó <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open-remote.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> per a obrir l'enllaç del document en el navegador. </para>
+	  <para
+>Feu clic al botó <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> per a eliminar l'element del document seleccionat. </para>
+	  <para
+>Per a reorganitzar els elements en la llista de documents, utilitzeu els botons <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-down.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> i <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>. </para>
+	  <para
+>De manera eventual, el botó <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> es pot utilitzar per a desar localment els documents remots. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Cerca el &PDF;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Trobareu alguns documents &PDF; per a l'entrada de bibliografia seleccionada a Internet. </para>
+	  <screenshot>
+	    <screeninfo
+>El diàleg Cerca el &PDF;</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="find-pdf.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>El diàleg Cerca el &PDF;</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>Podreu fer <guilabel
+>Ignora</guilabel
+>, <guilabel
+>Baixa</guilabel
+> o senzillament <guilabel
+>Usa només l'&URL;</guilabel
+> per a l'entrada. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="format-entry-ids">
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Dona format als ID de les entrades</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Permet donar format als identificadors per a les entrades bibliogràfiques seleccionades d'acord amb el format predeterminat. </para>
+	  <para
+>El format predeterminat dels identificadors es pot definir utilitzant la <link linkend="config-id-suggestions"
+>pàgina Suggeriments per a l'ID</link
+> del diàleg de configuració del &kbibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Color</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Permet seleccionar un rètol de color per a les entrades bibliogràfiques seleccionades o eliminar aquest rètol (<guimenuitem
+>Sense color</guimenuitem
+>). </para>
+	  <para
+>Els rètols de color es poden configurar utilitzant la <link linkend="config-color"
+>pàgina Rètols i colors</link
+> del diàleg de configuració del &kbibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Envia al &lyx;/&kile;</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+><link linkend="integration"
+>Envia les referències</link
+> a les entrades bibliogràfiques seleccionades al &lyx; o &kile;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Arranjament</guimenu
+> <guimenuitem
+>Configura el &kbibtex;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Obre el <link linkend="config-dialog"
+>diàleg de configuració del &kbibtex;</link
+>. </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </sect1>
+  <sect1 id="config-dialog">
+    <title
+>El diàleg de configuració del &kbibtex; </title>
+    <para
+>Es poden configurar diversos paràmetres del &kbibtex; mitjançant el diàleg <guilabel
+>Preferències</guilabel
+>. Aquest diàleg es pot obrir utilitzant l'element de menú <menuchoice
+><guimenu
+>Arranjament</guimenu
+><guimenuitem
+>Configura el &kbibtex;...</guimenuitem
+></menuchoice
+>. A continuació trobareu una descripció de les pàgines de configuració del &kbibtex;. </para>
+    <para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-revert.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Valors predeterminats</guibutton
+> per a restablir tots els elements als valors predeterminats. </para>
+    <para
+>El botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Restableix</guibutton
+> es pot utilitzar per a descartar tots els canvis de configuració actuals sense tancar la finestra <guilabel
+>Preferències</guilabel
+>. </para>
+    <sect2 id="config-general">
+      <title
+>Configuració general </title>
+      <screenshot>
+	<screeninfo
+>Configuració general</screeninfo>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="config-general.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase
+>Configuració general</phrase>
+	  </textobject>
+	</mediaobject>
+      </screenshot>
+      <para
+>Aquesta pàgina de configuració permet canviar el <guilabel
+>Format per als noms de les persones:</guilabel
+> predeterminat que s'aplicarà automàticament als noms introduïts en el diàleg <link linkend="element-editor"
+>Editor d'elements</link
+>. </para>
+      </sect2>
+    <sect2 id="config-keywords">
+      <title
+>Configuració de les Paraules clau </title>
+      <screenshot>
+	<screeninfo
+>Configuració de les Paraules clau</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-keywords.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuració de les Paraules clau</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Aquesta pàgina es pot utilitzar per a editar la llista de paraules clau. Les paraules clau aplicades a les entrades de bibliografia amb l'<link linkend="element-editor"
+>Editor d'elements</link
+> són útils per a estructurar la vostra bibliografia. El <link linkend="filter-toolbar"
+>filtratge</link
+> per paraules clau pot oferir-vos resultats detallats per tema. </para>
+	<para
+>El botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Afegeix</guibutton
+> es pot utilitzar per a afegir una paraula clau a la llista. </para>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Elimina</guibutton
+> per a eliminar l'element de paraula clau seleccionat. </para>
+      </sect2>
+      <sect2 id="config-color">
+      <title
+>Configuració dels Rètols i colors </title>
+      <screenshot>
+	<screeninfo
+>Configuració dels Rètols i colors</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-color.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuració dels Rètols i colors</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Els rètols de color són una altra forma útil d'estructurar la vostra bibliografia. Aquesta pàgina de configuració es pot utilitzar per a definir els rètols i els seus colors. </para>
+	<para
+>El botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Afegeix</guibutton
+> es pot utilitzar per a afegir un rètol a la llista. </para>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Elimina</guibutton
+> per a eliminar el rètol seleccionat. </para>
+	<para
+>Feu doble clic sobre un element a la columna <guilabel
+>Color</guilabel
+> o <guilabel
+>Rètol</guilabel
+> per a començar a editar-lo. </para>
+      </sect2>
+      <sect2 id="config-id-suggestions">
+      <title
+>Configuració dels Suggeriments de l'ID </title>
+      <screenshot>
+	<screeninfo
+>Configuració dels Suggeriments de l'ID</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-id-suggestions.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuració dels Suggeriments de l'ID</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Aquesta pàgina de configuració s'utilitza per a gestionar els esquemes de suggeriment d'identificador per a l'<link linkend="element-editor"
+>Editor d'elements</link
+>. Podeu afegir, editar, eliminar i reorganitzar els esquemes utilitzant els botons respectius que hi ha a la dreta de la llista de suggeriments. </para>
+	<para
+>Feu clic al botó <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="favorites.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Canvia al predeterminat</guibutton
+> per a canviar l'esquema predeterminat de suggeriments d'identificadors a l'element seleccionat. Aquest botó es pot utilitzar per a definir el format per a l'acció <link linkend="format-entry-ids"
+>Dona format als ID de les entrades</link
+>. </para>
+      </sect2>
+      <sect2 id="config-user-interface">
+      <title
+>Configuració de la Interfície d'usuari </title>
+      <screenshot>
+	<screeninfo
+>Configuració de la Interfície d'usuari</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-user-interface.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuració de la Interfície d'usuari</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Utilitzant aquesta pàgina de configuració podreu fer que el &kbibtex; mostri o oculti els comentaris i macros a la llista de bibliografia, triar el sistema de bibliografia (&bibtex; o &biblatex;) i definir què fer quan feu doble clic sobre un element a la llista de bibliografia (<guimenuitem
+>Obre a l'editor</guimenuitem
+> o <link linkend="document-preview"
+><guimenuitem
+>Visualitza el document</guimenuitem
+></link
+>). </para>
+	<tip>
+	  <para
+>El &biblatex; és una reimplementació de &bibtex;. Amb el &biblatex;, el format de la bibliografia està totalment controlat per macros en &latex;, no fitxers <filename role="extension"
+>bst</filename
+>. Admet bibliografies subdividides, múltiples bibliografies dins d'un document i llistes separades d'abreviatures bibliogràfiques. Les bibliografies es poden subdividir en parts i/o segmentar per temes. Igual com els estils de bibliografia, totes les ordres de citació es poden definir lliurement. El paquet &biblatex; està completament localitzat i pot interactuar amb el paquet babel.<footnote
+><para
+>Des de la documentació de &biblatex;.</para
+></footnote>
+	  </para>
+	  <para
+>El &biblatex; també pot utilitzar <ulink url="http://biblatex-biber.sourceforge.net/"
+>biber</ulink
+> com a dorsal. Amb el &biblatex; és possible utilitzar símbols UTF-8 en les entrades de la bibliografia. </para>
+	  <para
+>Per tant, podreu utilitzar el &biblatex; per a crear bibliografies sofisticades. </para>
+	</tip>
+      </sect2>
+      <sect2 id="config-saving">
+      <title
+>Configuració del Desament i exportació </title>
+      <screenshot>
+	<screeninfo
+>Configuració del Desament i exportació</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-saving.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuració del Desament i exportació</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Aquesta pàgina permet escollir una ordre de &latex; (&pex;, <userinput
+>\cite{...}</userinput
+>) que s'utilitzarà com a embolcall per a la referència copiada amb l'element <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;&Maj;<keycap
+>C</keycap
+></keycombo
+></shortcut
+><guimenuitem
+>Copia les referències</guimenuitem
+></menuchoice
+> del menú emergent a la llista de bibliografia. </para>
+	<para
+>També és possible fer que el &kbibtex; determini automàticament la <link linkend="lyx-integration"
+>canonada de dades del &lyx;</link
+> marcant la casella corresponent. </para>
+	<para
+>Quan l'element <guilabel
+>Detecta automàticament la canonada del &lyx;:</guilabel
+> no està marcat, podreu afegir manualment l'adreça de la canonada en el quadre de text <guilabel
+>Especifica manualment la canonada del &lyx;:</guilabel
+> o seleccionar-la utilitzant el <ulink url="help:/fundamentals/files.html"
+>diàleg genèric Obre/Desa del &kde;</ulink
+> prement el botó que hi ha a la dreta del quadre de text. </para>
+	<para
+>Finalment, podreu configurar aquí les còpies de seguretat. És possible seleccionar el tema de la còpia de seguretat (<guimenuitem
+>Només per a fitxers locals</guimenuitem
+>, <guimenuitem
+>Sense còpies de seguretat</guimenuitem
+> o <guimenuitem
+>Per als fitxers locals i remots</guimenuitem
+>) utilitzant la llista desplegable <guilabel
+>Còpies de seguretat en desar:</guilabel
+> i el nombre de còpies de seguretat que s'emmagatzemaran. </para>
+      </sect2>
+      <sect2 id="config-pdf">
+      <title
+>Configuració de &PDF; i Postscript </title>
+      <screenshot>
+	<screeninfo
+>Configuració de &PDF; i Postscript</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-pdf.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuració de &PDF; i Postscript</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Aquesta pàgina de configuració es pot utilitzar per a triar algunes opcions per a obtenir una <link linkend="element-editor"
+>vista prèvia de les entrades del &kbibtex;</link
+>. Podreu seleccionar la <guilabel
+>Mida del paper</guilabel
+>, l'idioma per al paquet <ulink url="https://www.ctan.org/pkg/babel"
+>babel</ulink
+> de &latex; i l'<link linkend="quick-using"
+>estil de la bibliografia</link
+>. </para>
+      </sect2>
+  </sect1>
+</chapter>
+
+<chapter id="advanced">
+  <title
+>Ús avançat </title>
+  <sect1 id="crossreferences">
+    <title
+>Referències creuades </title>
+    <para
+>Les referències creuades permeten estalviar una mica de temps creant vincles entre l'entrada <quote
+>pare</quote
+> (pot tractar-se com un procediment o una col·lecció d'articles) i les entrades <quote
+>filles</quote
+> (informes o articles). </para>
+    <para
+>Per a crear una referència creuada, senzillament afegiu el seu identificador al camp <guilabel
+>Referència creuada:</guilabel
+> a la pestanya <guilabel
+>Publicació</guilabel
+> de l'entrada. </para>
+    <screenshot>
+      <screeninfo
+>La pestanya «Publicació» del diàleg d'edició de l'entrada</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="cross-ref.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>La pestanya «Publicació» del diàleg d'edició de l'entrada</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Podeu introduir directament l'identificador o fer clic sobre el botó <inlinemediaobject
+> <imageobject
+> <imagedata fileref="flag.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> per a triar-lo des de la llista d'identificadors disponibles. </para>
+  </sect1>
+  <sect1 id="macros">
+    <title
+>Macros </title>
+    <para
+>Suposeu que la vostra bibliografia conté moltes referències a la mateixa revista i no voleu introduir el seu títol una vegada i una altra. Llavors, podreu definir una macro per al títol de la revista. </para>
+    <para
+>Diguem que volem definir una macro <replaceable
+>efm</replaceable
+> per a <quote
+>Engineering Fracture Mechanics</quote
+>. Llavors hauríem de fer el següent: </para>
+    <procedure>
+      <step>
+	<para
+>Trieu l'element de menú <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Element nou</guisubmenu
+><guimenuitem
+>Macro nova</guimenuitem
+></menuchoice
+>. </para>
+      </step>
+      <step>
+	<para
+>Introduïu un identificador (abreviatura) per al títol en el quadre de text <guilabel
+>ID:</guilabel
+>. L'identificador predeterminat és <userinput
+>Nou1</userinput
+>. Haurem d'introduir <userinput
+>efm</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Trieu <inlinemediaobject
+> <imageobject
+> <imagedata fileref="draw-text.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Text net</guilabel
+>). L'altra opció, <inlinemediaobject
+> <imageobject
+> <imagedata fileref="code-context.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Codi font</guilabel
+>) es pot utilitzar si voleu introduir alguna macro amb ordres de &latex;. </para>
+      </step>
+      <step>
+	<para
+>Introduïu <userinput
+>Engineering Fracture Mechanics</userinput
+> en el quadre de text <guilabel
+>Valor:</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>Definint una macro</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definint una macro</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Feu clic al botó <guibutton
+>Aplica</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>De manera opcional, canvieu a la pestanya <guilabel
+>Codi</guilabel
+> per a inspeccionar el codi de la macro. </para>
+	<screenshot>
+	  <screeninfo
+>Definint una macro (codi font)</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro-source.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definint una macro (codi font)</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Feu clic al botó <guibutton
+>D'acord</guibutton
+>. </para>
+      </step>
+    </procedure>
+    <para
+>El mateix procediment es pot utilitzar per a esmenar els títols, autors i noms dels mesos, &etc; d'acord amb les regles d'abreviatura del vostre editor per a les entrades des de les bases de dades en línia. De manera predeterminada, aquestes regles (macros) s'han de definir en els fitxers d'estil de la bibliografia (<filename role="extension"
+>bst</filename
+>). </para>
+  </sect1>
+</chapter>
+
+<chapter id="integration">
+  <title
+>Integració amb el &kile; i &lyx; </title>
+  <para
+>El &kbibtex; es pot integrar fàcilment amb els editors de &latex; comuns, com el &kile; i &lyx;. </para>
+  <sect1 id="kile-intergation">
+    <title
+>Integració amb el &kile; </title>
+    <para
+>El <ulink url="http://kile.sourceforge.net/"
+>&kile;</ulink
+> és un editor de codi font i intèrpret d'ordres per a &tex; i &latex;. </para>
+    <para
+>El &kbibtex; és un visualitzador/editor predeterminat per als fitxers en &bibtex; en el &kile;, de manera que no hi ha necessitat de cap configuració addicional. </para>
+    <para
+>Per a afegir cites seleccionades des de fitxers de bibliografia, inicieu el &kile;, obriu algun fitxer en &latex;, poseu el cursor allà on voleu afegir la citació, després canvieu a la finestra del &kbibtex;, seleccioneu elements a la llista d'elements i trieu <menuchoice
+><guimenu
+>Element</guimenu
+><guimenuitem
+>Envia al &lyx;/&kile;</guimenuitem
+></menuchoice
+> o utilitzeu l'element del menú contextual <guimenuitem
+>Envia al &lyx;/&kile;</guimenuitem
+> (clic amb el &BDR;). </para>
+    <para
+>Les cites s'inseriran com a <userinput
+>\cite{<replaceable
+>identificadors d'elements</replaceable
+>}</userinput
+> a la posició del cursor al document actual en el &kile;. </para>
+  </sect1>
+  <sect1 id="lyx-integration">
+    <title
+>Integració amb el &lyx; </title>
+    <para
+>El <ulink url="https://www.lyx.org/"
+>&lyx;</ulink
+> és un processador de documents que fomenta un enfocament d'escriptura basat en l'estructura dels vostres documents (WYSIWYM) i no senzillament en la seva aparença (WYSIWYG). </para>
+    <para
+>El &kbibtex; es pot integrar en el &lyx; mitjançant la canonada d'entrada/sortida del &lyx;. </para>
+    <procedure>
+      <step>
+	<para
+>Primer, haureu de configurar el &lyx; per a utilitzar la canonada. Trieu <menuchoice
+><guimenu
+>Eines</guimenu
+><guimenuitem
+>Preferències</guimenuitem
+></menuchoice
+> des del menú principal del &lyx;. Obriu la pàgina <guilabel
+>Camins</guilabel
+> i introduïu algun camí (&pex;, <filename
+>~/.lyx/lyxpipe</filename
+>) en el quadre de text <guilabel
+>Canonada del servidor del &lyx;</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>Configuració del &lyx;</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="lyx-preferences.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuració del &lyx;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Feu clic a <guibutton
+>Desa</guibutton
+> per a desar els canvis. </para>
+      </step>
+      <step>
+	<para
+>Trieu <menuchoice
+><guimenu
+>Eines</guimenu
+><guimenuitem
+>Reconfigura</guimenuitem
+></menuchoice
+> per a reconfigurar el &lyx; i reiniciar-lo. </para>
+      </step>
+      <step>
+	<para
+>Per a afegir cites seleccionades des dels fitxers de bibliografia, obriu algun document, situeu el cursor allà on voleu afegir una bibliografia i seleccioneu <menuchoice
+><guimenu
+>Insereix</guimenu
+><guisubmenu
+>Llista / TOC</guisubmenu
+><guimenuitem
+>Bibliografia en &bibtex;...</guimenuitem
+></menuchoice
+> des del menú principal del &lyx;. </para>
+      </step>
+      <step>
+	<para
+>Premeu <guibutton
+>Afegeix...</guibutton
+>, després <guibutton
+>Navega...</guibutton
+>. Apunteu el &lyx; a un fitxer <filename role="extension"
+>bib</filename
+> del &kbibtex;. Feu clic a <guibutton
+>Afegeix</guibutton
+> i després feu clic a <guibutton
+>D'acord</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Després poseu el cursor on voleu afegir la cita i canvieu a la finestra del &kbibtex;. Seleccioneu elements a la llista d'elements i trieu <menuchoice
+><guimenu
+>Element</guimenu
+><guimenuitem
+>Envia al &lyx;/&kile;</guimenuitem
+></menuchoice
+> o utilitzeu l'element del menú contextual <guimenuitem
+>Envia al &lyx;/&kile;</guimenuitem
+> (feu clic amb el &BDR;). </para>
+      </step>
+      <step>
+	<para
+>Les cites s'inseriran com a referència a la posició del cursor en el document actual del &lyx;. </para>
+      </step>
+    </procedure>
+  </sect1>
+</chapter>
+
+<chapter id="credits">
+  <title
+>Crèdits i llicència</title>
+  <para
+>&kbibtex; </para>
+  <para
+>Copyright del programa &copy; 2004-2014 Thomas Fischer <email
+>fischer@unix-ag.uni-kl.de</email
+> </para>
+  <para
+>Copyright de la documentació &copy; 2013 Yuri Chornoivan <email
+>yurchor@ukr.net</email
+> </para>
+<para
+>Traductor de la documentació: &credits.Antoni.Bella;</para
+> &underFDL; &underGPL; </chapter>
+
+<bibliography>
+  <biblioentry>
+    <abbrev
+>Lamport86</abbrev>
+    <author>
+      <personname
+><firstname
+>Leslie</firstname
+> <surname
+>Lamport</surname
+> </personname>
+    </author>
+    <title
+>LaTeX: un sistema de preparació de documents </title>
+    <pubdate
+>1986</pubdate>
+    <publisher>
+      <publishername
+>Addison-Wesley Publishing Company</publishername>
+    </publisher>
+  </biblioentry>
+</bibliography>
+
+&documentation.index;
+
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+-->

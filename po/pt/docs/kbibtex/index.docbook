@@ -1,0 +1,2230 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY latex "L<superscript
+>A</superscript
+>T<subscript
+>E</subscript
+>X">
+  <!ENTITY pdflatex "PDFL<superscript
+>A</superscript
+>T<subscript
+>E</subscript
+>X">
+  <!ENTITY pdf "<acronym
+>PDF</acronym
+>">
+  <!ENTITY tex "T<subscript
+>E</subscript
+>X">
+  <!ENTITY tetex "<application
+>teT<subscript
+>E</subscript
+>X</application
+>">
+  <!ENTITY texlive "<application
+>TeX Live</application
+>">
+  <!ENTITY bibtex "BibT<subscript
+>E</subscript
+>X">
+  <!ENTITY biblatex "<application
+>biblatex</application
+>">
+  <!ENTITY lyx "<application
+>LyX</application
+>">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Portuguese "INCLUDE">
+]>
+
+<book id="kbibtex" lang="&language;">
+
+<bookinfo>
+<title
+>O Manual do &kbibtex;</title>
+
+<authorgroup>
+  <author
+><firstname
+>Yuri</firstname
+><surname
+>Chornoivan</surname
+> <affiliation
+> <address
+> <email
+>yurchor@ukr.net</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>José</firstname
+><surname
+>Pires</surname
+><affiliation
+><address
+><email
+>zepires@gmail.com</email
+></address
+></affiliation
+><contrib
+>Tradução</contrib
+></othercredit
+> 
+</authorgroup>
+
+<copyright>
+<year
+>2004</year
+><year
+>2014</year>
+<holder
+>Thomas Fischer</holder>
+</copyright>
+
+<date
+>2014-04-14</date>
+<releaseinfo
+>0.6</releaseinfo>
+
+<legalnotice>
+  &FDLNotice;
+</legalnotice>
+
+<abstract>
+  <para
+>O &kbibtex; é um editor e consola gráfica do &bibtex;. </para>
+</abstract>
+
+<keywordset>
+  <keyword
+>KDE</keyword>
+  <keyword
+>kbibtex</keyword>
+  <keyword
+>LaTeX</keyword>
+  <keyword
+>TeX</keyword>
+  <keyword
+>bibliografia</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="preface">
+  <title
+>Prefácio</title>
+  <sect1 id="preface_sect">
+    <title
+>Requisitos</title>
+    <para
+>Para executar o &kbibtex;, terá de ter os seguintes componentes instalados no seu sistema: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+>As <ulink url="http://www.kde.org/"
+>bibliotecas do &kf5-full;</ulink
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="http://www.ctan.org/"
+>&latex;</ulink
+>: um programa de formatação de alta qualidade de documentos. Muito provavelmente irá querer o pacote &texlive; (ou, nos sistemas mais antigos, o &tetex;), se estiver num sistema compatível com o Unix. É uma dependência opcional, mas sem ela o &kbibtex; oferece uma funcionalidade muito limitada. </para>
+      </listitem>
+      <listitem>
+	<para
+>A colecção de ferramentas do <ulink url="https://www.lri.fr/~filliatr/bibtex2html/"
+>bibtex2html</ulink
+>, usadas para traduzir do &bibtex; para &HTML;, de forma a melhorar as capacidades de antevisão de itens do &kbibtex; (dependência opcional). </para>
+      </listitem>
+    </itemizedlist>
+    <para
+>A maioria destes itens, assim como o próprio &kbibtex;, poderão estar incluídas na sua distribuição de &Linux;; veja por favor a documentação da sua distribuição ou veja o &CD; ou DVD de instalação, para saber como adicionar estes pacotes ao seu computador. </para>
+  </sect1>
+  <sect1 id="preface_audience">
+    <title
+>Público Alvo </title>
+    <para
+>Este manual está destinado a qualquer indivíduo, independentemente da sua experiência com o &latex;, &kde;, &kbibtex; ou &Linux;. </para>
+    <para
+>Os utilizadores mais avançados provavelmente não irão ler este manual, mas todas as sugestões para a documentação serão tidas em consideração. Se quiser contribuir para este projecto ou para a documentação, por favor consulte a <ulink url="http://home.gna.org/kbibtex/"
+>página Web do &kbibtex;</ulink
+>. </para>
+  </sect1>
+
+</chapter>
+
+<chapter id="introduction">
+  <title
+>Introdução </title>
+  <sect1 id="intro_about">
+    <title
+>Acerca do &kbibtex; </title>
+    <para
+>O &kbibtex; é um ambiente integrado para criar e editar bibliografias no formato do &bibtex;. O &kbibtex; dá-lhe a capacidade de usar todas as funcionalidades do &bibtex; numa interface gráfica, dando-lhe um acesso simples, imediato e personalizado às bibliografias locais e 'online' com a capacidade de completação dos itens, a compilação, a antevisão e a pesquisa. </para>
+    <sect2 id="intro-bibtex">
+      <title
+>Acerca do &bibtex;</title>
+      <para
+>O &bibtex; é um programa e um formato de ficheiros desenhado por Oren Patashnik e Leslie Lamport em 1985, para o sistema de preparação de documentos em &latex; <citation
+>Lamport86</citation
+>. </para>
+      <para
+>O formato é na totalidade baseado em caracteres, pelo que poderá ser usado em qualquer programa (ainda que o conjunto de caracteres para os acentos é o do &tex;). É baseado em campos (marcas) e o programa &bibtex; irá ignorar os campos desconhecidos, pelo que tem a possibilidade de se expandir. É provavelmente o formato mais comum para bibliografias na Internet. </para>
+      <para
+>O programa &bibtex; usa os ficheiros de estilos, uma lista de citações do &latex; e uma base de dados do &bibtex; para criar um ficheiro em &latex; que apresenta as referências citadas. A ideia dos ficheiros de estilos é que a cópia final em qualquer formato específico de jornal possa ser feita automaticamente. </para>
+      <para
+>Um exemplo de elemento da base de dados do &bibtex;: </para>
+<programlisting
+>@article{PAM_doi:10.1007/BF00048294,
+        author = {Streitenberger, P. e Knott, John F.},
+        doi = {10.1007/BF00048294},
+        issn = {1573-2673},
+        journal = {{Jornal Internacional de Fracturas}},
+        number = {3},
+        pages = {R49},
+        publisher = {Springer},
+        title = {{O cálculo da área de abertura de rachas e o volume de abertura de rachas dos factores de intensidade de 'stress'}},
+        url = {http://dx.doi.org/10.1007/BF00048294},
+        volume = {76},
+        x-fetchedfrom = {SpringerLink},
+        year = {1995}
+}
+</programlisting>
+  </sect2>
+  <sect2 id="kbibtex-and-latex-editors">
+    <title
+>O &kbibtex; e os Editores de &latex;</title>
+    <para
+>Poderá editar o código em &latex; com uma grande variedade de ferramentas, desde editores de texto simples e minimalistas até editores visuais poderosos. Para uma comparação dos editores de &latex;, veja <ulink url="https://en.wikipedia.org/wiki/Comparison_of_TeX_editors"
+>esta página</ulink
+>. </para>
+    <para
+>O &kbibtex; oferece de base a <link linkend="integration"
+>integração com o &kile; e o &lyx;</link
+>, ainda que possa ser usado com sucesso em qualquer tipo de editor de &latex;. </para>
+  </sect2>
+  </sect1>
+  <sect1 id="intro_mainfeat">
+    <title
+>Funcionalidades Principais do &kbibtex; </title>
+    <para
+>O &kbibtex; permite-lhe fazer as seguintes coisas: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+>Indique um preâmbulo que define como deverá ser formatado o texto especial na sua bibliografia, usando a opção <menuchoice
+><guimenu
+>Elemento</guimenu
+><guisubmenu
+>Novo elemento</guisubmenu
+><guimenuitem
+>New preamble</guimenuitem
+></menuchoice
+> do menu ou da <link linkend="main-toolbar"
+>Barra Principal</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Escolher a codificação de um elemento com o item <guilabel
+>Codificação</guilabel
+> na janela <guilabel
+>Gravar como</guilabel
+> ou no <link linkend="file-settings"
+>painel de Configuração do Ficheiro</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Introduzir comentários que não são tidos em conta pelo &bibtex; com a opção <menuchoice
+><guimenu
+>Elemento</guimenu
+><guisubmenu
+>Novo elemento</guisubmenu
+><guimenuitem
+>Novo comentário</guimenuitem
+></menuchoice
+> do menu ou da <link linkend="main-toolbar"
+>Barra Principal</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Antever e gravar os itens da bibliografia em vários formatos (Código (&bibtex;), Código (RIS), Wikipédia, normal (&XML;/XSLT), bonito (&XML;/XSLT) e apenas-o-resumo (&XML;/XSLT)), usando o <link linkend="reference-preview"
+>painel de Antevisão da Referência</link
+>. São disponibilizados estilos de antevisão adicionais quando instalar o <application
+>bibtex2html</application
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Procurar pelos dados de itens bibliográficos nas bases de dados 'online', usando o <link linkend="online-search"
+>painel de Pesquisa 'Online'</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Ver os recursos locais ou remotos ('online'), como os ficheiros <link linkend="adding-link"
+>ligados</link
+> no item do &bibtex;, usando o <link linkend="document-preview"
+>painel de Antevisão do Documento</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Procurar e corrigir os itens duplicados na bibliografia, usando a opção <menuchoice
+><guimenu
+>Editar</guimenu
+><guimenuitem
+>Procurar os Duplicados</guimenuitem
+></menuchoice
+> do menu ou da <link linkend="main-toolbar"
+>Barra Principal</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Importe a sua biblioteca do <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+> com o <link linkend="zotero"
+>painel do Zotero</link
+>. </para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>
+
+<chapter id="quickstart">
+  <title
+>Arranque Rápido </title>
+  <sect1 id="quick_begin">
+    <title
+>Criar um Ficheiro de Bibliografia para Principiantes </title>
+    <!-- 1) No request from kbibtex from Distri user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distri user has a mimeapps.list in home, but no kbibtex in it
+         2b) Devel user has no mimeapps.list in home
+         2c) Systemsettings -> File Associations is the place to edit/chnage this in a kde desktop
+         update after rebuilding post 2014-01-12
+         Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
+         (why? from installation of distri?)
+         This dialog even pops up when opening a .bib file with LMB click in file manager
+    -->
+    <para
+>Depois da primeira execução, o &kbibtex; irá propor a definição do mesmo como editor de formatos bibliográficos por omissão. Recomendamos-lhe que o aceite.<footnote
+><para
+>Se optar por reconsiderar, por alguma razão, remova por favor os textos com a sub-sequência <literal
+>kbibtex</literal
+> do ficheiro <filename
+>mimeapps.list</filename
+> na sub-pasta <filename role="directory"
+>.local/share/applications</filename
+> da sua pasta pessoal.</para
+></footnote>
+    </para>
+    <para
+>De seguida irá ver uma janela semelhante a isto: </para>
+    <screenshot>
+      <screeninfo
+>A janela do &kbibtex; após a primeira execução</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="first-run.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>A janela do &kbibtex; após a primeira execução</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Para iniciar um novo documento de bibliografia, carregue no botão <guibutton
+>Novo</guibutton
+> no painel da direita, no botão <guibutton
+>Novo</guibutton
+> da barra de ferramentas ou escolha a opção do menu <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>N</keycap
+></keycombo
+></shortcut
+><guimenu
+>Ficheiro</guimenu
+><guimenuitem
+>Novo</guimenuitem
+></menuchoice
+>. </para>
+    <para
+>Agora chegou a altura de adicionar mais elementos. </para>
+    <para
+>Os utilizadores do &kbibtex; têm duas opções ao adicionar um item novo: podem usar o <link linkend="online-search"
+>painel de Pesquisa 'Online'</link
+> para procurar dados dos itens a nível 'online' ou poderão escrever o código manualmente. </para>
+    <para
+>Vamos tentar adicionar um item de livro manualmente. </para>
+    <procedure>
+      <step id="element-editing">
+	<para
+>Escolha a opção <menuchoice
+><guimenu
+>Elemento</guimenu
+><guisubmenu
+>Novo elemento</guisubmenu
+><guimenuitem
+>Novo item</guimenuitem
+></menuchoice
+> do menu do &kbibtex;. O &kbibtex; deverá abrir a janela para <guilabel
+>Editar o Elemento</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>A janela de edição de elementos do &kbibtex;</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="element-editor.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>A janela de edição de elementos do &kbibtex;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Escolha o <guimenuitem
+>Livro</guimenuitem
+> na lista <guilabel
+>Tipo:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Indique <userinput
+>Lamport86</userinput
+> no campo <guilabel
+>Id:</guilabel
+>. </para>
+	<tip>
+	  <para
+>O <quote
+>Id</quote
+> é usado para referenciar o item bibliográfico no seu documento principal. </para>
+	</tip>
+      </step>
+      <step>
+	<para
+>Vá à página do <guilabel
+>Título</guilabel
+> e indique <userinput
+>LaTeX: A Document Preparation System</userinput
+> no campo de texto <guilabel
+>Título:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Vá à página do <guilabel
+>Autor/Editor</guilabel
+>, carregue no botão <guibutton
+>Adicionar</guibutton
+> e escreva <userinput
+>Lamport, Leslie</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Vá à página <guilabel
+>Publicação</guilabel
+> e depois escreva <userinput
+>1986</userinput
+> no campo <guilabel
+>Ano:</guilabel
+> e <userinput
+>Addison-Wesley</userinput
+> no campo de texto <guilabel
+>Publicador:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Carregue em <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Escolha a opção do menu <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>S</keycap
+></keycombo
+></shortcut
+><guimenu
+>Ficheiro</guimenu
+><guimenuitem
+>Gravar</guimenuitem
+></menuchoice
+> e grave o seu ficheiro de bibliografia como <filename
+>exemplo.bib</filename
+> na pasta do seu relatório a escrever. </para>
+      </step>
+    </procedure>
+  </sect1>
+
+  <sect1 id="quick-using">
+    <title
+>Usar a bibliografia no seu documento de &latex; </title>
+    <para
+>Para usar de facto a bibliografia no seu documento, terá de adicionar os seguintes comandos no seu ficheiro de &latex; (estes comandos podem ser encontrados normalmente no fim do documento - onde aparece a secção de <quote
+>Referências</quote
+>): </para>
+<programlisting
+>\bibliography{<replaceable
+>xpto</replaceable
+>}
+\bibliographystyle{plain}
+</programlisting>
+    <para
+>Aqui o <replaceable
+>xpto</replaceable
+> é o nome do seu ficheiro <filename role="extension"
+>bib</filename
+> criado com o &kbibtex; e o <quote
+>plain</quote
+> é o nome do estilo de bibliografia. </para>
+    <para
+>Existe uma grande variedade de estilos bibliográficos específicos. Consulte por favor o seu responsável de publicação para saber o nome a escolher ou tentar descobrir o que se adequa mais aos seus objectivos. </para>
+    <para
+>Em baixo encontra-se uma lista de alguns dos estilos genéricos disponíveis em todo o lado: </para>
+    <variablelist>
+      <varlistentry>
+	<term
+>plain </term>
+	<listitem>
+	  <para
+>estilo normal, apresentado em ordem alfabética e legendado de forma numérica </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term
+>unsrt </term>
+	<listitem>
+	  <para
+>igual ao 'plain', excepto que os itens aparecem por ordem de citação </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term
+>alpha </term>
+	<listitem>
+	  <para
+>igual ao 'plain', excepto que são usado os identificadores dos itens </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term
+>abbrv </term>
+	<listitem>
+	  <para
+>igual ao 'plain', excepto que usa abreviaturas para os primeiros nomes, os nomes dos meses e os nomes dos diários </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    <para
+>Como tal, poderá usar as capacidades do seu editor de &latex; (consulte por favor a documentação do editor para esse fim) ou basta indicar o seguinte código num editor de texto genérico e depois gravar o ficheiro com a extensão <filename role="extension"
+>tex</filename
+>. </para>
+<programlisting
+>\documentclass{article}
+ \begin{document}
+ \bibliographystyle{plain}% Escolha um estilo bibliográfico
+ Ficheiro de teste com uma referência (see~\cite{Lamport86}).
+ \bibliography{exemplo}
+ \end{document}
+</programlisting>
+    <para
+>Para fins de testes, vamos assumir que este ficheiro se chama <userinput
+>exemplo.tex</userinput
+>. </para>
+    <note>
+      <para
+>Grave por favor este ficheiro na mesma pasta em que se encontra o seu ficheiro <filename
+>exemplo.bib</filename
+>. </para>
+    </note>
+    <para
+>Agora que tem as bases para um documento, terá de executar tanto o <application
+>latex</application
+> como o <application
+>bibtex</application
+> para o processar. </para>
+    <para
+>Primeiro, deverá executar o <application
+>latex</application
+> (para criar um ficheiro 'xpto.aux', que o <application
+>bibtex</application
+> consegue ler). Depois execute o <application
+>bibtex</application
+> uma vez para obter algumas das citações e criar um ficheiro <filename role="extension"
+>bbl</filename
+>. Depois corra o <application
+>latex</application
+> de novo, para que as referências cruzadas entre o ficheiro de texto e a bibliografia sejam correctas. Poderá querer repetir a execução do <application
+>bibtex</application
+> e do <application
+>latex</application
+> sobre o ficheiro para se certificar que todas as referências cruzadas fiquem correctas. Tenha em atenção que a adição/remoção de citações e código irão obrigar a executar o <application
+>bibtex</application
+> de novo. </para>
+    <para
+>Deste modo, poder-se-á usar os seguintes comandos para compilar o documento a partir da consola: </para>
+    <screen
+>latex exemplo
+bibtex exemplo
+latex exemplo
+latex exemplo</screen>
+    <tip>
+      <para
+>Se estiver a usar alguma consola avançada de &latex;, como o &kile; ou o &lyx;, não existe a necessidade de se preocupar com a execução de todos esses comandos a partir do emulador da consola. Basta usar uma combinação de teclas (<keycombo
+>&Alt;<keycap
+>6</keycap
+></keycombo
+> no &kile;) ou um botão da barra de ferramentas para ver os resultados. </para>
+    </tip>
+    <para
+>Agora, poderá ver os resultados como um ficheiro &DVI; ou &pdf; (o formato depende da sua configuração), guardado na mesma pasta dos seus ficheiros de código. </para>
+    <note>
+      <para
+>Parabéns! Acabou de criar o seu primeiro documento com a bibliografia do &bibtex;. </para>
+    </note>
+  </sect1>
+</chapter>
+
+<chapter id="interface">
+  <title
+>Interface do &kbibtex; </title>
+    <sect1 id="panels">
+    <title
+>Painéis do &kbibtex; </title>
+    <para
+>A funcionalidade principal do &kbibtex; está disponível através dos seus nove painéis. É possível reorganizar esses painéis ou mesmo destacá-los a partir da janela principal, carregando com o &LMB; no cabeçalho do painel e arrastando-o para o novo local. </para>
+    <para
+>Poderá mostrar ou esconder os painéis do &kbibtex; ou escondê-los no submenu <menuchoice
+><guimenu
+>Configuração</guimenu
+><guimenuitem
+>Mostrar os Painéis</guimenuitem
+></menuchoice
+>. Basta assinalar o item do painel para o tornar visível ou desligá-lo para esconder o painel. </para>
+    <sect2 id="list-of-documents">
+      <title
+>Painel da Lista de Documentos </title>
+	<para
+>O painel da <guilabel
+>Lista de Documentos</guilabel
+> permite mudar entre os vários documentos bibliográficos abertos (página <guilabel
+>Ficheiros Abertos</guilabel
+>), abrir os documentos usados recentemente (página <guilabel
+>Usados Recentemente</guilabel
+>), abrir os seus documentos principais da bibliografia (página de <guilabel
+>Favoritos</guilabel
+>), ou navegar pelo sistema de ficheiros do seu computador para procurar os documentos da bibliografia (página do <guilabel
+>Navegador do Sistema de Ficheiros</guilabel
+>). </para>
+	<tip>
+	  <para
+>Para adicionar um ficheiro de bibliografia aos favoritos, seleccione-o em qualquer página que não a dos <guilabel
+>Favoritos</guilabel
+>, carregue com o &RMB; e escolhendo a opção <guimenuitem
+>Adicionar aos Favoritos</guimenuitem
+>. Para remover a bibliografia dos favoritos, seleccione-a na página de <guilabel
+>Favoritos</guilabel
+>, carregue com o &RMB; e escolha a opção <guimenuitem
+>Remover dos Favoritos</guimenuitem
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel da lista de documentos</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-documents.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel da lista de documentos</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="list-of-values">
+      <title
+>Painel da Lista de Valores </title>
+	<para
+>O painel da <guilabel
+>Lista de Valores</guilabel
+> pode ser usado para simplificar a visualização das estatísticas sobre a utilização dos valores nos campos dos itens, assim como a edição em lote destes valores. </para>
+	<para
+>A lista superior é usada para escolher o campo da bibliografia para mostrar dados estatísticos (uma contagem dos itens com o mesmo valor para o campo) na lista inferior. </para>
+	<para
+>Poderá carregar com o &RMB; sobre um item da lista de baixo para aceder às capacidades de edição em lote. É possível <guimenuitem
+>Substituir todas as ocorrências</guimenuitem
+> do valor, <guimenuitem
+>Apagar todas as ocorrências</guimenuitem
+> do valor ou <guimenuitem
+>Procurar pelos valores seleccionados</guimenuitem
+>, usando a <link linkend="filter-toolbar"
+>Barra de Filtragem</link
+>, ou ainda <guimenuitem
+>Adicionar um valor aos itens seleccionados</guimenuitem
+>, <guimenuitem
+>Substituir o valor dos itens seleccionados</guimenuitem
+> ou <guimenuitem
+>Remover o valor dos itens seleccionados</guimenuitem
+> (alguns itens terão de estar seleccionados primeiro). </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel da lista de valores</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-values.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel da lista de valores</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="statistics">
+      <title
+>Painel de Estatísticas </title>
+      <para
+>O painel de <guilabel
+>Estatísticas</guilabel
+> está desenhado para mostrar uma lista compreensiva de informações estatísticas acerca do documento bibliográfico actual. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel de estatísticas</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="statistics.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel de estatísticas</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="reference-preview">
+      <title
+>Painel de Antevisão da Referência </title>
+	<para
+>O painel de <guilabel
+>Antevisão da Referência</guilabel
+> é usado para a antevisão e gravação no formato &HTML; do item de bibliografia seleccionado de momento. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel de antevisão da referência</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="reference-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel de antevisão da referência</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>São possíveis os formatos de antevisão da referência como Código (&bibtex;), Código (RIS), Wikipédia, normal (&XML;/XSLT), bonito (&XML;/XSLT), e apenas-o-resumo (&XML;/XSLT). Ficam disponíveis opções adicionais quando se instala o <application
+>bibtex2html</application
+>. </para>
+	<tip>
+	  <para
+>Quando carregar nos elementos da referência num formato baseado em &XML;, o &kbibtex; irá aplicar a <link linkend="filter-toolbar"
+>filtragem</link
+> correspondente na lista da bibliografia. </para>
+	</tip>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Abrir</guibutton
+> para abrir a referência no navegador Web predefinido. O botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Gravar como &HTML;</guibutton
+> pode ser usado para gravar a referência em &HTML; para uso posterior na sua página Web. </para>
+	<para
+>Poderá carregar com o &RMB; no painel para seleccionar o <guimenuitem
+>Actualizar</guimenuitem
+>, por forma a actualizar a referência de acordo com as últimas alterações no elemento. </para>
+    </sect2>
+    <sect2 id="file-settings">
+      <title
+>Painel de Configuração do Ficheiro </title>
+	<para
+>O painel de <guilabel
+>Configuração do Ficheiro</guilabel
+> pode ser usado para definir alguns parâmetros do ficheiro <filename role="extension"
+>bib</filename
+> da bibliografia actual. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel de configuração do ficheiro</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="file-settings.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel de configuração do ficheiro</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>É possível seleccionar a <guilabel
+>Codificação</guilabel
+>, os <guilabel
+>Separadores de Texto</guilabel
+>, a <guilabel
+>Protecção dos Comentários</guilabel
+>, a <guilabel
+>Capitalização das Palavras-Chave</guilabel
+> e a <guilabel
+>Formatação dos Nomes das Pessoas</guilabel
+>. </para>
+	<para
+>Por omissão, o &bibtex; irá converter para minúsculas todas as palavras intermédias nas frases. Assinale a opção <guilabel
+>Proteger os Títulos</guilabel
+> para proteger as maiúsculas/minúsculas nos títulos dos itens. </para>
+    </sect2>
+    <sect2 id="online-search">
+      <title
+>Painel de Pesquisa 'Online' </title>
+	<para
+>O painel de <guilabel
+>Pesquisa 'Online'</guilabel
+> pode ser usado para efectuar uma pesquisa nas bases de dados de bibliografias na Internet para descobrir os itens necessários ou para obter o conjunto de dados completo para um item introduzido manualmente. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel de Pesquisa 'Online'</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="online-search.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel de Pesquisa 'Online'</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Os itens podem ser pesquisados por <guilabel
+>Texto live</guilabel
+>, <guilabel
+>Título</guilabel
+>, <guilabel
+>Autor</guilabel
+> ou <guilabel
+>Ano</guilabel
+>. O número de resultados apresentados no <link linkend="search-results"
+>painel de Resultados da Pesquisa</link
+> pode ser ajustado com o campo incremental <guilabel
+>Número de Resultados</guilabel
+>. </para>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Usar o Item</guibutton
+> para preencher os campos do critério de pesquisa do item bibliográfico seleccionado de momento. Desta forma, poderá completar o item existente com os dados das bases de dados da Internet. O botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="media-playback-start.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Procurar</guibutton
+> pode ser usado para iniciar a pesquisa. </para>
+	<para
+>O &kbibtex; pode efectuar uma pesquisa sobre as bases de dados mais conhecidas da Internet. Para seleccionar o conjunto de bases de dados usadas na sua pesquisa, mude para a página <guilabel
+>Motores</guilabel
+> ou carregue com o &LMB; na ligação <guilabel
+>modificar</guilabel
+> na página de <guilabel
+>Termos da Pesquisa</guilabel
+>. </para>
+	<para
+>Para visitar a página Web da base de dados na Internet, carregue com o &RMB; no seu item respectivo da página <guilabel
+>Motores</guilabel
+> e seleccione <guimenuitem
+>Ir para a Página Web</guimenuitem
+>. </para>
+    </sect2>
+    <sect2 id="zotero">
+      <title
+>Painel do Zotero </title>
+	<para
+>O painel do <guilabel
+>Zotero</guilabel
+> pode ser usado para importar a sua biblioteca do <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+>. </para>
+	<para
+>O Zotero usa extensões especializadas do navegador para guardar os itens bibliográficos das páginas da Internet. Os dados são guardados numa base de dados 'online' que poderá ser acedida de qualquer lado. Poderá encontrar a documentação do Zotero <ulink url="https://www.zotero.org/support/"
+>aqui</ulink
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel do Zotero</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="zotero.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel do Zotero</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Obter as Credenciais</guibutton
+>, na página <guilabel
+>Credenciais</guilabel
+>, para iniciar o assistente de autorização do Zotero. Siga as instruções para dar acesso do &kbibtex; à sua biblioteca do Zotero. </para>
+	<para
+>Poderá usar depois o botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="download.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Carregar a Bibliografia</guibutton
+> para transferir os dados da biblioteca do Zotero. </para>
+	<para
+>Para aceder aos itens transferidos da biblioteca, faça duplo-click sobre o item correspondente nas páginas de <guilabel
+>Colecções</guilabel
+> ou <guilabel
+>Marcas</guilabel
+>. Os itens que satisfaçam os critérios escolhidos serão apresentados no <link linkend="search-results"
+>painel de Resultados da Pesquisa</link
+>. </para>
+    </sect2>
+    <sect2 id="search-results">
+      <title
+>Painel de Resultados da Pesquisa </title>
+	<para
+>O painel de <guilabel
+>Resultados da Pesquisa</guilabel
+> é usado para lidar com os resultados da pesquisa que foram obtidos no <link linkend="online-search"
+>painel de Pesquisa 'Online'</link
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel de Resultados da Pesquisa</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="search-results.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel de Resultados da Pesquisa</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="svn-update.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Importar</guibutton
+> para importar o resultado da pesquisa seleccionado de momento para a sua bibliografia. </para>
+	<para
+>Para aceder às outras acções para o resultado da pesquisa seleccionado de momento, carregue nele com o &RMB;. A partir do menu aberto, poderá rever o resultado (no item <guimenuitem
+>Ver o Elemento</guimenuitem
+>) ou copiá-lo para colá-lo posteriormente no formato do &bibtex; com a combinação <keycombo
+>&Ctrl;<keycap
+>V</keycap
+></keycombo
+> (o item <guimenuitem
+>Copiar</guimenuitem
+>). </para>
+    </sect2>
+    <sect2 id="element-editor">
+      <title
+>Painel do Editor de Elementos </title>
+	<para
+>O painel do <guilabel
+>Editor de Elementos</guilabel
+> pode ser usado para editar o elemento bibliográfico seleccionado de momento. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel do Editor de Elementos</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="element-editor.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel do Editor de Elementos</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Carregue no botão <inlinemediaobject
+> <imageobject
+> <imagedata fileref="view-filter.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> para seleccionar um <link linkend="config-id-suggestions"
+>identificador sugerido</link
+> para o elemento. </para>
+	<para
+>Indique os dados respectivos nos campos do editor. O formato dos dados dos campos pode ser alterado entre <guimenuitem
+>Texto</guimenuitem
+>, <guimenuitem
+>Referência</guimenuitem
+> e <guimenuitem
+>Código-Fonte</guimenuitem
+>, usando a lista à esquerda do campo de texto. </para>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="configure.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Options</guibutton
+> para abrir um menu com dois elementos. </para>
+	<para
+>O item <guimenuitem
+>Mostrar todos os campos</guimenuitem
+> pode ser usado para mostrar ou esconder todos os campos vazios do elemento actual. </para>
+	<para
+>É possível mudar o campo em primeiro plano com a tecla &Tab;. Como tal, o segundo item do menu, o <guimenuitem
+>A tecla Tab visita apenas os campos editáveis</guimenuitem
+>, pode ser usado para activar ou desactivar a navegação apenas entre os campos editáveis. </para>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="tools-check-spelling.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Verificar com o &bibtex;</guibutton
+> para antever o item de edição, à medida que aparece no ficheiro &pdf; compilado. </para>
+	<para
+>Assinale a opção <guilabel
+>Aplicar automaticamente as alterações</guilabel
+> para que aplique todas as suas alterações automaticamente ao elemento, sem a necessidade de carregar no botão <guibutton
+>Aplicar</guibutton
+>. </para>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Reiniciar</guibutton
+> para reverter todas as suas alterações. </para>
+      </sect2>
+      <sect2 id="document-preview">
+      <title
+>Painel de Antevisão do Documento </title>
+	<para
+>O painel da <guilabel
+>Antevisão do Documento</guilabel
+> pode ser usado para antever as páginas ou os documentos <link linkend="adding-link"
+>ligados</link
+> ao item bibliográfico seleccionado de momento. </para>
+	<tip>
+	  <para
+>Por omissão, poderá abrir o painel de <guilabel
+>Antevisão do Documento</guilabel
+> se carregar na combinação de teclas <keycombo
+>&Ctrl;&Shift;<keycap
+>D</keycap
+></keycombo
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Painel de Antevisão do Documento</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="document-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Painel de Antevisão do Documento</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Carregue no botão <inlinemediaobject
+> <imageobject
+> <imagedata fileref="applications-internet.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> para alternar entre apenas os ficheiros locais e entre todos os documentos, incluindo os remotos. </para>
+	<para
+>Carregue no botão <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> para abrir a página ou o documento na aplicação externa predefinida. </para>
+	<para
+>O campo do endereço pode ser usado para alterar entre as páginas e os documentos. </para>
+    </sect2>
+  </sect1>
+  <sect1 id="toolbars">
+    <title
+>Barras de Ferramentas do &kbibtex; </title>
+    <para
+>O &kbibtex; tem duas barras de ferramentas completamente personalizáveis que se localizam na parte superior da sua janela. </para>
+    <para
+>Poderá encontrar mais informações sobre a personalização das barras de ferramentas na <ulink url="Help:/fundamentals/config.html#toolbars"
+>secção correspondente do manual de Fundamentos do &kde;</ulink
+>. Em baixo, encontra-se a descrição curta dos botões predefinidos das barras de ferramentas do &kbibtex;. </para>
+    <sect2 id="main-toolbar">
+      <title
+>Barra Principal </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Barra Principal</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="main-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Barra Principal</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>A barra de ferramentas principal do &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para
+><guibutton
+>Novo</guibutton
+>: cria um novo documento de bibliografia. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Abrir</guibutton
+>: abre a <ulink url="help:/fundamentals/files.html"
+>janela genérica do &kde; para Abrir/Gravar</ulink
+>, que lhe permite abrir uma bibliografia existente para a editar. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Fechar</guibutton
+>: fecha o documento de bibliografia activo de momento. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Gravar</guibutton
+>: grava o documento de bibliografia activo de momento. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Gravar Como</guibutton
+>: permite gravar o documento de bibliografia aberto de momento com um novo nome, usando a <ulink url="help:/fundamentals/files.html"
+>janela genérica do &kde; para Abrir/Gravar</ulink
+>. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Novo elemento</guibutton
+>: permite criar o novo item, comentário, preâmbulo ou <link linkend="macros"
+>macro</link
+> no documento de bibliografia actual. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Procurar Duplicados</guibutton
+>: procura e corrige elementos duplicados no documento de bibliografia seleccionado de momento. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Enviar para o &lyx;/&kile;</guibutton
+>: envia uma referência sobre o item bibliográfico seleccionado de momento para o &lyx; ou o &kile;. Poderá ver mais sobre isto no <link linkend="integration"
+>capítulo correspondente deste manual</link
+>. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+    <sect2 id="filter-toolbar">
+      <title
+>Barra do Filtro </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Barra do Filtro</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="filter-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Barra do Filtro</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>A barra do filtro predefinida do &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>O método mais simples de navegar pelas bibliografias grandes é usar a barra do <guilabel
+>Filtro</guilabel
+>: o &kbibtex; irá filtrar a lista apresentada de acordo com os dados introduzidos por si. Se estiver a pesquisar por algum elemento, mas não souber a sua posição exacta na lista, basta escrever algumas letras dos seus dados no campo de texto <guilabel
+>Filtro</guilabel
+>. </para>
+	<para
+>Quando introduzir as primeiras letras, irá ver a lista a mudar. Quanto mais letras introduzir, mais reduzida ficará a lista. Esta filtragem ocorre imediatamente à medida que for escrevendo. </para>
+	<para
+>Se olhar para o lado direito da barra de <guilabel
+>Filtragem</guilabel
+>, irá reparar em dois menus. Os menus foram desenhados para que pudesse ajustar rapidamente os critérios de filtragem de acordo com as suas necessidades. O primeiro menu é usado para definir o modo de correspondência (<guimenuitem
+>qualquer palavra</guimenuitem
+>, <guimenuitem
+>todas as palavras</guimenuitem
+> ou <guimenuitem
+>frase exacta</guimenuitem
+>). O segundo serve para definir o campo em que deverá ser efectuada a filtragem. Poderá escolher <guimenuitem
+>qualquer campo</guimenuitem
+> ou seleccionar um campo para restringir ainda mais a lista de resultados nas bibliografias grandes. </para>
+	<para
+>Existem também dois botões nesta barra de ferramentas: </para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="application-pdf.png" format="PNG"/>
+		  </imageobject>
+</inlinemediaobject
+> <guibutton
+>Incluir os ficheiros &pdf; na pesquisa por texto completo</guibutton
+>: permite-lhe incluir o &pdf; com texto completo na filtragem. </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/>
+		  </imageobject>
+</inlinemediaobject
+> <guibutton
+>Repor os critérios do filtro</guibutton
+>: repõe os critérios de filtragem. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+  </sect1>
+  <sect1 id="menus">
+    <title
+>Menus do &kbibtex; </title>
+    <para
+>O &kbibtex; segue o esquema de menus normal do &kde;. Como tal, tem muitos itens de menu que são comuns a todas as aplicações do &kde;. Poderá encontrar mais informações sobre estes itens de menu <ulink url="help:/fundamentals/menus.html"
+>nesta secção de ajuda</ulink
+>. </para>
+    <para
+>Em baixo, poderá encontrar descrições para os itens de menu específicos do &kbibtex;. </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Editar</guimenu
+> <guimenuitem
+>Apagar</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Apaga o elemento seleccionado de momento na lista da bibliografia. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Editar</guimenu
+> <guimenuitem
+>Procurar os Duplicados</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Permite-lhe pesquisar e remover os duplicados na bibliografia aberta de momento. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Elemento</guimenu
+> <guisubmenu
+>Novo elemento</guisubmenu
+> <guimenuitem
+>Novo item</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Abre a janela <link linkend="element-editor"
+>Editar o Elemento</link
+> para introduzir um novo item bibliográfico. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Elemento</guimenu
+> <guisubmenu
+>Novo elemento</guisubmenu
+> <guimenuitem
+>Novo comentário</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Abre a janela para <link linkend="element-editor"
+>Editar o Elemento</link
+> para introduzir um novo comentário, o qual não será tido em conta por parte do &bibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Elemento</guimenu
+> <guisubmenu
+>Novo elemento</guisubmenu
+> <guimenuitem
+>Nova macro</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Abre a janela para <link linkend="element-editor"
+>Editar o Elemento</link
+>, que lhe permite introduzir uma nova <link linkend="macros"
+>macro</link
+>. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Elemento</guimenu
+> <guisubmenu
+>Novo elemento</guisubmenu
+> <guimenuitem
+>Novo preâmbulo</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Abre a janela para <link linkend="element-editor"
+>Editar o Elemento</link
+> para introduzir um novo preâmbulo da bibliografia, que define como deverá ser formatado o texto especial na sua bibliografia. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>E</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Elemento</guimenu
+> <guimenuitem
+>Editar o Elemento</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Abre a janela para <link linkend="element-editor"
+>Editar o Elemento</link
+> que lhe permite editar o elemento bibliográfico seleccionado de momento. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="adding-link">
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>D</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Elemento</guimenu
+> <guisubmenu
+>Ver o Documento</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Abre o documento local ou remoto para o item seleccionado de momento na lista da bibliografia. </para>
+	  <para
+>Poderá adicionar ou editar a ligação ao documento com a página <guilabel
+>Externo</guilabel
+> da janela para <link linkend="element-editor"
+>Editar o Elemento</link
+>. </para>
+	  <screenshot>
+	    <screeninfo
+>Página de documentos externos da janela de edição do item</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="external-tab.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Página de documentos externos da janela de edição do item</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>Pode usar o botão <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Adicionar</guilabel
+> para adicionar uma ligação à página remota. </para>
+	  <para
+>A opção <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Adicionar um ficheiro...</guilabel
+> é usada para seleccionar um dado ficheiro local e adicionar uma referência ou o ficheiro inteiro à bibliografia actual. </para>
+	  <para
+>Se carregar em <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, será limpo o item seleccionado de momento. </para>
+	  <para
+>Carregue no botão <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open-remote.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> para abrir a ligação ao documento no navegador. </para>
+	  <para
+>Carregue no botão <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> para remover o item do documento seleccionado de momento. </para>
+	  <para
+>Para reorganizar os itens na lista do documento, use os botões para <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-down.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> e <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>. </para>
+	  <para
+>Eventualmente, o botão <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> pode ser usado para gravar os documentos remotos a nível local. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Elemento</guimenu
+> <guimenuitem
+>Procurar o &pdf;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Tenta descobrir alguns documentos em &pdf; sobre o item bibliográfico seleccionado de momento na Internet. </para>
+	  <screenshot>
+	    <screeninfo
+>Janela de pesquisa de &pdf;'s</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="find-pdf.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Janela de pesquisa de &pdf;'s</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>Poderá <guilabel
+>Ignorar</guilabel
+>, <guilabel
+>Transferir</guilabel
+> ou <guilabel
+>Usar apenas o &URL;</guilabel
+> para o item. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="format-entry-ids">
+	<term>
+	  <menuchoice
+><guimenu
+>Elemento</guimenu
+> <guimenuitem
+>Formatar os ID's dos itens</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Permite-lhe formatar os identificadores dos itens bibliográficos seleccionados de momento, de acordo com a formatação predefinida. </para>
+	  <para
+>A formatação predefinida dos identificadores pode ser definida se usar a <link linkend="config-id-suggestions"
+>página de Sugestões de ID's</link
+> da janela de configuração do &kbibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Elemento</guimenu
+> <guisubmenu
+>Cor</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Permite-lhe seleccionar uma legenda de cor para os itens bibliográficos seleccionados de momento ou remover essa legenda (<guimenuitem
+>Sem cor</guimenuitem
+>). </para>
+	  <para
+>Poderá configurar as legendas de cores se usar a <link linkend="config-color"
+>página de Cor &amp; Legendas</link
+> da janela de configuração do &kbibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Elemento</guimenu
+> <guimenuitem
+>Enviar para o &lyx;/&kile;</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+><link linkend="integration"
+>Envia as referências</link
+> para os itens bibliográficos seleccionados de momento para o &lyx; ou o &kile;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Configuração</guimenu
+> <guimenuitem
+>Configurar o &kbibtex;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Abre a <link linkend="config-dialog"
+>janela de configuração do &kbibtex;</link
+>. </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </sect1>
+  <sect1 id="config-dialog">
+    <title
+>Janela de Configuração do &kbibtex; </title>
+    <para
+>Poderá configurar diversos parâmetros do &kbibtex; com a janela de <guilabel
+>Preferências</guilabel
+>. Poderá abrir esta janela com a opção do menu <menuchoice
+><guimenu
+>Configuração</guimenu
+><guimenuitem
+>Configurar o &kbibtex;</guimenuitem
+></menuchoice
+>. Em baixo, poderá encontrar uma descrição das páginas de configuração do &kbibtex;. </para>
+    <para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-revert.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>Predefinições</guibutton
+> para repor todos os itens com os seus valores predefinidos. </para>
+    <para
+>O botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Reiniciar</guibutton
+> pode ser usado para eliminar todas as mudanças de configuração actuais sem fechar a janela de <guilabel
+>Preferências</guilabel
+>. </para>
+    <sect2 id="config-general">
+      <title
+>Configuração Geral </title>
+      <screenshot>
+	<screeninfo
+>Configuração geral</screeninfo>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="config-general.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase
+>Configuração geral</phrase>
+	  </textobject>
+	</mediaobject>
+      </screenshot>
+      <para
+>Esta página de configuração permite-lhe alterar a <guilabel
+>formatação de Nomes de Pessoas</guilabel
+> que será aplicada automaticamente aos nomes introduzidos na janela do <link linkend="element-editor"
+>Editor de Elementos</link
+>. </para>
+      </sect2>
+    <sect2 id="config-keywords">
+      <title
+>Configuração das Palavras-Chave </title>
+      <screenshot>
+	<screeninfo
+>Configuração das palavras-chave</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-keywords.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuração das palavras-chave</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Esta página pode ser usada para editar a lista de palavras-chave. As palavras-chave aplicadas aos itens da bibliografia com o <link linkend="element-editor"
+>Editor do Elemento</link
+> são úteis para estruturar a sua bibliografia. A <link linkend="filter-toolbar"
+>filtragem</link
+> por palavras-chave poder-lhe-á resultados mais precisos por tópicos. </para>
+	<para
+>O botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Adicionar</guibutton
+> pode ser usado para adicionar uma palavra-chave à lista. </para>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Remover</guibutton
+> para remover o item de palavra-chave seleccionado de momento. </para>
+      </sect2>
+      <sect2 id="config-color">
+      <title
+>Configuração da Cor &amp; Legendas </title>
+      <screenshot>
+	<screeninfo
+>Configuração da Cor &amp; Legendas</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-color.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuração da Cor &amp; Legendas</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>As legendas por cores são outra forma útil de estruturar a sua bibliografia. Esta página de configuração pode ser usada para definir as legendas e as suas cores. </para>
+	<para
+>Poderá usar o botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Adicionar</guibutton
+> para adicionar uma legenda à lista. </para>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Remover</guibutton
+> para apagar a legenda seleccionada de momento. </para>
+	<para
+>Faça duplo-click sobre um item, na coluna <guilabel
+>Cor</guilabel
+> ou <guilabel
+>Legenda</guilabel
+> para iniciar a sua edição. </para>
+      </sect2>
+      <sect2 id="config-id-suggestions">
+      <title
+>Configuração das Sugestões de ID's </title>
+      <screenshot>
+	<screeninfo
+>Configuração das Sugestões de ID's</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-id-suggestions.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuração das Sugestões de ID's</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Esta página de configuração é usada para lidar com os esquemas de sugestão de identificadores no <link linkend="element-editor"
+>Editor de Elementos</link
+>. Poderá adicionar, editar, remover e reorganizar os esquemas com os botões respectivos à direita da lista de sugestões. </para>
+	<para
+>Carregue no botão <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="favorites.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Comutar a Predefinição</guibutton
+> para mudar o esquema de sugestão de ID's para o item seleccionado de momento. Este botão pode ser usado para definir o formato da acção <link linkend="format-entry-ids"
+>Formatar os ID's dos elementos</link
+>. </para>
+      </sect2>
+      <sect2 id="config-user-interface">
+      <title
+>Configuração da Interface de Utilizador </title>
+      <screenshot>
+	<screeninfo
+>Configuração da interface de utilizador</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-user-interface.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuração da interface de utilizador</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Ao usar esta página de configuração, poderá fazer com que o &kbibtex; mostre ou esconda os comentários e macros na lista de bibliografias, escolher o sistema de bibliografia (&bibtex; ou &biblatex;) e definir o que fazer quando fizer duplo-click sobre um elemento na lista de bibliografias (<guimenuitem
+>Abrir o Editor</guimenuitem
+> ou <link linkend="document-preview"
+><guimenuitem
+>Ver o Documento</guimenuitem
+></link
+>). </para>
+	<tip>
+	  <para
+>O &biblatex; é uma reimplementação do &bibtex;. Com o &biblatex;, a formatação da bibliografia é completamente controlada por macros de &latex; e não por ficheiros <filename role="extension"
+>bst</filename
+>. Suporta bibliografias sub-divididas, várias bibliografias dentro de um documento e listas separadas de atalhos bibliográficos. As bibliografias podem ser sub-divididas em partes e/ou segmentadas por tópicos. Como nos estilos de bibliografias, todos os comandos de citação podem ser definidos de forma livre. O pacote &biblatex; está totalmente preparado para suporte internacional e pode interagir com o pacote 'babel'.<footnote
+><para
+>Da documentação do &biblatex;.</para
+></footnote>
+	  </para>
+	  <para
+>Também o &biblatex; pode usar o <ulink url="http://biblatex-biber.sourceforge.net/"
+>biber</ulink
+> como infra-estrutura. Com o &biblatex; é possível usar símbolos em UTF-8 nos itens bibliográficos. </para>
+	  <para
+>Como tal, pode usar o &biblatex; para criar bibliografias sofisticadas. </para>
+	</tip>
+      </sect2>
+      <sect2 id="config-saving">
+      <title
+>Gravar e Exportar a Configuração </title>
+      <screenshot>
+	<screeninfo
+>Gravar e exportar a configuração</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-saving.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Gravar e exportar a configuração</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Esta página permite-lhe escolher um comando de &latex; (&eg; <userinput
+>\cite{...}</userinput
+>) que será usado como interface para a referência copiada com o item <menuchoice
+><shortcut
+>&Ctrl;&Shift;<keycap
+>C</keycap
+></shortcut
+><guimenuitem
+>Copiar a Referência</guimenuitem
+></menuchoice
+> do menu de contexto da lista de bibliografias. </para>
+	<para
+>Também é possível fazer com que o &kbibtex; determine o <link linkend="lyx-integration"
+>canal de dados do &lyx;</link
+> automaticamente, assinalando a opção correspondente. </para>
+	<para
+>Quando a opção <guilabel
+>Detectar automaticamente o canal do &lyx;</guilabel
+> não estiver assinalada, poderá adicionar o endereço do canal manualmente no campo de texto <guilabel
+>Canal do &lyx; definido manualmente</guilabel
+> ou seleccioná-lo com a <ulink url="help:/fundamentals/files.html"
+>janela genérica do &kde; para Abrir/Gravar</ulink
+>, carregando no botão à direita do campo de texto. </para>
+	<para
+>Eventualmente, poderá configurar aqui as cópias de segurança. É possível seleccionar os itens a salvaguardar (<guimenuitem
+>Apenas os ficheiros locais</guimenuitem
+>, <guimenuitem
+>Sem cópias de segurança</guimenuitem
+> ou <guimenuitem
+>Tanto os ficheiros locais como os remotos</guimenuitem
+>), usando a opção <guilabel
+>Cópias de segurança ao gravar</guilabel
+> e o número de cópias de segurança a armazenar. </para>
+      </sect2>
+      <sect2 id="config-pdf">
+      <title
+>Configuração do &pdf; &amp; PostScript </title>
+      <screenshot>
+	<screeninfo
+>Configuração do &pdf; &amp; PostScript</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-pdf.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuração do &pdf; &amp; PostScript</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Esta página de configuração pode ser usada para escolher algumas opções para a <link linkend="element-editor"
+>antevisão dos itens do &kbibtex;</link
+>. Poderá seleccionar o <guilabel
+>Tamanho do Papel</guilabel
+>, a língua para o pacote <ulink url="http://www.ctan.org/pkg/babel"
+>babel</ulink
+> do &latex; e o <link linkend="quick-using"
+>estilo da bibliografia</link
+>. </para>
+      </sect2>
+  </sect1>
+</chapter>
+
+<chapter id="advanced">
+  <title
+>Utilização Avançada </title>
+  <sect1 id="crossreferences">
+    <title
+>Referências Cruzadas </title>
+    <para
+>As referẽncias cruzadas permitem-lhe poupar algum tempo, criando ligações entre o item-<quote
+>pai</quote
+> (pode ser tratado como procedimentos ou como uma colecção de artigos) e os itens-<quote
+>filhos</quote
+> (relatórios ou artigos). </para>
+    <para
+>Para criar uma referência cruzada, basta adicionar o seu identificador no campo de <guilabel
+>Referência Cruzada:</guilabel
+> da página de <guilabel
+>Publicação</guilabel
+> do item. </para>
+    <screenshot>
+      <screeninfo
+>Página de Publicação da janela de edição do item</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="cross-ref.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>Página de Publicação da janela de edição do item</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Tanto poderá introduzir o identificador directamente como carregar no botão <inlinemediaobject
+> <imageobject
+> <imagedata fileref="flag.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> para o escolher na lista de identificadores disponíveis. </para>
+  </sect1>
+  <sect1 id="macros">
+    <title
+>Macros </title>
+    <para
+>Suponha que a sua bibliografia contém muitas referências para o mesmo jornal e que não deseja introduzir o mesmo título várias vezes. Poderá definir uma macro para o título do jornal. </para>
+    <para
+>Imagine que deseja definir uma macro <replaceable
+>lmf</replaceable
+> para <quote
+>Lidar com a Mecânica de Fracturas</quote
+>. Aí poderá fazer da seguinte forma: </para>
+    <procedure>
+      <step>
+	<para
+>Escolha o item do menu <menuchoice
+><guimenu
+>Elemento</guimenu
+><guisubmenu
+>Novo elemento</guisubmenu
+><guimenuitem
+>Nova macro</guimenuitem
+></menuchoice
+>. </para>
+      </step>
+      <step>
+	<para
+>Indique um identificador (abreviatura) para o título no campo de texto <guilabel
+>Id:</guilabel
+>. O identificador predefinido é o <userinput
+>Novo1</userinput
+>. Aí, poderá escrever <userinput
+>lmf</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Escolha a opção <inlinemediaobject
+> <imageobject
+> <imagedata fileref="draw-text.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Texto Simples</guilabel
+>). A outra opção, <inlinemediaobject
+> <imageobject
+> <imagedata fileref="code-context.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Código-Fonte</guilabel
+>) pode ser usada se quiser inserir alguma macro com comandos de &latex; nela. </para>
+      </step>
+      <step>
+	<para
+>Indique <userinput
+>Lidar com a Mecânica de Fracturas</userinput
+> no campo de texto <guilabel
+>Valor:</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>Definir a macro</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definir a macro</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Carregue no botão <guibutton
+>Aplicar</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Opcionalmente, mude para a página de <guilabel
+>Código</guilabel
+> para inspeccionar o código da macro. </para>
+	<screenshot>
+	  <screeninfo
+>Definir a macro (código-fonte)</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro-source.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definir a macro (código-fonte)</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Carregue no botão <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+    </procedure>
+    <para
+>Poderá usar o mesmo procedimento para corrigir os títulos, os autores, os nomes dos meses, &etc; de acordo com as regras de abreviação do seu publicador para os itens das bases de dados 'online'. Por omissão, estas regras (macros) deverão ser definidas nos ficheiros de estilos bibliográficos (<filename role="extension"
+>bst</filename
+>). </para>
+  </sect1>
+</chapter>
+
+<chapter id="integration">
+  <title
+>Integração com o &kile; e o &lyx; </title>
+  <para
+>O &kbibtex; pode ser facilmente integrado com os editores comuns de &latex;, nomeadamente com o &kile; e o &lyx;. </para>
+  <sect1 id="kile-intergation">
+    <title
+>Integração com o &kile; </title>
+    <para
+>O <ulink url="http://kile.sourceforge.net/"
+>&kile;</ulink
+> é uma consola e um editor de código em &tex; e &latex;. </para>
+    <para
+>O &kbibtex; é um visualizador/editor predefinido para itens do &bibtex; no &kile;, pelo que não existe necessidade de configuração adicional. </para>
+    <para
+>Para adicionar citações seleccionadas a partir dos ficheiros de bibliografias, inicie o &kile;, abra um ficheiro de &latex;, coloque o cursor onde deseja adicionar a citação, depois mude para a janela do &kbibtex;, seleccione os elementos na lista de elementos e escolha a opção <menuchoice
+><guimenu
+>Elemento</guimenu
+><guimenuitem
+>Enviar para o &lyx;/&kile;</guimenuitem
+></menuchoice
+> ou use o item do menu de contexto <guimenuitem
+>Enviar para o &lyx;/&kile;</guimenuitem
+> (carregando para tal com o &RMB;). </para>
+    <para
+>As citações serão inseridas como <userinput
+>\cite{<replaceable
+>identificadores dos elementos</replaceable
+>}</userinput
+> na posição do cursor, no documento actual do &kile;. </para>
+  </sect1>
+  <sect1 id="lyx-integration">
+    <title
+>Integração com o &lyx; </title>
+    <para
+>O <ulink url="http://www.lyx.org/"
+>&lyx;</ulink
+> é um processador de documentos que encoraja uma abordagem à escrita com base na estrutura dos seus documentos (WYSIWYM) e não simplesmente na sua aparência (WYSIWYG). </para>
+    <para
+>O &kbibtex; pode ser integrado no &lyx;, através do canal de entrada/saída do &lyx;. </para>
+    <procedure>
+      <step>
+	<para
+>Primeiro terá de configurar o &lyx; para usar o canal. Escolha a opção <menuchoice
+><guimenu
+>Ferramentas</guimenu
+><guimenuitem
+>Preferências</guimenuitem
+></menuchoice
+> do menu principal do &lyx;. Abra a página <guilabel
+>Localizações</guilabel
+> e indique a localização do mesmo (&eg; <filename
+>~/.lyx/lyxpipe</filename
+>) no campo de texto <guilabel
+>LyXServer pipe</guilabel
+> (canal do LyXServer). </para>
+	<screenshot>
+	  <screeninfo
+>Configuração do &lyx;</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="lyx-preferences.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Configuração do &lyx;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Carregue em <guibutton
+>Gravar</guibutton
+> para gravar as alterações. </para>
+      </step>
+      <step>
+	<para
+>Escolha a opção <menuchoice
+><guimenu
+>Ferramentas</guimenu
+><guimenuitem
+>Reconfigurar</guimenuitem
+></menuchoice
+> para reconfigurar o &lyx; e reiniciá-lo. </para>
+      </step>
+      <step>
+	<para
+>Para adicionar citações seleccionadas a partir dos ficheiros de bibliografias, abra um documento, coloque o cursor onde deseja adicionar uma bibliografia e seleccione a opção <menuchoice
+><guimenu
+>Inserir</guimenu
+><guisubmenu
+>Lista / Índice</guisubmenu
+><guimenuitem
+>Bibliografia do &bibtex;...</guimenuitem
+></menuchoice
+> no menu principal do &lyx;. </para>
+      </step>
+      <step>
+	<para
+>Carregue em <guibutton
+>Adicionar...</guibutton
+> e depois em <guibutton
+>Escolher...</guibutton
+>. Aponte o &lyx; para um ficheiro <filename role="extension"
+>bib</filename
+> do &kbibtex;. Carregue em <guibutton
+>Adicionar</guibutton
+> e depois carregue em <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Depois coloque o cursor onde deseja adicionar a citação e mude para a janela do &kbibtex;. Seleccione os elementos na lista e escolha a opção <menuchoice
+><guimenu
+>Elemento</guimenu
+><guimenuitem
+>Enviar para o &lyx;/&kile;</guimenuitem
+></menuchoice
+> ou use o item do menu de contexto <guimenuitem
+>Enviar para o &lyx;/&kile;</guimenuitem
+> (carregando para tal com o &RMB;). </para>
+      </step>
+      <step>
+	<para
+>As citações serão introduzidas como uma referência na posição do cursor do documento do &lyx; actual. </para>
+      </step>
+    </procedure>
+  </sect1>
+</chapter>
+
+<chapter id="credits">
+  <title
+>Créditos e Licença</title>
+  <para
+>&kbibtex; </para>
+  <para
+>Programa com 'copyright' &copy; 2004-2014 de Thomas Fischer <email
+>fischer@unix-ag.uni-kl.de</email
+> </para>
+  <para
+>Documentação com 'copyright' &copy; 2013 de Yuri Chornoivan <email
+>yurchor@ukr.net</email
+> </para>
+<para
+>Tradução de José Nuno Pires <email
+>zepires@gmail.com</email
+></para
+> 
+&underFDL; &underGPL; </chapter>
+
+<bibliography>
+  <biblioentry>
+    <abbrev
+>Lamport86</abbrev>
+    <author>
+      <personname
+><firstname
+>Leslie</firstname
+> <surname
+>Lamport</surname
+> </personname>
+    </author>
+    <title
+>Latex: um sistema de preparação de documentos </title>
+    <pubdate
+>1986</pubdate>
+    <publisher>
+      <publishername
+>Addison-Wesley Publishing Company</publishername>
+    </publisher>
+  </biblioentry>
+</bibliography>
+
+&documentation.index;
+
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+-->
