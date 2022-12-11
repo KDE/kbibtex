@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-10-17 00:47+0000\n"
+"POT-Creation-Date: 2022-12-11 00:47+0000\n"
 "PO-Revision-Date: 2022-10-18 07:17+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -475,7 +475,7 @@ msgstr "Adresse"
 msgid "Type"
 msgstr "Type"
 
-#: src/config/bibtexfields.cpp:191 src/gui/element/elementwidgets.cpp:989
+#: src/config/bibtexfields.cpp:191 src/gui/element/elementwidgets.cpp:997
 #, kde-format
 msgid "Key"
 msgstr "Clé"
@@ -1013,8 +1013,8 @@ msgctxt "Color Labels"
 msgid "Watch"
 msgstr "Observer"
 
-#: src/data/models/filemodel.cpp:251 src/gui/element/elementwidgets.cpp:436
-#: src/gui/element/elementwidgets.cpp:1088
+#: src/data/models/filemodel.cpp:251 src/gui/element/elementwidgets.cpp:440
+#: src/gui/element/elementwidgets.cpp:1096
 #, kde-format
 msgid "Macro"
 msgstr "Macro"
@@ -1024,7 +1024,7 @@ msgstr "Macro"
 msgid "Comment"
 msgstr "Commentaire"
 
-#: src/data/models/filemodel.cpp:271 src/gui/element/elementwidgets.cpp:1158
+#: src/data/models/filemodel.cpp:271 src/gui/element/elementwidgets.cpp:1166
 #, kde-format
 msgid "Preamble"
 msgstr "Préambule"
@@ -1119,8 +1119,8 @@ msgid "Associate Document with Entry"
 msgstr "Associer le document avec l'entrée"
 
 #: src/gui/element/associatedfilesui.cpp:236
-#: src/program/docklets/documentpreview.cpp:232
-#: src/program/docklets/referencepreview.cpp:121
+#: src/program/docklets/documentpreview.cpp:236
+#: src/program/docklets/referencepreview.cpp:125
 #, kde-format
 msgid "No preview available"
 msgstr "Aucun aperçu disponible"
@@ -1239,191 +1239,191 @@ msgstr ""
 msgid "Element validation failed"
 msgstr "Impossible de valider l'élément"
 
-#: src/gui/element/elementwidgets.cpp:454
+#: src/gui/element/elementwidgets.cpp:458
 #, kde-format
 msgid "Element type '%1' is invalid."
 msgstr "Le type d'élément « %1 » n'est pas valable."
 
-#: src/gui/element/elementwidgets.cpp:463
+#: src/gui/element/elementwidgets.cpp:467
 #, kde-format
 msgid "Id '%1' is invalid"
 msgstr "L'identifiant « %1 » n'est pas valable."
 
-#: src/gui/element/elementwidgets.cpp:515
+#: src/gui/element/elementwidgets.cpp:519
 #, kde-format
 msgid "Type:"
 msgstr "Type :"
 
-#: src/gui/element/elementwidgets.cpp:524
+#: src/gui/element/elementwidgets.cpp:528
 #, kde-format
 msgid "Id:"
 msgstr "Id :"
 
-#: src/gui/element/elementwidgets.cpp:541
+#: src/gui/element/elementwidgets.cpp:545
 #, kde-format
 msgid "Select a suggested id for this entry"
 msgstr "Sélectionnez un identifiant suggéré pour cette entrée"
 
-#: src/gui/element/elementwidgets.cpp:767
+#: src/gui/element/elementwidgets.cpp:771
 #, kde-format
 msgid "External"
 msgstr "Externe"
 
-#: src/gui/element/elementwidgets.cpp:853
+#: src/gui/element/elementwidgets.cpp:857
 #, kde-format
 msgid "Other Fields"
 msgstr "Autres champs"
 
-#: src/gui/element/elementwidgets.cpp:965
+#: src/gui/element/elementwidgets.cpp:973
 #, kde-format
 msgid "Name:"
 msgstr "Nom :"
 
-#: src/gui/element/elementwidgets.cpp:973
-#: src/gui/element/elementwidgets.cpp:1036 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/element/elementwidgets.cpp:981
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:98
 #, kde-format
 msgid "Add"
 msgstr "Ajouter"
 
-#: src/gui/element/elementwidgets.cpp:977
+#: src/gui/element/elementwidgets.cpp:985
 #, kde-format
 msgid "Content:"
 msgstr "Contenu :"
 
-#: src/gui/element/elementwidgets.cpp:984
+#: src/gui/element/elementwidgets.cpp:992
 #, kde-format
 msgid "List:"
 msgstr "Liste :"
 
-#: src/gui/element/elementwidgets.cpp:989 src/gui/valuelistmodel.cpp:322
+#: src/gui/element/elementwidgets.cpp:997 src/gui/valuelistmodel.cpp:322
 #, kde-format
 msgid "Value"
 msgstr "Valeur"
 
-#: src/gui/element/elementwidgets.cpp:994 src/parts/part.cpp:243
+#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:247
 #, kde-format
 msgid "Delete"
 msgstr "Supprimer"
 
-#: src/gui/element/elementwidgets.cpp:997
-#: src/program/docklets/referencepreview.cpp:144
+#: src/gui/element/elementwidgets.cpp:1005
+#: src/program/docklets/referencepreview.cpp:148
 #: src/program/documentlist.cpp:209
 #, kde-format
 msgid "Open"
 msgstr "Ouvrir"
 
-#: src/gui/element/elementwidgets.cpp:1036
+#: src/gui/element/elementwidgets.cpp:1044
 #: src/program/docklets/elementform.cpp:97
 #, kde-format
 msgid "Apply"
 msgstr "Appliquer"
 
-#: src/gui/element/elementwidgets.cpp:1105
-#: src/gui/element/elementwidgets.cpp:1175
+#: src/gui/element/elementwidgets.cpp:1113
+#: src/gui/element/elementwidgets.cpp:1183
 #, kde-format
 msgid "Value:"
 msgstr "Valeur :"
 
-#: src/gui/element/elementwidgets.cpp:1311
+#: src/gui/element/elementwidgets.cpp:1319
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 "Impossible d'analyser le code source renseigné comme un seul élément BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1320
+#: src/gui/element/elementwidgets.cpp:1328
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 "Impossible d'analyser le code source renseigné comme une seule entrée BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1326
+#: src/gui/element/elementwidgets.cpp:1334
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 "Impossible d'analyser le code source renseigné comme une seule macro BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1332
+#: src/gui/element/elementwidgets.cpp:1340
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 "Impossible d'analyser le code source renseigné comme un seul préambule "
 "BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1338
+#: src/gui/element/elementwidgets.cpp:1346
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX comment."
 msgstr ""
 "Impossible d'analyser le code source renseigné comme un seul commentaire "
 "BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1342
+#: src/gui/element/elementwidgets.cpp:1350
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Classe de l'élément définie de manière incorrecte"
 
-#: src/gui/element/elementwidgets.cpp:1351
+#: src/gui/element/elementwidgets.cpp:1359
 #, kde-format
 msgid "No issues detected"
 msgstr "Aucun problème détecté"
 
-#: src/gui/element/elementwidgets.cpp:1366
+#: src/gui/element/elementwidgets.cpp:1374
 #, kde-format
 msgid "Source"
 msgstr "Source"
 
-#: src/gui/element/elementwidgets.cpp:1397
+#: src/gui/element/elementwidgets.cpp:1405
 #, kde-format
 msgid "Restore"
 msgstr "Restaurer"
 
-#: src/gui/element/findpdfui.cpp:117 src/gui/element/findpdfui.cpp:166
-#: src/gui/element/findpdfui.cpp:168
+#: src/gui/element/findpdfui.cpp:121 src/gui/element/findpdfui.cpp:170
+#: src/gui/element/findpdfui.cpp:172
 #, kde-format
 msgid "View"
 msgstr "Afficher"
 
-#: src/gui/element/findpdfui.cpp:126 src/gui/element/findpdfui.cpp:166
-#: src/gui/element/findpdfui.cpp:168
+#: src/gui/element/findpdfui.cpp:130 src/gui/element/findpdfui.cpp:170
+#: src/gui/element/findpdfui.cpp:172
 #, kde-format
 msgid "Ignore"
 msgstr "Ignorer"
 
-#: src/gui/element/findpdfui.cpp:133 src/gui/element/findpdfui.cpp:166
-#: src/gui/element/findpdfui.cpp:168 src/gui/element/findpdfui.cpp:223
-#: src/gui/element/findpdfui.cpp:225
+#: src/gui/element/findpdfui.cpp:137 src/gui/element/findpdfui.cpp:170
+#: src/gui/element/findpdfui.cpp:172 src/gui/element/findpdfui.cpp:227
+#: src/gui/element/findpdfui.cpp:229
 #, kde-format
 msgid "Download"
 msgstr "Télécharger"
 
-#: src/gui/element/findpdfui.cpp:140 src/gui/element/findpdfui.cpp:166
-#: src/gui/element/findpdfui.cpp:168
+#: src/gui/element/findpdfui.cpp:144 src/gui/element/findpdfui.cpp:170
+#: src/gui/element/findpdfui.cpp:172
 #, kde-format
 msgid "Use URL only"
 msgstr "Utiliser l'URL uniquement"
 
-#: src/gui/element/findpdfui.cpp:369
+#: src/gui/element/findpdfui.cpp:380
 #, kde-format
 msgid "Result"
 msgstr "Résultat"
 
-#: src/gui/element/findpdfui.cpp:421
+#: src/gui/element/findpdfui.cpp:432
 #, kde-format
 msgid "Starting to search..."
 msgstr "Lancement de la recherche..."
 
-#: src/gui/element/findpdfui.cpp:440
+#: src/gui/element/findpdfui.cpp:451
 #, kde-format
 msgctxt "@title:window"
 msgid "Find PDF"
 msgstr "Trouver un « PDF »"
 
-#: src/gui/element/findpdfui.cpp:495
+#: src/gui/element/findpdfui.cpp:506
 #, kde-format
 msgid "Save URL '%1'"
 msgstr "Enregistrer l'URL « %1 »"
 
-#: src/gui/element/findpdfui.cpp:545
+#: src/gui/element/findpdfui.cpp:556
 #, kde-format
 msgid ""
 "<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
@@ -1553,59 +1553,59 @@ msgstr "Sélectionnez une référence croisée"
 msgid "Select the cross reference to another entry:"
 msgstr "Sélectionnez la référence croisée vers une autre entrée :"
 
-#: src/gui/field/fieldlineedit.cpp:232 src/gui/field/fieldlineedit.cpp:250
+#: src/gui/field/fieldlineedit.cpp:236 src/gui/field/fieldlineedit.cpp:254
 #, kde-format
 msgid "Opening and closing curly brackets do not match."
 msgstr "Les accolades d'ouverture et de fermeture ne correspondent pas."
 
-#: src/gui/field/fieldlineedit.cpp:237
+#: src/gui/field/fieldlineedit.cpp:241
 #, kde-format
 msgid "Reference contains characters outside of the allowed set."
 msgstr ""
 "La référence contient des caractères ne faisant pas partie de la liste "
 "autorisée."
 
-#: src/gui/field/fieldlineedit.cpp:247
+#: src/gui/field/fieldlineedit.cpp:251
 #, kde-format
 msgid "Source code could not be parsed correctly."
 msgstr "Impossible d'analyser le code source."
 
-#: src/gui/field/fieldlineedit.cpp:307 src/gui/field/fieldlineedit.cpp:362
+#: src/gui/field/fieldlineedit.cpp:311 src/gui/field/fieldlineedit.cpp:366
 #, kde-format
 msgid "Plain Text"
 msgstr "Texte brut"
 
-#: src/gui/field/fieldlineedit.cpp:313 src/gui/field/fieldlineedit.cpp:363
+#: src/gui/field/fieldlineedit.cpp:317 src/gui/field/fieldlineedit.cpp:367
 #, kde-format
 msgid "Reference"
 msgstr "Référence"
 
-#: src/gui/field/fieldlineedit.cpp:319 src/gui/field/fieldlineedit.cpp:364
+#: src/gui/field/fieldlineedit.cpp:323 src/gui/field/fieldlineedit.cpp:368
 #, kde-format
 msgid "Person"
 msgstr "Personne"
 
-#: src/gui/field/fieldlineedit.cpp:325 src/gui/field/fieldlineedit.cpp:365
+#: src/gui/field/fieldlineedit.cpp:329 src/gui/field/fieldlineedit.cpp:369
 #, kde-format
 msgid "Keyword"
 msgstr "Mot clé"
 
-#: src/gui/field/fieldlineedit.cpp:331 src/gui/field/fieldlineedit.cpp:367
+#: src/gui/field/fieldlineedit.cpp:335 src/gui/field/fieldlineedit.cpp:371
 #, kde-format
 msgid "Source Code"
 msgstr "Code source"
 
-#: src/gui/field/fieldlineedit.cpp:337 src/gui/field/fieldlineedit.cpp:370
+#: src/gui/field/fieldlineedit.cpp:341 src/gui/field/fieldlineedit.cpp:374
 #, kde-format
 msgid "Verbatim Text"
 msgstr "Texte verbatim"
 
-#: src/gui/field/fieldlineedit.cpp:475
+#: src/gui/field/fieldlineedit.cpp:483
 #, kde-format
 msgid "Open '%1'"
 msgstr "Ouvrir « %1 »"
 
-#: src/gui/field/fieldlineedit.cpp:491
+#: src/gui/field/fieldlineedit.cpp:499
 #, kde-format
 msgid ""
 "The current text cannot be used as value of type '%1'.\n"
@@ -2767,7 +2767,7 @@ msgstr "zbMATH Open"
 msgid "%1's Library"
 msgstr "Bibliothèque de %1"
 
-#: src/networking/zotero/oauthwizard.cpp:82
+#: src/networking/zotero/oauthwizard.cpp:86
 #, kde-format
 msgid ""
 "<html><head><title>KBibTeX authorized to use Zotero</title></"
@@ -2778,7 +2778,7 @@ msgstr ""
 "head><body><p>KBibTeX a été autorisé à lire votre base de données Zotero.</"
 "p></body></html>"
 
-#: src/networking/zotero/oauthwizard.cpp:139
+#: src/networking/zotero/oauthwizard.cpp:143
 #, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
@@ -2798,17 +2798,17 @@ msgstr ""
 "indiquant que KBibTeX a été autorisé.<br/>Cette fenêtre sera automatiquement "
 "fermée.</li></ol></qt>"
 
-#: src/networking/zotero/oauthwizard.cpp:145
+#: src/networking/zotero/oauthwizard.cpp:149
 #, kde-format
 msgid "Copy URL"
 msgstr "Copier l'URL"
 
-#: src/networking/zotero/oauthwizard.cpp:150
+#: src/networking/zotero/oauthwizard.cpp:154
 #, kde-format
 msgid "Open URL"
 msgstr "Ouvrir l'URL"
 
-#: src/networking/zotero/oauthwizard.cpp:170
+#: src/networking/zotero/oauthwizard.cpp:178
 #, kde-format
 msgctxt "@title:window"
 msgid "Zotero OAuth Key Exchange"
@@ -2838,139 +2838,139 @@ msgstr "Élément"
 msgid "Main Toolbar"
 msgstr "Barre principale"
 
-#: src/parts/part.cpp:131 src/parts/part.cpp:208
+#: src/parts/part.cpp:135 src/parts/part.cpp:212
 #, kde-format
 msgid "View Document"
 msgstr "Afficher le document"
 
-#: src/parts/part.cpp:158
+#: src/parts/part.cpp:162
 #, kde-format
 msgid "Save Copy As..."
 msgstr "Enregistrer une copie sous..."
 
-#: src/parts/part.cpp:162
+#: src/parts/part.cpp:166
 #, kde-format
 msgid "Save Selection..."
 msgstr "Enregistrer la sélection..."
 
-#: src/parts/part.cpp:170
+#: src/parts/part.cpp:174
 #, kde-format
 msgid "Filter"
 msgstr "Filtre"
 
-#: src/parts/part.cpp:175
+#: src/parts/part.cpp:179
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
 msgstr "Filtrer les entrées bibliographiques (%1)"
 
-#: src/parts/part.cpp:178
+#: src/parts/part.cpp:182
 #, kde-format
 msgid "New element"
 msgstr "Nouvel élément"
 
-#: src/parts/part.cpp:184
+#: src/parts/part.cpp:188
 #, kde-format
 msgid "New entry"
 msgstr "Nouvelle entrée"
 
-#: src/parts/part.cpp:189
+#: src/parts/part.cpp:193
 #, kde-format
 msgid "New comment"
 msgstr "Nouveau commentaire"
 
-#: src/parts/part.cpp:193
+#: src/parts/part.cpp:197
 #, kde-format
 msgid "New macro"
 msgstr "Nouvelle macro"
 
-#: src/parts/part.cpp:197
+#: src/parts/part.cpp:201
 #, kde-format
 msgid "New preamble"
 msgstr "Nouveau préambule"
 
-#: src/parts/part.cpp:202
+#: src/parts/part.cpp:206
 #, kde-format
 msgid "Edit Element"
 msgstr "Éditer l'élément"
 
-#: src/parts/part.cpp:214
+#: src/parts/part.cpp:218
 #, kde-format
 msgid "Find PDF..."
 msgstr "Trouver le PDF..."
 
-#: src/parts/part.cpp:219
+#: src/parts/part.cpp:223
 #, kde-format
 msgid "Format entry ids"
 msgstr "Format des identifiants d'entrée"
 
-#: src/parts/part.cpp:233
+#: src/parts/part.cpp:237
 #, kde-format
 msgid "Copy References"
 msgstr "Copier les références"
 
-#: src/parts/part.cpp:278
+#: src/parts/part.cpp:282
 #, kde-format
 msgid "New%1"
 msgstr "Nouveau%1"
 
-#: src/parts/part.cpp:437
+#: src/parts/part.cpp:441
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
 msgstr "Impossible de créer des copies de sauvegarde du document « %1 »."
 
-#: src/parts/part.cpp:437
+#: src/parts/part.cpp:441
 #, kde-format
 msgid "Backup copies"
 msgstr "Copies de sauvegarde"
 
-#: src/parts/part.cpp:470
+#: src/parts/part.cpp:474
 #, kde-format
 msgid "Save file"
 msgstr "Enregistrer le fichier"
 
-#: src/parts/part.cpp:500
+#: src/parts/part.cpp:504
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "Paramètres de fichier « BibTeX »"
 
-#: src/parts/part.cpp:518
+#: src/parts/part.cpp:522
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "Paramètres de fichier « PDF / PostScript »"
 
-#: src/parts/part.cpp:638
+#: src/parts/part.cpp:642
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr "L'enregistrement de la bibliographie dans le fichier « %1 » a échoué."
 
-#: src/parts/part.cpp:640 src/parts/part.cpp:646
+#: src/parts/part.cpp:644 src/parts/part.cpp:650
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr "L'enregistrement de la bibliographie a échoué"
 
-#: src/parts/part.cpp:642
+#: src/parts/part.cpp:646
 #, kde-format
 msgid "Saving bibliography failed:"
 msgstr "L'enregistrement de la bibliographie a échoué :"
 
-#: src/parts/part.cpp:645
+#: src/parts/part.cpp:649
 #, kde-format
 msgid "The following output was generated by the export filter:"
 msgstr "La sortie suivante a été générée par le filtre d'export :"
 
-#: src/parts/part.cpp:696
+#: src/parts/part.cpp:700
 #, kde-format
 msgid "Local Files"
 msgstr "Fichiers locaux"
 
-#: src/parts/part.cpp:721
+#: src/parts/part.cpp:725
 #, kde-format
 msgid "Remote Files"
 msgstr "Fichiers distants"
 
-#: src/parts/part.cpp:828
+#: src/parts/part.cpp:836
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -2983,7 +2983,7 @@ msgstr ""
 "Vérifiez que vous avez l'accès en écriture à ce fichier ou qu'il y a "
 "suffisamment d'espace disponible sur le disque."
 
-#: src/parts/part.cpp:957
+#: src/parts/part.cpp:969
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -2991,12 +2991,12 @@ msgstr ""
 "Impossible d'appliquer le format par défaut pour les identifiants "
 "d'entrées : aucun format par défaut spécifié."
 
-#: src/parts/part.cpp:957
+#: src/parts/part.cpp:969
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "Impossible d'appliquer le formatage par défaut"
 
-#: src/parts/part.cpp:1085
+#: src/parts/part.cpp:1097
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3007,17 +3007,17 @@ msgstr ""
 "\n"
 "Voulez-vous le recharger ou ignorer les changements sur le disque ?"
 
-#: src/parts/part.cpp:1085
+#: src/parts/part.cpp:1097
 #, kde-format
 msgid "File changed externally"
 msgstr "Le fichier a changé à l'extérieur du programme"
 
-#: src/parts/part.cpp:1085
+#: src/parts/part.cpp:1097
 #, kde-format
 msgid "Reload file"
 msgstr "Recharger le fichier"
 
-#: src/parts/part.cpp:1085
+#: src/parts/part.cpp:1097
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Ignorer les changements sur le disque"
@@ -3347,30 +3347,30 @@ msgstr "Aucune référence à envoyer vers LyX ou Kile."
 msgid "Could not open LyX server pipe '%1'."
 msgstr "Impossible d'ouvrir la connexion vers LyX « %1 »."
 
-#: src/program/docklets/documentpreview.cpp:198
+#: src/program/docklets/documentpreview.cpp:202
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
 "Basculer entre documents locaux uniquement ou tous les documents incluant "
 "ceux à distance"
 
-#: src/program/docklets/documentpreview.cpp:209
+#: src/program/docklets/documentpreview.cpp:213
 #, kde-format
 msgid "Open in external program"
 msgstr "Ouvrir dans un programme externe"
 
-#: src/program/docklets/documentpreview.cpp:343
+#: src/program/docklets/documentpreview.cpp:347
 #, kde-format
 msgid "Refreshing..."
 msgstr "Rafraîchissement..."
 
-#: src/program/docklets/documentpreview.cpp:372
+#: src/program/docklets/documentpreview.cpp:376
 #, kde-format
 msgid "No documents to show."
 msgstr "Aucun document à afficher."
 
-#: src/program/docklets/documentpreview.cpp:379
-#: src/program/docklets/documentpreview.cpp:691
+#: src/program/docklets/documentpreview.cpp:383
+#: src/program/docklets/documentpreview.cpp:699
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3380,18 +3380,18 @@ msgstr ""
 "\">Désactiver les restrictions</a> aux fichiers locaux pour voir les "
 "documents distants.</qt>"
 
-#: src/program/docklets/documentpreview.cpp:506
+#: src/program/docklets/documentpreview.cpp:510
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "Impossible d'afficher la partie demandée"
 
-#: src/program/docklets/documentpreview.cpp:533
 #: src/program/docklets/documentpreview.cpp:537
+#: src/program/docklets/documentpreview.cpp:541
 #, kde-format
 msgid "Loading..."
 msgstr "Chargement..."
 
-#: src/program/docklets/documentpreview.cpp:558
+#: src/program/docklets/documentpreview.cpp:562
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3405,7 +3405,7 @@ msgstr ""
 "\">Okular</a> pour KDE Frameworks&nbsp;5 afin d'utiliser son composant "
 "d'affichage de PDF.<br/> Okular pour KDE&nbsp;4 ne fonctionnera pas."
 
-#: src/program/docklets/documentpreview.cpp:559
+#: src/program/docklets/documentpreview.cpp:563
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3413,7 +3413,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>Savez-vous comment afficher le type MIME « %1.%2 » ?</qt>"
 
-#: src/program/docklets/documentpreview.cpp:694
+#: src/program/docklets/documentpreview.cpp:702
 #, kde-format
 msgid ""
 "No documents to show.\n"
@@ -3463,74 +3463,74 @@ msgstr "Appliquer les changements"
 msgid "Discard changes"
 msgstr "Abandonner les changements"
 
-#: src/program/docklets/referencepreview.cpp:80
+#: src/program/docklets/referencepreview.cpp:84
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Source (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:81
+#: src/program/docklets/referencepreview.cpp:85
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Source (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:87
+#: src/program/docklets/referencepreview.cpp:91
 #, kde-format
 msgid "Standard"
 msgstr "Standard"
 
-#: src/program/docklets/referencepreview.cpp:88
+#: src/program/docklets/referencepreview.cpp:92
 #, kde-format
 msgid "Fancy"
 msgstr "Sophistiqué"
 
-#: src/program/docklets/referencepreview.cpp:89
+#: src/program/docklets/referencepreview.cpp:93
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Citation Wikipédia"
 
-#: src/program/docklets/referencepreview.cpp:90
+#: src/program/docklets/referencepreview.cpp:94
 #, kde-format
 msgid "Abstract-only"
 msgstr "Abstrait uniquement"
 
-#: src/program/docklets/referencepreview.cpp:121
+#: src/program/docklets/referencepreview.cpp:125
 #, kde-format
 msgid "Reason:"
 msgstr "Raison :"
 
-#: src/program/docklets/referencepreview.cpp:145
+#: src/program/docklets/referencepreview.cpp:149
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Ouvrir la référence dans un navigateur."
 
-#: src/program/docklets/referencepreview.cpp:148
-#: src/program/docklets/referencepreview.cpp:419
+#: src/program/docklets/referencepreview.cpp:152
+#: src/program/docklets/referencepreview.cpp:427
 #, kde-format
 msgid "Save as HTML"
 msgstr "Enregistrer comme HTML"
 
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:153
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Enregistrer la référence comme un fragment HTML."
 
-#: src/program/docklets/referencepreview.cpp:239
+#: src/program/docklets/referencepreview.cpp:243
 #, kde-format
 msgid "Preview disabled"
 msgstr "Aperçu désactivé"
 
-#: src/program/docklets/referencepreview.cpp:259
+#: src/program/docklets/referencepreview.cpp:263
 #, kde-format
 msgid "No element selected"
 msgstr "Aucun élément sélectionné"
 
-#: src/program/docklets/referencepreview.cpp:324
-#: src/program/docklets/referencepreview.cpp:394
+#: src/program/docklets/referencepreview.cpp:328
+#: src/program/docklets/referencepreview.cpp:398
 #, kde-format
 msgid "No output generated"
 msgstr "Aucune sortie générée"
 
-#: src/program/docklets/referencepreview.cpp:353
+#: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid ""
 "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
@@ -3539,44 +3539,44 @@ msgstr ""
 "Ce type d'élément n'est pas pris en charge par la commande de Wikipedia "
 "<tt>{{cite}}</tt>."
 
-#: src/program/docklets/searchform.cpp:188
+#: src/program/docklets/searchform.cpp:192
 #, kde-format
 msgid "Go to Homepage"
 msgstr "Aller à la page d'accueil"
 
-#: src/program/docklets/searchform.cpp:212
+#: src/program/docklets/searchform.cpp:216
 #, kde-format
 msgid "Query Terms"
 msgstr "Termes de l'interrogation"
 
-#: src/program/docklets/searchform.cpp:215
+#: src/program/docklets/searchform.cpp:219
 #, kde-format
 msgid "Engines"
 msgstr "Moteurs"
 
-#: src/program/docklets/searchform.cpp:221
+#: src/program/docklets/searchform.cpp:225
 #, kde-format
 msgid "Use Entry"
 msgstr "Utiliser l'entrée"
 
-#: src/program/docklets/searchform.cpp:231
-#: src/program/docklets/searchform.cpp:304
+#: src/program/docklets/searchform.cpp:235
+#: src/program/docklets/searchform.cpp:308
 #, kde-format
 msgid "Search"
 msgstr "Rechercher"
 
-#: src/program/docklets/searchform.cpp:316
+#: src/program/docklets/searchform.cpp:320
 #, kde-format
 msgid "Stop"
 msgstr "Arrêt"
 
-#: src/program/docklets/searchform.cpp:339
+#: src/program/docklets/searchform.cpp:343
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Aucun moteur de recherche sélectionné (<a href=\"changeEngine\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:340
+#: src/program/docklets/searchform.cpp:344
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
@@ -3584,7 +3584,7 @@ msgstr ""
 "Le moteur de recherche <b>%1</b> est sélectionné (<a href=\"changeEngine"
 "\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:341
+#: src/program/docklets/searchform.cpp:345
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3593,7 +3593,7 @@ msgstr ""
 "Les moteurs de recherche <b>%1</b> et <b>%2</b> sont sélectionnés (<a href="
 "\"changeEngine\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:342
+#: src/program/docklets/searchform.cpp:346
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3602,7 +3602,7 @@ msgstr ""
 "Les moteurs de recherche <b>%1</b>, <b>%2</b> et <b>%3</b> sont sélectionnés "
 "(<a href=\"changeEngine\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:343
+#: src/program/docklets/searchform.cpp:347
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3611,7 +3611,7 @@ msgstr ""
 "Les moteurs de recherche <b>%1</b>, <b>%2</b> et plus sont sélectionnés (<a "
 "href=\"changeEngine\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:404
+#: src/program/docklets/searchform.cpp:412
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3620,7 +3620,7 @@ msgstr ""
 "Impossible de démarrer la recherche sur Internet :\n"
 "les termes de la recherche sont incomplets ou non valables."
 
-#: src/program/docklets/searchform.cpp:404
+#: src/program/docklets/searchform.cpp:412
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Recherche sur Internet"
