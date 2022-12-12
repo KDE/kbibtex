@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# giovanni <g.sora@tiscali.it>, 2017, 2020, 2021.
+# giovanni <g.sora@tiscali.it>, 2017, 2020, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-11 00:47+0000\n"
-"PO-Revision-Date: 2021-11-10 22:14+0100\n"
+"PO-Revision-Date: 2022-12-11 22:25+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -549,7 +549,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:216
 #, kde-format
 msgid "Editor Type"
-msgstr ""
+msgstr "Typo de Editor"
 
 #: src/config/bibtexfields.cpp:217
 #, kde-format
@@ -2380,16 +2380,14 @@ msgid "List Separator"
 msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:176
-#, fuzzy, kde-format
-#| msgid "Sort by Count"
+#, kde-format
 msgid "Sort by identifier"
-msgstr " Ordina per Computo"
+msgstr " Ordina per identificator"
 
 #: src/gui/widgets/filesettingswidget.cpp:177
-#, fuzzy, kde-format
-#| msgid "Sorting"
+#, kde-format
 msgid "Entry Sorting"
-msgstr "Ordinar"
+msgstr "Inserta Ordinar"
 
 #: src/gui/widgets/filterbar.cpp:71
 #, kde-format
