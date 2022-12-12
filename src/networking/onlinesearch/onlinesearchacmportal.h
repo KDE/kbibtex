@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2017 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2022 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -47,8 +47,7 @@ protected:
 private slots:
     void doneFetchingStartPage();
     void doneFetchingSearchPage();
-    void doneFetchingCitation();
-    void doneFetchingBibTeX();
+    void doneFetchingJSON();
 
 private:
     class OnlineSearchAcmPortalPrivate;
