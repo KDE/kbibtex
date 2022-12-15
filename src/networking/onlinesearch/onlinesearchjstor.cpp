@@ -15,12 +15,16 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
+#ifdef HAVE_WEBENGINEWIDGETS
+
 #include "onlinesearchjstor.h"
 
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QTimer>
 #include <QUrlQuery>
 #include <QRegularExpression>
+#include <QtWebEngineWidgets/QWebEnginePage>
 
 #ifdef HAVE_KF5
 #include <KLocalizedString>
@@ -62,7 +66,7 @@ OnlineSearchJStor::~OnlineSearchJStor()
 void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 3);
+    emit progress(curStep = 0, numSteps = 2 + numResults);
     d->numExpectedResults = numResults;
 
     /// Build search URL, to be used in the second step
@@ -71,10 +75,13 @@ void OnlineSearchJStor::startSearch(const QMap<QString, QString> &query, int num
     QUrlQuery q(d->queryUrl);
     d->queryUrl.setPath(QStringLiteral("/action/doAdvancedSearch"));
     q.addQueryItem(QStringLiteral("Search"), QStringLiteral("Search"));
-    q.addQueryItem(QStringLiteral("wc"), QStringLiteral("on")); /// include external references, too
-    q.addQueryItem(QStringLiteral("la"), QString()); /// no specific language
-    q.addQueryItem(QStringLiteral("jo"), QString()); /// no specific journal
-    q.addQueryItem(QStringLiteral("hp"), QString::number(numResults)); /// hits per page
+    q.addQueryItem(QStringLiteral("acc"), QStringLiteral("off")); /// all content, not just what you can access
+    q.addQueryItem(QStringLiteral("la"), QStringLiteral("")); /// no specific language
+    q.addQueryItem(QStringLiteral("group"), QStringLiteral("none")); /// not sure what that means
+    // TODO how to set number of results? 25 seems to be hard-coded standard
+    // Unused query keys:
+    //   'pt' for publication title
+    //   'isbn' for ISBN
     int queryNumber = 0;
     const QStringList elementsTitle = splitRespectingQuotationMarks(query[queryKeyTitle]);
     for (const QString &element : elementsTitle) {
@@ -162,39 +169,49 @@ void OnlineSearchJStor::doneFetchingResultPage()
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters
         QString htmlText = QString::fromUtf8(reply->readAll().constData());
+        QWebEnginePage *webPage = new QWebEnginePage(parent());
+        connect(webPage, &QWebEnginePage::loadFinished, parent(), [this, webPage](bool ok) mutable {
+            if (ok) {
+                QTimer::singleShot(4096, parent(), [this, webPage]() {
+                    QSharedPointer<QStringList> uniqueJStorIdentifiers(new QStringList);
+                    webPage->toHtml([this, uniqueJStorIdentifiers](const QString & htmlText) mutable {
+                        if (htmlText.length() == 0) return;
 
-        /// extract all unique DOI from HTML code
-        QStringList uniqueDOIs;
-        QRegularExpressionMatchIterator doiRegExpMatchIt = KBibTeX::doiRegExp.globalMatch(htmlText);
-        while (doiRegExpMatchIt.hasNext()) {
-            const QRegularExpressionMatch doiRegExpMatch = doiRegExpMatchIt.next();
-            QString doi = doiRegExpMatch.captured(0);
-            // FIXME DOI RegExp accepts DOIs with question marks, causes problems here
-            const int p = doi.indexOf(QLatin1Char('?'));
-            if (p > 0) doi = doi.left(p);
-            if (!uniqueDOIs.contains(doi))
-                uniqueDOIs.append(doi);
-        }
+                        /// Extract all unique identifiers from HTML code
+                        static const QRegularExpression jstorIdentifierRegExp(QStringLiteral("/stable/(pdf/|10[.][^/]+/)*([^\\\"?]+?)(\\.pdf)?[\\\"?]"));
+                        QRegularExpressionMatchIterator jstorIdentifierRegExpMatchIt = jstorIdentifierRegExp.globalMatch(htmlText);
+                        while (uniqueJStorIdentifiers->count() < d->numExpectedResults && jstorIdentifierRegExpMatchIt.hasNext()) {
+                            const QRegularExpressionMatch jstorIdentifierRegExpMatch = jstorIdentifierRegExpMatchIt.next();
+                            const QString jstorIdentifier = jstorIdentifierRegExpMatch.captured(2);
+                            if (!uniqueJStorIdentifiers->contains(jstorIdentifier)) {
+                                uniqueJStorIdentifiers->append(jstorIdentifier);
+                            }
+                        }
+                    });
 
-        if (uniqueDOIs.isEmpty()) {
-            /// No results found
-            stopSearch(resultNoError);
-        } else {
-            /// Build POST request that should return a BibTeX document
-            QString body;
-            int numResults = 0;
-            for (QStringList::ConstIterator it = uniqueDOIs.constBegin(); numResults < d->numExpectedResults && it != uniqueDOIs.constEnd(); ++it, ++numResults) {
-                if (!body.isEmpty()) body.append(QStringLiteral("&"));
-                body.append(QStringLiteral("citations=") + encodeURL(*it));
+                    QTimer::singleShot(1024, parent(), [this, uniqueJStorIdentifiers, webPage]() {
+                        if (uniqueJStorIdentifiers->isEmpty()) {
+                            /// No results found
+                            stopSearch(resultNoError);
+                            refreshBusyProperty();
+                        } else {
+                            for (const QString &jstorIdentifier : const_cast<const QStringList &>(*uniqueJStorIdentifiers)) {
+                                const QString url = QStringLiteral("https://www.jstor.org/citation/text/10.2307/") + jstorIdentifier;
+                                QNetworkRequest request(QUrl::fromUserInput(url));
+                                QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request);
+                                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+                                connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingBibTeXCode);
+                            }
+                        }
+                        webPage->deleteLater();
+                    });
+                });
+            } else {
+                stopSearch(resultUnspecifiedError);
+                webPage->deleteLater();
             }
-            QUrl bibTeXUrl = QUrl(OnlineSearchJStorPrivate::jstorBaseUrl);
-            bibTeXUrl.setPath(QStringLiteral("/citation/bulk/text"));
-            QNetworkRequest request(bibTeXUrl);
-            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-            QNetworkReply *newReply = InternalNetworkAccessManager::instance().post(request, body.toUtf8());
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
-            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchJStor::doneFetchingBibTeXCode);
-        }
+        });
+        webPage->setHtml(htmlText, reply->url());
     }
 
     refreshBusyProperty();
@@ -222,7 +239,8 @@ void OnlineSearchJStor::doneFetchingBibTeXCode()
             delete bibtexFile;
         }
 
-        stopSearch(numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
+        if (curStep == numSteps)
+            stopSearch(numFoundResults > 0 ? resultNoError : resultUnspecifiedError);
     }
 
     refreshBusyProperty();
@@ -300,3 +318,5 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
             ++it;
     }
 }
+
+#endif // HAVE_WEBENGINEWIDGETS

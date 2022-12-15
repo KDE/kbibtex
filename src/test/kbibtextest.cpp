@@ -133,7 +133,9 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchIngentaConnect(this);
     m_onlineSearchList << new OnlineSearchInspireHep(this);
     /// m_onlineSearchList << new OnlineSearchIsbnDB(this); /// disabled as provider switched to a paid model on 2017-12-26
+#ifdef HAVE_WEBENGINEWIDGETS
     m_onlineSearchList << new OnlineSearchJStor(this);
+#endif // HAVE_WEBENGINEWIDGETS
     m_onlineSearchList << new OnlineSearchMathSciNet(this);
     m_onlineSearchList << new OnlineSearchMRLookup(this);
     m_onlineSearchList << new OnlineSearchPubMed(this);

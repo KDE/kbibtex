@@ -11,7 +11,6 @@ set(
     onlinesearch/onlinesearchpubmed.cpp
     onlinesearch/onlinesearchacmportal.cpp
     onlinesearch/onlinesearchspringerlink.cpp
-    onlinesearch/onlinesearchjstor.cpp
     onlinesearch/onlinesearchmathscinet.cpp
     onlinesearch/onlinesearchmrlookup.cpp
     onlinesearch/onlinesearchinspirehep.cpp
@@ -47,6 +46,14 @@ if(BUILD_ZOTERO)
     )
 endif(BUILD_ZOTERO)
 
+if(Qt5WebEngineWidgets_FOUND)
+    list(
+        APPEND
+        kbibtexnetworking_LIB_SRCS
+        onlinesearch/onlinesearchjstor.cpp
+    )
+endif()
+
 set(
     kbibtexnetworking_HDRS
     onlinesearch/onlinesearchgeneral.h
@@ -56,7 +63,6 @@ set(
     onlinesearch/onlinesearchbibsonomy.h
     onlinesearch/onlinesearchgooglescholar.h
     onlinesearch/onlinesearchspringerlink.h
-    onlinesearch/onlinesearchjstor.h
     onlinesearch/onlinesearchieeexplore.h
     onlinesearch/onlinesearcharxiv.h
     onlinesearch/onlinesearchpubmed.h
@@ -90,6 +96,14 @@ if(BUILD_ZOTERO)
         zotero/tagmodel.h
     )
 endif(BUILD_ZOTERO)
+
+if(Qt5WebEngineWidgets_FOUND)
+    list(
+        APPEND
+        kbibtexnetworking_HDRS
+        onlinesearch/onlinesearchjstor.h
+    )
+endif()
 
 if(UNITY_BUILD)
     enable_unity_build(kbibtexnetworking kbibtexnetworking_LIB_SRCS)
@@ -142,6 +156,12 @@ if(BUILD_ZOTERO)
         ${QTOAUTH_LIBRARY}
     )
 endif(BUILD_ZOTERO)
+
+if(Qt5WebEngineWidgets_FOUND)
+    target_link_libraries(kbibtexnetworking
+        Qt5::WebEngineWidgets
+    )
+endif()
 
 
 set_target_properties(

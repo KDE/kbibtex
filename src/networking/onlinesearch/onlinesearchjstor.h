@@ -15,6 +15,8 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
+#ifdef HAVE_WEBENGINEWIDGETS
+
 #ifndef KBIBTEX_ONLINESEARCH_JSTOR_H
 #define KBIBTEX_ONLINESEARCH_JSTOR_H
 
@@ -50,3 +52,5 @@ private:
 };
 
 #endif // KBIBTEX_ONLINESEARCH_JSTOR_H
+
+#endif // HAVE_WEBENGINEWIDGETS

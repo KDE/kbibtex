@@ -59,7 +59,9 @@
 #include "onlinesearchsciencedirect.h"
 #include "onlinesearchspringerlink.h"
 #include "onlinesearcharxiv.h"
+#ifdef HAVE_WEBENGINEWIDGETS
 #include "onlinesearchjstor.h"
+#endif // HAVE_WEBENGINEWIDGETS
 #include "onlinesearchmathscinet.h"
 #include "onlinesearchmrlookup.h"
 #include "onlinesearchinspirehep.h"
@@ -229,7 +231,9 @@ public:
         addEngine(new OnlineSearchGoogleScholar(p));
         addEngine(new OnlineSearchIEEEXplore(p));
         addEngine(new OnlineSearchIngentaConnect(p));
+#ifdef HAVE_WEBENGINEWIDGETS
         addEngine(new OnlineSearchJStor(p));
+#endif // HAVE_WEBENGINEWIDGETS
         addEngine(new OnlineSearchMathSciNet(p));
         addEngine(new OnlineSearchMRLookup(p));
         addEngine(new OnlineSearchInspireHep(p));
