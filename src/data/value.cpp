@@ -715,7 +715,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
     int j = 0;
     static const QChar cbo = QLatin1Char('{'), cbc = QLatin1Char('}'), bs = QLatin1Char('\\'), mns = QLatin1Char('-'), comma = QLatin1Char(','), thinspace = QChar(0x2009), tilde = QLatin1Char('~'), nobreakspace = QChar(0x00a0);
     for (int i = 0; i < len; ++i) {
-        if ((result[i] == cbo || result[i] == cbc) && (i < 1 || result[i - 1] != bs)) {
+        if ((result[i] == cbo || result[i] == cbc) && (i < 1 || result[qMax(i - 1, 0)] != bs)) {
             /// hop over curly brackets
         } else if (i < len - 1 && result[i] == bs && result[i + 1] == mns) {
             /// hop over hyphenation commands

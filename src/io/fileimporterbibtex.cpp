@@ -84,7 +84,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
             /// Hop over XML declarations
             skipline = true;
         if (!skipline)
-            rawText.append(line).append("\n");
+            rawText += line + QStringLiteral("\n");
     }
 
     delete m_textStream;
@@ -587,12 +587,12 @@ QString FileImporterBibTeX::readSimpleString(const QString &until, const bool re
 {
     static const QString extraAlphaNumChars = QString(QStringLiteral("?'`-_:.+/$\\\"&"));
 
-    QString result; ///< 'result' is Null on purpose: simple strings cannot be empty in contrast to e.g. quoted strings
-
     if (!skipWhiteChar()) {
         /// Some error occurred while reading from data stream
         return QString::null;
     }
+
+    QString result; ///< 'result' is Null on purpose: simple strings cannot be empty in contrast to e.g. quoted strings
 
     QChar prevChar = QChar(0x00);
     while (!m_nextChar.isNull()) {
@@ -618,11 +618,11 @@ QString FileImporterBibTeX::readSimpleString(const QString &until, const bool re
                 break;
             } else {
                 /// Append read character to final result
-                result.append(m_nextChar);
+                result.append(QChar(nextCharUnicode));
             }
         } else if ((nextCharUnicode >= (ushort)'a' && nextCharUnicode <= (ushort)'z') || (nextCharUnicode >= (ushort)'A' && nextCharUnicode <= (ushort)'Z') || (nextCharUnicode >= (ushort)'0' && nextCharUnicode <= (ushort)'9') || extraAlphaNumChars.contains(m_nextChar)) {
             /// Accept default set of alpha-numeric characters
-            result.append(m_nextChar);
+            result.append(QChar(nextCharUnicode));
         } else
             break;
         prevChar = m_nextChar;
@@ -633,11 +633,14 @@ QString FileImporterBibTeX::readSimpleString(const QString &until, const bool re
 
 QString FileImporterBibTeX::readQuotedString()
 {
-    QString result(0, QChar()); ///< Construct an empty but non-null string
-
     Q_ASSERT_X(m_nextChar == QLatin1Char('"'), "QString FileImporterBibTeX::readQuotedString()", "m_nextChar is not '\"'");
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) {
+        /// Some error occurred while reading from data stream
+        return QString::null;
+    }
+
+    QString result(0, QChar()); ///< Construct an empty but non-null string
 
     while (!m_nextChar.isNull()) {
         if (m_nextChar == QLatin1Char('"') && m_prevChar != QLatin1Char('\\') && m_prevChar != QLatin1Char('{'))
@@ -659,13 +662,17 @@ QString FileImporterBibTeX::readQuotedString()
 QString FileImporterBibTeX::readBracketString()
 {
     static const QChar backslash = QLatin1Char('\\');
-    QString result(0, QChar()); ///< Construct an empty but non-null string
     const QChar openingBracket = m_nextChar;
     const QChar closingBracket = openingBracket == QLatin1Char('{') ? QLatin1Char('}') : (openingBracket == QLatin1Char('(') ? QLatin1Char(')') : QChar());
     Q_ASSERT_X(!closingBracket.isNull(), "QString FileImporterBibTeX::readBracketString()", "openingBracket==m_nextChar is neither '{' nor '('");
     int counter = 1;
 
-    if (!readChar()) return QString::null;
+    if (!readChar()) {
+        /// Some error occurred while reading from data stream
+        return QString::null;
+    }
+
+    QString result(0, QChar()); ///< Construct an empty but non-null string
 
     while (!m_nextChar.isNull()) {
         if (m_nextChar == openingBracket && m_prevChar != backslash)
