@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2016-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2016-2022 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -45,11 +45,12 @@ OnlineSearchBioRxiv::OnlineSearchBioRxiv(QWidget *parent)
 }
 
 OnlineSearchBioRxiv::~OnlineSearchBioRxiv() {
-    /// nothing
+    delete d;
 }
 
 void OnlineSearchBioRxiv::startSearch(const QMap<QString, QString> &query, int numResults) {
     m_hasBeenCanceled = false;
+    d->resultPageUrls.clear();
     emit progress(curStep = 0, numSteps = numResults * 2 + 1);
 
     QString urlText(QString(QStringLiteral("https://www.biorxiv.org/search/numresults:%1 sort:relevance-rank title_flags:match-phrase format_result:standard ")).arg(numResults));
@@ -97,7 +98,7 @@ void OnlineSearchBioRxiv::resultsPageDone() {
         /// ensure proper treatment of UTF-8 characters
         const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
 
-        static const QRegularExpression contentRegExp(QStringLiteral("/content/early/[12]\\d{3}/[01]\\d/\\d{2}/\\d+"));
+        static const QRegularExpression contentRegExp(QStringLiteral("[^\"]*/content/(early/[12]\\d{3}/[01]\\d/\\d{2}/\\d+|(") + KBibTeX::doiRegExp.pattern() + QStringLiteral("))"));
         QRegularExpressionMatchIterator contentRegExpMatchIt = contentRegExp.globalMatch(htmlCode);
         while (contentRegExpMatchIt.hasNext()) {
             const QRegularExpressionMatch contentRegExpMatch = contentRegExpMatchIt.next();
@@ -124,27 +125,39 @@ void OnlineSearchBioRxiv::resultPageDone() {
     emit progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    if (handleErrors(reply)) {
-        /// ensure proper treatment of UTF-8 characters
-        const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
+    QUrl redirUrl;
+    if (handleErrors(reply, redirUrl)) {
+        if (redirUrl.isValid()) {
+            /// Redirection to another url
+            ++numSteps;
+            QNetworkRequest request(redirUrl);
+            QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
+            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
+            connect(newReply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
+        } else {
+            /// ensure proper treatment of UTF-8 characters
+            const QString htmlCode = QString::fromUtf8(reply->readAll().constData());
+            Q_ASSERT_X(htmlCode.length() > 10, "OnlineSearchBioRxiv::resultPageDone", "htmlCode.length()>10");
+            dumpToFile(QStringLiteral("resultPageDone.html"), htmlCode);
 
-        static const QRegularExpression highwireRegExp(QStringLiteral("/highwire/citation/\\d+/bibtext"));
-        const QRegularExpressionMatch highwireRegExpMatch = highwireRegExp.match(htmlCode);
-        if (highwireRegExpMatch.hasMatch()) {
-            const QUrl url = QUrl(QStringLiteral("https://www.biorxiv.org") + highwireRegExpMatch.captured(0));
-            QNetworkRequest request(url);
-            QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
-            connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::bibTeXDownloadDone);
-        } else if (!d->resultPageUrls.isEmpty()) {
-            const QUrl firstUrl = *d->resultPageUrls.constBegin();
-            d->resultPageUrls.remove(firstUrl);
-            QNetworkRequest request(firstUrl);
-            QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
-            InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
-            connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
-        } else
-            stopSearch(resultNoError);
+            static const QRegularExpression highwireRegExp(QStringLiteral("/highwire/citation/\\d+/bibtext"));
+            const QRegularExpressionMatch highwireRegExpMatch = highwireRegExp.match(htmlCode);
+            if (highwireRegExpMatch.hasMatch()) {
+                const QUrl url = QUrl(QStringLiteral("https://www.biorxiv.org") + highwireRegExpMatch.captured(0));
+                QNetworkRequest request(url);
+                QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
+                connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::bibTeXDownloadDone);
+            } else if (!d->resultPageUrls.isEmpty()) {
+                const QUrl firstUrl = *d->resultPageUrls.constBegin();
+                d->resultPageUrls.remove(firstUrl);
+                QNetworkRequest request(firstUrl);
+                QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
+                InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
+                connect(reply, &QNetworkReply::finished, this, &OnlineSearchBioRxiv::resultPageDone);
+            } else
+                stopSearch(resultNoError);
+        }
     }
 
     refreshBusyProperty();
