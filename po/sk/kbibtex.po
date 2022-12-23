@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-11 00:47+0000\n"
+"POT-Creation-Date: 2022-12-23 00:47+0000\n"
 "PO-Revision-Date: 2021-01-14 15:37+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -116,913 +116,913 @@ msgid ""
 "a>&rsquo; tab."
 msgstr ""
 
-#: src/config/bibtexentries.cpp:67 src/config/bibtexentries.cpp:83
+#: src/config/bibtexentries.cpp:66 src/config/bibtexentries.cpp:82
 #, kde-format
 msgid "Journal Article"
 msgstr "Článok denníka"
 
-#: src/config/bibtexentries.cpp:68
+#: src/config/bibtexentries.cpp:67
 #, kde-format
 msgid "Conference"
 msgstr "Konferencie"
 
-#: src/config/bibtexentries.cpp:69 src/config/bibtexentries.cpp:100
+#: src/config/bibtexentries.cpp:68 src/config/bibtexentries.cpp:99
 #, kde-format
 msgid "Conference or Workshop Proceedings"
 msgstr "Konferenčné alebo seminárne rokovania"
 
-#: src/config/bibtexentries.cpp:70 src/config/bibtexentries.cpp:111
+#: src/config/bibtexentries.cpp:69 src/config/bibtexentries.cpp:110
 #, kde-format
 msgid "Technical Report"
 msgstr "Technická správa"
 
-#: src/config/bibtexentries.cpp:71 src/config/bibtexentries.cpp:95
+#: src/config/bibtexentries.cpp:70 src/config/bibtexentries.cpp:94
 #, kde-format
 msgid "Miscellaneous"
 msgstr "Rôzne"
 
-#: src/config/bibtexentries.cpp:72 src/config/bibtexentries.cpp:84
+#: src/config/bibtexentries.cpp:71 src/config/bibtexentries.cpp:83
 #, kde-format
 msgid "Book"
 msgstr "Kniha"
 
-#: src/config/bibtexentries.cpp:73 src/config/bibtexentries.cpp:86
+#: src/config/bibtexentries.cpp:72 src/config/bibtexentries.cpp:85
 #, kde-format
 msgid "Part of a Book"
 msgstr "Časť knihy"
 
-#: src/config/bibtexentries.cpp:74 src/config/bibtexentries.cpp:92
+#: src/config/bibtexentries.cpp:73 src/config/bibtexentries.cpp:91
 #, kde-format
 msgid "Part of a Book with own Title"
 msgstr "Časť knihy s vlastným titulom"
 
-#: src/config/bibtexentries.cpp:75 src/config/bibtexentries.cpp:110
+#: src/config/bibtexentries.cpp:74 src/config/bibtexentries.cpp:109
 #, kde-format
 msgid "PhD Thesis"
 msgstr "Dizertačná práca"
 
-#: src/config/bibtexentries.cpp:76 src/config/bibtexentries.cpp:109
+#: src/config/bibtexentries.cpp:75 src/config/bibtexentries.cpp:108
 #, kde-format
 msgid "Master's Thesis"
 msgstr "Diplomová práca"
 
-#: src/config/bibtexentries.cpp:77 src/config/bibtexentries.cpp:108
+#: src/config/bibtexentries.cpp:76 src/config/bibtexentries.cpp:107
 #, kde-format
 msgid "Unpublished Material"
 msgstr "Nepublikovaný materiál"
 
-#: src/config/bibtexentries.cpp:78 src/config/bibtexentries.cpp:94
+#: src/config/bibtexentries.cpp:77 src/config/bibtexentries.cpp:93
 #, kde-format
 msgid "Manual"
 msgstr "Ručne"
 
-#: src/config/bibtexentries.cpp:79 src/config/bibtexentries.cpp:89
+#: src/config/bibtexentries.cpp:78 src/config/bibtexentries.cpp:88
 #, kde-format
 msgid "Booklet"
 msgstr "Booklet"
 
-#: src/config/bibtexentries.cpp:85
+#: src/config/bibtexentries.cpp:84
 #, kde-format
 msgid "Multi-volume Book"
 msgstr "Viaczväzková kniha"
 
-#: src/config/bibtexentries.cpp:87
+#: src/config/bibtexentries.cpp:86
 #, kde-format
 msgid "Former Monograph as Part of a Book"
 msgstr "Bývalá monografia ako časť knihy"
 
-#: src/config/bibtexentries.cpp:88
+#: src/config/bibtexentries.cpp:87
 #, kde-format
 msgid "Supplemental Material in a Book"
 msgstr "Dodatočný materiál v knihe"
 
-#: src/config/bibtexentries.cpp:90
+#: src/config/bibtexentries.cpp:89
 #, kde-format
 msgid "Single-volume Collection"
 msgstr "Jednozväzková zbierka"
 
-#: src/config/bibtexentries.cpp:91
+#: src/config/bibtexentries.cpp:90
 #, kde-format
 msgid "Multi-volume Collection"
 msgstr "Viaczväzková zbierka"
 
-#: src/config/bibtexentries.cpp:93
+#: src/config/bibtexentries.cpp:92
 #, kde-format
 msgid "Supplemental Material in a Collection"
 msgstr "Dodatočný materiál v zbierke"
 
-#: src/config/bibtexentries.cpp:96
+#: src/config/bibtexentries.cpp:95
 #, kde-format
 msgid "Online Resource"
 msgstr "Online zdroj"
 
-#: src/config/bibtexentries.cpp:97
+#: src/config/bibtexentries.cpp:96
 #, kde-format
 msgid "Patent"
 msgstr "Patent"
 
-#: src/config/bibtexentries.cpp:98
+#: src/config/bibtexentries.cpp:97
 #, kde-format
 msgid "Periodical (Complete Issue)"
 msgstr "Časopis (kompletné vydanie)"
 
-#: src/config/bibtexentries.cpp:99
+#: src/config/bibtexentries.cpp:98
 #, kde-format
 msgid "Supplemental Material in a Periodical"
 msgstr "Dodatočný materiál v časopise"
 
-#: src/config/bibtexentries.cpp:101
+#: src/config/bibtexentries.cpp:100
 #, kde-format
 msgid "Multi-volume Proceedings"
 msgstr "Viaczväzkové rokovania"
 
-#: src/config/bibtexentries.cpp:102
+#: src/config/bibtexentries.cpp:101
 #, kde-format
 msgid "Publication in Conference Proceedings"
 msgstr "Publikácia v konferenčnom rokovaní"
 
-#: src/config/bibtexentries.cpp:103
+#: src/config/bibtexentries.cpp:102
 #, kde-format
 msgid "Single-volume Reference (e.g. Encyclopedia)"
 msgstr "Jednozväzková referencia (napr. encyklopédia)"
 
-#: src/config/bibtexentries.cpp:104
+#: src/config/bibtexentries.cpp:103
 #, kde-format
 msgid "Multi-volume Reference (e.g. Encyclopedia)"
 msgstr "Viaczväzková referencia (napr. encyklopédia)"
 
-#: src/config/bibtexentries.cpp:105
+#: src/config/bibtexentries.cpp:104
 #, kde-format
 msgid "Part of a Reference"
 msgstr "Časť referencie"
 
-#: src/config/bibtexentries.cpp:106
+#: src/config/bibtexentries.cpp:105
 #, kde-format
 msgid "Report"
 msgstr "Správa"
 
-#: src/config/bibtexentries.cpp:107
+#: src/config/bibtexentries.cpp:106
 #, kde-format
 msgid "Thesis"
 msgstr "Diplomová práca"
 
-#: src/config/bibtexfields.cpp:157 src/config/bibtexfields.cpp:196
+#: src/config/bibtexfields.cpp:160 src/config/bibtexfields.cpp:199
 #, kde-format
 msgid "Element Type"
 msgstr "Typ prvku"
 
-#: src/config/bibtexfields.cpp:158 src/config/bibtexfields.cpp:197
+#: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:200
 #: src/gui/file/findduplicatesui.cpp:158
 #, kde-format
 msgid "Identifier"
 msgstr "Identifikátor"
 
-#: src/config/bibtexfields.cpp:159 src/config/bibtexfields.cpp:198
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:321
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:651
+#: src/config/bibtexfields.cpp:162 src/config/bibtexfields.cpp:201
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:639
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:674
 #: src/processing/idsuggestions.cpp:412
 #, kde-format
 msgid "Title"
 msgstr "Názov"
 
-#: src/config/bibtexfields.cpp:160 src/config/bibtexfields.cpp:199
+#: src/config/bibtexfields.cpp:163 src/config/bibtexfields.cpp:202
 #, kde-format
 msgid "Title or Book Title"
 msgstr "Názov alebo názov knihy"
 
-#: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:208
+#: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:211
 #, kde-format
 msgid "Author or Editor"
 msgstr "Autor alebo editor"
 
-#: src/config/bibtexfields.cpp:162 src/config/bibtexfields.cpp:209
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:620
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:655
+#: src/config/bibtexfields.cpp:165 src/config/bibtexfields.cpp:212
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:643
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:678
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:79
 #, kde-format
 msgid "Author"
 msgstr "Autor"
 
-#: src/config/bibtexfields.cpp:163 src/config/bibtexfields.cpp:214
+#: src/config/bibtexfields.cpp:166 src/config/bibtexfields.cpp:217
 #, kde-format
 msgid "Editor"
 msgstr "Editor"
 
-#: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:230
+#: src/config/bibtexfields.cpp:167 src/config/bibtexfields.cpp:233
 #, kde-format
 msgid "Month"
 msgstr "Mesiac"
 
-#: src/config/bibtexfields.cpp:165 src/config/bibtexfields.cpp:231
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:210
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:624
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:659
+#: src/config/bibtexfields.cpp:168 src/config/bibtexfields.cpp:234
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:212
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:647
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:682
 #, kde-format
 msgid "Year"
 msgstr "Rok"
 
-#: src/config/bibtexfields.cpp:166
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:422
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:628
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:663
+#: src/config/bibtexfields.cpp:169
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:424
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:651
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:686
 #: src/processing/idsuggestions.cpp:441
 #, kde-format
 msgid "Journal"
 msgstr "Denník"
 
-#: src/config/bibtexfields.cpp:167 src/config/bibtexfields.cpp:239
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:242
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:636
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:671
+#: src/config/bibtexfields.cpp:170 src/config/bibtexfields.cpp:242
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:244
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:659
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:694
 #: src/processing/idsuggestions.cpp:476
 #, kde-format
 msgid "Volume"
 msgstr "Zväzok"
 
-#: src/config/bibtexfields.cpp:168 src/config/bibtexfields.cpp:241
+#: src/config/bibtexfields.cpp:171 src/config/bibtexfields.cpp:244
 #, kde-format
 msgid "Number"
 msgstr "Číslo"
 
-#: src/config/bibtexfields.cpp:169 src/config/bibtexfields.cpp:248
+#: src/config/bibtexfields.cpp:172 src/config/bibtexfields.cpp:251
 #, kde-format
 msgid "ISSN"
 msgstr "ISSN"
 
-#: src/config/bibtexfields.cpp:170 src/config/bibtexfields.cpp:249
+#: src/config/bibtexfields.cpp:173 src/config/bibtexfields.cpp:252
 #, kde-format
 msgid "ISBN"
 msgstr "ISBN"
 
-#: src/config/bibtexfields.cpp:171 src/config/bibtexfields.cpp:250
+#: src/config/bibtexfields.cpp:174 src/config/bibtexfields.cpp:253
 #, kde-format
 msgid "ISBN or ISSN"
 msgstr "ISBN alebo ISSN"
 
-#: src/config/bibtexfields.cpp:172 src/config/bibtexfields.cpp:252
+#: src/config/bibtexfields.cpp:175 src/config/bibtexfields.cpp:255
 #, kde-format
 msgid "How Published"
 msgstr "Ako publikované"
 
-#: src/config/bibtexfields.cpp:173 src/config/bibtexfields.cpp:253
+#: src/config/bibtexfields.cpp:176 src/config/bibtexfields.cpp:256
 #, kde-format
 msgid "Note"
 msgstr "Poznámka"
 
-#: src/config/bibtexfields.cpp:174 src/config/bibtexfields.cpp:256
+#: src/config/bibtexfields.cpp:177 src/config/bibtexfields.cpp:259
 #, kde-format
 msgid "Abstract"
 msgstr "Abstraktné"
 
-#: src/config/bibtexfields.cpp:175 src/config/bibtexfields.cpp:257
+#: src/config/bibtexfields.cpp:178 src/config/bibtexfields.cpp:260
 #, kde-format
 msgid "Pages"
 msgstr "Stránky"
 
-#: src/config/bibtexfields.cpp:176 src/config/bibtexfields.cpp:261
+#: src/config/bibtexfields.cpp:179 src/config/bibtexfields.cpp:264
 #, kde-format
 msgid "Publisher"
 msgstr "Vydavateľ"
 
-#: src/config/bibtexfields.cpp:177 src/config/bibtexfields.cpp:263
+#: src/config/bibtexfields.cpp:180 src/config/bibtexfields.cpp:266
 #, kde-format
 msgid "Institution"
 msgstr "Inštitúcia"
 
-#: src/config/bibtexfields.cpp:178 src/config/bibtexfields.cpp:264
+#: src/config/bibtexfields.cpp:181 src/config/bibtexfields.cpp:267
 #, kde-format
 msgid "Book Title"
 msgstr "Názov knihy"
 
-#: src/config/bibtexfields.cpp:179 src/config/bibtexfields.cpp:269
+#: src/config/bibtexfields.cpp:182 src/config/bibtexfields.cpp:272
 #, kde-format
 msgid "Series"
 msgstr "Série"
 
-#: src/config/bibtexfields.cpp:180 src/config/bibtexfields.cpp:271
+#: src/config/bibtexfields.cpp:183 src/config/bibtexfields.cpp:274
 #, kde-format
 msgid "Edition"
 msgstr "Vydanie"
 
-#: src/config/bibtexfields.cpp:181 src/config/bibtexfields.cpp:272
+#: src/config/bibtexfields.cpp:184 src/config/bibtexfields.cpp:275
 #, kde-format
 msgid "Chapter"
 msgstr "Kapitola"
 
-#: src/config/bibtexfields.cpp:182 src/config/bibtexfields.cpp:273
+#: src/config/bibtexfields.cpp:185 src/config/bibtexfields.cpp:276
 #, kde-format
 msgid "Organization"
 msgstr "Organizácia"
 
-#: src/config/bibtexfields.cpp:183
+#: src/config/bibtexfields.cpp:186
 #, kde-format
 msgid "School"
 msgstr "Škola"
 
-#: src/config/bibtexfields.cpp:184 src/config/bibtexfields.cpp:277
+#: src/config/bibtexfields.cpp:187 src/config/bibtexfields.cpp:280
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:125
 #, kde-format
 msgid "Keywords"
 msgstr "Kľúčové slová"
 
-#: src/config/bibtexfields.cpp:185 src/config/bibtexfields.cpp:278
+#: src/config/bibtexfields.cpp:188 src/config/bibtexfields.cpp:281
 #, kde-format
 msgid "Cross Reference"
 msgstr "Krížový odkaz"
 
-#: src/config/bibtexfields.cpp:186 src/config/bibtexfields.cpp:280
+#: src/config/bibtexfields.cpp:189 src/config/bibtexfields.cpp:283
 #: src/networking/onlinesearch/onlinesearchdoi.cpp:185
 #, kde-format
 msgid "DOI"
 msgstr "DOI"
 
-#: src/config/bibtexfields.cpp:187 src/config/bibtexfields.cpp:284
+#: src/config/bibtexfields.cpp:190 src/config/bibtexfields.cpp:287
 #, kde-format
 msgid "URL"
 msgstr "URL"
 
-#: src/config/bibtexfields.cpp:188 src/config/bibtexfields.cpp:287
-#: src/config/bibtexfields.cpp:310
+#: src/config/bibtexfields.cpp:191 src/config/bibtexfields.cpp:290
+#: src/config/bibtexfields.cpp:313
 #, kde-format
 msgid "Location"
 msgstr "Umiestnenie"
 
-#: src/config/bibtexfields.cpp:189
+#: src/config/bibtexfields.cpp:192
 #, kde-format
 msgid "Address"
 msgstr "Adresa"
 
-#: src/config/bibtexfields.cpp:190 src/config/bibtexfields.cpp:289
+#: src/config/bibtexfields.cpp:193 src/config/bibtexfields.cpp:292
 #: src/gui/file/findduplicatesui.cpp:160
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:495
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:632
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:667
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:497
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:655
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:690
 #: src/processing/idsuggestions.cpp:459
 #, kde-format
 msgid "Type"
 msgstr "Typ"
 
-#: src/config/bibtexfields.cpp:191 src/gui/element/elementwidgets.cpp:997
+#: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:997
 #, kde-format
 msgid "Key"
 msgstr "Kľúč"
 
-#: src/config/bibtexfields.cpp:192 src/config/bibtexfields.cpp:298
+#: src/config/bibtexfields.cpp:195 src/config/bibtexfields.cpp:301
 #: src/gui/preferences/settingscolorlabelwidget.cpp:194
 #: src/gui/preferences/settingscolorlabelwidget.cpp:427
 #, kde-format
 msgid "Color"
 msgstr "Farba"
 
-#: src/config/bibtexfields.cpp:193
+#: src/config/bibtexfields.cpp:196
 #, kde-format
 msgid "Stars"
 msgstr "Hviezdy"
 
-#: src/config/bibtexfields.cpp:200
+#: src/config/bibtexfields.cpp:203
 #, kde-format
 msgid "Subtitle"
 msgstr "Podtitulok"
 
-#: src/config/bibtexfields.cpp:201
+#: src/config/bibtexfields.cpp:204
 #, kde-format
 msgid "Title Addon"
 msgstr "Doplnok názvu"
 
-#: src/config/bibtexfields.cpp:202
+#: src/config/bibtexfields.cpp:205
 #, kde-format
 msgid "Shortitle"
 msgstr "Krátky názov"
 
-#: src/config/bibtexfields.cpp:203
+#: src/config/bibtexfields.cpp:206
 #, kde-format
 msgid "Original Title"
 msgstr "Pôvodný názov"
 
-#: src/config/bibtexfields.cpp:204
+#: src/config/bibtexfields.cpp:207
 #, kde-format
 msgid "Reprint Title"
 msgstr "Názov dotlače"
 
-#: src/config/bibtexfields.cpp:205
+#: src/config/bibtexfields.cpp:208
 #, kde-format
 msgid "Main Title"
 msgstr "Hlavný nadpis"
 
-#: src/config/bibtexfields.cpp:206
+#: src/config/bibtexfields.cpp:209
 #, kde-format
 msgid "Main Subtitle"
 msgstr "Hlavný podnázov"
 
-#: src/config/bibtexfields.cpp:207
+#: src/config/bibtexfields.cpp:210
 #, kde-format
 msgid "Maintitle Addon"
 msgstr "Doplnok hlavného názvu"
 
-#: src/config/bibtexfields.cpp:210
+#: src/config/bibtexfields.cpp:213
 #, kde-format
 msgid "Short Author"
 msgstr "Krátky autor"
 
-#: src/config/bibtexfields.cpp:211
+#: src/config/bibtexfields.cpp:214
 #, kde-format
 msgid "Name Addon"
 msgstr "Doplnok mena"
 
-#: src/config/bibtexfields.cpp:212
+#: src/config/bibtexfields.cpp:215
 #, kde-format
 msgid "Author Type"
 msgstr "Typ autora"
 
-#: src/config/bibtexfields.cpp:213
+#: src/config/bibtexfields.cpp:216
 #, kde-format
 msgid "Book Author"
 msgstr "Autor knihy"
 
-#: src/config/bibtexfields.cpp:215
+#: src/config/bibtexfields.cpp:218
 #, kde-format
 msgid "Short Editor"
 msgstr "Krátky editor"
 
-#: src/config/bibtexfields.cpp:216
+#: src/config/bibtexfields.cpp:219
 #, kde-format
 msgid "Editor Type"
 msgstr "Typ editora"
 
-#: src/config/bibtexfields.cpp:217
+#: src/config/bibtexfields.cpp:220
 #, kde-format
 msgid "Editor A"
 msgstr "Editor A"
 
-#: src/config/bibtexfields.cpp:218
+#: src/config/bibtexfields.cpp:221
 #, kde-format
 msgid "Editor A Type"
 msgstr "Editor typu A"
 
-#: src/config/bibtexfields.cpp:219
+#: src/config/bibtexfields.cpp:222
 #, kde-format
 msgid "Editor B"
 msgstr "Editor B"
 
-#: src/config/bibtexfields.cpp:220
+#: src/config/bibtexfields.cpp:223
 #, kde-format
 msgid "Editor B Type"
 msgstr "Editor typu B"
 
-#: src/config/bibtexfields.cpp:221
+#: src/config/bibtexfields.cpp:224
 #, kde-format
 msgid "Editor C"
 msgstr "Editor C"
 
-#: src/config/bibtexfields.cpp:222
+#: src/config/bibtexfields.cpp:225
 #, kde-format
 msgid "Editor C Type"
 msgstr "Editor typu C"
 
-#: src/config/bibtexfields.cpp:223
+#: src/config/bibtexfields.cpp:226
 #, kde-format
 msgid "Translator"
 msgstr "Prekladateľ"
 
-#: src/config/bibtexfields.cpp:224
+#: src/config/bibtexfields.cpp:227
 #, kde-format
 msgid "Afterword Author"
 msgstr "Autor doslovu"
 
-#: src/config/bibtexfields.cpp:225
+#: src/config/bibtexfields.cpp:228
 #, kde-format
 msgid "Introduction Author"
 msgstr "Autor úvodu"
 
-#: src/config/bibtexfields.cpp:226
+#: src/config/bibtexfields.cpp:229
 #, kde-format
 msgid "Foreword Author"
 msgstr "Autor predhovoru"
 
-#: src/config/bibtexfields.cpp:227
+#: src/config/bibtexfields.cpp:230
 #, kde-format
 msgid "Annotator"
 msgstr "Anotátor"
 
-#: src/config/bibtexfields.cpp:228
+#: src/config/bibtexfields.cpp:231
 #, kde-format
 msgid "Commentator"
 msgstr "Komentátor"
 
-#: src/config/bibtexfields.cpp:229
+#: src/config/bibtexfields.cpp:232
 #, kde-format
 msgid "Patent Holder"
 msgstr "Držiteľ patentu"
 
-#: src/config/bibtexfields.cpp:232
+#: src/config/bibtexfields.cpp:235
 #, kde-format
 msgid "Date"
 msgstr "Dátum"
 
-#: src/config/bibtexfields.cpp:233
+#: src/config/bibtexfields.cpp:236
 #, kde-format
 msgid "Date or Year"
 msgstr "Dátum alebo rok"
 
-#: src/config/bibtexfields.cpp:234
+#: src/config/bibtexfields.cpp:237
 #, kde-format
 msgid "Event Date"
 msgstr "Dátum udalosti"
 
-#: src/config/bibtexfields.cpp:235
+#: src/config/bibtexfields.cpp:238
 #, kde-format
 msgid "Original Date"
 msgstr "Pôvodný dátum"
 
-#: src/config/bibtexfields.cpp:236
+#: src/config/bibtexfields.cpp:239
 #, kde-format
 msgid "Journal Title"
 msgstr "Názov časopisu"
 
-#: src/config/bibtexfields.cpp:237
+#: src/config/bibtexfields.cpp:240
 #, kde-format
 msgid "Journal Subtitle"
 msgstr "Podtitul časopisu"
 
-#: src/config/bibtexfields.cpp:238
+#: src/config/bibtexfields.cpp:241
 #, kde-format
 msgid "Journal Shortitle"
 msgstr "Krátky názov časopisu"
 
-#: src/config/bibtexfields.cpp:240
+#: src/config/bibtexfields.cpp:243
 #, kde-format
 msgid "Number of Volumes"
 msgstr "Počet médií"
 
-#: src/config/bibtexfields.cpp:242
+#: src/config/bibtexfields.cpp:245
 #, kde-format
 msgid "Version"
 msgstr "Verzia"
 
-#: src/config/bibtexfields.cpp:243
+#: src/config/bibtexfields.cpp:246
 #, kde-format
 msgid "Part"
 msgstr "Časť"
 
-#: src/config/bibtexfields.cpp:244
+#: src/config/bibtexfields.cpp:247
 #, kde-format
 msgid "Issue"
 msgstr "Vydanie"
 
-#: src/config/bibtexfields.cpp:245
+#: src/config/bibtexfields.cpp:248
 #, kde-format
 msgid "IASN"
 msgstr "IASN"
 
-#: src/config/bibtexfields.cpp:246
+#: src/config/bibtexfields.cpp:249
 #, kde-format
 msgid "ISMN"
 msgstr "ISMN"
 
-#: src/config/bibtexfields.cpp:247
+#: src/config/bibtexfields.cpp:250
 #, kde-format
 msgid "ISRN"
 msgstr "ISRN"
 
-#: src/config/bibtexfields.cpp:251
+#: src/config/bibtexfields.cpp:254
 #, kde-format
 msgid "ISWC"
 msgstr "ISWC"
 
-#: src/config/bibtexfields.cpp:254
+#: src/config/bibtexfields.cpp:257
 #, kde-format
 msgid "Addendum"
 msgstr "Dodatky"
 
-#: src/config/bibtexfields.cpp:255
+#: src/config/bibtexfields.cpp:258
 #, kde-format
 msgid "Annotation"
 msgstr "Poznámka"
 
-#: src/config/bibtexfields.cpp:258
+#: src/config/bibtexfields.cpp:261
 #, kde-format
 msgid "Total Pages"
 msgstr "Celkovo strán"
 
-#: src/config/bibtexfields.cpp:259
+#: src/config/bibtexfields.cpp:262
 #, kde-format
 msgid "Pagination"
 msgstr "Stránkovanie"
 
-#: src/config/bibtexfields.cpp:260
+#: src/config/bibtexfields.cpp:263
 #, kde-format
 msgid "Book Pagination"
 msgstr "Stránkovanie knihy"
 
-#: src/config/bibtexfields.cpp:262
+#: src/config/bibtexfields.cpp:265
 #, kde-format
 msgid "Original Publisher"
 msgstr "Pôvodný vydavateľ"
 
-#: src/config/bibtexfields.cpp:265
+#: src/config/bibtexfields.cpp:268
 #, kde-format
 msgid "Book Subtitle"
 msgstr "Podtitul knihy"
 
-#: src/config/bibtexfields.cpp:266
+#: src/config/bibtexfields.cpp:269
 #, kde-format
 msgid "Issue Title"
 msgstr "Názov vydania"
 
-#: src/config/bibtexfields.cpp:267
+#: src/config/bibtexfields.cpp:270
 #, kde-format
 msgid "Issue Subtitle"
 msgstr "Podnázov vydania"
 
-#: src/config/bibtexfields.cpp:268
+#: src/config/bibtexfields.cpp:271
 #, kde-format
 msgid "Booktitle Addon"
 msgstr "Dodatok názvu knihy"
 
-#: src/config/bibtexfields.cpp:270
+#: src/config/bibtexfields.cpp:273
 #, kde-format
 msgid "Series Shortitle"
 msgstr "Krátky názov série"
 
-#: src/config/bibtexfields.cpp:274
+#: src/config/bibtexfields.cpp:277
 #, kde-format
 msgid "Event Title"
 msgstr "Názov udalosti"
 
-#: src/config/bibtexfields.cpp:275
+#: src/config/bibtexfields.cpp:278
 #, kde-format
 msgid "Venue"
 msgstr "Miesto konania"
 
-#: src/config/bibtexfields.cpp:276
+#: src/config/bibtexfields.cpp:279
 #, kde-format
 msgid "Index Title"
 msgstr "Názov registra"
 
-#: src/config/bibtexfields.cpp:279
+#: src/config/bibtexfields.cpp:282
 #, kde-format
 msgid "XRef"
 msgstr "XRef"
 
-#: src/config/bibtexfields.cpp:281
+#: src/config/bibtexfields.cpp:284
 #, kde-format
 msgid "E-Print"
 msgstr "E-Print"
 
-#: src/config/bibtexfields.cpp:282
+#: src/config/bibtexfields.cpp:285
 #, kde-format
 msgid "E-Print Class"
 msgstr "Trieda E-Print"
 
-#: src/config/bibtexfields.cpp:283
+#: src/config/bibtexfields.cpp:286
 #, kde-format
 msgid "E-Print Type"
 msgstr "Typ E-Print"
 
-#: src/config/bibtexfields.cpp:285
+#: src/config/bibtexfields.cpp:288
 #, kde-format
 msgid "URL Date"
 msgstr "Dátum URL"
 
-#: src/config/bibtexfields.cpp:286
+#: src/config/bibtexfields.cpp:289
 #, kde-format
 msgid "Local File URL"
 msgstr "URL lokálneho súboru"
 
-#: src/config/bibtexfields.cpp:288
+#: src/config/bibtexfields.cpp:291
 #, kde-format
 msgid "Original Location"
 msgstr "Pôvodné umiestnenie"
 
-#: src/config/bibtexfields.cpp:290
+#: src/config/bibtexfields.cpp:293
 #, kde-format
 msgid "EID"
 msgstr "EID"
 
-#: src/config/bibtexfields.cpp:291
+#: src/config/bibtexfields.cpp:294
 #: src/gui/preferences/settingscolorlabelwidget.cpp:195
 #, kde-format
 msgid "Label"
 msgstr "Štítok"
 
-#: src/config/bibtexfields.cpp:292
+#: src/config/bibtexfields.cpp:295
 #, kde-format
 msgid "Shorthand"
 msgstr "Tesnopis"
 
-#: src/config/bibtexfields.cpp:293
+#: src/config/bibtexfields.cpp:296
 #, kde-format
 msgid "Shorthand Intro"
 msgstr "Úvod tesnopisu"
 
-#: src/config/bibtexfields.cpp:294
+#: src/config/bibtexfields.cpp:297
 #, kde-format
 msgid "Publication State"
 msgstr "Stav publikácie"
 
-#: src/config/bibtexfields.cpp:295
+#: src/config/bibtexfields.cpp:298
 #, kde-format
 msgid "Language"
 msgstr "Jazyk"
 
-#: src/config/bibtexfields.cpp:296
+#: src/config/bibtexfields.cpp:299
 #, kde-format
 msgid "Original Language"
 msgstr "Pôvodný jazyk"
 
-#: src/config/bibtexfields.cpp:297 src/networking/zotero/collection.cpp:96
+#: src/config/bibtexfields.cpp:300 src/networking/zotero/collection.cpp:96
 #: src/program/docklets/zoterobrowser.cpp:108
 #, kde-format
 msgid "Library"
 msgstr "Knižnica"
 
-#: src/config/bibtexfields.cpp:299
+#: src/config/bibtexfields.cpp:302
 #, kde-format
 msgid "Gender"
 msgstr "Pohlavie"
 
-#: src/config/bibtexfields.cpp:300
+#: src/config/bibtexfields.cpp:303
 #, kde-format
 msgid "Hyphenation"
 msgstr "Delenie slov"
 
-#: src/config/bibtexfields.cpp:301
+#: src/config/bibtexfields.cpp:304
 #, kde-format
 msgid "Index Sorttitle"
 msgstr "Krátky názov registra"
 
-#: src/config/bibtexfields.cpp:302
+#: src/config/bibtexfields.cpp:305
 #, kde-format
 msgid "Entry Options"
 msgstr "Voľby položky"
 
-#: src/config/bibtexfields.cpp:303
+#: src/config/bibtexfields.cpp:306
 #, kde-format
 msgid "Presort"
 msgstr "Pretriediť"
 
-#: src/config/bibtexfields.cpp:304
+#: src/config/bibtexfields.cpp:307
 #, kde-format
 msgid "Sort Key"
 msgstr "Kľúč zoraďovania"
 
-#: src/config/bibtexfields.cpp:305
+#: src/config/bibtexfields.cpp:308
 #, kde-format
 msgid "Sort Names"
 msgstr "Triediť mená"
 
-#: src/config/bibtexfields.cpp:306
+#: src/config/bibtexfields.cpp:309
 #, kde-format
 msgid "Sort Shorthand"
 msgstr "Triediť tesnopis"
 
-#: src/config/bibtexfields.cpp:307
+#: src/config/bibtexfields.cpp:310
 #, kde-format
 msgid "Sort Title"
 msgstr "Triediť názov"
 
-#: src/config/bibtexfields.cpp:308
+#: src/config/bibtexfields.cpp:311
 #, kde-format
 msgid "Sort Year"
 msgstr "Triediť rok"
 
-#: src/config/bibtexfields.cpp:309
+#: src/config/bibtexfields.cpp:312
 #, kde-format
 msgid "ISAN"
 msgstr "ISAN"
 
-#: src/config/preferences.cpp:416
+#: src/config/preferences.cpp:420
 #, kde-format
 msgid "BibTeX"
 msgstr "BibTeX"
 
-#: src/config/preferences.cpp:416
+#: src/config/preferences.cpp:420
 #, kde-format
 msgid "BibLaTeX"
 msgstr "BibLaTeX"
 
-#: src/config/preferences.cpp:580
+#: src/config/preferences.cpp:584
 #, kde-format
 msgid "No backups"
 msgstr "Žiadne zálohy"
 
-#: src/config/preferences.cpp:580
+#: src/config/preferences.cpp:584
 #, kde-format
 msgid "Local files only"
 msgstr "Iba lokálne súbory"
 
-#: src/config/preferences.cpp:580
+#: src/config/preferences.cpp:584
 #, kde-format
 msgid "Both local and remote files"
 msgstr "Miestna aj vzdialené súbory"
 
-#: src/config/preferences.cpp:906
+#: src/config/preferences.cpp:910
 #, kde-format
 msgctxt "Comment Quoting"
 msgid "None"
 msgstr "Žiadne"
 
-#: src/config/preferences.cpp:906
+#: src/config/preferences.cpp:910
 #, kde-format
 msgctxt "Comment Quoting"
 msgid "@comment{…}"
 msgstr "@komentár{...}"
 
-#: src/config/preferences.cpp:906
+#: src/config/preferences.cpp:910
 #, kde-format
 msgctxt "Comment Quoting"
 msgid "% …"
 msgstr "% …"
 
-#: src/config/preferences.cpp:945
+#: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "lowercase"
 msgstr "malé písmená"
 
-#: src/config/preferences.cpp:945
+#: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "Initial capital"
 msgstr "Úvodná iniciála"
 
-#: src/config/preferences.cpp:945
+#: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UpperCamelCase"
 msgstr "UpperCamelCase"
 
-#: src/config/preferences.cpp:945
+#: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "lowerCamelCase"
 msgstr "lowerCamelCase"
 
-#: src/config/preferences.cpp:945
+#: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UPPERCASE"
 msgstr "VEĽKÉ PÍSMO"
 
-#: src/config/preferences.cpp:1182
+#: src/config/preferences.cpp:1186
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
 msgstr "Otvoriť editor"
 
-#: src/config/preferences.cpp:1182
+#: src/config/preferences.cpp:1186
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "View Document"
 msgstr "Zobraziť dokument"
 
-#: src/config/preferences.cpp:1221
+#: src/config/preferences.cpp:1225
 #, kde-format
 msgctxt "Color Labels"
 msgid "Important"
 msgstr "Dôležité"
 
-#: src/config/preferences.cpp:1221
+#: src/config/preferences.cpp:1225
 #, kde-format
 msgctxt "Color Labels"
 msgid "Unread"
 msgstr "Neprečítané"
 
-#: src/config/preferences.cpp:1221
+#: src/config/preferences.cpp:1225
 #, kde-format
 msgctxt "Color Labels"
 msgid "Read"
 msgstr "Prečítané"
 
-#: src/config/preferences.cpp:1221
+#: src/config/preferences.cpp:1225
 #, kde-format
 msgctxt "Color Labels"
 msgid "Watch"
 msgstr "Sledovanie"
 
-#: src/data/models/filemodel.cpp:251 src/gui/element/elementwidgets.cpp:440
+#: src/data/models/filemodel.cpp:256 src/gui/element/elementwidgets.cpp:440
 #: src/gui/element/elementwidgets.cpp:1096
 #, kde-format
 msgid "Macro"
 msgstr "Makro"
 
-#: src/data/models/filemodel.cpp:261
+#: src/data/models/filemodel.cpp:266
 #, kde-format
 msgid "Comment"
 msgstr "Komentár"
 
-#: src/data/models/filemodel.cpp:271 src/gui/element/elementwidgets.cpp:1166
+#: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1166
 #, kde-format
 msgid "Preamble"
 msgstr "Preambula"
 
-#: src/data/value.cpp:647
+#: src/data/value.cpp:649
 #, kde-format
 msgid " and "
 msgstr " a "
 
-#: src/data/value.cpp:650
+#: src/data/value.cpp:652
 #, kde-format
 msgid " and others"
 msgstr " a ďalšie"
@@ -1833,8 +1833,8 @@ msgstr "Pridať..."
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:336
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:343
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:427
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:345
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:429
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:268
 #, kde-format
 msgid "Remove"
@@ -1851,10 +1851,31 @@ msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
 msgid "NewColor%1"
 msgstr "NováFarba%1"
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:84
 #, kde-format
 msgid "Paper Size:"
 msgstr "Veľkosť papiera:"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
+#, fuzzy, kde-format
+#| msgid "A4"
+msgctxt "Paper size"
+msgid "A4"
+msgstr "A4"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
+#, fuzzy, kde-format
+#| msgid "Legal"
+msgctxt "Paper size"
+msgid "Legal"
+msgstr "Legal"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
+#, fuzzy, kde-format
+#| msgid "Letter"
+msgctxt "Paper size"
+msgid "Letter"
+msgstr "Letter"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:93
 #, kde-format
@@ -1945,319 +1966,335 @@ msgstr "Všeobecné"
 msgid "NewKeyword%1"
 msgstr "NovéKľúčovéSlovo%1"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:113
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
 #, kde-format
 msgid "Authors"
 msgstr "Autori"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:117
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:119
 #, kde-format
 msgid "Author Range:"
 msgstr "Rozsah autora:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "First author"
 msgstr "Prvý autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Second author"
 msgstr "Druhý autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Third author"
 msgstr "Tretí autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Fourth author"
 msgstr "Štvrtý autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Fifth author"
 msgstr "Piaty autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Sixth author"
 msgstr "Šiesty autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Seventh author"
 msgstr "Siedmy autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Eighth author"
 msgstr "Osmy autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Ninth author"
 msgstr "Deviaty autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Tenth author"
 msgstr "Desiaty autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:118
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "|Last author"
 msgstr "|Posledný autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:124
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:126
 #, kde-format
 msgid "... and last author"
 msgstr "... a posledný autor"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:130
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:134
 #: src/processing/idsuggestions.cpp:501
 #, kde-format
 msgid "From first author to author %1 and last author"
 msgstr "Od prvého autora k autorovi %1 a poslednému autorovi"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:130
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:134
 #: src/processing/idsuggestions.cpp:510 src/processing/idsuggestions.cpp:518
 #, kde-format
 msgid "From author %1 to author %2 and last author"
 msgstr "Od autora %1 k autorovi %2 a poslednému autorovi"
-
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:137
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:348
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:432
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:501
-#, kde-format
-msgid "No change"
-msgstr "Bez zmeny"
-
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:138
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:349
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:433
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:502
-#, kde-format
-msgid "To upper case"
-msgstr "Na veľké písmená"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:139
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:350
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:434
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:503
 #, kde-format
-msgid "To lower case"
-msgstr "Na malé písmená"
+msgid "No change"
+msgstr "Bez zmeny"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:140
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:351
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:435
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:504
 #, kde-format
-msgid "To CamelCase"
-msgstr "Na CamelCase"
+msgid "To upper case"
+msgstr "Na veľké písmená"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:141
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:352
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:436
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:505
 #, kde-format
+msgid "To lower case"
+msgstr "Na malé písmená"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:142
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:353
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:437
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:506
+#, kde-format
+msgid "To CamelCase"
+msgstr "Na CamelCase"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:143
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:354
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:438
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:507
+#, kde-format
 msgid "Change casing:"
 msgstr "Zmeniť veľkosť písmen:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:145
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:356
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:440
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:147
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:358
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:442
 #, kde-format
 msgid "Text in between:"
 msgstr "Text medzi:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:149
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:360
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:444
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:509
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:151
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:362
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:446
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:511
 #, kde-format
 msgid "Only first characters:"
 msgstr "Iba prvé znaky:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:150
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:361
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:445
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:510
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:152
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:363
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:447
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:512
 #, kde-format
 msgid "No limitation"
 msgstr "Bez obmedzení"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:213
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:215
 #, kde-format
 msgid "2 digits"
 msgstr "2 číslice"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:214
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:216
 #, kde-format
 msgid "4 digits"
 msgstr "4 číslice"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:215
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:217
 #, kde-format
 msgid "Digits:"
 msgstr "Číslice:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:246
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:248
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:116
 #, kde-format
 msgid "Volume:"
 msgstr "Zväzok:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:268
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:640
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:675
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:270
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:663
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:698
 #, kde-format
 msgid "Page Number"
 msgstr "Číslo strany"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:272
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:274
 #, kde-format
 msgid "First page's number:"
 msgstr "Číslo prvej strany:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:304
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:306
 #, kde-format
 msgid "First word only"
 msgstr "Iba prvé slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:306
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:308
 #, kde-format
 msgid "All but first word"
 msgstr "Všetko okrem prvého slova"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:308
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:335
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:338
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:310
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:337
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:340
 #, kde-format
 msgid "From first to last word"
 msgstr "Od prvého k poslednému slovu"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:310
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:335
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:338
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:312
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:337
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:340
 #, kde-format
 msgid "From word %1 to last word"
 msgstr "Od slova %1 k poslednému slovu"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:312
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:336
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:339
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:314
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:338
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:341
 #, kde-format
 msgid "From first word to word %1"
 msgstr "Od prvého slova k slovu %1"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:314
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:336
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:339
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:316
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:338
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:341
 #, kde-format
 msgid "From word %1 to word %2"
 msgstr "Od slova %1 k slovu %2"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:325
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:327
 #, kde-format
 msgid "Word Range:"
 msgstr "Rozsah slov:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "First word"
 msgstr "Prvé slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "Second word"
 msgstr "Druhé slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "Third word"
 msgstr "Tretie slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "Fourth word"
 msgstr "Štvrté slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "Fifth word"
 msgstr "Piate slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "Sixth word"
 msgstr "Šieste slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "Seventh word"
 msgstr "Siedme slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "Eighth word"
 msgstr "Osme slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "Ninth word"
 msgstr "Deviate slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "Tenth word"
 msgstr "Desiate slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:326
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "|Last word"
 msgstr "|Posledné slovo"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:344
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:428
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:346
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:430
 #, kde-format
 msgid "Small words:"
 msgstr "Malé slová:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:552
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:644
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:679
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:554
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:667
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:702
 #, kde-format
 msgid "Text"
 msgstr "Text"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:555
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:557
 #, kde-format
 msgid "Text:"
 msgstr "Text:"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:606
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:596
+#, kde-format
+msgid "Preview:"
+msgstr ""
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:610
+#, kde-format
+msgid "Copy format string to clipboard"
+msgstr ""
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:616
+#, fuzzy, kde-format
+#| msgid "Format entry ids"
+msgid "Format string:"
+msgstr "Formátovať idčka položiek"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
 msgid "Add at top"
 msgstr "Pridať na vrch"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:611
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:634
 #, kde-format
 msgid "Add at bottom"
 msgstr "Pridať na spodok"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:929
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:952
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:114
 #, kde-format
 msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
 msgstr "<qt>Štruktúra:<ul><li>%1</li></ul>Príklad: %2</qt>"
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:935
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:961
 #, fuzzy, kde-format
 #| msgid "Edit Id Suggestion"
 msgctxt "@title:window"
@@ -2457,14 +2494,20 @@ msgstr "Vynulovať kritériá filtra"
 msgid "Not set"
 msgstr "Nenastavené"
 
-#: src/io/fileexporterbibtex2html.cpp:75
+#: src/io/fileexporterbibtex2html.cpp:80
 #, kde-format
 msgid "The program <strong>bibtex2html</strong> is not available."
 msgstr "Program <strong>bibtex2html</strong> nie je dostupný."
 
-#: src/io/fileexporterbibtex2html.cpp:92
+#: src/io/fileexporterbibtex2html.cpp:98
 #, kde-format
 msgid "The BibTeX style <strong>%1</strong> is not available."
+msgstr "BibTeX štýl <strong>%1</strong> nie je dostupný."
+
+#: src/io/fileexporterbibtex2html.cpp:100
+#, fuzzy, kde-format
+#| msgid "The BibTeX style <strong>%1</strong> is not available."
+msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "BibTeX štýl <strong>%1</strong> nie je dostupný."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
@@ -3990,22 +4033,22 @@ msgstr "Otvoriť..."
 msgid "List of recently used files:"
 msgstr "Zoznam nedávno použitých súborov:"
 
-#: src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:268
 #, kde-format
 msgid "No part available for file of mime type '%1'."
 msgstr "Nie je dostupná časť pre súbor mime typu '%1'."
 
-#: src/program/mdiwidget.cpp:270 src/program/mdiwidget.cpp:272
+#: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
 #, kde-format
 msgid "No Part Available"
 msgstr "Nedostupná časť"
 
-#: src/program/mdiwidget.cpp:272
+#: src/program/mdiwidget.cpp:270
 #, kde-format
 msgid "No part available for file '%1'."
 msgstr "Nedostupná časť pre súbor '%1'."
 
-#: src/program/openfileinfo.cpp:249
+#: src/program/openfileinfo.cpp:288
 #, kde-format
 msgid "Unnamed-%1"
 msgstr "Nepomenované-%1"
@@ -4154,15 +4197,6 @@ msgstr "Nekompletná inštalácia KBibTeX"
 #~ msgctxt "Comment Quoting"
 #~ msgid "%{%1}"
 #~ msgstr "%{%1}"
-
-#~ msgid "A4"
-#~ msgstr "A4"
-
-#~ msgid "Letter"
-#~ msgstr "Letter"
-
-#~ msgid "Legal"
-#~ msgstr "Legal"
 
 #~ msgid "Changing this option requires a restart to take effect."
 #~ msgstr "Zmena tejto voľby vyžaduje reštart, aby sa prejavila."
