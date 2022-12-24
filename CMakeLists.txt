@@ -43,6 +43,8 @@ include(KDECMakeSettings)
 include(ECMInstallIcons)
 include(ECMSetupVersion)
 include(ECMAddAppIcon)
+include(ECMQtDeclareLoggingCategory)
+include(ECMGenerateHeaders)
 include(GenerateExportHeader)
 
 find_package(
@@ -52,6 +54,7 @@ find_package(
     Core
     Widgets
     Network
+    NetworkAuth
     XmlPatterns
     Concurrent
 )
