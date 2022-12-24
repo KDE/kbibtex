@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2022-12-11 20:00+0300\n"
+"PO-Revision-Date: 2022-12-23 20:50+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1868,19 +1868,19 @@ msgstr "Kağıt Boyutu:"
 #, kde-format
 msgctxt "Paper size"
 msgid "A4"
-msgstr ""
+msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Legal"
-msgstr ""
+msgstr "Resmi"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Letter"
-msgstr ""
+msgstr "Mektup"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:93
 #, kde-format
@@ -1890,7 +1890,7 @@ msgstr "'babel' için Dil:"
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:102
 #, kde-format
 msgid "Bibliography style:"
-msgstr "Bibliografya stili:"
+msgstr "Bibliografya biçemi:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:124
 #, kde-format
@@ -2270,18 +2270,17 @@ msgstr "Metin:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:596
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Önizleme:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Biçimlendirme dizisini panoya kopyala"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Girdi id'lerini biçimlendir"
+msgstr "Biçimlendirme dizisi:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2504,13 +2503,12 @@ msgstr "Program <strong>bibtex2html</strong> kullanılabilir değil."
 #: src/io/fileexporterbibtex2html.cpp:98
 #, kde-format
 msgid "The BibTeX style <strong>%1</strong> is not available."
-msgstr "BibTeX stili <strong>%1</strong> kullanılabilir değil."
+msgstr "BibTeX biçemi <strong>%1</strong> kullanılabilir değil."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "BibTeX stili <strong>%1</strong> kullanılabilir değil."
+msgstr "BibTeX biçemi <strong>YER TUTUCU</strong> kullanılabilir değil."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
