@@ -2,6 +2,7 @@ ChangeLog
 
 Diff 0.10 to 0.11
 
+- New online search: Unpaywall (can only search for freetext or DOI)
 - KDE Bug 444779: Adding zbMATH Open OAI-PMH search
 - Retrieving favicons by evaluation online search's webpage instead of hard-coding
   favicon URLs

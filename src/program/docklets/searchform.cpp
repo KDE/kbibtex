@@ -81,6 +81,7 @@
 #include <onlinesearch/OnlineSearchDOI>
 #include <onlinesearch/OnlineSearchBioRxiv>
 #include <onlinesearch/OnlineSearchSemanticScholar>
+#include <onlinesearch/OnlineSearchUnpaywall>
 #include <onlinesearch/OnlineSearchZbMath>
 #include <file/FileView>
 #include <models/FileModel>
@@ -264,6 +265,7 @@ public:
         addEngine(new OnlineSearchIDEASRePEc(p));
         addEngine(new OnlineSearchDOI(p));
         addEngine(new OnlineSearchSemanticScholar(p));
+        addEngine(new OnlineSearchUnpaywall(p));
         addEngine(new OnlineSearchZbMath(p));
 
         p->itemCheckChanged(nullptr);

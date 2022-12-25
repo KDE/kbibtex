@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -53,6 +53,7 @@
 #include <onlinesearch/OnlineSearchSOANASAADS>
 #include <onlinesearch/OnlineSearchBioRxiv>
 #include <onlinesearch/OnlineSearchSemanticScholar>
+#include <onlinesearch/OnlineSearchUnpaywall>
 #include <onlinesearch/OnlineSearchZbMath>
 
 static QColor blendColors(const QColor &color1, const QColor &color2, const qreal ratio)
@@ -145,6 +146,7 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_onlineSearchList << new OnlineSearchSpringerLink(this);
     m_onlineSearchList << new OnlineSearchBioRxiv(this);
     m_onlineSearchList << new OnlineSearchSemanticScholar(this);
+    m_onlineSearchList << new OnlineSearchUnpaywall(this);
     m_onlineSearchList << new OnlineSearchZbMath(this);
     m_currentOnlineSearch = m_onlineSearchList.constBegin();
 
@@ -263,6 +265,9 @@ void KBibTeXTest::processNextSearch()
         if (qobject_cast<OnlineSearchSemanticScholar *>(*m_currentOnlineSearch) != nullptr)
             /// Semantic Scholar cannot search for last names, but for DOIs or arXiv IDs instead
             query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1002/smj.863"));
+        else if (qobject_cast<OnlineSearchUnpaywall *>(*m_currentOnlineSearch) != nullptr)
+            /// Unpaywall cannot search for last names, but for DOIs of open access publications
+            query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1002/andp.201600209"));
         else {
             static const QStringList lastNames{QStringLiteral("Smith"), QStringLiteral("Jones"), QStringLiteral("Andersson"), QStringLiteral("Ivanova"), QStringLiteral("Wang"), QStringLiteral("Gonzalez"), QStringLiteral("Garcia"), QStringLiteral("Lopez"), QStringLiteral("Ahmed"), QStringLiteral("Nkosi"), QStringLiteral("Kim"), QStringLiteral("Chen"), QStringLiteral("Devi"), QStringLiteral("Khan"), QStringLiteral("Johansson"), QStringLiteral("Sharipov"), QStringLiteral("Korhonen"), QStringLiteral("Muller"), QStringLiteral("Murphy"), QStringLiteral("Papadopoulos"), QStringLiteral("Rossi"), QStringLiteral("Hernandez"), QStringLiteral("Williams"), QStringLiteral("Zhang"), QStringLiteral("Singh"), QStringLiteral("Kumar")};
             query.insert(OnlineSearchAbstract::QueryKey::Author, lastNames[QRandomGenerator::global()->bounded(lastNames.count())]);
