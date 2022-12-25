@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,6 +28,16 @@
 
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
+
+static int earliest(const QString &haystack, const QSet<QString> &needles, const int haystackFrom = 0) {
+    int result = INT_MAX;
+    for (const QString &needle : needles) {
+        const int p = haystack.indexOf(needle, haystackFrom);
+        if (p >= 0 && p < result)
+            result = p;
+    }
+    return result == INT_MAX ? -1 : result;
+}
 
 FavIconLocator::FavIconLocator(const QUrl &webpageUrl, QObject *parent)
         : QObject(parent), favIcon(QIcon::fromTheme(QStringLiteral("applications-internet")))
@@ -76,10 +86,10 @@ FavIconLocator::FavIconLocator(const QUrl &webpageUrl, QObject *parent)
                         if (p4 > p3 && p4 < p2) {
                             const QString relValue = htmlCode.mid(p3 + 5, p4 - p3 - 5);
                             if (relValue == QStringLiteral("icon") || relValue == QStringLiteral("shortcut icon")) {
-                                const int p5 = htmlCode.indexOf(QStringLiteral("href=\""), p1 + 5);
+                                const int p5 = earliest(htmlCode, {QStringLiteral("href=\""), QStringLiteral("href=")}, p1 + 5);
                                 if (p5 > p1 && p5 < p2) {
-                                    const int p6 = htmlCode.indexOf(QChar('"'), p5 + 6);
-                                    if (p6 > p5 + 5 && p6 < p2) {
+                                    const int p6 = earliest(htmlCode, {QStringLiteral("\""), QStringLiteral(" "), QStringLiteral(">")}, p5 + 6);
+                                    if (p6 > p5 + 5 && p6 <= p2) {
                                         QString hrefValue = htmlCode.mid(p5 + 6, p6 - p5 - 6).replace(QLatin1Char('&'), QLatin1String("&amp;")).replace(QLatin1Char('>'), QLatin1String("&gt;")).replace(QLatin1Char('<'), QLatin1String("&lt;"));
                                         /// Do some resolving in case favicon URL in HTML code is relative
                                         favIconUrl = reply->url().resolved(QUrl(hrefValue));
