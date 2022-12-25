@@ -2,16 +2,40 @@ ChangeLog
 
 Diff 0.10 to 0.11
 
+- KDE Bug 444779: Adding zbMATH Open OAI-PMH search
 - Retrieving favicons by evaluation online search's webpage instead of hard-coding
   favicon URLs
 - KDE Bug 403750, 413367: Allow to resize and reorder columns in the main
   bibliography view
 - KDE Bug 400672: Save only selected elements in a new bibliography file
+- KDE Bug 460315: Allow to sort elements' identifiers and keys sorted
+- KDE Bug 460316: Provide a command line program ('kbibtex-cli') to perform various
+  operations like converting bibliographies between different formats and reformatting
+  entries' keys according to some template
 - Adding SPDX identifiers to source files (SPDX-License-Identifier and
   SPDX-FileCopyrightText)
+- Improving support for Greek 'mu' versus 'micro' symbol
 - Refactoring FileExporterBibTeX and FileImporterBibTeX classes, among others for
   better handling of text encodings incompatible with ASCII, such as UTF-16
+- Improving support for Greek 'mu' versus 'micro' symbol
+- Refactoring usage of Qt 5 and KDE Framework 5 libraries that became deprecated
+  during the move to Qt 6 and KDE Frameworks 6.
+  Includes contributions by Nicolas Fella <nicolas.fella@gmx.de>
+- Fixing issues with closed QBuffer instances
+- Better support for JabRef's special structure for 'file' fields
 - Various improvements in XML export, now available in 'Save Copy As' operations
+- Addressing linter and compiler warnings about potentially problematic code
+- Various clean-ups and code modernizations
+- Adding scripts to compile and run KBibTeX in PodMan containers mimicing various
+  Linux distributions
+
+Various contributions by Albert Astals Cid <aacid@kde.org>, Antoni Bella Pérez
+<antonibella5@yahoo.com>, Friedrich W. H. Kossebau <kossebau@kde.org>, Luigi Toscano
+<luigi.toscano@tiscali.it>, Matthias Mailänder <matthias@mailaender.name>, Nicolas Fella
+<nicolas.fella@gmx.de>, Pino Toscano <pino@kde.org>, Volker Krause <vkrause@kde.org>,
+Yann Büchau <nobodyinperson@posteo.de>, Yuri Chornoivan <yurchor@ukr.net>, yuu yuu
+<yuu@tutamail.com>
+See Git repository for details.
 
 Diff 0.9.3 to 0.10
 
