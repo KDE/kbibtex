@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2022-10-17 09:55+0100\n"
+"PO-Revision-Date: 2022-12-23 20:46+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -49,7 +49,7 @@ msgstr ""
 "X-POFile-IgnoreConsistency: 3rd\n"
 "X-POFile-IgnoreConsistency: Type\n"
 "X-POFile-IgnoreConsistency: Comment\n"
-"X-POFile-SpellExtra: Semantic zbMATH Open\n"
+"X-POFile-SpellExtra: Semantic zbMATH Open PLACEHOLDER\n"
 "X-POFile-IgnoreConsistency: Venue\n"
 
 #, kde-format
@@ -2323,13 +2323,12 @@ msgstr "Antevisão:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Copiar o texto do formato para a área de transferência"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Formatar os ID's do item"
+msgstr "Texto do formato:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2555,10 +2554,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "O estilo de BibTeX <strong>%1</strong> não está disponível."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "O estilo de BibTeX <strong>%1</strong> não está disponível."
+msgstr "O estilo de BibTeX <strong>PLACEHOLDER</strong> não está disponível."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format

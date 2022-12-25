@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2022-10-17 10:27+0200\n"
+"PO-Revision-Date: 2022-12-23 14:32+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1884,19 +1884,19 @@ msgstr "Mida del paper:"
 #, kde-format
 msgctxt "Paper size"
 msgid "A4"
-msgstr ""
+msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Legal"
-msgstr ""
+msgstr "Legal"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Letter"
-msgstr ""
+msgstr "Carta"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:93
 #, kde-format
@@ -2286,18 +2286,17 @@ msgstr "Text:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:596
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Vista prèvia:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Copia la cadena de format al porta-retalls"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Dona format als ID de les entrades"
+msgstr "Cadena de format:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2523,10 +2522,11 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "L'estil <strong>%1</strong> de BibTeX no està disponible."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "L'estil <strong>%1</strong> de BibTeX no està disponible."
+msgstr ""
+"L'estil <strong>VARIABLE_DE_SUBSTITUCIÓ</strong> de BibTeX no està "
+"disponible."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
