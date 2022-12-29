@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2022-10-18 05:48+0200\n"
+"PO-Revision-Date: 2022-12-28 05:43+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -38,11 +38,11 @@ msgstr "გამოცება"
 
 #, kde-format
 msgid "Number/Issue"
-msgstr ""
+msgstr "რიცხვი/გამოცემა"
 
 #, kde-format
 msgid "Cross-Reference"
-msgstr ""
+msgstr "ჯვარედინი დამოწმება"
 
 #, kde-format
 msgid "Misc"
@@ -50,23 +50,23 @@ msgstr "სხვანი"
 
 #, kde-format
 msgid "Star Rating"
-msgstr ""
+msgstr "ვარსკვლავების რეიტინგი"
 
 #, kde-format
 msgid "Book Title Addon"
-msgstr ""
+msgstr "წიგნის სათაურის დამატება"
 
 #, kde-format
 msgid "Main Title Addon"
-msgstr ""
+msgstr "სათაურის დამატება"
 
 #, kde-format
 msgid "Further Persons"
-msgstr ""
+msgstr "დამატებითი პირები"
 
 #, kde-format
 msgid "Volume Part"
-msgstr ""
+msgstr "ტომის ნაწილი"
 
 #, kde-format
 msgid "Total Volumes"
@@ -74,7 +74,7 @@ msgstr "ჯამში ტომები"
 
 #, kde-format
 msgid "X-Reference"
-msgstr ""
+msgstr "X-მიმართვა"
 
 #, kde-format
 msgid "Identifiers"
@@ -106,7 +106,7 @@ msgstr "მოკლე სათაური"
 
 #, kde-format
 msgid "Reprint Data"
-msgstr ""
+msgstr "გადაბეჭდვის მონაცემები"
 
 #, kde-format
 msgid "Local File"
@@ -216,7 +216,7 @@ msgstr ""
 #: src/config/bibtexentries.cpp:95
 #, kde-format
 msgid "Online Resource"
-msgstr ""
+msgstr "ონლაინ რესურსი"
 
 #: src/config/bibtexentries.cpp:96
 #, kde-format
@@ -256,7 +256,7 @@ msgstr ""
 #: src/config/bibtexentries.cpp:104
 #, kde-format
 msgid "Part of a Reference"
-msgstr ""
+msgstr "ლექსიკონის ნაწილი"
 
 #: src/config/bibtexentries.cpp:105
 #, kde-format
@@ -291,12 +291,12 @@ msgstr "სათაური"
 #: src/config/bibtexfields.cpp:163 src/config/bibtexfields.cpp:202
 #, kde-format
 msgid "Title or Book Title"
-msgstr ""
+msgstr "წიგნის სათაური"
 
 #: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:211
 #, kde-format
 msgid "Author or Editor"
-msgstr ""
+msgstr "ავტორი ან რედაქტორი"
 
 #: src/config/bibtexfields.cpp:165 src/config/bibtexfields.cpp:212
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:643
@@ -365,7 +365,7 @@ msgstr "ISBN ან ISSN"
 #: src/config/bibtexfields.cpp:175 src/config/bibtexfields.cpp:255
 #, kde-format
 msgid "How Published"
-msgstr ""
+msgstr "როგორ გამოიცა"
 
 #: src/config/bibtexfields.cpp:176 src/config/bibtexfields.cpp:256
 #, kde-format
@@ -431,7 +431,7 @@ msgstr "საკვანძო სიტყვები"
 #: src/config/bibtexfields.cpp:188 src/config/bibtexfields.cpp:281
 #, kde-format
 msgid "Cross Reference"
-msgstr ""
+msgstr "ჯვარედინი დამოწმება"
 
 #: src/config/bibtexfields.cpp:189 src/config/bibtexfields.cpp:283
 #: src/networking/onlinesearch/onlinesearchdoi.cpp:185
@@ -490,97 +490,97 @@ msgstr "სუბტიტრები"
 #: src/config/bibtexfields.cpp:204
 #, kde-format
 msgid "Title Addon"
-msgstr ""
+msgstr "სათაურის დამატება"
 
 #: src/config/bibtexfields.cpp:205
 #, kde-format
 msgid "Shortitle"
-msgstr ""
+msgstr "მოკლე სახელი"
 
 #: src/config/bibtexfields.cpp:206
 #, kde-format
 msgid "Original Title"
-msgstr ""
+msgstr "ორიგინალური სათაური"
 
 #: src/config/bibtexfields.cpp:207
 #, kde-format
 msgid "Reprint Title"
-msgstr ""
+msgstr "გადაბეჭდვის სათაური"
 
 #: src/config/bibtexfields.cpp:208
 #, kde-format
 msgid "Main Title"
-msgstr ""
+msgstr "მთავარი სათაური"
 
 #: src/config/bibtexfields.cpp:209
 #, kde-format
 msgid "Main Subtitle"
-msgstr ""
+msgstr "მთავარი სუბტიტრი"
 
 #: src/config/bibtexfields.cpp:210
 #, kde-format
 msgid "Maintitle Addon"
-msgstr ""
+msgstr "სათაურის დამატება"
 
 #: src/config/bibtexfields.cpp:213
 #, kde-format
 msgid "Short Author"
-msgstr ""
+msgstr "ავტორი (მოკლედ)"
 
 #: src/config/bibtexfields.cpp:214
 #, kde-format
 msgid "Name Addon"
-msgstr ""
+msgstr "სახელის დამატება"
 
 #: src/config/bibtexfields.cpp:215
 #, kde-format
 msgid "Author Type"
-msgstr ""
+msgstr "ავტორის ტიპი"
 
 #: src/config/bibtexfields.cpp:216
 #, kde-format
 msgid "Book Author"
-msgstr ""
+msgstr "წიგნის ავტორი"
 
 #: src/config/bibtexfields.cpp:218
 #, kde-format
 msgid "Short Editor"
-msgstr ""
+msgstr "რედაქტორი მოკლედ"
 
 #: src/config/bibtexfields.cpp:219
 #, kde-format
 msgid "Editor Type"
-msgstr ""
+msgstr "რედაქტორის სახელი"
 
 #: src/config/bibtexfields.cpp:220
 #, kde-format
 msgid "Editor A"
-msgstr ""
+msgstr "რედაქტორი A"
 
 #: src/config/bibtexfields.cpp:221
 #, kde-format
 msgid "Editor A Type"
-msgstr ""
+msgstr "რედაქტორი A-ის ტიპი"
 
 #: src/config/bibtexfields.cpp:222
 #, kde-format
 msgid "Editor B"
-msgstr ""
+msgstr "რედაქტორი B"
 
 #: src/config/bibtexfields.cpp:223
 #, kde-format
 msgid "Editor B Type"
-msgstr ""
+msgstr "რედაქტორი B-ის ტიპი"
 
 #: src/config/bibtexfields.cpp:224
 #, kde-format
 msgid "Editor C"
-msgstr ""
+msgstr "რედაქტორი C"
 
 #: src/config/bibtexfields.cpp:225
 #, kde-format
 msgid "Editor C Type"
-msgstr ""
+msgstr "რედაქტორი C-ის ტპი"
 
 #: src/config/bibtexfields.cpp:226
 #, kde-format
@@ -590,32 +590,32 @@ msgstr "მთარგმნელი"
 #: src/config/bibtexfields.cpp:227
 #, kde-format
 msgid "Afterword Author"
-msgstr ""
+msgstr "შესავლის შემდეგი ტექსტის ავტორი"
 
 #: src/config/bibtexfields.cpp:228
 #, kde-format
 msgid "Introduction Author"
-msgstr ""
+msgstr "შესავლის ავტორი"
 
 #: src/config/bibtexfields.cpp:229
 #, kde-format
 msgid "Foreword Author"
-msgstr ""
+msgstr "სქოლიოს ავტორი"
 
 #: src/config/bibtexfields.cpp:230
 #, kde-format
 msgid "Annotator"
-msgstr ""
+msgstr "ანოტატორი"
 
 #: src/config/bibtexfields.cpp:231
 #, kde-format
 msgid "Commentator"
-msgstr ""
+msgstr "კომენტატორი"
 
 #: src/config/bibtexfields.cpp:232
 #, kde-format
 msgid "Patent Holder"
-msgstr ""
+msgstr "პატენტის მფლობელი"
 
 #: src/config/bibtexfields.cpp:235
 #, kde-format
@@ -625,32 +625,32 @@ msgstr "თარიღი"
 #: src/config/bibtexfields.cpp:236
 #, kde-format
 msgid "Date or Year"
-msgstr ""
+msgstr "თარიღი ან წელი"
 
 #: src/config/bibtexfields.cpp:237
 #, kde-format
 msgid "Event Date"
-msgstr ""
+msgstr "მოვლენის თარიღი"
 
 #: src/config/bibtexfields.cpp:238
 #, kde-format
 msgid "Original Date"
-msgstr ""
+msgstr "საწყისი თარიღი"
 
 #: src/config/bibtexfields.cpp:239
 #, kde-format
 msgid "Journal Title"
-msgstr ""
+msgstr "ჟურნალის სათაური"
 
 #: src/config/bibtexfields.cpp:240
 #, kde-format
 msgid "Journal Subtitle"
-msgstr ""
+msgstr "ჟურნალის ქვესათაური"
 
 #: src/config/bibtexfields.cpp:241
 #, kde-format
 msgid "Journal Shortitle"
-msgstr ""
+msgstr "ჟურნალის მოკლე სათაური"
 
 #: src/config/bibtexfields.cpp:243
 #, kde-format
@@ -665,7 +665,7 @@ msgstr "ვერსია"
 #: src/config/bibtexfields.cpp:246
 #, kde-format
 msgid "Part"
-msgstr ""
+msgstr "ნაწილი"
 
 #: src/config/bibtexfields.cpp:247
 #, kde-format
@@ -695,7 +695,7 @@ msgstr "ISWC"
 #: src/config/bibtexfields.cpp:257
 #, kde-format
 msgid "Addendum"
-msgstr ""
+msgstr "მინაწერი"
 
 #: src/config/bibtexfields.cpp:258
 #, kde-format
@@ -705,7 +705,7 @@ msgstr "ანოტაცია"
 #: src/config/bibtexfields.cpp:261
 #, kde-format
 msgid "Total Pages"
-msgstr ""
+msgstr "სულ გვერდები"
 
 #: src/config/bibtexfields.cpp:262
 #, kde-format
@@ -715,17 +715,17 @@ msgstr "გვერდებად დაყოფა"
 #: src/config/bibtexfields.cpp:263
 #, kde-format
 msgid "Book Pagination"
-msgstr ""
+msgstr "წიგნის გვერდებად დაყოფა"
 
 #: src/config/bibtexfields.cpp:265
 #, kde-format
 msgid "Original Publisher"
-msgstr ""
+msgstr "ორიგინალური გამომცემელი"
 
 #: src/config/bibtexfields.cpp:268
 #, kde-format
 msgid "Book Subtitle"
-msgstr ""
+msgstr "წიგნის სუბტტიტრი"
 
 #: src/config/bibtexfields.cpp:269
 #, kde-format
@@ -755,17 +755,17 @@ msgstr "მოვლენის სათაური"
 #: src/config/bibtexfields.cpp:278
 #, kde-format
 msgid "Venue"
-msgstr ""
+msgstr "ადგილი"
 
 #: src/config/bibtexfields.cpp:279
 #, kde-format
 msgid "Index Title"
-msgstr ""
+msgstr "მაჩვენებლის სათაური"
 
 #: src/config/bibtexfields.cpp:282
 #, kde-format
 msgid "XRef"
-msgstr ""
+msgstr "XRef"
 
 #: src/config/bibtexfields.cpp:284
 #, kde-format
@@ -785,12 +785,12 @@ msgstr ""
 #: src/config/bibtexfields.cpp:288
 #, kde-format
 msgid "URL Date"
-msgstr ""
+msgstr "URL -ის თარიღი"
 
 #: src/config/bibtexfields.cpp:289
 #, kde-format
 msgid "Local File URL"
-msgstr ""
+msgstr "ლოკალური ფაილის ბმული"
 
 #: src/config/bibtexfields.cpp:291
 #, kde-format
@@ -821,7 +821,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:297
 #, kde-format
 msgid "Publication State"
-msgstr ""
+msgstr "გამოცემის მდგომარეობა"
 
 #: src/config/bibtexfields.cpp:298
 #, kde-format
@@ -831,7 +831,7 @@ msgstr "ენა"
 #: src/config/bibtexfields.cpp:299
 #, kde-format
 msgid "Original Language"
-msgstr ""
+msgstr "საწყისი ენა"
 
 #: src/config/bibtexfields.cpp:300 src/networking/zotero/collection.cpp:96
 #: src/program/docklets/zoterobrowser.cpp:108
@@ -847,47 +847,47 @@ msgstr "სქესი"
 #: src/config/bibtexfields.cpp:303
 #, kde-format
 msgid "Hyphenation"
-msgstr ""
+msgstr "გადატანა"
 
 #: src/config/bibtexfields.cpp:304
 #, kde-format
 msgid "Index Sorttitle"
-msgstr ""
+msgstr "ინდექსით დალაგება"
 
 #: src/config/bibtexfields.cpp:305
 #, kde-format
 msgid "Entry Options"
-msgstr ""
+msgstr "ჩანაწერის მორგება"
 
 #: src/config/bibtexfields.cpp:306
 #, kde-format
 msgid "Presort"
-msgstr ""
+msgstr "წინასწარი დალაგება"
 
 #: src/config/bibtexfields.cpp:307
 #, kde-format
 msgid "Sort Key"
-msgstr ""
+msgstr "დალაგების ღილაკი"
 
 #: src/config/bibtexfields.cpp:308
 #, kde-format
 msgid "Sort Names"
-msgstr ""
+msgstr "სახელების დალაგება"
 
 #: src/config/bibtexfields.cpp:309
 #, kde-format
 msgid "Sort Shorthand"
-msgstr ""
+msgstr "შემოკლებების დალაგება"
 
 #: src/config/bibtexfields.cpp:310
 #, kde-format
 msgid "Sort Title"
-msgstr ""
+msgstr "სათაურით დალაგება"
 
 #: src/config/bibtexfields.cpp:311
 #, kde-format
 msgid "Sort Year"
-msgstr ""
+msgstr "წლით დალაგება"
 
 #: src/config/bibtexfields.cpp:312
 #, kde-format
@@ -902,12 +902,12 @@ msgstr "BibTeX"
 #: src/config/preferences.cpp:420
 #, kde-format
 msgid "BibLaTeX"
-msgstr ""
+msgstr "BibLaTeX"
 
 #: src/config/preferences.cpp:584
 #, kde-format
 msgid "No backups"
-msgstr ""
+msgstr "მარქაფის გარეშე"
 
 #: src/config/preferences.cpp:584
 #, kde-format
@@ -917,7 +917,7 @@ msgstr "მხოლოდ ლოკალური ფაილები"
 #: src/config/preferences.cpp:584
 #, kde-format
 msgid "Both local and remote files"
-msgstr ""
+msgstr "ორივე, ლოკალური და დაშორებული ფაილი"
 
 #: src/config/preferences.cpp:910
 #, kde-format
@@ -947,37 +947,37 @@ msgstr "დაბალი რეგისტრი"
 #, kde-format
 msgctxt "Casing of strings"
 msgid "Initial capital"
-msgstr ""
+msgstr "პირველი ასოს მაღალ რეგისტრში გადაყვანა"
 
 #: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UpperCamelCase"
-msgstr ""
+msgstr "UpperCamelCase"
 
 #: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "lowerCamelCase"
-msgstr ""
+msgstr "დაბალი რეგისტრი"
 
 #: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UPPERCASE"
-msgstr ""
+msgstr "მაღალირეგისტრი"
 
 #: src/config/preferences.cpp:1186
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
-msgstr ""
+msgstr "რედაქტორი"
 
 #: src/config/preferences.cpp:1186
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "View Document"
-msgstr ""
+msgstr "დოკუმენტის შენახვა"
 
 #: src/config/preferences.cpp:1225
 #, kde-format
@@ -1017,7 +1017,7 @@ msgstr "კომე_ნტარი"
 #: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1166
 #, kde-format
 msgid "Preamble"
-msgstr ""
+msgstr "პრეამბულა"
 
 #: src/data/value.cpp:649
 #, kde-format
@@ -1074,7 +1074,7 @@ msgstr ""
 #: src/gui/element/associatedfilesui.cpp:120
 #, kde-format
 msgid "User-defined name:"
-msgstr ""
+msgstr "მომხმარებლის მიერ განსაზღვრული სახელი:"
 
 #: src/gui/element/associatedfilesui.cpp:133
 #, kde-format
@@ -1091,7 +1091,7 @@ msgstr "შეფარდებითი ბილიკი"
 #: src/gui/field/fieldlistedit.cpp:604
 #, kde-format
 msgid "Absolute Path"
-msgstr ""
+msgstr "აბსოლუტური ბილიკი"
 
 #: src/gui/element/associatedfilesui.cpp:152
 #, kde-format
@@ -1156,7 +1156,7 @@ msgstr "გამართვა"
 #: src/gui/element/elementeditor.cpp:206
 #, kde-format
 msgid "Show all fields"
-msgstr ""
+msgstr "ყველა ველის ჩვენება"
 
 #: src/gui/element/elementeditor.cpp:213
 #, kde-format
@@ -1176,7 +1176,7 @@ msgstr ""
 #: src/gui/element/elementeditor.cpp:543
 #, kde-format
 msgid "No id given"
-msgstr ""
+msgstr "ID მთითებული არაა"
 
 #: src/gui/element/elementeditor.cpp:550
 #, kde-format
@@ -1251,7 +1251,7 @@ msgstr "გარე"
 #: src/gui/element/elementwidgets.cpp:857
 #, kde-format
 msgid "Other Fields"
-msgstr ""
+msgstr "სხვა ველები"
 
 #: src/gui/element/elementwidgets.cpp:973
 #, kde-format
@@ -1388,7 +1388,7 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Find PDF"
-msgstr ""
+msgstr "PDF-ის პოვნა"
 
 #: src/gui/element/findpdfui.cpp:506
 #, kde-format
@@ -1416,7 +1416,7 @@ msgstr ""
 #: src/gui/field/colorlabelwidget.cpp:106
 #, kde-format
 msgid "Color & Label"
-msgstr ""
+msgstr "ფერი და ჭდე"
 
 #: src/gui/field/fieldinput.cpp:89
 #, kde-format
@@ -1511,7 +1511,7 @@ msgstr "16-ე"
 #: src/gui/field/fieldinput.cpp:126
 #, kde-format
 msgid "Select an existing entry"
-msgstr ""
+msgstr "აირჩიეთ არსებული ჩანაწერი"
 
 #: src/gui/field/fieldinput.cpp:279
 #, kde-format
@@ -1584,7 +1584,7 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:144
 #, kde-format
 msgid "Remove value"
-msgstr ""
+msgstr "მნიშვნელობის წაშლა"
 
 #: src/gui/field/fieldlistedit.cpp:155
 #, kde-format
@@ -1614,7 +1614,7 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:484
 #, kde-format
 msgid "Add file..."
-msgstr ""
+msgstr "ფაილის დამატება..."
 
 #: src/gui/field/fieldlistedit.cpp:490
 #, kde-format
@@ -1634,7 +1634,7 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:543 src/gui/field/fieldlistedit.cpp:617
 #, kde-format
 msgid "Save file locally"
-msgstr ""
+msgstr "ფაილის ლოკალურად შენახვა"
 
 #: src/gui/field/fieldlistedit.cpp:593
 #, kde-format
@@ -1682,7 +1682,7 @@ msgstr ""
 #: src/gui/file/basicfileview.cpp:408
 #, kde-format
 msgid "No sorting"
-msgstr ""
+msgstr "დალაგების გარეშე"
 
 #: src/gui/file/fileview.cpp:89
 #, kde-format
@@ -1698,19 +1698,19 @@ msgstr "გავაუქმო ცვლილებები?"
 #: src/gui/file/fileview.cpp:89
 #, kde-format
 msgid "Continue Editing"
-msgstr ""
+msgstr "ჩასწორების გაგრძელება"
 
 #: src/gui/file/fileview.cpp:331
 #, kde-format
 msgctxt "@title:window"
 msgid "View Element"
-msgstr ""
+msgstr "ელემენტის ნახვა"
 
 #: src/gui/file/fileview.cpp:339
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
-msgstr ""
+msgstr "ელემენტის ჩასწორება"
 
 #: src/gui/file/findduplicatesui.cpp:142
 #, kde-format
@@ -1720,27 +1720,27 @@ msgstr "ალტერნატივები"
 #: src/gui/file/findduplicatesui.cpp:194
 #, kde-format
 msgid "None of the above"
-msgstr ""
+msgstr "Ჩამოთვლილთაგან არც ერთი"
 
 #: src/gui/file/findduplicatesui.cpp:550
 #, kde-format
 msgid "Select your duplicates"
-msgstr ""
+msgstr "აირჩიეთ თქვენი დუბლიკატები"
 
 #: src/gui/file/findduplicatesui.cpp:570
 #, kde-format
 msgid "Previous Clique"
-msgstr ""
+msgstr "წინა ჯგუფი"
 
 #: src/gui/file/findduplicatesui.cpp:572
 #, kde-format
 msgid "Next Clique"
-msgstr ""
+msgstr "შემდეგი ჯგუფი"
 
 #: src/gui/file/findduplicatesui.cpp:651
 #, kde-format
 msgid "Find Duplicates"
-msgstr ""
+msgstr "დუბლიკატების პოვნა"
 
 #: src/gui/file/findduplicatesui.cpp:682
 #, kde-format
@@ -1752,33 +1752,33 @@ msgstr ""
 #: src/gui/file/findduplicatesui.cpp:682
 #, kde-format
 msgid "Search only in selection?"
-msgstr ""
+msgstr "მხოლოდ მონიშნულში მოვძებნო?"
 
 #: src/gui/file/findduplicatesui.cpp:682
 #, kde-format
 msgid "Only in selection"
-msgstr ""
+msgstr "მხოლოდ მონიშნულში"
 
 #: src/gui/file/findduplicatesui.cpp:682
 #, kde-format
 msgid "Whole document"
-msgstr ""
+msgstr "სრულ დოკუმენტში"
 
 #: src/gui/file/findduplicatesui.cpp:705
 #, kde-format
 msgid "No duplicates were found."
-msgstr ""
+msgstr "დუბლიკატები ნაპოვნი არაა."
 
 #: src/gui/file/findduplicatesui.cpp:705
 #, kde-format
 msgid "No duplicates found"
-msgstr ""
+msgstr "დუბლიკატები ნაპოვნი არაა"
 
 #: src/gui/file/findduplicatesui.cpp:712
 #, kde-format
 msgctxt "@title:window"
 msgid "Merge Duplicates"
-msgstr ""
+msgstr "დუბლიკატების შერწყმა"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
 #, kde-format
@@ -1795,12 +1795,12 @@ msgstr "ნაგულისხმები პარამეტრები�
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
 #, kde-format
 msgid "All settings"
-msgstr ""
+msgstr "ყველა პარამეტრი"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
 #, kde-format
 msgid "Only current page"
-msgstr ""
+msgstr "მხოლოდ მიმდინარე გვერდი"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:170
 #, kde-format
@@ -1826,7 +1826,7 @@ msgstr "წაშლა"
 #: src/gui/preferences/settingscolorlabelwidget.cpp:360
 #, kde-format
 msgid "Color & Labels"
-msgstr ""
+msgstr "ფერი და ჭდეები"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:392
 #, kde-format
@@ -1843,34 +1843,34 @@ msgstr "ფურცლის ზომა:"
 #, kde-format
 msgctxt "Paper size"
 msgid "A4"
-msgstr ""
+msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Legal"
-msgstr ""
+msgstr "კანონთან დაკავშირებული საკითხები"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Letter"
-msgstr ""
+msgstr "წერილი"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:93
 #, kde-format
 msgid "Language for 'babel':"
-msgstr ""
+msgstr "'babel'-ის ენა:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:102
 #, kde-format
 msgid "Bibliography style:"
-msgstr ""
+msgstr "ბიბლიოგრაფიული სტილი:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:124
 #, kde-format
 msgid "PDF & Postscript"
-msgstr ""
+msgstr "PDF & Postscript"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:123
 #, kde-format
@@ -1880,7 +1880,7 @@ msgstr ""
 #: src/gui/preferences/settingsfileexporterwidget.cpp:125
 #, kde-format
 msgid "No command"
-msgstr ""
+msgstr "ბრძანება ვერ ვიპოვე"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:133
 #, kde-format
@@ -1895,7 +1895,7 @@ msgstr ""
 #: src/gui/preferences/settingsfileexporterwidget.cpp:152
 #, kde-format
 msgid "Backups when saving:"
-msgstr ""
+msgstr "მარქაფი შენახვისას:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:158
 #, kde-format
@@ -2044,7 +2044,7 @@ msgstr "ცვლილების გარეშე"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:504
 #, kde-format
 msgid "To upper case"
-msgstr ""
+msgstr "ქვედა რეგისტრში"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:141
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:352
@@ -2052,7 +2052,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:505
 #, kde-format
 msgid "To lower case"
-msgstr ""
+msgstr "ზედა რეგისტრში"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:142
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:353
@@ -2060,7 +2060,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:506
 #, kde-format
 msgid "To CamelCase"
-msgstr ""
+msgstr "აქლემგისტრზე"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:143
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:354
@@ -2068,14 +2068,14 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:507
 #, kde-format
 msgid "Change casing:"
-msgstr ""
+msgstr "რეგისტრის შეცვლა"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:147
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:358
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:442
 #, kde-format
 msgid "Text in between:"
-msgstr ""
+msgstr "ტექსტი შუაში"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:151
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:362
@@ -2083,7 +2083,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:511
 #, kde-format
 msgid "Only first characters:"
-msgstr ""
+msgstr "მხოლოდ პირველი სიმბოლოები:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:152
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:363
@@ -2091,17 +2091,17 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:512
 #, kde-format
 msgid "No limitation"
-msgstr ""
+msgstr "ლიმიტის გარეშე"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:215
 #, kde-format
 msgid "2 digits"
-msgstr ""
+msgstr "2 ციფრი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:216
 #, kde-format
 msgid "4 digits"
-msgstr ""
+msgstr "4 ციფრი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:217
 #, kde-format
@@ -2124,24 +2124,24 @@ msgstr "გვერდის ნომერი"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:274
 #, kde-format
 msgid "First page's number:"
-msgstr ""
+msgstr "პირველი გვერდის ნომერი:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:306
 #, kde-format
 msgid "First word only"
-msgstr ""
+msgstr "მხოლოდ პირველი სიტყვა"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:308
 #, kde-format
 msgid "All but first word"
-msgstr ""
+msgstr "ყველა, პირველი სიტყვის გარედა"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:310
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:337
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:340
 #, kde-format
 msgid "From first to last word"
-msgstr ""
+msgstr "პირველიდან ბოლო სიტყვამდე"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:312
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:337
@@ -2167,7 +2167,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:327
 #, kde-format
 msgid "Word Range:"
-msgstr ""
+msgstr "სიტყვების დიაპაზონი:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
@@ -2222,20 +2222,20 @@ msgstr "მეათე სიტყვა"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:328
 #, kde-format
 msgid "|Last word"
-msgstr ""
+msgstr "|ბოლო სიტყვა"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:346
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:430
 #, kde-format
 msgid "Small words:"
-msgstr ""
+msgstr "პატარა სიტყვები:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:554
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:667
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:702
 #, kde-format
 msgid "Text"
-msgstr ""
+msgstr "ტექსტი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:557
 #, kde-format
@@ -2245,7 +2245,7 @@ msgstr "ტექსტი:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:596
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "გადახედვა:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
@@ -2255,17 +2255,17 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
 msgid "Format string:"
-msgstr ""
+msgstr "სტრიქონის ფორმატი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
 msgid "Add at top"
-msgstr ""
+msgstr "თავში დამატება"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:634
 #, kde-format
 msgid "Add at bottom"
-msgstr ""
+msgstr "ბოლოში დამატება"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:952
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:114
@@ -2303,7 +2303,7 @@ msgstr "ქვემოთ"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:277
 #, kde-format
 msgid "Toggle Default"
-msgstr ""
+msgstr "ნაგულისხმების გადართვა"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:379
 #, kde-format
@@ -2315,22 +2315,22 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:379
 #, kde-format
 msgid "Remove suggestion?"
-msgstr ""
+msgstr "წავშალო მინიშნება?"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:379
 #, kde-format
 msgid "Remove suggestion"
-msgstr ""
+msgstr "მინიშნების წაშლა"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:379
 #, kde-format
 msgid "Revert changes"
-msgstr ""
+msgstr "ცვლილებების დაბრუნება"
 
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:69
 #, kde-format
 msgid "When double-clicking an element:"
-msgstr ""
+msgstr "ელემენტზე ორი-წკაპისას:"
 
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:83
 #, kde-format
@@ -2351,7 +2351,7 @@ msgstr "კოდირება:"
 #: src/gui/widgets/filesettingswidget.cpp:133
 #, kde-format
 msgid "String Delimiters:"
-msgstr ""
+msgstr "სტრიქონის გამყოფები:"
 
 #: src/gui/widgets/filesettingswidget.cpp:140
 #, kde-format
@@ -2385,7 +2385,7 @@ msgstr ""
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
-msgstr ""
+msgstr "დაბალი რეგისტრი"
 
 #: src/gui/widgets/filesettingswidget.cpp:151
 #, kde-format
@@ -2436,22 +2436,22 @@ msgstr ""
 #: src/gui/widgets/filterbar.cpp:91
 #, kde-format
 msgid "any word"
-msgstr ""
+msgstr "ყველა სიტყვა"
 
 #: src/gui/widgets/filterbar.cpp:92
 #, kde-format
 msgid "every word"
-msgstr ""
+msgstr "ყოველი სიტყვა"
 
 #: src/gui/widgets/filterbar.cpp:93
 #, kde-format
 msgid "exact phrase"
-msgstr ""
+msgstr "ზუსტი ფრაზა"
 
 #: src/gui/widgets/filterbar.cpp:98
 #, kde-format
 msgid "any field"
-msgstr ""
+msgstr "ნებისმიერი ველი"
 
 #: src/gui/widgets/filterbar.cpp:116
 #, kde-format
@@ -2505,13 +2505,13 @@ msgstr "KBibTeX"
 #: src/networking/onlinesearch/onlinesearchacmportal.cpp:303
 #, kde-format
 msgid "ACM Digital Library"
-msgstr ""
+msgstr "ACM ციფრული ბიბლიოთეკა"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:70
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
 #, kde-format
 msgid "Free text:"
-msgstr ""
+msgstr "ტექსტის მოძებნა:"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:79
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:90
@@ -2520,7 +2520,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:115
 #, kde-format
 msgid "Number of Results:"
-msgstr ""
+msgstr "შედეგების რაოდენობა:"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:675
 #, kde-format
@@ -2545,22 +2545,22 @@ msgstr "ჯგუფი"
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:80
 #, kde-format
 msgid "Concept"
-msgstr ""
+msgstr "კონცეფცია"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:81
 #, kde-format
 msgid "BibTeX Key"
-msgstr ""
+msgstr "BibTeX -ის გასაღები"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:82
 #, kde-format
 msgid "Everywhere"
-msgstr ""
+msgstr "ყველგან"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
 #, kde-format
 msgid "Bibsonomy"
-msgstr ""
+msgstr "Bibsonomy"
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
 #, kde-format
@@ -2570,7 +2570,7 @@ msgstr "bioRxiv"
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
 msgid "CERN Document Server"
-msgstr ""
+msgstr "CERN -ის დოკუმენტების სერვერი"
 
 #: src/networking/onlinesearch/onlinesearchdoi.cpp:63
 #, kde-format
@@ -2605,12 +2605,12 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:462
 #, kde-format
 msgid "Google Scholar"
-msgstr ""
+msgstr "Google Scholar"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:108
 #, kde-format
 msgid "IDEAS (RePEc)"
-msgstr ""
+msgstr "IDEAS (RePEc)"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:186
 #, kde-format
@@ -2620,7 +2620,7 @@ msgstr "IEEEXplore"
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:86
 #, kde-format
 msgid "Full text:"
-msgstr ""
+msgstr "სრული ტექსტი:"
 
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:101
 #, kde-format
@@ -2660,7 +2660,7 @@ msgstr "JSTOR"
 #: src/networking/onlinesearch/onlinesearchmathscinet.cpp:120
 #, kde-format
 msgid "MathSciNet"
-msgstr ""
+msgstr "MathSciNet"
 
 #: src/networking/onlinesearch/onlinesearchmrlookup.cpp:76
 #, kde-format
@@ -2680,7 +2680,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:68
 #, kde-format
 msgid "Paper Reference:"
-msgstr ""
+msgstr "ნაშრომზე მიმართვა:"
 
 #: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:237
 #, kde-format
@@ -2737,12 +2737,12 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:143
 #, kde-format
 msgid "zbMATH Open"
-msgstr ""
+msgstr "zbMATH Open"
 
 #: src/networking/zotero/collection.cpp:196
 #, kde-format
 msgid "%1's Library"
-msgstr ""
+msgstr "%1-ის ბიბლიოთეკა"
 
 #: src/networking/zotero/oauthwizard.cpp:86
 #, kde-format
@@ -2807,7 +2807,7 @@ msgstr "ხელსაწყოთა მთავარი ზოლი"
 #: src/parts/part.cpp:135 src/parts/part.cpp:212
 #, kde-format
 msgid "View Document"
-msgstr ""
+msgstr "დოკუმენტის შენახვა"
 
 #: src/parts/part.cpp:162
 #, kde-format
@@ -2817,7 +2817,7 @@ msgstr "ასლის შენახვა, როგორც..."
 #: src/parts/part.cpp:166
 #, kde-format
 msgid "Save Selection..."
-msgstr ""
+msgstr "მონიშნულის შენახვა..."
 
 #: src/parts/part.cpp:174
 #, kde-format
@@ -2857,12 +2857,12 @@ msgstr ""
 #: src/parts/part.cpp:206
 #, kde-format
 msgid "Edit Element"
-msgstr ""
+msgstr "ელემენტის ჩასწორება"
 
 #: src/parts/part.cpp:218
 #, kde-format
 msgid "Find PDF..."
-msgstr ""
+msgstr "PDF-ის პოვნა..."
 
 #: src/parts/part.cpp:223
 #, kde-format
@@ -2872,12 +2872,12 @@ msgstr ""
 #: src/parts/part.cpp:237
 #, kde-format
 msgid "Copy References"
-msgstr ""
+msgstr "მიმართვის კოპირება"
 
 #: src/parts/part.cpp:282
 #, kde-format
 msgid "New%1"
-msgstr ""
+msgstr "ახალი%1"
 
 #: src/parts/part.cpp:441
 #, kde-format
@@ -2887,7 +2887,7 @@ msgstr ""
 #: src/parts/part.cpp:441
 #, kde-format
 msgid "Backup copies"
-msgstr ""
+msgstr "ასლების მარქაფი"
 
 #: src/parts/part.cpp:474
 #, kde-format
@@ -2898,13 +2898,13 @@ msgstr "ფაილის შენახვა"
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
-msgstr ""
+msgstr "BibTeX ფაილის მორგება"
 
 #: src/parts/part.cpp:522
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
-msgstr ""
+msgstr "PDF/PostScript ფაილის მორგება"
 
 #: src/parts/part.cpp:642
 #, kde-format
@@ -2929,7 +2929,7 @@ msgstr ""
 #: src/parts/part.cpp:700
 #, kde-format
 msgid "Local Files"
-msgstr ""
+msgstr "ლოკალური ფაილები"
 
 #: src/parts/part.cpp:725
 #, kde-format
@@ -2967,7 +2967,7 @@ msgstr ""
 #: src/parts/part.cpp:1097
 #, kde-format
 msgid "File changed externally"
-msgstr ""
+msgstr "ფაილი გარედან შეიცვალა"
 
 #: src/parts/part.cpp:1097
 #, kde-format
@@ -3063,7 +3063,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:142
 #, kde-format
 msgid "Unknown warning: %1"
-msgstr ""
+msgstr "უცნობი გაფრთხილება: %1"
 
 #: src/processing/checkbibtex.cpp:151
 #, kde-format
@@ -3073,7 +3073,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:151
 #, kde-format
 msgid "Errors found"
-msgstr ""
+msgstr "ნაპოვნი შეცდომა"
 
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
@@ -3083,7 +3083,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
 msgid "Warnings found"
-msgstr ""
+msgstr "ნაპოვნი გაფრთხილებები"
 
 #: src/processing/checkbibtex.cpp:156
 #, kde-format
@@ -3117,7 +3117,7 @@ msgstr "_გაუქმება"
 #, kde-format
 msgctxt "@title:window"
 msgid "Finding Duplicates"
-msgstr ""
+msgstr "დუბლიკატების მოძებნა"
 
 #: src/processing/idsuggestions.cpp:314
 #, kde-format
@@ -3220,12 +3220,12 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:496
 #, kde-format
 msgid "First author only"
-msgstr ""
+msgstr "მხოლოდ პირველი ავტორი"
 
 #: src/processing/idsuggestions.cpp:498
 #, kde-format
 msgid "All authors"
-msgstr ""
+msgstr "ყველა ავტორი"
 
 #: src/processing/idsuggestions.cpp:503
 #, kde-format
@@ -3293,12 +3293,12 @@ msgstr ""
 #: src/program/docklets/documentpreview.cpp:347
 #, kde-format
 msgid "Refreshing..."
-msgstr ""
+msgstr "განახლება..."
 
 #: src/program/docklets/documentpreview.cpp:376
 #, kde-format
 msgid "No documents to show."
-msgstr ""
+msgstr "საჩვენებელი დოკუმენტების გარეშე."
 
 #: src/program/docklets/documentpreview.cpp:383
 #: src/program/docklets/documentpreview.cpp:699
@@ -3370,12 +3370,12 @@ msgstr ""
 #: src/program/docklets/elementform.cpp:188
 #, kde-format
 msgid "Element modified"
-msgstr ""
+msgstr "ელემენტი შეიცვალა"
 
 #: src/program/docklets/elementform.cpp:188
 #, kde-format
 msgid "Apply changes"
-msgstr ""
+msgstr "ცვლილებების გადატარება"
 
 #: src/program/docklets/elementform.cpp:188
 #, kde-format
@@ -3385,12 +3385,12 @@ msgstr "ცვლილებების გაუქმება"
 #: src/program/docklets/referencepreview.cpp:84
 #, kde-format
 msgid "Source (BibTeX)"
-msgstr ""
+msgstr "წყარო (BibTeX)"
 
 #: src/program/docklets/referencepreview.cpp:85
 #, kde-format
 msgid "Source (RIS)"
-msgstr ""
+msgstr "წყარო (RIS)"
 
 #: src/program/docklets/referencepreview.cpp:91
 #, kde-format
@@ -3426,7 +3426,7 @@ msgstr ""
 #: src/program/docklets/referencepreview.cpp:427
 #, kde-format
 msgid "Save as HTML"
-msgstr ""
+msgstr "შენახვა HTML ფაილში:"
 
 #: src/program/docklets/referencepreview.cpp:153
 #, kde-format
@@ -3436,7 +3436,7 @@ msgstr ""
 #: src/program/docklets/referencepreview.cpp:243
 #, kde-format
 msgid "Preview disabled"
-msgstr ""
+msgstr "მინიატურა გათიშულია"
 
 #: src/program/docklets/referencepreview.cpp:263
 #, kde-format
@@ -3789,12 +3789,12 @@ msgstr ""
 #: src/program/mainwindow.cpp:116
 #, kde-format
 msgid "List of Documents"
-msgstr ""
+msgstr "დოკუმენტების სია"
 
 #: src/program/mainwindow.cpp:126
 #, kde-format
 msgid "List of Values"
-msgstr ""
+msgstr "მნიშვნელობებს სია"
 
 #: src/program/mainwindow.cpp:135
 #, kde-format
@@ -3809,12 +3809,12 @@ msgstr "ძებნს შედეგები"
 #: src/program/mainwindow.cpp:155
 #, kde-format
 msgid "Online Search"
-msgstr ""
+msgstr "ონლაინ ძებნა"
 
 #: src/program/mainwindow.cpp:165
 #, kde-format
 msgid "Zotero"
-msgstr ""
+msgstr "Zotero"
 
 #: src/program/mainwindow.cpp:176
 #, kde-format
@@ -3829,12 +3829,12 @@ msgstr "დოკუმენტის დათვალიერება"
 #: src/program/mainwindow.cpp:196
 #, kde-format
 msgid "Element Editor"
-msgstr ""
+msgstr "ელემენტის რედაქტორი"
 
 #: src/program/mainwindow.cpp:206
 #, kde-format
 msgid "File Settings"
-msgstr ""
+msgstr "ფაილის პარამეტრები"
 
 #: src/program/mainwindow.cpp:301
 #, kde-format
@@ -3846,7 +3846,7 @@ msgstr ""
 #: src/program/mainwindow.cpp:301
 #, kde-format
 msgid "Creating document failed"
-msgstr ""
+msgstr "დოკუმენტის შექმნის შეცდომა"
 
 #: src/program/mainwindow.cpp:323
 #, kde-format
@@ -3856,7 +3856,7 @@ msgstr "ფაილის გახსნა"
 #: src/program/mainwindow.cpp:365
 #, kde-format
 msgid "%1 - KBibTeX"
-msgstr ""
+msgstr "%1 - KBibTeX"
 
 #: src/program/mainwindow.cpp:450
 #, kde-format
@@ -3893,7 +3893,7 @@ msgstr ""
 #: src/program/mdiwidget.cpp:101
 #, kde-format
 msgid "Full filename"
-msgstr ""
+msgstr "ფაილის სრული სახელი"
 
 #: src/program/mdiwidget.cpp:147
 #, kde-format
@@ -3933,7 +3933,7 @@ msgstr ""
 #: src/program/openfileinfo.cpp:288
 #, kde-format
 msgid "Unnamed-%1"
-msgstr ""
+msgstr "უსახელო-%1"
 
 #: src/program/program.cpp:72
 #, kde-format
