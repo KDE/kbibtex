@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2022-10-20 20:29+0200\n"
+"PO-Revision-Date: 2022-12-24 09:55+0100\n"
 "Last-Translator: Valter Mura <valtermura@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.04.0\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1879,22 +1879,19 @@ msgid "Paper Size:"
 msgstr "Dimensione carta:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "A4"
+#, kde-format
 msgctxt "Paper size"
 msgid "A4"
 msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "Legal"
+#, kde-format
 msgctxt "Paper size"
 msgid "Legal"
 msgstr "Legal"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "Letter"
+#, kde-format
 msgctxt "Paper size"
 msgid "Letter"
 msgstr "Letter"
@@ -2287,18 +2284,17 @@ msgstr "Testo:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:596
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Anteprima:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Copia la stringa formato negli appunti"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Formatta gli identificatori delle voci"
+msgstr "Stringa formato:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2524,10 +2520,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "Lo stile BibTeX <strong>%1</strong> non è disponibile."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "Lo stile BibTeX <strong>%1</strong> non è disponibile."
+msgstr "Lo stile BibTeX <strong>PLACEHOLDER</strong> non è disponibile."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format

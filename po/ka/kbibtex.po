@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2022-12-28 05:43+0100\n"
+"PO-Revision-Date: 2022-12-29 09:59+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -730,22 +730,22 @@ msgstr "წიგნის სუბტტიტრი"
 #: src/config/bibtexfields.cpp:269
 #, kde-format
 msgid "Issue Title"
-msgstr ""
+msgstr "გამოცემის სათაური"
 
 #: src/config/bibtexfields.cpp:270
 #, kde-format
 msgid "Issue Subtitle"
-msgstr ""
+msgstr "გამოცემის ქვესათაური"
 
 #: src/config/bibtexfields.cpp:271
 #, kde-format
 msgid "Booktitle Addon"
-msgstr ""
+msgstr "წიგნის დასახელებს დამატება"
 
 #: src/config/bibtexfields.cpp:273
 #, kde-format
 msgid "Series Shortitle"
-msgstr ""
+msgstr "სერიის მოკლე დასახელება"
 
 #: src/config/bibtexfields.cpp:277
 #, kde-format
@@ -770,17 +770,17 @@ msgstr "XRef"
 #: src/config/bibtexfields.cpp:284
 #, kde-format
 msgid "E-Print"
-msgstr ""
+msgstr "ელექტრონული გამოცემა"
 
 #: src/config/bibtexfields.cpp:285
 #, kde-format
 msgid "E-Print Class"
-msgstr ""
+msgstr "ელექტრონული გამოცემის კლასი"
 
 #: src/config/bibtexfields.cpp:286
 #, kde-format
 msgid "E-Print Type"
-msgstr ""
+msgstr "ელექტრონული გამოცემის ტიპი"
 
 #: src/config/bibtexfields.cpp:288
 #, kde-format
@@ -1064,7 +1064,7 @@ msgstr ""
 #: src/gui/element/associatedfilesui.cpp:107
 #, kde-format
 msgid "Rename Document?"
-msgstr ""
+msgstr "გადავარქვა სახელი დოკუმენტს?"
 
 #: src/gui/element/associatedfilesui.cpp:114
 #, kde-format
@@ -1226,7 +1226,7 @@ msgstr ""
 #: src/gui/element/elementwidgets.cpp:467
 #, kde-format
 msgid "Id '%1' is invalid"
-msgstr ""
+msgstr "Id '%1' არასწორია"
 
 #: src/gui/element/elementwidgets.cpp:519
 #, kde-format
@@ -1337,7 +1337,7 @@ msgstr ""
 #: src/gui/element/elementwidgets.cpp:1359
 #, kde-format
 msgid "No issues detected"
-msgstr ""
+msgstr "პრობლემების გარეშე"
 
 #: src/gui/element/elementwidgets.cpp:1374
 #, kde-format
@@ -1372,7 +1372,7 @@ msgstr "ჩამოტვირთვა"
 #: src/gui/element/findpdfui.cpp:172
 #, kde-format
 msgid "Use URL only"
-msgstr ""
+msgstr "მხოლოდ URL-ის გამოყენება"
 
 #: src/gui/element/findpdfui.cpp:380
 #, kde-format
@@ -1589,12 +1589,12 @@ msgstr "მნიშვნელობის წაშლა"
 #: src/gui/field/fieldlistedit.cpp:155
 #, kde-format
 msgid "Move value down"
-msgstr ""
+msgstr "მნიშვნელობის დაბლა ჩამოტანა"
 
 #: src/gui/field/fieldlistedit.cpp:166
 #, kde-format
 msgid "Move value up"
-msgstr ""
+msgstr "მნიშვნელობის მაღლა ატანა"
 
 #: src/gui/field/fieldlistedit.cpp:416
 #, kde-format
@@ -1604,7 +1604,7 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:421
 #, kde-format
 msgid "Add from Clipboard"
-msgstr ""
+msgstr "ბუფერიდან დამატება"
 
 #: src/gui/field/fieldlistedit.cpp:422
 #, kde-format
@@ -1619,7 +1619,7 @@ msgstr "ფაილის დამატება..."
 #: src/gui/field/fieldlistedit.cpp:490
 #, kde-format
 msgid "Add reference ..."
-msgstr ""
+msgstr "მიმართვის დამატება..."
 
 #: src/gui/field/fieldlistedit.cpp:493
 #, kde-format
@@ -2068,14 +2068,14 @@ msgstr "აქლემგისტრზე"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:507
 #, kde-format
 msgid "Change casing:"
-msgstr "რეგისტრის შეცვლა"
+msgstr "რეგისტრის შეცვლა:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:147
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:358
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:442
 #, kde-format
 msgid "Text in between:"
-msgstr "ტექსტი შუაში"
+msgstr "ტექსტი შუაში:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:151
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:362
@@ -2255,7 +2255,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
 msgid "Format string:"
-msgstr "სტრიქონის ფორმატი"
+msgstr "სტრიქონის ფორმატი:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2406,12 +2406,12 @@ msgstr ""
 #: src/gui/widgets/filesettingswidget.cpp:165
 #, kde-format
 msgid "Use global settings"
-msgstr ""
+msgstr "გლობალური პარამეტრების გამოყენება"
 
 #: src/gui/widgets/filesettingswidget.cpp:171
 #, kde-format
 msgid "List Separator"
-msgstr ""
+msgstr "სიის გამყოფი"
 
 #: src/gui/widgets/filesettingswidget.cpp:176
 #, kde-format
@@ -3426,7 +3426,7 @@ msgstr ""
 #: src/program/docklets/referencepreview.cpp:427
 #, kde-format
 msgid "Save as HTML"
-msgstr "შენახვა HTML ფაილში:"
+msgstr "შენახვა HTML ფაილში"
 
 #: src/program/docklets/referencepreview.cpp:153
 #, kde-format
