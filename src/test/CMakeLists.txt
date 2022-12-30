@@ -42,11 +42,17 @@ set(
     kbibtexdatatest.cpp
 )
 
+set(
+    kbibtexguitest_SRCS
+    kbibtexguitest.cpp
+)
+
 if(UNITY_BUILD AND NOT WIN32) # FIXME: Unity build of programs breaks on Windows
     enable_unity_build(kbibtextest kbibtextest_SRCS)
     enable_unity_build(kbibtexnetworkingtest kbibtexnetworkingtest_SRCS)
     enable_unity_build(kbibtexiotest kbibtexiotest_SRCS)
     enable_unity_build(kbibtexdatatest kbibtexdatatest_SRCS)
+    enable_unity_build(kbibtexguitest kbibtexdatatest_SRCS)
 endif(UNITY_BUILD AND NOT WIN32)
 
 add_executable(
@@ -82,6 +88,15 @@ add_executable(
 )
 
 add_dependencies(kbibtexdatatest
+    generate-kbibtex-git-info
+)
+
+add_executable(
+    kbibtexguitest
+    ${kbibtexguitest_SRCS}
+)
+
+add_dependencies(kbibtexguitest
     generate-kbibtex-git-info
 )
 
@@ -138,10 +153,24 @@ target_include_directories(kbibtexdatatest
         ${CMAKE_BINARY_DIR}
 )
 
+target_link_libraries(kbibtexguitest
+    PRIVATE
+        Qt5::Test
+        KBibTeX::Global
+        KBibTeX::Data
+        KBibTeX::GUI
+)
+
+target_include_directories(kbibtexguitest
+    PRIVATE
+        ${CMAKE_BINARY_DIR}
+)
+
 ecm_mark_as_test(
     kbibtexnetworkingtest
     kbibtexiotest
     kbibtexdatatest
+    kbibtexguitest
 )
 
 add_test(
@@ -163,6 +192,13 @@ add_test(
     kbibtexdatatest
     COMMAND
     kbibtexdatatest
+)
+
+add_test(
+    NAME
+    kbibtexguitest
+    COMMAND
+    kbibtexguitest
 )
 
 if(TESTSET_DIRECTORY)
