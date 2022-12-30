@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2022-12-29 09:59+0100\n"
+"PO-Revision-Date: 2022-12-30 06:25+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -201,12 +201,12 @@ msgstr ""
 #: src/config/bibtexentries.cpp:89
 #, kde-format
 msgid "Single-volume Collection"
-msgstr ""
+msgstr "ერთტომანი კოლექცია"
 
 #: src/config/bibtexentries.cpp:90
 #, kde-format
 msgid "Multi-volume Collection"
-msgstr ""
+msgstr "მრავალტომიანი კოლექცია"
 
 #: src/config/bibtexentries.cpp:92
 #, kde-format
@@ -236,7 +236,7 @@ msgstr ""
 #: src/config/bibtexentries.cpp:100
 #, kde-format
 msgid "Multi-volume Proceedings"
-msgstr ""
+msgstr "მრავალტომიანი მასალები"
 
 #: src/config/bibtexentries.cpp:101
 #, kde-format
@@ -811,12 +811,12 @@ msgstr "იარლიყი"
 #: src/config/bibtexfields.cpp:295
 #, kde-format
 msgid "Shorthand"
-msgstr ""
+msgstr "შემოკლება"
 
 #: src/config/bibtexfields.cpp:296
 #, kde-format
 msgid "Shorthand Intro"
-msgstr ""
+msgstr "მოკლე შესავალი"
 
 #: src/config/bibtexfields.cpp:297
 #, kde-format
@@ -1039,7 +1039,7 @@ msgstr ""
 #: src/gui/element/associatedfilesui.cpp:81
 #, kde-format
 msgid "File operation"
-msgstr ""
+msgstr "ფაილის ოპერაციები"
 
 #: src/gui/element/associatedfilesui.cpp:85
 #, kde-format
@@ -1189,17 +1189,17 @@ msgstr ""
 #: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "Id already in use"
-msgstr ""
+msgstr "იდენტიფიკატორი უკვე გამოიყენება"
 
 #: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "Keep duplicate ids"
-msgstr ""
+msgstr "დუბლირებული იდენტიფიკატორების გამოყენება"
 
 #: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "Restore original id"
-msgstr ""
+msgstr "საწყისი ID-ების აღდგენა"
 
 #: src/gui/element/elementeditor.cpp:579
 #, kde-format
@@ -1216,7 +1216,7 @@ msgstr ""
 #: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid "Element validation failed"
-msgstr ""
+msgstr "ელემენტის გადამოწმების შეცდომა"
 
 #: src/gui/element/elementwidgets.cpp:458
 #, kde-format
@@ -1382,7 +1382,7 @@ msgstr "შედეგი"
 #: src/gui/element/findpdfui.cpp:432
 #, kde-format
 msgid "Starting to search..."
-msgstr ""
+msgstr "ძებნის დასაწყისი..."
 
 #: src/gui/element/findpdfui.cpp:451
 #, kde-format
@@ -1393,7 +1393,7 @@ msgstr "PDF-ის პოვნა"
 #: src/gui/element/findpdfui.cpp:506
 #, kde-format
 msgid "Save URL '%1'"
-msgstr ""
+msgstr "'%1' ბმულის შენახვა"
 
 #: src/gui/element/findpdfui.cpp:556
 #, kde-format
@@ -1411,7 +1411,7 @@ msgstr "ფერის გარეშე"
 #: src/gui/field/colorlabelwidget.cpp:95
 #, kde-format
 msgid "User-defined color"
-msgstr ""
+msgstr "მომხმარებლის-მითითებული ფერი"
 
 #: src/gui/field/colorlabelwidget.cpp:106
 #, kde-format
@@ -1421,12 +1421,12 @@ msgstr "ფერი და ჭდე"
 #: src/gui/field/fieldinput.cpp:89
 #, kde-format
 msgid "Select a predefined month"
-msgstr ""
+msgstr "წინასწარ აღწერილი თვის არჩევა"
 
 #: src/gui/field/fieldinput.cpp:107
 #, kde-format
 msgid "Select a predefined edition"
-msgstr ""
+msgstr "წინასწარ აღწერილი გამოცემის არჩევა"
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
@@ -1566,7 +1566,7 @@ msgstr "საწყისი კოდი"
 #: src/gui/field/fieldlineedit.cpp:341 src/gui/field/fieldlineedit.cpp:374
 #, kde-format
 msgid "Verbatim Text"
-msgstr ""
+msgstr "ტექსტის ასლი"
 
 #: src/gui/field/fieldlineedit.cpp:483
 #, kde-format
@@ -1629,7 +1629,7 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:505
 #, kde-format
 msgid "File to Associate"
-msgstr ""
+msgstr "მისაბმელი ფაილი"
 
 #: src/gui/field/fieldlistedit.cpp:543 src/gui/field/fieldlistedit.cpp:617
 #, kde-format
@@ -1639,7 +1639,7 @@ msgstr "ფაილის ლოკალურად შენახვა"
 #: src/gui/field/fieldlistedit.cpp:593
 #, kde-format
 msgid "Save file '%1' locally"
-msgstr ""
+msgstr "ფაილის '%1' ლოკალურად შენახვა"
 
 #: src/gui/field/fieldlistedit.cpp:604
 #, kde-format
@@ -1652,7 +1652,7 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:645
 #, kde-format
 msgid "Add Keywords from List"
-msgstr ""
+msgstr "საკვანძო სიტყვების სიიდან დამატება"
 
 #: src/gui/field/fieldlistedit.cpp:646
 #, kde-format
@@ -1662,7 +1662,7 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:649
 #, kde-format
 msgid "Add Keywords from Clipboard"
-msgstr ""
+msgstr "საკვანძო სიტყვების ბუფერიდან დამატება"
 
 #: src/gui/field/fieldlistedit.cpp:650
 #, kde-format
@@ -1672,7 +1672,7 @@ msgstr ""
 #: src/gui/file/basicfileview.cpp:384
 #, kde-format
 msgid "Reset to defaults"
-msgstr ""
+msgstr "ნაგულისხმევზე ჩამოყრა"
 
 #: src/gui/file/basicfileview.cpp:391
 #, kde-format
@@ -1900,12 +1900,12 @@ msgstr "მარქაფი შენახვისას:"
 #: src/gui/preferences/settingsfileexporterwidget.cpp:158
 #, kde-format
 msgid "Number of Backups:"
-msgstr ""
+msgstr "მარქაფების რაოდენობა:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:180
 #, kde-format
 msgid "Saving and Exporting"
-msgstr ""
+msgstr "შენახვა და გატანა"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:43
 #: src/gui/widgets/filesettingswidget.cpp:36
@@ -1928,13 +1928,13 @@ msgstr "უმც."
 #: src/gui/preferences/settingsgeneralwidget.cpp:76
 #, kde-format
 msgid "Bibliography System:"
-msgstr ""
+msgstr "ბიბლიოგრაფიული სისტემა:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:80
 #: src/gui/widgets/filesettingswidget.cpp:161
 #, kde-format
 msgid "Person Names Formatting:"
-msgstr ""
+msgstr "სახელის ფორმატირება:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:102
 #, kde-format
@@ -1944,7 +1944,7 @@ msgstr "ზოგადი"
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:152
 #, kde-format
 msgid "NewKeyword%1"
-msgstr ""
+msgstr "ახალისაკვანძოსიტყვა%1"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:115
 #, kde-format
@@ -1954,7 +1954,7 @@ msgstr "ავტორები"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:119
 #, kde-format
 msgid "Author Range:"
-msgstr ""
+msgstr "ავტორების დიაპაზონი:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
@@ -2009,12 +2009,12 @@ msgstr "მეათე ავტორი"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "|Last author"
-msgstr ""
+msgstr "|ბოლო ავტორი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:126
 #, kde-format
 msgid "... and last author"
-msgstr ""
+msgstr "... და ბოლო ავტორი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
@@ -2373,13 +2373,13 @@ msgstr "დაბალი რეგისტრი"
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "Initial capital"
-msgstr ""
+msgstr "პირველი ასოს მაღალ რეგისტრში გადაყვანა"
 
 #: src/gui/widgets/filesettingswidget.cpp:149
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
-msgstr ""
+msgstr "UpperCamelCase"
 
 #: src/gui/widgets/filesettingswidget.cpp:150
 #, kde-format
@@ -2391,12 +2391,12 @@ msgstr "დაბალი რეგისტრი"
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UPPERCASE"
-msgstr ""
+msgstr "მაღალირეგისტრი"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
 #, kde-format
 msgid "Protect Titles"
-msgstr ""
+msgstr "დასახელებების დაცვა"
 
 #: src/gui/widgets/filesettingswidget.cpp:156
 #, kde-format
@@ -3540,7 +3540,7 @@ msgstr "იმპორტი"
 #: src/program/docklets/searchresults.cpp:97
 #, kde-format
 msgid "View Element"
-msgstr ""
+msgstr "ელემენტის ნახვა"
 
 #: src/program/docklets/searchresults.cpp:107
 #, kde-format
