@@ -33,6 +33,10 @@ class KBIBTEXGUI_EXPORT SettingsGlobalKeywordsWidget : public SettingsAbstractWi
 {
     Q_OBJECT
 
+#ifdef BUILD_TESTING
+    friend class KBibTeXGUITest;
+#endif // BUILD_TESTING
+
 public:
     explicit SettingsGlobalKeywordsWidget(QWidget *parent);
     ~SettingsGlobalKeywordsWidget() override;

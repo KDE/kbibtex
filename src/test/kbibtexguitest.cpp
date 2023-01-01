@@ -22,6 +22,7 @@
 #include <Entry>
 #include <models/FileModel>
 #include <file/SortFilterFileModel>
+#include <preferences/SettingsGlobalKeywordsWidget>
 
 class KBibTeXGUITest : public QObject
 {
@@ -31,6 +32,7 @@ private slots:
     void initTestCase();
 
     void sortedFilterFileModelSetSourceModel();
+    void settingsGlobalKeywordsWidgetAddRemove();
 
 private:
 };
@@ -59,6 +61,23 @@ void KBibTeXGUITest::sortedFilterFileModelSetSourceModel()
     QPointer<SortFilterFileModel> sortFilterProxyModel = new SortFilterFileModel();
     sortFilterProxyModel->setSourceModel(model.data());
     QCOMPARE(sortFilterProxyModel->rowCount(), 1);
+}
+
+void KBibTeXGUITest::settingsGlobalKeywordsWidgetAddRemove()
+{
+    QPointer<SettingsGlobalKeywordsWidget> sgkw = new SettingsGlobalKeywordsWidget(nullptr);
+    bool gotChanged = false;
+    connect(sgkw, &SettingsGlobalKeywordsWidget::changed, this, [&gotChanged] {
+        gotChanged = true;
+    });
+
+    gotChanged = false;
+    sgkw->addKeyword();
+    QCOMPARE(gotChanged, true);
+
+    gotChanged = false;
+    sgkw->removeKeyword();
+    QCOMPARE(gotChanged, true);
 }
 
 QTEST_MAIN(KBibTeXGUITest)
