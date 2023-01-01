@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2022-01-01 15:24+0000\n"
+"PO-Revision-Date: 2022-12-31 15:51+0000\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
-"Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
+"Language-Team: English <kde-i18n-doc@kde.org>\n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.12.0\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1867,22 +1867,19 @@ msgid "Paper Size:"
 msgstr "Paper Size:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "A4"
+#, kde-format
 msgctxt "Paper size"
 msgid "A4"
 msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "Legal"
+#, kde-format
 msgctxt "Paper size"
 msgid "Legal"
 msgstr "Legal"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "Letter"
+#, kde-format
 msgctxt "Paper size"
 msgid "Letter"
 msgstr "Letter"
@@ -2275,18 +2272,17 @@ msgstr "Text:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:596
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Preview:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Copy format string to clipboard"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Format entry IDs"
+msgstr "Format string:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2447,16 +2443,14 @@ msgid "List Separator"
 msgstr "List Separator"
 
 #: src/gui/widgets/filesettingswidget.cpp:176
-#, fuzzy, kde-format
-#| msgid "Sort by Count"
+#, kde-format
 msgid "Sort by identifier"
-msgstr "Sort by Count"
+msgstr "Sort by identifier"
 
 #: src/gui/widgets/filesettingswidget.cpp:177
-#, fuzzy, kde-format
-#| msgid "Sorting"
+#, kde-format
 msgid "Entry Sorting"
-msgstr "Sorting"
+msgstr "Entry Sorting"
 
 #: src/gui/widgets/filterbar.cpp:71
 #, kde-format
@@ -2514,10 +2508,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "The BibTeX style <strong>%1</strong> is not available."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "The BibTeX style <strong>%1</strong> is not available."
+msgstr "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
