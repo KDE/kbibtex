@@ -165,6 +165,7 @@ if(BUILD_TESTING AND NOT Qt5Test_FOUND)
 endif()
 
 if(BUILD_TESTING)
+    add_definitions(-DBUILD_TESTING)
     if (WRITE_RAWDATAFILE)
         add_definitions(-DWRITE_RAWDATAFILE)
     endif(WRITE_RAWDATAFILE)

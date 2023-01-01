@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2022 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -64,6 +64,8 @@ public:
     SettingsGlobalKeywordsWidgetPrivate(SettingsGlobalKeywordsWidget *parent)
             : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("Global Keywords")), stringListModel(parent) {
         setupGUI();
+        connect(&stringListModel, &DisallowEmptyStringListModel::dataChanged, p, &SettingsGlobalKeywordsWidget::changed);
+        connect(&stringListModel, &DisallowEmptyStringListModel::rowsRemoved, p, &SettingsGlobalKeywordsWidget::changed);
     }
 
     void loadState() {
