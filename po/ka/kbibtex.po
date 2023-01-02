@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2022-12-30 06:25+0100\n"
+"PO-Revision-Date: 2023-01-01 07:59+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1166,7 +1166,7 @@ msgstr ""
 #: src/gui/element/elementeditor.cpp:221
 #, kde-format
 msgid "Check with BibTeX"
-msgstr ""
+msgstr "BibTeX-ით შემოწმება"
 
 #: src/gui/element/elementeditor.cpp:543
 #, kde-format
@@ -1221,7 +1221,7 @@ msgstr "ელემენტის გადამოწმების შე�
 #: src/gui/element/elementwidgets.cpp:458
 #, kde-format
 msgid "Element type '%1' is invalid."
-msgstr ""
+msgstr "ელემენტის ტიპი '%1' არასწორია."
 
 #: src/gui/element/elementwidgets.cpp:467
 #, kde-format
@@ -2640,7 +2640,7 @@ msgstr "ISSN/ISBN/DOI:"
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:121
 #, kde-format
 msgid "Issue/Number:"
-msgstr ""
+msgstr "რიცხვი/გამოცემა:"
 
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:364
 #, kde-format
@@ -2934,7 +2934,7 @@ msgstr "ლოკალური ფაილები"
 #: src/parts/part.cpp:725
 #, kde-format
 msgid "Remote Files"
-msgstr ""
+msgstr "დაშორებული ფაილები"
 
 #: src/parts/part.cpp:836
 #, kde-format
@@ -2997,7 +2997,7 @@ msgstr ""
 #: src/parts/partfactory.cpp:40 src/program/program.cpp:57
 #, kde-format
 msgid "Thomas Fischer"
-msgstr ""
+msgstr "Thomas Fischer"
 
 #: src/parts/partfactory.cpp:40 src/program/program.cpp:57
 #, kde-format
@@ -3028,12 +3028,12 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:92
 #, kde-format
 msgid "Running BibTeX failed."
-msgstr ""
+msgstr "BibTeX -ის გაშვების შეცდომა."
 
 #: src/processing/checkbibtex.cpp:124
 #, kde-format
 msgid "Field <b>%1</b> is empty"
-msgstr ""
+msgstr "ველი <b>%1</b> ცარიელია"
 
 #: src/processing/checkbibtex.cpp:127
 #, kde-format
@@ -3143,19 +3143,19 @@ msgstr[1] ""
 #: src/processing/idsuggestions.cpp:446 src/processing/idsuggestions.cpp:464
 #, kde-format
 msgid ", in upper case"
-msgstr ""
+msgstr ", მაღალ რეგისტრში"
 
 #: src/processing/idsuggestions.cpp:395 src/processing/idsuggestions.cpp:427
 #: src/processing/idsuggestions.cpp:449 src/processing/idsuggestions.cpp:467
 #, kde-format
 msgid ", in lower case"
-msgstr ""
+msgstr ", დაბალ რეგისტრში"
 
 #: src/processing/idsuggestions.cpp:398 src/processing/idsuggestions.cpp:430
 #: src/processing/idsuggestions.cpp:452 src/processing/idsuggestions.cpp:470
 #, kde-format
 msgid ", in CamelCase"
-msgstr ""
+msgstr ", აქლემგისტრში"
 
 #: src/processing/idsuggestions.cpp:404 src/processing/idsuggestions.cpp:436
 #, kde-format
@@ -3165,12 +3165,12 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:407
 #, kde-format
 msgid "Year (2 digits)"
-msgstr ""
+msgstr "წელი (2 ციფრი)"
 
 #: src/processing/idsuggestions.cpp:409
 #, kde-format
 msgid "Year (4 digits)"
-msgstr ""
+msgstr "წელი (4 ციფრი)"
 
 #: src/processing/idsuggestions.cpp:414
 #, kde-format
@@ -3565,17 +3565,17 @@ msgstr ""
 #: src/program/docklets/statistics.cpp:53
 #, kde-format
 msgid "Number of Elements:"
-msgstr ""
+msgstr "ელემენტების რაოდენობა:"
 
 #: src/program/docklets/statistics.cpp:57
 #, kde-format
 msgid "Number of Entries:"
-msgstr ""
+msgstr "ჩანაწერების რაოდენობა:"
 
 #: src/program/docklets/statistics.cpp:60
 #, kde-format
 msgid "Journal Articles:"
-msgstr ""
+msgstr "ჟურნალის სტატიები:"
 
 #: src/program/docklets/statistics.cpp:63
 #, kde-format
@@ -3590,22 +3590,22 @@ msgstr "წიგნები:"
 #: src/program/docklets/statistics.cpp:69
 #, kde-format
 msgid "Other Entries:"
-msgstr ""
+msgstr "სხვა ჩანაწერები:"
 
 #: src/program/docklets/statistics.cpp:73
 #, kde-format
 msgid "Number of Comments:"
-msgstr ""
+msgstr "კომენტარების რაოდენობა:"
 
 #: src/program/docklets/statistics.cpp:77
 #, kde-format
 msgid "Number of Macros:"
-msgstr ""
+msgstr "მაკროების რაოდენობა:"
 
 #: src/program/docklets/valuelist.cpp:93
 #, kde-format
 msgid "Filter value list"
-msgstr ""
+msgstr "მნიშვნელობების სიის ფილტრი"
 
 #: src/program/docklets/valuelist.cpp:109
 #, kde-format
@@ -3620,27 +3620,27 @@ msgstr ""
 #: src/program/docklets/valuelist.cpp:126
 #, kde-format
 msgid "Show Count Column"
-msgstr ""
+msgstr "სვეტების რაოდენობის ჩვენება"
 
 #: src/program/docklets/valuelist.cpp:130
 #, kde-format
 msgid "Sort by Count"
-msgstr ""
+msgstr "რაოდენობით დალაგება"
 
 #: src/program/docklets/zoterobrowser.cpp:117
 #, kde-format
 msgid "Personal library"
-msgstr ""
+msgstr "პირადი ბიბლიოთეკა"
 
 #: src/program/docklets/zoterobrowser.cpp:119
 #, kde-format
 msgid "Group library"
-msgstr ""
+msgstr "ჯგუფის ბიბლიოთეკა"
 
 #: src/program/docklets/zoterobrowser.cpp:128
 #, kde-format
 msgid "No groups available"
-msgstr ""
+msgstr "ჯგუფები არ არის ხელმისაწვდომი"
 
 #: src/program/docklets/zoterobrowser.cpp:144
 #, kde-format
