@@ -104,6 +104,16 @@ EOF
 	buildahsetx copy "${id}" "${TEMPDIR}/kbibtex-kdeglobals" /tmp/xdg-config-home/kdeglobals || exit 1
 }
 
+function create_ubuntu_ddebslist() {
+	local CODENAME="$1"
+
+	{
+		echo "deb http://ddebs.ubuntu.com ${CODENAME} main restricted universe multiverse"
+		echo "deb http://ddebs.ubuntu.com ${CODENAME}-updates main restricted universe multiverse"
+		echo "deb http://ddebs.ubuntu.com ${CODENAME}-proposed main restricted universe multiverse"
+	} >"${TEMPDIR}/ddebs.list"
+}
+
 
 function build_ubuntu2204() {
 	local FROMIMAGE
@@ -125,14 +135,17 @@ function build_ubuntu2204() {
 	create_directories "${id}"
 
 	# DISTRIBUTION-SPECIFIC CODE BEGINS HERE
+	create_ubuntu_ddebslist jammy
+	buildahsetx copy "${id}" "${TEMPDIR}/ddebs.list" /etc/apt/sources.list.d/ddebs.list || exit 1
 	export TZ="Europe/Berlin"
 	buildah config --env TZ="${TZ}" "${id}"
 	echo "${TZ}" >"${TEMPDIR}/timezone"
 	buildahsetx copy "${id}" "${TEMPDIR}/timezone" /etc/timezone || exit 1
 	buildahsetx run "${id}" -- ln -snf /usr/share/zoneinfo/"${TZ}" /etc/localtime || exit 1
+	buildahsetx run "${id}" -- apt install -y ubuntu-dbgsym-keyring || exit 1
 	buildahsetx run "${id}" -- apt update || exit 1
 	# TODO install BibUtils
-	buildahsetx run "${id}" -- apt install -y sudo fonts-ibm-plex breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde okular kbibtex || exit 1
+	buildahsetx run "${id}" -- apt install -y sudo fonts-ibm-plex breeze-icon-theme kde-style-breeze frameworkintegration gdb valgrind xdg-desktop-portal-kde okular kbibtex kbibtex-dbgsym || exit 1
 	buildahsetx run "${id}" -- sudo apt autoremove || exit 1
 	buildahsetx run "${id}" -- sudo apt clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
@@ -166,14 +179,17 @@ function build_ubuntu2210() {
 	create_directories "${id}"
 
 	# DISTRIBUTION-SPECIFIC CODE BEGINS HERE
+	create_ubuntu_ddebslist kinetic
+	buildahsetx copy "${id}" "${TEMPDIR}/ddebs.list" /etc/apt/sources.list.d/ddebs.list || exit 1
 	export TZ="Europe/Berlin"
 	buildah config --env TZ="${TZ}" "${id}"
 	echo "${TZ}" >"${TEMPDIR}/timezone"
 	buildahsetx copy "${id}" "${TEMPDIR}/timezone" /etc/timezone || exit 1
 	buildahsetx run "${id}" -- ln -snf /usr/share/zoneinfo/"${TZ}" /etc/localtime || exit 1
+	buildahsetx run "${id}" -- apt install -y ubuntu-dbgsym-keyring || exit 1
 	buildahsetx run "${id}" -- apt update || exit 1
 	# TODO install BibUtils
-	buildahsetx run "${id}" -- apt install -y sudo fonts-ibm-plex breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde okular kbibtex || exit 1
+	buildahsetx run "${id}" -- apt install -y sudo fonts-ibm-plex breeze-icon-theme kde-style-breeze frameworkintegration gdb valgrind xdg-desktop-portal-kde okular kbibtex kbibtex-dbgsym || exit 1
 	buildahsetx run "${id}" -- sudo apt autoremove || exit 1
 	buildahsetx run "${id}" -- sudo apt clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE

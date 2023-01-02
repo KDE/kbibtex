@@ -115,6 +115,18 @@ EOF
 }
 
 
+function create_ubuntu_ddebslist() {
+	local CODENAME
+	CODENAME="$1"
+
+	{
+		echo "deb http://ddebs.ubuntu.com ${CODENAME} main restricted universe multiverse"
+		echo "deb http://ddebs.ubuntu.com ${CODENAME}-updates main restricted universe multiverse"
+		echo "deb http://ddebs.ubuntu.com ${CODENAME}-proposed main restricted universe multiverse"
+	} >"${TEMPDIR}/ddebs.list"
+}
+
+
 function build_archlinux() {
 	local FROMIMAGE
 	FROMIMAGE="docker://archlinux:latest"
@@ -364,14 +376,17 @@ function build_ubuntu2204() {
 	set_environment "${id}"
 
 	# DISTRIBUTION-SPECIFIC CODE BEGINS HERE
+	create_ubuntu_ddebslist jammy
+	buildahsetx copy "${id}" "${TEMPDIR}/ddebs.list" /etc/apt/sources.list.d/ddebs.list || exit 1
 	export TZ="Europe/Berlin"
 	buildah config --env TZ="${TZ}" "${id}"
 	echo "${TZ}" >"${TEMPDIR}/timezone"
 	buildahsetx copy "${id}" "${TEMPDIR}/timezone" /etc/timezone || exit 1
 	buildahsetx run "${id}" -- ln -snf /usr/share/zoneinfo/"${TZ}" /etc/localtime || exit 1
+	buildahsetx run "${id}" -- apt install -y ubuntu-dbgsym-keyring || exit 1
 	buildahsetx run "${id}" -- apt update || exit 1
 	# TODO install BibUtils
-	buildahsetx run "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
+	buildahsetx run "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb valgrind xdg-desktop-portal-kde git gettext okular appstream || exit 1
 	buildahsetx run "${id}" -- sudo apt autoremove || exit 1
 	buildahsetx run "${id}" -- sudo apt clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
@@ -406,14 +421,17 @@ function build_ubuntu2210() {
 	set_environment "${id}"
 
 	# DISTRIBUTION-SPECIFIC CODE BEGINS HERE
+	create_ubuntu_ddebslist kinetic
+	buildahsetx copy "${id}" "${TEMPDIR}/ddebs.list" /etc/apt/sources.list.d/ddebs.list || exit 1
 	export TZ="Europe/Berlin"
 	buildah config --env TZ="${TZ}" "${id}"
 	echo "${TZ}" >"${TEMPDIR}/timezone"
 	buildahsetx copy "${id}" "${TEMPDIR}/timezone" /etc/timezone || exit 1
 	buildahsetx run "${id}" -- ln -snf /usr/share/zoneinfo/"${TZ}" /etc/localtime || exit 1
+	buildahsetx run "${id}" -- apt install -y ubuntu-dbgsym-keyring || exit 1
 	buildahsetx run "${id}" -- apt update || exit 1
 	# TODO install BibUtils
-	buildahsetx run "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
+	buildahsetx run "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb valgrind xdg-desktop-portal-kde git gettext okular appstream || exit 1
 	buildahsetx run "${id}" -- sudo apt autoremove || exit 1
 	buildahsetx run "${id}" -- sudo apt clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
