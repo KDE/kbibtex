@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -245,7 +245,7 @@ void PDFItemDelegate::slotViewPDF()
         const QUrl url = index.data(PDFListModel::URLRole).toUrl();
         if (!tempfileName.isEmpty()) {
             /// Guess mime type for url to open
-            QUrl tempUrl(tempfileName);
+            QUrl tempUrl{QUrl::fromLocalFile(tempfileName)};
             QMimeType mimeType = FileInfo::mimeTypeForUrl(tempUrl);
             const QString mimeTypeName = mimeType.name();
             /// Ask KDE subsystem to open url in viewer matching mime type
@@ -444,7 +444,7 @@ FindPDFUI::~FindPDFUI()
     }
 }
 
-void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent)
+bool FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent)
 {
     QPointer<QDialog> dlg = new QDialog(parent);
     QPointer<FindPDFUI> widget = new FindPDFUI(entry, dlg);
@@ -464,12 +464,15 @@ void FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget
     connect(buttonBox->button(QDialogButtonBox::Abort), &QPushButton::clicked, widget.data(), &FindPDFUI::stopSearch);
 
     if (dlg->exec() == QDialog::Accepted)
-        widget->apply(entry, bibtexFile);
-    delete dlg;
+        return widget->apply(entry, bibtexFile);
+    else
+        return false;
 }
 
-void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
+bool FindPDFUI::apply(Entry &entry, const File &bibtexFile)
 {
+    bool bibtexFileModified = false;
+
     QAbstractItemModel *model = d->listViewResult->model();
     for (int i = 0; i < model->rowCount(); ++i) {
         bool ok = false;
@@ -490,13 +493,15 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             if (!alreadyContained) {
                 Value value;
                 value.append(QSharedPointer<VerbatimText>(new VerbatimText(url.toDisplayString())));
-                if (!entry.contains(Entry::ftUrl))
+                if (!entry.contains(Entry::ftUrl)) {
                     entry.insert(Entry::ftUrl, value);
-                else
+                    bibtexFileModified = true;
+                } else
                     for (int i = 2; i < 256; ++i) {
                         const QString keyName = QString(QStringLiteral("%1%2")).arg(Entry::ftUrl).arg(i);
                         if (!entry.contains(keyName)) {
                             entry.insert(keyName, value);
+                            bibtexFileModified = true;
                             break;
                         }
                     }
@@ -518,13 +523,15 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
                     Value value;
                     value.append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
                     const QString fieldNameStem = Preferences::instance().bibliographySystem() == Preferences::BibliographySystem::BibTeX ? Entry::ftLocalFile : Entry::ftFile;
-                    if (!entry.contains(fieldNameStem))
+                    if (!entry.contains(fieldNameStem)) {
                         entry.insert(fieldNameStem, value);
-                    else
+                        bibtexFileModified = true;
+                    } else
                         for (int i = 2; i < 256; ++i) {
                             const QString keyName = QString(QStringLiteral("%1%2")).arg(fieldNameStem).arg(i);
                             if (!entry.contains(keyName)) {
                                 entry.insert(keyName, value);
+                                bibtexFileModified = true;
                                 break;
                             }
                         }
@@ -532,6 +539,8 @@ void FindPDFUI::apply(Entry &entry, const File &bibtexFile)
             }
         }
     }
+
+    return bibtexFileModified;
 }
 
 void FindPDFUI::searchFinished()
