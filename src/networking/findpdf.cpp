@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,6 +27,9 @@
 #include <QUrlQuery>
 #include <QStandardPaths>
 #include <QDir>
+#ifdef HAVE_SCIHUB
+#include <QRandomGenerator>
+#endif // HAVE_SCIHUB
 
 #include <poppler-qt5.h>
 
@@ -47,6 +50,20 @@ class FindPDF::Private
 private:
     FindPDF *p;
 
+    /**
+     * @brief Remove the fragment part of an URL (i.e. everything starting from '#')
+     * @param u QUrl which may contain a fragment part or not
+     * @return QUrl with the fragment part removed if there was any
+     */
+    inline QUrl removeFragment(const QUrl &u) {
+        if (u.hasFragment()) {
+            QUrl _u{u};
+            _u.setFragment(QString());
+            return _u;
+        } else
+            return u;
+    }
+
 public:
     int aliveCounter;
     QList<ResultItem> result;
@@ -62,9 +79,11 @@ public:
 
     bool queueUrl(const QUrl &url, const QString &term, const QString &origin, int depth)
     {
-        if (!knownUrls.contains(url) && depth > 0) {
-            knownUrls.insert(url);
-            QNetworkRequest request = QNetworkRequest(url);
+        const QUrl sanitizedUrl{removeFragment(url)};
+
+        if (!knownUrls.contains(sanitizedUrl) && depth > 0) {
+            knownUrls.insert(sanitizedUrl);
+            QNetworkRequest request = QNetworkRequest(sanitizedUrl);
             QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply, 15); ///< set a timeout on network connections
             reply->setProperty(depthProperty, QVariant::fromValue<int>(depth));
@@ -83,6 +102,7 @@ public:
         /// fetch some properties from Reply object
         const QString term = reply->property(termProperty).toString();
         const QString origin = reply->property(originProperty).toString();
+        const QUrl baseUrl{reply->url()};
         bool ok = false;
         int depth = reply->property(depthProperty).toInt(&ok);
         if (!ok) depth = 0;
@@ -101,7 +121,7 @@ public:
             const QRegularExpressionMatch match = anchorRegExp.match(text);
             if (match.hasMatch()) {
                 const QUrl url = QUrl::fromEncoded(match.captured(1).toLatin1());
-                queueUrl(reply->url().resolved(url), term, origin, depth - 1);
+                queueUrl(baseUrl.resolved(url), term, origin, depth - 1);
                 gotLink = true;
                 break;
             }
@@ -113,7 +133,38 @@ public:
             const QRegularExpressionMatch match = genericAnchorRegExp.match(text);
             if (match.hasMatch()) {
                 const QUrl url = QUrl::fromEncoded(match.captured(1).toLatin1());
-                queueUrl(reply->url().resolved(url), term, origin, depth - 1);
+                queueUrl(baseUrl.resolved(url), term, origin, depth - 1);
+            }
+        }
+
+        if (baseUrl.isValid()) {
+            int p1 = text.indexOf(QStringLiteral("<embed"));
+            while (p1 > 0) {
+                const int p2 = text.indexOf(QStringLiteral(">"), p1 + 5);
+                if (p2 > p1) {
+                    const int p3 = text.indexOf(QStringLiteral("type=\"application/pdf\""), p1 + 5);
+                    if (p3 > p1 && p3 < p2) {
+                        const int p4 = text.indexOf(QStringLiteral("src=\""), p1 + 5);
+                        if (p4 > p1 && p4 < p2) {
+                            const int p5 = text.indexOf(QStringLiteral("\""), p4 + 5);
+                            if (p5 > p4 && p5 < p2) {
+                                const QString src{text.mid(p4 + 5, p5 - p4)};
+                                QUrl nextUrl;
+                                if (src.startsWith(QStringLiteral("http")))
+                                    nextUrl = QUrl::fromUserInput(src);
+                                else if (src.startsWith(QStringLiteral("//")))
+                                    nextUrl = QUrl::fromUserInput(baseUrl.scheme() + QStringLiteral(":") + src);
+                                else if (src.startsWith(QStringLiteral("/")))
+                                    nextUrl = QUrl::fromUserInput(baseUrl.scheme() + QStringLiteral("://") + baseUrl.host() + src);
+                                else
+                                    nextUrl = baseUrl.resolved(QUrl(src));
+                                queueUrl(nextUrl, term, origin, depth - 1);
+                            }
+                        }
+                    }
+                    p1 = text.indexOf(QStringLiteral("<embed"), p2);
+                } else
+                    break;
             }
         }
     }
@@ -309,7 +360,12 @@ bool FindPDF::search(const Entry &entry)
             QRegularExpressionMatchIterator doiRegExpMatchIt = KBibTeX::doiRegExp.globalMatch(fieldText);
             while (doiRegExpMatchIt.hasNext()) {
                 const QRegularExpressionMatch doiRegExpMatch = doiRegExpMatchIt.next();
-                d->queueUrl(QUrl(KBibTeX::doiUrlPrefix + doiRegExpMatch.captured(0)), fieldText, Entry::ftDOI, maxDepth);
+                const QString doiNumber{doiRegExpMatch.captured(0)};
+                d->queueUrl(QUrl(KBibTeX::doiUrlPrefix + doiNumber), fieldText, Entry::ftDOI, maxDepth);
+#ifdef HAVE_SCIHUB
+                static const QVector<QString> sciHubUrlPrefixes {{QStringLiteral("https://sci-hub.se/")}, {QStringLiteral("https://sci-hub.st/")}, {QStringLiteral("https://sci-hub.ru/")}};
+                d->queueUrl(QUrl::fromUserInput(sciHubUrlPrefixes[QRandomGenerator::global()->bounded(sciHubUrlPrefixes.length())] + doiNumber), fieldText, Entry::ftDOI, maxDepth);
+#endif // HAVE_SCIHUB
             }
 
             QRegularExpressionMatchIterator urlRegExpMatchIt = KBibTeX::urlRegExp.globalMatch(fieldText);
