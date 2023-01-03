@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2023 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -921,9 +921,15 @@ void KBibTeXPart::elementFindPDF()
 {
     QModelIndexList mil = d->partWidget->fileView()->selectionModel()->selectedRows();
     if (mil.count() == 1) {
-        QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row()).dynamicCast<Entry>();
-        if (!entry.isNull())
-            FindPDFUI::interactiveFindPDF(*entry, *d->bibTeXFile, widget());
+        const int row = d->partWidget->fileView()->sortFilterProxyModel()->mapToSource(*mil.constBegin()).row();
+        QSharedPointer<Entry> entry = d->partWidget->fileView()->fileModel()->element(row).dynamicCast<Entry>();
+        if (!entry.isNull()) {
+            const bool gotModified = FindPDFUI::interactiveFindPDF(*entry, *d->bibTeXFile, widget());
+            if (gotModified) {
+                d->model->elementChanged(row);
+                setModified(true);
+            }
+        }
     }
 }
 

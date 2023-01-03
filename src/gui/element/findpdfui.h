@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2023 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -44,11 +44,12 @@ public:
      * and keep, (2) which URLs to PDF files to keep (no file downloading) and (3)
      * which PDF files to ignore.
      *
-     * @param entry
-     * @param bibtexFile
-     * @param parent
+     * @param entry Entry for which PDF files are to be searched for
+     * @param bibtexFile Bibliography file to get a 'start URL' from it
+     * @param parent Parent widget for the graphical user interface
+     * @return True if the provided entry got modified, else False
      */
-    static void interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent);
+    static bool interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent);
 
 signals:
     void resultAvailable(bool);
@@ -62,7 +63,7 @@ public slots:
 protected:
     FindPDFUI(Entry &entry, QWidget *parent);
 
-    void apply(Entry &entry, const File &bibtexFile);
+    bool apply(Entry &entry, const File &bibtexFile);
 
 private:
     class Private;

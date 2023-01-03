@@ -184,6 +184,16 @@ if(TESTSET_DIRECTORY AND ( NOT EXISTS "${TESTSET_DIRECTORY}/bib/minix.bib" OR NO
 endif()
 
 
+option(
+    BUILD_SCIHUB
+    "Support fetching PDF files from SciHub"
+    ON
+)
+if(BUILD_SCIHUB)
+    add_definitions(-DHAVE_SCIHUB)
+endif()
+
+
 add_subdirectory(
     config
 )
