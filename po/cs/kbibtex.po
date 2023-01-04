@@ -1,7 +1,7 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Vít Pelčák <vit@pelcak.org>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
-# Vit Pelcak <vpelcak@suse.cz>, 2021.
+# Vit Pelcak <vit@pelcak.org>, 2021.
 #
 msgid ""
 msgstr ""
@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
 "PO-Revision-Date: 2021-12-17 16:48+0100\n"
-"Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
+"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -1858,19 +1858,19 @@ msgstr "Velikost papíru:"
 #, kde-format
 msgctxt "Paper size"
 msgid "A4"
-msgstr ""
+msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Legal"
-msgstr ""
+msgstr "Právní"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Letter"
-msgstr ""
+msgstr "Dopis"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:93
 #, kde-format
@@ -2260,7 +2260,7 @@ msgstr "Text:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:596
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Náhled:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
@@ -2268,10 +2268,9 @@ msgid "Copy format string to clipboard"
 msgstr ""
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Formátovat ID záznamů"
+msgstr ""
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2432,16 +2431,14 @@ msgid "List Separator"
 msgstr "Oddělovač seznamů"
 
 #: src/gui/widgets/filesettingswidget.cpp:176
-#, fuzzy, kde-format
-#| msgid "Sort by Count"
+#, kde-format
 msgid "Sort by identifier"
-msgstr "Třídit dle počtu"
+msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:177
-#, fuzzy, kde-format
-#| msgid "Sorting"
+#, kde-format
 msgid "Entry Sorting"
-msgstr "Třídění"
+msgstr ""
 
 #: src/gui/widgets/filterbar.cpp:71
 #, kde-format
@@ -2499,10 +2496,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "Styl BibTeX <strong>%1</strong> není dostupný."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "Styl BibTeX <strong>%1</strong> není dostupný."
+msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2023-01-02 05:06+0100\n"
+"PO-Revision-Date: 2023-01-03 08:40+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2356,7 +2356,7 @@ msgstr "სტრიქონის გამყოფები:"
 #: src/gui/widgets/filesettingswidget.cpp:140
 #, kde-format
 msgid "Comment Quoting:"
-msgstr ""
+msgstr "კომენტარის ციტირება:"
 
 #: src/gui/widgets/filesettingswidget.cpp:146
 #, kde-format
@@ -2431,7 +2431,7 @@ msgstr "ფილტრი:"
 #: src/gui/widgets/filterbar.cpp:87
 #, kde-format
 msgid "Filter bibliographic entries"
-msgstr ""
+msgstr "ბიბლიოგრაფიული ჩანაწერების ფილტრი"
 
 #: src/gui/widgets/filterbar.cpp:91
 #, kde-format
@@ -2461,7 +2461,7 @@ msgstr ""
 #: src/gui/widgets/filterbar.cpp:122
 #, kde-format
 msgid "Reset filter criteria"
-msgstr ""
+msgstr "ფილტრის კრიტერიუმის საწყის მნიშვნელობაზე დაბრუნება"
 
 #: src/gui/widgets/starrating.cpp:53
 #, kde-format
@@ -2471,7 +2471,7 @@ msgstr "დაყენებული არაა"
 #: src/io/fileexporterbibtex2html.cpp:80
 #, kde-format
 msgid "The program <strong>bibtex2html</strong> is not available."
-msgstr ""
+msgstr "პროგრამა <strong>bibtex2html</strong> ვერ ვიპოვე."
 
 #: src/io/fileexporterbibtex2html.cpp:98
 #, kde-format
