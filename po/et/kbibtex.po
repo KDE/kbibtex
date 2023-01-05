@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-23 00:47+0000\n"
+"POT-Creation-Date: 2023-01-05 00:48+0000\n"
 "PO-Revision-Date: 2020-04-26 10:18+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -424,7 +424,7 @@ msgid "School"
 msgstr "Kool"
 
 #: src/config/bibtexfields.cpp:187 src/config/bibtexfields.cpp:280
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:125
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:127
 #, kde-format
 msgid "Keywords"
 msgstr "Võtmesõnad"
@@ -1267,7 +1267,7 @@ msgstr "Nimi:"
 
 #: src/gui/element/elementwidgets.cpp:981
 #: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:98
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
 msgstr "Lisa"
@@ -1398,12 +1398,12 @@ msgctxt "@title:window"
 msgid "Find PDF"
 msgstr "PDF-i otsimine"
 
-#: src/gui/element/findpdfui.cpp:506
+#: src/gui/element/findpdfui.cpp:511
 #, kde-format
 msgid "Save URL '%1'"
 msgstr "URL-i '%1' salvestamine"
 
-#: src/gui/element/findpdfui.cpp:556
+#: src/gui/element/findpdfui.cpp:565
 #, kde-format
 msgid ""
 "<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
@@ -1839,7 +1839,7 @@ msgid "Add..."
 msgstr "Lisa..."
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:336
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:104
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:345
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:429
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:268
@@ -1968,7 +1968,7 @@ msgstr "Isikunimede vormindamine:"
 msgid "General"
 msgstr "Üldine"
 
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:152
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:154
 #, kde-format
 msgid "NewKeyword%1"
 msgstr "UusVõtmesõna%1"
@@ -2749,6 +2749,11 @@ msgstr "Autor või toimetaja:"
 msgid "SpringerLink"
 msgstr "SpringerLink"
 
+#: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
+#, kde-format
+msgid "Unpaywall"
+msgstr ""
+
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
 msgid ""
@@ -2998,19 +3003,19 @@ msgstr ""
 "Palun kontrolli, et sul oleks selle faili kirjutamisõigus ja et kettal "
 "jaguks ruumi."
 
-#: src/parts/part.cpp:969
+#: src/parts/part.cpp:975
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
 msgstr ""
 "Kirje ID-le ei saa kehtestada vaikevormingut. Vaikevormingut ei ole määratud."
 
-#: src/parts/part.cpp:969
+#: src/parts/part.cpp:975
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "Vaikevormingu rakendamine nurjus"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3021,17 +3026,17 @@ msgstr ""
 "\n"
 "Kas laadida fail uuesti või eirata muutusi kettal?"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid "File changed externally"
 msgstr "Faili on väljaspool muudetud"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid "Reload file"
 msgstr "Laadi fail uuesti"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Eira muutusi kettal"
@@ -3553,50 +3558,50 @@ msgid ""
 "command."
 msgstr "Wikipedia käsk <tt>{{cite}}</tt> ei toeta seda tüüpi elementi"
 
-#: src/program/docklets/searchform.cpp:192
+#: src/program/docklets/searchform.cpp:193
 #, kde-format
 msgid "Go to Homepage"
 msgstr "Mine kodulehele"
 
-#: src/program/docklets/searchform.cpp:216
+#: src/program/docklets/searchform.cpp:217
 #, kde-format
 msgid "Query Terms"
 msgstr "Otsingumõisted"
 
-#: src/program/docklets/searchform.cpp:219
+#: src/program/docklets/searchform.cpp:220
 #, kde-format
 msgid "Engines"
 msgstr "Mootorid"
 
-#: src/program/docklets/searchform.cpp:225
+#: src/program/docklets/searchform.cpp:226
 #, kde-format
 msgid "Use Entry"
 msgstr "Kasuta kirjet"
 
-#: src/program/docklets/searchform.cpp:235
-#: src/program/docklets/searchform.cpp:308
+#: src/program/docklets/searchform.cpp:236
+#: src/program/docklets/searchform.cpp:310
 #, kde-format
 msgid "Search"
 msgstr "Otsi"
 
-#: src/program/docklets/searchform.cpp:320
+#: src/program/docklets/searchform.cpp:322
 #, kde-format
 msgid "Stop"
 msgstr "Peata"
 
-#: src/program/docklets/searchform.cpp:343
+#: src/program/docklets/searchform.cpp:345
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr "Otsingumootorit pole valitud (<a href=\"changeEngine\">muuda</a>)."
 
-#: src/program/docklets/searchform.cpp:344
+#: src/program/docklets/searchform.cpp:346
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Valitud on otsingumootor <b>%1</b> (<a href=\"changeEngine\">muuda</a>)."
 
-#: src/program/docklets/searchform.cpp:345
+#: src/program/docklets/searchform.cpp:347
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3605,7 +3610,7 @@ msgstr ""
 "Valitud on otsingumootorid <b>%1</b> ja <b>%2</b> (<a href=\"changeEngine"
 "\">muuda</a>)."
 
-#: src/program/docklets/searchform.cpp:346
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3614,7 +3619,7 @@ msgstr ""
 "Valitud on otsingumootorid <b>%1</b>, <b>%2</b> ja <b>%3</b> (<a href="
 "\"changeEngine\">muuda</a>)."
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3623,7 +3628,7 @@ msgstr ""
 "Valitud on otsingumootorid <b>%1</b>, <b>%2</b> ja veel teisi (<a href="
 "\"changeEngine\">muuda</a>)."
 
-#: src/program/docklets/searchform.cpp:412
+#: src/program/docklets/searchform.cpp:414
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3632,7 +3637,7 @@ msgstr ""
 "Internetiotsingu alustamine nurjus.\n"
 "Otsingumõisted on vigased või ebatäielikud."
 
-#: src/program/docklets/searchform.cpp:412
+#: src/program/docklets/searchform.cpp:414
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Internetiotsing"

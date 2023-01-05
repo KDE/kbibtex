@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-23 00:47+0000\n"
+"POT-Creation-Date: 2023-01-05 00:48+0000\n"
 "PO-Revision-Date: 2022-12-23 19:25+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: French <kde-francophone@kde.org>\n"
@@ -433,7 +433,7 @@ msgid "School"
 msgstr "École"
 
 #: src/config/bibtexfields.cpp:187 src/config/bibtexfields.cpp:280
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:125
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:127
 #, kde-format
 msgid "Keywords"
 msgstr "Mots clés"
@@ -1281,7 +1281,7 @@ msgstr "Nom :"
 
 #: src/gui/element/elementwidgets.cpp:981
 #: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:98
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
 msgstr "Ajouter"
@@ -1418,12 +1418,12 @@ msgctxt "@title:window"
 msgid "Find PDF"
 msgstr "Trouver un « PDF »"
 
-#: src/gui/element/findpdfui.cpp:506
+#: src/gui/element/findpdfui.cpp:511
 #, kde-format
 msgid "Save URL '%1'"
 msgstr "Enregistrer l'URL « %1 »"
 
-#: src/gui/element/findpdfui.cpp:556
+#: src/gui/element/findpdfui.cpp:565
 #, kde-format
 msgid ""
 "<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
@@ -1862,7 +1862,7 @@ msgid "Add..."
 msgstr "Ajouter..."
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:336
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:104
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:345
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:429
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:268
@@ -1988,7 +1988,7 @@ msgstr "Format des noms de personnes :"
 msgid "General"
 msgstr "Général"
 
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:152
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:154
 #, kde-format
 msgid "NewKeyword%1"
 msgstr "NouveauMotClé%1"
@@ -2766,6 +2766,11 @@ msgstr "Auteur ou éditeur :"
 msgid "SpringerLink"
 msgstr "SpringerLink"
 
+#: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
+#, kde-format
+msgid "Unpaywall"
+msgstr ""
+
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
 msgid ""
@@ -3021,7 +3026,7 @@ msgstr ""
 "Vérifiez que vous avez l'accès en écriture à ce fichier ou qu'il y a "
 "suffisamment d'espace disponible sur le disque."
 
-#: src/parts/part.cpp:969
+#: src/parts/part.cpp:975
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3029,12 +3034,12 @@ msgstr ""
 "Impossible d'appliquer le format par défaut pour les identifiants "
 "d'entrées : aucun format par défaut spécifié."
 
-#: src/parts/part.cpp:969
+#: src/parts/part.cpp:975
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "Impossible d'appliquer le formatage par défaut"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3045,17 +3050,17 @@ msgstr ""
 "\n"
 "Voulez-vous le recharger ou ignorer les changements sur le disque ?"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid "File changed externally"
 msgstr "Le fichier a changé à l'extérieur du programme"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid "Reload file"
 msgstr "Recharger le fichier"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Ignorer les changements sur le disque"
@@ -3577,44 +3582,44 @@ msgstr ""
 "Ce type d'élément n'est pas pris en charge par la commande de Wikipedia "
 "<tt>{{cite}}</tt>."
 
-#: src/program/docklets/searchform.cpp:192
+#: src/program/docklets/searchform.cpp:193
 #, kde-format
 msgid "Go to Homepage"
 msgstr "Aller à la page d'accueil"
 
-#: src/program/docklets/searchform.cpp:216
+#: src/program/docklets/searchform.cpp:217
 #, kde-format
 msgid "Query Terms"
 msgstr "Termes de l'interrogation"
 
-#: src/program/docklets/searchform.cpp:219
+#: src/program/docklets/searchform.cpp:220
 #, kde-format
 msgid "Engines"
 msgstr "Moteurs"
 
-#: src/program/docklets/searchform.cpp:225
+#: src/program/docklets/searchform.cpp:226
 #, kde-format
 msgid "Use Entry"
 msgstr "Utiliser l'entrée"
 
-#: src/program/docklets/searchform.cpp:235
-#: src/program/docklets/searchform.cpp:308
+#: src/program/docklets/searchform.cpp:236
+#: src/program/docklets/searchform.cpp:310
 #, kde-format
 msgid "Search"
 msgstr "Rechercher"
 
-#: src/program/docklets/searchform.cpp:320
+#: src/program/docklets/searchform.cpp:322
 #, kde-format
 msgid "Stop"
 msgstr "Arrêt"
 
-#: src/program/docklets/searchform.cpp:343
+#: src/program/docklets/searchform.cpp:345
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Aucun moteur de recherche sélectionné (<a href=\"changeEngine\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:344
+#: src/program/docklets/searchform.cpp:346
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
@@ -3622,7 +3627,7 @@ msgstr ""
 "Le moteur de recherche <b>%1</b> est sélectionné (<a href=\"changeEngine"
 "\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:345
+#: src/program/docklets/searchform.cpp:347
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3631,7 +3636,7 @@ msgstr ""
 "Les moteurs de recherche <b>%1</b> et <b>%2</b> sont sélectionnés (<a href="
 "\"changeEngine\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:346
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3640,7 +3645,7 @@ msgstr ""
 "Les moteurs de recherche <b>%1</b>, <b>%2</b> et <b>%3</b> sont sélectionnés "
 "(<a href=\"changeEngine\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3649,7 +3654,7 @@ msgstr ""
 "Les moteurs de recherche <b>%1</b>, <b>%2</b> et plus sont sélectionnés (<a "
 "href=\"changeEngine\">changer</a>)."
 
-#: src/program/docklets/searchform.cpp:412
+#: src/program/docklets/searchform.cpp:414
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3658,7 +3663,7 @@ msgstr ""
 "Impossible de démarrer la recherche sur Internet :\n"
 "les termes de la recherche sont incomplets ou non valables."
 
-#: src/program/docklets/searchform.cpp:412
+#: src/program/docklets/searchform.cpp:414
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Recherche sur Internet"

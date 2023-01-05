@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-12-23 00:47+0000\n"
-"PO-Revision-Date: 2023-01-03 08:40+0100\n"
+"POT-Creation-Date: 2023-01-05 00:48+0000\n"
+"PO-Revision-Date: 2023-01-04 07:46+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -423,7 +423,7 @@ msgid "School"
 msgstr "სკოლა"
 
 #: src/config/bibtexfields.cpp:187 src/config/bibtexfields.cpp:280
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:125
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:127
 #, kde-format
 msgid "Keywords"
 msgstr "საკვანძო სიტყვები"
@@ -1260,7 +1260,7 @@ msgstr "სახელი:"
 
 #: src/gui/element/elementwidgets.cpp:981
 #: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:98
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
 msgstr "დამატება"
@@ -1332,7 +1332,7 @@ msgstr ""
 #: src/gui/element/elementwidgets.cpp:1350
 #, kde-format
 msgid "Element class not properly set"
-msgstr ""
+msgstr "ელემენტის კლასი არასწორადაა დაყენებული"
 
 #: src/gui/element/elementwidgets.cpp:1359
 #, kde-format
@@ -1390,12 +1390,12 @@ msgctxt "@title:window"
 msgid "Find PDF"
 msgstr "PDF-ის პოვნა"
 
-#: src/gui/element/findpdfui.cpp:506
+#: src/gui/element/findpdfui.cpp:511
 #, kde-format
 msgid "Save URL '%1'"
 msgstr "'%1' ბმულის შენახვა"
 
-#: src/gui/element/findpdfui.cpp:556
+#: src/gui/element/findpdfui.cpp:565
 #, kde-format
 msgid ""
 "<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
@@ -1599,7 +1599,7 @@ msgstr "მნიშვნელობის მაღლა ატანა"
 #: src/gui/field/fieldlistedit.cpp:416
 #, kde-format
 msgid "... and others (et al.)"
-msgstr ""
+msgstr "... და სხვები (et al.)"
 
 #: src/gui/field/fieldlistedit.cpp:421
 #, kde-format
@@ -1609,7 +1609,7 @@ msgstr "ბუფერიდან დამატება"
 #: src/gui/field/fieldlistedit.cpp:422
 #, kde-format
 msgid "Add a list of names from clipboard"
-msgstr ""
+msgstr "სახელების სიის ბუფერიდან დამატება"
 
 #: src/gui/field/fieldlistedit.cpp:484
 #, kde-format
@@ -1624,7 +1624,7 @@ msgstr "მიმართვის დამატება..."
 #: src/gui/field/fieldlistedit.cpp:493
 #, kde-format
 msgid "Add reference from clipboard"
-msgstr ""
+msgstr "მიმართვების ბუფერიდან დამატება"
 
 #: src/gui/field/fieldlistedit.cpp:505
 #, kde-format
@@ -1815,7 +1815,7 @@ msgid "Add..."
 msgstr "დამატება..."
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:336
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:104
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:345
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:429
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:268
@@ -1941,7 +1941,7 @@ msgstr "სახელის ფორმატირება:"
 msgid "General"
 msgstr "ზოგადი"
 
-#: src/gui/preferences/settingsglobalkeywordswidget.cpp:152
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:154
 #, kde-format
 msgid "NewKeyword%1"
 msgstr "ახალისაკვანძოსიტყვა%1"
@@ -2700,16 +2700,21 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:95
 #, kde-format
 msgid "Book/Journal title:"
-msgstr ""
+msgstr "წიგნის/ჟურნალის სათაური:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:102
 #, kde-format
 msgid "Author or Editor:"
-msgstr ""
+msgstr "ავტორი ან რედაქტორი:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:299
 #, kde-format
 msgid "SpringerLink"
+msgstr ""
+
+#: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
+#, kde-format
+msgid "Unpaywall"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
@@ -2945,18 +2950,18 @@ msgid ""
 "available."
 msgstr ""
 
-#: src/parts/part.cpp:969
+#: src/parts/part.cpp:975
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
 msgstr ""
 
-#: src/parts/part.cpp:969
+#: src/parts/part.cpp:975
 #, kde-format
 msgid "Cannot Apply Default Formatting"
-msgstr ""
+msgstr "ნაგულისხმები ფორმატირების გადატარების შეცდომა"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -2964,20 +2969,20 @@ msgid ""
 "Reload file or ignore changes on disk?"
 msgstr ""
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid "File changed externally"
 msgstr "ფაილი გარედან შეიცვალა"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid "Reload file"
 msgstr "ფაილის თავიდან ჩატვირთვა"
 
-#: src/parts/part.cpp:1097
+#: src/parts/part.cpp:1103
 #, kde-format
 msgid "Ignore on-disk changes"
-msgstr ""
+msgstr "დისკზე ცვლილებების იგნორი"
 
 #: src/parts/partfactory.cpp:36
 #, kde-format
@@ -2987,12 +2992,12 @@ msgstr "KBibTeXPart"
 #: src/parts/partfactory.cpp:36 src/program/program.cpp:52
 #, kde-format
 msgid "A BibTeX editor by KDE"
-msgstr ""
+msgstr "BibTeX რედაქტორი KDE-სგან"
 
 #: src/parts/partfactory.cpp:36 src/program/program.cpp:52
 #, kde-format
 msgid "Copyright 2004-2019 Thomas Fischer"
-msgstr ""
+msgstr "2004-2019 თომას ფიშერი, ყველა უფლება დაცულია"
 
 #: src/parts/partfactory.cpp:40 src/program/program.cpp:57
 #, kde-format
@@ -3015,7 +3020,7 @@ msgstr ""
 #: src/processing/bibliographyservice.cpp:189
 #, kde-format
 msgid "Failed to run 'kbuildsycoca5'"
-msgstr ""
+msgstr "'kbuildsycoca5'-ის გაშვების შეცდომა"
 
 #: src/processing/checkbibtex.cpp:92
 #, kde-format
@@ -3078,7 +3083,7 @@ msgstr "ნაპოვნი შეცდომა"
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
 msgid "The following warnings were found:"
-msgstr ""
+msgstr "აღმოჩენილია შემდეგი გაფრთხილებები"
 
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
@@ -3101,7 +3106,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:156
 #, kde-format
 msgid "No Errors or Warnings"
-msgstr ""
+msgstr "გაფრთხილებებისა და შეცდომების გარეშე"
 
 #: src/processing/findduplicates.cpp:384
 #, kde-format
@@ -3131,6 +3136,11 @@ msgid ""
 "which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
 "wird|with|you|und|and|ein|eine|einer|eines"
 msgstr ""
+"a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|"
+"es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
+"le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
+"which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
+"wird|with|you|und|and|ein|eine|einer|eines"
 
 #: src/processing/idsuggestions.cpp:388
 #, kde-format
@@ -3456,77 +3466,77 @@ msgid ""
 "command."
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:192
+#: src/program/docklets/searchform.cpp:193
 #, kde-format
 msgid "Go to Homepage"
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:216
+#: src/program/docklets/searchform.cpp:217
 #, kde-format
 msgid "Query Terms"
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:219
+#: src/program/docklets/searchform.cpp:220
 #, kde-format
 msgid "Engines"
 msgstr "ძრავები"
 
-#: src/program/docklets/searchform.cpp:225
+#: src/program/docklets/searchform.cpp:226
 #, kde-format
 msgid "Use Entry"
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:235
-#: src/program/docklets/searchform.cpp:308
+#: src/program/docklets/searchform.cpp:236
+#: src/program/docklets/searchform.cpp:310
 #, kde-format
 msgid "Search"
 msgstr "_ძებნა"
 
-#: src/program/docklets/searchform.cpp:320
+#: src/program/docklets/searchform.cpp:322
 #, kde-format
 msgid "Stop"
 msgstr "შეჩერება"
 
-#: src/program/docklets/searchform.cpp:343
+#: src/program/docklets/searchform.cpp:345
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:344
+#: src/program/docklets/searchform.cpp:346
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:345
+#: src/program/docklets/searchform.cpp:347
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
 "\">change</a>)."
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:346
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
 "\"changeEngine\">change</a>)."
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
 "\"changeEngine\">change</a>)."
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:412
+#: src/program/docklets/searchform.cpp:414
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
 "The search terms are not complete or invalid."
 msgstr ""
 
-#: src/program/docklets/searchform.cpp:412
+#: src/program/docklets/searchform.cpp:414
 #, kde-format
 msgid "Searching the Internet"
 msgstr ""
