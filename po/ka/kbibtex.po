@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-05 00:48+0000\n"
-"PO-Revision-Date: 2023-01-04 07:46+0100\n"
+"PO-Revision-Date: 2023-01-05 05:41+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2277,13 +2277,13 @@ msgstr "<qt>სტრუქტურა:<ul><li>%1</li></ul>მაგალი�
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Id Suggestion"
-msgstr ""
+msgstr "შეთავაზებული ID"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:166
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:305
 #, kde-format
 msgid "Id Suggestions"
-msgstr ""
+msgstr "შეთავაზებული ID-ები"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:265
 #, kde-format
@@ -2361,7 +2361,7 @@ msgstr "კომენტარის ციტირება:"
 #: src/gui/widgets/filesettingswidget.cpp:146
 #, kde-format
 msgid "Keyword Casing:"
-msgstr ""
+msgstr "საკვანძო სიტყვების რეგისტრი:"
 
 #: src/gui/widgets/filesettingswidget.cpp:147
 #, kde-format
@@ -2401,7 +2401,7 @@ msgstr "დასახელებების დაცვა"
 #: src/gui/widgets/filesettingswidget.cpp:156
 #, kde-format
 msgid "Protect Casing?"
-msgstr ""
+msgstr "დავიცვა რეგისტრი?"
 
 #: src/gui/widgets/filesettingswidget.cpp:165
 #, kde-format
@@ -2625,7 +2625,7 @@ msgstr "სრული ტექსტი:"
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:101
 #, kde-format
 msgid "Abstract/Keywords:"
-msgstr ""
+msgstr "ანოტაცია/საკვანძო სიტყვები:"
 
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:106
 #, kde-format
@@ -2645,7 +2645,7 @@ msgstr "რიცხვი/გამოცემა:"
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:364
 #, kde-format
 msgid "IngentaConnect"
-msgstr ""
+msgstr "IngentaConnect"
 
 #: src/networking/onlinesearch/onlinesearchinspirehep.cpp:32
 #, kde-format
@@ -2665,17 +2665,17 @@ msgstr "MathSciNet"
 #: src/networking/onlinesearch/onlinesearchmrlookup.cpp:76
 #, kde-format
 msgid "MR Lookup"
-msgstr ""
+msgstr "MR Lookup"
 
 #: src/networking/onlinesearch/onlinesearchpubmed.cpp:148
 #, kde-format
 msgid "PubMed"
-msgstr ""
+msgstr "PubMed"
 
 #: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:217
 #, kde-format
 msgid "ScienceDirect"
-msgstr ""
+msgstr "ScienceDirect"
 
 #: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:68
 #, kde-format
@@ -2685,7 +2685,7 @@ msgstr "ნაშრომზე მიმართვა:"
 #: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:237
 #, kde-format
 msgid "Semantic Scholar"
-msgstr ""
+msgstr "Semantic Scholar"
 
 #: src/networking/onlinesearch/onlinesearchsoanasaads.cpp:127
 #, kde-format
@@ -2695,7 +2695,7 @@ msgstr "NASA-ის ასტროფიზიკის მონაცემ�
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:81
 #, kde-format
 msgid "Free Text:"
-msgstr ""
+msgstr "თავისუფალი ტექსტი:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:95
 #, kde-format
@@ -2710,12 +2710,12 @@ msgstr "ავტორი ან რედაქტორი:"
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:299
 #, kde-format
 msgid "SpringerLink"
-msgstr ""
+msgstr "SpringerLink"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
 msgid "Unpaywall"
-msgstr ""
+msgstr "Unpaywall"
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
@@ -2857,7 +2857,7 @@ msgstr "ახალი მაკრო"
 #: src/parts/part.cpp:201
 #, kde-format
 msgid "New preamble"
-msgstr ""
+msgstr "ახალი პრეამბულა"
 
 #: src/parts/part.cpp:206
 #, kde-format
@@ -3083,7 +3083,7 @@ msgstr "ნაპოვნი შეცდომა"
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
 msgid "The following warnings were found:"
-msgstr "აღმოჩენილია შემდეგი გაფრთხილებები"
+msgstr "აღმოჩენილია შემდეგი გაფრთხილებები:"
 
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
@@ -3215,7 +3215,7 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:478
 #, kde-format
 msgid "First page number"
-msgstr ""
+msgstr "პირველი გვერდის ნომერი"
 
 #: src/processing/idsuggestions.cpp:480
 #, kde-format
@@ -3415,7 +3415,7 @@ msgstr "ჩვეულებრივი"
 #: src/program/docklets/referencepreview.cpp:93
 #, kde-format
 msgid "Wikipedia Citation"
-msgstr ""
+msgstr "ციტატა ვიკიპედიიდან"
 
 #: src/program/docklets/referencepreview.cpp:94
 #, kde-format
@@ -3539,7 +3539,7 @@ msgstr ""
 #: src/program/docklets/searchform.cpp:414
 #, kde-format
 msgid "Searching the Internet"
-msgstr ""
+msgstr "ინტერნეტში ძებნა"
 
 #: src/program/docklets/searchresults.cpp:87
 #: src/program/docklets/searchresults.cpp:102
@@ -3570,7 +3570,7 @@ msgstr ""
 #: src/program/docklets/searchresults.cpp:153
 #, kde-format
 msgid "No results to import."
-msgstr ""
+msgstr "შემოსატანი შედეგების გარეშე."
 
 #: src/program/docklets/statistics.cpp:53
 #, kde-format
