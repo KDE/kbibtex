@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-05 00:48+0000\n"
-"PO-Revision-Date: 2023-01-05 05:41+0100\n"
+"PO-Revision-Date: 2023-01-06 07:31+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -3298,7 +3298,7 @@ msgstr ""
 #: src/program/docklets/documentpreview.cpp:213
 #, kde-format
 msgid "Open in external program"
-msgstr ""
+msgstr "გარე პროგრამით გახსნა"
 
 #: src/program/docklets/documentpreview.cpp:347
 #, kde-format
@@ -3358,7 +3358,7 @@ msgstr ""
 #: src/program/docklets/elementform.cpp:77
 #, kde-format
 msgid "Automatically apply changes"
-msgstr ""
+msgstr "ცვლილებების ავტომატური გადატარება"
 
 #: src/program/docklets/elementform.cpp:93
 #, kde-format
@@ -3420,7 +3420,7 @@ msgstr "ციტატა ვიკიპედიიდან"
 #: src/program/docklets/referencepreview.cpp:94
 #, kde-format
 msgid "Abstract-only"
-msgstr ""
+msgstr "მხოლოდ აბსტრაქცია"
 
 #: src/program/docklets/referencepreview.cpp:125
 #, kde-format
@@ -3430,7 +3430,7 @@ msgstr "მიზეზი:"
 #: src/program/docklets/referencepreview.cpp:149
 #, kde-format
 msgid "Open reference in web browser."
-msgstr ""
+msgstr "მიმართვის ბრაუზერში გახსნა."
 
 #: src/program/docklets/referencepreview.cpp:152
 #: src/program/docklets/referencepreview.cpp:427
@@ -3441,7 +3441,7 @@ msgstr "შენახვა HTML ფაილში"
 #: src/program/docklets/referencepreview.cpp:153
 #, kde-format
 msgid "Save reference as HTML fragment."
-msgstr ""
+msgstr "მიმართვის HTML ფრაგმენტად შენახვა."
 
 #: src/program/docklets/referencepreview.cpp:243
 #, kde-format
@@ -3457,7 +3457,7 @@ msgstr "ელემენტი არჩეული არაა"
 #: src/program/docklets/referencepreview.cpp:398
 #, kde-format
 msgid "No output generated"
-msgstr ""
+msgstr "გამოტანა არ დაგენერირებულა"
 
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
@@ -3469,12 +3469,12 @@ msgstr ""
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
 msgid "Go to Homepage"
-msgstr ""
+msgstr "საწყის გვერდზე გადასვლა"
 
 #: src/program/docklets/searchform.cpp:217
 #, kde-format
 msgid "Query Terms"
-msgstr ""
+msgstr "მოთხოვნის პარამეტრები"
 
 #: src/program/docklets/searchform.cpp:220
 #, kde-format
@@ -3484,7 +3484,7 @@ msgstr "ძრავები"
 #: src/program/docklets/searchform.cpp:226
 #, kde-format
 msgid "Use Entry"
-msgstr ""
+msgstr "ჩანაწერის გამოყენება"
 
 #: src/program/docklets/searchform.cpp:236
 #: src/program/docklets/searchform.cpp:310
@@ -3734,7 +3734,7 @@ msgstr ""
 #: src/program/documentlist.cpp:264
 #, kde-format
 msgid "Save before switching?"
-msgstr ""
+msgstr "შევინახო გადართვამდე?"
 
 #: src/program/documentlist.cpp:264
 #, kde-format
@@ -3744,7 +3744,7 @@ msgstr "დოკუმენტის შენახვა"
 #: src/program/documentlist.cpp:264
 #, kde-format
 msgid "Do not switch"
-msgstr ""
+msgstr "არ გადაერთო"
 
 #: src/program/documentlist.cpp:277
 #, kde-format
@@ -3794,7 +3794,7 @@ msgstr "პანელების ჩვენება"
 #: src/program/mainwindow.cpp:99
 #, kde-format
 msgid "Recently used files"
-msgstr ""
+msgstr "ახლახანს გამოყენებული ფაილები"
 
 #: src/program/mainwindow.cpp:116
 #, kde-format
@@ -3829,7 +3829,7 @@ msgstr "Zotero"
 #: src/program/mainwindow.cpp:176
 #, kde-format
 msgid "Reference Preview"
-msgstr ""
+msgstr "მიმართვის მინიატურა"
 
 #: src/program/mainwindow.cpp:185
 #, kde-format
@@ -3883,12 +3883,12 @@ msgstr ""
 #: src/program/mainwindow.cpp:450
 #, kde-format
 msgid "Set as Default Editor"
-msgstr ""
+msgstr "ნაგულისხმებ რედაქტორად გამოყენება"
 
 #: src/program/mainwindow.cpp:450
 #, kde-format
 msgid "Keep settings unchanged"
-msgstr ""
+msgstr "პარამეტრები არ შეიცვლება"
 
 #: src/program/mdiwidget.cpp:99
 #, kde-format
@@ -3908,7 +3908,7 @@ msgstr "ფაილის სრული სახელი"
 #: src/program/mdiwidget.cpp:147
 #, kde-format
 msgid "<qt>Welcome to <b>KBibTeX</b></qt>"
-msgstr ""
+msgstr "<qt>მოგესალმებით <b>KBibTeX</b></qt>"
 
 #: src/program/mdiwidget.cpp:150
 #, kde-format
