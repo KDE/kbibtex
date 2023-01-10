@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-05 00:48+0000\n"
-"PO-Revision-Date: 2022-12-23 20:46+0000\n"
+"PO-Revision-Date: 2023-01-06 03:10+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -49,7 +49,7 @@ msgstr ""
 "X-POFile-IgnoreConsistency: 3rd\n"
 "X-POFile-IgnoreConsistency: Type\n"
 "X-POFile-IgnoreConsistency: Comment\n"
-"X-POFile-SpellExtra: Semantic zbMATH Open PLACEHOLDER\n"
+"X-POFile-SpellExtra: Semantic zbMATH Open PLACEHOLDER Unpaywall\n"
 "X-POFile-IgnoreConsistency: Venue\n"
 
 #, kde-format
@@ -2795,7 +2795,7 @@ msgstr "SpringerLink"
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
 msgid "Unpaywall"
-msgstr ""
+msgstr "Unpaywall"
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
