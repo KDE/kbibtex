@@ -1,7 +1,7 @@
 KBibTeX
 =======
 
-Copyright: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+Copyright: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
 Author/Maintainer: Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
@@ -29,7 +29,7 @@ In detail, the following dependencies exist:
 
 * Compile time
   - Qt 5.6 or later,
-    required components Core, Widgets, and Network
+    required components Core, Widgets, NetworkAuth, and Network
   - KDE Frameworks 5.26 or later,
     required components I18n, XmlGui, KIO, IconThemes, ItemViews,
                         Completion, Parts, CoreAddons, Service,

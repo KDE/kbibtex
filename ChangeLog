@@ -1,8 +1,17 @@
 ChangeLog
 
-Diff 0.9.2 to 0.9.3
+Diff 0.9.2 to 0.9.3.1
 
-- Fixing and revamping ACM's Digital Library (a.k.a. ACM Portal) online search
+- Fixing crashes with newer Qt versions (Albert Astals Cid <aacid@kde.org>)
+- Revamping various online searches by backporting updates from branch 'kbibtex/0.10':
+  ACM's Digital Library, SpringerLink, JStor, NASA Astrophysics Data System, bioRxiv,
+  InspireHEP
+- Fixing minor issues with build system
+- Fixing potential crash in BibTeX importer code
+- KDE Bug 459150: Fix creation of URL from user input
+- KDE Bug 463398: Predefined keywords are not remembered
+- Fixing various smaller issues
+- Adding Qt5's NetworkAuth as new explicit dependency
 
 Diff 0.9.1 to 0.9.2
 
