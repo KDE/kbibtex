@@ -1,0 +1,4111 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# Shinjo Park <kde@peremen.name>, 2019, 2020, 2021, 2022.
+# Jung Hee Lee <daemul72@gmail.com>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2023-01-04 03:44+0000\n"
+"PO-Revision-Date: 2022-05-15 22:20+0200\n"
+"Last-Translator: Shinjo Park <kde@peremen.name>\n"
+"Language-Team: Korean <kde-kr@kde.org>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 21.12.3\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "이정희"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "daemul72@gmail.com"
+
+#, kde-format
+msgid "Author/Editor"
+msgstr "저자/편집자"
+
+#, kde-format
+msgid "Publication"
+msgstr "출판"
+
+#, kde-format
+msgid "Number/Issue"
+msgstr "호/번호"
+
+#, kde-format
+msgid "Cross-Reference"
+msgstr "상호 참조"
+
+#, kde-format
+msgid "Misc"
+msgstr "기타"
+
+#, kde-format
+msgid "Star Rating"
+msgstr "별점"
+
+#, kde-format
+msgid "Book Title Addon"
+msgstr "도서 제목 부가 텍스트"
+
+#, kde-format
+msgid "Main Title Addon"
+msgstr "주 제목 부가 텍스트"
+
+#, kde-format
+msgid "Further Persons"
+msgstr "추가 인원"
+
+#, kde-format
+msgid "Volume Part"
+msgstr "권 부분"
+
+#, kde-format
+msgid "Total Volumes"
+msgstr "전체 권수"
+
+#, kde-format
+msgid "X-Reference"
+msgstr "X 참조"
+
+#, kde-format
+msgid "Identifiers"
+msgstr "식별자"
+
+#, kde-format
+msgid "Sorting"
+msgstr "정렬"
+
+#, kde-format
+msgid "Sort Name"
+msgstr "이름 정렬"
+
+#, kde-format
+msgid "Abbreviations"
+msgstr "약어"
+
+#, kde-format
+msgid "Short Journal"
+msgstr "짧은 저널"
+
+#, kde-format
+msgid "Short Series"
+msgstr "짧은 시리즈"
+
+#, kde-format
+msgid "Short Title"
+msgstr "짧은 제목"
+
+#, kde-format
+msgid "Reprint Data"
+msgstr "재인쇄 데이터"
+
+#, kde-format
+msgid "Local File"
+msgstr "로컬 파일"
+
+#, kde-format
+msgid ""
+"DOIs and URLs get handled in the &lsquo;<a href=\"#tab:external\">External</"
+"a>&rsquo; tab."
+msgstr ""
+"DOI와 URL은 &lsquo;<a href=\"#tab:external\">외부</a>&rsquo; 탭에서 처리됩니"
+"다."
+
+#: src/config/bibtexentries.cpp:65 src/config/bibtexentries.cpp:81
+#, kde-format
+msgid "Journal Article"
+msgstr "신문 기사"
+
+#: src/config/bibtexentries.cpp:66
+#, kde-format
+msgid "Conference"
+msgstr "학술 대회"
+
+#: src/config/bibtexentries.cpp:67 src/config/bibtexentries.cpp:98
+#, kde-format
+msgid "Conference or Workshop Proceedings"
+msgstr "학술 대회 또는 워크숍 논문집"
+
+#: src/config/bibtexentries.cpp:68 src/config/bibtexentries.cpp:109
+#, kde-format
+msgid "Technical Report"
+msgstr "기술 보고서"
+
+#: src/config/bibtexentries.cpp:69 src/config/bibtexentries.cpp:93
+#, kde-format
+msgid "Miscellaneous"
+msgstr "기타"
+
+#: src/config/bibtexentries.cpp:70 src/config/bibtexentries.cpp:82
+#, kde-format
+msgid "Book"
+msgstr "도서"
+
+#: src/config/bibtexentries.cpp:71 src/config/bibtexentries.cpp:84
+#, kde-format
+msgid "Part of a Book"
+msgstr "도서의 일부"
+
+#: src/config/bibtexentries.cpp:72 src/config/bibtexentries.cpp:90
+#, kde-format
+msgid "Part of a Book with own Title"
+msgstr "개별 제목이 있는 도서의 일부"
+
+#: src/config/bibtexentries.cpp:73 src/config/bibtexentries.cpp:108
+#, kde-format
+msgid "PhD Thesis"
+msgstr "박사 학위 논문"
+
+#: src/config/bibtexentries.cpp:74 src/config/bibtexentries.cpp:107
+#, kde-format
+msgid "Master's Thesis"
+msgstr "석사 학위 논문"
+
+#: src/config/bibtexentries.cpp:75 src/config/bibtexentries.cpp:106
+#, kde-format
+msgid "Unpublished Material"
+msgstr "출판되지 않은 자료"
+
+#: src/config/bibtexentries.cpp:76 src/config/bibtexentries.cpp:92
+#, kde-format
+msgid "Manual"
+msgstr "설명서"
+
+#: src/config/bibtexentries.cpp:77 src/config/bibtexentries.cpp:87
+#, kde-format
+msgid "Booklet"
+msgstr "소책자"
+
+#: src/config/bibtexentries.cpp:83
+#, kde-format
+msgid "Multi-volume Book"
+msgstr "여러 권의 책"
+
+#: src/config/bibtexentries.cpp:85
+#, kde-format
+msgid "Former Monograph as Part of a Book"
+msgstr "도서의 일부인 과거 연구 논문"
+
+#: src/config/bibtexentries.cpp:86
+#, kde-format
+msgid "Supplemental Material in a Book"
+msgstr "도서의 보충 자료"
+
+#: src/config/bibtexentries.cpp:88
+#, kde-format
+msgid "Single-volume Collection"
+msgstr "단권 모음집"
+
+#: src/config/bibtexentries.cpp:89
+#, kde-format
+msgid "Multi-volume Collection"
+msgstr "다권본 모음집"
+
+#: src/config/bibtexentries.cpp:91
+#, kde-format
+msgid "Supplemental Material in a Collection"
+msgstr "모음집의 보충 자료"
+
+#: src/config/bibtexentries.cpp:94
+#, kde-format
+msgid "Online Resource"
+msgstr "온라인 자원"
+
+#: src/config/bibtexentries.cpp:95
+#, kde-format
+msgid "Patent"
+msgstr "특허"
+
+#: src/config/bibtexentries.cpp:96
+#, kde-format
+msgid "Periodical (Complete Issue)"
+msgstr "정기 간행물(전체 발행본)"
+
+#: src/config/bibtexentries.cpp:97
+#, kde-format
+msgid "Supplemental Material in a Periodical"
+msgstr "정기 간행물의 보충 자료"
+
+#: src/config/bibtexentries.cpp:99
+#, kde-format
+msgid "Multi-volume Proceedings"
+msgstr "다권 논문집"
+
+#: src/config/bibtexentries.cpp:100
+#, kde-format
+msgid "Publication in Conference Proceedings"
+msgstr "학술 대회 논문집의 출판물"
+
+#: src/config/bibtexentries.cpp:101
+#, kde-format
+msgid "Single-volume Reference (e.g. Encyclopedia)"
+msgstr "단권 참조(예: 백과사전)"
+
+#: src/config/bibtexentries.cpp:102
+#, kde-format
+msgid "Multi-volume Reference (e.g. Encyclopedia)"
+msgstr "다권본 참조(예: 백과사전)"
+
+#: src/config/bibtexentries.cpp:103
+#, kde-format
+msgid "Part of a Reference"
+msgstr "참조의 일부분"
+
+#: src/config/bibtexentries.cpp:104
+#, kde-format
+msgid "Report"
+msgstr "보고서"
+
+#: src/config/bibtexentries.cpp:105
+#, kde-format
+msgid "Thesis"
+msgstr "학위 논문"
+
+#: src/config/bibtexfields.cpp:133 src/config/bibtexfields.cpp:172
+#, kde-format
+msgid "Element Type"
+msgstr "요소 형식"
+
+#: src/config/bibtexfields.cpp:134 src/config/bibtexfields.cpp:173
+#: src/gui/file/findduplicatesui.cpp:156
+#, kde-format
+msgid "Identifier"
+msgstr "식별자"
+
+#: src/config/bibtexfields.cpp:135 src/config/bibtexfields.cpp:174
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:318
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:613
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:648
+#: src/processing/idsuggestions.cpp:422
+#, kde-format
+msgid "Title"
+msgstr "제목"
+
+#: src/config/bibtexfields.cpp:136 src/config/bibtexfields.cpp:175
+#, kde-format
+msgid "Title or Book Title"
+msgstr "제목 또는 도서 제목"
+
+#: src/config/bibtexfields.cpp:137 src/config/bibtexfields.cpp:184
+#, kde-format
+msgid "Author or Editor"
+msgstr "저자 또는 편집자"
+
+#: src/config/bibtexfields.cpp:138 src/config/bibtexfields.cpp:185
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:617
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:652
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:77
+#, kde-format
+msgid "Author"
+msgstr "저자"
+
+#: src/config/bibtexfields.cpp:139 src/config/bibtexfields.cpp:190
+#, kde-format
+msgid "Editor"
+msgstr "편집자"
+
+#: src/config/bibtexfields.cpp:140 src/config/bibtexfields.cpp:206
+#, kde-format
+msgid "Month"
+msgstr "월"
+
+#: src/config/bibtexfields.cpp:141 src/config/bibtexfields.cpp:207
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:207
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:621
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:656
+#, kde-format
+msgid "Year"
+msgstr "연도"
+
+#: src/config/bibtexfields.cpp:142
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:419
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:625
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:660
+#: src/processing/idsuggestions.cpp:451
+#, kde-format
+msgid "Journal"
+msgstr "학술지"
+
+#: src/config/bibtexfields.cpp:143 src/config/bibtexfields.cpp:215
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:239
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:633
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:668
+#: src/processing/idsuggestions.cpp:486
+#, kde-format
+msgid "Volume"
+msgstr "권"
+
+#: src/config/bibtexfields.cpp:144 src/config/bibtexfields.cpp:217
+#, kde-format
+msgid "Number"
+msgstr "번호"
+
+#: src/config/bibtexfields.cpp:145 src/config/bibtexfields.cpp:224
+#, kde-format
+msgid "ISSN"
+msgstr "ISSN"
+
+#: src/config/bibtexfields.cpp:146 src/config/bibtexfields.cpp:225
+#, kde-format
+msgid "ISBN"
+msgstr "ISBN"
+
+#: src/config/bibtexfields.cpp:147 src/config/bibtexfields.cpp:226
+#, kde-format
+msgid "ISBN or ISSN"
+msgstr "ISBN 또는 ISSN"
+
+#: src/config/bibtexfields.cpp:148 src/config/bibtexfields.cpp:228
+#, kde-format
+msgid "How Published"
+msgstr "출판된 방법"
+
+#: src/config/bibtexfields.cpp:149 src/config/bibtexfields.cpp:229
+#, kde-format
+msgid "Note"
+msgstr "주석"
+
+#: src/config/bibtexfields.cpp:150 src/config/bibtexfields.cpp:232
+#, kde-format
+msgid "Abstract"
+msgstr "초록"
+
+#: src/config/bibtexfields.cpp:151 src/config/bibtexfields.cpp:233
+#, kde-format
+msgid "Pages"
+msgstr "쪽"
+
+#: src/config/bibtexfields.cpp:152 src/config/bibtexfields.cpp:237
+#, kde-format
+msgid "Publisher"
+msgstr "출판사"
+
+#: src/config/bibtexfields.cpp:153 src/config/bibtexfields.cpp:239
+#, kde-format
+msgid "Institution"
+msgstr "학회"
+
+#: src/config/bibtexfields.cpp:154 src/config/bibtexfields.cpp:240
+#, kde-format
+msgid "Book Title"
+msgstr "도서 제목"
+
+#: src/config/bibtexfields.cpp:155 src/config/bibtexfields.cpp:245
+#, kde-format
+msgid "Series"
+msgstr "시리즈"
+
+#: src/config/bibtexfields.cpp:156 src/config/bibtexfields.cpp:247
+#, kde-format
+msgid "Edition"
+msgstr "호(회)"
+
+#: src/config/bibtexfields.cpp:157 src/config/bibtexfields.cpp:248
+#, kde-format
+msgid "Chapter"
+msgstr "장"
+
+#: src/config/bibtexfields.cpp:158 src/config/bibtexfields.cpp:249
+#, kde-format
+msgid "Organization"
+msgstr "조직"
+
+#: src/config/bibtexfields.cpp:159
+#, kde-format
+msgid "School"
+msgstr "학교"
+
+#: src/config/bibtexfields.cpp:160 src/config/bibtexfields.cpp:253
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:125
+#, kde-format
+msgid "Keywords"
+msgstr "키워드"
+
+#: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:254
+#, kde-format
+msgid "Cross Reference"
+msgstr "상호 참조"
+
+#: src/config/bibtexfields.cpp:162 src/config/bibtexfields.cpp:256
+#: src/networking/onlinesearch/onlinesearchdoi.cpp:183
+#, kde-format
+msgid "DOI"
+msgstr "디지털 문서 식별자(DOI)"
+
+#: src/config/bibtexfields.cpp:163 src/config/bibtexfields.cpp:260
+#, kde-format
+msgid "URL"
+msgstr "URL"
+
+#: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:263
+#: src/config/bibtexfields.cpp:286
+#, kde-format
+msgid "Location"
+msgstr "소재지"
+
+#: src/config/bibtexfields.cpp:165
+#, kde-format
+msgid "Address"
+msgstr "주소"
+
+#: src/config/bibtexfields.cpp:166 src/config/bibtexfields.cpp:265
+#: src/gui/file/findduplicatesui.cpp:158
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:492
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:629
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:664
+#: src/processing/idsuggestions.cpp:469
+#, kde-format
+msgid "Type"
+msgstr "형식"
+
+#: src/config/bibtexfields.cpp:167 src/gui/element/elementwidgets.cpp:989
+#, kde-format
+msgid "Key"
+msgstr "키"
+
+#: src/config/bibtexfields.cpp:168 src/config/bibtexfields.cpp:274
+#: src/gui/preferences/settingscolorlabelwidget.cpp:200
+#: src/gui/preferences/settingscolorlabelwidget.cpp:432
+#, kde-format
+msgid "Color"
+msgstr "색상"
+
+#: src/config/bibtexfields.cpp:169
+#, kde-format
+msgid "Stars"
+msgstr "별표"
+
+#: src/config/bibtexfields.cpp:176
+#, kde-format
+msgid "Subtitle"
+msgstr "부제"
+
+#: src/config/bibtexfields.cpp:177
+#, kde-format
+msgid "Title Addon"
+msgstr "제목 추가 기능"
+
+#: src/config/bibtexfields.cpp:178
+#, kde-format
+msgid "Shortitle"
+msgstr "약칭"
+
+#: src/config/bibtexfields.cpp:179
+#, kde-format
+msgid "Original Title"
+msgstr "원 제목"
+
+#: src/config/bibtexfields.cpp:180
+#, kde-format
+msgid "Reprint Title"
+msgstr "재인쇄 제목"
+
+#: src/config/bibtexfields.cpp:181
+#, kde-format
+msgid "Main Title"
+msgstr "주 제목"
+
+#: src/config/bibtexfields.cpp:182
+#, kde-format
+msgid "Main Subtitle"
+msgstr "주 부제목"
+
+#: src/config/bibtexfields.cpp:183
+#, kde-format
+msgid "Maintitle Addon"
+msgstr "주 제목 부가 텍스트"
+
+#: src/config/bibtexfields.cpp:186
+#, kde-format
+msgid "Short Author"
+msgstr "약식 저자 이름"
+
+#: src/config/bibtexfields.cpp:187
+#, kde-format
+msgid "Name Addon"
+msgstr "이름 부가 텍스트"
+
+#: src/config/bibtexfields.cpp:188
+#, kde-format
+msgid "Author Type"
+msgstr "저자 형식"
+
+#: src/config/bibtexfields.cpp:189
+#, kde-format
+msgid "Book Author"
+msgstr "도서 저자"
+
+#: src/config/bibtexfields.cpp:191
+#, kde-format
+msgid "Short Editor"
+msgstr "짧은 편집자"
+
+#: src/config/bibtexfields.cpp:192
+#, kde-format
+msgid "Editor Type"
+msgstr "편집자 형식"
+
+#: src/config/bibtexfields.cpp:193
+#, kde-format
+msgid "Editor A"
+msgstr "편집자 A"
+
+#: src/config/bibtexfields.cpp:194
+#, kde-format
+msgid "Editor A Type"
+msgstr "편집자 A 형식"
+
+#: src/config/bibtexfields.cpp:195
+#, kde-format
+msgid "Editor B"
+msgstr "편집자 B"
+
+#: src/config/bibtexfields.cpp:196
+#, kde-format
+msgid "Editor B Type"
+msgstr "편집자 B 형식"
+
+#: src/config/bibtexfields.cpp:197
+#, kde-format
+msgid "Editor C"
+msgstr "편집자 C"
+
+#: src/config/bibtexfields.cpp:198
+#, kde-format
+msgid "Editor C Type"
+msgstr "편집자 C 형식"
+
+#: src/config/bibtexfields.cpp:199
+#, kde-format
+msgid "Translator"
+msgstr "역자"
+
+#: src/config/bibtexfields.cpp:200
+#, kde-format
+msgid "Afterword Author"
+msgstr "꼬리말 저자"
+
+#: src/config/bibtexfields.cpp:201
+#, kde-format
+msgid "Introduction Author"
+msgstr "소개 저자"
+
+#: src/config/bibtexfields.cpp:202
+#, kde-format
+msgid "Foreword Author"
+msgstr "머리말 저자"
+
+#: src/config/bibtexfields.cpp:203
+#, kde-format
+msgid "Annotator"
+msgstr "주석자"
+
+#: src/config/bibtexfields.cpp:204
+#, kde-format
+msgid "Commentator"
+msgstr "해설자"
+
+#: src/config/bibtexfields.cpp:205
+#, kde-format
+msgid "Patent Holder"
+msgstr "특허 보유자"
+
+#: src/config/bibtexfields.cpp:208
+#, kde-format
+msgid "Date"
+msgstr "날짜"
+
+#: src/config/bibtexfields.cpp:209
+#, kde-format
+msgid "Date or Year"
+msgstr "날짜 또는 연도"
+
+#: src/config/bibtexfields.cpp:210
+#, kde-format
+msgid "Event Date"
+msgstr "이벤트 날짜"
+
+#: src/config/bibtexfields.cpp:211
+#, kde-format
+msgid "Original Date"
+msgstr "원본 날짜"
+
+#: src/config/bibtexfields.cpp:212
+#, kde-format
+msgid "Journal Title"
+msgstr "저널 제목"
+
+#: src/config/bibtexfields.cpp:213
+#, kde-format
+msgid "Journal Subtitle"
+msgstr "저널 부제목"
+
+#: src/config/bibtexfields.cpp:214
+#, kde-format
+msgid "Journal Shortitle"
+msgstr "저널 단축 제목"
+
+#: src/config/bibtexfields.cpp:216
+#, kde-format
+msgid "Number of Volumes"
+msgstr "권 수"
+
+#: src/config/bibtexfields.cpp:218
+#, kde-format
+msgid "Version"
+msgstr "버전"
+
+#: src/config/bibtexfields.cpp:219
+#, kde-format
+msgid "Part"
+msgstr "파트"
+
+#: src/config/bibtexfields.cpp:220
+#, kde-format
+msgid "Issue"
+msgstr "호"
+
+#: src/config/bibtexfields.cpp:221
+#, kde-format
+msgid "IASN"
+msgstr "IASN"
+
+#: src/config/bibtexfields.cpp:222
+#, kde-format
+msgid "ISMN"
+msgstr "ISMN"
+
+#: src/config/bibtexfields.cpp:223
+#, kde-format
+msgid "ISRN"
+msgstr "ISRN"
+
+#: src/config/bibtexfields.cpp:227
+#, kde-format
+msgid "ISWC"
+msgstr "ISWC"
+
+#: src/config/bibtexfields.cpp:230
+#, kde-format
+msgid "Addendum"
+msgstr "부록"
+
+#: src/config/bibtexfields.cpp:231
+#, kde-format
+msgid "Annotation"
+msgstr "주석"
+
+#: src/config/bibtexfields.cpp:234
+#, kde-format
+msgid "Total Pages"
+msgstr "총 쪽 수"
+
+#: src/config/bibtexfields.cpp:235
+#, kde-format
+msgid "Pagination"
+msgstr "쪽 번호"
+
+#: src/config/bibtexfields.cpp:236
+#, kde-format
+msgid "Book Pagination"
+msgstr "도서 쪽 번호"
+
+#: src/config/bibtexfields.cpp:238
+#, kde-format
+msgid "Original Publisher"
+msgstr "원 출판사"
+
+#: src/config/bibtexfields.cpp:241
+#, kde-format
+msgid "Book Subtitle"
+msgstr "도서 부제목"
+
+#: src/config/bibtexfields.cpp:242
+#, kde-format
+msgid "Issue Title"
+msgstr "권 제목"
+
+#: src/config/bibtexfields.cpp:243
+#, kde-format
+msgid "Issue Subtitle"
+msgstr "권 부제목"
+
+#: src/config/bibtexfields.cpp:244
+#, kde-format
+msgid "Booktitle Addon"
+msgstr "도서 제목 부가 텍스트"
+
+#: src/config/bibtexfields.cpp:246
+#, kde-format
+msgid "Series Shortitle"
+msgstr "시리즈 단축 제목"
+
+#: src/config/bibtexfields.cpp:250
+#, kde-format
+msgid "Event Title"
+msgstr "이벤트 제목"
+
+#: src/config/bibtexfields.cpp:251
+#, kde-format
+msgid "Venue"
+msgstr "장소"
+
+#: src/config/bibtexfields.cpp:252
+#, kde-format
+msgid "Index Title"
+msgstr "색인 제목"
+
+#: src/config/bibtexfields.cpp:255
+#, kde-format
+msgid "XRef"
+msgstr "상호 참조"
+
+#: src/config/bibtexfields.cpp:257
+#, kde-format
+msgid "E-Print"
+msgstr "전자 인쇄"
+
+#: src/config/bibtexfields.cpp:258
+#, kde-format
+msgid "E-Print Class"
+msgstr "전자 인쇄 클래스"
+
+#: src/config/bibtexfields.cpp:259
+#, kde-format
+msgid "E-Print Type"
+msgstr "전자 인쇄 종류"
+
+#: src/config/bibtexfields.cpp:261
+#, kde-format
+msgid "URL Date"
+msgstr "URL 날짜"
+
+#: src/config/bibtexfields.cpp:262
+#, kde-format
+msgid "Local File URL"
+msgstr "로컬 파일 URL"
+
+#: src/config/bibtexfields.cpp:264
+#, kde-format
+msgid "Original Location"
+msgstr "원본 위치"
+
+#: src/config/bibtexfields.cpp:266
+#, kde-format
+msgid "EID"
+msgstr "EID"
+
+#: src/config/bibtexfields.cpp:267
+#: src/gui/preferences/settingscolorlabelwidget.cpp:201
+#, kde-format
+msgid "Label"
+msgstr "라벨"
+
+#: src/config/bibtexfields.cpp:268
+#, kde-format
+msgid "Shorthand"
+msgstr "속기"
+
+#: src/config/bibtexfields.cpp:269
+#, kde-format
+msgid "Shorthand Intro"
+msgstr "속기 소개"
+
+#: src/config/bibtexfields.cpp:270
+#, kde-format
+msgid "Publication State"
+msgstr "출판 상태"
+
+#: src/config/bibtexfields.cpp:271
+#, kde-format
+msgid "Language"
+msgstr "언어"
+
+#: src/config/bibtexfields.cpp:272
+#, kde-format
+msgid "Original Language"
+msgstr "원본 언어"
+
+#: src/config/bibtexfields.cpp:273 src/networking/zotero/collection.cpp:94
+#: src/program/docklets/zoterobrowser.cpp:106
+#, kde-format
+msgid "Library"
+msgstr "도서관"
+
+#: src/config/bibtexfields.cpp:275
+#, kde-format
+msgid "Gender"
+msgstr "성별"
+
+#: src/config/bibtexfields.cpp:276
+#, kde-format
+msgid "Hyphenation"
+msgstr "하이픈 넣기"
+
+#: src/config/bibtexfields.cpp:277
+#, kde-format
+msgid "Index Sorttitle"
+msgstr "색인 정렬 제목"
+
+#: src/config/bibtexfields.cpp:278
+#, kde-format
+msgid "Entry Options"
+msgstr "항목 옵션"
+
+#: src/config/bibtexfields.cpp:279
+#, kde-format
+msgid "Presort"
+msgstr "사전 정렬"
+
+#: src/config/bibtexfields.cpp:280
+#, kde-format
+msgid "Sort Key"
+msgstr "정렬 키"
+
+#: src/config/bibtexfields.cpp:281
+#, kde-format
+msgid "Sort Names"
+msgstr "이름 정렬"
+
+#: src/config/bibtexfields.cpp:282
+#, kde-format
+msgid "Sort Shorthand"
+msgstr "속기 정렬"
+
+#: src/config/bibtexfields.cpp:283
+#, kde-format
+msgid "Sort Title"
+msgstr "제목 정렬"
+
+#: src/config/bibtexfields.cpp:284
+#, kde-format
+msgid "Sort Year"
+msgstr "연도 정렬"
+
+#: src/config/bibtexfields.cpp:285
+#, kde-format
+msgid "ISAN"
+msgstr "ISAN"
+
+#: src/config/preferences.cpp:400
+#, kde-format
+msgid "BibTeX"
+msgstr "BibTeX"
+
+#: src/config/preferences.cpp:400
+#, kde-format
+msgid "BibLaTeX"
+msgstr "BibLaTeX"
+
+#: src/config/preferences.cpp:564
+#, kde-format
+msgid "No backups"
+msgstr "백업 없음"
+
+#: src/config/preferences.cpp:564
+#, kde-format
+msgid "Local files only"
+msgstr "로컬 파일만"
+
+#: src/config/preferences.cpp:564
+#, kde-format
+msgid "Both local and remote files"
+msgstr "로컬 및 원격 파일 모두"
+
+#: src/config/preferences.cpp:890
+#, kde-format
+msgctxt "Comment Quoting"
+msgid "None"
+msgstr "없음"
+
+#: src/config/preferences.cpp:890
+#, fuzzy, kde-format
+#| msgctxt "Comment Quoting"
+#| msgid "@comment{…}"
+msgctxt "Comment Quoting"
+msgid "@comment{…}"
+msgstr "@comment{…}"
+
+#: src/config/preferences.cpp:890
+#, kde-format
+msgctxt "Comment Quoting"
+msgid "% …"
+msgstr "% …"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "lowercase"
+msgstr "소문자"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "Initial capital"
+msgstr "첫 글자 대문자"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "UpperCamelCase"
+msgstr "UpperCamelCase"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "lowerCamelCase"
+msgstr "lowerCamelCase"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "UPPERCASE"
+msgstr "대문자"
+
+#: src/config/preferences.cpp:1128
+#, fuzzy, kde-format
+#| msgctxt "What to do if double-clicking on a file view item"
+#| msgid "Open Editor"
+msgctxt "What to do if double-clicking on a file view item"
+msgid "Open Editor"
+msgstr "편집기 열기"
+
+#: src/config/preferences.cpp:1128
+#, kde-format
+msgctxt "What to do if double-clicking on a file view item"
+msgid "View Document"
+msgstr "문서 보기"
+
+#: src/config/preferences.cpp:1167
+#, fuzzy, kde-format
+#| msgctxt "Color Labels"
+#| msgid "Important"
+msgctxt "Color Labels"
+msgid "Important"
+msgstr "중요"
+
+#: src/config/preferences.cpp:1167
+#, fuzzy, kde-format
+#| msgctxt "Color Labels"
+#| msgid "Unread"
+msgctxt "Color Labels"
+msgid "Unread"
+msgstr "읽지 않음"
+
+#: src/config/preferences.cpp:1167
+#, fuzzy, kde-format
+#| msgctxt "Color Labels"
+#| msgid "Read"
+msgctxt "Color Labels"
+msgid "Read"
+msgstr "읽음"
+
+#: src/config/preferences.cpp:1167
+#, fuzzy, kde-format
+#| msgctxt "Color Labels"
+#| msgid "Watch"
+msgctxt "Color Labels"
+msgid "Watch"
+msgstr "주의"
+
+#: src/data/models/filemodel.cpp:244 src/gui/element/elementwidgets.cpp:434
+#: src/gui/element/elementwidgets.cpp:1088
+#, kde-format
+msgid "Macro"
+msgstr "매크로"
+
+#: src/data/models/filemodel.cpp:254
+#, kde-format
+msgid "Comment"
+msgstr "주석"
+
+#: src/data/models/filemodel.cpp:264 src/gui/element/elementwidgets.cpp:1158
+#, kde-format
+msgid "Preamble"
+msgstr "머리말"
+
+#: src/data/value.cpp:611
+#, kde-format
+msgid " and "
+msgstr " 및 "
+
+#: src/data/value.cpp:614
+#, kde-format
+msgid " and others"
+msgstr " 및 기타"
+
+#: src/gui/element/associatedfilesui.cpp:75
+#, kde-format
+msgid ""
+"The following operations can be performed when associating the document with "
+"the entry:"
+msgstr "문서를 항목과 연결할 때 다음 작업을 수행할 수 있습니다:"
+
+#: src/gui/element/associatedfilesui.cpp:79
+#, kde-format
+msgid "File operation"
+msgstr "파일 작업"
+
+#: src/gui/element/associatedfilesui.cpp:83
+#, kde-format
+msgid "Do not copy or move document, only insert reference to it"
+msgstr "문서를 복사하거나 이동하지 않고 참조만 삽입합니다"
+
+#: src/gui/element/associatedfilesui.cpp:86
+#, kde-format
+msgid "Copy document next to bibliography file"
+msgstr "서지 정보 파일 옆으로 문서 복사"
+
+#: src/gui/element/associatedfilesui.cpp:89
+#, kde-format
+msgid "Move document next to bibliography file"
+msgstr "서지 정보 파일 옆으로 문서 이동"
+
+#: src/gui/element/associatedfilesui.cpp:99
+#, kde-format
+msgid "Path and filename of bibliography file:"
+msgstr "서지 정보 파일 경로 및 이름:"
+
+#: src/gui/element/associatedfilesui.cpp:105
+#, kde-format
+msgid "Rename Document?"
+msgstr "문서 이름을 바꾸시겠습니까?"
+
+#: src/gui/element/associatedfilesui.cpp:112
+#, kde-format
+msgid "Keep document's original filename"
+msgstr "문서의 원래 파일 이름 유지"
+
+#: src/gui/element/associatedfilesui.cpp:118
+#, kde-format
+msgid "User-defined name:"
+msgstr "사용자 정의 이름:"
+
+#: src/gui/element/associatedfilesui.cpp:131
+#, kde-format
+msgid "Path as Inserted into Entry"
+msgstr "항목으로 삽입된 경로"
+
+#: src/gui/element/associatedfilesui.cpp:135
+#: src/gui/field/fieldlistedit.cpp:602
+#, kde-format
+msgid "Relative Path"
+msgstr "상대 경로"
+
+#: src/gui/element/associatedfilesui.cpp:138
+#: src/gui/field/fieldlistedit.cpp:602
+#, kde-format
+msgid "Absolute Path"
+msgstr "절대 경로"
+
+#: src/gui/element/associatedfilesui.cpp:150
+#, kde-format
+msgid "Preview of reference to be inserted:"
+msgstr "삽입할 참조 미리 보기:"
+
+#: src/gui/element/associatedfilesui.cpp:163
+#, kde-format
+msgid "Associate Document with Entry"
+msgstr "항목과 문서 연결"
+
+#: src/gui/element/associatedfilesui.cpp:233
+#: src/program/docklets/documentpreview.cpp:218
+#: src/program/docklets/referencepreview.cpp:115
+#, kde-format
+msgid "No preview available"
+msgstr "미리 볼 수 없음"
+
+#: src/gui/element/associatedfilesui.cpp:294
+#, kde-format
+msgid ""
+"The following remote document is about to be associated with the current "
+"entry:"
+msgstr "다음 원격 문서가 현재 항목과 연결됩니다:"
+
+#: src/gui/element/associatedfilesui.cpp:295
+#: src/gui/element/associatedfilesui.cpp:308
+#, kde-format
+msgid "Rename after entry's id"
+msgstr "항목의 ID 작성 후 이름 바꾸기"
+
+#: src/gui/element/associatedfilesui.cpp:297
+#, kde-format
+msgid ""
+"The following remote document is about to be associated with entry '%1':"
+msgstr "다음 원격 문서가 '%1' 항목과 연결됩니다:"
+
+#: src/gui/element/associatedfilesui.cpp:298
+#: src/gui/element/associatedfilesui.cpp:311
+#, kde-format
+msgid "Rename after entry's id: '%1'"
+msgstr "항목의 ID 작성 후 이름 바꾸기: '%1'"
+
+#: src/gui/element/associatedfilesui.cpp:307
+#, kde-format
+msgid ""
+"The following local document is about to be associated with the current "
+"entry:"
+msgstr "다음 로컬 문서가 현재 항목과 연결됩니다:"
+
+#: src/gui/element/associatedfilesui.cpp:310
+#, kde-format
+msgid "The following local document is about to be associated with entry '%1':"
+msgstr "다음 로컬 문서가 '%1' 항목과 연결됩니다:"
+
+#: src/gui/element/elementeditor.cpp:198
+#, kde-format
+msgid "Options"
+msgstr "옵션"
+
+#: src/gui/element/elementeditor.cpp:204
+#, kde-format
+msgid "Show all fields"
+msgstr "모든 필드 표시"
+
+#: src/gui/element/elementeditor.cpp:211
+#, kde-format
+msgid "Tab key visits only editable fields"
+msgstr "편집 가능한 필드만 Tab 키로 찾아가기"
+
+#: src/gui/element/elementeditor.cpp:219
+#, kde-format
+msgid "Check with BibTeX"
+msgstr "BibTeX로 확인"
+
+#: src/gui/element/elementeditor.cpp:541
+#, kde-format
+msgid "No id was entered, so the previous id '%1' will be restored."
+msgstr "ID를 입력하지 않았으므로 이전 ID '%1'이(가) 복원됩니다."
+
+#: src/gui/element/elementeditor.cpp:541
+#, kde-format
+msgid "No id given"
+msgstr "ID 지정되지 않음"
+
+#: src/gui/element/elementeditor.cpp:548
+#, kde-format
+msgid ""
+"The entered id '%1' is already in use for another element.\n"
+"\n"
+"Keep original id '%2' instead?"
+msgstr ""
+"입력한 ID '%1'이(가) 이미 다른 요소에 사용되고 있습니다.\n"
+"\n"
+"'%2' 대신 원래 ID를 유지하시겠습니까?"
+
+#: src/gui/element/elementeditor.cpp:548
+#, kde-format
+msgid "Id already in use"
+msgstr "이미 사용 중인 ID"
+
+#: src/gui/element/elementeditor.cpp:548
+#, kde-format
+msgid "Keep duplicate ids"
+msgstr "중복 ID 유지"
+
+#: src/gui/element/elementeditor.cpp:548
+#, kde-format
+msgid "Restore original id"
+msgstr "원래 ID 복원"
+
+#: src/gui/element/elementeditor.cpp:577
+#, kde-format
+msgid "Validation for the current element failed."
+msgstr "현재 요소에 대한 유효성 검사에 실패했습니다."
+
+#: src/gui/element/elementeditor.cpp:577
+#, kde-format
+msgid ""
+"Validation for the current element failed:\n"
+"%1"
+msgstr ""
+"현재 요소에 대한 유효성 검사에 실패함:\n"
+"%1"
+
+#: src/gui/element/elementeditor.cpp:578
+#, kde-format
+msgid "Element validation failed"
+msgstr "요소 검증 실패"
+
+#: src/gui/element/elementwidgets.cpp:452
+#, kde-format
+msgid "Element type '%1' is invalid."
+msgstr "'%1' 요소 형식이 잘못되었습니다."
+
+#: src/gui/element/elementwidgets.cpp:461
+#, kde-format
+msgid "Id '%1' is invalid"
+msgstr "ID '%1'이(가) 잘못됨"
+
+#: src/gui/element/elementwidgets.cpp:513
+#, kde-format
+msgid "Type:"
+msgstr "형식:"
+
+#: src/gui/element/elementwidgets.cpp:522
+#, kde-format
+msgid "Id:"
+msgstr "ID:"
+
+#: src/gui/element/elementwidgets.cpp:539
+#, kde-format
+msgid "Select a suggested id for this entry"
+msgstr "이 항목에 제안된 ID 선택"
+
+#: src/gui/element/elementwidgets.cpp:767
+#, kde-format
+msgid "External"
+msgstr "외부"
+
+#: src/gui/element/elementwidgets.cpp:853
+#, kde-format
+msgid "Other Fields"
+msgstr "다른 필드"
+
+#: src/gui/element/elementwidgets.cpp:965
+#, kde-format
+msgid "Name:"
+msgstr "이름:"
+
+#: src/gui/element/elementwidgets.cpp:973
+#: src/gui/element/elementwidgets.cpp:1036 src/gui/field/fieldlistedit.cpp:102
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:98
+#, kde-format
+msgid "Add"
+msgstr "추가"
+
+#: src/gui/element/elementwidgets.cpp:977
+#, kde-format
+msgid "Content:"
+msgstr "내용:"
+
+#: src/gui/element/elementwidgets.cpp:984
+#, kde-format
+msgid "List:"
+msgstr "목록:"
+
+#: src/gui/element/elementwidgets.cpp:989 src/gui/valuelistmodel.cpp:299
+#, kde-format
+msgid "Value"
+msgstr "값"
+
+#: src/gui/element/elementwidgets.cpp:994 src/parts/part.cpp:240
+#, kde-format
+msgid "Delete"
+msgstr "삭제"
+
+#: src/gui/element/elementwidgets.cpp:997
+#: src/program/docklets/referencepreview.cpp:138
+#: src/program/documentlist.cpp:207
+#, kde-format
+msgid "Open"
+msgstr "열기"
+
+#: src/gui/element/elementwidgets.cpp:1036
+#: src/program/docklets/elementform.cpp:95
+#, kde-format
+msgid "Apply"
+msgstr "적용"
+
+#: src/gui/element/elementwidgets.cpp:1105
+#: src/gui/element/elementwidgets.cpp:1175
+#, kde-format
+msgid "Value:"
+msgstr "값:"
+
+#: src/gui/element/elementwidgets.cpp:1311
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX element."
+msgstr "지정한 소스 코드가 단일 BibTeX 요소로 해석되지 않습니다."
+
+#: src/gui/element/elementwidgets.cpp:1320
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX entry."
+msgstr "지정한 소스 코드가 단일 BibTeX 항목으로 해석되지 않습니다."
+
+#: src/gui/element/elementwidgets.cpp:1326
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX macro."
+msgstr "지정한 소스 코드가 단일 BibTeX 매크로로 해석되지 않습니다."
+
+#: src/gui/element/elementwidgets.cpp:1332
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX preamble."
+msgstr "지정한 소스 코드가 단일 BibTeX 서문으로 해석되지 않습니다."
+
+#: src/gui/element/elementwidgets.cpp:1338
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX comment."
+msgstr "지정한 소스 코드가 단일 BibTeX 요소로 해석되지 않습니다."
+
+#: src/gui/element/elementwidgets.cpp:1342
+#, kde-format
+msgid "Element class not properly set"
+msgstr "요소 클래스가 올바르게 설정되지 않았음"
+
+#: src/gui/element/elementwidgets.cpp:1351
+#, kde-format
+msgid "No issues detected"
+msgstr "감지된 문제 없음"
+
+#: src/gui/element/elementwidgets.cpp:1366
+#, kde-format
+msgid "Source"
+msgstr "소스"
+
+#: src/gui/element/elementwidgets.cpp:1397
+#, kde-format
+msgid "Restore"
+msgstr "복원"
+
+#: src/gui/element/findpdfui.cpp:115 src/gui/element/findpdfui.cpp:164
+#: src/gui/element/findpdfui.cpp:166
+#, kde-format
+msgid "View"
+msgstr "보기"
+
+#: src/gui/element/findpdfui.cpp:124 src/gui/element/findpdfui.cpp:164
+#: src/gui/element/findpdfui.cpp:166
+#, kde-format
+msgid "Ignore"
+msgstr "무시"
+
+#: src/gui/element/findpdfui.cpp:131 src/gui/element/findpdfui.cpp:164
+#: src/gui/element/findpdfui.cpp:166 src/gui/element/findpdfui.cpp:221
+#: src/gui/element/findpdfui.cpp:223
+#, kde-format
+msgid "Download"
+msgstr "다운로드"
+
+#: src/gui/element/findpdfui.cpp:138 src/gui/element/findpdfui.cpp:164
+#: src/gui/element/findpdfui.cpp:166
+#, kde-format
+msgid "Use URL only"
+msgstr "URL만 사용"
+
+#: src/gui/element/findpdfui.cpp:367
+#, kde-format
+msgid "Result"
+msgstr "결과"
+
+#: src/gui/element/findpdfui.cpp:419
+#, kde-format
+msgid "Starting to search..."
+msgstr "검색을 시작하는 중..."
+
+#: src/gui/element/findpdfui.cpp:438
+#, kde-format
+msgid "Find PDF"
+msgstr "PDF 찾기"
+
+#: src/gui/element/findpdfui.cpp:497
+#, kde-format
+msgid "Save URL '%1'"
+msgstr "'%1' URL 저장"
+
+#: src/gui/element/findpdfui.cpp:551
+#, kde-format
+msgid ""
+"<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
+"%2</b><br/>Number of found documents: <b>%3</b></qt>"
+msgstr ""
+"<qt>방문한 페이지 수: <b>%1</b><br/>실행 중인 다운로드 수: <b>%2</b><br/> 찾"
+"은 문서 수: <b>%3</b></qt>"
+
+#: src/gui/field/colorlabelwidget.cpp:91
+#: src/gui/preferences/settingscolorlabelwidget.cpp:457
+#, kde-format
+msgid "No color"
+msgstr "색상 없음"
+
+#: src/gui/field/colorlabelwidget.cpp:93
+#, kde-format
+msgid "User-defined color"
+msgstr "사용자 정의 색상"
+
+#: src/gui/field/colorlabelwidget.cpp:104
+#, kde-format
+msgid "Color & Label"
+msgstr "색상 및 라벨"
+
+#: src/gui/field/fieldinput.cpp:86
+#, kde-format
+msgid "Select a predefined month"
+msgstr "미리 정의된 달 선택"
+
+#: src/gui/field/fieldinput.cpp:104
+#, kde-format
+msgid "Select a predefined edition"
+msgstr "미리 정의된 판 선택"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "1st"
+msgstr "첫 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "2nd"
+msgstr "두 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "3rd"
+msgstr "세 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "4th"
+msgstr "네 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "5th"
+msgstr "다섯 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "6th"
+msgstr "여섯 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "7th"
+msgstr "일곱 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "8th"
+msgstr "여뎗 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "9th"
+msgstr "아홉 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "10th"
+msgstr "열 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "11th"
+msgstr "열한 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "12th"
+msgstr "열두 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "13th"
+msgstr "열세 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "14th"
+msgstr "열네 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "15th"
+msgstr "열다섯 번째"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "16th"
+msgstr "열여섯 번째"
+
+#: src/gui/field/fieldinput.cpp:123
+#, kde-format
+msgid "Select an existing entry"
+msgstr "기존 항목 선택"
+
+#: src/gui/field/fieldinput.cpp:276
+#, kde-format
+msgid "Select Cross Reference"
+msgstr "상호 참조 선택"
+
+#: src/gui/field/fieldinput.cpp:276
+#, kde-format
+msgid "Select the cross reference to another entry:"
+msgstr "다른 항목에 대한 상호 참조 선택:"
+
+#: src/gui/field/fieldlineedit.cpp:217 src/gui/field/fieldlineedit.cpp:235
+#, kde-format
+msgid "Opening and closing curly brackets do not match."
+msgstr "여는 중괄호와 닫는 중괄호가 일치하지 않습니다."
+
+#: src/gui/field/fieldlineedit.cpp:222
+#, kde-format
+msgid "Reference contains characters outside of the allowed set."
+msgstr "참조에 허용된 집합 외부의 문자가 들어 있습니다."
+
+#: src/gui/field/fieldlineedit.cpp:232
+#, kde-format
+msgid "Source code could not be parsed correctly."
+msgstr "소스 코드를 올바르게 해석할 수 없습니다."
+
+#: src/gui/field/fieldlineedit.cpp:292 src/gui/field/fieldlineedit.cpp:347
+#, kde-format
+msgid "Plain Text"
+msgstr "일반 텍스트"
+
+#: src/gui/field/fieldlineedit.cpp:298 src/gui/field/fieldlineedit.cpp:348
+#, kde-format
+msgid "Reference"
+msgstr "참조"
+
+#: src/gui/field/fieldlineedit.cpp:304 src/gui/field/fieldlineedit.cpp:349
+#, kde-format
+msgid "Person"
+msgstr "인물"
+
+#: src/gui/field/fieldlineedit.cpp:310 src/gui/field/fieldlineedit.cpp:350
+#, kde-format
+msgid "Keyword"
+msgstr "키워드"
+
+#: src/gui/field/fieldlineedit.cpp:316 src/gui/field/fieldlineedit.cpp:352
+#, kde-format
+msgid "Source Code"
+msgstr "소스 코드"
+
+#: src/gui/field/fieldlineedit.cpp:322 src/gui/field/fieldlineedit.cpp:355
+#, kde-format
+msgid "Verbatim Text"
+msgstr "약어 텍스트"
+
+#: src/gui/field/fieldlineedit.cpp:460
+#, kde-format
+msgid "Open '%1'"
+msgstr "'%1' 열기"
+
+#: src/gui/field/fieldlineedit.cpp:476
+#, kde-format
+msgid ""
+"The current text cannot be used as value of type '%1'.\n"
+"\n"
+"Switching back to type '%2'."
+msgstr ""
+"현재 텍스트를 '%1' 형식의 값으로 사용할 수 없습니다.\n"
+"\n"
+"'%2' 형식으로 다시 전환합니다."
+
+#: src/gui/field/fieldlistedit.cpp:142
+#, kde-format
+msgid "Remove value"
+msgstr "값 삭제"
+
+#: src/gui/field/fieldlistedit.cpp:153
+#, kde-format
+msgid "Move value down"
+msgstr "값 아래로 이동"
+
+#: src/gui/field/fieldlistedit.cpp:164
+#, kde-format
+msgid "Move value up"
+msgstr "값 위로 이동"
+
+#: src/gui/field/fieldlistedit.cpp:414
+#, kde-format
+msgid "... and others (et al.)"
+msgstr "... 및 여러 사람(외)"
+
+#: src/gui/field/fieldlistedit.cpp:419
+#, kde-format
+msgid "Add from Clipboard"
+msgstr "클립보드에서 추가"
+
+#: src/gui/field/fieldlistedit.cpp:420
+#, kde-format
+msgid "Add a list of names from clipboard"
+msgstr "클립보드에서 이름 목록 추가"
+
+#: src/gui/field/fieldlistedit.cpp:482
+#, kde-format
+msgid "Add file..."
+msgstr "파일 추가..."
+
+#: src/gui/field/fieldlistedit.cpp:488
+#, kde-format
+msgid "Add reference ..."
+msgstr "참조 추가..."
+
+#: src/gui/field/fieldlistedit.cpp:491
+#, kde-format
+msgid "Add reference from clipboard"
+msgstr "클립보드에서 참조 추가"
+
+#: src/gui/field/fieldlistedit.cpp:503
+#, kde-format
+msgid "File to Associate"
+msgstr "연결할 파일"
+
+#: src/gui/field/fieldlistedit.cpp:541 src/gui/field/fieldlistedit.cpp:615
+#, kde-format
+msgid "Save file locally"
+msgstr "로컬에 파일 저장"
+
+#: src/gui/field/fieldlistedit.cpp:591
+#, kde-format
+msgid "Save file '%1' locally"
+msgstr "'%1' 파일을 로컬에 저장"
+
+#: src/gui/field/fieldlistedit.cpp:602
+#, kde-format
+msgid ""
+"<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
+"path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute "
+"path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
+msgstr ""
+"<qt><p>서지 정보 파일과 관련된 파일 이름을 사용하시겠습니까?</p><p>상대 경로"
+"는 <br/><tt style=\"font-family: %3;\">%1</tt>입니다.</p>.<p>절대 경로는 <br/"
+"><tt style=\"font-family: %3;\">%2</tt>입니다.</p></qt>"
+
+#: src/gui/field/fieldlistedit.cpp:643
+#, kde-format
+msgid "Add Keywords from List"
+msgstr "목록에서 키워드 추가"
+
+#: src/gui/field/fieldlistedit.cpp:644
+#, kde-format
+msgid "Add keywords as selected from a pre-defined list of keywords"
+msgstr "사전 정의된 키워드 목록에서 선택된 키워드 추가"
+
+#: src/gui/field/fieldlistedit.cpp:647
+#, kde-format
+msgid "Add Keywords from Clipboard"
+msgstr "클립보드에서 키워드 추가"
+
+#: src/gui/field/fieldlistedit.cpp:648
+#, kde-format
+msgid "Add a punctuation-separated list of keywords from clipboard"
+msgstr "클립보드에서 구두점으로 구분된 키워드 목록 추가"
+
+#: src/gui/file/basicfileview.cpp:282
+#, kde-format
+msgid "Reset to defaults"
+msgstr "기본값 복원"
+
+#: src/gui/file/basicfileview.cpp:294
+#, kde-format
+msgid "No sorting"
+msgstr "정렬 없음"
+
+#: src/gui/file/fileview.cpp:85
+#, kde-format
+msgid ""
+"The current entry has been modified. Do you want to discard your changes?"
+msgstr "현재 항목이 수정되었습니다. 변경 사항을 삭제하시겠습니까?"
+
+#: src/gui/file/fileview.cpp:85
+#, kde-format
+msgid "Discard changes?"
+msgstr "변경 사항을 취소하시겠습니까?"
+
+#: src/gui/file/fileview.cpp:85
+#, kde-format
+msgid "Continue Editing"
+msgstr "계속 편집"
+
+#: src/gui/file/fileview.cpp:319 src/program/docklets/searchresults.cpp:95
+#, kde-format
+msgid "View Element"
+msgstr "요소 보기"
+
+#: src/gui/file/fileview.cpp:327 src/parts/part.cpp:199
+#, kde-format
+msgid "Edit Element"
+msgstr "요소 편집"
+
+#: src/gui/file/findduplicatesui.cpp:140
+#, kde-format
+msgid "Alternatives"
+msgstr "대안"
+
+#: src/gui/file/findduplicatesui.cpp:192
+#, kde-format
+msgid "None of the above"
+msgstr "위에 것 중 아무것도 없음"
+
+#: src/gui/file/findduplicatesui.cpp:548
+#, kde-format
+msgid "Select your duplicates"
+msgstr "중복 항목 선택"
+
+#: src/gui/file/findduplicatesui.cpp:568
+#, kde-format
+msgid "Previous Clique"
+msgstr "이전 Clique"
+
+#: src/gui/file/findduplicatesui.cpp:570
+#, kde-format
+msgid "Next Clique"
+msgstr "다음 Clique"
+
+#: src/gui/file/findduplicatesui.cpp:649
+#, kde-format
+msgid "Find Duplicates"
+msgstr "중복 항목 찾기"
+
+#: src/gui/file/findduplicatesui.cpp:680
+#, kde-format
+msgid ""
+"Multiple elements are selected. Do you want to search for duplicates only "
+"within the selection or in the whole document?"
+msgstr ""
+"여러 요소가 선택됩니다. 선택 항목 내에서만 또는 전체 문서에서 중복 항목을 검"
+"색하시겠습니까?"
+
+#: src/gui/file/findduplicatesui.cpp:680
+#, kde-format
+msgid "Search only in selection?"
+msgstr "선택 항목에서만 검색하시겠습니까?"
+
+#: src/gui/file/findduplicatesui.cpp:680
+#, kde-format
+msgid "Only in selection"
+msgstr "선택 시에만 해당"
+
+#: src/gui/file/findduplicatesui.cpp:680
+#, kde-format
+msgid "Whole document"
+msgstr "전체 문서"
+
+#: src/gui/file/findduplicatesui.cpp:703
+#, kde-format
+msgid "No duplicates were found."
+msgstr "중복 항목을 찾을 수 없습니다."
+
+#: src/gui/file/findduplicatesui.cpp:703
+#, kde-format
+msgid "No duplicates found"
+msgstr "중복 항목을 찾을 수 없음"
+
+#: src/gui/file/findduplicatesui.cpp:710
+#, kde-format
+msgid "Merge Duplicates"
+msgstr "중복 항목 병합"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#, kde-format
+msgid ""
+"This will reset the settings to factory defaults. Should this affect only "
+"the current page or all settings?"
+msgstr ""
+"모든 설정을 기본값으로 초기화합니다. 현재 쪽만 초기화하시겠습니까, 아니면 모"
+"든 설정을 초기화하시겠습니까?"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#, kde-format
+msgid "Reset to Defaults"
+msgstr "기본값 복원"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#, kde-format
+msgid "All settings"
+msgstr "모든 설정"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#, kde-format
+msgid "Only current page"
+msgstr "현재 쪽만"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:168
+#, kde-format
+msgid "Preferences"
+msgstr "설정"
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:336
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:266
+#, kde-format
+msgid "Add..."
+msgstr "추가..."
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:342
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:340
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:424
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:272
+#, kde-format
+msgid "Remove"
+msgstr "삭제"
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:366
+#, kde-format
+msgid "Color & Labels"
+msgstr "색상 및 라벨"
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:397
+#, kde-format
+msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
+msgid "NewColor%1"
+msgstr "새색상 %1"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:83
+#, kde-format
+msgid "Paper Size:"
+msgstr "용지 크기:"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
+#, kde-format
+msgid "Language for 'babel':"
+msgstr "'babel'의 언어:"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:100
+#, kde-format
+msgid "Bibliography style:"
+msgstr "참고문헌 목록 스타일:"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:122
+#, kde-format
+msgid "PDF & Postscript"
+msgstr "PDF 및 PostScript"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:121
+#, kde-format
+msgid "Command for 'Copy Reference':"
+msgstr "'참조 복사' 명령:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:123
+#, kde-format
+msgid "No command"
+msgstr "명령 없음"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:131
+#, kde-format
+msgid "Detect LyX pipe automatically:"
+msgstr "LyX 파이프 자동 감지:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:137
+#, kde-format
+msgid "Manually specified LyX pipe:"
+msgstr "수동으로 지정된 LyX 파이프:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:150
+#, kde-format
+msgid "Backups when saving:"
+msgstr "저장 시 백업:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:156
+#, kde-format
+msgid "Number of Backups:"
+msgstr "백업 개수:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:178
+#, kde-format
+msgid "Saving and Exporting"
+msgstr "저장 및 내보내기"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/widgets/filesettingswidget.cpp:34
+#, kde-format
+msgid "John"
+msgstr "홍"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/widgets/filesettingswidget.cpp:34
+#, kde-format
+msgid "Doe"
+msgstr "길동"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/widgets/filesettingswidget.cpp:34
+#, kde-format
+msgid "Jr."
+msgstr "주니어."
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:74
+#, kde-format
+msgid "Bibliography System:"
+msgstr "서지 정보 시스템:"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:78
+#: src/gui/widgets/filesettingswidget.cpp:161
+#, kde-format
+msgid "Person Names Formatting:"
+msgstr "인명 서식:"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:100
+#, kde-format
+msgid "General"
+msgstr "일반"
+
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:152
+#, kde-format
+msgid "NewKeyword%1"
+msgstr "새키워드%1"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:110
+#, kde-format
+msgid "Authors"
+msgstr "저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:114
+#, kde-format
+msgid "Author Range:"
+msgstr "저자 범위:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "First author"
+msgstr "첫 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Second author"
+msgstr "두 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Third author"
+msgstr "세 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Fourth author"
+msgstr "네 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Fifth author"
+msgstr "다섯 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Sixth author"
+msgstr "여섯 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Seventh author"
+msgstr "일곱 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Eighth author"
+msgstr "여덟 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Ninth author"
+msgstr "아홉 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Tenth author"
+msgstr "열 번째 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "|Last author"
+msgstr "|마지막 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:121
+#, kde-format
+msgid "... and last author"
+msgstr "... 및 마지막 저자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:127
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:129
+#: src/processing/idsuggestions.cpp:511
+#, kde-format
+msgid "From first author to author %1 and last author"
+msgstr "첫 번째 저자부터 %1저자 및 마지막 저자로"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:127
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:129
+#: src/processing/idsuggestions.cpp:520 src/processing/idsuggestions.cpp:528
+#, kde-format
+msgid "From author %1 to author %2 and last author"
+msgstr "%1저자에서 %2저자로, 마지막 저자로"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:134
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:345
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:429
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:498
+#, kde-format
+msgid "No change"
+msgstr "변경 안 함"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:135
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:346
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:430
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:499
+#, kde-format
+msgid "To upper case"
+msgstr "대문자로"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:136
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:347
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:431
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:500
+#, kde-format
+msgid "To lower case"
+msgstr "소문자로"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:137
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:348
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:432
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:501
+#, kde-format
+msgid "To CamelCase"
+msgstr "CamelCase로"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:138
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:349
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:433
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:502
+#, kde-format
+msgid "Change casing:"
+msgstr "대소문자 변경:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:142
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:353
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:437
+#, kde-format
+msgid "Text in between:"
+msgstr "다음 사이에 텍스트 입력:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:146
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:357
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:441
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:506
+#, kde-format
+msgid "Only first characters:"
+msgstr "첫 문자만:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:147
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:358
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:442
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:507
+#, kde-format
+msgid "No limitation"
+msgstr "무제한"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:210
+#, kde-format
+msgid "2 digits"
+msgstr "2자리 숫자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:211
+#, kde-format
+msgid "4 digits"
+msgstr "4자리 숫자"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:212
+#, kde-format
+msgid "Digits:"
+msgstr "자릿수:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:243
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:114
+#, kde-format
+msgid "Volume:"
+msgstr "권:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:265
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:637
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:672
+#, kde-format
+msgid "Page Number"
+msgstr "쪽 번호"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:269
+#, kde-format
+msgid "First page's number:"
+msgstr "첫 쪽 번호:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:301
+#, kde-format
+msgid "First word only"
+msgstr "첫 단어만"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:303
+#, kde-format
+msgid "All but first word"
+msgstr "첫 단어 제외"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:305
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:332
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:335
+#, kde-format
+msgid "From first to last word"
+msgstr "처음부터 마지막 단어까지"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:307
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:332
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:335
+#, kde-format
+msgid "From word %1 to last word"
+msgstr "%1번째 단어에서 마지막 단어까지"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:309
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:333
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:336
+#, kde-format
+msgid "From first word to word %1"
+msgstr "첫 번째 단어에서 %1번째 단어까지"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:311
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:333
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:336
+#, kde-format
+msgid "From word %1 to word %2"
+msgstr "%1 단어에서 %2 단어까지"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:322
+#, kde-format
+msgid "Word Range:"
+msgstr "단어 범위:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "First word"
+msgstr "첫 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Second word"
+msgstr "두 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Third word"
+msgstr "세 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Fourth word"
+msgstr "네 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Fifth word"
+msgstr "다섯 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Sixth word"
+msgstr "여섯 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Seventh word"
+msgstr "일곱 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Eighth word"
+msgstr "여덟 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Ninth word"
+msgstr "아홉 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Tenth word"
+msgstr "열 번째 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "|Last word"
+msgstr "|마지막 단어"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:341
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:425
+#, kde-format
+msgid "Small words:"
+msgstr "작은 단어:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:549
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:641
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:676
+#, kde-format
+msgid "Text"
+msgstr "텍스트"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:552
+#, kde-format
+msgid "Text:"
+msgstr "텍스트:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:603
+#, kde-format
+msgid "Add at top"
+msgstr "위에 추가"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:608
+#, kde-format
+msgid "Add at bottom"
+msgstr "아래에 추가"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:926
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:118
+#, kde-format
+msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
+msgstr "<qt>구조:<ul><li>%1</li></ul> 예: %2</qt>"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:932
+#, kde-format
+msgid "Edit Id Suggestion"
+msgstr "ID 추천 편집"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:170
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:309
+#, kde-format
+msgid "Id Suggestions"
+msgstr "ID 추천"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:269
+#, kde-format
+msgid "Edit..."
+msgstr "편집..."
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:275
+#, kde-format
+msgid "Up"
+msgstr "위"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:278
+#, kde-format
+msgid "Down"
+msgstr "아래"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:281
+#, kde-format
+msgid "Toggle Default"
+msgstr "기본 설정/해제"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#, kde-format
+msgid ""
+"All token have been removed from this suggestion. Remove suggestion itself "
+"or restore original suggestion?"
+msgstr ""
+"이 추천에서 모든 토큰이 삭제되었습니다. 추천 단어 자체를 삭제하거나 원래 추"
+"천 단어를 복원하시겠습니까?"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#, kde-format
+msgid "Remove suggestion?"
+msgstr "추천을 삭제하시겠습니까?"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#, kde-format
+msgid "Remove suggestion"
+msgstr "추천 삭제"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#, kde-format
+msgid "Revert changes"
+msgstr "변경 사항 되돌리기"
+
+#: src/gui/preferences/settingsuserinterfacewidget.cpp:67
+#, kde-format
+msgid "When double-clicking an element:"
+msgstr "요소를 두 번 클릭할 때:"
+
+#: src/gui/preferences/settingsuserinterfacewidget.cpp:81
+#, kde-format
+msgid "User Interface"
+msgstr "사용자 인터페이스"
+
+#: src/gui/valuelistmodel.cpp:301 src/program/docklets/valuelist.cpp:73
+#: src/program/docklets/valuelist.cpp:75
+#, kde-format
+msgid "Count"
+msgstr "개수"
+
+#: src/gui/widgets/filesettingswidget.cpp:127
+#, kde-format
+msgid "Encoding:"
+msgstr "인코딩:"
+
+#: src/gui/widgets/filesettingswidget.cpp:133
+#, kde-format
+msgid "String Delimiters:"
+msgstr "문자열 구분 기호:"
+
+#: src/gui/widgets/filesettingswidget.cpp:140
+#, kde-format
+msgid "Comment Quoting:"
+msgstr "주석 인용:"
+
+#: src/gui/widgets/filesettingswidget.cpp:146
+#, kde-format
+msgid "Keyword Casing:"
+msgstr "키워드 대소문자:"
+
+#: src/gui/widgets/filesettingswidget.cpp:147
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "lowercase"
+msgstr "소문자"
+
+#: src/gui/widgets/filesettingswidget.cpp:148
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "Initial capital"
+msgstr "첫 문자 대문자"
+
+#: src/gui/widgets/filesettingswidget.cpp:149
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "UpperCamelCase"
+msgstr "UpperCamelCase"
+
+#: src/gui/widgets/filesettingswidget.cpp:150
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "lowerCamelCase"
+msgstr "lowerCamelCase"
+
+#: src/gui/widgets/filesettingswidget.cpp:151
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "UPPERCASE"
+msgstr "대문자"
+
+#: src/gui/widgets/filesettingswidget.cpp:154
+#, kde-format
+msgid "Protect Titles"
+msgstr "제목 보호"
+
+#: src/gui/widgets/filesettingswidget.cpp:156
+#, kde-format
+msgid "Protect Casing?"
+msgstr "대소문자 보호 여부?"
+
+#: src/gui/widgets/filesettingswidget.cpp:165
+#, kde-format
+msgid "Use global settings"
+msgstr "전역 설정 사용"
+
+#: src/gui/widgets/filesettingswidget.cpp:171
+#, kde-format
+msgid "List Separator"
+msgstr "목록 구분 기호"
+
+#: src/gui/widgets/filterbar.cpp:69
+#, kde-format
+msgid "Filter:"
+msgstr "필터:"
+
+#: src/gui/widgets/filterbar.cpp:85
+#, kde-format
+msgid "Filter bibliographic entries"
+msgstr "서지 정보 항목 필터링"
+
+#: src/gui/widgets/filterbar.cpp:89
+#, kde-format
+msgid "any word"
+msgstr "임의 단어"
+
+#: src/gui/widgets/filterbar.cpp:90
+#, kde-format
+msgid "every word"
+msgstr "모든 단어"
+
+#: src/gui/widgets/filterbar.cpp:91
+#, kde-format
+msgid "exact phrase"
+msgstr "정확한 구문"
+
+#: src/gui/widgets/filterbar.cpp:96
+#, kde-format
+msgid "any field"
+msgstr "모든 필드"
+
+#: src/gui/widgets/filterbar.cpp:114
+#, kde-format
+msgid "Include PDF files in full-text search"
+msgstr "전체 텍스트 검색에 PDF 파일 포함"
+
+#: src/gui/widgets/filterbar.cpp:120
+#, kde-format
+msgid "Reset filter criteria"
+msgstr "필터 기준 초기화"
+
+#: src/gui/widgets/starrating.cpp:52
+#, kde-format
+msgid "Not set"
+msgstr "설정되지 않음"
+
+#: src/io/fileexporterbibtex2html.cpp:73
+#, kde-format
+msgid "The program <strong>bibtex2html</strong> is not available."
+msgstr "<strong>bibtex2html</strong> 프로그램을 사용할 수 없습니다."
+
+#: src/io/fileexporterbibtex2html.cpp:90
+#, kde-format
+msgid "The BibTeX style <strong>%1</strong> is not available."
+msgstr "BibTeX 스타일 <strong>%1</strong>을(를) 사용할 수 없습니다."
+
+#: src/io/fileexportertoolchain.cpp:74
+#, kde-format
+msgid "Running command '%1' using working directory '%2'"
+msgstr "작업 디렉터리 '%2'에서 명령 '%1'을(를) 실행하고 있습니다."
+
+#: src/io/fileexportertoolchain.cpp:95
+#, kde-format
+msgid "Starting command '%1' failed: %2"
+msgstr "명령 '%1' 시작 실패: %2"
+
+#: src/io/fileexportertoolchain.cpp:104
+#, kde-format
+msgid "Command '%1' succeeded"
+msgstr "'%1' 명령이 성공했습니다"
+
+#: src/io/fileexportertoolchain.cpp:106
+#, kde-format
+msgid "Command '%1' failed with exit code %2: %3"
+msgstr "'%1' 명령이 종료 코드 %2(으)로 실패함: %3"
+
+#: src/io/fileexportertoolchain.cpp:127
+#, kde-format
+msgid "Writing to file '%1' succeeded"
+msgstr "'%1' 파일에 쓰기 성공"
+
+#: src/io/fileexportertoolchain.cpp:132
+#, kde-format
+msgid "Writing to file '%1' failed"
+msgstr "'%1' 파일에 쓰기 실패"
+
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:230
+#, kde-format
+msgid "Searching '%1' failed for unknown reason."
+msgstr "알 수 없는 이유로 '%1'을(를) 검색하지 못했습니다."
+
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:230
+#, kde-format
+msgid ""
+"Searching '%1' failed with error message:\n"
+"\n"
+"%2"
+msgstr ""
+"'%1' 검색 실패, 오류 메시지:\n"
+"\n"
+"%2"
+
+#: src/networking/onlinesearch/onlinesearchacmportal.cpp:303
+#, kde-format
+msgid "ACM Digital Library"
+msgstr "ACM 디지털 도서관"
+
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:68
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:46
+#, kde-format
+msgid "Free text:"
+msgstr "자유 텍스트:"
+
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:77
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:88
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:79
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:123
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:113
+#, kde-format
+msgid "Number of Results:"
+msgstr "결과 개수:"
+
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:673
+#, kde-format
+msgid "arXiv.org"
+msgstr "arXiv.org"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:74
+#, kde-format
+msgid "Tag"
+msgstr "태그"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:75
+#, kde-format
+msgid "User"
+msgstr "사용자"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:76
+#, kde-format
+msgid "Group"
+msgstr "그룹"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:78
+#, kde-format
+msgid "Concept"
+msgstr "개념"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:79
+#, kde-format
+msgid "BibTeX Key"
+msgstr "BibTeX 키"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:80
+#, kde-format
+msgid "Everywhere"
+msgstr "어디서나"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:229
+#, kde-format
+msgid "Bibsonomy"
+msgstr "Bibsonomy"
+
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:82
+#, kde-format
+msgid "bioRxiv"
+msgstr "bioRxiv"
+
+#: src/networking/onlinesearch/onlinesearchcernds.cpp:35
+#, kde-format
+msgid "CERN Document Server"
+msgstr "CERN 문서 서버"
+
+#: src/networking/onlinesearch/onlinesearchdoi.cpp:61
+#, kde-format
+msgid "DOI:"
+msgstr "디지털 문서 식별자(DOI):"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:55
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:89
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:86
+#, kde-format
+msgid "Title:"
+msgstr "제목:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:63
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:94
+#, kde-format
+msgid "Author:"
+msgstr "저자:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:71
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:107
+#, kde-format
+msgid "Year:"
+msgstr "연도:"
+
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:328
+#, kde-format
+msgid ""
+"'Google Scholar' denied scrapping data because it thinks you are a robot."
+msgstr ""
+"'Google 학술검색'에서 로봇으로 판단했기 때문에 데이터 스크랩을 거부했습니다."
+
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:460
+#, kde-format
+msgid "Google Scholar"
+msgstr "Google 학술검색"
+
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:106
+#, kde-format
+msgid "IDEAS (RePEc)"
+msgstr "IDEAS(RePEc)"
+
+#: src/networking/onlinesearch/onlinesearchieeexplore.cpp:184
+#, kde-format
+msgid "IEEEXplore"
+msgstr "IEEEXplore"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:84
+#, kde-format
+msgid "Full text:"
+msgstr "전체 텍스트:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:99
+#, kde-format
+msgid "Abstract/Keywords:"
+msgstr "초록/키워드:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:104
+#, kde-format
+msgid "Publication:"
+msgstr "출판물:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:109
+#, kde-format
+msgid "ISSN/ISBN/DOI:"
+msgstr "ISSN/ISBN/DOI:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:119
+#, kde-format
+msgid "Issue/Number:"
+msgstr "호/번호:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:362
+#, kde-format
+msgid "IngentaConnect"
+msgstr "IngentaConnect"
+
+#: src/networking/onlinesearch/onlinesearchinspirehep.cpp:30
+#, kde-format
+msgid "Inspire High-Energy Physics Literature Database"
+msgstr "고에너지 물리학 문헌 데이터베이스 활용"
+
+#: src/networking/onlinesearch/onlinesearchjstor.cpp:124
+#, kde-format
+msgid "JSTOR"
+msgstr "JSTOR"
+
+#: src/networking/onlinesearch/onlinesearchmathscinet.cpp:118
+#, kde-format
+msgid "MathSciNet"
+msgstr "MathSciNet"
+
+#: src/networking/onlinesearch/onlinesearchmrlookup.cpp:74
+#, kde-format
+msgid "MR Lookup"
+msgstr "MR Lookup"
+
+#: src/networking/onlinesearch/onlinesearchpubmed.cpp:146
+#, kde-format
+msgid "PubMed"
+msgstr "PubMed"
+
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:215
+#, kde-format
+msgid "ScienceDirect"
+msgstr "ScienceDirect"
+
+#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:66
+#, kde-format
+msgid "Paper Reference:"
+msgstr "논문 참조:"
+
+#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:235
+#, kde-format
+msgid "Semantic Scholar"
+msgstr "Semantic Scholar"
+
+#: src/networking/onlinesearch/onlinesearchsoanasaads.cpp:133
+#, kde-format
+msgid "NASA Astrophysics Data System (ADS)"
+msgstr "NASA 천체물리 자료 시스템(ADS)"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:79
+#, kde-format
+msgid "Free Text:"
+msgstr "사용 가능한 텍스트:"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:93
+#, kde-format
+msgid "Book/Journal title:"
+msgstr "도서/저널 제목:"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:100
+#, kde-format
+msgid "Author or Editor:"
+msgstr "저자 또는 편집자:"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:297
+#, kde-format
+msgid "SpringerLink"
+msgstr "SpringerLink"
+
+#: src/networking/zotero/collection.cpp:194
+#, kde-format
+msgid "%1's Library"
+msgstr "%1의 라이브러리"
+
+#: src/networking/zotero/oauthwizard.cpp:89
+#, kde-format
+msgid ""
+"<html><head><title>KBibTeX authorized to use Zotero</title></"
+"head><body><p>KBibTeX got successfully authorized to read your Zotero "
+"database.</p></body></html>"
+msgstr ""
+"<html><head><title>KBibTeX에서 Zoteto 사용 허용됨</title></"
+"head><body><p>KBibTeX에서 Zotero 데이터베이스에 접근할 수 있도록 허가되었습니"
+"다.</p></body></html>"
+
+#: src/networking/zotero/oauthwizard.cpp:146
+#, kde-format
+msgid ""
+"<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
+"bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
+"process of authorization involves multiple steps:</p><ol><li>Open the URL as "
+"shown below in a web browser.</li><li>Log in at Zotero and approve the "
+"permissions for KBibTeX.</li><li>If successful, you will be redirected to a "
+"web page telling you that KBibTeX got authorized.<br/>This window will be "
+"closed automatically.</li></ol></qt>"
+msgstr ""
+"<qt><p><strong>KBibTeX</strong>에서 <strong>Zotero 서지 정보</strong>에 접근"
+"할 수 있도록 하려면 이 KBibTeX 인스턴스를 인증해야 합니다.</p><p>인증 과정은 "
+"다음과 같습니다:</p><ol><li>웹 브라우저에서 아래에 표시된 URL을 여십시오.</"
+"li><li>Zotero에 로그인한 다음 KBibTeX에 권한을 부여하십시오.</li><li>이 과정"
+"이 성공하면 KBibTeX이 인증되었다는 웹 페이지로 전환됩니다.<br/>이 창은 자동으"
+"로 닫힙니다.</li></ol></qt>"
+
+#: src/networking/zotero/oauthwizard.cpp:152
+#, kde-format
+msgid "Copy URL"
+msgstr "URL 복사"
+
+#: src/networking/zotero/oauthwizard.cpp:157
+#, kde-format
+msgid "Open URL"
+msgstr "URL 열기"
+
+#: src/networking/zotero/oauthwizard.cpp:177
+#, kde-format
+msgid "Zotero OAuth Key Exchange"
+msgstr "Zotero OAuth 키 교환"
+
+#. i18n: ectx: Menu (file)
+#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
+#, kde-format
+msgid "File"
+msgstr "파일"
+
+#. i18n: ectx: Menu (edit)
+#: src/parts/kbibtexpartui.rc:9
+#, kde-format
+msgid "Edit"
+msgstr "편집"
+
+#. i18n: ectx: Menu (element)
+#: src/parts/kbibtexpartui.rc:16
+#, kde-format
+msgid "Element"
+msgstr "요소"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
+#, kde-format
+msgid "Main Toolbar"
+msgstr "주 도구 모음"
+
+#: src/parts/part.cpp:135 src/parts/part.cpp:205
+#, kde-format
+msgid "View Document"
+msgstr "문서 보기"
+
+#: src/parts/part.cpp:162
+#, kde-format
+msgid "Save Copy As..."
+msgstr "복사본을 다른 이름으로 저장..."
+
+#: src/parts/part.cpp:167
+#, kde-format
+msgid "Filter"
+msgstr "필터"
+
+#: src/parts/part.cpp:172
+#, kde-format
+msgid "Filter bibliographic entries (%1)"
+msgstr "서지 정보 항목 필터링(%1)"
+
+#: src/parts/part.cpp:175
+#, kde-format
+msgid "New element"
+msgstr "새 요소"
+
+#: src/parts/part.cpp:181
+#, kde-format
+msgid "New entry"
+msgstr "새 항목"
+
+#: src/parts/part.cpp:186
+#, kde-format
+msgid "New comment"
+msgstr "새 주석"
+
+#: src/parts/part.cpp:190
+#, kde-format
+msgid "New macro"
+msgstr "새 매크로"
+
+#: src/parts/part.cpp:194
+#, kde-format
+msgid "New preamble"
+msgstr "새 서문"
+
+#: src/parts/part.cpp:211
+#, kde-format
+msgid "Find PDF..."
+msgstr "PDF 찾기..."
+
+#: src/parts/part.cpp:216
+#, kde-format
+msgid "Format entry ids"
+msgstr "입력 ID 형식 지정"
+
+#: src/parts/part.cpp:230
+#, kde-format
+msgid "Copy References"
+msgstr "참조 복사"
+
+#: src/parts/part.cpp:320
+#, kde-format
+msgid "New%1"
+msgstr "New%1"
+
+#: src/parts/part.cpp:479
+#, kde-format
+msgid "Could not create backup copies of document '%1'."
+msgstr "'%1' 문서의 백업 복사본을 생성할 수 없습니다."
+
+#: src/parts/part.cpp:479
+#, kde-format
+msgid "Backup copies"
+msgstr "백업 복사본"
+
+#: src/parts/part.cpp:496
+#, kde-format
+msgid "Save file"
+msgstr "파일 저장"
+
+#: src/parts/part.cpp:525
+#, kde-format
+msgid "BibTeX File Settings"
+msgstr "BibTeX 파일 설정"
+
+#: src/parts/part.cpp:542
+#, kde-format
+msgid "PDF/PostScript File Settings"
+msgstr "PDF/PostScript 파일 설정"
+
+#: src/parts/part.cpp:601
+#, kde-format
+msgid "Could not write bibliographic data to file."
+msgstr "서지 정보 데이터를 파일로 저장할 수 없습니다."
+
+#: src/parts/part.cpp:603
+#, kde-format
+msgid "Could not open local file '%1' for writing."
+msgstr "로컬 파일 '%1'에 쓰려고 열 수 없습니다."
+
+#: src/parts/part.cpp:625
+#, kde-format
+msgid "Failed to upload temporary file to final destination '%1'"
+msgstr "임시 파일을 최종 대상 '%1'(으)로 업로드할 수 없음"
+
+#: src/parts/part.cpp:627
+#, kde-format
+msgid "Could not write bibliographic data to temporary file."
+msgstr "서지 정보 데이터를 임시 파일로 저장할 수 없습니다."
+
+#: src/parts/part.cpp:629
+#, kde-format
+msgid "Could not open temporary file for writing."
+msgstr "임시 파일에 쓰려고 열 수 없습니다."
+
+#: src/parts/part.cpp:637
+#, kde-format
+msgid "Saving the bibliography to file '%1' failed."
+msgstr "서지 정보 목록을 '%1' 파일에 저장하지 못했습니다."
+
+#: src/parts/part.cpp:639 src/parts/part.cpp:645
+#, kde-format
+msgid "Saving bibliography failed"
+msgstr "서지 정보 저장 실패"
+
+#: src/parts/part.cpp:641
+#, kde-format
+msgid "Saving bibliography failed:"
+msgstr "서지 정보 저장 실패:"
+
+#: src/parts/part.cpp:644
+#, kde-format
+msgid "The following output was generated by the export filter:"
+msgstr "내보내기 필터에서 다음 출력을 생성했습니다:"
+
+#: src/parts/part.cpp:695
+#, kde-format
+msgid "Local Files"
+msgstr "로컬 파일"
+
+#: src/parts/part.cpp:720
+#, kde-format
+msgid "Remote Files"
+msgstr "원격 파일"
+
+#: src/parts/part.cpp:827
+#, kde-format
+msgid ""
+"The document could not be saved, as it was not possible to write to '%1'.\n"
+"\n"
+"Check that you have write access to this file or that enough disk space is "
+"available."
+msgstr ""
+"'%1'에 쓸 수 없으므로 문서를 저장할 수 없습니다.\n"
+"\n"
+"이 파일에 대한 쓰기 권한이 있는지 또는 사용 가능한 디스크 공간이 충분한지 확"
+"인하십시오."
+
+#: src/parts/part.cpp:950
+#, kde-format
+msgid ""
+"Cannot apply default formatting for entry ids: No default format specified."
+msgstr ""
+"항목 ID에 대해 기본 형식을 적용할 수 없습니다. 기본 형식을 지정하지 않았습니"
+"다."
+
+#: src/parts/part.cpp:950
+#, kde-format
+msgid "Cannot Apply Default Formatting"
+msgstr "기본 서식을 적용할 수 없음"
+
+#: src/parts/part.cpp:1078
+#, kde-format
+msgid ""
+"The file '%1' has changed on disk.\n"
+"\n"
+"Reload file or ignore changes on disk?"
+msgstr ""
+"디스크에서 '%1' 파일이 변경되었습니다.\n"
+"\n"
+"파일을 다시 읽거나 디스크의 변경 사항을 무시하시겠습니까?"
+
+#: src/parts/part.cpp:1078
+#, kde-format
+msgid "File changed externally"
+msgstr "외부에서 파일 변경됨"
+
+#: src/parts/part.cpp:1078
+#, kde-format
+msgid "Reload file"
+msgstr "파일 새로 고침"
+
+#: src/parts/part.cpp:1078
+#, kde-format
+msgid "Ignore on-disk changes"
+msgstr "디스크에서 변경 사항 무시"
+
+#: src/parts/partfactory.cpp:34
+#, kde-format
+msgid "KBibTeXPart"
+msgstr "KBibTeXPart"
+
+#: src/parts/partfactory.cpp:34 src/program/program.cpp:48
+#, kde-format
+msgid "A BibTeX editor by KDE"
+msgstr "KDE의 BibTeX 편집기"
+
+#: src/parts/partfactory.cpp:34 src/program/program.cpp:48
+#, kde-format
+msgid "Copyright 2004-2019 Thomas Fischer"
+msgstr "Copyright 2004-2019 Thomas Fischer"
+
+#: src/parts/partfactory.cpp:38 src/program/program.cpp:53
+#, kde-format
+msgid "Thomas Fischer"
+msgstr "Thomas Fischer"
+
+#: src/parts/partfactory.cpp:38 src/program/program.cpp:53
+#, kde-format
+msgid "Maintainer"
+msgstr "관리자"
+
+#: src/processing/bibliographyservice.cpp:187
+#, kde-format
+msgid ""
+"Failed to run 'kbuildsycoca5' to update mime type associations.\n"
+"\n"
+"The system may not know how to use KBibTeX to open bibliography files."
+msgstr ""
+"MIME 형식 연결을 업데이트할 수 있도록 'kbuildsycoca5'를 실행하지 못했습니"
+"다.\n"
+"\n"
+"시스템에서 KBibTeX로 서지 정보 파일을 열지 못할 수도 있습니다."
+
+#: src/processing/bibliographyservice.cpp:187
+#, kde-format
+msgid "Failed to run 'kbuildsycoca5'"
+msgstr "'kbuildsycoca5'를 실행하지 못했습니다."
+
+#: src/processing/checkbibtex.cpp:84
+#, kde-format
+msgid ""
+"Running BibTeX failed.\n"
+"\n"
+"See the following output to trace the error:"
+msgstr ""
+"BibTeX를 실행하지 못했습니다.\n"
+"\n"
+"오류를 추적하려면 다음 출력을 참조하십시오:"
+
+#: src/processing/checkbibtex.cpp:84
+#, kde-format
+msgid "Running BibTeX failed."
+msgstr "BibTeX를 실행하지 못했습니다."
+
+#: src/processing/checkbibtex.cpp:116
+#, kde-format
+msgid "Field <b>%1</b> is empty"
+msgstr "<b>%1</b> 필드가 비어 있음"
+
+#: src/processing/checkbibtex.cpp:119
+#, kde-format
+msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
+msgstr ""
+"<b>%1</b> 및 <b>%2</b> 필드는 비어 있지만, 하나 이상의 필드가 필요합니다"
+
+#: src/processing/checkbibtex.cpp:122
+#, kde-format
+msgid "Field <b>%1</b> exists, but <b>%2</b> does not exist"
+msgstr "<b>%1</b> 필드는 있지만, <b>%2</b> 필드는 없습니다"
+
+#: src/processing/checkbibtex.cpp:125
+#, kde-format
+msgid "Fields <b>%1</b> and <b>%2</b> cannot be used at the same time"
+msgstr "<b>%1</b> 필드와 <b>%2</b> 필드는 동시에 사용할 수 없습니다"
+
+#: src/processing/checkbibtex.cpp:128
+#, kde-format
+msgid "Fields <b>%1</b> or <b>%2</b> are required to sort entry"
+msgstr "항목을 정렬하려면 <b>%1</b> 또는 <b>%2</b> 필드가 필요합니다"
+
+#: src/processing/checkbibtex.cpp:131
+#, kde-format
+msgid "Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry"
+msgstr "항목을 정렬하려면 <b>%1</b>, <b>%2</b>, <b>%3</b> 필드가 필요합니다"
+
+#: src/processing/checkbibtex.cpp:134
+#, kde-format
+msgid "Unknown warning: %1"
+msgstr "알 수 없는 경고: %1"
+
+#: src/processing/checkbibtex.cpp:143
+#, kde-format
+msgid "<qt><p>The following error was found:</p><pre>%1</pre></qt>"
+msgstr "<qt><p>다음 오류가 발견되었습니다:</p><pre>%1</pre></qt>"
+
+#: src/processing/checkbibtex.cpp:143
+#, kde-format
+msgid "Errors found"
+msgstr "발견된 오류"
+
+#: src/processing/checkbibtex.cpp:145
+#, kde-format
+msgid "The following warnings were found:"
+msgstr "다음과 같은 경고가 발견됨:"
+
+#: src/processing/checkbibtex.cpp:145
+#, kde-format
+msgid "Warnings found"
+msgstr "발견된 경고"
+
+#: src/processing/checkbibtex.cpp:148
+#, kde-format
+msgid ""
+"\n"
+"\n"
+"Some fields missing in this entry were taken from the crossref'ed entry '%1'."
+msgstr ""
+"\n"
+"\n"
+"이 항목에 누락된 일부 필드는 상호 참조된 항목 '%1'에서 가져온 것입니다."
+
+#: src/processing/checkbibtex.cpp:148
+#, kde-format
+msgid "No warnings or errors were found.%1"
+msgstr "%1 경고 또는 오류를 찾을 수 없습니다"
+
+#: src/processing/checkbibtex.cpp:148
+#, kde-format
+msgid "No Errors or Warnings"
+msgstr "오류 또는 경고 없음"
+
+#: src/processing/findduplicates.cpp:382
+#, kde-format
+msgid "Searching ..."
+msgstr "검색 중..."
+
+#: src/processing/findduplicates.cpp:382
+#, kde-format
+msgid "Cancel"
+msgstr "취소"
+
+#: src/processing/findduplicates.cpp:384
+#, kde-format
+msgid "Finding Duplicates"
+msgstr "중복 항목 찾는 중"
+
+#: src/processing/idsuggestions.cpp:312
+#, fuzzy, kde-format
+#| msgctxt ""
+#| "Small words that can be removed from titles when generating id "
+#| "suggestions; separated by pipe symbol"
+#| msgid ""
+#| "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|"
+#| "er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|"
+#| "kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|"
+#| "von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|"
+#| "wer|which|wie|wird|with|you|und|and|ein|eine|einer|eines"
+msgctxt ""
+"Small words that can be removed from titles when generating id suggestions; "
+"separated by pipe symbol"
+msgid ""
+"a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|"
+"es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
+"le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
+"which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
+"wird|with|you|und|and|ein|eine|einer|eines"
+msgstr ""
+"a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|"
+"es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
+"le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
+"which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
+"wird|with|you|und|and|ein|eine|einer|eines"
+
+#: src/processing/idsuggestions.cpp:398
+#, kde-format
+msgid ", but only first letter of each last name"
+msgid_plural ", but only first %1 letters of each last name"
+msgstr[0] ", 그러나 각 성의 첫 %1개 문자만"
+
+#: src/processing/idsuggestions.cpp:402 src/processing/idsuggestions.cpp:434
+#: src/processing/idsuggestions.cpp:456 src/processing/idsuggestions.cpp:474
+#, kde-format
+msgid ", in upper case"
+msgstr ", 대문자"
+
+#: src/processing/idsuggestions.cpp:405 src/processing/idsuggestions.cpp:437
+#: src/processing/idsuggestions.cpp:459 src/processing/idsuggestions.cpp:477
+#, kde-format
+msgid ", in lower case"
+msgstr ", 소문자"
+
+#: src/processing/idsuggestions.cpp:408 src/processing/idsuggestions.cpp:440
+#: src/processing/idsuggestions.cpp:462 src/processing/idsuggestions.cpp:480
+#, kde-format
+msgid ", in CamelCase"
+msgstr ", CamelCase"
+
+#: src/processing/idsuggestions.cpp:414 src/processing/idsuggestions.cpp:446
+#, kde-format
+msgid ", with '%1' in between"
+msgstr ", '%1' 사이에"
+
+#: src/processing/idsuggestions.cpp:417
+#, kde-format
+msgid "Year (2 digits)"
+msgstr "연도(2자리)"
+
+#: src/processing/idsuggestions.cpp:419
+#, kde-format
+msgid "Year (4 digits)"
+msgstr "연도(4자리)"
+
+#: src/processing/idsuggestions.cpp:424
+#, kde-format
+msgid ", but only the first word"
+msgid_plural ", but only first %1 words"
+msgstr[0] ", 그러나 첫 단어 %1개만"
+
+#: src/processing/idsuggestions.cpp:426
+#, kde-format
+msgid ", but only starting from word %1"
+msgstr ", 그러나 %1번째 단어부터만"
+
+#: src/processing/idsuggestions.cpp:428
+#, kde-format
+msgid ", but only from word %1 to word %2"
+msgstr ", 단, %1 단어에서 %2 단어까지만"
+
+#: src/processing/idsuggestions.cpp:430 src/processing/idsuggestions.cpp:453
+#: src/processing/idsuggestions.cpp:471
+#, kde-format
+msgid ", but only first letter of each word"
+msgid_plural ", but only first %1 letters of each word"
+msgstr[0] ", 그러나 각 단어의 처음 %1 글자만"
+
+#: src/processing/idsuggestions.cpp:447
+#, kde-format
+msgid ", small words removed"
+msgstr ", 작은 단어 삭제됨"
+
+#: src/processing/idsuggestions.cpp:488
+#, kde-format
+msgid "First page number"
+msgstr "첫 페이지 번호"
+
+#: src/processing/idsuggestions.cpp:490
+#, kde-format
+msgid "Text: '%1'"
+msgstr "텍스트: '%1'"
+
+#: src/processing/idsuggestions.cpp:504
+#, kde-format
+msgid "First and last authors only"
+msgstr "첫 번째 및 마지막 저자만"
+
+#: src/processing/idsuggestions.cpp:506
+#, kde-format
+msgid "First author only"
+msgstr "첫 번째 저자만"
+
+#: src/processing/idsuggestions.cpp:508
+#, kde-format
+msgid "All authors"
+msgstr "모든 저자"
+
+#: src/processing/idsuggestions.cpp:513
+#, kde-format
+msgid "From first author to author %1"
+msgstr "첫 번째 저자부터 %1저자까지"
+
+#: src/processing/idsuggestions.cpp:517
+#, kde-format
+msgid "All but first author"
+msgstr "첫 번째 저자를 제외한 모든 저자"
+
+#: src/processing/idsuggestions.cpp:522 src/processing/idsuggestions.cpp:530
+#, kde-format
+msgid "From author %1 to author %2"
+msgstr "%1저자부터 %2저자까지"
+
+#: src/processing/idsuggestions.cpp:526
+#, kde-format
+msgid "From author %1 to last author"
+msgstr "%1저자부터 마지막 저자까지"
+
+#: src/processing/lyx.cpp:79
+#, kde-format
+msgid "Send to LyX/Kile"
+msgstr "LyX/Kile로 보내기"
+
+#: src/processing/lyx.cpp:99
+#, kde-format
+msgid ""
+"\n"
+"\n"
+"Check that LyX or Kile are running and configured to receive references."
+msgstr ""
+"\n"
+"\n"
+"LyX 또는 Kile이 실행 중이고 참조를 수신하도록 구성되었는지 확인하십시오."
+
+#: src/processing/lyx.cpp:100
+#, kde-format
+msgid "Send Reference to LyX"
+msgstr "LyX로 참조 보내기"
+
+#: src/processing/lyx.cpp:105
+#, kde-format
+msgid "No 'LyX server pipe' was detected."
+msgstr "'LyX 서버 파이프'가 감지되지 않았습니다."
+
+#: src/processing/lyx.cpp:110
+#, kde-format
+msgid "No references to send to LyX/Kile."
+msgstr "LyX/Kile에 보낼 참조가 없습니다."
+
+#: src/processing/lyx.cpp:116
+#, kde-format
+msgid "Could not open LyX server pipe '%1'."
+msgstr "LyX 서버 파이프 '%1'을(를) 열 수 없습니다."
+
+#: src/program/docklets/documentpreview.cpp:184
+#, kde-format
+msgid "Toggle between local files only and all documents including remote ones"
+msgstr "로컬 파일만 및 원격 파일도 들어 있는 모든 문서 간에 전환"
+
+#: src/program/docklets/documentpreview.cpp:195
+#, kde-format
+msgid "Open in external program"
+msgstr "외부 프로그램으로 열기"
+
+#: src/program/docklets/documentpreview.cpp:324
+#, kde-format
+msgid "Refreshing..."
+msgstr "새로 고치는 중..."
+
+#: src/program/docklets/documentpreview.cpp:353
+#, kde-format
+msgid "No documents to show."
+msgstr "표시할 문서가 없습니다."
+
+#: src/program/docklets/documentpreview.cpp:360
+#: src/program/docklets/documentpreview.cpp:673
+#, kde-format
+msgid ""
+"<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
+"restriction</a> to local files to see remote documents.</qt>"
+msgstr ""
+"<qt>표시할 문서가 없습니다.<br/><a href=\"disableonlylocalfiles\">제한 사용 "
+"안함</a>으로 설정해야 로컬 파일로 원격 문서를 볼 수 있습니다.</qt>"
+
+#: src/program/docklets/documentpreview.cpp:487
+#, kde-format
+msgid "Cannot show requested part"
+msgstr "요청한 부분을 표시할 수 없음"
+
+#: src/program/docklets/documentpreview.cpp:514
+#: src/program/docklets/documentpreview.cpp:518
+#, kde-format
+msgid "Loading..."
+msgstr "불러오는 중..."
+
+#: src/program/docklets/documentpreview.cpp:539
+#, kde-format
+msgctxt ""
+"Additional information in case there is not KPart available for mime type "
+"'application/pdf'"
+msgid ""
+"<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular\">Okular</"
+"a> for KDE Frameworks&nbsp;5 to make use of its PDF viewing component.<br/"
+">Okular for KDE&nbsp;4 will not work."
+msgstr ""
+"<br/><br/>PDF 보기 구성요소를 사용하려면 KDE 프레임워크&nbsp;5 용 <a href="
+"\"https://userbase.kde.org/Okular\">Okular</a>를 설치하십시오.<br/>Okular "
+"KDE&nbsp;4는 작동하지 않습니다."
+
+#: src/program/docklets/documentpreview.cpp:540
+#, kde-format
+msgctxt ""
+"First parameter is mime type, second parameter is optional information (may "
+"be empty)"
+msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
+msgstr "<qt>MIME 형식 '%1'을(를) 표시하는 방법을 알 수 없습니다.%2</qt>"
+
+#: src/program/docklets/documentpreview.cpp:676
+#, kde-format
+msgid ""
+"No documents to show.\n"
+"Some URLs or files could not be retrieved."
+msgstr ""
+"표시할 문서가 없습니다.\n"
+"일부 URL 또는 파일을 검색할 수 없습니다."
+
+#: src/program/docklets/elementform.cpp:75
+#, kde-format
+msgid "Automatically apply changes"
+msgstr "변경 사항 자동 적용"
+
+#: src/program/docklets/elementform.cpp:91
+#, kde-format
+msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
+msgstr "저장되지 않은 변경 사항이 있습니다. '적용'이나 '초기화'를 누르십시오."
+
+#: src/program/docklets/elementform.cpp:98
+#, kde-format
+msgid "Reset"
+msgstr "초기화"
+
+#: src/program/docklets/elementform.cpp:186
+#, kde-format
+msgid ""
+"The current element got modified.\n"
+"Apply or discard changes?"
+msgstr ""
+"현재 요소가 수정되었습니다.\n"
+"변경 사항을 적용하거나 삭제하시겠습니까?"
+
+#: src/program/docklets/elementform.cpp:186
+#, kde-format
+msgid "Element modified"
+msgstr "요소 수정됨"
+
+#: src/program/docklets/elementform.cpp:186
+#, kde-format
+msgid "Apply changes"
+msgstr "변경 사항 적용"
+
+#: src/program/docklets/elementform.cpp:186
+#, kde-format
+msgid "Discard changes"
+msgstr "변경 사항 무시"
+
+#: src/program/docklets/referencepreview.cpp:67
+#, kde-format
+msgid "Source (BibTeX)"
+msgstr "원본(BibTeX)"
+
+#: src/program/docklets/referencepreview.cpp:68
+#, kde-format
+msgid "Source (RIS)"
+msgstr "원본(RIS)"
+
+#: src/program/docklets/referencepreview.cpp:77
+#, kde-format
+msgid "Standard"
+msgstr "표준"
+
+#: src/program/docklets/referencepreview.cpp:78
+#, kde-format
+msgid "Fancy"
+msgstr "보기 좋게"
+
+#: src/program/docklets/referencepreview.cpp:79
+#, kde-format
+msgid "Wikipedia Citation"
+msgstr "위키백과 인용"
+
+#: src/program/docklets/referencepreview.cpp:80
+#, kde-format
+msgid "Abstract-only"
+msgstr "초록만"
+
+#: src/program/docklets/referencepreview.cpp:115
+#, kde-format
+msgid "Reason:"
+msgstr "이유:"
+
+#: src/program/docklets/referencepreview.cpp:139
+#, kde-format
+msgid "Open reference in web browser."
+msgstr "웹 브라우저에서 참조를 엽니다."
+
+#: src/program/docklets/referencepreview.cpp:142
+#: src/program/docklets/referencepreview.cpp:402
+#, kde-format
+msgid "Save as HTML"
+msgstr "HTML로 저장"
+
+#: src/program/docklets/referencepreview.cpp:143
+#, kde-format
+msgid "Save reference as HTML fragment."
+msgstr "참조를 HTML 조각으로 저장합니다."
+
+#: src/program/docklets/referencepreview.cpp:233
+#, kde-format
+msgid "Preview disabled"
+msgstr "미리 보기 사용 안 함"
+
+#: src/program/docklets/referencepreview.cpp:253
+#, kde-format
+msgid "No element selected"
+msgstr "선택된 요소가 없음"
+
+#: src/program/docklets/referencepreview.cpp:319
+#: src/program/docklets/referencepreview.cpp:377
+#, kde-format
+msgid "No output generated"
+msgstr "출력이 생성되지 않음"
+
+#: src/program/docklets/referencepreview.cpp:336
+#, kde-format
+msgid ""
+"This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
+"command."
+msgstr ""
+"이 형식의 요소는 위키백과의 <tt>{{cite}}</tt> 명령에서 지원되지 않습니다."
+
+#: src/program/docklets/searchform.cpp:185
+#, kde-format
+msgid "Go to Homepage"
+msgstr "홈페이지로 이동"
+
+#: src/program/docklets/searchform.cpp:209
+#, kde-format
+msgid "Query Terms"
+msgstr "검색어"
+
+#: src/program/docklets/searchform.cpp:212
+#, kde-format
+msgid "Engines"
+msgstr "엔진"
+
+#: src/program/docklets/searchform.cpp:218
+#, kde-format
+msgid "Use Entry"
+msgstr "항목 사용"
+
+#: src/program/docklets/searchform.cpp:228
+#: src/program/docklets/searchform.cpp:303
+#, kde-format
+msgid "Search"
+msgstr "검색"
+
+#: src/program/docklets/searchform.cpp:315
+#, kde-format
+msgid "Stop"
+msgstr "중지"
+
+#: src/program/docklets/searchform.cpp:338
+#, kde-format
+msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
+msgstr "검색 엔진이 선택되지 않음(<a href=\"changeEngine\">변경</a>)."
+
+#: src/program/docklets/searchform.cpp:339
+#, kde-format
+msgid ""
+"Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
+msgstr "검색 엔진 <b>%1</b>이(가) 선택됨(<a href=\"changeEngine\">변경</a>)."
+
+#: src/program/docklets/searchform.cpp:340
+#, kde-format
+msgid ""
+"Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
+"\">change</a>)."
+msgstr ""
+"검색 엔진 <b>%1</b>와(과) <b>%2</b>이(가) 선택됨(<a href=\"changeEngine\">변"
+"경</a>)."
+
+#: src/program/docklets/searchform.cpp:341
+#, kde-format
+msgid ""
+"Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
+"\"changeEngine\">change</a>)."
+msgstr ""
+"검색 엔진 <b>%1</b>, <b>%2</b>, <b>%3</b>이(가) 선택됨(<a href=\"changeEngine"
+"\">change</a>)."
+
+#: src/program/docklets/searchform.cpp:342
+#, kde-format
+msgid ""
+"Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
+"\"changeEngine\">change</a>)."
+msgstr ""
+"검색 엔진 <b>%1</b>, <b>%2</b> 등이 선택됨 (<a href=\"changeEngine\">변경</"
+"a>)."
+
+#: src/program/docklets/searchform.cpp:403
+#, kde-format
+msgid ""
+"Could not start searching the Internet:\n"
+"The search terms are not complete or invalid."
+msgstr ""
+"인터넷 검색을 시작할 수 없습니다.\n"
+"검색 용어가 완료되지 않았거나 잘못되었습니다."
+
+#: src/program/docklets/searchform.cpp:403
+#, kde-format
+msgid "Searching the Internet"
+msgstr "인터넷 검색"
+
+#: src/program/docklets/searchresults.cpp:85
+#: src/program/docklets/searchresults.cpp:100
+#, kde-format
+msgid "Import"
+msgstr "가져오기"
+
+#: src/program/docklets/searchresults.cpp:105
+#, kde-format
+msgid "Copy"
+msgstr "복사"
+
+#: src/program/docklets/searchresults.cpp:147
+#, kde-format
+msgid "No results to import and no bibliography open to import to."
+msgstr "가져올 결과도 없고 가져올 서지 정보 목록도 없습니다."
+
+#: src/program/docklets/searchresults.cpp:149
+#, kde-format
+msgid "No bibliography open to import to."
+msgstr "가져올 서지 정보 목록이 없습니다."
+
+#: src/program/docklets/searchresults.cpp:151
+#, kde-format
+msgid "No results to import."
+msgstr "가져올 결과가 없습니다."
+
+#: src/program/docklets/statistics.cpp:51
+#, kde-format
+msgid "Number of Elements:"
+msgstr "요소 개수:"
+
+#: src/program/docklets/statistics.cpp:55
+#, kde-format
+msgid "Number of Entries:"
+msgstr "항목 개수:"
+
+#: src/program/docklets/statistics.cpp:58
+#, kde-format
+msgid "Journal Articles:"
+msgstr "저널 글:"
+
+#: src/program/docklets/statistics.cpp:61
+#, kde-format
+msgid "Conference Publications:"
+msgstr "학술 대회 출판물:"
+
+#: src/program/docklets/statistics.cpp:64
+#, kde-format
+msgid "Books:"
+msgstr "도서:"
+
+#: src/program/docklets/statistics.cpp:67
+#, kde-format
+msgid "Other Entries:"
+msgstr "기타 항목:"
+
+#: src/program/docklets/statistics.cpp:71
+#, kde-format
+msgid "Number of Comments:"
+msgstr "주석 개수:"
+
+#: src/program/docklets/statistics.cpp:75
+#, kde-format
+msgid "Number of Macros:"
+msgstr "매크로 개수:"
+
+#: src/program/docklets/valuelist.cpp:93
+#, kde-format
+msgid "Filter value list"
+msgstr "필터 값 목록"
+
+#: src/program/docklets/valuelist.cpp:109
+#, kde-format
+msgid "Replace all occurrences"
+msgstr "모든 항목 바꾸기"
+
+#: src/program/docklets/valuelist.cpp:113
+#, kde-format
+msgid "Delete all occurrences"
+msgstr "모든 항목 삭제"
+
+#: src/program/docklets/valuelist.cpp:117
+#, kde-format
+msgid "Search for selected values"
+msgstr "선택한 값 검색"
+
+#: src/program/docklets/valuelist.cpp:121
+#: src/program/docklets/valuelist.cpp:174
+#: src/program/docklets/valuelist.cpp:484
+#, kde-format
+msgid "Add value to selected entries"
+msgstr "선택한 항목에 값 추가"
+
+#: src/program/docklets/valuelist.cpp:125
+#, kde-format
+msgid "Remove value from selected entries"
+msgstr "선택한 항목에서 값 삭제"
+
+#: src/program/docklets/valuelist.cpp:138
+#, kde-format
+msgid "Show Count Column"
+msgstr "개수 열 표시"
+
+#: src/program/docklets/valuelist.cpp:142
+#, kde-format
+msgid "Sort by Count"
+msgstr "개수별로 정렬"
+
+#: src/program/docklets/valuelist.cpp:176
+#: src/program/docklets/valuelist.cpp:486
+#, kde-format
+msgid "Replace value of selected entries"
+msgstr "선택한 항목의 값 바꾸기"
+
+#: src/program/docklets/zoterobrowser.cpp:115
+#, kde-format
+msgid "Personal library"
+msgstr "개인 라이브러리"
+
+#: src/program/docklets/zoterobrowser.cpp:117
+#, kde-format
+msgid "Group library"
+msgstr "그룹 라이브러리"
+
+#: src/program/docklets/zoterobrowser.cpp:126
+#, kde-format
+msgid "No groups available"
+msgstr "사용 가능한 그룹 없음"
+
+#: src/program/docklets/zoterobrowser.cpp:142
+#, kde-format
+msgid "Numeric user id:"
+msgstr "숫자 사용자 ID:"
+
+#: src/program/docklets/zoterobrowser.cpp:148
+#, kde-format
+msgid "API key:"
+msgstr "API 키:"
+
+#: src/program/docklets/zoterobrowser.cpp:154
+#, kde-format
+msgid "Get New Credentials"
+msgstr "새 자격 증명 얻기"
+
+#: src/program/docklets/zoterobrowser.cpp:161
+#, kde-format
+msgid "Collections"
+msgstr "모음집"
+
+#: src/program/docklets/zoterobrowser.cpp:168
+#, kde-format
+msgid "Tags"
+msgstr "태그"
+
+#: src/program/docklets/zoterobrowser.cpp:239
+#, kde-format
+msgid ""
+"KBibTeX failed to retrieve the bibliography from Zotero. Please check that "
+"the provided user id and API key are valid."
+msgstr ""
+"KBibTeX가 Zotero에서 참고문헌 목록을 검색하지 못했습니다. 제공된 사용자 ID와 "
+"API 키가 유효한지 확인하십시오."
+
+#: src/program/docklets/zoterobrowser.cpp:239
+#, kde-format
+msgid "Failed to retrieve data from Zotero"
+msgstr "Zotero에서 데이터를 가져올 수 없음"
+
+#: src/program/docklets/zoterobrowser.cpp:365
+#, kde-format
+msgid "No groups available or no permissions"
+msgstr "사용 가능한 그룹이 없거나 사용 권한이 없음"
+
+#: src/program/documentlist.cpp:55
+#, kde-format
+msgid "One level up"
+msgstr "한 단계 위"
+
+#: src/program/documentlist.cpp:59
+#, kde-format
+msgid "Go to Home folder"
+msgstr "홈 폴더로 이동"
+
+#: src/program/documentlist.cpp:199
+#, kde-format
+msgid "<br/><small>located in <b>%1</b></small>"
+msgstr "<br/><small><b>%1</b>에 위치함</small>"
+
+#: src/program/documentlist.cpp:203
+#, kde-format
+msgid "Favorite"
+msgstr "책갈피"
+
+#: src/program/documentlist.cpp:205 src/program/documentlist.cpp:395
+#, kde-format
+msgid "Recently Used"
+msgstr "최근에 사용됨"
+
+#: src/program/documentlist.cpp:209
+#, kde-format
+msgid "Modified"
+msgstr "수정됨"
+
+#: src/program/documentlist.cpp:262
+#, kde-format
+msgid ""
+"The current document has to be saved before switching the viewer/editor "
+"component."
+msgstr "뷰어/편집기 구성 요소를 전환하기 전에 현재 문서를 저장해야 합니다."
+
+#: src/program/documentlist.cpp:262
+#, kde-format
+msgid "Save before switching?"
+msgstr "전환하기 전에 저장하시겠습니까?"
+
+#: src/program/documentlist.cpp:262
+#, kde-format
+msgid "Save document"
+msgstr "문서 저장"
+
+#: src/program/documentlist.cpp:262
+#, kde-format
+msgid "Do not switch"
+msgstr "전환 안함"
+
+#: src/program/documentlist.cpp:275
+#, kde-format
+msgid "Close File"
+msgstr "파일 닫기"
+
+#: src/program/documentlist.cpp:279
+#, kde-format
+msgid "Open File"
+msgstr "파일 열기"
+
+#: src/program/documentlist.cpp:284
+#, kde-format
+msgid "Open with"
+msgstr "다음으로 열기"
+
+#: src/program/documentlist.cpp:288
+#, kde-format
+msgid "Remove from Favorites"
+msgstr "책갈피에서 삭제"
+
+#: src/program/documentlist.cpp:292
+#, kde-format
+msgid "Add to Favorites"
+msgstr "책갈피에 추가"
+
+#: src/program/documentlist.cpp:390
+#, kde-format
+msgid "Open Files"
+msgstr "파일 열기"
+
+#: src/program/documentlist.cpp:400
+#, kde-format
+msgid "Favorites"
+msgstr "책갈피"
+
+#: src/program/documentlist.cpp:403
+#, kde-format
+msgid "Filesystem Browser"
+msgstr "파일 시스템 탐색기"
+
+#: src/program/mainwindow.cpp:92
+#, kde-format
+msgid "Show Panels"
+msgstr "패널 표시"
+
+#: src/program/mainwindow.cpp:97
+#, kde-format
+msgid "Recently used files"
+msgstr "최근에 사용한 파일"
+
+#: src/program/mainwindow.cpp:114
+#, kde-format
+msgid "List of Documents"
+msgstr "문서 목록"
+
+#: src/program/mainwindow.cpp:124
+#, kde-format
+msgid "List of Values"
+msgstr "값 목록"
+
+#: src/program/mainwindow.cpp:133
+#, kde-format
+msgid "Statistics"
+msgstr "통계"
+
+#: src/program/mainwindow.cpp:142
+#, kde-format
+msgid "Search Results"
+msgstr "검색 결과"
+
+#: src/program/mainwindow.cpp:153
+#, kde-format
+msgid "Online Search"
+msgstr "온라인 검색"
+
+#: src/program/mainwindow.cpp:163
+#, kde-format
+msgid "Zotero"
+msgstr "Zotero"
+
+#: src/program/mainwindow.cpp:174
+#, kde-format
+msgid "Reference Preview"
+msgstr "참조 미리 보기"
+
+#: src/program/mainwindow.cpp:183
+#, kde-format
+msgid "Document Preview"
+msgstr "문서 미리 보기"
+
+#: src/program/mainwindow.cpp:194
+#, kde-format
+msgid "Element Editor"
+msgstr "요소 편집기"
+
+#: src/program/mainwindow.cpp:204
+#, kde-format
+msgid "File Settings"
+msgstr "파일 설정"
+
+#: src/program/mainwindow.cpp:306
+#, kde-format
+msgid ""
+"Creating a new document of mime type '%1' failed as no editor component "
+"could be instantiated."
+msgstr ""
+"편집기 구성 요소를 인스턴스화할 수 없어 MIME 형식이 '%1'인 새 문서를 만들 수 "
+"없습니다."
+
+#: src/program/mainwindow.cpp:306
+#, kde-format
+msgid "Creating document failed"
+msgstr "문서 작성 실패"
+
+#: src/program/mainwindow.cpp:328
+#, kde-format
+msgid "Open file"
+msgstr "파일 열기"
+
+#: src/program/mainwindow.cpp:370 src/program/program.cpp:48
+#, kde-format
+msgid "KBibTeX"
+msgstr "KBibTeX"
+
+#: src/program/mainwindow.cpp:370
+#, kde-format
+msgid "%1 - KBibTeX"
+msgstr "%1 - KBibTeX"
+
+#: src/program/mainwindow.cpp:455
+#, kde-format
+msgid ""
+"KBibTeX is not the default editor for its bibliography formats like BibTeX "
+"or RIS."
+msgstr ""
+"KBibTeX는 BibTeX 또는 RIS와 같은 서지 정보 목록 형식의 기본 편집기가 아닙니"
+"다."
+
+#: src/program/mainwindow.cpp:455
+#, kde-format
+msgid "Default Bibliography Editor"
+msgstr "기본 서지 정보 목록 편집기"
+
+#: src/program/mainwindow.cpp:455
+#, kde-format
+msgid "Set as Default Editor"
+msgstr "기본 편집기로 설정"
+
+#: src/program/mainwindow.cpp:455
+#, kde-format
+msgid "Keep settings unchanged"
+msgstr "설정을 변경하지 않은 상태로 유지"
+
+#: src/program/mdiwidget.cpp:97
+#, kde-format
+msgid "Filename"
+msgstr "파일 이름"
+
+#: src/program/mdiwidget.cpp:98
+#, kde-format
+msgid "Date/time of last use"
+msgstr "마지막 사용 날짜/시간"
+
+#: src/program/mdiwidget.cpp:99
+#, kde-format
+msgid "Full filename"
+msgstr "전체 파일 이름"
+
+#: src/program/mdiwidget.cpp:145
+#, kde-format
+msgid "<qt>Welcome to <b>KBibTeX</b></qt>"
+msgstr "<qt><b>KBibTeX</b>에 오신 것을 환영합니다</qt>"
+
+#: src/program/mdiwidget.cpp:148
+#, kde-format
+msgid "New"
+msgstr "새로 만들기"
+
+#: src/program/mdiwidget.cpp:152
+#, kde-format
+msgid "Open..."
+msgstr "열기..."
+
+#: src/program/mdiwidget.cpp:156
+#, kde-format
+msgid "List of recently used files:"
+msgstr "최근에 사용한 파일 목록:"
+
+#: src/program/mdiwidget.cpp:268
+#, kde-format
+msgid "No part available for file of mime type '%1'."
+msgstr "MIME 형식 '%1'의 파일에 사용할 수 있는 부분이 없습니다."
+
+#: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
+#, kde-format
+msgid "No Part Available"
+msgstr "사용 가능한 부분 없음"
+
+#: src/program/mdiwidget.cpp:270
+#, kde-format
+msgid "No part available for file '%1'."
+msgstr "'%1' 파일에 사용할 수 있는 부분이 없습니다."
+
+#: src/program/openfileinfo.cpp:247
+#, kde-format
+msgid "Unnamed-%1"
+msgstr "이름없음-%1"
+
+#: src/program/program.cpp:68
+#, kde-format
+msgid "File(s) to load."
+msgstr "불러올 파일입니다."
+
+#: src/program/program.cpp:98
+#, kde-format
+msgid ""
+"KBibTeX seems to be not installed completely. KBibTeX could not locate its "
+"own KPart.\n"
+"\n"
+"Only limited functionality will be available."
+msgstr ""
+"KBibTeX가 완전히 설치되지 않은 것 같습니다. KBibTeX가 자체 KPart를 찾을 수 없"
+"습니다.\n"
+"\n"
+"제한된 기능만 사용할 수 있습니다."
+
+#: src/program/program.cpp:98
+#, kde-format
+msgid "Incomplete KBibTeX Installation"
+msgstr "불완전한 KBibTeX 설치"
+
+#~ msgid "Changing this option requires a restart to take effect."
+#~ msgstr "이 옵션을 변경하려면 다시 시작해야 합니다."
+
+#~ msgid "Show Comments:"
+#~ msgstr "주석 표시:"
+
+#~ msgid "Show Macros:"
+#~ msgstr "매크로 표시:"
+
+#~ msgctxt "Comment Quoting"
+#~ msgid "%{%1}"
+#~ msgstr "%{%1}"
+
+#~ msgid "ISBNdb.com"
+#~ msgstr "ISBN 데이터베이스(ISBNdb.com)"
+
+#~ msgid "OCLC WorldCat"
+#~ msgstr "OCLC WorldCat"
+
+#~ msgid "Verification Code"
+#~ msgstr "검증 코드"
+
+#~ msgid ""
+#~ "Copy the code from the web page and paste it in the input field below."
+#~ msgstr "웹 페이지에서 코드를 복사하여 아래의 입력 필드에 붙여넣으십시오."
+
+#~ msgid ""
+#~ "<qt><p>Once you have granted permissions to KBibTeX on Zotero's web page, "
+#~ "you should see a light-green field with a black hexadecimal code "
+#~ "(example: <span style=\"color:black;background:#cfc;"
+#~ "\">48b67422661cc282cdea</span>).</p></qt>"
+#~ msgstr ""
+#~ "<qt><p>Zotero의 웹 페이지에서 KBibTeX에 대한 사용 권한을 부여하면 검은색 "
+#~ "16진수 코드가 있는 밝은 녹색 필드가 표시됩니다.(예: <span style=\"color:"
+#~ "black;background:#cfc;\">48b67422661cc282cdea</span>).</p></qt>"
+
+#~ msgid "Verification Code:"
+#~ msgstr "검증 코드:"
+
+#~ msgid "Instructions"
+#~ msgstr "지침"
+
+#~ msgid ""
+#~ "<qt>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
+#~ "bibliography</strong>, this KBibTeX instance has to be authorized.</qt>"
+#~ msgstr ""
+#~ "<qt><strong>KBibTeX</strong>에서 내 <strong>Zotero 참고문헌 목록</strong>"
+#~ "에 접근할 수 있도록 허용하려면 이 KBibTeX 인스턴스가 승인되어야 합니다.</"
+#~ "qt>"
+
+#~ msgid ""
+#~ "<qt><p>The process of authorization involves multiple steps:</"
+#~ "p><ol><li>Open the URL as shown on the next page.</li><li>Follow the "
+#~ "instructions as shown on Zotero's webpage.<br/>Configure permissions for "
+#~ "KBibTeX.</li><li>Eventually, you will get a hexadecimal string (black on "
+#~ "light-green background) which you have to copy and paste into this "
+#~ "wizard's last page</li></ol></qt>"
+#~ msgstr ""
+#~ "<qt><p>다음 단계에 따라 승인해야 합니다:</p><ol><li>다음 페이지에 표시된 "
+#~ "대로 URL을 엽니다.</li><li>FZotero의 웹 페이지에 표시된 지침을 따릅니다."
+#~ "<br/>KBibTeX에 대한 사용 권한을 구성합니다.</li><li>최종적으로는 이 마법사"
+#~ "의 마지막 페이지에 복사하여 붙여 넣어야 하는 16진수 문자열(연한 녹색 배경"
+#~ "의 검은색)이 표시됩니다.</li></ol></qt>"
+
+#~ msgid "Authorization URL"
+#~ msgstr "승인 URL"
+
+#~ msgid "Open the shown URL in your favorite browser."
+#~ msgstr "기본 브라우저에서 표시된 URL을 엽니다."
+
+#~ msgid ""
+#~ "You will be asked to login into Zotero and select and confirm the "
+#~ "permissions for KBibTeX."
+#~ msgstr ""
+#~ "Zotero에 로그인하고 KBibTeX에 대한 권한을 선택하고 확인하라는 메시지가 표"
+#~ "시됩니다."

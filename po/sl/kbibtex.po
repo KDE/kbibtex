@@ -1,0 +1,4054 @@
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the kbibtex package.
+#
+#
+# Matjaž Jeran <matjaz.jeran@amis.net>, 2021, 2023.
+# Martin Srebotnjak <miles@filmsi.net>, 2022.
+msgid ""
+msgstr ""
+"Project-Id-Version: kbibtex\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2023-01-04 03:44+0000\n"
+"PO-Revision-Date: 2023-01-04 07:41+0100\n"
+"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+"Language-Team: Slovenian <lugos-slo@lugos.si>\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
+"X-Generator: Lokalize 22.12.0\n"
+
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Matjaž Jeran, Martin Srebotnjak"
+
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "matjaz.jeran@amis.net, miles@filmsi.net"
+
+#, kde-format
+msgid "Author/Editor"
+msgstr "Avtor/Urednik"
+
+#, kde-format
+msgid "Publication"
+msgstr "Publikacija"
+
+#, kde-format
+msgid "Number/Issue"
+msgstr "Številka/Izdaja"
+
+#, kde-format
+msgid "Cross-Reference"
+msgstr "Navzkrižno sklicevanje"
+
+#, kde-format
+msgid "Misc"
+msgstr "Razno"
+
+#, kde-format
+msgid "Star Rating"
+msgstr "Ocena zvezdic"
+
+#, kde-format
+msgid "Book Title Addon"
+msgstr "Dodatek naslovu knjige"
+
+#, kde-format
+msgid "Main Title Addon"
+msgstr "Dodatek glavnemu naslovu"
+
+#, kde-format
+msgid "Further Persons"
+msgstr "Ostale osebe"
+
+#, kde-format
+msgid "Volume Part"
+msgstr "Del zvezka"
+
+#, kde-format
+msgid "Total Volumes"
+msgstr "Skupaj zvezkov/delov"
+
+#, kde-format
+msgid "X-Reference"
+msgstr "X-referenca "
+
+#, kde-format
+msgid "Identifiers"
+msgstr "Identifikatorji"
+
+#, kde-format
+msgid "Sorting"
+msgstr "Razvrščanje"
+
+#, kde-format
+msgid "Sort Name"
+msgstr "Ime razvrščanja"
+
+#, kde-format
+msgid "Abbreviations"
+msgstr "Kratice"
+
+#, kde-format
+msgid "Short Journal"
+msgstr "Kratek dnevnik"
+
+#, kde-format
+msgid "Short Series"
+msgstr "Kratke serije"
+
+#, kde-format
+msgid "Short Title"
+msgstr "Kratek naslov"
+
+#, kde-format
+msgid "Reprint Data"
+msgstr "Podatki o ponatisu"
+
+#, kde-format
+msgid "Local File"
+msgstr "Lokalna datoteka"
+
+#, kde-format
+msgid ""
+"DOIs and URLs get handled in the &lsquo;<a href=\"#tab:external\">External</"
+"a>&rsquo; tab."
+msgstr ""
+"DOI-ji in URL-ji se obdelujejo v &lsquo;<a href=\"#tab:external\">Zunanjem</"
+"a>&rsquo; zavihku."
+
+#: src/config/bibtexentries.cpp:65 src/config/bibtexentries.cpp:81
+#, kde-format
+msgid "Journal Article"
+msgstr "Članek v dnevniku"
+
+#: src/config/bibtexentries.cpp:66
+#, kde-format
+msgid "Conference"
+msgstr "Konferenca"
+
+#: src/config/bibtexentries.cpp:67 src/config/bibtexentries.cpp:98
+#, kde-format
+msgid "Conference or Workshop Proceedings"
+msgstr "Zbornik konference ali delavnice"
+
+#: src/config/bibtexentries.cpp:68 src/config/bibtexentries.cpp:109
+#, kde-format
+msgid "Technical Report"
+msgstr "Tehnično poročilo"
+
+#: src/config/bibtexentries.cpp:69 src/config/bibtexentries.cpp:93
+#, kde-format
+msgid "Miscellaneous"
+msgstr "Razno"
+
+#: src/config/bibtexentries.cpp:70 src/config/bibtexentries.cpp:82
+#, kde-format
+msgid "Book"
+msgstr "Knjiga"
+
+#: src/config/bibtexentries.cpp:71 src/config/bibtexentries.cpp:84
+#, kde-format
+msgid "Part of a Book"
+msgstr "Del knjige"
+
+#: src/config/bibtexentries.cpp:72 src/config/bibtexentries.cpp:90
+#, kde-format
+msgid "Part of a Book with own Title"
+msgstr "Del knjige s svojim naslovom"
+
+#: src/config/bibtexentries.cpp:73 src/config/bibtexentries.cpp:108
+#, kde-format
+msgid "PhD Thesis"
+msgstr "Doktorsko delo"
+
+#: src/config/bibtexentries.cpp:74 src/config/bibtexentries.cpp:107
+#, kde-format
+msgid "Master's Thesis"
+msgstr "Magistrsko delo"
+
+#: src/config/bibtexentries.cpp:75 src/config/bibtexentries.cpp:106
+#, kde-format
+msgid "Unpublished Material"
+msgstr "Neobjavljen material"
+
+#: src/config/bibtexentries.cpp:76 src/config/bibtexentries.cpp:92
+#, kde-format
+msgid "Manual"
+msgstr "Priročnik"
+
+#: src/config/bibtexentries.cpp:77 src/config/bibtexentries.cpp:87
+#, kde-format
+msgid "Booklet"
+msgstr "Knjižica"
+
+#: src/config/bibtexentries.cpp:83
+#, kde-format
+msgid "Multi-volume Book"
+msgstr "Knjiga iz več delov"
+
+#: src/config/bibtexentries.cpp:85
+#, kde-format
+msgid "Former Monograph as Part of a Book"
+msgstr "Prvotna monografija kot del knjige"
+
+#: src/config/bibtexentries.cpp:86
+#, kde-format
+msgid "Supplemental Material in a Book"
+msgstr "Dodatni material v knjigi"
+
+#: src/config/bibtexentries.cpp:88
+#, kde-format
+msgid "Single-volume Collection"
+msgstr "Zbirka z enim zvezkom/delom"
+
+#: src/config/bibtexentries.cpp:89
+#, kde-format
+msgid "Multi-volume Collection"
+msgstr "Zbirka z več zvezki/deli"
+
+#: src/config/bibtexentries.cpp:91
+#, kde-format
+msgid "Supplemental Material in a Collection"
+msgstr "Dodatni material v zbirki"
+
+#: src/config/bibtexentries.cpp:94
+#, kde-format
+msgid "Online Resource"
+msgstr "Spletni vir"
+
+#: src/config/bibtexentries.cpp:95
+#, kde-format
+msgid "Patent"
+msgstr "Patent"
+
+#: src/config/bibtexentries.cpp:96
+#, kde-format
+msgid "Periodical (Complete Issue)"
+msgstr "Revija (Celotna izdaja)"
+
+#: src/config/bibtexentries.cpp:97
+#, kde-format
+msgid "Supplemental Material in a Periodical"
+msgstr "Dodatni material v reviji"
+
+#: src/config/bibtexentries.cpp:99
+#, kde-format
+msgid "Multi-volume Proceedings"
+msgstr "Zbornik iz več delov"
+
+#: src/config/bibtexentries.cpp:100
+#, kde-format
+msgid "Publication in Conference Proceedings"
+msgstr "Publikacija v zborniku konference"
+
+#: src/config/bibtexentries.cpp:101
+#, kde-format
+msgid "Single-volume Reference (e.g. Encyclopedia)"
+msgstr "Referenčni vir v enem zvezku (npr. enciklopedija)"
+
+#: src/config/bibtexentries.cpp:102
+#, kde-format
+msgid "Multi-volume Reference (e.g. Encyclopedia)"
+msgstr "Referenčni vir v več zvezkih (npr. enciklopedija)"
+
+#: src/config/bibtexentries.cpp:103
+#, kde-format
+msgid "Part of a Reference"
+msgstr "Del referenčnega vira"
+
+#: src/config/bibtexentries.cpp:104
+#, kde-format
+msgid "Report"
+msgstr "Poročilo"
+
+#: src/config/bibtexentries.cpp:105
+#, kde-format
+msgid "Thesis"
+msgstr "Teza"
+
+#: src/config/bibtexfields.cpp:133 src/config/bibtexfields.cpp:172
+#, kde-format
+msgid "Element Type"
+msgstr "Vrsta elementa"
+
+#: src/config/bibtexfields.cpp:134 src/config/bibtexfields.cpp:173
+#: src/gui/file/findduplicatesui.cpp:156
+#, kde-format
+msgid "Identifier"
+msgstr "Identifikator"
+
+#: src/config/bibtexfields.cpp:135 src/config/bibtexfields.cpp:174
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:318
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:613
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:648
+#: src/processing/idsuggestions.cpp:422
+#, kde-format
+msgid "Title"
+msgstr "Naslov"
+
+#: src/config/bibtexfields.cpp:136 src/config/bibtexfields.cpp:175
+#, kde-format
+msgid "Title or Book Title"
+msgstr "Naslov ali naslov knjige"
+
+#: src/config/bibtexfields.cpp:137 src/config/bibtexfields.cpp:184
+#, kde-format
+msgid "Author or Editor"
+msgstr "Avtor ali urednik"
+
+#: src/config/bibtexfields.cpp:138 src/config/bibtexfields.cpp:185
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:617
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:652
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:77
+#, kde-format
+msgid "Author"
+msgstr "Avtor"
+
+#: src/config/bibtexfields.cpp:139 src/config/bibtexfields.cpp:190
+#, kde-format
+msgid "Editor"
+msgstr "Urednik"
+
+#: src/config/bibtexfields.cpp:140 src/config/bibtexfields.cpp:206
+#, kde-format
+msgid "Month"
+msgstr "Mesec"
+
+#: src/config/bibtexfields.cpp:141 src/config/bibtexfields.cpp:207
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:207
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:621
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:656
+#, kde-format
+msgid "Year"
+msgstr "Leto"
+
+#: src/config/bibtexfields.cpp:142
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:419
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:625
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:660
+#: src/processing/idsuggestions.cpp:451
+#, kde-format
+msgid "Journal"
+msgstr "Dnevnik"
+
+#: src/config/bibtexfields.cpp:143 src/config/bibtexfields.cpp:215
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:239
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:633
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:668
+#: src/processing/idsuggestions.cpp:486
+#, kde-format
+msgid "Volume"
+msgstr "Zvezek/del"
+
+#: src/config/bibtexfields.cpp:144 src/config/bibtexfields.cpp:217
+#, kde-format
+msgid "Number"
+msgstr "Številka"
+
+#: src/config/bibtexfields.cpp:145 src/config/bibtexfields.cpp:224
+#, kde-format
+msgid "ISSN"
+msgstr "ISSN"
+
+#: src/config/bibtexfields.cpp:146 src/config/bibtexfields.cpp:225
+#, kde-format
+msgid "ISBN"
+msgstr "ISBN"
+
+#: src/config/bibtexfields.cpp:147 src/config/bibtexfields.cpp:226
+#, kde-format
+msgid "ISBN or ISSN"
+msgstr "ISBN ali ISSN"
+
+#: src/config/bibtexfields.cpp:148 src/config/bibtexfields.cpp:228
+#, kde-format
+msgid "How Published"
+msgstr "Kako je izdano"
+
+#: src/config/bibtexfields.cpp:149 src/config/bibtexfields.cpp:229
+#, kde-format
+msgid "Note"
+msgstr "Opomba"
+
+#: src/config/bibtexfields.cpp:150 src/config/bibtexfields.cpp:232
+#, kde-format
+msgid "Abstract"
+msgstr "Izvleček"
+
+#: src/config/bibtexfields.cpp:151 src/config/bibtexfields.cpp:233
+#, kde-format
+msgid "Pages"
+msgstr "Strani"
+
+#: src/config/bibtexfields.cpp:152 src/config/bibtexfields.cpp:237
+#, kde-format
+msgid "Publisher"
+msgstr "Izdajatelj"
+
+#: src/config/bibtexfields.cpp:153 src/config/bibtexfields.cpp:239
+#, kde-format
+msgid "Institution"
+msgstr "Institucija"
+
+#: src/config/bibtexfields.cpp:154 src/config/bibtexfields.cpp:240
+#, kde-format
+msgid "Book Title"
+msgstr "Naslov knjige"
+
+#: src/config/bibtexfields.cpp:155 src/config/bibtexfields.cpp:245
+#, kde-format
+msgid "Series"
+msgstr "Serija"
+
+#: src/config/bibtexfields.cpp:156 src/config/bibtexfields.cpp:247
+#, kde-format
+msgid "Edition"
+msgstr "Izdaja"
+
+#: src/config/bibtexfields.cpp:157 src/config/bibtexfields.cpp:248
+#, kde-format
+msgid "Chapter"
+msgstr "Poglavje"
+
+#: src/config/bibtexfields.cpp:158 src/config/bibtexfields.cpp:249
+#, kde-format
+msgid "Organization"
+msgstr "Organizacija"
+
+#: src/config/bibtexfields.cpp:159
+#, kde-format
+msgid "School"
+msgstr "Šola"
+
+#: src/config/bibtexfields.cpp:160 src/config/bibtexfields.cpp:253
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:125
+#, kde-format
+msgid "Keywords"
+msgstr "Ključne besede"
+
+#: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:254
+#, kde-format
+msgid "Cross Reference"
+msgstr "Navzkrižno sklicevanje"
+
+#: src/config/bibtexfields.cpp:162 src/config/bibtexfields.cpp:256
+#: src/networking/onlinesearch/onlinesearchdoi.cpp:183
+#, kde-format
+msgid "DOI"
+msgstr "DOI"
+
+#: src/config/bibtexfields.cpp:163 src/config/bibtexfields.cpp:260
+#, kde-format
+msgid "URL"
+msgstr "URL"
+
+#: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:263
+#: src/config/bibtexfields.cpp:286
+#, kde-format
+msgid "Location"
+msgstr "Lokacija"
+
+#: src/config/bibtexfields.cpp:165
+#, kde-format
+msgid "Address"
+msgstr "Naslov"
+
+#: src/config/bibtexfields.cpp:166 src/config/bibtexfields.cpp:265
+#: src/gui/file/findduplicatesui.cpp:158
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:492
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:629
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:664
+#: src/processing/idsuggestions.cpp:469
+#, kde-format
+msgid "Type"
+msgstr "Vrsta"
+
+#: src/config/bibtexfields.cpp:167 src/gui/element/elementwidgets.cpp:989
+#, kde-format
+msgid "Key"
+msgstr "Ključ"
+
+#: src/config/bibtexfields.cpp:168 src/config/bibtexfields.cpp:274
+#: src/gui/preferences/settingscolorlabelwidget.cpp:200
+#: src/gui/preferences/settingscolorlabelwidget.cpp:432
+#, kde-format
+msgid "Color"
+msgstr "Barva"
+
+#: src/config/bibtexfields.cpp:169
+#, kde-format
+msgid "Stars"
+msgstr "Zvezde"
+
+#: src/config/bibtexfields.cpp:176
+#, kde-format
+msgid "Subtitle"
+msgstr "Podnaslov"
+
+#: src/config/bibtexfields.cpp:177
+#, kde-format
+msgid "Title Addon"
+msgstr "Dodatek naslovu"
+
+#: src/config/bibtexfields.cpp:178
+#, kde-format
+msgid "Shortitle"
+msgstr "Kratek naslov"
+
+#: src/config/bibtexfields.cpp:179
+#, kde-format
+msgid "Original Title"
+msgstr "Izvirni naslov"
+
+#: src/config/bibtexfields.cpp:180
+#, kde-format
+msgid "Reprint Title"
+msgstr "Naslov ponatisa"
+
+#: src/config/bibtexfields.cpp:181
+#, kde-format
+msgid "Main Title"
+msgstr "Glavni naslov"
+
+#: src/config/bibtexfields.cpp:182
+#, kde-format
+msgid "Main Subtitle"
+msgstr "Glavni podnaslov"
+
+#: src/config/bibtexfields.cpp:183
+#, kde-format
+msgid "Maintitle Addon"
+msgstr "Dodatek glavnemu naslovu"
+
+#: src/config/bibtexfields.cpp:186
+#, kde-format
+msgid "Short Author"
+msgstr "Avtor na kratko"
+
+#: src/config/bibtexfields.cpp:187
+#, kde-format
+msgid "Name Addon"
+msgstr "Dodatek imenu"
+
+#: src/config/bibtexfields.cpp:188
+#, kde-format
+msgid "Author Type"
+msgstr "Vrsta avtorja"
+
+#: src/config/bibtexfields.cpp:189
+#, kde-format
+msgid "Book Author"
+msgstr "Avtor knjige"
+
+#: src/config/bibtexfields.cpp:191
+#, kde-format
+msgid "Short Editor"
+msgstr "Urednik na kratko"
+
+#: src/config/bibtexfields.cpp:192
+#, kde-format
+msgid "Editor Type"
+msgstr "Vrsta urednika"
+
+#: src/config/bibtexfields.cpp:193
+#, kde-format
+msgid "Editor A"
+msgstr "Urednik A"
+
+#: src/config/bibtexfields.cpp:194
+#, kde-format
+msgid "Editor A Type"
+msgstr "Vrsta urednika A"
+
+#: src/config/bibtexfields.cpp:195
+#, kde-format
+msgid "Editor B"
+msgstr "Urednik B"
+
+#: src/config/bibtexfields.cpp:196
+#, kde-format
+msgid "Editor B Type"
+msgstr "Vrsta urednika B"
+
+#: src/config/bibtexfields.cpp:197
+#, kde-format
+msgid "Editor C"
+msgstr "Urednik C"
+
+#: src/config/bibtexfields.cpp:198
+#, kde-format
+msgid "Editor C Type"
+msgstr "Vrsta urednika C"
+
+#: src/config/bibtexfields.cpp:199
+#, kde-format
+msgid "Translator"
+msgstr "Prevajalec"
+
+#: src/config/bibtexfields.cpp:200
+#, kde-format
+msgid "Afterword Author"
+msgstr "Avto zaključnega besedila"
+
+#: src/config/bibtexfields.cpp:201
+#, kde-format
+msgid "Introduction Author"
+msgstr "Avtor uvoda"
+
+#: src/config/bibtexfields.cpp:202
+#, kde-format
+msgid "Foreword Author"
+msgstr "Avtor pregovora"
+
+#: src/config/bibtexfields.cpp:203
+#, kde-format
+msgid "Annotator"
+msgstr "Označevalec"
+
+#: src/config/bibtexfields.cpp:204
+#, kde-format
+msgid "Commentator"
+msgstr "Komentator"
+
+#: src/config/bibtexfields.cpp:205
+#, kde-format
+msgid "Patent Holder"
+msgstr "Nosilec patenta"
+
+#: src/config/bibtexfields.cpp:208
+#, kde-format
+msgid "Date"
+msgstr "Datum"
+
+#: src/config/bibtexfields.cpp:209
+#, kde-format
+msgid "Date or Year"
+msgstr "Datum ali leto"
+
+#: src/config/bibtexfields.cpp:210
+#, kde-format
+msgid "Event Date"
+msgstr "Datum dogodka"
+
+#: src/config/bibtexfields.cpp:211
+#, kde-format
+msgid "Original Date"
+msgstr "Prvotni datum"
+
+#: src/config/bibtexfields.cpp:212
+#, kde-format
+msgid "Journal Title"
+msgstr "Naslov dnevnika"
+
+#: src/config/bibtexfields.cpp:213
+#, kde-format
+msgid "Journal Subtitle"
+msgstr "Podnaslov dnevnika"
+
+#: src/config/bibtexfields.cpp:214
+#, kde-format
+msgid "Journal Shortitle"
+msgstr "Kratki naslov dnevnika"
+
+#: src/config/bibtexfields.cpp:216
+#, kde-format
+msgid "Number of Volumes"
+msgstr "Število zvezkov/delov"
+
+#: src/config/bibtexfields.cpp:218
+#, kde-format
+msgid "Version"
+msgstr "Verzija"
+
+#: src/config/bibtexfields.cpp:219
+#, kde-format
+msgid "Part"
+msgstr "Del"
+
+#: src/config/bibtexfields.cpp:220
+#, kde-format
+msgid "Issue"
+msgstr "Izdaja"
+
+#: src/config/bibtexfields.cpp:221
+#, kde-format
+msgid "IASN"
+msgstr "IASN"
+
+#: src/config/bibtexfields.cpp:222
+#, kde-format
+msgid "ISMN"
+msgstr "ISMN"
+
+#: src/config/bibtexfields.cpp:223
+#, kde-format
+msgid "ISRN"
+msgstr "ISRN"
+
+#: src/config/bibtexfields.cpp:227
+#, kde-format
+msgid "ISWC"
+msgstr "ISWC"
+
+#: src/config/bibtexfields.cpp:230
+#, kde-format
+msgid "Addendum"
+msgstr "Dodatek"
+
+#: src/config/bibtexfields.cpp:231
+#, kde-format
+msgid "Annotation"
+msgstr "Pripis"
+
+#: src/config/bibtexfields.cpp:234
+#, kde-format
+msgid "Total Pages"
+msgstr "Skupaj strani"
+
+#: src/config/bibtexfields.cpp:235
+#, kde-format
+msgid "Pagination"
+msgstr "Paginacija"
+
+#: src/config/bibtexfields.cpp:236
+#, kde-format
+msgid "Book Pagination"
+msgstr "Paginacija knjige"
+
+#: src/config/bibtexfields.cpp:238
+#, kde-format
+msgid "Original Publisher"
+msgstr "Izvirni izdajatelj"
+
+#: src/config/bibtexfields.cpp:241
+#, kde-format
+msgid "Book Subtitle"
+msgstr "Podnaslov knjige"
+
+#: src/config/bibtexfields.cpp:242
+#, kde-format
+msgid "Issue Title"
+msgstr "Naslov izdaje"
+
+#: src/config/bibtexfields.cpp:243
+#, kde-format
+msgid "Issue Subtitle"
+msgstr "Podnaslov izdaje"
+
+#: src/config/bibtexfields.cpp:244
+#, kde-format
+msgid "Booktitle Addon"
+msgstr "Dodatek naslovu knjige"
+
+#: src/config/bibtexfields.cpp:246
+#, kde-format
+msgid "Series Shortitle"
+msgstr "Kratki naslov serije"
+
+#: src/config/bibtexfields.cpp:250
+#, kde-format
+msgid "Event Title"
+msgstr "Naslov dogodka"
+
+#: src/config/bibtexfields.cpp:251
+#, kde-format
+msgid "Venue"
+msgstr "Prihod"
+
+#: src/config/bibtexfields.cpp:252
+#, kde-format
+msgid "Index Title"
+msgstr "Naslov indeksa"
+
+#: src/config/bibtexfields.cpp:255
+#, kde-format
+msgid "XRef"
+msgstr "XRef"
+
+#: src/config/bibtexfields.cpp:257
+#, kde-format
+msgid "E-Print"
+msgstr "Elektronska izdaja"
+
+#: src/config/bibtexfields.cpp:258
+#, kde-format
+msgid "E-Print Class"
+msgstr "Razred elektronske izdaje"
+
+#: src/config/bibtexfields.cpp:259
+#, kde-format
+msgid "E-Print Type"
+msgstr "Vrsta elektronske izdaje"
+
+#: src/config/bibtexfields.cpp:261
+#, kde-format
+msgid "URL Date"
+msgstr "Datum spletnega naslova"
+
+#: src/config/bibtexfields.cpp:262
+#, kde-format
+msgid "Local File URL"
+msgstr "Spletni naslov lokalne datoteke"
+
+#: src/config/bibtexfields.cpp:264
+#, kde-format
+msgid "Original Location"
+msgstr "Izvirna lokacija"
+
+#: src/config/bibtexfields.cpp:266
+#, kde-format
+msgid "EID"
+msgstr "EID"
+
+#: src/config/bibtexfields.cpp:267
+#: src/gui/preferences/settingscolorlabelwidget.cpp:201
+#, kde-format
+msgid "Label"
+msgstr "Oznaka"
+
+#: src/config/bibtexfields.cpp:268
+#, kde-format
+msgid "Shorthand"
+msgstr "Stenografija"
+
+#: src/config/bibtexfields.cpp:269
+#, kde-format
+msgid "Shorthand Intro"
+msgstr "Uvod v stenografijo"
+
+#: src/config/bibtexfields.cpp:270
+#, kde-format
+msgid "Publication State"
+msgstr "Stanje izdaje"
+
+#: src/config/bibtexfields.cpp:271
+#, kde-format
+msgid "Language"
+msgstr "Jezik"
+
+#: src/config/bibtexfields.cpp:272
+#, kde-format
+msgid "Original Language"
+msgstr "Izvirni jezik"
+
+#: src/config/bibtexfields.cpp:273 src/networking/zotero/collection.cpp:94
+#: src/program/docklets/zoterobrowser.cpp:106
+#, kde-format
+msgid "Library"
+msgstr "Knjižnica"
+
+#: src/config/bibtexfields.cpp:275
+#, kde-format
+msgid "Gender"
+msgstr "Spol"
+
+#: src/config/bibtexfields.cpp:276
+#, kde-format
+msgid "Hyphenation"
+msgstr "Deljenje"
+
+#: src/config/bibtexfields.cpp:277
+#, kde-format
+msgid "Index Sorttitle"
+msgstr "Naslov razvrstitve indeksa"
+
+#: src/config/bibtexfields.cpp:278
+#, kde-format
+msgid "Entry Options"
+msgstr "Možnosti vnosa"
+
+#: src/config/bibtexfields.cpp:279
+#, kde-format
+msgid "Presort"
+msgstr "Predrazvrščanje"
+
+#: src/config/bibtexfields.cpp:280
+#, kde-format
+msgid "Sort Key"
+msgstr "Ključ razvrščanja"
+
+#: src/config/bibtexfields.cpp:281
+#, kde-format
+msgid "Sort Names"
+msgstr "Razvrsti imena"
+
+#: src/config/bibtexfields.cpp:282
+#, kde-format
+msgid "Sort Shorthand"
+msgstr "Razvrsti stenografijo"
+
+#: src/config/bibtexfields.cpp:283
+#, kde-format
+msgid "Sort Title"
+msgstr "Naslov razvrščanja"
+
+#: src/config/bibtexfields.cpp:284
+#, kde-format
+msgid "Sort Year"
+msgstr "Leto razvrščanja"
+
+#: src/config/bibtexfields.cpp:285
+#, kde-format
+msgid "ISAN"
+msgstr "ISAN"
+
+#: src/config/preferences.cpp:400
+#, kde-format
+msgid "BibTeX"
+msgstr "BibTeX"
+
+#: src/config/preferences.cpp:400
+#, kde-format
+msgid "BibLaTeX"
+msgstr "BibLaTeX"
+
+#: src/config/preferences.cpp:564
+#, kde-format
+msgid "No backups"
+msgstr "Ni varovalnih kopij"
+
+#: src/config/preferences.cpp:564
+#, kde-format
+msgid "Local files only"
+msgstr "Samo lokalne datoteke"
+
+#: src/config/preferences.cpp:564
+#, kde-format
+msgid "Both local and remote files"
+msgstr "Tako lokalne kot oddaljene datoteke"
+
+#: src/config/preferences.cpp:890
+#, kde-format
+msgctxt "Comment Quoting"
+msgid "None"
+msgstr "Noben"
+
+#: src/config/preferences.cpp:890
+#, kde-format
+msgctxt "Comment Quoting"
+msgid "@comment{…}"
+msgstr "@comment{…}"
+
+#: src/config/preferences.cpp:890
+#, kde-format
+msgctxt "Comment Quoting"
+msgid "% …"
+msgstr "% …"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "lowercase"
+msgstr "male črke"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "Initial capital"
+msgstr "Velika začetnica"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "UpperCamelCase"
+msgstr "Dvozačetnica"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "lowerCamelCase"
+msgstr "nezačetnica"
+
+#: src/config/preferences.cpp:929
+#, kde-format
+msgctxt "Casing of strings"
+msgid "UPPERCASE"
+msgstr "VELIKE ČRKE"
+
+#: src/config/preferences.cpp:1128
+#, kde-format
+msgctxt "What to do if double-clicking on a file view item"
+msgid "Open Editor"
+msgstr "Odpri urejevalnik"
+
+#: src/config/preferences.cpp:1128
+#, kde-format
+msgctxt "What to do if double-clicking on a file view item"
+msgid "View Document"
+msgstr "Poglej dokument"
+
+#: src/config/preferences.cpp:1167
+#, kde-format
+msgctxt "Color Labels"
+msgid "Important"
+msgstr "Pomembno"
+
+#: src/config/preferences.cpp:1167
+#, kde-format
+msgctxt "Color Labels"
+msgid "Unread"
+msgstr "Neprebrano"
+
+#: src/config/preferences.cpp:1167
+#, kde-format
+msgctxt "Color Labels"
+msgid "Read"
+msgstr "Beri"
+
+#: src/config/preferences.cpp:1167
+#, kde-format
+msgctxt "Color Labels"
+msgid "Watch"
+msgstr "Opazuj"
+
+#: src/data/models/filemodel.cpp:244 src/gui/element/elementwidgets.cpp:434
+#: src/gui/element/elementwidgets.cpp:1088
+#, kde-format
+msgid "Macro"
+msgstr "Makro"
+
+#: src/data/models/filemodel.cpp:254
+#, kde-format
+msgid "Comment"
+msgstr "Komentar"
+
+#: src/data/models/filemodel.cpp:264 src/gui/element/elementwidgets.cpp:1158
+#, kde-format
+msgid "Preamble"
+msgstr "Preambula"
+
+#: src/data/value.cpp:611
+#, kde-format
+msgid " and "
+msgstr " in "
+
+#: src/data/value.cpp:614
+#, kde-format
+msgid " and others"
+msgstr " in ostali"
+
+#: src/gui/element/associatedfilesui.cpp:75
+#, kde-format
+msgid ""
+"The following operations can be performed when associating the document with "
+"the entry:"
+msgstr "V zvezi z dokumentom ob vnosu lahko izvedete naslednje operacije:"
+
+#: src/gui/element/associatedfilesui.cpp:79
+#, kde-format
+msgid "File operation"
+msgstr "Operacija na datoteki"
+
+#: src/gui/element/associatedfilesui.cpp:83
+#, kde-format
+msgid "Do not copy or move document, only insert reference to it"
+msgstr "Ne kopirajte ali prenašajte dokumenta, samo dodajajte sklicevanja vanj"
+
+#: src/gui/element/associatedfilesui.cpp:86
+#, kde-format
+msgid "Copy document next to bibliography file"
+msgstr "Kopiraj dokument zraven datoteke bibliografije"
+
+#: src/gui/element/associatedfilesui.cpp:89
+#, kde-format
+msgid "Move document next to bibliography file"
+msgstr "Prenesi dokument zraven datoteke bibliografije"
+
+#: src/gui/element/associatedfilesui.cpp:99
+#, kde-format
+msgid "Path and filename of bibliography file:"
+msgstr "Pot in ime datoteke bibliografije:"
+
+#: src/gui/element/associatedfilesui.cpp:105
+#, kde-format
+msgid "Rename Document?"
+msgstr "Naj preimenujem dokument?"
+
+#: src/gui/element/associatedfilesui.cpp:112
+#, kde-format
+msgid "Keep document's original filename"
+msgstr "Obdrži izvirno ime dokumenta"
+
+#: src/gui/element/associatedfilesui.cpp:118
+#, kde-format
+msgid "User-defined name:"
+msgstr "Uporabniško ime dokumenta:"
+
+#: src/gui/element/associatedfilesui.cpp:131
+#, kde-format
+msgid "Path as Inserted into Entry"
+msgstr "Pot kot je dodana ob vnosu"
+
+#: src/gui/element/associatedfilesui.cpp:135
+#: src/gui/field/fieldlistedit.cpp:602
+#, kde-format
+msgid "Relative Path"
+msgstr "Relativna pot"
+
+#: src/gui/element/associatedfilesui.cpp:138
+#: src/gui/field/fieldlistedit.cpp:602
+#, kde-format
+msgid "Absolute Path"
+msgstr "Absolutna pot"
+
+#: src/gui/element/associatedfilesui.cpp:150
+#, kde-format
+msgid "Preview of reference to be inserted:"
+msgstr "Predogled reference, ki bo vstavljena:"
+
+#: src/gui/element/associatedfilesui.cpp:163
+#, kde-format
+msgid "Associate Document with Entry"
+msgstr "Poveži dokument z vnosom"
+
+#: src/gui/element/associatedfilesui.cpp:233
+#: src/program/docklets/documentpreview.cpp:218
+#: src/program/docklets/referencepreview.cpp:115
+#, kde-format
+msgid "No preview available"
+msgstr "Predogleda ni na voljo"
+
+#: src/gui/element/associatedfilesui.cpp:294
+#, kde-format
+msgid ""
+"The following remote document is about to be associated with the current "
+"entry:"
+msgstr ""
+"Naslednji oddaljeni dokument je namenjen, da bo v zvezi s trenutnim vnosom:"
+
+#: src/gui/element/associatedfilesui.cpp:295
+#: src/gui/element/associatedfilesui.cpp:308
+#, kde-format
+msgid "Rename after entry's id"
+msgstr "Preimenuj po identifikatorju vnosa"
+
+#: src/gui/element/associatedfilesui.cpp:297
+#, kde-format
+msgid ""
+"The following remote document is about to be associated with entry '%1':"
+msgstr "Naslednji oddaljeni dokument je namenjen, da bo povezan z vnosom '%1':"
+
+#: src/gui/element/associatedfilesui.cpp:298
+#: src/gui/element/associatedfilesui.cpp:311
+#, kde-format
+msgid "Rename after entry's id: '%1'"
+msgstr "Preimenuj po identifikatorju vnosa: '%1'"
+
+#: src/gui/element/associatedfilesui.cpp:307
+#, kde-format
+msgid ""
+"The following local document is about to be associated with the current "
+"entry:"
+msgstr ""
+"Naslednji lokalni dokument je namenjen, da bo povezan s trenutnim vnosom:"
+
+#: src/gui/element/associatedfilesui.cpp:310
+#, kde-format
+msgid "The following local document is about to be associated with entry '%1':"
+msgstr "Naslednji lokalni dokument je namenjen, da bo povezan z vnosom '%1':"
+
+#: src/gui/element/elementeditor.cpp:198
+#, kde-format
+msgid "Options"
+msgstr "Možnosti"
+
+#: src/gui/element/elementeditor.cpp:204
+#, kde-format
+msgid "Show all fields"
+msgstr "Prikaži vsa polja"
+
+#: src/gui/element/elementeditor.cpp:211
+#, kde-format
+msgid "Tab key visits only editable fields"
+msgstr "Tipka Tab obiskuje samo polja, ki jih je mogoče urejati"
+
+#: src/gui/element/elementeditor.cpp:219
+#, kde-format
+msgid "Check with BibTeX"
+msgstr "Preveri z BibTeX-om"
+
+#: src/gui/element/elementeditor.cpp:541
+#, kde-format
+msgid "No id was entered, so the previous id '%1' will be restored."
+msgstr ""
+"Identifikator ni bil vnesen, zato bo obnovljen prejšnji identifikator '%1'."
+
+#: src/gui/element/elementeditor.cpp:541
+#, kde-format
+msgid "No id given"
+msgstr "NI danega identifikatorja"
+
+#: src/gui/element/elementeditor.cpp:548
+#, kde-format
+msgid ""
+"The entered id '%1' is already in use for another element.\n"
+"\n"
+"Keep original id '%2' instead?"
+msgstr ""
+"Vneseni identifikator '%1' se že uporablja za drug element.\n"
+"\n"
+"Naj namesto tega ohranim originalni identifikator '%2'?"
+
+#: src/gui/element/elementeditor.cpp:548
+#, kde-format
+msgid "Id already in use"
+msgstr "Identifikator je že v rabi"
+
+#: src/gui/element/elementeditor.cpp:548
+#, kde-format
+msgid "Keep duplicate ids"
+msgstr "Ohrani dvojne identifikatorje"
+
+#: src/gui/element/elementeditor.cpp:548
+#, kde-format
+msgid "Restore original id"
+msgstr "Obnosi izvirni identifikator"
+
+#: src/gui/element/elementeditor.cpp:577
+#, kde-format
+msgid "Validation for the current element failed."
+msgstr "Preverjanje veljavnosti trenutnega elementa ni uspelo."
+
+#: src/gui/element/elementeditor.cpp:577
+#, kde-format
+msgid ""
+"Validation for the current element failed:\n"
+"%1"
+msgstr ""
+"Preverjanje veljavnosti trenutnega elementa ni uspelo:\n"
+"%1"
+
+#: src/gui/element/elementeditor.cpp:578
+#, kde-format
+msgid "Element validation failed"
+msgstr "Preverjanje veljavnosti elementa ni uspelo"
+
+#: src/gui/element/elementwidgets.cpp:452
+#, kde-format
+msgid "Element type '%1' is invalid."
+msgstr "Vrsta elementa '%1' je neveljavna."
+
+#: src/gui/element/elementwidgets.cpp:461
+#, kde-format
+msgid "Id '%1' is invalid"
+msgstr "Identifikator '%1' je neveljaven"
+
+#: src/gui/element/elementwidgets.cpp:513
+#, kde-format
+msgid "Type:"
+msgstr "Vrsta:"
+
+#: src/gui/element/elementwidgets.cpp:522
+#, kde-format
+msgid "Id:"
+msgstr "Identifikator:"
+
+#: src/gui/element/elementwidgets.cpp:539
+#, kde-format
+msgid "Select a suggested id for this entry"
+msgstr "Izberite predlagan identifikator za ta vnos"
+
+#: src/gui/element/elementwidgets.cpp:767
+#, kde-format
+msgid "External"
+msgstr "Zunanji"
+
+#: src/gui/element/elementwidgets.cpp:853
+#, kde-format
+msgid "Other Fields"
+msgstr "Ostala polja"
+
+#: src/gui/element/elementwidgets.cpp:965
+#, kde-format
+msgid "Name:"
+msgstr "Ime:"
+
+#: src/gui/element/elementwidgets.cpp:973
+#: src/gui/element/elementwidgets.cpp:1036 src/gui/field/fieldlistedit.cpp:102
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:98
+#, kde-format
+msgid "Add"
+msgstr "Dodaj"
+
+#: src/gui/element/elementwidgets.cpp:977
+#, kde-format
+msgid "Content:"
+msgstr "Vsebina:"
+
+#: src/gui/element/elementwidgets.cpp:984
+#, kde-format
+msgid "List:"
+msgstr "Seznam:"
+
+#: src/gui/element/elementwidgets.cpp:989 src/gui/valuelistmodel.cpp:299
+#, kde-format
+msgid "Value"
+msgstr "Vrednost"
+
+#: src/gui/element/elementwidgets.cpp:994 src/parts/part.cpp:240
+#, kde-format
+msgid "Delete"
+msgstr "Zbriši"
+
+#: src/gui/element/elementwidgets.cpp:997
+#: src/program/docklets/referencepreview.cpp:138
+#: src/program/documentlist.cpp:207
+#, kde-format
+msgid "Open"
+msgstr "Odpri"
+
+#: src/gui/element/elementwidgets.cpp:1036
+#: src/program/docklets/elementform.cpp:95
+#, kde-format
+msgid "Apply"
+msgstr "Uveljavi"
+
+#: src/gui/element/elementwidgets.cpp:1105
+#: src/gui/element/elementwidgets.cpp:1175
+#, kde-format
+msgid "Value:"
+msgstr "Vrednost:"
+
+#: src/gui/element/elementwidgets.cpp:1311
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX element."
+msgstr "Dana izvorna koda se ne razčleni kot en sam element BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1320
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX entry."
+msgstr "Dana izvorna koda se ne razčleni kot en sam vnos BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1326
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX macro."
+msgstr "Dana izvorna koda se ne razčleni kot en sam makro BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1332
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX preamble."
+msgstr "Dana izvorna koda se ne razčleni kot ena sama preambula BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1338
+#, kde-format
+msgid "Given source code does not parse as one single BibTeX comment."
+msgstr "Dana izvorna koda se ne razčleni kot en sam komentar BibTeX."
+
+#: src/gui/element/elementwidgets.cpp:1342
+#, kde-format
+msgid "Element class not properly set"
+msgstr "Razred elementa ni pravilno nastavljen"
+
+#: src/gui/element/elementwidgets.cpp:1351
+#, kde-format
+msgid "No issues detected"
+msgstr "Ni zaznanih težav"
+
+#: src/gui/element/elementwidgets.cpp:1366
+#, kde-format
+msgid "Source"
+msgstr "Vir"
+
+#: src/gui/element/elementwidgets.cpp:1397
+#, kde-format
+msgid "Restore"
+msgstr "Obnovi"
+
+#: src/gui/element/findpdfui.cpp:115 src/gui/element/findpdfui.cpp:164
+#: src/gui/element/findpdfui.cpp:166
+#, kde-format
+msgid "View"
+msgstr "Pogled"
+
+#: src/gui/element/findpdfui.cpp:124 src/gui/element/findpdfui.cpp:164
+#: src/gui/element/findpdfui.cpp:166
+#, kde-format
+msgid "Ignore"
+msgstr "Prezri"
+
+#: src/gui/element/findpdfui.cpp:131 src/gui/element/findpdfui.cpp:164
+#: src/gui/element/findpdfui.cpp:166 src/gui/element/findpdfui.cpp:221
+#: src/gui/element/findpdfui.cpp:223
+#, kde-format
+msgid "Download"
+msgstr "Prenesi"
+
+#: src/gui/element/findpdfui.cpp:138 src/gui/element/findpdfui.cpp:164
+#: src/gui/element/findpdfui.cpp:166
+#, kde-format
+msgid "Use URL only"
+msgstr "Uporabi samo spletni naslov"
+
+#: src/gui/element/findpdfui.cpp:367
+#, kde-format
+msgid "Result"
+msgstr "Rezultat"
+
+#: src/gui/element/findpdfui.cpp:419
+#, kde-format
+msgid "Starting to search..."
+msgstr "Začenjam iskanje..."
+
+#: src/gui/element/findpdfui.cpp:438
+#, kde-format
+msgid "Find PDF"
+msgstr "Najdi PDF"
+
+#: src/gui/element/findpdfui.cpp:497
+#, kde-format
+msgid "Save URL '%1'"
+msgstr "Shrani URL '%1'"
+
+#: src/gui/element/findpdfui.cpp:551
+#, kde-format
+msgid ""
+"<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
+"%2</b><br/>Number of found documents: <b>%3</b></qt>"
+msgstr ""
+"<qt>Število obiskanih strani: <b>%1</b><br/>Število prenosov v teku: <b>%2</"
+"b><br/>Število najdenih dokumentov: <b>%3</b></qt>"
+
+#: src/gui/field/colorlabelwidget.cpp:91
+#: src/gui/preferences/settingscolorlabelwidget.cpp:457
+#, kde-format
+msgid "No color"
+msgstr "Ni barve"
+
+#: src/gui/field/colorlabelwidget.cpp:93
+#, kde-format
+msgid "User-defined color"
+msgstr "Uporabniško določena barva"
+
+#: src/gui/field/colorlabelwidget.cpp:104
+#, kde-format
+msgid "Color & Label"
+msgstr "Barva in oznaka"
+
+#: src/gui/field/fieldinput.cpp:86
+#, kde-format
+msgid "Select a predefined month"
+msgstr "Izberi vnaprej določen mesec"
+
+#: src/gui/field/fieldinput.cpp:104
+#, kde-format
+msgid "Select a predefined edition"
+msgstr "Izberi vnaprej določeno izdajo"
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "1st"
+msgstr "1."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "2nd"
+msgstr "2."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "3rd"
+msgstr "3."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "4th"
+msgstr "4."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "5th"
+msgstr "5."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "6th"
+msgstr "6."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "7th"
+msgstr "7."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "8th"
+msgstr "8."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "9th"
+msgstr "9."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "10th"
+msgstr "10."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "11th"
+msgstr "11."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "12th"
+msgstr "12."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "13th"
+msgstr "13."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "14th"
+msgstr "14."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "15th"
+msgstr "15."
+
+#: src/gui/field/fieldinput.cpp:108
+#, kde-format
+msgid "16th"
+msgstr "16."
+
+#: src/gui/field/fieldinput.cpp:123
+#, kde-format
+msgid "Select an existing entry"
+msgstr "Izberi obstoječ vnos"
+
+#: src/gui/field/fieldinput.cpp:276
+#, kde-format
+msgid "Select Cross Reference"
+msgstr "Izberite navzkrižni sklic"
+
+#: src/gui/field/fieldinput.cpp:276
+#, kde-format
+msgid "Select the cross reference to another entry:"
+msgstr "Izberite navzkrižni sklic na drug vnos:"
+
+#: src/gui/field/fieldlineedit.cpp:217 src/gui/field/fieldlineedit.cpp:235
+#, kde-format
+msgid "Opening and closing curly brackets do not match."
+msgstr "Levi in desni zaviti oklepaji se ne ujemajo."
+
+#: src/gui/field/fieldlineedit.cpp:222
+#, kde-format
+msgid "Reference contains characters outside of the allowed set."
+msgstr "Sklic vsebuje znake izven dovoljenega nabora."
+
+#: src/gui/field/fieldlineedit.cpp:232
+#, kde-format
+msgid "Source code could not be parsed correctly."
+msgstr "Izvorne kode ni bilo mogoče pravilno razčleniti."
+
+#: src/gui/field/fieldlineedit.cpp:292 src/gui/field/fieldlineedit.cpp:347
+#, kde-format
+msgid "Plain Text"
+msgstr "Preprosto besedilo"
+
+#: src/gui/field/fieldlineedit.cpp:298 src/gui/field/fieldlineedit.cpp:348
+#, kde-format
+msgid "Reference"
+msgstr "Referenca"
+
+#: src/gui/field/fieldlineedit.cpp:304 src/gui/field/fieldlineedit.cpp:349
+#, kde-format
+msgid "Person"
+msgstr "Oseba"
+
+#: src/gui/field/fieldlineedit.cpp:310 src/gui/field/fieldlineedit.cpp:350
+#, kde-format
+msgid "Keyword"
+msgstr "Ključna beseda"
+
+#: src/gui/field/fieldlineedit.cpp:316 src/gui/field/fieldlineedit.cpp:352
+#, kde-format
+msgid "Source Code"
+msgstr "Izvorna koda"
+
+#: src/gui/field/fieldlineedit.cpp:322 src/gui/field/fieldlineedit.cpp:355
+#, kde-format
+msgid "Verbatim Text"
+msgstr "Dobesedno besedilo"
+
+#: src/gui/field/fieldlineedit.cpp:460
+#, kde-format
+msgid "Open '%1'"
+msgstr "Odpri '%1'"
+
+#: src/gui/field/fieldlineedit.cpp:476
+#, kde-format
+msgid ""
+"The current text cannot be used as value of type '%1'.\n"
+"\n"
+"Switching back to type '%2'."
+msgstr ""
+"Trenutnega besedila ni mogoče uporabiti kot vrednost tipa '%1'.\n"
+"\n"
+"Preklop nazaj na tip '%2'."
+
+#: src/gui/field/fieldlistedit.cpp:142
+#, kde-format
+msgid "Remove value"
+msgstr "Odstrani vrednost"
+
+#: src/gui/field/fieldlistedit.cpp:153
+#, kde-format
+msgid "Move value down"
+msgstr "Premakni vrednost navzdol"
+
+#: src/gui/field/fieldlistedit.cpp:164
+#, kde-format
+msgid "Move value up"
+msgstr "Premakni vrednost navzgor"
+
+#: src/gui/field/fieldlistedit.cpp:414
+#, kde-format
+msgid "... and others (et al.)"
+msgstr "... in ostali (et al.)"
+
+#: src/gui/field/fieldlistedit.cpp:419
+#, kde-format
+msgid "Add from Clipboard"
+msgstr "Dodaj iz odložišča"
+
+#: src/gui/field/fieldlistedit.cpp:420
+#, kde-format
+msgid "Add a list of names from clipboard"
+msgstr "Dodaj seznam imen iz odložišča"
+
+#: src/gui/field/fieldlistedit.cpp:482
+#, kde-format
+msgid "Add file..."
+msgstr "Dodaj datoteko..."
+
+#: src/gui/field/fieldlistedit.cpp:488
+#, kde-format
+msgid "Add reference ..."
+msgstr "Dodaj referenco ..."
+
+#: src/gui/field/fieldlistedit.cpp:491
+#, kde-format
+msgid "Add reference from clipboard"
+msgstr "Dodaj referenco iz odložišča"
+
+#: src/gui/field/fieldlistedit.cpp:503
+#, kde-format
+msgid "File to Associate"
+msgstr "Asociirana datoteka"
+
+#: src/gui/field/fieldlistedit.cpp:541 src/gui/field/fieldlistedit.cpp:615
+#, kde-format
+msgid "Save file locally"
+msgstr "Shrani datoteko lokalno"
+
+#: src/gui/field/fieldlistedit.cpp:591
+#, kde-format
+msgid "Save file '%1' locally"
+msgstr "Shrani datoteko '%1' lokalno"
+
+#: src/gui/field/fieldlistedit.cpp:602
+#, kde-format
+msgid ""
+"<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
+"path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute "
+"path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
+msgstr ""
+"<qt><p>Ali želite uporabiti ime datoteke relativno glede na bibliografsko "
+"datoteko?</p><p>Relativna pot bi bila<br/><tt style=\"font-family: %3;\">%1</"
+"tt></p><p>Absolutna pot bi bila<br/><tt style=\"font-family: %3;\">%2</tt></"
+"p></qt>"
+
+#: src/gui/field/fieldlistedit.cpp:643
+#, kde-format
+msgid "Add Keywords from List"
+msgstr "Dodaj ključne besede iz seznama"
+
+#: src/gui/field/fieldlistedit.cpp:644
+#, kde-format
+msgid "Add keywords as selected from a pre-defined list of keywords"
+msgstr ""
+"Dodaj ključne besede kot izbiro iz vnaprej določenega seznama ključnih besed"
+
+#: src/gui/field/fieldlistedit.cpp:647
+#, kde-format
+msgid "Add Keywords from Clipboard"
+msgstr "Dodaj ključne besede iz odložišča"
+
+#: src/gui/field/fieldlistedit.cpp:648
+#, kde-format
+msgid "Add a punctuation-separated list of keywords from clipboard"
+msgstr "Dodajte seznam ključnih besed, ločenih z ločili iz odložišča"
+
+#: src/gui/file/basicfileview.cpp:282
+#, kde-format
+msgid "Reset to defaults"
+msgstr "Ponovno nastavi na privzete vrednosti"
+
+#: src/gui/file/basicfileview.cpp:294
+#, kde-format
+msgid "No sorting"
+msgstr "Brez razvrščanja"
+
+#: src/gui/file/fileview.cpp:85
+#, kde-format
+msgid ""
+"The current entry has been modified. Do you want to discard your changes?"
+msgstr "Trenutni vnos je bil spremenjen. Ali želite zavreči vaše spremembe?"
+
+#: src/gui/file/fileview.cpp:85
+#, kde-format
+msgid "Discard changes?"
+msgstr "Naj zavržem spremembe?"
+
+#: src/gui/file/fileview.cpp:85
+#, kde-format
+msgid "Continue Editing"
+msgstr "Nadaljuj z urejanjem"
+
+#: src/gui/file/fileview.cpp:319 src/program/docklets/searchresults.cpp:95
+#, kde-format
+msgid "View Element"
+msgstr "Poglej element"
+
+#: src/gui/file/fileview.cpp:327 src/parts/part.cpp:199
+#, kde-format
+msgid "Edit Element"
+msgstr "Uredi element"
+
+#: src/gui/file/findduplicatesui.cpp:140
+#, kde-format
+msgid "Alternatives"
+msgstr "Alternative"
+
+#: src/gui/file/findduplicatesui.cpp:192
+#, kde-format
+msgid "None of the above"
+msgstr "Ni od tega zgoraj"
+
+#: src/gui/file/findduplicatesui.cpp:548
+#, kde-format
+msgid "Select your duplicates"
+msgstr "Izberite vaše duplikate"
+
+#: src/gui/file/findduplicatesui.cpp:568
+#, kde-format
+msgid "Previous Clique"
+msgstr "Prejšnja klika"
+
+#: src/gui/file/findduplicatesui.cpp:570
+#, kde-format
+msgid "Next Clique"
+msgstr "Naslednja klika"
+
+#: src/gui/file/findduplicatesui.cpp:649
+#, kde-format
+msgid "Find Duplicates"
+msgstr "Najdi duplikate"
+
+#: src/gui/file/findduplicatesui.cpp:680
+#, kde-format
+msgid ""
+"Multiple elements are selected. Do you want to search for duplicates only "
+"within the selection or in the whole document?"
+msgstr ""
+"Izbranih je več elementov. Ali želite iskati samo dvojnike znotraj izbora "
+"ali v celotnem dokumentu?"
+
+#: src/gui/file/findduplicatesui.cpp:680
+#, kde-format
+msgid "Search only in selection?"
+msgstr "Iščem samo v izbiri?"
+
+#: src/gui/file/findduplicatesui.cpp:680
+#, kde-format
+msgid "Only in selection"
+msgstr "Samo v izbiri"
+
+#: src/gui/file/findduplicatesui.cpp:680
+#, kde-format
+msgid "Whole document"
+msgstr "Celoten dokument"
+
+#: src/gui/file/findduplicatesui.cpp:703
+#, kde-format
+msgid "No duplicates were found."
+msgstr "Ni najdenih duplikatov."
+
+#: src/gui/file/findduplicatesui.cpp:703
+#, kde-format
+msgid "No duplicates found"
+msgstr "Ni najdenih duplikatov"
+
+#: src/gui/file/findduplicatesui.cpp:710
+#, kde-format
+msgid "Merge Duplicates"
+msgstr "Zlij duplikate"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#, kde-format
+msgid ""
+"This will reset the settings to factory defaults. Should this affect only "
+"the current page or all settings?"
+msgstr ""
+"To bo ponovno nastavilo nastavitve na tovarniško privzete vrednosti. Naj to "
+"vpliva samo na trenutno stran ali na vse nastavitve?"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#, kde-format
+msgid "Reset to Defaults"
+msgstr "Ponovno nastavi na prevzete vrednosti"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#, kde-format
+msgid "All settings"
+msgstr "Vse nastavitve"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#, kde-format
+msgid "Only current page"
+msgstr "Samo trenutna stran"
+
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:168
+#, kde-format
+msgid "Preferences"
+msgstr "Preference"
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:336
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:266
+#, kde-format
+msgid "Add..."
+msgstr "Dodaj..."
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:342
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:340
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:424
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:272
+#, kde-format
+msgid "Remove"
+msgstr "Odstrani"
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:366
+#, kde-format
+msgid "Color & Labels"
+msgstr "Barva in oznake"
+
+#: src/gui/preferences/settingscolorlabelwidget.cpp:397
+#, kde-format
+msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
+msgid "NewColor%1"
+msgstr "Novabarva%1"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:83
+#, kde-format
+msgid "Paper Size:"
+msgstr "Velikost papirja:"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
+#, kde-format
+msgid "Language for 'babel':"
+msgstr "Jezik za 'babel':"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:100
+#, kde-format
+msgid "Bibliography style:"
+msgstr "Slog bibliografije:"
+
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:122
+#, kde-format
+msgid "PDF & Postscript"
+msgstr "PDF in Postscript"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:121
+#, kde-format
+msgid "Command for 'Copy Reference':"
+msgstr "Ukaz za 'Kopiraj referenco':"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:123
+#, kde-format
+msgid "No command"
+msgstr "Ni ukaza"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:131
+#, kde-format
+msgid "Detect LyX pipe automatically:"
+msgstr "Samodejno zaznaj pipe LyX:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:137
+#, kde-format
+msgid "Manually specified LyX pipe:"
+msgstr "Ročno določen pipe LyX:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:150
+#, kde-format
+msgid "Backups when saving:"
+msgstr "Varovalne kopije ob shranjevanju:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:156
+#, kde-format
+msgid "Number of Backups:"
+msgstr "Število varovalnih kopij:"
+
+#: src/gui/preferences/settingsfileexporterwidget.cpp:178
+#, kde-format
+msgid "Saving and Exporting"
+msgstr "Shranjujem in izvažam"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/widgets/filesettingswidget.cpp:34
+#, kde-format
+msgid "John"
+msgstr "John"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/widgets/filesettingswidget.cpp:34
+#, kde-format
+msgid "Doe"
+msgstr "Doe"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/widgets/filesettingswidget.cpp:34
+#, kde-format
+msgid "Jr."
+msgstr "ml."
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:74
+#, kde-format
+msgid "Bibliography System:"
+msgstr "Sistem bibliografije:"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:78
+#: src/gui/widgets/filesettingswidget.cpp:161
+#, kde-format
+msgid "Person Names Formatting:"
+msgstr "Oblikovanje osebnih imen:"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:100
+#, kde-format
+msgid "General"
+msgstr "Splošno"
+
+#: src/gui/preferences/settingsglobalkeywordswidget.cpp:152
+#, kde-format
+msgid "NewKeyword%1"
+msgstr "Novaključnabeseda%1"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:110
+#, kde-format
+msgid "Authors"
+msgstr "Avtorji"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:114
+#, kde-format
+msgid "Author Range:"
+msgstr "Obsegi avtorjev:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "First author"
+msgstr "Prvi avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Second author"
+msgstr "Drugi avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Third author"
+msgstr "Tretji avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Fourth author"
+msgstr "Četrti avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Fifth author"
+msgstr "Peti avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Sixth author"
+msgstr "Šesti avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Seventh author"
+msgstr "Sedmi avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Eighth author"
+msgstr "Osmi avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Ninth author"
+msgstr "Deveti avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "Tenth author"
+msgstr "Deseti avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:115
+#, kde-format
+msgid "|Last author"
+msgstr "|Zadnji avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:121
+#, kde-format
+msgid "... and last author"
+msgstr "... in zadnji avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:127
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:129
+#: src/processing/idsuggestions.cpp:511
+#, kde-format
+msgid "From first author to author %1 and last author"
+msgstr "Od prvega avtorja do avtorja %1 in zadnji avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:127
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:129
+#: src/processing/idsuggestions.cpp:520 src/processing/idsuggestions.cpp:528
+#, kde-format
+msgid "From author %1 to author %2 and last author"
+msgstr "Od avtorja %1 do avtorja %2 in zadnji avtor"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:134
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:345
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:429
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:498
+#, kde-format
+msgid "No change"
+msgstr "Ni sprememb"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:135
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:346
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:430
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:499
+#, kde-format
+msgid "To upper case"
+msgstr "V velike črke"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:136
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:347
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:431
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:500
+#, kde-format
+msgid "To lower case"
+msgstr "V male črke"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:137
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:348
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:432
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:501
+#, kde-format
+msgid "To CamelCase"
+msgstr "v dvozačetnico"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:138
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:349
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:433
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:502
+#, kde-format
+msgid "Change casing:"
+msgstr "Spremeni velikost črk:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:142
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:353
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:437
+#, kde-format
+msgid "Text in between:"
+msgstr "Besedilo vmes:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:146
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:357
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:441
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:506
+#, kde-format
+msgid "Only first characters:"
+msgstr "Samo prvi znaki:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:147
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:358
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:442
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:507
+#, kde-format
+msgid "No limitation"
+msgstr "Ni omejitve"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:210
+#, kde-format
+msgid "2 digits"
+msgstr "2 števki"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:211
+#, kde-format
+msgid "4 digits"
+msgstr "4 števke"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:212
+#, kde-format
+msgid "Digits:"
+msgstr "Števke:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:243
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:114
+#, kde-format
+msgid "Volume:"
+msgstr "Zvezek/del:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:265
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:637
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:672
+#, kde-format
+msgid "Page Number"
+msgstr "Številka strani"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:269
+#, kde-format
+msgid "First page's number:"
+msgstr "Številka prve strani:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:301
+#, kde-format
+msgid "First word only"
+msgstr "Samo prva beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:303
+#, kde-format
+msgid "All but first word"
+msgstr "Vse razen prve besede"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:305
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:332
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:335
+#, kde-format
+msgid "From first to last word"
+msgstr "Od prve do zadnje besede"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:307
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:332
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:335
+#, kde-format
+msgid "From word %1 to last word"
+msgstr "Od besede %1 do zadnje besede"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:309
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:333
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:336
+#, kde-format
+msgid "From first word to word %1"
+msgstr "Od prve besede do besede %1"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:311
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:333
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:336
+#, kde-format
+msgid "From word %1 to word %2"
+msgstr "Od besede %1 do besede %2"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:322
+#, kde-format
+msgid "Word Range:"
+msgstr "Obseg besed:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "First word"
+msgstr "Prva beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Second word"
+msgstr "Druga beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Third word"
+msgstr "Tretja beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Fourth word"
+msgstr "Četrta beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Fifth word"
+msgstr "Peta beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Sixth word"
+msgstr "Šesta beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Seventh word"
+msgstr "Sedma beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Eighth word"
+msgstr "Osma beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Ninth word"
+msgstr "Deveta beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "Tenth word"
+msgstr "Deseta beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:323
+#, kde-format
+msgid "|Last word"
+msgstr "|Zadnja beseda"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:341
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:425
+#, kde-format
+msgid "Small words:"
+msgstr "Male besede:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:549
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:641
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:676
+#, kde-format
+msgid "Text"
+msgstr "Besedilo"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:552
+#, kde-format
+msgid "Text:"
+msgstr "Besedilo:"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:603
+#, kde-format
+msgid "Add at top"
+msgstr "Dodaj na vrh"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:608
+#, kde-format
+msgid "Add at bottom"
+msgstr "Dodaj na dno"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:926
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:118
+#, kde-format
+msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
+msgstr "<qt>Structure:<ul><li>%1</li></ul>Primer: %2</qt>"
+
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:932
+#, kde-format
+msgid "Edit Id Suggestion"
+msgstr "Uredi predlog identifikatorja"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:170
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:309
+#, kde-format
+msgid "Id Suggestions"
+msgstr "Predlogo identifikatorja"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:269
+#, kde-format
+msgid "Edit..."
+msgstr "Uredi..."
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:275
+#, kde-format
+msgid "Up"
+msgstr "Gor"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:278
+#, kde-format
+msgid "Down"
+msgstr "Dol"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:281
+#, kde-format
+msgid "Toggle Default"
+msgstr "Preklopi privzeto"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#, kde-format
+msgid ""
+"All token have been removed from this suggestion. Remove suggestion itself "
+"or restore original suggestion?"
+msgstr ""
+"Iz tega predloga so odstranjeni vsi žetoni. Odstrani sam predlog ali obnovi "
+"prvotni predlog?"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#, kde-format
+msgid "Remove suggestion?"
+msgstr "Naj odstranim predlog?"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#, kde-format
+msgid "Remove suggestion"
+msgstr "Odstrani predlog"
+
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#, kde-format
+msgid "Revert changes"
+msgstr "Razveljavi spremembe"
+
+#: src/gui/preferences/settingsuserinterfacewidget.cpp:67
+#, kde-format
+msgid "When double-clicking an element:"
+msgstr "Ob dvojnem kliku na element:"
+
+#: src/gui/preferences/settingsuserinterfacewidget.cpp:81
+#, kde-format
+msgid "User Interface"
+msgstr "Uporabniški vmesnik"
+
+#: src/gui/valuelistmodel.cpp:301 src/program/docklets/valuelist.cpp:73
+#: src/program/docklets/valuelist.cpp:75
+#, kde-format
+msgid "Count"
+msgstr "Števec"
+
+#: src/gui/widgets/filesettingswidget.cpp:127
+#, kde-format
+msgid "Encoding:"
+msgstr "Kodiranje:"
+
+#: src/gui/widgets/filesettingswidget.cpp:133
+#, kde-format
+msgid "String Delimiters:"
+msgstr "Ločilniki nizov:"
+
+#: src/gui/widgets/filesettingswidget.cpp:140
+#, kde-format
+msgid "Comment Quoting:"
+msgstr "Citiranje komentarjev:"
+
+#: src/gui/widgets/filesettingswidget.cpp:146
+#, kde-format
+msgid "Keyword Casing:"
+msgstr "Velikost črk ključnih besed:"
+
+#: src/gui/widgets/filesettingswidget.cpp:147
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "lowercase"
+msgstr "male črke"
+
+#: src/gui/widgets/filesettingswidget.cpp:148
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "Initial capital"
+msgstr "Velika začetnica"
+
+#: src/gui/widgets/filesettingswidget.cpp:149
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "UpperCamelCase"
+msgstr "Dvozačetnica"
+
+#: src/gui/widgets/filesettingswidget.cpp:150
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "lowerCamelCase"
+msgstr "nezačetnica"
+
+#: src/gui/widgets/filesettingswidget.cpp:151
+#, kde-format
+msgctxt "Keyword Casing"
+msgid "UPPERCASE"
+msgstr "VELIKE ČRKE"
+
+#: src/gui/widgets/filesettingswidget.cpp:154
+#, kde-format
+msgid "Protect Titles"
+msgstr "Zaščiti naslove"
+
+#: src/gui/widgets/filesettingswidget.cpp:156
+#, kde-format
+msgid "Protect Casing?"
+msgstr "Naj zavarujem velikost črk?"
+
+#: src/gui/widgets/filesettingswidget.cpp:165
+#, kde-format
+msgid "Use global settings"
+msgstr "Uporabi globalne nastavitve"
+
+#: src/gui/widgets/filesettingswidget.cpp:171
+#, kde-format
+msgid "List Separator"
+msgstr "Ločilnik seznama"
+
+#: src/gui/widgets/filterbar.cpp:69
+#, kde-format
+msgid "Filter:"
+msgstr "Filter:"
+
+#: src/gui/widgets/filterbar.cpp:85
+#, kde-format
+msgid "Filter bibliographic entries"
+msgstr "Filtriraj bibliografske vnose"
+
+#: src/gui/widgets/filterbar.cpp:89
+#, kde-format
+msgid "any word"
+msgstr "katerakoli beseda"
+
+#: src/gui/widgets/filterbar.cpp:90
+#, kde-format
+msgid "every word"
+msgstr "vsaka beseda"
+
+#: src/gui/widgets/filterbar.cpp:91
+#, kde-format
+msgid "exact phrase"
+msgstr "točna fraza"
+
+#: src/gui/widgets/filterbar.cpp:96
+#, kde-format
+msgid "any field"
+msgstr "katerokoli polje"
+
+#: src/gui/widgets/filterbar.cpp:114
+#, kde-format
+msgid "Include PDF files in full-text search"
+msgstr "Vključi datoteke PDF v iskanje po polnem besedilu"
+
+#: src/gui/widgets/filterbar.cpp:120
+#, kde-format
+msgid "Reset filter criteria"
+msgstr "Ponovno nastavi kriterije filtra"
+
+#: src/gui/widgets/starrating.cpp:52
+#, kde-format
+msgid "Not set"
+msgstr "Ni nastavljeno"
+
+#: src/io/fileexporterbibtex2html.cpp:73
+#, kde-format
+msgid "The program <strong>bibtex2html</strong> is not available."
+msgstr "Program <strong>bibtex2html</strong> ni na voljo."
+
+#: src/io/fileexporterbibtex2html.cpp:90
+#, kde-format
+msgid "The BibTeX style <strong>%1</strong> is not available."
+msgstr "BibTeX slog <strong>%1</strong> ni na voljo."
+
+#: src/io/fileexportertoolchain.cpp:74
+#, kde-format
+msgid "Running command '%1' using working directory '%2'"
+msgstr "Poganjam ukaz  '%1' na delovnem imeniku '%2'"
+
+#: src/io/fileexportertoolchain.cpp:95
+#, kde-format
+msgid "Starting command '%1' failed: %2"
+msgstr "Začetni ukaz '%1' ni uspel: %2"
+
+#: src/io/fileexportertoolchain.cpp:104
+#, kde-format
+msgid "Command '%1' succeeded"
+msgstr "Ukaz '%1' je uspel"
+
+#: src/io/fileexportertoolchain.cpp:106
+#, kde-format
+msgid "Command '%1' failed with exit code %2: %3"
+msgstr "Ukaz '%1' ni uspel z izhodno kodo %2: %3"
+
+#: src/io/fileexportertoolchain.cpp:127
+#, kde-format
+msgid "Writing to file '%1' succeeded"
+msgstr "Pisanje na datoteko '%1' je uspelo"
+
+#: src/io/fileexportertoolchain.cpp:132
+#, kde-format
+msgid "Writing to file '%1' failed"
+msgstr "Shranjevanje na datoteko '%1' ni uspelo."
+
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:230
+#, kde-format
+msgid "Searching '%1' failed for unknown reason."
+msgstr "Iskanje '%1' je iz neznanih razlogov izpadlo."
+
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:230
+#, kde-format
+msgid ""
+"Searching '%1' failed with error message:\n"
+"\n"
+"%2"
+msgstr ""
+"Iskanje '%1' je izpadlo s sporočilom o napaki:\n"
+"\n"
+"%2"
+
+#: src/networking/onlinesearch/onlinesearchacmportal.cpp:303
+#, kde-format
+msgid "ACM Digital Library"
+msgstr "Digitalna knjižnica ACM"
+
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:68
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:46
+#, kde-format
+msgid "Free text:"
+msgstr "Prosto besedilo:"
+
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:77
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:88
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:79
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:123
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:113
+#, kde-format
+msgid "Number of Results:"
+msgstr "Število rezultatov:"
+
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:673
+#, kde-format
+msgid "arXiv.org"
+msgstr "arXiv.org"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:74
+#, kde-format
+msgid "Tag"
+msgstr "Oznaka"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:75
+#, kde-format
+msgid "User"
+msgstr "Uporabnik"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:76
+#, kde-format
+msgid "Group"
+msgstr "Grupa"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:78
+#, kde-format
+msgid "Concept"
+msgstr "Koncept"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:79
+#, kde-format
+msgid "BibTeX Key"
+msgstr "Ključ BibTeX"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:80
+#, kde-format
+msgid "Everywhere"
+msgstr "Povsod"
+
+#: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:229
+#, kde-format
+msgid "Bibsonomy"
+msgstr "Bibsonomy"
+
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:82
+#, kde-format
+msgid "bioRxiv"
+msgstr "bioRxiv"
+
+#: src/networking/onlinesearch/onlinesearchcernds.cpp:35
+#, kde-format
+msgid "CERN Document Server"
+msgstr "CERN strežnik dokumentov"
+
+#: src/networking/onlinesearch/onlinesearchdoi.cpp:61
+#, kde-format
+msgid "DOI:"
+msgstr "DOI:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:55
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:89
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:86
+#, kde-format
+msgid "Title:"
+msgstr "Naslov:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:63
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:94
+#, kde-format
+msgid "Author:"
+msgstr "Avtor:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:71
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:107
+#, kde-format
+msgid "Year:"
+msgstr "Leto:"
+
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:328
+#, kde-format
+msgid ""
+"'Google Scholar' denied scrapping data because it thinks you are a robot."
+msgstr ""
+"'Google Scholar' je zavrnil strganje podatkov, ker misli, da ste robot."
+
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:460
+#, kde-format
+msgid "Google Scholar"
+msgstr "Google Scholar"
+
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:106
+#, kde-format
+msgid "IDEAS (RePEc)"
+msgstr "IDEAS (RePEc)"
+
+#: src/networking/onlinesearch/onlinesearchieeexplore.cpp:184
+#, kde-format
+msgid "IEEEXplore"
+msgstr "IEEEXplore"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:84
+#, kde-format
+msgid "Full text:"
+msgstr "Polno besedilo:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:99
+#, kde-format
+msgid "Abstract/Keywords:"
+msgstr "Abstrakt/Ključne besede:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:104
+#, kde-format
+msgid "Publication:"
+msgstr "Publikacija:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:109
+#, kde-format
+msgid "ISSN/ISBN/DOI:"
+msgstr "ISSN/ISBN/DOI:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:119
+#, kde-format
+msgid "Issue/Number:"
+msgstr "Izdaja/številka:"
+
+#: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:362
+#, kde-format
+msgid "IngentaConnect"
+msgstr "IngentaConnect"
+
+#: src/networking/onlinesearch/onlinesearchinspirehep.cpp:30
+#, kde-format
+msgid "Inspire High-Energy Physics Literature Database"
+msgstr "Inspire High-Energy Physics Literature Database"
+
+#: src/networking/onlinesearch/onlinesearchjstor.cpp:124
+#, kde-format
+msgid "JSTOR"
+msgstr "JSTOR"
+
+#: src/networking/onlinesearch/onlinesearchmathscinet.cpp:118
+#, kde-format
+msgid "MathSciNet"
+msgstr "MathSciNet"
+
+#: src/networking/onlinesearch/onlinesearchmrlookup.cpp:74
+#, kde-format
+msgid "MR Lookup"
+msgstr "MR Lookup"
+
+#: src/networking/onlinesearch/onlinesearchpubmed.cpp:146
+#, kde-format
+msgid "PubMed"
+msgstr "PubMed"
+
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:215
+#, kde-format
+msgid "ScienceDirect"
+msgstr "ScienceDirect"
+
+#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:66
+#, kde-format
+msgid "Paper Reference:"
+msgstr "Referenca članka:"
+
+#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:235
+#, kde-format
+msgid "Semantic Scholar"
+msgstr "Semantic Scholar"
+
+#: src/networking/onlinesearch/onlinesearchsoanasaads.cpp:133
+#, kde-format
+msgid "NASA Astrophysics Data System (ADS)"
+msgstr "NASA Astrophysics Data System (ADS)"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:79
+#, kde-format
+msgid "Free Text:"
+msgstr "Prosto besedilo:"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:93
+#, kde-format
+msgid "Book/Journal title:"
+msgstr "Naslov knjige/revije:"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:100
+#, kde-format
+msgid "Author or Editor:"
+msgstr "Avtor ali urednik:"
+
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:297
+#, kde-format
+msgid "SpringerLink"
+msgstr "SpringerLink"
+
+#: src/networking/zotero/collection.cpp:194
+#, kde-format
+msgid "%1's Library"
+msgstr "%1's knjižnica"
+
+#: src/networking/zotero/oauthwizard.cpp:89
+#, kde-format
+msgid ""
+"<html><head><title>KBibTeX authorized to use Zotero</title></"
+"head><body><p>KBibTeX got successfully authorized to read your Zotero "
+"database.</p></body></html>"
+msgstr ""
+"<html><head><title>KBibTeX je pooblaščen uporabnik za Zotero</title></head> "
+"<body><p>KBibTeX he bil uspešno pooblaščen za branje vaše podatkovne baze za "
+"Zotero.</p></body></html>"
+
+#: src/networking/zotero/oauthwizard.cpp:146
+#, kde-format
+msgid ""
+"<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
+"bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
+"process of authorization involves multiple steps:</p><ol><li>Open the URL as "
+"shown below in a web browser.</li><li>Log in at Zotero and approve the "
+"permissions for KBibTeX.</li><li>If successful, you will be redirected to a "
+"web page telling you that KBibTeX got authorized.<br/>This window will be "
+"closed automatically.</li></ol></qt>"
+msgstr ""
+"<qt><p>Če želite omogočiti <strong>KBibTeX</strong> dostop do "
+"<strong>Zoterobibliografije</strong>, mora biti ta pojavek KBibTeX "
+"pooblaščen.</p><p>postopek avtorizacije vključuje več korakov:</"
+"p><ol><li>Odprite URL kotprikazano spodaj v spletnem brskalniku.</"
+"li><li>Prijavite se v Zotero in odobritedovoljenja za KBibTeX.</li><li>Če bo "
+"to uspešno, boste preusmerjeni na spletno stran, ki vam sporoča, da je "
+"KBibTeX pooblaščen.<br/>To okno se bo samodejno zaprlo.</li></ol></qt>"
+
+#: src/networking/zotero/oauthwizard.cpp:152
+#, kde-format
+msgid "Copy URL"
+msgstr "Kopiraj spletni naslov"
+
+#: src/networking/zotero/oauthwizard.cpp:157
+#, kde-format
+msgid "Open URL"
+msgstr "Odpri spletni naslov"
+
+#: src/networking/zotero/oauthwizard.cpp:177
+#, kde-format
+msgid "Zotero OAuth Key Exchange"
+msgstr "Zotero OAuth Key Exchange"
+
+#. i18n: ectx: Menu (file)
+#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
+#, kde-format
+msgid "File"
+msgstr "Datoteka"
+
+#. i18n: ectx: Menu (edit)
+#: src/parts/kbibtexpartui.rc:9
+#, kde-format
+msgid "Edit"
+msgstr "Uredi"
+
+#. i18n: ectx: Menu (element)
+#: src/parts/kbibtexpartui.rc:16
+#, kde-format
+msgid "Element"
+msgstr "Element"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
+#, kde-format
+msgid "Main Toolbar"
+msgstr "Glavna orodna vrstica"
+
+#: src/parts/part.cpp:135 src/parts/part.cpp:205
+#, kde-format
+msgid "View Document"
+msgstr "Ogled dokumenta"
+
+#: src/parts/part.cpp:162
+#, kde-format
+msgid "Save Copy As..."
+msgstr "Shrani kopijo kot..."
+
+#: src/parts/part.cpp:167
+#, kde-format
+msgid "Filter"
+msgstr "Filter"
+
+#: src/parts/part.cpp:172
+#, kde-format
+msgid "Filter bibliographic entries (%1)"
+msgstr "Filtriraj bibliografske vnose (%1)"
+
+#: src/parts/part.cpp:175
+#, kde-format
+msgid "New element"
+msgstr "Novi element"
+
+#: src/parts/part.cpp:181
+#, kde-format
+msgid "New entry"
+msgstr "Novi vnos"
+
+#: src/parts/part.cpp:186
+#, kde-format
+msgid "New comment"
+msgstr "Novi komentar"
+
+#: src/parts/part.cpp:190
+#, kde-format
+msgid "New macro"
+msgstr "Novi makro"
+
+#: src/parts/part.cpp:194
+#, kde-format
+msgid "New preamble"
+msgstr "Nova preambula"
+
+#: src/parts/part.cpp:211
+#, kde-format
+msgid "Find PDF..."
+msgstr "Najdi PDF..."
+
+#: src/parts/part.cpp:216
+#, kde-format
+msgid "Format entry ids"
+msgstr "Identifikatorji vnosa formata"
+
+#: src/parts/part.cpp:230
+#, kde-format
+msgid "Copy References"
+msgstr "Kopiraj reference"
+
+#: src/parts/part.cpp:320
+#, kde-format
+msgid "New%1"
+msgstr "Nov%1"
+
+#: src/parts/part.cpp:479
+#, kde-format
+msgid "Could not create backup copies of document '%1'."
+msgstr "Ni bilo mogoče ustvariti varnostne kopije dokumenta '%1'."
+
+#: src/parts/part.cpp:479
+#, kde-format
+msgid "Backup copies"
+msgstr "Varovalne kopije"
+
+#: src/parts/part.cpp:496
+#, kde-format
+msgid "Save file"
+msgstr "Shrani datoteko"
+
+#: src/parts/part.cpp:525
+#, kde-format
+msgid "BibTeX File Settings"
+msgstr "Nastavitve datoteke BibTeX"
+
+#: src/parts/part.cpp:542
+#, kde-format
+msgid "PDF/PostScript File Settings"
+msgstr "Nastavitve datoteke PDF/PostScript"
+
+#: src/parts/part.cpp:601
+#, kde-format
+msgid "Could not write bibliographic data to file."
+msgstr "Kopiraj dokument zraven datoteke bibliografije"
+
+#: src/parts/part.cpp:603
+#, kde-format
+msgid "Could not open local file '%1' for writing."
+msgstr "Ni bilo mogoče odpreti lokalne datoteke '%1' za pisanje."
+
+#: src/parts/part.cpp:625
+#, kde-format
+msgid "Failed to upload temporary file to final destination '%1'"
+msgstr "Nalaganje začasne datoteke na končni cilj '%1' ni uspelo"
+
+#: src/parts/part.cpp:627
+#, kde-format
+msgid "Could not write bibliographic data to temporary file."
+msgstr "Ni bilo mogoče zapisati bibliografskih podatkov v začasno datoteko."
+
+#: src/parts/part.cpp:629
+#, kde-format
+msgid "Could not open temporary file for writing."
+msgstr "Začasne datoteke ni bilo mogoče odpreti za pisanje."
+
+#: src/parts/part.cpp:637
+#, kde-format
+msgid "Saving the bibliography to file '%1' failed."
+msgstr "Shranjevanje bibliografije na datoteko '%1' ni uspelo."
+
+#: src/parts/part.cpp:639 src/parts/part.cpp:645
+#, kde-format
+msgid "Saving bibliography failed"
+msgstr "Shranjevanje bibliografije ni uspelo"
+
+#: src/parts/part.cpp:641
+#, kde-format
+msgid "Saving bibliography failed:"
+msgstr "Shranjevanje bibliografije ni uspelo:"
+
+#: src/parts/part.cpp:644
+#, kde-format
+msgid "The following output was generated by the export filter:"
+msgstr "Naslednji izhod je bil generiran z izvoznim filtrom:"
+
+#: src/parts/part.cpp:695
+#, kde-format
+msgid "Local Files"
+msgstr "Lokalne datoteke"
+
+#: src/parts/part.cpp:720
+#, kde-format
+msgid "Remote Files"
+msgstr "Oddaljene datoteke"
+
+#: src/parts/part.cpp:827
+#, kde-format
+msgid ""
+"The document could not be saved, as it was not possible to write to '%1'.\n"
+"\n"
+"Check that you have write access to this file or that enough disk space is "
+"available."
+msgstr ""
+"Dokumenta ni bilo mogoče shraniti, ker ni bilo mogoče pisati na '%1'.\n"
+"\n"
+"Preverite, ali imate dovoljenje za pisanje na to datoteko in da imate dovolj "
+"prostora na disku."
+
+#: src/parts/part.cpp:950
+#, kde-format
+msgid ""
+"Cannot apply default formatting for entry ids: No default format specified."
+msgstr ""
+"Za vnesene identifikatorje ne morem uporabiti privzetega oblikovanja: "
+"privzeta oblika ni določena."
+
+#: src/parts/part.cpp:950
+#, kde-format
+msgid "Cannot Apply Default Formatting"
+msgstr "Privzetega oblikovanja ni mogoče uporabiti"
+
+#: src/parts/part.cpp:1078
+#, kde-format
+msgid ""
+"The file '%1' has changed on disk.\n"
+"\n"
+"Reload file or ignore changes on disk?"
+msgstr ""
+"Datoteka '%1' se je spremenila na disku.\n"
+"\n"
+"Naj ponovno naložim datoteko ali naj prezrem spremembe na disku?"
+
+#: src/parts/part.cpp:1078
+#, kde-format
+msgid "File changed externally"
+msgstr "Datoteka je bila spremenjena od zunaj"
+
+#: src/parts/part.cpp:1078
+#, kde-format
+msgid "Reload file"
+msgstr "Ponovno naloži datoteko"
+
+#: src/parts/part.cpp:1078
+#, kde-format
+msgid "Ignore on-disk changes"
+msgstr "Prezri spremembe na disku"
+
+#: src/parts/partfactory.cpp:34
+#, kde-format
+msgid "KBibTeXPart"
+msgstr "KBibTeXPart"
+
+#: src/parts/partfactory.cpp:34 src/program/program.cpp:48
+#, kde-format
+msgid "A BibTeX editor by KDE"
+msgstr "BibTeX urejevalnik v okolju KDE"
+
+#: src/parts/partfactory.cpp:34 src/program/program.cpp:48
+#, kde-format
+msgid "Copyright 2004-2019 Thomas Fischer"
+msgstr "Copyright 2004-2019 Thomas Fischer"
+
+#: src/parts/partfactory.cpp:38 src/program/program.cpp:53
+#, kde-format
+msgid "Thomas Fischer"
+msgstr "Thomas Fischer"
+
+#: src/parts/partfactory.cpp:38 src/program/program.cpp:53
+#, kde-format
+msgid "Maintainer"
+msgstr "Vzdrževalec"
+
+#: src/processing/bibliographyservice.cpp:187
+#, kde-format
+msgid ""
+"Failed to run 'kbuildsycoca5' to update mime type associations.\n"
+"\n"
+"The system may not know how to use KBibTeX to open bibliography files."
+msgstr ""
+"Neuspel zagon 'kbuildsycoca5' za posodobitev asociacij mime.\n"
+"\n"
+"Sistem morda ne ve, kako uporabiti KBibTeX za odpiranje bibliografskih "
+"datotek."
+
+#: src/processing/bibliographyservice.cpp:187
+#, kde-format
+msgid "Failed to run 'kbuildsycoca5'"
+msgstr "Neuspel zagon 'kbuildsycoca5'"
+
+#: src/processing/checkbibtex.cpp:84
+#, kde-format
+msgid ""
+"Running BibTeX failed.\n"
+"\n"
+"See the following output to trace the error:"
+msgstr ""
+"Zagon BibTeX-a ni uspel.\n"
+"\n"
+"Za sledenje napake glejte naslednji izhod:"
+
+#: src/processing/checkbibtex.cpp:84
+#, kde-format
+msgid "Running BibTeX failed."
+msgstr "Zagon BibTeX-a ni uspel."
+
+#: src/processing/checkbibtex.cpp:116
+#, kde-format
+msgid "Field <b>%1</b> is empty"
+msgstr "Polje <b>%1</b> je prazno"
+
+#: src/processing/checkbibtex.cpp:119
+#, kde-format
+msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
+msgstr "Polja <b>%1</b> in <b>%2</b> sta prazna, a vsaj en je obvezen"
+
+#: src/processing/checkbibtex.cpp:122
+#, kde-format
+msgid "Field <b>%1</b> exists, but <b>%2</b> does not exist"
+msgstr "Polje <b>%1</b> obstaja, a <b>%2</b> ne obstaja"
+
+#: src/processing/checkbibtex.cpp:125
+#, kde-format
+msgid "Fields <b>%1</b> and <b>%2</b> cannot be used at the same time"
+msgstr "Polja <b>%1</b> in <b>%2</b> ne moreta biti uporabljena sočasno"
+
+#: src/processing/checkbibtex.cpp:128
+#, kde-format
+msgid "Fields <b>%1</b> or <b>%2</b> are required to sort entry"
+msgstr "Polje <b>%1</b> ali <b>%2</b> je obvezen za razvrščanje vnosa"
+
+#: src/processing/checkbibtex.cpp:131
+#, kde-format
+msgid "Fields <b>%1</b>, <b>%2</b>, <b>%3</b> are required to sort entry"
+msgstr "Polja <b>%1</b>, <b>%2</b>, <b>%3</b> so obvezna za razvrščanje vnosa"
+
+#: src/processing/checkbibtex.cpp:134
+#, kde-format
+msgid "Unknown warning: %1"
+msgstr "Neznano opozorilo: %1"
+
+#: src/processing/checkbibtex.cpp:143
+#, kde-format
+msgid "<qt><p>The following error was found:</p><pre>%1</pre></qt>"
+msgstr "<qt><p>Najdena je bila naslednja napaka:</p><pre>%1</pre></qt>"
+
+#: src/processing/checkbibtex.cpp:143
+#, kde-format
+msgid "Errors found"
+msgstr "Najdene napake"
+
+#: src/processing/checkbibtex.cpp:145
+#, kde-format
+msgid "The following warnings were found:"
+msgstr "Najdena so bila naslednja opozorila:"
+
+#: src/processing/checkbibtex.cpp:145
+#, kde-format
+msgid "Warnings found"
+msgstr "Najdena opozorila"
+
+#: src/processing/checkbibtex.cpp:148
+#, kde-format
+msgid ""
+"\n"
+"\n"
+"Some fields missing in this entry were taken from the crossref'ed entry '%1'."
+msgstr ""
+"\n"
+"\n"
+"Nekatera polja, ki manjkajo v tem vnosu, so bila vzeta iz navzkrižno "
+"označenega vnosa '%1'."
+
+#: src/processing/checkbibtex.cpp:148
+#, kde-format
+msgid "No warnings or errors were found.%1"
+msgstr "Ni najdenih opozoril ali napak.%1"
+
+#: src/processing/checkbibtex.cpp:148
+#, kde-format
+msgid "No Errors or Warnings"
+msgstr "Ni napak ali opozoril"
+
+#: src/processing/findduplicates.cpp:382
+#, kde-format
+msgid "Searching ..."
+msgstr "Iščem..."
+
+#: src/processing/findduplicates.cpp:382
+#, kde-format
+msgid "Cancel"
+msgstr "Prekliči"
+
+#: src/processing/findduplicates.cpp:384
+#, kde-format
+msgid "Finding Duplicates"
+msgstr "Iskanje dvojnikov"
+
+#: src/processing/idsuggestions.cpp:312
+#, kde-format
+msgctxt ""
+"Small words that can be removed from titles when generating id suggestions; "
+"separated by pipe symbol"
+msgid ""
+"a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|"
+"es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
+"le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
+"which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
+"wird|with|you|und|and|ein|eine|einer|eines"
+msgstr ""
+"a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|"
+"es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
+"le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
+"which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
+"wird|with|you|und|and|ein|eine|einer|eines"
+
+#: src/processing/idsuggestions.cpp:398
+#, kde-format
+msgid ", but only first letter of each last name"
+msgid_plural ", but only first %1 letters of each last name"
+msgstr[0] ", a samo prva %1 črka vsakega priimka"
+msgstr[1] ", ampak samo prvi %1 črki vsakega priimka"
+msgstr[2] ", ampak samo prve %1 črke vsakega priimka"
+msgstr[3] ", ampak samo prvih %1 črk vsakega priimka"
+
+#: src/processing/idsuggestions.cpp:402 src/processing/idsuggestions.cpp:434
+#: src/processing/idsuggestions.cpp:456 src/processing/idsuggestions.cpp:474
+#, kde-format
+msgid ", in upper case"
+msgstr ", v velikih črkah"
+
+#: src/processing/idsuggestions.cpp:405 src/processing/idsuggestions.cpp:437
+#: src/processing/idsuggestions.cpp:459 src/processing/idsuggestions.cpp:477
+#, kde-format
+msgid ", in lower case"
+msgstr ", v malih črkah"
+
+#: src/processing/idsuggestions.cpp:408 src/processing/idsuggestions.cpp:440
+#: src/processing/idsuggestions.cpp:462 src/processing/idsuggestions.cpp:480
+#, kde-format
+msgid ", in CamelCase"
+msgstr ", v dvozačetnico"
+
+#: src/processing/idsuggestions.cpp:414 src/processing/idsuggestions.cpp:446
+#, kde-format
+msgid ", with '%1' in between"
+msgstr ", z '%1' vmes"
+
+#: src/processing/idsuggestions.cpp:417
+#, kde-format
+msgid "Year (2 digits)"
+msgstr "Leto (2 števki)"
+
+#: src/processing/idsuggestions.cpp:419
+#, kde-format
+msgid "Year (4 digits)"
+msgstr "Leto (4 števke)"
+
+#: src/processing/idsuggestions.cpp:424
+#, kde-format
+msgid ", but only the first word"
+msgid_plural ", but only first %1 words"
+msgstr[0] ", a samo prva %1 beseda"
+msgstr[1] ", a samo prvi %1 besedi"
+msgstr[2] ", a samo prve %1 besede"
+msgstr[3] ", a samo prvih %1 besed"
+
+#: src/processing/idsuggestions.cpp:426
+#, kde-format
+msgid ", but only starting from word %1"
+msgstr ", a samo z začetkom besede %1"
+
+#: src/processing/idsuggestions.cpp:428
+#, kde-format
+msgid ", but only from word %1 to word %2"
+msgstr ", a samo od besede %1 do besede %2"
+
+#: src/processing/idsuggestions.cpp:430 src/processing/idsuggestions.cpp:453
+#: src/processing/idsuggestions.cpp:471
+#, kde-format
+msgid ", but only first letter of each word"
+msgid_plural ", but only first %1 letters of each word"
+msgstr[0] ", a samo prvo %1 črko vsake besede"
+msgstr[1] ", a samo prvi %1 črki vsake besede"
+msgstr[2] ", a samo prve %1 črke vsake besede"
+msgstr[3] ", a samo prvih %1 črk vsake besede"
+
+#: src/processing/idsuggestions.cpp:447
+#, kde-format
+msgid ", small words removed"
+msgstr ", majhne besede odstranjene"
+
+#: src/processing/idsuggestions.cpp:488
+#, kde-format
+msgid "First page number"
+msgstr "Številka prve strani"
+
+#: src/processing/idsuggestions.cpp:490
+#, kde-format
+msgid "Text: '%1'"
+msgstr "Besedilo: '%1'"
+
+#: src/processing/idsuggestions.cpp:504
+#, kde-format
+msgid "First and last authors only"
+msgstr "Samo prvi in zadnji avtor"
+
+#: src/processing/idsuggestions.cpp:506
+#, kde-format
+msgid "First author only"
+msgstr "Samo prvi avtor"
+
+#: src/processing/idsuggestions.cpp:508
+#, kde-format
+msgid "All authors"
+msgstr "Vsi avtorji"
+
+#: src/processing/idsuggestions.cpp:513
+#, kde-format
+msgid "From first author to author %1"
+msgstr "Od prvega avtorja do avtorja %1"
+
+#: src/processing/idsuggestions.cpp:517
+#, kde-format
+msgid "All but first author"
+msgstr "Vsi razen prvega avtorja"
+
+#: src/processing/idsuggestions.cpp:522 src/processing/idsuggestions.cpp:530
+#, kde-format
+msgid "From author %1 to author %2"
+msgstr "Od avtorja %1 do avtorja %2"
+
+#: src/processing/idsuggestions.cpp:526
+#, kde-format
+msgid "From author %1 to last author"
+msgstr "Od avtorja %1 do zadnjega avtorja"
+
+#: src/processing/lyx.cpp:79
+#, kde-format
+msgid "Send to LyX/Kile"
+msgstr "Pošlji v LyX/Kile"
+
+#: src/processing/lyx.cpp:99
+#, kde-format
+msgid ""
+"\n"
+"\n"
+"Check that LyX or Kile are running and configured to receive references."
+msgstr ""
+"\n"
+"\n"
+"Preverite, da sta LyX ali Kile zagnana in nastavljena za sprejemanje "
+"referenc."
+
+#: src/processing/lyx.cpp:100
+#, kde-format
+msgid "Send Reference to LyX"
+msgstr "Pošlji sklic na LyX"
+
+#: src/processing/lyx.cpp:105
+#, kde-format
+msgid "No 'LyX server pipe' was detected."
+msgstr "Ni zaznan noben 'strežnik LyX pipe'."
+
+#: src/processing/lyx.cpp:110
+#, kde-format
+msgid "No references to send to LyX/Kile."
+msgstr "Ni referenc za pošiljanje na LyX/Kile."
+
+#: src/processing/lyx.cpp:116
+#, kde-format
+msgid "Could not open LyX server pipe '%1'."
+msgstr "Ni bilo mogoče odpreti strežnika LyX pipe '%1'."
+
+#: src/program/docklets/documentpreview.cpp:184
+#, kde-format
+msgid "Toggle between local files only and all documents including remote ones"
+msgstr ""
+"Preklop med lokalnimi datotekami in vsemi dokumenti vključno z oddaljenimi"
+
+#: src/program/docklets/documentpreview.cpp:195
+#, kde-format
+msgid "Open in external program"
+msgstr "Odpri v zunanjem programu"
+
+#: src/program/docklets/documentpreview.cpp:324
+#, kde-format
+msgid "Refreshing..."
+msgstr "Osvežujem..."
+
+#: src/program/docklets/documentpreview.cpp:353
+#, kde-format
+msgid "No documents to show."
+msgstr "Ni dokumentov za prikaz."
+
+#: src/program/docklets/documentpreview.cpp:360
+#: src/program/docklets/documentpreview.cpp:673
+#, kde-format
+msgid ""
+"<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
+"restriction</a> to local files to see remote documents.</qt>"
+msgstr ""
+"<qt>Ni dokumentov za prikaz.<br/><a href=\"disableonlylocalfiles\">Onemogoči "
+"omejitve </a> na lokalne datoteke za mogoč ogled oddaljenih dokumentov.</qt>"
+
+#: src/program/docklets/documentpreview.cpp:487
+#, kde-format
+msgid "Cannot show requested part"
+msgstr "Ni mogoče prikazati zahtevanega dela"
+
+#: src/program/docklets/documentpreview.cpp:514
+#: src/program/docklets/documentpreview.cpp:518
+#, kde-format
+msgid "Loading..."
+msgstr "Nalaganje..."
+
+#: src/program/docklets/documentpreview.cpp:539
+#, kde-format
+msgctxt ""
+"Additional information in case there is not KPart available for mime type "
+"'application/pdf'"
+msgid ""
+"<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular\">Okular</"
+"a> for KDE Frameworks&nbsp;5 to make use of its PDF viewing component.<br/"
+">Okular for KDE&nbsp;4 will not work."
+msgstr ""
+"<br/><br/>Prosim namestite <a href=\"https://userbase.kde.org/Okular"
+"\">Okular</a> za KDE Frameworks&nbsp;5 za uporabo komponente za ogled PDF."
+"<br/>Okular za KDE&nbsp;4 ne bo deloval."
+
+#: src/program/docklets/documentpreview.cpp:540
+#, kde-format
+msgctxt ""
+"First parameter is mime type, second parameter is optional information (may "
+"be empty)"
+msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
+msgstr "<qt>Ne vem, kako prikazati vrsto mime '%1'.%2</qt>"
+
+#: src/program/docklets/documentpreview.cpp:676
+#, kde-format
+msgid ""
+"No documents to show.\n"
+"Some URLs or files could not be retrieved."
+msgstr ""
+"Ni dokumentov za prikaz.\n"
+"Nekaterih spletnih naslovov ali datotek ni bilo mogoče pridobiti."
+
+#: src/program/docklets/elementform.cpp:75
+#, kde-format
+msgid "Automatically apply changes"
+msgstr "Samodejno uveljavi spremembe"
+
+#: src/program/docklets/elementform.cpp:91
+#, kde-format
+msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
+msgstr ""
+"Obstajajo neshranjene spremembe. Pritisnite 'Uveljavi' ali 'Ponovno nastavi'."
+
+#: src/program/docklets/elementform.cpp:98
+#, kde-format
+msgid "Reset"
+msgstr "Ponovno nastavi"
+
+#: src/program/docklets/elementform.cpp:186
+#, kde-format
+msgid ""
+"The current element got modified.\n"
+"Apply or discard changes?"
+msgstr ""
+"Trenutni element je bil spremenjen.\n"
+"Ali želite uveljaviti ali zavreči spremembe?"
+
+#: src/program/docklets/elementform.cpp:186
+#, kde-format
+msgid "Element modified"
+msgstr "Element spremenjen"
+
+#: src/program/docklets/elementform.cpp:186
+#, kde-format
+msgid "Apply changes"
+msgstr "Uveljavi spremembe"
+
+#: src/program/docklets/elementform.cpp:186
+#, kde-format
+msgid "Discard changes"
+msgstr "Zavrzi spremembe"
+
+#: src/program/docklets/referencepreview.cpp:67
+#, kde-format
+msgid "Source (BibTeX)"
+msgstr "Vir (BibTeX)"
+
+#: src/program/docklets/referencepreview.cpp:68
+#, kde-format
+msgid "Source (RIS)"
+msgstr "Vir (RIS)"
+
+#: src/program/docklets/referencepreview.cpp:77
+#, kde-format
+msgid "Standard"
+msgstr "Standard"
+
+#: src/program/docklets/referencepreview.cpp:78
+#, kde-format
+msgid "Fancy"
+msgstr "Razkošno"
+
+#: src/program/docklets/referencepreview.cpp:79
+#, kde-format
+msgid "Wikipedia Citation"
+msgstr "Citiranje Wikipedie"
+
+#: src/program/docklets/referencepreview.cpp:80
+#, kde-format
+msgid "Abstract-only"
+msgstr "Samo izvleček"
+
+#: src/program/docklets/referencepreview.cpp:115
+#, kde-format
+msgid "Reason:"
+msgstr "Razlog:"
+
+#: src/program/docklets/referencepreview.cpp:139
+#, kde-format
+msgid "Open reference in web browser."
+msgstr "Odpri referenco v spletnem brskalniku."
+
+#: src/program/docklets/referencepreview.cpp:142
+#: src/program/docklets/referencepreview.cpp:402
+#, kde-format
+msgid "Save as HTML"
+msgstr "Shrani kot HTML"
+
+#: src/program/docklets/referencepreview.cpp:143
+#, kde-format
+msgid "Save reference as HTML fragment."
+msgstr "Shrani referenco kot fragment HTML."
+
+#: src/program/docklets/referencepreview.cpp:233
+#, kde-format
+msgid "Preview disabled"
+msgstr "Predogled onemogočen"
+
+#: src/program/docklets/referencepreview.cpp:253
+#, kde-format
+msgid "No element selected"
+msgstr "Ni izbranega elementa"
+
+#: src/program/docklets/referencepreview.cpp:319
+#: src/program/docklets/referencepreview.cpp:377
+#, kde-format
+msgid "No output generated"
+msgstr "Ni generiranega izhoda"
+
+#: src/program/docklets/referencepreview.cpp:336
+#, kde-format
+msgid ""
+"This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
+"command."
+msgstr "Ta vrsta elementa v Wikipediji ni podprta z ukazom <tt>{{cite}}</tt>."
+
+#: src/program/docklets/searchform.cpp:185
+#, kde-format
+msgid "Go to Homepage"
+msgstr "Pojdi na domačo stran"
+
+#: src/program/docklets/searchform.cpp:209
+#, kde-format
+msgid "Query Terms"
+msgstr "Pogoji poizvedbe"
+
+#: src/program/docklets/searchform.cpp:212
+#, kde-format
+msgid "Engines"
+msgstr "Pogoni"
+
+#: src/program/docklets/searchform.cpp:218
+#, kde-format
+msgid "Use Entry"
+msgstr "Uporabi vnos"
+
+#: src/program/docklets/searchform.cpp:228
+#: src/program/docklets/searchform.cpp:303
+#, kde-format
+msgid "Search"
+msgstr "Išči"
+
+#: src/program/docklets/searchform.cpp:315
+#, kde-format
+msgid "Stop"
+msgstr "Ustavi"
+
+#: src/program/docklets/searchform.cpp:338
+#, kde-format
+msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
+msgstr "Izbran ni noben iskalnik (<a href=\"changeEngine\">spremeni</a>)."
+
+#: src/program/docklets/searchform.cpp:339
+#, kde-format
+msgid ""
+"Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
+msgstr "Iskalnik <b>%1</b> je izbran (<a href=\"changeEngine\">spremeni</a>)."
+
+#: src/program/docklets/searchform.cpp:340
+#, kde-format
+msgid ""
+"Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
+"\">change</a>)."
+msgstr ""
+"Iskalnika <b>%1</b> in <b>%2</b> sta izbrana (<a href=\"changeEngine"
+"\">spremeni</a>)."
+
+#: src/program/docklets/searchform.cpp:341
+#, kde-format
+msgid ""
+"Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
+"\"changeEngine\">change</a>)."
+msgstr ""
+"Iskalniki <b>%1</b>, <b>%2</b> in <b>%3</b> so izbrani (<a href="
+"\"changeEngine\">spremeni</a>)."
+
+#: src/program/docklets/searchform.cpp:342
+#, kde-format
+msgid ""
+"Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
+"\"changeEngine\">change</a>)."
+msgstr ""
+"Iskalniki <b>%1</b>, <b>%2</b> in več so izbrani (<a href=\"changeEngine"
+"\">spremeni</a>)."
+
+#: src/program/docklets/searchform.cpp:403
+#, kde-format
+msgid ""
+"Could not start searching the Internet:\n"
+"The search terms are not complete or invalid."
+msgstr ""
+"Iskanja po internetu ni bilo mogoče začeti:\n"
+"Iskalni izrazi niso popolni ali so neveljavni."
+
+#: src/program/docklets/searchform.cpp:403
+#, kde-format
+msgid "Searching the Internet"
+msgstr "Iskanje po internetu"
+
+#: src/program/docklets/searchresults.cpp:85
+#: src/program/docklets/searchresults.cpp:100
+#, kde-format
+msgid "Import"
+msgstr "Uvoz"
+
+#: src/program/docklets/searchresults.cpp:105
+#, kde-format
+msgid "Copy"
+msgstr "Kopiraj"
+
+#: src/program/docklets/searchresults.cpp:147
+#, kde-format
+msgid "No results to import and no bibliography open to import to."
+msgstr "Ni rezultatov za uvoz in nobena bibliografija ni odprta za uvažanje."
+
+#: src/program/docklets/searchresults.cpp:149
+#, kde-format
+msgid "No bibliography open to import to."
+msgstr "Ni na voljo bibliografije za uvažanje."
+
+#: src/program/docklets/searchresults.cpp:151
+#, kde-format
+msgid "No results to import."
+msgstr "Ni rezultatov za uvoz."
+
+#: src/program/docklets/statistics.cpp:51
+#, kde-format
+msgid "Number of Elements:"
+msgstr "Število elementov:"
+
+#: src/program/docklets/statistics.cpp:55
+#, kde-format
+msgid "Number of Entries:"
+msgstr "Število vnosov:"
+
+#: src/program/docklets/statistics.cpp:58
+#, kde-format
+msgid "Journal Articles:"
+msgstr "Članki revije:"
+
+#: src/program/docklets/statistics.cpp:61
+#, kde-format
+msgid "Conference Publications:"
+msgstr "Publikacije konferenc:"
+
+#: src/program/docklets/statistics.cpp:64
+#, kde-format
+msgid "Books:"
+msgstr "Knjige:"
+
+#: src/program/docklets/statistics.cpp:67
+#, kde-format
+msgid "Other Entries:"
+msgstr "Ostali vnosi:"
+
+#: src/program/docklets/statistics.cpp:71
+#, kde-format
+msgid "Number of Comments:"
+msgstr "Število komentarjev:"
+
+#: src/program/docklets/statistics.cpp:75
+#, kde-format
+msgid "Number of Macros:"
+msgstr "Število makrojev:"
+
+#: src/program/docklets/valuelist.cpp:93
+#, kde-format
+msgid "Filter value list"
+msgstr "Filtriraj seznam vrednosti"
+
+#: src/program/docklets/valuelist.cpp:109
+#, kde-format
+msgid "Replace all occurrences"
+msgstr "Odstrani vse pojavke"
+
+#: src/program/docklets/valuelist.cpp:113
+#, kde-format
+msgid "Delete all occurrences"
+msgstr "Odstrani vse pojavke"
+
+#: src/program/docklets/valuelist.cpp:117
+#, kde-format
+msgid "Search for selected values"
+msgstr "Išči izbrane vrednosti"
+
+#: src/program/docklets/valuelist.cpp:121
+#: src/program/docklets/valuelist.cpp:174
+#: src/program/docklets/valuelist.cpp:484
+#, kde-format
+msgid "Add value to selected entries"
+msgstr "Dodaj vrednost izbranim vnosom"
+
+#: src/program/docklets/valuelist.cpp:125
+#, kde-format
+msgid "Remove value from selected entries"
+msgstr "Odstrani vrednost izbranim vnosom"
+
+#: src/program/docklets/valuelist.cpp:138
+#, kde-format
+msgid "Show Count Column"
+msgstr "Prikaži stolpec števcev"
+
+#: src/program/docklets/valuelist.cpp:142
+#, kde-format
+msgid "Sort by Count"
+msgstr "Razvrsti po števcih"
+
+#: src/program/docklets/valuelist.cpp:176
+#: src/program/docklets/valuelist.cpp:486
+#, kde-format
+msgid "Replace value of selected entries"
+msgstr "Zamenjaj vrednosti izbranim vnosom"
+
+#: src/program/docklets/zoterobrowser.cpp:115
+#, kde-format
+msgid "Personal library"
+msgstr "Osebna knjižnica"
+
+#: src/program/docklets/zoterobrowser.cpp:117
+#, kde-format
+msgid "Group library"
+msgstr "Grupna knjižnica"
+
+#: src/program/docklets/zoterobrowser.cpp:126
+#, kde-format
+msgid "No groups available"
+msgstr "Ni na voljo nobene grupe"
+
+#: src/program/docklets/zoterobrowser.cpp:142
+#, kde-format
+msgid "Numeric user id:"
+msgstr "Številski identifikator uporabnika:"
+
+#: src/program/docklets/zoterobrowser.cpp:148
+#, kde-format
+msgid "API key:"
+msgstr "Ključ API:"
+
+#: src/program/docklets/zoterobrowser.cpp:154
+#, kde-format
+msgid "Get New Credentials"
+msgstr "Dobi nove poverilnice"
+
+#: src/program/docklets/zoterobrowser.cpp:161
+#, kde-format
+msgid "Collections"
+msgstr "Zbirke"
+
+#: src/program/docklets/zoterobrowser.cpp:168
+#, kde-format
+msgid "Tags"
+msgstr "Oznake"
+
+#: src/program/docklets/zoterobrowser.cpp:239
+#, kde-format
+msgid ""
+"KBibTeX failed to retrieve the bibliography from Zotero. Please check that "
+"the provided user id and API key are valid."
+msgstr ""
+"KBibTeX ni uspel pridobiti bibliografije s portala Zotero. Prosimo, "
+"preverite veljavnost identifikatorja uporabnika in njegovega ključa API."
+
+#: src/program/docklets/zoterobrowser.cpp:239
+#, kde-format
+msgid "Failed to retrieve data from Zotero"
+msgstr "Podatkov iz Zotera ni bilo mogoče pridobiti"
+
+#: src/program/docklets/zoterobrowser.cpp:365
+#, kde-format
+msgid "No groups available or no permissions"
+msgstr "Na voljo ni nobena skupina ali dovoljenja"
+
+#: src/program/documentlist.cpp:55
+#, kde-format
+msgid "One level up"
+msgstr "En nivo navzgor"
+
+#: src/program/documentlist.cpp:59
+#, kde-format
+msgid "Go to Home folder"
+msgstr "Pojdi v domačo mapo"
+
+#: src/program/documentlist.cpp:199
+#, kde-format
+msgid "<br/><small>located in <b>%1</b></small>"
+msgstr "<br/><small>locirano v <b>%1</b></small>"
+
+#: src/program/documentlist.cpp:203
+#, kde-format
+msgid "Favorite"
+msgstr "Priljubljeni"
+
+#: src/program/documentlist.cpp:205 src/program/documentlist.cpp:395
+#, kde-format
+msgid "Recently Used"
+msgstr "Zadnje uporabljeni"
+
+#: src/program/documentlist.cpp:209
+#, kde-format
+msgid "Modified"
+msgstr "Spremenjeni"
+
+#: src/program/documentlist.cpp:262
+#, kde-format
+msgid ""
+"The current document has to be saved before switching the viewer/editor "
+"component."
+msgstr ""
+"Pred zamenjavo komponente pregledovalnika/urejevalnika je treba shraniti "
+"trenutni dokument."
+
+#: src/program/documentlist.cpp:262
+#, kde-format
+msgid "Save before switching?"
+msgstr "Naj shranim pred preklopom?"
+
+#: src/program/documentlist.cpp:262
+#, kde-format
+msgid "Save document"
+msgstr "Shrani dokument"
+
+#: src/program/documentlist.cpp:262
+#, kde-format
+msgid "Do not switch"
+msgstr "Ne preklopi"
+
+#: src/program/documentlist.cpp:275
+#, kde-format
+msgid "Close File"
+msgstr "Zapri datoteko"
+
+#: src/program/documentlist.cpp:279
+#, kde-format
+msgid "Open File"
+msgstr "Odpri datoteko"
+
+#: src/program/documentlist.cpp:284
+#, kde-format
+msgid "Open with"
+msgstr "Odpri z"
+
+#: src/program/documentlist.cpp:288
+#, kde-format
+msgid "Remove from Favorites"
+msgstr "Odstrani iz priljubljenih"
+
+#: src/program/documentlist.cpp:292
+#, kde-format
+msgid "Add to Favorites"
+msgstr "Dodaj k priljubljenim"
+
+#: src/program/documentlist.cpp:390
+#, kde-format
+msgid "Open Files"
+msgstr "Odpri datoteke"
+
+#: src/program/documentlist.cpp:400
+#, kde-format
+msgid "Favorites"
+msgstr "Priljubljene"
+
+#: src/program/documentlist.cpp:403
+#, kde-format
+msgid "Filesystem Browser"
+msgstr "Brskalnik po datotekah"
+
+#: src/program/mainwindow.cpp:92
+#, kde-format
+msgid "Show Panels"
+msgstr "Prikaži panoje"
+
+#: src/program/mainwindow.cpp:97
+#, kde-format
+msgid "Recently used files"
+msgstr "Nazadnje uporabljene datoteke"
+
+#: src/program/mainwindow.cpp:114
+#, kde-format
+msgid "List of Documents"
+msgstr "Seznam dokumentov"
+
+#: src/program/mainwindow.cpp:124
+#, kde-format
+msgid "List of Values"
+msgstr "Seznam vrednosti"
+
+#: src/program/mainwindow.cpp:133
+#, kde-format
+msgid "Statistics"
+msgstr "Statistika"
+
+#: src/program/mainwindow.cpp:142
+#, kde-format
+msgid "Search Results"
+msgstr "Poišči rezultate"
+
+#: src/program/mainwindow.cpp:153
+#, kde-format
+msgid "Online Search"
+msgstr "Spletno iskanje"
+
+#: src/program/mainwindow.cpp:163
+#, kde-format
+msgid "Zotero"
+msgstr "Zotero"
+
+#: src/program/mainwindow.cpp:174
+#, kde-format
+msgid "Reference Preview"
+msgstr "Predogled referenc"
+
+#: src/program/mainwindow.cpp:183
+#, kde-format
+msgid "Document Preview"
+msgstr "Predogled dokumenta"
+
+#: src/program/mainwindow.cpp:194
+#, kde-format
+msgid "Element Editor"
+msgstr "Urejevalnik elementa"
+
+#: src/program/mainwindow.cpp:204
+#, kde-format
+msgid "File Settings"
+msgstr "Nastavitev datoteke"
+
+#: src/program/mainwindow.cpp:306
+#, kde-format
+msgid ""
+"Creating a new document of mime type '%1' failed as no editor component "
+"could be instantiated."
+msgstr ""
+"Ustvarjanje novega dokumenta mime vrste '%1' ni uspelo, saj se nobena "
+"komponenta urejevalnika ni mogla pojaviti."
+
+#: src/program/mainwindow.cpp:306
+#, kde-format
+msgid "Creating document failed"
+msgstr "Ustvarjanje dokumenta ni uspelo"
+
+#: src/program/mainwindow.cpp:328
+#, kde-format
+msgid "Open file"
+msgstr "Odpri datoteko"
+
+#: src/program/mainwindow.cpp:370 src/program/program.cpp:48
+#, kde-format
+msgid "KBibTeX"
+msgstr "KBibTeX"
+
+#: src/program/mainwindow.cpp:370
+#, kde-format
+msgid "%1 - KBibTeX"
+msgstr "%1 - KBibTeX"
+
+#: src/program/mainwindow.cpp:455
+#, kde-format
+msgid ""
+"KBibTeX is not the default editor for its bibliography formats like BibTeX "
+"or RIS."
+msgstr ""
+"KBibTeX ni privzeti urejevalnik za svoje bibliografske formate, kot je "
+"BibTeX ali RIS."
+
+#: src/program/mainwindow.cpp:455
+#, kde-format
+msgid "Default Bibliography Editor"
+msgstr "Privzeti urejevalnik bibliografije"
+
+#: src/program/mainwindow.cpp:455
+#, kde-format
+msgid "Set as Default Editor"
+msgstr "Nastavi kot privzeti urejevalnik"
+
+#: src/program/mainwindow.cpp:455
+#, kde-format
+msgid "Keep settings unchanged"
+msgstr "Ohranjaj nespremenjene nastavitve"
+
+#: src/program/mdiwidget.cpp:97
+#, kde-format
+msgid "Filename"
+msgstr "Ime datoteke"
+
+#: src/program/mdiwidget.cpp:98
+#, kde-format
+msgid "Date/time of last use"
+msgstr "Datum/čas zadnje uporabe"
+
+#: src/program/mdiwidget.cpp:99
+#, kde-format
+msgid "Full filename"
+msgstr "Polno ime datoteke"
+
+#: src/program/mdiwidget.cpp:145
+#, kde-format
+msgid "<qt>Welcome to <b>KBibTeX</b></qt>"
+msgstr "<qt>Dobrodošli v <b>KBibTeX</b></qt>"
+
+#: src/program/mdiwidget.cpp:148
+#, kde-format
+msgid "New"
+msgstr "Novo"
+
+#: src/program/mdiwidget.cpp:152
+#, kde-format
+msgid "Open..."
+msgstr "Odpri..."
+
+#: src/program/mdiwidget.cpp:156
+#, kde-format
+msgid "List of recently used files:"
+msgstr "Seznam zadnje uporabljenih datotek:"
+
+#: src/program/mdiwidget.cpp:268
+#, kde-format
+msgid "No part available for file of mime type '%1'."
+msgstr "Nobenega dela datoteke ni na voljo za mime vrste '%1'."
+
+#: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
+#, kde-format
+msgid "No Part Available"
+msgstr "Nobenega dela ni na voljo"
+
+#: src/program/mdiwidget.cpp:270
+#, kde-format
+msgid "No part available for file '%1'."
+msgstr "Nobenega dela ni na voljo za datoteko '%1'."
+
+#: src/program/openfileinfo.cpp:247
+#, kde-format
+msgid "Unnamed-%1"
+msgstr "Brezimena-%1"
+
+#: src/program/program.cpp:68
+#, kde-format
+msgid "File(s) to load."
+msgstr "Datoteke za nalaganje."
+
+#: src/program/program.cpp:98
+#, kde-format
+msgid ""
+"KBibTeX seems to be not installed completely. KBibTeX could not locate its "
+"own KPart.\n"
+"\n"
+"Only limited functionality will be available."
+msgstr ""
+"Kaže, da KBibTeX ni nameščen v celoti. KBibTeX je ni mogel najti lastni "
+"KPart.\n"
+"\n"
+"Na voljo bo le omejena funkcionalnost."
+
+#: src/program/program.cpp:98
+#, kde-format
+msgid "Incomplete KBibTeX Installation"
+msgstr "Nepopolna namestitev KBibTeX"
+
+#, fuzzy
+#~| msgid "Number of Comments:"
+#~ msgid "Show Comments:"
+#~ msgstr "Število komentarjev:"
+
+#, fuzzy
+#~| msgid "Number of Macros:"
+#~ msgid "Show Macros:"
+#~ msgstr "Število makrojev:"
+
+#, fuzzy
+#~| msgid "Institution"
+#~ msgid "Instructions"
+#~ msgstr "Institucija"
+
+#, fuzzy
+#~| msgid "Author/Editor"
+#~ msgid "Authorization URL"
+#~ msgstr "Avtor/Urednik"

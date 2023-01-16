@@ -1,0 +1,2235 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY pdflatex "PDFL<superscript
+>A</superscript
+>T<subscript
+>E</subscript
+>X">
+  <!ENTITY tex "T<subscript
+>E</subscript
+>X">
+  <!ENTITY tetex "<application
+>teT<subscript
+>E</subscript
+>X</application
+>">
+  <!ENTITY texlive "<application
+>TeX Live</application
+>">
+  <!ENTITY bibtex "BibT<subscript
+>E</subscript
+>X">
+  <!ENTITY biblatex "<application
+>biblatex</application
+>">
+  <!ENTITY lyx "<application
+>LyX</application
+>">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Russian "INCLUDE">
+]>
+
+<book id="kbibtex" lang="&language;">
+
+<bookinfo>
+<title
+>Руководство пользователя &kbibtex;</title>
+
+<authorgroup>
+  <author
+><firstname
+>Yuri</firstname
+><surname
+>Chornoivan</surname
+> <affiliation
+> <address
+> <email
+>yurchor@ukr.net</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>Мария</firstname
+><surname
+>Шикунова</surname
+><affiliation
+><address
+><email
+>translation-team@basealt.ru</email
+></address
+></affiliation
+><contrib
+>Перевод на русский язык</contrib
+></othercredit
+> 
+</authorgroup>
+
+<copyright>
+<year
+>2004</year
+><year
+>2014</year>
+<holder
+>Thomas Fischer</holder>
+</copyright>
+
+<date
+>07 мая 2019 г.</date>
+<releaseinfo
+>0.9</releaseinfo>
+
+<legalnotice>
+  &FDLNotice;
+</legalnotice>
+
+<abstract>
+  <para
+>&kbibtex; — это графический редактор и оболочка &bibtex;. </para>
+</abstract>
+
+<keywordset>
+  <keyword
+>KDE</keyword>
+  <keyword
+>kbibtex</keyword>
+  <keyword
+>LaTeX</keyword>
+  <keyword
+>TeX</keyword>
+  <keyword
+>библиография</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="preface">
+  <title
+>Вступление</title>
+  <sect1 id="preface_sect">
+    <title
+>Требования</title>
+    <para
+>Для корректной работы &kbibtex; требуется установить следующие компоненты: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+><ulink url="https://www.kde.org/"
+>&kf5-full; libraries</ulink
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.ctan.org/"
+>&latex;</ulink
+>: high-quality document typesetting program. Most likely you want the &texlive; (or on older systems the &tetex;) package, if you are on a Unix-like system. It is an optional dependency, but without it &kbibtex; provides very limited functionality. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.lri.fr/~filliatr/bibtex2html/"
+>bibtex2html</ulink
+> набор инструментов для преобразования из &bibtex; в &HTML; для расширения возможностей предварительного просмотра записей &kbibtex; (необязательная зависимость). </para>
+      </listitem>
+    </itemizedlist>
+    <para
+>Большинство этих компонентов, как и &kbibtex;, должны быть уже включены в ваш дистрибутив &Linux;; чтобы добавить в систему эти пакеты, обратитесь к документации дистрибутива или к установочному &CD;/DVD. </para>
+  </sect1>
+  <sect1 id="preface_audience">
+    <title
+>Целевая аудитория </title>
+    <para
+>Это руководство предназначено для любого человека, независимо от его опыта работы с &latex;, &kde;, &kbibtex; или &Linux;. </para>
+    <para
+>Продвинутым пользователям это руководство может и не пригодиться, но все предложения по документации будут рассмотрены. Если вы хотите внести свой вклад в этот проект или документацию, пожалуйста, обратитесь к <ulink url="https://userbase.kde.org/KBibTeX"
+>веб-странице &kbibtex;</ulink
+>. </para>
+  </sect1>
+
+</chapter>
+
+<chapter id="introduction">
+  <title
+>Введение </title>
+  <sect1 id="intro_about">
+    <title
+>О &kbibtex; </title>
+    <para
+>&kbibtex; — это встроенное окружение для создания и редактирования библиографии в формате &bibtex;. &kbibtex; предоставляет возможность использовать весь функционал &bibtex; в графическом интерфейсе, позволяя моментально получить доступ к локальным и онлайн-библиографиям с возможностью заполнения, сборки, просмотра и поиска записей. </para>
+    <sect2 id="intro-bibtex">
+      <title
+>О &bibtex;</title>
+      <para
+>&bibtex; — это приложение и формат файла, разработанные Oren Patashnik и Leslie Lamport в 1985 году для системы подготовки документов &latex; <citation
+>Lamport86</citation
+>. </para>
+      <para
+>Формат полностью основан на символах, поэтому его возможно использовать в любой программе (хотя стандартным набором символом для акцентов является &tex;). Он основан на полях (метках), и программа &bibtex; игнорирует неизвестные поля, поэтому его возможно расширить. Вероятно, это наиболее распространённый формат библиографии в Интернете. </para>
+      <para
+>Приложение &bibtex; использует файлы стилей, список цитат из &latex; и базу данных &bibtex; для создания файла &latex; со списком цитируемых ссылок. Идея файлов стилей заключается в том, что окончательное копирование в любой специальной форме для журнала может быть выполнено автоматически. </para>
+      <para
+>Пример записи из базы данных &bibtex;: </para>
+<programlisting
+>@article{PAM_doi:10.1007/BF00048294,
+        author = {Streitenberger, P. and Knott, John F.},
+        doi = {10.1007/BF00048294},
+        issn = {1573-2673},
+        journal = {{International Journal of Fracture}},
+        number = {3},
+        pages = {R49},
+        publisher = {Springer},
+        title = {{The calculation of crack opening area and crack opening volume from stress intensity factors}},
+        url = {https://dx.doi.org/10.1007/BF00048294},
+        volume = {76},
+        x-fetchedfrom = {SpringerLink},
+        year = {1995}
+}
+</programlisting>
+  </sect2>
+  <sect2 id="kbibtex-and-latex-editors">
+    <title
+>Редакторы &kbibtex; и &latex;</title>
+    <para
+>Код &latex; возможно редактировать с помощью большого количества инструментов от простых текстовых редакторов до мощных визуальных пакетов. Таблица сравнения редакторов &latex; находится <ulink url="https://ru.wikipedia.org/wiki/Сравнение_редакторов_TeX"
+>здесь</ulink
+>. </para>
+    <para
+>&kbibtex; обеспечивает встроенную <link linkend="integration"
+>интеграцию с &kile; и &lyx;</link
+>, при этом его также возможно использовать с любым редактором &latex;. </para>
+  </sect2>
+  </sect1>
+  <sect1 id="intro_mainfeat">
+    <title
+>Основные возможности &kbibtex; </title>
+    <para
+>&kbibtex; предоставляет следующие возможности: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+>Ввод преамбулы, которая определяет, как особый текст будет отформатирован в библиографии с помощью пункта меню <menuchoice
+><guimenu
+>Элемент</guimenu
+><guisubmenu
+>Новый элемент</guisubmenu
+><guimenuitem
+>Новая преамбула</guimenuitem
+></menuchoice
+> или <link linkend="main-toolbar"
+>основной панели инструментов</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Выбор кодировки записи с помощью элемента <guilabel
+>Кодировка</guilabel
+> в диалоге <guilabel
+>Сохранить как</guilabel
+> или на <link linkend="file-settings"
+>панели параметров файла</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Ввод комментариев, которые не будут учитываться &bibtex;, с помощью пункта меню <menuchoice
+><guimenu
+>Элемент</guimenu
+><guisubmenu
+>Новый элемент</guisubmenu
+><guimenuitem
+>Новый комментарий</guimenuitem
+></menuchoice
+> или на <link linkend="main-toolbar"
+>Основной панели инструментов</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Просмотр и сохранение библиографических списков в разных форматах (исходный (&bibtex;), исходный (RIS), Википедия, стандартный (&XML;/XSLT), изысканный (&XML;/XSLT) и только аннотация (&XML;/XSLT)) с помощью <link linkend="reference-preview"
+>панели просмотра ссылок</link
+>. Дополнительные стили предварительного просмотра доступны при установке пакета <application
+>bibtex2html</application
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Поиск данных библиографических записей в онлайн-базах данных с помощью <link linkend="online-search"
+>панели поиска в Интернете</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Просмотр локальных или удалённых (онлайн) ресурсов (наподобие файлов), на которые <link linkend="adding-link"
+>ссылаются</link
+> записи &bibtex; с помощью <link linkend="document-preview"
+>панели предпросмотра документа</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Поиск и исправление дублирующихся библиографических записей с помощью меню <menuchoice
+><guimenu
+>Правка</guimenu
+><guimenuitem
+>Найти дубликаты</guimenuitem
+></menuchoice
+> или на <link linkend="main-toolbar"
+>основной панели инструментов</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Импорт библиотеки <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+> с помощью <link linkend="zotero"
+>панели Zotero</link
+>. </para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>
+
+<chapter id="quickstart">
+  <title
+>Быстрый запуск </title>
+  <sect1 id="quick_begin">
+    <title
+>Создание файла библиографии для начинающих </title>
+    <!-- 1) No request from kbibtex from Distro user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distro user has a mimeapps.list in home, but no kbibtex in it
+         2b) Devel user has no mimeapps.list in home
+         2c) Systemsettings -> File Associations is the place to edit/change this in a kde desktop
+         update after rebuilding post 2014-01-12
+         Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
+         (why? from installation of distro?)
+         This dialog even pops up when opening a .bib file with LMB click in file manager
+    -->
+    <para
+>При первом запуске &kbibtex; предложит установить себя в качестве редактора по умолчанию для библиографических форматов. Рекомендуется согласиться с предложением.<footnote
+><para
+>Если по тем или иным причинам потребуется убрать эту настройку, удалите строки с подстрокой <literal
+>kbibtex</literal
+> из файла <filename
+>mimeapps.list</filename
+>, расположенного в каталоге <filename role="directory"
+>.local/share/applications</filename
+> домашнего каталога.</para
+></footnote>
+    </para>
+    <para
+>Затем будет отображено подобное окно: </para>
+    <screenshot>
+      <screeninfo
+>Окно &kbibtex; после первого запуска</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="first-run.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>Окно &kbibtex; после первого запуска</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Чтобы начать создание нового библиографического документа, нажмите кнопку <guibutton
+>Создать</guibutton
+> на правой панели, кнопку <guibutton
+>Создать</guibutton
+> на панели инструментов или воспользуйтесь меню <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>N</keycap
+></keycombo
+></shortcut
+><guimenu
+>Файл</guimenu
+><guimenuitem
+>Создать</guimenuitem
+></menuchoice
+>. </para>
+    <para
+>Теперь добавим несколько записей. </para>
+    <para
+>&kbibtex; предлагает два варианта при создании новой записи: воспользоваться <link linkend="online-search"
+>панелью поиска в Интернете</link
+> для поиска по онлайн-базам данных, либо записать всё вручную. </para>
+    <para
+>Попробуем вручную добавить запись для книги. </para>
+    <procedure>
+      <step id="element-editing">
+	<para
+>В меню &kbibtex; выберите пункт <menuchoice
+><guimenu
+>Элемент</guimenu
+><guisubmenu
+>Новый элемент</guisubmenu
+><guimenuitem
+>Новая запись</guimenuitem
+></menuchoice
+>. &kbibtex; откроет окно <guilabel
+>Изменить элемент</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>Окно редактирования элемента &kbibtex;</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="element-editor.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Окно редактирования элемента &kbibtex;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>В раскрывающемся списке <guilabel
+>Тип:</guilabel
+> выберите вариант <guimenuitem
+>Книга</guimenuitem
+>. </para>
+      </step>
+      <step>
+	<para
+>Введите <userinput
+>Lamport86</userinput
+> в поле <guilabel
+>ID:</guilabel
+>. </para>
+	<tip>
+	  <para
+>Поле <quote
+>ID</quote
+> используется для ссылки на библиографическую запись в основном документе. </para>
+	</tip>
+      </step>
+      <step>
+	<para
+>Перейдите на вкладку <guilabel
+>Название</guilabel
+> и введите <userinput
+>LaTeX: Система подготовки документов</userinput
+> в текстовое поле <guilabel
+>Название:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Перейдите на вкладку <guilabel
+>Автор/Редактор</guilabel
+>, нажмите <guibutton
+>Добавить</guibutton
+> и введите <userinput
+>Lamport, Leslie</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Перейдите на вкладку <guilabel
+>Публикация</guilabel
+>, введите <userinput
+>1986</userinput
+> в текстовое поле <guilabel
+>Год:</guilabel
+> и <userinput
+>Addison-Wesley</userinput
+> в текстовое поле <guilabel
+>Издатель:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Нажмите <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Выберите пункт меню <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>S</keycap
+></keycombo
+></shortcut
+><guimenu
+>Файл</guimenu
+><guimenuitem
+>Сохранить</guimenuitem
+></menuchoice
+> и сохраните файл библиографии под названием <filename
+>example.bib</filename
+> в каталоге с создаваемой книгой. </para>
+      </step>
+    </procedure>
+  </sect1>
+
+  <sect1 id="quick-using">
+    <title
+>Использование библиографии в документе &latex; </title>
+    <para
+>Чтобы начать использовать созданную библиографию в своей статье, добавьте следующие команды в файл &latex; (эти команды обычно расположены в конце документа, где находится раздел <quote
+>Ссылки</quote
+>): </para>
+<programlisting
+>\bibliography{<replaceable
+>foo</replaceable
+>}
+\bibliographystyle{plain}
+</programlisting>
+    <para
+>Here, <replaceable
+>foo</replaceable
+> is the name of your <filename role="extension"
+>bib</filename
+> file created with &kbibtex; and <quote
+><literal
+>plain</literal
+></quote
+> is the name of bibliography style. </para>
+    <para
+>Существует множество особых библиографических стилей. Проконсультируйтесь со своим издателем, чтобы выбрать подходящий, или попробуйте самостоятельно найти тот, который лучше всего подходит для ваших целей. </para>
+    <para
+>Ниже приведён список некоторых универсальных стилей, доступных везде: </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+      <literal
+>plain</literal>
+	</term>
+	<listitem>
+	  <para
+>обычный стиль, пункты списка которого перечислены в алфавитном порядке и обозначены цифрами </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>unsrt</literal>
+	</term>
+	<listitem>
+	  <para
+>same as <literal
+>plain</literal
+> except entries appear in order of citation </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>alpha</literal>
+	</term>
+	<listitem>
+	  <para
+>same as <literal
+>plain</literal
+> except entry identifiers are used </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>abbrv</literal>
+	</term>
+	<listitem>
+	  <para
+>same as <literal
+>plain</literal
+> except uses abbreviations for first names, month names, and journal names </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    <para
+>Это позволяет использовать возможности редактора &latex; (более подробная информация содержится в документации редактора) или просто ввести следующий код в общий текстовый редактор, а затем сохранить файл с расширением <filename role="extension"
+>tex</filename
+>. </para>
+<programlisting
+>\documentclass{article}
+ \begin{document}
+ \bibliographystyle{plain}% Выберите стиль библиографии
+ Тестовый файл с ссылкой (смотрите~\cite{Lamport86}).
+ \bibliography{example}
+ \end{document}
+</programlisting>
+    <para
+>В целях тестирования назовём файл <userinput
+>example.tex</userinput
+>. </para>
+    <note>
+      <para
+>Сохраните файл в том же каталоге, в котором содержится файл <filename
+>example.bib</filename
+>. </para>
+    </note>
+    <para
+>Теперь, когда у документа появилась основа, для его обработки запустите <application
+>latex</application
+> и <application
+>bibtex</application
+>. </para>
+    <para
+>First, you should run <application
+>latex</application
+> (to create a <filename
+>foo.aux</filename
+> file, which <application
+>bibtex</application
+> reads). Then run <application
+>bibtex</application
+> once to get some of the citations and create a <filename role="extension"
+>bbl</filename
+> file. Then run <application
+>latex</application
+> again so that the cross references between the text file and the bibliography are correct. You may want to repeat running <application
+>bibtex</application
+> and <application
+>latex</application
+> on the file to make sure that all cross references are correct. Be warned that adding/deleting citations and sources will require running <application
+>bibtex</application
+> again. </para>
+    <para
+>Таким образом, для компиляции документа в консоли следует использовать следующие команды: </para>
+    <screen
+>latex example
+bibtex example
+latex example
+latex example</screen>
+    <tip>
+      <para
+>Если используется расширенная оболочка &latex; наподобие &kile; или &lyx;, не нужно беспокоиться о запуске всех этих команд из эмулятора консоли. Для просмотра результатов воспользуйтесь комбинацией клавиш (<keycombo
+>&Alt;<keycap
+>6</keycap
+></keycombo
+> в &kile;) или кнопкой на панели инструментов. </para>
+    </tip>
+    <para
+>Теперь возможно просмотреть результат в файле формата &DVI; или &PDF; (формат зависит от конфигурации), расположенном в том же каталоге, что и исходные файлы. </para>
+    <note>
+      <para
+>Ваш первый документ с библиографией &bibtex; готов! </para>
+    </note>
+  </sect1>
+</chapter>
+
+<chapter id="interface">
+  <title
+>Интерфейс &kbibtex; </title>
+    <sect1 id="panels">
+    <title
+>Панели &kbibtex; </title>
+    <para
+>Основной функционал &kbibtex; расположен на девяти панелях. Эти панели возможно перемещать или откреплять от основного окна с помощью левой кнопки мыши. </para>
+    <para
+>Скрыть или отобразить панели &kbibtex; возможно с помощью вложенного меню <menuchoice
+><guimenu
+>Настройка</guimenu
+><guimenuitem
+>Показать панели</guimenuitem
+></menuchoice
+>, где достаточно просто установить или снять соответствующий флажок. </para>
+    <sect2 id="list-of-documents">
+      <title
+>Панель списка документов </title>
+	<para
+>Панель <guilabel
+>Список документов</guilabel
+> позволяет переключаться между открытыми библиографическими документами (вкладка <guilabel
+>Открыть файлы</guilabel
+>), недавно открытыми документами (вкладка <guilabel
+>Недавно открытые</guilabel
+>), открытыми основными библиографическими документами (вкладка <guilabel
+>Избранное</guilabel
+>) или просмотром файловой системы компьютера, предоставляя возможность найти библиографические документы (вкладка <guilabel
+>Просмотр файловой системы</guilabel
+>). </para>
+	<tip>
+	  <para
+>Чтобы добавить файл библиографии в избранное, выделите его в любой вкладке (кроме <guilabel
+>Избранное</guilabel
+>), щёлкните по нему правой кнопкой мыши и в открывшемся контекстном меню выберите пункт <guimenuitem
+>Добавить в Избранное</guimenuitem
+>. Чтобы удалить файл библиографии из избранного, выделите его на вкладке <guilabel
+>Избранное</guilabel
+>, щёлкните по нему правой кнопкой мыши и в открывшемся контекстном меню выберите пункт <guimenuitem
+>Удалить из Избранного</guimenuitem
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель списка документов</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-documents.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель списка документов</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="list-of-values">
+      <title
+>Панель списка значений </title>
+	<para
+>Панель <guilabel
+>Список значений</guilabel
+> возможно использовать для удобного просмотра статистики использования значений в полях записей и пакетного редактирования этих значений. </para>
+	<para
+>Верхний раскрывающийся список используется для выбора библиографического поля для отображения статистических данных (количество записей с одинаковым значением для поля) в нижнем списке. </para>
+	<para
+>Щёлкните правой кнопкой мыши по записи в нижнем списке для получения доступа к возможностям пакетного редактирования. Значения возможно <guimenuitem
+>Заменить везде</guimenuitem
+>, <guimenuitem
+>Удалить везде</guimenuitem
+>, <guimenuitem
+>Искать выбранные значения</guimenuitem
+>, используя <link linkend="filter-toolbar"
+>панель инструментов фильтров</link
+>, функции <guimenuitem
+>Добавить значения для выделенных записей</guimenuitem
+>, <guimenuitem
+>Заменить значения в выделенных записях</guimenuitem
+> или <guimenuitem
+>Удалить значения из выделенных записей</guimenuitem
+> (некоторые записи должны быть сначала выбраны в основном списке записей). </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель списка значений</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-values.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель списка значений</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="statistics">
+      <title
+>Панель статистики </title>
+      <para
+>Панель <guilabel
+>Статистика</guilabel
+> предназначена для отображения исчерпывающего списка статистической информации о текущем библиографическом документе. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель статистики</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="statistics.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель статистики</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="reference-preview">
+      <title
+>Панель предпросмотра ссылки </title>
+	<para
+>Панель <guilabel
+>Предпросмотр ссылки</guilabel
+> предназначена для просмотра и сохранения выделенной библиографической записи в формате &HTML;. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель предпросмотра ссылки</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="reference-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель предпросмотра ссылки</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Возможно просматривать ссылки в форматах «исходный (&bibtex;)», «исходный (RIS)», «Википедия», «стандартный (&XML;/XSLT)», «изысканный (&XML;/XSLT)» и «только аннотация (&XML;/XSLT)». Дополнительные стили предварительного просмотра доступны при установке пакета <application
+>bibtex2html</application
+>. </para>
+	<tip>
+	  <para
+>При нажатии по элементам ссылки в формате на основе &XML; &kbibtex; применяет соответствующую <link linkend="filter-toolbar"
+>фильтрацию</link
+> к списку библиографии. </para>
+	</tip>
+	<para
+>Нажмите <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Открыть</guibutton
+>, чтобы открыть ссылку в браузере, установленном по умолчанию. Кнопка <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Сохранить как &HTML;</guibutton
+> позволяет сохранить ссылку в формате &HTML; для дальнейшего использования на сайте. </para>
+	<para
+>Щёлкните правой кнопкой мыши по панели и в открывшемся контекстном меню выберите <guimenuitem
+>Перезагрузить</guimenuitem
+>, чтобы обновить ссылки относительно последних изменений в записи. </para>
+    </sect2>
+    <sect2 id="file-settings">
+      <title
+>Панель параметров файла </title>
+	<para
+>Панель <guilabel
+>Параметры файла</guilabel
+> служит для указания некоторых параметров для файла текущей библиографии <filename role="extension"
+>bib</filename
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель параметров файла</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="file-settings.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель параметров файла</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Возможно установить <guilabel
+>Кодировку</guilabel
+>, <guilabel
+>Разделители строки</guilabel
+>, <guilabel
+>Выделение комментариев</guilabel
+>, <guilabel
+>Регистр ключевых слов</guilabel
+> и <guilabel
+>Форматирование имён</guilabel
+>. </para>
+	<para
+>По умолчанию &bibtex; записывает все промежуточные слова в предложениях со строчными буквами. Установите флажок <guilabel
+>Защита названий</guilabel
+> для защиты регистра в названиях записей. </para>
+    </sect2>
+    <sect2 id="online-search">
+      <title
+>Панель поиска в Интернете </title>
+	<para
+>Панель <guilabel
+>Поиск в Интернете</guilabel
+> позволяет производить поиск по библиографическим базам данных в Интернете в целях поиска требуемых записей или получения полного набора данных для записей, введённых вручную. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель поиска в Интернете</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="online-search.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель поиска в Интернете</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Доступные параметры поиска: <guilabel
+>Свободный текст </guilabel
+>, <guilabel
+>Заголовок</guilabel
+>, <guilabel
+>Автор</guilabel
+> и <guilabel
+>Год</guilabel
+>. Количество результатов, отображаемых в <link linkend="search-results"
+>панели результатов поиска</link
+>, возможно регулировать с помощью счётчика <guilabel
+>Количество результатов</guilabel
+>. </para>
+	<para
+>Нажмите <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Использовать запись</guibutton
+>, чтобы заполнить критерии поиска из выбранной библиографической записи. Это позволяет заполнить существующую запись данными из онлайн-баз данных. Кнопка <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="media-playback-start.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Поиск</guibutton
+> позволяет начать поиск. </para>
+	<para
+>&kbibtex; может производить поиск в наиболее популярных онлайн-базах данных. Чтобы выбрать набор баз данных для текущего поиска, перейдите во вкладку <guilabel
+>Поисковые движки</guilabel
+> или щёлкните левой кнопкой мыши по ссылке <guilabel
+>изменить</guilabel
+> на вкладке <guilabel
+>Параметры запроса</guilabel
+>. </para>
+	<para
+>Чтобы посетить домашнюю страницу базы данных, щёлкните правой кнопкой мыши по соответствующей записи на вкладке <guilabel
+>Поисковые движки</guilabel
+> и в открывшемся контекстном меню выберите пункт <guimenuitem
+>На домашнюю страницу</guimenuitem
+>. </para>
+    </sect2>
+    <sect2 id="zotero">
+      <title
+>Панель Zotero </title>
+	<para
+>Панель <guilabel
+>Zotero</guilabel
+> позволяет импортировать библиотеку <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+>. </para>
+	<para
+>Zotero использует специализированные дополнения браузера для сохранения библиографических записей с Интернет-страниц. Данные хранятся в базе данных, доступ к которой возможно осуществить отовсюду. Документация Zotero находится <ulink url="https://www.zotero.org/support/"
+>здесь</ulink
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель Zotero</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="zotero.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель Zotero</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Click the <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Get New Credentials</guibutton
+> button on <guilabel
+>Credentials</guilabel
+> tab to start the Zotero authorization wizard. Follow the instructions to allow &kbibtex; access your Zotero library. </para>
+	<para
+>Чтобы получить доступ к записям библиотеки, дважды щёлкните по вкладкам <guilabel
+>Коллекции</guilabel
+> или <guilabel
+>Метки</guilabel
+>. Записи, удовлетворяющие указанным требованиям, будут отображены на <link linkend="search-results"
+>панели результатов поиска</link
+>. </para>
+    </sect2>
+    <sect2 id="search-results">
+      <title
+>Панель поиска результатов </title>
+	<para
+>Панель <guilabel
+>Результаты поиска</guilabel
+> используется для обработки результатов поиска, полученных с помощью панели <link linkend="online-search"
+>Поиск в Интернете</link
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель поиска результатов</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="search-results.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель поиска результатов</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Нажмите <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="svn-update.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Импорт</guibutton
+> для импорта выделенных результатов поисков в файл библиографии. </para>
+	<para
+>Чтобы получить доступ к другим действиям для текущего выделенного результата поиска, щёлкните по нему правой кнопкой мыши. В открывшемся контекстном меню возможно просмотреть результат (пункт <guimenuitem
+>Просмотреть элемент</guimenuitem
+>) или скопировать его для дальнейшей вставки в любое место в формате &bibtex; <keycombo
+>&Ctrl;<keycap
+>V</keycap
+></keycombo
+> (пункт <guimenuitem
+>Копировать</guimenuitem
+>). </para>
+    </sect2>
+    <sect2 id="element-editor">
+      <title
+>Панель редактора элементов </title>
+	<para
+>Панель <guilabel
+>Редактор элемента</guilabel
+> позволяет редактировать выбранный элемент библиографии. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель редактора элементов</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="element-editor.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель редактора элементов</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Нажмите <inlinemediaobject
+> <imageobject
+> <imagedata fileref="view-filter.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> для выделения <link linkend="config-id-suggestions"
+>предлагаемого идентификатора</link
+> для элемента. </para>
+	<para
+>Введите соответствующие данные в поля редактора. Формат данных поля возможно переключить на <guimenuitem
+>Текст</guimenuitem
+>, <guimenuitem
+>Ссылка</guimenuitem
+> или <guimenuitem
+>Исходный код</guimenuitem
+> с помощью раскрывающегося списка в левой части текстового поля. </para>
+	<para
+>Нажмите <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="configure.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Параметры</guibutton
+> для открытия раскрывающегося списка с двумя элементами. </para>
+	<para
+>Пункт <guimenuitem
+>Показывать все поля</guimenuitem
+> позволяет отображать или скрывать все пустые поля текущего элемента. </para>
+	<para
+>Чтобы переключать фокус между полями, используйте клавишу &Tab;. Второй флажок раскрывающегося списка, <guimenuitem
+>Клавиша Tab открывает только редактируемые поля</guimenuitem
+>, позволяет переключать переход только между редактируемыми полями. </para>
+	<para
+>Нажмите <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="tools-check-spelling.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Проверить через &bibtex;</guibutton
+> для просмотра редактируемой записи как она будет отображаться в собранном файле &PDF;. </para>
+	<para
+>Установите флажок <guilabel
+>Применять изменения автоматически</guilabel
+>, чтобы все изменения автоматически применялись без нажатия кнопки <guibutton
+>Применить</guibutton
+>. </para>
+	<para
+>Нажмите <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Сбросить</guibutton
+> для сброса всех изменений. </para>
+      </sect2>
+      <sect2 id="document-preview">
+      <title
+>Панель предпросмотра документов </title>
+	<para
+>Панель <guilabel
+>Предпросмотр документа</guilabel
+> позволяет просматривать страницы или документы, <link linkend="adding-link"
+>связанные</link
+> с текущей библиографической записью. </para>
+	<tip>
+	  <para
+>По умолчанию панель <guilabel
+>Предпросмотр документа</guilabel
+> открывается комбинацией клавиш <keycombo
+>&Ctrl;&Shift;<keycap
+>D</keycap
+></keycombo
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель предпросмотра документов</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="document-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель предпросмотра документов</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Нажмите кнопку <inlinemediaobject
+> <imageobject
+> <imagedata fileref="applications-internet.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> для переключения на только локальные файлы или на все файлы, включая удалённые. </para>
+	<para
+>Нажмите кнопку <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> для открытия страницы документа в соответствующем внешнем приложении, установленном по умолчанию. </para>
+	<para
+>The <guilabel
+>Address</guilabel
+> drop down box can be used to switch between the pages and documents. </para>
+    </sect2>
+  </sect1>
+  <sect1 id="toolbars">
+    <title
+>Панели инструментов &kbibtex; </title>
+    <para
+>&kbibtex; имеет две полностью настраиваемые панели инструментов, расположенные в верхней части окна. </para>
+    <para
+>More information on customizing the toolbars can be found in the <ulink url="help:/fundamentals/config.html#toolbars"
+>corresponding section of &kde; Fundamentals manual</ulink
+>. Below is the short description of the default buttons of &kbibtex; toolbars. </para>
+    <sect2 id="main-toolbar">
+      <title
+>Основная панель инструментов </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Основная панель инструментов</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="main-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Основная панель инструментов</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>Стандартная панель инструментов &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para
+><guibutton
+>Создать</guibutton
+>: создаёт новый библиографический документ. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Открыть</guibutton
+>: открывает <ulink url="help:/fundamentals/files.html"
+>стандартное окно открытия и сохранения &kde;</ulink
+>, позволяющий открыть существующую библиографию для редактирования. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Закрыть</guibutton
+>: закрывает текущий библиографический документ. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Сохранить</guibutton
+>: сохраняет текущий библиографический документ. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Сохранить как</guibutton
+>: открывает <ulink url="help:/fundamentals/files.html"
+>стандартное окно открытия и сохранения &kde;</ulink
+>, позволяя сохранить текущий библиографический документ под новым именем. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Новый элемент</guibutton
+>: позволяет создать новую запись, комментарий, преамбулу или <link linkend="macros"
+>макрос</link
+> в текущем библиографическом документе. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Найти дубликаты</guibutton
+>: находит и исправляет дублирующиеся элементы в текущем библиографическом документе. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Отправить в &lyx;/&kile;</guibutton
+>: отправляет ссылку на текущую библиографию в &lyx; или &kile;. Более подробная информация об этой функции содержится в <link linkend="integration"
+>соответствующей главе этого руководства</link
+>. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+    <sect2 id="filter-toolbar">
+      <title
+>Панель фильтра </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Панель фильтра</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="filter-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Панель фильтра</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>Стандартная панель фильтра &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Самый простой метод навигации в больших библиографических списках — это использование панели инструментов <guilabel
+>Фильтр</guilabel
+>: &kbibtex; отфильтрует отображаемый список на основании заданных параметров. Если необходимо найти конкретный элемент, точная позиция которого неизвестна, введите несколько символов из его данных в текстовом поле <guilabel
+>Фильтр</guilabel
+>. </para>
+	<para
+>При вводе нескольких первых букв список будет меняться. Чем больше букв будет введено, тем более сокращённый список отобразится. Эта фильтрация происходит сразу после ввода. </para>
+	<para
+>В правой части панели инструментов <guilabel
+>Фильтр</guilabel
+> находятся два раскрывающихся списка. Эти списки позволяют быстро адаптировать критерии фильтра к своим потребностям. Первый раскрывающийся список используется для выбора режима соответствия (<guimenuitem
+>любое слово</guimenuitem
+>, <guimenuitem
+>каждое слово</guimenuitem
+> или <guimenuitem
+>точная фраза</guimenuitem
+>). Второй список позволяет указать поле, в котором следует применить фильтрацию. Возможно выбрать <guimenuitem
+>любое поле</guimenuitem
+> или определённое поле, чтобы сузить список результатов в больших библиографических списках. </para>
+	<para
+>На этой панели инструментов есть также две кнопки: </para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="application-pdf.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>Включить &PDF;-файлы в полнотекстовый поиск</guibutton
+>: позволяет включить полнотекстовый &PDF; в фильтрацию. </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>Сбросить фильтр</guibutton
+>: сбрасывает параметры фильтрации. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+  </sect1>
+  <sect1 id="menus">
+    <title
+>Меню &kbibtex; </title>
+    <para
+>&kbibtex; следует стандартной схеме меню &kde;. В приложении содержится множество пунктов меню, которые имеет большинство приложений &kde;. Более подробная информация об этих пунктах меню представлена <ulink url="help:/fundamentals/menus.html"
+>в этом разделе руководства</ulink
+>. </para>
+    <para
+>Ниже представлено описание пунктов меню, специфичных для &kbibtex;. </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Правка</guimenu
+> <guimenuitem
+>Удалить</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Удаляет выделенный элемент из библиографического списка. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Элемент</guimenu
+> <guimenuitem
+>Найти дубликаты</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Позволяет найти и удалить дубликаты в текущей библиографии. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Элемент</guimenu
+> <guisubmenu
+>Новый элемент</guisubmenu
+> <guimenuitem
+>Новая запись</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Открывает окно <link linkend="element-editor"
+>изменения элемента</link
+> для добавления новой библиографической записи. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Элемент</guimenu
+> <guisubmenu
+>Новый элемент</guisubmenu
+> <guimenuitem
+>Новый комментарий</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Открывает окно <link linkend="element-editor"
+>изменения элемента</link
+> для добавления комментария, который не будет учитываться в &bibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Элемент</guimenu
+> <guisubmenu
+>Новый элемент</guisubmenu
+> <guimenuitem
+>Новый макрос</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Открывает окно <link linkend="element-editor"
+>изменение элемента</link
+> для добавления нового <link linkend="macros"
+>макроса</link
+>. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Элемент</guimenu
+> <guisubmenu
+>Новый элемент</guisubmenu
+> <guimenuitem
+>Новая преамбула</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Открывает окно <link linkend="element-editor"
+>изменение элемента</link
+> для добавления новой библиографической преамбулы, определяющей форматирование текста в библиографии. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>E</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Элемент</guimenu
+> <guimenuitem
+>Изменить элемент</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Открывает окно <link linkend="element-editor"
+>изменение элемента</link
+> для редактирования текущего библиографического элемента. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="adding-link">
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>D</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Элемент</guimenu
+> <guisubmenu
+>Просмотр</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Открывает локальный или удалённый документ для выделенной записи в библиографическом списке. </para>
+	  <para
+>Чтобы добавить ссылку на документ, воспользуйтесь вкладкой <guilabel
+>Внешние</guilabel
+> окна <link linkend="element-editor"
+>изменения элемента</link
+>. </para>
+	  <screenshot>
+	    <screeninfo
+>Вкладка внешних документов диалога редактирования записи</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="external-tab.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Вкладка внешних документов диалога редактирования записи</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>Кнопка <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Добавить</guilabel
+> позволяет добавить ссылку на удалённую страницу. </para>
+	  <para
+>Раскрывающийся список <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Добавить файл...</guilabel
+> предназначен для выбора определённого локального файла и добавления ссылки или целого файла к текущей библиографии. </para>
+	  <para
+>Нажмите кнопку <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, чтобы удалить выбранный элемент </para>
+	  <para
+>Нажмите на кнопку <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open-remote.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> для открытия ссылки на документ в браузере. </para>
+	  <para
+>Нажмите на кнопку <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> для удаления выбранного элемента из документа. </para>
+	  <para
+>Чтобы изменить порядок строк в списке документов, воспользуйтесь кнопками <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-down.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> и <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>. </para>
+	  <para
+>Кнопка <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> позволяет локально сохранить удалённые документы. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Элемент</guimenu
+> <guimenuitem
+>Найти &PDF;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Попытка найти в Интернете &PDF;-документы для выбранной библиографической записи. </para>
+	  <screenshot>
+	    <screeninfo
+>Диалог поиска &PDF;</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="find-pdf.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Диалог поиска &PDF;</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>Результат поиска возможно <guilabel
+>Игнорировать</guilabel
+>, <guilabel
+>Загрузить</guilabel
+> или просто <guilabel
+>Использовать только &URL;</guilabel
+>. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="format-entry-ids">
+	<term>
+	  <menuchoice
+><guimenu
+>Элемент</guimenu
+> <guimenuitem
+>Форматировать идентификаторы записей</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Позволяет отформатировать идентификаторы для выбранных библиографических записей на основании заданных параметров форматирования по умолчанию. </para>
+	  <para
+>Чтобы установить форматирование для идентификаторов по умолчанию, воспользуйтесь диалогом настройки &kbibtex; <link linkend="config-id-suggestions"
+>предлагаемых идентификаторов</link
+>. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Элемент</guimenu
+> <guisubmenu
+>Цвет</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Позволяет установить или удалить (<guimenuitem
+>Без цвета</guimenuitem
+>) цветовую метку в выделенных библиографических записях. </para>
+	  <para
+>Цветовые метки возможно отрегулировать с помощью диалога настройки &kbibtex; <link linkend="config-color"
+>Цвета и метки</link
+>. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Элемент</guimenu
+> <guimenuitem
+>Отправить в &lyx;/&kile;</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+><link linkend="integration"
+>Послать ссылки</link
+> в выбранные библиографические записи в &lyx; или &kile;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Настройка</guimenu
+> <guimenuitem
+>Настроить &kbibtex;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Открыть <link linkend="config-dialog"
+>диалог настройки &kbibtex;</link
+>. </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </sect1>
+  <sect1 id="config-dialog">
+    <title
+>Диалог настройки &kbibtex; </title>
+    <para
+>Several &kbibtex; parameters can be configured via the <guilabel
+>Preferences</guilabel
+> dialog. This dialog can be opened using the <menuchoice
+><guimenu
+>Settings</guimenu
+><guimenuitem
+>Configure &kbibtex;...</guimenuitem
+></menuchoice
+> menu item. Below you can find a description of &kbibtex; configuration pages. </para>
+    <para
+>Нажмите кнопку <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-revert.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> По умолчанию</guibutton
+> для сброса всех элементов к значениям по умолчанию. </para>
+    <para
+>Кнопка <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Сбросить</guibutton
+> позволяет отменить все изменения текущей конфигурации без закрытия окна <guilabel
+>Предпочтения</guilabel
+>. </para>
+    <sect2 id="config-general">
+      <title
+>Основные параметры </title>
+      <screenshot>
+	<screeninfo
+>Основные параметры</screeninfo>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="config-general.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase
+>Основные параметры</phrase>
+	  </textobject>
+	</mediaobject>
+      </screenshot>
+      <para
+>Эта страница позволяет изменить стандартное <guilabel
+>Форматирование имён</guilabel
+>, которое будет автоматически применяться к именам, вводимым в диалоге <link linkend="element-editor"
+>изменения элементов</link
+>. </para>
+      </sect2>
+    <sect2 id="config-keywords">
+      <title
+>Настройка ключевых слов </title>
+      <screenshot>
+	<screeninfo
+>Настройка ключевых слов</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-keywords.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Настройка ключевых слов</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Эта страница позволяет редактировать список ключевых слов. Ключевые слова, присвоенные библиографическим записям с помощью <link linkend="element-editor"
+>редактора элементов</link
+>, позволяют структурировать библиографию. <link linkend="filter-toolbar"
+>Фильтр</link
+> по ключевым словам позволяет отобразить подробные результаты по темам. </para>
+	<para
+>Кнопка <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Добавить</guibutton
+> позволяет добавить ключевое слово в список. </para>
+	<para
+>Нажмите кнопку <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Удалить</guibutton
+> для удаления текущего ключевого слова. </para>
+      </sect2>
+      <sect2 id="config-color">
+      <title
+>Настройка цветов и меток </title>
+      <screenshot>
+	<screeninfo
+>Настройка цветов и меток</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-color.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Настройка цветов и меток</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Цветовые метки — это ещё один полезный способ структурировать библиографию. Эта страница параметров позволяет определить метки и их цвета. </para>
+	<para
+>Кнопка <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Добавить</guibutton
+> используется для добавления метки к списку. </para>
+	<para
+>Нажмите кнопку <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Удалить</guibutton
+>, чтобы удалить текущую метку. </para>
+	<para
+>Дважды щёлкните по столбцу <guilabel
+>Цвет</guilabel
+> или <guilabel
+>Метка</guilabel
+>, чтобы начать его редактировать. </para>
+      </sect2>
+      <sect2 id="config-id-suggestions">
+      <title
+>Настройка предлагаемых идентификаторов </title>
+      <screenshot>
+	<screeninfo
+>Настройка предлагаемых идентификаторов</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-id-suggestions.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Настройка предлагаемых идентификаторов</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Эта страница используется для управления схемой предлагаемых идентификаторов в окне <link linkend="element-editor"
+>Редактирование элемента</link
+>. Соответствующие кнопки справа от списка позволяют добавлять, редактировать, удалять и изменять порядок схем. </para>
+	<para
+>Нажмите <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="favorites.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Выбрать по умолчанию</guibutton
+>, чтобы переключить схему предлагаемого идентификатора по умолчанию на текущий элемент. Эта кнопка позволяет указать формат для действия «<link linkend="format-entry-ids"
+>Форматировать идентификаторы записей</link
+>». </para>
+      </sect2>
+      <sect2 id="config-user-interface">
+      <title
+>Настройка пользовательского интерфейса </title>
+      <screenshot>
+	<screeninfo
+>Настройка пользовательского интерфейса</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-user-interface.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Настройка пользовательского интерфейса</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Эта страница позволяет показать или скрыть комментарии для списка макросов в &kbibtex;, выбрать систему библиографии (&bibtex; или &biblatex;) и указать, что делать при двойном щелчке по элементу в списке библиографии (<guimenuitem
+>Открыть редактор</guimenuitem
+> или <link linkend="document-preview"
+><guimenuitem
+>Просмотреть документ</guimenuitem
+></link
+>). </para>
+	<tip>
+	  <para
+>&biblatex; — это повторная реализация &bibtex;. В &biblatex; форматирование библиографии полностью контролируется макросами &latex;, а не файлами <filename role="extension"
+>bst</filename
+>. Это приложение поддерживает разделённые библиографии, несколько библиографий в одном документе и отдельные списки библиографических сокращений. Библиографии могут быть разделены на части и/или сегментированы по темам. Как и библиографические  стили, все команды цитирования возможно легко указать. Пакет &biblatex; полностью локализован и может использоваться вместе с пакетом babel.<footnote
+><para
+>Из документации &biblatex;.</para
+></footnote>
+	  </para>
+	  <para
+>&biblatex; может использовать <ulink url="http://biblatex-biber.sourceforge.net/"
+>biber</ulink
+>. &biblatex; позволяет использовать кодировку UTF-8 в библиографических записях. </para>
+	  <para
+>&biblatex; позволяет создавать сложные библиографические списки. </para>
+	</tip>
+      </sect2>
+      <sect2 id="config-saving">
+      <title
+>Настройка сохранения и экспорта </title>
+      <screenshot>
+	<screeninfo
+>Настройка сохранения и экспорта</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-saving.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Настройка сохранения и экспорта</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Эта страница позволяет выбирать команду &latex; (например, <userinput
+>\cite{...}</userinput
+>), которая будет использоваться в качестве оболочки для ссылки, скопированной из библиографического списка с помощью пункта всплывающего меню <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;&Shift;<keycap
+>C</keycap
+></keycombo
+></shortcut
+><guimenuitem
+>Скопировать ссылку</guimenuitem
+></menuchoice
+>. </para>
+	<para
+>&kbibtex; может автоматически определять <link linkend="lyx-integration"
+>канал данных &lyx;</link
+>, проверяя соответствующий флажок. </para>
+	<para
+>Когда не установлен флажок <guilabel
+>Определять каналы &lyx; автоматически</guilabel
+>, возможно добавить адрес канала вручную в текстовое поле <guilabel
+>Указать канал &lyx; вручную</guilabel
+> или выбрать его с помощью <ulink url="help:/fundamentals/files.html"
+>стандартного диалога открытия и сохранения &kde;</ulink
+> нажатием кнопки с правой стороны текстового поля. </para>
+	<para
+>Здесь возможно настроить резервное копирование. Чтобы выбрать субъект резервного копирования (<guimenuitem
+>Только локальные файлы</guimenuitem
+>, <guimenuitem
+>Без резервных копий</guimenuitem
+> или <guimenuitem
+>Локальные и удалённые файлы</guimenuitem
+>), воспользуйтесь раскрывающемся списком <guilabel
+>Резервные копии при сохранении</guilabel
+> и укажите количество резервных копий для сохранения. </para>
+      </sect2>
+      <sect2 id="config-pdf">
+      <title
+>Настройка &PDF; и Postscript </title>
+      <screenshot>
+	<screeninfo
+>Настройка &PDF; и Postscript</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-pdf.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Настройка &PDF; и Postscript</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>This configuration page can be used to choose some options for <link linkend="element-editor"
+>previewing of &kbibtex; entries</link
+>. You can select <guilabel
+>Paper Size</guilabel
+>, language for <ulink url="https://www.ctan.org/pkg/babel"
+>babel</ulink
+> &latex; package and the <link linkend="quick-using"
+>bibliography style</link
+>. </para>
+      </sect2>
+  </sect1>
+</chapter>
+
+<chapter id="advanced">
+  <title
+>Дополнительные возможности </title>
+  <sect1 id="crossreferences">
+    <title
+>Перекрёстные ссылки </title>
+    <para
+>Перекрёстные ссылки позволяют сэкономить немного времени с помощью создания связи между <quote
+>родительской</quote
+> записью (например, материалы или сборник статей) и <quote
+>дочерними</quote
+> записями (отчёты или статьи). </para>
+    <para
+>Чтобы создать перекрёстную ссылку, введите её идентификатор в поле <guilabel
+>Перекрёстная ссылка:</guilabel
+> на вкладке <guilabel
+>Публикация</guilabel
+>. </para>
+    <screenshot>
+      <screeninfo
+>Вкладка издательства диалога редактирования записи</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="cross-ref.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>Вкладка издательства диалога редактирования записи</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Идентификатор возможно ввести напрямую или нажать кнопку <inlinemediaobject
+> <imageobject
+> <imagedata fileref="flag.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> и выбрать нужный вариант в списке доступных идентификаторов. </para>
+  </sect1>
+  <sect1 id="macros">
+    <title
+>Макросы </title>
+    <para
+>Допустим, библиография содержит множество ссылок на один и тот же журнал, и вводить этот заголовок снова и снова не хочется. Для таких целей возможно воспользоваться макросами для заголовка журнала. </para>
+    <para
+>Например, создадим макрос <replaceable
+>nit</replaceable
+> для журнала <quote
+>Наука и Техника</quote
+>. Следует поступить таким образом: </para>
+    <procedure>
+      <step>
+	<para
+>Выберите пункт меню <menuchoice
+><guimenu
+>Элемент</guimenu
+><guisubmenu
+>Новый элемент</guisubmenu
+><guimenuitem
+>Новый макрос</guimenuitem
+></menuchoice
+>. </para>
+      </step>
+      <step>
+	<para
+>Введите идентификатор (сокращение) для заголовка в текстовом поле <guilabel
+>ID:</guilabel
+>. Стандартный идентификатор <userinput
+>New1</userinput
+> следует заменить на <userinput
+>nit</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Выберите <inlinemediaobject
+> <imageobject
+> <imagedata fileref="draw-text.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Простой текст</guilabel
+>). Другой вариант, <inlinemediaobject
+> <imageobject
+> <imagedata fileref="code-context.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Исходный код</guilabel
+>), возможно использовать для вставки макросов с командами &latex;. </para>
+      </step>
+      <step>
+	<para
+>В текстовое поле <guilabel
+>Значение:</guilabel
+> введите <userinput
+>Наука и Техника</userinput
+>. </para>
+	<screenshot>
+	  <screeninfo
+>Определение макроса</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Определение макроса</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Нажмите <guibutton
+>Создать</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>При желании перейдите на вкладку <guilabel
+>Источник</guilabel
+>, чтобы проверить код макроса. </para>
+	<screenshot>
+	  <screeninfo
+>Определение макроса (исходный код)</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro-source.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Определение макроса (исходный код)</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Нажмите <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+    </procedure>
+    <para
+>Таким же образом возможно указывать заголовки, авторов и названия месяцев, в соответствии с правилами конкретного издателя по сокращениям для записей из онлайн-баз данных. По умолчанию эти правила (макросы) должны быть определены в файлах стилей библиографии (<filename role="extension"
+>bst</filename
+>). </para>
+  </sect1>
+</chapter>
+
+<chapter id="integration">
+  <title
+>Интеграция с &kile; и &lyx; </title>
+  <para
+>&kbibtex; легко интегрируется с обычными редакторами &latex;, а именно с &kile; и &lyx;. </para>
+  <sect1 id="kile-intergation">
+    <title
+>Интеграция с &kile; </title>
+    <para
+><ulink url="http://kile.sourceforge.net/"
+>&kile;</ulink
+> — это оболочка и редактор исходного кода &tex; и &latex;. </para>
+    <para
+>&kbibtex; — это стандартное средство просмотра для файлов &bibtex; в &kile;, поэтому в этом случае дополнительная настройка не требуется. </para>
+    <para
+>Чтобы добавить выделенные цитаты из библиографии, запустите &kile;, откройте файл &latex;, поместите курсор туда, куда требуется вставить цитату, перейдите в окно &kbibtex;, выделите элемент в списке и выберите вариант <menuchoice
+><guimenu
+>Элемент</guimenu
+><guimenuitem
+>Отправить в &lyx;/&kile;</guimenuitem
+></menuchoice
+> или воспользуйтесь пунктом в вызываемом правой кнопкой мыши контекстном меню <guimenuitem
+>Отправить в &lyx;/&kile;</guimenuitem
+>. </para>
+    <para
+>Цитаты будут вставлены в виде <userinput
+>\cite{<replaceable
+>идентификаторы элемента</replaceable
+>}</userinput
+> в положении курсора в текущий документ &kile;. </para>
+  </sect1>
+  <sect1 id="lyx-integration">
+    <title
+>Интеграция с &lyx; </title>
+    <para
+><ulink url="https://www.lyx.org/"
+>&lyx;</ulink
+> is a document processor that encourages an approach to writing based on the structure of your documents (WYSIWYM) and not simply their appearance (WYSIWYG). </para>
+    <para
+>&kbibtex; возможно интегрировать с &lyx; с помощью канала ввода/вывода &lyx;. </para>
+    <procedure>
+      <step>
+	<para
+>Для начала требуется настроить &lyx; на использование канала. Откройте <menuchoice
+><guimenu
+>Инструменты</guimenu
+><guimenuitem
+>Настройки</guimenuitem
+></menuchoice
+> в главном окне &lyx;. Перейдите на страницу <guilabel
+>Пути</guilabel
+> и введите путь (например, <filename
+>~/.lyx/lyxpipe</filename
+>) в текстовое поле <guilabel
+>Канал сервера LyX</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>Настройка &lyx;</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="lyx-preferences.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Настройка &lyx;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Нажмите <guibutton
+>Сохранить</guibutton
+> для сохранения изменений. </para>
+      </step>
+      <step>
+	<para
+>Чтобы обновить конфигурацию &lyx; и перезапустить его, выберите пункт <menuchoice
+><guimenu
+>Инструменты</guimenu
+><guimenuitem
+>Обновить конфигурацию</guimenuitem
+></menuchoice
+>. </para>
+      </step>
+      <step>
+	<para
+>Чтобы добавить выбранные цитаты из библиографического файла, откройте документ, поместите курсор в место, куда требуется вставить библиографию, и выберите пункт меню &lyx; <menuchoice
+><guimenu
+>Вставка</guimenu
+><guisubmenu
+>Списки / содержание</guisubmenu
+><guimenuitem
+>Библиография &bibtex;...</guimenuitem
+></menuchoice
+>. </para>
+      </step>
+      <step>
+	<para
+>Нажмите <guibutton
+>Добавить...</guibutton
+>, а затем <guibutton
+>Обзор...</guibutton
+>. Укажите файл &kbibtex; <filename role="extension"
+>bib</filename
+>. Нажмите <guibutton
+>Добавить</guibutton
+> и <guibutton
+>OK</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>После этого поместите курсор туда, куда требуется вставить цитату, перейдите в окно &kbibtex;, выделите элемент в списке и выберите вариант <menuchoice
+><guimenu
+>Элемент</guimenu
+><guimenuitem
+>Отправить в &lyx;/&kile;</guimenuitem
+></menuchoice
+> или воспользуйтесь пунктом в вызываемом правой кнопкой мыши контекстном меню <guimenuitem
+>Отправить в &lyx;/&kile;</guimenuitem
+>. </para>
+      </step>
+      <step>
+	<para
+>Цитаты будут вставлены в качестве ссылки в положении курсора в текущий документ &lyx;. </para>
+      </step>
+    </procedure>
+  </sect1>
+</chapter>
+
+<chapter id="credits">
+  <title
+>Авторские права и лицензия</title>
+  <para
+>&kbibtex; </para>
+  <para
+>Авторские права на программу &copy; 2004-2014 Thomas Fischer <email
+>fischer@unix-ag.uni-kl.de</email
+> </para>
+  <para
+>Авторские права на документацию &copy; 2013 Yuri Chornoivan <email
+>yurchor@ukr.net</email
+> </para>
+<para
+>Перевод на русский язык — Мария Шикунова <email
+>translation-team@basealt.ru</email
+></para
+> &underFDL; &underGPL; </chapter>
+
+<bibliography>
+  <biblioentry>
+    <abbrev
+>Lamport86</abbrev>
+    <author>
+      <personname
+><firstname
+>Leslie</firstname
+> <surname
+>Lamport</surname
+> </personname>
+    </author>
+    <title
+>Latex: система подготовки документов </title>
+    <pubdate
+>1986</pubdate>
+    <publisher>
+      <publishername
+>Addison-Wesley Publishing Company</publishername>
+    </publisher>
+  </biblioentry>
+</bibliography>
+
+&documentation.index;
+
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+-->

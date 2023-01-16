@@ -1,0 +1,124 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Spanish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Manual del usuario de KBibTeX</title>
+<author
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+> <contrib
+>Página man de KBibTeX.</contrib
+> <email
+>fischer@unix-ag.uni-kl.de</email
+></author>
+<date
+>2016-06-29</date>
+<productname
+>KBibTeX</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>kbibtex</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>kbibtex</command
+></refname>
+<refpurpose
+>un editor de BibTeX creado por KDE escrito por Thomas Fischer y publicado bajo la licencia GPL versión 2 o posterior.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>kbibtex</command
+> <arg choice="opt"
+><replaceable
+>URL</replaceable
+></arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Descripción</title>
+<para
+>KBibTeX es un editor BibTeX creado por KDE escrito por Thomas Fischer y publicado bajo la licencia GPL versión 2 o posterior. </para>
+<para
+>KBibTeX puede iniciarse como un programa independiente o embebido como una KPart en prácticamente cualquier programa de &kde; (&eg; Konqueror). </para>
+</refsect1>
+
+<refsect1 id="arguments"
+><title
+>Argumentos</title>
+<variablelist>
+  <varlistentry>
+    <term
+><option
+>URL</option
+></term>
+  <listitem>
+    <para
+>Una dirección o varias direcciones de los documentos de bibliografía a ser abiertos.</para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Vea también</title>
+<simplelist>
+<member
+>Documentación de usuario más detallada se encuentra disponible en <ulink url="help:/kbibtex"
+>help:/kbibtex</ulink
+> (o bien introduzca este <acronym
+>URL</acronym
+> en &konqueror;, o ejecute <userinput
+><command
+>khelpcenter</command
+> <parameter
+>help:/kbibtex</parameter
+></userinput
+>).</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+<member
+>También hay más información disponible en el <ulink url="https://userbase.kde.org/KBibTeX"
+>sitio web oficial de KBibTeX</ulink
+>.</member>
+</simplelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Autores</title>
+<para
+>KBibTeX ha sido escrito por <personname
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+></personname
+> <email
+>fischer@unix-ag.uni-kl.de</email
+>. </para>
+</refsect1>
+
+</refentry>

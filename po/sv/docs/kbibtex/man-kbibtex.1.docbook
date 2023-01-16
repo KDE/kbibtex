@@ -1,0 +1,122 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Swedish "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>Kbibtex användarmanual</title>
+<author
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+> <contrib
+>Kbibtex manualsida.</contrib
+> <email
+>fischer@unix-ag.uni-kl.de</email
+></author>
+<date
+>2016-06-29</date>
+<productname
+>Kbibtex</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>kbibtex</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>kbibtex</command
+></refname>
+<refpurpose
+>En Bibtex-editor av KDE skriven av Thomas Fischer och utgiven enligt GPL version 2 eller senare.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>kbibtex</command
+> <arg choice="opt"
+><replaceable
+>webbadress</replaceable
+></arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>Beskrivning</title>
+<para
+>Kbibtex är en Bibtex-editor av KDE skriven av Thomas Fischer och utgiven enligt GPL version 2 eller senare. </para>
+<para
+>Kbibtex kan startas som ett fristående program eller inbäddat som ett delprogram i så gott som alla &kde;-program (t.ex. Konqueror). </para>
+</refsect1>
+
+<refsect1 id="arguments"
+><title
+>Argument</title>
+<variablelist>
+  <varlistentry>
+    <term
+><option
+>Webbadress</option
+></term>
+  <listitem>
+    <para
+>En adress eller flera adresser för bibliografidokument som ska öppnas.</para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>Se också</title>
+<simplelist>
+<member
+>Mer detaljerad användardokumentation är tillgänglig med <ulink url="help:/kbibtex"
+>help:/kbibtex</ulink
+> (skriv antingen in webbadressen i &konqueror;, eller kör <userinput
+><command
+>khelpcenter</command
+> <parameter
+>help:/kbibtex</parameter
+></userinput
+>).</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+<member
+>Det finns också ytterligare information tillgänglig på <ulink url="https://userbase.kde.org/KBibTeX"
+>Kbibtex officiella webbsida</ulink
+>.</member>
+</simplelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>Upphovsmän</title>
+<para
+>Kbibtex är skrivet av <personname
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+></personname
+> <email
+>fischer@unix-ag.uni-kl.de</email
+>. </para>
+</refsect1>
+
+</refentry>
