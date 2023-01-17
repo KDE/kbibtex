@@ -2886,7 +2886,7 @@ msgstr "Configuració de fitxers de BibTeX"
 #: src/parts/part.cpp:542
 #, kde-format
 msgid "PDF/PostScript File Settings"
-msgstr "Configuració dels fitxers PDF/PostScript"
+msgstr "Configureu els fitxers PDF/PostScript"
 
 #: src/parts/part.cpp:601
 #, kde-format
@@ -3921,7 +3921,7 @@ msgstr "Editor d'elements"
 #: src/program/mainwindow.cpp:204
 #, kde-format
 msgid "File Settings"
-msgstr "Configuració dels fitxers"
+msgstr "Configureu els fitxers"
 
 #: src/program/mainwindow.cpp:306
 #, kde-format
