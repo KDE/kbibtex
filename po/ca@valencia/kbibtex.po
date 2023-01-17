@@ -1747,7 +1747,7 @@ msgstr "Visualització de l'element"
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
-msgstr "Edició de l'element"
+msgstr "Editeu l'element"
 
 #: src/gui/file/findduplicatesui.cpp:142
 #, kde-format
@@ -2318,7 +2318,7 @@ msgstr "<qt>Estructura:<ul><li>%1</li></ul>Exemple: %2</qt>"
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Id Suggestion"
-msgstr "Edició de l'ID suggerit"
+msgstr "Editeu l'ID suggerit"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:166
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:305
@@ -2976,7 +2976,7 @@ msgstr "Configuració de fitxers de BibTeX"
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
-msgstr "Configuració dels fitxers PDF/PostScript"
+msgstr "Configureu els fitxers PDF/PostScript"
 
 #: src/parts/part.cpp:642
 #, kde-format
@@ -3969,7 +3969,7 @@ msgstr "Editor d'elements"
 #: src/program/mainwindow.cpp:206
 #, kde-format
 msgid "File Settings"
-msgstr "Configuració dels fitxers"
+msgstr "Configureu els fitxers"
 
 #: src/program/mainwindow.cpp:301
 #, kde-format
