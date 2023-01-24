@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-05 00:48+0000\n"
-"PO-Revision-Date: 2023-01-22 07:04+0100\n"
+"PO-Revision-Date: 2023-01-23 05:59+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -156,7 +156,7 @@ msgstr "წიგნის ნაწილი"
 #: src/config/bibtexentries.cpp:73 src/config/bibtexentries.cpp:91
 #, kde-format
 msgid "Part of a Book with own Title"
-msgstr ""
+msgstr "წიგნის ნაწილი საკუთარი სათაურით"
 
 #: src/config/bibtexentries.cpp:74 src/config/bibtexentries.cpp:109
 #, kde-format
@@ -196,7 +196,7 @@ msgstr ""
 #: src/config/bibtexentries.cpp:87
 #, kde-format
 msgid "Supplemental Material in a Book"
-msgstr ""
+msgstr "წიგნის დამატებითი მასალები"
 
 #: src/config/bibtexentries.cpp:89
 #, kde-format
@@ -211,7 +211,7 @@ msgstr "მრავალტომიანი კოლექცია"
 #: src/config/bibtexentries.cpp:92
 #, kde-format
 msgid "Supplemental Material in a Collection"
-msgstr ""
+msgstr "კოლექციის დამატებითი მასალები"
 
 #: src/config/bibtexentries.cpp:95
 #, kde-format
@@ -226,12 +226,12 @@ msgstr "პატენტი"
 #: src/config/bibtexentries.cpp:97
 #, kde-format
 msgid "Periodical (Complete Issue)"
-msgstr ""
+msgstr "პერიოდული (სრული)"
 
 #: src/config/bibtexentries.cpp:98
 #, kde-format
 msgid "Supplemental Material in a Periodical"
-msgstr ""
+msgstr "პერიოდული გამოცემის დამატებითი მასალები"
 
 #: src/config/bibtexentries.cpp:100
 #, kde-format
@@ -1045,6 +1045,7 @@ msgstr "ფაილის ოპერაციები"
 #, kde-format
 msgid "Do not copy or move document, only insert reference to it"
 msgstr ""
+"დოკუმენტის კოპირება ან გადატანა არ მოხდება. მხოლოდ ჩაისმება მასზე მიმართვა"
 
 #: src/gui/element/associatedfilesui.cpp:88
 #, kde-format
@@ -1204,7 +1205,7 @@ msgstr "საწყისი ID-ების აღდგენა"
 #: src/gui/element/elementeditor.cpp:579
 #, kde-format
 msgid "Validation for the current element failed."
-msgstr ""
+msgstr "მიმდინარე ელემენტის გადამოწმების შეცდომა."
 
 #: src/gui/element/elementeditor.cpp:579
 #, kde-format
@@ -1212,6 +1213,8 @@ msgid ""
 "Validation for the current element failed:\n"
 "%1"
 msgstr ""
+"მიმდინარე ელემენტის გადამოწმების შეცდომა:\n"
+"%1"
 
 #: src/gui/element/elementeditor.cpp:580
 #, kde-format
@@ -1677,7 +1680,7 @@ msgstr "ნაგულისხმევზე ჩამოყრა"
 #: src/gui/file/basicfileview.cpp:391
 #, kde-format
 msgid "Allow manual column resizing/positioning"
-msgstr ""
+msgstr "სვეტის ხელით ზომის შეცვლის/გადაადგილების დაშვება"
 
 #: src/gui/file/basicfileview.cpp:408
 #, kde-format
@@ -2250,7 +2253,7 @@ msgstr "გადახედვა:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "ფორმატის სტრიქონის ბუფერში კოპირება"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
@@ -2486,7 +2489,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
-msgstr ""
+msgstr "'%1'-ის ძებნა უცნობი მიზეზით ავარიულად დასრულდა."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
@@ -2495,6 +2498,9 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"'%1'-ის ძებნა შემდეგი შეცდომით დასრულდა:\n"
+"\n"
+"%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:321
 #: src/program/mainwindow.cpp:365 src/program/program.cpp:52
@@ -3350,7 +3356,7 @@ msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
 "be empty)"
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
-msgstr ""
+msgstr "<qt>არ ვიცი, როგორ გაჩვენოთ mimetype '%1'.%2</qt>"
 
 #: src/program/docklets/documentpreview.cpp:702
 #, kde-format
