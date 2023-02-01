@@ -54,7 +54,6 @@ find_package(
     Core
     Widgets
     Network
-    NetworkAuth
     XmlPatterns
     Concurrent
 )
