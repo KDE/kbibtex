@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-04 03:44+0000\n"
-"PO-Revision-Date: 2023-01-14 04:09+0100\n"
+"PO-Revision-Date: 2023-02-02 07:00+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -156,7 +156,7 @@ msgstr "წიგნის ნაწილი"
 #: src/config/bibtexentries.cpp:72 src/config/bibtexentries.cpp:90
 #, kde-format
 msgid "Part of a Book with own Title"
-msgstr ""
+msgstr "წიგნის ნაწილი საკუთარი სათაურით"
 
 #: src/config/bibtexentries.cpp:73 src/config/bibtexentries.cpp:108
 #, kde-format
@@ -196,7 +196,7 @@ msgstr ""
 #: src/config/bibtexentries.cpp:86
 #, kde-format
 msgid "Supplemental Material in a Book"
-msgstr ""
+msgstr "წიგნის დამატებითი მასალები"
 
 #: src/config/bibtexentries.cpp:88
 #, kde-format
@@ -211,7 +211,7 @@ msgstr "მრავალტომიანი კოლექცია"
 #: src/config/bibtexentries.cpp:91
 #, kde-format
 msgid "Supplemental Material in a Collection"
-msgstr ""
+msgstr "კოლექციის დამატებითი მასალები"
 
 #: src/config/bibtexentries.cpp:94
 #, kde-format
@@ -226,12 +226,12 @@ msgstr "პატენტი"
 #: src/config/bibtexentries.cpp:96
 #, kde-format
 msgid "Periodical (Complete Issue)"
-msgstr ""
+msgstr "პერიოდული (სრული)"
 
 #: src/config/bibtexentries.cpp:97
 #, kde-format
 msgid "Supplemental Material in a Periodical"
-msgstr ""
+msgstr "პერიოდული გამოცემის დამატებითი მასალები"
 
 #: src/config/bibtexentries.cpp:99
 #, kde-format
@@ -1045,21 +1045,22 @@ msgstr "ფაილის ოპერაციები"
 #, kde-format
 msgid "Do not copy or move document, only insert reference to it"
 msgstr ""
+"დოკუმენტის კოპირება ან გადატანა არ მოხდება. მხოლოდ ჩაისმება მასზე მიმართვა"
 
 #: src/gui/element/associatedfilesui.cpp:86
 #, kde-format
 msgid "Copy document next to bibliography file"
-msgstr ""
+msgstr "დოკუმენტის ბიბლიოგრაფიის ფაილთან კოპირება"
 
 #: src/gui/element/associatedfilesui.cpp:89
 #, kde-format
 msgid "Move document next to bibliography file"
-msgstr ""
+msgstr "დოკუმენტის ბიბლიოგრაფიის ფაილთან გადატანა"
 
 #: src/gui/element/associatedfilesui.cpp:99
 #, kde-format
 msgid "Path and filename of bibliography file:"
-msgstr ""
+msgstr "ბიბლიოგრაფიის ფაილის ბილიკი და სახელი:"
 
 #: src/gui/element/associatedfilesui.cpp:105
 #, kde-format
@@ -1203,7 +1204,7 @@ msgstr "საწყისი ID-ების აღდგენა"
 #: src/gui/element/elementeditor.cpp:577
 #, kde-format
 msgid "Validation for the current element failed."
-msgstr ""
+msgstr "მიმდინარე ელემენტის გადამოწმების შეცდომა."
 
 #: src/gui/element/elementeditor.cpp:577
 #, kde-format
@@ -1211,6 +1212,8 @@ msgid ""
 "Validation for the current element failed:\n"
 "%1"
 msgstr ""
+"მიმდინარე ელემენტის გადამოწმების შეცდომა:\n"
+"%1"
 
 #: src/gui/element/elementeditor.cpp:578
 #, kde-format
@@ -1514,7 +1517,7 @@ msgstr "აირჩიეთ არსებული ჩანაწერი"
 #: src/gui/field/fieldinput.cpp:276
 #, kde-format
 msgid "Select Cross Reference"
-msgstr ""
+msgstr "აირჩიეთჯვარედინი მიმართვა"
 
 #: src/gui/field/fieldinput.cpp:276
 #, kde-format
@@ -1821,7 +1824,7 @@ msgstr "ფერი და ჭდეები"
 #, kde-format
 msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
 msgid "NewColor%1"
-msgstr ""
+msgstr "ახალიფერი%1"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:83
 #, kde-format
@@ -1992,14 +1995,14 @@ msgstr "... და ბოლო ავტორი"
 #: src/processing/idsuggestions.cpp:511
 #, kde-format
 msgid "From first author to author %1 and last author"
-msgstr ""
+msgstr "პირველი ავტორიდან %1 ავტორამდე და ბოლო ავტორი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:127
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:129
 #: src/processing/idsuggestions.cpp:520 src/processing/idsuggestions.cpp:528
 #, kde-format
 msgid "From author %1 to author %2 and last author"
-msgstr ""
+msgstr "%1 ავტორიდან %2 ავტორამდე და ბოლო ავტორი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:345
@@ -2119,21 +2122,21 @@ msgstr "პირველიდან ბოლო სიტყვამდე"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:335
 #, kde-format
 msgid "From word %1 to last word"
-msgstr ""
+msgstr "სიტყვიდან %1 ბოლო სიტყვამდე"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:309
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:333
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:336
 #, kde-format
 msgid "From first word to word %1"
-msgstr ""
+msgstr "პირველი სიტყვიდან %1-ე სიტყვამდე"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:311
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:333
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:336
 #, kde-format
 msgid "From word %1 to word %2"
-msgstr ""
+msgstr "%1-ე სიტყვიდან %2 სიტყვამდე"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:322
 #, kde-format
@@ -2456,7 +2459,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:230
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
-msgstr ""
+msgstr "'%1'-ის ძებნა უცნობი მიზეზით ავარიულად დასრულდა."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:230
 #, kde-format
@@ -2465,6 +2468,9 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
+"'%1'-ის ძებნა შემდეგი შეცდომით დასრულდა:\n"
+"\n"
+"%2"
 
 #: src/networking/onlinesearch/onlinesearchacmportal.cpp:303
 #, kde-format
@@ -2714,7 +2720,7 @@ msgstr "URL-ის გახსნა"
 #: src/networking/zotero/oauthwizard.cpp:177
 #, kde-format
 msgid "Zotero OAuth Key Exchange"
-msgstr ""
+msgstr "Zotero OAuth-ის გასაღებების მიმოცვლა"
 
 #. i18n: ectx: Menu (file)
 #: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
@@ -2758,7 +2764,7 @@ msgstr "ფილტრი"
 #: src/parts/part.cpp:172
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
-msgstr ""
+msgstr "ბიბლიოგრაფიული ჩანაწერების გაფილვრა (%1)"
 
 #: src/parts/part.cpp:175
 #, kde-format
@@ -2793,7 +2799,7 @@ msgstr "PDF-ის პოვნა..."
 #: src/parts/part.cpp:216
 #, kde-format
 msgid "Format entry ids"
-msgstr ""
+msgstr "ჩანაწერების იდენტიფიკატორების ფორმატირება"
 
 #: src/parts/part.cpp:230
 #, kde-format
@@ -2808,7 +2814,7 @@ msgstr "ახალი%1"
 #: src/parts/part.cpp:479
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
-msgstr ""
+msgstr "დოკუმენტის ('%1') სამარქაფე ასლების შექმნა შეუძლებელია."
 
 #: src/parts/part.cpp:479
 #, kde-format
@@ -2858,22 +2864,22 @@ msgstr ""
 #: src/parts/part.cpp:637
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
-msgstr ""
+msgstr "ბიბლიოგრაფიის ფაილში '%1' შენახვის შეცდომა."
 
 #: src/parts/part.cpp:639 src/parts/part.cpp:645
 #, kde-format
 msgid "Saving bibliography failed"
-msgstr ""
+msgstr "ბიბლიოგრაფიის შენახვის შეცდომა"
 
 #: src/parts/part.cpp:641
 #, kde-format
 msgid "Saving bibliography failed:"
-msgstr ""
+msgstr "ბიბლიოგრაფიის შენახვის შეცდომა:"
 
 #: src/parts/part.cpp:644
 #, kde-format
 msgid "The following output was generated by the export filter:"
-msgstr ""
+msgstr "გატანის ფილტრის მიერ დაგენერირებული ტექსტი:"
 
 #: src/parts/part.cpp:695
 #, kde-format
@@ -2893,6 +2899,10 @@ msgid ""
 "Check that you have write access to this file or that enough disk space is "
 "available."
 msgstr ""
+"დოკუმენტის შენახვა შეუძლებელია, რადგან '%1'-ში ჩაწერა აკრძალულია.\n"
+"\n"
+"შეამოწმეთ, გაქვთ თუ არა ამ ფაილში ჩაწერის უფლება და დისკზე ადგილი საკმარისი "
+"თუა."
 
 #: src/parts/part.cpp:950
 #, kde-format
@@ -2987,22 +2997,22 @@ msgstr "ველი <b>%1</b> ცარიელია"
 #: src/processing/checkbibtex.cpp:119
 #, kde-format
 msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
-msgstr ""
+msgstr "ველები <b>%1</b> და <b>%2</b> ცარიელია, მაგრამ მინიმუმ ერთი საჭიროა"
 
 #: src/processing/checkbibtex.cpp:122
 #, kde-format
 msgid "Field <b>%1</b> exists, but <b>%2</b> does not exist"
-msgstr ""
+msgstr "ველი <b>%1</b> არსებობს, მაგრამ <b>%2</b> არ არსებობს"
 
 #: src/processing/checkbibtex.cpp:125
 #, kde-format
 msgid "Fields <b>%1</b> and <b>%2</b> cannot be used at the same time"
-msgstr ""
+msgstr "ველები <b>%1</b> და <b>%2</b> ერთდროულად გამოყენებული ვერ იქნება"
 
 #: src/processing/checkbibtex.cpp:128
 #, kde-format
 msgid "Fields <b>%1</b> or <b>%2</b> are required to sort entry"
-msgstr ""
+msgstr "ჩანაწერების დასალაგებლად აუცილებელია ველები <b>%1</b> ან <b>%2</b>"
 
 #: src/processing/checkbibtex.cpp:131
 #, kde-format
@@ -3153,7 +3163,7 @@ msgstr[1] ""
 #: src/processing/idsuggestions.cpp:447
 #, kde-format
 msgid ", small words removed"
-msgstr ""
+msgstr ", პატარა სიტყვების გარეშე"
 
 #: src/processing/idsuggestions.cpp:488
 #, kde-format
@@ -3168,7 +3178,7 @@ msgstr "ტექსტი: '%1'"
 #: src/processing/idsuggestions.cpp:504
 #, kde-format
 msgid "First and last authors only"
-msgstr ""
+msgstr "მხოლოდ პირველი და ბოლო ავტორები"
 
 #: src/processing/idsuggestions.cpp:506
 #, kde-format
@@ -3183,27 +3193,27 @@ msgstr "ყველა ავტორი"
 #: src/processing/idsuggestions.cpp:513
 #, kde-format
 msgid "From first author to author %1"
-msgstr ""
+msgstr "პირველი ავტორიდან %1-ე ავტორამდე"
 
 #: src/processing/idsuggestions.cpp:517
 #, kde-format
 msgid "All but first author"
-msgstr ""
+msgstr "ყველა ავტორი, პირველის გარდა"
 
 #: src/processing/idsuggestions.cpp:522 src/processing/idsuggestions.cpp:530
 #, kde-format
 msgid "From author %1 to author %2"
-msgstr ""
+msgstr "ავტორიდან %1 ავტორამდე %2"
 
 #: src/processing/idsuggestions.cpp:526
 #, kde-format
 msgid "From author %1 to last author"
-msgstr ""
+msgstr "ავტორიდან %1 ბოლო ავტორამდე"
 
 #: src/processing/lyx.cpp:79
 #, kde-format
 msgid "Send to LyX/Kile"
-msgstr ""
+msgstr "LyX/Kile-სთვის გაგზავნა"
 
 #: src/processing/lyx.cpp:99
 #, kde-format
@@ -3264,7 +3274,7 @@ msgstr ""
 #: src/program/docklets/documentpreview.cpp:487
 #, kde-format
 msgid "Cannot show requested part"
-msgstr ""
+msgstr "მოთხოვნილი ნაწილის ჩვენება შეუძლებელია"
 
 #: src/program/docklets/documentpreview.cpp:514
 #: src/program/docklets/documentpreview.cpp:518
@@ -3289,7 +3299,7 @@ msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
 "be empty)"
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
-msgstr ""
+msgstr "<qt>არ ვიცი, როგორ გაჩვენოთ mimetype '%1'.%2</qt>"
 
 #: src/program/docklets/documentpreview.cpp:676
 #, kde-format
@@ -3297,6 +3307,8 @@ msgid ""
 "No documents to show.\n"
 "Some URLs or files could not be retrieved."
 msgstr ""
+"საჩვენებელი დოკუმენტების გარეშე.\n"
+"ზოგიერთი URL-სა და ფაილის მიღება შეუძლებელია."
 
 #: src/program/docklets/elementform.cpp:75
 #, kde-format
@@ -3306,7 +3318,7 @@ msgstr "ცვლილებების ავტომატური გა�
 #: src/program/docklets/elementform.cpp:91
 #, kde-format
 msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
-msgstr ""
+msgstr "ნაპოვნია შეუნახავი ცვლილებები. დააწექით 'გადატარებას' ან 'დაბრუნებას'."
 
 #: src/program/docklets/elementform.cpp:98
 #, kde-format
@@ -3319,6 +3331,8 @@ msgid ""
 "The current element got modified.\n"
 "Apply or discard changes?"
 msgstr ""
+"მიმდინარე ელემენტი შეიცვალა.\n"
+"შევინახო თუ მოვაცილო ეს ცვლილებები?"
 
 #: src/program/docklets/elementform.cpp:186
 #, kde-format
@@ -3443,13 +3457,14 @@ msgstr "შეჩერება"
 #: src/program/docklets/searchform.cpp:338
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
-msgstr ""
+msgstr "საძიებო სისტემა არჩეული არაა (<a href=\"changeEngine\">შეცვლა</a>)."
 
 #: src/program/docklets/searchform.cpp:339
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
+"არჩეულია <b>%1</b> საძიებო სისტემა (<a href=\"changeEngine\">შეცვლა</a>)."
 
 #: src/program/docklets/searchform.cpp:340
 #, kde-format
@@ -3457,6 +3472,8 @@ msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
 "\">change</a>)."
 msgstr ""
+"არჩეულია <b>%1</b> და <b>%2</b> საძიებო სისტემები (<a href=\"changeEngine"
+"\">შეცვლა</a>)."
 
 #: src/program/docklets/searchform.cpp:341
 #, kde-format
@@ -3498,12 +3515,12 @@ msgstr "კოპირება"
 #: src/program/docklets/searchresults.cpp:147
 #, kde-format
 msgid "No results to import and no bibliography open to import to."
-msgstr ""
+msgstr "შემოსატანი შედეგების და გახსნილი ბიბლიოგრაციის გარეშე."
 
 #: src/program/docklets/searchresults.cpp:149
 #, kde-format
 msgid "No bibliography open to import to."
-msgstr ""
+msgstr "შემოსატანად ბიბლიოგრაფია ღია არ გაქვთ."
 
 #: src/program/docklets/searchresults.cpp:151
 #, kde-format
@@ -3528,7 +3545,7 @@ msgstr "ჟურნალის სტატიები:"
 #: src/program/docklets/statistics.cpp:61
 #, kde-format
 msgid "Conference Publications:"
-msgstr ""
+msgstr "კონფერენციის პუბლიკაციები:"
 
 #: src/program/docklets/statistics.cpp:64
 #, kde-format
@@ -3616,7 +3633,7 @@ msgstr "ჯგუფები არ არის ხელმისაწვდ
 #: src/program/docklets/zoterobrowser.cpp:142
 #, kde-format
 msgid "Numeric user id:"
-msgstr ""
+msgstr "მომხმარებლის რიცხვითი ID:"
 
 #: src/program/docklets/zoterobrowser.cpp:148
 #, kde-format
@@ -3626,7 +3643,7 @@ msgstr "API-ის გასაღები:"
 #: src/program/docklets/zoterobrowser.cpp:154
 #, kde-format
 msgid "Get New Credentials"
-msgstr ""
+msgstr "ახალი ავტორიზაციის დეტალების მიღება"
 
 #: src/program/docklets/zoterobrowser.cpp:161
 #, kde-format
@@ -3648,27 +3665,27 @@ msgstr ""
 #: src/program/docklets/zoterobrowser.cpp:239
 #, kde-format
 msgid "Failed to retrieve data from Zotero"
-msgstr ""
+msgstr "Zotero-დან მონაცემების მიღების შეცდომა"
 
 #: src/program/docklets/zoterobrowser.cpp:365
 #, kde-format
 msgid "No groups available or no permissions"
-msgstr ""
+msgstr "ჯგუფები ხელმიუწვდომელია ან წვდომები არ გაგაჩნიათ"
 
 #: src/program/documentlist.cpp:55
 #, kde-format
 msgid "One level up"
-msgstr ""
+msgstr "ერთი დონით მაღლა"
 
 #: src/program/documentlist.cpp:59
 #, kde-format
 msgid "Go to Home folder"
-msgstr ""
+msgstr "საწყის საქაღალდეზე გადასვლა"
 
 #: src/program/documentlist.cpp:199
 #, kde-format
 msgid "<br/><small>located in <b>%1</b></small>"
-msgstr ""
+msgstr "<br/><small>მოთავსებულია <b>%1</b></small>"
 
 #: src/program/documentlist.cpp:203
 #, kde-format
@@ -3844,7 +3861,7 @@ msgstr ""
 #: src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Default Bibliography Editor"
-msgstr ""
+msgstr "ბიბლიოგრაფიის ნაგულისხმები რედაქტორი"
 
 #: src/program/mainwindow.cpp:455
 #, kde-format
@@ -3864,7 +3881,7 @@ msgstr "ფაილის სახელი"
 #: src/program/mdiwidget.cpp:98
 #, kde-format
 msgid "Date/time of last use"
-msgstr ""
+msgstr "ბოლოს გამოყენების თარიღი/დრო"
 
 #: src/program/mdiwidget.cpp:99
 #, kde-format
@@ -3889,7 +3906,7 @@ msgstr "გახსნა..."
 #: src/program/mdiwidget.cpp:156
 #, kde-format
 msgid "List of recently used files:"
-msgstr ""
+msgstr "ახლახანს გამოყენებული ფაილების სია:"
 
 #: src/program/mdiwidget.cpp:268
 #, kde-format
@@ -3899,12 +3916,12 @@ msgstr ""
 #: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
 #, kde-format
 msgid "No Part Available"
-msgstr ""
+msgstr "ხელმისაწვდომი ნაწილების გარეშე"
 
 #: src/program/mdiwidget.cpp:270
 #, kde-format
 msgid "No part available for file '%1'."
-msgstr ""
+msgstr "ფაილისთვის %1 ნაწილები ხელმიუწვდომელია."
 
 #: src/program/openfileinfo.cpp:247
 #, kde-format
@@ -3928,7 +3945,7 @@ msgstr ""
 #: src/program/program.cpp:98
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
-msgstr ""
+msgstr "KBibTeX-ის დაყენება არასრულია"
 
 #, fuzzy
 #~| msgid "New comment"

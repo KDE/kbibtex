@@ -4055,23 +4055,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instal·lació incompleta del KBibTeX"
-
-#, fuzzy
-#~| msgid "Number of Comments:"
-#~ msgid "Show Comments:"
-#~ msgstr "Nombre de comentaris:"
-
-#, fuzzy
-#~| msgid "Number of Macros:"
-#~ msgid "Show Macros:"
-#~ msgstr "Nombre de macros:"
-
-#, fuzzy
-#~| msgid "Institution"
-#~ msgid "Instructions"
-#~ msgstr "Institució"
-
-#, fuzzy
-#~| msgid "Author/Editor"
-#~ msgid "Authorization URL"
-#~ msgstr "Autor/editor"
