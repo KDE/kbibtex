@@ -1,14 +1,14 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Vít Pelčák <vit@pelcak.org>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
-# Vit Pelcak <vit@pelcak.org>, 2021.
+# Vit Pelcak <vit@pelcak.org>, 2021, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-05 00:48+0000\n"
-"PO-Revision-Date: 2021-12-17 16:48+0100\n"
+"PO-Revision-Date: 2023-01-30 11:12+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 21.12.0\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2265,12 +2265,12 @@ msgstr "Náhled:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Zkopírovat řetězec formátu do schránky"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
 msgid "Format string:"
-msgstr ""
+msgstr "Řetězec formátu:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2433,12 +2433,12 @@ msgstr "Oddělovač seznamů"
 #: src/gui/widgets/filesettingswidget.cpp:176
 #, kde-format
 msgid "Sort by identifier"
-msgstr ""
+msgstr "Seřadit podle identifikátoru"
 
 #: src/gui/widgets/filesettingswidget.cpp:177
 #, kde-format
 msgid "Entry Sorting"
-msgstr ""
+msgstr "Řazení položek"
 
 #: src/gui/widgets/filterbar.cpp:71
 #, kde-format
@@ -2498,7 +2498,7 @@ msgstr "Styl BibTeX <strong>%1</strong> není dostupný."
 #: src/io/fileexporterbibtex2html.cpp:100
 #, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr ""
+msgstr "Styl BibTeX <strong>PLACEHOLDER</strong> není dostupný."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format

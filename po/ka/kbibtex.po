@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-05 00:48+0000\n"
-"PO-Revision-Date: 2023-01-23 05:59+0100\n"
+"PO-Revision-Date: 2023-02-03 15:59+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -1012,7 +1012,7 @@ msgstr "მაკრო"
 #: src/data/models/filemodel.cpp:266
 #, kde-format
 msgid "Comment"
-msgstr "კომე_ნტარი"
+msgstr "კომენტარი"
 
 #: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1166
 #, kde-format
@@ -3126,7 +3126,7 @@ msgstr "ძებნა ..."
 #: src/processing/findduplicates.cpp:384
 #, kde-format
 msgid "Cancel"
-msgstr "_გაუქმება"
+msgstr "გაუქმება"
 
 #: src/processing/findduplicates.cpp:386
 #, kde-format
@@ -3504,7 +3504,7 @@ msgstr "ჩანაწერის გამოყენება"
 #: src/program/docklets/searchform.cpp:310
 #, kde-format
 msgid "Search"
-msgstr "_ძებნა"
+msgstr "ძებნა"
 
 #: src/program/docklets/searchform.cpp:322
 #, kde-format
@@ -3734,7 +3734,7 @@ msgstr "რჩეული"
 #: src/program/documentlist.cpp:207 src/program/documentlist.cpp:397
 #, kde-format
 msgid "Recently Used"
-msgstr "ახლახანს _გამოყენებული"
+msgstr "ახლახანს გამოყენებული"
 
 #: src/program/documentlist.cpp:211
 #, kde-format
