@@ -253,8 +253,7 @@ add_subdirectory(
 if(KF5DocTools_FOUND)
     add_subdirectory(doc)
 endif()
-macro_optional_add_subdirectory(
-    po
-)
+
+ki18n_install(po)
 
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
