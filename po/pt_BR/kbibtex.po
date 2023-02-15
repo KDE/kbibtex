@@ -3,21 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2014, 2015, 2016.
-# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2017, 2018, 2019, 2020, 2021.
+# Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2017, 2018, 2019, 2020, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-04 03:44+0000\n"
-"PO-Revision-Date: 2021-02-22 10:36-0300\n"
+"PO-Revision-Date: 2023-02-14 09:26-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
-"Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
+"Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -929,12 +929,10 @@ msgid "None"
 msgstr "Nenhum"
 
 #: src/config/preferences.cpp:890
-#, fuzzy, kde-format
-#| msgctxt "Comment Quoting"
-#| msgid "@comment{…}"
+#, kde-format
 msgctxt "Comment Quoting"
 msgid "@comment{…}"
-msgstr "@comment{…}"
+msgstr "@comentário{…}"
 
 #: src/config/preferences.cpp:890
 #, kde-format
@@ -973,9 +971,7 @@ msgid "UPPERCASE"
 msgstr "MAIÚSCULAS"
 
 #: src/config/preferences.cpp:1128
-#, fuzzy, kde-format
-#| msgctxt "What to do if double-clicking on a file view item"
-#| msgid "Open Editor"
+#, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
 msgstr "Abrir editor"
@@ -987,33 +983,25 @@ msgid "View Document"
 msgstr "Exibir documento"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Important"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Important"
 msgstr "Importante"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Unread"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Unread"
 msgstr "Não lido"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Read"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Read"
 msgstr "Lido"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Watch"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Watch"
 msgstr "Monitorado"
@@ -3155,16 +3143,7 @@ msgid "Finding Duplicates"
 msgstr "Procurando duplicados"
 
 #: src/processing/idsuggestions.cpp:312
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Small words that can be removed from titles when generating id "
-#| "suggestions; separated by pipe symbol"
-#| msgid ""
-#| "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|"
-#| "er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|"
-#| "kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|"
-#| "von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|"
-#| "wer|which|wie|wird|with|you|und|and|ein|eine|einer|eines"
+#, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
 "separated by pipe symbol"
@@ -3179,9 +3158,9 @@ msgstr ""
 "es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
 "le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
 "which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
-"wird|with|you|o|os|as|e|meu|teu|seu|nosso|vosso|um|uma|uns|umas|de|do|da|dos|"
-"das|com|em|no|na|nos|nas|se|por|te|me|lhe|nos|vos|lhes|sobre|sob|com|para|"
-"und|and|ein|eine|einer|eines"
+"wird|with|you|und|and|ein|eine|einer|eines|o|os|as|e|meu|teu|seu|nosso|vosso|"
+"um|uma|uns|umas|de|do|da|dos|das|com|em|no|na|nos|nas|se|por|te|me|lhe|nos|"
+"vos|lhes|sobre|sob|com|para"
 
 #: src/processing/idsuggestions.cpp:398
 #, kde-format
