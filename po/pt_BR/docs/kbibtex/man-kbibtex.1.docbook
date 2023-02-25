@@ -6,7 +6,7 @@
 <refentry lang="&language;">
 <refentryinfo>
 <title
->Manual do Usuário do KDE</title>
+>Manual do usuário do KBibTeX</title>
 <author
 ><firstname
 >Thomas</firstname
@@ -18,9 +18,9 @@
 >fischer@unix-ag.uni-kl.de</email
 ></author>
 <date
->30/12/2013</date>
+>29/06/2016</date>
 <productname
->kbibtex</productname>
+>KBibTeX</productname>
 </refentryinfo>
 
 <refmeta>
@@ -38,21 +38,13 @@
 >kbibtex</command
 ></refname>
 <refpurpose
->Um editor BibTeX para o KDE, escrito por Thomas Fischer e lançado sob a licença GPL versão 2 ou posterior.</refpurpose>
+>Um editor BibTeX do KDE, escrito por Thomas Fischer e lançado sob a licença GPL versão 2 ou posterior.</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <cmdsynopsis
 ><command
 >kbibtex</command
-> <arg choice="opt"
-><replaceable
->opções do Qt</replaceable
-></arg
-> <arg choice="opt"
-><replaceable
->opções do KDE</replaceable
-></arg
 > <arg choice="opt"
 ><replaceable
 >URL</replaceable
@@ -64,96 +56,9 @@
 <title
 >Descrição</title>
 <para
->KBibTeX é um editor BibTeX para o KDE, escrito por Thomas Fischer e lançado sob a licença GPL versão 2 ou posterior. </para>
+>KBibTeX é um editor BibTeX do KDE, escrito por Thomas Fischer e lançado sob a licença GPL versão 2 ou posterior. </para>
 <para
 >O KBibTeX pode ser iniciado como um programa independente ou integrado como um KPart em praticamente todos os programas do &kde; (no Konqueror, &eg;). </para>
-</refsect1>
-
-<refsect1 id="generic_options"
-><title
->Opções genéricas</title>
-<variablelist>
-  <varlistentry>
-  <term
-><option
->--help</option
-></term>
-  <listitem>
-<para
->Mostra a ajuda sobre as opções.</para>
-  </listitem>
-  </varlistentry>
-  <varlistentry>
-  <term
-><option
->--help-qt</option
-></term>
-  <listitem>
-<para
->Mostra as opções específicas do Qt.</para>
-  </listitem>
-  </varlistentry>
-  <varlistentry>
-  <term
-><option
->--help-kde</option
-></term>
-  <listitem>
-<para
->Mostra as opções específicas do KDE.</para>
-  </listitem>
-  </varlistentry>
-  <varlistentry>
-  <term
-><option
->--help-all</option
-></term>
-  <listitem>
-<para
->Mostra todas as opções.</para>
-  </listitem>
-  </varlistentry>
-  <varlistentry>
-  <term
-><option
->--author</option
-></term>
-  <listitem>
-<para
->Mostra informações sobre o autor.</para>
-  </listitem>
-  </varlistentry>
-  <varlistentry>
-  <term
-><option
->-v, --version</option
-></term>
-  <listitem>
-<para
->Mostra informações sobre a versão.</para>
-  </listitem>
-  </varlistentry>
-  <varlistentry>
-  <term
-><option
->--license</option
-></term>
-  <listitem>
-<para
->Mostra informações sobre a licença.</para>
-  </listitem>
-  </varlistentry>
-  <varlistentry>
-  <term
-><option
->--</option
-></term>
-  <listitem>
-<para
->Fim das opções.</para>
-  </listitem>
-  </varlistentry>
-</variablelist>
 </refsect1>
 
 <refsect1 id="arguments"
@@ -176,7 +81,8 @@
 <refsect1>
 <title
 >Veja também</title>
-<para
+<simplelist>
+<member
 >A documentação mais detalhada para o usuário está disponível em <ulink url="help:/kbibtex"
 >help:/kbibtex</ulink
 > (tanto poderá inserir esta <acronym
@@ -187,12 +93,17 @@
 > <parameter
 >help:/kbibtex</parameter
 ></userinput
->).</para>
+>).</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+<member
+>Também existe mais informações disponíveis no <ulink url="https://userbase.kde.org/KBibTeX"
+>site do KBibTeX</ulink
+>.</member>
+</simplelist>
 
-<para
->Também existe mais informações disponíveis na <ulink url="http://home.gna.org/kbibtex/"
->página Web do KBibTeX</ulink
->.</para>
 </refsect1>
 
 <refsect1>
