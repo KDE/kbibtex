@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Shinjo Park <kde@peremen.name>, 2019, 2020, 2021, 2022.
+# Shinjo Park <kde@peremen.name>, 2019, 2020, 2021, 2022, 2023.
 # Jung Hee Lee <daemul72@gmail.com>, 2019.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-05 00:48+0000\n"
-"PO-Revision-Date: 2022-05-15 22:20+0200\n"
+"PO-Revision-Date: 2023-03-01 01:22+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -1862,19 +1862,19 @@ msgstr "용지 크기:"
 #, kde-format
 msgctxt "Paper size"
 msgid "A4"
-msgstr ""
+msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Legal"
-msgstr ""
+msgstr "리갈"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
 #, kde-format
 msgctxt "Paper size"
 msgid "Letter"
-msgstr ""
+msgstr "레터"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:93
 #, kde-format
@@ -2264,18 +2264,17 @@ msgstr "텍스트:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:596
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "미리 보기:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "형식 지정 문자열을 클립보드에 복사"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "입력 ID 형식 지정"
+msgstr "형식 지정 문자열:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2436,16 +2435,14 @@ msgid "List Separator"
 msgstr "목록 구분 기호"
 
 #: src/gui/widgets/filesettingswidget.cpp:176
-#, fuzzy, kde-format
-#| msgid "Sort by Count"
+#, kde-format
 msgid "Sort by identifier"
-msgstr "개수별로 정렬"
+msgstr "식별자로 정렬"
 
 #: src/gui/widgets/filesettingswidget.cpp:177
-#, fuzzy, kde-format
-#| msgid "Sorting"
+#, kde-format
 msgid "Entry Sorting"
-msgstr "정렬"
+msgstr "항목 정렬"
 
 #: src/gui/widgets/filterbar.cpp:71
 #, kde-format
@@ -2503,10 +2500,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "BibTeX 스타일 <strong>%1</strong>을(를) 사용할 수 없습니다."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "BibTeX 스타일 <strong>%1</strong>을(를) 사용할 수 없습니다."
+msgstr "BibTeX 스타일 <strong>PLACEHOLDER</strong>을(를) 사용할 수 없습니다."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
@@ -2744,7 +2740,7 @@ msgstr "SpringerLink"
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
 msgid "Unpaywall"
-msgstr ""
+msgstr "Unpaywall"
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
