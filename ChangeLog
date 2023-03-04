@@ -38,7 +38,7 @@ Yann Büchau <nobodyinperson@posteo.de>, Yuri Chornoivan <yurchor@ukr.net>, yuu 
 <yuu@tutamail.com>
 See Git repository for details.
 
-Diff 0.9.3 to 0.10
+Diff 0.9.3.2 to 0.10
 
 - New online search: Semantic Scholar
 - Migrating Inspire Hep to REST API
@@ -86,6 +86,11 @@ Diff 0.9.3 to 0.10
 - KDE Bug 379443: Slowdown when loading citation with many authors
 - KDE Bug 433005: Cannot unselect entry list view columns in BibLaTeX mode
 - KDE Invent issue 1: Properly handling letter modifiers such as \c{e} instead of \ce
+
+Diff 0.9.3.1 to 0.9.3.2
+
+- KDE Bug 464606: Reactivating installation of translations
+- KDE Bug 464607: Removing dependency on Qt5's NetworkAuth
 
 Diff 0.9.2 to 0.9.3.1
 
