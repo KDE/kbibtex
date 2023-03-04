@@ -61,6 +61,7 @@ Diff 0.9.3.2 to 0.10
   or KComboBox -> QComboBox
 - Migrating many old-style casts like '(int)' to new-style casts like 'static_cast<..>(..)'
 - Fixing missing <bibliography> tag in XML export
+- Fixing issues when searching for PDF files ('Find PDF')
 - Fixing UI issues with ColorLabelWidget
 - Preferring QSignalBlocker over manually temporarily disconnecting/disabling signals
 - Refactoring QSignalMapper into many small lambda-based 'connect's
@@ -85,6 +86,7 @@ Diff 0.9.3.2 to 0.10
 - KDE Bug 426856: File encoding is not always stored
 - KDE Bug 379443: Slowdown when loading citation with many authors
 - KDE Bug 433005: Cannot unselect entry list view columns in BibLaTeX mode
+- KDE Bug 433084, 453455: Fixing crash when opening .bib file
 - KDE Invent issue 1: Properly handling letter modifiers such as \c{e} instead of \ce
 
 Diff 0.9.3.1 to 0.9.3.2
