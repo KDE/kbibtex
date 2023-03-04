@@ -6,7 +6,7 @@ endif(POLICY CMP0048)
 
 project(
     kbibtex
-    VERSION 0.10
+    VERSION 0.10.0
     LANGUAGES CXX
 )
 

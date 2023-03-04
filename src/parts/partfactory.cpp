@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2023 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,7 +31,7 @@ public:
     KAboutData aboutData;
 
     Private()
-            : aboutData(QStringLiteral("kbibtexpart"), i18n("KBibTeXPart"), strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QLatin1String(KBIBTEX_GIT_INFO_STRING ", near " KBIBTEX_VERSION_STRING) : QLatin1String(KBIBTEX_VERSION_STRING), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2019 Thomas Fischer"), QString(), QStringLiteral("https://userbase.kde.org/KBibTeX"))
+            : aboutData(QStringLiteral("kbibtexpart"), i18n("KBibTeXPart"), strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QLatin1String(KBIBTEX_GIT_INFO_STRING ", near " KBIBTEX_VERSION_STRING) : QLatin1String(KBIBTEX_VERSION_STRING), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2023 Thomas Fischer"), QString(), QStringLiteral("https://userbase.kde.org/KBibTeX"))
     {
         aboutData.setOrganizationDomain(QByteArray("kde.org"));
         aboutData.setDesktopFileName(QStringLiteral("org.kde.kbibtex"));

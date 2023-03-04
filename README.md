@@ -2,7 +2,7 @@
 
 [![Screenshot of KBibTeX](https://userbase.kde.org/images.userbase/thumb/7/7f/20150602-kbibtex-kf5.png/320px-20150602-kbibtex-kf5.png)](https://userbase.kde.org/images.userbase/7/7f/20150602-kbibtex-kf5.png)
 
-Copyright: 2004–2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+Copyright: 2004–2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
 Author/Maintainer: Thomas Fischer <fischer@unix-ag.uni-kl.de>
 
