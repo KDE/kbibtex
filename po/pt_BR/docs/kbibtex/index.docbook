@@ -1,21 +1,10 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
-  <!ENTITY kile "<application
->Kile</application
->">
-  <!ENTITY latex "L<superscript
->A</superscript
->T<subscript
->E</subscript
->X">
   <!ENTITY pdflatex "PDFL<superscript
 >A</superscript
 >T<subscript
 >E</subscript
 >X">
-  <!ENTITY pdf "<acronym
->PDF</acronym
->">
   <!ENTITY tex "T<subscript
 >E</subscript
 >X">
@@ -33,13 +22,9 @@
   <!ENTITY biblatex "<application
 >biblatex</application
 >">
-  <!ENTITY makeindex "makeindex">
-  <!ENTITY kbibtex "KBibTeX">
   <!ENTITY lyx "<application
 >LyX</application
 >">
-  <!ENTITY kappname "&kbibtex;">
-  <!ENTITY package "extragear-office">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % Brazilian-Portuguese "INCLUDE">
 ]>
@@ -90,9 +75,9 @@
 </copyright>
 
 <date
->14/04/2014</date>
+>07/05/2019</date>
 <releaseinfo
->0.6</releaseinfo>
+>0.9</releaseinfo>
 
 <legalnotice>
   &FDLNotice;
@@ -107,7 +92,7 @@
   <keyword
 >KDE</keyword>
   <keyword
->&kbibtex;</keyword>
+>kbibtex</keyword>
   <keyword
 >LaTeX</keyword>
   <keyword
@@ -129,13 +114,13 @@
     <itemizedlist>
       <listitem>
 	<para
-><ulink url="http://www.kde.org/"
->Bibliotecas básicas do &kde;</ulink
+><ulink url="https://www.kde.org/"
+>Bibliotecas &kf5-full;</ulink
 >. </para>
       </listitem>
       <listitem>
 	<para
-><ulink url="http://www.ctan.org/"
+><ulink url="https://www.ctan.org/"
 >&latex;</ulink
 >: Programa de formatação de documentos de alta qualidade. Provavelmente você quer o pacte &texlive; (ou, em sistemas mais antigos, o &tetex;), se você está em um sistema semelhante ao Unix. É uma dependência opcional, mas sem ela o &kbibtex; oferece uma funcionalidade muito limitada. </para>
       </listitem>
@@ -155,8 +140,8 @@
     <para
 >Esse manual é destinado a qualquer pessoa, independentemente de sua experiência com &latex;, &kde;, &kbibtex; ou &Linux;. </para>
     <para
->Não espera-se que usuários avançados leiam este manual, mas todas as sugestões sobre a documentação serão consideradas Se você gostaria de contribuir para esse projeto ou para a documentação, por favor, consulte a <ulink url="http://home.gna.org/kbibtex/"
->página Web do &kbibtex;</ulink
+>Não espera-se que usuários avançados leiam este manual, mas todas as sugestões sobre a documentação serão consideradas Se você gostaria de contribuir para esse projeto ou para a documentação, por favor, consulte o <ulink url="https://userbase.kde.org/KBibTeX"
+>site do &kbibtex;</ulink
 >. </para>
   </sect1>
 
@@ -193,7 +178,7 @@
         pages = {R49},
         publisher = {Springer},
         title = {{The calculation of crack opening area and crack opening volume from stress intensity factors}},
-        url = {http://dx.doi.org/10.1007/BF00048294},
+        url = {https://dx.doi.org/10.1007/BF00048294},
         volume = {76},
         x-fetchedfrom = {SpringerLink},
         year = {1995}
@@ -309,6 +294,15 @@
   <sect1 id="quick_begin">
     <title
 >Criando um arquivo de bibliografia para principiantes </title>
+    <!-- 1) No request from kbibtex from Distro user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distro user has a mimeapps.list in home, but no kbibtex in it
+         2b) Devel user has no mimeapps.list in home
+         2c) Systemsettings -> File Associations is the place to edit/change this in a kde desktop
+         update after rebuilding post 2014-01-12
+         Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
+         (why? from installation of distro?)
+         This dialog even pops up when opening a .bib file with LMB click in file manager
+    -->
     <para
 >Depois da primeira execução, o &kbibtex; irá propor a definição do mesmo como editor de formatos bibliográficos padrão. Recomendamos que aceite isso.<footnote
 ><para
@@ -492,7 +486,9 @@
 > é o nome do seu arquivo <filename role="extension"
 >bib</filename
 > criado com o &kbibtex; e o <quote
->plain</quote
+><literal
+>plain</literal
+></quote
 > é o nome do estilo de bibliografia. </para>
     <para
 >Existe uma grande variedade de estilos bibliográficos específicos. Consulte o responsável da sua publicação para saber o nome a escolher ou tentar descobrir o mais adequado aos seus objetivos. </para>
@@ -500,35 +496,49 @@
 >Abaixo há uma lista de alguns dos estilos genéricos disponíveis em qualquer lugar: </para>
     <variablelist>
       <varlistentry>
-	<term
->plain </term>
+	<term>
+      <literal
+>plain</literal>
+	</term>
 	<listitem>
 	  <para
 >estilo normal, apresentado em ordem alfabética e legendado de forma numérica </para>
 	</listitem>
       </varlistentry>
       <varlistentry>
-	<term
->unsrt </term>
+	<term>
+	  <literal
+>unsrt</literal>
+	</term>
 	<listitem>
 	  <para
->igual ao 'plain', exceto que os itens aparecem por ordem de citação </para>
+>igual ao <literal
+>plain</literal
+>, exceto que os itens aparecem por ordem de citação </para>
 	</listitem>
       </varlistentry>
       <varlistentry>
-	<term
->alpha </term>
+	<term>
+	  <literal
+>alpha</literal>
+	</term>
 	<listitem>
 	  <para
->igual ao 'plain', exceto que são usado os identificadores dos itens </para>
+>igual ao <literal
+>plain</literal
+>, exceto que são usado os identificadores dos itens </para>
 	</listitem>
       </varlistentry>
       <varlistentry>
-	<term
->abbrv </term>
+	<term>
+	  <literal
+>abbrv</literal>
+	</term>
 	<listitem>
 	  <para
->igual ao 'plain', exceto que usa abreviaturas para os primeiros nomes, os nomes dos meses e os nomes dos diários </para>
+>igual ao <literal
+>plain</literal
+>, exceto que usa abreviaturas para os primeiros nomes, os nomes dos meses e os nomes dos diários </para>
 	</listitem>
       </varlistentry>
     </variablelist>
@@ -563,7 +573,9 @@
     <para
 >Primeiro, você deverá executar o <application
 >latex</application
-> (para criar um arquivo 'foo.aux', que o <application
+> (para criar um arquivo <filename
+>foo.aux</filename
+>que o <application
 >bibtex</application
 > consegue ler). Depois execute o <application
 >bibtex</application
@@ -594,7 +606,7 @@ latex exemplo</screen>
 > no &kile;) ou um botão da barra de ferramentas para ver os resultados. </para>
     </tip>
     <para
->Agora, você poderá ver os resultados como um arquivo &DVI; ou &pdf; (o formato depende da sua configuração), armazenado na mesma pasta dos seus arquivos de código. </para>
+>Agora, você poderá ver os resultados como um arquivo &DVI; ou &PDF; (o formato depende da sua configuração), armazenado na mesma pasta dos seus arquivos de código. </para>
     <note>
       <para
 >Parabéns! Você acabou de criar seu primeiro documento com bibliografia do &bibtex;. </para>
@@ -770,7 +782,7 @@ latex exemplo</screen>
 > <imagedata fileref="document-save.png" format="PNG"/> </imageobject
 > </inlinemediaobject
 > Salvar como &HTML;</guibutton
-> pode ser usado para salvar a referência em &HTML; para uso posterior na sua página Web. </para>
+> pode ser usado para salvar a referência em &HTML; para uso posterior no seu site. </para>
 	<para
 >Você pode clicar com o &RMB; no painel para selecionar a opção <guimenuitem
 >Recarregar</guimenuitem
@@ -876,10 +888,10 @@ latex exemplo</screen>
 >Termos de pesquisa</guilabel
 >. </para>
 	<para
->Para visitar a página Web do banco de dados na Internet, clique com o &RMB; no seu item respectivo da aba <guilabel
+>Para visitar o site do banco de dados na Internet, clique com o &RMB; no seu item respectivo da aba <guilabel
 >Mecanismos</guilabel
 > e selecione <guimenuitem
->Ir para a Página Web</guimenuitem
+>Ir para o site</guimenuitem
 >. </para>
     </sect2>
     <sect2 id="zotero">
@@ -916,20 +928,12 @@ latex exemplo</screen>
 > <imageobject
 > <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/> </imageobject
 > </inlinemediaobject
-> Obter credenciais</guibutton
+> Obter credenciais novas</guibutton
 >, na aba <guilabel
 >Credenciais</guilabel
 >, para iniciar o assistente de autorização do Zotero. Siga as instruções para liberar o acesso do &kbibtex; a sua biblioteca do Zotero. </para>
 	<para
->Então o botão <guibutton
-> <inlinemediaobject
-> <imageobject
-> <imagedata fileref="download.png" format="PNG"/> </imageobject
-> </inlinemediaobject
-> Carregar bibliografia</guibutton
-> pode ser usado para baixar os dados da biblioteca do Zotero. </para>
-	<para
->Para acessar os itens baixados da biblioteca, use o clique duplo sobre o item correspondente nas abas <guilabel
+>Para acessar os itens da biblioteca, use o clique duplo sobre o item correspondente nas abas <guilabel
 >Coleções</guilabel
 > ou <guilabel
 >Etiquetas</guilabel
@@ -1041,7 +1045,7 @@ latex exemplo</screen>
 > <imagedata fileref="tools-check-spelling.png" format="PNG"/> </imageobject
 > </inlinemediaobject
 > Verificar com o &bibtex;</guibutton
-> para visualizar o item de edição, à medida que aparece no arquivo &pdf; compilado. </para>
+> para visualizar o item de edição, à medida que aparece no arquivo &PDF; compilado. </para>
 	<para
 >Assinale a opção <guilabel
 >Aplicar as alterações automaticamente</guilabel
@@ -1104,7 +1108,9 @@ latex exemplo</screen>
 > </inlinemediaobject
 > para abrir a página ou o documento no aplicativo externo padrão. </para>
 	<para
->O campo do endereço pode ser usado para alternar entre páginas e documentos. </para>
+>O campo do <guilabel
+>Endereço</guilabel
+> pode ser usado para alternar entre páginas e documentos. </para>
     </sect2>
   </sect1>
   <sect1 id="toolbars">
@@ -1113,7 +1119,7 @@ latex exemplo</screen>
     <para
 >O &kbibtex; tem duas barras de ferramentas completamente personalizáveis, localizadas na parte superior da janela. </para>
     <para
->Mais informações sobre a personalização das barras de ferramentas podem ser obtidas na <ulink url="Help:/fundamentals/config.html#toolbars"
+>Mais informações sobre a personalização das barras de ferramentas podem ser obtidas na <ulink url="help:/fundamentals/config.html#toolbars"
 >seção correspondente do manual Fundamentos do &kde;</ulink
 >. Abaixo, você encontra a descrição resumida dos botões padrão das barras de ferramentas do &kbibtex;. </para>
     <sect2 id="main-toolbar">
@@ -1250,19 +1256,19 @@ latex exemplo</screen>
 		<inlinemediaobject>
 		  <imageobject>
 		    <imagedata fileref="application-pdf.png" format="PNG"/>
-		  </imageobject>
-</inlinemediaobject
+		  </imageobject
+></inlinemediaobject
 > <guibutton
->Incluir os arquivos &pdf; na pesquisa por texto completo</guibutton
->: Permite-lhe incluir o &pdf; com texto completo na filtragem. </para>
+>Incluir os arquivos &PDF; na pesquisa por texto completo</guibutton
+>: Permite-lhe incluir o &PDF; com texto completo na filtragem. </para>
 	    </listitem>
 	    <listitem>
 	      <para>
 		<inlinemediaobject>
 		  <imageobject>
 		    <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/>
-		  </imageobject>
-</inlinemediaobject
+		  </imageobject
+></inlinemediaobject
 > <guibutton
 >Restaurar os critérios do filtro</guibutton
 >: Restaura os critérios de filtragem. </para>
@@ -1500,22 +1506,22 @@ latex exemplo</screen>
 ><guimenu
 >Elemento</guimenu
 > <guimenuitem
->Localizar &pdf;...</guimenuitem
+>Localizar &PDF;...</guimenuitem
 > </menuchoice>
 	</term>
 	<listitem>
 	  <para
->Tenta localizar na Internet alguns documentos em &pdf; sobre o item bibliográfico selecionado. </para>
+>Tenta localizar na Internet alguns documentos em &PDF; sobre o item bibliográfico selecionado. </para>
 	  <screenshot>
 	    <screeninfo
->Janela para localizar &pdf;s</screeninfo>
+>Janela para localizar &PDF;s</screeninfo>
 	    <mediaobject>
 	      <imageobject>
 		<imagedata fileref="find-pdf.png" format="PNG"/>
 	      </imageobject>
 	      <textobject>
 		<phrase
->Janela para localizar &pdf;s</phrase>
+>Janela para localizar &PDF;s</phrase>
 	      </textobject>
 	    </mediaobject>
 	  </screenshot>
@@ -1611,7 +1617,7 @@ latex exemplo</screen>
 ><guimenu
 >Configurações</guimenu
 ><guimenuitem
->Configurar o &kbibtex;</guimenuitem
+>Configurar o &kbibtex;...</guimenuitem
 ></menuchoice
 >. Abaixo você poderá encontrar uma descrição das páginas de configuração do &kbibtex;. </para>
     <para
@@ -1860,17 +1866,17 @@ latex exemplo</screen>
       </sect2>
       <sect2 id="config-pdf">
       <title
->Configuração - &pdf; e PostScript </title>
+>Configuração - &PDF; e PostScript </title>
       <screenshot>
 	<screeninfo
->Configuração - &pdf; e PostScript</screeninfo>
+>Configuração - &PDF; e PostScript</screeninfo>
 	  <mediaobject>
 	    <imageobject>
 	      <imagedata fileref="config-pdf.png" format="PNG"/>
 	    </imageobject>
 	    <textobject>
 	      <phrase
->Configuração - &pdf; e PostScript</phrase>
+>Configuração - &PDF; e PostScript</phrase>
 	    </textobject>
 	  </mediaobject>
 	</screenshot>
@@ -1879,7 +1885,7 @@ latex exemplo</screen>
 >visualização dos itens do &kbibtex;</link
 >. Você pode selecionar o <guilabel
 >Tamanho do papel</guilabel
->, o idioma do pacote <ulink url="http://www.ctan.org/pkg/babel"
+>, o idioma do pacote <ulink url="https://www.ctan.org/pkg/babel"
 >babel</ulink
 > do &latex; e o <link linkend="quick-using"
 >estilo da bibliografia</link
@@ -2071,7 +2077,7 @@ latex exemplo</screen>
     <title
 >Integração com o &lyx; </title>
     <para
->O <ulink url="http://www.lyx.org/"
+>O <ulink url="https://www.lyx.org/"
 >&lyx;</ulink
 > é um processador de documento que encoraja uma abordagem à escrita com base na estrutura dos seus documentos (WYSIWYM) e não simplesmente na sua aparência (WYSIWYG). </para>
     <para
@@ -2185,19 +2191,7 @@ latex exemplo</screen>
 >Tradução de André Marcelo Alvarenga <email
 >alvarenga@kde.org</email
 ></para
-> 
-&underFDL; &underGPL; </chapter>
-
-<appendix id="installation">
-  <title
->Instalação</title>
-  <para
->A forma padrão de instalar o &kbibtex; é usar o gerenciador de pacotes e os repositórios de software da sua distribuição. </para>
-  <para
->Use as <ulink url="http://home.gna.org/kbibtex/download.html"
->instruções da página oficial do &kbibtex;</ulink
-> para baixar o código-fonte do &kbibtex; e compilá-lo você mesmo. </para>
-</appendix>
+> &underFDL; &underGPL; </chapter>
 
 <bibliography>
   <biblioentry>
