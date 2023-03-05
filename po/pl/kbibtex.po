@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-05 00:48+0000\n"
-"PO-Revision-Date: 2023-02-12 09:40+0100\n"
+"PO-Revision-Date: 2023-03-04 09:06+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -110,7 +110,7 @@ msgstr "Data przedruku"
 
 #, kde-format
 msgid "Local File"
-msgstr "Plik lokalny"
+msgstr "Plik miejscowy"
 
 #, kde-format
 msgid ""
@@ -792,7 +792,7 @@ msgstr "Adres URL daty"
 #: src/config/bibtexfields.cpp:289
 #, kde-format
 msgid "Local File URL"
-msgstr "Adres URL lokalnego pliku"
+msgstr "Adres URL pliku miejscowego"
 
 #: src/config/bibtexfields.cpp:291
 #, kde-format
@@ -914,12 +914,12 @@ msgstr "Brak kopi zapasowych"
 #: src/config/preferences.cpp:584
 #, kde-format
 msgid "Local files only"
-msgstr "Tylko pliki lokalne"
+msgstr "Tylko pliku miejscowe"
 
 #: src/config/preferences.cpp:584
 #, kde-format
 msgid "Both local and remote files"
-msgstr "Pliki lokalne i zdalne"
+msgstr "Pliki miejscowe i zdalne"
 
 #: src/config/preferences.cpp:910
 #, kde-format
@@ -1143,12 +1143,12 @@ msgstr "Zmień nazwę według id wpisu: '%1'"
 msgid ""
 "The following local document is about to be associated with the current "
 "entry:"
-msgstr "Następujący lokalny dokument ma zostać przypisany bieżącemu wpisowi:"
+msgstr "Następujący dokument miejscowy ma zostać przypisany bieżącemu wpisowi:"
 
 #: src/gui/element/associatedfilesui.cpp:313
 #, kde-format
 msgid "The following local document is about to be associated with entry '%1':"
-msgstr "Następujący lokalny dokument ma zostać przypisany wpisowi '%1':"
+msgstr "Następujący dokument miejscowy ma zostać przypisany wpisowi '%1':"
 
 #: src/gui/element/elementeditor.cpp:200
 #, kde-format
@@ -1653,12 +1653,12 @@ msgstr "Plik do przypisania"
 #: src/gui/field/fieldlistedit.cpp:543 src/gui/field/fieldlistedit.cpp:617
 #, kde-format
 msgid "Save file locally"
-msgstr "Zapisz plik lokalnie"
+msgstr "Zapisz plik miejscowo"
 
 #: src/gui/field/fieldlistedit.cpp:593
 #, kde-format
 msgid "Save file '%1' locally"
-msgstr "Zapisz plik '%1' lokalnie"
+msgstr "Zapisz plik '%1' miejscowo"
 
 #: src/gui/field/fieldlistedit.cpp:604
 #, kde-format
@@ -2987,7 +2987,7 @@ msgstr "Filtr eksportu zwrócił następujący wynik:"
 #: src/parts/part.cpp:700
 #, kde-format
 msgid "Local Files"
-msgstr "Lokalne pliki"
+msgstr "Pliki miejscowe"
 
 #: src/parts/part.cpp:725
 #, kde-format
@@ -3376,7 +3376,7 @@ msgstr "Nie można otworzyć kanału serwera LyX '%1'."
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
-"Przełącz pomiędzy tylko lokalnymi plikami i wszystkimi dokumentami, "
+"Przełącz pomiędzy tylko plikami miejscowymi i wszystkimi dokumentami, "
 "uwzględniając też te zdalne"
 
 #: src/program/docklets/documentpreview.cpp:213
@@ -3402,8 +3402,8 @@ msgid ""
 "restriction</a> to local files to see remote documents.</qt>"
 msgstr ""
 "<qt>Brak dokumentów do pokazania.<br/><a href=\"disableonlylocalfiles"
-"\">Wyłącz ograniczenie</a> na pliki lokalne, aby zobaczyć zdalne dokumenty.</"
-"qt>"
+"\">Wyłącz ograniczenie</a> na pliki miejscowe, aby zobaczyć zdalne dokumenty."
+"</qt>"
 
 #: src/program/docklets/documentpreview.cpp:510
 #, kde-format
