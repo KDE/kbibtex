@@ -18,6 +18,7 @@ set(
     fileexporterris.cpp
     fileexporterrtf.cpp
     fileexportertoolchain.cpp
+    fileexporterwordbibxml.cpp
     fileexporterxml.cpp
     fileexporterxslt.cpp
     fileimporterbibtex.cpp

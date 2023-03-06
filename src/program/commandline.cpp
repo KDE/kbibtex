@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2022-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -43,20 +43,28 @@ int main(int argc, char *argv[])
     cmdLineParser.addVersionOption();
     QCommandLineOption outputFileCLO{{QStringLiteral("o"), QStringLiteral("output")}, QStringLiteral("Write output to file, stdout if not specified"), QStringLiteral("outputfilename")};
     cmdLineParser.addOption(outputFileCLO);
+    QCommandLineOption outputformatCLI{{QStringLiteral("O"), QStringLiteral("output-format")}, QStringLiteral("Provide suggestion for output format"), QStringLiteral("format")};
+    cmdLineParser.addOption(outputformatCLI);
     QCommandLineOption idSuggestionFormatStringCLO{{QStringLiteral("format-id")}, QStringLiteral("Reformat all entry ids using this format string"), QStringLiteral("formatstring")};
     cmdLineParser.addOption(idSuggestionFormatStringCLO);
     cmdLineParser.addPositionalArgument(QStringLiteral("file"), QStringLiteral("Read from this file"));
 
     cmdLineParser.process(coreApp);
 
-    if (cmdLineParser.positionalArguments().length() < 1) {
+    QVector<QString> arguments;
+    arguments.reserve(cmdLineParser.positionalArguments().length());
+    for (const QString &pa : cmdLineParser.positionalArguments())
+        if (pa.length() > 0)
+            arguments.append(pa);
+
+    if (arguments.length() < 1) {
         std::cerr << "No file to read from specified. Use  --help  for instructions." << std::endl;
         coreApp.exit(exitCode = 1);
-    } else if (cmdLineParser.positionalArguments().length() > 1) {
+    } else if (arguments.length() > 1) {
         std::cerr << "More than one input file specified. Use  --help  for instructions." << std::endl;
         coreApp.exit(exitCode = 1);
     } else {
-        const QFileInfo inputFileInfo{cmdLineParser.positionalArguments().constFirst()};
+        const QFileInfo inputFileInfo{arguments.constFirst()};
         if (!inputFileInfo.exists() || inputFileInfo.size() <= 0 || !inputFileInfo.isFile() || !inputFileInfo.isReadable()) {
             std::cerr << "Argument is not an existing, readable, non-empty file: " << inputFileInfo.filePath().toLocal8Bit().constData() << std::endl;
             coreApp.exit(exitCode = 1);
@@ -110,7 +118,17 @@ int main(int argc, char *argv[])
                             const QFileInfo outputFileInfo{cmdLineParser.value(outputFileCLO)};
                             QFile outputfile(outputFileInfo.filePath());
                             if (outputfile.open(QFile::WriteOnly)) {
-                                FileExporter *exporter = FileExporter::factory(outputFileInfo, QString() /** TODO */, &coreApp);
+                                QString exporterClassHint;
+                                if (cmdLineParser.isSet(outputformatCLI)) {
+                                    const QString cmpTo = cmdLineParser.value(outputformatCLI).toLower();
+                                    for (const QString &exporterClass : FileExporter::exporterClasses(outputFileInfo))
+                                        if (exporterClass.toLower().contains(cmpTo)) {
+                                            exporterClassHint = exporterClass;
+                                            std::cerr << "Choosing exporter " << exporterClassHint.toLocal8Bit().constData() << " based on --output-format=" << cmpTo.toLocal8Bit().constData() << std::endl;
+                                            break;
+                                        }
+                                }
+                                FileExporter *exporter = FileExporter::factory(outputFileInfo, exporterClassHint, &coreApp);
                                 const bool ok = exporter->save(&outputfile, file);
                                 outputfile.close();
                                 if (!ok) {

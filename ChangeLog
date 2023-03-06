@@ -19,6 +19,7 @@ Diff 0.10 to 0.11
 - Improving support for Greek 'mu' versus 'micro' symbol
 - Refactoring FileExporterBibTeX and FileImporterBibTeX classes, among others for
   better handling of text encodings incompatible with ASCII, such as UTF-16
+- Adding exporter for Word XML bibliography
 - Improving support for Greek 'mu' versus 'micro' symbol
 - Refactoring usage of Qt 5 and KDE Framework 5 libraries that became deprecated
   during the move to Qt 6 and KDE Frameworks 6.

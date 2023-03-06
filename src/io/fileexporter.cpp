@@ -26,6 +26,7 @@
 #include <Element>
 #include "fileexporterbibtex.h"
 #include "fileexporterbibtexoutput.h"
+#include "fileexporterwordbibxml.h"
 #include "fileexporterxml.h"
 #include "fileexporterxslt.h"
 #include "fileexporterris.h"
@@ -62,7 +63,9 @@ FileExporter *FileExporter::factory(const QFileInfo &fileInfo, const QString &ex
             FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils(parent);
             fileExporterBibUtils->setFormat(BibUtils::Format::WordBib);
             return fileExporterBibUtils;
-        } else
+        } else if (exporterClassHint.contains(QStringLiteral("FileExporterWordBibXML")))
+            return new FileExporterWordBibXML(parent);
+        else
             return new FileExporterXML(parent);
     } else if (ending.endsWith(QStringLiteral("ris"))) {
         if (BibUtils::available() && exporterClassHint.contains(QStringLiteral("FileExporterBibUtils"))) {
@@ -105,9 +108,9 @@ QVector<QString> FileExporter::exporterClasses(const QFileInfo &fileInfo)
             return {QStringLiteral("FileExporterHTML")};
     } else if (ending.endsWith(QStringLiteral("xml"))) {
         if (BibUtils::available())
-            return {QStringLiteral("FileExporterXML"), QStringLiteral("FileExporterBibUtils")};
+            return {QStringLiteral("FileExporterXML"), QStringLiteral("FileExporterWordBibXML"), QStringLiteral("FileExporterBibUtils")};
         else
-            return {QStringLiteral("FileExporterXML")};
+            return {QStringLiteral("FileExporterXML"), QStringLiteral("FileExporterWordBibXML")};
     } else if (ending.endsWith(QStringLiteral("ris"))) {
         if (BibUtils::available())
             return {QStringLiteral("FileExporterRIS"), QStringLiteral("FileExporterBibUtils")};
