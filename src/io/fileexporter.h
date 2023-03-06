@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -49,8 +49,10 @@ public:
     explicit FileExporter(QObject *parent);
     ~FileExporter() override;
 
-    static FileExporter *factory(const QFileInfo &fileInfo, QObject *parent);
-    static FileExporter *factory(const QUrl &url, QObject *parent);
+    static FileExporter *factory(const QFileInfo &fileInfo, const QString &exporterClassHint, QObject *parent);
+    static FileExporter *factory(const QUrl &url, const QString &exporterClassHint, QObject *parent);
+    static QVector<QString> exporterClasses(const QFileInfo &fileInfo);
+    static QVector<QString> exporterClasses(const QUrl &url);
 
     /**
      * @brief Convert an element into a string representation.

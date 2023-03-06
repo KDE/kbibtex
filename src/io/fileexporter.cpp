@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,6 +21,7 @@
 
 #include <QBuffer>
 #include <QTextStream>
+#include <QStandardPaths>
 
 #include <Element>
 #include "fileexporterbibtex.h"
@@ -47,16 +48,29 @@ FileExporter::~FileExporter()
 }
 
 
-FileExporter *FileExporter::factory(const QFileInfo &fileInfo, QObject *parent)
+FileExporter *FileExporter::factory(const QFileInfo &fileInfo, const QString &exporterClassHint, QObject *parent)
 {
     const QString ending = fileInfo.completeSuffix().toLower();
 
     if (ending.endsWith(QStringLiteral("html")) || ending.endsWith(QStringLiteral("htm"))) {
-        return new FileExporterHTML(parent);
+        if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty() && exporterClassHint.contains(QStringLiteral("FileExporterBibTeX2HTML")))
+            return new FileExporterBibTeX2HTML(parent);
+        else
+            return new FileExporterHTML(parent);
     } else if (ending.endsWith(QStringLiteral("xml"))) {
-        return new FileExporterXML(parent);
+        if (BibUtils::available() && exporterClassHint.contains(QStringLiteral("FileExporterBibUtils"))) {
+            FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils(parent);
+            fileExporterBibUtils->setFormat(BibUtils::Format::WordBib);
+            return fileExporterBibUtils;
+        } else
+            return new FileExporterXML(parent);
     } else if (ending.endsWith(QStringLiteral("ris"))) {
-        return new FileExporterRIS(parent);
+        if (BibUtils::available() && exporterClassHint.contains(QStringLiteral("FileExporterBibUtils"))) {
+            FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils(parent);
+            fileExporterBibUtils->setFormat(BibUtils::Format::RIS);
+            return fileExporterBibUtils;
+        } else
+            return new FileExporterRIS(parent);
     } else if (ending.endsWith(QStringLiteral("pdf"))) {
         return new FileExporterPDF(parent);
     } else if (ending.endsWith(QStringLiteral("ps"))) {
@@ -67,27 +81,57 @@ FileExporter *FileExporter::factory(const QFileInfo &fileInfo, QObject *parent)
         return fileExporterBibUtils;
     } else if (ending.endsWith(QStringLiteral("rtf"))) {
         return new FileExporterRTF(parent);
-    }
-    /*
-     * FIXME: FileExporterHTML and FileExporterBibTeX2HTML compete for which exporter is used
-     *        for HTML export. This should be determined in some global setting.
-     *        If FileExporterBibTeX2HTML is to be used, the bibliography style has to be
-     *        determined as well.
-    else if (ending.endsWith(QStringLiteral("html")) || ending.endsWith(QStringLiteral("htm"))) {
-        return new FileExporterBibTeX2HTML(parent);
-    }
-    */
-    else if (ending.endsWith(QStringLiteral("bbl"))) {
+    } else if (ending.endsWith(QStringLiteral("bbl"))) {
         return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::OutputType::BibTeXBlockList, parent);
     } else {
         return new FileExporterBibTeX(parent);
     }
 }
 
-FileExporter *FileExporter::factory(const QUrl &url, QObject *parent)
+FileExporter *FileExporter::factory(const QUrl &url, const QString &exporterClassHint, QObject *parent)
 {
     const QFileInfo inputFileInfo(url.fileName());
-    return factory(inputFileInfo, parent);
+    return factory(inputFileInfo, exporterClassHint, parent);
+}
+
+QVector<QString> FileExporter::exporterClasses(const QFileInfo &fileInfo)
+{
+    const QString ending = fileInfo.completeSuffix().toLower();
+
+    if (ending.endsWith(QStringLiteral("html")) || ending.endsWith(QStringLiteral("htm"))) {
+        if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty())
+            return {QStringLiteral("FileExporterHTML"), QStringLiteral("FileExporterBibTeX2HTML")};
+        else
+            return {QStringLiteral("FileExporterHTML")};
+    } else if (ending.endsWith(QStringLiteral("xml"))) {
+        if (BibUtils::available())
+            return {QStringLiteral("FileExporterXML"), QStringLiteral("FileExporterBibUtils")};
+        else
+            return {QStringLiteral("FileExporterXML")};
+    } else if (ending.endsWith(QStringLiteral("ris"))) {
+        if (BibUtils::available())
+            return {QStringLiteral("FileExporterRIS"), QStringLiteral("FileExporterBibUtils")};
+        else
+            return {QStringLiteral("FileExporterRIS")};
+    } else if (ending.endsWith(QStringLiteral("pdf"))) {
+        return{QStringLiteral("FileExporterPDF")};
+    } else if (ending.endsWith(QStringLiteral("ps"))) {
+        return {QStringLiteral("FileExporterPS")};
+    } else if (BibUtils::available() && ending.endsWith(QStringLiteral("isi"))) {
+        return {QStringLiteral("FileExporterBibUtils")};
+    } else if (ending.endsWith(QStringLiteral("rtf"))) {
+        return {QStringLiteral("FileExporterRTF")};
+    } else if (ending.endsWith(QStringLiteral("bbl"))) {
+        return {QStringLiteral("FileExporterBibTeXOutput")};
+    } else {
+        return {QStringLiteral("FileExporterBibTeX")};
+    }
+}
+
+QVector<QString> FileExporter::exporterClasses(const QUrl &url)
+{
+    const QFileInfo inputFileInfo(url.fileName());
+    return exporterClasses(inputFileInfo);
 }
 
 QString FileExporter::toString(const QSharedPointer<const Element> element, const File *bibtexfile)

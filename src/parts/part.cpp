@@ -26,6 +26,7 @@
 #include <QMenu>
 #include <QApplication>
 #include <QLayout>
+#include <QListWidget>
 #include <QKeyEvent>
 #include <QMimeType>
 #include <QPointer>
@@ -492,8 +493,52 @@ public:
         return selectedUrls.isEmpty() ? QUrl() : selectedUrls.first();
     }
 
+    QString chooseExporterClass(const QUrl &url, const QVector<QString> &availableExporters) {
+        if (availableExporters.isEmpty())
+            return QString();
+        else if (availableExporters.size() == 1)
+            return *availableExporters.begin();
+        else {
+            // Fancy short descriptions for exporter classes
+            static const QHash<QString, QString> exporterDescription{{QStringLiteral("FileExporterBibUtils"), i18n("BibUtils")},
+                {QStringLiteral("FileExporterBibTeX2HTML"), i18n("BibTeX2HTML")},
+                {QStringLiteral("FileExporterWordBibXML"), i18n("Word XML bibliography")},
+                {QStringLiteral("FileExporterXML"), i18n("KBibTeX's own XML structure")},
+                {QStringLiteral("FileExporterHTML"), i18n("KBibTeX's built-in HTML exporter")},
+                {QStringLiteral("FileExporterRIS"), i18n("KBibTeX's built-in RIS exporter")}
+            };
+            QStringList choices;
+            choices.reserve(availableExporters.length());
+            for (const QString &exporterName : availableExporters)
+                if (exporterDescription.contains(exporterName))
+                    choices.append(exporterDescription[exporterName]);
+
+            QPointer<QDialog> dlg = new QDialog(p->widget());
+            dlg->setWindowTitle(i18nc("@title:window", "Choose Exporter"));
+            QBoxLayout *layout = new QVBoxLayout(dlg);
+            QLabel *label = new QLabel(i18n("Several exporter modules are available to write file '%1'.\n\nPlease choose one.", url.fileName()), dlg);
+            layout->addWidget(label);
+            QListWidget *list = new QListWidget(dlg);
+            layout->addWidget(list);
+            list->addItems(choices);
+            list->setSelectionMode(QAbstractItemView::SingleSelection);
+            list->setCurrentRow(0, QItemSelectionModel::Current);
+            list->item(0)->setSelected(true);
+            QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok, Qt::Horizontal, dlg);
+            buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
+            layout->addWidget(buttonBox);
+            connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
+
+            if (dlg->exec() == QDialog::Accepted) {
+                // Map back from exporter description to exporter class name
+                return exporterDescription.key(list->currentItem()->text());
+            } else
+                return *availableExporters.begin();
+        }
+    }
+
     FileExporter *saveFileExporter(const QUrl &url) {
-        FileExporter *exporter = FileExporter::factory(url, p);
+        FileExporter *exporter = FileExporter::factory(url, chooseExporterClass(url, FileExporter::exporterClasses(url)), p);
 
         if (isSaveAsOperation) {
             /// only show export dialog at SaveAs or SaveCopyAs operations

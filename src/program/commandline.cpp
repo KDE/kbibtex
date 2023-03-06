@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
                             const QFileInfo outputFileInfo{cmdLineParser.value(outputFileCLO)};
                             QFile outputfile(outputFileInfo.filePath());
                             if (outputfile.open(QFile::WriteOnly)) {
-                                FileExporter *exporter = FileExporter::factory(outputFileInfo, &coreApp);
+                                FileExporter *exporter = FileExporter::factory(outputFileInfo, QString() /** TODO */, &coreApp);
                                 const bool ok = exporter->save(&outputfile, file);
                                 outputfile.close();
                                 if (!ok) {
