@@ -85,8 +85,9 @@ private:
                 {i18n("Source (RIS)"), QStringLiteral("ris"), QStringLiteral("exporter")}
             };
             /// Query from FileExporterBibTeX2HTML which BibTeX styles are available
-            for (const QString &bibtex2htmlStyle : FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles())
-                listOfStyles.append({bibtex2htmlStyle, bibtex2htmlStyle, QStringLiteral("bibtex2html")});
+            if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty())
+                for (const QString &bibtex2htmlStyle : FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles())
+                    listOfStyles.append({bibtex2htmlStyle, bibtex2htmlStyle, QStringLiteral("bibtex2html")});
             listOfStyles.append({
                 {i18n("Standard"), QStringLiteral("standard"), QStringLiteral("xml")},
                 {i18n("Fancy"), QStringLiteral("fancy"), QStringLiteral("xml")},
@@ -279,7 +280,7 @@ void ReferencePreview::renderHTML()
             exporter = new FileExporterRIS(this);
         else
             qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output style " << previewStyle.style << " for type " << previewStyle.type;
-    } else if (previewStyle.type == QStringLiteral("bibtex2html")) {
+    } else if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty() && previewStyle.type == QStringLiteral("bibtex2html")) {
         crossRefHandling = merge;
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML(this);
         exporterHTML->setLaTeXBibliographyStyle(previewStyle.style);
