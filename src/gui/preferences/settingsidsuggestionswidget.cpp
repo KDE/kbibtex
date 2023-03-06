@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,7 @@
 #include <QPushButton>
 #include <QFontDatabase>
 
+#include <kwidgetsaddons_version.h>
 #include <KLocalizedString>
 #include <KMessageBox>
 
@@ -376,7 +377,13 @@ void SettingsIdSuggestionsWidget::editItem(const QModelIndex &index)
     if (index != QModelIndex() && !(suggestion = index.data(IdSuggestionsModel::FormatStringRole).toString()).isEmpty()) {
         const QString newSuggestion = IdSuggestionsEditDialog::editSuggestion(d->idSuggestionsModel->previewEntry().data(), suggestion, this);
         if (newSuggestion.isEmpty()) {
-            if (KMessageBox::questionYesNo(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), QIcon::fromTheme(QStringLiteral("list-remove"))), KGuiItem(i18n("Revert changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Yes && d->idSuggestionsModel->remove(index)) {
+            if (
+#if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+                KMessageBox::questionYesNo(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), QIcon::fromTheme(QStringLiteral("list-remove"))), KGuiItem(i18n("Revert changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Yes
+#else // >= 5.100.0
+                KMessageBox::questionTwoActions(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), QIcon::fromTheme(QStringLiteral("list-remove"))), KGuiItem(i18n("Revert changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::PrimaryAction
+#endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+                && d->idSuggestionsModel->remove(index)) {
                 emit changed();
             }
         } else if (newSuggestion != suggestion) {

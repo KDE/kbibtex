@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -37,6 +37,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 
+#include <kwidgetsaddons_version.h>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <kparts/part.h>
@@ -679,7 +680,13 @@ void FindDuplicatesUI::startDuplicatesSearch()
     /// If more than one element but not all are selected in the main list view,
     /// ask the user if duplicates are to be searched only within the selection
     const int selectedRowsCount = d->view->selectedElements().count();
-    if (selectedRowsCount > 1 && selectedRowsCount < d->view->sortFilterProxyModel()->sourceModel()->rowCount() && KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes) {
+    if (selectedRowsCount > 1 && selectedRowsCount < d->view->sortFilterProxyModel()->sourceModel()->rowCount() &&
+#if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+            KMessageBox::questionYesNo(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::Yes
+#else // >= 5.100.0
+            KMessageBox::questionTwoActions(d->part->widget(), i18n("Multiple elements are selected. Do you want to search for duplicates only within the selection or in the whole document?"), i18n("Search only in selection?"), KGuiItem(i18n("Only in selection")), KGuiItem(i18n("Whole document"))) == KMessageBox::PrimaryAction
+#endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+       ) {
         /// Yes, do only search for duplicates within selection, so copy all
         /// selected elements to a temporary new File object
         workingSetFile = new File();

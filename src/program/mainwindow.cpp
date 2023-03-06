@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,6 +31,7 @@
 #include <QFileDialog>
 #include <QAction>
 
+#include <kwidgetsaddons_version.h>
 #include <KActionMenu>
 #include <KActionCollection>
 #include <KPluginFactory>
@@ -447,7 +448,13 @@ void KBibTeXMainWindow::delayed() {
     if (bs == nullptr) {
         /// First call to this slot
         bs = new BibliographyService(this);
-        if (!bs->isKBibTeXdefault() && KMessageBox::questionYesNo(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::Yes) {
+        if (!bs->isKBibTeXdefault() &&
+#if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+                KMessageBox::questionYesNo(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::Yes
+#else // >= 5.100.0
+                KMessageBox::questionTwoActions(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::PrimaryAction
+#endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+           ) {
             bs->setKBibTeXasDefault();
             /// QTimer calls this slot again, but as 'bs' will not be NULL,
             /// the 'if' construct's 'else' path will be followed.

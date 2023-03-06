@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,7 @@
 #include <QCheckBox>
 #include <QPushButton>
 
+#include <kwidgetsaddons_version.h>
 #include <KLocalizedString>
 #include <KIconLoader>
 #include <KConfigGroup>
@@ -185,7 +186,13 @@ void ElementForm::setElement(QSharedPointer<Element> element, const File *file)
     /// changes rather than to discard them -> apply changes in previous element.
     /// FIXME If the previous element got delete from the file and therefore a different
     /// element gets set, changes will be still applied to the element to-be-deleted.
-    if (d->gotModified && element != d->element && KMessageBox::questionYesNo(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), QIcon::fromTheme(QStringLiteral("dialog-ok-apply"))), KGuiItem(i18n("Discard changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Yes) {
+    if (d->gotModified && element != d->element &&
+#if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+            KMessageBox::questionYesNo(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), QIcon::fromTheme(QStringLiteral("dialog-ok-apply"))), KGuiItem(i18n("Discard changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Yes
+#else // >= 5.100.0
+            KMessageBox::questionTwoActions(this, i18n("The current element got modified.\nApply or discard changes?"), i18n("Element modified"), KGuiItem(i18n("Apply changes"), QIcon::fromTheme(QStringLiteral("dialog-ok-apply"))), KGuiItem(i18n("Discard changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::PrimaryAction
+#endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+       ) {
         d->apply();
     }
     if (element != d->element) {
