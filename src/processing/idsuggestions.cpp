@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,12 @@
 
 #include <QRegularExpression>
 
+#ifdef HAVE_KF5I18N
 #include <KLocalizedString>
+#else // HAVE_KF5I18N
+#define i18nc(comment,text) QStringLiteral(text)
+#define i18n(text) QStringLiteral(text)
+#endif // HAVE_KF5I18N
 
 #include <Preferences>
 #include <Encoder>
@@ -385,7 +390,12 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
             }
             text = formatAuthorRange(info.startWord, info.endWord, info.lastWord);
 
-            if (info.len > 0 && info.len < std::numeric_limits<int>::max()) text.append(i18np(", but only first letter of each last name", ", but only first %1 letters of each last name", info.len));
+            if (info.len > 0 && info.len < std::numeric_limits<int>::max())
+#ifdef HAVE_KF5I18N
+                text.append(i18np(", but only first letter of each last name", ", but only first %1 letters of each last name", info.len));
+#else // HAVE_KF5I18N
+                text.append(info.len > 1 ? QString(QStringLiteral(", but only first %1 letters of each last name")).arg(QString::number(info.len)) : QStringLiteral(", but only first letter of each last name"));
+#endif // HAVE_KF5I18N
 
             switch (info.caseChange) {
             case IdSuggestions::CaseChange::ToUpper:
@@ -401,7 +411,12 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
                 break;
             }
 
-            if (!info.inBetween.isEmpty()) text.append(i18n(", with '%1' in between", info.inBetween));
+            if (!info.inBetween.isEmpty())
+#ifdef HAVE_KF5I18N
+                text.append(i18n(", with '%1' in between", info.inBetween));
+#else // HAVE_KF5I18N
+                text.append(QString(QStringLiteral(", with '%1' in between")).arg(info.inBetween));
+#endif // HAVE_KF5I18N
         }
         else if (token[0] == 'y')
             text.append(i18n("Year (2 digits)"));
@@ -411,13 +426,29 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Title"));
             if (info.startWord == 0 && info.endWord < std::numeric_limits<int>::max())
+#ifdef HAVE_KF5I18N
                 text.append(i18np(", but only the first word", ", but only first %1 words", info.endWord + 1));
+#else // HAVE_KF5I18N
+                text.append(info.endWord + 1 > 1 ? QString(QStringLiteral(", but only first %1 words'")).arg(QString::number(info.endWord + 1)) : QStringLiteral(", but only the first word"));
+#endif // HAVE_KF5I18N
             else if (info.startWord > 0 && info.endWord == std::numeric_limits<int>::max())
+#ifdef HAVE_KF5I18N
                 text.append(i18n(", but only starting from word %1", info.startWord + 1));
+#else // HAVE_KF5I18N
+                text.append(QString(QStringLiteral(", but only starting from word %1")).arg(QString::number(info.startWord + 1)));
+#endif // HAVE_KF5I18N
             else if (info.startWord > 0 && info.endWord < std::numeric_limits<int>::max())
+#ifdef HAVE_KF5I18N
                 text.append(i18n(", but only from word %1 to word %2", info.startWord + 1, info.endWord + 1));
+#else // HAVE_KF5I18N
+                text.append(QString(QStringLiteral(", but only from word %1 to word %2")).arg(QString::number(info.startWord + 1), QString::number(info.endWord + 1)));
+#endif // HAVE_KF5I18N
             if (info.len > 0 && info.len < std::numeric_limits<int>::max())
+#ifdef HAVE_KF5I18N
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
+#else // HAVE_KF5I18N
+                text.append(info.len > 1 ? QString(QStringLiteral(", but only first %1 letters of each word'")).arg(QString::number(info.len)) : QStringLiteral(", but only first letter of each word"));
+#endif // HAVE_KF5I18N
 
             switch (info.caseChange) {
             case IdSuggestions::CaseChange::ToUpper:
@@ -433,14 +464,23 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
                 break;
             }
 
-            if (!info.inBetween.isEmpty()) text.append(i18n(", with '%1' in between", info.inBetween));
+            if (!info.inBetween.isEmpty())
+#ifdef HAVE_KF5I18N
+                text.append(i18n(", with '%1' in between", info.inBetween));
+#else // HAVE_KF5I18N
+                text.append(QString(QStringLiteral(", with '%1' in between")).arg(info.inBetween));
+#endif // HAVE_KF5I18N
             if (token[0] == 'T') text.append(i18n(", small words removed"));
         }
         else if (token[0] == 'j') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Journal"));
             if (info.len > 0 && info.len < std::numeric_limits<int>::max())
+#ifdef HAVE_KF5I18N
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
+#else // HAVE_KF5I18N
+                text.append(info.len > 1 ? QString(QStringLiteral(", but only first %1 letters of each word'")).arg(QString::number(info.len)) : QStringLiteral(", but only first letter of each word"));
+#endif // HAVE_KF5I18N
             switch (info.caseChange) {
             case IdSuggestions::CaseChange::ToUpper:
                 text.append(i18n(", in upper case"));
@@ -458,7 +498,11 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Type"));
             if (info.len > 0 && info.len < std::numeric_limits<int>::max())
+#ifdef HAVE_KF5I18N
                 text.append(i18np(", but only first letter of each word", ", but only first %1 letters of each word", info.len));
+#else // HAVE_KF5I18N
+                text.append(info.len > 1 ? QString(QStringLiteral(", but only first %1 letters of each word'")).arg(QString::number(info.len)) : QStringLiteral(", but only first letter of each word"));
+#endif // HAVE_KF5I18N
             switch (info.caseChange) {
             case IdSuggestions::CaseChange::ToUpper:
                 text.append(i18n(", in upper case"));
@@ -477,7 +521,11 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
         } else if (token[0] == 'p') {
             text.append(i18n("First page number"));
         } else if (token[0] == '"')
+#ifdef HAVE_KF5I18N
             text.append(i18n("Text: '%1'", token.mid(1)));
+#else // HAVE_KF5I18N
+            text.append(QString(QStringLiteral("Text: '%1'")).arg(token.mid(1)));
+#endif // HAVE_KF5I18N
         else
             text.append("?");
 
@@ -498,26 +546,54 @@ QString IdSuggestions::formatAuthorRange(int minValue, int maxValue, bool lastAu
             return i18n("All authors");
         else {
             if (lastAuthor)
+#ifdef HAVE_KF5I18N
                 return i18n("From first author to author %1 and last author", maxValue + 1);
+#else // HAVE_KF5I18N
+                return QString(QStringLiteral("From first author to author %1 and last author")).arg(QString::number(maxValue + 1));
+#endif // HAVE_KF5I18N
             else
+#ifdef HAVE_KF5I18N
                 return i18n("From first author to author %1", maxValue + 1);
+#else // HAVE_KF5I18N
+                return QString(QStringLiteral("From first author to author %1")).arg(QString::number(maxValue + 1));
+#endif // HAVE_KF5I18N
         }
     } else if (minValue == 1) {
         if (maxValue == std::numeric_limits<int>::max())
             return i18n("All but first author");
         else {
             if (lastAuthor)
+#ifdef HAVE_KF5I18N
                 return i18n("From author %1 to author %2 and last author", minValue + 1, maxValue + 1);
+#else // HAVE_KF5I18N
+                return QString(QStringLiteral("From author %1 to author %2 and last author")).arg(QString::number(minValue + 1), QString::number(maxValue + 1));
+#endif // HAVE_KF5I18N
             else
+#ifdef HAVE_KF5I18N
                 return i18n("From author %1 to author %2", minValue + 1, maxValue + 1);
+#else // HAVE_KF5I18N
+                return QString(QStringLiteral("From author %1 to author %2")).arg(QString::number(minValue + 1), QString::number(maxValue + 1));
+#endif // HAVE_KF5I18N
         }
     } else {
         if (maxValue == std::numeric_limits<int>::max())
+#ifdef HAVE_KF5I18N
             return i18n("From author %1 to last author", minValue + 1);
+#else // HAVE_KF5I18N
+            return QString(QStringLiteral("From author %1 to last author")).arg(QString::number(minValue + 1));
+#endif // HAVE_KF5I18N
         else if (lastAuthor)
+#ifdef HAVE_KF5I18N
             return i18n("From author %1 to author %2 and last author", minValue + 1, maxValue + 1);
+#else // HAVE_KF5I18N
+            return QString(QStringLiteral("From author %1 to author %2 and last author")).arg(QString::number(minValue + 1), QString::number(maxValue + 1));
+#endif // HAVE_KF5I18N
         else
+#ifdef HAVE_KF5I18N
             return i18n("From author %1 to author %2", minValue + 1, maxValue + 1);
+#else // HAVE_KF5I18N
+            return QString(QStringLiteral("From author %1 to author %2")).arg(QString::number(minValue + 1), QString::number(maxValue + 1));
+#endif // HAVE_KF5I18N
     }
 }
 
