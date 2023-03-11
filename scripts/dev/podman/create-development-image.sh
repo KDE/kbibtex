@@ -14,13 +14,17 @@ trap cleanup_on_exit EXIT
 function buildahsetx() {
 	set -x
 	buildah "${@}"
+	exitcode=$?
 	{ set +x ; } 2>/dev/null
+	return ${exitcode}
 }
 
 function podmansetx() {
 	set -x
 	podman "${@}"
+	exitcode=$?
 	{ set +x ; } 2>/dev/null
+	return ${exitcode}
 }
 
 function create_directories() {
@@ -160,6 +164,8 @@ function build_archlinux() {
 	buildahsetx commit "${id}" "${IMAGENAME}" 2>&1 | tee "${TEMPDIR}/buildah-commit-output.txt" || exit 1
 	buildahcommitlastline="$(tail -n 1 <"${TEMPDIR}/buildah-commit-output.txt")"
 	grep -qP '^[0-9a-f]{24,96}$' <<<"${buildahcommitlastline}" && finalimagename="${buildahcommitlastline}"
+
+	return 0
 }
 
 
@@ -200,6 +206,8 @@ function build_debian10() {
 	buildahsetx commit "${id}" "${IMAGENAME}" 2>&1 | tee "${TEMPDIR}/buildah-commit-output.txt" || exit 1
 	buildahcommitlastline="$(tail -n 1 <"${TEMPDIR}/buildah-commit-output.txt")"
 	grep -qP '^[0-9a-f]{24,96}$' <<<"${buildahcommitlastline}" && finalimagename="${buildahcommitlastline}"
+
+	return 0
 }
 
 
@@ -240,6 +248,8 @@ function build_debian11() {
 	buildahsetx commit "${id}" "${IMAGENAME}" 2>&1 | tee "${TEMPDIR}/buildah-commit-output.txt" || exit 1
 	buildahcommitlastline="$(tail -n 1 <"${TEMPDIR}/buildah-commit-output.txt")"
 	grep -qP '^[0-9a-f]{24,96}$' <<<"${buildahcommitlastline}" && finalimagename="${buildahcommitlastline}"
+
+	return 0
 }
 
 
@@ -280,6 +290,8 @@ function build_debian12() {
 	buildahsetx commit "${id}" "${IMAGENAME}" 2>&1 | tee "${TEMPDIR}/buildah-commit-output.txt" || exit 1
 	buildahcommitlastline="$(tail -n 1 <"${TEMPDIR}/buildah-commit-output.txt")"
 	grep -qP '^[0-9a-f]{24,96}$' <<<"${buildahcommitlastline}" && finalimagename="${buildahcommitlastline}"
+
+	return 0
 }
 
 
@@ -318,6 +330,8 @@ function build_kdeneon() {
 	buildahsetx commit "${id}" "${IMAGENAME}" 2>&1 | tee "${TEMPDIR}/buildah-commit-output.txt" || exit 1
 	buildahcommitlastline="$(tail -n 1 <"${TEMPDIR}/buildah-commit-output.txt")"
 	grep -qP '^[0-9a-f]{24,96}$' <<<"${buildahcommitlastline}" && finalimagename="${buildahcommitlastline}"
+
+	return 0
 }
 
 
@@ -352,6 +366,8 @@ function build_fedora() {
 	buildahsetx commit "${id}" "${IMAGENAME}" 2>&1 | tee "${TEMPDIR}/buildah-commit-output.txt" || exit 1
 	buildahcommitlastline="$(tail -n 1 <"${TEMPDIR}/buildah-commit-output.txt")"
 	grep -qP '^[0-9a-f]{24,96}$' <<<"${buildahcommitlastline}" && finalimagename="${buildahcommitlastline}"
+
+	return 0
 }
 
 
@@ -397,6 +413,8 @@ function build_ubuntu2204() {
 	buildahsetx commit "${id}" "${IMAGENAME}" 2>&1 | tee "${TEMPDIR}/buildah-commit-output.txt" || exit 1
 	buildahcommitlastline="$(tail -n 1 <"${TEMPDIR}/buildah-commit-output.txt")"
 	grep -qP '^[0-9a-f]{24,96}$' <<<"${buildahcommitlastline}" && finalimagename="${buildahcommitlastline}"
+
+	return 0
 }
 
 
@@ -442,6 +460,8 @@ function build_ubuntu2210() {
 	buildahsetx commit "${id}" "${IMAGENAME}" 2>&1 | tee "${TEMPDIR}/buildah-commit-output.txt" || exit 1
 	buildahcommitlastline="$(tail -n 1 <"${TEMPDIR}/buildah-commit-output.txt")"
 	grep -qP '^[0-9a-f]{24,96}$' <<<"${buildahcommitlastline}" && finalimagename="${buildahcommitlastline}"
+
+	return 0
 }
 
 

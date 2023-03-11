@@ -13,13 +13,17 @@ trap cleanup_on_exit EXIT
 function buildahsetx() {
 	set -x
 	buildah "${@}"
+	exitcode=$?
 	{ set +x ; } 2>/dev/null
+	return ${exitcode}
 }
 
 function podmansetx() {
 	set -x
 	podman "${@}"
+	exitcode=$?
 	{ set +x ; } 2>/dev/null
+	return ${exitcode}
 }
 
 function create_imagename() {
