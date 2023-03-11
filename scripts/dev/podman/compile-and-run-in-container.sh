@@ -68,38 +68,35 @@ EOF
 
 function build_sources() {
 	local id="$1"
-	local sudocmd="$2"
 
 	buildahsetx config --workingdir /tmp/build "${id}" || exit 1
-	buildahsetx run "${id}" -- "${sudocmd}" /usr/bin/cmake -DBUILD_TESTING:BOOL=ON -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=/usr ../source || exit 1
-	buildahsetx run "${id}" -- "${sudocmd}" /usr/bin/make -j$(( $(nproc) - 1 )) || exit 1
+	buildahsetx config --user root --env VERBOSE=1 "${id}"
+	buildahsetx run --user root "${id}" -- /usr/bin/cmake --log-level=VERBOSE -DBUILD_TESTING:BOOL=ON -DCMAKE_BUILD_TYPE=debug -DCMAKE_INSTALL_PREFIX:PATH=/usr ../source || exit 1
+	buildahsetx run --user root "${id}" -- /usr/bin/make -j$(( $(nproc) - 1 )) || exit 1
 }
 
 function install_program() {
 	local id="$1"
-	local sudocmd="$2"
 
-	buildahsetx run "${id}" -- "${sudocmd}" make install || exit 1
-	buildahsetx run "${id}" -- "${sudocmd}" kbuildsycoca5 || exit 1
+	buildahsetx run --user root "${id}" -- make install || exit 1
+	buildahsetx run --user root "${id}" -- kbuildsycoca5 || exit 1
 }
 
 function cleaning() {
 	local id="$1"
-	local sudocmd="$2"
 
-	buildahsetx run "${id}" -- "${sudocmd}" rm -rf '/tmp/source'
+	buildahsetx run --user root "${id}" -- rm -rf '/tmp/source'
 }
 
 function setting_ownerships() {
 	local id="$1"
 	local username="$2"
-	local sudocmd="$3"
 
 	for d in build xdg-config-home ; do
-		buildahsetx run "${id}" -- "${sudocmd}" chown -R "${username}:${username}" "/tmp/${d}" || exit 1
+		buildahsetx run --user root "${id}" -- chown -R "${username}:${username}" "/tmp/${d}" || exit 1
 	done
 	for d in runtime cache config ; do
-		buildahsetx run "${id}" -- "${sudocmd}" chown -R "${username}:${username}" "/tmp/xdg-${d}-dir" || exit 1
+		buildahsetx run --user root "${id}" -- chown -R "${username}:${username}" "/tmp/xdg-${d}-dir" || exit 1
 	done
 }
 
@@ -144,8 +141,6 @@ if (( $# == 1 || $# == 2)) ; then
 	if [[ $1 == "archlinux" || $1 == "debian10" || $1 == "debian11" || $1 == "debian12" || $1 == "fedora" || $1 == "ubuntu"* || $1 == "kdeneon" ]] ; then
 		DIST="$1"
 		[[ ${DIST} == "ubuntu" ]] && DIST="ubuntu2210"
-		SUDOCMD=""
-		[[ ${DIST} == "kdeneon" ]] && SUDOCMD="sudo"
 		USERNAME="kdeuser"
 		[[ ${DIST} == "kdeneon" ]] && USERNAME="neon"
 
@@ -153,13 +148,13 @@ if (( $# == 1 || $# == 2)) ; then
 		IMAGENAME="$(create_imagename "${FROMIMAGE}")"
 		ID="$(prepare_image "${FROMIMAGE}" "${IMAGENAME}")"
 		prepare_environment "${ID}" "${2:-}" || exit 1
-		build_sources "${ID}" "${SUDOCMD}" || exit 1
-		install_program "${ID}" "${SUDOCMD}" || exit 1
-		cleaning "${ID}" "${SUDOCMD}" || exit 1
-		setting_ownerships "${ID}" "${USERNAME}" "${SUDOCMD}" || exit 1
-		finalizing_image "${ID}" "${USERNAME}" "${SUDOCMD}" || exit 1
-		run_test_programs "${ID}" "${USERNAME}" "${SUDOCMD}" || exit 1
-		run_kbibtex_program "${ID}" "${USERNAME}" "${SUDOCMD}" || exit 1
+		build_sources "${ID}" || exit 1
+		install_program "${ID}" || exit 1
+		cleaning "${ID}" || exit 1
+		setting_ownerships "${ID}" "${USERNAME}" || exit 1
+		finalizing_image "${ID}" "${USERNAME}" || exit 1
+		run_test_programs "${ID}" "${USERNAME}" || exit 1
+		run_kbibtex_program "${ID}" "${USERNAME}" || exit 1
 	elif [[ $1 == "--cleanup" ]] ; then
 		podmansetx image ls
 		podmansetx container ls
