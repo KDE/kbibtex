@@ -63,13 +63,19 @@ target_link_libraries(kbibtexdata
         KBibTeX::Global
 )
 
-if(BUILD_APP_DESKTOP OR BUILD_KPART)
+if(KF5I18n_FOUND)
+    target_link_libraries(kbibtexdata
+        PRIVATE
+            KF5::I18n
+    )
+endif()
+
+if(BUILD_KPART OR BUILD_TESTING)
     target_link_libraries(kbibtexdata
         PRIVATE
             Qt5::Gui
-            KF5::I18n
     )
-endif(BUILD_APP_DESKTOP OR BUILD_KPART)
+endif()
 
 install(
     TARGETS kbibtexdata

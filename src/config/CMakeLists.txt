@@ -48,12 +48,12 @@ target_link_libraries(kbibtexconfig
         KF5::ConfigCore
 )
 
-if(BUILD_APP_DESKTOP OR BUILD_KPART)
+if(KF5I18n_FOUND)
     target_link_libraries(kbibtexconfig
         PRIVATE
             KF5::I18n
     )
-endif(BUILD_APP_DESKTOP OR BUILD_KPART)
+endif()
 
 install(
     TARGETS kbibtexconfig

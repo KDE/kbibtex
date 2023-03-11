@@ -4,13 +4,20 @@
 
 set(
     kbibtexprocessing_SRCS
-    findduplicates.cpp
     idsuggestions.cpp
-    lyx.cpp
-    checkbibtex.cpp
-    bibliographyservice.cpp
     journalabbreviations.cpp
 )
+
+if(BUILD_KPART OR BUILD_TESTING)
+    set(
+        kbibtexprocessing_SRCS
+        ${kbibtexprocessing_SRCS}
+        findduplicates.cpp
+        lyx.cpp
+        checkbibtex.cpp
+        bibliographyservice.cpp
+    )
+endif()
 
 ecm_qt_declare_logging_category(kbibtexprocessing_SRCS
     HEADER logging_processing.h
@@ -46,15 +53,27 @@ target_link_libraries(kbibtexprocessing
         Qt5::Core
         KBibTeX::Data
     PRIVATE
-        Qt5::Widgets
         KF5::ConfigCore
-        KF5::I18n
-        KF5::Parts
-        KF5::WidgetsAddons
-        KF5::XmlGui
         KBibTeX::Config
         KBibTeX::IO
 )
+
+if(BUILD_KPART OR BUILD_TESTING)
+    target_link_libraries(kbibtexprocessing
+        PRIVATE
+            Qt5::Widgets
+            KF5::WidgetsAddons
+            KF5::XmlGui
+            KF5::Parts
+    )
+endif()
+
+if(KF5I18n_FOUND)
+    target_link_libraries(kbibtexprocessing
+        PRIVATE
+            KF5::I18n
+    )
+endif()
 
 install(
     TARGETS kbibtexprocessing
@@ -69,14 +88,21 @@ set_target_properties(kbibtexprocessing PROPERTIES
 
 ecm_generate_headers(kbibtexprocessing_HEADERS
     HEADER_NAMES
-        BibliographyService
-        CheckBibTeX
-        FindDuplicates
         IdSuggestions
         JournalAbbreviations
-        LyX
     REQUIRED_HEADERS kbibtexprocessing_HEADERS
 )
+
+if(BUILD_KPART OR BUILD_TESTING)
+    ecm_generate_headers(kbibtexprocessing_HEADERS
+        HEADER_NAMES
+            BibliographyService
+            FindDuplicates
+            CheckBibTeX
+            LyX
+        REQUIRED_HEADERS kbibtexprocessing_HEADERS
+    )
+endif()
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kbibtexprocessing_export.h

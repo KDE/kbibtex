@@ -116,7 +116,7 @@ find_package(
     XmlPatterns
 )
 
-if(BUILD_APP_DESKTOP OR BUILD_KPART)
+if(BUILD_KPART OR BUILD_TESTING)
     find_package(
         Qt5 ${QT_MIN_VERSION}
         CONFIG
@@ -150,7 +150,7 @@ find_package(
     REQUIRED
     Config
 )
-if(BUILD_APP_DESKTOP OR BUILD_KPART)
+if(BUILD_KPART OR BUILD_TESTING)
     find_package(
         KF5 ${KF5_MIN_VERSION}
         MODULE
@@ -272,11 +272,10 @@ if(KF5DocTools_FOUND)
     add_subdirectory(doc)
     kdoctools_install(po)
 endif()
-# macro_optional_add_subdirectory(
-#     po
-# )
 
-ki18n_install(po)
+if(KF5I18n_FOUND)
+    ki18n_install(po)
+endif()
 
 if (ECM_VERSION VERSION_GREATER_EQUAL "5.59.0")
     install(FILES kbibtex.categories DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})

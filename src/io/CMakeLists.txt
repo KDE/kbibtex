@@ -78,13 +78,20 @@ target_link_libraries(kbibtexio
         KBibTeX::Config
 )
 
-if(BUILD_APP_DESKTOP OR BUILD_KPART)
+if(BUILD_KPART OR BUILD_TESTING)
     target_link_libraries(kbibtexio
         PRIVATE
             Qt5::Concurrent
+    )
+endif()
+
+if(KF5I18n_FOUND)
+    target_link_libraries(kbibtexio
+        PRIVATE
             KF5::I18n
     )
-endif(BUILD_APP_DESKTOP OR BUILD_KPART)
+endif()
+
 if(Qt5Concurrent_FOUND)
     # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
     add_definitions(
