@@ -928,9 +928,7 @@ msgid "None"
 msgstr "Ei mitään"
 
 #: src/config/preferences.cpp:890
-#, fuzzy, kde-format
-#| msgctxt "Comment Quoting"
-#| msgid "@comment{…}"
+#, kde-format
 msgctxt "Comment Quoting"
 msgid "@comment{…}"
 msgstr "@comment{…}"
@@ -972,9 +970,7 @@ msgid "UPPERCASE"
 msgstr "SUURAAKKOSET"
 
 #: src/config/preferences.cpp:1128
-#, fuzzy, kde-format
-#| msgctxt "What to do if double-clicking on a file view item"
-#| msgid "Open Editor"
+#, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
 msgstr "Avaa muokkain"
@@ -986,33 +982,25 @@ msgid "View Document"
 msgstr "Näytä tiedosto"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Important"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Important"
 msgstr "Tärkeä"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Unread"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Unread"
 msgstr "Lukematta"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Read"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Read"
 msgstr "Luettu"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Watch"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Watch"
 msgstr "Tarkkaile"
@@ -3136,16 +3124,7 @@ msgid "Finding Duplicates"
 msgstr "Etsitään kaksoiskappaleita"
 
 #: src/processing/idsuggestions.cpp:312
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Small words that can be removed from titles when generating id "
-#| "suggestions; separated by pipe symbol"
-#| msgid ""
-#| "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|"
-#| "er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|"
-#| "kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|"
-#| "von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|"
-#| "wer|which|wie|wird|with|you|und|and|ein|eine|einer|eines"
+#, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
 "separated by pipe symbol"
