@@ -26,6 +26,7 @@
 #include <QFileInfo>
 #include <QTimer>
 
+#include "kbibtex-version.h"
 #include <File>
 #include <FileImporter>
 #include <FileExporter>
@@ -37,6 +38,7 @@ int main(int argc, char *argv[])
     int exitCode = 0;
     QCoreApplication coreApp(argc, argv);
     QCoreApplication::setApplicationName(QStringLiteral("kbibtex-cli"));
+    QCoreApplication::setApplicationVersion(QStringLiteral(KBIBTEX_VERSION_STRING));
 
     QCommandLineParser cmdLineParser;
     cmdLineParser.addHelpOption();
