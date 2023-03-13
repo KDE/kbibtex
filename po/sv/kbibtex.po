@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-05 00:48+0000\n"
+"POT-Creation-Date: 2023-03-13 00:49+0000\n"
 "PO-Revision-Date: 2021-12-12 17:56+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -275,7 +275,7 @@ msgid "Element Type"
 msgstr "Elementtyp"
 
 #: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:200
-#: src/gui/file/findduplicatesui.cpp:158
+#: src/gui/file/findduplicatesui.cpp:159
 #, kde-format
 msgid "Identifier"
 msgstr "Identifierare"
@@ -284,7 +284,7 @@ msgstr "Identifierare"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:323
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:639
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:674
-#: src/processing/idsuggestions.cpp:412
+#: src/processing/idsuggestions.cpp:427
 #, kde-format
 msgid "Title"
 msgstr "Titel"
@@ -329,7 +329,7 @@ msgstr "År"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:424
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:651
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:686
-#: src/processing/idsuggestions.cpp:441
+#: src/processing/idsuggestions.cpp:477
 #, kde-format
 msgid "Journal"
 msgstr "Tidskrift"
@@ -338,7 +338,7 @@ msgstr "Tidskrift"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:244
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:659
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:694
-#: src/processing/idsuggestions.cpp:476
+#: src/processing/idsuggestions.cpp:520
 #, kde-format
 msgid "Volume"
 msgstr "Volym"
@@ -457,11 +457,11 @@ msgid "Address"
 msgstr "Adress"
 
 #: src/config/bibtexfields.cpp:193 src/config/bibtexfields.cpp:292
-#: src/gui/file/findduplicatesui.cpp:160
+#: src/gui/file/findduplicatesui.cpp:161
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:497
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:655
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:690
-#: src/processing/idsuggestions.cpp:459
+#: src/processing/idsuggestions.cpp:499
 #, kde-format
 msgid "Type"
 msgstr "Typ"
@@ -1083,13 +1083,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Sökväg att infoga i post"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:604
+#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
 #, kde-format
 msgid "Relative Path"
 msgstr "Relativ sökväg"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:604
+#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
 #, kde-format
 msgid "Absolute Path"
 msgstr "Absolut sökväg"
@@ -1107,7 +1107,7 @@ msgstr "Associera dokument med post"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:236
-#: src/program/docklets/referencepreview.cpp:125
+#: src/program/docklets/referencepreview.cpp:126
 #, kde-format
 msgid "No preview available"
 msgstr "Ingen förhandsgranskning tillgänglig"
@@ -1267,7 +1267,7 @@ msgid "Name:"
 msgstr "Namn:"
 
 #: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:105
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1288,20 +1288,20 @@ msgstr "Lista:"
 msgid "Value"
 msgstr "Värde"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:247
+#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:248
 #, kde-format
 msgid "Delete"
 msgstr "Ta bort"
 
 #: src/gui/element/elementwidgets.cpp:1005
-#: src/program/docklets/referencepreview.cpp:148
-#: src/program/documentlist.cpp:209
+#: src/program/docklets/referencepreview.cpp:149
+#: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
 msgstr "Öppna"
 
 #: src/gui/element/elementwidgets.cpp:1044
-#: src/program/docklets/elementform.cpp:97
+#: src/program/docklets/elementform.cpp:98
 #, kde-format
 msgid "Apply"
 msgstr "Verkställ"
@@ -1594,67 +1594,67 @@ msgstr ""
 "\n"
 "Byter tillbaka till typ '%2'."
 
-#: src/gui/field/fieldlistedit.cpp:144
+#: src/gui/field/fieldlistedit.cpp:145
 #, kde-format
 msgid "Remove value"
 msgstr "Ta bort värde"
 
-#: src/gui/field/fieldlistedit.cpp:155
+#: src/gui/field/fieldlistedit.cpp:156
 #, kde-format
 msgid "Move value down"
 msgstr "Flytta ner värde"
 
-#: src/gui/field/fieldlistedit.cpp:166
+#: src/gui/field/fieldlistedit.cpp:167
 #, kde-format
 msgid "Move value up"
 msgstr "Flytta upp värde"
 
-#: src/gui/field/fieldlistedit.cpp:416
+#: src/gui/field/fieldlistedit.cpp:417
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... med flera (et al.)"
 
-#: src/gui/field/fieldlistedit.cpp:421
+#: src/gui/field/fieldlistedit.cpp:422
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Lägg till från klippbordet"
 
-#: src/gui/field/fieldlistedit.cpp:422
+#: src/gui/field/fieldlistedit.cpp:423
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Lägg till en lista med namn från klippbordet"
 
-#: src/gui/field/fieldlistedit.cpp:484
+#: src/gui/field/fieldlistedit.cpp:485
 #, kde-format
 msgid "Add file..."
 msgstr "Lägg till fil..."
 
-#: src/gui/field/fieldlistedit.cpp:490
+#: src/gui/field/fieldlistedit.cpp:491
 #, kde-format
 msgid "Add reference ..."
 msgstr "Lägg till referens..."
 
-#: src/gui/field/fieldlistedit.cpp:493
+#: src/gui/field/fieldlistedit.cpp:494
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Lägg till referens från klippbordet"
 
-#: src/gui/field/fieldlistedit.cpp:505
+#: src/gui/field/fieldlistedit.cpp:506
 #, kde-format
 msgid "File to Associate"
 msgstr "Fil att associera"
 
-#: src/gui/field/fieldlistedit.cpp:543 src/gui/field/fieldlistedit.cpp:617
+#: src/gui/field/fieldlistedit.cpp:544 src/gui/field/fieldlistedit.cpp:624
 #, kde-format
 msgid "Save file locally"
 msgstr "Spara fil lokalt"
 
-#: src/gui/field/fieldlistedit.cpp:593
+#: src/gui/field/fieldlistedit.cpp:594
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Spara filen '%1' lokalt"
 
-#: src/gui/field/fieldlistedit.cpp:604
+#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1666,22 +1666,22 @@ msgstr ""
 "absoluta sökvägen skulle vara<br/><tt style=\"font-family: %3;\">%2</tt></"
 "p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:645
+#: src/gui/field/fieldlistedit.cpp:652
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Lägg till nyckelord från lista"
 
-#: src/gui/field/fieldlistedit.cpp:646
+#: src/gui/field/fieldlistedit.cpp:653
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr "Lägg till sökord som väljes från en fördefinierad lista med nyckelord"
 
-#: src/gui/field/fieldlistedit.cpp:649
+#: src/gui/field/fieldlistedit.cpp:656
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Lägg till nyckelord från klippbordet"
 
-#: src/gui/field/fieldlistedit.cpp:650
+#: src/gui/field/fieldlistedit.cpp:657
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr ""
@@ -1731,37 +1731,37 @@ msgctxt "@title:window"
 msgid "Edit Element"
 msgstr "Redigera element"
 
-#: src/gui/file/findduplicatesui.cpp:142
+#: src/gui/file/findduplicatesui.cpp:143
 #, kde-format
 msgid "Alternatives"
 msgstr "Alternativ"
 
-#: src/gui/file/findduplicatesui.cpp:194
+#: src/gui/file/findduplicatesui.cpp:195
 #, kde-format
 msgid "None of the above"
 msgstr "Inget av ovanstående"
 
-#: src/gui/file/findduplicatesui.cpp:550
+#: src/gui/file/findduplicatesui.cpp:551
 #, kde-format
 msgid "Select your duplicates"
 msgstr "Välj dubbletter"
 
-#: src/gui/file/findduplicatesui.cpp:570
+#: src/gui/file/findduplicatesui.cpp:571
 #, kde-format
 msgid "Previous Clique"
 msgstr "Föregående kotteri"
 
-#: src/gui/file/findduplicatesui.cpp:572
+#: src/gui/file/findduplicatesui.cpp:573
 #, kde-format
 msgid "Next Clique"
 msgstr "Nästa kotteri"
 
-#: src/gui/file/findduplicatesui.cpp:651
+#: src/gui/file/findduplicatesui.cpp:652
 #, kde-format
 msgid "Find Duplicates"
 msgstr "Sök dubbletter"
 
-#: src/gui/file/findduplicatesui.cpp:682
+#: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
 msgid ""
 "Multiple elements are selected. Do you want to search for duplicates only "
@@ -1770,38 +1770,39 @@ msgstr ""
 "Flera element är markerade. Vill du bara söka efter dubbletter i markeringen "
 "eller i hela dokumentet?"
 
-#: src/gui/file/findduplicatesui.cpp:682
+#: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
 msgid "Search only in selection?"
 msgstr "Sök bara i markering?"
 
-#: src/gui/file/findduplicatesui.cpp:682
+#: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
 msgid "Only in selection"
 msgstr "Bara i markering"
 
-#: src/gui/file/findduplicatesui.cpp:682
+#: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
 msgid "Whole document"
 msgstr "Hela dokumentet"
 
-#: src/gui/file/findduplicatesui.cpp:705
+#: src/gui/file/findduplicatesui.cpp:712
 #, kde-format
 msgid "No duplicates were found."
 msgstr "Inga dubbletter hittades."
 
-#: src/gui/file/findduplicatesui.cpp:705
+#: src/gui/file/findduplicatesui.cpp:712
 #, kde-format
 msgid "No duplicates found"
 msgstr "Inga dubbletter hittades"
 
-#: src/gui/file/findduplicatesui.cpp:712
+#: src/gui/file/findduplicatesui.cpp:719
 #, kde-format
 msgctxt "@title:window"
 msgid "Merge Duplicates"
 msgstr "Sammanfoga dubbletter"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid ""
 "This will reset the settings to factory defaults. Should this affect only "
@@ -1810,29 +1811,32 @@ msgstr ""
 "Det här återställer inställningarna till fördefinierade standardvärden. Ska "
 "det bara påverka nuvarande sida eller alla inställningar?"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid "Reset to Defaults"
 msgstr "Återställ till standardvärden"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid "All settings"
 msgstr "Alla inställningar"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid "Only current page"
 msgstr "Bara nuvarande sida"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:170
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:185
 #, kde-format
 msgctxt "@title:window"
 msgid "Preferences"
 msgstr "Inställningar"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:330
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:262
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:263
 #, kde-format
 msgid "Add..."
 msgstr "Lägg till..."
@@ -1841,7 +1845,7 @@ msgstr "Lägg till..."
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:104
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:345
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:429
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:268
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:269
 #, kde-format
 msgid "Remove"
 msgstr "Ta bort"
@@ -2044,14 +2048,14 @@ msgstr "... och sista författare"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
-#: src/processing/idsuggestions.cpp:501
+#: src/processing/idsuggestions.cpp:550
 #, kde-format
 msgid "From first author to author %1 and last author"
 msgstr "Från första författare till författare %1 och sista författare"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
-#: src/processing/idsuggestions.cpp:510 src/processing/idsuggestions.cpp:518
+#: src/processing/idsuggestions.cpp:567 src/processing/idsuggestions.cpp:587
 #, kde-format
 msgid "From author %1 to author %2 and last author"
 msgstr "Från författare %1 till författare %2 och sista författare"
@@ -2295,7 +2299,7 @@ msgid "Add at bottom"
 msgstr "Lägg till längst ner"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:952
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:114
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:115
 #, kde-format
 msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
 msgstr "<qt>Struktur:<ul><li>%1</li></ul>Exempel: %2</qt>"
@@ -2306,33 +2310,34 @@ msgctxt "@title:window"
 msgid "Edit Id Suggestion"
 msgstr "Redigera identifierarförslag"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:166
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:305
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:167
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:306
 #, kde-format
 msgid "Id Suggestions"
 msgstr "Identifierarförslag"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:265
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:266
 #, kde-format
 msgid "Edit..."
 msgstr "Redigera..."
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:271
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:272
 #, kde-format
 msgid "Up"
 msgstr "Upp"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:274
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:275
 #, kde-format
 msgid "Down"
 msgstr "Ner"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:277
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:278
 #, kde-format
 msgid "Toggle Default"
 msgstr "Ändra förval"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:382
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid ""
 "All token have been removed from this suggestion. Remove suggestion itself "
@@ -2341,17 +2346,20 @@ msgstr ""
 "Alla symboler har tagits bort från det här förslaget. Ta bort förslaget "
 "själv eller återställ det ursprungliga förslaget?"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:382
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Remove suggestion?"
 msgstr "Ta bort förslag?"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:382
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Remove suggestion"
 msgstr "Ta bort förslag"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:382
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Revert changes"
 msgstr "Återställ ändringar"
@@ -2532,7 +2540,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:321
-#: src/program/mainwindow.cpp:365 src/program/program.cpp:52
+#: src/program/mainwindow.cpp:366 src/program/program.cpp:52
 #, kde-format
 msgid "KBibTeX"
 msgstr "Kbibtex"
@@ -2862,139 +2870,185 @@ msgstr "Element"
 msgid "Main Toolbar"
 msgstr "Huvudverktygsrad"
 
-#: src/parts/part.cpp:135 src/parts/part.cpp:212
+#: src/parts/part.cpp:136 src/parts/part.cpp:213
 #, kde-format
 msgid "View Document"
 msgstr "Visa dokument"
 
-#: src/parts/part.cpp:162
+#: src/parts/part.cpp:163
 #, kde-format
 msgid "Save Copy As..."
 msgstr "Spara kopia som..."
 
-#: src/parts/part.cpp:166
+#: src/parts/part.cpp:167
 #, kde-format
 msgid "Save Selection..."
 msgstr "Spara markering..."
 
-#: src/parts/part.cpp:174
+#: src/parts/part.cpp:175
 #, kde-format
 msgid "Filter"
 msgstr "Filter"
 
-#: src/parts/part.cpp:179
+#: src/parts/part.cpp:180
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
 msgstr "Filtrera bibliografiposter (%1)"
 
-#: src/parts/part.cpp:182
+#: src/parts/part.cpp:183
 #, kde-format
 msgid "New element"
 msgstr "Nytt element"
 
-#: src/parts/part.cpp:188
+#: src/parts/part.cpp:189
 #, kde-format
 msgid "New entry"
 msgstr "Ny post"
 
-#: src/parts/part.cpp:193
+#: src/parts/part.cpp:194
 #, kde-format
 msgid "New comment"
 msgstr "Ny kommentar"
 
-#: src/parts/part.cpp:197
+#: src/parts/part.cpp:198
 #, kde-format
 msgid "New macro"
 msgstr "Nytt makro"
 
-#: src/parts/part.cpp:201
+#: src/parts/part.cpp:202
 #, kde-format
 msgid "New preamble"
 msgstr "Ny ingress"
 
-#: src/parts/part.cpp:206
+#: src/parts/part.cpp:207
 #, kde-format
 msgid "Edit Element"
 msgstr "Redigera element"
 
-#: src/parts/part.cpp:218
+#: src/parts/part.cpp:219
 #, kde-format
 msgid "Find PDF..."
 msgstr "Sök PDF..."
 
-#: src/parts/part.cpp:223
+#: src/parts/part.cpp:224
 #, kde-format
 msgid "Format entry ids"
 msgstr "Formatera postidentiferare"
 
-#: src/parts/part.cpp:237
+#: src/parts/part.cpp:238
 #, kde-format
 msgid "Copy References"
 msgstr "Kopiera referenser"
 
-#: src/parts/part.cpp:282
+#: src/parts/part.cpp:283
 #, kde-format
 msgid "New%1"
 msgstr "Ny %1"
 
-#: src/parts/part.cpp:441
+#: src/parts/part.cpp:442
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
 msgstr "Kunde inte skapa säkerhetskopior av dokumentet '%1'"
 
-#: src/parts/part.cpp:441
+#: src/parts/part.cpp:442
 #, kde-format
 msgid "Backup copies"
 msgstr "Säkerhetskopior"
 
-#: src/parts/part.cpp:474
+#: src/parts/part.cpp:475
 #, kde-format
 msgid "Save file"
 msgstr "Spara fil"
 
+#: src/parts/part.cpp:503
+#, kde-format
+msgid "BibUtils"
+msgstr ""
+
 #: src/parts/part.cpp:504
+#, fuzzy, kde-format
+#| msgid "BibTeX"
+msgid "BibTeX2HTML"
+msgstr "Bibtex"
+
+#: src/parts/part.cpp:505
+#, fuzzy, kde-format
+#| msgid "Load bibliography"
+msgid "Word XML bibliography"
+msgstr "Läs in bibliografi"
+
+#: src/parts/part.cpp:506
+#, kde-format
+msgid "KBibTeX's own XML structure"
+msgstr ""
+
+#: src/parts/part.cpp:507
+#, kde-format
+msgid "KBibTeX's built-in HTML exporter"
+msgstr ""
+
+#: src/parts/part.cpp:508
+#, kde-format
+msgid "KBibTeX's built-in RIS exporter"
+msgstr ""
+
+#: src/parts/part.cpp:517
+#, kde-format
+msgctxt "@title:window"
+msgid "Choose Exporter"
+msgstr ""
+
+#: src/parts/part.cpp:519
+#, kde-format
+msgid ""
+"Several exporter modules are available to write file '%1'.\n"
+"\n"
+"Please choose one."
+msgstr ""
+
+#: src/parts/part.cpp:549
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "Bibtex-filinställningar"
 
-#: src/parts/part.cpp:522
+#: src/parts/part.cpp:567
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "PDF- och Postscript-filinställningar"
 
-#: src/parts/part.cpp:642
+#: src/parts/part.cpp:687
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr "Misslyckades spara bibliografi till filen '%1'."
 
-#: src/parts/part.cpp:644 src/parts/part.cpp:650
+#: src/parts/part.cpp:689 src/parts/part.cpp:695
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr "Misslyckades spara bibliografi"
 
-#: src/parts/part.cpp:646
+#: src/parts/part.cpp:691
 #, kde-format
 msgid "Saving bibliography failed:"
 msgstr "Misslyckades spara bibliografi:"
 
-#: src/parts/part.cpp:649
+#: src/parts/part.cpp:694
 #, kde-format
 msgid "The following output was generated by the export filter:"
 msgstr "Följande utmatning skapades av exportfiltret:"
 
-#: src/parts/part.cpp:700
+#: src/parts/part.cpp:745
 #, kde-format
 msgid "Local Files"
 msgstr "Lokala filer"
 
-#: src/parts/part.cpp:725
+#: src/parts/part.cpp:770
 #, kde-format
 msgid "Remote Files"
 msgstr "Fjärrfiler"
 
-#: src/parts/part.cpp:836
+#: src/parts/part.cpp:881
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3008,7 +3062,7 @@ msgstr ""
 "Kontrollera att du har skrivbehörighet till filen, och att tillräckligt "
 "diskutrymme finns tillgängligt."
 
-#: src/parts/part.cpp:975
+#: src/parts/part.cpp:1020
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3016,12 +3070,12 @@ msgstr ""
 "Kan inte utföra standardformatering av postidentiferare: Inget "
 "standardformat angivet."
 
-#: src/parts/part.cpp:975
+#: src/parts/part.cpp:1020
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "Kan inte tillämpa förvald formatering"
 
-#: src/parts/part.cpp:1103
+#: src/parts/part.cpp:1148
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3032,17 +3086,17 @@ msgstr ""
 "\n"
 "Läs in filen igen eller ignorera ändringarna på disken?"
 
-#: src/parts/part.cpp:1103
+#: src/parts/part.cpp:1148
 #, kde-format
 msgid "File changed externally"
 msgstr "Filen ändrades externt"
 
-#: src/parts/part.cpp:1103
+#: src/parts/part.cpp:1148
 #, kde-format
 msgid "Reload file"
 msgstr "Läs in filen igen"
 
-#: src/parts/part.cpp:1103
+#: src/parts/part.cpp:1148
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Ignorera ändringar på disken"
@@ -3198,7 +3252,7 @@ msgctxt "@title:window"
 msgid "Finding Duplicates"
 msgstr "Söker efter dubbletter"
 
-#: src/processing/idsuggestions.cpp:314
+#: src/processing/idsuggestions.cpp:319
 #, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
@@ -3214,117 +3268,117 @@ msgstr ""
 "hade|han|hans|har|henne|hennes|hon|honom|hur|i|in|ingen|jag|med|men|mig|min|"
 "på|som|sin|sina|till|ut|vad|var|vem|vid|vilka|vilken|vilket|är"
 
-#: src/processing/idsuggestions.cpp:388
+#: src/processing/idsuggestions.cpp:395
 #, kde-format
 msgid ", but only first letter of each last name"
 msgid_plural ", but only first %1 letters of each last name"
 msgstr[0] ", men bara första bokstaven i varje efternamn"
 msgstr[1] ", men bara de %1 första bokstäverna i varje efternamn"
 
-#: src/processing/idsuggestions.cpp:392 src/processing/idsuggestions.cpp:424
-#: src/processing/idsuggestions.cpp:446 src/processing/idsuggestions.cpp:464
+#: src/processing/idsuggestions.cpp:402 src/processing/idsuggestions.cpp:455
+#: src/processing/idsuggestions.cpp:486 src/processing/idsuggestions.cpp:508
 #, kde-format
 msgid ", in upper case"
 msgstr ", med stora bokstäver"
 
-#: src/processing/idsuggestions.cpp:395 src/processing/idsuggestions.cpp:427
-#: src/processing/idsuggestions.cpp:449 src/processing/idsuggestions.cpp:467
+#: src/processing/idsuggestions.cpp:405 src/processing/idsuggestions.cpp:458
+#: src/processing/idsuggestions.cpp:489 src/processing/idsuggestions.cpp:511
 #, kde-format
 msgid ", in lower case"
 msgstr ", med små bokstäver"
 
-#: src/processing/idsuggestions.cpp:398 src/processing/idsuggestions.cpp:430
-#: src/processing/idsuggestions.cpp:452 src/processing/idsuggestions.cpp:470
+#: src/processing/idsuggestions.cpp:408 src/processing/idsuggestions.cpp:461
+#: src/processing/idsuggestions.cpp:492 src/processing/idsuggestions.cpp:514
 #, kde-format
 msgid ", in CamelCase"
 msgstr ", med kamelnotation"
 
-#: src/processing/idsuggestions.cpp:404 src/processing/idsuggestions.cpp:436
+#: src/processing/idsuggestions.cpp:416 src/processing/idsuggestions.cpp:469
 #, kde-format
 msgid ", with '%1' in between"
 msgstr ", med '%1' emellan"
 
-#: src/processing/idsuggestions.cpp:407
+#: src/processing/idsuggestions.cpp:422
 #, kde-format
 msgid "Year (2 digits)"
 msgstr "År (2 siffror)"
 
-#: src/processing/idsuggestions.cpp:409
+#: src/processing/idsuggestions.cpp:424
 #, kde-format
 msgid "Year (4 digits)"
 msgstr "År (4 siffror)"
 
-#: src/processing/idsuggestions.cpp:414
+#: src/processing/idsuggestions.cpp:430
 #, kde-format
 msgid ", but only the first word"
 msgid_plural ", but only first %1 words"
 msgstr[0] ", men bara det första ordet"
 msgstr[1] ", men bara de %1 första orden"
 
-#: src/processing/idsuggestions.cpp:416
+#: src/processing/idsuggestions.cpp:436
 #, kde-format
 msgid ", but only starting from word %1"
 msgstr ", men bara med början på ord %1"
 
-#: src/processing/idsuggestions.cpp:418
+#: src/processing/idsuggestions.cpp:442
 #, kde-format
 msgid ", but only from word %1 to word %2"
 msgstr ", men bara från ord %1 till ord %2"
 
-#: src/processing/idsuggestions.cpp:420 src/processing/idsuggestions.cpp:443
-#: src/processing/idsuggestions.cpp:461
+#: src/processing/idsuggestions.cpp:448 src/processing/idsuggestions.cpp:480
+#: src/processing/idsuggestions.cpp:502
 #, kde-format
 msgid ", but only first letter of each word"
 msgid_plural ", but only first %1 letters of each word"
 msgstr[0] ", men bara första bokstaven i varje ord"
 msgstr[1] ", men bara %1 första bokstäverna i varje ord"
 
-#: src/processing/idsuggestions.cpp:437
+#: src/processing/idsuggestions.cpp:473
 #, kde-format
 msgid ", small words removed"
 msgstr ", korta ord borttagna"
 
-#: src/processing/idsuggestions.cpp:478
+#: src/processing/idsuggestions.cpp:522
 #, kde-format
 msgid "First page number"
 msgstr "Första sidnummer"
 
-#: src/processing/idsuggestions.cpp:480
+#: src/processing/idsuggestions.cpp:525
 #, kde-format
 msgid "Text: '%1'"
 msgstr "Text: '%1'"
 
-#: src/processing/idsuggestions.cpp:494
+#: src/processing/idsuggestions.cpp:542
 #, kde-format
 msgid "First and last authors only"
 msgstr "Bara första och sista författare"
 
-#: src/processing/idsuggestions.cpp:496
+#: src/processing/idsuggestions.cpp:544
 #, kde-format
 msgid "First author only"
 msgstr "Bara första författare"
 
-#: src/processing/idsuggestions.cpp:498
+#: src/processing/idsuggestions.cpp:546
 #, kde-format
 msgid "All authors"
 msgstr "Alla författare"
 
-#: src/processing/idsuggestions.cpp:503
+#: src/processing/idsuggestions.cpp:556
 #, kde-format
 msgid "From first author to author %1"
 msgstr "Från första författare till författare %1"
 
-#: src/processing/idsuggestions.cpp:507
+#: src/processing/idsuggestions.cpp:563
 #, kde-format
 msgid "All but first author"
 msgstr "Alla utom första författare"
 
-#: src/processing/idsuggestions.cpp:512 src/processing/idsuggestions.cpp:520
+#: src/processing/idsuggestions.cpp:573 src/processing/idsuggestions.cpp:593
 #, kde-format
 msgid "From author %1 to author %2"
 msgstr "Från författare %1 till författare %2"
 
-#: src/processing/idsuggestions.cpp:516
+#: src/processing/idsuggestions.cpp:581
 #, kde-format
 msgid "From author %1 to last author"
 msgstr "Från författare %1 till sista författare"
@@ -3438,24 +3492,25 @@ msgstr ""
 "Inga dokument att visa.\n"
 "Vissa webbadresser eller filer kunde inte hämtas."
 
-#: src/program/docklets/elementform.cpp:77
+#: src/program/docklets/elementform.cpp:78
 #, kde-format
 msgid "Automatically apply changes"
 msgstr "Verkställ ändringar automatiskt"
 
-#: src/program/docklets/elementform.cpp:93
+#: src/program/docklets/elementform.cpp:94
 #, kde-format
 msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
 msgstr ""
 "Det finns osparade ändringar. Tryck antingen på 'Verkställ' eller "
 "'Återställ'."
 
-#: src/program/docklets/elementform.cpp:100
+#: src/program/docklets/elementform.cpp:101
 #, kde-format
 msgid "Reset"
 msgstr "Återställ"
 
-#: src/program/docklets/elementform.cpp:188
+#: src/program/docklets/elementform.cpp:191
+#: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid ""
 "The current element got modified.\n"
@@ -3464,17 +3519,20 @@ msgstr ""
 "Det aktuella elementet har ändrats.\n"
 "Verkställ eller kasta ändringar?"
 
-#: src/program/docklets/elementform.cpp:188
+#: src/program/docklets/elementform.cpp:191
+#: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid "Element modified"
 msgstr "Element ändrat"
 
-#: src/program/docklets/elementform.cpp:188
+#: src/program/docklets/elementform.cpp:191
+#: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid "Apply changes"
 msgstr "Verkställ ändringar"
 
-#: src/program/docklets/elementform.cpp:188
+#: src/program/docklets/elementform.cpp:191
+#: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid "Discard changes"
 msgstr "Kasta ändringar"
@@ -3489,64 +3547,64 @@ msgstr "Källa (Bibtex)"
 msgid "Source (RIS)"
 msgstr "Källa (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:91
+#: src/program/docklets/referencepreview.cpp:92
 #, kde-format
 msgid "Standard"
 msgstr "Vanlig"
 
-#: src/program/docklets/referencepreview.cpp:92
+#: src/program/docklets/referencepreview.cpp:93
 #, kde-format
 msgid "Fancy"
 msgstr "Snygg"
 
-#: src/program/docklets/referencepreview.cpp:93
+#: src/program/docklets/referencepreview.cpp:94
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Wikipedia-citering"
 
-#: src/program/docklets/referencepreview.cpp:94
+#: src/program/docklets/referencepreview.cpp:95
 #, kde-format
 msgid "Abstract-only"
 msgstr "Bara sammanfattning"
 
-#: src/program/docklets/referencepreview.cpp:125
+#: src/program/docklets/referencepreview.cpp:126
 #, kde-format
 msgid "Reason:"
 msgstr "Orsak:"
 
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:150
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Öppna referens i en webbläsare."
 
-#: src/program/docklets/referencepreview.cpp:152
-#: src/program/docklets/referencepreview.cpp:427
+#: src/program/docklets/referencepreview.cpp:153
+#: src/program/docklets/referencepreview.cpp:428
 #, kde-format
 msgid "Save as HTML"
 msgstr "Spara som HTML"
 
-#: src/program/docklets/referencepreview.cpp:153
+#: src/program/docklets/referencepreview.cpp:154
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Spara referens som HTML-fragment."
 
-#: src/program/docklets/referencepreview.cpp:243
+#: src/program/docklets/referencepreview.cpp:244
 #, kde-format
 msgid "Preview disabled"
 msgstr "Förhandsgranskning inaktiverad"
 
-#: src/program/docklets/referencepreview.cpp:263
+#: src/program/docklets/referencepreview.cpp:264
 #, kde-format
 msgid "No element selected"
 msgstr "Inget element valt"
 
-#: src/program/docklets/referencepreview.cpp:328
-#: src/program/docklets/referencepreview.cpp:398
+#: src/program/docklets/referencepreview.cpp:329
+#: src/program/docklets/referencepreview.cpp:399
 #, kde-format
 msgid "No output generated"
 msgstr "Ingen utmatning skapad"
 
-#: src/program/docklets/referencepreview.cpp:357
+#: src/program/docklets/referencepreview.cpp:358
 #, kde-format
 msgid ""
 "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
@@ -3793,37 +3851,37 @@ msgstr "Misslyckades hämta data från Zotero"
 msgid "No groups available or no permissions"
 msgstr "Inga grupper tillgängliga eller inga rättigheter"
 
-#: src/program/documentlist.cpp:57
+#: src/program/documentlist.cpp:59
 #, kde-format
 msgid "One level up"
 msgstr "En nivå upp"
 
-#: src/program/documentlist.cpp:61
+#: src/program/documentlist.cpp:63
 #, kde-format
 msgid "Go to Home folder"
 msgstr "Gå till hemkatalog"
 
-#: src/program/documentlist.cpp:201
+#: src/program/documentlist.cpp:207
 #, kde-format
 msgid "<br/><small>located in <b>%1</b></small>"
 msgstr "<br/><small>placerad i <b>%1</b></small>"
 
-#: src/program/documentlist.cpp:205
+#: src/program/documentlist.cpp:211
 #, kde-format
 msgid "Favorite"
 msgstr "Favorit"
 
-#: src/program/documentlist.cpp:207 src/program/documentlist.cpp:397
+#: src/program/documentlist.cpp:213 src/program/documentlist.cpp:409
 #, kde-format
 msgid "Recently Used"
 msgstr "Senast använda"
 
-#: src/program/documentlist.cpp:211
+#: src/program/documentlist.cpp:217
 #, kde-format
 msgid "Modified"
 msgstr "Ändrad"
 
-#: src/program/documentlist.cpp:264
+#: src/program/documentlist.cpp:272 src/program/documentlist.cpp:274
 #, kde-format
 msgid ""
 "The current document has to be saved before switching the viewer/editor "
@@ -3832,122 +3890,122 @@ msgstr ""
 "Det aktuella dokumentet måste sparas innan visnings- eller editorkomponent "
 "kan bytas."
 
-#: src/program/documentlist.cpp:264
+#: src/program/documentlist.cpp:272 src/program/documentlist.cpp:274
 #, kde-format
 msgid "Save before switching?"
 msgstr "Spara innan byte?"
 
-#: src/program/documentlist.cpp:264
+#: src/program/documentlist.cpp:272 src/program/documentlist.cpp:274
 #, kde-format
 msgid "Save document"
 msgstr "Spara dokument"
 
-#: src/program/documentlist.cpp:264
+#: src/program/documentlist.cpp:272 src/program/documentlist.cpp:274
 #, kde-format
 msgid "Do not switch"
 msgstr "Byt inte"
 
-#: src/program/documentlist.cpp:277
+#: src/program/documentlist.cpp:289
 #, kde-format
 msgid "Close File"
 msgstr "Stäng fil"
 
-#: src/program/documentlist.cpp:281
+#: src/program/documentlist.cpp:293
 #, kde-format
 msgid "Open File"
 msgstr "Öppna fil"
 
-#: src/program/documentlist.cpp:286
+#: src/program/documentlist.cpp:298
 #, kde-format
 msgid "Open with"
 msgstr "Öppna med"
 
-#: src/program/documentlist.cpp:290
+#: src/program/documentlist.cpp:302
 #, kde-format
 msgid "Remove from Favorites"
 msgstr "Ta bort från favoriter"
 
-#: src/program/documentlist.cpp:294
+#: src/program/documentlist.cpp:306
 #, kde-format
 msgid "Add to Favorites"
 msgstr "Lägg till i favoriter"
 
-#: src/program/documentlist.cpp:392
+#: src/program/documentlist.cpp:404
 #, kde-format
 msgid "Open Files"
 msgstr "Öppna filer"
 
-#: src/program/documentlist.cpp:402
+#: src/program/documentlist.cpp:414
 #, kde-format
 msgid "Favorites"
 msgstr "Favoriter"
 
-#: src/program/documentlist.cpp:405
+#: src/program/documentlist.cpp:417
 #, kde-format
 msgid "Filesystem Browser"
 msgstr "Filsystembläddrare"
 
-#: src/program/mainwindow.cpp:94
+#: src/program/mainwindow.cpp:95
 #, kde-format
 msgid "Show Panels"
 msgstr "Visa paneler"
 
-#: src/program/mainwindow.cpp:99
+#: src/program/mainwindow.cpp:100
 #, kde-format
 msgid "Recently used files"
 msgstr "Senast använda filer"
 
-#: src/program/mainwindow.cpp:116
+#: src/program/mainwindow.cpp:117
 #, kde-format
 msgid "List of Documents"
 msgstr "Dokumentlista"
 
-#: src/program/mainwindow.cpp:126
+#: src/program/mainwindow.cpp:127
 #, kde-format
 msgid "List of Values"
 msgstr "Värdelista"
 
-#: src/program/mainwindow.cpp:135
+#: src/program/mainwindow.cpp:136
 #, kde-format
 msgid "Statistics"
 msgstr "Statistik"
 
-#: src/program/mainwindow.cpp:144
+#: src/program/mainwindow.cpp:145
 #, kde-format
 msgid "Search Results"
 msgstr "Sökresultat"
 
-#: src/program/mainwindow.cpp:155
+#: src/program/mainwindow.cpp:156
 #, kde-format
 msgid "Online Search"
 msgstr "Sökning på nätet"
 
-#: src/program/mainwindow.cpp:165
+#: src/program/mainwindow.cpp:166
 #, kde-format
 msgid "Zotero"
 msgstr "Zotero"
 
-#: src/program/mainwindow.cpp:176
+#: src/program/mainwindow.cpp:177
 #, kde-format
 msgid "Reference Preview"
 msgstr "Förhandsgranskning av referenser"
 
-#: src/program/mainwindow.cpp:185
+#: src/program/mainwindow.cpp:186
 #, kde-format
 msgid "Document Preview"
 msgstr "Förhandsgranskning av dokument"
 
-#: src/program/mainwindow.cpp:196
+#: src/program/mainwindow.cpp:197
 #, kde-format
 msgid "Element Editor"
 msgstr "Elementeditor"
 
-#: src/program/mainwindow.cpp:206
+#: src/program/mainwindow.cpp:207
 #, kde-format
 msgid "File Settings"
 msgstr "Filinställningar"
 
-#: src/program/mainwindow.cpp:301
+#: src/program/mainwindow.cpp:302
 #, kde-format
 msgid ""
 "Creating a new document of mime type '%1' failed as no editor component "
@@ -3956,22 +4014,22 @@ msgstr ""
 "Skapa ett nytt dokument med Mime-typ '%1' misslyckades, eftersom ingen "
 "editorkomponent kunde instantieras."
 
-#: src/program/mainwindow.cpp:301
+#: src/program/mainwindow.cpp:302
 #, kde-format
 msgid "Creating document failed"
 msgstr "Misslyckades skapa dokument"
 
-#: src/program/mainwindow.cpp:323
+#: src/program/mainwindow.cpp:324
 #, kde-format
 msgid "Open file"
 msgstr "Öppna fil"
 
-#: src/program/mainwindow.cpp:365
+#: src/program/mainwindow.cpp:366
 #, kde-format
 msgid "%1 - KBibTeX"
 msgstr "%1 - Kbibtex"
 
-#: src/program/mainwindow.cpp:450
+#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -3980,17 +4038,17 @@ msgstr ""
 "Kbibtex är inte standardeditor för dess bibliografiformat, såsom Bibtex "
 "eller RIS."
 
-#: src/program/mainwindow.cpp:450
+#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Standardeditor för bibliografier"
 
-#: src/program/mainwindow.cpp:450
+#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Använd som standardeditor"
 
-#: src/program/mainwindow.cpp:450
+#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Behåll inställningarna oförändrade"
@@ -4242,9 +4300,6 @@ msgstr "Ofullständig Kbibtex-installation"
 
 #~ msgid "Overwrite File?"
 #~ msgstr "Skriv över fil?"
-
-#~ msgid "Load bibliography"
-#~ msgstr "Läs in bibliografi"
 
 #~ msgid "Searching '%1' failed: Could not extract form from ACM's start page."
 #~ msgstr ""

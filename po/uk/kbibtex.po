@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-05 00:48+0000\n"
+"POT-Creation-Date: 2023-03-13 00:49+0000\n"
 "PO-Revision-Date: 2023-01-05 08:44+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -278,7 +278,7 @@ msgid "Element Type"
 msgstr "Тип елемента"
 
 #: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:200
-#: src/gui/file/findduplicatesui.cpp:158
+#: src/gui/file/findduplicatesui.cpp:159
 #, kde-format
 msgid "Identifier"
 msgstr "Ідентифікатор"
@@ -287,7 +287,7 @@ msgstr "Ідентифікатор"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:323
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:639
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:674
-#: src/processing/idsuggestions.cpp:412
+#: src/processing/idsuggestions.cpp:427
 #, kde-format
 msgid "Title"
 msgstr "Заголовок"
@@ -332,7 +332,7 @@ msgstr "Рік"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:424
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:651
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:686
-#: src/processing/idsuggestions.cpp:441
+#: src/processing/idsuggestions.cpp:477
 #, kde-format
 msgid "Journal"
 msgstr "Журнал"
@@ -341,7 +341,7 @@ msgstr "Журнал"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:244
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:659
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:694
-#: src/processing/idsuggestions.cpp:476
+#: src/processing/idsuggestions.cpp:520
 #, kde-format
 msgid "Volume"
 msgstr "Том"
@@ -460,11 +460,11 @@ msgid "Address"
 msgstr "Адреса"
 
 #: src/config/bibtexfields.cpp:193 src/config/bibtexfields.cpp:292
-#: src/gui/file/findduplicatesui.cpp:160
+#: src/gui/file/findduplicatesui.cpp:161
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:497
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:655
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:690
-#: src/processing/idsuggestions.cpp:459
+#: src/processing/idsuggestions.cpp:499
 #, kde-format
 msgid "Type"
 msgstr "Тип"
@@ -1087,13 +1087,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Шлях, який буде вставлено до запису"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:604
+#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
 #, kde-format
 msgid "Relative Path"
 msgstr "Відносний шлях"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:604
+#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
 #, kde-format
 msgid "Absolute Path"
 msgstr "Абсолютний шлях"
@@ -1111,7 +1111,7 @@ msgstr "Пов'язування документа із записом"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:236
-#: src/program/docklets/referencepreview.cpp:125
+#: src/program/docklets/referencepreview.cpp:126
 #, kde-format
 msgid "No preview available"
 msgstr "Перегляд недоступний"
@@ -1271,7 +1271,7 @@ msgid "Name:"
 msgstr "Назва:"
 
 #: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:105
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1292,20 +1292,20 @@ msgstr "Список:"
 msgid "Value"
 msgstr "Значення"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:247
+#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:248
 #, kde-format
 msgid "Delete"
 msgstr "Вилучити"
 
 #: src/gui/element/elementwidgets.cpp:1005
-#: src/program/docklets/referencepreview.cpp:148
-#: src/program/documentlist.cpp:209
+#: src/program/docklets/referencepreview.cpp:149
+#: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
 msgstr "Відкрити"
 
 #: src/gui/element/elementwidgets.cpp:1044
-#: src/program/docklets/elementform.cpp:97
+#: src/program/docklets/elementform.cpp:98
 #, kde-format
 msgid "Apply"
 msgstr "Застосувати"
@@ -1601,67 +1601,67 @@ msgstr ""
 "\n"
 "Повертаємося до типу «%2»."
 
-#: src/gui/field/fieldlistedit.cpp:144
+#: src/gui/field/fieldlistedit.cpp:145
 #, kde-format
 msgid "Remove value"
 msgstr "Вилучити значення"
 
-#: src/gui/field/fieldlistedit.cpp:155
+#: src/gui/field/fieldlistedit.cpp:156
 #, kde-format
 msgid "Move value down"
 msgstr "Пересунути значення нижче"
 
-#: src/gui/field/fieldlistedit.cpp:166
+#: src/gui/field/fieldlistedit.cpp:167
 #, kde-format
 msgid "Move value up"
 msgstr "Пересунути значення вище"
 
-#: src/gui/field/fieldlistedit.cpp:416
+#: src/gui/field/fieldlistedit.cpp:417
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "… та інші (та ін.)"
 
-#: src/gui/field/fieldlistedit.cpp:421
+#: src/gui/field/fieldlistedit.cpp:422
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Додати з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:422
+#: src/gui/field/fieldlistedit.cpp:423
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Додати список імен з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:484
+#: src/gui/field/fieldlistedit.cpp:485
 #, kde-format
 msgid "Add file..."
 msgstr "Додати файл…"
 
-#: src/gui/field/fieldlistedit.cpp:490
+#: src/gui/field/fieldlistedit.cpp:491
 #, kde-format
 msgid "Add reference ..."
 msgstr "Додати посилання…"
 
-#: src/gui/field/fieldlistedit.cpp:493
+#: src/gui/field/fieldlistedit.cpp:494
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Додати посилання з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:505
+#: src/gui/field/fieldlistedit.cpp:506
 #, kde-format
 msgid "File to Associate"
 msgstr "Файл, який слід пов’язати"
 
-#: src/gui/field/fieldlistedit.cpp:543 src/gui/field/fieldlistedit.cpp:617
+#: src/gui/field/fieldlistedit.cpp:544 src/gui/field/fieldlistedit.cpp:624
 #, kde-format
 msgid "Save file locally"
 msgstr "Зберегти файл локально"
 
-#: src/gui/field/fieldlistedit.cpp:593
+#: src/gui/field/fieldlistedit.cpp:594
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Зберегти файл «%1» локально"
 
-#: src/gui/field/fieldlistedit.cpp:604
+#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1673,23 +1673,23 @@ msgstr ""
 "\">%1</tt></p><p>Абсолютний запис є таким<br/><tt style=\"font-family: %3;\">"
 "%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:645
+#: src/gui/field/fieldlistedit.cpp:652
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Додати ключові слова зі списку"
 
-#: src/gui/field/fieldlistedit.cpp:646
+#: src/gui/field/fieldlistedit.cpp:653
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Додати ключові слова вибором з попередньо визначеного списку ключових слів"
 
-#: src/gui/field/fieldlistedit.cpp:649
+#: src/gui/field/fieldlistedit.cpp:656
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Додати ключові слова з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:650
+#: src/gui/field/fieldlistedit.cpp:657
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr ""
@@ -1739,37 +1739,37 @@ msgctxt "@title:window"
 msgid "Edit Element"
 msgstr "Редагування елемента"
 
-#: src/gui/file/findduplicatesui.cpp:142
+#: src/gui/file/findduplicatesui.cpp:143
 #, kde-format
 msgid "Alternatives"
 msgstr "Альтернативи"
 
-#: src/gui/file/findduplicatesui.cpp:194
+#: src/gui/file/findduplicatesui.cpp:195
 #, kde-format
 msgid "None of the above"
 msgstr "Нічого з наведеного вище"
 
-#: src/gui/file/findduplicatesui.cpp:550
+#: src/gui/file/findduplicatesui.cpp:551
 #, kde-format
 msgid "Select your duplicates"
 msgstr "Виберіть ваші дублікати"
 
-#: src/gui/file/findduplicatesui.cpp:570
+#: src/gui/file/findduplicatesui.cpp:571
 #, kde-format
 msgid "Previous Clique"
 msgstr "Попередня група"
 
-#: src/gui/file/findduplicatesui.cpp:572
+#: src/gui/file/findduplicatesui.cpp:573
 #, kde-format
 msgid "Next Clique"
 msgstr "Наступна група"
 
-#: src/gui/file/findduplicatesui.cpp:651
+#: src/gui/file/findduplicatesui.cpp:652
 #, kde-format
 msgid "Find Duplicates"
 msgstr "Знайти дублікати"
 
-#: src/gui/file/findduplicatesui.cpp:682
+#: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
 msgid ""
 "Multiple elements are selected. Do you want to search for duplicates only "
@@ -1778,38 +1778,39 @@ msgstr ""
 "Позначено декілька елементів. Хочете виконати пошук дублікатів лише у "
 "позначених елемента чи в усьому документі?"
 
-#: src/gui/file/findduplicatesui.cpp:682
+#: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
 msgid "Search only in selection?"
 msgstr "Шукати лише у позначеному?"
 
-#: src/gui/file/findduplicatesui.cpp:682
+#: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
 msgid "Only in selection"
 msgstr "Лише у позначеному"
 
-#: src/gui/file/findduplicatesui.cpp:682
+#: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
 msgid "Whole document"
 msgstr "У всьому документі"
 
-#: src/gui/file/findduplicatesui.cpp:705
+#: src/gui/file/findduplicatesui.cpp:712
 #, kde-format
 msgid "No duplicates were found."
 msgstr "Дублікатів не знайдено."
 
-#: src/gui/file/findduplicatesui.cpp:705
+#: src/gui/file/findduplicatesui.cpp:712
 #, kde-format
 msgid "No duplicates found"
 msgstr "Дублікатів не знайдено"
 
-#: src/gui/file/findduplicatesui.cpp:712
+#: src/gui/file/findduplicatesui.cpp:719
 #, kde-format
 msgctxt "@title:window"
 msgid "Merge Duplicates"
 msgstr "Об’єднання дублікатів"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid ""
 "This will reset the settings to factory defaults. Should this affect only "
@@ -1819,29 +1820,32 @@ msgstr ""
 "параметрів. Застосувати відновлення лише до поточної сторінки чи до усіх "
 "параметрів програми?"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid "Reset to Defaults"
 msgstr "Повернути типові значення"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid "All settings"
 msgstr "Усі параметри"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:117
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid "Only current page"
 msgstr "Лише поточну сторінку"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:170
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:185
 #, kde-format
 msgctxt "@title:window"
 msgid "Preferences"
 msgstr "Налаштування"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:330
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:262
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:263
 #, kde-format
 msgid "Add..."
 msgstr "Додати…"
@@ -1850,7 +1854,7 @@ msgstr "Додати…"
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:104
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:345
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:429
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:268
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:269
 #, kde-format
 msgid "Remove"
 msgstr "Вилучити"
@@ -2050,14 +2054,14 @@ msgstr "…і останній автор"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
-#: src/processing/idsuggestions.cpp:501
+#: src/processing/idsuggestions.cpp:550
 #, kde-format
 msgid "From first author to author %1 and last author"
 msgstr "Від першого автора до автора %1 і останній автор"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
-#: src/processing/idsuggestions.cpp:510 src/processing/idsuggestions.cpp:518
+#: src/processing/idsuggestions.cpp:567 src/processing/idsuggestions.cpp:587
 #, kde-format
 msgid "From author %1 to author %2 and last author"
 msgstr "Від автора %1 до автора %2 і останній автор"
@@ -2300,7 +2304,7 @@ msgid "Add at bottom"
 msgstr "Надати наприкінці"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:952
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:114
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:115
 #, kde-format
 msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
 msgstr "<qt>Структура:<ul><li>%1</li></ul>Приклад: %2</qt>"
@@ -2311,33 +2315,34 @@ msgctxt "@title:window"
 msgid "Edit Id Suggestion"
 msgstr "Зміна пропозиції ідентифікатора"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:166
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:305
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:167
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:306
 #, kde-format
 msgid "Id Suggestions"
 msgstr "Пропозиції ідентифікаторів"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:265
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:266
 #, kde-format
 msgid "Edit..."
 msgstr "Змінити…"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:271
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:272
 #, kde-format
 msgid "Up"
 msgstr "Вгору"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:274
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:275
 #, kde-format
 msgid "Down"
 msgstr "Вниз"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:277
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:278
 #, kde-format
 msgid "Toggle Default"
 msgstr "Перемкнути типовий"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:382
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid ""
 "All token have been removed from this suggestion. Remove suggestion itself "
@@ -2346,17 +2351,20 @@ msgstr ""
 "З цієї пропозиції вилучено усі записи. Вилучити цю пропозицію і відновити "
 "початкову пропозицію?"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:382
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Remove suggestion?"
 msgstr "Вилучити пропозицію?"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:382
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Remove suggestion"
 msgstr "Вилучити пропозицію"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:379
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:382
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Revert changes"
 msgstr "Скасувати зміни"
@@ -2534,7 +2542,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:321
-#: src/program/mainwindow.cpp:365 src/program/program.cpp:52
+#: src/program/mainwindow.cpp:366 src/program/program.cpp:52
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -2868,139 +2876,185 @@ msgstr "Елемент"
 msgid "Main Toolbar"
 msgstr "Головна панель"
 
-#: src/parts/part.cpp:135 src/parts/part.cpp:212
+#: src/parts/part.cpp:136 src/parts/part.cpp:213
 #, kde-format
 msgid "View Document"
 msgstr "Переглянути документ"
 
-#: src/parts/part.cpp:162
+#: src/parts/part.cpp:163
 #, kde-format
 msgid "Save Copy As..."
 msgstr "Зберегти копію як…"
 
-#: src/parts/part.cpp:166
+#: src/parts/part.cpp:167
 #, kde-format
 msgid "Save Selection..."
 msgstr "Зберегти вибір…"
 
-#: src/parts/part.cpp:174
+#: src/parts/part.cpp:175
 #, kde-format
 msgid "Filter"
 msgstr "Фільтрувати"
 
-#: src/parts/part.cpp:179
+#: src/parts/part.cpp:180
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
 msgstr "Фільтрувати бібліографічні записи (%1)"
 
-#: src/parts/part.cpp:182
+#: src/parts/part.cpp:183
 #, kde-format
 msgid "New element"
 msgstr "Новий елемент"
 
-#: src/parts/part.cpp:188
+#: src/parts/part.cpp:189
 #, kde-format
 msgid "New entry"
 msgstr "Новий запис"
 
-#: src/parts/part.cpp:193
+#: src/parts/part.cpp:194
 #, kde-format
 msgid "New comment"
 msgstr "Новий коментар"
 
-#: src/parts/part.cpp:197
+#: src/parts/part.cpp:198
 #, kde-format
 msgid "New macro"
 msgstr "Новий макроc"
 
-#: src/parts/part.cpp:201
+#: src/parts/part.cpp:202
 #, kde-format
 msgid "New preamble"
 msgstr "Новий вступ"
 
-#: src/parts/part.cpp:206
+#: src/parts/part.cpp:207
 #, kde-format
 msgid "Edit Element"
 msgstr "Редагування елемента"
 
-#: src/parts/part.cpp:218
+#: src/parts/part.cpp:219
 #, kde-format
 msgid "Find PDF..."
 msgstr "Знайти PDF…"
 
-#: src/parts/part.cpp:223
+#: src/parts/part.cpp:224
 #, kde-format
 msgid "Format entry ids"
 msgstr "Форматування ідентифікаторів записів"
 
-#: src/parts/part.cpp:237
+#: src/parts/part.cpp:238
 #, kde-format
 msgid "Copy References"
 msgstr "Копіювати посилання"
 
-#: src/parts/part.cpp:282
+#: src/parts/part.cpp:283
 #, kde-format
 msgid "New%1"
 msgstr "Новий%1"
 
-#: src/parts/part.cpp:441
+#: src/parts/part.cpp:442
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
 msgstr "Не вдалося створити резервні копії документа «%1»."
 
-#: src/parts/part.cpp:441
+#: src/parts/part.cpp:442
 #, kde-format
 msgid "Backup copies"
 msgstr "Резервне копіювання"
 
-#: src/parts/part.cpp:474
+#: src/parts/part.cpp:475
 #, kde-format
 msgid "Save file"
 msgstr "Зберегти файл"
 
+#: src/parts/part.cpp:503
+#, kde-format
+msgid "BibUtils"
+msgstr ""
+
 #: src/parts/part.cpp:504
+#, fuzzy, kde-format
+#| msgid "BibTeX"
+msgid "BibTeX2HTML"
+msgstr "BibTeX"
+
+#: src/parts/part.cpp:505
+#, fuzzy, kde-format
+#| msgid "Load bibliography"
+msgid "Word XML bibliography"
+msgstr "Завантажити бібліографію"
+
+#: src/parts/part.cpp:506
+#, kde-format
+msgid "KBibTeX's own XML structure"
+msgstr ""
+
+#: src/parts/part.cpp:507
+#, kde-format
+msgid "KBibTeX's built-in HTML exporter"
+msgstr ""
+
+#: src/parts/part.cpp:508
+#, kde-format
+msgid "KBibTeX's built-in RIS exporter"
+msgstr ""
+
+#: src/parts/part.cpp:517
+#, kde-format
+msgctxt "@title:window"
+msgid "Choose Exporter"
+msgstr ""
+
+#: src/parts/part.cpp:519
+#, kde-format
+msgid ""
+"Several exporter modules are available to write file '%1'.\n"
+"\n"
+"Please choose one."
+msgstr ""
+
+#: src/parts/part.cpp:549
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "Параметри файлів BibTeX"
 
-#: src/parts/part.cpp:522
+#: src/parts/part.cpp:567
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "Параметри файлів PDF/PostScript"
 
-#: src/parts/part.cpp:642
+#: src/parts/part.cpp:687
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr "Спроба зберегти файл бібліографії «%1» зазнала невдачі."
 
-#: src/parts/part.cpp:644 src/parts/part.cpp:650
+#: src/parts/part.cpp:689 src/parts/part.cpp:695
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr "Спроба зберегти бібліографію завершилася невдало"
 
-#: src/parts/part.cpp:646
+#: src/parts/part.cpp:691
 #, kde-format
 msgid "Saving bibliography failed:"
 msgstr "Спроба зберегти бібліографію завершилася невдало:"
 
-#: src/parts/part.cpp:649
+#: src/parts/part.cpp:694
 #, kde-format
 msgid "The following output was generated by the export filter:"
 msgstr "Фільтром експортування було виведено такі повідомлення:"
 
-#: src/parts/part.cpp:700
+#: src/parts/part.cpp:745
 #, kde-format
 msgid "Local Files"
 msgstr "Локальні файли"
 
-#: src/parts/part.cpp:725
+#: src/parts/part.cpp:770
 #, kde-format
 msgid "Remote Files"
 msgstr "Віддалені файли"
 
-#: src/parts/part.cpp:836
+#: src/parts/part.cpp:881
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3013,7 +3067,7 @@ msgstr ""
 "Перевірте, що у вас є право запису до цього файла, та наявність достатнього "
 "вільного місця."
 
-#: src/parts/part.cpp:975
+#: src/parts/part.cpp:1020
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3021,12 +3075,12 @@ msgstr ""
 "Застосування типового форматування для ідентифікаторів записів неможливе: не "
 "вказано типового форматування."
 
-#: src/parts/part.cpp:975
+#: src/parts/part.cpp:1020
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "Не вдалося застосувати типове форматування"
 
-#: src/parts/part.cpp:1103
+#: src/parts/part.cpp:1148
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3037,17 +3091,17 @@ msgstr ""
 "\n"
 "Перезавантажити файл чи ігнорувати зміни на диску?"
 
-#: src/parts/part.cpp:1103
+#: src/parts/part.cpp:1148
 #, kde-format
 msgid "File changed externally"
 msgstr "Файл змінено поза межами програми"
 
-#: src/parts/part.cpp:1103
+#: src/parts/part.cpp:1148
 #, kde-format
 msgid "Reload file"
 msgstr "Перезавантажити файл"
 
-#: src/parts/part.cpp:1103
+#: src/parts/part.cpp:1148
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Ігнорувати зміни на диску"
@@ -3208,7 +3262,7 @@ msgctxt "@title:window"
 msgid "Finding Duplicates"
 msgstr "Пошук дублікатів"
 
-#: src/processing/idsuggestions.cpp:314
+#: src/processing/idsuggestions.cpp:319
 #, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
@@ -3226,7 +3280,7 @@ msgstr ""
 "which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
 "wird|with|you|und|and|ein|eine|einer|eines|про|о|в|у|на|і|и|та|з|с|из"
 
-#: src/processing/idsuggestions.cpp:388
+#: src/processing/idsuggestions.cpp:395
 #, kde-format
 msgid ", but only first letter of each last name"
 msgid_plural ", but only first %1 letters of each last name"
@@ -3235,40 +3289,40 @@ msgstr[1] ", але лише перші %1 літери кожного пріз�
 msgstr[2] ", але лише перші %1 літер кожного прізвища"
 msgstr[3] ", але лише першу літеру кожного прізвища"
 
-#: src/processing/idsuggestions.cpp:392 src/processing/idsuggestions.cpp:424
-#: src/processing/idsuggestions.cpp:446 src/processing/idsuggestions.cpp:464
+#: src/processing/idsuggestions.cpp:402 src/processing/idsuggestions.cpp:455
+#: src/processing/idsuggestions.cpp:486 src/processing/idsuggestions.cpp:508
 #, kde-format
 msgid ", in upper case"
 msgstr ", великими літерами"
 
-#: src/processing/idsuggestions.cpp:395 src/processing/idsuggestions.cpp:427
-#: src/processing/idsuggestions.cpp:449 src/processing/idsuggestions.cpp:467
+#: src/processing/idsuggestions.cpp:405 src/processing/idsuggestions.cpp:458
+#: src/processing/idsuggestions.cpp:489 src/processing/idsuggestions.cpp:511
 #, kde-format
 msgid ", in lower case"
 msgstr ", малими літерами"
 
-#: src/processing/idsuggestions.cpp:398 src/processing/idsuggestions.cpp:430
-#: src/processing/idsuggestions.cpp:452 src/processing/idsuggestions.cpp:470
+#: src/processing/idsuggestions.cpp:408 src/processing/idsuggestions.cpp:461
+#: src/processing/idsuggestions.cpp:492 src/processing/idsuggestions.cpp:514
 #, kde-format
 msgid ", in CamelCase"
 msgstr ", у CamelCase"
 
-#: src/processing/idsuggestions.cpp:404 src/processing/idsuggestions.cpp:436
+#: src/processing/idsuggestions.cpp:416 src/processing/idsuggestions.cpp:469
 #, kde-format
 msgid ", with '%1' in between"
 msgstr ", з «%1» між ними"
 
-#: src/processing/idsuggestions.cpp:407
+#: src/processing/idsuggestions.cpp:422
 #, kde-format
 msgid "Year (2 digits)"
 msgstr "Рік (2 цифри)"
 
-#: src/processing/idsuggestions.cpp:409
+#: src/processing/idsuggestions.cpp:424
 #, kde-format
 msgid "Year (4 digits)"
 msgstr "Рік (4 цифри)"
 
-#: src/processing/idsuggestions.cpp:414
+#: src/processing/idsuggestions.cpp:430
 #, kde-format
 msgid ", but only the first word"
 msgid_plural ", but only first %1 words"
@@ -3277,18 +3331,18 @@ msgstr[1] ", але лише перші %1 слова"
 msgstr[2] ", але лише перших %1 слів"
 msgstr[3] ", але лише перше слово"
 
-#: src/processing/idsuggestions.cpp:416
+#: src/processing/idsuggestions.cpp:436
 #, kde-format
 msgid ", but only starting from word %1"
 msgstr ", але лише починаючи зі слова %1"
 
-#: src/processing/idsuggestions.cpp:418
+#: src/processing/idsuggestions.cpp:442
 #, kde-format
 msgid ", but only from word %1 to word %2"
 msgstr ", але лише зі слова %1 до слова %2"
 
-#: src/processing/idsuggestions.cpp:420 src/processing/idsuggestions.cpp:443
-#: src/processing/idsuggestions.cpp:461
+#: src/processing/idsuggestions.cpp:448 src/processing/idsuggestions.cpp:480
+#: src/processing/idsuggestions.cpp:502
 #, kde-format
 msgid ", but only first letter of each word"
 msgid_plural ", but only first %1 letters of each word"
@@ -3297,52 +3351,52 @@ msgstr[1] ", але лише перші %1 літери кожного слов�
 msgstr[2] ", але лише перші %1 літер кожного слова"
 msgstr[3] ", але лише першу літеру кожного слова"
 
-#: src/processing/idsuggestions.cpp:437
+#: src/processing/idsuggestions.cpp:473
 #, kde-format
 msgid ", small words removed"
 msgstr ", з вилученням коротких слів"
 
-#: src/processing/idsuggestions.cpp:478
+#: src/processing/idsuggestions.cpp:522
 #, kde-format
 msgid "First page number"
 msgstr "Номер першої сторінки"
 
-#: src/processing/idsuggestions.cpp:480
+#: src/processing/idsuggestions.cpp:525
 #, kde-format
 msgid "Text: '%1'"
 msgstr "Текст: «%1»"
 
-#: src/processing/idsuggestions.cpp:494
+#: src/processing/idsuggestions.cpp:542
 #, kde-format
 msgid "First and last authors only"
 msgstr "Лише перший і останній автори"
 
-#: src/processing/idsuggestions.cpp:496
+#: src/processing/idsuggestions.cpp:544
 #, kde-format
 msgid "First author only"
 msgstr "Лише перший автор"
 
-#: src/processing/idsuggestions.cpp:498
+#: src/processing/idsuggestions.cpp:546
 #, kde-format
 msgid "All authors"
 msgstr "Усі автори"
 
-#: src/processing/idsuggestions.cpp:503
+#: src/processing/idsuggestions.cpp:556
 #, kde-format
 msgid "From first author to author %1"
 msgstr "Від першого автора до автора %1"
 
-#: src/processing/idsuggestions.cpp:507
+#: src/processing/idsuggestions.cpp:563
 #, kde-format
 msgid "All but first author"
 msgstr "Усі автори, окрім першого"
 
-#: src/processing/idsuggestions.cpp:512 src/processing/idsuggestions.cpp:520
+#: src/processing/idsuggestions.cpp:573 src/processing/idsuggestions.cpp:593
 #, kde-format
 msgid "From author %1 to author %2"
 msgstr "Від автора %1 до автора %2"
 
-#: src/processing/idsuggestions.cpp:516
+#: src/processing/idsuggestions.cpp:581
 #, kde-format
 msgid "From author %1 to last author"
 msgstr "Від автора %1 до останнього автора"
@@ -3461,24 +3515,25 @@ msgstr ""
 "Нічого показувати.\n"
 "Не вдалося отримати дані з деяких адрес або файлів."
 
-#: src/program/docklets/elementform.cpp:77
+#: src/program/docklets/elementform.cpp:78
 #, kde-format
 msgid "Automatically apply changes"
 msgstr "Автоматично застосовувати зміни"
 
-#: src/program/docklets/elementform.cpp:93
+#: src/program/docklets/elementform.cpp:94
 #, kde-format
 msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
 msgstr ""
 "Внесені зміни не було збережено. Будь ласка, натисніть кнопку «Застосувати» "
 "або кнопку «Скинути»."
 
-#: src/program/docklets/elementform.cpp:100
+#: src/program/docklets/elementform.cpp:101
 #, kde-format
 msgid "Reset"
 msgstr "Скинути"
 
-#: src/program/docklets/elementform.cpp:188
+#: src/program/docklets/elementform.cpp:191
+#: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid ""
 "The current element got modified.\n"
@@ -3487,17 +3542,20 @@ msgstr ""
 "До поточного елемента внесено зміни.\n"
 "Застосувати чи відкинути ці зміни?"
 
-#: src/program/docklets/elementform.cpp:188
+#: src/program/docklets/elementform.cpp:191
+#: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid "Element modified"
 msgstr "Елемент змінено"
 
-#: src/program/docklets/elementform.cpp:188
+#: src/program/docklets/elementform.cpp:191
+#: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid "Apply changes"
 msgstr "Застосувати зміни"
 
-#: src/program/docklets/elementform.cpp:188
+#: src/program/docklets/elementform.cpp:191
+#: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid "Discard changes"
 msgstr "Відкинути зміни"
@@ -3512,64 +3570,64 @@ msgstr "Початковий код (BibTeX)"
 msgid "Source (RIS)"
 msgstr "Початковий код (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:91
+#: src/program/docklets/referencepreview.cpp:92
 #, kde-format
 msgid "Standard"
 msgstr "Стандартний"
 
-#: src/program/docklets/referencepreview.cpp:92
+#: src/program/docklets/referencepreview.cpp:93
 #, kde-format
 msgid "Fancy"
 msgstr "Красивий"
 
-#: src/program/docklets/referencepreview.cpp:93
+#: src/program/docklets/referencepreview.cpp:94
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Цитата з Вікіпедії"
 
-#: src/program/docklets/referencepreview.cpp:94
+#: src/program/docklets/referencepreview.cpp:95
 #, kde-format
 msgid "Abstract-only"
 msgstr "Лише резюме"
 
-#: src/program/docklets/referencepreview.cpp:125
+#: src/program/docklets/referencepreview.cpp:126
 #, kde-format
 msgid "Reason:"
 msgstr "Причина:"
 
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:150
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Відкрити посилання у програмі для перегляду інтернету."
 
-#: src/program/docklets/referencepreview.cpp:152
-#: src/program/docklets/referencepreview.cpp:427
+#: src/program/docklets/referencepreview.cpp:153
+#: src/program/docklets/referencepreview.cpp:428
 #, kde-format
 msgid "Save as HTML"
 msgstr "Зберегти як HTML"
 
-#: src/program/docklets/referencepreview.cpp:153
+#: src/program/docklets/referencepreview.cpp:154
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Зберегти посилання як фрагмент коду HTML."
 
-#: src/program/docklets/referencepreview.cpp:243
+#: src/program/docklets/referencepreview.cpp:244
 #, kde-format
 msgid "Preview disabled"
 msgstr "Попередній перегляд вимкнено"
 
-#: src/program/docklets/referencepreview.cpp:263
+#: src/program/docklets/referencepreview.cpp:264
 #, kde-format
 msgid "No element selected"
 msgstr "Не позначено жодного елемента"
 
-#: src/program/docklets/referencepreview.cpp:328
-#: src/program/docklets/referencepreview.cpp:398
+#: src/program/docklets/referencepreview.cpp:329
+#: src/program/docklets/referencepreview.cpp:399
 #, kde-format
 msgid "No output generated"
 msgstr "Нічого не виведено"
 
-#: src/program/docklets/referencepreview.cpp:357
+#: src/program/docklets/referencepreview.cpp:358
 #, kde-format
 msgid ""
 "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
@@ -3818,37 +3876,37 @@ msgstr "Не вдалося отримати дані з Zotero"
 msgid "No groups available or no permissions"
 msgstr "Немає доступних груп або відповідних прав доступу"
 
-#: src/program/documentlist.cpp:57
+#: src/program/documentlist.cpp:59
 #, kde-format
 msgid "One level up"
 msgstr "На рівень вище"
 
-#: src/program/documentlist.cpp:61
+#: src/program/documentlist.cpp:63
 #, kde-format
 msgid "Go to Home folder"
 msgstr "Повернутися до теки «Домівка»"
 
-#: src/program/documentlist.cpp:201
+#: src/program/documentlist.cpp:207
 #, kde-format
 msgid "<br/><small>located in <b>%1</b></small>"
 msgstr "<br/><small>розташовано у <b>%1</b></small>"
 
-#: src/program/documentlist.cpp:205
+#: src/program/documentlist.cpp:211
 #, kde-format
 msgid "Favorite"
 msgstr "Улюблене"
 
-#: src/program/documentlist.cpp:207 src/program/documentlist.cpp:397
+#: src/program/documentlist.cpp:213 src/program/documentlist.cpp:409
 #, kde-format
 msgid "Recently Used"
 msgstr "Недавно використані"
 
-#: src/program/documentlist.cpp:211
+#: src/program/documentlist.cpp:217
 #, kde-format
 msgid "Modified"
 msgstr "Змінено"
 
-#: src/program/documentlist.cpp:264
+#: src/program/documentlist.cpp:272 src/program/documentlist.cpp:274
 #, kde-format
 msgid ""
 "The current document has to be saved before switching the viewer/editor "
@@ -3857,122 +3915,122 @@ msgstr ""
 "Перш ніж можна буде перемкнутися між компонентами перегляду та редактора, "
 "поточний документ має бути збережено."
 
-#: src/program/documentlist.cpp:264
+#: src/program/documentlist.cpp:272 src/program/documentlist.cpp:274
 #, kde-format
 msgid "Save before switching?"
 msgstr "Зберегти, перш ніж перемикатися?"
 
-#: src/program/documentlist.cpp:264
+#: src/program/documentlist.cpp:272 src/program/documentlist.cpp:274
 #, kde-format
 msgid "Save document"
 msgstr "Зберегти документ"
 
-#: src/program/documentlist.cpp:264
+#: src/program/documentlist.cpp:272 src/program/documentlist.cpp:274
 #, kde-format
 msgid "Do not switch"
 msgstr "Не перемикатися"
 
-#: src/program/documentlist.cpp:277
+#: src/program/documentlist.cpp:289
 #, kde-format
 msgid "Close File"
 msgstr "Закрити файл"
 
-#: src/program/documentlist.cpp:281
+#: src/program/documentlist.cpp:293
 #, kde-format
 msgid "Open File"
 msgstr "Відкрити файл"
 
-#: src/program/documentlist.cpp:286
+#: src/program/documentlist.cpp:298
 #, kde-format
 msgid "Open with"
 msgstr "Відкрити за допомогою"
 
-#: src/program/documentlist.cpp:290
+#: src/program/documentlist.cpp:302
 #, kde-format
 msgid "Remove from Favorites"
 msgstr "Вилучити з улюбленого"
 
-#: src/program/documentlist.cpp:294
+#: src/program/documentlist.cpp:306
 #, kde-format
 msgid "Add to Favorites"
 msgstr "Додати до улюбленого"
 
-#: src/program/documentlist.cpp:392
+#: src/program/documentlist.cpp:404
 #, kde-format
 msgid "Open Files"
 msgstr "Відкриті файли"
 
-#: src/program/documentlist.cpp:402
+#: src/program/documentlist.cpp:414
 #, kde-format
 msgid "Favorites"
 msgstr "Улюблене"
 
-#: src/program/documentlist.cpp:405
+#: src/program/documentlist.cpp:417
 #, kde-format
 msgid "Filesystem Browser"
 msgstr "Навігатор файловою системою"
 
-#: src/program/mainwindow.cpp:94
+#: src/program/mainwindow.cpp:95
 #, kde-format
 msgid "Show Panels"
 msgstr "Показувати панелі"
 
-#: src/program/mainwindow.cpp:99
+#: src/program/mainwindow.cpp:100
 #, kde-format
 msgid "Recently used files"
 msgstr "Нещодавно використані файли"
 
-#: src/program/mainwindow.cpp:116
+#: src/program/mainwindow.cpp:117
 #, kde-format
 msgid "List of Documents"
 msgstr "Список документів"
 
-#: src/program/mainwindow.cpp:126
+#: src/program/mainwindow.cpp:127
 #, kde-format
 msgid "List of Values"
 msgstr "Список значень"
 
-#: src/program/mainwindow.cpp:135
+#: src/program/mainwindow.cpp:136
 #, kde-format
 msgid "Statistics"
 msgstr "Статистика"
 
-#: src/program/mainwindow.cpp:144
+#: src/program/mainwindow.cpp:145
 #, kde-format
 msgid "Search Results"
 msgstr "Результати пошуку"
 
-#: src/program/mainwindow.cpp:155
+#: src/program/mainwindow.cpp:156
 #, kde-format
 msgid "Online Search"
 msgstr "Пошук у мережі"
 
-#: src/program/mainwindow.cpp:165
+#: src/program/mainwindow.cpp:166
 #, kde-format
 msgid "Zotero"
 msgstr "Zotero"
 
-#: src/program/mainwindow.cpp:176
+#: src/program/mainwindow.cpp:177
 #, kde-format
 msgid "Reference Preview"
 msgstr "Попередній перегляд посилань"
 
-#: src/program/mainwindow.cpp:185
+#: src/program/mainwindow.cpp:186
 #, kde-format
 msgid "Document Preview"
 msgstr "Попередній перегляд документа"
 
-#: src/program/mainwindow.cpp:196
+#: src/program/mainwindow.cpp:197
 #, kde-format
 msgid "Element Editor"
 msgstr "Редактор елементів"
 
-#: src/program/mainwindow.cpp:206
+#: src/program/mainwindow.cpp:207
 #, kde-format
 msgid "File Settings"
 msgstr "Параметри файла"
 
-#: src/program/mainwindow.cpp:301
+#: src/program/mainwindow.cpp:302
 #, kde-format
 msgid ""
 "Creating a new document of mime type '%1' failed as no editor component "
@@ -3981,22 +4039,22 @@ msgstr ""
 "Спроба створення документа з типом MIME «%1» зазнала невдачі, оскільки не "
 "вдалося запустити відповідний компонент редактора."
 
-#: src/program/mainwindow.cpp:301
+#: src/program/mainwindow.cpp:302
 #, kde-format
 msgid "Creating document failed"
 msgstr "Спроба створити документ зазнала невдачі"
 
-#: src/program/mainwindow.cpp:323
+#: src/program/mainwindow.cpp:324
 #, kde-format
 msgid "Open file"
 msgstr "Відкрити файл"
 
-#: src/program/mainwindow.cpp:365
+#: src/program/mainwindow.cpp:366
 #, kde-format
 msgid "%1 - KBibTeX"
 msgstr "%1 — KBibTeX"
 
-#: src/program/mainwindow.cpp:450
+#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -4005,17 +4063,17 @@ msgstr ""
 "KBibTeX не є типовим редактором для підтримуваних бібліографій, зокрема у "
 "форматах BibTeX та RIS."
 
-#: src/program/mainwindow.cpp:450
+#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Типовий редактор бібліографій"
 
-#: src/program/mainwindow.cpp:450
+#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Зробити типовим редактором"
 
-#: src/program/mainwindow.cpp:450
+#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Не змінювати параметрів"
@@ -4267,9 +4325,6 @@ msgstr "Комплект KBibTeX встановлено не повністю"
 
 #~ msgid "Overwrite File?"
 #~ msgstr "Перезаписати файл?"
-
-#~ msgid "Load bibliography"
-#~ msgstr "Завантажити бібліографію"
 
 #~ msgid "Searching '%1' failed: Could not extract form from ACM's start page."
 #~ msgstr ""
