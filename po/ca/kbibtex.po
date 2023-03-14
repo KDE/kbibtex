@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2023-01-05 05:08+0100\n"
+"PO-Revision-Date: 2023-03-13 09:45+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -2978,39 +2978,38 @@ msgstr "Desa el fitxer"
 #: src/parts/part.cpp:503
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:504
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "BibTeX"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:505
 #, kde-format
 msgid "Word XML bibliography"
-msgstr ""
+msgstr "Bibliografia XML del Word"
 
 #: src/parts/part.cpp:506
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "Estructura XML pròpia del KBibTeX"
 
 #: src/parts/part.cpp:507
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "Exportador HTML integrat del KBibTeX"
 
 #: src/parts/part.cpp:508
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "Exportador RIS integrat del KBibTeX"
 
 #: src/parts/part.cpp:517
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Trieu l'exportador"
 
 #: src/parts/part.cpp:519
 #, kde-format
@@ -3019,6 +3018,10 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Hi ha diversos mòduls exportadors disponibles per a escriure el fitxer "
+"«%1».\n"
+"\n"
+"Trieu-ne un."
 
 #: src/parts/part.cpp:549
 #, kde-format

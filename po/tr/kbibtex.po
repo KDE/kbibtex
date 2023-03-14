@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2023-03-07 20:19+0300\n"
+"PO-Revision-Date: 2023-03-13 20:53+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -34,7 +34,7 @@ msgstr "Yazar/Editör"
 
 #, kde-format
 msgid "Publication"
-msgstr "Yayın"
+msgstr "Yayım"
 
 #, kde-format
 msgid "Number/Issue"
@@ -66,7 +66,7 @@ msgstr "Diğer Kişiler"
 
 #, kde-format
 msgid "Volume Part"
-msgstr "Cilt Bölümü"
+msgstr "Cilt Kısmı"
 
 #, kde-format
 msgid "Total Volumes"
@@ -86,7 +86,7 @@ msgstr "Sıralama"
 
 #, kde-format
 msgid "Sort Name"
-msgstr "Sıra İsmi"
+msgstr "Adı Sırala"
 
 #, kde-format
 msgid "Abbreviations"
@@ -98,7 +98,7 @@ msgstr "Kısa Dergi"
 
 #, kde-format
 msgid "Short Series"
-msgstr "Kısa Seriler"
+msgstr "Kısa Seri"
 
 #, kde-format
 msgid "Short Title"
@@ -106,7 +106,7 @@ msgstr "Kısa Başlık"
 
 #, kde-format
 msgid "Reprint Data"
-msgstr "Veriyi Tekrar Yazdır"
+msgstr "Veriyi Yeniden Yazdır"
 
 #, kde-format
 msgid "Local File"
@@ -153,12 +153,12 @@ msgstr "Kitap"
 #: src/config/bibtexentries.cpp:72 src/config/bibtexentries.cpp:85
 #, kde-format
 msgid "Part of a Book"
-msgstr "Bir Kitabın Bölümü"
+msgstr "Kitabın Bir Kısmı"
 
 #: src/config/bibtexentries.cpp:73 src/config/bibtexentries.cpp:91
 #, kde-format
 msgid "Part of a Book with own Title"
-msgstr "Kendi Başlığına Sahip Bir Kitabın Parçası"
+msgstr "Kendi Başlığına Sahip Bir Kitabın Kısmı"
 
 #: src/config/bibtexentries.cpp:74 src/config/bibtexentries.cpp:109
 #, kde-format
@@ -193,7 +193,7 @@ msgstr "Çok Ciltli Kitap"
 #: src/config/bibtexentries.cpp:86
 #, kde-format
 msgid "Former Monograph as Part of a Book"
-msgstr "Bir Kitabın Bölümü Olan İlk Monograf"
+msgstr "Kitabın Bir Kısmı Olan İlk Monograf"
 
 #: src/config/bibtexentries.cpp:87
 #, kde-format
@@ -218,7 +218,7 @@ msgstr "Bir Koleksiyondaki Tamamlayıcı Materyal"
 #: src/config/bibtexentries.cpp:95
 #, kde-format
 msgid "Online Resource"
-msgstr "Çevrimiçi Kaynak"
+msgstr "Çevrimiçi Özkaynak"
 
 #: src/config/bibtexentries.cpp:96
 #, kde-format
@@ -228,12 +228,12 @@ msgstr "Patent"
 #: src/config/bibtexentries.cpp:97
 #, kde-format
 msgid "Periodical (Complete Issue)"
-msgstr "Süreli Yayın (Eksiksiz Sayı)"
+msgstr "Süreli Yayım (Eksiksiz Sayı)"
 
 #: src/config/bibtexentries.cpp:98
 #, kde-format
 msgid "Supplemental Material in a Periodical"
-msgstr "Bir Süreli Yayında Tamamlayıcı Materyal"
+msgstr "Süreli Bir Yayımda Tamamlayıcı Materyal"
 
 #: src/config/bibtexentries.cpp:100
 #, kde-format
@@ -243,22 +243,22 @@ msgstr "Çok Ciltli Bildiriler"
 #: src/config/bibtexentries.cpp:101
 #, kde-format
 msgid "Publication in Conference Proceedings"
-msgstr "Konferans Bildirilerindeki Yayınlar"
+msgstr "Konferans Bildirilerindeki Yayımlar"
 
 #: src/config/bibtexentries.cpp:102
 #, kde-format
 msgid "Single-volume Reference (e.g. Encyclopedia)"
-msgstr "Tek Ciltlik Başvuru (Ör. Ansiklopedi)"
+msgstr "Tek Ciltlik Başvuru (Örn. Ansiklopedi)"
 
 #: src/config/bibtexentries.cpp:103
 #, kde-format
 msgid "Multi-volume Reference (e.g. Encyclopedia)"
-msgstr "Çok Ciltli Başvuru (Ör. Ansiklopedi)"
+msgstr "Çok Ciltli Başvuru (Örn. Ansiklopedi)"
 
 #: src/config/bibtexentries.cpp:104
 #, kde-format
 msgid "Part of a Reference"
-msgstr "Bir Başvurunun Bölümü"
+msgstr "Başvurunun Bir Kısmı"
 
 #: src/config/bibtexentries.cpp:105
 #, kde-format
@@ -273,7 +273,7 @@ msgstr "Tez"
 #: src/config/bibtexfields.cpp:160 src/config/bibtexfields.cpp:199
 #, kde-format
 msgid "Element Type"
-msgstr "Öge Tipi"
+msgstr "Öge Türü"
 
 #: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:200
 #: src/gui/file/findduplicatesui.cpp:159
@@ -367,7 +367,7 @@ msgstr "ISBN veya ISSN"
 #: src/config/bibtexfields.cpp:175 src/config/bibtexfields.cpp:255
 #, kde-format
 msgid "How Published"
-msgstr "Nasıl Yayınlandı"
+msgstr "Nasıl Yayımlandı"
 
 #: src/config/bibtexfields.cpp:176 src/config/bibtexfields.cpp:256
 #, kde-format
@@ -402,7 +402,7 @@ msgstr "Kitap Başlığı"
 #: src/config/bibtexfields.cpp:182 src/config/bibtexfields.cpp:272
 #, kde-format
 msgid "Series"
-msgstr "Seri adı"
+msgstr "Seri"
 
 #: src/config/bibtexfields.cpp:183 src/config/bibtexfields.cpp:274
 #, kde-format
@@ -465,12 +465,12 @@ msgstr "Adres"
 #: src/processing/idsuggestions.cpp:499
 #, kde-format
 msgid "Type"
-msgstr "Tip"
+msgstr "Tür"
 
 #: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:997
 #, kde-format
 msgid "Key"
-msgstr "Tuş"
+msgstr "Anahtar"
 
 #: src/config/bibtexfields.cpp:195 src/config/bibtexfields.cpp:301
 #: src/gui/preferences/settingscolorlabelwidget.cpp:194
@@ -487,7 +487,7 @@ msgstr "Yıldızlar"
 #: src/config/bibtexfields.cpp:203
 #, kde-format
 msgid "Subtitle"
-msgstr "Altbaşlık"
+msgstr "Alt Başlık"
 
 #: src/config/bibtexfields.cpp:204
 #, kde-format
@@ -502,12 +502,12 @@ msgstr "Kısa Başlık"
 #: src/config/bibtexfields.cpp:206
 #, kde-format
 msgid "Original Title"
-msgstr "Orijinal Başlık"
+msgstr "Özgün Başlık"
 
 #: src/config/bibtexfields.cpp:207
 #, kde-format
 msgid "Reprint Title"
-msgstr "Başlığı Tekrar Yazdır"
+msgstr "Başlığı Yeniden Yazdır"
 
 #: src/config/bibtexfields.cpp:208
 #, kde-format
@@ -537,7 +537,7 @@ msgstr "Ad Eklentisi"
 #: src/config/bibtexfields.cpp:215
 #, kde-format
 msgid "Author Type"
-msgstr "Yazar Tipi"
+msgstr "Yazar Türü"
 
 #: src/config/bibtexfields.cpp:216
 #, kde-format
@@ -637,7 +637,7 @@ msgstr "Olay Tarihi"
 #: src/config/bibtexfields.cpp:238
 #, kde-format
 msgid "Original Date"
-msgstr "Orijinal Tarih"
+msgstr "Özgün Tarih"
 
 #: src/config/bibtexfields.cpp:239
 #, kde-format
@@ -647,7 +647,7 @@ msgstr "Dergi Başlığı"
 #: src/config/bibtexfields.cpp:240
 #, kde-format
 msgid "Journal Subtitle"
-msgstr "Dergi Altbaşlığı"
+msgstr "Dergi Alt Başlığı"
 
 #: src/config/bibtexfields.cpp:241
 #, kde-format
@@ -667,7 +667,7 @@ msgstr "Sürüm"
 #: src/config/bibtexfields.cpp:246
 #, kde-format
 msgid "Part"
-msgstr "Bölüm"
+msgstr "Kısım"
 
 #: src/config/bibtexfields.cpp:247
 #, kde-format
@@ -702,7 +702,7 @@ msgstr "Ek"
 #: src/config/bibtexfields.cpp:258
 #, kde-format
 msgid "Annotation"
-msgstr "Bilgi notu"
+msgstr "Bilgi Notu"
 
 #: src/config/bibtexfields.cpp:261
 #, kde-format
@@ -722,12 +722,12 @@ msgstr "Kitap Sayfalandırması"
 #: src/config/bibtexfields.cpp:265
 #, kde-format
 msgid "Original Publisher"
-msgstr "Orijinal Yayımlayan"
+msgstr "Özgün Yayımcı"
 
 #: src/config/bibtexfields.cpp:268
 #, kde-format
 msgid "Book Subtitle"
-msgstr "Kitap Altbaşlığı"
+msgstr "Kitap Alt Başlığı"
 
 #: src/config/bibtexfields.cpp:269
 #, kde-format
@@ -737,7 +737,7 @@ msgstr "Sayı Başlığı"
 #: src/config/bibtexfields.cpp:270
 #, kde-format
 msgid "Issue Subtitle"
-msgstr "Sayı Altbaşlığı"
+msgstr "Sayı Alt Başlığı"
 
 #: src/config/bibtexfields.cpp:271
 #, kde-format
@@ -747,7 +747,7 @@ msgstr "Kitap Başlığı Eklentisi"
 #: src/config/bibtexfields.cpp:273
 #, kde-format
 msgid "Series Shortitle"
-msgstr "Diziler Kısa Başlığı"
+msgstr "Seri Kısa Başlığı"
 
 #: src/config/bibtexfields.cpp:277
 #, kde-format
@@ -762,7 +762,7 @@ msgstr "Sahne"
 #: src/config/bibtexfields.cpp:279
 #, kde-format
 msgid "Index Title"
-msgstr "Dizin Başlığı"
+msgstr "İndeks Başlığı"
 
 #: src/config/bibtexfields.cpp:282
 #, kde-format
@@ -797,7 +797,7 @@ msgstr "Yerel Dosya URL'si"
 #: src/config/bibtexfields.cpp:291
 #, kde-format
 msgid "Original Location"
-msgstr "Original Konum"
+msgstr "Özgün Konum"
 
 #: src/config/bibtexfields.cpp:293
 #, kde-format
@@ -833,7 +833,7 @@ msgstr "Dil"
 #: src/config/bibtexfields.cpp:299
 #, kde-format
 msgid "Original Language"
-msgstr "Orijinal Dil"
+msgstr "Özgün Dil"
 
 #: src/config/bibtexfields.cpp:300 src/networking/zotero/collection.cpp:96
 #: src/program/docklets/zoterobrowser.cpp:108
@@ -864,7 +864,7 @@ msgstr "Girdi Seçenekleri"
 #: src/config/bibtexfields.cpp:306
 #, kde-format
 msgid "Presort"
-msgstr "Ön sıralama"
+msgstr "Ön Sıralama"
 
 #: src/config/bibtexfields.cpp:307
 #, kde-format
@@ -909,7 +909,7 @@ msgstr "BibLaTeX"
 #: src/config/preferences.cpp:584
 #, kde-format
 msgid "No backups"
-msgstr "Yedeklemeler yok"
+msgstr "Yedekleme yok"
 
 #: src/config/preferences.cpp:584
 #, kde-format
@@ -931,7 +931,7 @@ msgstr "Hiçbiri"
 #, kde-format
 msgctxt "Comment Quoting"
 msgid "@comment{…}"
-msgstr "@comment{…}"
+msgstr "@yorum{…}"
 
 #: src/config/preferences.cpp:910
 #, kde-format
@@ -949,7 +949,7 @@ msgstr "küçük harf"
 #, kde-format
 msgctxt "Casing of strings"
 msgid "Initial capital"
-msgstr "Baş harf"
+msgstr "Baş harf büyük"
 
 #: src/config/preferences.cpp:949
 #, kde-format
@@ -967,7 +967,7 @@ msgstr "küçükDeveBiçimi"
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UPPERCASE"
-msgstr "BÜYÜKHARF"
+msgstr "BÜYÜK HARF"
 
 #: src/config/preferences.cpp:1186
 #, kde-format
@@ -1073,7 +1073,7 @@ msgstr "Belgeyi Yeniden Adlandır?"
 #: src/gui/element/associatedfilesui.cpp:114
 #, kde-format
 msgid "Keep document's original filename"
-msgstr "Belgenin orijinal dosya adını koru"
+msgstr "Belgenin özgün dosya adını koru"
 
 #: src/gui/element/associatedfilesui.cpp:120
 #, kde-format
@@ -1089,7 +1089,7 @@ msgstr "Girişe Eklenen Yol"
 #: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
 #, kde-format
 msgid "Relative Path"
-msgstr "Bağıl Yol"
+msgstr "Göreceli Yol"
 
 #: src/gui/element/associatedfilesui.cpp:140
 #: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
@@ -1100,7 +1100,7 @@ msgstr "Mutlak Yol"
 #: src/gui/element/associatedfilesui.cpp:152
 #, kde-format
 msgid "Preview of reference to be inserted:"
-msgstr "Eklenecek başvuruların önizlenmesi:"
+msgstr "Eklenecek başvuruların önizlemesi:"
 
 #: src/gui/element/associatedfilesui.cpp:165
 #, kde-format
@@ -1113,7 +1113,7 @@ msgstr "Belgeyi Girdiyle İlişkilendir"
 #: src/program/docklets/referencepreview.cpp:126
 #, kde-format
 msgid "No preview available"
-msgstr "Önizleme yapılamıyor"
+msgstr "Kullanılabilir önizleme yok"
 
 #: src/gui/element/associatedfilesui.cpp:297
 #, kde-format
@@ -1126,7 +1126,7 @@ msgstr "Aşağıdaki uzak belge şu anki girdiyle ilişkilendirilmek üzere:"
 #: src/gui/element/associatedfilesui.cpp:311
 #, kde-format
 msgid "Rename after entry's id"
-msgstr "Girdinin id'sinden sonra yeniden adlandır"
+msgstr "Girdinin kimliğinden sonra yeniden adlandır"
 
 #: src/gui/element/associatedfilesui.cpp:300
 #, kde-format
@@ -1138,7 +1138,7 @@ msgstr "Aşağıdaki uzak belge '%1' girdisiyle ilişkilendirilmek üzere:"
 #: src/gui/element/associatedfilesui.cpp:314
 #, kde-format
 msgid "Rename after entry's id: '%1'"
-msgstr "Girdinin id'sinden sonra yeniden adlandır: '%1'"
+msgstr "Girdinin kimliğinden sonra yeniden adlandır: '%1'"
 
 #: src/gui/element/associatedfilesui.cpp:310
 #, kde-format
@@ -1197,17 +1197,17 @@ msgstr ""
 #: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "Id already in use"
-msgstr "Kimlik zaten kullanımda"
+msgstr "Kimlik halihazırda kullanımda"
 
 #: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "Keep duplicate ids"
-msgstr "Çakışan kimlikleri koru"
+msgstr "Yinelenmiş kimlikleri tut"
 
 #: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "Restore original id"
-msgstr "Özgün kimliğe geri dön"
+msgstr "Özgün kimliği geri yükle"
 
 #: src/gui/element/elementeditor.cpp:579
 #, kde-format
@@ -1251,12 +1251,12 @@ msgstr "Kimlik:"
 #: src/gui/element/elementwidgets.cpp:545
 #, kde-format
 msgid "Select a suggested id for this entry"
-msgstr "Bu girdi için önerilen bir id seçin"
+msgstr "Bu girdi için önerilen bir kimlik seçin"
 
 #: src/gui/element/elementwidgets.cpp:771
 #, kde-format
 msgid "External"
-msgstr "Harici"
+msgstr "Dış"
 
 #: src/gui/element/elementwidgets.cpp:857
 #, kde-format
@@ -1342,7 +1342,7 @@ msgstr "Verilen kaynak kodu tek bir BibTeX yorumu olarak ayrıştırılamıyor."
 #: src/gui/element/elementwidgets.cpp:1350
 #, kde-format
 msgid "Element class not properly set"
-msgstr "Öge sınıfı düzgünce ayarlanmımış"
+msgstr "Öge sınıfı düzgünce ayarlanmamış"
 
 #: src/gui/element/elementwidgets.cpp:1359
 #, kde-format
@@ -1392,7 +1392,7 @@ msgstr "Sonuç"
 #: src/gui/element/findpdfui.cpp:432
 #, kde-format
 msgid "Starting to search..."
-msgstr "Aramaya başlıyor..."
+msgstr "Arama başlıyor..."
 
 #: src/gui/element/findpdfui.cpp:451
 #, kde-format
@@ -1403,7 +1403,7 @@ msgstr "PDF Bul"
 #: src/gui/element/findpdfui.cpp:511
 #, kde-format
 msgid "Save URL '%1'"
-msgstr "'%1' URL'i Kaydet"
+msgstr "'%1' URL'sini Kaydet"
 
 #: src/gui/element/findpdfui.cpp:565
 #, kde-format
@@ -1428,17 +1428,17 @@ msgstr "Kullanıcı tanımlı renk"
 #: src/gui/field/colorlabelwidget.cpp:106
 #, kde-format
 msgid "Color & Label"
-msgstr "Renk & Etiket"
+msgstr "Renk ve Etiket"
 
 #: src/gui/field/fieldinput.cpp:89
 #, kde-format
 msgid "Select a predefined month"
-msgstr "Önceden tanımlanmış bir ay seçin"
+msgstr "Önceden tanımlanmış bir ay seç"
 
 #: src/gui/field/fieldinput.cpp:107
 #, kde-format
 msgid "Select a predefined edition"
-msgstr "Önceden tanımlanmış bir edisyon seçin"
+msgstr "Önceden tanımlanmış bir baskı seç"
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
@@ -1523,12 +1523,12 @@ msgstr "16."
 #: src/gui/field/fieldinput.cpp:126
 #, kde-format
 msgid "Select an existing entry"
-msgstr "Varolan bir girdiyi seç"
+msgstr "Var olan bir girdiyi seç"
 
 #: src/gui/field/fieldinput.cpp:279
 #, kde-format
 msgid "Select Cross Reference"
-msgstr "Çapraz Başvuru Seç"
+msgstr "Çapraz Başvuru seç"
 
 #: src/gui/field/fieldinput.cpp:279
 #, kde-format
@@ -1568,7 +1568,7 @@ msgstr "Kişi"
 #: src/gui/field/fieldlineedit.cpp:329 src/gui/field/fieldlineedit.cpp:369
 #, kde-format
 msgid "Keyword"
-msgstr "Anahtar sözcük"
+msgstr "Anahtar Sözcük"
 
 #: src/gui/field/fieldlineedit.cpp:335 src/gui/field/fieldlineedit.cpp:371
 #, kde-format
@@ -1583,7 +1583,7 @@ msgstr "Verbatim Metin"
 #: src/gui/field/fieldlineedit.cpp:483
 #, kde-format
 msgid "Open '%1'"
-msgstr "'%1' Аç"
+msgstr "Aç: '%1'"
 
 #: src/gui/field/fieldlineedit.cpp:499
 #, kde-format
@@ -1592,7 +1592,7 @@ msgid ""
 "\n"
 "Switching back to type '%2'."
 msgstr ""
-"Geçerli metin, '%1' tipi değeri olarak kullanılamaz.\n"
+"Geçerli metin, '%1' türü değeri olarak kullanılamaz.\n"
 "\n"
 "'%2' türüne geri dönülüyor."
 
@@ -1604,12 +1604,12 @@ msgstr "Değeri kaldır"
 #: src/gui/field/fieldlistedit.cpp:156
 #, kde-format
 msgid "Move value down"
-msgstr "Değeri aşağı indir"
+msgstr "Değeri aşağı taşı"
 
 #: src/gui/field/fieldlistedit.cpp:167
 #, kde-format
 msgid "Move value up"
-msgstr "Değeri yukarı kaldır"
+msgstr "Değeri yukarı taşı"
 
 #: src/gui/field/fieldlistedit.cpp:417
 #, kde-format
@@ -1634,7 +1634,7 @@ msgstr "Dosya ekle..."
 #: src/gui/field/fieldlistedit.cpp:491
 #, kde-format
 msgid "Add reference ..."
-msgstr "Başvuru ekle ..."
+msgstr "Başvuru ekle..."
 
 #: src/gui/field/fieldlistedit.cpp:494
 #, kde-format
@@ -1677,7 +1677,7 @@ msgstr "Listeden Anahtar Sözcükler Ekle"
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Önceden tanımlanmış bir anahtar sözcük listesinden seçilen anahtar "
-"sözcükleri ekleyin"
+"sözcükleri ekle"
 
 #: src/gui/field/fieldlistedit.cpp:656
 #, kde-format
@@ -1688,7 +1688,7 @@ msgstr "Panodan Anahtar Sözcükler Ekle"
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr ""
-"Panodan, noktalama işaretleriyle ayrılmış bir anahtar sözcük listesi ekleyin"
+"Panodan, noktalama işaretleriyle ayrılmış bir anahtar sözcük listesi ekle"
 
 #: src/gui/file/basicfileview.cpp:384
 #, kde-format
@@ -1714,7 +1714,7 @@ msgstr "Bu girdi düzenlendi. Değişikliklerinizi atmak istiyor musunuz?"
 #: src/gui/file/fileview.cpp:89
 #, kde-format
 msgid "Discard changes?"
-msgstr "Değişiklikler göz ardı edilsin mi?"
+msgstr "Değişiklikler yok sayılsın mı?"
 
 #: src/gui/file/fileview.cpp:89
 #, kde-format
@@ -1746,12 +1746,12 @@ msgstr "Yukarıdakilerin hiçbiri"
 #: src/gui/file/findduplicatesui.cpp:551
 #, kde-format
 msgid "Select your duplicates"
-msgstr "Kopyalarınızı seçin"
+msgstr "Kopyalarını seç"
 
 #: src/gui/file/findduplicatesui.cpp:571
 #, kde-format
 msgid "Previous Clique"
-msgstr "Önceki klik"
+msgstr "Önceki Klik"
 
 #: src/gui/file/findduplicatesui.cpp:573
 #, kde-format
@@ -1761,7 +1761,7 @@ msgstr "Sonraki Klik"
 #: src/gui/file/findduplicatesui.cpp:652
 #, kde-format
 msgid "Find Duplicates"
-msgstr "Kopyaları Bul"
+msgstr "Yinelenmişleri Bul"
 
 #: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
@@ -1769,8 +1769,8 @@ msgid ""
 "Multiple elements are selected. Do you want to search for duplicates only "
 "within the selection or in the whole document?"
 msgstr ""
-"Birden fazla eleman seçildi. Çiftlerde yalnızca seçim içerisinde mi yoksa "
-"bütün belgede mi arama yapmak istiyor musunuz?"
+"Birden fazla öge seçili. Çiftlerde yalnızca seçim içinde mi yoksa bütün "
+"belgede mi arama yapmak istiyor musunuz?"
 
 #: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
@@ -1790,18 +1790,18 @@ msgstr "Tüm belge"
 #: src/gui/file/findduplicatesui.cpp:712
 #, kde-format
 msgid "No duplicates were found."
-msgstr "Hiçbir kopya bulunamadı."
+msgstr "Hiçbir yinelenen bulunmadı."
 
 #: src/gui/file/findduplicatesui.cpp:712
 #, kde-format
 msgid "No duplicates found"
-msgstr "Hiçbir kopya bulunmadı."
+msgstr "Bulunan yinelenen yok"
 
 #: src/gui/file/findduplicatesui.cpp:719
 #, kde-format
 msgctxt "@title:window"
 msgid "Merge Duplicates"
-msgstr "Kopyaları Birleştir"
+msgstr "Yinelenmişleri Birleştir"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
@@ -1810,8 +1810,8 @@ msgid ""
 "This will reset the settings to factory defaults. Should this affect only "
 "the current page or all settings?"
 msgstr ""
-"Bu, ayarları fabrika varsayılanlarına sıfırlar. Bu yalnızca geçerli sayfayı "
-"mı etkilemeli ya da tüm ayarları mı?"
+"Bu, ayarları fabrika öntanımlılarına sıfırlayacaktır. Bu yalnızca geçerli "
+"sayfayı mı yoksa tüm ayarları mı etkilemeli?"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
@@ -1829,7 +1829,7 @@ msgstr "Tüm Ayarlar"
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid "Only current page"
-msgstr "Yalnızca geçerli sayfada"
+msgstr "Yalnızca geçerli sayfa"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:185
 #, kde-format
@@ -1855,7 +1855,7 @@ msgstr "Kaldır"
 #: src/gui/preferences/settingscolorlabelwidget.cpp:360
 #, kde-format
 msgid "Color & Labels"
-msgstr "Renk & Etiketler"
+msgstr "Renk ve Etiketler"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:392
 #, kde-format
@@ -1894,12 +1894,12 @@ msgstr "'babel' için Dil:"
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:102
 #, kde-format
 msgid "Bibliography style:"
-msgstr "Bibliografya biçemi:"
+msgstr "Kaynakça biçemi:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:124
 #, kde-format
 msgid "PDF & Postscript"
-msgstr "PDF & Postscript"
+msgstr "PDF ve Postscript"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:123
 #, kde-format
@@ -1919,7 +1919,7 @@ msgstr "LyX veriyolunu otomatik olarak algıla:"
 #: src/gui/preferences/settingsfileexporterwidget.cpp:139
 #, kde-format
 msgid "Manually specified LyX pipe:"
-msgstr "Elle belirtilmiş LyX borusu:"
+msgstr "Elle belirtilmiş LyX veriyolu:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:152
 #, kde-format
@@ -1940,30 +1940,30 @@ msgstr "Kaydetme ve Dışa Aktarma"
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "John"
-msgstr "John"
+msgstr "Hakan"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:43
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "Doe"
-msgstr "Doe"
+msgstr "SAYMAN"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:43
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "Jr."
-msgstr "Jr."
+msgstr "Oğ."
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:76
 #, kde-format
 msgid "Bibliography System:"
-msgstr "Bibliografya Sistemi:"
+msgstr "Kaynakça Sistemi:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:80
 #: src/gui/widgets/filesettingswidget.cpp:161
 #, kde-format
 msgid "Person Names Formatting:"
-msgstr "Kişisel Adların Biçimlendirmesi:"
+msgstr "Kişi Adlarının Biçimlendirmesi:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:102
 #, kde-format
@@ -1973,7 +1973,7 @@ msgstr "Genel"
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:154
 #, kde-format
 msgid "NewKeyword%1"
-msgstr "Yeni Anahtar Sözcük %1"
+msgstr "YeniAnahtarSözcük%1"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:115
 #, kde-format
@@ -2050,14 +2050,14 @@ msgstr "... ve son yazar"
 #: src/processing/idsuggestions.cpp:550
 #, kde-format
 msgid "From first author to author %1 and last author"
-msgstr "İlk yazardan yazar %1'e ve son yazara"
+msgstr "İlk yazardan %1. yazara ve son yazara"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
 #: src/processing/idsuggestions.cpp:567 src/processing/idsuggestions.cpp:587
 #, kde-format
 msgid "From author %1 to author %2 and last author"
-msgstr "Yazar %1'den yazar %2'ye ve son yazara"
+msgstr "%1. yazardan %2. yazara ve son yazara"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:139
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:350
@@ -2073,7 +2073,7 @@ msgstr "Değişiklik yok"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:504
 #, kde-format
 msgid "To upper case"
-msgstr "Büyük harfe"
+msgstr "BÜYÜK harfe"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:141
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:352
@@ -2081,7 +2081,7 @@ msgstr "Büyük harfe"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:505
 #, kde-format
 msgid "To lower case"
-msgstr "Küçük harflere"
+msgstr "küçük harfe"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:142
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:353
@@ -2097,7 +2097,7 @@ msgstr "DeveBiçimine"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:507
 #, kde-format
 msgid "Change casing:"
-msgstr "Büyük/küçük harf'i değiştir:"
+msgstr "BÜYÜK/küçük harf değiştir:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:147
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:358
@@ -2312,7 +2312,7 @@ msgstr "Kimlik Önerisini Düzenle"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:306
 #, kde-format
 msgid "Id Suggestions"
-msgstr "Id Önerileri"
+msgstr "Kimlik Önerileri"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:266
 #, kde-format
@@ -2332,7 +2332,7 @@ msgstr "Aşağı"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:278
 #, kde-format
 msgid "Toggle Default"
-msgstr "Varsayılanı Değiştir"
+msgstr "Öntanımlıyı Değiştir"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:382
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
@@ -2341,14 +2341,14 @@ msgid ""
 "All token have been removed from this suggestion. Remove suggestion itself "
 "or restore original suggestion?"
 msgstr ""
-"Bu öneriden tüm simgeler kaldırıldı. Önerinin kendisini kaldırın veya özgün "
-"önerinizi geri yükleyin?"
+"Bu öneriden tüm simgeler kaldırıldı. Önerinin kendisini kaldırılsın mı veya "
+"özgün öneriniz geri yüklensin mi?"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:382
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Remove suggestion?"
-msgstr "Öneriyi kaldır?"
+msgstr "Öneri kaldırılsın mı?"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:382
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
@@ -2365,7 +2365,7 @@ msgstr "Değişiklikleri geri al"
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:69
 #, kde-format
 msgid "When double-clicking an element:"
-msgstr "Bir öge çift tıklandığında:"
+msgstr "Bir ögeye çift tıklandığında:"
 
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:83
 #, kde-format
@@ -2386,7 +2386,7 @@ msgstr "Kodlama:"
 #: src/gui/widgets/filesettingswidget.cpp:133
 #, kde-format
 msgid "String Delimiters:"
-msgstr "Karakter Dizisi Sınırlandırıcıları:"
+msgstr "Dizi Sınırlandırıcıları:"
 
 #: src/gui/widgets/filesettingswidget.cpp:140
 #, kde-format
@@ -2396,7 +2396,7 @@ msgstr "Yorum Alıntılama:"
 #: src/gui/widgets/filesettingswidget.cpp:146
 #, kde-format
 msgid "Keyword Casing:"
-msgstr "Anahtar Sözcük Büyük Küçük Harf Ayarı:"
+msgstr "Anahtar Sözcük BÜYÜK/küçük Harf:"
 
 #: src/gui/widgets/filesettingswidget.cpp:147
 #, kde-format
@@ -2408,25 +2408,25 @@ msgstr "küçük harf"
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "Initial capital"
-msgstr "Baş harf"
+msgstr "Baş harf Büyük"
 
 #: src/gui/widgets/filesettingswidget.cpp:149
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
-msgstr "UpperCamelCase"
+msgstr "BüyükDeveBiçimi"
 
 #: src/gui/widgets/filesettingswidget.cpp:150
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
-msgstr "lowerCamelCase"
+msgstr "küçükDeveBiçimi"
 
 #: src/gui/widgets/filesettingswidget.cpp:151
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UPPERCASE"
-msgstr "BÜYÜKHARFLERLE"
+msgstr "BÜYÜK HARF"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
 #, kde-format
@@ -2436,12 +2436,12 @@ msgstr "Başlıkları Koru"
 #: src/gui/widgets/filesettingswidget.cpp:156
 #, kde-format
 msgid "Protect Casing?"
-msgstr "Büyük/küçük harflendirmeyi koru?"
+msgstr "BÜYÜK/küçük Harf Düzenini Koru"
 
 #: src/gui/widgets/filesettingswidget.cpp:165
 #, kde-format
 msgid "Use global settings"
-msgstr "Genel ayarları kullan"
+msgstr "Global ayarları kullan"
 
 #: src/gui/widgets/filesettingswidget.cpp:171
 #, kde-format
@@ -2466,7 +2466,7 @@ msgstr "Süz:"
 #: src/gui/widgets/filterbar.cpp:87
 #, kde-format
 msgid "Filter bibliographic entries"
-msgstr "Bibliografya ile ilgili girdileri süz"
+msgstr "Kaynakça ile ilgili girdileri süz"
 
 #: src/gui/widgets/filterbar.cpp:91
 #, kde-format
@@ -2491,7 +2491,7 @@ msgstr "herhangi bir alan"
 #: src/gui/widgets/filterbar.cpp:116
 #, kde-format
 msgid "Include PDF files in full-text search"
-msgstr "Tüm-metin aramasına PDF dosyalarını dahil et"
+msgstr "Tüm-metin aramasında PDF dosyalarını içer"
 
 #: src/gui/widgets/filterbar.cpp:122
 #, kde-format
@@ -2506,22 +2506,22 @@ msgstr "Ayarlanmamış"
 #: src/io/fileexporterbibtex2html.cpp:80
 #, kde-format
 msgid "The program <strong>bibtex2html</strong> is not available."
-msgstr "Program <strong>bibtex2html</strong> kullanılabilir değil."
+msgstr "<strong>bibtex2html</strong> programı kullanılamıyor."
 
 #: src/io/fileexporterbibtex2html.cpp:98
 #, kde-format
 msgid "The BibTeX style <strong>%1</strong> is not available."
-msgstr "BibTeX biçemi <strong>%1</strong> kullanılabilir değil."
+msgstr "BibTeX biçemi <strong>%1</strong> kullanılamıyor."
 
 #: src/io/fileexporterbibtex2html.cpp:100
 #, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "BibTeX biçemi <strong>YER TUTUCU</strong> kullanılabilir değil."
+msgstr "BibTeX biçemi <strong>PLACEHOLDER</strong> kullanılamıyor."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
-msgstr "'%1' i arama bilinmeyen bir nedenle başarısız oldu."
+msgstr "'%1' araması bilinmeyen bir nedenle başarısız oldu."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
@@ -2530,7 +2530,7 @@ msgid ""
 "\n"
 "%2"
 msgstr ""
-"'%1' i arama hata iletisi ile başarısız oldu:\n"
+"'%1' araması hata iletisi vererek başarısız oldu:\n"
 "\n"
 "%2"
 
@@ -2558,7 +2558,7 @@ msgstr "Serbest metin:"
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:115
 #, kde-format
 msgid "Number of Results:"
-msgstr "Sonuçların Sayısı:"
+msgstr "Sonuç Sayısı:"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:675
 #, kde-format
@@ -2670,7 +2670,7 @@ msgstr "Özet/Anahtar Sözcükler:"
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:106
 #, kde-format
 msgid "Publication:"
-msgstr "Yayın:"
+msgstr "Yayım:"
 
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:111
 #, kde-format
@@ -2823,7 +2823,7 @@ msgstr ""
 "aşağıda gösterildiği gibi bir web tarayıcısında açın.</li><li>Zotero'ya "
 "oturum açın ve KBibTeX izinlerini onaylayın.</li><li>Başarılıysa KBibTeX "
 "kimliğinin doğrulandığını belirten bir web sayfasına yönlendirileceksiniz."
-"<br>Bu pencere kendiliğinden kapatılacak..</li></ol></qt>"
+"<br>Bu pencere kendiliğinden kapatılacaktır.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:149
 #, kde-format
@@ -2851,7 +2851,7 @@ msgstr "Dosya"
 #: src/parts/kbibtexpartui.rc:14
 #, kde-format
 msgid "Edit"
-msgstr "Düzenle"
+msgstr "Düzen"
 
 #. i18n: ectx: Menu (element)
 #: src/parts/kbibtexpartui.rc:21
@@ -2893,27 +2893,27 @@ msgstr "Kaynakça girdilerini süz (%1)"
 #: src/parts/part.cpp:183
 #, kde-format
 msgid "New element"
-msgstr "Yeni öge"
+msgstr "Yeni Öge"
 
 #: src/parts/part.cpp:189
 #, kde-format
 msgid "New entry"
-msgstr "Yeni girdi"
+msgstr "Yeni Girdi"
 
 #: src/parts/part.cpp:194
 #, kde-format
 msgid "New comment"
-msgstr "Yeni yorum"
+msgstr "Yeni Yorum"
 
 #: src/parts/part.cpp:198
 #, kde-format
 msgid "New macro"
-msgstr "Yeni makro"
+msgstr "Yeni Makro"
 
 #: src/parts/part.cpp:202
 #, kde-format
 msgid "New preamble"
-msgstr "Yeni önsöz"
+msgstr "Yeni Önsöz"
 
 #: src/parts/part.cpp:207
 #, kde-format
@@ -2928,12 +2928,12 @@ msgstr "PDF Bul..."
 #: src/parts/part.cpp:224
 #, kde-format
 msgid "Format entry ids"
-msgstr "Girdi id'lerini biçimlendir"
+msgstr "Girdi Kimliklerini Biçimlendir"
 
 #: src/parts/part.cpp:238
 #, kde-format
 msgid "Copy References"
-msgstr "Başvuruları kopyala"
+msgstr "Başvuruları Kopyala"
 
 #: src/parts/part.cpp:283
 #, kde-format
@@ -2943,7 +2943,7 @@ msgstr "Yeni%1"
 #: src/parts/part.cpp:442
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
-msgstr "Belgenin yedek kopyaları oluşturulamadı '%1'."
+msgstr "'%1' dosyasının yedek kopyaları oluşturulamadı."
 
 #: src/parts/part.cpp:442
 #, kde-format
@@ -2958,39 +2958,38 @@ msgstr "Dosyayı kaydet"
 #: src/parts/part.cpp:503
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:504
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "BibTeX"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:505
 #, kde-format
 msgid "Word XML bibliography"
-msgstr ""
+msgstr "Word XML kaynak dizini"
 
 #: src/parts/part.cpp:506
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "KBibTeX'in kendi XML yapısı"
 
 #: src/parts/part.cpp:507
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "KBibTeX'in yerleşik HTML dışa aktarıcısı"
 
 #: src/parts/part.cpp:508
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "KBibTeX'in yerleşik RIS dışa aktarıcısı"
 
 #: src/parts/part.cpp:517
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Dışa Aktarıcı Seç"
 
 #: src/parts/part.cpp:519
 #, kde-format
@@ -2999,6 +2998,9 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"'%1' dosyasını yazmak için birden çok dışa aktarıcı modül kullanılabilir:\n"
+"\n"
+"Lütfen birini seçin."
 
 #: src/parts/part.cpp:549
 #, kde-format
@@ -3060,13 +3062,13 @@ msgstr ""
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
 msgstr ""
-"Girdi id'leri için varsayılan biçimlendirme uygulanamıyor: Varsayılan biçim "
+"Girdi kimlikleri için öntanımlı biçimlendirme uygulanamıyor: Öntanımlı biçim "
 "belirtilmedi."
 
 #: src/parts/part.cpp:1020
 #, kde-format
 msgid "Cannot Apply Default Formatting"
-msgstr "Varsayılan Biçimlendirme Uygulanamıyor"
+msgstr "Öntanımlı Biçimlendirme Uygulanamıyor"
 
 #: src/parts/part.cpp:1148
 #, kde-format
@@ -3075,24 +3077,24 @@ msgid ""
 "\n"
 "Reload file or ignore changes on disk?"
 msgstr ""
-"Dosya '%1' diskte değiştirildi.\n"
+"'%1' dosyası diskte değiştirildi.\n"
 "\n"
-"Dosyayı tekrar yükle veya diskteki değişiklikleri göz ardı et?"
+"Dosya yeniden yüklensin mi veya diskteki değişiklikler yok sayılsın mı?"
 
 #: src/parts/part.cpp:1148
 #, kde-format
 msgid "File changed externally"
-msgstr "Dosya harici olarak değiştirildi"
+msgstr "Dosya dışarıdan değiştirildi"
 
 #: src/parts/part.cpp:1148
 #, kde-format
 msgid "Reload file"
-msgstr "Dosyayı Tekrar Yükle"
+msgstr "Dosyayı Yeniden Yükle"
 
 #: src/parts/part.cpp:1148
 #, kde-format
 msgid "Ignore on-disk changes"
-msgstr "Disk üzerindeki değişiklikleri göz ardı et"
+msgstr "Disk üzerindeki değişiklikleri yok say"
 
 #: src/parts/partfactory.cpp:36
 #, kde-format
@@ -3102,12 +3104,12 @@ msgstr "KBibTeXPart"
 #: src/parts/partfactory.cpp:36 src/program/program.cpp:52
 #, kde-format
 msgid "A BibTeX editor by KDE"
-msgstr "KDE tarafından bir BibTeX düzenleyici"
+msgstr "KDE tarafından yapılmiş bir BibTeX düzenleyici"
 
 #: src/parts/partfactory.cpp:36 src/program/program.cpp:52
 #, kde-format
 msgid "Copyright 2004-2019 Thomas Fischer"
-msgstr "Copyright 2004-2019 Thomas Fischer"
+msgstr "Telif hakkı 2004-2019 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:40 src/program/program.cpp:57
 #, kde-format
@@ -3117,7 +3119,7 @@ msgstr "Thomas Fischer"
 #: src/parts/partfactory.cpp:40 src/program/program.cpp:57
 #, kde-format
 msgid "Maintainer"
-msgstr "Projeyi Yürüten"
+msgstr "Bakımcı"
 
 #: src/processing/bibliographyservice.cpp:189
 #, kde-format
@@ -3146,12 +3148,12 @@ msgid ""
 msgstr ""
 "BibTex çalıştırılamadı.\n"
 "\n"
-"Hatayı izlemek için aşağıdaki çıktıya bakınız:"
+"Hatayı izlemek için aşağıdaki çıktıya bakın:"
 
 #: src/processing/checkbibtex.cpp:92
 #, kde-format
 msgid "Running BibTeX failed."
-msgstr "BibTeX çalışması başarısız oldu."
+msgstr "BibTeX çalıştırılamadı."
 
 #: src/processing/checkbibtex.cpp:124
 #, kde-format
@@ -3161,12 +3163,12 @@ msgstr "<b>%1</b> alanı boş"
 #: src/processing/checkbibtex.cpp:127
 #, kde-format
 msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
-msgstr "<b>%1</b> ve <b>%2</b> alanları boş, ancak en az bir tane gerekiyor"
+msgstr "<b>%1</b> ve <b>%2</b> alanları boş; ancak en az bir tane gerekiyor"
 
 #: src/processing/checkbibtex.cpp:130
 #, kde-format
 msgid "Field <b>%1</b> exists, but <b>%2</b> does not exist"
-msgstr "<b>%1</b> alanı var, ama <b>%2</b> mevcut değil"
+msgstr "<b>%1</b> alanı var; ancak  <b>%2</b> yok"
 
 #: src/processing/checkbibtex.cpp:133
 #, kde-format
@@ -3187,7 +3189,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:142
 #, kde-format
 msgid "Unknown warning: %1"
-msgstr "Bilinmeyen uyarı:%1"
+msgstr "Bilinmeyen uyarı: %1"
 
 #: src/processing/checkbibtex.cpp:151
 #, kde-format
@@ -3218,7 +3220,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Bu girdideki eksik olan bazı alanlar çapraz başvurulu '%1' girişinden alındı."
+"Bu girdideki eksik olan bazı alanlar çapraz başvurulu '%1' girdisinden "
+"alındı."
 
 #: src/processing/checkbibtex.cpp:156
 #, kde-format
@@ -3228,23 +3231,23 @@ msgstr "Herhangi bir uyarı veya hata bulunamadı.%1"
 #: src/processing/checkbibtex.cpp:156
 #, kde-format
 msgid "No Errors or Warnings"
-msgstr "Hatalar veya Uyarılar Yok"
+msgstr "Hata veya Uyarı Yok"
 
 #: src/processing/findduplicates.cpp:384
 #, kde-format
 msgid "Searching ..."
-msgstr "Aranıyor ..."
+msgstr "Aranıyor..."
 
 #: src/processing/findduplicates.cpp:384
 #, kde-format
 msgid "Cancel"
-msgstr "İptal Et"
+msgstr "İptal"
 
 #: src/processing/findduplicates.cpp:386
 #, kde-format
 msgctxt "@title:window"
 msgid "Finding Duplicates"
-msgstr "Kopyaları Buluyor"
+msgstr "Yinelenenler Bulunuyor"
 
 #: src/processing/idsuggestions.cpp:319
 #, kde-format
@@ -3287,29 +3290,29 @@ msgstr ", küçük harflerle"
 #: src/processing/idsuggestions.cpp:492 src/processing/idsuggestions.cpp:514
 #, kde-format
 msgid ", in CamelCase"
-msgstr ", CamelCase formatında"
+msgstr ", DeveBiçimi biçiminde"
 
 #: src/processing/idsuggestions.cpp:416 src/processing/idsuggestions.cpp:469
 #, kde-format
 msgid ", with '%1' in between"
-msgstr ", '%1' ile arasında"
+msgstr ", arasında '%1' ile"
 
 #: src/processing/idsuggestions.cpp:422
 #, kde-format
 msgid "Year (2 digits)"
-msgstr "Yıl (2 hane)"
+msgstr "Yıl (2 basamak)"
 
 #: src/processing/idsuggestions.cpp:424
 #, kde-format
 msgid "Year (4 digits)"
-msgstr "Yıl (4 hane)"
+msgstr "Yıl (4 basamak)"
 
 #: src/processing/idsuggestions.cpp:430
 #, kde-format
 msgid ", but only the first word"
 msgid_plural ", but only first %1 words"
 msgstr[0] "; ancak yalnızca ilk sözcük"
-msgstr[1] ", ama yalnızca ilk %1 sözcük"
+msgstr[1] "; ancak yalnızca ilk %1 sözcük"
 
 #: src/processing/idsuggestions.cpp:436
 #, kde-format
@@ -3362,27 +3365,27 @@ msgstr "Tüm yazarlar"
 #: src/processing/idsuggestions.cpp:556
 #, kde-format
 msgid "From first author to author %1"
-msgstr "İlk yazardan yazar %1'e"
+msgstr "İlk yazardan %1. yazara"
 
 #: src/processing/idsuggestions.cpp:563
 #, kde-format
 msgid "All but first author"
-msgstr "İlk yazar hariç hepsi"
+msgstr "İlk yazar dışında hepsi"
 
 #: src/processing/idsuggestions.cpp:573 src/processing/idsuggestions.cpp:593
 #, kde-format
 msgid "From author %1 to author %2"
-msgstr "Yazar %1'den yazar %2'ye"
+msgstr "%1. yazardan %2. yazara"
 
 #: src/processing/idsuggestions.cpp:581
 #, kde-format
 msgid "From author %1 to last author"
-msgstr "Yazar %1'den son yazara"
+msgstr "%1. yazardan son yazara"
 
 #: src/processing/lyx.cpp:81
 #, kde-format
 msgid "Send to LyX/Kile"
-msgstr "LyX/Kile'e gönder"
+msgstr "LyX/Kile'ye Gönder"
 
 #: src/processing/lyx.cpp:101
 #, kde-format
@@ -3404,29 +3407,29 @@ msgstr "Başvuruyu LyX'e Gönder"
 #: src/processing/lyx.cpp:107
 #, kde-format
 msgid "No 'LyX server pipe' was detected."
-msgstr "Hiçbir 'LyX sunucu borusu' tespit edilemedi."
+msgstr "Algılanan 'LyX sunucu veriyolu' bulunmadı."
 
 #: src/processing/lyx.cpp:112
 #, kde-format
 msgid "No references to send to LyX/Kile."
-msgstr "LyX/Kile'a göndermek için başvuru yok."
+msgstr "LyX/Kile'ye göndermek için başvuru yok."
 
 #: src/processing/lyx.cpp:118
 #, kde-format
 msgid "Could not open LyX server pipe '%1'."
-msgstr "LyX sunucu borusu açılamadı: '%1'."
+msgstr "LyX sunucu veriyolu açılamadı: '%1'."
 
 #: src/program/docklets/documentpreview.cpp:202
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
-"Yalnızca yerel dosyalar ve uzak dosyalar da dahil olacak şekilde tüm "
-"belgeler arasında geçiş yap"
+"Yalnızca yerel dosyalar ve uzak dosyalar da içerilecek biçimde tüm belgeler "
+"arasında geçiş yap"
 
 #: src/program/docklets/documentpreview.cpp:213
 #, kde-format
 msgid "Open in external program"
-msgstr "Harici bir programla aç"
+msgstr "Bir dış programda aç"
 
 #: src/program/docklets/documentpreview.cpp:347
 #, kde-format
@@ -3451,7 +3454,7 @@ msgstr ""
 #: src/program/docklets/documentpreview.cpp:510
 #, kde-format
 msgid "Cannot show requested part"
-msgstr "İstenilen bölüm gösterilemiyor"
+msgstr "İstenen kısım gösterilemiyor"
 
 #: src/program/docklets/documentpreview.cpp:537
 #: src/program/docklets/documentpreview.cpp:541
@@ -3470,8 +3473,8 @@ msgid ""
 ">Okular for KDE&nbsp;4 will not work."
 msgstr ""
 "<br/><br/>Lütfen PDF görüntüleme bileşenini kullanmak için, KDE "
-"Çatıları&nbsp;5 için <a href=\"https://userbase.kde.org/Okular\">Okular</a> "
-"kurun.<br/>KDE&nbsp;4 için Okular çalışmayacaktır."
+"Frameworks&nbsp;5 için <a href=\"https://userbase.kde.org/Okular\">Okular</"
+"a>'ı kurun.<br/>KDE&nbsp;4 için olan Okular çalışmayacaktır."
 
 #: src/program/docklets/documentpreview.cpp:563
 #, kde-format
@@ -3499,8 +3502,7 @@ msgstr "Değişiklikleri otomatik olarak uygula"
 #, kde-format
 msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
 msgstr ""
-"Kaydedilmemiş değişiklikler bulunuyor. Lütfen 'Uygula' veya 'Sıfırla' ya "
-"basınız."
+"Kaydedilmemiş değişiklikler var. Lütfen 'Uygula'ya veya 'Sıfırla'ya basın."
 
 #: src/program/docklets/elementform.cpp:101
 #, kde-format
@@ -3514,14 +3516,14 @@ msgid ""
 "The current element got modified.\n"
 "Apply or discard changes?"
 msgstr ""
-"Şu anki öge değişiklik içeriyor.\n"
-"Değişiklikleri uygula veya göz ardı et?"
+"Geçerli öge değiştirilmiş.\n"
+"Değişiklikler uygulansın mı atılsın mı?"
 
 #: src/program/docklets/elementform.cpp:191
 #: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid "Element modified"
-msgstr "Öge değiştirildi"
+msgstr "Öge değiştirilmiş"
 
 #: src/program/docklets/elementform.cpp:191
 #: src/program/docklets/elementform.cpp:193
@@ -3533,7 +3535,7 @@ msgstr "Değişiklikleri uygula"
 #: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid "Discard changes"
-msgstr "Değişiklikleri Göz Ardı Et"
+msgstr "Değişiklikleri at"
 
 #: src/program/docklets/referencepreview.cpp:84
 #, kde-format
@@ -3568,18 +3570,18 @@ msgstr "Yalnızca özet"
 #: src/program/docklets/referencepreview.cpp:126
 #, kde-format
 msgid "Reason:"
-msgstr "Neden:"
+msgstr "Gerekçe:"
 
 #: src/program/docklets/referencepreview.cpp:150
 #, kde-format
 msgid "Open reference in web browser."
-msgstr "Başvuruyu web tarayıcısında aç."
+msgstr "Başvuruyu web tarayıcıda aç."
 
 #: src/program/docklets/referencepreview.cpp:153
 #: src/program/docklets/referencepreview.cpp:428
 #, kde-format
 msgid "Save as HTML"
-msgstr "HTML olarak Kaydet"
+msgstr "HTML olarak kaydet"
 
 #: src/program/docklets/referencepreview.cpp:154
 #, kde-format
@@ -3594,13 +3596,13 @@ msgstr "Önizleme devre dışı"
 #: src/program/docklets/referencepreview.cpp:264
 #, kde-format
 msgid "No element selected"
-msgstr "Hiçbir öge seçilmedi"
+msgstr "Seçili öge yok"
 
 #: src/program/docklets/referencepreview.cpp:329
 #: src/program/docklets/referencepreview.cpp:399
 #, kde-format
 msgid "No output generated"
-msgstr "Hiçbir çıktı oluşturulmadı"
+msgstr "Üretilen çıktı yok"
 
 #: src/program/docklets/referencepreview.cpp:358
 #, kde-format
@@ -3645,14 +3647,14 @@ msgstr "Durdur"
 #: src/program/docklets/searchform.cpp:345
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
-msgstr "Hiçbir arama motoru seçilmedi (<a href=\"changeEngine\">değiştir</a>)."
+msgstr "Seçili arama motoru yok (<a href=\"changeEngine\">değiştir</a>)."
 
 #: src/program/docklets/searchform.cpp:346
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
-"Arama motoru <b>%1</b> seçildi (<a href=\"changeEngine\">değiştir</a>)."
+"<b>%1</b> arama motoru seçildi (<a href=\"changeEngine\">değiştir</a>)."
 
 #: src/program/docklets/searchform.cpp:347
 #, kde-format
@@ -3660,7 +3662,7 @@ msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
 "\">change</a>)."
 msgstr ""
-"Arama motorları <b>%1</b> ve <b>%2</b> seçildiler (<a href=\"changeEngine"
+"<b>%1</b> ve <b>%2</b> arama motorları seçildi (<a href=\"changeEngine"
 "\">değiştir</a>)."
 
 #: src/program/docklets/searchform.cpp:348
@@ -3669,7 +3671,7 @@ msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
 "\"changeEngine\">change</a>)."
 msgstr ""
-"Arama motorları <b>%1</b>,<b>%2</b> ve <b>%3</b> seçildiler (<a href="
+"<b>%1</b>,<b>%2</b> ve <b>%3</b> arama motorları seçildi (<a href="
 "\"changeEngine\">değiştir</a>)."
 
 #: src/program/docklets/searchform.cpp:349
@@ -3678,7 +3680,7 @@ msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
 "\"changeEngine\">change</a>)."
 msgstr ""
-"Arama motorları <b>%1</b>, <b>%2</b> ve daha fazlası seçildi (<a href="
+"<b>%1</b>, <b>%2</b> ve daha fazla arama motorları seçildi (<a href="
 "\"changeEngine\">değiştir</a>)."
 
 #: src/program/docklets/searchform.cpp:414
@@ -3687,13 +3689,13 @@ msgid ""
 "Could not start searching the Internet:\n"
 "The search terms are not complete or invalid."
 msgstr ""
-"Interneti aramaya başlanamadı.\n"
+"İnterneti aramaya başlanamadı.\n"
 "Arama terimleri eksik veya geçersiz."
 
 #: src/program/docklets/searchform.cpp:414
 #, kde-format
 msgid "Searching the Internet"
-msgstr "Internet Aranıyor"
+msgstr "İnternet Aranıyor"
 
 #: src/program/docklets/searchresults.cpp:87
 #: src/program/docklets/searchresults.cpp:102
@@ -3729,22 +3731,22 @@ msgstr "İçe aktarılacak sonuç yok."
 #: src/program/docklets/statistics.cpp:53
 #, kde-format
 msgid "Number of Elements:"
-msgstr "Ögelerin Sayısı:"
+msgstr "Öge Sayısı:"
 
 #: src/program/docklets/statistics.cpp:57
 #, kde-format
 msgid "Number of Entries:"
-msgstr "Girdilerin Sayısı:"
+msgstr "Girdi Sayısı:"
 
 #: src/program/docklets/statistics.cpp:60
 #, kde-format
 msgid "Journal Articles:"
-msgstr "Günlük Makaleler:"
+msgstr "Dergi Makaleleri:"
 
 #: src/program/docklets/statistics.cpp:63
 #, kde-format
 msgid "Conference Publications:"
-msgstr "Konferans Yayınları:"
+msgstr "Konferans Yayımları:"
 
 #: src/program/docklets/statistics.cpp:66
 #, kde-format
@@ -3759,12 +3761,12 @@ msgstr "Diğer Girdiler:"
 #: src/program/docklets/statistics.cpp:73
 #, kde-format
 msgid "Number of Comments:"
-msgstr "Yorumların Sayısı:"
+msgstr "Yorum Sayısı:"
 
 #: src/program/docklets/statistics.cpp:77
 #, kde-format
 msgid "Number of Macros:"
-msgstr "Makroların Sayısı:"
+msgstr "Makro Sayısı:"
 
 #: src/program/docklets/valuelist.cpp:93
 #, kde-format
@@ -3789,7 +3791,7 @@ msgstr "Sayı Sütununu Göster"
 #: src/program/docklets/valuelist.cpp:130
 #, kde-format
 msgid "Sort by Count"
-msgstr "Hesaba göre Sıralama"
+msgstr "Sayıya Göre Sırala"
 
 #: src/program/docklets/zoterobrowser.cpp:117
 #, kde-format
@@ -3804,12 +3806,12 @@ msgstr "Grup Kitaplığı"
 #: src/program/docklets/zoterobrowser.cpp:128
 #, kde-format
 msgid "No groups available"
-msgstr "Mevcut bir grup bulunmamakta"
+msgstr "Kullanılabilir grup yok"
 
 #: src/program/docklets/zoterobrowser.cpp:144
 #, kde-format
 msgid "Numeric user id:"
-msgstr "Sayısal kullanıcı id'si:"
+msgstr "Sayısal kullanıcı kimliği:"
 
 #: src/program/docklets/zoterobrowser.cpp:150
 #, kde-format
@@ -3863,7 +3865,7 @@ msgstr "Ana Klasöre Git"
 #: src/program/documentlist.cpp:207
 #, kde-format
 msgid "<br/><small>located in <b>%1</b></small>"
-msgstr "<br/><small><b>%1</b>'de bulunan</small>"
+msgstr "<br/><small><b>%1</b> konumunda bulunan</small>"
 
 #: src/program/documentlist.cpp:211
 #, kde-format
@@ -3922,17 +3924,17 @@ msgstr "Birlikte Aç"
 #: src/program/documentlist.cpp:302
 #, kde-format
 msgid "Remove from Favorites"
-msgstr "Favorilerden Kaldır"
+msgstr "Sık Kullanılanlardan Kaldır"
 
 #: src/program/documentlist.cpp:306
 #, kde-format
 msgid "Add to Favorites"
-msgstr "Favorilere Ekle"
+msgstr "Sık Kullanılanlara Ekle"
 
 #: src/program/documentlist.cpp:404
 #, kde-format
 msgid "Open Files"
-msgstr "Dosyaları Aç"
+msgstr "Dosyalar Aç"
 
 #: src/program/documentlist.cpp:414
 #, kde-format
@@ -3952,17 +3954,17 @@ msgstr "Panelleri Göster"
 #: src/program/mainwindow.cpp:100
 #, kde-format
 msgid "Recently used files"
-msgstr "En son kullanılan dosyalar"
+msgstr "Son Kullanılan Dosyalar"
 
 #: src/program/mainwindow.cpp:117
 #, kde-format
 msgid "List of Documents"
-msgstr "Belgelerin Listesi"
+msgstr "Belgeler Listesi"
 
 #: src/program/mainwindow.cpp:127
 #, kde-format
 msgid "List of Values"
-msgstr "Değerlerin Listesi"
+msgstr "Değerler Listesi"
 
 #: src/program/mainwindow.cpp:136
 #, kde-format
@@ -3972,7 +3974,7 @@ msgstr "İstatistikler"
 #: src/program/mainwindow.cpp:145
 #, kde-format
 msgid "Search Results"
-msgstr "Arama sonuçları"
+msgstr "Arama Sonuçları"
 
 #: src/program/mainwindow.cpp:156
 #, kde-format
@@ -3997,7 +3999,7 @@ msgstr "Belge Önizleme"
 #: src/program/mainwindow.cpp:197
 #, kde-format
 msgid "Element Editor"
-msgstr "Öge Düzenleyicisi"
+msgstr "Öge Düzenleyici"
 
 #: src/program/mainwindow.cpp:207
 #, kde-format
@@ -4021,7 +4023,7 @@ msgstr "Belge oluşturma işlemi başarısız"
 #: src/program/mainwindow.cpp:324
 #, kde-format
 msgid "Open file"
-msgstr "Dosya aç"
+msgstr "Dosya Aç"
 
 #: src/program/mainwindow.cpp:366
 #, kde-format
@@ -4034,23 +4036,23 @@ msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
 "or RIS."
 msgstr ""
-"KBibTeX, BibTex veya RIS gibi kaynakça formatlarının varsayılan "
-"düzenleyicisi değildir."
+"KBibTeX, BibTex veya RIS gibi kaynakça formatlarının öntanımlı düzenleyicisi "
+"değil."
 
 #: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Default Bibliography Editor"
-msgstr "Varsayılan Kaynakça Düzenleyici"
+msgstr "Öntanımlı Kaynakça Düzenleyici"
 
 #: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Set as Default Editor"
-msgstr "Varsayılan Düzenleyici olarak Ayarla"
+msgstr "Öntanımlı Düzenleyici Olarak Ayarla"
 
 #: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Keep settings unchanged"
-msgstr "Ayarları değişmeden koru"
+msgstr "Ayarları Değiştirme"
 
 #: src/program/mdiwidget.cpp:99
 #, kde-format
@@ -4065,12 +4067,12 @@ msgstr "Son kullanım tarihi/zamanı"
 #: src/program/mdiwidget.cpp:101
 #, kde-format
 msgid "Full filename"
-msgstr "Tam dosyaadı"
+msgstr "Tam dosya adı"
 
 #: src/program/mdiwidget.cpp:147
 #, kde-format
 msgid "<qt>Welcome to <b>KBibTeX</b></qt>"
-msgstr "<qt><b>KBibTeX 'e</b> Hoşgeldiniz</qt>"
+msgstr "<qt><b>KBibTeX 'e</b> Hoş Geldiniz</qt>"
 
 #: src/program/mdiwidget.cpp:150
 #, kde-format
@@ -4090,17 +4092,17 @@ msgstr "Son kullanılan dosyaların listesi:"
 #: src/program/mdiwidget.cpp:268
 #, kde-format
 msgid "No part available for file of mime type '%1'."
-msgstr "'%1' MIME türünde dosya için bir bölüm bulunmuyor."
+msgstr "'%1' MIME türündeki bir dosya için kısım kullanılamıyor."
 
 #: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
 #, kde-format
 msgid "No Part Available"
-msgstr "Bölüm Mevcut Değil"
+msgstr "Kullanılabilir Kısım Yok"
 
 #: src/program/mdiwidget.cpp:270
 #, kde-format
 msgid "No part available for file '%1'."
-msgstr "'%1' dosyası için bir bölüm mevcut değil."
+msgstr "'%1' dosyası için bir kısım yok."
 
 #: src/program/openfileinfo.cpp:288
 #, kde-format
@@ -4110,7 +4112,7 @@ msgstr "Adsız %1"
 #: src/program/program.cpp:72
 #, kde-format
 msgid "File(s) to load."
-msgstr "Yüklenecek Dosya(lar)."
+msgstr "Yüklenecek dosya(lar)."
 
 #: src/program/program.cpp:102
 #, kde-format
