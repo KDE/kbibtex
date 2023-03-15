@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2023-01-06 09:19+0100\n"
+"PO-Revision-Date: 2023-03-14 08:53+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
@@ -76,7 +76,7 @@ msgstr "Skupaj zvezkov/delov"
 
 #, kde-format
 msgid "X-Reference"
-msgstr "X-referenca "
+msgstr "X-referenca"
 
 #, kde-format
 msgid "Identifiers"
@@ -2090,7 +2090,7 @@ msgstr "V male črke"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:506
 #, kde-format
 msgid "To CamelCase"
-msgstr "v dvozačetnico"
+msgstr "V dvozačetnico"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:143
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:354
@@ -2959,39 +2959,38 @@ msgstr "Shrani datoteko"
 #: src/parts/part.cpp:503
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:504
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "BibTeX"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:505
 #, kde-format
 msgid "Word XML bibliography"
-msgstr ""
+msgstr "Word XML bibliografija"
 
 #: src/parts/part.cpp:506
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "KBibTeX's lastna struktura XML"
 
 #: src/parts/part.cpp:507
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "KBibTeX's vgrajeni izvoznik v HTML"
 
 #: src/parts/part.cpp:508
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "KBibTeX's vgrajeni izvoznik v RIS"
 
 #: src/parts/part.cpp:517
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Izberite način izvoza"
 
 #: src/parts/part.cpp:519
 #, kde-format
@@ -3000,6 +2999,9 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Obstaja več modulov za izvoz za zapis datoteke '%1'.\n"
+"\n"
+"Izberite enega."
 
 #: src/parts/part.cpp:549
 #, kde-format
