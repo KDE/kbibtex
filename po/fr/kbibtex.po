@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2023-01-08 09:53+0100\n"
+"PO-Revision-Date: 2023-03-14 07:35+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.3\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -2983,40 +2983,38 @@ msgstr "Enregistrer le fichier"
 #: src/parts/part.cpp:503
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:504
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "BibTeX"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:505
-#, fuzzy, kde-format
-#| msgid "Load bibliography"
+#, kde-format
 msgid "Word XML bibliography"
-msgstr "Charger une bibliographie"
+msgstr "Bibliographie de mots au format « XML »"
 
 #: src/parts/part.cpp:506
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "La structure propre au format « XML » de KBibTeX"
 
 #: src/parts/part.cpp:507
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "Le module intégré d'exportation au format « HTML » de KBibTeX"
 
 #: src/parts/part.cpp:508
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "Le module intégré d'exportation au format « RIS » de KBibTeX"
 
 #: src/parts/part.cpp:517
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Sélectionner un module d'exportation"
 
 #: src/parts/part.cpp:519
 #, kde-format
@@ -3025,6 +3023,10 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Plusieurs modules d'exportation sont disponibles pour l'écriture du fichier "
+"« %1 ».\n"
+"\n"
+"Veuillez en sélectionner un."
 
 #: src/parts/part.cpp:549
 #, kde-format
