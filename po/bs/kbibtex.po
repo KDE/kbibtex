@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-04 03:44+0000\n"
+"POT-Creation-Date: 2023-03-16 02:48+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -3052,7 +3052,7 @@ msgstr "Uređivač BibTeX za KDE"
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
 #, fuzzy, kde-format
 #| msgid "Copyright 2004-2015 Thomas Fischer"
-msgid "Copyright 2004-2019 Thomas Fischer"
+msgid "Copyright 2004-2023 Thomas Fischer"
 msgstr "Sva prava zadržana 2004-2015 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53

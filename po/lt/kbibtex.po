@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: l 10n\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-04 03:44+0000\n"
+"POT-Creation-Date: 2023-03-16 02:48+0000\n"
 "PO-Revision-Date: 2016-08-30 12:25+0300\n"
 "Last-Translator: Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2945,7 +2945,7 @@ msgstr ""
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
 #, fuzzy, kde-format
 #| msgid "Copyright 2004-2015 Thomas Fischer"
-msgid "Copyright 2004-2019 Thomas Fischer"
+msgid "Copyright 2004-2023 Thomas Fischer"
 msgstr "(c) 2004-2015 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53

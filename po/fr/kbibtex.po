@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-04 03:44+0000\n"
+"POT-Creation-Date: 2023-03-16 02:48+0000\n"
 "PO-Revision-Date: 2022-12-23 19:25+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
 "Language-Team: fr\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.3\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -3017,8 +3017,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Un éditeur BibTeX par KDE"
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
-#, kde-format
-msgid "Copyright 2004-2019 Thomas Fischer"
+#, fuzzy, kde-format
+#| msgid "Copyright 2004-2019 Thomas Fischer"
+msgid "Copyright 2004-2023 Thomas Fischer"
 msgstr "Copyright 2004-2019 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53

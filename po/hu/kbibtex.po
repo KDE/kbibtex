@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-04 03:44+0000\n"
+"POT-Creation-Date: 2023-03-16 02:48+0000\n"
 "PO-Revision-Date: 2014-05-04 18:07+0200\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2941,7 +2941,7 @@ msgstr "Egy BibTeX szerkesztő a KDE-hez"
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
 #, fuzzy, kde-format
 #| msgid "Copyright 2004-2013 Thomas Fischer"
-msgid "Copyright 2004-2019 Thomas Fischer"
+msgid "Copyright 2004-2023 Thomas Fischer"
 msgstr "Copyright Thomas Fischer, 2004-2013."
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53

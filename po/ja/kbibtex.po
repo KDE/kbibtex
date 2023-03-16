@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-04 03:44+0000\n"
+"POT-Creation-Date: 2023-03-16 02:48+0000\n"
 "PO-Revision-Date: 2013-12-24 01:19-0800\n"
 "Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -2936,7 +2936,7 @@ msgstr ""
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
 #, kde-format
-msgid "Copyright 2004-2019 Thomas Fischer"
+msgid "Copyright 2004-2023 Thomas Fischer"
 msgstr ""
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
