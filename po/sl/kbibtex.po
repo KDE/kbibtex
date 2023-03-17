@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-16 02:48+0000\n"
-"PO-Revision-Date: 2023-01-04 07:41+0100\n"
+"PO-Revision-Date: 2023-03-16 13:05+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
-"X-Generator: Lokalize 22.12.0\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2057,7 +2057,7 @@ msgstr "V male črke"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:501
 #, kde-format
 msgid "To CamelCase"
-msgstr "v dvozačetnico"
+msgstr "V DvoZačetnico"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:138
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:349
@@ -2479,7 +2479,7 @@ msgstr "Pisanje na datoteko '%1' je uspelo"
 #: src/io/fileexportertoolchain.cpp:132
 #, kde-format
 msgid "Writing to file '%1' failed"
-msgstr "Shranjevanje na datoteko '%1' ni uspelo."
+msgstr "Pisanje v datoteko '%1' ni uspelo"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:230
 #, kde-format
@@ -2875,7 +2875,7 @@ msgstr "Nastavitve datoteke PDF/PostScript"
 #: src/parts/part.cpp:601
 #, kde-format
 msgid "Could not write bibliographic data to file."
-msgstr "Kopiraj dokument zraven datoteke bibliografije"
+msgstr "Ni bilo mogoče pisati bibliografije v datoteko."
 
 #: src/parts/part.cpp:603
 #, kde-format
