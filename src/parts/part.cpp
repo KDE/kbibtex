@@ -810,10 +810,20 @@ public:
 
 };
 
-KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutData &componentData)
+KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent,
+#if KPARTS_VERSION >= 0x054D00 // >= 5.77.0
+                         const KPluginMetaData &metaData
+#else // KPARTS_VERSION < 0x054D00 // < 5.77.0
+                         const KAboutData &componentData
+#endif // KPARTS_VERSION >= 0x054D00 // >= 5.77.0
+                         , const QVariantList &)
         : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(parentWidget, this))
 {
+#if KPARTS_VERSION >= 0x054D00 // >= 5.77.0
+    setMetaData(metaData);
+#else // KPARTS_VERSION < 0x054D00 // < 5.77.0
     setComponentData(componentData);
+#endif // KPARTS_VERSION >= 0x054D00 // >= 5.77.0
 
     setWidget(d->partWidget);
     updateActions();
@@ -1158,3 +1168,9 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
             qCWarning(LOG_KBIBTEX_PART) << "path is Empty";
     }
 }
+
+K_PLUGIN_FACTORY(KBibTeXPartFactory,
+                 registerPlugin<KBibTeXPart>();
+                )
+
+#include "part.moc"

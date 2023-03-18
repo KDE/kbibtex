@@ -22,12 +22,18 @@
 
 #include <QObject>
 
+#include <kparts_version.h>
 #include <KParts/Part>
 #include <KParts/ReadWritePart>
-#include <KAboutData>
 
 #include <NotificationHub>
 #include <file/PartWidget>
+
+#if KPARTS_VERSION >= 0x054D00 // >= 5.77.0
+class KPluginMetaData;
+#else // KPARTS_VERSION < 0x054D00 // < 5.77.0
+class KAboutData;
+#endif // KPARTS_VERSION >= 0x054D00 // >= 5.77.0
 
 class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
 {
@@ -36,7 +42,13 @@ class KBibTeXPart : public KParts::ReadWritePart, private NotificationListener
     friend class KBibTeXBrowserExtension;
 
 public:
-    KBibTeXPart(QWidget *parentWidget, QObject *parent, const KAboutData &componentData);
+    KBibTeXPart(QWidget *parentWidget, QObject *parent,
+#if KPARTS_VERSION >= 0x054D00 // >= 5.77.0
+                const KPluginMetaData &metaData
+#else // KPARTS_VERSION < 0x054D00 // < 5.77.0
+                const KAboutData &componentData
+#endif // KPARTS_VERSION >= 0x054D00 // >= 5.77.0
+                , const QVariantList &);
     ~KBibTeXPart() override;
 
     void setModified(bool modified) override;

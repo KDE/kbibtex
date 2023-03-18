@@ -165,7 +165,11 @@ public:
         const QVector<KPluginMetaData> parts {KParts::PartLoader::partsForMimeType(mimeType)};
         if (!parts.isEmpty()) {
             KPluginFactory::Result<KPluginFactory> pluginFactory{KPluginFactory::loadFactory(parts.first())};
+#if KSERVICE_VERSION>= 0x055900 // >= 5.89.0
+            KParts::ReadOnlyPart *part{pluginFactory.plugin->create<KParts::ReadOnlyPart>(parentWidget, p, QVariantList())};
+#else // < 5.89.0
             KParts::ReadOnlyPart *part{pluginFactory.plugin->create<KParts::ReadOnlyPart>(parentWidget, p)};
+#endif // >= 5.89.0
 #else // < 5.82.0
         KService::Ptr service = KMimeTypeTrader::self()->preferredService(mimeType, QStringLiteral("KParts/ReadOnlyPart"));
         if (service) {

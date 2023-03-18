@@ -4,7 +4,6 @@
 set(
     kbibtexpart_SRCS
     part.cpp
-    partfactory.cpp
 )
 
 ecm_qt_declare_logging_category(kbibtexpart_SRCS
