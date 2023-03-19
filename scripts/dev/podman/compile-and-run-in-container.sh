@@ -47,11 +47,13 @@ function prepare_environment() {
 	checkout="$2"
 
 	cat <<EOF >"${TEMPDIR}/runtestprograms.sh"
+QT_QPA_PLATFORM="offscreen"
+export QT_QPA_PLATFORM
 set -x
 # FIXME kbibtexfilestest  requires to have testsets files available
-/tmp/build/bin/kbibtexnetworkingtest -platform offscreen || exit 1
-/tmp/build/bin/kbibtexiotest -platform offscreen || exit 1
-/tmp/build/bin/kbibtexdatatest -platform offscreen || exit 1
+/tmp/build/bin/kbibtexnetworkingtest || exit 1
+/tmp/build/bin/kbibtexiotest || exit 1
+/tmp/build/bin/kbibtexdatatest || exit 1
 set +x
 EOF
 	buildahsetx copy "${id}" "${TEMPDIR}/runtestprograms.sh" /tmp/ || exit 1
