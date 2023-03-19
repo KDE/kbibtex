@@ -138,13 +138,16 @@ function run_bash() {
 }
 
 if (( $# == 1 || $# == 2)) ; then
-	if [[ $1 == "archlinux" || $1 == "debian10" || $1 == "debian11" || $1 == "debian12" || $1 == "fedora" || $1 == "ubuntu"* || $1 == "kdeneon" ]] ; then
+	if [[ $1 == "archlinux" || $1 == "debian10" || $1 == "debian11" || $1 == "debian12" || $1 == "fedora" || $1 == "fedora3"* || $1 == "fedora4"* || $1 == "ubuntu"* || $1 == "kdeneon" ]] ; then
 		DIST="$1"
 		[[ ${DIST} == "ubuntu" ]] && DIST="ubuntu2210"
+		DISTVARIANT=""
+		[[ ${DIST} == "fedora" ]] && DISTVARIANT="-latest"
+		[[ ${DIST} == "fedora3"* || ${DIST} == "fedora4"* ]] && DISTVARIANT="-${DIST:6}" && DIST="fedora"
 		USERNAME="kdeuser"
 		[[ ${DIST} == "kdeneon" ]] && USERNAME="neon"
 
-		FROMIMAGE="localhost/${DIST}-kde-devel"
+		FROMIMAGE="localhost/${DIST}${DISTVARIANT}-kde-devel"
 		IMAGENAME="$(create_imagename "${FROMIMAGE}")"
 		ID="$(prepare_image "${FROMIMAGE}" "${IMAGENAME}")"
 		prepare_environment "${ID}" "${2:-}" || exit 1
@@ -172,12 +175,12 @@ if (( $# == 1 || $# == 2)) ; then
 		echo "  sudo rm -rf ~/.local/share/containers ~/.config/containers"
 		exit 0
 	else
-		echo "Unknown argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  ubuntu2204  ubuntu2210  kdeneon" >&2
+		echo "Unknown argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  fedora36  fedora37  fedora38  ubuntu2204  ubuntu2210  kdeneon" >&2
 		echo "To get help how to clean up previously created images or containers, run  $(basename "$0") --cleanup" >&2
 		exit 1
 	fi
 else
-	echo "Missing argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  ubuntu2204  ubuntu2210  kdeneon" >&2
+	echo "Missing argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  fedora36  fedora37  fedora38  ubuntu2204  ubuntu2210  kdeneon" >&2
 	echo "To get help how to clean up previously created images or containers, run  $(basename "$0") --cleanup" >&2
 	exit 1
 fi

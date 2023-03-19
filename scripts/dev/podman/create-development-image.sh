@@ -328,10 +328,11 @@ function build_kdeneon() {
 
 
 function build_fedora() {
+	local variant="${1:-latest}"
 	local FROMIMAGE
-	FROMIMAGE="docker://fedora:latest"
+	FROMIMAGE="docker://fedora:${variant}"
 	local IMAGENAME
-	IMAGENAME="fedora-kde-devel"
+	IMAGENAME="fedora-${variant}-kde-devel"
 	local WORKINGCONTAINERNAME
 	WORKINGCONTAINERNAME="working-$(sed -r 's!docker://!!g;s![^a-z0-9.-]+!-!g' <<<"${FROMIMAGE}")"
 
@@ -484,7 +485,9 @@ if (( $# == 1 )) ; then
 	elif [[ $1 == "debian12" || $1 == "bookworm" ]] ; then
 		build_debian12 || exit 1
 	elif [[ $1 == "fedora" ]] ; then
-		build_fedora || exit 1
+		build_fedora latest || exit 1
+	elif [[ $1 == "fedora3"* || $1 == "fedora4"* ]] ; then
+		build_fedora "${1:6}" || exit 1
 	elif [[ $1 == "ubuntu2204" ]] ; then
 		build_ubuntu2204 || exit 1
 	elif [[ $1 == "ubuntu"* ]] ; then
@@ -492,12 +495,12 @@ if (( $# == 1 )) ; then
 	elif [[ $1 == "kdeneon" ]] ; then
 		build_kdeneon || exit 1
 	else
-		echo "Unknown argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  ubuntu2204  ubuntu2210  kdeneon" >&2
+		echo "Unknown argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  fedora36  fedora37  fedora38  ubuntu2204  ubuntu2210  kdeneon" >&2
 		echo "To get help how to clean up previously created images or containers, run  $(basename "$0") --cleanup" >&2
 		exit 1
 	fi
 else
-	echo "Missing argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  ubuntu2204  ubuntu2210  kdeneon" >&2
+	echo "Missing argument, expecting one of the following:  archlinux  debian10  debian11  debian12  fedora  fedora36  fedora37  fedora38  ubuntu2204  ubuntu2210  kdeneon" >&2
 	echo "To get help how to clean up previously created images or containers, run  $(basename "$0") --cleanup" >&2
 	exit 1
 fi
