@@ -309,11 +309,10 @@ function build_kdeneon() {
 	set_environment "${id}"
 
 	# DISTRIBUTION-SPECIFIC CODE BEGINS HERE
-	buildahsetx run --user root "${id}" -- apt clean || exit 1
-	buildahsetx run --user root "${id}" -- apt update || exit 1
-	buildahsetx run --user root "${id}" -- apt dist-upgrade -y || exit 1
+	buildahsetx run --user root "${id}" -- pkcon refresh || exit 1
+	buildahsetx run --user root "${id}" -- pkcon update || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- apt install -y cmake extra-cmake-modules libpoppler-qt5-dev libicu-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- pkcon install -y cmake extra-cmake-modules libpoppler-qt5-dev libicu-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme git gettext okular appstream || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
 
 	copy_config_files_to_image "${id}" || exit 1
