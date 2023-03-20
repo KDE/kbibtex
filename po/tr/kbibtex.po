@@ -2823,7 +2823,7 @@ msgstr ""
 "aşağıda gösterildiği gibi bir web tarayıcısında açın.</li><li>Zotero'ya "
 "oturum açın ve KBibTeX izinlerini onaylayın.</li><li>Başarılıysa KBibTeX "
 "kimliğinin doğrulandığını belirten bir web sayfasına yönlendirileceksiniz."
-"<br>Bu pencere kendiliğinden kapatılacaktır.</li></ol></qt>"
+"<br/>Bu pencere kendiliğinden kapatılacaktır.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:149
 #, kde-format
@@ -3396,7 +3396,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"LyX veya Kile 'in çalıştığını ve başvuruları almak için yapılandırıldığını "
+"LyX veya Kile'nin çalıştığını ve başvuruları almak için yapılandırıldığını "
 "denetleyin."
 
 #: src/processing/lyx.cpp:102
@@ -3448,7 +3448,7 @@ msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
 "restriction</a> to local files to see remote documents.</qt>"
 msgstr ""
-"<qt>Gösterilecek belge yok.<br/><a hred=\"disableonlylocalfiles\">Uzak "
+"<qt>Gösterilecek belge yok.<br/><a href=\"disableonlylocalfiles\">Uzak "
 "belgeleri görmek için</a> yerel dosyalara kısıtlamayı kaldır.</qt>"
 
 #: src/program/docklets/documentpreview.cpp:510
