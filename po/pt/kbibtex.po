@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2023-01-06 03:10+0000\n"
+"PO-Revision-Date: 2023-03-20 11:37+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -49,8 +49,9 @@ msgstr ""
 "X-POFile-IgnoreConsistency: 3rd\n"
 "X-POFile-IgnoreConsistency: Type\n"
 "X-POFile-IgnoreConsistency: Comment\n"
-"X-POFile-SpellExtra: Semantic zbMATH Open PLACEHOLDER Unpaywall\n"
+"X-POFile-SpellExtra: Semantic zbMATH Open PLACEHOLDER Unpaywall BibUtils\n"
 "X-POFile-IgnoreConsistency: Venue\n"
+"X-POFile-SpellExtra: Word\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3008,39 +3009,38 @@ msgstr "Gravar o ficheiro"
 #: src/parts/part.cpp:503
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:504
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "BibTeX"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:505
 #, kde-format
 msgid "Word XML bibliography"
-msgstr ""
+msgstr "Biblioteca XML do Word"
 
 #: src/parts/part.cpp:506
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "Estrutura de XML própria do KBibTeX"
 
 #: src/parts/part.cpp:507
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "Exportação incorporada para HTML do KBibTeX"
 
 #: src/parts/part.cpp:508
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "Exportação incorporada para RIS do KBibTeX"
 
 #: src/parts/part.cpp:517
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Escolha o Método de Exportação"
 
 #: src/parts/part.cpp:519
 #, kde-format
@@ -3049,6 +3049,9 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Estão disponíveis vários módulos de exportação para gravar o ficheiro '%1'.\n"
+"\n"
+"Por favor, escolha um."
 
 #: src/parts/part.cpp:549
 #, kde-format
