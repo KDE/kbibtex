@@ -3734,7 +3734,7 @@ msgstr "ID numèric de l'usuari:"
 #: src/program/docklets/zoterobrowser.cpp:148
 #, kde-format
 msgid "API key:"
-msgstr "Clau de la API:"
+msgstr "Clau de l'API:"
 
 #: src/program/docklets/zoterobrowser.cpp:154
 #, kde-format
@@ -3758,7 +3758,7 @@ msgid ""
 "the provided user id and API key are valid."
 msgstr ""
 "KBibTeX no ha pogut recuperar la bibliografia des de Zotero. Comproveu que "
-"l'ID d'usuari i la clau de la API proporcionats són vàlids."
+"l'ID d'usuari i la clau de l'API proporcionats són vàlids."
 
 #: src/program/docklets/zoterobrowser.cpp:239
 #, kde-format
