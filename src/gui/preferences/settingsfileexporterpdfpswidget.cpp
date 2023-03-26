@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2023 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -51,11 +51,17 @@ public:
         comboBoxPaperSize->setCurrentIndex(row);
 
         const QString babelLanguage = Preferences::instance().laTeXBabelLanguage();
-        row = qMax(0, GUIHelper::selectValue(comboBoxBabelLanguage->model(), babelLanguage));
-        comboBoxBabelLanguage->setCurrentIndex(row);
+        row = GUIHelper::selectValue(comboBoxBabelLanguage->model(), babelLanguage);
+        if (row >= 0 || !comboBoxBabelLanguage->isEditable())
+            comboBoxBabelLanguage->setCurrentIndex(qMax(0, row));
+        else
+            comboBoxBabelLanguage->lineEdit()->setText(babelLanguage);
         const QString bibliographyStyle = Preferences::instance().bibTeXBibliographyStyle();
-        row = qMax(0, GUIHelper::selectValue(comboBoxBibliographyStyle->model(), bibliographyStyle));
-        comboBoxBibliographyStyle->setCurrentIndex(row);
+        row = GUIHelper::selectValue(comboBoxBibliographyStyle->model(), bibliographyStyle);
+        if (row >= 0 || !comboBoxBibliographyStyle->isEditable())
+            comboBoxBibliographyStyle->setCurrentIndex(qMax(0, row));
+        else
+            comboBoxBibliographyStyle->lineEdit()->setText(bibliographyStyle);
     }
 
     bool saveState() {
