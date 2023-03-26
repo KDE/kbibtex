@@ -97,9 +97,10 @@ public:
         comboBoxBabelLanguage->setObjectName(QStringLiteral("comboBoxBabelLanguage"));
         comboBoxBabelLanguage->setEditable(true);
         layout->addRow(i18n("Language for 'babel':"), comboBoxBabelLanguage);
-        comboBoxBabelLanguage->addItem(QStringLiteral("english"));
-        comboBoxBabelLanguage->addItem(QStringLiteral("ngerman"));
-        comboBoxBabelLanguage->addItem(QStringLiteral("swedish"));
+        static const QStringList languages {QStringLiteral("acadian"), QStringLiteral("afrikaans"), QStringLiteral("american"), QStringLiteral("australian"), QStringLiteral("austrian"), QStringLiteral("azerbaijani"), QStringLiteral("bahasa"), QStringLiteral("bahasai"), QStringLiteral("bahasam"), QStringLiteral("basquebrazilian"), QStringLiteral("breton"), QStringLiteral("british"), QStringLiteral("bulgarian"), QStringLiteral("canadian"), QStringLiteral("canadien"), QStringLiteral("catalan"), QStringLiteral("croatian"), QStringLiteral("czech"), QStringLiteral("danish"), QStringLiteral("dutch"), QStringLiteral("english"), QStringLiteral("esperanto"), QStringLiteral("estonian"), QStringLiteral("finnish"), QStringLiteral("francais"), QStringLiteral("french"), QStringLiteral("galician"), QStringLiteral("german"), QStringLiteral("germanb"), QStringLiteral("greek"), QStringLiteral("hebrew"), QStringLiteral("icelandic"), QStringLiteral("indon"), QStringLiteral("indonesian"), QStringLiteral("interlingua"), QStringLiteral("irish"), QStringLiteral("italian"), QStringLiteral("latin"), QStringLiteral("lowersorbian"), QStringLiteral("malay"), QStringLiteral("melayu"), QStringLiteral("naustrian"), QStringLiteral("newzealand"), QStringLiteral("ngerman"), QStringLiteral("norsk"), QStringLiteral("nynorsk"), QStringLiteral("polish"), QStringLiteral("polutonikogreek"), QStringLiteral("portuguese"), QStringLiteral("romanian"), QStringLiteral("russian"), QStringLiteral("samin"), QStringLiteral("scottish"), QStringLiteral("serbian"), QStringLiteral("slovak"), QStringLiteral("slovene"), QStringLiteral("spanish"), QStringLiteral("swedish"), QStringLiteral("turkish"), QStringLiteral("UKenglish"), QStringLiteral("ukrainian"), QStringLiteral("uppersorbian"), QStringLiteral("USenglish"), QStringLiteral("welsh")};
+        for (const QString &language : languages) {
+            comboBoxBabelLanguage->addItem(language);
+        }
         connect(comboBoxBabelLanguage->lineEdit(), &QLineEdit::textChanged, p, &SettingsFileExporterPDFPSWidget::changed);
 
         comboBoxBibliographyStyle = new QComboBox(p);
