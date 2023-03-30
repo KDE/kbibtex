@@ -1,6 +1,10 @@
 ChangeLog
 
-Diff 0.9.3.2 to 0.10
+Diff 0.10.0 to 0.10.1
+
+- KDE Bug 467803: Accepting empty string as valid copy reference command
+
+Diff 0.9.3.2 to 0.10.0
 
 - New online search: Semantic Scholar
 - Migrating Inspire Hep to REST API

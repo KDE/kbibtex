@@ -105,7 +105,7 @@ public:
         comboBoxBibliographyStyle->setObjectName(QStringLiteral("comboBoxBibliographyStyle"));
         comboBoxBibliographyStyle->setEditable(true);
         layout->addRow(i18n("Bibliography style:"), comboBoxBibliographyStyle);
-        static const QStringList styles {QString(QStringLiteral("abbrv")), QString(QStringLiteral("alpha")), QString(QStringLiteral("plain")), QString(QStringLiteral("agsm")), QString(QStringLiteral("dcu")), QString(QStringLiteral("jmr")), QString(QStringLiteral("jphysicsB")), QString(QStringLiteral("kluwer")), QString(QStringLiteral("nederlands"))};
+        static const QStringList styles {QStringLiteral("abbrv"), QStringLiteral("alpha"), QStringLiteral("plain"), QStringLiteral("acm"), QStringLiteral("ieeetr"), QStringLiteral("apalike"), QStringLiteral("agsm"), QStringLiteral("dcu"), QStringLiteral("siam"), QStringLiteral("jmr"), QStringLiteral("jphysicsB"), QStringLiteral("kluwer"), QStringLiteral("nederlands")};
         for (const QString &style : styles) {
             comboBoxBibliographyStyle->addItem(style);
         }
