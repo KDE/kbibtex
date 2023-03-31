@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2023-01-10 16:00+0100\n"
+"PO-Revision-Date: 2023-03-30 22:26+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 23.03.80\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -604,7 +604,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:230
 #, kde-format
 msgid "Annotator"
-msgstr ""
+msgstr "Annotator"
 
 #: src/config/bibtexfields.cpp:231
 #, kde-format
@@ -952,7 +952,7 @@ msgstr ""
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UpperCamelCase"
-msgstr ""
+msgstr "de forma UpperCamel"
 
 #: src/config/preferences.cpp:949
 #, kde-format
@@ -1920,7 +1920,7 @@ msgstr "john"
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "Doe"
-msgstr ""
+msgstr "Doe"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:43
 #: src/gui/widgets/filesettingswidget.cpp:36
@@ -2386,7 +2386,7 @@ msgstr ""
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
-msgstr ""
+msgstr "de forma UpperCamel"
 
 #: src/gui/widgets/filesettingswidget.cpp:150
 #, kde-format
@@ -2518,7 +2518,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
 #, kde-format
 msgid "Free text:"
-msgstr ""
+msgstr "Texto libere:"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:79
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:90
@@ -2627,7 +2627,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:86
 #, kde-format
 msgid "Full text:"
-msgstr ""
+msgstr "Texto plen:"
 
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:101
 #, kde-format
@@ -2702,7 +2702,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:81
 #, kde-format
 msgid "Free Text:"
-msgstr ""
+msgstr "Texto libere:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:95
 #, kde-format
@@ -2754,7 +2754,7 @@ msgstr ""
 #: src/networking/zotero/collection.cpp:196
 #, kde-format
 msgid "%1's Library"
-msgstr ""
+msgstr "Bibliotheca de %1"
 
 #: src/networking/zotero/oauthwizard.cpp:86
 #, kde-format
@@ -2829,7 +2829,7 @@ msgstr "Salveguarda copia como..."
 #: src/parts/part.cpp:167
 #, kde-format
 msgid "Save Selection..."
-msgstr ""
+msgstr "Salveguarda selection"
 
 #: src/parts/part.cpp:175
 #, kde-format
@@ -2854,12 +2854,12 @@ msgstr "Nove entrata"
 #: src/parts/part.cpp:194
 #, kde-format
 msgid "New comment"
-msgstr ""
+msgstr "Nove commento"
 
 #: src/parts/part.cpp:198
 #, kde-format
 msgid "New macro"
-msgstr ""
+msgstr "Nove macro"
 
 #: src/parts/part.cpp:202
 #, kde-format
@@ -2912,10 +2912,9 @@ msgid "BibUtils"
 msgstr ""
 
 #: src/parts/part.cpp:504
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "BibTeX"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:505
 #, kde-format
@@ -3054,12 +3053,12 @@ msgstr ""
 #: src/parts/partfactory.cpp:36 src/program/program.cpp:52
 #, kde-format
 msgid "Copyright 2004-2019 Thomas Fischer"
-msgstr ""
+msgstr "Copyright 2004-2019 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:40 src/program/program.cpp:57
 #, kde-format
 msgid "Thomas Fischer"
-msgstr ""
+msgstr "Thomas Fischer"
 
 #: src/parts/partfactory.cpp:40 src/program/program.cpp:57
 #, kde-format
@@ -3125,7 +3124,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:142
 #, kde-format
 msgid "Unknown warning: %1"
-msgstr ""
+msgstr "Aviso incognite: %1"
 
 #: src/processing/checkbibtex.cpp:151
 #, kde-format
@@ -3145,7 +3144,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
 msgid "Warnings found"
-msgstr ""
+msgstr "Avisos trovate"
 
 #: src/processing/checkbibtex.cpp:156
 #, kde-format
@@ -3227,12 +3226,12 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:422
 #, kde-format
 msgid "Year (2 digits)"
-msgstr ""
+msgstr "Anno (2 cifras)"
 
 #: src/processing/idsuggestions.cpp:424
 #, kde-format
 msgid "Year (4 digits)"
-msgstr ""
+msgstr "Anno (4 cifras)"
 
 #: src/processing/idsuggestions.cpp:430
 #, kde-format
@@ -3267,7 +3266,7 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:522
 #, kde-format
 msgid "First page number"
-msgstr ""
+msgstr "Numero de prime pagina"
 
 #: src/processing/idsuggestions.cpp:525
 #, kde-format
@@ -3277,17 +3276,17 @@ msgstr "Texto: '%1'"
 #: src/processing/idsuggestions.cpp:542
 #, kde-format
 msgid "First and last authors only"
-msgstr ""
+msgstr "Solmente prime e ultime autores"
 
 #: src/processing/idsuggestions.cpp:544
 #, kde-format
 msgid "First author only"
-msgstr ""
+msgstr "Solmente prime autor"
 
 #: src/processing/idsuggestions.cpp:546
 #, kde-format
 msgid "All authors"
-msgstr ""
+msgstr "Omne autores"
 
 #: src/processing/idsuggestions.cpp:556
 #, kde-format
@@ -3434,7 +3433,7 @@ msgstr ""
 #: src/program/docklets/elementform.cpp:193
 #, kde-format
 msgid "Element modified"
-msgstr ""
+msgstr "Elemento modificate"
 
 #: src/program/docklets/elementform.cpp:191
 #: src/program/docklets/elementform.cpp:193
@@ -3451,12 +3450,12 @@ msgstr "Abandona modificationes"
 #: src/program/docklets/referencepreview.cpp:84
 #, kde-format
 msgid "Source (BibTeX)"
-msgstr ""
+msgstr "Fonte (BibTeX)"
 
 #: src/program/docklets/referencepreview.cpp:85
 #, kde-format
 msgid "Source (RIS)"
-msgstr ""
+msgstr "Fonte (RIS)"
 
 #: src/program/docklets/referencepreview.cpp:92
 #, kde-format
@@ -3471,7 +3470,7 @@ msgstr "Phantasia"
 #: src/program/docklets/referencepreview.cpp:94
 #, kde-format
 msgid "Wikipedia Citation"
-msgstr ""
+msgstr "Citation de Wikipedia"
 
 #: src/program/docklets/referencepreview.cpp:95
 #, kde-format
@@ -3525,7 +3524,7 @@ msgstr ""
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
 msgid "Go to Homepage"
-msgstr ""
+msgstr "Vade a pagina Domo o Initial"
 
 #: src/program/docklets/searchform.cpp:217
 #, kde-format
@@ -3631,7 +3630,7 @@ msgstr ""
 #: src/program/docklets/statistics.cpp:53
 #, kde-format
 msgid "Number of Elements:"
-msgstr ""
+msgstr "Numero de Elementos:"
 
 #: src/program/docklets/statistics.cpp:57
 #, kde-format
@@ -3656,7 +3655,7 @@ msgstr "Libros:"
 #: src/program/docklets/statistics.cpp:69
 #, kde-format
 msgid "Other Entries:"
-msgstr ""
+msgstr "Altere entratas:"
 
 #: src/program/docklets/statistics.cpp:73
 #, kde-format
@@ -3671,7 +3670,7 @@ msgstr ""
 #: src/program/docklets/valuelist.cpp:93
 #, kde-format
 msgid "Filter value list"
-msgstr ""
+msgstr "Filtra lista de valor"
 
 #: src/program/docklets/valuelist.cpp:109
 #, kde-format
@@ -3696,22 +3695,22 @@ msgstr " Ordina per Computo"
 #: src/program/docklets/zoterobrowser.cpp:117
 #, kde-format
 msgid "Personal library"
-msgstr ""
+msgstr "Bibliotheca personal"
 
 #: src/program/docklets/zoterobrowser.cpp:119
 #, kde-format
 msgid "Group library"
-msgstr ""
+msgstr "Bibliotheca de gruppo"
 
 #: src/program/docklets/zoterobrowser.cpp:128
 #, kde-format
 msgid "No groups available"
-msgstr ""
+msgstr "Necun gruppos disponibile"
 
 #: src/program/docklets/zoterobrowser.cpp:144
 #, kde-format
 msgid "Numeric user id:"
-msgstr ""
+msgstr "Id de usator numeric:"
 
 #: src/program/docklets/zoterobrowser.cpp:150
 #, kde-format
@@ -3748,17 +3747,17 @@ msgstr ""
 #: src/program/docklets/zoterobrowser.cpp:367
 #, kde-format
 msgid "No groups available or no permissions"
-msgstr ""
+msgstr "Necun gruppos disponibile o necun  permissiones"
 
 #: src/program/documentlist.cpp:59
 #, kde-format
 msgid "One level up"
-msgstr ""
+msgstr "Un Nivello in alto"
 
 #: src/program/documentlist.cpp:63
 #, kde-format
 msgid "Go to Home folder"
-msgstr ""
+msgstr "Vade al dossier de Initio"
 
 #: src/program/documentlist.cpp:207
 #, kde-format
@@ -3850,17 +3849,17 @@ msgstr "Monstra pannellos"
 #: src/program/mainwindow.cpp:100
 #, kde-format
 msgid "Recently used files"
-msgstr ""
+msgstr "Files recentemente usate"
 
 #: src/program/mainwindow.cpp:117
 #, kde-format
 msgid "List of Documents"
-msgstr ""
+msgstr "Lista de Documentos"
 
 #: src/program/mainwindow.cpp:127
 #, kde-format
 msgid "List of Values"
-msgstr ""
+msgstr "Lista de valores"
 
 #: src/program/mainwindow.cpp:136
 #, kde-format
@@ -3875,7 +3874,7 @@ msgstr "Resultatos de cerca"
 #: src/program/mainwindow.cpp:156
 #, kde-format
 msgid "Online Search"
-msgstr ""
+msgstr "Cerca in linea"
 
 #: src/program/mainwindow.cpp:166
 #, kde-format
