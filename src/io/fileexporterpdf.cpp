@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -155,13 +155,8 @@ bool FileExporterPDF::writeLatexFile(const QString &filename)
 #else // QT_VERSION < 0x050e00
             ts << "\\usepackage{url}" << endl;
 #endif // QT_VERSION >= 0x050e00
-        const QString bibliographyStyle = Preferences::instance().bibTeXBibliographyStyle();
-        if (bibliographyStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))
-#if QT_VERSION >= 0x050e00
-            ts << "\\usepackage[bibnewpage]{apacite}" << Qt::endl;
-#else // QT_VERSION < 0x050e00
-            ts << "\\usepackage[bibnewpage]{apacite}" << endl;
-#endif // QT_VERSION >= 0x050e00
+        const QString bibliographyStyle =
+            Preferences::instance().bibTeXBibliographyStyle();
         if ((bibliographyStyle == QStringLiteral("agsm") || bibliographyStyle == QStringLiteral("dcu") || bibliographyStyle == QStringLiteral("jmr") || bibliographyStyle == QStringLiteral("jphysicsB") || bibliographyStyle == QStringLiteral("kluwer") || bibliographyStyle == QStringLiteral("nederlands") || bibliographyStyle == QStringLiteral("dcu") || bibliographyStyle == QStringLiteral("dcu")) && kpsewhich(QStringLiteral("harvard.sty")) && kpsewhich(QStringLiteral("html.sty")))
 #if QT_VERSION >= 0x050e00
             ts << "\\usepackage{html}" << Qt::endl << "\\usepackage[dcucite]{harvard}" << Qt::endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << Qt::endl;
