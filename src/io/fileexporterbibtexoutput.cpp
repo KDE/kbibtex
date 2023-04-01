@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2023 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -124,9 +124,8 @@ bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
             ts << "\\usepackage[pdfproducer={KBibTeX: https://userbase.kde.org/KBibTeX},pdftex]{hyperref}\n";
         else if (kpsewhich(QStringLiteral("url.sty")))
             ts << "\\usepackage{url}\n";
-        const QString latexBibStyle = Preferences::instance().bibTeXBibliographyStyle();
-        if (latexBibStyle.startsWith(QStringLiteral("apacite")) && kpsewhich(QStringLiteral("apacite.sty")))
-            ts << "\\usepackage[bibnewpage]{apacite}\n";
+        const QString latexBibStyle =
+            Preferences::instance().bibTeXBibliographyStyle();
         ts << "\\bibliographystyle{" << latexBibStyle << "}\n";
         ts << "\\begin{document}\n";
         ts << "\\nocite{*}\n";
