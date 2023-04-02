@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-16 02:48+0000\n"
+"POT-Creation-Date: 2023-04-02 02:38+0000\n"
 "PO-Revision-Date: 2023-03-16 13:39+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1867,22 +1867,22 @@ msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
 msgid "NewColor%1"
 msgstr "NuevoColor%1"
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:83
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:89
 #, kde-format
 msgid "Paper Size:"
 msgstr "Tamaño del papel:"
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:97
 #, kde-format
 msgid "Language for 'babel':"
 msgstr "Idioma para «babel»:"
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:100
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:107
 #, kde-format
 msgid "Bibliography style:"
 msgstr "Estilo de bibliografía:"
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:122
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:129
 #, kde-format
 msgid "PDF & Postscript"
 msgstr "PDF y Postscript"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-16 02:48+0000\n"
+"POT-Creation-Date: 2023-04-02 02:38+0000\n"
 "PO-Revision-Date: 2013-12-24 01:19-0800\n"
 "Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -1819,22 +1819,22 @@ msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
 msgid "NewColor%1"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:83
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:89
 #, kde-format
 msgid "Paper Size:"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:97
 #, kde-format
 msgid "Language for 'babel':"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:100
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:107
 #, kde-format
 msgid "Bibliography style:"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:122
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:129
 #, kde-format
 msgid "PDF & Postscript"
 msgstr ""
