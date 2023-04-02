@@ -529,11 +529,12 @@ public:
             layout->addWidget(buttonBox);
             connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
 
-            if (dlg->exec() == QDialog::Accepted) {
-                // Map back from exporter description to exporter class name
-                return exporterDescription.key(list->currentItem()->text());
-            } else
-                return *availableExporters.begin();
+            const QString result{dlg->exec() == QDialog::Accepted && !dlg.isNull()
+                                 ? exporterDescription.key(list->currentItem()->text()) //<Map back from exporter description to exporter class name
+                                 :*availableExporters.begin()
+                                };
+            delete dlg;
+            return result;
         }
     }
 

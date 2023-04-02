@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -587,6 +587,12 @@ public:
         setupGUI();
     }
 
+    ~IdSuggestionsEditWidgetPrivate()
+    {
+        while (!widgetList.isEmpty())
+            delete widgetList.takeFirst();
+    }
+
     void setupGUI() {
         QBoxLayout *boxLayout = new QVBoxLayout(p);
         QFormLayout *formLayout = new QFormLayout();
@@ -932,7 +938,7 @@ IdSuggestionsEditWidget::IdSuggestionsEditWidget(const Entry *previewEntry, QWid
 
 IdSuggestionsEditWidget::~IdSuggestionsEditWidget()
 {
-// TODO
+    delete d;
 }
 
 void IdSuggestionsEditWidget::setFormatString(const QString &formatString)
@@ -980,16 +986,13 @@ QString IdSuggestionsEditDialog::editSuggestion(const Entry *previewEntry, const
     connect(dbb->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
 
     widget->setFormatString(suggestion);
-    if (dlg->exec() == Accepted) {
-        const QString formatString = widget->formatString();
-        delete dlg;
-        return formatString;
-    }
 
+    const QString result{dlg->exec() == Accepted && !dlg.isNull()
+                         ? widget->formatString()
+                             : suggestion //<Return unmodified original suggestion
+                        };
     delete dlg;
-
-    /// Return unmodified original suggestion
-    return suggestion;
+    return result;
 }
 
 #include "settingsidsuggestionseditor.moc"

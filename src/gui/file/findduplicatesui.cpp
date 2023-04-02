@@ -647,7 +647,7 @@ public:
 };
 
 FindDuplicatesUI::FindDuplicatesUI(KParts::Part *part, FileView *fileView)
-        : QObject(), d(new FindDuplicatesUIPrivate(this, part, fileView))
+        : QObject(fileView), d(new FindDuplicatesUIPrivate(this, part, fileView))
 {
     QAction *newAction = new QAction(QIcon::fromTheme(QStringLiteral("tab-duplicate")), i18n("Find Duplicates"), this);
     part->actionCollection()->addAction(QStringLiteral("findduplicates"), newAction);

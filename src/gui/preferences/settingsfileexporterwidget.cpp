@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -121,7 +121,7 @@ public:
         comboBoxCopyReferenceCmd = new QComboBox(p);
         comboBoxCopyReferenceCmd->setObjectName(QStringLiteral("comboBoxCopyReferenceCmd"));
         layout->addRow(i18n("Command for 'Copy Reference':"), comboBoxCopyReferenceCmd);
-        ItalicTextItemModel *itim = new ItalicTextItemModel();
+        ItalicTextItemModel *itim = new ItalicTextItemModel(comboBoxCopyReferenceCmd);
         itim->addItem(i18n("No command"), QString());
         for (const QString &citeCommand : Preferences::availableCopyReferenceCommands)
             itim->addItem(citeCmdToLabel.arg(citeCommand), citeCommand);

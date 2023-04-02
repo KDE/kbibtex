@@ -442,12 +442,14 @@ FindPDFUI::~FindPDFUI()
         delete it->tempFilename;
         it = d->resultList.erase(it);
     }
+
+    delete d;
 }
 
 bool FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent)
 {
     QPointer<QDialog> dlg = new QDialog(parent);
-    QPointer<FindPDFUI> widget = new FindPDFUI(entry, dlg);
+    FindPDFUI *widget = new FindPDFUI(entry, dlg);
     dlg->setWindowTitle(i18nc("@title:window", "Find PDF"));
     QBoxLayout *layout = new QVBoxLayout(dlg);
     layout->addWidget(widget);
@@ -457,16 +459,15 @@ bool FindPDFUI::interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget
 
     buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     buttonBox->button(QDialogButtonBox::Ok)->setDefault(true);
-    connect(widget.data(), &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Ok), &QWidget::setEnabled);
-    connect(widget.data(), &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Abort), &QWidget::setDisabled);
+    connect(widget, &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Ok), &QWidget::setEnabled);
+    connect(widget, &FindPDFUI::resultAvailable, buttonBox->button(QDialogButtonBox::Abort), &QWidget::setDisabled);
     connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, dlg.data(), &QDialog::accept);
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, dlg.data(), &QDialog::reject);
-    connect(buttonBox->button(QDialogButtonBox::Abort), &QPushButton::clicked, widget.data(), &FindPDFUI::stopSearch);
+    connect(buttonBox->button(QDialogButtonBox::Abort), &QPushButton::clicked, widget, &FindPDFUI::stopSearch);
 
-    if (dlg->exec() == QDialog::Accepted)
-        return widget->apply(entry, bibtexFile);
-    else
-        return false;
+    const bool result = dlg->exec() == QDialog::Accepted && !dlg.isNull() ? widget->apply(entry, bibtexFile) : false;
+    delete dlg;
+    return result;
 }
 
 bool FindPDFUI::apply(Entry &entry, const File &bibtexFile)
