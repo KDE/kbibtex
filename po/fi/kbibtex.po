@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Tommi Nieminen <translator@legisign.org>, 2014, 2015, 2018, 2019, 2020, 2021, 2022.
+# Tommi Nieminen <translator@legisign.org>, 2014, 2015, 2018, 2019, 2020, 2021, 2022, 2023.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2014, 2015, 2016.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2022-08-27 23:45+0300\n"
+"PO-Revision-Date: 2023-03-29 23:10+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -1872,15 +1872,13 @@ msgid "A4"
 msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "Legal"
+#, kde-format
 msgctxt "Paper size"
 msgid "Legal"
 msgstr "Legal"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "Letter"
+#, kde-format
 msgctxt "Paper size"
 msgid "Letter"
 msgstr "Letter"
@@ -2274,18 +2272,17 @@ msgstr "Teksti:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:596
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Esikatselu:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Kopioi muotoilujono leikepöydälle"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Tietuetunnisteiden muotoilu"
+msgstr "Muotoilujono:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2450,16 +2447,14 @@ msgid "List Separator"
 msgstr "Luetteloerotin"
 
 #: src/gui/widgets/filesettingswidget.cpp:176
-#, fuzzy, kde-format
-#| msgid "Sort by Count"
+#, kde-format
 msgid "Sort by identifier"
-msgstr "Lajittele määrän mukaan"
+msgstr "Lajittele tunnisteen mukaan"
 
 #: src/gui/widgets/filesettingswidget.cpp:177
-#, fuzzy, kde-format
-#| msgid "Sorting"
+#, kde-format
 msgid "Entry Sorting"
-msgstr "Lajittelu"
+msgstr "Tietuelajittelu"
 
 #: src/gui/widgets/filterbar.cpp:71
 #, kde-format
@@ -2517,10 +2512,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "BibTeX-tyyli <strong>%1</strong> ei ole käytettävissä."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "BibTeX-tyyli <strong>%1</strong> ei ole käytettävissä."
+msgstr "BibTeX-tyyli <strong>PLACEHOLDER</strong> ei ole käytettävissä."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
@@ -2759,7 +2753,7 @@ msgstr "SpringerLink"
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
 msgid "Unpaywall"
-msgstr ""
+msgstr "Poista maksumuuri"
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
@@ -2965,37 +2959,35 @@ msgid "BibUtils"
 msgstr ""
 
 #: src/parts/part.cpp:504
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "BibTeX"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:505
-#, fuzzy, kde-format
-#| msgid "Load bibliography"
+#, kde-format
 msgid "Word XML bibliography"
-msgstr "Lataa lähdeluettelo"
+msgstr "Wordin XML-lähdeluettelo"
 
 #: src/parts/part.cpp:506
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "KBibTeXin oma XML-rakenne"
 
 #: src/parts/part.cpp:507
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "KBibTeXin sisään rakennettu HTML-vienti"
 
 #: src/parts/part.cpp:508
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "KBibTeXin sisään rakennettu RIS-vienti"
 
 #: src/parts/part.cpp:517
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Valitse vientiohjelma"
 
 #: src/parts/part.cpp:519
 #, kde-format
@@ -3004,6 +2996,9 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Useampi vientimoduuli voi kirjoittaa tiedoston ”%1”.\n"
+"\n"
+"Valitse yksi."
 
 #: src/parts/part.cpp:549
 #, kde-format
