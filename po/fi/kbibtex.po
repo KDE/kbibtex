@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Tommi Nieminen <translator@legisign.org>, 2014, 2015, 2018, 2019, 2020, 2021, 2022.
+# Tommi Nieminen <translator@legisign.org>, 2014, 2015, 2018, 2019, 2020, 2021, 2022, 2023.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2014, 2015, 2016.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-02 02:38+0000\n"
-"PO-Revision-Date: 2022-08-27 23:45+0300\n"
+"PO-Revision-Date: 2023-03-29 23:10+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -2984,10 +2984,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "KDE:n BibTeX-muokkain"
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2023 Thomas Fischer"
-msgstr "Tekijänoikeudet 2004–2019 Thomas Fischer"
+msgstr "Tekijänoikeudet 2004–2023 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
 #, kde-format
