@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-02 02:38+0000\n"
-"PO-Revision-Date: 2023-03-21 09:26-0300\n"
+"PO-Revision-Date: 2023-04-05 09:57-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -2343,7 +2343,7 @@ msgstr "Codificação:"
 #: src/gui/widgets/filesettingswidget.cpp:133
 #, kde-format
 msgid "String Delimiters:"
-msgstr "Separadores de strings:"
+msgstr "Separadores de textos:"
 
 #: src/gui/widgets/filesettingswidget.cpp:140
 #, kde-format
