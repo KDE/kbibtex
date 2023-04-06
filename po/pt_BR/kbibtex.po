@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2023-03-22 17:52-0300\n"
+"PO-Revision-Date: 2023-04-05 09:57-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -2289,13 +2289,12 @@ msgstr "Visualização:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Copiar formato do texto para a área de transferência"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Formatar os IDs do registro"
+msgstr "Formato do texto:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2397,7 +2396,7 @@ msgstr "Codificação:"
 #: src/gui/widgets/filesettingswidget.cpp:133
 #, kde-format
 msgid "String Delimiters:"
-msgstr "Separadores de strings:"
+msgstr "Separadores de textos:"
 
 #: src/gui/widgets/filesettingswidget.cpp:140
 #, kde-format
@@ -2525,10 +2524,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "O estilo BibTeX <strong>%1</strong> não está disponível."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "O estilo BibTeX <strong>%1</strong> não está disponível."
+msgstr "O estilo BibTeX <strong>PLACEHOLDER</strong> não está disponível."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
