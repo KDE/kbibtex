@@ -580,7 +580,7 @@ latex voorbeeld</screen>
 > in &kile;) of een knop op de werkbalk te gebruiken om resultaat te krijgen. </para>
     </tip>
     <para
->U kunt nu het resultaat als een &DVI; of &pdf;-bestand zien (het formaat hangt af van uw configuratie), opgeslagen in dezelfde map als uw bronbestanden. </para>
+>Now, you can see the results as a &DVI; or &pdf; file (the format depends on your configuration), stored in the same folder as your source files. </para>
     <note>
       <para
 >Gefeliciteerd! U hebt zojuist uw eerste document met &bibtex; bibliografie gemaakt. </para>
@@ -907,20 +907,20 @@ latex voorbeeld</screen>
 >Credentials</guilabel
 > om de autorisatie-assistent van Zotero te starten. Volg de instructies om &kbibtex; toegang tot uw Zotero bibliotheek te geven. </para>
 	<para
->Daarna kunt u de knop <guibutton
+>Then the <guibutton
 > <inlinemediaobject
 > <imageobject
 > <imagedata fileref="download.png" format="PNG"/> </imageobject
 > </inlinemediaobject
 > Load bibliography</guibutton
-> gebruiken om data van uit de Zotero bibliotheek te downloaden. </para>
+> button can be used to download data from Zotero library. </para>
 	<para
->Om toegang te krijgen tot de gedownloade bibliotheek-entries, dubbelklikt u op het corresponderende item in het tabblad <guilabel
->Verzamelingen</guilabel
-> of het tabblad <guilabel
+>To access the downloaded library entries double-click on the corresponding item on <guilabel
+>Collections</guilabel
+> or <guilabel
 >Tags</guilabel
->. De entries die overeenkomen met de zoekcriteria krijgt u te zien in het <link linkend="search-results"
->Paneel met zoekresultaten</link
+> tabs. The entries that satisfy the chosen criteria will be shown on the <link linkend="search-results"
+>Search Results panel</link
 >. </para>
     </sect2>
     <sect2 id="search-results">
@@ -1021,13 +1021,13 @@ latex voorbeeld</screen>
 >Tabtoets bezoekt alleen bewerkbare velden</guimenuitem
 >, gebruiken om de navigatie alleen tussen bewerkbare velden aan en uit te schakelen. </para>
 	<para
->Klik op de knop <guibutton
+>Click the <guibutton
 > <inlinemediaobject
 > <imageobject
 > <imagedata fileref="tools-check-spelling.png" format="PNG"/> </imageobject
 > </inlinemediaobject
->Controleren met &bibtex;</guibutton
-> om een voorbeeld van de bewerkte entry te krijgen zoals het te zien is in het gecompileerde &pdf;-bestand. </para>
+> Check with &bibtex;</guibutton
+> button to preview the editing entry as it will be shown in the compiled &pdf; file. </para>
 	<para
 >Schakel <guilabel
 >Automatisch wijzigingen toepassen</guilabel
@@ -1239,8 +1239,8 @@ latex voorbeeld</screen>
 		  </imageobject
 ></inlinemediaobject
 > <guibutton
->&pdf;-bestanden meenemen in zoeken in volledige tekst</guibutton
->: hiermee kunt u &pdf; met volledige tekst in het filteren meenemen. </para>
+>Include &pdf; files in fulltext search</guibutton
+>: allows you to include fulltext &pdf; in the filtering. </para>
 	    </listitem>
 	    <listitem>
 	      <para>
@@ -1486,22 +1486,22 @@ latex voorbeeld</screen>
 ><guimenu
 >Element</guimenu
 > <guimenuitem
->&pdf; zoeken...</guimenuitem
+>Find &pdf;...</guimenuitem
 > </menuchoice>
 	</term>
 	<listitem>
 	  <para
->Probeert om &pdf;-documenten te vinden op het internet die bij het geselecteerde bibliografie-item horen. </para>
+>Try to find some &pdf; documents for the currently selected bibliography entry in the Internet. </para>
 	  <screenshot>
 	    <screeninfo
->Dialoog voor het zoeken van &pdf;</screeninfo>
+>Find &pdf; dialog</screeninfo>
 	    <mediaobject>
 	      <imageobject>
 		<imagedata fileref="find-pdf.png" format="PNG"/>
 	      </imageobject>
 	      <textobject>
 		<phrase
->dialoog voor het zoeken van &pdf;</phrase>
+>Find &pdf; dialog</phrase>
 	      </textobject>
 	    </mediaobject>
 	  </screenshot>
@@ -1848,17 +1848,17 @@ latex voorbeeld</screen>
       </sect2>
       <sect2 id="config-pdf">
       <title
->&pdf; &amp; Postscript configuratie </title>
+>&pdf; &amp; Postscript Configuration </title>
       <screenshot>
 	<screeninfo
->&pdf; &amp; Postscript configuratie</screeninfo>
+>&pdf; &amp; Postscript configuration</screeninfo>
 	  <mediaobject>
 	    <imageobject>
 	      <imagedata fileref="config-pdf.png" format="PNG"/>
 	    </imageobject>
 	    <textobject>
 	      <phrase
->&pdf; &amp; Postscript configuratie</phrase>
+>&pdf; &amp; Postscript configuration</phrase>
 	    </textobject>
 	  </mediaobject>
 	</screenshot>
