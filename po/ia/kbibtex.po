@@ -1107,7 +1107,7 @@ msgstr ""
 #: src/program/docklets/referencepreview.cpp:115
 #, kde-format
 msgid "No preview available"
-msgstr "Nulle vista preliminari disponibile"
+msgstr "Nulle vista preliminar disponibile"
 
 #: src/gui/element/associatedfilesui.cpp:294
 #, kde-format
@@ -3794,7 +3794,7 @@ msgstr ""
 #: src/program/mainwindow.cpp:183
 #, kde-format
 msgid "Document Preview"
-msgstr "Vista preliminari de documento"
+msgstr "Vista preliminar de documento"
 
 #: src/program/mainwindow.cpp:194
 #, kde-format
