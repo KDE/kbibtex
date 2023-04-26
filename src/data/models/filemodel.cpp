@@ -280,12 +280,12 @@ QVariant FileModel::data(const QModelIndex &index, int role) const
                         } else
                             return QVariant();
                     } else
-                        return QVariant("?");
+                        return QVariant(QStringLiteral("?"));
                 }
             }
         }
     } else
-        return QVariant("?");
+        return QVariant(QStringLiteral("?"));
 }
 
 QVariant FileModel::headerData(int section, Qt::Orientation orientation, int role) const

@@ -142,7 +142,7 @@ QString LyX::guessLyXPipeLocation()
         const QStringList files = directory.entryList(nameFilter, QDir::Hidden | QDir::System | QDir::Writable, QDir::Unsorted);
         for (const QString &filename : files) {
             const QString canonicalFilename = QFileInfo(directory.absolutePath() + QDir::separator() + filename).canonicalFilePath();
-            if (QT_LSTAT(canonicalFilename.toLatin1(), &statBuffer) == 0 && S_ISFIFO(statBuffer.st_mode))
+            if (QT_LSTAT(canonicalFilename.toLatin1().constData(), &statBuffer) == 0 && S_ISFIFO(statBuffer.st_mode))
                 return canonicalFilename;
         }
     }

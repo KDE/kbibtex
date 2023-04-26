@@ -185,17 +185,17 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         QMultiMap<QString, QString> form = formParameters(htmlCode, htmlCode.indexOf(QStringLiteral("<form method=\"post\" action=\"/cgi-bin/refs.cgi\""), Qt::CaseInsensitive));
         form.replace(QStringLiteral("output"), QStringLiteral("2")); ///< enforce BibTeX output
 
-        QString body;
+        QByteArray body;
         for (const QString &key : form.keys()) {
-            if (!body.isEmpty()) body += QLatin1Char('&');
+            if (!body.isEmpty()) body += '&';
             for (const QString &value : form.values(key))
-                body += key + QLatin1Char('=') + QString(QUrl::toPercentEncoding(value));
+                body += key.toLatin1() + '=' + QUrl::toPercentEncoding(value);
         }
 
         const QUrl url = QUrl(QStringLiteral("https://ideas.repec.org/cgi-bin/refs.cgi"));
         QNetworkRequest request(url);
-        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-        reply = InternalNetworkAccessManager::instance().post(request, body.toUtf8());
+        request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
+        reply = InternalNetworkAccessManager::instance().post(request, body);
         reply->setProperty("downloadurl", QVariant::fromValue<QString>(downloadUrl));
         InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
         connect(reply, &QNetworkReply::finished, this, &OnlineSearchIDEASRePEc::downloadBibTeXDone);

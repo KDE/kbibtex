@@ -165,7 +165,7 @@ bool FileExporterPS::beautifyPostscriptFile(const QString &filename, const QStri
         int i = 0;
         while (!(line = ts.readLine()).isNull()) {
             if (i < 32 && line.startsWith(QStringLiteral("%%Title:")))
-                line = "%%Title: " + title;
+                line = QStringLiteral("%%Title: ") + title;
             else if (i < 32 && line.startsWith(QStringLiteral("%%Creator:")))
                 line += QStringLiteral("; exported from within KBibTeX: https://userbase.kde.org/KBibTeX");
             lines += line;

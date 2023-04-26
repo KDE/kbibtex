@@ -343,8 +343,8 @@ void ReferencePreview::renderHTML()
                 int endofxsomethingpos = text.indexOf(QStringLiteral("}"), xsomethingpos + 11);
                 if (endofxsomethingpos > xsomethingpos) {
                     /// Trim empty lines around match
-                    while (xsomethingpos > 0 && text[xsomethingpos - 1] == '\n') --xsomethingpos;
-                    while (text[endofxsomethingpos + 1] == '\n') ++endofxsomethingpos;
+                    while (xsomethingpos > 0 && text[xsomethingpos - 1] == QLatin1Char('\n')) --xsomethingpos;
+                    while (text[endofxsomethingpos + 1] == QLatin1Char('\n')) ++endofxsomethingpos;
                     /// Clip comment out of text
                     text = text.left(xsomethingpos) + text.mid(endofxsomethingpos + 1);
                 }
@@ -380,11 +380,11 @@ void ReferencePreview::renderHTML()
                 text.replace(QStringLiteral("--"), QString(QChar(0x2013)));
 
                 text.prepend(d->htmlStart);
-                text.append("</body></html>");
+                text.append(QStringLiteral("</body></html>"));
             } else if (previewStyle.type == QStringLiteral("xml")) {
                 /// XML/XSLT
                 text.prepend(d->htmlStart);
-                text.append("</body></html>");
+                text.append(QStringLiteral("</body></html>"));
             }
 
             /// adopt current color scheme

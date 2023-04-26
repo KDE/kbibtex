@@ -217,7 +217,7 @@ void OnlineSearchPubMed::eFetchDone()
             qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             stopSearch(resultInvalidArguments);
         } else {  /// remove XML header
-            if (bibTeXcode[0] == '<')
+            if (bibTeXcode[0] == QLatin1Char('<'))
                 bibTeXcode = bibTeXcode.mid(bibTeXcode.indexOf(QStringLiteral(">")) + 1);
 
             FileImporterBibTeX importer(this);

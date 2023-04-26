@@ -97,7 +97,7 @@ void FileSettingsWidget::saveProperties(File *file)
 
     file->setProperty(File::Encoding, m_comboBoxEncodings->currentText());
     const QString stringDelimiter = m_comboBoxStringDelimiters->currentText();
-    file->setProperty(File::StringDelimiter, QString(stringDelimiter[0]) + stringDelimiter[stringDelimiter.length() - 1]);
+    file->setProperty(File::StringDelimiter, QString(QStringLiteral("%1%2")).arg(stringDelimiter[0], stringDelimiter[stringDelimiter.length() - 1]));
     bool ok = false;
     const Preferences::QuoteComment quoteComment = static_cast<Preferences::QuoteComment>(m_comboBoxQuoteComment->currentData().toInt(&ok));
     if (ok)

@@ -330,7 +330,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                 sendVisualNotification(i18n("'Google Scholar' denied scrapping data because it thinks you are a robot."), label(), 10);
             } else {
 #endif // HAVE_KF
-                static const QRegularExpression linkToBib("/scholar.bib\\?[^\" >]+");
+                static const QRegularExpression linkToBib(QStringLiteral("/scholar.bib\\?[^\" >]+"));
                 QRegularExpressionMatchIterator linkToBibMatchIterator = linkToBib.globalMatch(htmlText);
                 while (linkToBibMatchIterator.hasNext()) {
                     const QRegularExpressionMatch linkToBibMatch = linkToBibMatchIterator.next();

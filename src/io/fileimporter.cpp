@@ -144,7 +144,7 @@ Person *FileImporter::splitName(const QString &name)
             if (from > 0) {
                 firstName = *segments.begin(); /// First name initialized with first segment
                 for (QStringList::ConstIterator it = ++segments.begin(); from > 1; ++it, --from) {
-                    firstName.append(" ");
+                    firstName.append(QStringLiteral(" "));
                     firstName.append(*it);
                 }
             }

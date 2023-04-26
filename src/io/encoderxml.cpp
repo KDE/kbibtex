@@ -71,7 +71,7 @@ QString EncoderXML::decode(const QString &text) const
         int p2 = result.indexOf(QStringLiteral(";"), p + 1);
         if (p2 < 0 || p2 > p + 8) break;
         bool ok = false;
-        int hex = result.midRef(p + 3, p2 - p - 3).toInt(&ok, 16);
+        int hex = QStringView{result}.mid(p + 3, p2 - p - 3).toInt(&ok, 16);
         if (ok && hex > 0)
             result.replace(result.mid(p, p2 - p + 1), QChar(hex));
     }
@@ -84,7 +84,7 @@ QString EncoderXML::decode(const QString &text) const
         int p2 = result.indexOf(QStringLiteral(";"), p + 1);
         if (p2 < 0 || p2 > p + 8) break;
         bool ok = false;
-        int dec = result.midRef(p + 2, p2 - p - 2).toInt(&ok, 10);
+        int dec = QStringView{result}.mid(p + 2, p2 - p - 2).toInt(&ok, 10);
         if (ok && dec > 0)
             result.replace(result.mid(p, p2 - p + 1), QChar(dec));
     }

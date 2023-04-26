@@ -78,7 +78,7 @@ private:
         const QByteArray conversionResult = codec->fromUnicode(&c, 1, &state);
         /// Conversion failed if codec gave a single byte back which is 0x00
         /// (due to QTextCodec::ConvertInvalidToNull above)
-        return conversionResult.length() != 1 || conversionResult.at(0) != '\0';
+        return conversionResult.length() != 1 || conversionResult.at(0) != QLatin1Char('\0');
     }
 
 public:
@@ -181,15 +181,15 @@ public:
                 if (!plainText.isNull()) {
                     QString textBody = EncoderLaTeX::instance().encode(plainText->text(), targetEncoding);
                     if (!isOpen) {
-                        if (!result.isEmpty()) result.append(" # ");
+                        if (!result.isEmpty()) result.append(QStringLiteral(" # "));
                         result.append(stringOpenDelimiter);
                     } else if (!prev.dynamicCast<const PlainText>().isNull())
-                        result.append(' ');
+                        result.append(QStringLiteral(" "));
                     else if (!prev.dynamicCast<const Person>().isNull()) {
                         /// handle "et al." i.e. "and others"
-                        result.append(" and ");
+                        result.append(QStringLiteral(" and "));
                     } else {
-                        result.append(stringCloseDelimiter).append(" # ").append(stringOpenDelimiter);
+                        result.append(stringCloseDelimiter).append(QStringLiteral(" # ")).append(stringOpenDelimiter);
                     }
                     isOpen = true;
 
@@ -203,7 +203,7 @@ public:
                         const QString keyToLower(key.toLower());
                         QString textBody = verbatimText->text();
                         if (!isOpen) {
-                            if (!result.isEmpty()) result.append(" # ");
+                            if (!result.isEmpty()) result.append(QStringLiteral(" # "));
                             result.append(stringOpenDelimiter);
                         } else if (!prev.dynamicCast<const VerbatimText>().isNull()) {
                             if (keyToLower.startsWith(Entry::ftUrl) || keyToLower.startsWith(Entry::ftLocalFile) || keyToLower.startsWith(Entry::ftFile) || keyToLower.startsWith(Entry::ftDOI))
@@ -211,9 +211,9 @@ public:
                                 /// as a plain comma may be part of the filename or URL
                                 result.append(QStringLiteral("; "));
                             else
-                                result.append(' ');
+                                result.append(QStringLiteral(" "));
                         } else {
-                            result.append(stringCloseDelimiter).append(" # ").append(stringOpenDelimiter);
+                            result.append(stringCloseDelimiter).append(QStringLiteral(" # ")).append(stringOpenDelimiter);
                         }
                         isOpen = true;
 
@@ -238,11 +238,11 @@ public:
                         if (!person.isNull()) {
                             QString firstName = person->firstName();
                             if (!firstName.isEmpty() && requiresPersonQuoting(firstName, false))
-                                firstName = firstName.prepend("{").append("}");
+                                firstName = firstName.prepend(QStringLiteral("{")).append(QStringLiteral("}"));
 
                             QString lastName = person->lastName();
                             if (!lastName.isEmpty() && requiresPersonQuoting(lastName, true))
-                                lastName = lastName.prepend("{").append("}");
+                                lastName = lastName.prepend(QStringLiteral("{")).append(QStringLiteral("}"));
 
                             QString suffix = person->suffix();
 
@@ -253,12 +253,12 @@ public:
                             QString thisName = EncoderLaTeX::instance().encode(Person::transcribePersonName(pnf, firstName, lastName, suffix), targetEncoding);
 
                             if (!isOpen) {
-                                if (!result.isEmpty()) result.append(" # ");
+                                if (!result.isEmpty()) result.append(QStringLiteral(" # "));
                                 result.append(stringOpenDelimiter);
                             } else if (!prev.dynamicCast<const Person>().isNull())
-                                result.append(" and ");
+                                result.append(QStringLiteral(" and "));
                             else {
-                                result.append(stringCloseDelimiter).append(" # ").append(stringOpenDelimiter);
+                                result.append(stringCloseDelimiter).append(QStringLiteral(" # ")).append(stringOpenDelimiter);
                             }
                             isOpen = true;
 
@@ -271,12 +271,12 @@ public:
                             if (!keyword.isNull()) {
                                 QString textBody = EncoderLaTeX::instance().encode(keyword->text(), targetEncoding);
                                 if (!isOpen) {
-                                    if (!result.isEmpty()) result.append(" # ");
+                                    if (!result.isEmpty()) result.append(QStringLiteral(" # "));
                                     result.append(stringOpenDelimiter);
                                 } else if (!prev.dynamicCast<const Keyword>().isNull())
                                     result.append(listSeparator);
                                 else {
-                                    result.append(stringCloseDelimiter).append(" # ").append(stringOpenDelimiter);
+                                    result.append(stringCloseDelimiter).append(QStringLiteral(" # ")).append(stringOpenDelimiter);
                                 }
                                 isOpen = true;
 
@@ -357,9 +357,9 @@ public:
             output.append(QLatin1Char('}')).append(QStringLiteral("\n\n"));
         } else if (quoteComment == Preferences::QuoteComment::PercentSign) {
 #if QT_VERSION >= 0x050e00
-            QStringList commentLines = text.split('\n', Qt::SkipEmptyParts);
+            QStringList commentLines = text.split(QStringLiteral("\n"), Qt::SkipEmptyParts);
 #else // QT_VERSION < 0x050e00
-            QStringList commentLines = text.split('\n', QString::SkipEmptyParts);
+            QStringList commentLines = text.split(QStringLiteral("\n"), QString::SkipEmptyParts);
 #endif // QT_VERSION >= 0x050e00
             for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); ++it) {
                 const QString &line = *it;
@@ -456,7 +456,7 @@ public:
     }
 
     bool requiresPersonQuoting(const QString &text, bool isLastName) {
-        if (isLastName && !text.contains(QChar(' ')))
+        if (isLastName && !text.contains(QLatin1Char(' ')))
             /** Last name contains NO spaces, no quoting necessary */
             return false;
         else if (!isLastName && !text.contains(QStringLiteral(" and ")))
@@ -466,15 +466,15 @@ public:
             /** Last name starts with lower-case character (von, van, de, ...) */
             // FIXME does not work yet
             return false;
-        else if (text[0] != '{' || text[text.length() - 1] != '}')
+        else if (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}'))
             /** as either last name contains spaces or first name contains " and " and there is no protective quoting yet, there must be a protective quoting added */
             return true;
 
         int bracketCounter = 0;
         for (int i = text.length() - 1; i >= 0; --i) {
-            if (text[i] == '{')
+            if (text[i] == QLatin1Char('{'))
                 ++bracketCounter;
-            else if (text[i] == '}')
+            else if (text[i] == QLatin1Char('}'))
                 --bracketCounter;
             if (bracketCounter == 0 && i > 0)
                 return true;

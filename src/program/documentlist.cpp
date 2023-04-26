@@ -233,7 +233,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
 QVariant DocumentListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation != Qt::Horizontal || section != 0 || role != Qt::DisplayRole) return QVariant();
-    return QVariant("List of Files");
+    return QVariant(QStringLiteral("List of Files"));
 }
 
 void DocumentListModel::listsChanged(OpenFileInfo::StatusFlags statusFlags)

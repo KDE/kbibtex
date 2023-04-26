@@ -221,9 +221,9 @@ public:
                     if (!person.isNull())
                         value.append(person);
                     else {
-                        qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart, i - nameStart).join(' ') << "does not form a name near line" << line_number;
+                        qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart, i - nameStart).join(QLatin1Char(' ')) << "does not form a name near line" << line_number;
                         if (parent != nullptr)
-                            QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart, i - nameStart).join(' ')).arg(line_number)));
+                            QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart, i - nameStart).join(QLatin1Char(' '))).arg(line_number)));
                     }
                 } else {
                     qCInfo(LOG_KBIBTEX_IO) << "Found" << tokenAnd << "but no name before it near line" << line_number;
@@ -248,9 +248,9 @@ public:
             if (!person.isNull())
                 value.append(person);
             else {
-                qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart).join(' ') << "does not form a name near line" << line_number;
+                qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart).join(QLatin1Char(' ')) << "does not form a name near line" << line_number;
                 if (parent != nullptr)
-                    QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart).join(' ')).arg(line_number)));
+                    QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart).join(QLatin1Char(' '))).arg(line_number)));
             }
         }
     }
@@ -1092,12 +1092,12 @@ public:
                 int bracketCounter = 0;
                 for (int i = 0; i < token.length(); ++i) {
                     /// Consider opening curly brackets
-                    if (token[i] == QChar('{')) ++bracketCounter;
+                    if (token[i] == QLatin1Char('{')) ++bracketCounter;
                     /// Consider closing curly brackets
-                    else if (token[i] == QChar('}')) --bracketCounter;
+                    else if (token[i] == QLatin1Char('}')) --bracketCounter;
                     /// Only if outside any open curly bracket environments
                     /// consider comma characters
-                    else if (bracketCounter == 0 && token[i] == QChar(',')) {
+                    else if (bracketCounter == 0 && token[i] == QLatin1Char(',')) {
                         /// Memorize comma's position and break from loop
                         p = i;
                         break;
@@ -1128,7 +1128,7 @@ public:
         }
         if (commaCount > 0) {
             if (comma != nullptr) *comma = CommaContainment::Contains;
-            return QSharedPointer<Person>(new Person(partC.isEmpty() ? partB.join(QChar(' ')) : partC.join(QChar(' ')), partA.join(QChar(' ')), partC.isEmpty() ? QString() : partB.join(QChar(' '))));
+            return QSharedPointer<Person>(new Person(partC.isEmpty() ? partB.join(QLatin1Char(' ')) : partC.join(QLatin1Char(' ')), partA.join(QLatin1Char(' ')), partC.isEmpty() ? QString() : partB.join(QLatin1Char(' '))));
         }
 
         /**
@@ -1152,7 +1152,7 @@ public:
         }
         if (!partB.isEmpty()) {
             /// Name was actually given in PubMed format
-            return QSharedPointer<Person>(new Person(partB.join(QChar(' ')), partA.join(QChar(' '))));
+            return QSharedPointer<Person>(new Person(partB.join(QLatin1Char(' ')), partA.join(QLatin1Char(' '))));
         }
 
         /**
@@ -1181,7 +1181,7 @@ public:
         if (!partB.isEmpty()) {
             /// Name was actually like "Peter Ole van der Tuckwell",
             /// split into "Peter Ole" and "van der Tuckwell"
-            return QSharedPointer<Person>(new Person(partA.join(QChar(' ')), partB.join(QChar(' ')), partC.isEmpty() ? QString() : partC.join(QChar(' '))));
+            return QSharedPointer<Person>(new Person(partA.join(QLatin1Char(' ')), partB.join(QLatin1Char(' ')), partC.isEmpty() ? QString() : partC.join(QLatin1Char(' '))));
         }
 
         qCWarning(LOG_KBIBTEX_IO) << "Don't know how to handle name" << tokens.join(QLatin1Char(' ')) << "near line" << line_number;
@@ -1370,7 +1370,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
             int i = xkbibtexencodingpos + 28, l = 0;
             encoding.clear();
             encoding.reserve(32);
-            while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != '\n' && rawData.at(i) != '\r' && rawData.at(i) != '}' && rawData.at(i) != ')' && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
+            while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != QLatin1Char('\n') && rawData.at(i) != QLatin1Char('\r') && rawData.at(i) != QLatin1Char('}') && rawData.at(i) != QLatin1Char(')') && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
                 encoding.append(QLatin1Char(rawData.at(i)));
                 ++i;
                 ++l;
@@ -1383,7 +1383,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
                 int i = jabrefencodingpos + 11, l = 0;
                 encoding.clear();
                 encoding.reserve(32);
-                while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != '\n' && rawData.at(i) != '\r' && rawData.at(i) != '}' && rawData.at(i) != ')' && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
+                while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != QLatin1Char('\n') && rawData.at(i) != QLatin1Char('\r') && rawData.at(i) != QLatin1Char('}') && rawData.at(i) != QLatin1Char(')') && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
                     encoding.append(QLatin1Char(rawData.at(i)));
                     ++i;
                     ++l;
@@ -1492,7 +1492,7 @@ QList<QSharedPointer<Keyword> > FileImporterBibTeX::splitKeywords(const QString 
     static const QHash<char, QRegularExpression> splitAlong = {
         {'\n', QRegularExpression(QStringLiteral("\\s*\n\\s*"))},
         {';', QRegularExpression(QStringLiteral("\\s*;\\s*"))},
-        {',', QRegularExpression(QString("\\s*,\\s*"))}
+        {',', QRegularExpression(QStringLiteral("\\s*,\\s*"))}
     };
     if (usedSplitChar != nullptr)
         *usedSplitChar = '\0';
@@ -1548,7 +1548,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     static const QList<QChar> invalidChars {QChar(0x00b7), QChar(0x2020), QChar(0x2217), QChar(0x2021), QChar(0x002a), QChar(0x21d1) /** Upwards double arrow */};
     for (const auto &invalidChar : invalidChars)
         /// Replacing daggers with commas ensures that they act as persons' names separator
-        internalText = internalText.replace(invalidChar, QChar(','));
+        internalText = internalText.replace(invalidChar, QLatin1Char(','));
     /// Remove numbers to footnotes
     static const QRegularExpression numberFootnoteRegExp(QStringLiteral("(\\w)\\d+\\b"));
     internalText = internalText.replace(numberFootnoteRegExp, QStringLiteral("\\1"));
@@ -1570,7 +1570,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
     bool containsSpace = true;
     for (QStringList::ConstIterator it = authorTokenList.constBegin(); containsSpace && it != authorTokenList.constEnd(); ++it)
-        containsSpace = (*it).contains(QChar(' '));
+        containsSpace = (*it).contains(QLatin1Char(' '));
 
     QList<QSharedPointer<Person> > result;
     result.reserve(authorTokenList.size());
@@ -1692,9 +1692,9 @@ void FileImporterBibTeX::contextSensitiveSplit(const QString &text, QStringList 
     segments.clear(); ///< empty list for results before proceeding
 
     for (int pos = 0; pos < len; ++pos) {
-        if (text[pos] == '{')
+        if (text[pos] == QLatin1Char('{'))
             ++bracketCounter;
-        else if (text[pos] == '}')
+        else if (text[pos] == QLatin1Char('}'))
             --bracketCounter;
 
         if (text[pos].isSpace() && bracketCounter == 0) {

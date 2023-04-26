@@ -813,50 +813,50 @@ public:
         for (const QString &token : tokenList) {
             TokenWidget *tokenWidget = nullptr;
 
-            if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
+            if (token[0] == QLatin1Char('a') || token[0] == QLatin1Char('A') || token[0] == QLatin1Char('z')) {
                 IdSuggestions::IdSuggestionTokenInfo info = IdSuggestions::evalToken(token.mid(1));
                 /// Support deprecated 'a' and 'z' cases
-                if (token[0] == 'a')
+                if (token[0] == QLatin1Char('a'))
                     info.startWord = info.endWord = 0;
-                else if (token[0] == 'z') {
+                else if (token[0] == QLatin1Char('z')) {
                     info.startWord = 1;
                     info.endWord = std::numeric_limits<int>::max();
                 }
                 tokenWidget = new AuthorWidget(info, p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
-            } else if (token[0] == 'y') {
+            } else if (token[0] == QLatin1Char('y')) {
                 tokenWidget = new YearWidget(2, p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
-            } else if (token[0] == 'Y') {
+            } else if (token[0] == QLatin1Char('Y')) {
                 tokenWidget = new YearWidget(4, p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
-            } else if (token[0] == 't' || token[0] == 'T') {
+            } else if (token[0] == QLatin1Char('t') || token[0] == QLatin1Char('T')) {
                 IdSuggestions::IdSuggestionTokenInfo info = IdSuggestions::evalToken(token.mid(1));
                 tokenWidget = new TitleWidget(info, token[0].isUpper(), p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
-            } else if (token[0] == 'j' || token[0] == 'J') {
+            } else if (token[0] == QLatin1Char('j') || token[0] == QLatin1Char('J')) {
                 IdSuggestions::IdSuggestionTokenInfo info = IdSuggestions::evalToken(token.mid(1));
                 tokenWidget = new JournalWidget(info, token[0].isUpper(), p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
-            } else if (token[0] == 'e') {
+            } else if (token[0] == QLatin1Char('e')) {
                 IdSuggestions::IdSuggestionTokenInfo info = IdSuggestions::evalToken(token.mid(1));
                 tokenWidget = new TypeWidget(info, p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
-            } else if (token[0] == 'v') {
+            } else if (token[0] == QLatin1Char('v')) {
                 tokenWidget = new VolumeWidget(p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
-            } else if (token[0] == 'p') {
+            } else if (token[0] == QLatin1Char('p')) {
                 tokenWidget = new PageNumberWidget(p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);
-            } else if (token[0] == '"') {
+            } else if (token[0] == QLatin1Char('"')) {
                 tokenWidget = new TextWidget(token.mid(1), p, container);
                 widgetList << tokenWidget;
                 containerLayout->insertWidget(containerLayout->count() - 2, tokenWidget, 1);

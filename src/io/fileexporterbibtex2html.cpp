@@ -43,8 +43,8 @@ public:
 
     FileExporterBibTeX2HTMLPrivate(FileExporterBibTeX2HTML *parent, const QString &workingDir)
             : p(parent) {
-        bibTeXFilename = QString(workingDir).append("/bibtex-to-html.bib");
-        outputFilename = QString(workingDir).append("/bibtex-to-html.html");
+        bibTeXFilename = QString(workingDir).append(QStringLiteral("/bibtex-to-html.bib"));
+        outputFilename = QString(workingDir).append(QStringLiteral("/bibtex-to-html.html"));
         bibStyle = QStringLiteral("plain");
     }
 
@@ -89,7 +89,7 @@ public:
 
 
     bool checkBSTexists(QIODevice *iodevice) {
-        if (p->kpsewhich(bibStyle + ".bst"))
+        if (p->kpsewhich(bibStyle + QStringLiteral(".bst")))
             return true;
 
         QTextStream ts(iodevice);
@@ -177,7 +177,7 @@ QStringList FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles()
     if (listOfBibStyles.isEmpty()) {
         static const QStringList stylesToTestFor {QStringLiteral("abbrv"), QStringLiteral("acm"), QStringLiteral("alpha"), QStringLiteral("apalike"), QStringLiteral("ieeetr"), QStringLiteral("plain"), QStringLiteral("siam"), QStringLiteral("unsrt")};
         for (const QString &bibStyle : stylesToTestFor)
-            if (kpsewhich(bibStyle + ".bst"))
+            if (kpsewhich(bibStyle + QStringLiteral(".bst")))
                 listOfBibStyles.append(bibStyle);
     }
     return listOfBibStyles;

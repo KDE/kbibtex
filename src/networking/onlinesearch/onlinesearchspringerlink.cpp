@@ -224,7 +224,7 @@ public:
 
         QString year = query[QueryKey::Year];
         if (!year.isEmpty()) {
-            static const QRegularExpression yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
+            static const QRegularExpression yearRegExp(QStringLiteral("\\b(18|19|20)[0-9]{2}\\b"));
             const QRegularExpressionMatch yearRegExpMatch = yearRegExp.match(year);
             if (yearRegExpMatch.hasMatch()) {
                 year = yearRegExpMatch.captured(0);

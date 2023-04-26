@@ -170,7 +170,7 @@ public:
         const QString number = object.value(QStringLiteral("number")).toString();
         if (!number.isEmpty() && number.startsWith(QStringLiteral("Article "))) {
             Value v;
-            v.append(QSharedPointer<ValueItem>(new PlainText(number.midRef(8).trimmed().toString())));
+            v.append(QSharedPointer<ValueItem>(new PlainText(QStringView{number}.mid(8).trimmed().toString())));
             entry->insert(QStringLiteral("articleno"), v);
         }
         const QString issue = object.value(QStringLiteral("issue")).toString();
@@ -388,7 +388,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
         }
         if (!dois.isEmpty()) {
             QNetworkRequest request(QUrl(QStringLiteral("https://dl.acm.org/action/exportCiteProcCitation")));
-            request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
+            request.setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
             QByteArray postBody = QByteArray("dois=");
             bool first = true;
             for (const QString &doi : dois) {

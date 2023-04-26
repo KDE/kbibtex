@@ -984,7 +984,7 @@ QString EncoderLaTeX::decode(const QString &input) const
 
                 /// Next, check if there follows a modifier after the backslash
                 /// For example an quotation mark as used in {\"a}
-                const int lookupTablePos = modifierInLookupTable(input[i + 2].toLatin1());
+                const int lookupTablePos = modifierInLookupTable(input[i + 2]);
 
                 /// Check for spaces between modifier and character, for example
                 /// like {\H o}
@@ -1018,7 +1018,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     if (!found) {
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
-                        output.append(input.midRef(i, 6 + skipSpaces));
+                        output.append(QStringView{input}.mid(i, 6 + skipSpaces));
                         qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH" << input[i + 4 + skipSpaces];
                     }
                     /// Step over those additional characters
@@ -1035,7 +1035,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     if (unicodeLetter.unicode() < 127) {
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
-                        output.append(input.midRef(i, 7 + skipSpaces));
+                        output.append(QStringView{input}.mid(i, 7 + skipSpaces));
                         qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
                         qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 7 + skipSpaces);
                     } else
@@ -1054,7 +1054,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     if (!found) {
                         /// This combination of modifier and letter is not known,
                         /// so try to preserve it
-                        output.append(input.midRef(i, 8 + skipSpaces));
+                        output.append(QStringView{input}.mid(i, 8 + skipSpaces));
                         qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
                         qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 2] << "BACKSLASH {" << input[i + 5 + skipSpaces] << "}";
                     }
@@ -1096,7 +1096,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         if (!found) {
                             /// Dealing with a string like {\noopsort}
                             /// (see BibTeX documentation where this gets explained)
-                            output.append(input.midRef(i, 3 + alpha.size()));
+                            output.append(QStringView{input}.mid(i, 3 + alpha.size()));
                         }
                         i = nextPosAfterAlpha;
                     } else {
@@ -1175,7 +1175,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 if (unicodeLetter.unicode() < 127) {
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
-                    output.append(input.midRef(i, 5 + skipSpaces));
+                    output.append(QStringView{input}.mid(i, 5 + skipSpaces));
                     qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
                     qCWarning(LOG_KBIBTEX_IO) << "Don't know how to translate this into Unicode: " << input.mid(i, 5 + skipSpaces);
                 } else
@@ -1194,7 +1194,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 if (!found) {
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
-                    output.append(input.midRef(i, 4 + skipSpaces));
+                    output.append(QStringView{input}.mid(i, 4 + skipSpaces));
                     qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 1] << "BACKSLASH" << input[i + 3 + skipSpaces];
                 }
                 /// Step over those additional characters
@@ -1211,7 +1211,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 if (!found) {
                     /// This combination of modifier and letter is not known,
                     /// so try to preserve it
-                    output.append(input.midRef(i, 6 + skipSpaces));
+                    output.append(QStringView{input}.mid(i, 6 + skipSpaces));
                     qCWarning(LOG_KBIBTEX_IO) << "Cannot interpret BACKSLASH" << input[i + 1] << "BACKSLASH {" << input[i + 4 + skipSpaces] << "}";
                 }
                 /// Step over those additional characters
@@ -1263,7 +1263,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         }
                     } else {
                         /// No command found? Just copy input char to output
-                        output.append(input.midRef(i, 1 + alpha.size()));
+                        output.append(QStringView{input}.mid(i, 1 + alpha.size()));
 
                         if (alpha == QStringLiteral("ensuremath") && input[nextPosAfterAlpha + 1] == QLatin1Char('{')) {
                             currentMathMode.push(MathModeEnsureMath);
@@ -1381,7 +1381,7 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
     int openedClosedCurlyBrackets = 0;
 
     /// check for \url
-    if (pos < input.length() - 6 && input.midRef(pos, 5) == QStringLiteral("\\url{")) {
+    if (pos < input.length() - 6 && QStringView{input}.mid(pos, 5) == QStringLiteral("\\url{")) {
         copyBytesCount = 5;
         openedClosedCurlyBrackets = 1;
     }
@@ -1393,7 +1393,7 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
             else if (input[pos + copyBytesCount] == QLatin1Char('}') && input[pos + copyBytesCount - 1] != QLatin1Char('\\')) --openedClosedCurlyBrackets;
         }
 
-        output.append(input.midRef(pos, copyBytesCount));
+        output.append(QStringView{input}.mid(pos, copyBytesCount));
         pos += copyBytesCount;
     }
 

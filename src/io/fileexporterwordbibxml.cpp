@@ -43,15 +43,15 @@ public:
     }
 
     bool insideProtectiveCurleyBrackets(const QString &input) {
-        if (input.length() < 3 || input[0] != QChar('{') || input[input.length() - 1] != QChar('}'))
+        if (input.length() < 3 || input[0] != QLatin1Char('{') || input[input.length() - 1] != QLatin1Char('}'))
             return false;
 
         int depth = 0;
         QChar prev;
         for (const QChar &c : input) {
-            if (c == QChar('{') && prev != QChar('\\'))
+            if (c == QLatin1Char('{') && prev != QLatin1Char('\\'))
                 ++depth;
-            else if (c == QChar('}') && prev != QChar('\\'))
+            else if (c == QLatin1Char('}') && prev != QLatin1Char('\\'))
                 --depth;
             prev = c;
         }
@@ -62,8 +62,8 @@ public:
     QString removeUnwantedChars(const QString &input) {
         QString result;
         result.reserve(input.length());
-        static const QSet<QChar> skip{QChar('{'), QChar('}'), QChar('<'), QChar('>'), QChar('&')};
-        static const QHash<QChar, QString> replace{{QChar('~'), QStringLiteral(" ")}};
+        static const QSet<QChar> skip{QLatin1Char('{'), QLatin1Char('}'), QLatin1Char('<'), QLatin1Char('>'), QLatin1Char('&')};
+        static const QHash<QChar, QString> replace{{QLatin1Char('~'), QStringLiteral(" ")}};
         for (const QChar &c : input)
             if (skip.contains(c))
                 continue;
@@ -139,7 +139,7 @@ public:
         QString standardNumber;
 
         // Authors and editors are grouped
-        static const QHash<QString, QString> personFields{{"Author", Entry::ftAuthor}, {"Editor", Entry::ftEditor}, {"Translator", QStringLiteral("translator")}, {"BookAuthor", QStringLiteral("bookauthor")}};
+        static const QHash<QString, QString> personFields{{QStringLiteral("Author"), Entry::ftAuthor}, {QStringLiteral("Editor"), Entry::ftEditor}, {QStringLiteral("Translator"), QStringLiteral("translator")}, {QStringLiteral("BookAuthor"), QStringLiteral("bookauthor")}};
         if (entry->contains(Entry::ftAuthor) || entry->contains(Entry::ftEditor)) {
             stream << "<b:Author>";
             for (auto it = personFields.constBegin(); it != personFields.constEnd(); ++it) {

@@ -59,7 +59,7 @@ class InternalNetworkAccessManager::HTTPEquivCookieJar: public QNetworkCookieJar
 
 public:
     void mergeHtmlHeadCookies(const QString &htmlCode, const QUrl &url) {
-        static const QRegularExpression cookieContent("^([^\"=; ]+)=([^\"=; ]+).*\\bpath=([^\"=; ]+)", QRegularExpression::CaseInsensitiveOption);
+        static const QRegularExpression cookieContent(QStringLiteral("^([^\"=; ]+)=([^\"=; ]+).*\\bpath=([^\"=; ]+)"), QRegularExpression::CaseInsensitiveOption);
         int p1 = -1;
         QRegularExpressionMatch cookieContentRegExpMatch;
         if ((p1 = htmlCode.toLower().indexOf(QStringLiteral("http-equiv=\"set-cookie\""), 0, Qt::CaseInsensitive)) >= 5

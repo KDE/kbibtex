@@ -250,7 +250,7 @@ public:
     }
 
     static QString translateToken(const Entry &entry, const QString &token) {
-        switch (token[0].toLatin1()) {
+        switch (token[0].unicode()) {
         case 'a': ///< deprecated but still supported case
         {
             /// Evaluate the token string, store information in struct IdSuggestionTokenInfo ati
@@ -380,11 +380,11 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
 #endif // QT_VERSION >= 0x050e00
     for (const QString &token : tokenList) {
         QString text;
-        if (token[0] == 'a' || token[0] == 'A' || token[0] == 'z') {
+        if (token[0] == QLatin1Char('a') || token[0] == QLatin1Char('A') || token[0] == QLatin1Char('z')) {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
-            if (token[0] == 'a')
+            if (token[0] == QLatin1Char('a'))
                 info.startWord = info.endWord = 0;
-            else if (token[0] == 'z') {
+            else if (token[0] == QLatin1Char('z')) {
                 info.startWord = 1;
                 info.endWord = std::numeric_limits<int>::max();
             }
@@ -418,11 +418,11 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
                 text.append(QString(QStringLiteral(", with '%1' in between")).arg(info.inBetween));
 #endif // HAVE_KFI18N
         }
-        else if (token[0] == 'y')
+        else if (token[0] == QLatin1Char('y'))
             text.append(i18n("Year (2 digits)"));
-        else if (token[0] == 'Y')
+        else if (token[0] == QLatin1Char('Y'))
             text.append(i18n("Year (4 digits)"));
-        else if (token[0] == 't' || token[0] == 'T') {
+        else if (token[0] == QLatin1Char('t') || token[0] == QLatin1Char('T')) {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Title"));
             if (info.startWord == 0 && info.endWord < std::numeric_limits<int>::max())
@@ -470,9 +470,9 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
 #else // HAVE_KFI18N
                 text.append(QString(QStringLiteral(", with '%1' in between")).arg(info.inBetween));
 #endif // HAVE_KFI18N
-            if (token[0] == 'T') text.append(i18n(", small words removed"));
+            if (token[0] == QLatin1Char('T')) text.append(i18n(", small words removed"));
         }
-        else if (token[0] == 'j') {
+        else if (token[0] == QLatin1Char('j')) {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Journal"));
             if (info.len > 0 && info.len < std::numeric_limits<int>::max())
@@ -494,7 +494,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
             case IdSuggestions::CaseChange::None:
                 break;
             }
-        } else if (token[0] == 'e') {
+        } else if (token[0] == QLatin1Char('e')) {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Type"));
             if (info.len > 0 && info.len < std::numeric_limits<int>::max())
@@ -516,18 +516,18 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
             default:
                 break;
             }
-        } else if (token[0] == 'v') {
+        } else if (token[0] == QLatin1Char('v')) {
             text.append(i18n("Volume"));
-        } else if (token[0] == 'p') {
+        } else if (token[0] == QLatin1Char('p')) {
             text.append(i18n("First page number"));
-        } else if (token[0] == '"')
+        } else if (token[0] == QLatin1Char('"'))
 #ifdef HAVE_KFI18N
             text.append(i18n("Text: '%1'", token.mid(1)));
 #else // HAVE_KFI18N
             text.append(QString(QStringLiteral("Text: '%1'")).arg(token.mid(1)));
 #endif // HAVE_KFI18N
         else
-            text.append("?");
+            text.append(QStringLiteral("?"));
 
         result.append(text);
     }
@@ -636,7 +636,7 @@ IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &tok
 
     int dvStart = 0, dvEnd = std::numeric_limits<int>::max();
     if (token.length() > pos + 2 ///< sufficiently many characters to follow
-            && token[pos] == 'w' ///< identifier to start specifying a range of words
+            && token[pos] == QLatin1Char('w') ///< identifier to start specifying a range of words
             && (dvStart = token[pos + 1].digitValue()) > -1 ///< first word index correctly parsed
             && (
                 token[pos + 2] == QLatin1Char('I') ///< infinitely many words
@@ -653,7 +653,7 @@ IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &tok
         }
     }
 
-    if (token.length() > pos + 1 && token[pos] == '"')
+    if (token.length() > pos + 1 && token[pos] == QLatin1Char('"'))
         result.inBetween = token.mid(pos + 1);
 
     return result;

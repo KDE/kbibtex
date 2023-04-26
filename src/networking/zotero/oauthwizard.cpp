@@ -82,7 +82,7 @@ public:
         /// be closed.
         const quint16 port = static_cast<quint16>(QRandomGenerator::global()->bounded(1025, 65533) & 0xffff);
         QOAuthHttpServerReplyHandler *replyHandler = new QOAuthHttpServerReplyHandler(port, parent);
-        replyHandler->setCallbackPath("kbibtex-zotero-oauth");
+        replyHandler->setCallbackPath(QStringLiteral("kbibtex-zotero-oauth"));
         replyHandler->setCallbackText(i18n("<html><head><title>KBibTeX authorized to use Zotero</title></head><body><p>KBibTeX got successfully authorized to read your Zotero database.</p></body></html>"));
         qOAuth->setReplyHandler(replyHandler);
 

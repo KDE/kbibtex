@@ -191,7 +191,7 @@ QString Person::transcribePersonName(const QString &formatting, const QString &f
 {
     QString result = formatting;
     int p1 = -1, p2 = -1, p3 = -1;
-    while ((p1 = result.indexOf('<')) >= 0 && (p2 = result.indexOf('>', p1 + 1)) >= 0 && (p3 = result.indexOf('%', p1)) >= 0 && p3 < p2) {
+    while ((p1 = result.indexOf(QLatin1Char('<'))) >= 0 && (p2 = result.indexOf(QLatin1Char('>'), p1 + 1)) >= 0 && (p3 = result.indexOf(QLatin1Char('%'), p1)) >= 0 && p3 < p2) {
         QString insert;
         switch (result[p3 + 1].toLatin1()) {
         case 'f':
@@ -651,9 +651,9 @@ QString PlainTextValue::text(const Value &value)
                 /// "and others" case: replace text to be appended by translated variant
                 nextText = i18n(" and others");
             } else if (lastVit == ValueItemType::Keyword && vit == ValueItemType::Keyword)
-                result.append("; ");
+                result.append(QStringLiteral("; "));
             else if (!result.isEmpty())
-                result.append(" ");
+                result.append(QStringLiteral(" "));
             result.append(nextText);
 
             lastVit = vit;

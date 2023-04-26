@@ -52,7 +52,7 @@ bool FileExporterToolchain::runProcesses(const QStringList &progs, bool doEmitPr
     Q_EMIT progress(0, progs.size());
     for (QStringList::ConstIterator it = progs.constBegin(); result && it != progs.constEnd(); ++it) {
         QCoreApplication::instance()->processEvents();
-        QStringList args = (*it).split(' ');
+        QStringList args = (*it).split(QStringLiteral(" "));
         QString cmd = args.first();
         args.erase(args.begin());
         result &= runProcess(cmd, args, doEmitProcessOutput);
@@ -75,7 +75,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
     process.setWorkingDirectory(tempDir.path());
     /// Assemble the full command line (program name + arguments)
     /// for use in log messages and debug output
-    const QString fullCommandLine = cmd + QLatin1Char(' ') + args.join(QStringLiteral(" "));
+    const QString fullCommandLine = cmd + QStringLiteral(" ") + args.join(QStringLiteral(" "));
 
     qCInfo(LOG_KBIBTEX_IO) << "Running command" << fullCommandLine << "using working directory" << process.workingDirectory();
     process.start(cmd, args);
@@ -171,7 +171,7 @@ bool FileExporterToolchain::kpsewhich(const QString &filename)
     kpsewhich.start(QStringLiteral("kpsewhich"), param);
     if (kpsewhich.waitForStarted(3000) && kpsewhich.waitForFinished(30000)) {
         const QString standardOut = QString::fromUtf8(kpsewhich.readAllStandardOutput());
-        result = kpsewhich.exitStatus() == QProcess::NormalExit && kpsewhich.exitCode() == 0 && standardOut.endsWith(QDir::separator() + filename + QChar('\n'));
+        result = kpsewhich.exitStatus() == QProcess::NormalExit && kpsewhich.exitCode() == 0 && standardOut.endsWith(QDir::separator() + filename + QStringLiteral("\n"));
         kpsewhichMap.insert(filename, result);
     }
 

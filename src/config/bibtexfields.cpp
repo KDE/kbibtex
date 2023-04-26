@@ -127,9 +127,9 @@ public:
         for (BibTeXFields::Iterator it = p->begin(); it != p->end(); ++it) {
             const QString groupName = QStringLiteral("Column") + it->upperCamelCase + it->upperCamelCaseAlt;
             KConfigGroup configGroup(layoutConfig, groupName);
-            configGroup.deleteEntry("Visible_" + treeViewName);
-            configGroup.deleteEntry("Width_" + treeViewName);
-            configGroup.deleteEntry("VisualIndex_" + treeViewName);
+            configGroup.deleteEntry(QStringLiteral("Visible_") + treeViewName);
+            configGroup.deleteEntry(QStringLiteral("Width_") + treeViewName);
+            configGroup.deleteEntry(QStringLiteral("VisualIndex_") + treeViewName);
         }
         layoutConfig->sync();
         load();
@@ -409,7 +409,7 @@ KBibTeX::TypeFlags BibTeXFields::typeFlagsFromString(const QString &typeFlagsStr
 {
     KBibTeX::TypeFlags result;
 
-    const QStringList list = typeFlagsString.split(';');
+    const QStringList list = typeFlagsString.split(QLatin1Char(';'));
     for (const QString &s : list)
         result |= typeFlagFromString(s);
 
@@ -425,7 +425,7 @@ QString BibTeXFields::typeFlagsToString(KBibTeX::TypeFlags typeFlags)
     if (typeFlags & KBibTeX::TypeFlag::Keyword) resultList << QStringLiteral("Keyword");
     if (typeFlags & KBibTeX::TypeFlag::Reference) resultList << QStringLiteral("Reference");
     if (typeFlags & KBibTeX::TypeFlag::Verbatim) resultList << QStringLiteral("Verbatim");
-    return resultList.join(QChar(';'));
+    return resultList.join(QChar(QLatin1Char(';')));
 }
 
 QString BibTeXFields::typeFlagToString(KBibTeX::TypeFlag typeFlag)

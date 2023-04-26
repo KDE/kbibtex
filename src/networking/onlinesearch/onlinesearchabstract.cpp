@@ -167,13 +167,13 @@ QStringList OnlineSearchAbstract::splitRespectingQuotationMarks(const QString &t
     QStringList result;
 
     while (p1 < max) {
-        while (text[p1] == ' ') ++p1;
+        while (text[p1] == QLatin1Char(' ')) ++p1;
         p2 = p1;
-        if (text[p2] == '"') {
+        if (text[p2] == QLatin1Char('"')) {
             ++p2;
-            while (p2 < max && text[p2] != '"')  ++p2;
+            while (p2 < max && text[p2] != QLatin1Char('"'))  ++p2;
         } else
-            while (p2 < max && text[p2] != ' ') ++p2;
+            while (p2 < max && text[p2] != QLatin1Char(' ')) ++p2;
         result << text.mid(p1, p2 - p1 + 1).simplified();
         p1 = p2 + 1;
     }
@@ -331,7 +331,7 @@ QString OnlineSearchAbstract::encodeURL(QString rawText)
 {
     const char *cur = httpUnsafeChars;
     while (*cur != '\0') {
-        rawText = rawText.replace(QChar(*cur), '%' + QString::number(*cur, 16));
+        rawText = rawText.replace(QLatin1Char(*cur), QStringLiteral("%") + QString::number(*cur, 16));
         ++cur;
     }
     rawText = rawText.replace(QLatin1Char(' '), QLatin1Char('+'));

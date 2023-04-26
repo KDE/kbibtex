@@ -124,7 +124,7 @@ public:
             const auto alt = currentClique->values(fieldName);
             /// second, return number of alternatives for list of alternatives
             /// plus one for an "else" option
-            return alt.count() + (fieldName.startsWith('^') || fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl ? 0 : 1);
+            return alt.count() + (fieldName.startsWith(QLatin1Char('^')) || fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl ? 0 : 1);
         }
 
         return 0;
@@ -165,7 +165,7 @@ public:
                 /// this is not to be a radio widget
                 return QVariant::fromValue(false);
             case Qt::FontRole:
-                if (fieldName.startsWith('^')) {
+                if (fieldName.startsWith(QLatin1Char('^'))) {
                     QFont f = p->font();
                     f.setItalic(true);
                     return f;
@@ -444,7 +444,7 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override {
         bool ok;
         int checkState = value.toInt(&ok);
-        Q_ASSERT_X(ok, "CheckableFileModel::setData", QString("Could not convert value " + value.toString()).toLatin1());
+        Q_ASSERT_X(ok, "CheckableFileModel::setData", QString(QStringLiteral("Could not convert value %1")).arg(value.toString()).toLatin1().constData());
         if (ok && role == Qt::CheckStateRole && index.column() == 1) {
             QSharedPointer<Entry> entry = element(index.row()).dynamicCast<Entry>();
             if (!entry.isNull()) {

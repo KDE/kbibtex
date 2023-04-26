@@ -263,7 +263,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
     QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
     if (url.startsWith(QStringLiteral("https://www.jstor.org/stable/"))) {
         /// use JSTOR's own stable ID for entry ID
-        entry->setId("jstor" + url.mid(28).replace(QLatin1Char(','), QString()));
+        entry->setId(QStringLiteral("jstor") + url.mid(28).replace(QLatin1Char(','), QString()));
         /// store JSTOR's own stable ID
         Value v;
         v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.mid(28))));

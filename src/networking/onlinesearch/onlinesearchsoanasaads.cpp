@@ -61,23 +61,23 @@ public:
         /// Title
         const QStringList title = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Title]);
         if (!title.isEmpty()) {
-            if (!q.isEmpty()) q.append(' ');
+            if (!q.isEmpty()) q.append(QStringLiteral(" "));
             q.append(QStringLiteral("title:\"") + title.join(QStringLiteral("\" title:\"")) + QStringLiteral("\""));
         }
 
         /// Authors
         const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Author]);
         if (!authors.isEmpty()) {
-            if (!q.isEmpty()) q.append(' ');
+            if (!q.isEmpty()) q.append(QStringLiteral(" "));
             q.append(QStringLiteral("author:\"") + authors.join(QStringLiteral("\" author:\"")) + QStringLiteral("\""));
         }
 
         QString year = query[QueryKey::Year];
         if (!year.isEmpty()) {
-            static const QRegularExpression yearRegExp("\\b(18|19|20)[0-9]{2}\\b");
+            static const QRegularExpression yearRegExp(QStringLiteral("\\b(18|19|20)[0-9]{2}\\b"));
             const QRegularExpressionMatch yearRegExpMatch = yearRegExp.match(year);
             if (yearRegExpMatch.hasMatch()) {
-                if (!q.isEmpty()) q.append(' ');
+                if (!q.isEmpty()) q.append(QStringLiteral(" "));
                 year = yearRegExpMatch.captured(0);
                 q.append(QStringLiteral(" year:") + year);
             }
@@ -152,7 +152,7 @@ void OnlineSearchSOANASAADS::doneFetchingSearchJSON()
                         QStringList bibcodeList;
                         for (const QJsonValue &itemValue : docsArray) {
                             if (itemValue.isObject()) {
-                                const QJsonValue bibcodeValue = itemValue.toObject().value(QString("bibcode"));
+                                const QJsonValue bibcodeValue = itemValue.toObject().value(QStringLiteral("bibcode"));
                                 if (bibcodeValue.isString()) {
                                     bibcodeList.append(bibcodeValue.toString());
                                 }

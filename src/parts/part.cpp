@@ -300,7 +300,7 @@ public:
     }
 
     bool openFile(const QUrl &url, const QString &localFilePath) {
-        p->setObjectName("KBibTeXPart::KBibTeXPart for " + url.toDisplayString() + " aka " + localFilePath);
+        p->setObjectName(QString(QStringLiteral("KBibTeXPart::KBibTeXPart for '%1' aka '%2'")).arg(url.toDisplayString(), localFilePath));
 
         qApp->setOverrideCursor(Qt::WaitCursor);
 

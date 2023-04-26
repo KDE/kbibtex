@@ -575,7 +575,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
         /// Test for duplicate ids, use fallback ids with numeric suffix
         if (m_file != nullptr && m_file->containsKey(suggestion)) {
             int suffix = 2;
-            while (m_file->containsKey(suggestion = suggestionBase + QChar('_') + QString::number(suffix)))
+            while (m_file->containsKey(suggestion = suggestionBase + QStringLiteral("_") + QString::number(suffix)))
                 ++suffix;
         }
 

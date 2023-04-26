@@ -73,13 +73,13 @@ public:
         comboBoxSearchWhere = new QComboBox(this);
         layout->addWidget(comboBoxSearchWhere, 0, 0, 1, 1);
         comboBoxSearchWhere->setEditable(true);
-        comboBoxSearchWhere->addItem(i18n("Tag"), "tag");
-        comboBoxSearchWhere->addItem(i18n("User"), "user");
-        comboBoxSearchWhere->addItem(i18n("Group"), "group");
-        comboBoxSearchWhere->addItem(i18n("Author"), "author");
-        comboBoxSearchWhere->addItem(i18n("Concept"), "concept/tag");
-        comboBoxSearchWhere->addItem(i18n("BibTeX Key"), "bibtexkey");
-        comboBoxSearchWhere->addItem(i18n("Everywhere"), "search");
+        comboBoxSearchWhere->addItem(i18n("Tag"), QStringLiteral("tag"));
+        comboBoxSearchWhere->addItem(i18n("User"), QStringLiteral("user"));
+        comboBoxSearchWhere->addItem(i18n("Group"), QStringLiteral("group"));
+        comboBoxSearchWhere->addItem(i18n("Author"), QStringLiteral("author"));
+        comboBoxSearchWhere->addItem(i18n("Concept"), QStringLiteral("concept/tag"));
+        comboBoxSearchWhere->addItem(i18n("BibTeX Key"), QStringLiteral("bibtexkey"));
+        comboBoxSearchWhere->addItem(i18n("Everywhere"), QStringLiteral("search"));
         comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
 
         lineEditSearchTerm = new QLineEdit(this);

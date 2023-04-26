@@ -139,9 +139,9 @@ public:
         layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
         connect(qobject_cast<QLineEdit *>(lineeditLyXPipePath->lineEdit()), &QLineEdit::textEdited, p, &SettingsFileExporterWidget::changed);
 #if QT_VERSION >= 0x050b00
-        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().horizontalAdvance(QChar('W')) * 20);
+        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().horizontalAdvance(QLatin1Char('W')) * 20);
 #else // QT_VERSION >= 0x050b00
-        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
+        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QLatin1Char('W')) * 20);
 #endif // QT_VERSION >= 0x050b00
         lineeditLyXPipePath->setFilter(QStringLiteral("inode/fifo"));
         lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
@@ -162,7 +162,7 @@ public:
     }
 };
 
-const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::citeCmdToLabel = QStringLiteral("\\%1{") + QChar(0x2026) + QChar('}');
+const QString SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate::citeCmdToLabel = QStringLiteral("\\%1{") + QChar(0x2026) + QStringLiteral("}");
 
 SettingsFileExporterWidget::SettingsFileExporterWidget(QWidget *parent)
         : SettingsAbstractWidget(parent), d(new SettingsFileExporterWidgetPrivate(this))

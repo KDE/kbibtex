@@ -322,7 +322,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
 
 #ifdef WRITE_RAWDATAFILE
     static const QRegularExpression filenameStemRegExp(QStringLiteral("/?([^/]+)[.]bib$"));
-    const QString filenameStem = filenameStemRegExp.match(currentTestFile.filename).captured(1).remove(QChar('-')).remove(QChar('_'));
+    const QString filenameStem = filenameStemRegExp.match(currentTestFile.filename).captured(1).remove(QLatin1Char('-')).remove(QLatin1Char('_'));
     QFile rawDataFile("kbibtexfilestest-rawdata.h");
     if (rawDataFile.open(QFile::Append)) {
         QTextStream ts(&rawDataFile);
@@ -387,7 +387,7 @@ void KBibTeXFilesTest::saveFile(File *file, const TestFile &currentTestFile, QSt
         QFAIL(qPrintable(QString::fromLatin1("Don't know format of '%1'").arg(currentTestFile.filename)));
     }
 
-    QTemporaryFile tempFile(QDir::tempPath() + "/XXXXXX." + QFileInfo(currentTestFile.filename).fileName());
+    QTemporaryFile tempFile(QDir::tempPath() + QStringLiteral("/XXXXXX.") + QFileInfo(currentTestFile.filename).fileName());
     /// It is the function caller's responsibility to remove the temporary file later
     tempFile.setAutoRemove(false);
     QVERIFY(tempFile.open());
