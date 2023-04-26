@@ -146,10 +146,10 @@ void Groups::finishedFetchingGroups()
             if (d->api->inBackoffMode())
                 /// If Zotero asked to 'back off', wait until this period is over before issuing the next request
                 QTimer::singleShot((d->api->backoffSecondsLeft() + 1) * 1000, this, [ = ]() {
-                    d->requestZoteroUrl(nextPage);
+                    d->requestZoteroUrl(QUrl{nextPage});
                 });
             else
-                d->requestZoteroUrl(nextPage);
+                d->requestZoteroUrl(QUrl{nextPage});
         } else {
             d->busy = false;
             d->initialized = true;

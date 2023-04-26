@@ -146,8 +146,7 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QueryKey, QString> &query
     d->queryAuthor = queryFragments.join(QStringLiteral("+"));
     d->queryYear = encodeURL(query[QueryKey::Year]);
 
-    QUrl url(d->startPageUrl);
-    QNetworkRequest request(url);
+    QNetworkRequest request(QUrl{d->startPageUrl});
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
     connect(reply, &QNetworkReply::finished, this, &OnlineSearchGoogleScholar::doneFetchingStartPage);
@@ -353,7 +352,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                 const QString primaryUrl = listBibTeXurlsFront.value().first;
                 const QString documentUrl = listBibTeXurlsFront.value().second;
                 QTimer::singleShot(250, this, [this, bibtexUrl, primaryUrl, documentUrl, reply]() {
-                    QNetworkRequest request(bibtexUrl);
+                    QNetworkRequest request(QUrl{bibtexUrl});
                     QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
                     if (!primaryUrl.isEmpty()) {
                         /// Store primary URL as a property of the request/reply
@@ -435,7 +434,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                 const QString bibtexUrl = listBibTeXurlsFront.key();
                 const QString primaryUrl = listBibTeXurlsFront.value().first;
                 const QString documentUrl = listBibTeXurlsFront.value().second;
-                QNetworkRequest request(bibtexUrl);
+                QNetworkRequest request(QUrl{bibtexUrl});
                 QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request, reply);
                 InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
                 if (!primaryUrl.isEmpty()) {

@@ -42,7 +42,7 @@ class OnlineSearchJStor::OnlineSearchJStorPrivate
 {
 public:
     int numExpectedResults;
-    static const QString jstorBaseUrl;
+    static const QUrl jstorBaseUrl;
     QUrl queryUrl;
 
     OnlineSearchJStorPrivate(OnlineSearchJStor *)
@@ -52,7 +52,7 @@ public:
     }
 };
 
-const QString OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl = QStringLiteral("https://www.jstor.org/");
+const QUrl OnlineSearchJStor::OnlineSearchJStorPrivate::jstorBaseUrl{QStringLiteral("https://www.jstor.org/")};
 
 OnlineSearchJStor::OnlineSearchJStor(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchJStorPrivate(this))
@@ -73,7 +73,7 @@ void OnlineSearchJStor::startSearch(const QMap<QueryKey, QString> &query, int nu
 
     /// Build search URL, to be used in the second step
     /// after fetching the start page
-    d->queryUrl = QUrl(OnlineSearchJStorPrivate::jstorBaseUrl);
+    d->queryUrl = OnlineSearchJStorPrivate::jstorBaseUrl;
     QUrlQuery q(d->queryUrl);
     d->queryUrl.setPath(QStringLiteral("/action/doAdvancedSearch"));
     q.addQueryItem(QStringLiteral("Search"), QStringLiteral("Search"));

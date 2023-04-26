@@ -40,7 +40,7 @@ public:
     QMap<QString, QString> queryParameters;
     int numResults;
 
-    static const QString queryFormUrl;
+    static const QUrl queryFormUrl;
     static const QString queryUrlStem;
 
     OnlineSearchMathSciNetPrivate(OnlineSearchMathSciNet *parent)
@@ -50,7 +50,7 @@ public:
     }
 };
 
-const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryFormUrl = QStringLiteral("https://mathscinet.ams.org/mathscinet/");
+const QUrl OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryFormUrl{QStringLiteral("https://mathscinet.ams.org/mathscinet/")};
 const QString OnlineSearchMathSciNet::OnlineSearchMathSciNetPrivate::queryUrlStem = QStringLiteral("https://mathscinet.ams.org/mathscinet/search/publications.html?client=KBibTeX");
 
 OnlineSearchMathSciNet::OnlineSearchMathSciNet(QObject *parent)

@@ -48,13 +48,12 @@ class OnlineSearchAcmPortal::OnlineSearchAcmPortalPrivate
 public:
     QString joinedQueryString;
     int numExpectedResults, numFoundResults;
-    const QString acmPortalBaseUrl;
+    static const QUrl acmPortalBaseUrl;
     int currentSearchPosition;
     static const int requestedResultsPerPage;
 
     OnlineSearchAcmPortalPrivate(OnlineSearchAcmPortal *)
-            : numExpectedResults(0), numFoundResults(0),
-          acmPortalBaseUrl(QStringLiteral("https://dl.acm.org/")), currentSearchPosition(0) {
+            : numExpectedResults(0), numFoundResults(0), currentSearchPosition(0) {
         /// nothing
     }
 
@@ -262,6 +261,7 @@ public:
     }
 };
 
+const QUrl OnlineSearchAcmPortal::OnlineSearchAcmPortalPrivate::acmPortalBaseUrl{QStringLiteral("https://dl.acm.org/")};
 const int OnlineSearchAcmPortal::OnlineSearchAcmPortalPrivate::requestedResultsPerPage = 50; ///< either 10, 20, or 50
 
 OnlineSearchAcmPortal::OnlineSearchAcmPortal(QObject *parent)
