@@ -74,7 +74,7 @@ public:
     Form(QWidget *parent)
             : OnlineSearchAbstract::Form(parent), configGroupName(QStringLiteral("Search Engine SpringerLink")) {
         QFormLayout *layout = new QFormLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         lineEditFreeText = new QLineEdit(this);
         lineEditFreeText->setClearButtonEnabled(true);

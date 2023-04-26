@@ -112,7 +112,7 @@ public:
         /// Personal or Group Library
         QGridLayout *gridLayout = new QGridLayout();
         containerLayout->addLayout(gridLayout);
-        gridLayout->setMargin(0);
+        gridLayout->setContentsMargins(0, 0, 0, 0);
         gridLayout->setColumnMinimumWidth(0, 16); // TODO determine size of a radio button
         radioPersonalLibrary = new QRadioButton(i18n("Personal library"), container);
         gridLayout->addWidget(radioPersonalLibrary, 0, 0, 1, 2);
@@ -137,7 +137,7 @@ public:
         /// Credentials
         QFormLayout *containerForm = new QFormLayout();
         containerLayout->addLayout(containerForm, 1);
-        containerForm->setMargin(0);
+        containerForm->setContentsMargins(0, 0, 0, 0);
         lineEditNumericUserId = new QLineEdit(container);
         lineEditNumericUserId->setSizePolicy(sizePolicy);
         lineEditNumericUserId->setReadOnly(true);
@@ -152,7 +152,7 @@ public:
 
         QBoxLayout *containerButtonLayout = new QHBoxLayout();
         containerLayout->addLayout(containerButtonLayout, 0);
-        containerButtonLayout->setMargin(0);
+        containerButtonLayout->setContentsMargins(0, 0, 0, 0);
         QPushButton *buttonGetOAuthCredentials = new QPushButton(QIcon::fromTheme(QStringLiteral("preferences-web-browser-identification")), i18n("Get New Credentials"), container);
         containerButtonLayout->addWidget(buttonGetOAuthCredentials, 0);
         connect(buttonGetOAuthCredentials, &QPushButton::clicked, p, &ZoteroBrowser::getOAuthCredentials);

@@ -71,7 +71,7 @@ public:
         elementEditor = new ElementEditor(true, p);
         layout->addWidget(elementEditor, 0, 0, 1, 4);
         elementEditor->setEnabled(false);
-        elementEditor->layout()->setMargin(0);
+        elementEditor->layout()->setContentsMargins(0, 0, 0, 0);
         connect(elementEditor, &ElementEditor::modified, p, &ElementForm::modified);
 
         /// Checkbox enabling/disabling setting to automatically apply changes in form to element

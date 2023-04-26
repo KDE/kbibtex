@@ -37,7 +37,7 @@ public:
     Private(PartWidget *parent)
             : p(parent) {
         QBoxLayout *layout = new QVBoxLayout(parent);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         filterBar = new FilterBar(parent);
         layout->addWidget(filterBar, 0);

@@ -85,7 +85,7 @@ public:
 
     void setupGUI() {
         QBoxLayout *outerLayout = new QVBoxLayout(p);
-        outerLayout->setMargin(0);
+        outerLayout->setContentsMargins(0, 0, 0, 0);
         outerLayout->setSpacing(0);
         scrollArea = new QScrollArea(p);
         outerLayout->addWidget(scrollArea);
@@ -94,12 +94,12 @@ public:
         container->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
         scrollArea->setWidget(container);
         layout = new QVBoxLayout(container);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
         layout->setSpacing(innerSpacing);
 
         pushButtonContainer = new QWidget(container);
         pushButtonContainerLayout = new QHBoxLayout(pushButtonContainer);
-        pushButtonContainerLayout->setMargin(0);
+        pushButtonContainerLayout->setContentsMargins(0, 0, 0, 0);
         layout->addWidget(pushButtonContainer);
 
         addLineButton = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add"), pushButtonContainer);

@@ -718,7 +718,7 @@ void FindDuplicatesUI::startDuplicatesSearch()
         QPointer<QDialog> dlg = new QDialog(d->part->widget());
         dlg->setWindowTitle(i18nc("@title:window", "Merge Duplicates"));
         MergeWidget *mw = new MergeWidget(workingSetFile, cliques, dlg);
-        mw->layout()->setMargin(0);
+        mw->layout()->setContentsMargins(0, 0, 0, 0);
         QBoxLayout *layout = new QVBoxLayout(dlg);
         layout->addWidget(mw);
         QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, dlg);

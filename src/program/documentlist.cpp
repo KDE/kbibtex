@@ -50,7 +50,7 @@ public:
     DirOperatorWidget(QWidget *parent)
             : QWidget(parent) {
         QGridLayout *layout = new QGridLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
         layout->setColumnStretch(0, 0);
         layout->setColumnStretch(1, 0);
         layout->setColumnStretch(2, 1);

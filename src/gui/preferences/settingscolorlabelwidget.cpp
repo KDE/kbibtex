@@ -306,7 +306,7 @@ public:
 
     void setupGUI() {
         QGridLayout *layout = new QGridLayout(p);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         /// Central element in the main widget
         /// is a tree view for color-label pairs

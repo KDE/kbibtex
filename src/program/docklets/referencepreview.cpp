@@ -125,7 +125,7 @@ public:
           htmlStart(QStringLiteral("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: ") + textColor.name() + QStringLiteral("; font-size: ") + QString::number(defaultFontSize) + QStringLiteral("pt; font-family: '") + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + QStringLiteral("'; background-color: '") + QApplication::palette().base().color().name(QColor::HexRgb) + QStringLiteral("'\">")),
           notAvailableMessage(htmlStart + QStringLiteral("<p style=\"font-style: italic;\">") + i18n("No preview available") + QStringLiteral("</p><p style=\"font-size: 90%;\">") + i18n("Reason:") + QStringLiteral(" %1</p></body></html>")) {
         QGridLayout *gridLayout = new QGridLayout(p);
-        gridLayout->setMargin(0);
+        gridLayout->setContentsMargins(0, 0, 0, 0);
         gridLayout->setColumnStretch(0, 1);
         gridLayout->setColumnStretch(1, 0);
         gridLayout->setColumnStretch(2, 0);
@@ -139,7 +139,7 @@ public:
         frame->setFrameShape(QFrame::StyledPanel);
 
         QVBoxLayout *layout = new QVBoxLayout(frame);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
         htmlView = new KTextEdit(frame);
         htmlView->setReadOnly(true);
         htmlDocument = new QTextDocument(htmlView);

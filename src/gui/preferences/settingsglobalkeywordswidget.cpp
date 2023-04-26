@@ -90,7 +90,7 @@ public:
 
     void setupGUI() {
         QGridLayout *layout = new QGridLayout(p);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         listViewKeywords = new QListView(p);
         layout->addWidget(listViewKeywords, 0, 0, 3, 1);

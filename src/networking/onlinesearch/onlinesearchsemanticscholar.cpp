@@ -60,7 +60,7 @@ public:
     OnlineSearchQueryFormSemanticScholar(QWidget *widget)
             : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine Semantic Scholar")) {
         QFormLayout *layout = new QFormLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         lineEditPaperReference = new QLineEdit(this);
         lineEditPaperReference->setClearButtonEnabled(true);

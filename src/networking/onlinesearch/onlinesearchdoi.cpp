@@ -58,7 +58,7 @@ public:
     Form(QWidget *widget)
             : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine DOI")) {
         QGridLayout *layout = new QGridLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         QLabel *label = new QLabel(i18n("DOI:"), this);
         layout->addWidget(label, 0, 0, 1, 1);

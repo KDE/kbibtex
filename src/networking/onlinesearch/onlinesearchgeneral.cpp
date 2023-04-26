@@ -43,7 +43,7 @@ public:
           configGroupName(QStringLiteral("Search Engine General"))
     {
         QFormLayout *layout = new QFormLayout(parent);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         QLabel *label = new QLabel(i18n("Free text:"), parent);
         QLineEdit *lineEdit = new QLineEdit(parent);

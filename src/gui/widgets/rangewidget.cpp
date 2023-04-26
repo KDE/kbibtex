@@ -42,7 +42,7 @@ public:
         Q_UNUSED(parent)
 
         QBoxLayout *layout = new QHBoxLayout(parent);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         lowerComboBox = new QComboBox(parent);
         layout->addWidget(lowerComboBox, 1, Qt::AlignCenter);

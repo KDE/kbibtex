@@ -195,7 +195,7 @@ public:
       */
     void setupGUI() {
         QVBoxLayout *layout = new QVBoxLayout(p);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         /// some widgets on the top to control the view
 

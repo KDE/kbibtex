@@ -66,7 +66,7 @@ public:
 
     void setupGUI() {
         QBoxLayout *layout = new QHBoxLayout(p);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         QLabel *label = new QLabel(i18n("Filter:"), p);
         layout->addWidget(label, 0);

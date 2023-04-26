@@ -65,7 +65,7 @@ public:
     Form(QWidget *parent)
             : OnlineSearchAbstract::Form(parent), configGroupName(QStringLiteral("Search Engine arXiv.org")) {
         QGridLayout *layout = new QGridLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         QLabel *label = new QLabel(i18n("Free text:"), this);
         layout->addWidget(label, 0, 0, 1, 1);

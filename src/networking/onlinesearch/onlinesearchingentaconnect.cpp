@@ -79,7 +79,7 @@ public:
     Form(QWidget *widget)
             : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine IngentaConnect")) {
         QFormLayout *layout = new QFormLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         lineEditFullText = new QLineEdit(this);
         lineEditFullText->setClearButtonEnabled(true);

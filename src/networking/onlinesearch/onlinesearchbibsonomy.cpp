@@ -68,7 +68,7 @@ public:
     Form(QWidget *widget)
             : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine Bibsonomy")) {
         QGridLayout *layout = new QGridLayout(this);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         comboBoxSearchWhere = new QComboBox(this);
         layout->addWidget(comboBoxSearchWhere, 0, 0, 1, 1);

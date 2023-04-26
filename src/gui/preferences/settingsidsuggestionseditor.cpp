@@ -115,7 +115,7 @@ public:
         setTitle(i18n("Authors"));
 
         QBoxLayout *boxLayout = new QVBoxLayout();
-        boxLayout->setMargin(0);
+        boxLayout->setContentsMargins(0, 0, 0, 0);
         formLayout->addRow(i18n("Author Range:"), boxLayout);
         static const QStringList authorRange {i18n("First author"), i18n("Second author"), i18n("Third author"), i18n("Fourth author"), i18n("Fifth author"), i18n("Sixth author"), i18n("Seventh author"), i18n("Eighth author"), i18n("Ninth author"), i18n("Tenth author"), i18n("|Last author")};
         rangeWidgetAuthor = new RangeWidget(authorRange, this);
@@ -323,7 +323,7 @@ public:
         setTitle(i18n("Title"));
 
         QBoxLayout *boxLayout = new QVBoxLayout();
-        boxLayout->setMargin(0);
+        boxLayout->setContentsMargins(0, 0, 0, 0);
         formLayout->addRow(i18n("Word Range:"), boxLayout);
         static const QStringList wordRange {i18n("First word"), i18n("Second word"), i18n("Third word"), i18n("Fourth word"), i18n("Fifth word"), i18n("Sixth word"), i18n("Seventh word"), i18n("Eighth word"), i18n("Ninth word"), i18n("Tenth word"), i18n("|Last word")};
         rangeWidgetAuthor = new RangeWidget(wordRange, this);
@@ -424,7 +424,7 @@ public:
         setTitle(i18n("Journal"));
 
         QBoxLayout *boxLayout = new QVBoxLayout();
-        boxLayout->setMargin(0);
+        boxLayout->setContentsMargins(0, 0, 0, 0);
 
         checkBoxRemoveSmallWords = new QCheckBox(i18n("Remove"), this);
         formLayout->addRow(i18n("Small words:"), checkBoxRemoveSmallWords);
@@ -497,7 +497,7 @@ public:
         setTitle(i18n("Type"));
 
         QBoxLayout *boxLayout = new QVBoxLayout();
-        boxLayout->setMargin(0);
+        boxLayout->setContentsMargins(0, 0, 0, 0);
 
         comboBoxChangeCase = new QComboBox(this);
         comboBoxChangeCase->addItem(i18n("No change"), static_cast<int>(IdSuggestions::CaseChange::None));

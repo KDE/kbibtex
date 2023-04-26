@@ -68,7 +68,7 @@ public:
 
     void createGUI() {
         QHBoxLayout *layout = new QHBoxLayout(p);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         switch (fieldInputType) {
         case KBibTeX::FieldInputType::MultiLine:

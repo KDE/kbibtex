@@ -81,7 +81,7 @@ public:
 
     void setupGUI() {
         QBoxLayout *layout = new QVBoxLayout(p);
-        layout->setMargin(0);
+        layout->setContentsMargins(0, 0, 0, 0);
 
         comboboxFieldNames = new QComboBox(p);
         comboboxFieldNames->setEditable(true);

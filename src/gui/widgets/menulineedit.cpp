@@ -89,7 +89,7 @@ public:
         p->setObjectName(QStringLiteral("FieldLineEdit"));
 
         hLayout = new QHBoxLayout(p);
-        hLayout->setMargin(0);
+        hLayout->setContentsMargins(0, 0, 0, 0);
         hLayout->setSpacing(2);
 
         m_pushButtonType = new QPushButton(p);
