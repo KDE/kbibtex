@@ -19,6 +19,7 @@
         <comment xml:lang="cs">Soubor se seznamem použité literatury RIS</comment>
         <comment xml:lang="de">RIS-Bibliografiedatei</comment>
         <comment xml:lang="en_GB">RIS bibliography file</comment>
+        <comment xml:lang="eo">RIS-bibliografia dosiero</comment>
         <comment xml:lang="es">Archivo de bibliografía RIS</comment>
         <comment xml:lang="eu">RIS bibliografia fitxategia</comment>
         <comment xml:lang="fi">RIS-lähdeluettelotiedosto</comment>
@@ -55,6 +56,7 @@
         <comment xml:lang="cs">Soubor se seznamem použité literatury ISI</comment>
         <comment xml:lang="de">ISI-Bibliografiedatei</comment>
         <comment xml:lang="en_GB">ISI bibliography file</comment>
+        <comment xml:lang="eo">ISI-bibliografia dosiero</comment>
         <comment xml:lang="es">Archivo de bibliografía ISI</comment>
         <comment xml:lang="eu">ISI bibliografia fitxategia</comment>
         <comment xml:lang="fi">ISI-lähdeluettelotiedosto</comment>
@@ -93,6 +95,7 @@
         <comment xml:lang="cs">Knihovna EndNote</comment>
         <comment xml:lang="de">EndNote-Bibliothek</comment>
         <comment xml:lang="en_GB">EndNote library</comment>
+        <comment xml:lang="eo">EndNote-biblioteko</comment>
         <comment xml:lang="es">Biblioteca EndNote</comment>
         <comment xml:lang="eu">EndNote liburutegia</comment>
         <comment xml:lang="fi">EndNote-kirjasto</comment>
