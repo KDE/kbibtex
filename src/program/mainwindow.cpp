@@ -192,7 +192,7 @@ public:
         dockDocumentPreview->setObjectName(QStringLiteral("dockDocumentPreview"));
         dockDocumentPreview->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         showPanelsMenu->addAction(dockDocumentPreview->toggleViewAction());
-        p->actionCollection()->setDefaultShortcut(dockDocumentPreview->toggleViewAction(), Qt::CTRL + Qt::SHIFT + Qt::Key_D);
+        p->actionCollection()->setDefaultShortcut(dockDocumentPreview->toggleViewAction(), Qt::CTRL | Qt::SHIFT | Qt::Key_D);
 
         dockElementForm = new QDockWidget(i18n("Element Editor"), p);
         dockElementForm->setAllowedAreas(Qt::BottomDockWidgetArea | Qt::TopDockWidgetArea | Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);

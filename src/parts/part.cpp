@@ -175,7 +175,7 @@ public:
         QAction *filterWidgetAction = new QAction(i18n("Filter"), p);
         p->actionCollection()->addAction(QStringLiteral("toolbar_filter_widget"), filterWidgetAction);
         filterWidgetAction->setIcon(QIcon::fromTheme(QStringLiteral("view-filter")));
-        p->actionCollection()->setDefaultShortcut(filterWidgetAction, Qt::CTRL + Qt::Key_F);
+        p->actionCollection()->setDefaultShortcut(filterWidgetAction, Qt::CTRL | Qt::Key_F);
         connect(filterWidgetAction, &QAction::triggered, partWidget->filterBar(), static_cast<void(QWidget::*)()>(&QWidget::setFocus));
         partWidget->filterBar()->setPlaceholderText(i18n("Filter bibliographic entries (%1)", filterWidgetAction->shortcut().toString()));
 
@@ -188,7 +188,7 @@ public:
 
         QAction *newEntry = new QAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New entry"), newElementAction);
         newElementMenu->addAction(newEntry);
-        p->actionCollection()->setDefaultShortcut(newEntry, Qt::CTRL + Qt::SHIFT + Qt::Key_N);
+        p->actionCollection()->setDefaultShortcut(newEntry, Qt::CTRL | Qt::SHIFT | Qt::Key_N);
         connect(newEntry, &QAction::triggered, p, &KBibTeXPart::newEntryTriggered);
 
         QAction *newComment = new QAction(QIcon::fromTheme(QStringLiteral("address-book-new")), i18n("New comment"), newElementAction);
@@ -206,13 +206,13 @@ public:
         /// Action to edit an element
         elementEditAction = new QAction(QIcon::fromTheme(QStringLiteral("document-edit")), i18n("Edit Element"), p);
         p->actionCollection()->addAction(QStringLiteral("element_edit"), elementEditAction);
-        p->actionCollection()->setDefaultShortcut(elementEditAction, Qt::CTRL + Qt::Key_E);
+        p->actionCollection()->setDefaultShortcut(elementEditAction, Qt::CTRL | Qt::Key_E);
         connect(elementEditAction, &QAction::triggered, partWidget->fileView(), &FileView::editCurrentElement);
 
         /// Action to view the document associated to the current element
         elementViewDocumentAction = new QAction(QIcon::fromTheme(QStringLiteral("application-pdf")), i18n("View Document"), p);
         p->actionCollection()->addAction(QStringLiteral("element_viewdocument"), elementViewDocumentAction);
-        p->actionCollection()->setDefaultShortcut(elementViewDocumentAction, Qt::CTRL + Qt::Key_D);
+        p->actionCollection()->setDefaultShortcut(elementViewDocumentAction, Qt::CTRL | Qt::Key_D);
         connect(elementViewDocumentAction, &QAction::triggered, p, &KBibTeXPart::elementViewDocument);
 
         /// Action to find a PDF matching the current element
@@ -236,7 +236,7 @@ public:
 
         /// Action to copy references, e.g. '\\cite{fordfulkerson1959}'
         editCopyReferencesAction = new QAction(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy References"), p);
-        p->actionCollection()->setDefaultShortcut(editCopyReferencesAction, Qt::CTRL + Qt::SHIFT + Qt::Key_C);
+        p->actionCollection()->setDefaultShortcut(editCopyReferencesAction, Qt::CTRL | Qt::SHIFT | Qt::Key_C);
         p->actionCollection()->addAction(QStringLiteral("edit_copy_references"), editCopyReferencesAction);
         connect(editCopyReferencesAction, &QAction::triggered, clipboard, &Clipboard::copyReferences);
 
