@@ -82,7 +82,7 @@ public:
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole)
                     return ofiItem->lastAccess().toString(Qt::TextDate);
                 else if (role == SortRole)
-                    return ofiItem->lastAccess().toTime_t();
+                    return ofiItem->lastAccess().toSecsSinceEpoch();
             } else if (index.column() == 2) {
                 if (role == Qt::DisplayRole || role == Qt::ToolTipRole || role == SortRole)
                     return ofiItem->url().url(QUrl::PreferLocalFile);

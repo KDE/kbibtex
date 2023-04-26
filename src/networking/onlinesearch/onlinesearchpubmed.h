@@ -42,7 +42,7 @@ public:
     QUrl homepage() const override;
 
     static const int maxNumResults;
-    static const uint queryChokeTimeout;
+    static const qint64 queryChokeTimeout; // FIXME needs to be in public interface?
 
 private Q_SLOTS:
     void eSearchDone();
@@ -52,7 +52,7 @@ private:
     class OnlineSearchPubMedPrivate;
     OnlineSearchPubMedPrivate *d;
 
-    static uint lastQueryEpoch;
+    static qint64 lastQueryEpoch; // FIXME needs to be in public interface?
 };
 
 #endif // KBIBTEX_NETWORKING_ONLINESEARCHPUBMED_H

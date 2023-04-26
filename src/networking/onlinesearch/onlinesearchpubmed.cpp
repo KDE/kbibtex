@@ -38,8 +38,8 @@
 #include "logging_networking.h"
 
 const int OnlineSearchPubMed::maxNumResults = 25;
-const uint OnlineSearchPubMed::queryChokeTimeout = 10; /// 10 seconds
-uint OnlineSearchPubMed::lastQueryEpoch = 0;
+const qint64 OnlineSearchPubMed::queryChokeTimeout = 10; /// 10 seconds
+qint64 OnlineSearchPubMed::lastQueryEpoch = 0;
 
 class OnlineSearchPubMed::OnlineSearchPubMedPrivate
 {
@@ -127,7 +127,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QueryKey, QString> &query, int n
     /// enforcing limit on number of results
     numResults = qMin(maxNumResults, numResults);
     /// enforcing choke on number of searchs per time
-    if (QDateTime::currentDateTimeUtc().toTime_t() - lastQueryEpoch < queryChokeTimeout) {
+    if (QDateTime::currentDateTimeUtc().toSecsSinceEpoch() - lastQueryEpoch < queryChokeTimeout) {
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Too many search queries per time; choke enforces pause of" << queryChokeTimeout << "seconds between queries";
         delayedStoppedSearch(resultNoError);
         return;
@@ -160,7 +160,7 @@ QUrl OnlineSearchPubMed::homepage() const
 void OnlineSearchPubMed::eSearchDone()
 {
     Q_EMIT progress(++curStep, numSteps);
-    lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
+    lastQueryEpoch = QDateTime::currentDateTimeUtc().toSecsSinceEpoch();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -203,7 +203,7 @@ void OnlineSearchPubMed::eSearchDone()
 void OnlineSearchPubMed::eFetchDone()
 {
     Q_EMIT progress(++curStep, numSteps);
-    lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
+    lastQueryEpoch = QDateTime::currentDateTimeUtc().toSecsSinceEpoch();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
