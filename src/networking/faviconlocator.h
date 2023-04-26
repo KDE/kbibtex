@@ -57,7 +57,7 @@ public:
      */
     QIcon icon() const;
 
-signals:
+Q_SIGNALS:
     /**
      * Asynchronous search for a favicon concluded either with the
      * retrieved favicon or, in case of any failure, a generic icon.

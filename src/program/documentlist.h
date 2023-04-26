@@ -61,7 +61,7 @@ private:
     class DocumentListModelPrivate;
     DocumentListModelPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void listsChanged(OpenFileInfo::StatusFlags statusFlags);
 };
 
@@ -73,7 +73,7 @@ public:
     DocumentListView(OpenFileInfo::StatusFlag statusFlag, QWidget *parent);
     ~DocumentListView() override;
 
-private slots:
+private Q_SLOTS:
     void addToFavorites();
     void removeFromFavorites();
     void openFile();
@@ -97,10 +97,10 @@ public:
     explicit DocumentList(QWidget *parent = nullptr);
     ~DocumentList();
 
-signals:
+Q_SIGNALS:
     void openFile(const QUrl &url);
 
-private slots:
+private Q_SLOTS:
     void fileSelected(const KFileItem &item);
 
 private:

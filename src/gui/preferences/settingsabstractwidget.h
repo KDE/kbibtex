@@ -41,10 +41,10 @@ public:
     virtual QString label() const = 0;
     virtual QIcon icon() const = 0;
 
-signals:
+Q_SIGNALS:
     void changed();
 
-public slots:
+public Q_SLOTS:
     virtual void loadState() = 0;
     /**
      * Save the state of this settings widget into the configuration settings,

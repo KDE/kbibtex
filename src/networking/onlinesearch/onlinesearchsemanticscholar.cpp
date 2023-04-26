@@ -198,7 +198,7 @@ OnlineSearchSemanticScholar::~OnlineSearchSemanticScholar()
 void OnlineSearchSemanticScholar::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     const QUrl url = d->buildQueryUrl();
     if (url.isValid()) {
@@ -218,7 +218,7 @@ void OnlineSearchSemanticScholar::startSearchFromForm()
 void OnlineSearchSemanticScholar::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     const QUrl url = d->buildQueryUrl(query, numResults);
     if (url.isValid()) {
@@ -253,7 +253,7 @@ QUrl OnlineSearchSemanticScholar::homepage() const
 
 void OnlineSearchSemanticScholar::downloadDone()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     QUrl redirUrl;

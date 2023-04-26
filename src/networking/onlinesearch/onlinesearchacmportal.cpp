@@ -281,7 +281,7 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QueryKey, QString> &query, in
     d->joinedQueryString.clear();
     d->currentSearchPosition = 1;
     d->numFoundResults = 0;
-    emit progress(curStep = 0, numSteps = numResults / OnlineSearchAcmPortalPrivate::requestedResultsPerPage + 3);
+    Q_EMIT progress(curStep = 0, numSteps = numResults / OnlineSearchAcmPortalPrivate::requestedResultsPerPage + 3);
 
     for (QMap<QueryKey, QString>::ConstIterator it = query.constBegin(); it != query.constEnd(); ++it) {
         // FIXME: Is there a need for percent encoding?
@@ -314,7 +314,7 @@ QUrl OnlineSearchAcmPortal::homepage() const
 
 void OnlineSearchAcmPortal::doneFetchingStartPage()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -353,7 +353,7 @@ void OnlineSearchAcmPortal::doneFetchingStartPage()
 
 void OnlineSearchAcmPortal::doneFetchingSearchPage()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -413,7 +413,7 @@ void OnlineSearchAcmPortal::doneFetchingSearchPage()
 
 void OnlineSearchAcmPortal::doneFetchingJSON()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 

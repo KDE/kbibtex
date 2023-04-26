@@ -37,10 +37,10 @@ public:
     explicit UrlChecker(QObject *parent = nullptr);
     ~UrlChecker();
 
-public slots:
+public Q_SLOTS:
     void startChecking(const File &bibtexFile);
 
-signals:
+Q_SIGNALS:
     void urlChecked(QUrl url, UrlChecker::Status status, QString msg);
     void finished();
 

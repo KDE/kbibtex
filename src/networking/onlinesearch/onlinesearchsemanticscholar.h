@@ -44,7 +44,7 @@ public:
 #endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
 
-private slots:
+private Q_SLOTS:
     void downloadDone();
 
 private:

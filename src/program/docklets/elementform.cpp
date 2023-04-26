@@ -229,7 +229,7 @@ void ElementForm::apply()
     d->apply();
 
     /// Notify rest of program (esp. main list) about changes
-    emit elementModified();
+    Q_EMIT elementModified();
 
 }
 

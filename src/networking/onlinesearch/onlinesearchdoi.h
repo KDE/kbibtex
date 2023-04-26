@@ -54,7 +54,7 @@ private:
     class OnlineSearchDOIPrivate;
     OnlineSearchDOIPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void downloadDone();
 };
 

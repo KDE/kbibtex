@@ -48,7 +48,7 @@ public:
     FileView *fileView();
     OpenFileInfo *currentFile();
 
-public slots:
+public Q_SLOTS:
     /**
      * Make the MDI widget show a different file using a part
      * as specified by a service.
@@ -59,7 +59,7 @@ public slots:
      */
     void setFile(OpenFileInfo *openFileInfo, const KPluginMetaData &service);
 
-signals:
+Q_SIGNALS:
     void setCaption(const QString &);
     void documentSwitched(FileView *, FileView *);
     void activePartChanged(KParts::Part *);
@@ -71,7 +71,7 @@ private:
     class MDIWidgetPrivate;
     MDIWidgetPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void slotStatusFlagsChanged(OpenFileInfo::StatusFlags);
     void slotOpenLRU(const QModelIndex &);
 };

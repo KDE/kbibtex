@@ -45,7 +45,7 @@ private:
     class OnlineSearchScienceDirectPrivate;
     OnlineSearchScienceDirectPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void doneFetchingJSON();
 };
 

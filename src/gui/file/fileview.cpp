@@ -143,9 +143,9 @@ bool FileView::editElement(QSharedPointer<Element> element)
         if (changed) {
             FileModel *model = fileModel();
             const File *bibliographyFile = model != nullptr ? model->bibliographyFile() : nullptr;
-            emit currentElementChanged(currentElement(), bibliographyFile);
-            emit selectedElementsChanged();
-            emit modified(true);
+            Q_EMIT currentElementChanged(currentElement(), bibliographyFile);
+            Q_EMIT selectedElementsChanged();
+            Q_EMIT modified(true);
         }
         return changed;
     } else
@@ -194,7 +194,7 @@ void FileView::currentChanged(const QModelIndex &current, const QModelIndex &pre
     m_current = elementAt(current);
     FileModel *model = fileModel();
     if (model != nullptr)
-        emit currentElementChanged(m_current, model->bibliographyFile());
+        Q_EMIT currentElementChanged(m_current, model->bibliographyFile());
 }
 
 void FileView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
@@ -215,7 +215,7 @@ void FileView::selectionChanged(const QItemSelection &selected, const QItemSelec
         m_selection.removeOne(elementAt(index));
     }
 
-    emit selectedElementsChanged();
+    Q_EMIT selectedElementsChanged();
 }
 
 void FileView::selectionDelete()
@@ -229,13 +229,13 @@ void FileView::selectionDelete()
     FileModel *model = fileModel();
     if (model != nullptr) model->removeRowList(rows);
 
-    emit modified(true);
+    Q_EMIT modified(true);
 }
 
 /// FIXME the existence of this function is basically just one big hack
 void FileView::externalModification()
 {
-    emit modified(true);
+    Q_EMIT modified(true);
 }
 
 void FileView::setReadOnly(bool isReadOnly)
@@ -303,7 +303,7 @@ void FileView::dragMoveEvent(QDragMoveEvent *event)
 
 void FileView::itemActivated(const QModelIndex &index)
 {
-    emit elementExecuted(elementAt(index));
+    Q_EMIT elementExecuted(elementAt(index));
 }
 
 void FileView::prepareEditorDialog(DialogType dialogType)

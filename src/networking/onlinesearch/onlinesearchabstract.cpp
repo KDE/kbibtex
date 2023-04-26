@@ -572,7 +572,7 @@ bool OnlineSearchAbstract::publishEntry(QSharedPointer<Entry> entry)
 
     sanitizeEntry(entry);
 
-    emit foundEntry(entry);
+    Q_EMIT foundEntry(entry);
 
     return true;
 }
@@ -582,15 +582,15 @@ void OnlineSearchAbstract::stopSearch(int errorCode) {
         curStep = numSteps;
     else
         curStep = numSteps = 0;
-    emit progress(curStep, numSteps);
-    emit stoppedSearch(errorCode);
+    Q_EMIT progress(curStep, numSteps);
+    Q_EMIT stoppedSearch(errorCode);
 }
 
 void OnlineSearchAbstract::refreshBusyProperty() {
     const bool newBusyState = busy();
     if (newBusyState != m_previousBusyState) {
         m_previousBusyState = newBusyState;
-        emit busyChanged();
+        Q_EMIT busyChanged();
     }
 }
 

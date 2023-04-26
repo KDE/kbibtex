@@ -41,7 +41,7 @@ public:
     FileModel *fileModel();
     QSortFilterProxyModel *sortFilterProxyModel();
 
-signals:
+Q_SIGNALS:
     void searchFor(const QString &);
     /**
      * Signal emitted if this view's selection changes.
@@ -57,7 +57,7 @@ private:
     class Private;
     Private *d;
 
-private slots:
+private Q_SLOTS:
     void headerColumnVisibilityToggled();
     void sort(int, Qt::SortOrder);
     void noSorting();

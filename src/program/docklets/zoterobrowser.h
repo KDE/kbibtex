@@ -37,17 +37,17 @@ public:
     explicit ZoteroBrowser(SearchResults *searchResults, QWidget *parent);
     ~ZoteroBrowser() override;
 
-public slots:
+public Q_SLOTS:
     void visibiltyChanged(bool);
 
-signals:
+Q_SIGNALS:
     void itemToShow();
 
 private:
     class Private;
     Private *const d;
 
-private slots:
+private Q_SLOTS:
     void modelReset();
     void collectionDoubleClicked(const QModelIndex &index);
     void tagDoubleClicked(const QModelIndex &index);

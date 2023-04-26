@@ -40,7 +40,7 @@ public:
     QString label() const override;
     QIcon icon() const override;
 
-public slots:
+public Q_SLOTS:
     void loadState() override;
     bool saveState() override;
     void resetToDefaults() override;
@@ -48,7 +48,7 @@ public slots:
     void automaticLyXDetectionToggled(bool);
 #endif // QT_LSTAT
 
-private slots:
+private Q_SLOTS:
     void updateGUI();
 
 private:

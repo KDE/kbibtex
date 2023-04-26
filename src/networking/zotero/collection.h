@@ -53,7 +53,7 @@ public:
     uint collectionNumericId(const QString &collectionId) const;
     QString collectionFromNumericId(quintptr numericId) const;
 
-signals:
+Q_SIGNALS:
     void finishedLoading();
 
 private:
@@ -62,7 +62,7 @@ private:
 
     void emitFinishedLoading();
 
-private slots:
+private Q_SLOTS:
     void finishedFetchingCollection();
 };
 

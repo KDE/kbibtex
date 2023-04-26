@@ -579,12 +579,12 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
             Value v;
             v.append(QSharedPointer<VerbatimText>(new VerbatimText(entry->id())));
             reset(v);
-            emit textChanged(entry->id());
+            Q_EMIT textChanged(entry->id());
             success = true;
         } else if (!entry.isNull() && entry->contains(d->fieldKey)) {
             /// case for "normal" fields like for journal, pages, ...
             reset(entry->value(d->fieldKey));
-            emit textChanged(text());
+            Q_EMIT textChanged(text());
             success = true;
         }
     }
@@ -593,6 +593,6 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
         /// In case above cases were not met and thus 'success' is still false,
         /// clear this line edit and use the clipboad text as its content
         setText(clipboardText);
-        emit textChanged(clipboardText);
+        Q_EMIT textChanged(clipboardText);
     }
 }

@@ -44,7 +44,7 @@ private:
     class KBibTeXPreferencesDialogPrivate;
     KBibTeXPreferencesDialogPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void buttonClicked(QAbstractButton *);
     void gotChanged();
 };

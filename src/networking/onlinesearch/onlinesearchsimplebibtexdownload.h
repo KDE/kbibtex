@@ -42,7 +42,7 @@ protected:
     virtual QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) = 0;
     virtual QString processRawDownload(const QString &download);
 
-private slots:
+private Q_SLOTS:
     void downloadDone();
 };
 

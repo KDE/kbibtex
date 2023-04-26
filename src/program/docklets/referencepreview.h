@@ -38,7 +38,7 @@ public:
 
     void setFileView(FileView *fileView);
 
-public slots:
+public Q_SLOTS:
     void setElement(QSharedPointer<Element>, const File *);
 
 private:
@@ -47,7 +47,7 @@ private:
 
     void setHtml(const QString &html, bool buttonsEnabled);
 
-private slots:
+private Q_SLOTS:
     void renderHTML();
     void openAsHTML();
     void saveAsHTML();

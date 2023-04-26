@@ -43,7 +43,7 @@ public:
 
     static bool kpsewhich(const QString &filename);
 
-signals:
+Q_SIGNALS:
     void processStandardOut(const QString);
     void processStandardError(const QString);
 

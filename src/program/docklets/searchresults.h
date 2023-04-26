@@ -38,14 +38,14 @@ public:
     void clear();
     bool insertElement(QSharedPointer<Element> element);
 
-public slots:
+public Q_SLOTS:
     void documentSwitched(FileView *, FileView *);
 
 private:
     class SearchResultsPrivate;
     SearchResultsPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void updateGUI();
     void importSelected();
 };

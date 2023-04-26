@@ -273,7 +273,7 @@ void BasicFileView::setModel(QAbstractItemModel *model)
 
     connect(selectionModel(), &QItemSelectionModel::selectionChanged, this, [this](const QItemSelection &selected, const QItemSelection &) {
         const bool hasSelection = !selected.empty();
-        emit this->hasSelectionChanged(hasSelection);
+        Q_EMIT this->hasSelectionChanged(hasSelection);
     });
 
     /// sort according to session
@@ -297,10 +297,10 @@ void BasicFileView::keyPressEvent(QKeyEvent *event)
 {
     if (event->modifiers() == Qt::NoModifier) {
         if ((event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter) && currentIndex() != QModelIndex()) {
-            emit doubleClicked(currentIndex());
+            Q_EMIT doubleClicked(currentIndex());
             event->accept();
         } else if (!event->text().isEmpty() && event->text().at(0).isLetterOrNumber()) {
-            emit searchFor(event->text());
+            Q_EMIT searchFor(event->text());
             event->accept();
         }
     }

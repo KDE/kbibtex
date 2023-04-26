@@ -94,7 +94,7 @@ public:
 
     static QString numberToOrdinal(const int number);
 
-signals:
+Q_SIGNALS:
     /**
      * @brief Signal to notify the caller of this class's functions about the progress.
      * @param[out] current Current progress, a non-negative number, less or equal @c total
@@ -117,7 +117,7 @@ signals:
      */
     void message(const FileExporter::MessageSeverity severity, const QString &messageText);
 
-public slots:
+public Q_SLOTS:
     virtual void cancel() {
         // nothing
     }

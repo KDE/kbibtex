@@ -71,7 +71,7 @@ public:
 
     void notificationEvent(int eventId) override;
 
-signals:
+Q_SIGNALS:
     void bibliographySystemChanged();
 
 private:

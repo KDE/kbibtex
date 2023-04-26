@@ -643,7 +643,7 @@ OnlineSearchArXiv::~OnlineSearchArXiv()
 void OnlineSearchArXiv::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
@@ -659,7 +659,7 @@ void OnlineSearchArXiv::startSearchFromForm()
 void OnlineSearchArXiv::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
@@ -695,7 +695,7 @@ QUrl OnlineSearchArXiv::homepage() const
 
 void OnlineSearchArXiv::downloadDone()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 

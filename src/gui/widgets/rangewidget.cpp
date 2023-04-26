@@ -120,7 +120,7 @@ void RangeWidget::setLowerValue(int newLowerValue)
     newLowerValue = qMin(qMax(qMin(newLowerValue, d->values.size() - 1), 0), d->upperValue);
     if (newLowerValue != d->lowerValue) {
         d->lowerValue = newLowerValue;
-        emit lowerValueChanged(d->lowerValue);
+        Q_EMIT lowerValueChanged(d->lowerValue);
         d->adjustComboBoxes();
     }
 }
@@ -135,7 +135,7 @@ void RangeWidget::setUpperValue(int newUpperValue)
     newUpperValue = qMax(qMax(qMin(newUpperValue, d->values.size() - 1), 0), d->lowerValue);
     if (newUpperValue != d->upperValue) {
         d->upperValue = newUpperValue;
-        emit upperValueChanged(d->upperValue);
+        Q_EMIT upperValueChanged(d->upperValue);
         d->adjustComboBoxes();
     }
 }
@@ -150,7 +150,7 @@ void RangeWidget::lowerComboBoxChanged(int spinboxLowerValue)
     const int newLowerValue = spinboxLowerValue;
     if (newLowerValue != d->lowerValue) {
         d->lowerValue = newLowerValue;
-        emit lowerValueChanged(d->lowerValue);
+        Q_EMIT lowerValueChanged(d->lowerValue);
         d->adjustComboBoxes();
     }
 }
@@ -160,7 +160,7 @@ void RangeWidget::upperComboBoxChanged(int spinboxUpperValue)
     const int newUpperValue = spinboxUpperValue + d->lowerValue;
     if (newUpperValue != d->upperValue) {
         d->upperValue = newUpperValue;
-        emit upperValueChanged(d->upperValue);
+        Q_EMIT upperValueChanged(d->upperValue);
         d->adjustComboBoxes();
     }
 }

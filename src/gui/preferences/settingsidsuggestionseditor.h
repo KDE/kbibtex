@@ -60,7 +60,7 @@ public:
     void setFormatString(const QString &formatString);
     QString formatString() const;
 
-public slots:
+public Q_SLOTS:
     void updatePreview();
 
 private:

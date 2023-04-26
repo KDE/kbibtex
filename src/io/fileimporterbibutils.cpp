@@ -63,7 +63,7 @@ File *FileImporterBibUtils::load(QIODevice *iodevice)
         return nullptr;
     } else if (iodevice->atEnd() || iodevice->size() <= 0) {
         qCWarning(LOG_KBIBTEX_IO) << "Input device at end or does not contain any data";
-        emit message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
+        Q_EMIT message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
         return new File();
     }
 

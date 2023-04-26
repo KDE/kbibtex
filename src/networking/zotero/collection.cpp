@@ -249,5 +249,5 @@ void Collection::finishedFetchingCollection()
 void Collection::emitFinishedLoading()
 {
     d->busy = false;
-    emit finishedLoading();
+    Q_EMIT finishedLoading();
 }

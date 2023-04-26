@@ -43,7 +43,7 @@ public:
 
     void setProtectCasing(bool protectCasing);
 
-public slots:
+public Q_SLOTS:
     void cancel() override;
 
 private:

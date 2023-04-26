@@ -50,7 +50,7 @@ public:
     static QString guessLyXPipeLocation();
 #endif // QT_LSTAT
 
-private slots:
+private Q_SLOTS:
     void sendReferenceToLyX();
 
 private:

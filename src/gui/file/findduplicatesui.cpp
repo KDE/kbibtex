@@ -258,7 +258,7 @@ public:
                 }
 
                 /// update view on neighbouring alternatives
-                emit dataChanged(index.sibling(0, 0), index.sibling(rowCount(index.parent()), 0));
+                Q_EMIT dataChanged(index.sibling(0, 0), index.sibling(rowCount(index.parent()), 0));
 
                 return true;
             } else if (role == Qt::CheckStateRole && isInt && selectionType(fieldName) == SelectionTypeCheck) {
@@ -269,7 +269,7 @@ public:
                 else
                     return false; ///< tertium non datur
 
-                emit dataChanged(index, index);
+                Q_EMIT dataChanged(index, index);
 
                 return true;
             } else if (role == UserInputRole) {
@@ -313,7 +313,7 @@ public:
                 if (!v.isEmpty()) {
                     values.removeAt(index.row());
                     values.insert(index.row(), v);
-                    emit dataChanged(index, index);
+                    Q_EMIT dataChanged(index, index);
                     return true;
                 } else
                     return false;
@@ -453,7 +453,7 @@ public:
                     EntryClique *ec = cl[currentClique];
                     ec->setEntryChecked(QSharedPointer<Entry>(entry), checkState == Qt::Checked);
                     cl[currentClique] = ec;
-                    emit dataChanged(index, index);
+                    Q_EMIT dataChanged(index, index);
                     tv->reset();
                     tv->expandAll();
                     return true;

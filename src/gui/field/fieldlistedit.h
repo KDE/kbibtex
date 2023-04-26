@@ -62,7 +62,7 @@ public:
     virtual void setFieldKey(const QString &fieldKey);
     virtual void setCompletionItems(const QStringList &items);
 
-signals:
+Q_SIGNALS:
     void modified();
 
 protected:
@@ -76,7 +76,7 @@ protected:
 
     const Element *m_element;
 
-private slots:
+private Q_SLOTS:
     void lineAdd();
 
 protected:
@@ -100,7 +100,7 @@ public:
 
     void setReadOnly(bool isReadOnly) override;
 
-private slots:
+private Q_SLOTS:
     void slotAddNamesFromClipboard();
 
 private:
@@ -126,7 +126,7 @@ public:
 protected:
     FieldLineEdit *addFieldLineEdit() override;
 
-private slots:
+private Q_SLOTS:
     void slotAddReference();
     void slotAddReferenceFromClipboard();
     void downloadFinished(KJob *);
@@ -156,7 +156,7 @@ public:
     void setFile(const File *file) override;
     void setCompletionItems(const QStringList &items) override;
 
-private slots:
+private Q_SLOTS:
     void slotAddKeywordsFromList();
     void slotAddKeywordsFromClipboard();
 

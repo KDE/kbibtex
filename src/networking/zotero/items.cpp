@@ -154,7 +154,7 @@ void Items::finishedFetchingItems()
             /// Perform basic sanity checks ...
             if (bibtexFile != nullptr && !bibtexFile->isEmpty()) {
                 for (const QSharedPointer<Element> &element : const_cast<const File &>(*bibtexFile)) {
-                    emit foundElement(element); ///< ... and publish result
+                    Q_EMIT foundElement(element); ///< ... and publish result
                 }
             }
 
@@ -164,10 +164,10 @@ void Items::finishedFetchingItems()
             d->retrieveItems(reply->url(), start + Zotero::API::limit);
         } else {
             /// Done retrieving BibTeX code
-            emit stoppedSearch(0); // TODO proper error codes
+            Q_EMIT stoppedSearch(0); // TODO proper error codes
         }
     } else {
         qCWarning(LOG_KBIBTEX_NETWORKING) << reply->errorString(); ///< something went wrong
-        emit stoppedSearch(1); // TODO proper error codes
+        Q_EMIT stoppedSearch(1); // TODO proper error codes
     }
 }

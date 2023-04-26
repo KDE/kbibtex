@@ -107,7 +107,7 @@ public:
      */
     static bool isFileExporterBibTeX(const FileExporter &other);
 
-public slots:
+public Q_SLOTS:
     void cancel() override;
 
 private:

@@ -122,7 +122,7 @@ public:
 
     void setCommentHandling(CommentHandling commentHandling);
 
-public slots:
+public Q_SLOTS:
     void cancel() override;
 
 private:

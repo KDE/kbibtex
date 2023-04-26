@@ -87,11 +87,11 @@ QNetworkRequest API::request(const QUrl &url) const
 void API::startBackoff(int duration) {
     if (duration > 0 && !inBackoffMode()) {
         d->backoffElapseTime = QDateTime::currentDateTime().addSecs(duration + 1);
-        emit backoffModeStart();
+        Q_EMIT backoffModeStart();
         /// Use single-shot timer and functor to emit signal
         /// that backoff mode has finished
         QTimer::singleShot((duration + 1) * 1000, this, [ = ]() {
-            emit backoffModeEnd();
+            Q_EMIT backoffModeEnd();
         });
     }
 }

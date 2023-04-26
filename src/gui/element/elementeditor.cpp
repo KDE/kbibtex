@@ -563,13 +563,13 @@ void ElementEditor::apply()
 
     d->apply();
     d->setModified(false);
-    emit modified(false);
+    Q_EMIT modified(false);
 }
 
 void ElementEditor::reset()
 {
     d->reset();
-    emit modified(false);
+    Q_EMIT modified(false);
 }
 
 bool ElementEditor::validate() {
@@ -601,7 +601,7 @@ void ElementEditor::setElement(QSharedPointer<Element> element, const File *file
 {
     d->setElement(element, file);
     d->reset();
-    emit modified(false);
+    Q_EMIT modified(false);
 }
 
 void ElementEditor::setElement(QSharedPointer<const Element> element, const File *file)
@@ -691,5 +691,5 @@ void ElementEditor::childModified(bool m)
         d->elementUnapplied = true;
         d->referenceWidgetSetEntryIdByDefault();
     }
-    emit modified(m);
+    Q_EMIT modified(m);
 }

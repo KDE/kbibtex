@@ -109,7 +109,7 @@ public:
     void setColor(const QColor &newColor) {
         userColor = newColor;
         const QModelIndex idx = index(rowCount() - 1, 0, QModelIndex());
-        emit dataChanged(idx, idx);
+        Q_EMIT dataChanged(idx, idx);
     }
 
     void reset() {
@@ -242,7 +242,7 @@ void ColorLabelWidget::slotCurrentIndexChanged(int index)
             d->model->setColor(newColor);
     }
 
-    emit modified();
+    Q_EMIT modified();
 }
 
 QPixmap ColorLabelWidget::createSolidIcon(const QColor &color)

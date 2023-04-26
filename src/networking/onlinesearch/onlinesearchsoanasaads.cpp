@@ -109,7 +109,7 @@ OnlineSearchSOANASAADS::~OnlineSearchSOANASAADS()
 
 void OnlineSearchSOANASAADS::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
-    emit progress(curStep = 0, numSteps = 2);
+    Q_EMIT progress(curStep = 0, numSteps = 2);
 
     QUrl url = d->buildSearchUrl(query, numResults);
     QNetworkRequest request(url);
@@ -134,7 +134,7 @@ QUrl OnlineSearchSOANASAADS::homepage() const
 
 void OnlineSearchSOANASAADS::doneFetchingSearchJSON()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -196,7 +196,7 @@ void OnlineSearchSOANASAADS::doneFetchingSearchJSON()
 
 void OnlineSearchSOANASAADS::doneFetchingExportBibTeX()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 

@@ -134,18 +134,18 @@ public:
                 if (idx.row() != m_defaultFormatStringRow) {
                     QModelIndex oldDefaultIndex = index(m_defaultFormatStringRow, 0);
                     m_defaultFormatStringRow = idx.row();
-                    emit dataChanged(oldDefaultIndex, oldDefaultIndex);
-                    emit dataChanged(idx, idx);
+                    Q_EMIT dataChanged(oldDefaultIndex, oldDefaultIndex);
+                    Q_EMIT dataChanged(idx, idx);
                 }
             } else {
                 m_defaultFormatStringRow = -1;
-                emit dataChanged(idx, idx);
+                Q_EMIT dataChanged(idx, idx);
             }
 
             return true;
         } else if (role == FormatStringRole && value.canConvert<QString>()) {
             m_formatStringList[idx.row()] = value.toString();
-            emit dataChanged(idx, idx);
+            Q_EMIT dataChanged(idx, idx);
             return true;
         }
 
@@ -338,24 +338,24 @@ void SettingsIdSuggestionsWidget::buttonClicked()
             QModelIndex index = d->idSuggestionsModel->index(row, 0, QModelIndex());
             d->treeViewSuggestions->setCurrentIndex(index);
             if (d->idSuggestionsModel->setData(index, newSuggestion, IdSuggestionsModel::FormatStringRole))
-                emit changed();
+                Q_EMIT changed();
         }
     } else if (button == d->buttonEditSuggestion) {
         QModelIndex currIndex = d->treeViewSuggestions->currentIndex();
         editItem(currIndex);
     } else if (button == d->buttonDeleteSuggestion) {
         if (d->idSuggestionsModel->remove(selectedIndex)) {
-            emit changed();
+            Q_EMIT changed();
         }
     } else if (button == d->buttonSuggestionUp) {
         if (d->idSuggestionsModel->moveUp(selectedIndex)) {
             d->treeViewSuggestions->selectionModel()->setCurrentIndex(selectedIndex.sibling(selectedIndex.row() - 1, 0), QItemSelectionModel::ClearAndSelect);
-            emit changed();
+            Q_EMIT changed();
         }
     } else if (button == d->buttonSuggestionDown) {
         if (d->idSuggestionsModel->moveDown(selectedIndex)) {
             d->treeViewSuggestions->selectionModel()->setCurrentIndex(selectedIndex.sibling(selectedIndex.row() + 1, 0), QItemSelectionModel::ClearAndSelect);
-            emit changed();
+            Q_EMIT changed();
         }
     }
 }
@@ -384,11 +384,11 @@ void SettingsIdSuggestionsWidget::editItem(const QModelIndex &index)
                 KMessageBox::questionTwoActions(this, i18n("All token have been removed from this suggestion. Remove suggestion itself or restore original suggestion?"), i18n("Remove suggestion?"), KGuiItem(i18n("Remove suggestion"), QIcon::fromTheme(QStringLiteral("list-remove"))), KGuiItem(i18n("Revert changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::PrimaryAction
 #endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
                 && d->idSuggestionsModel->remove(index)) {
-                emit changed();
+                Q_EMIT changed();
             }
         } else if (newSuggestion != suggestion) {
             if (d->idSuggestionsModel->setData(index, newSuggestion, IdSuggestionsModel::FormatStringRole))
-                emit changed();
+                Q_EMIT changed();
         }
     }
 
@@ -399,7 +399,7 @@ void SettingsIdSuggestionsWidget::toggleDefault()
     QModelIndex curIndex = d->treeViewSuggestions->currentIndex();
     bool current = d->idSuggestionsModel->data(curIndex, IdSuggestionsModel::IsDefaultFormatStringRole).toBool();
     d->idSuggestionsModel->setData(curIndex, !current, IdSuggestionsModel::IsDefaultFormatStringRole);
-    emit changed();
+    Q_EMIT changed();
 }
 
 #include "settingsidsuggestionswidget.moc"

@@ -62,7 +62,7 @@ protected:
 protected:
     void setupActions();
 
-protected slots:
+protected Q_SLOTS:
     bool documentSave();
     bool documentSaveAs();
     bool documentSaveCopyAs();
@@ -71,7 +71,7 @@ protected slots:
     void elementFindPDF();
     void applyDefaultFormatString();
 
-private slots:
+private Q_SLOTS:
     void newEntryTriggered();
     void newMacroTriggered();
     void newCommentTriggered();

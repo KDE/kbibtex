@@ -460,7 +460,7 @@ void SearchForm::stoppedSearch(int)
         if (d->runningSearches.isEmpty()) {
             /// last search engine stopped
             d->switchToSearch();
-            emit doneSearching();
+            Q_EMIT doneSearching();
 
             QTimer::singleShot(1000, d->progressBar, &QProgressBar::hide);
             QTimer::singleShot(1100, d->useEntryButton, &QPushButton::show);

@@ -47,7 +47,7 @@ public:
     void setSourceModel(QAbstractItemModel *model) override;
     FileModel *fileSourceModel() const;
 
-public slots:
+public Q_SLOTS:
     void updateFilter(const SortFilterFileModel::FilterQuery &);
 
 protected:

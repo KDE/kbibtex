@@ -556,7 +556,7 @@ void FindPDFUI::searchFinished()
     d->listViewResult->reset();
 
     static_cast<QWidget *>(parent())->unsetCursor();
-    emit resultAvailable(true);
+    Q_EMIT resultAvailable(true);
 }
 
 void FindPDFUI::searchProgress(int visitedPages, int runningJobs, int foundDocuments)

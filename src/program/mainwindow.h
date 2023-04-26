@@ -41,7 +41,7 @@ public:
     explicit KBibTeXMainWindow(QWidget *parent = nullptr);
     ~KBibTeXMainWindow() override;
 
-public slots:
+public Q_SLOTS:
     void openDocument(const QUrl &url);
 
 protected: // KMainWindow API
@@ -52,13 +52,13 @@ protected: // KMainWindow API
 protected:
     void setupControllers();
 
-protected slots:
+protected Q_SLOTS:
     void newDocument();
     void openDocumentDialog();
     void showPreferences();
     void documentSwitched(FileView *, FileView *);
 
-private slots:
+private Q_SLOTS:
     void showSearchResults();
     void documentListsChanged(OpenFileInfo::StatusFlags statusFlags);
     void openRecentFile();

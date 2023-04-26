@@ -276,7 +276,7 @@ FilterBar::~FilterBar()
 void FilterBar::setFilter(const SortFilterFileModel::FilterQuery &fq)
 {
     d->setFilter(fq);
-    emit filterChanged(fq);
+    Q_EMIT filterChanged(fq);
 }
 
 SortFilterFileModel::FilterQuery FilterBar::filter()
@@ -298,7 +298,7 @@ void FilterBar::comboboxStatusChanged()
 void FilterBar::resetState()
 {
     d->resetState();
-    emit filterChanged(d->filter());
+    Q_EMIT filterChanged(d->filter());
 }
 
 void FilterBar::userPressedEnter()
@@ -311,7 +311,7 @@ void FilterBar::userPressedEnter()
 
 void FilterBar::publishFilter()
 {
-    emit filterChanged(d->filter());
+    Q_EMIT filterChanged(d->filter());
 }
 
 void FilterBar::buttonHeight()

@@ -366,12 +366,12 @@ void FieldListEdit::dropEvent(QDropEvent *event)
                 v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.url(QUrl::PreferLocalFile))));
             }
             reset(v);
-            emit modified();
+            Q_EMIT modified();
             success = true;
         } else if (!entry.isNull() && entry->contains(d->fieldKey)) {
             /// case for "normal" lists like for authors, editors, ...
             reset(entry->value(d->fieldKey));
-            emit modified();
+            Q_EMIT modified();
             success = true;
         }
     }
@@ -390,7 +390,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
             delete fieldLineEdit;
         }
 
-        emit modified();
+        Q_EMIT modified();
     }
 }
 
@@ -474,7 +474,7 @@ void PersonListEdit::slotAddNamesFromClipboard()
             delete value;
         }
         if (!personList.isEmpty())
-            emit modified();
+            Q_EMIT modified();
     }
 }
 
@@ -525,7 +525,7 @@ void UrlListEdit::addReference(const QUrl &url) {
             value->append(QSharedPointer<VerbatimText>(new VerbatimText(visibleFilename)));
             lineAdd(value);
             delete value;
-            emit modified();
+            Q_EMIT modified();
         }
     }
 }
@@ -689,7 +689,7 @@ void KeywordListEdit::slotAddKeywordsFromList()
             delete value;
         }
         if (!newKeywordList.isEmpty())
-            emit modified();
+            Q_EMIT modified();
     }
     */
 }
@@ -709,7 +709,7 @@ void KeywordListEdit::slotAddKeywordsFromClipboard()
             delete value;
         }
         if (!keywords.isEmpty())
-            emit modified();
+            Q_EMIT modified();
     }
 }
 

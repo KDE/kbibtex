@@ -98,7 +98,7 @@ private:
     QLineEdit *lineEditTextInBetween;
     QSpinBox *spinBoxLength;
 
-private slots:
+private Q_SLOTS:
     void updateRangeLabel()
     {
         const int lower = rangeWidgetAuthor->lowerValue();
@@ -295,7 +295,7 @@ private:
     QLineEdit *lineEditTextInBetween;
     QSpinBox *spinBoxLength;
 
-private slots:
+private Q_SLOTS:
     void updateRangeLabel()
     {
         const int lower = rangeWidgetAuthor->lowerValue();

@@ -44,12 +44,12 @@ public:
     QString label() const override;
     QIcon icon() const override;
 
-public slots:
+public Q_SLOTS:
     void loadState() override;
     bool saveState() override;
     void resetToDefaults() override;
 
-private slots:
+private Q_SLOTS:
     void addKeyword();
     void removeKeyword();
     void enableRemoveButton();

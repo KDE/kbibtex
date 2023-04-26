@@ -91,7 +91,7 @@ void ElementWidget::setModified(bool newIsModified)
 {
     m_isModified = newIsModified;
 
-    emit modified(newIsModified);
+    Q_EMIT modified(newIsModified);
 }
 
 void ElementWidget::gotModified()
@@ -235,7 +235,7 @@ void EntryConfiguredWidget::infoMessageLinkActivated(const QString &contents)
 {
     if (contents.startsWith(QStringLiteral("#tab:"))) {
         const QString tabIdentifier = contents.mid(5);
-        emit requestingTabChange(tabIdentifier);
+        Q_EMIT requestingTabChange(tabIdentifier);
     }
 }
 

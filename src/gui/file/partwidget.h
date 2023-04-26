@@ -40,7 +40,7 @@ public:
     FileView *fileView();
     FilterBar *filterBar();
 
-private slots:
+private Q_SLOTS:
     void searchFor(const QString &);
 
 private:

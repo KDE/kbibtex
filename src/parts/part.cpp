@@ -1041,7 +1041,7 @@ void KBibTeXPart::applyDefaultFormatString()
 bool KBibTeXPart::openFile()
 {
     const bool success = d->openFile(url(), localFilePath());
-    emit completed();
+    Q_EMIT completed();
     return success;
 }
 

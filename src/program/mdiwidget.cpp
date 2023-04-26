@@ -291,11 +291,11 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, const KPluginMetaData &servi
 
     if (hasChanged) {
         /// This signal gets forwarded to KParts::MainWindow::createGUI(KParts::Part*)
-        emit activePartChanged(part);
+        Q_EMIT activePartChanged(part);
         /// If new widget comes from a KBibTeX Part, retrieve its editor
         PartWidget *newPartWidget = qobject_cast<PartWidget *>(widget);
         FileView *newEditor = newPartWidget == nullptr ? nullptr : newPartWidget->fileView();
-        emit documentSwitched(oldEditor, newEditor);
+        Q_EMIT documentSwitched(oldEditor, newEditor);
     }
 
     /// Notify main window about a change of current file,
@@ -304,11 +304,11 @@ void MDIWidget::setFile(OpenFileInfo *openFileInfo, const KPluginMetaData &servi
     if (openFileInfo != nullptr) {
         QUrl url = openFileInfo->url();
         if (url.isValid())
-            emit setCaption(QString(QStringLiteral("%1 [%2]")).arg(openFileInfo->shortCaption(), squeeze_text(openFileInfo->fullCaption(), 64)));
+            Q_EMIT setCaption(QString(QStringLiteral("%1 [%2]")).arg(openFileInfo->shortCaption(), squeeze_text(openFileInfo->fullCaption(), 64)));
         else
-            emit setCaption(openFileInfo->shortCaption());
+            Q_EMIT setCaption(openFileInfo->shortCaption());
     } else
-        emit setCaption(QString());
+        Q_EMIT setCaption(QString());
 }
 
 FileView *MDIWidget::fileView()
@@ -332,7 +332,7 @@ void MDIWidget::slotOpenLRU(const QModelIndex &index)
 {
     QUrl url = index.data(LRUItemModel::URLRole).toUrl();
     if (url.isValid())
-        emit documentOpenURL(url);
+        Q_EMIT documentOpenURL(url);
 }
 
 #include "mdiwidget.moc"

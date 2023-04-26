@@ -72,11 +72,11 @@ public:
 protected:
     void focusInEvent(QFocusEvent *event) override;
 
-signals:
+Q_SIGNALS:
     void textChanged(const QString &);
     void modified();
 
-private slots:
+private Q_SLOTS:
     void slotTextChanged();
 
 private:

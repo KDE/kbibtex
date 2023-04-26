@@ -511,7 +511,7 @@ bool ValueListModel::searchAndReplaceValueInModel(const QModelIndex &index, cons
     }
 
     /// Notify Qt about data changed
-    emit dataChanged(index, index);
+    Q_EMIT dataChanged(index, index);
 
     return true;
 }
@@ -590,7 +590,7 @@ void ValueListModel::removeValueFromModel(const QModelIndex &index)
         values[row].value = values[lastRow].value;
         values[row].sortBy = values[lastRow].sortBy;
 
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
     }
 
     /// Remove last row, which is no longer used

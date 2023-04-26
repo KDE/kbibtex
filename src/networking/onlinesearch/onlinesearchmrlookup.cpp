@@ -45,7 +45,7 @@ OnlineSearchMRLookup::OnlineSearchMRLookup(QObject *parent)
 void OnlineSearchMRLookup::startSearch(const QMap<QueryKey, QString> &query, int)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     QUrl url(queryUrlStem);
     QUrlQuery q(url);
@@ -85,7 +85,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    emit progress(curStep = numSteps, numSteps);
+    Q_EMIT progress(curStep = numSteps, numSteps);
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters

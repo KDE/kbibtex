@@ -55,10 +55,10 @@ public:
 
     QWidget *buddy();
 
-signals:
+Q_SIGNALS:
     void modified();
 
-private slots:
+private Q_SLOTS:
     void selectCrossRef();
 
 private:

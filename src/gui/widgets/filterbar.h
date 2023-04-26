@@ -40,7 +40,7 @@ public:
 
     void setPlaceholderText(const QString &msg);
 
-public slots:
+public Q_SLOTS:
     /**
      * Set the filter criteria to be both shown in this filter bar
      * and applied to the list of elements.
@@ -48,14 +48,14 @@ public slots:
      */
     void setFilter(const SortFilterFileModel::FilterQuery &fq);
 
-signals:
+Q_SIGNALS:
     void filterChanged(const SortFilterFileModel::FilterQuery &);
 
 private:
     class FilterBarPrivate;
     FilterBarPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void comboboxStatusChanged();
     void resetState();
     void userPressedEnter();

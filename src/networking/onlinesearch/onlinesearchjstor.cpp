@@ -68,7 +68,7 @@ OnlineSearchJStor::~OnlineSearchJStor()
 void OnlineSearchJStor::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 2 + numResults);
+    Q_EMIT progress(curStep = 0, numSteps = 2 + numResults);
     d->numExpectedResults = numResults;
 
     /// Build search URL, to be used in the second step
@@ -137,7 +137,7 @@ QUrl OnlineSearchJStor::homepage() const
 
 void OnlineSearchJStor::doneFetchingStartPage()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -164,7 +164,7 @@ void OnlineSearchJStor::doneFetchingStartPage()
 
 void OnlineSearchJStor::doneFetchingResultPage()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -221,7 +221,7 @@ void OnlineSearchJStor::doneFetchingResultPage()
 
 void OnlineSearchJStor::doneFetchingBibTeXCode()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 

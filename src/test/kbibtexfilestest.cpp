@@ -53,7 +53,7 @@ class KBibTeXFilesTest : public QObject
 {
     Q_OBJECT
 
-private slots:
+private Q_SLOTS:
     void initTestCase();
 #ifdef WRITE_RAWDATAFILE
     void cleanupTestCase();

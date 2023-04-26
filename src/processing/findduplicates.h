@@ -86,7 +86,7 @@ public:
 
     bool findDuplicateEntries(File *file, QVector<EntryClique *> &entryCliqueList);
 
-signals:
+Q_SIGNALS:
     void maximumProgress(int maxProgress);
     void currentProgress(int progress);
 

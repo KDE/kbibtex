@@ -50,14 +50,14 @@ public:
     SearchForm(SearchResults *searchResults, QWidget *parent);
     ~SearchForm() override;
 
-signals:
+Q_SIGNALS:
     /**
      * This signal gets emitted once the last of possibly several parallel
      * online searches is done.
      */
     void doneSearching();
 
-public slots:
+public Q_SLOTS:
     /**
      * Notify this widget about a new current element selected in the
      * main list view. Allows the widget to put use in the "Use Entry"
@@ -72,7 +72,7 @@ private:
     class SearchFormPrivate;
     SearchFormPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void startSearch();
     void stoppedSearch(int resultCode);
     void itemCheckChanged(QListWidgetItem *);

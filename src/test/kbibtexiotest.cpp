@@ -56,7 +56,7 @@ private:
     File *russianBibliography();
     QVector<QPair<const char *, File *> > fileImporterExporterTestCases();
 
-private slots:
+private Q_SLOTS:
     void initTestCase();
     void encoderConvertToPlainAscii_data();
     void encoderConvertToPlainAscii();

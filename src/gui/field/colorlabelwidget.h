@@ -46,10 +46,10 @@ public:
 
     static QPixmap createSolidIcon(const QColor &color);
 
-signals:
+Q_SIGNALS:
     void modified();
 
-private slots:
+private Q_SLOTS:
     void slotCurrentIndexChanged(int);
 
 private:

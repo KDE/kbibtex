@@ -58,13 +58,13 @@ public:
     void setFilterBar(FilterBar *filterBar);
     void setClipboard(Clipboard *clipboard);
 
-signals:
+Q_SIGNALS:
     void selectedElementsChanged();
     void currentElementChanged(QSharedPointer<Element>, const File *);
     void elementExecuted(QSharedPointer<Element>);
     void modified(bool);
 
-public slots:
+public Q_SLOTS:
     void viewCurrentElement();
     void viewElement(const QSharedPointer<Element>);
     void editCurrentElement();
@@ -85,7 +85,7 @@ protected:
     void dragMoveEvent(QDragMoveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
 
-protected slots:
+protected Q_SLOTS:
     void itemActivated(const QModelIndex &index);
     void dialogButtonClicked(QAbstractButton *);
 

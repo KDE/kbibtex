@@ -41,7 +41,7 @@ public:
     QString label() const override;
     QUrl homepage() const override;
 
-private slots:
+private Q_SLOTS:
     void resultsPageDone();
     void resultPageDone();
     void bibTeXDownloadDone();

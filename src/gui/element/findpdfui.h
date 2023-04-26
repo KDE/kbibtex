@@ -53,10 +53,10 @@ public:
      */
     static bool interactiveFindPDF(Entry &entry, const File &bibtexFile, QWidget *parent);
 
-signals:
+Q_SIGNALS:
     void resultAvailable(bool);
 
-public slots:
+public Q_SLOTS:
     /**
      * Abort a running search.
      */
@@ -71,7 +71,7 @@ private:
     class Private;
     Private *const d;
 
-private slots:
+private Q_SLOTS:
     void searchFinished();
     void searchProgress(int visitedPages, int runningJobs, int foundDocuments);
 };

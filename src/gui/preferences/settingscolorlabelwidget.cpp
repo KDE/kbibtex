@@ -157,8 +157,8 @@ bool ColorLabelSettingsModel::setData(const QModelIndex &index, const QVariant &
                 /// ... store this color in the data structure
                 colorLabelPairs[index.row()].first = color.name(QColor::HexRgb);
                 /// Notify everyone about the changes
-                emit dataChanged(left, right);
-                emit modified();
+                Q_EMIT dataChanged(left, right);
+                Q_EMIT modified();
                 return true;
             }
         } else if (index.column() == 1 && value.canConvert<QString>()) {
@@ -168,8 +168,8 @@ bool ColorLabelSettingsModel::setData(const QModelIndex &index, const QVariant &
                 /// ... store this text in the data structure
                 colorLabelPairs[index.row()].second = text;
                 /// Notify everyone about the changes
-                emit dataChanged(left, right);
-                emit modified();
+                Q_EMIT dataChanged(left, right);
+                Q_EMIT modified();
                 return true;
             }
         }
@@ -229,7 +229,7 @@ bool ColorLabelSettingsModel::saveState()
 void ColorLabelSettingsModel::resetToDefaults()
 {
     colorLabelPairs = Preferences::instance().defaultColorCodes;
-    emit modified();
+    Q_EMIT modified();
 }
 
 /**
@@ -247,7 +247,7 @@ void ColorLabelSettingsModel::addColorLabel(const QColor &color, const QString &
     colorLabelPairs.append(qMakePair(color.name(QColor::HexRgb), label));
     endInsertRows();
 
-    emit modified();
+    Q_EMIT modified();
 }
 
 /**
@@ -262,7 +262,7 @@ void ColorLabelSettingsModel::removeColorLabel(int row)
         beginRemoveRows(QModelIndex(), row, row);
         colorLabelPairs.removeAt(row);
         endRemoveRows();
-        emit modified();
+        Q_EMIT modified();
     }
 }
 

@@ -118,7 +118,7 @@ public:
      */
     qint64 backoffSecondsLeft() const;
 
-signals:
+Q_SIGNALS:
     /**
      * Signal gets emitted when backoff mode is entered.
      */

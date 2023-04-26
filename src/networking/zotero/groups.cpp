@@ -153,12 +153,12 @@ void Groups::finishedFetchingGroups()
         } else {
             d->busy = false;
             d->initialized = true;
-            emit finishedLoading();
+            Q_EMIT finishedLoading();
         }
     } else {
         qCWarning(LOG_KBIBTEX_NETWORKING) << reply->errorString(); ///< something went wrong
         d->busy = false;
         d->initialized = false;
-        emit finishedLoading();
+        Q_EMIT finishedLoading();
     }
 }

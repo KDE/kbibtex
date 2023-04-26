@@ -194,7 +194,7 @@ OnlineSearchScienceDirect::~OnlineSearchScienceDirect()
 
 void OnlineSearchScienceDirect::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     QUrl u(OnlineSearchScienceDirectPrivate::apiUrl);
     QNetworkRequest request(u);
@@ -228,7 +228,7 @@ QUrl OnlineSearchScienceDirect::homepage() const
 
 void OnlineSearchScienceDirect::doneFetchingJSON()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 

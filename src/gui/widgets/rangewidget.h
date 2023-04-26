@@ -88,7 +88,7 @@ public:
      */
     int upperValue() const;
 
-signals:
+Q_SIGNALS:
     /**
      * Signal notifying about the change of the lower value. This signal
      * will not be triggered if the value is set to the same value it
@@ -103,7 +103,7 @@ signals:
      */
     void upperValueChanged(int);
 
-private slots:
+private Q_SLOTS:
     void lowerComboBoxChanged(int);
     void upperComboBoxChanged(int);
 

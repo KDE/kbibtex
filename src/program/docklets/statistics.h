@@ -36,7 +36,7 @@ public:
 
     void setFileView(FileView *);
 
-public slots:
+public Q_SLOTS:
     void update();
 
 private:

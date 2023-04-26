@@ -36,7 +36,7 @@ OnlineSearchSimpleBibTeXDownload::OnlineSearchSimpleBibTeXDownload(QObject *pare
 void OnlineSearchSimpleBibTeXDownload::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 2);
+    Q_EMIT progress(curStep = 0, numSteps = 2);
 
     QNetworkRequest request(buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
@@ -53,7 +53,7 @@ QString OnlineSearchSimpleBibTeXDownload::processRawDownload(const QString &down
 
 void OnlineSearchSimpleBibTeXDownload::downloadDone()
 {
-    emit progress(++curStep, numSteps = 2);
+    Q_EMIT progress(++curStep, numSteps = 2);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 

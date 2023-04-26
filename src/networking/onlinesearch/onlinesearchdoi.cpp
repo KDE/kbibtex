@@ -144,7 +144,7 @@ OnlineSearchDOI::~OnlineSearchDOI()
 void OnlineSearchDOI::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     const QUrl url = d->buildQueryUrl();
     if (url.isValid()) {
@@ -165,7 +165,7 @@ void OnlineSearchDOI::startSearchFromForm()
 void OnlineSearchDOI::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     const QUrl url = d->buildQueryUrl(query, numResults);
     if (url.isValid()) {
@@ -201,7 +201,7 @@ QUrl OnlineSearchDOI::homepage() const
 
 void OnlineSearchDOI::downloadDone()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     QUrl redirUrl;

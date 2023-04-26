@@ -48,7 +48,7 @@ public:
     void retrieveItemsByCollection(const QString &collectionId);
     void retrieveItemsByTag(const QString &tag);
 
-signals:
+Q_SIGNALS:
     void foundElement(QSharedPointer<Element>);
     void stoppedSearch(int);
 
@@ -56,7 +56,7 @@ private:
     class Private;
     Private *const d;
 
-private slots:
+private Q_SLOTS:
     void finishedFetchingItems();
 };
 

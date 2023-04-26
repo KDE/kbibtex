@@ -37,13 +37,13 @@ public:
 
     void setFileView(FileView *fileView);
 
-public slots:
+public Q_SLOTS:
     void update();
 
-protected slots:
+protected Q_SLOTS:
     void resizeEvent(QResizeEvent *e) override;
 
-private slots:
+private Q_SLOTS:
     void listItemActivated(const QModelIndex &);
     void listItemStartRenaming();
     void deleteAllOccurrences();

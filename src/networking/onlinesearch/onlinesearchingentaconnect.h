@@ -56,7 +56,7 @@ private:
     class OnlineSearchIngentaConnectPrivate;
     OnlineSearchIngentaConnectPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void downloadDone();
 };
 

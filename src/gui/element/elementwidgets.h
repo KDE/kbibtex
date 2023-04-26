@@ -76,13 +76,13 @@ protected:
     bool isReadOnly;
     const File *m_file;
 
-protected slots:
+protected Q_SLOTS:
     void gotModified();
 
 private:
     bool m_isModified;
 
-signals:
+Q_SIGNALS:
     void modified(bool);
 };
 
@@ -124,10 +124,10 @@ public:
 
     bool canEdit(const Element *element) override;
 
-signals:
+Q_SIGNALS:
     void requestingTabChange(const QString &tabIdentifier);
 
-private slots:
+private Q_SLOTS:
     void infoMessageLinkActivated(const QString &contents);
 };
 
@@ -169,7 +169,7 @@ public:
 
     bool canEdit(const Element *element) override;
 
-public slots:
+public Q_SLOTS:
     void setEntryIdByDefault();
 
 private:
@@ -179,12 +179,12 @@ private:
 
     QString computeType() const;
 
-private slots:
+private Q_SLOTS:
     void prepareSuggestionsMenu();
     void insertSuggestionFromAction();
     void entryIdManuallyChanged();
 
-signals:
+Q_SIGNALS:
     void entryTypeChanged();
 };
 
@@ -249,7 +249,7 @@ public:
 
     bool canEdit(const Element *element) override;
 
-private slots:
+private Q_SLOTS:
     void listElementExecuted(QTreeWidgetItem *item, int column);
     void listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetItem *previous);
     void actionAddApply();
@@ -334,7 +334,7 @@ public:
 
     bool canEdit(const Element *element) override;
 
-private slots:
+private Q_SLOTS:
     void reset();
     void addMessage(const FileImporter::MessageSeverity severity, const QString &messageText);
     void updateMessage();

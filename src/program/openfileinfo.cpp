@@ -321,7 +321,7 @@ void OpenFileInfo::setFlags(StatusFlags statusFlags)
     bool hasChanged = d->flags != statusFlags;
     d->flags = statusFlags;
     if (hasChanged)
-        emit flagsChanged(statusFlags);
+        Q_EMIT flagsChanged(statusFlags);
 }
 
 void OpenFileInfo::addFlags(StatusFlags statusFlags)
@@ -332,7 +332,7 @@ void OpenFileInfo::addFlags(StatusFlags statusFlags)
     bool hasChanged = (~d->flags & statusFlags) > 0;
     d->flags |= statusFlags;
     if (hasChanged)
-        emit flagsChanged(statusFlags);
+        Q_EMIT flagsChanged(statusFlags);
 }
 
 void OpenFileInfo::removeFlags(StatusFlags statusFlags)
@@ -340,7 +340,7 @@ void OpenFileInfo::removeFlags(StatusFlags statusFlags)
     bool hasChanged = (d->flags & statusFlags) > 0;
     d->flags &= ~statusFlags;
     if (hasChanged)
-        emit flagsChanged(statusFlags);
+        Q_EMIT flagsChanged(statusFlags);
 }
 
 QDateTime OpenFileInfo::lastAccess() const
@@ -351,7 +351,7 @@ QDateTime OpenFileInfo::lastAccess() const
 void OpenFileInfo::setLastAccess(const QDateTime &dateTime)
 {
     d->lastAccessDateTime = dateTime;
-    emit flagsChanged(OpenFileInfo::StatusFlag::RecentlyUsed);
+    Q_EMIT flagsChanged(OpenFileInfo::StatusFlag::RecentlyUsed);
 }
 
 QVector<KPluginMetaData> OpenFileInfo::listOfServices()
@@ -626,12 +626,12 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
         OpenFileInfo::StatusFlags statusFlags = OpenFileInfo::StatusFlag::Open;
         statusFlags |= OpenFileInfo::StatusFlag::RecentlyUsed;
         statusFlags |= OpenFileInfo::StatusFlag::Favorite;
-        emit flagsChanged(statusFlags);
+        Q_EMIT flagsChanged(statusFlags);
     }
 
     if (openFileInfo == d->currentFileInfo)
-        emit currentChanged(openFileInfo, {});
-    emit flagsChanged(openFileInfo->flags());
+        Q_EMIT currentChanged(openFileInfo, {});
+    Q_EMIT flagsChanged(openFileInfo->flags());
 
     return true;
 }
@@ -730,9 +730,9 @@ void OpenFileInfoManager::setCurrentFile(OpenFileInfo *openFileInfo, const KPlug
     }
     if (hasChanged) {
         if (previous != nullptr) previous->setLastAccess();
-        emit currentChanged(openFileInfo, service);
+        Q_EMIT currentChanged(openFileInfo, service);
     } else if (openFileInfo != nullptr && service.pluginId() != openFileInfo->currentService().pluginId())
-        emit currentChanged(openFileInfo, service);
+        Q_EMIT currentChanged(openFileInfo, service);
 }
 
 OpenFileInfoManager::OpenFileInfoList OpenFileInfoManager::filteredItems(OpenFileInfo::StatusFlag required, OpenFileInfo::StatusFlags forbidden)
@@ -758,5 +758,5 @@ void OpenFileInfoManager::deferredListsChanged()
     OpenFileInfo::StatusFlags statusFlags = OpenFileInfo::StatusFlag::Open;
     statusFlags |= OpenFileInfo::StatusFlag::RecentlyUsed;
     statusFlags |= OpenFileInfo::StatusFlag::Favorite;
-    emit flagsChanged(statusFlags);
+    Q_EMIT flagsChanged(statusFlags);
 }

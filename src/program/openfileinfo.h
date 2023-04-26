@@ -83,7 +83,7 @@ public:
 
     friend class OpenFileInfoManager;
 
-signals:
+Q_SIGNALS:
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 protected:
@@ -151,7 +151,7 @@ public:
 
     friend class OpenFileInfo;
 
-signals:
+Q_SIGNALS:
     void currentChanged(OpenFileInfo *, const KPluginMetaData &service);
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
@@ -162,7 +162,7 @@ private:
     class OpenFileInfoManagerPrivate;
     OpenFileInfoManagerPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void deferredListsChanged();
 };
 

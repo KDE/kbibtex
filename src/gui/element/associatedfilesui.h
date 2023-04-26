@@ -48,7 +48,7 @@ public:
 protected:
     explicit AssociatedFilesUI(const QString &entryId, const File *bibTeXfile, QWidget *parent);
 
-private slots:
+private Q_SLOTS:
     void updateUIandPreview();
 
 private:

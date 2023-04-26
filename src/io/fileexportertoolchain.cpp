@@ -49,14 +49,14 @@ bool FileExporterToolchain::runProcesses(const QStringList &progs, bool doEmitPr
     bool result = true;
     int i = 0;
 
-    emit progress(0, progs.size());
+    Q_EMIT progress(0, progs.size());
     for (QStringList::ConstIterator it = progs.constBegin(); result && it != progs.constEnd(); ++it) {
         QCoreApplication::instance()->processEvents();
         QStringList args = (*it).split(' ');
         QString cmd = args.first();
         args.erase(args.begin());
         result &= runProcess(cmd, args, doEmitProcessOutput);
-        emit progress(i++, progs.size());
+        Q_EMIT progress(i++, progs.size());
     }
     QCoreApplication::instance()->processEvents();
     return result;
@@ -86,7 +86,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
             const QString line = ts.readLine();
             qCWarning(LOG_KBIBTEX_IO) << line;
             if (doEmitProcessOutput)
-                emit processStandardOut(line);
+                Q_EMIT processStandardOut(line);
         }
     });
     connect(&process, &QProcess::readyReadStandardError, this, [this, &doEmitProcessOutput, &process] {
@@ -95,7 +95,7 @@ bool FileExporterToolchain::runProcess(const QString &cmd, const QStringList &ar
             const QString line = ts.readLine();
             qCDebug(LOG_KBIBTEX_IO) << line;
             if (doEmitProcessOutput)
-                emit processStandardError(line);
+                Q_EMIT processStandardError(line);
         }
     });
 

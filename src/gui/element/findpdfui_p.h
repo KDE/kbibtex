@@ -50,7 +50,7 @@ protected:
     /// get the list of widgets
     QList<QWidget *> createItemWidgets(const QModelIndex &index) const override;
 
-private slots:
+private Q_SLOTS:
     void slotViewPDF();
     void slotRadioNoDownloadToggled(bool);
     void slotRadioDownloadToggled(bool);

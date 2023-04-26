@@ -200,7 +200,7 @@ OnlineSearchBibsonomy::~OnlineSearchBibsonomy()
 void OnlineSearchBibsonomy::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
@@ -214,7 +214,7 @@ void OnlineSearchBibsonomy::startSearch(const QMap<QueryKey, QString> &query, in
 void OnlineSearchBibsonomy::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl());
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
@@ -251,7 +251,7 @@ QUrl OnlineSearchBibsonomy::homepage() const
 
 void OnlineSearchBibsonomy::downloadDone()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 

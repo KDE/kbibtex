@@ -38,7 +38,7 @@ public:
 
     void setFileView(FileView *fileView);
 
-private slots:
+private Q_SLOTS:
     void widgetsChangedSlot();
     void currentFileChangedSlot();
     void flagsChangedSlot(const OpenFileInfo::StatusFlags statusFlags);

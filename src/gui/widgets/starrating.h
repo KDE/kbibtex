@@ -82,7 +82,7 @@ public:
      */
     void setReadOnly(bool isReadOnly);
 
-signals:
+Q_SIGNALS:
     void modified();
 
 protected:
@@ -92,7 +92,7 @@ protected:
     void leaveEvent(QEvent *) override;
     bool eventFilter(QObject *obj, QEvent *event) override;
 
-private slots:
+private Q_SLOTS:
     void clear();
     void buttonHeight();
 

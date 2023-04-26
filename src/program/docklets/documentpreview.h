@@ -59,7 +59,7 @@ public:
     explicit DocumentPreview(QDockWidget *parent);
     ~DocumentPreview() override;
 
-public slots:
+public Q_SLOTS:
     void setElement(QSharedPointer<Element>, const File *);
     void setBibTeXUrl(const QUrl &);
 
@@ -69,7 +69,7 @@ private:
 
     QString mimeType(const QUrl &url);
 
-private slots:
+private Q_SLOTS:
     void onlyLocalFilesChanged();
     void statFinished(KJob *);
     void loadingFinished();

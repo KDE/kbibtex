@@ -57,15 +57,15 @@ public:
     QWidget *currentPage() const;
     void setCurrentPage(QWidget *tab);
 
-signals:
+Q_SIGNALS:
     void modified(bool);
 
-public slots:
+public Q_SLOTS:
     void apply();
     void reset();
     bool validate();
 
-private slots:
+private Q_SLOTS:
     void tabChanged();
     void switchToTab(const QString &tabIdentifier);
     void childModified(bool);

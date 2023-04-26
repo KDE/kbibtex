@@ -260,7 +260,7 @@ OnlineSearchSpringerLink::~OnlineSearchSpringerLink()
 void OnlineSearchSpringerLink::startSearchFromForm()
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     QUrl springerLinkSearchUrl = d->buildQueryUrl();
 
@@ -284,7 +284,7 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QueryKey, QString> &query,
     q.addQueryItem(QStringLiteral("p"), QString::number(numResults));
     springerLinkSearchUrl.setQuery(q);
 
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
     QNetworkRequest request(springerLinkSearchUrl);
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);

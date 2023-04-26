@@ -44,11 +44,11 @@ public:
     void loadProperties(File *file);
     void saveProperties(File *file);
 
-public slots:
+public Q_SLOTS:
     void resetToLoadedProperties();
     void resetToDefaults();
 
-signals:
+Q_SIGNALS:
     void widgetsChanged();
 
 private:

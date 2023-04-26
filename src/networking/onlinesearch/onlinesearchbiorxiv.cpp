@@ -53,7 +53,7 @@ OnlineSearchBioRxiv::~OnlineSearchBioRxiv() {
 void OnlineSearchBioRxiv::startSearch(const QMap<QueryKey, QString> &query, int numResults) {
     m_hasBeenCanceled = false;
     d->resultPageUrls.clear();
-    emit progress(curStep = 0, numSteps = numResults * 2 + 1);
+    Q_EMIT progress(curStep = 0, numSteps = numResults * 2 + 1);
 
     QString urlText(QString(QStringLiteral("https://www.biorxiv.org/search/numresults:%1 sort:relevance-rank title_flags:match-phrase format_result:standard ")).arg(numResults));
     urlText.append(query[QueryKey::FreeText]);
@@ -89,7 +89,7 @@ QUrl OnlineSearchBioRxiv::homepage() const {
 }
 
 void OnlineSearchBioRxiv::resultsPageDone() {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
@@ -120,7 +120,7 @@ void OnlineSearchBioRxiv::resultsPageDone() {
 }
 
 void OnlineSearchBioRxiv::resultPageDone() {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
@@ -151,7 +151,7 @@ void OnlineSearchBioRxiv::resultPageDone() {
 
 
 void OnlineSearchBioRxiv::bibTeXDownloadDone() {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {

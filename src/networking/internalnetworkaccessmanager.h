@@ -89,7 +89,7 @@ private:
 
     static QString userAgent();
 
-private slots:
+private Q_SLOTS:
     void networkReplyTimeout();
     void networkReplyFinished();
     void logSslErrors(const QList<QSslError> &errors);

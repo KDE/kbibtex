@@ -45,7 +45,7 @@ public:
 protected:
     void sanitizeEntry(QSharedPointer<Entry> entry) override;
 
-private slots:
+private Q_SLOTS:
     void doneFetchingResultPage();
 
 private:

@@ -65,13 +65,13 @@ void FileModel::notificationEvent(int eventId)
             columnChanged |= fd.upperCamelCaseAlt.toLower() == Entry::ftAuthor || fd.upperCamelCaseAlt.toLower() == Entry::ftEditor;
             /// Changes necessary for this column? Publish update
             if (columnChanged)
-                emit dataChanged(index(0, column), index(rowCount() - 1, column));
+                Q_EMIT dataChanged(index(0, column), index(rowCount() - 1, column));
             ++column;
         }
     } else if (eventId == NotificationHub::EventBibliographySystemChanged) {
         beginResetModel();
         endResetModel();
-        emit bibliographySystemChanged();
+        Q_EMIT bibliographySystemChanged();
     }
 }
 
@@ -408,5 +408,5 @@ int FileModel::row(QSharedPointer<Element> element) const
 }
 
 void FileModel::elementChanged(int row) {
-    emit dataChanged(createIndex(row, 0), createIndex(row, columnCount() - 1));
+    Q_EMIT dataChanged(createIndex(row, 0), createIndex(row, columnCount() - 1));
 }

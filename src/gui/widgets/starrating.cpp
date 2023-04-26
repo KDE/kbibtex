@@ -144,7 +144,7 @@ void StarRating::mouseReleaseEvent(QMouseEvent *ev)
         d->mouseLocation = QPoint();
         const double newPercent = d->percentForPosition(ev->pos(), d->maxNumberOfStars, d->starsInside());
         setValue(newPercent);
-        emit modified();
+        Q_EMIT modified();
         ev->accept();
     }
 }
@@ -220,7 +220,7 @@ void StarRating::clear()
     if (d->isReadOnly) return; ///< disallow modifications if read-only
 
     unsetValue();
-    emit modified();
+    Q_EMIT modified();
 }
 
 void StarRating::buttonHeight()

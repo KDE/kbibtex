@@ -77,7 +77,7 @@ public:
     virtual QUrl homepage() const = 0;
     virtual bool busy() const;
 
-public slots:
+public Q_SLOTS:
     void cancel();
 
 protected:
@@ -181,7 +181,7 @@ private:
     QString htmlAttribute(const QString &htmlCode, const int startPos, const QString &attribute) const;
     bool htmlAttributeIsSelected(const QString &htmlCode, const int startPos, const QString &attribute) const;
 
-signals:
+Q_SIGNALS:
     void foundEntry(QSharedPointer<Entry>);
     void stoppedSearch(int);
     void progress(int, int);
@@ -203,7 +203,7 @@ public:
     virtual bool readyToStart() const = 0;
     virtual void copyFromEntry(const Entry &) = 0;
 
-signals:
+Q_SIGNALS:
     void returnPressed();
 
 protected:

@@ -433,7 +433,7 @@ DocumentList::~DocumentList()
 void DocumentList::fileSelected(const KFileItem &item)
 {
     if (item.isFile() && item.isReadable())
-        emit openFile(item.url());
+        Q_EMIT openFile(item.url());
 }
 
 #include "documentlist.moc"

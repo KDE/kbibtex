@@ -67,7 +67,7 @@ OnlineSearchMathSciNet::~OnlineSearchMathSciNet()
 void OnlineSearchMathSciNet::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 3);
+    Q_EMIT progress(curStep = 0, numSteps = 3);
 
     d->queryParameters.clear();
     d->numResults = qMin(50, numResults); /// limit query to max 50 elements
@@ -129,7 +129,7 @@ void OnlineSearchMathSciNet::doneFetchingQueryForm()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     if (handleErrors(reply)) {
         // UNUSED const QString htmlText = QString::fromUtf8(reply->readAll().constData());
@@ -163,7 +163,7 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     if (handleErrors(reply)) {
         const QString htmlText = QString::fromUtf8(reply->readAll().constData());
@@ -210,7 +210,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
-    emit progress(curStep = numSteps, numSteps);
+    Q_EMIT progress(curStep = numSteps, numSteps);
 
     if (handleErrors(reply)) {
         /// ensure proper treatment of UTF-8 characters

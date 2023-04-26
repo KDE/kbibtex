@@ -102,7 +102,7 @@ public:
 private:
     static bool looksLikeSuffix(const QString &suffix);
 
-signals:
+Q_SIGNALS:
     void progress(int current, int total);
 
     /**
@@ -120,7 +120,7 @@ signals:
      */
     void message(const FileImporter::MessageSeverity severity, const QString &messageText);
 
-public slots:
+public Q_SLOTS:
     virtual void cancel() {
         // nothing
     }

@@ -116,7 +116,7 @@ OnlineSearchUnpaywall::~OnlineSearchUnpaywall()
 void OnlineSearchUnpaywall::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     const QUrl url = d->buildQueryUrl(query, numResults);
     if (url.isValid()) {
@@ -149,14 +149,14 @@ void OnlineSearchUnpaywall::downloadDone()
         if (redirUrl.isValid()) {
             // Redirection to another url
             ++numSteps;
-            emit progress(++curStep, numSteps);
+            Q_EMIT progress(++curStep, numSteps);
 
             QNetworkRequest request(redirUrl);
             QNetworkReply *newReply = InternalNetworkAccessManager::instance().get(request);
             InternalNetworkAccessManager::instance().setNetworkReplyTimeout(newReply);
             connect(newReply, &QNetworkReply::finished, this, &OnlineSearchUnpaywall::downloadDone);
         } else {
-            emit progress(++curStep, numSteps);
+            Q_EMIT progress(++curStep, numSteps);
 
             QJsonParseError parseError;
             const QJsonDocument document = QJsonDocument::fromJson(reply->readAll(), &parseError);

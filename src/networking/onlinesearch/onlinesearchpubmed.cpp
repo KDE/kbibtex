@@ -122,7 +122,7 @@ OnlineSearchPubMed::~OnlineSearchPubMed()
 void OnlineSearchPubMed::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 2);
+    Q_EMIT progress(curStep = 0, numSteps = 2);
 
     /// enforcing limit on number of results
     numResults = qMin(maxNumResults, numResults);
@@ -159,7 +159,7 @@ QUrl OnlineSearchPubMed::homepage() const
 
 void OnlineSearchPubMed::eSearchDone()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
     lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
@@ -202,7 +202,7 @@ void OnlineSearchPubMed::eSearchDone()
 
 void OnlineSearchPubMed::eFetchDone()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
     lastQueryEpoch = QDateTime::currentDateTimeUtc().toTime_t();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());

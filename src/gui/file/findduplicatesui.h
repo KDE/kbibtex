@@ -50,7 +50,7 @@ public:
 
     void showCurrentClique();
 
-private slots:
+private Q_SLOTS:
     void previousClique();
     void nextClique();
 
@@ -71,7 +71,7 @@ public:
     FindDuplicatesUI(KParts::Part *part, FileView *fileView);
     ~FindDuplicatesUI() override;
 
-private slots:
+private Q_SLOTS:
     void startDuplicatesSearch();
 
 private:

@@ -106,7 +106,7 @@ OnlineSearchIEEEXplore::~OnlineSearchIEEEXplore()
 void OnlineSearchIEEEXplore::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     QNetworkRequest request(d->buildQueryUrl(query, numResults));
 
@@ -125,7 +125,7 @@ void OnlineSearchIEEEXplore::startSearch(const QMap<QueryKey, QString> &query, i
 
 void OnlineSearchIEEEXplore::doneFetchingXML()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 

@@ -384,5 +384,5 @@ QWidget *FieldInput::buddy()
 void FieldInput::selectCrossRef()
 {
     if (d->selectCrossRef())
-        emit modified();
+        Q_EMIT modified();
 }

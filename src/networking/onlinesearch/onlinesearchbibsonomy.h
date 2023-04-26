@@ -54,7 +54,7 @@ private:
     class OnlineSearchBibsonomyPrivate;
     OnlineSearchBibsonomyPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void downloadDone();
 };
 

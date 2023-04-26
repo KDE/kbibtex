@@ -329,7 +329,7 @@ bool FindPDF::search(const Entry &entry)
     d->result.clear();
     d->currentEntry = entry;
 
-    emit progress(0, d->aliveCounter, 0);
+    Q_EMIT progress(0, d->aliveCounter, 0);
 
     /// Generate a string which contains the title's beginning
     QString searchWords;
@@ -409,7 +409,7 @@ bool FindPDF::search(const Entry &entry)
 
     if (d->aliveCounter == 0) {
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Directly at start, no URLs are queue for a search -> this should never happen";
-        emit finished();
+        Q_EMIT finished();
     }
 
     return true;
@@ -440,7 +440,7 @@ void FindPDF::downloadFinished()
     static const char *pdfHead = "%PDF-";
 
     --d->aliveCounter;
-    emit progress(d->knownUrls.count(), d->aliveCounter, d->result.count());
+    Q_EMIT progress(d->knownUrls.count(), d->aliveCounter, d->result.count());
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     d->runningDownloads.remove(reply);
@@ -501,7 +501,7 @@ void FindPDF::downloadFinished()
             /// looks like a PDF file -> grab it
             const bool gotPDFfile = d->processPDF(reply, data);
             if (gotPDFfile)
-                emit progress(d->knownUrls.count(), d->aliveCounter, d->result.count());
+                Q_EMIT progress(d->knownUrls.count(), d->aliveCounter, d->result.count());
         } else {
             /// Assume UTF-8 data
             const QString text = QString::fromUtf8(data.constData());
@@ -512,6 +512,6 @@ void FindPDF::downloadFinished()
 
     if (d->aliveCounter == 0) {
         /// no more running downloads left
-        emit finished();
+        Q_EMIT finished();
     }
 }

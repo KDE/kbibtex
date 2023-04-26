@@ -36,17 +36,17 @@ public:
     ElementForm(MDIWidget *mdiWidget, QDockWidget *parent);
     ~ElementForm() override;
 
-public slots:
+public Q_SLOTS:
     void setElement(QSharedPointer<Element>, const File *);
 
-signals:
+Q_SIGNALS:
     void elementModified();
 
 private:
     class ElementFormPrivate;
     ElementFormPrivate *d;
 
-private slots:
+private Q_SLOTS:
     void modified(bool);
     void apply();
     bool validateAndOnlyThenApply();

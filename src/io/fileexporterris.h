@@ -43,7 +43,7 @@ public:
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
     bool save(QIODevice *iodevice, const File *bibtexfile) override;
 
-public slots:
+public Q_SLOTS:
     void cancel() override;
 
 private:

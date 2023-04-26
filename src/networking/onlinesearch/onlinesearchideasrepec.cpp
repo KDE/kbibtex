@@ -91,7 +91,7 @@ OnlineSearchIDEASRePEc::~OnlineSearchIDEASRePEc()
 void OnlineSearchIDEASRePEc::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
     const QUrl url = d->buildQueryUrl(query, numResults);
-    emit progress(curStep = 0, numSteps = 2 * numResults + 1);
+    Q_EMIT progress(curStep = 0, numSteps = 2 * numResults + 1);
     m_hasBeenCanceled = false;
 
     QNetworkRequest request(url);
@@ -115,7 +115,7 @@ QUrl OnlineSearchIDEASRePEc::homepage() const
 
 void OnlineSearchIDEASRePEc::downloadListDone()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -167,7 +167,7 @@ void OnlineSearchIDEASRePEc::downloadListDone()
 
 void OnlineSearchIDEASRePEc::downloadPublicationDone()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -206,7 +206,7 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
 
 void OnlineSearchIDEASRePEc::downloadBibTeXDone()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     const QString downloadUrl = reply->property("downloadurl").toString();
@@ -233,7 +233,7 @@ void OnlineSearchIDEASRePEc::downloadBibTeXDone()
                         Value v;
                         v.append(QSharedPointer<VerbatimText>(new VerbatimText(label())));
                         entry->insert(QStringLiteral("x-fetchedfrom"), v);
-                        emit foundEntry(entry);
+                        Q_EMIT foundEntry(entry);
                     }
 
                 }

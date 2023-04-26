@@ -1210,7 +1210,7 @@ File *FileImporterBibTeX::fromString(const QString &rawText)
 {
     if (rawText.isEmpty()) {
         qCInfo(LOG_KBIBTEX_IO) << "BibTeX data converted to string is empty";
-        emit message(MessageSeverity::Warning, QStringLiteral("BibTeX data converted to string is empty"));
+        Q_EMIT message(MessageSeverity::Warning, QStringLiteral("BibTeX data converted to string is empty"));
         return new File();
     }
 
@@ -1224,7 +1224,7 @@ File *FileImporterBibTeX::fromString(const QString &rawText)
     const int afterHTMLremovalLength = internalRawText.length();
     if (originalLength != afterHTMLremovalLength) {
         qCInfo(LOG_KBIBTEX_IO) << (originalLength - afterHTMLremovalLength) << "characters of HTML tags have been removed";
-        emit message(MessageSeverity::Info, QString(QStringLiteral("%1 characters of HTML tags have been removed")).arg(originalLength - afterHTMLremovalLength));
+        Q_EMIT message(MessageSeverity::Info, QString(QStringLiteral("%1 characters of HTML tags have been removed")).arg(originalLength - afterHTMLremovalLength));
     }
 
     Private::Statistics statistics;
@@ -1234,7 +1234,7 @@ File *FileImporterBibTeX::fromString(const QString &rawText)
     bool gotAtLeastOneElement = false;
     QString previousEntryId;
     while (!state.nextChar.isNull() && !m_cancelFlag && !state.textStream->atEnd()) {
-        emit progress(qint64toint(state.textStream->pos()), internalRawText.length());
+        Q_EMIT progress(qint64toint(state.textStream->pos()), internalRawText.length());
         Element *element = d->nextElement(statistics, state);
 
         if (element != nullptr) {
@@ -1259,16 +1259,16 @@ File *FileImporterBibTeX::fromString(const QString &rawText)
 
     if (!gotAtLeastOneElement) {
         qCWarning(LOG_KBIBTEX_IO) << "In non-empty input, did not find a single BibTeX element";
-        emit message(MessageSeverity::Error, QStringLiteral("In non-empty input, did not find a single BibTeX element"));
+        Q_EMIT message(MessageSeverity::Error, QStringLiteral("In non-empty input, did not find a single BibTeX element"));
         delete result;
         result = nullptr;
     }
 
-    emit progress(100, 100);
+    Q_EMIT progress(100, 100);
 
     if (m_cancelFlag) {
         qCWarning(LOG_KBIBTEX_IO) << "Loading bibliography data has been canceled";
-        emit message(MessageSeverity::Error, QStringLiteral("Loading bibliography data has been canceled"));
+        Q_EMIT message(MessageSeverity::Error, QStringLiteral("Loading bibliography data has been canceled"));
         delete result;
         result = nullptr;
     }
@@ -1307,11 +1307,11 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 
     if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
         qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
-        emit message(MessageSeverity::Error, QStringLiteral("Input device not readable"));
+        Q_EMIT message(MessageSeverity::Error, QStringLiteral("Input device not readable"));
         return nullptr;
     } else if (iodevice->atEnd() || iodevice->size() <= 0) {
         qCInfo(LOG_KBIBTEX_IO) << "Input device at end or does not contain any data";
-        emit message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
+        Q_EMIT message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
         return new File();
     }
 
@@ -1454,7 +1454,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     QTextCodec *codec = QTextCodec::codecForName(encoding == QStringLiteral("latex") ? "utf-8" : encoding.toLatin1());
     if (codec == nullptr) {
         qCWarning(LOG_KBIBTEX_IO) << "Could not determine codec for encoding" << encoding;
-        emit message(MessageSeverity::Warning, QString(QStringLiteral("Could not determine codec for encoding '%1'")).arg(encoding));
+        Q_EMIT message(MessageSeverity::Warning, QString(QStringLiteral("Could not determine codec for encoding '%1'")).arg(encoding));
         return nullptr;
     }
     QString rawText = codec->toUnicode(rawData);

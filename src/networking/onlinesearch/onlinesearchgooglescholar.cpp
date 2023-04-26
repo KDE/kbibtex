@@ -124,7 +124,7 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QueryKey, QString> &query
 {
     d->numResults = numResults;
     m_hasBeenCanceled = false;
-    emit progress(curStep = 0, numSteps = numResults + 4);
+    Q_EMIT progress(curStep = 0, numSteps = numResults + 4);
 
     const auto respectingQuotationMarksFreeText = splitRespectingQuotationMarks(query[QueryKey::FreeText]);
     const auto respectingQuotationMarksTitle = splitRespectingQuotationMarks(query[QueryKey::Title]);
@@ -157,7 +157,7 @@ void OnlineSearchGoogleScholar::startSearch(const QMap<QueryKey, QString> &query
 
 void OnlineSearchGoogleScholar::doneFetchingStartPage()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -205,7 +205,7 @@ void OnlineSearchGoogleScholar::doneFetchingStartPage()
 
 void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -261,7 +261,7 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
 void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -304,7 +304,7 @@ void OnlineSearchGoogleScholar::doneFetchingSetConfigPage()
 
 void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -377,7 +377,7 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 
 void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     /// Extract previously stored URLs from reply
@@ -420,7 +420,7 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
                             urlValue.append(QSharedPointer<VerbatimText>(new VerbatimText(documentUrl)));
                             entry->insert(Entry::ftUrl, urlValue);
                         }
-                        emit foundEntry(entry);
+                        Q_EMIT foundEntry(entry);
                         hasEntry = true;
                     }
                 }

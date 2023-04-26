@@ -44,7 +44,7 @@ public:
     static const int maxNumResults;
     static const uint queryChokeTimeout;
 
-private slots:
+private Q_SLOTS:
     void eSearchDone();
     void eFetchDone();
 

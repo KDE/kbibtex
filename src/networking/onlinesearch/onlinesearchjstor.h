@@ -46,7 +46,7 @@ public:
 protected:
     void sanitizeEntry(QSharedPointer<Entry> entry) override;
 
-private slots:
+private Q_SLOTS:
     void doneFetchingStartPage();
     void doneFetchingResultPage();
     void doneFetchingBibTeXCode();

@@ -113,7 +113,7 @@ OnlineSearchZbMath::~OnlineSearchZbMath()
 
 void OnlineSearchZbMath::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
-    emit progress(curStep = 0, numSteps = 1);
+    Q_EMIT progress(curStep = 0, numSteps = 1);
 
     /// Remember number of expected results, but ensure that it is within a reasonable range
     d->numAwaitedResults = qMin(1024, qMax(1, numResults));
@@ -150,7 +150,7 @@ QUrl OnlineSearchZbMath::homepage() const
 
 void OnlineSearchZbMath::doneFetchingOAI()
 {
-    emit progress(++curStep, numSteps);
+    Q_EMIT progress(++curStep, numSteps);
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {

@@ -182,7 +182,7 @@ void UrlChecker::startChecking(const File &bibtexFile)
     if (bibtexFile.count() < 1) {
         /// Nothing to do for empty bibliographies
         QTimer::singleShot(100, this, [this]() {
-            emit finished();
+            Q_EMIT finished();
         });
         return;
     }
@@ -201,7 +201,7 @@ void UrlChecker::startChecking(const File &bibtexFile)
     if (d->urlsToCheck.isEmpty()) {
         /// No URLs identified in bibliography, so nothing to do
         QTimer::singleShot(100, this, [this]() {
-            emit finished();
+            Q_EMIT finished();
         });
         return;
     }

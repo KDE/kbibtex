@@ -79,7 +79,7 @@ public:
      */
     QList<ResultItem> results();
 
-signals:
+Q_SIGNALS:
     /**
      * A search initiated by @see search has been finished.
      */
@@ -95,13 +95,13 @@ signals:
      */
     void progress(int visitedPages, int runningJobs, int foundDocuments);
 
-public slots:
+public Q_SLOTS:
     /**
      * Abort any running downloads.
      */
     void abort();
 
-private slots:
+private Q_SLOTS:
     void downloadFinished();
 
 private:

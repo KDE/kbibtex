@@ -43,7 +43,7 @@ public:
     explicit Clipboard(FileView *fileView);
     ~Clipboard() override;
 
-public slots:
+public Q_SLOTS:
     void cut();
     void copy();
     void copyReferences();

@@ -44,7 +44,7 @@ public:
     File *load(QIODevice *iodevice) override;
     static bool guessCanDecode(const QString &text);
 
-public slots:
+public Q_SLOTS:
     void cancel() override;
 
 private:

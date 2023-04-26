@@ -410,7 +410,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QVector<EntryClique *> &en
     progressDlg->setMaximum(maxProgress);
     progressDlg->show();
 
-    emit maximumProgress(maxProgress);
+    Q_EMIT maximumProgress(maxProgress);
 
     /// go through all entries ...
     for (const auto &entry : const_cast<const QVector<QSharedPointer<Entry> > &>(listOfEntries)) {
@@ -421,7 +421,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QVector<EntryClique *> &en
         }
 
         progressDlg->setValue(curProgress);
-        emit currentProgress(curProgress);
+        Q_EMIT currentProgress(curProgress);
         /// ... and find a "clique" of entries where it will match, i.e. distance is below sensitivity
 
         /// assume current entry will match in no clique
@@ -456,7 +456,7 @@ bool FindDuplicates::findDuplicateEntries(File *file, QVector<EntryClique *> &en
         ++progressDelta;
         progressDlg->setValue(curProgress);
 
-        emit currentProgress(curProgress);
+        Q_EMIT currentProgress(curProgress);
     }
 
     progressDlg->setValue(progressDlg->maximum());

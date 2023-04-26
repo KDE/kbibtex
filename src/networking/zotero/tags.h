@@ -48,14 +48,14 @@ public:
 
     QMap<QString, int> tags() const;
 
-signals:
+Q_SIGNALS:
     void finishedLoading();
 
 private:
     class Private;
     Private *const d;
 
-private slots:
+private Q_SLOTS:
     void finishedFetchingTags();
 };
 

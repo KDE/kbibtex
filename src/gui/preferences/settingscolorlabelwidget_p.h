@@ -50,7 +50,7 @@ public:
     void addColorLabel(const QColor &color, const QString &label);
     void removeColorLabel(int row);
 
-signals:
+Q_SIGNALS:
     void modified();
 
 private:
