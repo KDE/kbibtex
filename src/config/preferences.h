@@ -28,9 +28,9 @@
 
 #include <KBibTeX>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexconfig_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 class KBIBTEXCONFIG_EXPORT Preferences {
 public:
@@ -49,12 +49,12 @@ public:
     static const BibliographySystem defaultBibliographySystem;
     static const QVector<QPair<Preferences::BibliographySystem, QString>> availableBibliographySystems;
     BibliographySystem bibliographySystem();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBibliographySystem(const BibliographySystem bibliographySystem);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** PersonNameFormat of type QString ***
@@ -63,12 +63,12 @@ public:
     static const QString personNameFormatFirstLast;
     static const QString defaultPersonNameFormat;
     const QString &personNameFormat();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setPersonNameFormat(const QString &personNameFormat);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** CopyReferenceCommand of type QString ***
@@ -76,12 +76,12 @@ public:
     static const QString defaultCopyReferenceCommand;
     static const QStringList availableCopyReferenceCommands;
     const QString &copyReferenceCommand();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setCopyReferenceCommand(const QString &copyReferenceCommand);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** PageSize of type PageSize ***
@@ -89,12 +89,12 @@ public:
     static const PageSize defaultPageSize;
     static const QVector<QPair<Preferences::PageSize, QString>> availablePageSizes;
     PageSize pageSize();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setPageSize(const PageSize pageSize);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** BackupScope of type BackupScope ***
@@ -102,72 +102,72 @@ public:
     static const BackupScope defaultBackupScope;
     static const QVector<QPair<Preferences::BackupScope, QString>> availableBackupScopes;
     BackupScope backupScope();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBackupScope(const BackupScope backupScope);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** NumberOfBackups of type int ***
 
     static const int defaultNumberOfBackups;
     int numberOfBackups();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setNumberOfBackups(const int numberOfBackups);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** IdSuggestionFormatStrings of type QStringList ***
 
     static const QStringList defaultIdSuggestionFormatStrings;
     const QStringList &idSuggestionFormatStrings();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setIdSuggestionFormatStrings(const QStringList &idSuggestionFormatStrings);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** ActiveIdSuggestionFormatString of type QString ***
 
     static const QString defaultActiveIdSuggestionFormatString;
     const QString &activeIdSuggestionFormatString();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setActiveIdSuggestionFormatString(const QString &activeIdSuggestionFormatString);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** LyXUseAutomaticPipeDetection of type bool ***
 
     static const bool defaultLyXUseAutomaticPipeDetection;
     bool lyXUseAutomaticPipeDetection();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setLyXUseAutomaticPipeDetection(const bool lyXUseAutomaticPipeDetection);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** LyXPipePath of type QString ***
 
     static const QString defaultLyXPipePath;
     const QString &lyXPipePath();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setLyXPipePath(const QString &lyXPipePath);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** BibTeXEncoding of type QString ***
@@ -175,12 +175,12 @@ public:
     static const QString defaultBibTeXEncoding;
     static const QStringList availableBibTeXEncodings;
     const QString &bibTeXEncoding();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBibTeXEncoding(const QString &bibTeXEncoding);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** BibTeXStringDelimiter of type QString ***
@@ -188,12 +188,12 @@ public:
     static const QString defaultBibTeXStringDelimiter;
     static const QStringList availableBibTeXStringDelimiters;
     const QString &bibTeXStringDelimiter();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBibTeXStringDelimiter(const QString &bibTeXStringDelimiter);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** BibTeXQuoteComment of type QuoteComment ***
@@ -201,12 +201,12 @@ public:
     static const QuoteComment defaultBibTeXQuoteComment;
     static const QVector<QPair<Preferences::QuoteComment, QString>> availableBibTeXQuoteComments;
     QuoteComment bibTeXQuoteComment();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBibTeXQuoteComment(const QuoteComment bibTeXQuoteComment);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** BibTeXKeywordCasing of type KBibTeX::Casing ***
@@ -214,24 +214,24 @@ public:
     static const KBibTeX::Casing defaultBibTeXKeywordCasing;
     static const QVector<QPair<KBibTeX::Casing, QString>> availableBibTeXKeywordCasings;
     KBibTeX::Casing bibTeXKeywordCasing();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBibTeXKeywordCasing(const KBibTeX::Casing bibTeXKeywordCasing);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** BibTeXProtectCasing of type bool ***
 
     static const bool defaultBibTeXProtectCasing;
     bool bibTeXProtectCasing();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBibTeXProtectCasing(const bool bibTeXProtectCasing);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** BibTeXListSeparator of type QString ***
@@ -239,48 +239,48 @@ public:
     static const QString defaultBibTeXListSeparator;
     static const QStringList availableBibTeXListSeparators;
     const QString &bibTeXListSeparator();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBibTeXListSeparator(const QString &bibTeXListSeparator);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** bibTeXEntriesSortedByIdentifier of type bool ***
 
     static const bool defaultbibTeXEntriesSortedByIdentifier;
     bool bibTeXEntriesSortedByIdentifier();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setbibTeXEntriesSortedByIdentifier(const bool bibTeXEntriesSortedByIdentifier);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** LaTeXBabelLanguage of type QString ***
 
     static const QString defaultLaTeXBabelLanguage;
     const QString &laTeXBabelLanguage();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setLaTeXBabelLanguage(const QString &laTeXBabelLanguage);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** BibTeXBibliographyStyle of type QString ***
 
     static const QString defaultBibTeXBibliographyStyle;
     const QString &bibTeXBibliographyStyle();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setBibTeXBibliographyStyle(const QString &bibTeXBibliographyStyle);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** FileViewDoubleClickAction of type FileViewDoubleClickAction ***
@@ -288,24 +288,24 @@ public:
     static const FileViewDoubleClickAction defaultFileViewDoubleClickAction;
     static const QVector<QPair<Preferences::FileViewDoubleClickAction, QString>> availableFileViewDoubleClickActions;
     FileViewDoubleClickAction fileViewDoubleClickAction();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setFileViewDoubleClickAction(const FileViewDoubleClickAction fileViewDoubleClickAction);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 
     /// *** ColorCodes of type QVector<QPair<QString, QString>> ***
 
     static const QVector<QPair<QString, QString>> defaultColorCodes;
     const QVector<QPair<QString, QString>> &colorCodes();
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
     bool setColorCodes(const QVector<QPair<QString, QString>> &colorCodes);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 private:
     Q_DISABLE_COPY(Preferences)

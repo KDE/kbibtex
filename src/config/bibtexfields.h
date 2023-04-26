@@ -25,9 +25,9 @@
 
 #include <KBibTeX>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexconfig_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 typedef struct {
     /**
@@ -79,10 +79,10 @@ public:
      */
     static BibTeXFields &instance();
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     void save();
     void resetToDefaults(const QString &treeViewName);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
     /**
      * Change the casing of a given field name to one of the predefine formats.

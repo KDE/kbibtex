@@ -24,9 +24,9 @@
 
 #include <onlinesearch/OnlineSearchAbstract>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexnetworking_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #ifdef HAVE_QTWIDGETS
 namespace OnlineSearchGeneral {

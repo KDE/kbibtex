@@ -29,9 +29,9 @@
 #include <QRegularExpressionMatch>
 #include <QFile>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"

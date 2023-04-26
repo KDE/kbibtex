@@ -29,13 +29,13 @@
 #include <QTextStream>
 #endif // HAVE_QTWIDGETS
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KMessageBox>
 #include <KConfigGroup>
 #include <KLocalizedString>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <FileImporterBibTeX>
 #include <XSLTransform>
@@ -671,12 +671,12 @@ void OnlineSearchArXiv::startSearch(const QMap<QueryKey, QString> &query, int nu
 
 QString OnlineSearchArXiv::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("arXiv.org");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-arxiv-label
     return QObject::tr("arXiv.org");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 #ifdef HAVE_QTWIDGETS

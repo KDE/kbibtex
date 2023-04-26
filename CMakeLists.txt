@@ -171,11 +171,11 @@ if(BUILD_KPART OR BUILD_TESTING)
 endif()
 if (KF5_FOUND)
     # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-    add_definitions(-DHAVE_KF5)
+    add_definitions(-DHAVE_KF)
 endif()
 if (KF5I18n_FOUND)
     # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-    add_definitions(-DHAVE_KF5I18N)
+    add_definitions(-DHAVE_KFI18N)
 endif()
 
 find_package(

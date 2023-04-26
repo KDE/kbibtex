@@ -24,9 +24,9 @@
 
 #include <FileImporter>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexio_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 class FileImporterBibTeX;
 

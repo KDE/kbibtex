@@ -23,9 +23,9 @@
 #include <QObject>
 #include <qplatformdefs.h>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexprocessing_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 namespace KParts
 {

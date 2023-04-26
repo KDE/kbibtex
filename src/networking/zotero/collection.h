@@ -25,9 +25,9 @@
 #include <QSharedPointer>
 #include <QUrl>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexnetworking_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 namespace Zotero
 {

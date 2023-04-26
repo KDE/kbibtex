@@ -29,11 +29,11 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <KBibTeX>
 #include <FileImporterBibTeX>
@@ -213,12 +213,12 @@ void OnlineSearchScienceDirect::startSearch(const QMap<QueryKey, QString> &query
 
 QString OnlineSearchScienceDirect::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("ScienceDirect");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-sciencedirect-label
     return QObject::tr("ScienceDirect");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 QUrl OnlineSearchScienceDirect::homepage() const

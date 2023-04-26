@@ -31,12 +31,12 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
 #include <KConfigGroup>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <Encoder>
 #include <EncoderXML>
@@ -295,12 +295,12 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QueryKey, QString> &query,
 
 QString OnlineSearchSpringerLink::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("SpringerLink");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-springerlink-label
     return QObject::tr("SpringerLink");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 #ifdef HAVE_QTWIDGETS

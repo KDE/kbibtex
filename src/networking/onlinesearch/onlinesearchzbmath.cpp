@@ -26,11 +26,11 @@
 #include <QRegularExpression>
 #include <QSet>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <XSLTransform>
 #include <EncoderXML>

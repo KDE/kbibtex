@@ -22,9 +22,9 @@
 
 #include <QObject>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexprocessing_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 /**
  * To make (or test for) KBibTeX the default bibliography editor,

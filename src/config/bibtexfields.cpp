@@ -22,16 +22,16 @@
 #include <QExplicitlySharedDataPointer>
 #include <QStandardPaths>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KSharedConfig>
 #include <KConfigGroup>
 #endif // HAVE KF5
-#ifdef HAVE_KF5I18N
+#ifdef HAVE_KFI18N
 #include <KLocalizedString>
-#else // HAVE_KF5I18N
+#else // HAVE_KFI18N
 #include <QObject>
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5I18N
+#endif // HAVE_KFI18N
 
 #include "preferences.h"
 #include "logging_config.h"
@@ -53,23 +53,23 @@ public:
 
     BibTeXFields *p;
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     KSharedConfigPtr layoutConfig;
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
     BibTeXFieldsPrivate(const QString &style, BibTeXFields *parent)
             : p(parent) {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
         const QString stylefile = style + QStringLiteral(".kbstyle");
         layoutConfig = KSharedConfig::openConfig(stylefile, KConfig::FullConfig, QStandardPaths::AppDataLocation);
         if (layoutConfig->groupList().isEmpty())
             qCWarning(LOG_KBIBTEX_CONFIG) << "The configuration file for layout of type" << style << "could not be located or is empty";
-#else // HAVE_KF5
+#else // HAVE_KF
         Q_UNUSED(style)
-#endif // HAVE_KF5
+#endif // HAVE_KF
     }
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     void load() {
         int logicalIndex = 0;
         for (BibTeXFields::Iterator it = p->begin(); it != p->end(); ++logicalIndex, ++it) {
@@ -134,16 +134,16 @@ public:
         layoutConfig->sync();
         load();
     }
-#endif // HAVE_KF5
+#endif // HAVE_KF
 };
 
 
 BibTeXFields::BibTeXFields(const QString &style, const QVector<FieldDescription> &other)
         : QVector<FieldDescription>(other), d(new BibTeXFieldsPrivate(style, this))
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     d->load();
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 BibTeXFields::~BibTeXFields()
@@ -318,7 +318,7 @@ BibTeXFields &BibTeXFields::instance()
     return Preferences::instance().bibliographySystem() == Preferences::BibliographySystem::BibLaTeX ? singletonBibLaTeX : singletonBibTeX;
 }
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 void BibTeXFields::save()
 {
     d->save();
@@ -328,7 +328,7 @@ void BibTeXFields::resetToDefaults(const QString &treeViewName)
 {
     d->resetToDefaults(treeViewName);
 }
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 QString BibTeXFields::format(const QString &name, KBibTeX::Casing casing) const
 {

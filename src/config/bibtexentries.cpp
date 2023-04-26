@@ -21,12 +21,12 @@
 
 #include <QStandardPaths>
 
-#ifdef HAVE_KF5I18N
+#ifdef HAVE_KFI18N
 #include <KLocalizedString>
-#else // HAVE_KF5I18N
+#else // HAVE_KFI18N
 #include <QObject>
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5I18N
+#endif // HAVE_KFI18N
 
 #include "preferences.h"
 
@@ -43,9 +43,9 @@ class BibTeXEntries::BibTeXEntriesPrivate
 {
 public:
     static const QVector<EntryDescription> entryDescriptionsBibTeX;
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     static const QVector<EntryDescription> entryDescriptionsBibLaTeX;
-#endif // HAVE_KF5
+#endif // HAVE_KF
 };
 
 
@@ -77,7 +77,7 @@ const BibTeXEntries &BibTeXEntries::instance()
         EntryDescription {QStringLiteral("Manual"), QString(), i18n("Manual"), {QStringLiteral("title")}, {QStringLiteral("author"), QStringLiteral("organization"), QStringLiteral("address"), QStringLiteral("edition"), QStringLiteral("month"), QStringLiteral("year"), QStringLiteral("note")}},
         EntryDescription {QStringLiteral("Booklet"), QString(), i18n("Booklet"), {QStringLiteral("title")}, {QStringLiteral("author"), QStringLiteral("howpublished"), QStringLiteral("address"), QStringLiteral("month"), QStringLiteral("year"), QStringLiteral("note")}}
     };
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     static const QVector<EntryDescription> entryDescriptionsBibLaTeX {
         EntryDescription {QStringLiteral("Article"), QString(), i18n("Journal Article"), {QStringLiteral("author"), QStringLiteral("title"), QStringLiteral("journaltitle"), QStringLiteral("year^date")}, {QStringLiteral("translator"), QStringLiteral("annotator"), QStringLiteral("commentator"), QStringLiteral("subtitle"), QStringLiteral("titleaddon"), QStringLiteral("editor"), QStringLiteral("editora"), QStringLiteral("editorb"), QStringLiteral("editorc"), QStringLiteral("journalsubtitle"), QStringLiteral("issuetitle"), QStringLiteral("issuesubtitle"), QStringLiteral("language"), QStringLiteral("origlanguage"), QStringLiteral("series"), QStringLiteral("volume"), QStringLiteral("number"), QStringLiteral("eid"), QStringLiteral("issue"), QStringLiteral("month"), QStringLiteral("pages"), QStringLiteral("version"), QStringLiteral("note"), QStringLiteral("issn"), QStringLiteral("addendum"), QStringLiteral("pubstate"), QStringLiteral("doi"), QStringLiteral("eprint"), QStringLiteral("eprintclass"), QStringLiteral("eprinttype"), QStringLiteral("url"), QStringLiteral("urldate")}},
         EntryDescription {QStringLiteral("Book"), QString(), i18n("Book"), {QStringLiteral("author"), QStringLiteral("title"), QStringLiteral("year^date")}, {QStringLiteral("editor"), QStringLiteral("editora"), QStringLiteral("editorb"), QStringLiteral("editorc"), QStringLiteral("translator"), QStringLiteral("annotator"), QStringLiteral("commentator"), QStringLiteral("introduction"), QStringLiteral("foreword"), QStringLiteral("afterword"), QStringLiteral("subtitle"), QStringLiteral("titleaddon"), QStringLiteral("maintitle"), QStringLiteral("mainsubtitle"), QStringLiteral("maintitleaddon"), QStringLiteral("language"), QStringLiteral("origlanguage"), QStringLiteral("volume"), QStringLiteral("part"), QStringLiteral("edition"), QStringLiteral("volumes"), QStringLiteral("series"), QStringLiteral("number"), QStringLiteral("note"), QStringLiteral("publisher"), QStringLiteral("location"), QStringLiteral("isbn"), QStringLiteral("chapter"), QStringLiteral("pages"), QStringLiteral("pagetotal"), QStringLiteral("addendum"), QStringLiteral("pubstate"), QStringLiteral("doi"), QStringLiteral("eprint"), QStringLiteral("eprintclass"), QStringLiteral("eprinttype"), QStringLiteral("url"), QStringLiteral("urldate")}},
@@ -109,19 +109,19 @@ const BibTeXEntries &BibTeXEntries::instance()
         EntryDescription {QStringLiteral("PhDThesis"), QString(), i18n("PhD Thesis"), {QStringLiteral("author"), QStringLiteral("title"), QStringLiteral("institution"), QStringLiteral("year^date")}, {QStringLiteral("subtitle"), QStringLiteral("titleaddon"), QStringLiteral("type"), QStringLiteral("language"), QStringLiteral("note"), QStringLiteral("location"), QStringLiteral("month"), QStringLiteral("isbn"), QStringLiteral("chapter"), QStringLiteral("pages"), QStringLiteral("pagetotal"), QStringLiteral("addendum"), QStringLiteral("pubstate"), QStringLiteral("doi"), QStringLiteral("eprint"), QStringLiteral("eprintclass"), QStringLiteral("eprinttype"), QStringLiteral("url"), QStringLiteral("urldate")}},
         EntryDescription {QStringLiteral("TechReport"), QString(), i18n("Technical Report"), {QStringLiteral("author"), QStringLiteral("title"), QStringLiteral("institution"), QStringLiteral("year^date")}, {QStringLiteral("subtitle"), QStringLiteral("titleaddon"), QStringLiteral("type"), QStringLiteral("language"), QStringLiteral("number"), QStringLiteral("version"), QStringLiteral("note"), QStringLiteral("location"), QStringLiteral("month"), QStringLiteral("isrn"), QStringLiteral("chapter"), QStringLiteral("pages"), QStringLiteral("pagetotal"), QStringLiteral("addendum"), QStringLiteral("pubstate"), QStringLiteral("doi"), QStringLiteral("eprint"), QStringLiteral("eprintclass"), QStringLiteral("eprinttype"), QStringLiteral("url"), QStringLiteral("urldate")}}
     };
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
     static const BibTeXEntries singletonBibTeX(entryDescriptionsBibTeX)
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
             , singletonBibLaTeX(entryDescriptionsBibLaTeX)
-#endif // HAVE_KF5
+#endif // HAVE_KF
             ;
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return Preferences::instance().bibliographySystem() == Preferences::BibliographySystem::BibLaTeX ? singletonBibLaTeX : singletonBibTeX;
-#else // HAVE_KF5
+#else // HAVE_KF
     return singletonBibTeX;
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 QString BibTeXEntries::format(const QString &name, KBibTeX::Casing casing) const

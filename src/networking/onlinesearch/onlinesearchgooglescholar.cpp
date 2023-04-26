@@ -25,11 +25,11 @@
 #include <QRegularExpression>
 #include <QTimer>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
@@ -324,12 +324,12 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
 
             d->listBibTeXurls.clear();
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
             if (htmlText.contains(QStringLiteral("enable JavaScript")) || htmlText.contains(QStringLiteral("re not a robot"))) {
                 qCInfo(LOG_KBIBTEX_NETWORKING) << "'Google Scholar' denied scrapping data because it thinks KBibTeX is a robot.";
                 sendVisualNotification(i18n("'Google Scholar' denied scrapping data because it thinks you are a robot."), label(), 10);
             } else {
-#endif // HAVE_KF5
+#endif // HAVE_KF
                 static const QRegularExpression linkToBib("/scholar.bib\\?[^\" >]+");
                 QRegularExpressionMatchIterator linkToBibMatchIterator = linkToBib.globalMatch(htmlText);
                 while (linkToBibMatchIterator.hasNext()) {
@@ -343,9 +343,9 @@ void OnlineSearchGoogleScholar::doneFetchingQueryPage()
                     const QString bibtexUrl(QStringLiteral("https://") + reply->url().host() + linkToBibMatch.captured().replace(QStringLiteral("&amp;"), QStringLiteral("&")));
                     d->listBibTeXurls.insert(bibtexUrl, qMakePair(primaryUrl, documentUrl));
                 }
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
             }
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
             if (!d->listBibTeXurls.isEmpty()) {
                 const auto listBibTeXurlsFront = d->listBibTeXurls.begin();
@@ -458,12 +458,12 @@ void OnlineSearchGoogleScholar::doneFetchingBibTeX()
 
 QString OnlineSearchGoogleScholar::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("Google Scholar");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-googlescholar-label
     return QObject::tr("Google Scholar");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 QUrl OnlineSearchGoogleScholar::homepage() const

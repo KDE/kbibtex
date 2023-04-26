@@ -97,9 +97,9 @@ def print_header(headerincludes, implementationincludes, enums, settings, output
             print("#include", includeline, file=outputdevice)
     if headerincludes:
         print(file=outputdevice)
-    print('#ifdef HAVE_KF5', file=outputdevice)
+    print('#ifdef HAVE_KF', file=outputdevice)
     print('#include "kbibtexconfig_export.h"', file=outputdevice)
-    print('#endif // HAVE_KF5', file=outputdevice)
+    print('#endif // HAVE_KF', file=outputdevice)
     print(file=outputdevice)
 
     print("class KBIBTEXCONFIG_EXPORT Preferences {", file=outputdevice)
@@ -145,13 +145,13 @@ def print_header(headerincludes, implementationincludes, enums, settings, output
                   setting['availabletype'] + " available" + stem + "s;", file=outputdevice)
         print(("    const " if needsReference(type) else "    ") + type + (" &" if needsReference(type) else " ") +
               lowercasestart + "();", file=outputdevice)
-        print('#ifdef HAVE_KF5', file=outputdevice)
+        print('#ifdef HAVE_KF', file=outputdevice)
         print('    /*!', file=outputdevice)
         print('     * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions', file=outputdevice)
         print('     */', file=outputdevice)
         print("    bool set" + stem + "(const " +
               type + (" &" if needsReference(type) else " ") + lowercasestart + ");", file=outputdevice)
-        print('#endif // HAVE_KF5', file=outputdevice)
+        print('#endif // HAVE_KF', file=outputdevice)
         print("", file=outputdevice)
 
     print("private:", file=outputdevice)
@@ -185,19 +185,19 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
     print('#include <Preferences>', file=outputdevice)
     print(file=outputdevice)
     print('#include <QCoreApplication>', file=outputdevice)
-    print('#ifdef HAVE_KF5', file=outputdevice)
+    print('#ifdef HAVE_KF', file=outputdevice)
     print('#include <KLocalizedString>', file=outputdevice)
     print('#include <KSharedConfig>', file=outputdevice)
     print('#include <KConfigWatcher>', file=outputdevice)
     print('#include <KConfigGroup>', file=outputdevice)
-    print('#else // HAVE_KF5', file=outputdevice)
+    print('#else // HAVE_KF', file=outputdevice)
     print('#define i18n(text) QStringLiteral(text)', file=outputdevice)
     print('#define i18nc(comment,text) QStringLiteral(text)', file=outputdevice)
-    print('#endif // HAVE_KF5', file=outputdevice)
+    print('#endif // HAVE_KF', file=outputdevice)
     print(file=outputdevice)
-    print('#ifdef HAVE_KF5', file=outputdevice)
+    print('#ifdef HAVE_KF', file=outputdevice)
     print('#include <NotificationHub>', file=outputdevice)
-    print('#endif // HAVE_KF5', file=outputdevice)
+    print('#endif // HAVE_KF', file=outputdevice)
     print(file=outputdevice)
     # Include other headers as necessary
     for includeline in implementationincludes:
@@ -212,7 +212,7 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
     print('class Preferences::Private', file=outputdevice)
     print('{', file=outputdevice)
     print('public:', file=outputdevice)
-    print('#ifdef HAVE_KF5', file=outputdevice)
+    print('#ifdef HAVE_KF', file=outputdevice)
     print('    KSharedConfigPtr config;', file=outputdevice)
     print('    KConfigWatcher::Ptr watcher;', file=outputdevice)
     print(file=outputdevice)
@@ -223,13 +223,13 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
             type = "Preferences::" + type
         print('    bool dirtyFlag' + stem + ';', file=outputdevice)
         print('    ' + type + ' cached' + stem + ';', file=outputdevice)
-    print('#endif // HAVE_KF5', file=outputdevice)
+    print('#endif // HAVE_KF', file=outputdevice)
 
     # Constructor for Preferences::Private
     print(file=outputdevice)
     print('    Private(Preferences *)', file=outputdevice)
     print('    {', file=outputdevice)
-    print('#ifdef HAVE_KF5', file=outputdevice)
+    print('#ifdef HAVE_KF', file=outputdevice)
     print('        config = KSharedConfig::openConfig(QStringLiteral("kbibtexrc"));', file=outputdevice)
     print('        watcher = KConfigWatcher::create(config);', file=outputdevice)
     for setting in settings:
@@ -237,11 +237,11 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
         print('        dirtyFlag' + stem + ' = true;', file=outputdevice)
         print('        cached' + stem + ' = Preferences::default' +
               stem + ';', file=outputdevice)
-    print('#endif // HAVE_KF5', file=outputdevice)
+    print('#endif // HAVE_KF', file=outputdevice)
     print('    }', file=outputdevice)
 
     print(file=outputdevice)
-    print('#ifdef HAVE_KF5', file=outputdevice)
+    print('#ifdef HAVE_KF', file=outputdevice)
     first = True
     for setting in settings:
         stem = setting['stem']
@@ -299,7 +299,7 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
             elif isinstance(setting['writeEntry'], str):
                 print('        ' + setting['writeEntry'], file=outputdevice)
             print('    }', file=outputdevice)
-    print('#endif // HAVE_KF5', file=outputdevice)
+    print('#endif // HAVE_KF', file=outputdevice)
     print('};', file=outputdevice)
 
     # Singleton function Preferences::instance()
@@ -314,7 +314,7 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
     print('Preferences::Preferences()', file=outputdevice)
     print('        : d(new Preferences::Private(this))', file=outputdevice)
     print('{', file=outputdevice)
-    print('#ifdef HAVE_KF5', file=outputdevice)
+    print('#ifdef HAVE_KF', file=outputdevice)
     print(
         '    QObject::connect(d->watcher.data(), &KConfigWatcher::configChanged, QCoreApplication::instance(), [this](const KConfigGroup &group, const QByteArrayList &names) {', file=outputdevice)
     print('        QSet<int> eventsToPublish;', file=outputdevice)
@@ -335,7 +335,7 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
     print('        for (const int eventId : eventsToPublish)', file=outputdevice)
     print('            NotificationHub::publishEvent(eventId);', file=outputdevice)
     print('    });', file=outputdevice)
-    print('#endif // HAVE_KF5', file=outputdevice)
+    print('#endif // HAVE_KF', file=outputdevice)
     print('}', file=outputdevice)
     print(file=outputdevice)
     # Destructor for Preferences
@@ -385,7 +385,7 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
         print(("const " if needsReference(type) else "") + type + (" &" if needsReference(type) else " ") +
               "Preferences::" + lowercasestart + "()", file=outputdevice)
         print("{", file=outputdevice)
-        print('#ifdef HAVE_KF5', file=outputdevice)
+        print('#ifdef HAVE_KF', file=outputdevice)
         print('    if (d->dirtyFlag' + stem + ') {', file=outputdevice)
         print('        d->config->reparseConfiguration();', file=outputdevice)
         print('        static const KConfigGroup configGroup(d->config, QStringLiteral("' +
@@ -424,14 +424,14 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
         print('        }', file=outputdevice)
         print('    }', file=outputdevice)
         print('    return d->cached' + stem + ";", file=outputdevice)
-        print('#else // HAVE_KF5', file=outputdevice)
+        print('#else // HAVE_KF', file=outputdevice)
         print('    return default' + stem + ";", file=outputdevice)
-        print('#endif // HAVE_KF5', file=outputdevice)
+        print('#endif // HAVE_KF', file=outputdevice)
         print("}", file=outputdevice)
 
         print(file=outputdevice)
 
-        print('#ifdef HAVE_KF5', file=outputdevice)
+        print('#ifdef HAVE_KF', file=outputdevice)
         print("bool Preferences::set" + stem + '(const ' + type +
               (" &" if needsReference(type) else " ") + 'newValue)', file=outputdevice)
         print("{", file=outputdevice)
@@ -508,7 +508,7 @@ def print_implementation(headerincludes, implementationincludes, enums, settings
         # NotificationHub::publishEvent(notificationEventId);
         print('    return true;', file=outputdevice)
         print("}", file=outputdevice)
-        print('#endif // HAVE_KF5', file=outputdevice)
+        print('#endif // HAVE_KF', file=outputdevice)
 
 
 jsondata = {}

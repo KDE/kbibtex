@@ -30,12 +30,12 @@
 #include <QNetworkReply>
 #include <QUrlQuery>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
 #include <KConfigGroup>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <File>
 #include <Entry>
@@ -360,12 +360,12 @@ void OnlineSearchIngentaConnect::startSearchFromForm()
 
 QString OnlineSearchIngentaConnect::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("IngentaConnect");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-ingentaconnect-label
     return QObject::tr("IngentaConnect");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 #ifdef HAVE_QTWIDGETS

@@ -23,11 +23,11 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <XSLTransform>
 #include <EncoderXML>
@@ -182,12 +182,12 @@ void OnlineSearchIEEEXplore::doneFetchingXML()
 
 QString OnlineSearchIEEEXplore::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("IEEEXplore");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-ieeexplore-label
     return QObject::tr("IEEEXplore");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 QUrl OnlineSearchIEEEXplore::homepage() const

@@ -25,10 +25,10 @@
 #include <QTimer>
 #include <QStandardPaths>
 #include <QRegularExpression>
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-#endif // HAVE_KF5
+#endif // HAVE_KF
 #if QT_VERSION >= 0x050a00
 #include <QRandomGenerator>
 #endif // QT_VERSION
@@ -36,10 +36,10 @@
 #include <QListWidgetItem>
 #endif // HAVE_QTWIDGETS
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
 #include <KMessageBox>
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <KBibTeX>
 #include <Encoder>
@@ -212,9 +212,9 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
             if (rawHeaderName.toLower().contains("apikey") || rawHeaderName.toLower().contains("api-key")) continue; ///< skip dumping header values containing an API key
             qCDebug(LOG_KBIBTEX_NETWORKING) << "RECVD " << rawHeaderName << ":" << reply->rawHeader(rawHeaderName);
         }
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
         sendVisualNotification(errorString.isEmpty() ? i18n("Searching '%1' failed for unknown reason.", label()) : i18n("Searching '%1' failed with error message:\n\n%2", label(), InternalNetworkAccessManager::removeApiKey(errorString)), label(), 10);
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
         int resultCode = resultUnspecifiedError;
         if (reply->error() == QNetworkReply::AuthenticationRequiredError || reply->error() == QNetworkReply::ProxyAuthenticationRequiredError)
@@ -290,7 +290,7 @@ bool OnlineSearchAbstract::htmlAttributeIsSelected(const QString &htmlCode, cons
     return false;
 }
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 /**
  * Display a passive notification popup using the D-Bus interface.
  * Copied from KDialog with modifications.
@@ -325,7 +325,7 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
     if (replyMsg.type() == QDBusMessage::ErrorMessage)
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Error: failed to send D-Bus message:" << text;
 }
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 QString OnlineSearchAbstract::encodeURL(QString rawText)
 {

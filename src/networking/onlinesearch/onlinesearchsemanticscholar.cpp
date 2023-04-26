@@ -30,10 +30,10 @@
 #include <QFormLayout>
 #endif // HAVE_QTWIDGETS
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KConfigGroup>
 #include <KLocalizedString>
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <KBibTeX>
 #include <FileImporterBibTeX>

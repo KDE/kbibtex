@@ -31,11 +31,11 @@
 #include <QJsonValue>
 #include <QJsonArray>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <File>
 #include <Entry>
@@ -299,12 +299,12 @@ void OnlineSearchAcmPortal::startSearch(const QMap<QueryKey, QString> &query, in
 
 QString OnlineSearchAcmPortal::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("ACM Digital Library");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-acmdigitallibrary-label
     return QObject::tr("ACM Digital Library");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 QUrl OnlineSearchAcmPortal::homepage() const

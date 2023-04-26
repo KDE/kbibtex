@@ -27,16 +27,16 @@
 #include <QRegularExpression>
 #include <QDebug>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KSharedConfig>
 #include <KConfigGroup>
-#endif // HAVE_KF5
-#ifdef HAVE_KF5I18N
+#endif // HAVE_KF
+#ifdef HAVE_KFI18N
 #include <KLocalizedString>
-#else // HAVE_KF5I18N
+#else // HAVE_KFI18N
 #include <QObject>
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5I18N
+#endif // HAVE_KFI18N
 
 #include <Preferences>
 #include "logging_data.h"

@@ -25,12 +25,12 @@
 #include <QFile>
 #include <QString>
 
-#ifdef HAVE_KF5I18N
+#ifdef HAVE_KFI18N
 #include <KLocalizedString>
-#else // HAVE_KF5I18N
+#else // HAVE_KFI18N
 #include <QObject>
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5I18N
+#endif // HAVE_KFI18N
 
 #include <BibTeXEntries>
 #include <BibTeXFields>

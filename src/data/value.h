@@ -24,9 +24,9 @@
 #include <QVariant>
 #include <QSharedPointer>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexdata_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 /**
   * Generic class of an information element in a @see Value object.
@@ -232,7 +232,7 @@ protected:
     QString m_text, m_comment;
 
 private:
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     struct ColorLabelPair {
         QString hexColor;
         QString label;
@@ -240,7 +240,7 @@ private:
 
     static QList<ColorLabelPair> colorLabelPairs;
     static bool colorLabelPairsInitialized;
-#endif // HAVE_KF5
+#endif // HAVE_KF
 };
 
 QDebug operator<<(QDebug dbg, const VerbatimText &verbatimText);

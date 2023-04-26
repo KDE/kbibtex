@@ -22,9 +22,9 @@
 
 #include <File>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexdata_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 /**
  * Base class for bibliographic elements in a BibTeX file.

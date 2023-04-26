@@ -38,9 +38,9 @@
 #include <QRandomGenerator>
 #endif // QT_VERSION
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KProtocolManager>
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include "logging_networking.h"
 
@@ -108,7 +108,7 @@ InternalNetworkAccessManager &InternalNetworkAccessManager::instance()
 
 QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const QUrl &oldUrl)
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /// Query the KDE subsystem if a proxy has to be used
     /// for the host of a given URL
     QString proxyHostName = KProtocolManager::proxyForUrl(request.url());
@@ -133,9 +133,9 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
         /// No proxy to be used, clear previous settings
         setProxy(QNetworkProxy());
     }
-#else // HAVE_KF5
+#else // HAVE_KF
     setProxy(QNetworkProxy());
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
     if (!request.hasRawHeader(QByteArray("Accept")))
         request.setRawHeader(QByteArray("Accept"), QByteArray("text/*, */*;q=0.7"));

@@ -23,9 +23,9 @@
 #include <QMap>
 #include <QUrl>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexglobal_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #define squeeze_text(text, n) ((text).length()<=(n)?(text):(text).left((n)/2-1)+QStringLiteral("...")+(text).right((n)/2-2))
 

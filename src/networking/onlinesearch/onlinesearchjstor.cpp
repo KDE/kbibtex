@@ -28,11 +28,11 @@
 #include <QRegularExpression>
 #include <QtWebEngineWidgets/QWebEnginePage>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <FileImporterBibTeX>
 #include "internalnetworkaccessmanager.h"
@@ -122,12 +122,12 @@ void OnlineSearchJStor::startSearch(const QMap<QueryKey, QString> &query, int nu
 
 QString OnlineSearchJStor::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("JSTOR");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-jstor-label
     return QObject::tr("JSTOR");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 QUrl OnlineSearchJStor::homepage() const

@@ -30,13 +30,13 @@
 #endif // HAVE_QTWIDGETS
 #include <QNetworkReply>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
 #include <KConfigGroup>
 #include <KMessageBox>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <FileImporterBibTeX>
 #include <File>
@@ -227,12 +227,12 @@ void OnlineSearchBibsonomy::startSearchFromForm()
 
 QString OnlineSearchBibsonomy::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("Bibsonomy");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-bibsonomy-label
     return QObject::tr("Bibsonomy");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 #ifdef HAVE_QTWIDGETS

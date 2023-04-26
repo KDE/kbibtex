@@ -101,30 +101,30 @@ public:
     }
 
     void loadPreferencesAndProperties(const File *bibtexfile) {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
         encoding = Preferences::instance().bibTeXEncoding();
         QString stringDelimiter = Preferences::instance().bibTeXStringDelimiter();
         if (stringDelimiter.length() != 2)
             stringDelimiter = Preferences::defaultBibTeXStringDelimiter;
-#else // HAVE_KF5
+#else // HAVE_KF
         encoding = QStringLiteral("LaTeX");
         const QString stringDelimiter = QStringLiteral("{}");
-#endif // HAVE_KF5
+#endif // HAVE_KF
         stringOpenDelimiter = stringDelimiter[0];
         stringCloseDelimiter = stringDelimiter[1];
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
         keywordCasing = Preferences::instance().bibTeXKeywordCasing();
         quoteComment = Preferences::instance().bibTeXQuoteComment();
         protectCasing = Preferences::instance().bibTeXProtectCasing() ? Qt::Checked : Qt::Unchecked;
         listSeparator =  Preferences::instance().bibTeXListSeparator();
         sortedByIdentifier = Preferences::instance().bibTeXEntriesSortedByIdentifier();
-#else // HAVE_KF5
+#else // HAVE_KF
         keywordCasing = KBibTeX::Casing::LowerCase;
         quoteComment = Preferences::QuoteComment::None;
         protectCasing = Qt::PartiallyChecked;
         listSeparator = QStringLiteral("; ");
         sortedByIdentifier = false;
-#endif // HAVE_KF5
+#endif // HAVE_KF
         personNameFormatting = Preferences::instance().personNameFormat();
 
         /// Check if a valid File object was provided

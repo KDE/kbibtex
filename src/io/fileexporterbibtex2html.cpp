@@ -22,12 +22,12 @@
 #include <QFile>
 #include <QStandardPaths>
 
-#ifdef HAVE_KF5I18N
+#ifdef HAVE_KFI18N
 #include <KLocalizedString>
-#else // HAVE_KF5I18N
+#else // HAVE_KFI18N
 #include <QObject>
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5I18N
+#endif // HAVE_KFI18N
 
 #include "fileexporterbibtex.h"
 #include "logging_io.h"
@@ -94,11 +94,11 @@ public:
 
         QTextStream ts(iodevice);
         ts << QStringLiteral("<div style=\"color: red; background: white;\">");
-#ifdef HAVE_KF5I18N
+#ifdef HAVE_KFI18N
         ts << i18n("The BibTeX style <strong>%1</strong> is not available.", bibStyle);
-#else // HAVE_KF5I18N
+#else // HAVE_KFI18N
         ts << i18n("The BibTeX style <strong>PLACEHOLDER</strong> is not available.").replace(QStringLiteral("PLACEHOLDER"), bibStyle);
-#endif // HAVE_KF5I18N
+#endif // HAVE_KFI18N
 #if QT_VERSION >= 0x050e00
         ts << QStringLiteral("</div>") << Qt::endl;
 #else // QT_VERSION < 0x050e00

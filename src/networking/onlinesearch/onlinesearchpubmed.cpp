@@ -24,12 +24,12 @@
 #include <QTimer>
 #include <QRegularExpression>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include <KLocalizedString>
 #include <KMessageBox>
-#else // HAVE_KF5
+#else // HAVE_KF
 #define i18n(text) QObject::tr(text)
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 #include <XSLTransform>
 #include <EncoderXML>
@@ -144,12 +144,12 @@ void OnlineSearchPubMed::startSearch(const QMap<QueryKey, QString> &query, int n
 
 QString OnlineSearchPubMed::label() const
 {
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     return i18n("PubMed");
-#else // HAVE_KF5
+#else // HAVE_KF
     //= onlinesearch-pubmed-label
     return QObject::tr("PubMed");
-#endif // HAVE_KF5
+#endif // HAVE_KF
 }
 
 QUrl OnlineSearchPubMed::homepage() const

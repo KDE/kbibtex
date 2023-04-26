@@ -32,9 +32,9 @@
 
 #include <Entry>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexnetworking_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 class QNetworkReply;
 class QNetworkRequest;
@@ -158,7 +158,7 @@ protected:
      */
     void refreshBusyProperty();
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
     /**
      * @brief Send a visual notification to the desktop, similar to KNotification
      * @param text Message to be shown
@@ -167,7 +167,7 @@ protected:
      * @param icon Name of icon to be shown
      */
     void sendVisualNotification(const QString &text, const QString &title, int timeout = 10, const QString &icon = QStringLiteral("kbibtex"));
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 private:
     bool m_previousBusyState;

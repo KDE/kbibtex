@@ -22,9 +22,9 @@
 
 #include <Element>
 
-#ifdef HAVE_KF5
+#ifdef HAVE_KF
 #include "kbibtexdata_export.h"
-#endif // HAVE_KF5
+#endif // HAVE_KF
 
 /**
  * This class represents a comment in a BibTeX file. In BibTeX files,
