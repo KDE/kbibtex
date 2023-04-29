@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -118,7 +118,7 @@ public:
                     const bool filenameSuggestsHTML = filename.isEmpty() || filename.endsWith(QStringLiteral(".html")) || filename.endsWith(QStringLiteral(".htm"));
                     const bool filenameSuggestsPDF =  filename.endsWith(QStringLiteral(".pdf"));
                     const bool filenameSuggestsPostScript =  filename.endsWith(QStringLiteral(".ps"));
-                    const bool containsHTML = data.contains("<!DOCTYPE HTML") || data.contains("<html") || data.contains("<HTML") || data.contains("<body") || data.contains("<body");
+                    const bool containsHTML = data.contains("<!DOCTYPE HTML") || data.contains("<html") || data.contains("<HTML") || data.contains("<body") || data.contains("<BODY");
                     const bool containsPDF = data.startsWith("%PDF");
                     const bool containsPostScript = data.startsWith("%!");
                     if (filenameSuggestsPDF && containsPDF) {
@@ -130,12 +130,12 @@ public:
                         QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "UrlValid: Looks and smells like a PostScript" << url.toDisplayString();
                     } else if (containsHTML) {
-                        static const QRegularExpression error404(QStringLiteral("\\b404\\b"));
-                        const QRegularExpressionMatch error404match = error404.match(data);
-                        if (error404match.hasMatch()) {
+                        static const QRegularExpression error40X(QStringLiteral("\\b(40\\d)\\b"));
+                        const QRegularExpressionMatch error40Xmatch = error40X.match(QString::fromUtf8(data));
+                        if (error40Xmatch.hasMatch()) {
                             /// Instead of an 'emit' ...
-                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::Error404), Q_ARG(QString, QStringLiteral("Got error 404")));
-                            qCWarning(LOG_KBIBTEX_NETWORKING) << "Error404" << url.toDisplayString();
+                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::Error40X), Q_ARG(QString, QString(QStringLiteral("Got error %1")).arg(error40Xmatch.captured(1))));
+                            qCWarning(LOG_KBIBTEX_NETWORKING) << "Error" << error40Xmatch.captured(1) << "in" << url.toDisplayString();
                         } else if (filenameSuggestsHTML) {
                             /// Instead of an 'emit' ...
                             QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
