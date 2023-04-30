@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2008-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2008-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileContributor: 2013-2021 Pino Toscano <pino@kde.org>
 # SPDX-FileContributor: 2014-2021 Yuri Chornoivan <yurchor@ukr.net>
 # SPDX-FileContributor: 2015-2021 David Faure <faure@kde.org>
 # SPDX-FileContributor: 2016-2021 Andreas Sturmlechner <andreas.sturmlechner@gmail.com>
 
-cmake_minimum_required(VERSION 3.7.2)
+cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
 
 if(POLICY CMP0048)
     cmake_policy(SET CMP0048 NEW)
@@ -132,16 +132,12 @@ if(BUILD_KPART OR BUILD_TESTING)
         Test
     )
     if (Qt5Widgets_FOUND)
-        # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-        add_definitions(-DHAVE_QTWIDGETS)
+        add_compile_definitions(HAVE_QTWIDGETS)
     endif()
 endif()
 
 if(Qt5WebEngineWidgets_FOUND)
-    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-    add_definitions(
-        -DHAVE_WEBENGINEWIDGETS
-    )
+    add_compile_definitions(HAVE_WEBENGINEWIDGETS)
 endif()
 
 find_package(
@@ -170,12 +166,10 @@ if(BUILD_KPART OR BUILD_TESTING)
     )
 endif()
 if (KF5_FOUND)
-    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-    add_definitions(-DHAVE_KF)
+    add_compile_definitions(HAVE_KF)
 endif()
 if (KF5I18n_FOUND)
-    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-    add_definitions(-DHAVE_KFI18N)
+    add_compile_definitions(HAVE_KFI18N)
 endif()
 
 find_package(
@@ -185,8 +179,7 @@ find_package(
     Qt5
 )
 if (PKG_Poppler_Qt5_FOUND)
-    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-    add_definitions(-DHAVE_POPPLERQT5)
+    add_compile_definitions(HAVE_POPPLERQT5)
 endif()
 
 find_package(
@@ -197,8 +190,7 @@ find_package(
 )
 
 if(ICU_FOUND)
-    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-    add_definitions(-DHAVE_ICU)
+    add_compile_definitions(HAVE_ICU)
 endif()
 
 option(
@@ -227,9 +219,9 @@ if(BUILD_TESTING AND NOT Qt5Test_FOUND)
 endif()
 
 if(BUILD_TESTING)
-    add_definitions(-DBUILD_TESTING)
+    add_compile_definitions(BUILD_TESTING)
     if (WRITE_RAWDATAFILE)
-        add_definitions(-DWRITE_RAWDATAFILE)
+        add_compile_definitions(WRITE_RAWDATAFILE)
     endif(WRITE_RAWDATAFILE)
 
     set(
@@ -252,7 +244,7 @@ option(
     ON
 )
 if(BUILD_SCIHUB)
-    add_definitions(-DHAVE_SCIHUB)
+    add_compile_definitions(HAVE_SCIHUB)
 endif()
 
 
