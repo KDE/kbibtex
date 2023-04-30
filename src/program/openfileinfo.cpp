@@ -116,11 +116,11 @@ public:
             return nullptr;
         }
 
-        Q_ASSERT_X(internalWidgetParent == nullptr || internalWidgetParent == newWidgetParent, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "internal widget should be either NULL or the same one as supplied as \"newWidgetParent\"");
+        Q_ASSERT_X(internalWidgetParent == nullptr || internalWidgetParent == newWidgetParent, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, const KPluginMetaData & = {})", "internal widget should be either NULL or the same one as supplied as \"newWidgetParent\"");
 
         /** use cached part for this parent if possible */
         if (internalWidgetParent == newWidgetParent && (!partMetaData.isValid() || currentPart == partMetaData)) {
-            Q_ASSERT_X(part != nullptr, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "Part is NULL");
+            Q_ASSERT_X(part != nullptr, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, const KPluginMetaData & = {})", "Part is NULL");
             return part;
         } else if (part != nullptr) {
             KParts::ReadWritePart *rwp = qobject_cast<KParts::ReadWritePart *>(part);
@@ -135,7 +135,7 @@ public:
         internalWidgetParent = nullptr;
 
         if (!partMetaData.isValid()) {
-            /// no valid KService has been passed
+            /// no valid KPartMetaData has been passed
             /// try to find a read-write part to open file
             partMetaData = p->defaultService();
         }
@@ -145,7 +145,7 @@ public:
             qCDebug(LOG_KBIBTEX_PROGRAM) << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
             qCDebug(LOG_KBIBTEX_PROGRAM) << "QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
             qCDebug(LOG_KBIBTEX_PROGRAM) << "KDEDIRS=" << getenv("KDEDIRS");
-            qCCritical(LOG_KBIBTEX_PROGRAM) << "Cannot find service to handle mimetype " << mimeType;
+            qCCritical(LOG_KBIBTEX_PROGRAM) << "Cannot find part to handle mimetype " << mimeType;
             return nullptr;
         }
 
@@ -167,7 +167,7 @@ public:
             qCDebug(LOG_KBIBTEX_PROGRAM) << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
             qCDebug(LOG_KBIBTEX_PROGRAM) << "QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
             qCDebug(LOG_KBIBTEX_PROGRAM) << "KDEDIRS=" << getenv("KDEDIRS");
-            qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not instantiate read-write part for service" << partMetaData.name() << "(mimeType=" << mimeType << ", library=" << partMetaData.fileName() << ", error msg=" << errorString << ")";
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not instantiate read-write part for" << partMetaData.name() << "(mimeType=" << mimeType << ", library=" << partMetaData.fileName() << ", error msg=" << errorString << ")";
             /// creating a read-write part failed, so maybe it is read-only (like Okular's PDF viewer)?
             const auto loadResult = KParts::PartLoader::instantiatePart<KParts::ReadOnlyPart>(partMetaData, newWidgetParent, qobject_cast<QObject *>(newWidgetParent));
             errorString = loadResult.errorString;
@@ -175,7 +175,7 @@ public:
         }
         if (part == nullptr) {
             /// still cannot create part, must be error
-            qCCritical(LOG_KBIBTEX_PROGRAM) << "Could not instantiate part for service" << partMetaData.name() << "(mimeType=" << mimeType << ", library=" << partMetaData.fileName() << ", error msg=" << errorString << ")";
+            qCCritical(LOG_KBIBTEX_PROGRAM) << "Could not instantiate part for" << partMetaData.name() << "(mimeType=" << mimeType << ", library=" << partMetaData.fileName() << ", error msg=" << errorString << ")";
             return nullptr;
         }
 
@@ -194,7 +194,7 @@ public:
         currentPart = partMetaData;
         internalWidgetParent = newWidgetParent;
 
-        Q_ASSERT_X(part != nullptr, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, KService::Ptr newServicePtr = KService::Ptr())", "Creation of part failed, is NULL"); /// test should not be necessary, but just to be save ...
+        Q_ASSERT_X(part != nullptr, "KParts::ReadOnlyPart *OpenFileInfo::OpenFileInfoPrivate::createPart(QWidget *newWidgetParent, const KPluginMetaData & = {})", "Creation of part failed, is NULL"); /// test should not be necessary, but just to be save ...
         return part;
     }
 
@@ -404,9 +404,9 @@ KPluginMetaData OpenFileInfo::defaultService()
     }
 
     if (result.isValid())
-        qCDebug(LOG_KBIBTEX_PROGRAM) << "Using service" << result.name() << "(" << result.description() << ") for mime type" << mt << "through library" << result.fileName();
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "Using" << result.name() << "(" << result.description() << ") for mime type" << mt << "through library" << result.fileName();
     else
-        qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not find service for mime type" << mt;
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Could not find part for mime type" << mt;
     return result;
 }
 
