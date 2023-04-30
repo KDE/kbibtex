@@ -26,7 +26,7 @@
 #include <QUrl>
 #include <QVariant>
 
-#include <KService>
+#include <KPluginMetaData>
 #include <FileInfo>
 
 namespace KParts

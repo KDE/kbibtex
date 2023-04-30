@@ -365,10 +365,11 @@ QVector<KPluginMetaData> OpenFileInfo::listOfServices()
     auto it = std::find_if(result.cbegin(), result.cend(), [](const KPluginMetaData &md){
         return md.pluginId() == QStringLiteral("kbibtexpart");
     });
-
-    // If not insert it
+    // If not, insert it
     if (it == result.cend()) {
-        result << KPluginMetaData(QStringLiteral("kbibtexpart"));
+        auto kbibtexpart {KPluginMetaData(QStringLiteral("kbibtexpart"))};
+        if (kbibtexpart.isValid())
+            result << kbibtexpart;
     }
 
     return result;
@@ -377,24 +378,31 @@ QVector<KPluginMetaData> OpenFileInfo::listOfServices()
 KPluginMetaData OpenFileInfo::defaultService()
 {
     const QString mt = mimeType();
-    KPluginMetaData result;
-    if (mt == QStringLiteral("application/pdf") || mt == QStringLiteral("text/x-bibtex")) {
-        /// If either a BibTeX file or a PDF file is to be opened, enforce using
-        /// KBibTeX's part over anything else.
-        /// KBibTeX has a FileImporterPDF which allows it to load .pdf file
-        /// that got generated with KBibTeX and contain the original
-        /// .bib file as an 'attachment'.
-        /// This importer does not work with any other .pdf files!!!
-        result = KPluginMetaData("kbibtexpart");
-    }
-    if (!result.isValid()) {
-        /// First, try to locate KPart that can both read and write the queried MIME type
-        const QVector<KPluginMetaData> parts = KParts::PartLoader::partsForMimeType(mt);
 
-        if (!parts.isEmpty()) {
-            result = parts.first();
-        }
+    KPluginMetaData result;
+
+    static const QSet<QString> supportedMimeTypes{
+        QStringLiteral("text/x-bibtex"),
+#ifdef HAVE_POPPLERQT5
+        QStringLiteral("application/pdf"),
+#endif // HAVE_POPPLERQT5
+        QStringLiteral("application/x-endnote-refer"), QStringLiteral("application/x-isi-export-format"), QStringLiteral("text/x-research-info-systems"),
+        QStringLiteral("application/xml")
+    };
+    if (supportedMimeTypes.contains(mt)) {
+        // If the mime type is natively supported by KBibTeX's part, enforce using this part
+        result = KPluginMetaData(QStringLiteral("kbibtexpart"));
     }
+
+    if (!result.isValid()) {
+        // If above test for PDF or BibTeX did not locate a part, or mime type was something else,
+        // search more generally by mime type
+
+        const QVector<KPluginMetaData> parts = listOfServices();
+        if (!parts.isEmpty())
+            result = parts.first();
+    }
+
     if (result.isValid())
         qCDebug(LOG_KBIBTEX_PROGRAM) << "Using service" << result.name() << "(" << result.description() << ") for mime type" << mt << "through library" << result.fileName();
     else

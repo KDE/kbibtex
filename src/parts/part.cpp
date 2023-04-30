@@ -1170,8 +1170,6 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     }
 }
 
-K_PLUGIN_FACTORY(KBibTeXPartFactory,
-                 registerPlugin<KBibTeXPart>();
-                )
+K_PLUGIN_CLASS_WITH_JSON(KBibTeXPart, "kbibtexpart.json")
 
 #include "part.moc"
