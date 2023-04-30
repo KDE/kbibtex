@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: KBibTeX 0.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2023-04-26 21:04+0200\n"
+"PO-Revision-Date: 2023-04-29 12:22+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -2975,7 +2975,7 @@ msgstr "Datei speichern"
 #: src/parts/part.cpp:503
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:504
 #, kde-format
