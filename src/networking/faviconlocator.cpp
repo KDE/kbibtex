@@ -67,7 +67,7 @@ FavIconLocator::FavIconLocator(const QUrl &webpageUrl, QObject *parent)
     }
 
     QNetworkRequest request(webpageUrl);
-    request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
     QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
     connect(reply, &QNetworkReply::finished, parent, [this, reply, fileNameStem, webpageUrl]() {
         QUrl favIconUrl;
@@ -114,7 +114,7 @@ FavIconLocator::FavIconLocator(const QUrl &webpageUrl, QObject *parent)
         }
 
         QNetworkRequest request(favIconUrl);
-        request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+        request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
         QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
         connect(reply, &QNetworkReply::finished, this, [this, reply, fileNameStem, favIconUrl, webpageUrl]() {
             if (reply->error() == QNetworkReply::NoError) {
