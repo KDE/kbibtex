@@ -272,7 +272,7 @@ function build_debian12() {
 	buildahsetx run --user root "${id}" -- apt update || exit 1
 	buildahsetx run --user root "${id}" -- apt dist-upgrade -y || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctoo ls-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
 	buildahsetx run --user root "${id}" -- apt autoremove || exit 1
 	buildahsetx run --user root "${id}" -- apt clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
