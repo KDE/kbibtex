@@ -19,6 +19,7 @@
 
 #include "fileexporterxml.h"
 
+#include <QIODevice>
 #include <QRegularExpression>
 #include <QStringList>
 

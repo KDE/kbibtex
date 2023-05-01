@@ -19,6 +19,7 @@
 
 #include "fileimporterris.h"
 
+#include <QIODevice>
 #include <QVector>
 #include <QTextStream>
 #include <QRegularExpression>

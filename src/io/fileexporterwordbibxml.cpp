@@ -19,6 +19,7 @@
 
 #include "fileexporterwordbibxml.h"
 
+#include <QIODevice>
 #include <QTextStream>
 #include <QRegularExpression>
 

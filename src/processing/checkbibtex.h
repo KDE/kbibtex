@@ -26,6 +26,8 @@
 #include "kbibtexprocessing_export.h"
 #endif // HAVE_KF
 
+class QWidget;
+
 class Entry;
 class Element;
 class File;

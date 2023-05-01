@@ -21,7 +21,6 @@
 
 #include <typeinfo>
 
-#include <QLinkedList>
 #include <QProgressDialog>
 #include <QApplication>
 #include <QDate>

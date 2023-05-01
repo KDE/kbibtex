@@ -25,7 +25,6 @@
 #include <QString>
 #include <QStringList>
 #include <QRegularExpression>
-#include <QDebug>
 
 #ifdef HAVE_KF
 #include <KSharedConfig>

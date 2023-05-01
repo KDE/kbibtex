@@ -26,8 +26,6 @@
 #include "kbibtexio_export.h"
 #endif // HAVE_KF
 
-class QStringList;
-
 /**
 @author Thomas Fischer
  */
