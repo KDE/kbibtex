@@ -251,7 +251,7 @@ public:
         }
 
         if (!containsUrl) {
-            Poppler::Document *doc = Poppler::Document::loadFromData(data);
+            QScopedPointer<Poppler::Document> doc(Poppler::Document::loadFromData(data));
 
             ResultItem resultItem;
             resultItem.tempFilename = new QTemporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QStringLiteral("kbibtex_findpdf_XXXXXX.pdf"));
@@ -275,7 +275,7 @@ public:
             resultItem.textPreview = doc->info(QStringLiteral("Title")).simplified();
             static const int maxTextLen = 1024;
             for (int i = 0; i < doc->numPages() && resultItem.textPreview.length() < maxTextLen; ++i) {
-                Poppler::Page *page = doc->page(i);
+                QScopedPointer<Poppler::Page> page(doc->page(i));
                 if (!resultItem.textPreview.isEmpty()) resultItem.textPreview += QLatin1Char(' ');
                 resultItem.textPreview += QStringView{page->text(QRect()).simplified()}.left(maxTextLen);
             }
@@ -284,8 +284,6 @@ public:
             resultItem.relevance = origin == Entry::ftDOI ? 1.0 : (origin == QStringLiteral("eprint") ? 0.75 : 0.5);
             result << resultItem;
             progress = true;
-
-            delete doc;
         }
 
         return progress;

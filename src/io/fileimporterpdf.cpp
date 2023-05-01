@@ -57,8 +57,8 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     File *result = nullptr;
     QByteArray buffer = iodevice->readAll();
 
-    Poppler::Document *doc = Poppler::Document::loadFromData(buffer);
-    if (doc == nullptr) {
+    QScopedPointer<Poppler::Document> doc(Poppler::Document::loadFromData(buffer));
+    if (!doc) {
         qCWarning(LOG_KBIBTEX_IO) << "Could not load PDF document";
         iodevice->close();
         return nullptr;
@@ -97,8 +97,6 @@ File *FileImporterPDF::load(QIODevice *iodevice)
         }
     } else
         qCDebug(LOG_KBIBTEX_IO) << "PDF document has no files embedded";
-
-    delete doc;
 
     iodevice->close();
     return result;
