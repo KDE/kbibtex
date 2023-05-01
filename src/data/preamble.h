@@ -62,6 +62,6 @@ private:
     PreamblePrivate *const d;
 };
 
-QDebug operator<<(QDebug dbg, const Preamble &preamble);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Preamble &preamble);
 
 #endif // KBIBTEX_DATA_PREAMBLE_H

@@ -44,6 +44,6 @@ private:
     int uniqueId;
 };
 
-QDebug operator<<(QDebug dbg, const Element &element);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Element &element);
 
 #endif // KBIBTEX_DATA_ELEMENT_H

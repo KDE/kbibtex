@@ -104,6 +104,6 @@ private:
     MacroPrivate *const d;
 };
 
-QDebug operator<<(QDebug dbg, const Macro &macro);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Macro &macro);
 
 #endif

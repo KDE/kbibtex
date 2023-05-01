@@ -142,7 +142,7 @@ private:
 
 };
 
-QDebug operator<<(QDebug dbg, const Person &person);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Person &person);
 
 Q_DECLARE_METATYPE(Person *)
 
@@ -172,7 +172,7 @@ protected:
     QString m_text;
 };
 
-QDebug operator<<(QDebug dbg, const MacroKey &macrokey);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const MacroKey &macrokey);
 
 
 class KBIBTEXDATA_EXPORT PlainText: public ValueItem
@@ -199,7 +199,7 @@ protected:
     QString m_text;
 };
 
-QDebug operator<<(QDebug dbg, const PlainText &plainText);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const PlainText &plainText);
 
 
 class KBIBTEXDATA_EXPORT VerbatimText: public ValueItem
@@ -243,7 +243,7 @@ private:
 #endif // HAVE_KF
 };
 
-QDebug operator<<(QDebug dbg, const VerbatimText &verbatimText);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const VerbatimText &verbatimText);
 
 
 /**
@@ -279,7 +279,7 @@ public:
     bool operator!=(const Value &rhs) const;
 };
 
-QDebug operator<<(QDebug dbg, const Value &value);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Value &value);
 
 
 class KBIBTEXDATA_EXPORT PlainTextValue

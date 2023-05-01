@@ -131,6 +131,6 @@ private:
 
 Q_DECLARE_METATYPE(File *)
 
-QDebug operator<<(QDebug dbg, const File &file);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const File &file);
 
 #endif // KBIBTEX_DATA_FILE_H

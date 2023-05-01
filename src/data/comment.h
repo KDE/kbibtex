@@ -93,6 +93,6 @@ private:
     CommentPrivate *const d;
 };
 
-QDebug operator<<(QDebug dbg, const Comment &comment);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Comment &comment);
 
 #endif // KBIBTEX_DATA_COMMENT_H
