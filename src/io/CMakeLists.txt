@@ -24,14 +24,13 @@ set(
     fileimporterbibtex.cpp
     fileimporterbibutils.cpp
     fileimporter.cpp
-    fileimporterpdf.cpp
     fileimporterris.cpp
     fileinfo.cpp
     bibutils.cpp
     xsltransform.cpp
 )
 
-if(Popper_Qt5_FOUND)
+if(PKG_Poppler_Qt5_FOUND)
     set(
         kbibtexio_SRCS
         ${kbibtexio_SRCS}
@@ -146,12 +145,19 @@ ecm_generate_headers(kbibtexio_HEADERS
         FileImporter
         FileImporterBibTeX
         FileImporterBibUtils
-        FileImporterPDF
         FileImporterRIS
         FileInfo
         XSLTransform
     REQUIRED_HEADERS kbibtexio_HEADERS
 )
+
+if(PKG_Poppler_Qt5_FOUND)
+    ecm_generate_headers(kbibtexio_HEADERS
+        HEADER_NAMES
+            FileImporterPDF
+        REQUIRED_HEADERS kbibtexio_HEADERS
+    )
+endif()
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kbibtexio_export.h

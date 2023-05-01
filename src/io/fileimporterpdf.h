@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2017 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,6 +19,8 @@
 
 #ifndef KBIBTEX_IO_FILEIMPORTERPDF_H
 #define KBIBTEX_IO_FILEIMPORTERPDF_H
+
+#ifdef HAVE_POPPLERQT5
 
 #include <QUrl>
 
@@ -51,5 +53,7 @@ private:
     bool m_cancelFlag;
     FileImporterBibTeX *m_bibTeXimporter;
 };
+
+#endif // HAVE_POPPLERQT5
 
 #endif // KBIBTEX_IO_FILEIMPORTERPDF_H

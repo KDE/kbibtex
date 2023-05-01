@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -16,6 +16,8 @@
  *   You should have received a copy of the GNU General Public License     *
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
+
+#ifdef HAVE_POPPLERQT5
 
 #include "fileimporterpdf.h"
 
@@ -112,3 +114,5 @@ void FileImporterPDF::cancel()
     m_cancelFlag = true;
     m_bibTeXimporter->cancel();
 }
+
+#endif // HAVE_POPPLERQT5

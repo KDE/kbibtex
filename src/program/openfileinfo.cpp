@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -36,7 +36,9 @@
 #include <KParts/PartLoader>
 #include <kparts_version.h>
 
+#ifdef HAVE_POPPLERQT5
 #include <FileImporterPDF>
+#endif // HAVE_POPPLERQT5
 #include "logging_program.h"
 
 #if KPARTS_VERSION < QT_VERSION_CHECK(5, 100, 0)
@@ -380,7 +382,6 @@ KPluginMetaData OpenFileInfo::defaultService()
     const QString mt = mimeType();
 
     KPluginMetaData result;
-
     static const QSet<QString> supportedMimeTypes{
         QStringLiteral("text/x-bibtex"),
 #ifdef HAVE_POPPLERQT5
@@ -395,8 +396,9 @@ KPluginMetaData OpenFileInfo::defaultService()
     }
 
     if (!result.isValid()) {
-        // If above test for PDF or BibTeX did not locate a part, or mime type was something else,
-        // search more generally by mime type
+        // If above test for supported mime types failed
+        // or no valid KPluginMetaData could be instanciated for 'kbibtexpart',
+        // pick any of the other available parts supporting the requested mime type
 
         const QVector<KPluginMetaData> parts = listOfServices();
         if (!parts.isEmpty())
