@@ -122,8 +122,7 @@ bool FileExporterRTF::writeLatexFile(const QString &filename)
 #else // QT_VERSION < 0x050e00
             ts << "\\usepackage{url}" << endl;
 #endif // QT_VERSION >= 0x050e00
-        const QString bibliographyStyle =
-            Preferences::instance().bibTeXBibliographyStyle();
+        const QString bibliographyStyle = Preferences::instance().bibTeXBibliographyStyle();
         if (bibliographyStyle == QStringLiteral("dcu") && kpsewhich(QStringLiteral("harvard.sty")) && kpsewhich(QStringLiteral("html.sty")))
 #if QT_VERSION >= 0x050e00
             ts << "\\usepackage{html}" << Qt::endl << "\\usepackage[dcucite]{harvard}" << Qt::endl << "\\renewcommand{\\harvardurl}{URL: \\url}" << Qt::endl;

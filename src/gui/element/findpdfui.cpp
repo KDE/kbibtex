@@ -335,9 +335,9 @@ QVariant PDFListModel::data(const QModelIndex &index, int role) const
         if (role == Qt::DisplayRole)
             return m_resultList[index.row()].url.toDisplayString();
         else if (role == URLRole)
-            return  m_resultList[index.row()].url;
+            return m_resultList[index.row()].url;
         else if (role == TextualPreviewRole)
-            return  m_resultList[index.row()].textPreview;
+            return m_resultList[index.row()].textPreview;
         else if (role == Qt::ToolTipRole)
             return QString(QStringLiteral("<qt>%1</qt/>")).arg(m_resultList[index.row()].textPreview); ///<  'qt' tags required for word wrap
         else if (role == TempFileNameRole) {

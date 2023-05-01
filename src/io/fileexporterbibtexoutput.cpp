@@ -126,8 +126,7 @@ bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
             ts << "\\usepackage[pdfproducer={KBibTeX: https://userbase.kde.org/KBibTeX},pdftex]{hyperref}\n";
         else if (kpsewhich(QStringLiteral("url.sty")))
             ts << "\\usepackage{url}\n";
-        const QString latexBibStyle =
-            Preferences::instance().bibTeXBibliographyStyle();
+        const QString latexBibStyle = Preferences::instance().bibTeXBibliographyStyle();
         ts << "\\bibliographystyle{" << latexBibStyle << "}\n";
         ts << "\\begin{document}\n";
         ts << "\\nocite{*}\n";
