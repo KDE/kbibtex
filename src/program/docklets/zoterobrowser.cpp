@@ -32,7 +32,7 @@
 #include <QComboBox>
 
 #include <KLocalizedString>
-#include <KWallet/KWallet>
+#include <KWallet>
 #include <KMessageBox>
 
 #include <Element>
