@@ -379,7 +379,7 @@ const File *File::sortByIdentifier(const File *bibtexfile)
     return newFile;
 }
 
-QDebug operator<<(QDebug dbg, const File &file) {
-    dbg.nospace() << "File is " << (file.checkValidity() ? "" : "NOT ") << "valid and has " << file.count() << " members";
+QDebug operator<<(QDebug dbg, const File *file) {
+    dbg.nospace() << "File is " << (file->checkValidity() ? "" : "NOT ") << "valid and has " << file->count() << " members";
     return dbg;
 }

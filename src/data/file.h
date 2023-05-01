@@ -129,8 +129,8 @@ private:
     FilePrivate *d;
 };
 
-Q_DECLARE_METATYPE(File *)
+Q_DECLARE_METATYPE(File*)
 
-KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const File &file);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const File *file);
 
 #endif // KBIBTEX_DATA_FILE_H

@@ -237,10 +237,9 @@ private:
     EntryPrivate *const d;
 };
 
-Q_DECLARE_METATYPE(Entry)
-Q_DECLARE_METATYPE(Entry *)
+Q_DECLARE_METATYPE(Entry*)
 
-KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Entry &Entry);
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Entry *Entry);
 
 /**
  * Comparison operator, necessary for QMap operations.

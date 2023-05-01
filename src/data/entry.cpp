@@ -274,7 +274,7 @@ bool Entry::isEntry(const Element &other) {
     return typeid(other) == typeid(Entry);
 }
 
-QDebug operator<<(QDebug dbg, const Entry &entry) {
-    dbg.nospace() << "Entry " << entry.id() << " (uniqueId=" << entry.uniqueId() << "), has " << entry.count() << " key-value pairs";
+QDebug operator<<(QDebug dbg, const Entry *entry) {
+    dbg.nospace() << "Entry " << entry->id() << " (uniqueId=" << entry->uniqueId() << "), has " << entry->count() << " key-value pairs";
     return dbg;
 }

@@ -96,7 +96,7 @@ private:
     OpenFileInfoPrivate *d;
 };
 
-Q_DECLARE_METATYPE(OpenFileInfo *)
+Q_DECLARE_METATYPE(OpenFileInfo*)
 
 
 class OpenFileInfoManager: public QObject

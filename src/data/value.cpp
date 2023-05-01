@@ -217,8 +217,8 @@ bool Person::isPerson(const ValueItem &other) {
     return typeid(other) == typeid(Person);
 }
 
-QDebug operator<<(QDebug dbg, const Person &person) {
-    dbg.nospace() << "Person " << Person::transcribePersonName(&person, Preferences::defaultPersonNameFormat);
+QDebug operator<<(QDebug dbg, const Person *person) {
+    dbg.nospace() << "Person " << Person::transcribePersonName(person, Preferences::defaultPersonNameFormat);
     return dbg;
 }
 

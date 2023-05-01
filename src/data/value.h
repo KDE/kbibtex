@@ -139,12 +139,11 @@ private:
     QString m_firstName;
     QString m_lastName;
     QString m_suffix;
-
 };
 
-KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Person &person);
+Q_DECLARE_METATYPE(Person*)
 
-Q_DECLARE_METATYPE(Person *)
+KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Person *person);
 
 
 class KBIBTEXDATA_EXPORT MacroKey: public ValueItem
