@@ -6,7 +6,6 @@ install(
     fancy.xsl
     standard.xsl
     abstractonly.xsl
-    arxiv2bibtex.xsl
     pubmed2bibtex.xsl
     pam2bibtex.xsl
     ieeexploreapiv1-to-bibtex.xsl

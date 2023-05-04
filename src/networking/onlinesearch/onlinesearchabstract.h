@@ -119,6 +119,11 @@ protected:
 
     static QString decodeURL(QString rawText);
 
+    static QString deHTMLify(const QString &input);
+    static QByteArray htmlEntityToUnicode(const QByteArray &input);
+
+    static QString monthToMacroKeyText(const QString &rawText);
+
     QMultiMap<QString, QString> formParameters(const QString &htmlText, int startPos) const;
 
     /**

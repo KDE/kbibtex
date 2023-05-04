@@ -356,6 +356,72 @@ QString OnlineSearchAbstract::decodeURL(QString rawText)
     return rawText;
 }
 
+QString OnlineSearchAbstract::deHTMLify(const QString &input) {
+    QString result{input};
+    result.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
+    int p1 = result.indexOf(QStringLiteral("&#x"));
+    while (p1 >= 0) {
+        if (p1 < result.length() - 8 && result[p1 + 7] == QLatin1Char(';')) {
+            bool ok = false;
+            const int code{result.mid(p1 + 3, 4).toInt(&ok, 16)};
+            if (ok && code > 32 && code <= 0xffff)
+                result = result.left(p1) + QChar(code) + result.mid(p1 + 8);
+        } else if (p1 < result.length() - 6 && result[p1 + 2] == QLatin1Char('#') && result[p1 + 5] == QLatin1Char(';')) {
+            bool ok = false;
+            const int code{result.mid(p1 + 3, 2).toInt(&ok, 16)};
+            if (ok && code > 32 && code <= 0xffff)
+                result = result.left(p1) + QChar(code) + result.mid(p1 + 6);
+        }
+        p1 = result.indexOf(QStringLiteral("&#x"), p1 + 1);
+    }
+    return result;
+}
+
+QByteArray OnlineSearchAbstract::htmlEntityToUnicode(const QByteArray &input) {
+    QByteArray result{input};
+    int p1 = result.indexOf("&#");
+    while (p1 >= 0) {
+        if (p1 < result.length() - 8 && result[p1 + 2] == '#' && result[p1 + 7] == ';') {
+            bool ok = false;
+            const int code{result.mid(p1 + 3, 4).toInt(&ok, 16)};
+            if (ok && code > 32 && code <= 0xffff)
+                result = result.left(p1) + QString(QChar(code)).toUtf8() + result.mid(p1 + 8);
+        } else if (p1 < result.length() - 6 && result[p1 + 2] == '#' && result[p1 + 5] == ';') {
+            bool ok = false;
+            const int code{result.mid(p1 + 3, 2).toInt(&ok, 16)};
+            if (ok && code > 32 && code <= 0xffff)
+                result = result.left(p1) + QString(QChar(code)).toUtf8() + result.mid(p1 + 6);
+        }
+
+        p1 = result.indexOf("&#", p1 + 1);
+    }
+    return result;
+}
+
+QString OnlineSearchAbstract::monthToMacroKeyText(const QString &rawText)
+{
+    if (rawText.isEmpty())
+        return QString();
+
+    // First, test if rawText contains a number like '05',
+    // which can be translated into 'may'
+    bool ok = false;
+    int iMonth = rawText.toInt(&ok);
+    if (ok && iMonth >= 1 && iMonth <= 12)
+        return KBibTeX::MonthsTriple[iMonth - 1];
+
+    // rawText may look like 'August', so get the first three letters
+    // and compare them to known MacroKey texts for months, for example 'aug'
+    const QString rtl{rawText.left(3).toLower()};
+    if (rtl.length() >= 3 && rtl[0].isLetter())
+        for (int i = 0; i < 12; ++i)
+            if (rtl == KBibTeX::MonthsTriple[i])
+                return rtl;
+
+    // All tests above failed, so maybe rawText is no month?
+    return QString();
+}
+
 QMultiMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, int startPos) const
 {
     /// how to recognize HTML tags

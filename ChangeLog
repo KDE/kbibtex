@@ -27,6 +27,7 @@ Diff 0.10.1 to 0.11.0
 - Fixing issues with closed QBuffer instances
 - Better support for JabRef's special structure for 'file' fields
 - Various improvements in XML export, now available in 'Save Copy As' operations
+- Migrating away from QtXmlPatterns (no longer available in Qt6): ArXiv
 - Addressing linter and compiler warnings about potentially problematic code
 - Various clean-ups and code modernizations
 - Adding scripts to compile and run KBibTeX in PodMan containers mimicing various

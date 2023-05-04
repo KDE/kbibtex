@@ -83,6 +83,8 @@ set_target_properties(kbibtexnetworking
 target_include_directories(kbibtexnetworking
     INTERFACE
         $<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/KBibTeX/networking>
+    PRIVATE
+        ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 target_link_libraries(kbibtexnetworking
@@ -112,6 +114,35 @@ if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
             Qt${QT_MAJOR_VERSION}::WebEngineWidgets
     )
 endif()
+
+set(onlinesearchgeneratorstems "arxiv")
+set(onlinesearchdependencies)
+foreach(stem ${onlinesearchgeneratorstems})
+    add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/onlinesearch/onlinesearch${stem}-parser.generated.cpp
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/onlinesearch/onlinesearch-parser-generator.py ${CMAKE_CURRENT_SOURCE_DIR}/onlinesearch/onlinesearch${stem}-parser.in.cpp
+    COMMAND ${Python_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/onlinesearch/onlinesearch-parser-generator.py ${CMAKE_CURRENT_SOURCE_DIR}/onlinesearch/onlinesearch${stem}-parser.in.cpp > ${CMAKE_CURRENT_BINARY_DIR}/onlinesearch/onlinesearch${stem}-parser.generated.cpp
+    VERBATIM
+    )
+    set_source_files_properties(
+        ${CMAKE_CURRENT_BINARY_DIR}/onlinesearch/onlinesearch${stem}-parser.generated.cpp
+        PROPERTIES
+        GENERATED 1
+        HEADER_FILE_ONLY 1
+        SKIP_AUTOMOC ON
+        SKIP_AUTOUIC ON
+        SKIP_AUTOGEN ON
+    )
+    list(APPEND onlinesearchdependencies ${CMAKE_CURRENT_BINARY_DIR}/onlinesearch/onlinesearch${stem}-parser.generated.cpp)
+endforeach()
+add_custom_target(
+    parserincludes
+    DEPENDS
+        ${onlinesearchdependencies}
+)
+add_dependencies(kbibtexnetworking
+    parserincludes
+)
 
 install(
     TARGETS kbibtexnetworking

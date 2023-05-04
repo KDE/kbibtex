@@ -108,6 +108,12 @@ if(BUILD_APP_DESKTOP)
     set(BUILD_KPART ON)
 endif()
 
+find_package(
+    Python
+    COMPONENTS
+      Interpreter
+    REQUIRED
+)
 
 find_package(
     Qt${QT_MAJOR_VERSION} ${QT_REQUIRED_VERSION}

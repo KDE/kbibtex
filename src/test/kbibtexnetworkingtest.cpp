@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,12 +20,14 @@
 #include <QtTest>
 
 #include <onlinesearch/OnlineSearchAbstract>
+#include <onlinesearch/OnlineSearchArXiv>
 #include <AssociatedFiles>
 
 typedef QMultiMap<QString, QString> FormData;
 
 Q_DECLARE_METATYPE(AssociatedFiles::PathType)
 Q_DECLARE_METATYPE(FormData)
+Q_DECLARE_METATYPE(QVector<QSharedPointer<Entry>>)
 
 class OnlineSearchDummy : public OnlineSearchAbstract
 {
@@ -51,6 +53,10 @@ private Q_SLOTS:
     void onlineSearchAbstractFormParameters();
     void onlineSearchAbstractSanitizeEntry_data();
     void onlineSearchAbstractSanitizeEntry();
+#ifdef BUILD_TESTING
+    void onlineSearchArXivAtomRSSparsing_data();
+    void onlineSearchArXivAtomRSSparsing();
+#endif // BUILD_TESTING
 
     void associatedFilescomputeAssociateURL_data();
     void associatedFilescomputeAssociateURL();
@@ -221,6 +227,74 @@ void KBibTeXNetworkingTest::onlineSearchAbstractSanitizeEntry()
     QCOMPARE(*badInputEntrySharedPointer.data(), *goodOutputEntry);
     delete goodOutputEntry;
 }
+
+#ifdef BUILD_TESTING
+void KBibTeXNetworkingTest::onlineSearchArXivAtomRSSparsing_data()
+{
+    QTest::addColumn<QByteArray>("xmlData");
+    QTest::addColumn<bool>("expectedOk");
+    QTest::addColumn<QVector<QSharedPointer<Entry>>>("expectedEntries");
+
+    QTest::newRow("Empty input data") << QByteArray() << false << QVector<QSharedPointer<Entry>>();
+    QTest::newRow("Glibberish") << QByteArrayLiteral("dfbhflbkndfsgn") << false << QVector<QSharedPointer<Entry>>();
+
+    auto arxiv150400141v1 = QSharedPointer<Entry>(new Entry(Entry::etMisc, QStringLiteral("arXiv:1504.00141v1")));
+    arxiv150400141v1->insert(Entry::ftAbstract, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("We give necessary and fppje dccrz so that we eoeml d-hypercyclicity for fnsxq who map a holomorphic function to a afczs sum of the Taylor dpcef. This jksqc is connected yaqxf doubly fzexf Taylors series and this is an lefws to gaxws the yppmz to rqqfi fzexf Taylor series."))));
+    const Value valueArchivePrefix = Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("arXiv")));
+    arxiv150400141v1->insert(QStringLiteral("archiveprefix"), valueArchivePrefix);
+    arxiv150400141v1->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Vagia"), QStringLiteral("Vlachou"))));
+    arxiv150400141v1->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.48550/arXiv.1504.00141"))));
+    arxiv150400141v1->insert(QStringLiteral("eprint"), Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("1504.00141"))));
+    const Value valueMonthApril = Value() << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("apr")));
+    arxiv150400141v1->insert(Entry::ftMonth, valueMonthApril);
+    arxiv150400141v1->insert(QStringLiteral("primaryclass"), Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("math.CV"))));
+    arxiv150400141v1->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Disjoint Hypercyclicity for ibnxz of Taylor-type Operators"))));
+    arxiv150400141v1->insert(Entry::ftUrl, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("http://arxiv.org/abs/1504.00141v1"))));
+    arxiv150400141v1->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2015"))));
+    QTest::newRow("1504.00141v1") << QByteArrayLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<feed xmlns=\"http://www.w3.org/2005/Atom\">\n<link href=\"http://arxiv.org/api/query?search_query%3Dall%3A%22taylor%22%26id_list%3D%26start%3D0%26max_results%3D10\" rel=\"self\" type=\"application/atom+xml\"/><title type=\"html\">ArXiv Query: search_query=all:\"taylor\"&amp;id_list=&amp;start=0&amp;max_results=10</title><id>http://arxiv.org/api/6h9sToXCpLXkWfu8KLjT9VitsINsBm1Y</id><updated>2022-11-04T00:00:00-04:00</updated><opensearch:totalResults xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\">11993</opensearch:totalResults><opensearch:startIndex xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\">0</opensearch:startIndex><opensearch:itemsPerPage xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\">10</opensearch:itemsPerPage><entry><id>http://arxiv.org/abs/1504.00141v1</id><updated>2015-04-01T08:25:07Z</updated><published>2015-04-01T08:25:07Z</published><title>Disjoint Hypercyclicity for ibnxz of Taylor-type Operators"
+                                  "</title><summary>  We give necessary and fppje dccrz so that we eoeml d-hypercyclicity for fnsxq who map a holomorphic function to a afczs sum of the Taylor dpcef. This jksqc is connected yaqxf doubly fzexf Taylors series and this is an lefws to gaxws the yppmz to rqqfi fzexf Taylor series. </summary><author><name>Vagia Vlachou</name></author><link href=\"http://arxiv.org/abs/1504.00141v1\" rel=\"alternate\" type=\"text/html\"/><link title=\"pdf\" href=\"http://arxiv.org/pdf/1504.00141v1\" rel=\"related\" type=\"application/pdf\"/><arxiv:primary_category xmlns:arxiv=\"http://arxiv.org/schemas/atom\" term=\"math.CV\" scheme=\"http://arxiv.org/schemas/atom\"/><category term=\"math.CV\" scheme=\"http://arxiv.org/schemas/atom\"/><category term=\"47A16, 47B38, 41A30\" scheme=\"http://arxiv.org/schemas/atom\"/>\n</entry>\n</feed>") << true << QVector<QSharedPointer<Entry>> {arxiv150400141v1};
+
+    auto arxiv09122475v2 = QSharedPointer<Entry>(new Entry(Entry::etArticle, QStringLiteral("arXiv:0912.2475v2")));
+    arxiv09122475v2->insert(Entry::ftAbstract, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("We vzusx holographic superconductors in Einstein-Gauss-Bonnet gravity. We consider two wwgze backgrounds: a $d$-ceuda Gauss-Bonnet-AdS black hole and a Gauss-Bonnet-AdS soliton. We discuss in bhgtq the effects that the dmaul of the vrunw field, the Gauss-Bonnet coupling and the dimensionality of the AdS space eoeml on the jomwq rnsbo and conductivity. We also vzusx the ratio $\\omega_g/T_c $ for various masses of the vrunw field and Gauss-Bonnet couplings."))));
+    arxiv09122475v2->insert(QStringLiteral("archiveprefix"), valueArchivePrefix);
+    arxiv09122475v2->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Qiyuan"), QStringLiteral("Pan"))) << QSharedPointer<Person>(new Person(QStringLiteral("Bin"), QStringLiteral("Wang"))) << QSharedPointer<Person>(new Person(QStringLiteral("Eleftherios"), QStringLiteral("Papantonopoulos"))) << QSharedPointer<Person>(new Person(QStringLiteral("Jeferson"), QStringLiteral("de Oliveira"))) << QSharedPointer<Person>(new Person(QStringLiteral("A. B."), QStringLiteral("Pavan"))));
+    arxiv09122475v2->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.1103/PhysRevD.81.106007"))));
+    arxiv09122475v2->insert(QStringLiteral("eprint"), Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("0912.2475"))));
+    arxiv09122475v2->insert(Entry::ftJournal, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Phys.Rev.D"))));
+    arxiv09122475v2->insert(Entry::ftMonth, valueMonthApril);
+    arxiv09122475v2->insert(Entry::ftNote, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("21 pages, 10 figures. accepted for publication in PRD"))));
+    arxiv09122475v2->insert(Entry::ftPages, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("106007"))));
+    arxiv09122475v2->insert(QStringLiteral("primaryclass"), Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("hep-th"))));
+    arxiv09122475v2->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Holographic Superconductors yaqxf various condensates in Einstein-Gauss-Bonnet gravity"))));
+    arxiv09122475v2->insert(Entry::ftUrl, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("http://arxiv.org/abs/0912.2475v2"))));
+    arxiv09122475v2->insert(Entry::ftVolume, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("81"))));
+    arxiv09122475v2->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2010"))));
+    QTest::newRow("1504.00141v1 & 0912.2475v2") << QByteArrayLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<feed xmlns=\"http://www.w3.org/2005/Atom\">\n<link href=\"http://arxiv.org/api/query?search_query%3Dall%3A%22taylor%22%26id_list%3D%26start%3D0%26max_results%3D10\" rel=\"self\" type=\"application/atom+xml\"/><title type=\"html\">ArXiv Query: search_query=all:\"taylor\"&amp;id_list=&amp;start=0&amp;max_results=10</title><id>http://arxiv.org/api/6h9sToXCpLXkWfu8KLjT9VitsINsBm1Y</id><updated>2022-11-04T00:00:00-04:00</updated><opensearch:totalResults xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\">11993</opensearch:totalResults><opensearch:startIndex xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\">0</opensearch:startIndex><opensearch:itemsPerPage xmlns:opensearch=\"http://a9.com/-/spec/opensearch/1.1/\">10</opensearch:itemsPerPage><entry><id>http://arxiv.org/abs/1504.00141v1</id><updated>2015-04-01T08:25:07Z</updated><published>2015-04-01T08:25:07Z</published><title>Disjoint Hypercyclicity for ibnxz of Taylor-type Operators"
+            "</title><summary>  We give necessary and fppje dccrz so that we eoeml d-hypercyclicity for fnsxq who map a holomorphic function to a afczs sum of the Taylor dpcef. This jksqc is connected yaqxf doubly fzexf Taylors series and this is an lefws to gaxws the yppmz to rqqfi fzexf Taylor series. </summary><author><name>Vagia Vlachou</name></author><link href=\"http://arxiv.org/abs/1504.00141v1\" rel=\"alternate\" type=\"text/html\"/><link title=\"pdf\" href=\"http://arxiv.org/pdf/1504.00141v1\" rel=\"related\" type=\"application/pdf\"/><arxiv:primary_category xmlns:arxiv=\"http://arxiv.org/schemas/atom\" term=\"math.CV\" scheme=\"http://arxiv.org/schemas/atom\"/><category term=\"math.CV\" scheme=\"http://arxiv.org/schemas/atom\"/><category term=\"47A16, 47B38, 41A30\" scheme=\"http://arxiv.org/schemas/atom\"/>\n</entry>\n<entry><id>http://arxiv.org/abs/0912.2475v2</id><updated>2010-04-09T05:27:26Z</updated><published>2009-12-13T05:11:02Z</published><title>"
+            "Holographic Superconductors yaqxf various condensates in Einstein-Gauss-Bonnet gravity</title><summary>  We vzusx holographic superconductors in Einstein-Gauss-Bonnet gravity. We consider two wwgze backgrounds: a $d$-ceuda Gauss-Bonnet-AdS black hole and a Gauss-Bonnet-AdS soliton. We discuss in bhgtq the effects that the dmaul of the vrunw field, the Gauss-Bonnet coupling and the dimensionality of the AdS space eoeml on the jomwq rnsbo and conductivity. We also vzusx the ratio $\\omega_g/T_c $ for various masses of the vrunw field and Gauss-Bonnet couplings.</summary><author><name>Qiyuan Pan</name></author><author><name>Bin Wang</name></author><author><name>Eleftherios Papantonopoulos</name></author><author><name>Jeferson de Oliveira</name></author><author><name>A. B. Pavan</name></author><arxiv:doi xmlns:arxiv=\"http://arxiv.org/schemas/atom\">10.1103/PhysRevD.81.106007</arxiv:doi><link title=\"doi\" href=\"http://dx.doi.org/10.1103/PhysRevD.81.106007\" rel=\"related\"/>"
+            "<arxiv:comment xmlns:arxiv=\"http://arxiv.org/schemas/atom\">21 pages, 10 figures. accepted for publication in PRD</arxiv:comment><arxiv:journal_ref xmlns:arxiv=\"http://arxiv.org/schemas/atom\">Phys.Rev.D81:106007,2010</arxiv:journal_ref><link href=\"http://arxiv.org/abs/0912.2475v2\" rel=\"alternate\" type=\"text/html\"/><link title=\"pdf\" href=\"http://arxiv.org/pdf/0912.2475v2\" rel=\"related\" type=\"application/pdf\"/><arxiv:primary_category xmlns:arxiv=\"http://arxiv.org/schemas/atom\" term=\"hep-th\" scheme=\"http://arxiv.org/schemas/atom\"/><category term=\"hep-th\" scheme=\"http://arxiv.org/schemas/atom\"/><category term=\"gr-qc\" scheme=\"http://arxiv.org/schemas/atom\"/></entry>\n</feed>") << true << QVector<QSharedPointer<Entry>> {arxiv150400141v1, arxiv09122475v2};
+}
+
+void KBibTeXNetworkingTest::onlineSearchArXivAtomRSSparsing()
+{
+    QFETCH(QByteArray, xmlData);
+    QFETCH(bool, expectedOk);
+    QFETCH(QVector<QSharedPointer<Entry>>, expectedEntries);
+
+    OnlineSearchArXiv osa(this);
+    bool ok = false;
+    const auto generatedEntries = osa.parseAtomXML(xmlData, &ok);
+    QCOMPARE(expectedOk, ok);
+    QCOMPARE(generatedEntries.length(), expectedEntries.length());
+    if (ok) {
+        for (auto itA = expectedEntries.constBegin(), itB = generatedEntries.constBegin(); itA != expectedEntries.constEnd() && itB != generatedEntries.constEnd(); ++itA, ++itB) {
+            const QSharedPointer<Entry> &entryA = *itA;
+            const QSharedPointer<Entry> &entryB = *itB;
+            QCOMPARE(*entryA, *entryB);
+        }
+    }
+}
+#endif // BUILD_TESTING
 
 void KBibTeXNetworkingTest::associatedFilescomputeAssociateURL_data()
 {
