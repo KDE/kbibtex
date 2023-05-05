@@ -284,7 +284,12 @@ KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Value &value);
 class KBIBTEXDATA_EXPORT PlainTextValue
 {
 public:
-    static QString text(const Value &value);
+    enum FormattingOption {
+        NoOptions = 0x0,
+        BeautifyMonth = 0x1
+    };
+    Q_DECLARE_FLAGS(FormattingOptions, FormattingOption)
+    static QString text(const Value &value, const FormattingOptions formattingOptions = FormattingOption::NoOptions);
     static QString text(const ValueItem &valueItem);
     static QString text(const QSharedPointer<const ValueItem> &valueItem);
 
@@ -293,6 +298,8 @@ private:
 
     static QString text(const ValueItem &valueItem, ValueItemType &vit);
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(PlainTextValue::FormattingOptions)
 
 Q_DECLARE_METATYPE(Value)
 

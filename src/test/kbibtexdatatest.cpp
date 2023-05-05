@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,6 +21,7 @@
 
 #include <FileExporterBibTeX>
 #include <FileImporterBibTeX>
+#include <Value>
 #include <Entry>
 #include <Macro>
 
@@ -43,6 +44,9 @@ private Q_SLOTS:
 
     void rearrangingCrossRefEntries_data();
     void rearrangingCrossRefEntries();
+
+    void beautifyingMonths_data();
+    void beautifyingMonths();
 
 private:
 };
@@ -243,6 +247,33 @@ void KBibTeXDataTest::rearrangingCrossRefEntries()
     File *savedBibTeXfile = importer.fromString(exporter.toString(originalBibTeXfile));
 
     QCOMPARE(*rearrangedBibTeXfile, *savedBibTeXfile);
+}
+
+void KBibTeXDataTest::beautifyingMonths_data()
+{
+    QTest::addColumn<Value>("monthsInput");
+    QTest::addColumn<QString>("expectedBeautification");
+    QTest::addColumn<QString>("expectedWithoutBeautification");
+
+    QTest::newRow("Empty value") << Value() << QString() << QString();
+    QTest::newRow("Single month as macro key") << (Value() << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("apr")))) << QLocale::system().monthName(4) << QStringLiteral("apr");
+    QTest::newRow("Single month as number") << (Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("6")))) << QLocale::system().monthName(6) << QStringLiteral("6");
+    QTest::newRow("Two months as macro keys") << (Value() << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("apr"))) << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("may")))) << QLocale::system().monthName(4) + QChar(0x2013) + QLocale::system().monthName(5) << QStringLiteral("apr may");
+    QTest::newRow("Two months as numbers") << (Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("4"))) << QSharedPointer<PlainText>(new PlainText(QStringLiteral("5")))) << QLocale::system().monthName(4) + QChar(0x2013) + QLocale::system().monthName(5) << QStringLiteral("4 5");
+    QTest::newRow("Two months as macro keys, with # in between") << (Value() << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("apr"))) << QSharedPointer<PlainText>(new PlainText(QStringLiteral("#"))) << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("may")))) << QLocale::system().monthName(4) + QChar(0x2013) + QLocale::system().monthName(5) << QStringLiteral("apr # may");
+    QTest::newRow("Two months as numbers, with # in between") << (Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("4")))  << QSharedPointer<PlainText>(new PlainText(QStringLiteral("#"))) << QSharedPointer<PlainText>(new PlainText(QStringLiteral("5")))) << QLocale::system().monthName(4) + QChar(0x2013) + QLocale::system().monthName(5) << QStringLiteral("4 # 5");
+    QTest::newRow("Two months as macro keys, with -- in between") << (Value() << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("apr"))) << QSharedPointer<PlainText>(new PlainText(QStringLiteral("--"))) << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("may")))) << QLocale::system().monthName(4) + QChar(0x2013) + QLocale::system().monthName(5) << QStringLiteral("apr -- may");
+    QTest::newRow("Two months as numbers, with -- in between") << (Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("4")))  << QSharedPointer<PlainText>(new PlainText(QStringLiteral("--"))) << QSharedPointer<PlainText>(new PlainText(QStringLiteral("5")))) << QLocale::system().monthName(4) + QChar(0x2013) + QLocale::system().monthName(5) << QStringLiteral("4 -- 5");
+}
+
+void KBibTeXDataTest::beautifyingMonths()
+{
+    QFETCH(Value, monthsInput);
+    QFETCH(QString, expectedBeautification);
+    QFETCH(QString, expectedWithoutBeautification);
+
+    QCOMPARE(PlainTextValue::text(monthsInput, PlainTextValue::BeautifyMonth), expectedBeautification);
+    QCOMPARE(PlainTextValue::text(monthsInput), expectedWithoutBeautification);
 }
 
 void KBibTeXDataTest::initTestCase()

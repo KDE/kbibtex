@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -635,10 +635,46 @@ QDebug operator<<(QDebug dbg, const Value &value) {
 }
 
 
-QString PlainTextValue::text(const Value &value)
+QString PlainTextValue::text(const Value &value, const FormattingOptions formattingOptions)
 {
     ValueItemType vit = ValueItemType::Other;
     ValueItemType lastVit = ValueItemType::Other;
+
+    if (formattingOptions.testFlag(FormattingOption::BeautifyMonth) && value.length() >= 1 && value.length() <= 3) {
+        int firstIndex = -1, lastIndex = -1;
+        if (MacroKey::isMacroKey(*value.first()) && MacroKey::isMacroKey(*value.last())) {
+            // Probably one macro key like  jan  or a triple like  jan "#" feb   or just  jan feb
+            const QString firstText = value.first().dynamicCast<MacroKey>()->text().toLower();
+            const QString lastText = value.length() > 1 ? value.last().dynamicCast<MacroKey>()->text().toLower() : QString();
+            firstIndex = std::distance(KBibTeX::MonthsTriple, std::find(KBibTeX::MonthsTriple, KBibTeX::MonthsTriple + 12, firstText)) + 1;
+            lastIndex = value.length() > 1 ? std::distance(KBibTeX::MonthsTriple, std::find(KBibTeX::MonthsTriple, KBibTeX::MonthsTriple + 12, lastText)) + 1 : firstIndex;
+        } else {
+            // Some text that may contain a number like  5
+            bool ok = false;
+            firstIndex = PlainTextValue::text(value.first()).toInt(&ok);
+            if (!ok || (firstIndex < 1) || (firstIndex > 12))
+                firstIndex = -1;
+            ok = true;
+            lastIndex = value.length() > 1 ? PlainTextValue::text(value.last()).toInt(&ok) : firstIndex;
+            if (!ok || (lastIndex < 1) || (lastIndex > 12))
+                lastIndex = -1;
+            static const QSet<QString> centerOfThree{QStringLiteral("#"), QStringLiteral("-"), QStringLiteral("--"), QStringLiteral("/"), QChar(0x2013)};
+            if (value.length() == 3 && !centerOfThree.contains(PlainTextValue::text(value.at(1)))) {
+                // If value contains three elements, the center one must be one of the allowed strings in the set
+                lastIndex = firstIndex = -1;
+            }
+        }
+        if (firstIndex >= 1 && lastIndex <= 12 && lastIndex >= 1 && lastIndex <= 12) {
+            if (value.length() == 1) {
+                // Detour via format string necessary due to bug QT-113415
+                return QString(QStringLiteral("%1")).arg(QLocale::system().monthName(firstIndex));
+            }
+            else
+                return QString(QStringLiteral("%1%2%3")).arg(QLocale::system().monthName(firstIndex), QChar(0x2013), QLocale::system().monthName(lastIndex));
+        } else {
+            qCDebug(LOG_KBIBTEX_DATA) << "Got asked to beautify month, but could not determine index";
+        }
+    }
 
     QString result;
     for (const auto &valueItem : value) {

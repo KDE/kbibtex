@@ -114,13 +114,13 @@ QString FileModel::entryText(const Entry *entry, const QString &raw, const QStri
     } else {
         QString text;
         if (entry->contains(raw))
-            text = PlainTextValue::text(entry->value(raw)).simplified();
+            text = PlainTextValue::text(entry->value(raw), raw.toLower() == Entry::ftMonth ? PlainTextValue::BeautifyMonth : PlainTextValue::NoOptions).simplified();
         else if (!rawAlt.isEmpty() && entry->contains(rawAlt))
-            text = PlainTextValue::text(entry->value(rawAlt)).simplified();
+            text = PlainTextValue::text(entry->value(rawAlt), rawAlt.toLower() == Entry::ftMonth ? PlainTextValue::BeautifyMonth : PlainTextValue::NoOptions).simplified();
         if (text.isEmpty())
             for (const QString &alias : rawAliases) {
                 if (entry->contains(alias)) {
-                    text = PlainTextValue::text(entry->value(alias)).simplified();
+                    text = PlainTextValue::text(entry->value(alias), alias.toLower() == Entry::ftMonth ? PlainTextValue::BeautifyMonth : PlainTextValue::NoOptions).simplified();
                     if (!text.isEmpty()) break;
                 }
             }
