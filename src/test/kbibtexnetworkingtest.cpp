@@ -21,6 +21,7 @@
 
 #include <onlinesearch/OnlineSearchAbstract>
 #include <onlinesearch/OnlineSearchArXiv>
+#include <onlinesearch/OnlineSearchIEEEXplore>
 #include <AssociatedFiles>
 
 typedef QMultiMap<QString, QString> FormData;
@@ -56,6 +57,8 @@ private Q_SLOTS:
 #ifdef BUILD_TESTING
     void onlineSearchArXivAtomRSSparsing_data();
     void onlineSearchArXivAtomRSSparsing();
+    void onlineSearchIeeeXMLparsing_data();
+    void onlineSearchIeeeXMLparsing();
 #endif // BUILD_TESTING
 
     void associatedFilescomputeAssociateURL_data();
@@ -284,6 +287,69 @@ void KBibTeXNetworkingTest::onlineSearchArXivAtomRSSparsing()
     OnlineSearchArXiv osa(this);
     bool ok = false;
     const auto generatedEntries = osa.parseAtomXML(xmlData, &ok);
+    QCOMPARE(expectedOk, ok);
+    QCOMPARE(generatedEntries.length(), expectedEntries.length());
+    if (ok) {
+        for (auto itA = expectedEntries.constBegin(), itB = generatedEntries.constBegin(); itA != expectedEntries.constEnd() && itB != generatedEntries.constEnd(); ++itA, ++itB) {
+            const QSharedPointer<Entry> &entryA = *itA;
+            const QSharedPointer<Entry> &entryB = *itB;
+            QCOMPARE(*entryA, *entryB);
+        }
+    }
+}
+
+void KBibTeXNetworkingTest::onlineSearchIeeeXMLparsing_data()
+{
+    QTest::addColumn<QByteArray>("xmlData");
+    QTest::addColumn<bool>("expectedOk");
+    QTest::addColumn<QVector<QSharedPointer<Entry>>>("expectedEntries");
+
+    QTest::newRow("Empty input data") << QByteArray() << false << QVector<QSharedPointer<Entry>>();
+    QTest::newRow("Glibberish") << QByteArrayLiteral("dfbhflbkndfsgn") << false << QVector<QSharedPointer<Entry>>();
+
+    auto ieee7150835 = QSharedPointer<Entry>(new Entry(Entry::etInProceedings, QStringLiteral("ieee7150835")));
+    ieee7150835->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("An analysis on data Accountability and Security in jjzyg"))));
+    ieee7150835->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Shital A."), QStringLiteral("Hande"))) << QSharedPointer<Person>(new Person(QStringLiteral("Sunil B."), QStringLiteral("Mane"))));
+    ieee7150835->insert(Entry::ftBookTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2015 International Conference on Industrial Instrumentation and Control (ICIC)"))));
+    ieee7150835->insert(Entry::ftPublisher, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("IEEE"))));
+    ieee7150835->insert(Entry::ftAbstract, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Cloud ydfue is one of the best ecrji parameter in IT zrrdf which wkmmt on awrtb tyzef. It uses Central ntppr xzcym and internet for pxict data and cxzlz. Users can opdmd their files and cxzlz hpggf internet opdmd. As it is publically available so data ihroa must be ssyxu. In this ftkab, we bkeuc ixalo izcrf ihroa and wrtsw djqmw of jjzyg ydfue such as integrity, confidentiality, otmyd, dqgnm, ymace, lugjg There are many ihroa issues related to jjzyg ydfue which includes users data xhkrp remotely by many users, user uxidm know how their data get processed on to the jjzyg. To deal with it many ihroa and dqgnm models exit. Here we ykpbs some of them like Privacy kdmce in jjzyg, RSA based storage ihroa system, Cloud ydfue data ihroa model and Cloud clyoc dqgnm knasm. We bkeuc ixalo these four models and elfse ytsoq that which model is hevvm for which type of wrtsw or service. Proposed system nmyek on nkpgq Lightweight Framework for Accountability and Security."))));
+    ieee7150835->insert(Entry::ftMonth, Value() << QSharedPointer<MacroKey>(new MacroKey(QStringLiteral("may"))));
+    ieee7150835->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2015"))));
+    ieee7150835->insert(Entry::ftPages, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("713\u2013717"))));
+    ieee7150835->insert(Entry::ftISBN, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("978-1-4799-7164-0"))));
+    ieee7150835->insert(Entry::ftKeywords, Value() << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Cloud ydfue"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Data ihroa"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Data models"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Computational modeling"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Servers"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Data privacy"))));
+    ieee7150835->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.1109/IIC.2015.7150835"))));
+    ieee7150835->insert(Entry::ftUrl, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://ieeexplore.ieee.org/document/7150835/"))));
+    QTest::newRow("ieee7150835") << QByteArrayLiteral("<articles><totalfound>1</totalfound><totalsearched>5942285</totalsearched><article><doi>10.1109/IIC.2015.7150835</doi><title>An analysis on data Accountability and Security in jjzyg</title><publisher>IEEE</publisher><isbn>978-1-4799-7164-0</isbn><rank>1</rank><authors><author><affiliation>Department of Computer Engineering and IT, College of Engineering, Pune</affiliation><authorUrl>https://ieeexplore.ieee.org/author/37085452758</authorUrl><id>37085452758</id><full_name>Shital A. Hande</full_name><author_order>1</author_order><authorAffiliations><authorAffiliation>Department of Computer Engineering and IT, College of Engineering, Pune</authorAffiliation></authorAffiliations></author><author><affiliation>Department of Computer Engineering and IT, College of Engineering, Pune</affiliation><authorUrl>https://ieeexplore.ieee.org/author/37603496400</authorUrl><id>37603496400</id><full_name>Sunil B. Mane</full_name><author_order>2</author_order><authorAffiliations><authorAffiliation>Department"
+                                 " of Computer Engineering and IT, College of Engineering, Pune</authorAffiliation></authorAffiliations></author></authors><accessType>locked</accessType><content_type>Conferences</content_type><abstract>Cloud ydfue is one of the best ecrji parameter in IT zrrdf which wkmmt on awrtb tyzef. It uses Central ntppr xzcym and internet for pxict data and cxzlz. Users can opdmd their files and cxzlz hpggf internet opdmd. As it is publically available so data ihroa must be ssyxu. In this ftkab, we bkeuc ixalo izcrf ihroa and wrtsw djqmw of jjzyg ydfue such as integrity, confidentiality, otmyd, dqgnm, ymace, lugjg There are many ihroa issues related to jjzyg ydfue which includes users data xhkrp remotely by many users, user uxidm know how their data get processed on to the jjzyg. To deal with it many ihroa and dqgnm models exit. Here we ykpbs some of them like Privacy kdmce"
+                                 " in jjzyg, RSA based storage ihroa system, Cloud ydfue data ihroa model and Cloud clyoc dqgnm knasm. We bkeuc ixalo these four models and elfse ytsoq that which model is hevvm for which type of wrtsw or service. Proposed system nmyek on nkpgq Lightweight Framework for Accountability and Security.</abstract><article_number>7150835</article_number><pdf_url>https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&amp;arnumber=7150835</pdf_url><html_url>https://ieeexplore.ieee.org/document/7150835/</html_url><abstract_url>https://ieeexplore.ieee.org/document/7150835/</abstract_url><publication_title>2015 International Conference on Industrial Instrumentation and Control (ICIC)</publication_title><conference_location>Pune, India</conference_location><conference_dates>28-30 May 2015</conference_dates><publication_number>7133193</publication_number><is_number>7150576</is_number><publication_year>2015</publication_year><publication_date>28-30 May 2015"
+                                 "</publication_date><start_page>713</start_page><end_page>717</end_page><citing_paper_count>3</citing_paper_count><citing_patent_count>0</citing_patent_count><download_count>456</download_count><insert_date>20150709</insert_date><index_terms><ieee_terms><term>Cloud ydfue</term><term>Data ihroa</term><term>Data models</term><term>Computational modeling</term><term>Servers</term><term>Data privacy</term></ieee_terms><author_terms><terms>Cloud ydfue</terms><terms>Cloud Accountability</terms><terms>data ihroa</terms></author_terms></index_terms><isbn_formats><isbn_format><format>DVD ISBN</format><value>978-1-4799-7164-0</value><isbnType>New-2005</isbnType></isbn_format><isbn_format><format>Electronic ISBN</format><value>978-1-4799-7165-7</value><isbnType>New-2005</isbnType></isbn_format></isbn_formats></article></articles>") << true << QVector<QSharedPointer<Entry>> {ieee7150835};
+
+    auto ieee9898655 = QSharedPointer<Entry>(new Entry(Entry::etInBook, QStringLiteral("ieee9898655")));
+    ieee9898655->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Secure Development"))));
+    ieee9898655->insert(Entry::ftBookTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Start-Up Secure: Baking Cybersecurity into Your Company from Founding to Exit"))));
+    ieee9898655->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Chris"), QStringLiteral("Castaldo"))));
+    ieee9898655->insert(Entry::ftPublisher, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Wiley"))));
+    ieee9898655->insert(Entry::ftAbstract, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Building a minimally ftwgz product uxidm bkeuc some basics of ihroa baked into it. Secure coding is not always a rvesx cdfxa but many modern tools of today help to enable developers to wbacv xwszt pvrte. When it ghjet to nkpgq software there is no kgxru of yfbvx to do so. Building Security in Maturity Model is anynn to be aware of rsbps the npdgp and xnfkd phase and anynn to mqefv consider in jrsuy phase. The Capability Maturity Model Integration (CMMI) is a long\u2010""standing model for software alvtu jowkf. CMMI is notable as it is yguju a requirement on US wdwph software alvtu xdmwf. When ituab are nkpgq code in their Integrated Development Environment (IDE) there are now many yidqp tools that add on to gfoxb all the popular IDEs available today that act as spell\u2010""checkers for secure code."))));
+    ieee9898655->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2021"))));
+    ieee9898655->insert(Entry::ftPages, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("143\u2013151"))));
+    ieee9898655->insert(Entry::ftISBN, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("9781119700746"))));
+    ieee9898655->insert(Entry::ftKeywords, Value() << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Capability jowkf model"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Codes"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Testing"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Training"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Computer ihroa"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Buildings"))) << QSharedPointer<Keyword>(new Keyword(QStringLiteral("Standards organizations"))));
+    ieee9898655->insert(Entry::ftUrl, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://ieeexplore.ieee.org/document/9898655/"))));
+    QTest::newRow("ieee9898655") << QByteArrayLiteral("<articles><totalfound>1</totalfound><totalsearched>5942285</totalsearched><article><title>Secure Development</title><publisher>Wiley</publisher><isbn>9781119700746</isbn><rank>1</rank><authors><author><full_name>Chris Castaldo</full_name><author_order>1</author_order><authorAffiliations><authorAffiliation/></authorAffiliations></author></authors><accessType>locked</accessType><content_type>Books</content_type><abstract>Building a minimally ftwgz product uxidm bkeuc some basics of ihroa baked into it. Secure coding is not always a rvesx cdfxa but many modern tools of today help to enable developers to wbacv xwszt pvrte. When it ghjet to nkpgq software there is no kgxru of yfbvx to do so. Building Security in Maturity Model is anynn to be aware of rsbps the npdgp and xnfkd phase and anynn to mqefv consider in jrsuy phase. The Capability Maturity Model Integration (CMMI) is a long&amp;#x2010;standing model for software alvtu jowkf."
+                                 " CMMI is notable as it is yguju a requirement on US wdwph software alvtu xdmwf. When ituab are nkpgq code in their Integrated Development Environment (IDE) there are now many yidqp tools that add on to gfoxb all the popular IDEs available today that act as spell&amp;#x2010;checkers for secure code.</abstract><article_number>9898655</article_number><pdf_url>https://ieeexplore.ieee.org/xpl/ebooks/bookPdfWithBanner.jsp?fileName=9898655.pdf&amp;bkn=9872307&amp;pdfType=chapter</pdf_url><html_url>https://ieeexplore.ieee.org/document/9898655/</html_url><abstract_url>https://ieeexplore.ieee.org/document/9898655/</abstract_url><publication_title>Start-Up Secure: Baking Cybersecurity into Your Company from Founding to Exit</publication_title><publication_number>9872307</publication_number><publication_year>2021</publication_year><start_page>143</start_page><end_page>151</end_page><citing_paper_count>0</citing_paper_count><citing_patent_count>0</citing_patent_count>"
+                                 "<download_count>7</download_count><insert_date>20220921</insert_date><index_terms><ieee_terms><term>Capability jowkf model</term><term>Codes</term><term>Testing</term><term>Training</term><term>Computer ihroa</term><term>Buildings</term><term>Standards organizations</term></ieee_terms></index_terms><isbn_formats><isbn_format><format>Electronic ISBN</format><value>9781119700746</value><isbnType>New-2005</isbnType></isbn_format><isbn_format><format>Online ISBN</format><value>9781394174768</value><isbnType>New-2005</isbnType></isbn_format><isbn_format><format>Print ISBN</format><value>9781119700739</value><isbnType>New-2005</isbnType></isbn_format><isbn_format><format>Electronic ISBN</format><value>9781119700753</value><isbnType>New-2005</isbnType></isbn_format></isbn_formats></article></articles>") << true << QVector<QSharedPointer<Entry>> {ieee9898655};
+}
+
+void KBibTeXNetworkingTest::onlineSearchIeeeXMLparsing()
+{
+    QFETCH(QByteArray, xmlData);
+    QFETCH(bool, expectedOk);
+    QFETCH(QVector<QSharedPointer<Entry>>, expectedEntries);
+
+    OnlineSearchIEEEXplore searchIEEExplore(this);
+    bool ok = false;
+    const auto generatedEntries = searchIEEExplore.parseIeeeXML(xmlData, &ok);
     QCOMPARE(expectedOk, ok);
     QCOMPARE(generatedEntries.length(), expectedEntries.length());
     if (ok) {

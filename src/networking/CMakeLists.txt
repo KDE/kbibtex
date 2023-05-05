@@ -115,7 +115,7 @@ if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
     )
 endif()
 
-set(onlinesearchgeneratorstems "arxiv")
+set(onlinesearchgeneratorstems "arxiv" "ieeexplore")
 set(onlinesearchdependencies)
 foreach(stem ${onlinesearchgeneratorstems})
     add_custom_command(

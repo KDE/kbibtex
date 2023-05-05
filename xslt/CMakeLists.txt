@@ -8,7 +8,6 @@ install(
     abstractonly.xsl
     pubmed2bibtex.xsl
     pam2bibtex.xsl
-    ieeexploreapiv1-to-bibtex.xsl
     oaizbpreview-to-bibtex.xsl
     wikipedia-cite.xsl
     DESTINATION

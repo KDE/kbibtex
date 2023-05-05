@@ -41,6 +41,11 @@ public:
     QString label() const override;
     QUrl homepage() const override;
 
+#ifdef BUILD_TESTING
+    // KBibTeXNetworkingTest::onlineSearchIeeeXMLparsing  makes use of this function to test parsing XML data
+    QVector<QSharedPointer<Entry>> parseIeeeXML(const QByteArray &xmlData, bool *ok = nullptr);
+#endif // BUILD_TESTING
+
 private Q_SLOTS:
     void doneFetchingXML();
 
