@@ -183,9 +183,13 @@ public:
                     if (!isOpen) {
                         if (!result.isEmpty()) result.append(QStringLiteral(" # "));
                         result.append(stringOpenDelimiter);
-                    } else if (!prev.dynamicCast<const PlainText>().isNull())
-                        result.append(QStringLiteral(" "));
-                    else if (!prev.dynamicCast<const Person>().isNull()) {
+                    } else if (!prev.dynamicCast<const PlainText>().isNull()) {
+                        if (key.toLower().startsWith(Entry::ftKeywords))
+                            // Keywords in the 'keywords' field are separated by semicolons
+                            result.append(QStringLiteral(";"));
+                        else
+                            result.append(QStringLiteral(" "));
+                    } else if (!prev.dynamicCast<const Person>().isNull()) {
                         /// handle "et al." i.e. "and others"
                         result.append(QStringLiteral(" and "));
                     } else {
