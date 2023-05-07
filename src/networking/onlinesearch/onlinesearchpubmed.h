@@ -41,8 +41,10 @@ public:
     QString label() const override;
     QUrl homepage() const override;
 
-    static const int maxNumResults;
-    static const qint64 queryChokeTimeout; // FIXME needs to be in public interface?
+#ifdef BUILD_TESTING
+    // KBibTeXNetworkingTest::onlineSearchPubMedXMLparsing  makes use of this function to test parsing XML data
+    QVector<QSharedPointer<Entry>> parsePubMedXML(const QByteArray &xmlData, bool *ok = nullptr);
+#endif // BUILD_TESTING
 
 private Q_SLOTS:
     void eSearchDone();
