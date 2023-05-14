@@ -139,27 +139,27 @@ void KBibTeXNetworkingTest::onlineSearchAbstractSanitizeEntry_data()
 
     QTest::newRow("Entry with type and id but without values") << new Entry(Entry::etArticle, QStringLiteral("abc123")) << new Entry(Entry::etArticle, QStringLiteral("abc123"));
 
-    const Value doiValue = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/182")));
+    const Value doiValue = Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.1000/182")));
     const Value authorValue = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("Jane Doe")));
 
     Entry *entryA1 = new Entry(Entry::etBook, QStringLiteral("abcdef"));
     Entry *entryA2 = new Entry(Entry::etBook, QStringLiteral("abcdef"));
-    Value valueA1 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("http://dx.example.org/10.1000/182"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://www.kde.org"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://dx.doi.org/10.1000/183")));
+    Value valueA1 = Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("http://dx.example.org/10.1000/182"))) << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://www.kde.org"))) << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://dx.doi.org/10.1000/183")));
     entryA1->insert(Entry::ftUrl, valueA1);
-    Value valueA2 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/182"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/183")));
+    Value valueA2 = Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.1000/182"))) << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.1000/183")));
     entryA2->insert(Entry::ftDOI, valueA2);
-    Value valueA3 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://www.kde.org")));
+    Value valueA3 = Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://www.kde.org")));
     entryA2->insert(Entry::ftUrl, valueA3);
     QTest::newRow("Entry with DOI number in URL") << entryA1 << entryA2;
 
     Entry *entryB1 = new Entry(Entry::etPhDThesis, QStringLiteral("abCDef2"));
     Entry *entryB2 = new Entry(Entry::etPhDThesis, QStringLiteral("abCDef2"));
-    Value valueB1 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("http://dx.example.org/10.1000/182")))  << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://www.kde.org"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://dx.doi.org/10.1000/183")));
+    Value valueB1 = Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("http://dx.example.org/10.1000/182")))  << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://www.kde.org"))) << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://dx.doi.org/10.1000/183")));
     entryB1->insert(Entry::ftUrl, valueB1);
-    Value valueB2 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/182"))) << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("10.1000/183")));
+    Value valueB2 = Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.1000/182"))) << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.1000/183")));
     entryB1->insert(Entry::ftDOI, valueB2);
     entryB2->insert(Entry::ftDOI, valueB2);
-    Value valueB3 = Value() << QSharedPointer<ValueItem>(new PlainText(QStringLiteral("https://www.kde.org")));
+    Value valueB3 = Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://www.kde.org")));
     entryB2->insert(Entry::ftUrl, valueB3);
     QTest::newRow("Entry both with DOI and DOI number in URL") << entryB1 << entryB2;
 

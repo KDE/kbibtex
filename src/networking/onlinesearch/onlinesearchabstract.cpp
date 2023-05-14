@@ -544,7 +544,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
                 list.append(doi);
             list.sort();
             for (const QString &doi : const_cast<const QStringList &>(list))
-                doiValue.append(QSharedPointer<PlainText>(new PlainText(doi)));
+                doiValue.append(QSharedPointer<VerbatimText>(new VerbatimText(doi)));
             entry->insert(Entry::ftDOI, doiValue);
         }
     } else if (!entry->contains(Entry::ftDOI)) {
@@ -552,7 +552,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
         if (doiRegExpMatch.hasMatch()) {
             /// If entry id looks like a DOI, add a DOI field
             Value doiValue;
-            doiValue.append(QSharedPointer<PlainText>(new PlainText(doiRegExpMatch.captured())));
+            doiValue.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured())));
             entry->insert(Entry::ftDOI, doiValue);
         }
     }
