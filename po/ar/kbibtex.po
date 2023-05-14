@@ -2105,7 +2105,7 @@ msgstr "خانتان"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:216
 #, kde-format
 msgid "4 digits"
-msgstr "٤ خانات"
+msgstr "4 خانات"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:217
 #, kde-format
