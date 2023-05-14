@@ -6,7 +6,6 @@ install(
     fancy.xsl
     standard.xsl
     abstractonly.xsl
-    pam2bibtex.xsl
     oaizbpreview-to-bibtex.xsl
     wikipedia-cite.xsl
     DESTINATION

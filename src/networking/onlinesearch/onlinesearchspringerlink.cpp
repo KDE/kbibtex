@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,6 +30,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QUrlQuery>
+#include <QXmlStreamReader>
 
 #ifdef HAVE_KF
 #include <KLocalizedString>
@@ -38,10 +39,9 @@
 #define i18n(text) QObject::tr(text)
 #endif // HAVE_KF
 
+#include <KBibTeX>
 #include <Encoder>
-#include <EncoderXML>
 #include <FileImporterBibTeX>
-#include <XSLTransform>
 #include "internalnetworkaccessmanager.h"
 #include "onlinesearchabstract_p.h"
 #include "logging_networking.h"
@@ -152,24 +152,20 @@ public:
 class OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate
 {
 private:
-    static const QString xsltFilenameBase;
     static const QString springerLinkQueryBaseUrl;
 
 public:
     static const QString springerMetadataKey;
-    const XSLTransform xslt;
 #ifdef HAVE_QTWIDGETS
     OnlineSearchSpringerLink::Form *form;
 #endif // HAVE_QTWIDGETS
 
     OnlineSearchSpringerLinkPrivate(OnlineSearchSpringerLink *)
-            : xslt(XSLTransform::locateXSLTfile(xsltFilenameBase))
 #ifdef HAVE_QTWIDGETS
-        , form(nullptr)
+            : form(nullptr)
 #endif // HAVE_QTWIDGETS
     {
-        if (!xslt.isValid())
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to initialize XSL transformation based on file '" << xsltFilenameBase << "'";
+        // nothing
     }
 
 #ifdef HAVE_QTWIDGETS
@@ -199,9 +195,12 @@ public:
         if (!year.isEmpty())
             queryString += QString(QStringLiteral(" year:%1")).arg(year);
 
+        const int numResults = form->numResultsField->value();
+
         queryString = queryString.simplified();
         QUrlQuery query(queryUrl);
         query.addQueryItem(QStringLiteral("q"), queryString);
+        query.addQueryItem(QStringLiteral("p"), QString::number(numResults));
         query.addQueryItem(QStringLiteral("api_key"), springerMetadataKey);
         queryUrl.setQuery(query);
 
@@ -209,9 +208,8 @@ public:
     }
 #endif // HAVE_QTWIDGETS
 
-    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query) {
+    QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) {
         QUrl queryUrl{QUrl::fromUserInput(springerLinkQueryBaseUrl)};
-
         QString queryString = query[QueryKey::FreeText];
 
         const QStringList titleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Title]);
@@ -237,14 +235,169 @@ public:
         queryString = queryString.simplified();
         QUrlQuery q(queryUrl);
         q.addQueryItem(QStringLiteral("q"), queryString);
+        q.addQueryItem(QStringLiteral("p"), QString::number(numResults));
         q.addQueryItem(QStringLiteral("api_key"), springerMetadataKey);
         queryUrl.setQuery(q);
 
         return queryUrl;
     }
+
+    static QByteArray rewriteXMLformatting(const QByteArray &input) {
+        QByteArray result{input};
+        static const QSet<const char *> lookInsideTags{"xhtml:body", "dc:title"};
+
+        int p1 = -1;
+        while ((p1 = result.indexOf('<', p1 + 1)) >= 0) {
+            bool surroundingTagFound = false;
+            for (const char *surroundingTag : lookInsideTags) {
+                if (qstrncmp(surroundingTag, result.constData() + p1 + 1, qstrlen(surroundingTag)) == 0)
+                {
+                    surroundingTagFound = true;
+                    p1 = result.indexOf("<", p1 + 7);
+                    while (p1 >= 0) {
+                        if (result.length() > p1 + 1 && result[p1 + 1] == '/' && qstrncmp(surroundingTag, result.constData() + p1 + 2, qstrlen(surroundingTag)) == 0)
+                            break;
+
+                        bool encounteredKnowTag = false;
+
+                        // There are some HTML tags like <h1>..</h1> or <p>..</p> that shall get removed, but not any text inside
+                        // Exception are headings with 'standard' text like <h1>Abstract</h1> which is to be removed completely
+                        static const QSet<const char *> ignoredTags{"h1", "h2", "h3", "p"};
+                        const int tagOffset = result[p1 + 1] == '/' ? p1 + 2 : p1 + 1;
+                        for (const char *tag : ignoredTags) {
+                            if (qstrncmp(tag, result.constData() + tagOffset, qstrlen(tag)) == 0) {
+                                int p2 = result.indexOf(">", tagOffset);
+                                if (qstrncmp(result.constData() + p2 + 1, "Abstract<", 9) == 0 || qstrncmp(result.constData() + p2 + 1, "A bstract<", 10) == 0) {
+                                    p2 = result.indexOf(">", p2 + 9);
+                                    result = result.left(p1) + result.mid(p2 + 1);
+                                } else {
+                                    const char *replacement = (result[p1 + 1] == '/' && qstrncmp(tag, "p", 1) == 0) ? "\n" : "";
+                                    result = result.left(p1) + replacement + result.mid(p2 + 1);
+                                }
+                                encounteredKnowTag = true;
+                                --p1;
+                                break;
+                            }
+                        }
+
+                        // Remove some tags including their content, for example <CitationRef ..>..</CitationRef>
+                        static const QSet<const char *> removeTagsWithContent{"CitationRef"};
+                        if (!encounteredKnowTag)
+                            for (const char *tag : removeTagsWithContent) {
+                                if (qstrncmp(tag, result.constData() + p1 + 1, qstrlen(tag)) == 0) {
+                                    int p2 = p1;
+                                    while ((p2 = result.indexOf('<', p2 + 1)) >= 0) {
+                                        if (result.length() > p2 + 1 && result[p2 + 1] == '/' && qstrncmp(tag, result.constData() + p2 + 2, qstrlen(tag)) == 0)
+                                            break;
+                                    }
+                                    if (p2 > p1)
+                                        p2 = result.indexOf('>', p2 + 1);
+                                    if (p2 > p1) {
+                                        result = result.left(p1) + result.mid(p2 + 1);
+                                        encounteredKnowTag = true;
+                                        --p1;
+                                    } else
+                                        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not find closing tag for" << tag;
+                                    break;
+                                }
+                            }
+
+                        // Special treatment of <InlineEquation>, which possibly contains some TeX code that should be preserved
+                        if (!encounteredKnowTag && qstrncmp("InlineEquation", result.constData() + p1 + 1, 14) == 0) {
+                            const int pmax = result.indexOf("</InlineEquation", p1 + 5);
+                            if (pmax > p1) {
+                                const int pend = result.indexOf('>', pmax + 12);
+                                int p2 = result.indexOf("Format=\"TEX\"", p1 + 4);
+                                if (p1 < p2 && p2 < pmax && pmax < pend) {
+                                    p2 = result.indexOf('>', p2 + 9);
+                                    const int p3 = result.indexOf('<', p2 + 1);
+                                    if (p1 < p2 && p2 < p3 && p3 < pmax) {
+                                        QByteArray equation = result.mid(p2 + 1, p3 - p2 - 1);
+                                        if (equation.length() > 4 && equation.startsWith("$$") && equation.endsWith("$$"))
+                                            equation = equation.mid(1, equation.length() - 2);
+                                        if (equation.length() > 4 && equation.startsWith("$ ") && equation.endsWith(" $"))
+                                            equation = "$" + equation.mid(2, equation.length() - 4).trimmed() + "$";
+                                        result = result.left(p1) + equation + result.mid(pend + 1);
+                                        encounteredKnowTag = true;
+                                        --p1;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Special treatment of <Emphasis>, which possibly contains some TeX code that should be preserved
+                        if (!encounteredKnowTag && qstrncmp("Emphasis", result.constData() + p1 + 1, 8) == 0) {
+                            const int pmax = result.indexOf("</Emphasis", p1 + 5);
+                            if (pmax > p1) {
+                                const int pend = result.indexOf('>', pmax + 8);
+                                const int p2 = result.indexOf('>', p1 + 8);
+                                if (p1 < p2 && p2 < pmax && pmax < pend) {
+                                    const int p3 = result.indexOf("Type=\"Italic\"", p1 + 6);
+                                    const char *emphCommand = (p3 > p1 && p3 < pmax) ? "\\textit{" : "\\emph{";
+                                    result = result.left(p1) + emphCommand + result.mid(p2 + 1, pmax - p2 - 1) + "}" + result.mid(pend + 1);
+                                    encounteredKnowTag = true;
+                                    --p1;
+                                }
+                            }
+                        }
+
+                        // Special treatment of <Superscript>, which possibly contains some TeX code that should be preserved
+                        if (!encounteredKnowTag && qstrncmp("Superscript", result.constData() + p1 + 1, 11) == 0) {
+                            const int pmax = result.indexOf("</Superscript", p1 + 5);
+                            if (pmax > p1) {
+                                const int pend = result.indexOf('>', pmax + 8);
+                                const int p2 = result.indexOf('>', p1 + 8);
+                                const bool isCitationRef = qstrncmp(result.constData() + p1 + 13, "<CitationRef", 12) == 0;
+                                if (p1 < p2 && p2 < pmax && pmax < pend) {
+                                    result = result.left(p1) + (isCitationRef ? QByteArray() : ("\\textsuperscript{" + result.mid(p2 + 1, pmax - p2 - 1) + "}")) + result.mid(pend + 1);
+                                    encounteredKnowTag = true;
+                                    --p1;
+                                }
+                            }
+                        }
+
+                        // Special treatment of <Subscript>, which possibly contains some TeX code that should be preserved
+                        if (!encounteredKnowTag && qstrncmp("Subscript", result.constData() + p1 + 1, 8) == 0) {
+                            const int pmax = result.indexOf("</Subscript", p1 + 5);
+                            if (pmax > p1) {
+                                const int pend = result.indexOf('>', pmax + 8);
+                                const int p2 = result.indexOf('>', p1 + 8);
+                                if (p1 < p2 && p2 < pmax && pmax < pend) {
+                                    result = result.left(p1) + "\\textsubscript{" + result.mid(p2 + 1, pmax - p2 - 1) + "}" + result.mid(pend + 1);
+                                    encounteredKnowTag = true;
+                                    --p1;
+                                }
+                            }
+                        }
+
+                        if (!encounteredKnowTag) {
+                            // Encountered a tag that is neither known to be ignored or removed including content
+                            qCWarning(LOG_KBIBTEX_NETWORKING) << "Found unknown tag in SpringerLink data:" << result.mid(p1, 64);
+                        }
+                        p1 = result.indexOf("<", p1 + 1);
+                    }
+                    break;
+                }
+            }
+            if (!surroundingTagFound)
+                ++p1;
+        }
+
+        return OnlineSearchAbstract::htmlEntityToUnicode(result);
+    }
+
+    QVector<QSharedPointer<Entry>> parsePAM(const QByteArray &xmlData, bool *ok) {
+        QVector<QSharedPointer<Entry>> result;
+
+        // Source code generated by Python script 'onlinesearch-parser-generator.py'
+        // using information from configuration file 'onlinesearchspringerlink-parser.in.cpp'
+        #include "onlinesearch/onlinesearchspringerlink-parser.generated.cpp"
+
+        return result;
+    }
 };
 
-const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::xsltFilenameBase = QStringLiteral("pam2bibtex.xsl");
+
 const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::springerLinkQueryBaseUrl{QStringLiteral("https://api.springernature.com/metadata/pam")};
 const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::springerMetadataKey(InternalNetworkAccessManager::reverseObfuscate("\xce\xb8\x4d\x2c\x8d\xba\xa9\xc4\x61\x9\x58\x6c\xbb\xde\x86\xb5\xb1\xc6\x15\x71\x76\x45\xd\x79\x12\x65\x95\xe1\x5d\x2f\x1d\x24\x10\x72\x2a\x5e\x69\x4\xdc\xba\xab\xc3\x28\x58\x8a\xfa\x5e\x69"));
 
@@ -282,10 +435,7 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QueryKey, QString> &query,
 {
     m_hasBeenCanceled = false;
 
-    QUrl springerLinkSearchUrl = d->buildQueryUrl(query);
-    QUrlQuery q(springerLinkSearchUrl);
-    q.addQueryItem(QStringLiteral("p"), QString::number(numResults));
-    springerLinkSearchUrl.setQuery(q);
+    QUrl springerLinkSearchUrl = d->buildQueryUrl(query, numResults);
 
     Q_EMIT progress(curStep = 0, numSteps = 1);
     QNetworkRequest request(springerLinkSearchUrl);
@@ -320,35 +470,34 @@ QUrl OnlineSearchSpringerLink::homepage() const
     return QUrl(QStringLiteral("https://link.springer.com/"));
 }
 
+#ifdef BUILD_TESTING
+QVector<QSharedPointer<Entry> > OnlineSearchSpringerLink::parsePAM(const QByteArray &xmlData, bool *ok)
+{
+    return d->parsePAM(xmlData, ok);
+}
+
+QByteArray OnlineSearchSpringerLink::rewriteXMLformatting(const QByteArray &input)
+{
+    return OnlineSearchSpringerLinkPrivate::rewriteXMLformatting(input);
+}
+#endif // BUILD_TESTING
+
 void OnlineSearchSpringerLink::doneFetchingPAM()
 {
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
     if (handleErrors(reply)) {
-        /// ensure proper treatment of UTF-8 characters
-        const QString xmlSource = QString::fromUtf8(reply->readAll().constData());
+        const QByteArray xmlCode{OnlineSearchSpringerLinkPrivate::rewriteXMLformatting(reply->readAll())};
 
-        const QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(xmlSource).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")));
-        if (bibTeXcode.isEmpty()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL transformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
-            stopSearch(resultInvalidArguments);
+        bool ok = false;
+        const QVector<QSharedPointer<Entry>> entries = d->parsePAM(xmlCode, &ok);
+
+        if (ok) {
+            for (const auto &entry : entries)
+                publishEntry(entry);
+            stopSearch(resultNoError);
         } else {
-            FileImporterBibTeX importer(this);
-            const File *bibtexFile = importer.fromString(bibTeXcode);
-
-            bool hasEntries = false;
-            if (bibtexFile != nullptr) {
-                for (const QSharedPointer<Element> &element : *bibtexFile) {
-                    QSharedPointer<Entry> entry = element.dynamicCast<Entry>();
-                    hasEntries |= publishEntry(entry);
-                }
-
-                stopSearch(resultNoError);
-
-                delete bibtexFile;
-            } else {
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "No valid BibTeX file results returned on request on" << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
-                stopSearch(resultUnspecifiedError);
-            }
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to parse XML data from" << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
+            stopSearch(resultUnspecifiedError);
         }
     }
 

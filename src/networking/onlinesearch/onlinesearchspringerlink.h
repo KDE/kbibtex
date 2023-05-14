@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -56,6 +56,12 @@ public:
     OnlineSearchAbstract::Form *customWidget(QWidget *parent) override;
 #endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
+
+#ifdef BUILD_TESTING
+    // KBibTeXNetworkingTest::onlineSearchSpringerLinkXMLparsing  makes use of these functions to test parsing XML data
+    QVector<QSharedPointer<Entry>> parsePAM(const QByteArray &xmlData, bool *ok = nullptr);
+    static QByteArray rewriteXMLformatting(const QByteArray &input);
+#endif // BUILD_TESTING
 
 private Q_SLOTS:
     void doneFetchingPAM();
