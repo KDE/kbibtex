@@ -318,7 +318,12 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile)
 
     bool result = true;
     QTextStream stream(iodevice);
+    // https://forum.qt.io/topic/135724/qt-6-replacement-for-qtextcodec
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     stream.setCodec("UTF-8");
+#else
+    stream.setEncoding(QStringConverter::Utf8);
+#endif
 
 #if QT_VERSION >= 0x050e00
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << Qt::endl;
@@ -354,7 +359,12 @@ bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Eleme
     }
 
     QTextStream stream(iodevice);
+    // https://forum.qt.io/topic/135724/qt-6-replacement-for-qtextcodec
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     stream.setCodec("UTF-8");
+#else
+    stream.setEncoding(QStringConverter::Utf8);
+#endif
 
 #if QT_VERSION >= 0x050e00
     stream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << Qt::endl;

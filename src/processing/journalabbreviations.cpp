@@ -50,7 +50,12 @@ public:
             static const QRegularExpression splitRegExp(QStringLiteral("\\s*[=;]\\s*"));
 
             QTextStream ts(&journalFile);
+            // https://forum.qt.io/topic/135724/qt-6-replacement-for-qtextcodec
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
             ts.setCodec("utf8");
+#else
+            ts.setEncoding(QStringConverter::Utf8);
+#endif
 
             QString line;
             while (!(line = ts.readLine().trimmed()).isNull()) {

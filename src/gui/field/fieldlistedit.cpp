@@ -149,7 +149,11 @@ public:
             const QSize size(container->width(), recommendedHeight());
             container->resize(size);
             /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
             QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+            QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
+#endif
         });
 
         QPushButton *goDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QString(), le);
@@ -159,7 +163,11 @@ public:
             const bool gotModified = goDownFieldLineEdit(le);
             if (gotModified) {
                 /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                 QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
+#endif
             }
         });
 
@@ -170,7 +178,11 @@ public:
             const bool gotModified = goUpFieldLineEdit(le);
             if (gotModified) {
                 /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                 QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
+#endif
             }
         });
 

@@ -153,7 +153,11 @@ QList<QWidget *> PDFItemDelegate::createItemWidgets(const QModelIndex &index) co
 /// Update the widgets
 /// Clazy warns: "Missing reference on non-trivial type" for argument 'widgets',
 /// but KWidgetItemDelegate defines this function this way and cannot be changed.
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const
+#else
+void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> &widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const
+#endif
 {
     if (!index.isValid()) return;
 

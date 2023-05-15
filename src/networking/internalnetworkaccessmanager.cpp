@@ -27,6 +27,9 @@
 #include <QNetworkCookieJar>
 #include <QNetworkCookie>
 #include <QNetworkProxy>
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#include <QNetworkProxyFactory>
+#endif // QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QtGlobal>
@@ -108,6 +111,7 @@ InternalNetworkAccessManager &InternalNetworkAccessManager::instance()
 
 QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const QUrl &oldUrl)
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #ifdef HAVE_KF
     /// Query the KDE subsystem if a proxy has to be used
     /// for the host of a given URL
@@ -136,6 +140,13 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
 #else // HAVE_KF
     setProxy(QNetworkProxy());
 #endif // HAVE_KF
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    const auto networkProxyList = QNetworkProxyFactory::proxyForQuery(QNetworkProxyQuery(request.url()));
+    if (networkProxyList.length() < 1 || networkProxyList.first().type() == QNetworkProxy::NoProxy)
+        setProxy(QNetworkProxy());
+    else
+        setProxy(networkProxyList.first());
+#endif // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 
     if (!request.hasRawHeader(QByteArray("Accept")))
         request.setRawHeader(QByteArray("Accept"), QByteArray("text/*, */*;q=0.7"));

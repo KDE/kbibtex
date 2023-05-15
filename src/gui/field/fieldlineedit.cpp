@@ -494,7 +494,11 @@ public:
 
         if (convertValueType(value, newTypeFlag)) {
             reset(value, newTypeFlag);
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
             QMetaObject::invokeMethod(parent, "modified", Qt::DirectConnection, QGenericReturnArgument());
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+            QMetaObject::invokeMethod(parent, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
+#endif
         } else
             KMessageBox::error(parent, i18n("The current text cannot be used as value of type '%1'.\n\nSwitching back to type '%2'.", BibTeXFields::typeFlagToString(newTypeFlag), BibTeXFields::typeFlagToString(typeFlag)));
     }

@@ -64,7 +64,11 @@ public:
                     busyCounter.load() <= 0
 #endif // QT_VERSION >= 0x050e00
                     && urlsToCheck.isEmpty())
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                     QMetaObject::invokeMethod(p, "finished", Qt::DirectConnection, QGenericReturnArgument());
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                    QMetaObject::invokeMethod(p, "finished", Qt::DirectConnection, QMetaMethodReturnArgument());
+#endif
                 else
                     /// It should not happen that when this timer is triggered the original condition is violated
                     qCCritical(LOG_KBIBTEX_NETWORKING) << "This cannot happen:" <<
@@ -105,13 +109,21 @@ public:
             const QUrl url = reply->url();
             if (reply->error() != QNetworkReply::NoError) {
                 /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                 QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::NetworkError), Q_ARG(QString, reply->errorString()));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::NetworkError), Q_ARG(QString, reply->errorString()));
+#endif
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "NetworkError:" << reply->errorString() << url.toDisplayString();
             } else {
                 const QByteArray data = reply->read(1024);
                 if (data.isEmpty()) {
                     /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                     QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnknownError), Q_ARG(QString, QStringLiteral("No data received")));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                    QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnknownError), Q_ARG(QString, QStringLiteral("No data received")));
+#endif
                     qCWarning(LOG_KBIBTEX_NETWORKING) << "UnknownError: No data received" << url.toDisplayString();
                 } else {
                     const QString filename = url.fileName().toLower();
@@ -123,39 +135,71 @@ public:
                     const bool containsPostScript = data.startsWith("%!");
                     if (filenameSuggestsPDF && containsPDF) {
                         /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                         QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
+#endif
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "UrlValid: Looks and smells like a PDF" << url.toDisplayString();
                     } else if (filenameSuggestsPostScript && containsPostScript) {
                         /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                         QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
+#endif
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "UrlValid: Looks and smells like a PostScript" << url.toDisplayString();
                     } else if (containsHTML) {
                         static const QRegularExpression error40X(QStringLiteral("\\b(40\\d)\\b"));
                         const QRegularExpressionMatch error40Xmatch = error40X.match(QString::fromUtf8(data));
                         if (error40Xmatch.hasMatch()) {
                             /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                             QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::Error40X), Q_ARG(QString, QString(QStringLiteral("Got error %1")).arg(error40Xmatch.captured(1))));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::Error40X), Q_ARG(QString, QString(QStringLiteral("Got error %1")).arg(error40Xmatch.captured(1))));
+#endif
                             qCWarning(LOG_KBIBTEX_NETWORKING) << "Error" << error40Xmatch.captured(1) << "in" << url.toDisplayString();
                         } else if (filenameSuggestsHTML) {
                             /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                             QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
+#endif
                             qCWarning(LOG_KBIBTEX_NETWORKING) << "UrlValid: Looks and smells like a HTML" << url.toDisplayString();
                         } else {
                             /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                             QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                            QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
+#endif
                             qCWarning(LOG_KBIBTEX_NETWORKING) << "NotExpectedFileType (HTML): Filename's extension does not match content" << url.toDisplayString();
                         }
                     } else if (filenameSuggestsPDF != containsPDF) {
                         /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                         QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
+#endif
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "NotExpectedFileType (PDF): Filename's extension does not match content" << url.toDisplayString();
                     } else if (filenameSuggestsPostScript != containsPostScript) {
                         /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                         QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UnexpectedFileType), Q_ARG(QString, QStringLiteral("Filename's extension does not match content")));
+#endif
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "NotExpectedFileType (PostScript): Filename's extension does not match content" << url.toDisplayString();
                     } else {
                         /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                         QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                        QMetaObject::invokeMethod(p, "urlChecked", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QUrl, url), Q_ARG(UrlChecker::Status, UrlChecker::Status::UrlValid), Q_ARG(QString, QString()));
+#endif
                         qCWarning(LOG_KBIBTEX_NETWORKING) << "UrlValid: Cannot see any issued with this URL" << url.toDisplayString();
                     }
                 }

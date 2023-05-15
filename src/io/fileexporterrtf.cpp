@@ -100,7 +100,12 @@ bool FileExporterRTF::writeLatexFile(const QString &filename)
     QFile latexFile(filename);
     if (latexFile.open(QIODevice::WriteOnly)) {
         QTextStream ts(&latexFile);
+        // https://forum.qt.io/topic/135724/qt-6-replacement-for-qtextcodec
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
         ts.setCodec("UTF-8");
+#else
+        ts.setEncoding(QStringConverter::Utf8);
+#endif
 #if QT_VERSION >= 0x050e00
         ts << "\\documentclass{article}" << Qt::endl;
         ts << "\\usepackage[T1]{fontenc}" << Qt::endl;

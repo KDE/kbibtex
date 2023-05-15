@@ -369,7 +369,11 @@ QVector<KPluginMetaData> OpenFileInfo::listOfServices()
     });
     // If not, insert it
     if (it == result.cend()) {
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
         auto kbibtexpart {KPluginMetaData(QStringLiteral("kbibtexpart"))};
+#else // (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+        auto kbibtexpart {KPluginMetaData::findPluginById(QStringLiteral("kf6/parts"), QStringLiteral("kbibtexpart"))};
+#endif // (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
         if (kbibtexpart.isValid())
             result << kbibtexpart;
     }
@@ -392,7 +396,11 @@ KPluginMetaData OpenFileInfo::defaultService()
     };
     if (supportedMimeTypes.contains(mt)) {
         // If the mime type is natively supported by KBibTeX's part, enforce using this part
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
         result = KPluginMetaData(QStringLiteral("kbibtexpart"));
+#else // (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+        result = KPluginMetaData::findPluginById(QStringLiteral("kf6/parts"), QStringLiteral("kbibtexpart"));
+#endif // (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     }
 
     if (!result.isValid()) {

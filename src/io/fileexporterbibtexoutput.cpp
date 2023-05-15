@@ -116,7 +116,12 @@ bool FileExporterBibTeXOutput::writeLatexFile(const QString &filename)
     QFile latexFile(filename);
     if (latexFile.open(QIODevice::WriteOnly)) {
         QTextStream ts(&latexFile);
+        // https://forum.qt.io/topic/135724/qt-6-replacement-for-qtextcodec
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
         ts.setCodec("UTF-8");
+#else
+        ts.setEncoding(QStringConverter::Utf8);
+#endif
         ts << "\\documentclass{article}\n";
         ts << "\\usepackage[T1]{fontenc}\n";
         ts << "\\usepackage[utf8]{inputenc}\n";

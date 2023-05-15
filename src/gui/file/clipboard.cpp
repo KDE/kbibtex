@@ -37,6 +37,15 @@
 #include "element/associatedfilesui.h"
 #include "logging_gui.h"
 
+template<class T>
+inline QPoint eventPos(T *event) {
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    return event->pos();
+#else
+    return event->position().toPoint();
+#endif
+}
+
 class Clipboard::ClipboardPrivate
 {
 public:
@@ -332,7 +341,7 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
     if (!(event->buttons() & Qt::LeftButton))
         return;
 
-    if (d->previousPosition.x() > -1 && (event->pos() - d->previousPosition).manhattanLength() >= QApplication::startDragDistance()) {
+    if (d->previousPosition.x() > -1 && (eventPos(event) - d->previousPosition).manhattanLength() >= QApplication::startDragDistance()) {
         QString text = d->selectionToText();
 
         QDrag *drag = new QDrag(d->fileView);
@@ -344,14 +353,14 @@ void Clipboard::editorMouseEvent(QMouseEvent *event)
         drag->exec(Qt::CopyAction);
     }
 
-    d->previousPosition = event->pos();
+    d->previousPosition = eventPos(event);
 }
 
 void Clipboard::editorDragEnterEvent(QDragEnterEvent *event)
 {
     if (d->fileView->isReadOnly())
         event->ignore();
-    else if (d->acceptableDropAction(event->mimeData(), event->pos()))
+    else if (d->acceptableDropAction(event->mimeData(), eventPos(event)))
         event->acceptProposedAction();
     else
         event->ignore();
@@ -361,7 +370,7 @@ void Clipboard::editorDragMoveEvent(QDragMoveEvent *event)
 {
     if (d->fileView->isReadOnly())
         event->ignore();
-    else if (d->acceptableDropAction(event->mimeData(), event->pos()))
+    else if (d->acceptableDropAction(event->mimeData(), eventPos(event)))
         event->acceptProposedAction();
     else
         event->ignore();
@@ -386,7 +395,7 @@ void Clipboard::editorDropEvent(QDropEvent *event)
         /// to a PDF document) and if the drop happens onto an
         /// bibliography entry (and not a comment or an empty area
         /// in the list view, for example)
-        const QSharedPointer<Entry> dropTarget = d->dropTarget(event->pos());
+        const QSharedPointer<Entry> dropTarget = d->dropTarget(eventPos(event));
         if (!dropTarget.isNull()) {
             const QSet<QUrl> urls = d->urlsToAssociate(event->mimeData());
             for (const QUrl &urlToAssociate : urls)

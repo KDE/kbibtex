@@ -41,8 +41,11 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
-    /// update the widgets
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     void updateItemWidgets(const QList<QWidget *> widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const override;
+#else
+    void updateItemWidgets(const QList<QWidget *> &widgets, const QStyleOptionViewItem &option, const QPersistentModelIndex &index) const override;
+#endif
 
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const override;
 

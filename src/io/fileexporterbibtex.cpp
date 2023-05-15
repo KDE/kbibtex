@@ -535,13 +535,21 @@ public:
                         if (!preamble.isNull()) {
                             result &= writePreamble(output, *preamble);
                             /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                             QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                            QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#endif
                         } else {
                             QSharedPointer<const Macro> macro = (*msit).dynamicCast<const Macro>();
                             if (!macro.isNull()) {
                                 result &= writeMacro(output, *macro, targetEncoding);
                                 /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                                 QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                                QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#endif
                             }
                         }
                     }
@@ -550,25 +558,41 @@ public:
 
                 result &= writeEntry(output, *entry, targetEncoding);
                 /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                 QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#endif
             } else {
                 QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
                 if (!comment.isNull() && !comment->text().startsWith(QStringLiteral("x-kbibtex-"))) {
                     result &= writeComment(output, *comment);
                     /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                     QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                    QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#endif
                 } else if (!allPreamblesAndMacrosProcessed) {
                     QSharedPointer<const Preamble> preamble = element.dynamicCast<const Preamble>();
                     if (!preamble.isNull()) {
                         result &= writePreamble(output, *preamble);
                         /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                         QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                        QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#endif
                     } else {
                         QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
                         if (!macro.isNull()) {
                             result &= writeMacro(output, *macro, targetEncoding);
                             /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                             QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                            QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#endif
                         }
                     }
                 }
@@ -584,7 +608,11 @@ public:
 
                 result &= writeEntry(output, *entry, targetEncoding);
                 /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                 QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                QMetaObject::invokeMethod(parent, "progress", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(int, ++currentPos), Q_ARG(int, totalElements));
+#endif
             }
 
         if (_bibtexfile != bibtexfile)

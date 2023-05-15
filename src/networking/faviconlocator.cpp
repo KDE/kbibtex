@@ -59,7 +59,11 @@ FavIconLocator::FavIconLocator(const QUrl &webpageUrl, QObject *parent)
             } else {
                 favIcon = QIcon(fileName);
                 QTimer::singleShot(100, this, [this]() {
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                     QMetaObject::invokeMethod(this, "gotIcon", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QIcon, favIcon));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+                    QMetaObject::invokeMethod(this, "gotIcon", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QIcon, favIcon));
+#endif
                 });
                 return;
             }
@@ -157,7 +161,11 @@ FavIconLocator::FavIconLocator(const QUrl &webpageUrl, QObject *parent)
             } else
                 qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not download icon from URL " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString() << ": " << reply->errorString();
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
             QMetaObject::invokeMethod(this, "gotIcon", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QIcon, favIcon));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+            QMetaObject::invokeMethod(this, "gotIcon", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QIcon, favIcon));
+#endif
         });
     });
 }

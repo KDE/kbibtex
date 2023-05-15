@@ -294,7 +294,11 @@ public:
         value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
         reset(value);
         /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
         QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+        QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
+#endif
     }
 
     void setEdition(int edition)
@@ -305,7 +309,11 @@ public:
             value.append(QSharedPointer<PlainText>(new PlainText(editionString)));
             reset(value);
             /// Instead of an 'emit' ...
+#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
             QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+            QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
+#endif
         }
     }
 };

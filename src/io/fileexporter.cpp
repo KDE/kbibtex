@@ -145,7 +145,12 @@ QString FileExporter::toString(const QSharedPointer<const Element> &element, con
         buffer.close();
         if (buffer.open(QBuffer::ReadOnly)) {
             QTextStream ts(&buffer);
+            // https://forum.qt.io/topic/135724/qt-6-replacement-for-qtextcodec
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
             ts.setCodec("UTF-8");
+#else
+            ts.setEncoding(QStringConverter::Utf8);
+#endif
             return ts.readAll();
         }
     }
@@ -161,7 +166,12 @@ QString FileExporter::toString(const File *bibtexfile)
         buffer.close();
         if (buffer.open(QBuffer::ReadOnly)) {
             QTextStream ts(&buffer);
+            // https://forum.qt.io/topic/135724/qt-6-replacement-for-qtextcodec
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
             ts.setCodec("utf-8");
+#else
+            ts.setEncoding(QStringConverter::Utf8);
+#endif
             return ts.readAll();
         }
     }

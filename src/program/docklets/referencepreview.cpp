@@ -173,7 +173,12 @@ public:
     bool saveHTML(QTemporaryFile &tempFile) const {
         if (tempFile.open()) {
             QTextStream ts(&tempFile);
+            // https://forum.qt.io/topic/135724/qt-6-replacement-for-qtextcodec
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
             ts.setCodec("utf-8");
+#else
+            ts.setEncoding(QStringConverter::Utf8);
+#endif
             static const QRegularExpression kbibtexHrefRegExp(QStringLiteral("<a[^>]+href=\"kbibtex:[^>]+>(.+?)</a>"));
             QString modifiedHtmlText = htmlText;
             modifiedHtmlText = modifiedHtmlText.replace(kbibtexHrefRegExp, QStringLiteral("\\1"));

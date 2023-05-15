@@ -42,7 +42,9 @@ int main(int argc, char *argv[])
         QLoggingCategory::setFilterRules(QStringLiteral("kbibtex.*.debug = true"));
     }
 
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif // (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 
     QApplication programCore(argc, argv);
 
@@ -90,9 +92,13 @@ int main(int argc, char *argv[])
 
     mainWindow->show();
 
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     const KPluginMetaData service {
         KPluginMetaData(QStringLiteral("kbibtexpart"))
     };
+#else // (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    const KPluginMetaData service {KPluginMetaData::findPluginById(QStringLiteral("kf6/parts"), QStringLiteral("kbibtexpart"))};
+#endif // (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     if (!service.isValid()) {
         /// Dump some environment variables that may be helpful
         /// in tracing back why the part's .desktop file was not found
