@@ -31,7 +31,13 @@
 #include <QRandomGenerator>
 #endif // HAVE_SCIHUB
 
+#ifdef HAVE_POPPLERQT5
 #include <poppler-qt5.h>
+#else // not HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT6
+#include <poppler-qt6.h>
+#endif // HAVE_POPPLERQT6
+#endif // HAVE_POPPLERQT5
 
 #include <KBibTeX>
 #include <Value>
@@ -251,7 +257,13 @@ public:
         }
 
         if (!containsUrl) {
+#ifdef HAVE_POPPLERQT5
             QScopedPointer<Poppler::Document> doc(Poppler::Document::loadFromData(data));
+#else // not HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT6
+            std::unique_ptr<Poppler::Document> doc = Poppler::Document::loadFromData(data);
+#endif // HAVE_POPPLERQT6
+#endif // HAVE_POPPLERQT5
 
             ResultItem resultItem;
             resultItem.tempFilename = new QTemporaryFile(QStandardPaths::writableLocation(QStandardPaths::TempLocation) + QDir::separator() + QStringLiteral("kbibtex_findpdf_XXXXXX.pdf"));
@@ -275,7 +287,13 @@ public:
             resultItem.textPreview = doc->info(QStringLiteral("Title")).simplified();
             static const int maxTextLen = 1024;
             for (int i = 0; i < doc->numPages() && resultItem.textPreview.length() < maxTextLen; ++i) {
+#ifdef HAVE_POPPLERQT5
                 QScopedPointer<Poppler::Page> page(doc->page(i));
+#else // not HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT6
+                std::unique_ptr<Poppler::Page> page = doc->page(i);
+#endif // HAVE_POPPLERQT6
+#endif // HAVE_POPPLERQT5
                 if (!resultItem.textPreview.isEmpty()) resultItem.textPreview += QLatin1Char(' ');
                 resultItem.textPreview += QStringView{page->text(QRect()).simplified()}.left(maxTextLen);
             }

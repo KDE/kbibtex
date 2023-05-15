@@ -24,7 +24,13 @@
 #include <QBuffer>
 #include <QFile>
 
+#ifdef HAVE_POPPLERQT5
 #include <poppler-qt5.h>
+#else // not HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT6
+#include <poppler-qt6.h>
+#endif // HAVE_POPPLERQT6
+#endif // HAVE_POPPLERQT5
 
 #include <File>
 #include "fileimporterbibtex.h"
@@ -57,7 +63,13 @@ File *FileImporterPDF::load(QIODevice *iodevice)
     File *result = nullptr;
     QByteArray buffer = iodevice->readAll();
 
+#ifdef HAVE_POPPLERQT5
     QScopedPointer<Poppler::Document> doc(Poppler::Document::loadFromData(buffer));
+#else // not HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT6
+    std::unique_ptr<Poppler::Document> doc = Poppler::Document::loadFromData(buffer);
+#endif // HAVE_POPPLERQT6
+#endif // HAVE_POPPLERQT5
     if (!doc) {
         qCWarning(LOG_KBIBTEX_IO) << "Could not load PDF document";
         iodevice->close();
