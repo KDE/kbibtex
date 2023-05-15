@@ -91,7 +91,6 @@
 #include <ValueListModel>
 #include "logging_part.h"
 
-static const char RCFileName[] = "kbibtexpartui.rc";
 class KBibTeXPart::KBibTeXPartPrivate
 {
 private:
@@ -862,7 +861,7 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent,
 
     d->initializeNew();
 
-    setXMLFile(RCFileName);
+    setXMLFile(QStringLiteral("kbibtexpartui.rc"));
 
     NotificationHub::registerNotificationListener(this, NotificationHub::EventConfigurationChanged);
     d->readConfiguration();

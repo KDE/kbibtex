@@ -17,7 +17,7 @@
  *   along with this program; if not, see <https://www.gnu.org/licenses/>. *
  ***************************************************************************/
 
-#ifdef HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
 
 #include "fileimporterpdf.h"
 
@@ -113,4 +113,4 @@ void FileImporterPDF::cancel()
     m_bibTeXimporter->cancel();
 }
 
-#endif // HAVE_POPPLERQT5
+#endif // HAVE_POPPLERQT

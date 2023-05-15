@@ -30,7 +30,7 @@ set(
     xsltransform.cpp
 )
 
-if(PKG_Poppler_Qt5_FOUND)
+if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
     set(
         kbibtexio_SRCS
         ${kbibtexio_SRCS}
@@ -69,29 +69,42 @@ target_include_directories(kbibtexio
 
 target_link_libraries(kbibtexio
     PUBLIC
-        Qt5::Core
+        Qt${QT_MAJOR_VERSION}::Core
         KBibTeX::Data
         KBibTeX::Global
     PRIVATE
-        Qt5::XmlPatterns
         KBibTeX::Config
 )
+
+if(Qt6Core5Compat_FOUND)
+    target_link_libraries(kbibtexio
+        PRIVATE
+            Qt6::Core5Compat
+    )
+endif()
+
+if(Qt5XmlPatterns_FOUND)
+    target_link_libraries(kbibtexio
+        PRIVATE
+            Qt5::XmlPatterns
+    )
+endif()
 
 if(BUILD_KPART OR BUILD_TESTING)
     target_link_libraries(kbibtexio
         PRIVATE
-            Qt5::Concurrent
+            Qt${QT_MAJOR_VERSION}::Concurrent
     )
 endif()
 
-if(KF5I18n_FOUND)
+if(KF${QT_MAJOR_VERSION}I18n_FOUND)
     target_link_libraries(kbibtexio
         PRIVATE
-            KF5::I18n
+            KF${QT_MAJOR_VERSION}::I18n
     )
 endif()
 
-if(Qt5Concurrent_FOUND)
+if(Qt${QT_MAJOR_VERSION}Concurrent_FOUND)
     # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
     add_definitions(
         -DHAVE_QTCONCURRENT
@@ -106,10 +119,10 @@ if(ICU_FOUND)
     )
 endif()
 
-if(PKG_Poppler_Qt5_FOUND)
+if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
     target_link_libraries(kbibtexio
         PRIVATE
-            Poppler::Qt5
+            Poppler::Qt${QT_MAJOR_VERSION}
     )
 endif()
 
@@ -151,7 +164,7 @@ ecm_generate_headers(kbibtexio_HEADERS
     REQUIRED_HEADERS kbibtexio_HEADERS
 )
 
-if(PKG_Poppler_Qt5_FOUND)
+if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
     ecm_generate_headers(kbibtexio_HEADERS
         HEADER_NAMES
             FileImporterPDF

@@ -20,8 +20,10 @@
 #include "xsltransform.h"
 
 #include <QFileInfo>
+#ifdef HAVE_QTXMLPATTERNS
 #include <QXmlQuery>
 #include <QXmlSerializer>
+#endif // HAVE_QTXMLPATTERNS
 #include <QBuffer>
 #include <QCoreApplication>
 #include <QStandardPaths>
@@ -66,6 +68,7 @@ QString XSLTransform::transform(const QString &xmlText) const
         return QString();
     }
 
+#ifdef HAVE_QTXMLPATTERNS
     QXmlQuery query(QXmlQuery::XSLT20);
 
     if (!query.setFocus(xmlText)) {
@@ -100,6 +103,12 @@ QString XSLTransform::transform(const QString &xmlText) const
         qCWarning(LOG_KBIBTEX_IO) << "Invoking QXmlQuery::evaluateTo(...) failed";
         return QString();
     }
+#else // HAVE_QTXMLPATTERNS
+    Q_UNUSED(xmlText);
+
+    // FIXME handle XSL transformations without QXmlQuery
+    return QString();
+#endif // HAVE_QTXMLPATTERNS
 }
 
 QString XSLTransform::locateXSLTfile(const QString &stem)

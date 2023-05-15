@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_IO_FILEIMPORTERPDF_H
 #define KBIBTEX_IO_FILEIMPORTERPDF_H
 
-#ifdef HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
 
 #include <QUrl>
 
@@ -54,6 +54,6 @@ private:
     FileImporterBibTeX *m_bibTeXimporter;
 };
 
-#endif // HAVE_POPPLERQT5
+#endif // HAVE_POPPLERQT
 
 #endif // KBIBTEX_IO_FILEIMPORTERPDF_H

@@ -65,15 +65,15 @@ if(BUILD_APP_DESKTOP)
 
     target_link_libraries(kbibtex
         PRIVATE
-            Qt5::Core
-            KF5::CoreAddons
-            KF5::Crash
-            KF5::I18n
-            KF5::IconThemes
-            KF5::KIOCore
-            KF5::KIOFileWidgets
-            KF5::Parts
-            KF5::Wallet
+            Qt${QT_MAJOR_VERSION}::Core
+            KF${QT_MAJOR_VERSION}::CoreAddons
+            KF${QT_MAJOR_VERSION}::Crash
+            KF${QT_MAJOR_VERSION}::I18n
+            KF${QT_MAJOR_VERSION}::IconThemes
+            KF${QT_MAJOR_VERSION}::KIOCore
+            KF${QT_MAJOR_VERSION}::KIOFileWidgets
+            KF${QT_MAJOR_VERSION}::Parts
+            KF${QT_MAJOR_VERSION}::Wallet
             KBibTeX::Global
             KBibTeX::GUI
             KBibTeX::IO
@@ -81,14 +81,14 @@ if(BUILD_APP_DESKTOP)
             KBibTeX::Processing
     )
 
-    if(Qt5WebEngineWidgets_FOUND)
+    if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
         message(STATUS "Using QtWebEngine to render complex HTML content")
         target_link_libraries(kbibtex
             PRIVATE
-                Qt5::WebEngineWidgets
+                Qt${QT_MAJOR_VERSION}::WebEngineWidgets
         )
     else()
-        if(Qt5WebKitWidgets_FOUND)
+        if(Qt${QT_MAJOR_VERSION}WebKitWidgets_FOUND)
             message(STATUS "Using QtWebKit to render complex HTML content")
             # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
             add_definitions(
@@ -96,7 +96,7 @@ if(BUILD_APP_DESKTOP)
             )
             target_link_libraries(kbibtex
                 PRIVATE
-                    Qt5::WebKitWidgets
+                    Qt${QT_MAJOR_VERSION}::WebKitWidgets
             )
         else()
             message(STATUS "If available, using a KPart to render complex HTML content")
@@ -135,7 +135,7 @@ if(BUILD_APP_COMMAND_LINE)
 
     target_link_libraries(kbibtex-cli
         PRIVATE
-            Qt5::Core
+            Qt${QT_MAJOR_VERSION}::Core
             KBibTeX::Data
             KBibTeX::IO
             KBibTeX::Processing

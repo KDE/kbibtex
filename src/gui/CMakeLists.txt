@@ -74,21 +74,20 @@ target_include_directories(kbibtexgui
 
 target_link_libraries(kbibtexgui
     PUBLIC
-        Qt5::Core
-        Qt5::Widgets
+        Qt${QT_MAJOR_VERSION}::Core
+        Qt${QT_MAJOR_VERSION}::Widgets
     PRIVATE
-        Poppler::Qt5
-        Qt5::Gui
-        Qt5::Concurrent
-        Qt5::XmlPatterns
-        KF5::ConfigCore
-        KF5::I18n
-        KF5::IconThemes
-        KF5::WidgetsAddons
-        KF5::KIOCore
-        KF5::KIOFileWidgets
-        KF5::Parts
-        KF5::TextEditor
+        Poppler::Qt${QT_MAJOR_VERSION}
+        Qt${QT_MAJOR_VERSION}::Gui
+        Qt${QT_MAJOR_VERSION}::Concurrent
+        KF${QT_MAJOR_VERSION}::ConfigCore
+        KF${QT_MAJOR_VERSION}::I18n
+        KF${QT_MAJOR_VERSION}::IconThemes
+        KF${QT_MAJOR_VERSION}::WidgetsAddons
+        KF${QT_MAJOR_VERSION}::KIOCore
+        KF${QT_MAJOR_VERSION}::KIOFileWidgets
+        KF${QT_MAJOR_VERSION}::Parts
+        KF${QT_MAJOR_VERSION}::TextEditor
         KBibTeX::Config
         KBibTeX::Data
         KBibTeX::Global
@@ -96,6 +95,13 @@ target_link_libraries(kbibtexgui
         KBibTeX::Networking
         KBibTeX::Processing
 )
+
+if(Qt5XmlPatterns_FOUND)
+    target_link_libraries(kbibtexio
+        PRIVATE
+            Qt5::XmlPatterns
+    )
+endif()
 
 install(
     TARGETS kbibtexgui

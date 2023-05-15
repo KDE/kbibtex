@@ -46,7 +46,7 @@ set(
     urlchecker.cpp
 )
 
-if(Qt5WebEngineWidgets_FOUND)
+if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
     # See also below for a similar if-clause
     message(STATUS "Using QtWebEngine parse JStor pages")
     set(
@@ -87,29 +87,29 @@ target_include_directories(kbibtexnetworking
 
 target_link_libraries(kbibtexnetworking
     PUBLIC
-        Qt5::Core
-        Qt5::Network
-        Qt5::Widgets
+        Qt${QT_MAJOR_VERSION}::Core
+        Qt${QT_MAJOR_VERSION}::Network
+        Qt${QT_MAJOR_VERSION}::Widgets
         KBibTeX::Data
     PRIVATE
-        Poppler::Qt5
-        Qt5::DBus
-        Qt5::NetworkAuth
-        KF5::ConfigCore
-        KF5::WidgetsAddons
-        KF5::I18n
-        KF5::KIOCore
-        KF5::KIOFileWidgets
+        Poppler::Qt${QT_MAJOR_VERSION}
+        Qt${QT_MAJOR_VERSION}::DBus
+        Qt${QT_MAJOR_VERSION}::NetworkAuth
+        KF${QT_MAJOR_VERSION}::ConfigCore
+        KF${QT_MAJOR_VERSION}::WidgetsAddons
+        KF${QT_MAJOR_VERSION}::I18n
+        KF${QT_MAJOR_VERSION}::KIOCore
+        KF${QT_MAJOR_VERSION}::KIOFileWidgets
         KBibTeX::Config
         KBibTeX::Global
         KBibTeX::IO
 )
 
-if(Qt5WebEngineWidgets_FOUND)
+if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
     # See also above for a similar if-clause
     target_link_libraries(kbibtexnetworking
         PRIVATE
-            Qt5::WebEngineWidgets
+            Qt${QT_MAJOR_VERSION}::WebEngineWidgets
     )
 endif()
 

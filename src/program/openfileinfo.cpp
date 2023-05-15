@@ -36,9 +36,9 @@
 #include <KParts/PartLoader>
 #include <kparts_version.h>
 
-#ifdef HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
 #include <FileImporterPDF>
-#endif // HAVE_POPPLERQT5
+#endif // HAVE_POPPLERQT
 #include "logging_program.h"
 
 #if KPARTS_VERSION < QT_VERSION_CHECK(5, 100, 0)
