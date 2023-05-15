@@ -848,13 +848,19 @@ KBibTeXPart::KBibTeXPart(QWidget *parentWidget, QObject *parent,
                          const KAboutData &componentData
 #endif // KPARTS_VERSION >= 0x054D00 // >= 5.77.0
                          , const QVariantList &)
-        : KParts::ReadWritePart(parent), d(new KBibTeXPartPrivate(parentWidget, this))
+        : KParts::ReadWritePart(parent
+#if KPARTS_VERSION >= 0x05C800 // >= 5.200.0
+                            , metaData
+#endif // KPARTS_VERSION >= 0x05C800 // >= 5.200.0
+                           ), d(new KBibTeXPartPrivate(parentWidget, this))
 {
+#if KPARTS_VERSION <= 0x05C800 // <= 5.200.0
 #if KPARTS_VERSION >= 0x054D00 // >= 5.77.0
     setMetaData(metaData);
 #else // KPARTS_VERSION < 0x054D00 // < 5.77.0
     setComponentData(componentData);
 #endif // KPARTS_VERSION >= 0x054D00 // >= 5.77.0
+#endif // KPARTS_VERSION <= 0x05C800 // <= 5.200.0
 
     setWidget(d->partWidget);
     updateActions();
