@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2017 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -43,14 +43,9 @@ public:
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
     bool save(QIODevice *iodevice, const File *bibtexfile) override;
 
-public Q_SLOTS:
-    void cancel() override;
-
 private:
-    bool m_cancelFlag;
-
-    bool writeEntry(QTextStream &stream, const Entry *entry);
-    bool writeKeyValue(QTextStream &stream, const QString &key, const QString &value);
+    class Private;
+    Private *d;
 };
 
 #endif // KBIBTEX_IO_FILEEXPORTERRIS_H
