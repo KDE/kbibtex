@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,7 +41,7 @@ public:
     ~FileExporterBibTeXOutput() override;
 
     bool save(QIODevice *iodevice, const File *bibtexfile) override;
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile) override;
 
 private:
     OutputType m_outputType;

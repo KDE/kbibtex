@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -126,7 +126,7 @@ QString FileModel::entryText(const Entry *entry, const QString &raw, const QStri
             }
 
         if (followCrossRef && text.isEmpty() && entry->contains(Entry::ftCrossRef)) {
-            QScopedPointer<const Entry> completedEntry(entry->resolveCrossref(m_file));
+            const QSharedPointer<const Entry> completedEntry(entry->resolveCrossref(m_file));
             return entryText(completedEntry.data(), raw, rawAlt, rawAliases, role, false);
         }
 

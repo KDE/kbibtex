@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -558,7 +558,7 @@ void ReferenceWidget::prepareSuggestionsMenu()
     /// Collect information on the current entry as it is edited
     QSharedPointer<Entry> guiDataEntry(new Entry());
     m_applyElement->apply(guiDataEntry);
-    QSharedPointer<Entry> crossrefResolvedEntry(guiDataEntry->resolveCrossref(m_file));
+    const QSharedPointer<const Entry> crossrefResolvedEntry(guiDataEntry->resolveCrossref(m_file));
 
     QMenu *suggestionsMenu = buttonSuggestId->menu();
     suggestionsMenu->clear();
@@ -628,7 +628,7 @@ void ReferenceWidget::setEntryIdByDefault()
         /// Collect information on the current entry as it is edited
         QSharedPointer<Entry> guiDataEntry(new Entry());
         m_applyElement->apply(guiDataEntry);
-        QSharedPointer<Entry> crossrefResolvedEntry(guiDataEntry->resolveCrossref(m_file));
+        const QSharedPointer<const Entry> crossrefResolvedEntry(guiDataEntry->resolveCrossref(m_file));
         /// Determine default suggestion based on current data
         const QString defaultSuggestion = IdSuggestions::defaultFormatId(*crossrefResolvedEntry.data());
 

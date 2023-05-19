@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -67,11 +67,11 @@ public:
      */
     void setEncoding(const QString &encoding);
 
-    QString toString(const QSharedPointer<const Element> element, const File *bibtexfile) override;
+    QString toString(const QSharedPointer<const Element> &element, const File *bibtexfile) override;
     QString toString(const File *bibtexfile) override;
 
     bool save(QIODevice *iodevice, const File *bibtexfile) override;
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile) override;
 
     /**
      * Write a Value object into a BibTeX or BibLaTeX strign representation.

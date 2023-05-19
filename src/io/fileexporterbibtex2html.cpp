@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -143,7 +143,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile)
     return result;
 }
 
-bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
+bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";

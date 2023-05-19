@@ -61,7 +61,7 @@ public:
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
      * @return String representation of provided element
      */
-    virtual QString toString(const QSharedPointer<const Element> element, const File *bibtexfile);
+    virtual QString toString(const QSharedPointer<const Element> &element, const File *bibtexfile);
 
     /**
      * @brief Convert a bibliography into a string representation.
@@ -90,7 +90,7 @@ public:
      * @param[out] errorLog List of strings that receives error messages; may be @c nullptr
      * @return @c true if writing the element succeeded, else @c false
      */
-    virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) = 0;
+    virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile) = 0;
 
     static QString numberToOrdinal(const int number);
 

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -46,7 +46,6 @@ public:
     FileView(const QString &name, QWidget *parent);
 
     const QList<QSharedPointer<Element> > &selectedElements() const;
-    const QSharedPointer<Element> currentElement() const;
     QSharedPointer<Element> currentElement();
     QSharedPointer<Element> elementAt(const QModelIndex &index);
 
@@ -66,7 +65,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void viewCurrentElement();
-    void viewElement(const QSharedPointer<Element>);
+    void viewElement(const QSharedPointer<Element> &);
     void editCurrentElement();
     bool editElement(QSharedPointer<Element>);
     void setSelectedElement(QSharedPointer<Element>);

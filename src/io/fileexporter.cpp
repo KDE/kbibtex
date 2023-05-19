@@ -137,7 +137,7 @@ QVector<QString> FileExporter::exporterClasses(const QUrl &url)
     return exporterClasses(inputFileInfo);
 }
 
-QString FileExporter::toString(const QSharedPointer<const Element> element, const File *bibtexfile)
+QString FileExporter::toString(const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     QBuffer buffer;
     buffer.open(QBuffer::WriteOnly);

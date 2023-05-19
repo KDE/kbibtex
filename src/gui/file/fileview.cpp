@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -110,7 +110,7 @@ void FileView::viewCurrentElement()
     viewElement(currentElement());
 }
 
-void FileView::viewElement(const QSharedPointer<Element> element)
+void FileView::viewElement(const QSharedPointer<Element> &element)
 {
     prepareEditorDialog(DialogType::View);
     FileModel *model = fileModel();
@@ -169,11 +169,6 @@ void FileView::setSelectedElement(QSharedPointer<Element> element)
     const QModelIndex sourceIdx = row >= 0 && model != nullptr ? model->index(row, 0) : QModelIndex();
     const QModelIndex idx = sortFilterProxyModel()->mapFromSource(sourceIdx);
     selModel->setCurrentIndex(idx, QItemSelectionModel::Select | QItemSelectionModel::Rows);
-}
-
-const QSharedPointer<Element> FileView::currentElement() const
-{
-    return m_current;
 }
 
 QSharedPointer<Element> FileView::currentElement()

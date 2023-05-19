@@ -186,7 +186,7 @@ FileExporterRIS::~FileExporterRIS()
     /// nothing
 }
 
-bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
+bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     Q_UNUSED(bibtexfile)
 

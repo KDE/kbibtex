@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                              and contributors                           *
  *                                                                         *
  *   Contributions to this file were made by                               *
@@ -246,7 +246,7 @@ void ReferencePreview::setEnabled(bool enabled)
     d->comboBox->setEnabled(enabled);
 }
 
-void ReferencePreview::setElement(QSharedPointer<Element> element, const File *file)
+void ReferencePreview::setElement(QSharedPointer<const Element> element, const File *file)
 {
     d->element = element;
     d->file = file;
@@ -311,7 +311,7 @@ void ReferencePreview::renderHTML()
                 exporterResult = exporter->save(&buffer, d->element, d->file);
         } else */
         if (crossRefHandling == merge && !entry.isNull()) {
-            QSharedPointer<Entry> merged = QSharedPointer<Entry>(entry->resolveCrossref(d->file));
+            const QSharedPointer<const Entry> merged = entry->resolveCrossref(d->file);
             exporterResult = exporter->save(&buffer, merged, d->file);
         } else
             exporterResult = exporter->save(&buffer, d->element, d->file);

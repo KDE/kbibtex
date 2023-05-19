@@ -392,7 +392,7 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
     }
 
     d->documentPreview->setBibTeXUrl(validFile ? openFileInfo->url() : QUrl());
-    d->referencePreview->setElement(QSharedPointer<Element>(), nullptr);
+    d->referencePreview->setElement(QSharedPointer<const Element>(), nullptr);
     d->elementForm->setElement(QSharedPointer<Element>(), nullptr);
     d->documentPreview->setElement(QSharedPointer<Element>(), nullptr);
     d->valueList->setFileView(newFileView);

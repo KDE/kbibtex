@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -48,7 +48,7 @@ public:
     ~FileExporterPDF() override;
 
     bool save(QIODevice *iodevice, const File *bibtexfile) override;
-    bool save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile) override;
+    bool save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile) override;
 
     void setDocumentSearchPaths(const QStringList &searchPaths);
     void setFileEmbedding(const FileEmbeddings fileEmbedding);
@@ -63,7 +63,7 @@ private:
     bool generatePDF(QIODevice *iodevice);
     bool writeLatexFile(const QString &filename);
     void fillEmbeddedFileList(const File *bibtexfile);
-    void fillEmbeddedFileList(const QSharedPointer<const Element> element, const File *bibtexfile);
+    void fillEmbeddedFileList(const QSharedPointer<const Element> &element, const File *bibtexfile);
 };
 
 #endif // KBIBTEX_IO_FILEEXPORTERPDF_H

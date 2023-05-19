@@ -75,7 +75,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile)
     return result;
 }
 
-bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
+bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -221,14 +221,14 @@ void FileExporterPDF::fillEmbeddedFileList(const File *bibtexfile)
         fillEmbeddedFileList(element, bibtexfile);
 }
 
-void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> element, const File *bibtexfile)
+void FileExporterPDF::fillEmbeddedFileList(const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     if (bibtexfile == nullptr || !bibtexfile->hasProperty(File::Url)) {
         /// If no valid File was provided or File is not saved, do not append files
         return;
     }
 
-    const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+    const QSharedPointer<const Entry> &entry = element.dynamicCast<const Entry>();
     if (!entry.isNull()) {
         const QString title = PlainTextValue::text(entry->value(Entry::ftTitle));
         const auto urlList = FileInfo::entryUrls(entry, bibtexfile->property(File::Url).toUrl(), FileInfo::TestExistence::Yes);

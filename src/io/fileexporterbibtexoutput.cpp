@@ -71,7 +71,7 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile)
     return result;
 }
 
-bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<const Element> element, const File *bibtexfile)
+bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     if (!ioDevice->isWritable() && !ioDevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";

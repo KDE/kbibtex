@@ -130,7 +130,7 @@ public:
     }
 
 
-    bool writeEntry(QTextStream &stream, const Entry *entry)
+    bool writeEntry(QTextStream &stream, const QSharedPointer<const Entry> &entry)
     {
         // Documentation of Word XML Bibliography:
         //  - https://docs.jabref.org/advanced/knowledge/msofficebibfieldmapping
@@ -150,7 +150,7 @@ public:
                     bool nameListOpened = false;
                     const Value value = entry->value(it.value());
                     for (const auto &valueItem : value) {
-                        QSharedPointer<const Person> p = valueItem.dynamicCast<const Person>();
+                        const QSharedPointer<const Person> p = valueItem.dynamicCast<const Person>();
                         if (!p.isNull()) {
                             if (!nameListOpened && p->firstName().isEmpty() && insideProtectiveCurleyBrackets(p->lastName())) {
                                 // Person's last name looks like  {KDE e.V.}  so treat as organization name instead of a person's name
@@ -177,12 +177,12 @@ public:
         }
 
         for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
-            const QString key = it.key().toLower();
+            const QString &key = it.key().toLower();
             if (personFields.values().contains(key)) {
                 // Authors, editors, etc. were processed above
                 continue;
             }
-            const Value value = it.value();
+            const Value &value = it.value();
 
             static const QSet<QString> fieldsKeptAsIs{Entry::ftTitle, Entry::ftPublisher, Entry::ftJournal, Entry::ftVolume, Entry::ftNote, Entry::ftEdition, Entry::ftBookTitle, Entry::ftChapter, Entry::ftNumber, Entry::ftSchool, Entry::ftDOI, Entry::ftUrl, Entry::ftPages, Entry::ftLocation};
             static const QSet<QString> ignoredFields{Entry::ftAbstract, Entry::ftLocalFile, Entry::ftSeries, Entry::ftKeywords, Entry::ftCrossRef, Entry::ftAddress, QStringLiteral("acmid"), QStringLiteral("articleno"), QStringLiteral("numpages"), QStringLiteral("added-at"), QStringLiteral("biburl"), QStringLiteral("organization"), QStringLiteral("ee"), QStringLiteral("interhash"), QStringLiteral("intrahash"), QStringLiteral("howpublished"), QStringLiteral("key"), QStringLiteral("type"), QStringLiteral("institution"), QStringLiteral("issue"), QStringLiteral("eprint"), QStringLiteral("affiliation"), QStringLiteral("keyword"), QStringLiteral("urldate"), QStringLiteral("date"), QStringLiteral("shortauthor")};
@@ -218,16 +218,16 @@ public:
     }
 
 
-    bool write(QTextStream &stream, const Element *element, const File *bibtexfile = nullptr) {
+    bool write(QTextStream &stream, const QSharedPointer<const Element> &element, const File *bibtexfile = nullptr) {
         bool result = false;
 
-        const Entry *entry = dynamic_cast<const Entry *>(element);
-        if (entry != nullptr) {
+        const QSharedPointer<const Entry> &entry = element.dynamicCast<const Entry>();
+        if (!entry.isNull()) {
             if (bibtexfile == nullptr)
                 result |= writeEntry(stream, entry);
             else {
-                QScopedPointer<const Entry> resolvedEntry(entry->resolveCrossref(bibtexfile));
-                result |= writeEntry(stream, resolvedEntry.data());
+                const QSharedPointer<const Entry> resolvedEntry(entry->resolveCrossref(bibtexfile));
+                result |= writeEntry(stream, resolvedEntry);
             }
         } else {
             // not (yet) supported
@@ -274,7 +274,7 @@ bool FileExporterWordBibXML::save(QIODevice *iodevice, const File *bibtexfile)
 #endif // QT_VERSION >= 0x050e00
 
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result && !d->cancelFlag; ++it)
-        result &= d->write(stream, (*it).data(), bibtexfile);
+        result &= d->write(stream, *it, bibtexfile);
 
 #if QT_VERSION >= 0x050e00
     stream << "</b:Sources>" << Qt::endl;
@@ -285,7 +285,7 @@ bool FileExporterWordBibXML::save(QIODevice *iodevice, const File *bibtexfile)
     return result && !d->cancelFlag;
 }
 
-bool FileExporterWordBibXML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
+bool FileExporterWordBibXML::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     if (!iodevice->isWritable() && !iodevice->isWritable()) {
         qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
@@ -308,7 +308,7 @@ bool FileExporterWordBibXML::save(QIODevice *iodevice, const QSharedPointer<cons
     stream << "<b:Sources xmlns:b=\"http://schemas.openxmlformats.org/officeDocument/2006/bibliography\" xmlns=\"http://schemas.openxmlformats.org/officeDocument/2006/bibliography\">" << endl;
 #endif // QT_VERSION >= 0x050e00
 
-    const bool result = d->write(stream, element.data(), bibtexfile);
+    const bool result = d->write(stream, element, bibtexfile);
 
 #if QT_VERSION >= 0x050e00
     stream << "</b:Sources>" << Qt::endl;

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -308,8 +308,8 @@ public:
         output.append(QLatin1Char('{')).append(Encoder::instance().convertToPlainAscii(entry.id()));
 
         for (Entry::ConstIterator it = entry.constBegin(); it != entry.constEnd(); ++it) {
-            const QString key = it.key();
-            Value value = it.value();
+            const QString &key = it.key();
+            const Value &value = it.value();
             if (value.isEmpty()) continue; ///< ignore empty key-value pairs
 
             QString text = internalValueToBibTeX(value, targetEncoding, key);
@@ -320,7 +320,7 @@ public:
             }
 
             // FIXME hack!
-            const QSharedPointer<ValueItem> first = *value.constBegin();
+            const QSharedPointer<const ValueItem> &first = *value.constBegin();
             if (PlainText::isPlainText(*first) && (key == Entry::ftTitle || key == Entry::ftBookTitle || key == Entry::ftSeries)) {
                 if (protectCasing == Qt::Checked)
                     addProtectiveCasing(text);
@@ -597,22 +597,22 @@ public:
         return result;
     }
 
-    bool saveAsString(QString &output, const QSharedPointer<const Element> element) {
+    bool saveAsString(QString &output, const QSharedPointer<const Element> &element) {
         const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
 
-        const QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
+        const QSharedPointer<const Entry> &entry = element.dynamicCast<const Entry>();
         if (!entry.isNull())
             return writeEntry(output, *entry, targetEncoding);
         else {
-            const QSharedPointer<const Macro> macro = element.dynamicCast<const Macro>();
+            const QSharedPointer<const Macro> &macro = element.dynamicCast<const Macro>();
             if (!macro.isNull())
                 return writeMacro(output, *macro, targetEncoding);
             else {
-                const QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
+                const QSharedPointer<const Comment> &comment = element.dynamicCast<const Comment>();
                 if (!comment.isNull())
                     return writeComment(output, *comment);
                 else {
-                    const QSharedPointer<const Preamble> preamble = element.dynamicCast<const Preamble>();
+                    const QSharedPointer<const Preamble> &preamble = element.dynamicCast<const Preamble>();
                     if (!preamble.isNull())
                         return writePreamble(output, *preamble);
                     else
@@ -719,7 +719,7 @@ void FileExporterBibTeX::setEncoding(const QString &encoding)
     d->forcedEncoding = encoding;
 }
 
-QString FileExporterBibTeX::toString(const QSharedPointer<const Element> element, const File *bibtexfile)
+QString FileExporterBibTeX::toString(const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     d->cancelFlag = false;
 
@@ -789,7 +789,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile)
     return result && !d->cancelFlag;
 }
 
-bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
+bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     d->cancelFlag = false;
 

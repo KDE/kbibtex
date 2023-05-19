@@ -344,7 +344,7 @@ bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile)
     return result;
 }
 
-bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Element> element, const File *bibtexfile)
+bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
     Q_UNUSED(bibtexfile)
 

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -213,7 +213,7 @@ public:
      * @param bibTeXfile bibliography to search for entries being cross-referenced
      * @return New entry object with known cross references resolved
      */
-    Entry *resolveCrossref(const File *bibTeXfile) const;
+    QSharedPointer<Entry> resolveCrossref(const File *bibTeXfile) const;
 
     static QStringList authorsLastName(const Entry &entry);
     QStringList authorsLastName() const;
