@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -185,7 +185,7 @@ public:
             } else if ((*it).key == QStringLiteral("DO") || (*it).key == QStringLiteral("M3")) {
                 const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match((*it).value);
                 if (doiRegExpMatch.hasMatch())
-                    appendValue(entry, Entry::ftDOI, QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured())));
+                    appendValue(entry, Entry::ftDOI, QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(QStringLiteral("doi")))));
             } else if ((*it).key == QStringLiteral("PB")) {
                 appendValue(entry, Entry::ftPublisher, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == QStringLiteral("IN")) {
@@ -203,7 +203,7 @@ public:
                 const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(fieldValue);
                 const QRegularExpressionMatch urlRegExpMatch = KBibTeX::urlRegExp.match(fieldValue);
                 const QString fieldName = doiRegExpMatch.hasMatch() ? Entry::ftDOI : (KBibTeX::urlRegExp.match((*it).value).hasMatch() ? Entry::ftUrl : (Preferences::instance().bibliographySystem() == Preferences::BibliographySystem::BibTeX ? Entry::ftLocalFile : Entry::ftFile));
-                fieldValue = doiRegExpMatch.hasMatch() ? doiRegExpMatch.captured() : (urlRegExpMatch.hasMatch() ? urlRegExpMatch.captured() : fieldValue);
+                fieldValue = doiRegExpMatch.hasMatch() ? doiRegExpMatch.captured(QStringLiteral("doi")) : (urlRegExpMatch.hasMatch() ? urlRegExpMatch.captured() : fieldValue);
                 if (fieldValue.startsWith(QStringLiteral("file:///"))) fieldValue = fieldValue.mid(7);
                 appendValue(entry, fieldName, QSharedPointer<VerbatimText>(new VerbatimText(fieldValue)));
             } else if ((*it).key == QStringLiteral("SP")) {

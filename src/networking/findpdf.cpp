@@ -375,7 +375,7 @@ bool FindPDF::search(const Entry &entry)
             QRegularExpressionMatchIterator doiRegExpMatchIt = KBibTeX::doiRegExp.globalMatch(fieldText);
             while (doiRegExpMatchIt.hasNext()) {
                 const QRegularExpressionMatch doiRegExpMatch = doiRegExpMatchIt.next();
-                const QString doiNumber{doiRegExpMatch.captured(0)};
+                const QString doiNumber{doiRegExpMatch.captured(QStringLiteral("doi"))};
                 d->queueUrl(QUrl(KBibTeX::doiUrlPrefix + doiNumber), fieldText, Entry::ftDOI, maxDepth);
 #ifdef HAVE_SCIHUB
                 static const QVector<QString> sciHubUrlPrefixes {{QStringLiteral("https://sci-hub.se/")}, {QStringLiteral("https://sci-hub.st/")}, {QStringLiteral("https://sci-hub.ru/")}};

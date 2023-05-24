@@ -694,7 +694,7 @@ bool FilesWidget::apply(QSharedPointer<Element> element) const
                     urlValue.append(QSharedPointer<VerbatimText>(newVT));
             } else if ((match = KBibTeX::doiRegExp.match(text)).hasMatch()) {
                 /// add DOI
-                VerbatimText *newVT = new VerbatimText(match.captured(0));
+                VerbatimText *newVT = new VerbatimText(match.captured(QStringLiteral("doi")));
                 /// test for duplicates
                 if (doiValue.contains(*newVT))
                     delete newVT;

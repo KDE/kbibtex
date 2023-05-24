@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -79,7 +79,7 @@ public:
             /// Sometimes the 'DOI' field is empty, but there is a DOI in the 'id' field
             const QRegularExpressionMatch doiInIdMatch = KBibTeX::doiRegExp.match(id);
             if (doiInIdMatch.hasMatch())
-                doi = doiInIdMatch.captured();
+                doi = doiInIdMatch.captured(QStringLiteral("doi"));
         }
         QString entryIdSerial = !doi.isEmpty() ? doi : (!isbn.isEmpty() ? isbn : (!id.isEmpty() ? id : object.value(QStringLiteral("URL")).toString().remove(QStringLiteral("http://")).remove(QStringLiteral("https://"))));
         const QString entryId = QStringLiteral("ACM-") + entryIdSerial.remove(QRegularExpression(QStringLiteral("[^0-9./-]")));

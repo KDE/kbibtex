@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -121,7 +121,7 @@ public:
 
         const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(query[QueryKey::FreeText]);
         if (doiRegExpMatch.hasMatch()) {
-            return QUrl(QStringLiteral("https://dx.doi.org/") + doiRegExpMatch.captured(0));
+            return QUrl(QStringLiteral("https://dx.doi.org/") + doiRegExpMatch.captured(QStringLiteral("doi")));
         }
 
         return QUrl();

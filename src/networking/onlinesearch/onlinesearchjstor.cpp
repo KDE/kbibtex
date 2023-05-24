@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -256,7 +256,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
     if (doiRegExpMatch.hasMatch()) {
         /// entry ID is a DOI
         Value v;
-        v.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(0))));
+        v.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(QStringLiteral("doi")))));
         entry->insert(Entry::ftDOI, v);
     }
 

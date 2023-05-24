@@ -407,7 +407,7 @@ public:
                     QRegularExpressionMatchIterator doiRegExpMatchIt = KBibTeX::doiRegExp.globalMatch(preprocessedText);
                     while (doiRegExpMatchIt.hasNext()) {
                         const QRegularExpressionMatch doiRegExpMatch = doiRegExpMatchIt.next();
-                        value.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(0))));
+                        value.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(QStringLiteral("doi")))));
                     }
                 }
             } else if (iKey == Entry::ftKeywords) {

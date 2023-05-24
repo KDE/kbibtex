@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -113,7 +113,7 @@ public:
         const QString doi = object.value(QStringLiteral("doi")).toString();
         const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(doi);
         if (doiRegExpMatch.hasMatch())
-            entry->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured())));
+            entry->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(QStringLiteral("doi")))));
 
         const QString url = object.value(QStringLiteral("uri")).toString().remove(QStringLiteral("?dgcid=api_sd_search-api-endpoint"));
         if (!url.isEmpty())

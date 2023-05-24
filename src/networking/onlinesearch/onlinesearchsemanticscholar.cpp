@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -112,11 +112,11 @@ public:
 
         const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(form->lineEditPaperReference->text());
         if (doiRegExpMatch.hasMatch())
-            return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + doiRegExpMatch.captured(0));
+            return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + doiRegExpMatch.captured(QStringLiteral("doi")));
         else {
-            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithoutPrefix.match(form->lineEditPaperReference->text());
+            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExp.match(form->lineEditPaperReference->text());
             if (arXivRegExpMatch.hasMatch())
-                return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + arXivRegExpMatch.captured(0));
+                return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/arXiv:") + arXivRegExpMatch.captured(QStringLiteral("arxiv")));
         }
 
         return QUrl();
@@ -128,16 +128,11 @@ public:
 
         const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(query[QueryKey::FreeText]);
         if (doiRegExpMatch.hasMatch())
-            return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + doiRegExpMatch.captured(0));
+            return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + doiRegExpMatch.captured(QStringLiteral("doi")));
         else {
-            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithPrefix.match(query[QueryKey::FreeText]);
+            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExp.match(query[QueryKey::FreeText]);
             if (arXivRegExpMatch.hasMatch())
-                return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/") + arXivRegExpMatch.captured(0));
-            else {
-                const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithoutPrefix.match(query[QueryKey::FreeText]);
-                if (arXivRegExpMatch.hasMatch())
-                    return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/arXiv:") + arXivRegExpMatch.captured(0));
-            }
+                return QUrl(QStringLiteral("https://api.semanticscholar.org/v1/paper/arXiv:") + arXivRegExpMatch.captured(QStringLiteral("arxiv")));
         }
         return QUrl();
     }
@@ -158,12 +153,12 @@ public:
         const QString doi = object.value(QStringLiteral("doi")).toString();
         const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(doi);
         if (doiRegExpMatch.hasMatch())
-            entry->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured())));
+            entry->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(QStringLiteral("doi")))));
 
         const QString arxivId = object.value(QStringLiteral("arxivId")).toString();
-        const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithoutPrefix.match(arxivId);
+        const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExp.match(arxivId);
         if (arXivRegExpMatch.hasMatch())
-            entry->insert(QStringLiteral("eprint"), Value() << QSharedPointer<VerbatimText>(new VerbatimText(arXivRegExpMatch.captured())));
+            entry->insert(QStringLiteral("eprint"), Value() << QSharedPointer<VerbatimText>(new VerbatimText(arXivRegExpMatch.captured(QStringLiteral("arxiv")))));
 
         const QJsonArray authorArray = object.value(QStringLiteral("authors")).toArray();
         Value authors;

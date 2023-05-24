@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -114,8 +114,8 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
     int pos = 0;
     QRegularExpressionMatch doiRegExpMatch;
     while ((doiRegExpMatch = KBibTeX::doiRegExp.match(internalText, pos)).hasMatch()) {
-        pos = doiRegExpMatch.capturedStart(0);
-        QString doiMatch = doiRegExpMatch.captured(0);
+        pos = doiRegExpMatch.capturedStart(QStringLiteral("doi"));
+        QString doiMatch = doiRegExpMatch.captured(QStringLiteral("doi"));
         const int semicolonHttpPos = doiMatch.indexOf(QStringLiteral(";http"));
         if (semicolonHttpPos > 0) doiMatch = doiMatch.left(semicolonHttpPos);
         const QUrl url(KBibTeX::doiUrlPrefix + QString(doiMatch).remove(QStringLiteral("\\")));
@@ -242,8 +242,8 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
         /// Sometimes the entry id contains or is actually a DOI number
         const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(id);
         if (doiRegExpMatch.hasMatch()) {
-            QString match = doiRegExpMatch.captured(0);
-            QUrl url(KBibTeX::doiUrlPrefix + match.remove(QStringLiteral("\\")));
+            const QString match = doiRegExpMatch.captured(QStringLiteral("doi")).remove(QStringLiteral("\\"));
+            QUrl url(KBibTeX::doiUrlPrefix + match);
             result.insert(url);
         }
     }
@@ -251,8 +251,8 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
         const QString doi = PlainTextValue::text(entry->value(Entry::ftDOI));
         QRegularExpressionMatch doiRegExpMatch;
         if (!doi.isEmpty() && (doiRegExpMatch = KBibTeX::doiRegExp.match(doi)).hasMatch()) {
-            QString match = doiRegExpMatch.captured(0);
-            QUrl url(KBibTeX::doiUrlPrefix + match.remove(QStringLiteral("\\")));
+            const QString match = doiRegExpMatch.captured(QStringLiteral("doi")).remove(QStringLiteral("\\"));
+            QUrl url(KBibTeX::doiUrlPrefix + match);
             result.insert(url);
         }
     }

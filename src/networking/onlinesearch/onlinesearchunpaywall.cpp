@@ -51,7 +51,7 @@ public:
 
         const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(query[QueryKey::FreeText]);
         if (doiRegExpMatch.hasMatch())
-            return QUrl::fromUserInput(QStringLiteral("https://api.unpaywall.org/v2/") + doiRegExpMatch.captured(0) + QStringLiteral("?email=") + InternalNetworkAccessManager::reverseObfuscate("\xb7\xd2\xaf\xcb\x25\xb\xa8\xc4\x16\x7d\x6c\x41\xda\xb3\x7a\x14\x25\x50\x27\x9\x49\x2e\x58\x39\x3b\x16\xdc\xa4\x8d\xe4\xbb\xd5\x6f\x1a\xb9\xf9\xb1\xe9\x44\x21\xaa\xfe\x4b\x29\x1a\x73\x20\x62\x88\xc3\x7f\x54\x62\x10\x7c\x19\x53\x3b\xc8\xab\x80\xf3\x43\x2a\x4d\x2b"));
+            return QUrl::fromUserInput(QStringLiteral("https://api.unpaywall.org/v2/") + doiRegExpMatch.captured(QStringLiteral("doi")) + QStringLiteral("?email=") + InternalNetworkAccessManager::reverseObfuscate("\xb7\xd2\xaf\xcb\x25\xb\xa8\xc4\x16\x7d\x6c\x41\xda\xb3\x7a\x14\x25\x50\x27\x9\x49\x2e\x58\x39\x3b\x16\xdc\xa4\x8d\xe4\xbb\xd5\x6f\x1a\xb9\xf9\xb1\xe9\x44\x21\xaa\xfe\x4b\x29\x1a\x73\x20\x62\x88\xc3\x7f\x54\x62\x10\x7c\x19\x53\x3b\xc8\xab\x80\xf3\x43\x2a\x4d\x2b"));
         else if (query[QueryKey::FreeText].length() > 2)
             return QUrl::fromUserInput(QStringLiteral("https://api.unpaywall.org/v2/search/?query=") + query[QueryKey::FreeText] + QStringLiteral("&email=") + InternalNetworkAccessManager::reverseObfuscate("\xb7\xd2\xaf\xcb\x25\xb\xa8\xc4\x16\x7d\x6c\x41\xda\xb3\x7a\x14\x25\x50\x27\x9\x49\x2e\x58\x39\x3b\x16\xdc\xa4\x8d\xe4\xbb\xd5\x6f\x1a\xb9\xf9\xb1\xe9\x44\x21\xaa\xfe\x4b\x29\x1a\x73\x20\x62\x88\xc3\x7f\x54\x62\x10\x7c\x19\x53\x3b\xc8\xab\x80\xf3\x43\x2a\x4d\x2b"));
 
@@ -74,7 +74,7 @@ public:
         entry->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QString::number(year))));
         const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(doi);
         if (doiRegExpMatch.hasMatch())
-            entry->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured())));
+            entry->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(QStringLiteral("doi")))));
         const QString journal = object.value(QStringLiteral("journal_name")).toString();
         if (!journal.isEmpty())
             entry->insert(Entry::ftJournal, Value() << QSharedPointer<PlainText>(new PlainText(journal)));

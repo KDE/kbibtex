@@ -93,7 +93,7 @@ QString OnlineSearchAbstract::Form::Private::guessFreeText(const Entry &entry)
             const QString text = PlainTextValue::text(entry[doiKey]);
             const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(text);
             if (doiRegExpMatch.hasMatch())
-                return doiRegExpMatch.captured(0);
+                return doiRegExpMatch.captured(QStringLiteral("doi"));
         }
 
     /// If there is no free text yet (e.g. no DOI number), try to identify an arXiv eprint number
@@ -101,9 +101,9 @@ QString OnlineSearchAbstract::Form::Private::guessFreeText(const Entry &entry)
     for (const QString &arxivKey : arxivKeys)
         if (!entry.value(arxivKey).isEmpty()) {
             const QString text = PlainTextValue::text(entry[arxivKey]);
-            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExpWithPrefix.match(text);
+            const QRegularExpressionMatch arXivRegExpMatch = KBibTeX::arXivRegExp.match(text);
             if (arXivRegExpMatch.hasMatch())
-                return arXivRegExpMatch.captured(1);
+                return arXivRegExpMatch.captured(QStringLiteral("arxiv"));
         }
 
     return QString();
@@ -595,7 +595,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
             const QString viText = PlainTextValue::text(*it);
             const QRegularExpressionMatch doiRegExpMatch = KBibTeX::doiRegExp.match(viText);
             if (doiRegExpMatch.hasMatch()) {
-                doiSet.insert(doiRegExpMatch.captured());
+                doiSet.insert(doiRegExpMatch.captured(QStringLiteral("doi")));
                 it = v.erase(it);
                 gotChanged = true;
             } else
@@ -622,7 +622,7 @@ void OnlineSearchAbstract::sanitizeEntry(QSharedPointer<Entry> entry)
         if (doiRegExpMatch.hasMatch()) {
             /// If entry id looks like a DOI, add a DOI field
             Value doiValue;
-            doiValue.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured())));
+            doiValue.append(QSharedPointer<VerbatimText>(new VerbatimText(doiRegExpMatch.captured(QStringLiteral("doi")))));
             entry->insert(Entry::ftDOI, doiValue);
         }
     }
