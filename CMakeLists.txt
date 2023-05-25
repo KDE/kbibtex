@@ -287,9 +287,6 @@ add_subdirectory(
     src
 )
 add_subdirectory(
-    xslt
-)
-add_subdirectory(
     mime
 )
 if(KF${QT_MAJOR_VERSION}DocTools_FOUND)

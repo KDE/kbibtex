@@ -29,7 +29,6 @@
 #include "fileexporterbibtexoutput.h"
 #include "fileexporterwordbibxml.h"
 #include "fileexporterxml.h"
-#include "fileexporterxslt.h"
 #include "fileexporterris.h"
 #include "fileexporterpdf.h"
 #include "fileexporterps.h"
@@ -57,8 +56,7 @@ FileExporter *FileExporter::factory(const QFileInfo &fileInfo, const QString &ex
     if (ending.endsWith(QStringLiteral("html")) || ending.endsWith(QStringLiteral("htm"))) {
         if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty() && exporterClassHint.contains(QStringLiteral("FileExporterBibTeX2HTML")))
             return new FileExporterBibTeX2HTML(parent);
-        else
-            return new FileExporterHTML(parent);
+        // else // TODO anything?
     } else if (ending.endsWith(QStringLiteral("xml"))) {
         if (BibUtils::available() && exporterClassHint.contains(QStringLiteral("FileExporterBibUtils"))) {
             FileExporterBibUtils *fileExporterBibUtils = new FileExporterBibUtils(parent);
@@ -87,9 +85,9 @@ FileExporter *FileExporter::factory(const QFileInfo &fileInfo, const QString &ex
         return new FileExporterRTF(parent);
     } else if (ending.endsWith(QStringLiteral("bbl"))) {
         return new FileExporterBibTeXOutput(FileExporterBibTeXOutput::OutputType::BibTeXBlockList, parent);
-    } else {
-        return new FileExporterBibTeX(parent);
     }
+
+    return new FileExporterBibTeX(parent);
 }
 
 FileExporter *FileExporter::factory(const QUrl &url, const QString &exporterClassHint, QObject *parent)

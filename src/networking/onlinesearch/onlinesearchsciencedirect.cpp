@@ -38,7 +38,6 @@
 #include <KBibTeX>
 #include <FileImporterBibTeX>
 #include <EncoderXML>
-#include <XSLTransform>
 #include "internalnetworkaccessmanager.h"
 #include "logging_networking.h"
 

@@ -38,14 +38,14 @@
 #include <FileExporterRIS>
 #include <FileExporterBibUtils>
 #include <FileExporterXML>
-#ifdef HAVE_QTXMLPATTERNS // Qt XML Patterns is no longer part of Qt6, but XSLTransformations depend on it
-#include <FileExporterXSLT>
-#endif // HAVE_QTXMLPATTERNS
 
 #include "logging_test.h"
 // Provides definition of KDESRCDIR
 #include "test-config.h"
 
+typedef QHash<FileExporterXML::OutputStyle, QString> MapFileExporterXMLOutputStyleToQString;
+
+Q_DECLARE_METATYPE(MapFileExporterXMLOutputStyleToQString)
 Q_DECLARE_METATYPE(QMimeType)
 Q_DECLARE_METATYPE(QSharedPointer<Element>)
 
@@ -81,13 +81,6 @@ private Q_SLOTS:
     void fileInfoUrlsInText();
     void fileExporterXMLsave_data();
     void fileExporterXMLsave();
-#ifdef HAVE_QTXMLPATTERNS // Qt XML Patterns is no longer part of Qt6, but XSLTransformations depend on it
-    QHash<QString, QHash<const char *, QSet<QString>>> fileExporterXSLTtestCases();
-    void fileExporterXSLTsaveFile_data();
-    void fileExporterXSLTsaveFile();
-    void fileExporterXSLTsaveElement_data();
-    void fileExporterXSLTsaveElement();
-#endif // HAVE_QTXMLPATTERNS
     void fileExporterRISsave_data();
     void fileExporterRISsave();
     void fileExporterBibTeXsave_data();
@@ -481,11 +474,23 @@ QVector<QPair<const char *, File *> > KBibTeXIOTest::fileImporterExporterTestCas
 void KBibTeXIOTest::fileExporterXMLsave_data()
 {
     QTest::addColumn<File *>("bibTeXfile");
-    QTest::addColumn<QString>("xmlData");
+    QTest::addColumn<MapFileExporterXMLOutputStyleToQString>("expectedData");
 
-    static const QHash<const char *, QString> keyToXmlData {
-        {fileImporterExporterTestCases_Label_Empty_file, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>|</bibliography>|")},
-        {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>| <entry id=\"the-whale-1851\" type=\"book\">|  <authors>|<person><firstname>Herman</firstname><lastname>Melville</lastname></person><person><firstname>Moby</firstname><lastname>Dick</lastname></person>|  </authors>|  <month triple=\"jun\" number=\"6\"><text>June</text></month>|  <title><text>Call me Ishmael</text></title>|  <year number=\"1851\"><text>1851</text></year>| </entry>|</bibliography>|")}
+    static const QHash<const char *, MapFileExporterXMLOutputStyleToQString> keyToXmlData {
+        {   fileImporterExporterTestCases_Label_Empty_file, {
+                {FileExporterXML::OutputStyle::XML_KBibTeX, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>|</bibliography>|")},
+                {FileExporterXML::OutputStyle::HTML_Standard, QStringLiteral("<!DOCTYPE html>|<!-- HTML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<html xmlns=\"http://www.w3.org/1999/xhtml\">|<head><title>Bibliography</title><meta charset=\"utf-8\"></head>|<body>|</body></html>||")},
+                {FileExporterXML::OutputStyle::HTML_AbstractOnly, QStringLiteral("<!DOCTYPE html>|<!-- HTML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<html xmlns=\"http://www.w3.org/1999/xhtml\">|<head><title>Bibliography</title><meta charset=\"utf-8\"></head>|<body>|</body></html>||")},
+                {FileExporterXML::OutputStyle::Plain_WikipediaCite, QString()}
+            }
+        },
+        {   fileImporterExporterTestCases_Label_Moby_Dick, {
+                {FileExporterXML::OutputStyle::XML_KBibTeX, QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>|<!-- XML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<bibliography>| <entry id=\"the-whale-1851\" type=\"book\">|  <authors>|<person><firstname>Herman</firstname><lastname>Melville</lastname></person><person><firstname>Moby</firstname><lastname>Dick</lastname></person>|  </authors>|  <month triple=\"jun\" number=\"6\"><text>June</text></month>|  <title><text>Call me Ishmael</text></title>|  <year number=\"1851\"><text>1851</text></year>| </entry>|</bibliography>|")},
+                {FileExporterXML::OutputStyle::HTML_Standard, QStringLiteral("<!DOCTYPE html>|<!-- HTML document written by KBibTeXIO as part of KBibTeX -->|<!-- https://userbase.kde.org/KBibTeX -->|<html xmlns=\"http://www.w3.org/1999/xhtml\">|<head><title>Bibliography</title><meta charset=\"utf-8\"></head>|<body>|<p>Melville<span style=\"opacity:0.75;\">, Herman</span>, Dick<span style=\"opacity:0.75;\">, Moby</span>: <strong>Call me Ishmael</strong>, June 1851</p>|</body></html>||")},
+                {FileExporterXML::OutputStyle::HTML_AbstractOnly, QString()},
+                {FileExporterXML::OutputStyle::Plain_WikipediaCite, QStringLiteral("{{Citation|| title = Call me Ishmael|| year = 1851||last1 = Melville||first1 = Herman||last2 = Dick||first2 = Moby|}}|")}
+            }
+        }
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
 
@@ -497,109 +502,17 @@ void KBibTeXIOTest::fileExporterXMLsave_data()
 void KBibTeXIOTest::fileExporterXMLsave()
 {
     QFETCH(File *, bibTeXfile);
-    QFETCH(QString, xmlData);
+    QFETCH(MapFileExporterXMLOutputStyleToQString, expectedData);
 
     FileExporterXML fileExporterXML(this);
-    const QString generatedData = fileExporterXML.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
 
-    QCOMPARE(generatedData, xmlData);
-}
-
-#ifdef HAVE_QTXMLPATTERNS // Qt XML Patterns is no longer part of Qt6, but XSLTransformations depend on it
-QHash<QString, QHash<const char *, QSet<QString>>> KBibTeXIOTest::fileExporterXSLTtestCases()
-{
-    static const QHash<QString, QHash<const char *, QSet<QString>>> xsltTokeyToXsltData {
-        {
-            QStringLiteral("kbibtex/standard.xsl"),
-            {
-                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body>|</body>")}},
-                {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral(">1851<"), QStringLiteral(">Call me Ishmael<"), QStringLiteral("</b>"), QStringLiteral("</body>")}}
-            }
-        },
-        {
-            QStringLiteral("kbibtex/fancy.xsl"),
-            {
-                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral("<body style=\"margin:0px; padding: 0px;\">|</body>")}},
-                {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("<title>Bibliography</title>"), QStringLiteral(" style=\"text-decoration: "), QStringLiteral("<span style=\""), QStringLiteral("ref=\"kbibtex:filter:year=1851\">1851</a>"), QStringLiteral("ef=\"kbibtex:filter:title=Call me Ishmael\">Call me Ishmael<"), QStringLiteral("ef=\"kbibtex:filter:author=Melville\">Melville, H.</a>")}}
-            }
-        },
-        {
-            QStringLiteral("kbibtex/wikipedia-cite.xsl"),
-            {
-                {fileImporterExporterTestCases_Label_Empty_file, {QStringLiteral("|")}},
-                {fileImporterExporterTestCases_Label_Moby_Dick, {QStringLiteral("{cite book|"), QStringLiteral("|title=Call me Ishmael|"), QStringLiteral("|last1=Melville"), QStringLiteral("|first2=Moby"), QStringLiteral("|year=1851|")}}
-            }
-        }
-    };
-    return xsltTokeyToXsltData;
-}
-
-void KBibTeXIOTest::fileExporterXSLTsaveFile_data()
-{
-    QTest::addColumn<File *>("bibTeXfile");
-    QTest::addColumn<QString>("xslTranslationFile");
-    QTest::addColumn<QSet<QString>>("expectedFragments");
-
-    static const auto &xsltToKeyToXsltData = fileExporterXSLTtestCases();
-    static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
-
-    for (const QString &xslTranslationFile : xsltToKeyToXsltData.keys()) {
-        const QHash<const char *, QSet<QString>> &keyToXsltData = xsltToKeyToXsltData.value(xslTranslationFile);
-        for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
-            if (keyToXsltData.contains(it->first)) {
-                const QString label = QString(QStringLiteral("'%1' with XSLT '%2'")).arg(QString::fromLatin1(it->first), xslTranslationFile);
-                QTest::newRow(label.toUtf8().constData()) << it->second << xslTranslationFile << keyToXsltData.value(it->first);
-            }
+    for (auto it = expectedData.constBegin(); it != expectedData.constEnd(); ++it) {
+        fileExporterXML.setOutputStyle(it.key());
+        const QString &expectedText = it.value();
+        const QString generatedText = fileExporterXML.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
+        QCOMPARE(generatedText, expectedText);
     }
 }
-
-void KBibTeXIOTest::fileExporterXSLTsaveFile()
-{
-    QFETCH(File *, bibTeXfile);
-    QFETCH(QString, xslTranslationFile);
-    QFETCH(QSet<QString>, expectedFragments);
-
-    FileExporterXSLT fileExporterXSLT(QStringLiteral(KDESRCDIR "../../xslt/") + xslTranslationFile.remove(QStringLiteral("kbibtex/")), this);
-    static const QRegularExpression removeSpaceBeforeTagRegExp(QStringLiteral("\\s+(<[/a-z])"));
-    const QString generatedData = fileExporterXSLT.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|')).replace(removeSpaceBeforeTagRegExp, QStringLiteral("\\1")).replace(QStringLiteral("|||"), QStringLiteral("|")).replace(QStringLiteral("||"), QStringLiteral("|"));
-
-    for (const QString &fragment : expectedFragments)
-        QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data: '%2'")).arg(fragment, generatedData).toLatin1().constData());
-}
-
-void KBibTeXIOTest::fileExporterXSLTsaveElement_data()
-{
-    QTest::addColumn<QSharedPointer<Element>>("element");
-    QTest::addColumn<QString>("xslTranslationFile");
-    QTest::addColumn<QSet<QString>>("expectedFragments");
-
-    static const auto &xsltToKeyToXsltData = fileExporterXSLTtestCases();
-    static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
-
-    for (const QString &xslTranslationFile : xsltToKeyToXsltData.keys()) {
-        const QHash<const char *, QSet<QString>> &keyToXsltData = xsltToKeyToXsltData.value(xslTranslationFile);
-        for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
-            if (!it->second->isEmpty() && keyToXsltData.contains(it->first)) {
-                const QString label = QString(QStringLiteral("'%1' with XSLT '%2'")).arg(QString::fromLatin1(it->first), xslTranslationFile);
-                QTest::newRow(label.toUtf8().constData()) << it->second->first() << xslTranslationFile << keyToXsltData.value(it->first);
-            }
-    }
-}
-
-void KBibTeXIOTest::fileExporterXSLTsaveElement()
-{
-    QFETCH(QSharedPointer<Element>, element);
-    QFETCH(QString, xslTranslationFile);
-    QFETCH(QSet<QString>, expectedFragments);
-
-    FileExporterXSLT fileExporterXSLT(QStringLiteral(KDESRCDIR "../../xslt/") + xslTranslationFile.remove(QStringLiteral("kbibtex/")), this);
-    static const QRegularExpression removeSpaceBeforeTagRegExp(QStringLiteral("\\s+(<[/a-z])"));
-    const QString generatedData = fileExporterXSLT.toString(element, nullptr).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|')).replace(removeSpaceBeforeTagRegExp, QStringLiteral("\\1")).replace(QStringLiteral("|||"), QStringLiteral("|")).replace(QStringLiteral("||"), QStringLiteral("|"));
-
-    for (const QString &fragment : expectedFragments)
-        QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data: '%2'")).arg(fragment, generatedData).toLatin1().constData());
-}
-#endif // HAVE_QTXMLPATTERNS
 
 void KBibTeXIOTest::fileExporterRISsave_data()
 {

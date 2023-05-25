@@ -42,7 +42,6 @@
 #include <preferences/KBibTeXPreferencesDialog>
 #include <file/FileView>
 #include <file/Clipboard>
-#include <XSLTransform>
 #include <BibliographyService>
 #include <BibUtils>
 #include "docklets/referencepreview.h"

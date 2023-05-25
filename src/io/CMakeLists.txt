@@ -20,14 +20,12 @@ set(
     fileexportertoolchain.cpp
     fileexporterwordbibxml.cpp
     fileexporterxml.cpp
-    fileexporterxslt.cpp
     fileimporterbibtex.cpp
     fileimporterbibutils.cpp
     fileimporter.cpp
     fileimporterris.cpp
     fileinfo.cpp
     bibutils.cpp
-    xsltransform.cpp
 )
 
 if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
@@ -154,13 +152,11 @@ ecm_generate_headers(kbibtexio_HEADERS
         FileExporterRTF
         FileExporterToolchain
         FileExporterXML
-        FileExporterXSLT
         FileImporter
         FileImporterBibTeX
         FileImporterBibUtils
         FileImporterRIS
         FileInfo
-        XSLTransform
     REQUIRED_HEADERS kbibtexio_HEADERS
 )
 

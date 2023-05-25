@@ -58,11 +58,10 @@
 #include <Element>
 #include <Entry>
 #include <File>
-#include <XSLTransform>
 #include <FileExporterBibTeX>
 #include <FileExporterBibTeX2HTML>
 #include <FileExporterRIS>
-#include <FileExporterXSLT>
+#include <FileExporterXML>
 #include <file/FileView>
 #include "logging_program.h"
 
@@ -89,10 +88,9 @@ private:
                 for (const QString &bibtex2htmlStyle : FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles())
                     listOfStyles.append({bibtex2htmlStyle, bibtex2htmlStyle, QStringLiteral("bibtex2html")});
             listOfStyles.append({
-                {i18n("Standard"), QStringLiteral("standard"), QStringLiteral("xml")},
-                {i18n("Fancy"), QStringLiteral("fancy"), QStringLiteral("xml")},
-                {i18n("Wikipedia Citation"), QStringLiteral("wikipedia-cite"), QStringLiteral("plain_xml")},
-                {i18n("Abstract-only"), QStringLiteral("abstractonly"), QStringLiteral("xml")}
+                {i18n("Standard"), QStringLiteral("HTML_Standard"), QStringLiteral("xml")},
+                {i18n("Wikipedia Citation"), QStringLiteral("Plain_WikipediaCite"), QStringLiteral("xml")},
+                {i18n("Abstract-only"), QStringLiteral("HTML_AbstractOnly"), QStringLiteral("xml")}
             });
         }
         return listOfStyles;
@@ -122,7 +120,7 @@ public:
           configKeyName(QStringLiteral("Style")), file(nullptr), fileView(nullptr),
           textColor(QApplication::palette().text().color()),
           defaultFontSize(QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize()),
-          htmlStart(QStringLiteral("<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" />\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: ") + textColor.name() + QStringLiteral("; font-size: ") + QString::number(defaultFontSize) + QStringLiteral("pt; font-family: '") + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + QStringLiteral("'; background-color: '") + QApplication::palette().base().color().name(QColor::HexRgb) + QStringLiteral("'\">")),
+          htmlStart(QStringLiteral("<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: ") + textColor.name() + QStringLiteral("; font-size: ") + QString::number(defaultFontSize) + QStringLiteral("pt; font-family: '") + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + QStringLiteral("'; background-color: '") + QApplication::palette().base().color().name(QColor::HexRgb) + QStringLiteral("'\">")),
           notAvailableMessage(htmlStart + QStringLiteral("<p style=\"font-style: italic;\">") + i18n("No preview available") + QStringLiteral("</p><p style=\"font-size: 90%;\">") + i18n("Reason:") + QStringLiteral(" %1</p></body></html>")) {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -284,9 +282,15 @@ void ReferencePreview::renderHTML()
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML(this);
         exporterHTML->setLaTeXBibliographyStyle(previewStyle.style);
         exporter = exporterHTML;
-    } else if (previewStyle.type == QStringLiteral("xml") || previewStyle.type.endsWith(QStringLiteral("_xml"))) {
-        const QString filename = previewStyle.style + QStringLiteral(".xsl");
-        exporter = new FileExporterXSLT(XSLTransform::locateXSLTfile(filename), this);
+    } else if (previewStyle.type == QStringLiteral("xml")) {
+        FileExporterXML *exporterXML = new FileExporterXML(this);
+        if (previewStyle.style == QStringLiteral("Plain_WikipediaCite"))
+            exporterXML->setOutputStyle(FileExporterXML::OutputStyle::Plain_WikipediaCite);
+        else if (previewStyle.style == QStringLiteral("HTML_Standard"))
+            exporterXML->setOutputStyle(FileExporterXML::OutputStyle::HTML_Standard);
+        else if (previewStyle.style == QStringLiteral("HTML_AbstractOnly"))
+            exporterXML->setOutputStyle(FileExporterXML::OutputStyle::HTML_AbstractOnly);
+        exporter = exporterXML;
     } else
         qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output type " << previewStyle.type;
 
@@ -347,16 +351,21 @@ void ReferencePreview::renderHTML()
             if (previewStyle.style == QStringLiteral("wikipedia-cite"))
                 text.remove(QStringLiteral("\n"));
 
-            if (text.contains(QStringLiteral("{{cite FIXME"))) {
-                /// Wikipedia {{cite ...}} command had problems (e.g. unknown entry type)
-                text = d->notAvailableMessage.arg(i18n("This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> command."));
-            } else if (previewStyle.type == QStringLiteral("exporter") || previewStyle.type.startsWith(QStringLiteral("plain_"))) {
-                /// source
+            if (previewStyle.style.startsWith(QStringLiteral("Plain_"))) {
+                // Plain text gets formatted as verbatim text in monospaced font
                 text.prepend(QStringLiteral("';\">"));
                 text.prepend(QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
                 text.prepend(QStringLiteral("<pre style=\"font-family: '"));
                 text.prepend(d->htmlStart);
                 text.append(QStringLiteral("</pre></body></html>"));
+            } else if (previewStyle.style.startsWith(QStringLiteral("HTML_"))) {
+                // Replace existing header up to <body> start with internal, predefined HTML start
+                int p = text.indexOf(QStringLiteral("<body"));
+                if (p >= 0) {
+                    p = text.indexOf(QStringLiteral(">"), p + 4);
+                    if (p >= 0)
+                        text = d->htmlStart + text.mid(p + 1);
+                }
             } else if (previewStyle.type == QStringLiteral("bibtex2html")) {
                 /// bibtex2html
 

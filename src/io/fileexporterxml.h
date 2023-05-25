@@ -45,6 +45,9 @@ public:
     explicit FileExporterXML(QObject *parent);
     ~FileExporterXML() override;
 
+    enum class OutputStyle {XML_KBibTeX, HTML_Standard, HTML_AbstractOnly, Plain_WikipediaCite};
+    void setOutputStyle(OutputStyle outputStyle);
+
     bool save(QIODevice *iodevice, const File *bibtexfile) override;
     bool save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile) override;
 
@@ -52,5 +55,11 @@ private:
     class Private;
     Private *d;
 };
+
+inline size_t qHash(FileExporterXML::OutputStyle outputStyle, size_t seed = 0) {
+    return ::qHash(static_cast<uint>(outputStyle), seed);
+}
+
+KBIBTEXIO_EXPORT QDebug operator<<(QDebug dbg, FileExporterXML::OutputStyle outputStyle);
 
 #endif // KBIBTEX_IO_FILEEXPORTERXML_H
