@@ -260,11 +260,6 @@ void ReferencePreview::setElement(QSharedPointer<const Element> element, const F
 
 void ReferencePreview::renderHTML()
 {
-    enum { ignore, /// do not include crossref'ed entry's values (one entry)
-           /// NOT USED: add, /// feed both the current entry as well as the crossref'ed entry into the exporter (two entries)
-           merge /// merge the crossref'ed entry's values into the current entry (one entry)
-         } crossRefHandling = ignore;
-
     if (d->element.isNull()) {
         setHtml(d->notAvailableMessage.arg(i18n("No element selected")), false);
         return;
@@ -286,12 +281,10 @@ void ReferencePreview::renderHTML()
         else
             qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output style " << previewStyle.style << " for type " << previewStyle.type;
     } else if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty() && previewStyle.type == QStringLiteral("bibtex2html")) {
-        crossRefHandling = merge;
         FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML(this);
         exporterHTML->setLaTeXBibliographyStyle(previewStyle.style);
         exporter = exporterHTML;
     } else if (previewStyle.type == QStringLiteral("xml") || previewStyle.type.endsWith(QStringLiteral("_xml"))) {
-        crossRefHandling = merge;
         const QString filename = previewStyle.style + QStringLiteral(".xsl");
         exporter = new FileExporterXSLT(XSLTransform::locateXSLTfile(filename), this);
     } else
@@ -315,11 +308,7 @@ void ReferencePreview::renderHTML()
             } else
                 exporterResult = exporter->save(&buffer, d->element, d->file);
         } else */
-        if (crossRefHandling == merge && !entry.isNull()) {
-            const QSharedPointer<const Entry> merged = entry->resolveCrossref(d->file);
-            exporterResult = exporter->save(&buffer, merged, d->file);
-        } else
-            exporterResult = exporter->save(&buffer, d->element, d->file);
+        exporterResult = exporter->save(&buffer, d->element, d->file);
         buffer.close();
         delete exporter;
 
