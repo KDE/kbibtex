@@ -30,6 +30,7 @@
 #include <KBibTeX>
 #include <Entry>
 #include <Value>
+#include "fileexporter.h"
 #include "logging_io.h"
 
 #define appendValue(entry, fieldname, newvalue) { Value value = (entry)->value((fieldname)); value.append((newvalue)); (entry)->insert((fieldname), value); }
@@ -261,7 +262,7 @@ public:
         }
         if (dateFragments.count() > 1) {
             bool ok;
-            int month = dateFragments[1].toInt(&ok);
+            int month = FileExporter::monthStringToNumber(dateFragments[1], &ok);
             if (ok && month >= 1 && month <= 12) {
                 Value value = entry->value(Entry::ftMonth);
                 value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));

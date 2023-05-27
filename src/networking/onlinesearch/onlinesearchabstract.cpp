@@ -42,6 +42,7 @@
 
 #include <KBibTeX>
 #include <Encoder>
+#include <FileExporter>
 #include "internalnetworkaccessmanager.h"
 #include "onlinesearchabstract_p.h"
 #include "faviconlocator.h"
@@ -403,23 +404,12 @@ QString OnlineSearchAbstract::monthToMacroKeyText(const QString &rawText)
     if (rawText.isEmpty())
         return QString();
 
-    // First, test if rawText contains a number like '05',
-    // which can be translated into 'may'
     bool ok = false;
-    int iMonth = rawText.toInt(&ok);
-    if (ok && iMonth >= 1 && iMonth <= 12)
-        return KBibTeX::MonthsTriple[iMonth - 1];
+    int iMonth = FileExporter::monthStringToNumber(rawText, &ok);
+    if (!ok || (iMonth < 1) || (iMonth > 12))
+        return QString();
 
-    // rawText may look like 'August', so get the first three letters
-    // and compare them to known MacroKey texts for months, for example 'aug'
-    const QString rtl{rawText.left(3).toLower()};
-    if (rtl.length() >= 3 && rtl[0].isLetter())
-        for (int i = 0; i < 12; ++i)
-            if (rtl == KBibTeX::MonthsTriple[i])
-                return rtl;
-
-    // All tests above failed, so maybe rawText is no month?
-    return QString();
+    return KBibTeX::MonthsTriple[iMonth - 1];
 }
 
 QMultiMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &htmlText, int startPos) const

@@ -92,7 +92,34 @@ public:
      */
     virtual bool save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile) = 0;
 
-    static QString numberToOrdinal(const int number);
+    static QString numberToOrdinal(const int number, bool onlyText = true);
+
+    /**
+     * Convert a textual representation of an edition string into a number.
+     * Examples for supported string patterns include '4', '4th', or 'fourth'.
+     * Success of the conversion is returned via the @c ok variable, where the
+     * function caller has to provide a pointer to a boolean variable.
+     * In case of success, the function's result is the edition, in case
+     * of failure, i.e. @c *ok==false, the result is undefined.
+     * @param[in] editionString A string representing an edition number
+     * @param[out] ok Pointer to a boolean variable used to return the success (@c true) or failure (@c false) state of the conversion; must not be @c nullptr
+     * @return In case of success, the edition as a positive int, else undefined
+     */
+    static int editionStringToNumber(const QString &editionString, bool *ok);
+
+    /**
+     * Convert a textual representation of a month string into a number.
+     * Examples for supported string patterns include 'January', 'jan', or '1'.
+     * Success of the conversion is returned via the @c ok variable, where the
+     * function caller has to provide a pointer to a boolean variable.
+     * In case of success, the function's result is the month in the range
+     * 1 (January) to 12 (December), in case of failure, i.e. @c *ok==false,
+     * the result is undefined.
+     * @param[in] monthString A string representing a month
+     * @param[out] ok Pointer to a boolean variable used to return the success (@c true) or failure (@c false) state of the conversion; must not be @c nullptr
+     * @return In case of success, the month as a positive int in the range 1 to 12, else undefined
+     */
+    static int monthStringToNumber(const QString &monthString, bool *ok);
 
 Q_SIGNALS:
     /**
