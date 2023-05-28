@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2023 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -19,8 +19,11 @@
 
 #include <QFormLayout>
 #include <QComboBox>
+#include <QPushButton>
 
 #include <KLocalizedString>
+#include <KSharedConfig>
+#include <KConfigGroup>
 
 #include "preferences.h"
 #include "value.h"
@@ -80,6 +83,22 @@ public:
         for (const QString &formattingOption : formattingOptions)
             comboBoxPersonNameFormatting->addItem(Person::transcribePersonName(&dummyPerson, formattingOption), formattingOption);
         connect(comboBoxPersonNameFormatting, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &SettingsGeneralWidget::changed);
+
+        KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
+        KConfigGroup configGroup(config, QStringLiteral("Notification Messages"));
+        // Show button to reset all 'don't ask again' settings only if there is anything to reset
+        if (!configGroup.keyList().isEmpty()) {
+            QPushButton *buttonResetAllDontAskAgain = new QPushButton(i18nc("When asked to clear all 'don't ask again' settings", "Reset All"), p);
+            layout->addRow(i18n("Clear all 'don't ask again' settings:"), buttonResetAllDontAskAgain);
+            connect(buttonResetAllDontAskAgain, &QPushButton::clicked, p, [this, buttonResetAllDontAskAgain]() {
+                buttonResetAllDontAskAgain->setEnabled(false);
+                // In configuration file 'kbibtexrc', remove group '[Notification Messages]'
+                KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));
+                KConfigGroup configGroup(config, QStringLiteral("Notification Messages"));
+                configGroup.deleteGroup();
+                config->sync();
+            });
+        }
     }
 };
 
