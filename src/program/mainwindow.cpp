@@ -449,9 +449,9 @@ void KBibTeXMainWindow::delayed() {
         bs = new BibliographyService(this);
         if (!bs->isKBibTeXdefault() &&
 #if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
-                KMessageBox::questionYesNo(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::Yes
+                KMessageBox::questionYesNo(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged")), QStringLiteral("DontAskAgain_SetKBibTeXAsDefaultBibliographyEditor")) == KMessageBox::Yes
 #else // >= 5.100.0
-                KMessageBox::questionTwoActions(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged"))) == KMessageBox::PrimaryAction
+                KMessageBox::questionTwoActions(this, i18n("KBibTeX is not the default editor for its bibliography formats like BibTeX or RIS."), i18n("Default Bibliography Editor"), KGuiItem(i18n("Set as Default Editor")), KGuiItem(i18n("Keep settings unchanged")), QStringLiteral("DontAskAgain_SetKBibTeXAsDefaultBibliographyEditor")) == KMessageBox::PrimaryAction
 #endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
            ) {
             bs->setKBibTeXasDefault();
