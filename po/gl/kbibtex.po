@@ -1,14 +1,14 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2015, 2017.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019, 2020.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019, 2020, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-02 02:38+0000\n"
-"PO-Revision-Date: 2020-03-07 17:04+0100\n"
+"PO-Revision-Date: 2023-06-06 09:10+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.08.3\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -951,17 +951,19 @@ msgctxt "Casing of strings"
 msgid "Initial capital"
 msgstr "Maiúscula inicial"
 
+# well-spelled: IniciaisMaiúsculas
 #: src/config/preferences.cpp:929
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UpperCamelCase"
-msgstr "CamelCaseConMaiúsculaInicial"
+msgstr "IniciaisMaiúsculas"
 
+# well-spelled: maiúsculasIntermedias
 #: src/config/preferences.cpp:929
 #, kde-format
 msgctxt "Casing of strings"
 msgid "lowerCamelCase"
-msgstr "camelCaseConMinúsculaInicial"
+msgstr "maiúsculasIntermedias"
 
 #: src/config/preferences.cpp:929
 #, kde-format
@@ -1104,7 +1106,7 @@ msgstr "Vista previa da referencia para inserir:"
 #: src/gui/element/associatedfilesui.cpp:163
 #, kde-format
 msgid "Associate Document with Entry"
-msgstr ""
+msgstr "Asociar o documento coa entrada"
 
 #: src/gui/element/associatedfilesui.cpp:233
 #: src/program/docklets/documentpreview.cpp:218
@@ -1703,9 +1705,7 @@ msgid "No sorting"
 msgstr "Sen ordenar"
 
 #: src/gui/file/fileview.cpp:85
-#, fuzzy, kde-format
-#| msgid ""
-#| "The current entry has been modified. Do you want do discard your changes?"
+#, kde-format
 msgid ""
 "The current entry has been modified. Do you want to discard your changes?"
 msgstr "Modificouse esta entrada. Quere descartar os cambios?"
@@ -1848,6 +1848,7 @@ msgstr "Retirar"
 msgid "Color & Labels"
 msgstr "Cor e etiquetas"
 
+# well-spelled: NovaCor
 #: src/gui/preferences/settingscolorlabelwidget.cpp:397
 #, kde-format
 msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
@@ -1944,6 +1945,7 @@ msgstr "Formato dos nomes de persoas:"
 msgid "General"
 msgstr "Xeral"
 
+# well-spelled: NovaPalabraClave
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:152
 #, kde-format
 msgid "NewKeyword%1"
@@ -2364,17 +2366,19 @@ msgctxt "Keyword Casing"
 msgid "Initial capital"
 msgstr "Maiúscula inicial"
 
+# well-spelled: IniciaisMaiúsculas
 #: src/gui/widgets/filesettingswidget.cpp:149
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
-msgstr "CamelCaseConMaiúsculaInicial"
+msgstr "IniciaisMaiúsculas"
 
+# well-spelled: maiúsculasIntermedias
 #: src/gui/widgets/filesettingswidget.cpp:150
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
-msgstr "camelCaseConMinúsculaInicial"
+msgstr "maiúsculasIntermedias"
 
 #: src/gui/widgets/filesettingswidget.cpp:151
 #, kde-format
@@ -2880,33 +2884,29 @@ msgid "PDF/PostScript File Settings"
 msgstr "Configuración dos ficheiros PDF/PostScript"
 
 #: src/parts/part.cpp:601
-#, fuzzy, kde-format
-#| msgid "Copy document next to bibliography file"
+#, kde-format
 msgid "Could not write bibliographic data to file."
-msgstr "Copiar o documento canda o ficheiro da bibliografía."
+msgstr "Non se puideron escribir os datos bibliográficos no ficheiro."
 
 #: src/parts/part.cpp:603
-#, fuzzy, kde-format
-#| msgid "Could not open LyX server pipe '%1'."
+#, kde-format
 msgid "Could not open local file '%1' for writing."
-msgstr "Non se puido abrir a canalización de servidor de LyX «%1»."
+msgstr "Non se puido abrir o ficheiro local «%1» para escribir nel."
 
 #: src/parts/part.cpp:625
 #, kde-format
 msgid "Failed to upload temporary file to final destination '%1'"
-msgstr ""
+msgstr "Non se puido enviar o ficheiro temporal a «%1»."
 
 #: src/parts/part.cpp:627
-#, fuzzy, kde-format
-#| msgid "Copy document next to bibliography file"
+#, kde-format
 msgid "Could not write bibliographic data to temporary file."
-msgstr "Copiar o documento canda o ficheiro da bibliografía."
+msgstr "Non se puideron escribir os datos bibliográficos no ficheiro temporal."
 
 #: src/parts/part.cpp:629
-#, fuzzy, kde-format
-#| msgid "Could not open LyX server pipe '%1'."
+#, kde-format
 msgid "Could not open temporary file for writing."
-msgstr "Non se puido abrir a canalización de servidor de LyX «%1»."
+msgstr "Non se puido abrir o ficheiro temporal para escribir."
 
 #: src/parts/part.cpp:637
 #, kde-format
@@ -2919,10 +2919,9 @@ msgid "Saving bibliography failed"
 msgstr "A garda da bibliografía fallou."
 
 #: src/parts/part.cpp:641
-#, fuzzy, kde-format
-#| msgid "Saving bibliography failed"
+#, kde-format
 msgid "Saving bibliography failed:"
-msgstr "A garda da bibliografía fallou."
+msgstr "A garda da bibliografía fallou:"
 
 #: src/parts/part.cpp:644
 #, kde-format
@@ -3003,10 +3002,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Un editor de BibTeX de KDE."
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2023 Thomas Fischer"
-msgstr "© 2004-2019 Thomas Fischer"
+msgstr "© 2004-2023 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
 #, kde-format
@@ -3150,16 +3148,7 @@ msgid "Finding Duplicates"
 msgstr "Atopar duplicados"
 
 #: src/processing/idsuggestions.cpp:312
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Small words that can be removed from titles when generating id "
-#| "suggestions; separated by pipe symbol"
-#| msgid ""
-#| "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|"
-#| "er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|"
-#| "kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|"
-#| "von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|"
-#| "wer|which|wie|wird|with|you"
+#, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
 "separated by pipe symbol"
@@ -3174,7 +3163,9 @@ msgstr ""
 "es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
 "le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
 "which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
-"wird|with|you|un|unha|uns|unhas|o|a|os|as"
+"wird|with|you|und|and|ein|eine|einer|eines|un|unha|uns|unhas|o|a|os|as|de|"
+"dun|dunha|duns|dunhas|do|da|dos|das|en|nun|nunha|nuns|nunhas|no|na|nos|nas|"
+"con|cun|cunha|cuns|cunhas|co|coa|cos|coas|a|ao|á|aos|ás"
 
 #: src/processing/idsuggestions.cpp:398
 #, kde-format
