@@ -1,14 +1,14 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2015, 2017.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019, 2020.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2017, 2018, 2019, 2020, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2020-03-07 17:04+0100\n"
+"PO-Revision-Date: 2023-06-06 09:10+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.08.3\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -951,17 +951,19 @@ msgctxt "Casing of strings"
 msgid "Initial capital"
 msgstr "Maiúscula inicial"
 
+# well-spelled: IniciaisMaiúsculas
 #: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UpperCamelCase"
-msgstr "CamelCaseConMaiúsculaInicial"
+msgstr "IniciaisMaiúsculas"
 
+# well-spelled: maiúsculasIntermedias
 #: src/config/preferences.cpp:949
 #, kde-format
 msgctxt "Casing of strings"
 msgid "lowerCamelCase"
-msgstr "camelCaseConMinúsculaInicial"
+msgstr "maiúsculasIntermedias"
 
 #: src/config/preferences.cpp:949
 #, kde-format
@@ -1105,7 +1107,7 @@ msgstr "Vista previa da referencia para inserir:"
 #, kde-format
 msgctxt "@title:window"
 msgid "Associate Document with Entry"
-msgstr ""
+msgstr "Asociar o documento coa entrada"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:236
@@ -1397,8 +1399,7 @@ msgid "Starting to search..."
 msgstr "Comezando a busca…"
 
 #: src/gui/element/findpdfui.cpp:451
-#, fuzzy, kde-format
-#| msgid "Find PDF"
+#, kde-format
 msgctxt "@title:window"
 msgid "Find PDF"
 msgstr "Atopar un PDF"
@@ -1711,9 +1712,7 @@ msgid "No sorting"
 msgstr "Sen ordenar"
 
 #: src/gui/file/fileview.cpp:89
-#, fuzzy, kde-format
-#| msgid ""
-#| "The current entry has been modified. Do you want do discard your changes?"
+#, kde-format
 msgid ""
 "The current entry has been modified. Do you want to discard your changes?"
 msgstr "Modificouse esta entrada. Quere descartar os cambios?"
@@ -1729,15 +1728,13 @@ msgid "Continue Editing"
 msgstr "Continuar editando"
 
 #: src/gui/file/fileview.cpp:331
-#, fuzzy, kde-format
-#| msgid "View Element"
+#, kde-format
 msgctxt "@title:window"
 msgid "View Element"
 msgstr "Ver o elemento"
 
 #: src/gui/file/fileview.cpp:339
-#, fuzzy, kde-format
-#| msgid "Edit Element"
+#, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
 msgstr "Editar o elemento"
@@ -1807,8 +1804,7 @@ msgid "No duplicates found"
 msgstr "Non se atoparon duplicados."
 
 #: src/gui/file/findduplicatesui.cpp:719
-#, fuzzy, kde-format
-#| msgid "Merge Duplicates"
+#, kde-format
 msgctxt "@title:window"
 msgid "Merge Duplicates"
 msgstr "Fusionar os duplicados"
@@ -1842,8 +1838,7 @@ msgid "Only current page"
 msgstr "Só á páxina actual"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:185
-#, fuzzy, kde-format
-#| msgid "Preferences"
+#, kde-format
 msgctxt "@title:window"
 msgid "Preferences"
 msgstr "Configuración"
@@ -1868,6 +1863,7 @@ msgstr "Retirar"
 msgid "Color & Labels"
 msgstr "Cor e etiquetas"
 
+# well-spelled: NovaCor
 #: src/gui/preferences/settingscolorlabelwidget.cpp:392
 #, kde-format
 msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
@@ -1880,22 +1876,19 @@ msgid "Paper Size:"
 msgstr "Tamaño do papel:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "A4"
+#, kde-format
 msgctxt "Paper size"
 msgid "A4"
 msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "Legal"
+#, kde-format
 msgctxt "Paper size"
 msgid "Legal"
 msgstr "Legal"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
-#, fuzzy, kde-format
-#| msgid "Letter"
+#, kde-format
 msgctxt "Paper size"
 msgid "Letter"
 msgstr "Carta"
@@ -1985,6 +1978,7 @@ msgstr "Formato dos nomes de persoas:"
 msgid "General"
 msgstr "Xeral"
 
+# well-spelled: NovaPalabraClave
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:154
 #, kde-format
 msgid "NewKeyword%1"
@@ -2289,18 +2283,17 @@ msgstr "Texto:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:596
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Vista previa:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:610
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Copiar a cadea de formato no portapapeis"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Formatar os identificadores das entradas"
+msgstr "Cadea de formato:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #, kde-format
@@ -2319,8 +2312,7 @@ msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
 msgstr "<qt>Estrutura:<ul><li>%1</li></ul>Exemplo: %2</qt>"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:961
-#, fuzzy, kde-format
-#| msgid "Edit Id Suggestion"
+#, kde-format
 msgctxt "@title:window"
 msgid "Edit Id Suggestion"
 msgstr "Editar o identificador suxerido"
@@ -2427,17 +2419,19 @@ msgctxt "Keyword Casing"
 msgid "Initial capital"
 msgstr "Maiúscula inicial"
 
+# well-spelled: IniciaisMaiúsculas
 #: src/gui/widgets/filesettingswidget.cpp:149
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
-msgstr "CamelCaseConMaiúsculaInicial"
+msgstr "IniciaisMaiúsculas"
 
+# well-spelled: maiúsculasIntermedias
 #: src/gui/widgets/filesettingswidget.cpp:150
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
-msgstr "camelCaseConMinúsculaInicial"
+msgstr "maiúsculasIntermedias"
 
 #: src/gui/widgets/filesettingswidget.cpp:151
 #, kde-format
@@ -2466,16 +2460,14 @@ msgid "List Separator"
 msgstr "Separador de listas"
 
 #: src/gui/widgets/filesettingswidget.cpp:176
-#, fuzzy, kde-format
-#| msgid "Sort by Count"
+#, kde-format
 msgid "Sort by identifier"
-msgstr "Ordenar pola cantidade"
+msgstr "Ordenar polo identificador"
 
 #: src/gui/widgets/filesettingswidget.cpp:177
-#, fuzzy, kde-format
-#| msgid "Sorting"
+#, kde-format
 msgid "Entry Sorting"
-msgstr "Ordenación"
+msgstr "Orde das entradas"
 
 #: src/gui/widgets/filterbar.cpp:71
 #, kde-format
@@ -2533,10 +2525,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "O estilo de BibTeX <strong>%1</strong> non está dispoñíbel."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "O estilo de BibTeX <strong>%1</strong> non está dispoñíbel."
+msgstr "O estilo de BibTeX <strong>PLACEHOLDER</strong> non está dispoñíbel."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
@@ -2775,7 +2766,7 @@ msgstr "SpringerLink"
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
 msgid "Unpaywall"
-msgstr ""
+msgstr "Unpaywall"
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
@@ -2783,6 +2774,8 @@ msgid ""
 "The query to be sent to 'zbMATH Open' lacks author information, which may "
 "result in few or no matching results."
 msgstr ""
+"A consulta para enviar a «zbMATH Open» carece de información de autoría, o "
+"que pode limitar os resultados."
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
@@ -2790,6 +2783,8 @@ msgid ""
 "The query to be sent to 'zbMATH Open' lacks 'year' information, which may "
 "degrade result quality."
 msgstr ""
+"A consulta para enviar a «zbMATH Open» carece de ano, o que pode empeorar a "
+"calidade dos resultados."
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
@@ -2798,11 +2793,13 @@ msgid ""
 "information.\n"
 "This will most likely result in few or no matching results."
 msgstr ""
+"A consulta para enviar a «zbMATH Open» carece de información de autoría e "
+"ano, o que probabelmente limite os resultados."
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:143
 #, kde-format
 msgid "zbMATH Open"
-msgstr ""
+msgstr "zbMATH Open"
 
 #: src/networking/zotero/collection.cpp:196
 #, kde-format
@@ -2850,8 +2847,7 @@ msgid "Open URL"
 msgstr "Abrir o URL"
 
 #: src/networking/zotero/oauthwizard.cpp:178
-#, fuzzy, kde-format
-#| msgid "Zotero OAuth Key Exchange"
+#, kde-format
 msgctxt "@title:window"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Intercambio de chaves de OAuth para Zotero"
@@ -2973,40 +2969,38 @@ msgstr "Gardar o ficheiro"
 #: src/parts/part.cpp:503
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:504
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "BibTeX"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:505
-#, fuzzy, kde-format
-#| msgid "Load bibliography"
+#, kde-format
 msgid "Word XML bibliography"
-msgstr "Cargar unha bibliografía."
+msgstr "Bibliografía de Word en XML"
 
 #: src/parts/part.cpp:506
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "Estrutura XML de KBibTex"
 
 #: src/parts/part.cpp:507
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "Exportador a HTML de serie de KBibTex"
 
 #: src/parts/part.cpp:508
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "Exportador a RIS de serie de KBibTex"
 
 #: src/parts/part.cpp:517
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Escolla un exportador"
 
 #: src/parts/part.cpp:519
 #, kde-format
@@ -3015,17 +3009,18 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Hai varios exportadores para escribir o ficheiro «%1».\n"
+"\n"
+"Escolla un."
 
 #: src/parts/part.cpp:549
-#, fuzzy, kde-format
-#| msgid "BibTeX File Settings"
+#, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "Configuración dos ficheiros de BibTeX"
 
 #: src/parts/part.cpp:567
-#, fuzzy, kde-format
-#| msgid "PDF/PostScript File Settings"
+#, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "Configuración dos ficheiros PDF/PostScript"
@@ -3041,10 +3036,9 @@ msgid "Saving bibliography failed"
 msgstr "A garda da bibliografía fallou."
 
 #: src/parts/part.cpp:691
-#, fuzzy, kde-format
-#| msgid "Saving bibliography failed"
+#, kde-format
 msgid "Saving bibliography failed:"
-msgstr "A garda da bibliografía fallou."
+msgstr "A garda da bibliografía fallou:"
 
 #: src/parts/part.cpp:694
 #, kde-format
@@ -3266,23 +3260,13 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: src/processing/findduplicates.cpp:386
-#, fuzzy, kde-format
-#| msgid "Finding Duplicates"
+#, kde-format
 msgctxt "@title:window"
 msgid "Finding Duplicates"
 msgstr "Atopar duplicados"
 
 #: src/processing/idsuggestions.cpp:319
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Small words that can be removed from titles when generating id "
-#| "suggestions; separated by pipe symbol"
-#| msgid ""
-#| "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|"
-#| "er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|"
-#| "kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|"
-#| "von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|"
-#| "wer|which|wie|wird|with|you"
+#, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
 "separated by pipe symbol"
@@ -3297,7 +3281,9 @@ msgstr ""
 "es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
 "le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
 "which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
-"wird|with|you|un|unha|uns|unhas|o|a|os|as"
+"wird|with|you|und|and|ein|eine|einer|eines|un|unha|uns|unhas|o|a|os|as|de|"
+"dun|dunha|duns|dunhas|do|da|dos|das|en|nun|nunha|nuns|nunhas|no|na|nos|nas|"
+"con|cun|cunha|cuns|cunhas|co|coa|cos|coas|a|ao|á|aos|ás"
 
 #: src/processing/idsuggestions.cpp:395
 #, kde-format
@@ -3810,16 +3796,14 @@ msgid "Filter value list"
 msgstr "Filtrar a lista de valores."
 
 #: src/program/docklets/valuelist.cpp:109
-#, fuzzy, kde-format
-#| msgid "Replace all occurrences"
+#, kde-format
 msgid "Edit to replace all occurrences"
-msgstr "Substituír todas as aparicións."
+msgstr "Editar para substituír todas as aparicións."
 
 #: src/program/docklets/valuelist.cpp:113
-#, fuzzy, kde-format
-#| msgid "Replace all occurrences"
+#, kde-format
 msgid "Remove all occurrences"
-msgstr "Substituír todas as aparicións."
+msgstr "Eliminar todas as aparicións."
 
 #: src/program/docklets/valuelist.cpp:126
 #, kde-format
