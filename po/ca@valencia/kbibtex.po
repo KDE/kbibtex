@@ -1617,12 +1617,12 @@ msgstr "Suprimix el valor"
 #: src/gui/field/fieldlistedit.cpp:153
 #, kde-format
 msgid "Move value down"
-msgstr "Mou avall el valor"
+msgstr "Mou cap avall el valor"
 
 #: src/gui/field/fieldlistedit.cpp:164
 #, kde-format
 msgid "Move value up"
-msgstr "Mou amunt el valor"
+msgstr "Mou cap amunt el valor"
 
 #: src/gui/field/fieldlistedit.cpp:414
 #, kde-format
