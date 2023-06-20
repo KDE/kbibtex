@@ -909,7 +909,7 @@ msgstr "BibLaTeX"
 #: src/config/preferences.cpp:584
 #, kde-format
 msgid "No backups"
-msgstr "Sen copias de seguranza"
+msgstr "Sen copias de seguridade"
 
 #: src/config/preferences.cpp:584
 #, kde-format
@@ -1163,7 +1163,7 @@ msgstr "Opcións"
 #: src/gui/element/elementeditor.cpp:206
 #, kde-format
 msgid "Show all fields"
-msgstr "Mostrar todos os campos"
+msgstr "Amosar todos os campos"
 
 #: src/gui/element/elementeditor.cpp:213
 #, kde-format
@@ -1931,12 +1931,12 @@ msgstr "Canalización de LyX indicada manualmente:"
 #: src/gui/preferences/settingsfileexporterwidget.cpp:152
 #, kde-format
 msgid "Backups when saving:"
-msgstr "Copias de seguranza ao gardar:"
+msgstr "Copias de seguridade ao gardar:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:158
 #, kde-format
 msgid "Number of Backups:"
-msgstr "Número de copias de seguranza:"
+msgstr "Número de copias de seguridade:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:180
 #, kde-format
@@ -2452,7 +2452,7 @@ msgstr "Protexer as maiúsculas?"
 #: src/gui/widgets/filesettingswidget.cpp:165
 #, kde-format
 msgid "Use global settings"
-msgstr "Empregar as opcións globais."
+msgstr "Usar as opcións globais."
 
 #: src/gui/widgets/filesettingswidget.cpp:171
 #, kde-format
@@ -2954,12 +2954,12 @@ msgstr "Novo %1"
 #: src/parts/part.cpp:442
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
-msgstr "Non se puideron crear copias de seguranza do documento «%1»."
+msgstr "Non se puideron crear copias de seguridade do documento «%1»."
 
 #: src/parts/part.cpp:442
 #, kde-format
 msgid "Backup copies"
-msgstr "Copias de seguranza"
+msgstr "Copias de seguridade"
 
 #: src/parts/part.cpp:475
 #, kde-format
@@ -3457,7 +3457,7 @@ msgstr "Actualizando…"
 #: src/program/docklets/documentpreview.cpp:376
 #, kde-format
 msgid "No documents to show."
-msgstr "Non hai documentos para mostrar."
+msgstr "Non hai documentos para amosar."
 
 #: src/program/docklets/documentpreview.cpp:383
 #: src/program/docklets/documentpreview.cpp:699
@@ -3466,14 +3466,14 @@ msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
 "restriction</a> to local files to see remote documents.</qt>"
 msgstr ""
-"<qt>Non hai documentos para mostrar.<br/><a href=\"disableonlylocalfiles"
+"<qt>Non hai documentos para amosar.<br/><a href=\"disableonlylocalfiles"
 "\">Desactive a restrición</a> de ficheiros locais para ver os documentos "
 "remotos.</qt>"
 
 #: src/program/docklets/documentpreview.cpp:510
 #, kde-format
 msgid "Cannot show requested part"
-msgstr "Non se pode mostrar a parte solicitada."
+msgstr "Non se pode amosar a parte solicitada."
 
 #: src/program/docklets/documentpreview.cpp:537
 #: src/program/docklets/documentpreview.cpp:541
@@ -3501,7 +3501,7 @@ msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
 "be empty)"
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
-msgstr "<qt>Non se sabe como mostrar o tipo MIME «%1».%2</qt>"
+msgstr "<qt>Non se sabe como amosar o tipo MIME «%1».%2</qt>"
 
 #: src/program/docklets/documentpreview.cpp:702
 #, kde-format
@@ -3509,7 +3509,7 @@ msgid ""
 "No documents to show.\n"
 "Some URLs or files could not be retrieved."
 msgstr ""
-"Non hai documentos para mostrar.\n"
+"Non hai documentos para amosar.\n"
 "Non se puideron obter algúns dos enderezos URL e ficheiros."
 
 #: src/program/docklets/elementform.cpp:78
@@ -3808,7 +3808,7 @@ msgstr "Eliminar todas as aparicións."
 #: src/program/docklets/valuelist.cpp:126
 #, kde-format
 msgid "Show Count Column"
-msgstr "Mostrar o número de columnas"
+msgstr "Amosar o número de columnas"
 
 #: src/program/docklets/valuelist.cpp:130
 #, kde-format
@@ -3971,7 +3971,7 @@ msgstr "Navegador do sistema de ficheiros"
 #: src/program/mainwindow.cpp:95
 #, kde-format
 msgid "Show Panels"
-msgstr "Mostrar os paneis"
+msgstr "Amosar os paneis"
 
 #: src/program/mainwindow.cpp:100
 #, kde-format
