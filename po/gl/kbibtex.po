@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-13 00:49+0000\n"
-"PO-Revision-Date: 2023-06-17 16:27+0200\n"
+"PO-Revision-Date: 2023-06-24 12:21+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -30,7 +30,7 @@ msgstr "adrian@chaves.io"
 
 #, kde-format
 msgid "Author/Editor"
-msgstr "Autor ou editor"
+msgstr "Persoa autora ou editora"
 
 #, kde-format
 msgid "Publication"
@@ -117,8 +117,8 @@ msgid ""
 "DOIs and URLs get handled in the &lsquo;<a href=\"#tab:external\">External</"
 "a>&rsquo; tab."
 msgstr ""
-"As DOI e os URL xestiónanse na lapela «<a href=\"#tab:external\">Externo</"
-"a>» tab."
+"As DOI e os URL xestiónanse no separador «<a href=\"#tab:external\">Externo</"
+"a>»."
 
 #: src/config/bibtexentries.cpp:66 src/config/bibtexentries.cpp:82
 #, kde-format
@@ -298,7 +298,7 @@ msgstr "Título ou título de libro"
 #: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:211
 #, kde-format
 msgid "Author or Editor"
-msgstr "Autor ou editor"
+msgstr "Persoa autora ou editora"
 
 #: src/config/bibtexfields.cpp:165 src/config/bibtexfields.cpp:212
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:643
@@ -306,7 +306,7 @@ msgstr "Autor ou editor"
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:79
 #, kde-format
 msgid "Author"
-msgstr "Autor"
+msgstr "Persoa autora"
 
 #: src/config/bibtexfields.cpp:166 src/config/bibtexfields.cpp:217
 #, kde-format
@@ -527,7 +527,7 @@ msgstr "Complemento do título principal"
 #: src/config/bibtexfields.cpp:213
 #, kde-format
 msgid "Short Author"
-msgstr "Autor curto"
+msgstr "Autoría curto"
 
 #: src/config/bibtexfields.cpp:214
 #, kde-format
@@ -537,12 +537,12 @@ msgstr "Complemento do nome"
 #: src/config/bibtexfields.cpp:215
 #, kde-format
 msgid "Author Type"
-msgstr "Tipo de autor"
+msgstr "Tipo de autoría"
 
 #: src/config/bibtexfields.cpp:216
 #, kde-format
 msgid "Book Author"
-msgstr "Autor do libro"
+msgstr "Persoa autora do libro"
 
 #: src/config/bibtexfields.cpp:218
 #, kde-format
@@ -592,17 +592,17 @@ msgstr "Tradutor"
 #: src/config/bibtexfields.cpp:227
 #, kde-format
 msgid "Afterword Author"
-msgstr "Autor do epílogo"
+msgstr "Persoa autora do epílogo"
 
 #: src/config/bibtexfields.cpp:228
 #, kde-format
 msgid "Introduction Author"
-msgstr "Autor da introdución"
+msgstr "Persoa autora da introdución"
 
 #: src/config/bibtexfields.cpp:229
 #, kde-format
 msgid "Foreword Author"
-msgstr "Autor do prólogo"
+msgstr "Persoa autora do prólogo"
 
 #: src/config/bibtexfields.cpp:230
 #, kde-format
@@ -772,7 +772,7 @@ msgstr "XRef"
 #: src/config/bibtexfields.cpp:284
 #, kde-format
 msgid "E-Print"
-msgstr "Impresión dixital:"
+msgstr "Impresión dixital"
 
 #: src/config/bibtexfields.cpp:285
 #, kde-format
@@ -1079,7 +1079,7 @@ msgstr "Manter o nome de ficheiro orixinal"
 #: src/gui/element/associatedfilesui.cpp:120
 #, kde-format
 msgid "User-defined name:"
-msgstr "Nome definido polo usuario:"
+msgstr "Nome definido pola persoa usuaria:"
 
 #: src/gui/element/associatedfilesui.cpp:133
 #, kde-format
@@ -1427,7 +1427,7 @@ msgstr "Sen cor"
 #: src/gui/field/colorlabelwidget.cpp:95
 #, kde-format
 msgid "User-defined color"
-msgstr "Cor definida polo usuario"
+msgstr "Cor definida pola persoa usuaria"
 
 #: src/gui/field/colorlabelwidget.cpp:106
 #, kde-format
@@ -1921,12 +1921,12 @@ msgstr "Sen orde"
 #: src/gui/preferences/settingsfileexporterwidget.cpp:133
 #, kde-format
 msgid "Detect LyX pipe automatically:"
-msgstr "Detectar a canalización de LyX automaticamente:"
+msgstr "Detectar o cano de LyX automaticamente:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:139
 #, kde-format
 msgid "Manually specified LyX pipe:"
-msgstr "Canalización de LyX indicada manualmente:"
+msgstr "Cano de LyX indicado manualmente:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:152
 #, kde-format
@@ -1987,86 +1987,86 @@ msgstr "NovaPalabraClave%1"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:115
 #, kde-format
 msgid "Authors"
-msgstr "Autores"
+msgstr "Autoría"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:119
 #, kde-format
 msgid "Author Range:"
-msgstr "Intervalo de autores:"
+msgstr "Intervalo de persoas autoras:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "First author"
-msgstr "Primeiro autor"
+msgstr "Primeira persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Second author"
-msgstr "Segundo autor"
+msgstr "Segunda persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Third author"
-msgstr "Terceiro autor"
+msgstr "Terceira persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Fourth author"
-msgstr "Cuarto autor"
+msgstr "Cuarta persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Fifth author"
-msgstr "Quinto autor"
+msgstr "Quinta persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Sixth author"
-msgstr "Sexto autor"
+msgstr "Sexta persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Seventh author"
-msgstr "Sétimo autor"
+msgstr "Sétima persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Eighth author"
-msgstr "Oitavo autor"
+msgstr "Oitava persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Ninth author"
-msgstr "Noveno autor"
+msgstr "Novena persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Tenth author"
-msgstr "Décimo autor"
+msgstr "Décima persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "|Last author"
-msgstr "|Último autor"
+msgstr "|Última persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:126
 #, kde-format
 msgid "... and last author"
-msgstr "…e o último autor"
+msgstr "…e a última persoa autora"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
 #: src/processing/idsuggestions.cpp:550
 #, kde-format
 msgid "From first author to author %1 and last author"
-msgstr "Do primeiro autor ao autor %1 e o último autor"
+msgstr "Persoas autoras da primeira a %1 e a última"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
 #: src/processing/idsuggestions.cpp:567 src/processing/idsuggestions.cpp:587
 #, kde-format
 msgid "From author %1 to author %2 and last author"
-msgstr "Do autor %1 ao autor %2 e o último autor"
+msgstr "Persoas autoras de %1 a %2 e a última"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:139
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:350
@@ -2379,7 +2379,7 @@ msgstr "Ao facer clic duplo nun elemento:"
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:83
 #, kde-format
 msgid "User Interface"
-msgstr "Interface de usuario"
+msgstr "Interface"
 
 #: src/gui/valuelistmodel.cpp:324 src/program/docklets/valuelist.cpp:73
 #: src/program/docklets/valuelist.cpp:75
@@ -2584,7 +2584,7 @@ msgstr "Etiqueta"
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:77
 #, kde-format
 msgid "User"
-msgstr "Usuario"
+msgstr "Persoa usuaria"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:78
 #, kde-format
@@ -2637,7 +2637,7 @@ msgstr "Título:"
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:96
 #, kde-format
 msgid "Author:"
-msgstr "Autor:"
+msgstr "Persoa autora:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:73
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:109
@@ -2756,7 +2756,7 @@ msgstr "Título do libro ou publicación:"
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:102
 #, kde-format
 msgid "Author or Editor:"
-msgstr "Autor ou editor:"
+msgstr "Persoa autora ou editora:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:299
 #, kde-format
@@ -2831,10 +2831,10 @@ msgstr ""
 "<qt><p>Para permitir a <strong>KBibTeX</strong> acceso á súa "
 "<strong>bibliografía de Zotero</strong>, esta instancia de KBibTeX require "
 "autorización.</p><p>O proceso de autorización está composto de varios pasos:"
-"</p><ol><li>Abrir o URL como se mostra a continuación nun navegador web.</"
-"li><li>Accede a Zotero e aproba os permisos para KBibTeX.</li><li>Se todo "
-"vai ben redirixirano a unha páxina web que explique que se autorizou KBibTeX."
-"<br/>Esta xanela pecharase automaticamente.</li></ol></qt>"
+"</p><ol><li>Abrir o URL como se amosa a continuación nun navegador web.</"
+"li><li>Acceder a Zotero e aprobar os permisos para KBibTeX.</li><li>Se todo "
+"vai ben abrirase unha páxina web que explica que se autorizou KBibTeX.<br/"
+">Esta xanela pecharase automaticamente.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:149
 #, kde-format
@@ -3368,37 +3368,37 @@ msgstr "Texto: «%1»"
 #: src/processing/idsuggestions.cpp:542
 #, kde-format
 msgid "First and last authors only"
-msgstr "Só o primeiro e o último autor"
+msgstr "Só a primeiro e a última persoas autoras"
 
 #: src/processing/idsuggestions.cpp:544
 #, kde-format
 msgid "First author only"
-msgstr "Só o primeiro autor"
+msgstr "Só a primeira persoa autora"
 
 #: src/processing/idsuggestions.cpp:546
 #, kde-format
 msgid "All authors"
-msgstr "Todos os autores"
+msgstr "Todas as persoas autoras"
 
 #: src/processing/idsuggestions.cpp:556
 #, kde-format
 msgid "From first author to author %1"
-msgstr "Do primeiro autor ao %1"
+msgstr "Persoas autoras da primeira a %1"
 
 #: src/processing/idsuggestions.cpp:563
 #, kde-format
 msgid "All but first author"
-msgstr "Todos os autores menos o primeiro"
+msgstr "Todas as persoas autoras menos a primeira"
 
 #: src/processing/idsuggestions.cpp:573 src/processing/idsuggestions.cpp:593
 #, kde-format
 msgid "From author %1 to author %2"
-msgstr "Do autor %1 ao autor %2"
+msgstr "Persoas autoras de %1 a %2"
 
 #: src/processing/idsuggestions.cpp:581
 #, kde-format
 msgid "From author %1 to last author"
-msgstr "Do autor %1 ao último autor"
+msgstr "Persoas autoras de %1 á última"
 
 #: src/processing/lyx.cpp:81
 #, kde-format
@@ -3425,7 +3425,7 @@ msgstr "Enviar a referencia a LyX"
 #: src/processing/lyx.cpp:107
 #, kde-format
 msgid "No 'LyX server pipe' was detected."
-msgstr "Non se detectou ningunha «canalización de servidor de LyX»."
+msgstr "Non se detectou ningún «cano de servidor de LyX»."
 
 #: src/processing/lyx.cpp:112
 #, kde-format
@@ -3435,13 +3435,13 @@ msgstr "Non seleccionou referencias para enviar a LyX ou Kile."
 #: src/processing/lyx.cpp:118
 #, kde-format
 msgid "Could not open LyX server pipe '%1'."
-msgstr "Non se puido abrir a canalización de servidor de LyX «%1»."
+msgstr "Non se puido abrir o cano de servidor de LyX «%1»."
 
 #: src/program/docklets/documentpreview.cpp:202
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
-"Alternar entre só ficheiros locais e todos os documentos incluídos os "
+"Conmutar entre só ficheiros locais e todos os documentos incluídos os "
 "remotos."
 
 #: src/program/docklets/documentpreview.cpp:213
@@ -3833,7 +3833,7 @@ msgstr "Non hai grupos dispoñíbeis."
 #: src/program/docklets/zoterobrowser.cpp:144
 #, kde-format
 msgid "Numeric user id:"
-msgstr "Identificador numérico de usuario:"
+msgstr "Identificador numérico de persoa usuaria:"
 
 #: src/program/docklets/zoterobrowser.cpp:150
 #, kde-format
@@ -3862,7 +3862,7 @@ msgid ""
 "the provided user id and API key are valid."
 msgstr ""
 "Non se puido obter a bibliografía de Zotero. Comprobe que o identificador de "
-"usuario e a chave de API fornecidas son correctas."
+"persoa usuaria e a chave de API fornecidas son correctas."
 
 #: src/program/docklets/zoterobrowser.cpp:241
 #, kde-format
@@ -3897,7 +3897,7 @@ msgstr "Favorito"
 #: src/program/documentlist.cpp:213 src/program/documentlist.cpp:409
 #, kde-format
 msgid "Recently Used"
-msgstr "Empregados recentemente"
+msgstr "Usado recentemente"
 
 #: src/program/documentlist.cpp:217
 #, kde-format
