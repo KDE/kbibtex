@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
+# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-02 02:38+0000\n"
-"PO-Revision-Date: 2020-12-04 20:00+0100\n"
+"PO-Revision-Date: 2023-07-24 15:44+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.04.3\n"
+"X-Generator: Lokalize 20.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -927,9 +927,7 @@ msgid "None"
 msgstr "Inga"
 
 #: src/config/preferences.cpp:890
-#, fuzzy, kde-format
-#| msgctxt "Comment Quoting"
-#| msgid "@comment{…}"
+#, kde-format
 msgctxt "Comment Quoting"
 msgid "@comment{…}"
 msgstr "@kommentar{...}"
@@ -971,9 +969,7 @@ msgid "UPPERCASE"
 msgstr "STORA BOKSTÄVER"
 
 #: src/config/preferences.cpp:1128
-#, fuzzy, kde-format
-#| msgctxt "What to do if double-clicking on a file view item"
-#| msgid "Open Editor"
+#, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
 msgstr "Öppna editor"
@@ -985,33 +981,25 @@ msgid "View Document"
 msgstr "Visa dokument"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Important"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Important"
 msgstr "Viktigt"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Unread"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Unread"
 msgstr "Oläst"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Read"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Read"
 msgstr "Läst"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Watch"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Watch"
 msgstr "Bevakat"
@@ -3001,10 +2989,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "En Bibtex-editor av KDE"
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2023 Thomas Fischer"
-msgstr "Copyright 2004-2019 Thomas Fischer"
+msgstr "Copyright 2004-2023 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
 #, kde-format
@@ -3142,16 +3129,7 @@ msgid "Finding Duplicates"
 msgstr "Söker efter dubbletter"
 
 #: src/processing/idsuggestions.cpp:312
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Small words that can be removed from titles when generating id "
-#| "suggestions; separated by pipe symbol"
-#| msgid ""
-#| "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|"
-#| "er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|"
-#| "kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|"
-#| "von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|"
-#| "wer|which|wie|wird|with|you|und|and|ein|eine|einer|eines"
+#, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
 "separated by pipe symbol"
