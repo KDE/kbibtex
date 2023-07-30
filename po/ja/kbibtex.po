@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-13 00:49+0000\n"
+"POT-Creation-Date: 2023-07-30 00:46+0000\n"
 "PO-Revision-Date: 2013-12-24 01:19-0800\n"
 "Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -277,8 +277,8 @@ msgstr ""
 
 #: src/config/bibtexfields.cpp:162 src/config/bibtexfields.cpp:201
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:323
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:639
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:674
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:645
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:680
 #: src/processing/idsuggestions.cpp:427
 #, kde-format
 msgid "Title"
@@ -295,8 +295,8 @@ msgid "Author or Editor"
 msgstr ""
 
 #: src/config/bibtexfields.cpp:165 src/config/bibtexfields.cpp:212
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:643
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:678
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:649
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:684
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:79
 #, kde-format
 msgid "Author"
@@ -314,16 +314,16 @@ msgstr ""
 
 #: src/config/bibtexfields.cpp:168 src/config/bibtexfields.cpp:234
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:212
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:647
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:682
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:653
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:688
 #, kde-format
 msgid "Year"
 msgstr ""
 
 #: src/config/bibtexfields.cpp:169
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:424
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:651
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:686
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:657
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:692
 #: src/processing/idsuggestions.cpp:477
 #, kde-format
 msgid "Journal"
@@ -331,8 +331,8 @@ msgstr ""
 
 #: src/config/bibtexfields.cpp:170 src/config/bibtexfields.cpp:242
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:244
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:659
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:694
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:665
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:700
 #: src/processing/idsuggestions.cpp:520
 #, kde-format
 msgid "Volume"
@@ -454,8 +454,8 @@ msgstr ""
 #: src/config/bibtexfields.cpp:193 src/config/bibtexfields.cpp:292
 #: src/gui/file/findduplicatesui.cpp:161
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:497
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:655
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:690
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:661
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:696
 #: src/processing/idsuggestions.cpp:499
 #, kde-format
 msgid "Type"
@@ -1101,7 +1101,7 @@ msgid "Associate Document with Entry"
 msgstr ""
 
 #: src/gui/element/associatedfilesui.cpp:236
-#: src/program/docklets/documentpreview.cpp:236
+#: src/program/docklets/documentpreview.cpp:240
 #: src/program/docklets/referencepreview.cpp:126
 #, kde-format
 msgid "No preview available"
@@ -1380,18 +1380,18 @@ msgstr ""
 msgid "Starting to search..."
 msgstr ""
 
-#: src/gui/element/findpdfui.cpp:451
+#: src/gui/element/findpdfui.cpp:453
 #, kde-format
 msgctxt "@title:window"
 msgid "Find PDF"
 msgstr ""
 
-#: src/gui/element/findpdfui.cpp:511
+#: src/gui/element/findpdfui.cpp:512
 #, kde-format
 msgid "Save URL '%1'"
 msgstr ""
 
-#: src/gui/element/findpdfui.cpp:565
+#: src/gui/element/findpdfui.cpp:566
 #, kde-format
 msgid ""
 "<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
@@ -1834,40 +1834,40 @@ msgctxt "Label for a new color; placeholder is for a 6-digit hex string"
 msgid "NewColor%1"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:84
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:90
 #, kde-format
 msgid "Paper Size:"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
 #, kde-format
 msgctxt "Paper size"
 msgid "A4"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
 #, kde-format
 msgctxt "Paper size"
 msgid "Legal"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:85
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
 #, kde-format
 msgctxt "Paper size"
 msgid "Letter"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:93
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:99
 #, kde-format
 msgid "Language for 'babel':"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:102
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:109
 #, kde-format
 msgid "Bibliography style:"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:124
+#: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:131
 #, kde-format
 msgid "PDF & Postscript"
 msgstr ""
@@ -2115,8 +2115,8 @@ msgid "Volume:"
 msgstr ""
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:270
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:663
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:698
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:669
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:704
 #, kde-format
 msgid "Page Number"
 msgstr ""
@@ -2231,8 +2231,8 @@ msgid "Small words:"
 msgstr ""
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:554
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:667
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:702
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:673
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:708
 #, kde-format
 msgid "Text"
 msgstr ""
@@ -2242,38 +2242,38 @@ msgstr ""
 msgid "Text:"
 msgstr ""
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:596
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:602
 #, kde-format
 msgid "Preview:"
 msgstr ""
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:610
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
 msgid "Copy format string to clipboard"
 msgstr ""
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:616
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:622
 #, kde-format
 msgid "Format string:"
 msgstr ""
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:629
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:635
 #, kde-format
 msgid "Add at top"
 msgstr ""
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:634
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:640
 #, kde-format
 msgid "Add at bottom"
 msgstr ""
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:952
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:958
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:115
 #, kde-format
 msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
 msgstr ""
 
-#: src/gui/preferences/settingsidsuggestionseditor.cpp:961
+#: src/gui/preferences/settingsidsuggestionseditor.cpp:967
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Id Suggestion"
@@ -2600,13 +2600,13 @@ msgstr ""
 msgid "Year:"
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:330
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
 msgid ""
 "'Google Scholar' denied scrapping data because it thinks you are a robot."
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:462
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:461
 #, kde-format
 msgid "Google Scholar"
 msgstr ""
@@ -2947,49 +2947,49 @@ msgid ""
 "Please choose one."
 msgstr ""
 
-#: src/parts/part.cpp:549
+#: src/parts/part.cpp:550
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr ""
 
-#: src/parts/part.cpp:567
+#: src/parts/part.cpp:568
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr ""
 
-#: src/parts/part.cpp:687
+#: src/parts/part.cpp:688
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr ""
 
-#: src/parts/part.cpp:689 src/parts/part.cpp:695
+#: src/parts/part.cpp:690 src/parts/part.cpp:696
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr ""
 
-#: src/parts/part.cpp:691
+#: src/parts/part.cpp:692
 #, kde-format
 msgid "Saving bibliography failed:"
 msgstr ""
 
-#: src/parts/part.cpp:694
+#: src/parts/part.cpp:695
 #, kde-format
 msgid "The following output was generated by the export filter:"
 msgstr ""
 
-#: src/parts/part.cpp:745
+#: src/parts/part.cpp:746
 #, kde-format
 msgid "Local Files"
 msgstr ""
 
-#: src/parts/part.cpp:770
+#: src/parts/part.cpp:771
 #, kde-format
 msgid "Remote Files"
 msgstr ""
 
-#: src/parts/part.cpp:881
+#: src/parts/part.cpp:892
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -2998,18 +2998,18 @@ msgid ""
 "available."
 msgstr ""
 
-#: src/parts/part.cpp:1020
+#: src/parts/part.cpp:1031
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
 msgstr ""
 
-#: src/parts/part.cpp:1020
+#: src/parts/part.cpp:1031
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr ""
 
-#: src/parts/part.cpp:1148
+#: src/parts/part.cpp:1159
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3017,44 +3017,19 @@ msgid ""
 "Reload file or ignore changes on disk?"
 msgstr ""
 
-#: src/parts/part.cpp:1148
+#: src/parts/part.cpp:1159
 #, kde-format
 msgid "File changed externally"
 msgstr ""
 
-#: src/parts/part.cpp:1148
+#: src/parts/part.cpp:1159
 #, kde-format
 msgid "Reload file"
 msgstr ""
 
-#: src/parts/part.cpp:1148
+#: src/parts/part.cpp:1159
 #, kde-format
 msgid "Ignore on-disk changes"
-msgstr ""
-
-#: src/parts/partfactory.cpp:36
-#, kde-format
-msgid "KBibTeXPart"
-msgstr ""
-
-#: src/parts/partfactory.cpp:36 src/program/program.cpp:52
-#, kde-format
-msgid "A BibTeX editor by KDE"
-msgstr ""
-
-#: src/parts/partfactory.cpp:36 src/program/program.cpp:52
-#, kde-format
-msgid "Copyright 2004-2019 Thomas Fischer"
-msgstr ""
-
-#: src/parts/partfactory.cpp:40 src/program/program.cpp:57
-#, kde-format
-msgid "Thomas Fischer"
-msgstr ""
-
-#: src/parts/partfactory.cpp:40 src/program/program.cpp:57
-#, kde-format
-msgid "Maintainer"
 msgstr ""
 
 #: src/processing/bibliographyservice.cpp:189
@@ -3330,46 +3305,46 @@ msgstr ""
 msgid "Could not open LyX server pipe '%1'."
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:202
+#: src/program/docklets/documentpreview.cpp:206
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:213
+#: src/program/docklets/documentpreview.cpp:217
 #, kde-format
 msgid "Open in external program"
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:347
+#: src/program/docklets/documentpreview.cpp:351
 #, kde-format
 msgid "Refreshing..."
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:376
+#: src/program/docklets/documentpreview.cpp:380
 #, kde-format
 msgid "No documents to show."
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:383
-#: src/program/docklets/documentpreview.cpp:699
+#: src/program/docklets/documentpreview.cpp:387
+#: src/program/docklets/documentpreview.cpp:703
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
 "restriction</a> to local files to see remote documents.</qt>"
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:510
+#: src/program/docklets/documentpreview.cpp:514
 #, kde-format
 msgid "Cannot show requested part"
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:537
 #: src/program/docklets/documentpreview.cpp:541
+#: src/program/docklets/documentpreview.cpp:545
 #, kde-format
 msgid "Loading..."
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:562
+#: src/program/docklets/documentpreview.cpp:566
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3380,7 +3355,7 @@ msgid ""
 ">Okular for KDE&nbsp;4 will not work."
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:563
+#: src/program/docklets/documentpreview.cpp:567
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3388,7 +3363,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:702
+#: src/program/docklets/documentpreview.cpp:706
 #, kde-format
 msgid ""
 "No documents to show.\n"
@@ -3984,9 +3959,29 @@ msgstr ""
 msgid "No part available for file '%1'."
 msgstr ""
 
-#: src/program/openfileinfo.cpp:288
+#: src/program/openfileinfo.cpp:293
 #, kde-format
 msgid "Unnamed-%1"
+msgstr ""
+
+#: src/program/program.cpp:52
+#, kde-format
+msgid "A BibTeX editor by KDE"
+msgstr ""
+
+#: src/program/program.cpp:52
+#, kde-format
+msgid "Copyright 2004-2019 Thomas Fischer"
+msgstr ""
+
+#: src/program/program.cpp:57
+#, kde-format
+msgid "Thomas Fischer"
+msgstr ""
+
+#: src/program/program.cpp:57
+#, kde-format
+msgid "Maintainer"
 msgstr ""
 
 #: src/program/program.cpp:72
