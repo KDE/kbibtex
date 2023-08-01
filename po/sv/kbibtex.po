@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
+# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-30 00:46+0000\n"
-"PO-Revision-Date: 2021-12-12 17:56+0100\n"
+"PO-Revision-Date: 2023-07-31 08:00+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -1867,22 +1867,19 @@ msgid "Paper Size:"
 msgstr "Pappersstorlek:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "A4"
+#, kde-format
 msgctxt "Paper size"
 msgid "A4"
 msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Legal"
+#, kde-format
 msgctxt "Paper size"
 msgid "Legal"
 msgstr "Legal"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Letter"
+#, kde-format
 msgctxt "Paper size"
 msgid "Letter"
 msgstr "Letter"
@@ -2275,18 +2272,17 @@ msgstr "Text:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:602
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Förhandsgranskning:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Kopiera formatsträng till klippbordet"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:622
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Formatera postidentiferare"
+msgstr "Formatsträng:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:635
 #, kde-format
@@ -2451,16 +2447,14 @@ msgid "List Separator"
 msgstr "Listavgränsare"
 
 #: src/gui/widgets/filesettingswidget.cpp:176
-#, fuzzy, kde-format
-#| msgid "Sort by Count"
+#, kde-format
 msgid "Sort by identifier"
-msgstr "Sorterat enligt antal"
+msgstr "Sorterat enligt identifierare"
 
 #: src/gui/widgets/filesettingswidget.cpp:177
-#, fuzzy, kde-format
-#| msgid "Sorting"
+#, kde-format
 msgid "Entry Sorting"
-msgstr "Sortering"
+msgstr "Postsortering"
 
 #: src/gui/widgets/filterbar.cpp:71
 #, kde-format
@@ -2518,10 +2512,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "Bibtex-stilen <strong>%1</strong> är inte tillgänglig."
 
 #: src/io/fileexporterbibtex2html.cpp:100
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "Bibtex-stilen <strong>%1</strong> är inte tillgänglig."
+msgstr "Bibtex-stilen <strong>PLACEHOLDER</strong> är inte tillgänglig."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:216
 #, kde-format
@@ -2760,7 +2753,7 @@ msgstr "SpringerLink"
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
 msgid "Unpaywall"
-msgstr ""
+msgstr "Ta bort betalvägg"
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
 #, kde-format
@@ -2963,40 +2956,38 @@ msgstr "Spara fil"
 #: src/parts/part.cpp:503
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:504
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "Bibtex"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:505
-#, fuzzy, kde-format
-#| msgid "Load bibliography"
+#, kde-format
 msgid "Word XML bibliography"
-msgstr "Läs in bibliografi"
+msgstr "Word XML-bibliografi"
 
 #: src/parts/part.cpp:506
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "Kbibtex egen XML-struktur"
 
 #: src/parts/part.cpp:507
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "Kbibtex inbyggda HTML-exportverktyg"
 
 #: src/parts/part.cpp:508
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "Kbibtex inbyggda RIS-exportverktyg"
 
 #: src/parts/part.cpp:517
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Välj exportverktyg"
 
 #: src/parts/part.cpp:519
 #, kde-format
@@ -3005,6 +2996,9 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Flera exportmoduler är tillgängliga för att skriva filen '%1'.\n"
+"\n"
+"Välj ett av dem."
 
 #: src/parts/part.cpp:550
 #, kde-format
