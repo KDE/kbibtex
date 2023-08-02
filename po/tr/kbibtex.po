@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-02 02:38+0000\n"
-"PO-Revision-Date: 2023-03-13 20:53+0300\n"
+"PO-Revision-Date: 2023-08-02 01:08+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.11.70\n"
 "X-POOTLE-MTIME: 1502202283.000000\n"
 
 #, kde-format
@@ -3864,7 +3864,7 @@ msgstr "Sık Kullanılanlar"
 #: src/program/documentlist.cpp:403
 #, kde-format
 msgid "Filesystem Browser"
-msgstr "Dosya Sistemi Tarayıcı"
+msgstr "Dosya Sistemi Tarayıcısı"
 
 #: src/program/mainwindow.cpp:92
 #, kde-format
@@ -3919,7 +3919,7 @@ msgstr "Belge Önizleme"
 #: src/program/mainwindow.cpp:194
 #, kde-format
 msgid "Element Editor"
-msgstr "Öge Düzenleyici"
+msgstr "Öge Düzenleyicisi"
 
 #: src/program/mainwindow.cpp:204
 #, kde-format
@@ -3967,7 +3967,7 @@ msgstr ""
 #: src/program/mainwindow.cpp:455
 #, kde-format
 msgid "Default Bibliography Editor"
-msgstr "Öntanımlı Kaynakça Düzenleyici"
+msgstr "Öntanımlı Kaynakça Düzenleyicisi"
 
 #: src/program/mainwindow.cpp:455
 #, kde-format
