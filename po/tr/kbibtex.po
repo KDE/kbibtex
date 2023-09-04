@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-02 02:38+0000\n"
-"PO-Revision-Date: 2023-08-26 12:25+0300\n"
+"PO-Revision-Date: 2023-09-03 21:39+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -949,7 +949,7 @@ msgstr "küçük harf"
 #, kde-format
 msgctxt "Casing of strings"
 msgid "Initial capital"
-msgstr "Baş harf büyük"
+msgstr "Baş Harf Büyük"
 
 #: src/config/preferences.cpp:929
 #, kde-format
@@ -991,13 +991,13 @@ msgstr "Önemli"
 #, kde-format
 msgctxt "Color Labels"
 msgid "Unread"
-msgstr "Okunmamış"
+msgstr "Okunmayan"
 
 #: src/config/preferences.cpp:1167
 #, kde-format
 msgctxt "Color Labels"
 msgid "Read"
-msgstr "Okunmuş"
+msgstr "Okunan"
 
 #: src/config/preferences.cpp:1167
 #, kde-format
