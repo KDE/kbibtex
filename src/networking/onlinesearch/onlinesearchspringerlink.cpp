@@ -329,7 +329,7 @@ void OnlineSearchSpringerLink::doneFetchingPAM()
 
         const QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(xmlSource).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")));
         if (bibTeXcode.isEmpty()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL transformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             stopSearch(resultInvalidArguments);
         } else {
             FileImporterBibTeX importer(this);

@@ -217,7 +217,7 @@ void OnlineSearchPubMed::eFetchDone()
         /// use XSL transformation to get BibTeX document from XML result
         QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(input));
         if (bibTeXcode.isEmpty()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL transformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             stopSearch(resultInvalidArguments);
         } else {  /// remove XML header
             if (bibTeXcode[0] == '<')
