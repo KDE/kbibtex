@@ -158,7 +158,7 @@ void OnlineSearchZbMath::doneFetchingOAI()
         const QString bibTeXcode = EncoderXML::instance().decode(d->xslt.transform(xmlCode));
 
         if (bibTeXcode.isEmpty()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL tranformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "XSL transformation failed for data from " << InternalNetworkAccessManager::removeApiKey(reply->url()).toDisplayString();
             stopSearch(resultInvalidArguments);
         } else {
             FileImporterBibTeX importer(this);

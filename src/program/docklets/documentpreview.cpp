@@ -247,7 +247,7 @@ public:
         okularPart = locatePart(QStringLiteral("application/pdf"), stackedWidget);
         swpOkular = (okularPart == nullptr) ? -1 : stackedWidget->addWidget(okularPart->widget());
         if (okularPart == nullptr || swpOkular < 0) {
-            qCWarning(LOG_KBIBTEX_PROGRAM) << "No 'KDE Framworks 5'-based Okular part for PDF or PostScript document preview available.";
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "No 'KDE Frameworks 5'-based Okular part for PDF or PostScript document preview available.";
         }
 #ifdef HAVE_WEBENGINEWIDGETS
         qCDebug(LOG_KBIBTEX_PROGRAM) << "WebEngine is available, using it instead of WebKit or HTML KPart (both neither considered nor tested for) for HTML/Web preview.";
