@@ -6,6 +6,8 @@ configure_file(kbibtexpart.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/kbibtexpart.de
 set(
     kbibtexpart_SRCS
     part.cpp
+
+    part.qrc
 )
 
 ecm_qt_declare_logging_category(kbibtexpart_SRCS
@@ -56,10 +58,4 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/kbibtexpart.desktop
     DESTINATION
     ${KDE_INSTALL_KSERVICES5DIR}
-)
-install(
-    FILES
-    kbibtexpartui.rc
-    DESTINATION
-    ${KDE_INSTALL_KXMLGUI5DIR}/kbibtexpart
 )

@@ -18,6 +18,8 @@ set(
     docklets/filesettings.cpp
     docklets/zoterobrowser.cpp
     openfileinfo.cpp
+
+    program.qrc
 )
 
 set(
@@ -112,12 +114,6 @@ if(BUILD_APP_DESKTOP)
         org.kde.kbibtex.desktop
         DESTINATION
         ${KDE_INSTALL_APPDIR}
-    )
-    install(
-        FILES
-        kbibtexui.rc
-        DESTINATION
-        ${KDE_INSTALL_KXMLGUI5DIR}/kbibtex
     )
     install(
         FILES
