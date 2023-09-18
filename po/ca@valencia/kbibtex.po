@@ -1172,7 +1172,7 @@ msgstr "Mostra tots els camps"
 #: src/gui/element/elementeditor.cpp:213
 #, kde-format
 msgid "Tab key visits only editable fields"
-msgstr "La tecla Tab només visita els camps editables"
+msgstr "La tecla «Tab» només visita els camps editables"
 
 #: src/gui/element/elementeditor.cpp:221
 #, kde-format
