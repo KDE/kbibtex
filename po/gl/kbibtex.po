@@ -909,7 +909,7 @@ msgstr "BibLaTeX"
 #: src/config/preferences.cpp:564
 #, kde-format
 msgid "No backups"
-msgstr "Sen copias de seguridade"
+msgstr "Sen salvagardas"
 
 #: src/config/preferences.cpp:564
 #, kde-format
@@ -1898,12 +1898,12 @@ msgstr "Cano de LyX indicado manualmente:"
 #: src/gui/preferences/settingsfileexporterwidget.cpp:150
 #, kde-format
 msgid "Backups when saving:"
-msgstr "Copias de seguridade ao gardar:"
+msgstr "Salvagardas ao gardar:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:156
 #, kde-format
 msgid "Number of Backups:"
-msgstr "Número de copias de seguridade:"
+msgstr "Número de salvagardas:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:178
 #, kde-format
@@ -2861,12 +2861,12 @@ msgstr "Novo %1"
 #: src/parts/part.cpp:479
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
-msgstr "Non se puideron crear copias de seguridade do documento «%1»."
+msgstr "Non foi posíbel crear salvagardas do documento «%1»."
 
 #: src/parts/part.cpp:479
 #, kde-format
 msgid "Backup copies"
-msgstr "Copias de seguridade"
+msgstr "Salvagardas"
 
 #: src/parts/part.cpp:496
 #, kde-format
@@ -2886,27 +2886,27 @@ msgstr "Configuración dos ficheiros PDF/PostScript"
 #: src/parts/part.cpp:601
 #, kde-format
 msgid "Could not write bibliographic data to file."
-msgstr "Non se puideron escribir os datos bibliográficos no ficheiro."
+msgstr "Non foi posíbel escribir os datos bibliográficos no ficheiro."
 
 #: src/parts/part.cpp:603
 #, kde-format
 msgid "Could not open local file '%1' for writing."
-msgstr "Non se puido abrir o ficheiro local «%1» para escribir nel."
+msgstr "Non foi posíbel abrir o ficheiro local «%1» para escribir nel."
 
 #: src/parts/part.cpp:625
 #, kde-format
 msgid "Failed to upload temporary file to final destination '%1'"
-msgstr "Non se puido enviar o ficheiro temporal a «%1»."
+msgstr "Non foi posíbel enviar o ficheiro temporal a «%1»."
 
 #: src/parts/part.cpp:627
 #, kde-format
 msgid "Could not write bibliographic data to temporary file."
-msgstr "Non se puideron escribir os datos bibliográficos no ficheiro temporal."
+msgstr "Non foi posíbel escribir os datos bibliográficos no ficheiro temporal."
 
 #: src/parts/part.cpp:629
 #, kde-format
 msgid "Could not open temporary file for writing."
-msgstr "Non se puido abrir o ficheiro temporal para escribir."
+msgstr "Non foi posíbel abrir o ficheiro temporal para escribir."
 
 #: src/parts/part.cpp:637
 #, kde-format
@@ -2946,7 +2946,7 @@ msgid ""
 "Check that you have write access to this file or that enough disk space is "
 "available."
 msgstr ""
-"Non se puido gardar o documento porque non foi posíbel escribir en «%1».\n"
+"Non foi posíbel gardar o documento porque non foi posíbel escribir en «%1».\n"
 "\n"
 "Comproba que tes permiso de escritura neste ficheiro ou que hai espazo "
 "abondo no disco."
@@ -2956,13 +2956,13 @@ msgstr ""
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
 msgstr ""
-"Non se pode aplicar o formato predeterminado para os identificadores das "
+"Non é posíbel aplicar o formato predeterminado para os identificadores das "
 "entradas: non se indicou ningún formato predeterminado."
 
 #: src/parts/part.cpp:950
 #, kde-format
 msgid "Cannot Apply Default Formatting"
-msgstr "Non se pode aplicar o formato predeterminado"
+msgstr "Non é posíbel aplicar o formato predeterminado"
 
 #: src/parts/part.cpp:1078
 #, kde-format
@@ -3023,7 +3023,7 @@ msgid ""
 "\n"
 "The system may not know how to use KBibTeX to open bibliography files."
 msgstr ""
-"Non se puido executar «kbuildsycoca5» para actualizar as asociacións de "
+"Non foi posíbel executar «kbuildsycoca5» para actualizar as asociacións de "
 "tipos MIME.\n"
 "\n"
 "O sistema podería non saber que debe abrir os ficheiros de bibliografías con "
@@ -3032,7 +3032,7 @@ msgstr ""
 #: src/processing/bibliographyservice.cpp:187
 #, kde-format
 msgid "Failed to run 'kbuildsycoca5'"
-msgstr "Non se puido executar «kbuildsycoca5»."
+msgstr "Non foi posíbel executar «kbuildsycoca5»."
 
 #: src/processing/checkbibtex.cpp:84
 #, kde-format
@@ -3317,7 +3317,7 @@ msgstr "Non seleccionou referencias para enviar a LyX ou Kile."
 #: src/processing/lyx.cpp:116
 #, kde-format
 msgid "Could not open LyX server pipe '%1'."
-msgstr "Non se puido abrir o cano de servidor de LyX «%1»."
+msgstr "Non foi posíbel abrir o cano de servidor de LyX «%1»."
 
 #: src/program/docklets/documentpreview.cpp:184
 #, kde-format
@@ -3355,7 +3355,7 @@ msgstr ""
 #: src/program/docklets/documentpreview.cpp:487
 #, kde-format
 msgid "Cannot show requested part"
-msgstr "Non se pode amosar a parte solicitada."
+msgstr "Non é posíbel amosar a parte solicitada."
 
 #: src/program/docklets/documentpreview.cpp:514
 #: src/program/docklets/documentpreview.cpp:518
@@ -3587,7 +3587,7 @@ msgid ""
 "Could not start searching the Internet:\n"
 "The search terms are not complete or invalid."
 msgstr ""
-"Non se puido iniciar a busca por Internet:\n"
+"Non foi posíbel iniciar a busca por Internet:\n"
 "Os termos de busca están incompletos ou son incorrectos."
 
 #: src/program/docklets/searchform.cpp:403
@@ -3757,13 +3757,13 @@ msgid ""
 "KBibTeX failed to retrieve the bibliography from Zotero. Please check that "
 "the provided user id and API key are valid."
 msgstr ""
-"Non se puido obter a bibliografía de Zotero. Comprobe que o identificador de "
-"persoa usuaria e a chave de API fornecidas son correctas."
+"Non foi posíbel obter a bibliografía de Zotero. Comprobe que o identificador "
+"de persoa usuaria e a chave de API fornecidas son correctas."
 
 #: src/program/docklets/zoterobrowser.cpp:239
 #, kde-format
 msgid "Failed to retrieve data from Zotero"
-msgstr "Non se puideron obter datos de Zotero."
+msgstr "Non foi posíbel obter datos de Zotero."
 
 #: src/program/docklets/zoterobrowser.cpp:365
 #, kde-format
