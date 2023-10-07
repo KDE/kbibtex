@@ -3374,7 +3374,7 @@ msgid ""
 ">Okular for KDE&nbsp;4 will not work."
 msgstr ""
 "<br/><br/>Instal·leu <a href=\"https://userbase.kde.org/Okular\">Okular</a> "
-"de KDE Frameworks&nbsp;5 per a fer ús del seu component de visualització de "
+"dels Frameworks 5 de KDE per a fer ús del seu component de visualització de "
 "PDF.<br/>Okular de KDE&nbsp;4 no funcionarà."
 
 #: src/program/docklets/documentpreview.cpp:540
