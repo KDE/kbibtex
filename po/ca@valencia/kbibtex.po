@@ -3512,7 +3512,7 @@ msgstr ""
 #: src/program/docklets/searchform.cpp:185
 #, kde-format
 msgid "Go to Homepage"
-msgstr "Ves a la pàgina personal"
+msgstr "Ves fins a la pàgina personal"
 
 #: src/program/docklets/searchform.cpp:209
 #, kde-format
@@ -3778,7 +3778,7 @@ msgstr "Un nivell amunt"
 #: src/program/documentlist.cpp:59
 #, kde-format
 msgid "Go to Home folder"
-msgstr "Ves a la carpeta d'inici"
+msgstr "Ves fins a la carpeta d'inici"
 
 #: src/program/documentlist.cpp:199
 #, kde-format
