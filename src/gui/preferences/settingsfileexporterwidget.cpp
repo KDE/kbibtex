@@ -31,12 +31,12 @@
 #include <KUrlRequester>
 #include <KLineEdit> /// required as KUrlRequester returns it
 
+#include <kio_version.h>
 #include <Preferences>
 #include <FileExporter>
 #include <LyX>
 #include "guihelper.h"
 #include "italictextitemmodel.h"
-#include "file/clipboard.h"
 
 class SettingsFileExporterWidget::SettingsFileExporterWidgetPrivate
 {
@@ -143,7 +143,11 @@ public:
 #else // QT_VERSION >= 0x050b00
         lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QLatin1Char('W')) * 20);
 #endif // QT_VERSION >= 0x050b00
+#if KIO_VERSION < QT_VERSION_CHECK(5, 108, 0)
         lineeditLyXPipePath->setFilter(QStringLiteral("inode/fifo"));
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 108, 0) // >= 5.108.0
+        lineeditLyXPipePath->setMimeTypeFilters({QStringLiteral("inode/fifo")});
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 108, 0)
         lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
 
         comboBoxBackupScope = new QComboBox(p);
