@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:33+0000\n"
+"POT-Creation-Date: 2023-11-07 01:19+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -1042,12 +1042,12 @@ msgstr "Komentar"
 msgid "Preamble"
 msgstr "Uvod"
 
-#: src/data/value.cpp:649
+#: src/data/value.cpp:684
 #, kde-format
 msgid " and "
 msgstr " i "
 
-#: src/data/value.cpp:652
+#: src/data/value.cpp:687
 #, kde-format
 msgid " and others"
 msgstr " i ostali"
@@ -1748,14 +1748,14 @@ msgstr "Odbaci izmjene?"
 msgid "Continue Editing"
 msgstr "Nastavi uređivanje"
 
-#: src/gui/file/fileview.cpp:331
+#: src/gui/file/fileview.cpp:326
 #, fuzzy, kde-format
 #| msgid "View Element"
 msgctxt "@title:window"
 msgid "View Element"
 msgstr "Prikaz elementa"
 
-#: src/gui/file/fileview.cpp:339
+#: src/gui/file/fileview.cpp:334
 #, fuzzy, kde-format
 #| msgid "Edit Element"
 msgctxt "@title:window"
@@ -1956,17 +1956,17 @@ msgstr "Detektuj LyX cijev automatski:"
 msgid "Manually specified LyX pipe:"
 msgstr "Ručno specificirana LyX cijev:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:152
+#: src/gui/preferences/settingsfileexporterwidget.cpp:156
 #, kde-format
 msgid "Backups when saving:"
 msgstr "Rezervne kopije kod spremanja:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:158
+#: src/gui/preferences/settingsfileexporterwidget.cpp:162
 #, kde-format
 msgid "Number of Backups:"
 msgstr "Maksimalni broj rezervnih kopija:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:180
+#: src/gui/preferences/settingsfileexporterwidget.cpp:184
 #, kde-format
 msgid "Saving and Exporting"
 msgstr "Čuvanje i izvođenje"
@@ -2597,7 +2597,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:321
-#: src/program/mainwindow.cpp:366 src/program/program.cpp:52
+#: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -3276,18 +3276,18 @@ msgstr "Upozorenja ili riječi nisu nađeni.%1"
 msgid "No Errors or Warnings"
 msgstr ""
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, fuzzy, kde-format
 #| msgid "Searching..."
 msgid "Searching ..."
 msgstr "Pretraživanje..."
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Cancel"
 msgstr ""
 
-#: src/processing/findduplicates.cpp:386
+#: src/processing/findduplicates.cpp:385
 #, fuzzy, kde-format
 #| msgid "Finding Duplicates"
 msgctxt "@title:window"
@@ -4178,40 +4178,40 @@ msgstr "Nijedan dio nije dostupan"
 msgid "No part available for file '%1'."
 msgstr "Nijedan dio nije dostupan za datoteku '%1'."
 
-#: src/program/openfileinfo.cpp:293
+#: src/program/openfileinfo.cpp:295
 #, kde-format
 msgid "Unnamed-%1"
 msgstr "Neimenovano-%1"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, fuzzy, kde-format
 #| msgid "A BibTeX editor for KDE"
 msgid "A BibTeX editor by KDE"
 msgstr "Uređivač BibTeX za KDE"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, fuzzy, kde-format
 #| msgid "Copyright 2004-2015 Thomas Fischer"
 msgid "Copyright 2004-2019 Thomas Fischer"
 msgstr "Sva prava zadržana 2004-2015 Thomas Fischer"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "Održavatelj"
 
-#: src/program/program.cpp:72
+#: src/program/program.cpp:73
 #, fuzzy, kde-format
 #| msgid "File(s) to load"
 msgid "File(s) to load."
 msgstr "Datoteke za učitavanje"
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4224,7 +4224,7 @@ msgstr ""
 "\n"
 "Samo ograničena funkcionalnost će biti dostupna."
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nepotpuna KBibTeX instalacija"

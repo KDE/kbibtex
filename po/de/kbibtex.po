@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KBibTeX 0.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:33+0000\n"
+"POT-Creation-Date: 2023-11-07 01:19+0000\n"
 "PO-Revision-Date: 2023-04-29 12:22+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1021,12 +1021,12 @@ msgstr "Kommentar"
 msgid "Preamble"
 msgstr "Präambel"
 
-#: src/data/value.cpp:649
+#: src/data/value.cpp:684
 #, kde-format
 msgid " and "
 msgstr " und "
 
-#: src/data/value.cpp:652
+#: src/data/value.cpp:687
 #, kde-format
 msgid " and others"
 msgstr " und andere"
@@ -1735,13 +1735,13 @@ msgstr "Änderungen verwerfen?"
 msgid "Continue Editing"
 msgstr "Bearbeiten fortsetzen"
 
-#: src/gui/file/fileview.cpp:331
+#: src/gui/file/fileview.cpp:326
 #, kde-format
 msgctxt "@title:window"
 msgid "View Element"
 msgstr "Element betrachten"
 
-#: src/gui/file/fileview.cpp:339
+#: src/gui/file/fileview.cpp:334
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
@@ -1936,17 +1936,17 @@ msgstr "LyX-Pipe automatisch erkennen:"
 msgid "Manually specified LyX pipe:"
 msgstr "Benutzerspezifizierte LyX-Pipe:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:152
+#: src/gui/preferences/settingsfileexporterwidget.cpp:156
 #, kde-format
 msgid "Backups when saving:"
 msgstr "Sicherheitskopien beim Speichern:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:158
+#: src/gui/preferences/settingsfileexporterwidget.cpp:162
 #, kde-format
 msgid "Number of Backups:"
 msgstr "Anzahl Sicherheitskopien:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:180
+#: src/gui/preferences/settingsfileexporterwidget.cpp:184
 #, kde-format
 msgid "Saving and Exporting"
 msgstr "Speichern und Exportieren"
@@ -2550,7 +2550,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:321
-#: src/program/mainwindow.cpp:366 src/program/program.cpp:52
+#: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -3227,17 +3227,17 @@ msgstr "Es sind keine Warnungen oder Fehler gefunden worden.%1"
 msgid "No Errors or Warnings"
 msgstr "Keine Fehler oder Warnungen"
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Searching ..."
 msgstr "Suchen ..."
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: src/processing/findduplicates.cpp:386
+#: src/processing/findduplicates.cpp:385
 #, kde-format
 msgctxt "@title:window"
 msgid "Finding Duplicates"
@@ -4104,37 +4104,37 @@ msgstr "Keine Komponente vorhanden"
 msgid "No part available for file '%1'."
 msgstr "Es ist keine Komponente für Datei „%1“ vorhanden."
 
-#: src/program/openfileinfo.cpp:293
+#: src/program/openfileinfo.cpp:295
 #, kde-format
 msgid "Unnamed-%1"
 msgstr "Unbenannt-%1"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "Ein BibTeX-Editor von KDE"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, kde-format
 msgid "Copyright 2004-2019 Thomas Fischer"
 msgstr "Copyright 2004-2019 Thomas Fischer"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "Hauptentwickler"
 
-#: src/program/program.cpp:72
+#: src/program/program.cpp:73
 #, kde-format
 msgid "File(s) to load."
 msgstr "Zu ladende Datei(en)"
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4147,7 +4147,7 @@ msgstr ""
 "\n"
 "Es wird nur begrenzte Funktionalität verfügbar sein."
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Unvollständige KBibTeX-Installation"

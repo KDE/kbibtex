@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:33+0000\n"
+"POT-Creation-Date: 2023-11-07 01:19+0000\n"
 "PO-Revision-Date: 2023-08-08 16:49+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1024,12 +1024,12 @@ msgstr "Comentari"
 msgid "Preamble"
 msgstr "Preàmbul"
 
-#: src/data/value.cpp:649
+#: src/data/value.cpp:684
 #, kde-format
 msgid " and "
 msgstr " i "
 
-#: src/data/value.cpp:652
+#: src/data/value.cpp:687
 #, kde-format
 msgid " and others"
 msgstr " entre altres"
@@ -1738,13 +1738,13 @@ msgstr "Voleu descartar els canvis?"
 msgid "Continue Editing"
 msgstr "Continua l'edició"
 
-#: src/gui/file/fileview.cpp:331
+#: src/gui/file/fileview.cpp:326
 #, kde-format
 msgctxt "@title:window"
 msgid "View Element"
 msgstr "Visualització de l'element"
 
-#: src/gui/file/fileview.cpp:339
+#: src/gui/file/fileview.cpp:334
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
@@ -1938,17 +1938,17 @@ msgstr "Detecta automàticament la canonada de LyX:"
 msgid "Manually specified LyX pipe:"
 msgstr "Especifica manualment la canonada de LyX:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:152
+#: src/gui/preferences/settingsfileexporterwidget.cpp:156
 #, kde-format
 msgid "Backups when saving:"
 msgstr "Còpies de seguretat en guardar:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:158
+#: src/gui/preferences/settingsfileexporterwidget.cpp:162
 #, kde-format
 msgid "Number of Backups:"
 msgstr "Nombre de còpies de seguretat:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:180
+#: src/gui/preferences/settingsfileexporterwidget.cpp:184
 #, kde-format
 msgid "Saving and Exporting"
 msgstr "Guardada i exportació"
@@ -2554,7 +2554,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:321
-#: src/program/mainwindow.cpp:366 src/program/program.cpp:52
+#: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -3231,17 +3231,17 @@ msgstr "No s'ha trobat cap avís o error. %1"
 msgid "No Errors or Warnings"
 msgstr "Sense errors ni avisos"
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Searching ..."
 msgstr "S'està buscant..."
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: src/processing/findduplicates.cpp:386
+#: src/processing/findduplicates.cpp:385
 #, kde-format
 msgctxt "@title:window"
 msgid "Finding Duplicates"
@@ -4105,37 +4105,37 @@ msgstr "Cap part disponible"
 msgid "No part available for file '%1'."
 msgstr "Cap part disponible per al fitxer «%1»."
 
-#: src/program/openfileinfo.cpp:293
+#: src/program/openfileinfo.cpp:295
 #, kde-format
 msgid "Unnamed-%1"
 msgstr "Sense_nom-%1"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "Un editor de BibTeX, creat per la comunitat KDE"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, kde-format
 msgid "Copyright 2004-2019 Thomas Fischer"
 msgstr "Copyright 2004-2019 Thomas Fischer"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "Mantenidor"
 
-#: src/program/program.cpp:72
+#: src/program/program.cpp:73
 #, kde-format
 msgid "File(s) to load."
 msgstr "Fitxers que s'han de carregar."
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4148,7 +4148,7 @@ msgstr ""
 "\n"
 "Només estarà disponible una funcionalitat limitada."
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instal·lació incompleta de KBibTeX"

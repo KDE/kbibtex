@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:33+0000\n"
+"POT-Creation-Date: 2023-11-07 01:19+0000\n"
 "PO-Revision-Date: 2023-03-16 11:47+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1023,12 +1023,12 @@ msgstr "Komentar"
 msgid "Preamble"
 msgstr "Preambula"
 
-#: src/data/value.cpp:649
+#: src/data/value.cpp:684
 #, kde-format
 msgid " and "
 msgstr " in "
 
-#: src/data/value.cpp:652
+#: src/data/value.cpp:687
 #, kde-format
 msgid " and others"
 msgstr " in ostali"
@@ -1722,13 +1722,13 @@ msgstr "Naj zavržem spremembe?"
 msgid "Continue Editing"
 msgstr "Nadaljuj z urejanjem"
 
-#: src/gui/file/fileview.cpp:331
+#: src/gui/file/fileview.cpp:326
 #, kde-format
 msgctxt "@title:window"
 msgid "View Element"
 msgstr "Poglej element"
 
-#: src/gui/file/fileview.cpp:339
+#: src/gui/file/fileview.cpp:334
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
@@ -1922,17 +1922,17 @@ msgstr "Samodejno zaznaj pipe LyX:"
 msgid "Manually specified LyX pipe:"
 msgstr "Ročno določen pipe LyX:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:152
+#: src/gui/preferences/settingsfileexporterwidget.cpp:156
 #, kde-format
 msgid "Backups when saving:"
 msgstr "Varovalne kopije ob shranjevanju:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:158
+#: src/gui/preferences/settingsfileexporterwidget.cpp:162
 #, kde-format
 msgid "Number of Backups:"
 msgstr "Število varovalnih kopij:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:180
+#: src/gui/preferences/settingsfileexporterwidget.cpp:184
 #, kde-format
 msgid "Saving and Exporting"
 msgstr "Shranjujem in izvažam"
@@ -2536,7 +2536,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:321
-#: src/program/mainwindow.cpp:366 src/program/program.cpp:52
+#: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -3207,17 +3207,17 @@ msgstr "Ni najdenih opozoril ali napak.%1"
 msgid "No Errors or Warnings"
 msgstr "Ni napak ali opozoril"
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Searching ..."
 msgstr "Iščem..."
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Cancel"
 msgstr "Prekliči"
 
-#: src/processing/findduplicates.cpp:386
+#: src/processing/findduplicates.cpp:385
 #, kde-format
 msgctxt "@title:window"
 msgid "Finding Duplicates"
@@ -4080,37 +4080,37 @@ msgstr "Nobenega dela ni na voljo"
 msgid "No part available for file '%1'."
 msgstr "Nobenega dela ni na voljo za datoteko '%1'."
 
-#: src/program/openfileinfo.cpp:293
+#: src/program/openfileinfo.cpp:295
 #, kde-format
 msgid "Unnamed-%1"
 msgstr "Brezimena-%1"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "BibTeX urejevalnik v okolju KDE"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, kde-format
 msgid "Copyright 2004-2019 Thomas Fischer"
 msgstr "Copyright 2004-2019 Thomas Fischer"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "Vzdrževalec"
 
-#: src/program/program.cpp:72
+#: src/program/program.cpp:73
 #, kde-format
 msgid "File(s) to load."
 msgstr "Datoteke za nalaganje."
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4123,7 +4123,7 @@ msgstr ""
 "\n"
 "Na voljo bo le omejena funkcionalnost."
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nepopolna namestitev KBibTeX"

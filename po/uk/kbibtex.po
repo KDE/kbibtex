@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:33+0000\n"
+"POT-Creation-Date: 2023-11-07 01:19+0000\n"
 "PO-Revision-Date: 2023-03-13 08:47+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -1023,12 +1023,12 @@ msgstr "Коментар"
 msgid "Preamble"
 msgstr "Вступ"
 
-#: src/data/value.cpp:649
+#: src/data/value.cpp:684
 #, kde-format
 msgid " and "
 msgstr " та "
 
-#: src/data/value.cpp:652
+#: src/data/value.cpp:687
 #, kde-format
 msgid " and others"
 msgstr " та інші"
@@ -1727,13 +1727,13 @@ msgstr "Відкинути зміни?"
 msgid "Continue Editing"
 msgstr "Продовжити редагування"
 
-#: src/gui/file/fileview.cpp:331
+#: src/gui/file/fileview.cpp:326
 #, kde-format
 msgctxt "@title:window"
 msgid "View Element"
 msgstr "Перегляд елемента"
 
-#: src/gui/file/fileview.cpp:339
+#: src/gui/file/fileview.cpp:334
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
@@ -1928,17 +1928,17 @@ msgstr "Виявляти канал до LyX автоматично:"
 msgid "Manually specified LyX pipe:"
 msgstr "Вказаний вручну канал до LyX:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:152
+#: src/gui/preferences/settingsfileexporterwidget.cpp:156
 #, kde-format
 msgid "Backups when saving:"
 msgstr "Резервне копіювання під час збереження:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:158
+#: src/gui/preferences/settingsfileexporterwidget.cpp:162
 #, kde-format
 msgid "Number of Backups:"
 msgstr "Кількість резервних копій:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:180
+#: src/gui/preferences/settingsfileexporterwidget.cpp:184
 #, kde-format
 msgid "Saving and Exporting"
 msgstr "Збереження і експортування"
@@ -2542,7 +2542,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:321
-#: src/program/mainwindow.cpp:366 src/program/program.cpp:52
+#: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -3223,17 +3223,17 @@ msgstr "Зауважень немає, помилок не виявлено.%1"
 msgid "No Errors or Warnings"
 msgstr "Немає помилок чи попереджень"
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Searching ..."
 msgstr "Шукаємо…"
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: src/processing/findduplicates.cpp:386
+#: src/processing/findduplicates.cpp:385
 #, kde-format
 msgctxt "@title:window"
 msgid "Finding Duplicates"
@@ -4105,37 +4105,37 @@ msgstr "Недоступний модуль"
 msgid "No part available for file '%1'."
 msgstr "Модуль для обробки файла «%1» недоступний."
 
-#: src/program/openfileinfo.cpp:293
+#: src/program/openfileinfo.cpp:295
 #, kde-format
 msgid "Unnamed-%1"
 msgstr "Без_назви-%1"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "Редактор BibTeX від KDE"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, kde-format
 msgid "Copyright 2004-2019 Thomas Fischer"
 msgstr "© Thomas Fischer, 2004–2019"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "Супровідник"
 
-#: src/program/program.cpp:72
+#: src/program/program.cpp:73
 #, kde-format
 msgid "File(s) to load."
 msgstr "Файли, які слід завантажити."
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4148,7 +4148,7 @@ msgstr ""
 "\n"
 "У поточному стані можливості програми буде значно обмежено."
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Комплект KBibTeX встановлено не повністю"

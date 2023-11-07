@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:33+0000\n"
+"POT-Creation-Date: 2023-11-07 01:19+0000\n"
 "PO-Revision-Date: 2014-05-04 18:07+0200\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1018,12 +1018,12 @@ msgstr ""
 msgid "Preamble"
 msgstr ""
 
-#: src/data/value.cpp:649
+#: src/data/value.cpp:684
 #, kde-format
 msgid " and "
 msgstr ""
 
-#: src/data/value.cpp:652
+#: src/data/value.cpp:687
 #, kde-format
 msgid " and others"
 msgstr ""
@@ -1699,13 +1699,13 @@ msgstr ""
 msgid "Continue Editing"
 msgstr ""
 
-#: src/gui/file/fileview.cpp:331
+#: src/gui/file/fileview.cpp:326
 #, kde-format
 msgctxt "@title:window"
 msgid "View Element"
 msgstr ""
 
-#: src/gui/file/fileview.cpp:339
+#: src/gui/file/fileview.cpp:334
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
@@ -1895,17 +1895,17 @@ msgstr ""
 msgid "Manually specified LyX pipe:"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:152
+#: src/gui/preferences/settingsfileexporterwidget.cpp:156
 #, kde-format
 msgid "Backups when saving:"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:158
+#: src/gui/preferences/settingsfileexporterwidget.cpp:162
 #, kde-format
 msgid "Number of Backups:"
 msgstr ""
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:180
+#: src/gui/preferences/settingsfileexporterwidget.cpp:184
 #, kde-format
 msgid "Saving and Exporting"
 msgstr ""
@@ -2504,7 +2504,7 @@ msgid ""
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:321
-#: src/program/mainwindow.cpp:366 src/program/program.cpp:52
+#: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
 msgstr ""
@@ -3134,17 +3134,17 @@ msgstr ""
 msgid "No Errors or Warnings"
 msgstr ""
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Searching ..."
 msgstr ""
 
-#: src/processing/findduplicates.cpp:384
+#: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Cancel"
 msgstr ""
 
-#: src/processing/findduplicates.cpp:386
+#: src/processing/findduplicates.cpp:385
 #, kde-format
 msgctxt "@title:window"
 msgid "Finding Duplicates"
@@ -3965,40 +3965,40 @@ msgstr ""
 msgid "No part available for file '%1'."
 msgstr ""
 
-#: src/program/openfileinfo.cpp:293
+#: src/program/openfileinfo.cpp:295
 #, kde-format
 msgid "Unnamed-%1"
 msgstr "Névtelen-%1"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, fuzzy, kde-format
 #| msgid "A BibTeX editor for KDE"
 msgid "A BibTeX editor by KDE"
 msgstr "Egy BibTeX szerkesztő a KDE-hez"
 
-#: src/program/program.cpp:52
+#: src/program/program.cpp:53
 #, fuzzy, kde-format
 #| msgid "Copyright 2004-2013 Thomas Fischer"
 msgid "Copyright 2004-2019 Thomas Fischer"
 msgstr "Copyright Thomas Fischer, 2004-2013."
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Thomas Fischer"
 msgstr ""
 
-#: src/program/program.cpp:57
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr ""
 
-#: src/program/program.cpp:72
+#: src/program/program.cpp:73
 #, fuzzy, kde-format
 #| msgid "File(s) to load"
 msgid "File(s) to load."
 msgstr "Betöltendő fájlok"
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4011,7 +4011,7 @@ msgstr ""
 "\n"
 "Csak korlátozott működés lesz elérhető."
 
-#: src/program/program.cpp:102
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Befejezetlen KBibTeX telepítés"
