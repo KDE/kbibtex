@@ -713,6 +713,12 @@ void FindDuplicatesUI::startDuplicatesSearch()
     else {
         /// Duplicates have been found, so let user choose how to handle duplicate fields
 
+        /// Set all entries in all cliques as checked
+        for(EntryClique *ec : cliques){
+            for (auto &entry : ec->entryList())
+                ec->setEntryChecked(entry, true);
+        }
+
         /// Why is a QPointer used here you may wonder? Check here in case the link still works:
         ///   https://blogs.kde.org/2009/03/26/how-crash-almost-every-qtkde-application-and-how-fix-it-0
         QPointer<QDialog> dlg = new QDialog(d->part->widget());
