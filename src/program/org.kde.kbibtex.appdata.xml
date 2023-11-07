@@ -42,6 +42,7 @@
   <name xml:lang="sv">Kbibtex</name>
   <name xml:lang="tr">KBibTeX</name>
   <name xml:lang="uk">KBibTeX</name>
+  <name xml:lang="x-test">xxKBibTeXxx</name>
   <name xml:lang="zh-CN">KBibTeX</name>
   <summary>BibTeX editor by KDE to edit bibliographies used with LaTeX</summary>
   <summary xml:lang="ar">محرر بب تخ بواسطة كِيدِي لتحرير المراجع المستخدمة مع لاتخ</summary>
@@ -69,6 +70,7 @@
   <summary xml:lang="sv">Bibtex-editor av KDE för att redigera bibliografier använda med Latex</summary>
   <summary xml:lang="tr">Kaynakça dosyalarını LaTeX kullanarak düzenlemek için KDE BibTeX düzenleyicisi</summary>
   <summary xml:lang="uk">Редактор BibTeX від KDE. Призначений для редагування бібліографій, що використовуються у LaTeX</summary>
+  <summary xml:lang="x-test">xxBibTeX editor by KDE to edit bibliographies used with LaTeXxx</summary>
   <summary xml:lang="zh-CN">KDE 社区开发的 BibTeX 编辑器，用于编辑 LaTeX 使用的参考文献目录</summary>
   <description>
     <p>
@@ -99,6 +101,7 @@
     <p xml:lang="sv">Kbibtex är ett referenshanteringsprogram som kan användas för att samla Tex/Latex-bibliografier och exportera dem med diverse format.</p>
     <p xml:lang="tr">KBibTex, TeX/LaTeX kaynakçalarını toplamak ve çeşitli biçimlerde dışa aktarmak için kullanılabilecek bir başvuru yönetim uygulamasıdır.</p>
     <p xml:lang="uk">KBibTeX — програма для керування посиланнями, якою можна скористатися для створення бібліографій TeX/LaTeX та експортування даних бібліографій у різноманітних форматах.</p>
+    <p xml:lang="x-test">xxKBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.xx</p>
     <p xml:lang="zh-CN">KBibTeX 是一个参考文献管理应用程序，可以用来收集 TeX/LaTeX 文献目录并以各种格式导出。</p>
     <p>KBibTeX can do the following things:</p>
     <p xml:lang="ar">يستطيع كبتخ فعل التالي:</p>
@@ -128,6 +131,7 @@
     <p xml:lang="sv">Kbibtex kan göra följande saker:</p>
     <p xml:lang="tr">KBibTex aşağıdakileri yapabilir:</p>
     <p xml:lang="uk">KBibTeX може виконувати такі завдання:</p>
+    <p xml:lang="x-test">xxKBibTeX can do the following things:xx</p>
     <p xml:lang="zh-CN">KBibTeX 可以完成以下工作：</p>
     <ul>
       <li>Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
@@ -156,6 +160,7 @@
       <li xml:lang="sv">Förhandsgranska bibliografier med olika format (källa (Bibtex), källa (RIS), Wikipedia, standard (XML/XSLT), snygg (XML/XSLT) och bara sammandrag (XML/XSLT)). Ytterligare förhandsgranskningsstilar är tillgängliga om bibtex2html är installerat.</li>
       <li xml:lang="tr">Kaynakça girdilerini çeşitli biçimlerde önizleyin Kaynak (BibTeX), Kaynak (RIS), Wikipedia, standart (XML/XSLT), süslü (XML/XSLT) ve salt özet (XML/XSLT). Bibtex2html kurulduğunda ek önizleme biçemleri kullanılabilir hale gelir.</li>
       <li xml:lang="uk">Виконувати попередній перегляд і зберігати записи бібліографії у різних форматах (початковий код (BibTeX), початковий код (RIS), Вікіпедія, standard (XML/XSLT), fancy (XML/XSLT) та abstract-only (XML/XSLT)). Доступ до додаткових стилів попереднього перегляду можна отримати після встановлення програми bibtex2html.</li>
+      <li xml:lang="x-test">xxPreview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.xx</li>
       <li xml:lang="zh-CN">以各种格式预览参考文献条目 (资料来源 (BibTeX)、资料来源 (RIS)、维基百科、标准 (XML/XSLT)、美观 (XML/XSLT)、抽象 (XML/XSLT) 等)。安装了 bibtex2html 后还可以使用更多预览样式。</li>
       <li>Import data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.</li>
       <li xml:lang="ar">استيراد البيانات بتنسيقات ملفات ببليوغرافية متنوعة مثل BibTeX و RIS و ISI (تتطلب bibutils) وتصدير البيانات إلى PDF (يتطلب pdflatex) و PostScript (يتطلب لاتكس) و RTF (يتطلب latex2rtf) و HTML. </li>
@@ -183,6 +188,7 @@
       <li xml:lang="sv">Importera data med diverse bibliografi-filformat såsom Bibtex, RIS och ISI (kräver bibutils) och exportera data till PDF (kräver pdflatex), PostScript (kräver latex), RTF (kräver latex2rtf), och HTML.</li>
       <li xml:lang="tr">BibTeX, RIS ve ISI (bibutils gerektirir) gibi çeşitli kaynakça dosya biçimlerine verileri içe aktarın ve PDF  (pdflatex gerektirir), PostScript (lateks gerektirir), RTF (latex2rtf gerektirir) ve HTML'e verileri dışa aktarın.</li>
       <li xml:lang="uk">Імпортувати дані у різноманітних форматах файлів бібліографії, зокрема BibTeX, RIS та ISI (слід встановити bibutils) та експортувати дані до PDF (потребує встановлення pdflatex), PostScript (потребує встановлення latex), RTF (потребує встановлення latex2rtf) та HTML.</li>
+      <li xml:lang="x-test">xxImport data in various bibliography file formats such as BibTeX, RIS and ISI (requires bibutils) and export data to PDF (requires pdflatex), PostScript (requires latex), RTF (requires latex2rtf), and HTML.xx</li>
       <li xml:lang="zh-CN">导入各种参考文献文件格式的数据，如BibTeX、RIS 和 ISI (需要bibutils)，并导出数据到 PDF (需要 pdftex)、PostScript (需要 latex)、RTF (需要 latex2rtf) 和 HTML。</li>
       <li>Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="ar">البحث عن بيانات إدخالات الببليوغرافيا في قواعد البيانات عبر الإنترنت (على سبيل المثال، الباحث العلمي من غوغل و ACM، و IEEE، و arXiv، وما إلى ذلك)</li>
@@ -210,6 +216,7 @@
       <li xml:lang="sv">Söka efter bibliografiposternas data i databaser på nätet (t.ex. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="tr">Çevrimiçi veritabanlarında kaynakça girdi verilerini arayın (Ör. Google Scholar, ACM, IEEE, arXiv, vb.)</li>
       <li xml:lang="uk">Виконувати пошук даних записів бібліографії у базах даних у інтернеті (зокрема у Google Scholar, ACM, IEEE, arXiv тощо).</li>
+      <li xml:lang="x-test">xxSearch for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)xx</li>
       <li xml:lang="zh-CN">搜索在线数据库中的参考文献条目数据 (如 Google Scholar、ACM、IEEE、arXiv 等)</li>
       <li>Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
       <li xml:lang="ar">معاينة الموارد المحلية أو البعيدة (عبر الإنترنت) ، على سبيل المثال ملفات PDF ، المرتبطة في إدخال BibTEX.</li>
@@ -237,6 +244,7 @@
       <li xml:lang="sv">Förhandsgranska lokala eller fjärresurser (på nätet), t.ex. PDF-filer, länkade i Bibtex-posten.</li>
       <li xml:lang="tr">Yerel veya uzak (çevrimiçi) kaynakları önizleyin, ör. BibTEX girdisinde bağlantı verilen PDF dosyaları.</li>
       <li xml:lang="uk">Попередньо переглядати локальні та інтернет-ресурси, зокрема файли PDF, пов’язані із записом бібліографії BibTeX.</li>
+      <li xml:lang="x-test">xxPreview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.xx</li>
       <li xml:lang="zh-CN">预览本地或远程 (在线) 资源，例如在 BibTEX 条目中链接的 PDF 文件。</li>
       <li>Find and merge duplicate entries in bibliography.</li>
       <li xml:lang="ar">ابحث عن الإدخالات المكررة ودمجها في قائمة المراجع.</li>
@@ -265,6 +273,7 @@
       <li xml:lang="sv">Hitta och sammanfoga duplicerade poster i bibliografin.</li>
       <li xml:lang="tr">Kaynakçadaki yinelenen girişleri bulun ve birleştirin.</li>
       <li xml:lang="uk">Шукати і об’єднувати дублікати записів у бібліографії.</li>
+      <li xml:lang="x-test">xxFind and merge duplicate entries in bibliography.xx</li>
       <li xml:lang="zh-CN">查找和合并参考文献中的重复条目。</li>
       <li>Integrate your bibliographies with LaTeX editors such as Kile and LyX.</li>
       <li xml:lang="ar">ادمج المراجع الخاصة بك مع محرري لاتخ مثل Kile و LyX.</li>
@@ -292,6 +301,7 @@
       <li xml:lang="sv">Integrera bibliografierna med Latex-editorer såsom Kile och LyX</li>
       <li xml:lang="tr">Kaynakçalarınızı Kile ve LyX gibi LaTeX düzenleyicileri ile bütünleştirin.</li>
       <li xml:lang="uk">Інтегрувати ваші бібліографії з редакторами LaTeX, зокрема Kile та LyX.</li>
+      <li xml:lang="x-test">xxIntegrate your bibliographies with LaTeX editors such as Kile and LyX.xx</li>
       <li xml:lang="zh-CN">将参考文献与 LaTeX 编辑器整合，例如 Kile 和 LyX。</li>
       <li>Import your Zotero library.</li>
       <li xml:lang="ar">استيراد مكتبة Zotero الخاصة بك.</li>
@@ -322,6 +332,7 @@
       <li xml:lang="sv">Importera ett Zotero-bibliotek.</li>
       <li xml:lang="tr">Zotero kitaplığınızı içe aktarın.</li>
       <li xml:lang="uk">Імпортувати дані з вашої бібліотеки Zotero.</li>
+      <li xml:lang="x-test">xxImport your Zotero library.xx</li>
       <li xml:lang="zh-CN">导入您的 Zotero 库。</li>
     </ul>
   </description>
@@ -357,6 +368,7 @@
       <caption xml:lang="sv">Huvudfönstret i Kbibtex</caption>
       <caption xml:lang="tr">KBibTeX ana penceresi</caption>
       <caption xml:lang="uk">Головне вікно KBibTeX</caption>
+      <caption xml:lang="x-test">xxKBibTeX main windowxx</caption>
       <caption xml:lang="zh-CN">KBibTeX 主窗口</caption>
       <image>https://cdn.kde.org/screenshots/kbibtex/kbibtex-kf5.png</image>
     </screenshot>
