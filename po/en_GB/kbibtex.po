@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 01:19+0000\n"
+"POT-Creation-Date: 2023-11-08 00:43+0000\n"
 "PO-Revision-Date: 2023-03-14 20:54+0000\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -1799,7 +1799,7 @@ msgstr "No duplicates were found."
 msgid "No duplicates found"
 msgstr "No duplicates found"
 
-#: src/gui/file/findduplicatesui.cpp:719
+#: src/gui/file/findduplicatesui.cpp:725
 #, kde-format
 msgctxt "@title:window"
 msgid "Merge Duplicates"

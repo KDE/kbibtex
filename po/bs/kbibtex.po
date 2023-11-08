@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 01:19+0000\n"
+"POT-Creation-Date: 2023-11-08 00:43+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -1827,7 +1827,7 @@ msgstr "Nije pronađen nijedan duplikat"
 msgid "No duplicates found"
 msgstr "Nije pronađen nijedan duplikat"
 
-#: src/gui/file/findduplicatesui.cpp:719
+#: src/gui/file/findduplicatesui.cpp:725
 #, fuzzy, kde-format
 #| msgid "Find Duplicates"
 msgctxt "@title:window"

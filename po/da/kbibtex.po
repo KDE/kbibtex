@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 01:19+0000\n"
+"POT-Creation-Date: 2023-11-08 00:43+0000\n"
 "PO-Revision-Date: 2020-08-02 17:36+0200\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -1774,7 +1774,7 @@ msgstr ""
 msgid "No duplicates found"
 msgstr "Ingen dobbeltgængere fundet"
 
-#: src/gui/file/findduplicatesui.cpp:719
+#: src/gui/file/findduplicatesui.cpp:725
 #, fuzzy, kde-format
 msgctxt "@title:window"
 msgid "Merge Duplicates"

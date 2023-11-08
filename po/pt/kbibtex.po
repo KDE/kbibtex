@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-07 01:19+0000\n"
+"POT-Creation-Date: 2023-11-08 00:43+0000\n"
 "PO-Revision-Date: 2023-03-20 11:37+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -1846,7 +1846,7 @@ msgstr "Nenhuns duplicados encontrados."
 msgid "No duplicates found"
 msgstr "Nenhuns duplicados encontrados"
 
-#: src/gui/file/findduplicatesui.cpp:719
+#: src/gui/file/findduplicatesui.cpp:725
 #, kde-format
 msgctxt "@title:window"
 msgid "Merge Duplicates"
