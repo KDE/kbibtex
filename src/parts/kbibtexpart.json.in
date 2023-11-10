@@ -12,6 +12,7 @@
                 "Name[nl]": "Thomas Fischer",
                 "Name[pt_BR]": "Thomas Fischer",
                 "Name[sl]": "Thomas Fischer",
+                "Name[tr]": "Thomas Fischer",
                 "Name[uk]": "Thomas Fischer",
                 "Name[x-test]": "xxThomas Fischerxx"
             }
@@ -25,6 +26,7 @@
         "Copyright[nl]": "Copyright 2004-2023 Thomas Fischer",
         "Copyright[pt_BR]": "Copyright 2004-2023 Thomas Fischer",
         "Copyright[sl]": "Copyright 2004-2023 Thomas Fischer",
+        "Copyright[tr]": "Telif hakkı 2004-2023 Thomas Fischer",
         "Copyright[uk]": "© Thomas Fischer, 2004–2023",
         "Copyright[x-test]": "xxCopyright 2004-2023 Thomas Fischerxx",
         "Description": "KParts component to view and edit bibliographic files",
@@ -36,6 +38,7 @@
         "Description[nl]": "Component van KParts om bibliografische bestanden te bekijken en te bewerken",
         "Description[pt_BR]": "Componente do KParts para editar e visualizar arquivos bibliográficos",
         "Description[sl]": "Komponenta KParts za ogled in urejanje bibliografskih datotek",
+        "Description[tr]": "Kaynakça dosyalarını görüntülemek ve düzenlemek için KParts bileşeni",
         "Description[uk]": "Компонент KParts для перегляду та редагування файлів бібліографії",
         "Description[x-test]": "xxKParts component to view and edit bibliographic filesxx",
         "Icon": "kbibtex",
