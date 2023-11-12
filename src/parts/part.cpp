@@ -392,7 +392,9 @@ public:
             return;
 
         /// Do not make backup copies if destination file does not exist yet
-#if KIO_VERSION >= 0x054500 // >= 5.69.0
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 240, 0) // >= 5.240.0
+        KIO::StatJob *statJob = KIO::stat(url, KIO::StatJob::DestinationSide, KIO::StatNoDetails /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+#elif KIO_VERSION >= QT_VERSION_CHECK(5, 69, 0) // >= 5.69.0
         KIO::StatJob *statJob = KIO::statDetails(url, KIO::StatJob::DestinationSide, KIO::StatNoDetails /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
 #else // KIO_VERSION < 0x054500 // < 5.69.0
         KIO::StatJob *statJob = KIO::stat(url, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
@@ -415,7 +417,9 @@ public:
             QUrl olderBackupUrl = url;
             constructBackupUrl(level, olderBackupUrl);
 
-#if KIO_VERSION >= 0x054500 // >= 5.69.0
+#if KIO_VERSION >= QT_VERSION_CHECK(5, 240, 0) // >= 5.240.0
+            statJob = KIO::stat(newerBackupUrl, KIO::StatJob::DestinationSide, KIO::StatNoDetails /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
+#elif KIO_VERSION >= QT_VERSION_CHECK(5, 69, 0) // >= 5.69.0
             statJob = KIO::statDetails(newerBackupUrl, KIO::StatJob::DestinationSide, KIO::StatNoDetails /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
 #else // KIO_VERSION < 0x054500 // < 5.69.0
             statJob = KIO::stat(newerBackupUrl, KIO::StatJob::DestinationSide, 0 /** not details necessary, just need to know if file exists */, KIO::HideProgressInfo);
