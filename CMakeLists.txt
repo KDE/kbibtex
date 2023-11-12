@@ -182,6 +182,7 @@ if(BUILD_KPART OR BUILD_TESTING)
         Wallet
         Crash
         TextEditor
+        TextWidgets
         COMPONENTS
         XmlGui
         Parts

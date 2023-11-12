@@ -74,6 +74,7 @@ if(BUILD_APP_DESKTOP)
             KF${QT_MAJOR_VERSION}::KIOFileWidgets
             KF${QT_MAJOR_VERSION}::Parts
             KF${QT_MAJOR_VERSION}::Wallet
+            KF${QT_MAJOR_VERSION}::TextWidgets
             KBibTeX::Global
             KBibTeX::GUI
             KBibTeX::IO

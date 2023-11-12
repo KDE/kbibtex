@@ -88,6 +88,7 @@ target_link_libraries(kbibtexgui
         KF${QT_MAJOR_VERSION}::KIOFileWidgets
         KF${QT_MAJOR_VERSION}::Parts
         KF${QT_MAJOR_VERSION}::TextEditor
+        KF${QT_MAJOR_VERSION}::TextWidgets
         KBibTeX::Config
         KBibTeX::Data
         KBibTeX::Global
