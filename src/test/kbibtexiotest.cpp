@@ -38,7 +38,9 @@
 #include <FileExporterRIS>
 #include <FileExporterBibUtils>
 #include <FileExporterXML>
+#ifdef HAVE_QTXMLPATTERNS // Qt XML Patterns is no longer part of Qt6, but XSLTransformations depend on it
 #include <FileExporterXSLT>
+#endif // HAVE_QTXMLPATTERNS
 
 #include "logging_test.h"
 // Provides definition of KDESRCDIR
@@ -79,11 +81,13 @@ private Q_SLOTS:
     void fileInfoUrlsInText();
     void fileExporterXMLsave_data();
     void fileExporterXMLsave();
+#ifdef HAVE_QTXMLPATTERNS // Qt XML Patterns is no longer part of Qt6, but XSLTransformations depend on it
     QHash<QString, QHash<const char *, QSet<QString>>> fileExporterXSLTtestCases();
     void fileExporterXSLTsaveFile_data();
     void fileExporterXSLTsaveFile();
     void fileExporterXSLTsaveElement_data();
     void fileExporterXSLTsaveElement();
+#endif // HAVE_QTXMLPATTERNS
     void fileExporterRISsave_data();
     void fileExporterRISsave();
     void fileExporterBibTeXsave_data();
@@ -501,6 +505,7 @@ void KBibTeXIOTest::fileExporterXMLsave()
     QCOMPARE(generatedData, xmlData);
 }
 
+#ifdef HAVE_QTXMLPATTERNS // Qt XML Patterns is no longer part of Qt6, but XSLTransformations depend on it
 QHash<QString, QHash<const char *, QSet<QString>>> KBibTeXIOTest::fileExporterXSLTtestCases()
 {
     static const QHash<QString, QHash<const char *, QSet<QString>>> xsltTokeyToXsltData {
@@ -594,6 +599,7 @@ void KBibTeXIOTest::fileExporterXSLTsaveElement()
     for (const QString &fragment : expectedFragments)
         QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data: '%2'")).arg(fragment, generatedData).toLatin1().constData());
 }
+#endif // HAVE_QTXMLPATTERNS
 
 void KBibTeXIOTest::fileExporterRISsave_data()
 {
