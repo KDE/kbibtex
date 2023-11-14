@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-08 00:43+0000\n"
-"PO-Revision-Date: 2023-03-30 22:26+0200\n"
+"PO-Revision-Date: 2023-11-13 14:58+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.03.80\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1038,7 +1038,7 @@ msgstr ""
 #: src/gui/element/associatedfilesui.cpp:81
 #, kde-format
 msgid "File operation"
-msgstr ""
+msgstr "Operation de File"
 
 #: src/gui/element/associatedfilesui.cpp:85
 #, kde-format
@@ -3466,7 +3466,7 @@ msgstr ""
 #: src/program/docklets/referencepreview.cpp:428
 #, kde-format
 msgid "Save as HTML"
-msgstr ""
+msgstr "Salveguarda como HTML"
 
 #: src/program/docklets/referencepreview.cpp:154
 #, kde-format
@@ -3635,12 +3635,12 @@ msgstr "Altere entratas:"
 #: src/program/docklets/statistics.cpp:73
 #, kde-format
 msgid "Number of Comments:"
-msgstr ""
+msgstr "Numero de Commentos:"
 
 #: src/program/docklets/statistics.cpp:77
 #, kde-format
 msgid "Number of Macros:"
-msgstr ""
+msgstr "Numero d Macros:"
 
 #: src/program/docklets/valuelist.cpp:93
 #, kde-format
@@ -3933,7 +3933,7 @@ msgstr ""
 #: src/program/mdiwidget.cpp:101
 #, kde-format
 msgid "Full filename"
-msgstr ""
+msgstr "Nomine de file plen"
 
 #: src/program/mdiwidget.cpp:147
 #, kde-format
