@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -540,7 +540,7 @@ void KBibTeXIOTest::fileExporterXSLTsaveFile_data()
         const QHash<const char *, QSet<QString>> &keyToXsltData = xsltToKeyToXsltData.value(xslTranslationFile);
         for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
             if (keyToXsltData.contains(it->first)) {
-                const QString label = QString(QStringLiteral("'%1' with XSLT '%2'")).arg(QString::fromLatin1(it->first)).arg(xslTranslationFile);
+                const QString label = QString(QStringLiteral("'%1' with XSLT '%2'")).arg(QString::fromLatin1(it->first), xslTranslationFile);
                 QTest::newRow(label.toUtf8().constData()) << it->second << xslTranslationFile << keyToXsltData.value(it->first);
             }
     }
@@ -552,13 +552,12 @@ void KBibTeXIOTest::fileExporterXSLTsaveFile()
     QFETCH(QString, xslTranslationFile);
     QFETCH(QSet<QString>, expectedFragments);
 
-
     FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xslTranslationFile), this);
     static const QRegularExpression removeSpaceBeforeTagRegExp(QStringLiteral("\\s+(<[/a-z])"));
     const QString generatedData = fileExporterXSLT.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|')).replace(removeSpaceBeforeTagRegExp, QStringLiteral("\\1")).replace(QStringLiteral("|||"), QStringLiteral("|")).replace(QStringLiteral("||"), QStringLiteral("|"));
 
     for (const QString &fragment : expectedFragments)
-        QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data")).arg(fragment).toLatin1().constData());
+        QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data: '%2'")).arg(fragment, generatedData).toLatin1().constData());
 }
 
 void KBibTeXIOTest::fileExporterXSLTsaveElement_data()
@@ -574,7 +573,7 @@ void KBibTeXIOTest::fileExporterXSLTsaveElement_data()
         const QHash<const char *, QSet<QString>> &keyToXsltData = xsltToKeyToXsltData.value(xslTranslationFile);
         for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
             if (!it->second->isEmpty() && keyToXsltData.contains(it->first)) {
-                const QString label = QString(QStringLiteral("'%1' with XSLT '%2'")).arg(QString::fromLatin1(it->first)).arg(xslTranslationFile);
+                const QString label = QString(QStringLiteral("'%1' with XSLT '%2'")).arg(QString::fromLatin1(it->first), xslTranslationFile);
                 QTest::newRow(label.toUtf8().constData()) << it->second->first() << xslTranslationFile << keyToXsltData.value(it->first);
             }
     }
@@ -591,7 +590,7 @@ void KBibTeXIOTest::fileExporterXSLTsaveElement()
     const QString generatedData = fileExporterXSLT.toString(element, nullptr).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|')).replace(removeSpaceBeforeTagRegExp, QStringLiteral("\\1")).replace(QStringLiteral("|||"), QStringLiteral("|")).replace(QStringLiteral("||"), QStringLiteral("|"));
 
     for (const QString &fragment : expectedFragments)
-        QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data")).arg(fragment).toLatin1().constData());
+        QVERIFY2(generatedData.contains(fragment), QString(QStringLiteral("Fragment '%1' not found in generated XML data: '%2'")).arg(fragment, generatedData).toLatin1().constData());
 }
 
 void KBibTeXIOTest::fileExporterRISsave_data()
