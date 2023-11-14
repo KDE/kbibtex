@@ -188,9 +188,8 @@ function build_debian10() {
 	buildahsetx run --user root "${id}" -- apt update || exit 1
 	buildahsetx run --user root "${id}" -- apt dist-upgrade -y || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
-	buildahsetx run --user root "${id}" -- apt autoremove || exit 1
-	buildahsetx run --user root "${id}" -- apt clean || exit 1
+	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- apt -y clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
 
 	copy_config_files_to_image "${id}" || exit 1
@@ -228,11 +227,10 @@ function build_debian11() {
 	echo "deb http://ftp.se.debian.org/debian/ bullseye main contrib" >"${TEMPDIR}/etc-apt-sources.list"
 	buildahsetx copy "${id}" "${TEMPDIR}/etc-apt-sources.list" /etc/apt/sources.list || exit 1
 	buildahsetx run --user root "${id}" -- apt update || exit 1
-	buildahsetx run --user root "${id}" -- apt dist-upgrade -y || exit 1
+	buildahsetx run --user root "${id}" -- apt -y full-upgrade || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
-	buildahsetx run --user root "${id}" -- apt autoremove || exit 1
-	buildahsetx run --user root "${id}" -- apt clean || exit 1
+	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- apt -y clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
 
 	copy_config_files_to_image "${id}" || exit 1
@@ -270,11 +268,10 @@ function build_debian12() {
 	echo "deb http://ftp.se.debian.org/debian/ bookworm main contrib" >"${TEMPDIR}/etc-apt-sources.list"
 	buildahsetx copy "${id}" "${TEMPDIR}/etc-apt-sources.list" /etc/apt/sources.list || exit 1
 	buildahsetx run --user root "${id}" -- apt update || exit 1
-	buildahsetx run --user root "${id}" -- apt dist-upgrade -y || exit 1
+	buildahsetx run --user root "${id}" -- apt -y full-upgrade || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
-	buildahsetx run --user root "${id}" -- apt autoremove || exit 1
-	buildahsetx run --user root "${id}" -- apt clean || exit 1
+	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb xdg-desktop-portal-kde git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- apt -y clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
 
 	copy_config_files_to_image "${id}" || exit 1
@@ -309,10 +306,12 @@ function build_kdeneon() {
 	set_environment "${id}"
 
 	# DISTRIBUTION-SPECIFIC CODE BEGINS HERE
-	buildahsetx run --user root "${id}" -- pkcon refresh || exit 1
-	buildahsetx run --user root "${id}" -- pkcon update || exit 1
+	buildahsetx run --user root "${id}" -- apt install -y ubuntu-dbgsym-keyring || exit 1
+	buildahsetx run --user root "${id}" -- apt update || exit 1
+	buildahsetx run --user root "${id}" -- apt -y full-upgrade || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- pkcon install -y cmake extra-cmake-modules libpoppler-qt5-dev libicu-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- apt -y install cmake extra-cmake-modules libpoppler-qt5-dev libicu-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- apt -y clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
 
 	copy_config_files_to_image "${id}" || exit 1
@@ -394,11 +393,10 @@ function build_ubuntu2204() {
 	buildahsetx copy "${id}" "${TEMPDIR}/ddebs.list" /etc/apt/sources.list.d/ddebs.list || exit 1
 	buildahsetx run --user root "${id}" -- apt install -y ubuntu-dbgsym-keyring || exit 1
 	buildahsetx run --user root "${id}" -- apt update || exit 1
-	buildahsetx run --user root "${id}" -- apt upgrade || exit 1
+	buildahsetx run --user root "${id}" -- apt -y full-upgrade || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb valgrind xdg-desktop-portal-kde git gettext okular appstream || exit 1
-	buildahsetx run --user root "${id}" -- apt autoremove || exit 1
-	buildahsetx run --user root "${id}" -- apt clean || exit 1
+	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb valgrind xdg-desktop-portal-kde git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- apt -y clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
 
 	copy_config_files_to_image "${id}" || exit 1
@@ -443,11 +441,10 @@ function build_ubuntu2210() {
 	buildahsetx copy "${id}" "${TEMPDIR}/ddebs.list" /etc/apt/sources.list.d/ddebs.list || exit 1
 	buildahsetx run --user root "${id}" -- apt install -y ubuntu-dbgsym-keyring || exit 1
 	buildahsetx run --user root "${id}" -- apt update || exit 1
-	buildahsetx run --user root "${id}" -- apt upgrade || exit 1
+	buildahsetx run --user root "${id}" -- apt -y full-upgrade || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb valgrind xdg-desktop-portal-kde git gettext okular appstream || exit 1
-	buildahsetx run --user root "${id}" -- apt autoremove || exit 1
-	buildahsetx run --user root "${id}" -- apt clean || exit 1
+	buildahsetx run --user root "${id}" -- apt install -y sudo fonts-ibm-plex cmake g++ make extra-cmake-modules libicu-dev libpoppler-qt5-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev libqt5webenginewidgets5 qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme kde-style-breeze frameworkintegration gdb valgrind xdg-desktop-portal-kde git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- apt -y clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
 
 	copy_config_files_to_image "${id}" || exit 1
