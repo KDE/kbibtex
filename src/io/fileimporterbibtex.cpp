@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -277,7 +277,7 @@ public:
 
             /// Maintain statistics on if (book) titles are protected
             /// by surrounding curly brackets
-            if (iKey == Entry::ftTitle || iKey == Entry::ftBookTitle) {
+            if (!text.isEmpty() && (iKey == Entry::ftTitle || iKey == Entry::ftBookTitle)) {
                 if (text[0] == QLatin1Char('{') && text[text.length() - 1] == QLatin1Char('}'))
                     ++statistics.countProtectedTitle;
                 else
