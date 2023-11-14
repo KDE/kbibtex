@@ -287,7 +287,7 @@ function build_debian12() {
 
 function build_kdeneon() {
 	local FROMIMAGE
-	FROMIMAGE="docker://kdeneon/plasma:developer"
+	FROMIMAGE="invent-registry.kde.org/neon/docker-images/plasma:unstable"
 	local IMAGENAME
 	IMAGENAME="kdeneon-kde-devel"
 	local WORKINGCONTAINERNAME
@@ -310,7 +310,7 @@ function build_kdeneon() {
 	buildahsetx run --user root "${id}" -- apt update || exit 1
 	buildahsetx run --user root "${id}" -- apt -y full-upgrade || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- apt -y install cmake extra-cmake-modules libpoppler-qt5-dev libicu-dev libqt5xmlpatterns5-dev libqt5networkauth5-dev qtwebengine5-dev libqt5webchannel5-dev libkf5i18n-dev libkf5xmlgui-dev libkf5kio-dev libkf5iconthemes-dev libkf5parts-dev libkf5coreaddons-dev libkf5service-dev libkf5wallet-dev libkf5crash-dev libkf5doctools-dev libkf5texteditor-dev breeze-icon-theme git gettext okular appstream || exit 1
+	buildahsetx run --user root "${id}" -- apt -y install sudo fonts-ibm-plex cmake g++ make libicu-dev qt6-networkauth-dev libpoppler-qt6-dev qt6-base-dev-tools kf6-syntax-highlighting-dev kf6-extra-cmake-modules kf6-syntax-highlighting-dev kf6-ki18n-dev kf6-kxmlgui-dev kf6-kiconthemes-dev kf6-kparts-dev kf6-kcoreaddons-dev kf6-kservice-dev kf6-ktextwidgets-dev kf6-kwallet-dev kf6-kcrash-dev kf6-kdoctools-dev kf6-ktexteditor-dev kf6-breeze-icon-theme gdb valgrind git gettext || exit 1
 	buildahsetx run --user root "${id}" -- apt -y clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
 

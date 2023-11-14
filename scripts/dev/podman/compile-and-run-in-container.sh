@@ -152,6 +152,8 @@ if (( $# == 1 || $# == 2)) ; then
 		IMAGENAME="$(create_imagename "${FROMIMAGE}")"
 		ID="$(prepare_image "${FROMIMAGE}" "${IMAGENAME}")"
 		prepare_environment "${ID}" "${2:-}" || exit 1
+		# KDE Neon supports Qt6, so enable it
+		[[ ${DIST} == "kdeneon" ]] && buildahsetx run --user root "${ID}" -- sed -i -e 's!set(QT_MAJOR_VERSION "5")!set(QT_MAJOR_VERSION "6")!' /tmp/source/CMakeLists.txt
 		build_sources "${ID}" || exit 1
 		install_program "${ID}" || exit 1
 		cleaning "${ID}" || exit 1
