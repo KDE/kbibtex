@@ -88,7 +88,7 @@ while read filename ; do
 	TEMPFILE=$(mktemp -t 'kbibtex_formatted_source_XXXXXXXXXXX.cpp')
 
 	echo "Processing \"${filename}\""
-	astyle -n --align-reference=name --align-pointer=name --indent=spaces=4 --indent-labels --pad-oper --unpad-paren --pad-header --keep-one-line-statements --convert-tabs --indent-preprocessor <"${filename}" >${TEMPFILE}
+	astyle -n --align-reference=name --align-pointer=name --indent=spaces=4 --indent-labels --pad-oper --unpad-paren --pad-header --keep-one-line-statements --convert-tabs <"${filename}" >${TEMPFILE}
 
 	# Astyle has problem with 'foreach' statements
 	sed -i -e 's/\bforeach(/foreach (/g' ${TEMPFILE}
