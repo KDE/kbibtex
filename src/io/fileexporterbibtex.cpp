@@ -50,7 +50,6 @@ private:
      * Determine a codec to use based on various settings such as
      * the global preferences, per-file settings, or configuration
      * settings passed to this FileExporterBibTeX instance.
-     * @return a valid QTextCodec instance or 'nullptr' if UTF-8 is to be used
      */
     QPair<QString, QTextCodec *> determineTargetCodec() {
         QString encoding = QStringLiteral("utf-8"); ///< default encoding if nothing else is set

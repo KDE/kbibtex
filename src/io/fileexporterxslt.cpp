@@ -28,7 +28,6 @@
 #include <Entry>
 #include <Macro>
 #include <Comment>
-#include "encoderxml.h"
 #include "fileexporterxml.h"
 #include "xsltransform.h"
 #include "logging_io.h"
