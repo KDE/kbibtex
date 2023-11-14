@@ -117,7 +117,7 @@ function run_test_programs() {
 	mkdir -p /tmp/kbibtex-podman
 	rm -f /tmp/kbibtex-podman/output-{kbibtexnetworkingtest,kbibtexiotest,kbibtexdatatest}.txt
 
-	podmansetx container run --net=host -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive "${id}_img" /usr/bin/sudo -u "${username}" /bin/bash /tmp/runtestprograms.sh 2>&1 | tee -a /tmp/kbibtex-podman/output-testprograms.txt || { echo "For log output, see '/tmp/kbibtex-podman/output-testprograms.txt'" >&2 ; exit 1 ; }
+	podmansetx container run --rm --net=host -v /tmp/kbibtex-podman:/tmp/kbibtex-podman --tty --interactive "${id}_img" /usr/bin/sudo -u "${username}" /bin/bash /tmp/runtestprograms.sh 2>&1 | tee -a /tmp/kbibtex-podman/output-testprograms.txt || { echo "For log output, see '/tmp/kbibtex-podman/output-testprograms.txt'" >&2 ; exit 1 ; }
 }
 
 function run_kbibtex_program() {
