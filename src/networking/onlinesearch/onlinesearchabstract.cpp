@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,7 +20,6 @@
 #include "onlinesearchabstract.h"
 
 #include <QFileInfo>
-#include <QNetworkReply>
 #include <QDir>
 #include <QTimer>
 #include <QStandardPaths>
@@ -186,16 +185,21 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply)
     return handleErrors(reply, url);
 }
 
-bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl)
+bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl, const QSet<const QNetworkReply::NetworkError> &ignoredErrors)
 {
     /// The URL to be shown or logged shall not contain any API key
     const QUrl urlToShow = InternalNetworkAccessManager::removeApiKey(reply->url());
+
+    // Create a new set of NetworkError, guarantee that NoError is included, as callers may pass an empty QSet but mean to include NoError
+    // TODO construct ignoredErrorsIncludingNoError in a way that it becomes 'const'
+    QSet<const QNetworkReply::NetworkError> ignoredErrorsIncludingNoError{ignoredErrors};
+    ignoredErrorsIncludingNoError.insert(QNetworkReply::NoError);
 
     newUrl = QUrl();
     if (m_hasBeenCanceled) {
         stopSearch(resultCancelled);
         return false;
-    } else if (reply->error() != QNetworkReply::NoError) {
+    } else if (!ignoredErrorsIncludingNoError.contains(QNetworkReply::NoError)) {
         m_hasBeenCanceled = true;
         const QString errorString = reply->errorString();
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Search using" << label() << "failed (error code" << reply->error() << "," << InternalNetworkAccessManager::removeApiKey(errorString) << "), HTTP code" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() << ":" << reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray() << ") for URL" << urlToShow.toDisplayString();

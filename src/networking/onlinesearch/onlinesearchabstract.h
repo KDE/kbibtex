@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QMap>
 #include <QString>
+#include <QNetworkReply>
 #ifdef HAVE_QTWIDGETS
 #include <QWidget>
 #endif // HAVE_QTWIDGETS
@@ -109,7 +110,7 @@ protected:
     * @param reply The reply the function will handle errors for
     * @param newUrl will be set to the new URL if reply contains a redirection, otherwise reply's original URL
     */
-    bool handleErrors(QNetworkReply *reply, QUrl &newUrl);
+    bool handleErrors(QNetworkReply *reply, QUrl &newUrl, const QSet<const QNetworkReply::NetworkError> &ignoredErrors = QSet<const QNetworkReply::NetworkError>({QNetworkReply::NoError}));
 
     /**
      * Encode a text to be HTTP URL save, e.g. replace '=' by '%3D'.

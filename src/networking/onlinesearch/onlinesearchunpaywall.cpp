@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2022-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -145,7 +145,7 @@ void OnlineSearchUnpaywall::downloadDone()
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     QUrl redirUrl;
-    if (handleErrors(reply, redirUrl)) {
+    if (handleErrors(reply, redirUrl, {QNetworkReply::ContentNotFoundError})) {
         if (redirUrl.isValid()) {
             // Redirection to another url
             ++numSteps;
