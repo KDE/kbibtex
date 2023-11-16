@@ -45,7 +45,7 @@ public:
         QFormLayout *layout = new QFormLayout(parent);
         layout->setContentsMargins(0, 0, 0, 0);
 
-        QLabel *label = new QLabel(i18n("Free text:"), parent);
+        QLabel *label = new QLabel(i18n("Free text or DOI:"), parent);
         QLineEdit *lineEdit = new QLineEdit(parent);
         layout->addRow(label, lineEdit);
         lineEdit->setClearButtonEnabled(true);
