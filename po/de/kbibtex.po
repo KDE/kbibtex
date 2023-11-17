@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KBibTeX 0.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-08 00:43+0000\n"
+"POT-Creation-Date: 2023-11-17 00:42+0000\n"
 "PO-Revision-Date: 2023-04-29 12:22+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -2533,12 +2533,12 @@ msgstr "Der BibTeX-Stil <strong>%1</strong> ist nicht verfügbar."
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "Der BibTeX-Stil <strong>PLACEHOLDER</strong> ist nicht verfügbar."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "Suchen in „%1“ aus unbekanntem Grund fehlgeschlagen."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2549,7 +2549,7 @@ msgstr ""
 "\n"
 "%2"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:321
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:325
 #: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
@@ -2561,7 +2561,6 @@ msgid "ACM Digital Library"
 msgstr "ACM Digital Library"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:70
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
 #, kde-format
 msgid "Free text:"
 msgstr "Freitext:"
@@ -2629,6 +2628,12 @@ msgstr "CERN Document Server"
 #, kde-format
 msgid "DOI:"
 msgstr "DOI:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
+#, fuzzy, kde-format
+#| msgid "Free text:"
+msgid "Free text or DOI:"
+msgstr "Freitext:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91

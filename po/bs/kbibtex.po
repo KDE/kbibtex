@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-08 00:43+0000\n"
+"POT-Creation-Date: 2023-11-17 00:42+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -2580,12 +2580,12 @@ msgstr "BibTeX stil <strong>%1</strong> nije dostupan."
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "BibTeX stil <strong>%1</strong> nije dostupan."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "Pretraživanje '%1' nije uspjelo iz nepoznatog razloga."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2596,7 +2596,7 @@ msgstr ""
 "\n"
 "%2"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:321
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:325
 #: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
@@ -2608,7 +2608,6 @@ msgid "ACM Digital Library"
 msgstr "ACM Digitalna Biblioteka"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:70
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
 #, kde-format
 msgid "Free text:"
 msgstr "Slobodan tekst:"
@@ -2676,6 +2675,12 @@ msgstr "CERN Dokument Server"
 #, kde-format
 msgid "DOI:"
 msgstr "DOI:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
+#, fuzzy, kde-format
+#| msgid "Free text:"
+msgid "Free text or DOI:"
+msgstr "Slobodan tekst:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91

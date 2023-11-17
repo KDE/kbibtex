@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-08 00:43+0000\n"
+"POT-Creation-Date: 2023-11-17 00:42+0000\n"
 "PO-Revision-Date: 2023-03-16 16:33+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2508,12 +2508,12 @@ msgstr "Styl BibTeX <strong>%1</strong> není dostupný."
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "Styl BibTeX <strong>PLACEHOLDER</strong> není dostupný."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "Hledání '%1' z neznámého důvodu selhalo."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2524,7 +2524,7 @@ msgstr ""
 "\n"
 "%2"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:321
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:325
 #: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
@@ -2536,7 +2536,6 @@ msgid "ACM Digital Library"
 msgstr "Digitální knihovna ACM"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:70
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
 #, kde-format
 msgid "Free text:"
 msgstr "Nějaký text:"
@@ -2604,6 +2603,12 @@ msgstr "Dokumentový server CERN"
 #, kde-format
 msgid "DOI:"
 msgstr "DOI:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
+#, fuzzy, kde-format
+#| msgid "Free text:"
+msgid "Free text or DOI:"
+msgstr "Nějaký text:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91

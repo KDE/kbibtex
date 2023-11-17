@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-08 00:43+0000\n"
+"POT-Creation-Date: 2023-11-17 00:42+0000\n"
 "PO-Revision-Date: 2022-11-10 01:12+0700\n"
 "Last-Translator: OIS <mistresssilvara@hotmail.com>\n"
 "Language-Team: Interlingue <kde-i18n-doc@kde.org>\n"
@@ -2505,12 +2505,12 @@ msgstr "Li stil de BibTeX <strong>%1</strong> es índisponibil."
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "Li stil de BibTeX <strong>%1</strong> es índisponibil."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
 #, fuzzy, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "testparm de Samba ne successat por un ínconosset cause"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:216
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2518,7 +2518,7 @@ msgid ""
 "%2"
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:321
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:325
 #: src/program/mainwindow.cpp:366 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
@@ -2530,7 +2530,6 @@ msgid "ACM Digital Library"
 msgstr "Biblioteca digital de ACM"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:70
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
 #, fuzzy, kde-format
 msgid "Free text:"
 msgstr "Líber: "
@@ -2598,6 +2597,11 @@ msgstr "ti-ci document"
 #, kde-format
 msgid "DOI:"
 msgstr "DOI:"
+
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
+#, fuzzy, kde-format
+msgid "Free text or DOI:"
+msgstr "Líber: "
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
