@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-17 00:42+0000\n"
-"PO-Revision-Date: 2023-08-08 16:49+0200\n"
+"PO-Revision-Date: 2023-11-17 09:44+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
-"X-Generator: Lokalize 23.04.3\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2635,10 +2635,9 @@ msgid "DOI:"
 msgstr "DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
-#, fuzzy, kde-format
-#| msgid "Free text:"
+#, kde-format
 msgid "Free text or DOI:"
-msgstr "Text lliure:"
+msgstr "Text lliure o DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
@@ -4159,6 +4158,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instal·lació incompleta del KBibTeX"
-
-#~ msgid "KBibTeXPart"
-#~ msgstr "KBibTeXPart"

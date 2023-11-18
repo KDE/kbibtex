@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-17 00:42+0000\n"
-"PO-Revision-Date: 2023-04-26 00:20+0100\n"
+"PO-Revision-Date: 2023-11-17 22:10+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -2615,10 +2615,9 @@ msgid "DOI:"
 msgstr "DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
-#, fuzzy, kde-format
-#| msgid "Free text:"
+#, kde-format
 msgid "Free text or DOI:"
-msgstr "Libera teksto:"
+msgstr "Libera teksto aŭ DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
@@ -4131,6 +4130,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nekompleta Instalado de KBibTeX"
-
-#~ msgid "KBibTeXPart"
-#~ msgstr "KBibTeXPart"
