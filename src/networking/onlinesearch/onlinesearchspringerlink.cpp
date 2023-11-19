@@ -153,6 +153,7 @@ class OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate
 {
 private:
     static const QString xsltFilenameBase;
+    static const QString springerLinkQueryBaseUrl;
 
 public:
     static const QString springerMetadataKey;
@@ -175,7 +176,7 @@ public:
     QUrl buildQueryUrl() {
         if (form == nullptr) return QUrl();
 
-        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springernature.com/metadata/pam?api_key=")).append(springerMetadataKey));
+        QUrl queryUrl{QUrl::fromUserInput(springerLinkQueryBaseUrl)};
 
         QString queryString = form->lineEditFreeText->text();
 
@@ -201,6 +202,7 @@ public:
         queryString = queryString.simplified();
         QUrlQuery query(queryUrl);
         query.addQueryItem(QStringLiteral("q"), queryString);
+        query.addQueryItem(QStringLiteral("api_key"), springerMetadataKey);
         queryUrl.setQuery(query);
 
         return queryUrl;
@@ -208,7 +210,7 @@ public:
 #endif // HAVE_QTWIDGETS
 
     QUrl buildQueryUrl(const QMap<QueryKey, QString> &query) {
-        QUrl queryUrl = QUrl(QString(QStringLiteral("https://api.springernature.com/metadata/pam?api_key=")).append(springerMetadataKey));
+        QUrl queryUrl{QUrl::fromUserInput(springerLinkQueryBaseUrl)};
 
         QString queryString = query[QueryKey::FreeText];
 
@@ -235,6 +237,7 @@ public:
         queryString = queryString.simplified();
         QUrlQuery q(queryUrl);
         q.addQueryItem(QStringLiteral("q"), queryString);
+        q.addQueryItem(QStringLiteral("api_key"), springerMetadataKey);
         queryUrl.setQuery(q);
 
         return queryUrl;
@@ -242,8 +245,8 @@ public:
 };
 
 const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::xsltFilenameBase = QStringLiteral("pam2bibtex.xsl");
+const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::springerLinkQueryBaseUrl{QStringLiteral("https://api.springernature.com/metadata/pam")};
 const QString OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate::springerMetadataKey(InternalNetworkAccessManager::reverseObfuscate("\xce\xb8\x4d\x2c\x8d\xba\xa9\xc4\x61\x9\x58\x6c\xbb\xde\x86\xb5\xb1\xc6\x15\x71\x76\x45\xd\x79\x12\x65\x95\xe1\x5d\x2f\x1d\x24\x10\x72\x2a\x5e\x69\x4\xdc\xba\xab\xc3\x28\x58\x8a\xfa\x5e\x69"));
-
 
 OnlineSearchSpringerLink::OnlineSearchSpringerLink(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchSpringerLink::OnlineSearchSpringerLinkPrivate(this))
