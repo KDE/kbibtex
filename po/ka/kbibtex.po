@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-17 00:42+0000\n"
-"PO-Revision-Date: 2023-11-10 04:51+0100\n"
+"PO-Revision-Date: 2023-11-18 21:32+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2524,7 +2524,7 @@ msgstr "ACM ციფრული ბიბლიოთეკა"
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:70
 #, kde-format
 msgid "Free text:"
-msgstr "ტექსტის მოძებნა:"
+msgstr "თავისუფალი ტექსტი:"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:79
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:90
@@ -2591,10 +2591,9 @@ msgid "DOI:"
 msgstr "DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
-#, fuzzy, kde-format
-#| msgid "Free text:"
+#, kde-format
 msgid "Free text or DOI:"
-msgstr "ტექსტის მოძებნა:"
+msgstr "თავისუფალი ტექსტი ან DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
