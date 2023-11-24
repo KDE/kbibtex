@@ -296,6 +296,11 @@ void FileView::dragMoveEvent(QDragMoveEvent *event)
         m_clipboard->editorDragMoveEvent(event);
 }
 
+void FileView::contextMenuEvent(QContextMenuEvent *event)
+{
+    emit contextMenuTriggered(event);
+}
+
 void FileView::itemActivated(const QModelIndex &index)
 {
     Q_EMIT elementExecuted(elementAt(index));

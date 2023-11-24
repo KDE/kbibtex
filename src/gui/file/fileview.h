@@ -62,6 +62,7 @@ Q_SIGNALS:
     void currentElementChanged(QSharedPointer<Element>, const File *);
     void elementExecuted(QSharedPointer<Element>);
     void modified(bool);
+    void contextMenuTriggered(QContextMenuEvent *);
 
 public Q_SLOTS:
     void viewCurrentElement();
@@ -83,6 +84,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 protected Q_SLOTS:
     void itemActivated(const QModelIndex &index);
