@@ -3,6 +3,7 @@ ChangeLog
 Diff 0.10.0 to 0.10.1
 
 - KDE Bug 467803: Accepting empty string as valid copy reference command
+- KDE Bug 470750: 'View Document' should check for existance of local PDF at keypress
 
 Diff 0.9.3.2 to 0.10.0
 

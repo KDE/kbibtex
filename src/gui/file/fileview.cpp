@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2023 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -287,6 +287,11 @@ void FileView::dropEvent(QDropEvent *event)
 void FileView::dragMoveEvent(QDragMoveEvent *event)
 {
     emit editorDragMoveEvent(event);
+}
+
+void FileView::contextMenuEvent(QContextMenuEvent *event)
+{
+    emit contextMenuTriggered(event);
 }
 
 void FileView::itemActivated(const QModelIndex &index)

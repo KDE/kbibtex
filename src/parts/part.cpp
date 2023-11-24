@@ -22,6 +22,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMenu>
+#include <QShortcut>
 #include <QApplication>
 #include <QLayout>
 #include <QKeyEvent>
@@ -127,6 +128,7 @@ public:
     FileModel *model;
     SortFilterFileModel *sortFilterProxyModel;
     QAction *editCutAction, *editDeleteAction, *editCopyAction, *editPasteAction, *editCopyReferencesAction, *elementEditAction, *elementViewDocumentAction, *fileSaveAction, *elementFindPDFAction, *entryApplyDefaultFormatString;
+    QShortcut *updateViewDocumentShortcut;
     QMenu *viewDocumentMenu;
     bool isSaveAsOperation;
     LyX *lyx;
@@ -211,6 +213,17 @@ public:
         p->actionCollection()->setDefaultShortcut(elementViewDocumentAction, Qt::CTRL + Qt::Key_D);
         connect(elementViewDocumentAction, &QAction::triggered, p, &KBibTeXPart::elementViewDocument);
 
+        // Shortcut complementing elementViewDocumentAction; to be enabled if elementViewDocumentAction is disabled and vice versa
+        // Triggers a check if elementViewDocumentAction should be enabled and then opens a document if so
+        updateViewDocumentShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_D), partWidget);
+        updateViewDocumentShortcut->setEnabled(false);
+        connect(updateViewDocumentShortcut, &QShortcut::activated, p, [this]() {
+            // Update menu items for opening documents associated with an entry
+            updateViewDocumentMenu();
+            // Show 'best' document. If no document is available, this function will nothing
+            p->elementViewDocument();
+        });
+
         /// Action to find a PDF matching the current element
         elementFindPDFAction = new QAction(QIcon::fromTheme(QStringLiteral("application-pdf")), i18n("Find PDF..."), p);
         p->actionCollection()->addAction(QStringLiteral("element_findpdf"), elementFindPDFAction);
@@ -247,7 +260,17 @@ public:
         connect(editDeleteAction, &QAction::triggered, partWidget->fileView(), &FileView::selectionDelete);
 
         /// Build context menu for central BibTeX file view
-        partWidget->fileView()->setContextMenuPolicy(Qt::ActionsContextMenu); ///< context menu is based on actions
+        partWidget->fileView()->setContextMenuPolicy(Qt::DefaultContextMenu);
+        connect(partWidget->fileView(), &FileView::contextMenuTriggered, p, [this](QContextMenuEvent * event) {
+            // Update menu items for opening documents associated with an entry
+            updateViewDocumentMenu();
+            // Assemble context menu from actions that were associated with this QWidget
+            // using the same mechanism as if policy Qt::ActionsContextMenu was used
+            QMenu menu(partWidget);
+            for (QAction *action : partWidget->fileView()->actions())
+                menu.addAction(action);
+            menu.exec(event->globalPos());
+        });
         partWidget->fileView()->addAction(elementEditAction);
         partWidget->fileView()->addAction(elementViewDocumentAction);
         QAction *separator = new QAction(p);
@@ -661,7 +684,7 @@ public:
      */
     int updateViewDocumentMenu() {
         viewDocumentMenu->clear();
-        int result = 0; ///< Initially, no references are known
+        int numDocumentsToView = 0; ///< Initially, no references are known
 
         /// Retrieve Entry object of currently selected line
         /// in main list view
@@ -724,11 +747,19 @@ public:
                     viewDocumentMenu->insertSection(firstAction, i18n("Remote Files"));
                 }
 
-                result = urlList.count();
+                numDocumentsToView = urlList.count();
             }
         }
 
-        return result;
+        const bool emptySelection = partWidget->fileView()->selectedElements().isEmpty();
+        // Enable menu item only if there is at least one document to view
+        elementViewDocumentAction->setEnabled(!emptySelection && numDocumentsToView > 0);
+        // Activate sub-menu only if there are at least two documents to view
+        elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? viewDocumentMenu : nullptr);
+        elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? (*viewDocumentMenu->actions().constBegin())->text() : QString());
+        updateViewDocumentShortcut->setEnabled(!elementViewDocumentAction->isEnabled());
+
+        return numDocumentsToView;
     }
 
     void readConfiguration() {
@@ -1049,12 +1080,8 @@ void KBibTeXPart::updateActions()
     d->colorLabelContextMenu->menuAction()->setEnabled(!emptySelection && isReadWrite());
     d->colorLabelContextMenuAction->setEnabled(!emptySelection && isReadWrite());
 
-    int numDocumentsToView = d->updateViewDocumentMenu();
-    /// enable menu item only if there is at least one document to view
-    d->elementViewDocumentAction->setEnabled(!emptySelection && numDocumentsToView > 0);
-    /// activate sub-menu only if there are at least two documents to view
-    d->elementViewDocumentAction->setMenu(numDocumentsToView > 1 ? d->viewDocumentMenu : nullptr);
-    d->elementViewDocumentAction->setToolTip(numDocumentsToView == 1 ? (*d->viewDocumentMenu->actions().constBegin())->text() : QString());
+    // Update menu items for opening documents associated with an entry
+    d->updateViewDocumentMenu();
 
     /// update list of references which can be sent to LyX
     QStringList references;

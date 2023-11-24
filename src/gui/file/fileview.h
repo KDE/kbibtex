@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2023 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -63,6 +63,7 @@ signals:
     void editorDragMoveEvent(QDragMoveEvent *);
     void editorDropEvent(QDropEvent *);
     void modified(bool);
+    void contextMenuTriggered(QContextMenuEvent *);
 
 public slots:
     void viewCurrentElement();
@@ -84,6 +85,7 @@ protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dragMoveEvent(QDragMoveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 protected slots:
     void itemActivated(const QModelIndex &index);
