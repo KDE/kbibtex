@@ -1676,9 +1676,9 @@ msgid ""
 "path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute "
 "path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
 msgstr ""
-"<qt><p>Utilitze un nom de fitxer relatiu al fitxer de bibliografia?</p><p>El "
-"camí relatiu serà<br/><tt style=\"font-family: %3;\">%1</tt></p><p>El camí "
-"absolut serà<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
+"<qt><p>Voleu utilitzar un nom de fitxer relatiu al fitxer de bibliografia?</"
+"p><p>El camí relatiu serà<br/><tt style=\"font-family: %3;\">%1</tt></"
+"p><p>El camí absolut serà<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
 
 #: src/gui/field/fieldlistedit.cpp:643
 #, kde-format
