@@ -10,6 +10,7 @@
   <name xml:lang="da">KBibTeX</name>
   <name xml:lang="de">KBibTeX</name>
   <name xml:lang="en-GB">KBibTeX</name>
+  <name xml:lang="eo">KBibTeX</name>
   <name xml:lang="es">KBibTeX</name>
   <name xml:lang="et">KBibTeX</name>
   <name xml:lang="fi">KBibTeX</name>
@@ -37,6 +38,7 @@
   <summary xml:lang="ca-valencia">Editor de BibTeX, creat per la comunitat KDE, per a editar bibliografies emprant LaTeX</summary>
   <summary xml:lang="de">BibTeX-Editor von KDE zum Bearbeiten von Bibliografien mit LaTeX</summary>
   <summary xml:lang="en-GB">BibTeX editor by KDE to edit bibliographies used with LaTeX</summary>
+  <summary xml:lang="eo">BibTeX-redaktilo de KDE por redakti bibliografiojn uzatajn kun LaTeX</summary>
   <summary xml:lang="es">Editor de BibTeX creado por KDE para editar las bibliografías usadas con LaTeX</summary>
   <summary xml:lang="et">KDE BibTeXi redaktor bibliograafiate muutmiseks LaTeXi kõlblikuks</summary>
   <summary xml:lang="fi">KDE:n BibTeX-muokkain LaTeXissa käytettävien lähdeluettelojen muokkaamiseen</summary>
@@ -91,6 +93,7 @@
     <p xml:lang="ca-valencia">KBibTeX pot fer les següents coses:</p>
     <p xml:lang="de">Mit KBibTeX können Sie folgende Aufgabe erledigen:</p>
     <p xml:lang="en-GB">KBibTeX can do the following things:</p>
+    <p xml:lang="eo">KBibTeX povas fari la jenajn aferojn:</p>
     <p xml:lang="es">KBibTeX puede hacer las siguientes tareas:</p>
     <p xml:lang="et">KBibTeX suudab teha järgmisi asju:</p>
     <p xml:lang="fi">KBibTeXilla voit tehdä seuraavia asioita:</p>
@@ -219,6 +222,7 @@
       <li xml:lang="ca-valencia">Busca i fusiona les entrades duplicades en la bibliografia.</li>
       <li xml:lang="de"> Suchen und zusammenführen von doppelten Einträgen in Bibliografien.</li>
       <li xml:lang="en-GB">Find and merge duplicate entries in bibliography.</li>
+      <li xml:lang="eo">Trovi kaj kunfandi duobligitajn enskribojn en bibliografio.</li>
       <li xml:lang="es">Busca y fusiona las entradas duplicadas en la bibliografía.</li>
       <li xml:lang="et">Bibliograafia topeltkirjete otsimine ja ühendamine.</li>
       <li xml:lang="fi">Etsiä ja yhdistää lähdetietueiden kaksoiskappaleita.</li>
@@ -245,6 +249,7 @@
       <li xml:lang="ca-valencia">Integra les vostres bibliografies amb editors de LaTeX com Kile i LyX.</li>
       <li xml:lang="de">Integration Ihrer Bibliografien mit LaTeX-Editoren wie Kile und LyX.</li>
       <li xml:lang="en-GB">Integrate your bibliographies with LaTeX editors such as Kile and LyX.</li>
+      <li xml:lang="eo">Integri viajn bibliografiojn kun LaTeX-redaktiloj kiel Kile kaj LyX.</li>
       <li xml:lang="es">Integra sus bibliografías con editores LaTeX como Kile y LyX.</li>
       <li xml:lang="et">Bibliograafia põimimine LaTeXi redaktoritega, näiteks Kile või LyX.</li>
       <li xml:lang="fi">Integroida lähdetietokantasi LaTeX-muokkaimeen kuten Kileen tai LyXiin.</li>
@@ -271,6 +276,7 @@
       <li xml:lang="cs">Importovat vaši knihovnu Zotero</li>
       <li xml:lang="de">Import Ihrer Zotero-Bibliothek.</li>
       <li xml:lang="en-GB">Import your Zotero library.</li>
+      <li xml:lang="eo">Importu vian Zotero-bibliotekon.</li>
       <li xml:lang="es">Importa su librería Zotero.</li>
       <li xml:lang="et">Oma Zotero raamatukogu import.</li>
       <li xml:lang="fi">Tuoda Zotero-kirjastosi.</li>
@@ -305,6 +311,7 @@
       <caption xml:lang="cs">Hlavní okno KBibTeX</caption>
       <caption xml:lang="de">Hauptfenster von KBibTeX</caption>
       <caption xml:lang="en-GB">KBibTeX main window</caption>
+      <caption xml:lang="eo">KBibTeX ĉefa fenestro</caption>
       <caption xml:lang="es">Ventana principal de KBibTeX</caption>
       <caption xml:lang="et">KBibTeXi peaaken</caption>
       <caption xml:lang="fi">KBibTeXin pääikkuna</caption>
