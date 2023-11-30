@@ -3132,16 +3132,7 @@ msgid "Finding Duplicates"
 msgstr "Trovi Duplikatojn"
 
 #: src/processing/idsuggestions.cpp:312
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Small words that can be removed from titles when generating id "
-#| "suggestions; ¦separated by pipe symbol"
-#| msgid ""
-#| "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|"
-#| "er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|"
-#| "kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|"
-#| "von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|"
-#| "wer|which|wie|wird|with|you|und|and|ein|eine|einer|eines"
+#, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
 "separated by pipe symbol"
@@ -3354,14 +3345,7 @@ msgid "Loading..."
 msgstr "Ŝargante..."
 
 #: src/program/docklets/documentpreview.cpp:539
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Additional information in case there is not KPart available for mime type "
-#| "¦'application/pdf'"
-#| msgid ""
-#| "<br/><br/>Please install <a href=\"https://userbase.kde.org/Okular"
-#| "\">Okular</a> for KDE Frameworks&nbsp;5 to make use of its PDF viewing "
-#| "component.<br/>Okular for KDE&nbsp;4 will not work."
+#, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
 "'application/pdf'"
@@ -3375,11 +3359,7 @@ msgstr ""
 ">Okular por KDE 4 ne funkcios."
 
 #: src/program/docklets/documentpreview.cpp:540
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "First parameter is mime type, second parameter is optional information "
-#| "(may ¦be empty)"
-#| msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
+#, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
 "be empty)"
