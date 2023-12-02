@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2021-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -42,6 +42,11 @@ public:
     void startSearch(const QMap<QueryKey, QString> &query, int numResults) override;
     QString label() const override;
     QUrl homepage() const override;
+
+#ifdef BUILD_TESTING
+    // KBibTeXNetworkingTest::onlineSearchZbMathXMLparsing  makes use of this function to test parsing Atom XML data
+    QVector<QSharedPointer<Entry>> parseZbMathXML(const QByteArray &xmlData, bool *ok);
+#endif // BUILD_TESTING
 
 private Q_SLOTS:
     void doneFetchingOAI();

@@ -6,7 +6,6 @@ install(
     fancy.xsl
     standard.xsl
     abstractonly.xsl
-    oaizbpreview-to-bibtex.xsl
     wikipedia-cite.xsl
     DESTINATION
     ${KDE_INSTALL_DATADIR}/kbibtex
