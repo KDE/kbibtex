@@ -51,10 +51,10 @@ public:
 
     Private(QWidget *w, BibliographyService *parent)
             : configXDGMimeAppsList(KSharedConfig::openConfig(QStringLiteral("mimeapps.list"), KConfig::NoGlobals, QStandardPaths::ApplicationsLocation)),
-          configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, "Added KDE Service Associations"),
-          configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, "Removed KDE Service Associations"),
-          configGroupAddedAssociations(configXDGMimeAppsList, "Added Associations"),
-          configGroupRemovedAssociations(configXDGMimeAppsList, "Removed Associations"),
+          configGroupAddedKDEServiceAssociations(configXDGMimeAppsList, QStringLiteral("Added KDE Service Associations")),
+          configGroupRemovedKDEServiceAssociations(configXDGMimeAppsList, QStringLiteral("Removed KDE Service Associations")),
+          configGroupAddedAssociations(configXDGMimeAppsList, QStringLiteral("Added Associations")),
+          configGroupRemovedAssociations(configXDGMimeAppsList, QStringLiteral("Removed Associations")),
           parentWidget(w)
     {
         Q_UNUSED(parent)
