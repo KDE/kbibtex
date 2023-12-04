@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-17 00:42+0000\n"
+"POT-Creation-Date: 2023-12-04 00:41+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -1314,7 +1314,7 @@ msgstr "Lista:"
 msgid "Value"
 msgstr "Vrijednost"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:248
+#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:261
 #, kde-format
 msgid "Delete"
 msgstr "Obriši"
@@ -1748,14 +1748,14 @@ msgstr "Odbaci izmjene?"
 msgid "Continue Editing"
 msgstr "Nastavi uređivanje"
 
-#: src/gui/file/fileview.cpp:326
+#: src/gui/file/fileview.cpp:331
 #, fuzzy, kde-format
 #| msgid "View Element"
 msgctxt "@title:window"
 msgid "View Element"
 msgstr "Prikaz elementa"
 
-#: src/gui/file/fileview.cpp:334
+#: src/gui/file/fileview.cpp:339
 #, fuzzy, kde-format
 #| msgid "Edit Element"
 msgctxt "@title:window"
@@ -2815,7 +2815,7 @@ msgstr "Naslov knjige/žurnala:"
 msgid "Author or Editor:"
 msgstr "Pisac ili urednik:"
 
-#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:299
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:302
 #, kde-format
 msgid "SpringerLink"
 msgstr "SpringerLink"
@@ -2918,137 +2918,137 @@ msgstr "Element"
 msgid "Main Toolbar"
 msgstr "Glavna traka sa alatkama"
 
-#: src/parts/part.cpp:136 src/parts/part.cpp:213
+#: src/parts/part.cpp:138 src/parts/part.cpp:215
 #, kde-format
 msgid "View Document"
 msgstr "Prikaži dokument"
 
-#: src/parts/part.cpp:163
+#: src/parts/part.cpp:165
 #, kde-format
 msgid "Save Copy As..."
 msgstr "Spremi kopiju kao ..."
 
-#: src/parts/part.cpp:167
+#: src/parts/part.cpp:169
 #, kde-format
 msgid "Save Selection..."
 msgstr ""
 
-#: src/parts/part.cpp:175
+#: src/parts/part.cpp:177
 #, kde-format
 msgid "Filter"
 msgstr "Filter"
 
-#: src/parts/part.cpp:180
+#: src/parts/part.cpp:182
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
 msgstr "Filtriraj bibliografske unose (%1)"
 
-#: src/parts/part.cpp:183
+#: src/parts/part.cpp:185
 #, kde-format
 msgid "New element"
 msgstr "Novi element"
 
-#: src/parts/part.cpp:189
+#: src/parts/part.cpp:191
 #, kde-format
 msgid "New entry"
 msgstr "Novi unos"
 
-#: src/parts/part.cpp:194
+#: src/parts/part.cpp:196
 #, kde-format
 msgid "New comment"
 msgstr "Novi komentar"
 
-#: src/parts/part.cpp:198
+#: src/parts/part.cpp:200
 #, kde-format
 msgid "New macro"
 msgstr "Novi makro"
 
-#: src/parts/part.cpp:202
+#: src/parts/part.cpp:204
 #, kde-format
 msgid "New preamble"
 msgstr "Novi uvod"
 
-#: src/parts/part.cpp:207
+#: src/parts/part.cpp:209
 #, kde-format
 msgid "Edit Element"
 msgstr "Uredi element"
 
-#: src/parts/part.cpp:219
+#: src/parts/part.cpp:232
 #, kde-format
 msgid "Find PDF..."
 msgstr "Nađi PDF..."
 
-#: src/parts/part.cpp:224
+#: src/parts/part.cpp:237
 #, kde-format
 msgid "Format entry ids"
 msgstr "Formatiraj ulazne id-ove"
 
-#: src/parts/part.cpp:238
+#: src/parts/part.cpp:251
 #, kde-format
 msgid "Copy References"
 msgstr "Kopiraj reference"
 
-#: src/parts/part.cpp:283
+#: src/parts/part.cpp:306
 #, kde-format
 msgid "New%1"
 msgstr "Novi%1"
 
-#: src/parts/part.cpp:442
+#: src/parts/part.cpp:465
 #, fuzzy, kde-format
 #| msgid "<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>"
 msgid "Could not create backup copies of document '%1'."
 msgstr "<qt>Neuspjelo kreiranje rezervnih kopija dokumenta<br/><b>%1</b>.</qt>"
 
-#: src/parts/part.cpp:442
+#: src/parts/part.cpp:465
 #, kde-format
 msgid "Backup copies"
 msgstr "Rezervne kopije"
 
-#: src/parts/part.cpp:475
+#: src/parts/part.cpp:498
 #, fuzzy, kde-format
 #| msgid "Save file locally"
 msgid "Save file"
 msgstr "Lokalno sačuvaj datoteku"
 
-#: src/parts/part.cpp:503
+#: src/parts/part.cpp:526
 #, kde-format
 msgid "BibUtils"
 msgstr ""
 
-#: src/parts/part.cpp:504
+#: src/parts/part.cpp:527
 #, fuzzy, kde-format
 #| msgid "KBibTeX"
 msgid "BibTeX2HTML"
 msgstr "KBibTeX"
 
-#: src/parts/part.cpp:505
+#: src/parts/part.cpp:528
 #, fuzzy, kde-format
 #| msgid "Load bibliography"
 msgid "Word XML bibliography"
 msgstr "Učitaj literaturu"
 
-#: src/parts/part.cpp:506
+#: src/parts/part.cpp:529
 #, kde-format
 msgid "KBibTeX's own XML structure"
 msgstr ""
 
-#: src/parts/part.cpp:507
+#: src/parts/part.cpp:530
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
 msgstr ""
 
-#: src/parts/part.cpp:508
+#: src/parts/part.cpp:531
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
 msgstr ""
 
-#: src/parts/part.cpp:517
+#: src/parts/part.cpp:540
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
 msgstr ""
 
-#: src/parts/part.cpp:519
+#: src/parts/part.cpp:542
 #, kde-format
 msgid ""
 "Several exporter modules are available to write file '%1'.\n"
@@ -3056,37 +3056,37 @@ msgid ""
 "Please choose one."
 msgstr ""
 
-#: src/parts/part.cpp:550
+#: src/parts/part.cpp:573
 #, fuzzy, kde-format
 #| msgid "BibTeX File Settings"
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "BibTeX Postavke datoteka"
 
-#: src/parts/part.cpp:568
+#: src/parts/part.cpp:591
 #, fuzzy, kde-format
 #| msgid "PDF/PostScript File Settings"
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "PDF/PostScript Postavke datoteka"
 
-#: src/parts/part.cpp:688
+#: src/parts/part.cpp:711
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr "Čuvanje literature u datoteku '%1' nije uspjelo."
 
-#: src/parts/part.cpp:690 src/parts/part.cpp:696
+#: src/parts/part.cpp:713 src/parts/part.cpp:719
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr "Čuvanje literature nije uspjelo"
 
-#: src/parts/part.cpp:692
+#: src/parts/part.cpp:715
 #, fuzzy, kde-format
 #| msgid "Saving bibliography failed"
 msgid "Saving bibliography failed:"
 msgstr "Čuvanje literature nije uspjelo"
 
-#: src/parts/part.cpp:695
+#: src/parts/part.cpp:718
 #, fuzzy, kde-format
 #| msgid ""
 #| "Saving the bibliography to file '%1' failed.\n"
@@ -3098,17 +3098,17 @@ msgstr ""
 "\n"
 "Sljedeći izlaz je generiran od strane izvoznog filtera:"
 
-#: src/parts/part.cpp:746
+#: src/parts/part.cpp:769
 #, kde-format
 msgid "Local Files"
 msgstr "Lokalne Datoteke"
 
-#: src/parts/part.cpp:771
+#: src/parts/part.cpp:794
 #, kde-format
 msgid "Remote Files"
 msgstr "Udaljene datoteke"
 
-#: src/parts/part.cpp:892
+#: src/parts/part.cpp:923
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3121,7 +3121,7 @@ msgstr ""
 "Provjerite da imate pristup za pisanje u ovu datoteku ili da na disku ima "
 "dovoljno mjesta."
 
-#: src/parts/part.cpp:1031
+#: src/parts/part.cpp:1062
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3129,12 +3129,12 @@ msgstr ""
 "Ne mogu primjeniti podrazumijevano formatiranje za ulazne id-ove: Nije "
 "specificiran podrazumijevani format."
 
-#: src/parts/part.cpp:1031
+#: src/parts/part.cpp:1062
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr ""
 
-#: src/parts/part.cpp:1159
+#: src/parts/part.cpp:1186
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3145,17 +3145,17 @@ msgstr ""
 "\n"
 "Da ponovo učitam datoteku ili da zanemarim promjene na disku?"
 
-#: src/parts/part.cpp:1159
+#: src/parts/part.cpp:1186
 #, kde-format
 msgid "File changed externally"
 msgstr "Datoteka je promijenjena izvana"
 
-#: src/parts/part.cpp:1159
+#: src/parts/part.cpp:1186
 #, kde-format
 msgid "Reload file"
 msgstr "Ponovno učitati datoteku"
 
-#: src/parts/part.cpp:1159
+#: src/parts/part.cpp:1186
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Zanemari promjene na disku"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-17 00:42+0000\n"
+"POT-Creation-Date: 2023-12-04 00:41+0000\n"
 "PO-Revision-Date: 2023-11-13 14:58+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1279,7 +1279,7 @@ msgstr "Lista:"
 msgid "Value"
 msgstr "Valor"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:248
+#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:261
 #, kde-format
 msgid "Delete"
 msgstr "Dele"
@@ -1699,13 +1699,13 @@ msgstr "Abandona modificationes?"
 msgid "Continue Editing"
 msgstr ""
 
-#: src/gui/file/fileview.cpp:326
+#: src/gui/file/fileview.cpp:331
 #, kde-format
 msgctxt "@title:window"
 msgid "View Element"
 msgstr "Vide elemento"
 
-#: src/gui/file/fileview.cpp:334
+#: src/gui/file/fileview.cpp:339
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
@@ -2719,7 +2719,7 @@ msgstr ""
 msgid "Author or Editor:"
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:299
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:302
 #, kde-format
 msgid "SpringerLink"
 msgstr ""
@@ -2821,133 +2821,133 @@ msgstr "Elemento"
 msgid "Main Toolbar"
 msgstr "Barra de instrumento principal"
 
-#: src/parts/part.cpp:136 src/parts/part.cpp:213
+#: src/parts/part.cpp:138 src/parts/part.cpp:215
 #, kde-format
 msgid "View Document"
 msgstr "Vide Documento"
 
-#: src/parts/part.cpp:163
+#: src/parts/part.cpp:165
 #, kde-format
 msgid "Save Copy As..."
 msgstr "Salveguarda copia como..."
 
-#: src/parts/part.cpp:167
+#: src/parts/part.cpp:169
 #, kde-format
 msgid "Save Selection..."
 msgstr "Salveguarda selection"
 
-#: src/parts/part.cpp:175
+#: src/parts/part.cpp:177
 #, kde-format
 msgid "Filter"
 msgstr "Filtro"
 
-#: src/parts/part.cpp:180
+#: src/parts/part.cpp:182
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
 msgstr ""
 
-#: src/parts/part.cpp:183
+#: src/parts/part.cpp:185
 #, kde-format
 msgid "New element"
 msgstr "Nove elemento"
 
-#: src/parts/part.cpp:189
+#: src/parts/part.cpp:191
 #, kde-format
 msgid "New entry"
 msgstr "Nove entrata"
 
-#: src/parts/part.cpp:194
+#: src/parts/part.cpp:196
 #, kde-format
 msgid "New comment"
 msgstr "Nove commento"
 
-#: src/parts/part.cpp:198
+#: src/parts/part.cpp:200
 #, kde-format
 msgid "New macro"
 msgstr "Nove macro"
 
-#: src/parts/part.cpp:202
+#: src/parts/part.cpp:204
 #, kde-format
 msgid "New preamble"
 msgstr ""
 
-#: src/parts/part.cpp:207
+#: src/parts/part.cpp:209
 #, kde-format
 msgid "Edit Element"
 msgstr "Edita elemento"
 
-#: src/parts/part.cpp:219
+#: src/parts/part.cpp:232
 #, kde-format
 msgid "Find PDF..."
 msgstr "Trova PDF..."
 
-#: src/parts/part.cpp:224
+#: src/parts/part.cpp:237
 #, kde-format
 msgid "Format entry ids"
 msgstr ""
 
-#: src/parts/part.cpp:238
+#: src/parts/part.cpp:251
 #, kde-format
 msgid "Copy References"
 msgstr ""
 
-#: src/parts/part.cpp:283
+#: src/parts/part.cpp:306
 #, kde-format
 msgid "New%1"
 msgstr "Nove %1"
 
-#: src/parts/part.cpp:442
+#: src/parts/part.cpp:465
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
 msgstr ""
 
-#: src/parts/part.cpp:442
+#: src/parts/part.cpp:465
 #, kde-format
 msgid "Backup copies"
 msgstr ""
 
-#: src/parts/part.cpp:475
+#: src/parts/part.cpp:498
 #, kde-format
 msgid "Save file"
 msgstr "Salveguarda file"
 
-#: src/parts/part.cpp:503
+#: src/parts/part.cpp:526
 #, kde-format
 msgid "BibUtils"
 msgstr ""
 
-#: src/parts/part.cpp:504
+#: src/parts/part.cpp:527
 #, kde-format
 msgid "BibTeX2HTML"
 msgstr "BibTeX2HTML"
 
-#: src/parts/part.cpp:505
+#: src/parts/part.cpp:528
 #, kde-format
 msgid "Word XML bibliography"
 msgstr ""
 
-#: src/parts/part.cpp:506
+#: src/parts/part.cpp:529
 #, kde-format
 msgid "KBibTeX's own XML structure"
 msgstr ""
 
-#: src/parts/part.cpp:507
+#: src/parts/part.cpp:530
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
 msgstr ""
 
-#: src/parts/part.cpp:508
+#: src/parts/part.cpp:531
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
 msgstr ""
 
-#: src/parts/part.cpp:517
+#: src/parts/part.cpp:540
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
 msgstr ""
 
-#: src/parts/part.cpp:519
+#: src/parts/part.cpp:542
 #, kde-format
 msgid ""
 "Several exporter modules are available to write file '%1'.\n"
@@ -2955,49 +2955,49 @@ msgid ""
 "Please choose one."
 msgstr ""
 
-#: src/parts/part.cpp:550
+#: src/parts/part.cpp:573
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "Preferentias de file de BibTeX"
 
-#: src/parts/part.cpp:568
+#: src/parts/part.cpp:591
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "Preferentias de file de PDF/PostScript"
 
-#: src/parts/part.cpp:688
+#: src/parts/part.cpp:711
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr ""
 
-#: src/parts/part.cpp:690 src/parts/part.cpp:696
+#: src/parts/part.cpp:713 src/parts/part.cpp:719
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr ""
 
-#: src/parts/part.cpp:692
+#: src/parts/part.cpp:715
 #, kde-format
 msgid "Saving bibliography failed:"
 msgstr ""
 
-#: src/parts/part.cpp:695
+#: src/parts/part.cpp:718
 #, kde-format
 msgid "The following output was generated by the export filter:"
 msgstr ""
 
-#: src/parts/part.cpp:746
+#: src/parts/part.cpp:769
 #, kde-format
 msgid "Local Files"
 msgstr "Files local"
 
-#: src/parts/part.cpp:771
+#: src/parts/part.cpp:794
 #, kde-format
 msgid "Remote Files"
 msgstr "Files remote"
 
-#: src/parts/part.cpp:892
+#: src/parts/part.cpp:923
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3011,18 +3011,18 @@ msgstr ""
 "Tu verifica que tu ha le permission de scriptura a iste file o que assatis "
 "spatio sur le disco es disponibile."
 
-#: src/parts/part.cpp:1031
+#: src/parts/part.cpp:1062
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
 msgstr ""
 
-#: src/parts/part.cpp:1031
+#: src/parts/part.cpp:1062
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr ""
 
-#: src/parts/part.cpp:1159
+#: src/parts/part.cpp:1186
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3030,17 +3030,17 @@ msgid ""
 "Reload file or ignore changes on disk?"
 msgstr ""
 
-#: src/parts/part.cpp:1159
+#: src/parts/part.cpp:1186
 #, kde-format
 msgid "File changed externally"
 msgstr ""
 
-#: src/parts/part.cpp:1159
+#: src/parts/part.cpp:1186
 #, kde-format
 msgid "Reload file"
 msgstr "Recarga file"
 
-#: src/parts/part.cpp:1159
+#: src/parts/part.cpp:1186
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr ""
