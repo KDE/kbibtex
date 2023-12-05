@@ -883,7 +883,7 @@ void OtherFieldsWidget::listCurrentChanged(QTreeWidgetItem *item, QTreeWidgetIte
     buttonDelete->setEnabled(somethingSelected && !isReadOnly);
     if (somethingSelected) {
         currentUrl = QUrl(item->text(1));
-        validUrl = currentUrl.isValid() && currentUrl.isLocalFile() & QFileInfo::exists(currentUrl.toLocalFile());
+        validUrl = currentUrl.isValid() && currentUrl.isLocalFile() && QFileInfo::exists(currentUrl.toLocalFile());
         if (!validUrl) {
             const QRegularExpressionMatch urlRegExpMatch = KBibTeX::urlRegExp.match(item->text(1));
             if (urlRegExpMatch.hasMatch()) {
