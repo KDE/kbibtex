@@ -151,14 +151,12 @@ if(BUILD_KPART OR BUILD_TESTING)
         KIO
         IconThemes
         CoreAddons
-        Service
         Wallet
         Crash
         TextEditor
         COMPONENTS
         XmlGui
         Parts
-        #DocTools
     )
 endif()
 if (KF5_FOUND)

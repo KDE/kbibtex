@@ -4,16 +4,20 @@
 Dependencies:
 - 'on': ['@all']
   'require':
+    'frameworks/kconfig': '@stable'
     'frameworks/ki18n': '@stable'
     'frameworks/kxmlgui': '@stable'
     'frameworks/kio': '@stable'
     'frameworks/kiconthemes': '@stable'
-    'frameworks/kitemviews': '@stable'
     'frameworks/kparts': '@stable'
     'frameworks/kcoreaddons': '@stable'
-    'frameworks/kservice': '@stable'
     'frameworks/ktexteditor': '@stable'
-    'frameworks/kdoctools': '@stable'
+    'frameworks/kwidgetaddons': '@stable'
     'frameworks/kwallet': '@stable'
     'frameworks/kcrash': '@stable'
     'frameworks/extra-cmake-modules': '@stable'
+
+Options:
+  test-before-installing: True
+  require-passing-tests-on: [ 'Linux', 'FreeBSD', 'Windows' ]
+  cmake-options: -DBUILD_TESTING:BOOL=ON
