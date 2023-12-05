@@ -55,6 +55,7 @@ QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
     static const QMimeType mtBibTeX(db.mimeTypeForName(mimetypeBibTeX));
     static const QMimeType mtPDF(db.mimeTypeForName(mimetypePDF));
     static const QMimeType mtRIS(db.mimeTypeForName(mimetypeRIS));
+
     /// Test if mime type for BibTeX is registered before determining file extension
     static const QString mimetypeBibTeXExt = mtBibTeX.preferredSuffix();
     /// Test if mime type for RIS is registered before determining file extension
@@ -64,16 +65,16 @@ QMimeType FileInfo::mimeTypeForUrl(const QUrl &url)
 
     const QString extension = db.suffixForFileName(url.fileName()).toLower();
     /// First, check preferred suffixes
-    if (extension == mimetypeBibTeXExt)
+    if (mtBibTeX.isValid() && extension == mimetypeBibTeXExt)
         return mtBibTeX;
-    else if (extension == mimetypeRISExt)
+    else if (mtRIS.isValid() && extension == mimetypeRISExt)
         return mtRIS;
     else if (extension == mimetypePDFExt)
         return mtPDF;
     /// Second, check any other suffixes
-    else if (mtBibTeX.suffixes().contains(extension))
+    else if (mtBibTeX.isValid() && mtBibTeX.suffixes().contains(extension))
         return mtBibTeX;
-    else if (mtRIS.suffixes().contains(extension))
+    else if (mtRIS.isValid() && mtRIS.suffixes().contains(extension))
         return mtRIS;
     else if (mtPDF.suffixes().contains(extension))
         return mtPDF;

@@ -36,6 +36,8 @@
 #include <FileExporterXSLT>
 
 #include "logging_test.h"
+// Provides definition of KDESRCDIR
+#include "test-config.h"
 
 Q_DECLARE_METATYPE(QMimeType)
 Q_DECLARE_METATYPE(QSharedPointer<Element>)
@@ -420,7 +422,7 @@ void KBibTeXIOTest::fileExporterXSLTsaveFile()
     QFETCH(QString, xslTranslationFile);
     QFETCH(QSet<QString>, expectedFragments);
 
-    FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xslTranslationFile), this);
+    FileExporterXSLT fileExporterXSLT(QStringLiteral(KDESRCDIR "../../xslt/") + xslTranslationFile.remove(QStringLiteral("kbibtex/")), this);
     QStringList errorLog;
     static const QRegularExpression removeSpaceBeforeTagRegExp(QStringLiteral("\\s+(<[/a-z])"));
     const QString generatedData = fileExporterXSLT.toString(bibTeXfile, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|')).replace(removeSpaceBeforeTagRegExp, QStringLiteral("\\1")).replace(QStringLiteral("|||"), QStringLiteral("|")).replace(QStringLiteral("||"), QStringLiteral("|"));
@@ -456,7 +458,7 @@ void KBibTeXIOTest::fileExporterXSLTsaveElement()
     QFETCH(QString, xslTranslationFile);
     QFETCH(QSet<QString>, expectedFragments);
 
-    FileExporterXSLT fileExporterXSLT(QStandardPaths::locate(QStandardPaths::GenericDataLocation, xslTranslationFile), this);
+    FileExporterXSLT fileExporterXSLT(QStringLiteral(KDESRCDIR "../../xslt/") + xslTranslationFile.remove(QStringLiteral("kbibtex/")), this);
     QStringList errorLog;
     static const QRegularExpression removeSpaceBeforeTagRegExp(QStringLiteral("\\s+(<[/a-z])"));
     const QString generatedData = fileExporterXSLT.toString(element, nullptr, &errorLog).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|')).replace(removeSpaceBeforeTagRegExp, QStringLiteral("\\1")).replace(QStringLiteral("|||"), QStringLiteral("|")).replace(QStringLiteral("||"), QStringLiteral("|"));
