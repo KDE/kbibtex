@@ -298,7 +298,7 @@ void FileView::dragMoveEvent(QDragMoveEvent *event)
 
 void FileView::contextMenuEvent(QContextMenuEvent *event)
 {
-    emit contextMenuTriggered(event);
+    Q_EMIT contextMenuTriggered(event);
 }
 
 void FileView::itemActivated(const QModelIndex &index)
