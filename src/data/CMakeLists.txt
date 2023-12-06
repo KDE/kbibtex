@@ -16,7 +16,7 @@ set(
     value.cpp
 )
 
-if(Qt${QT_MAJOR_VERSION}Gui_FOUND)
+if(Qt${QT_VERSION_MAJOR}Gui_FOUND)
     set(
         kbibtexdata_SRCS
         ${kbibtexdata_SRCS}
@@ -56,24 +56,24 @@ target_include_directories(kbibtexdata
 
 target_link_libraries(kbibtexdata
     PUBLIC
-        Qt${QT_MAJOR_VERSION}::Core
+        Qt${QT_VERSION_MAJOR}::Core
         KBibTeX::Config
     PRIVATE
-        KF${QT_MAJOR_VERSION}::ConfigCore
+        KF${QT_VERSION_MAJOR}::ConfigCore
         KBibTeX::Global
 )
 
-if(KF${QT_MAJOR_VERSION}I18n_FOUND)
+if(KF${QT_VERSION_MAJOR}I18n_FOUND)
     target_link_libraries(kbibtexdata
         PRIVATE
-            KF${QT_MAJOR_VERSION}::I18n
+            KF${QT_VERSION_MAJOR}::I18n
     )
 endif()
 
 if(BUILD_KPART OR BUILD_TESTING)
     target_link_libraries(kbibtexdata
         PRIVATE
-            Qt${QT_MAJOR_VERSION}::Gui
+            Qt${QT_VERSION_MAJOR}::Gui
     )
 endif()
 
@@ -100,7 +100,7 @@ ecm_generate_headers(kbibtexdata_HEADERS
     REQUIRED_HEADERS kbibtexdata_HEADERS
 )
 
-if(Qt${QT_MAJOR_VERSION}Gui_FOUND)
+if(Qt${QT_VERSION_MAJOR}Gui_FOUND)
     ecm_generate_headers(kbibtexdata_HEADERS
         HEADER_NAMES
             models/FileModel

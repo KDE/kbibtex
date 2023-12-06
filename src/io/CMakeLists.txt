@@ -28,7 +28,7 @@ set(
     bibutils.cpp
 )
 
-if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
+if(PKG_Poppler_Qt${QT_VERSION_MAJOR}_FOUND)
     set(
         kbibtexio_SRCS
         ${kbibtexio_SRCS}
@@ -67,7 +67,7 @@ target_include_directories(kbibtexio
 
 target_link_libraries(kbibtexio
     PUBLIC
-        Qt${QT_MAJOR_VERSION}::Core
+        Qt${QT_VERSION_MAJOR}::Core
         KBibTeX::Data
         KBibTeX::Global
     PRIVATE
@@ -91,18 +91,18 @@ endif()
 if(BUILD_KPART OR BUILD_TESTING)
     target_link_libraries(kbibtexio
         PRIVATE
-            Qt${QT_MAJOR_VERSION}::Concurrent
+            Qt${QT_VERSION_MAJOR}::Concurrent
     )
 endif()
 
-if(KF${QT_MAJOR_VERSION}I18n_FOUND)
+if(KF${QT_VERSION_MAJOR}I18n_FOUND)
     target_link_libraries(kbibtexio
         PRIVATE
-            KF${QT_MAJOR_VERSION}::I18n
+            KF${QT_VERSION_MAJOR}::I18n
     )
 endif()
 
-if(Qt${QT_MAJOR_VERSION}Concurrent_FOUND)
+if(Qt${QT_VERSION_MAJOR}Concurrent_FOUND)
     # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
     add_definitions(
         -DHAVE_QTCONCURRENT
@@ -117,10 +117,10 @@ if(ICU_FOUND)
     )
 endif()
 
-if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
+if(PKG_Poppler_Qt${QT_VERSION_MAJOR}_FOUND)
     target_link_libraries(kbibtexio
         PRIVATE
-            Poppler::Qt${QT_MAJOR_VERSION}
+            Poppler::Qt${QT_VERSION_MAJOR}
     )
 endif()
 
@@ -160,7 +160,7 @@ ecm_generate_headers(kbibtexio_HEADERS
     REQUIRED_HEADERS kbibtexio_HEADERS
 )
 
-if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
+if(PKG_Poppler_Qt${QT_VERSION_MAJOR}_FOUND)
     ecm_generate_headers(kbibtexio_HEADERS
         HEADER_NAMES
             FileImporterPDF

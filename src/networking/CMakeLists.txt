@@ -46,7 +46,7 @@ set(
     urlchecker.cpp
 )
 
-if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
+if(Qt${QT_VERSION_MAJOR}WebEngineWidgets_FOUND)
     # See also below for a similar if-clause
     message(STATUS "Using QtWebEngine parse JStor pages")
     set(
@@ -89,29 +89,29 @@ target_include_directories(kbibtexnetworking
 
 target_link_libraries(kbibtexnetworking
     PUBLIC
-        Qt${QT_MAJOR_VERSION}::Core
-        Qt${QT_MAJOR_VERSION}::Network
-        Qt${QT_MAJOR_VERSION}::Widgets
+        Qt${QT_VERSION_MAJOR}::Core
+        Qt${QT_VERSION_MAJOR}::Network
+        Qt${QT_VERSION_MAJOR}::Widgets
         KBibTeX::Data
     PRIVATE
-        Poppler::Qt${QT_MAJOR_VERSION}
-        Qt${QT_MAJOR_VERSION}::DBus
-        Qt${QT_MAJOR_VERSION}::NetworkAuth
-        KF${QT_MAJOR_VERSION}::ConfigCore
-        KF${QT_MAJOR_VERSION}::WidgetsAddons
-        KF${QT_MAJOR_VERSION}::I18n
-        KF${QT_MAJOR_VERSION}::KIOCore
-        KF${QT_MAJOR_VERSION}::KIOFileWidgets
+        Poppler::Qt${QT_VERSION_MAJOR}
+        Qt${QT_VERSION_MAJOR}::DBus
+        Qt${QT_VERSION_MAJOR}::NetworkAuth
+        KF${QT_VERSION_MAJOR}::ConfigCore
+        KF${QT_VERSION_MAJOR}::WidgetsAddons
+        KF${QT_VERSION_MAJOR}::I18n
+        KF${QT_VERSION_MAJOR}::KIOCore
+        KF${QT_VERSION_MAJOR}::KIOFileWidgets
         KBibTeX::Config
         KBibTeX::Global
         KBibTeX::IO
 )
 
-if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
+if(Qt${QT_VERSION_MAJOR}WebEngineWidgets_FOUND)
     # See also above for a similar if-clause
     target_link_libraries(kbibtexnetworking
         PRIVATE
-            Qt${QT_MAJOR_VERSION}::WebEngineWidgets
+            Qt${QT_VERSION_MAJOR}::WebEngineWidgets
     )
 endif()
 

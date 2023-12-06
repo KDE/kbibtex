@@ -74,21 +74,21 @@ target_include_directories(kbibtexgui
 
 target_link_libraries(kbibtexgui
     PUBLIC
-        Qt${QT_MAJOR_VERSION}::Core
-        Qt${QT_MAJOR_VERSION}::Widgets
+        Qt${QT_VERSION_MAJOR}::Core
+        Qt${QT_VERSION_MAJOR}::Widgets
     PRIVATE
-        Poppler::Qt${QT_MAJOR_VERSION}
-        Qt${QT_MAJOR_VERSION}::Gui
-        Qt${QT_MAJOR_VERSION}::Concurrent
-        KF${QT_MAJOR_VERSION}::ConfigCore
-        KF${QT_MAJOR_VERSION}::I18n
-        KF${QT_MAJOR_VERSION}::IconThemes
-        KF${QT_MAJOR_VERSION}::WidgetsAddons
-        KF${QT_MAJOR_VERSION}::KIOCore
-        KF${QT_MAJOR_VERSION}::KIOFileWidgets
-        KF${QT_MAJOR_VERSION}::Parts
-        KF${QT_MAJOR_VERSION}::TextEditor
-        KF${QT_MAJOR_VERSION}::TextWidgets
+        Poppler::Qt${QT_VERSION_MAJOR}
+        Qt${QT_VERSION_MAJOR}::Gui
+        Qt${QT_VERSION_MAJOR}::Concurrent
+        KF${QT_VERSION_MAJOR}::ConfigCore
+        KF${QT_VERSION_MAJOR}::I18n
+        KF${QT_VERSION_MAJOR}::IconThemes
+        KF${QT_VERSION_MAJOR}::WidgetsAddons
+        KF${QT_VERSION_MAJOR}::KIOCore
+        KF${QT_VERSION_MAJOR}::KIOFileWidgets
+        KF${QT_VERSION_MAJOR}::Parts
+        KF${QT_VERSION_MAJOR}::TextEditor
+        KF${QT_VERSION_MAJOR}::TextWidgets
         KBibTeX::Config
         KBibTeX::Data
         KBibTeX::Global
