@@ -31,6 +31,7 @@
 #include <KBibTeX>
 #include <Entry>
 #include "onlinesearchabstract_p.h"
+#include "logging_networking.h"
 
 namespace OnlineSearchGeneral {
 
@@ -97,14 +98,6 @@ public:
     QSpinBox *numResultsField;
     const QString configGroupName;
 
-/// GCC's C++ compiler may complain about that the following function does reach
-/// its end without returning anything. Seemingly, the compiler is not aware that
-/// the switch covers all cases of the OnlineSearchAbstract::QueryKey enum.
-/// Unfortunately, this problem causes the C++ compiler inside GitLab's CI to stop
-/// and issue an error, making the CI to abort.
-/// Thus, this particular check gets temporarily disabled.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wreturn-type"
     static QString queryKeyToString(const OnlineSearchAbstract::QueryKey &queryKey)
     {
         switch (queryKey) {
@@ -112,9 +105,12 @@ public:
         case OnlineSearchAbstract::QueryKey::Title: return QStringLiteral("title");
         case OnlineSearchAbstract::QueryKey::Author: return QStringLiteral("author");
         case OnlineSearchAbstract::QueryKey::Year: return QStringLiteral("year");
+        default: {
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "Encountered an unsupported queryKey:" << static_cast<int>(queryKey);
+            return QStringLiteral("free");
+        }
         }
     }
-#pragma GCC diagnostic pop
 
     void loadState()
     {

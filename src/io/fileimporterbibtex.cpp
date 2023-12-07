@@ -746,13 +746,6 @@ public:
         return new Comment(result);
     }
 
-
-/// GCC's C++ compiler may complain about that the following function does reach
-/// its end without returning anything. Seemingly, the compiler is not aware that
-/// the switch covers all cases of the FileImporterBibTeX::Private::Token enum.
-/// Thus, this particular check gets temporarily disabled.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wreturn-type"
     QString tokenidToString(Token token)
     {
         switch (token) {
@@ -765,9 +758,12 @@ public:
         case Token::Doublecross: return QString(QStringLiteral("Doublecross"));
         case Token::EndOfFile: return QString(QStringLiteral("EOF"));
         case Token::Unknown: return QString(QStringLiteral("Unknown"));
+        default: {
+            qCWarning(LOG_KBIBTEX_IO) << "Encountered an unsupported Token:" << static_cast<int>(token);
+            return QString(QStringLiteral("Unknown"));
+        }
         }
     }
-#pragma GCC diagnostic pop
 
     Preamble *readPreambleElement(Statistics &statistics, State &state)
     {

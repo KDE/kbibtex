@@ -56,7 +56,7 @@ public:
     class Form;
 #endif // HAVE_QTWIDGETS
 
-    enum class QueryKey {FreeText, Title, Author, Year};
+    enum class QueryKey {FreeText = 1, Title = 2, Author = 3, Year = 4};
 
     static const int resultCancelled;
     static const int resultNoError;
