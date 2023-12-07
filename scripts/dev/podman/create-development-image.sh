@@ -310,7 +310,7 @@ function build_kdeneon() {
 	buildahsetx run --user root "${id}" -- apt update || exit 1
 	buildahsetx run --user root "${id}" -- apt -y full-upgrade || exit 1
 	# TODO install BibUtils
-	buildahsetx run --user root "${id}" -- apt -y install sudo fonts-ibm-plex cmake g++ make libicu-dev qt6-networkauth-dev libpoppler-qt6-dev qt6-base-dev-tools kf6-syntax-highlighting-dev kf6-extra-cmake-modules kf6-syntax-highlighting-dev kf6-ki18n-dev kf6-kxmlgui-dev kf6-kiconthemes-dev kf6-kparts-dev kf6-kcoreaddons-dev kf6-kservice-dev kf6-ktextwidgets-dev kf6-kwallet-dev kf6-kcrash-dev kf6-kdoctools-dev kf6-ktexteditor-dev kf6-breeze-icon-theme gdb valgrind git gettext || exit 1
+	buildahsetx run --user root "${id}" -- apt -y install sudo fonts-ibm-plex cmake g++ make libicu-dev qt6-networkauth-dev qt6-webengine-dev libpoppler-qt6-dev qt6-base-dev-tools kf6-syntax-highlighting-dev kf6-extra-cmake-modules kf6-syntax-highlighting-dev kf6-ki18n-dev kf6-kxmlgui-dev kf6-kiconthemes-dev kf6-kparts-dev kf6-kcoreaddons-dev kf6-kservice-dev kf6-ktextwidgets-dev kf6-kwallet-dev kf6-kcrash-dev kf6-kdoctools-dev kf6-ktexteditor-dev kf6-breeze-icon-theme gdb valgrind git gettext || exit 1
 	buildahsetx run --user root "${id}" -- apt -y clean || exit 1
 	# DISTRIBUTION-SPECIFIC CODE ENDS HERE
 

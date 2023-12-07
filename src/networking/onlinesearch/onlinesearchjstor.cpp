@@ -26,7 +26,7 @@
 #include <QTimer>
 #include <QUrlQuery>
 #include <QRegularExpression>
-#include <QtWebEngineWidgets/QWebEnginePage>
+#include <QWebEnginePage>
 
 #ifdef HAVE_KF
 #include <KLocalizedString>
