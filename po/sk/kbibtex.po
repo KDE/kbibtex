@@ -1,19 +1,19 @@
 # translation of kbibtex.po to Slovak
-# Roman Paholík <wizzardsk@gmail.com>, 2014, 2016, 2017.
+# SPDX-FileCopyrightText: 2014, 2016, 2017, 2023 Roman Paholík <wizzardsk@gmail.com>
 # Matej Mrenica <matejm98mthw@gmail.com>, 2020, 2021.
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-04 00:41+0000\n"
-"PO-Revision-Date: 2021-01-14 15:37+0100\n"
-"Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
-"Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2023-12-06 19:13+0100\n"
+"Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
+"Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.12.1\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #, kde-format
@@ -1101,7 +1101,7 @@ msgstr "Náhľad vloženej referencie:"
 #, kde-format
 msgctxt "@title:window"
 msgid "Associate Document with Entry"
-msgstr ""
+msgstr "Asociovať dokument s položkou"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
@@ -1861,22 +1861,19 @@ msgid "Paper Size:"
 msgstr "Veľkosť papiera:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "A4"
+#, kde-format
 msgctxt "Paper size"
 msgid "A4"
 msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Legal"
+#, kde-format
 msgctxt "Paper size"
 msgid "Legal"
 msgstr "Legal"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Letter"
+#, kde-format
 msgctxt "Paper size"
 msgid "Letter"
 msgstr "Letter"
@@ -2269,7 +2266,7 @@ msgstr "Text:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:602
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Náhľad:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
@@ -2299,8 +2296,7 @@ msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
 msgstr "<qt>Štruktúra:<ul><li>%1</li></ul>Príklad: %2</qt>"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:967
-#, fuzzy, kde-format
-#| msgid "Edit Id Suggestion"
+#, kde-format
 msgctxt "@title:window"
 msgid "Edit Id Suggestion"
 msgstr "Upraviť návrh Id"
@@ -2723,16 +2719,14 @@ msgid "ScienceDirect"
 msgstr "ScienceDirect"
 
 #: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:68
-#, fuzzy, kde-format
-#| msgid "Part of a Reference"
+#, kde-format
 msgid "Paper Reference:"
-msgstr "Časť referencie"
+msgstr "Papierová referencia:"
 
 #: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:237
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Semantic Scholar"
-msgstr "Google Scholar"
+msgstr "Sémantický učenec"
 
 #: src/networking/onlinesearch/onlinesearchsoanasaads.cpp:127
 #, kde-format
@@ -3222,16 +3216,7 @@ msgid "Finding Duplicates"
 msgstr "Nájsť duplikáty"
 
 #: src/processing/idsuggestions.cpp:319
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Small words that can be removed from titles when generating id "
-#| "suggestions; separated by pipe symbol"
-#| msgid ""
-#| "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|"
-#| "er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|"
-#| "kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|"
-#| "von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|"
-#| "wer|which|wie|wird|with|you"
+#, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
 "separated by pipe symbol"
@@ -3246,7 +3231,7 @@ msgstr ""
 "es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
 "le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
 "which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
-"wird|with|you"
+"wird|with|you|und|and|ein|eine|einer|eines"
 
 #: src/processing/idsuggestions.cpp:395
 #, kde-format
