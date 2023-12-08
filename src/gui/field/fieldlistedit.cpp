@@ -86,7 +86,6 @@ public:
     void setupGUI() {
         QBoxLayout *outerLayout = new QVBoxLayout(p);
         outerLayout->setContentsMargins(0, 0, 0, 0);
-        outerLayout->setSpacing(0);
         scrollArea = new QScrollArea(p);
         outerLayout->addWidget(scrollArea);
 

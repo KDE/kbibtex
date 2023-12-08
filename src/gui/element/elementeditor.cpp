@@ -169,6 +169,7 @@ public:
         const bool limitKeyboardTabStops = configGroup.readEntry(MenuLineEdit::keyLimitKeyboardTabStops, false);
 
         QBoxLayout *vLayout = new QVBoxLayout(p);
+        vLayout->setContentsMargins({});
 
         referenceWidget = new ReferenceWidget(p);
         referenceWidget->setApplyElementInterface(this);

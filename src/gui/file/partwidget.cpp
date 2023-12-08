@@ -38,9 +38,15 @@ public:
             : p(parent) {
         QBoxLayout *layout = new QVBoxLayout(parent);
         layout->setContentsMargins(0, 0, 0, 0);
+        layout->setSpacing(0);
 
         filterBar = new FilterBar(parent);
         layout->addWidget(filterBar, 0);
+
+        auto separator = new QFrame(parent);
+        separator->setFrameStyle(QFrame::HLine);
+        separator->setMaximumHeight(1);
+        layout->addWidget(separator);
 
         fileView = new FileView(QStringLiteral("Main"), parent);
         layout->addWidget(fileView, 0xffffff);

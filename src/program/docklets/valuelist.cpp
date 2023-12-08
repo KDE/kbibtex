@@ -82,17 +82,30 @@ public:
     void setupGUI() {
         QBoxLayout *layout = new QVBoxLayout(p);
         layout->setContentsMargins(0, 0, 0, 0);
+        layout->setSpacing(0);
+
+        auto nestedLayout = new QVBoxLayout();
+        nestedLayout->setContentsMargins(
+            p->style()->pixelMetric(QStyle::PM_LayoutLeftMargin),
+            p->style()->pixelMetric(QStyle::PM_LayoutTopMargin),
+            p->style()->pixelMetric(QStyle::PM_LayoutBottomMargin),
+            p->style()->pixelMetric(QStyle::PM_LayoutRightMargin));
+        nestedLayout->setSpacing(p->style()->pixelMetric(QStyle::PM_LayoutVerticalSpacing));
+        layout->addLayout(nestedLayout);
 
         comboboxFieldNames = new QComboBox(p);
         comboboxFieldNames->setEditable(true);
-        layout->addWidget(comboboxFieldNames);
+        nestedLayout->addWidget(comboboxFieldNames);
 
         lineeditFilter = new QLineEdit(p);
-        layout->addWidget(lineeditFilter);
+        nestedLayout->addWidget(lineeditFilter);
         lineeditFilter->setClearButtonEnabled(true);
         lineeditFilter->setPlaceholderText(i18n("Filter value list"));
 
         treeviewFieldValues = new QTreeView(p);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+        treeviewFieldValues->setProperty("_breeze_borders_sides", QVariant::fromValue(QFlags{Qt::TopEdge}));
+#endif
         layout->addWidget(treeviewFieldValues);
         treeviewFieldValues->setEditTriggers(QAbstractItemView::EditKeyPressed);
         treeviewFieldValues->setSortingEnabled(true);
