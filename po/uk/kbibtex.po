@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-04 00:41+0000\n"
+"POT-Creation-Date: 2023-12-08 00:42+0000\n"
 "PO-Revision-Date: 2023-11-17 08:21+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -1087,13 +1087,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Шлях, який буде вставлено до запису"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
+#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
 #, kde-format
 msgid "Relative Path"
 msgstr "Відносний шлях"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
+#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
 #, kde-format
 msgid "Absolute Path"
 msgstr "Абсолютний шлях"
@@ -1111,7 +1111,7 @@ msgstr "Пов'язування документа із записом"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:126
+#: src/program/docklets/referencepreview.cpp:124
 #, kde-format
 msgid "No preview available"
 msgstr "Перегляд недоступний"
@@ -1292,13 +1292,13 @@ msgstr "Список:"
 msgid "Value"
 msgstr "Значення"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:261
+#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:260
 #, kde-format
 msgid "Delete"
 msgstr "Вилучити"
 
 #: src/gui/element/elementwidgets.cpp:1005
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:147
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -1364,53 +1364,53 @@ msgstr "Джерело"
 msgid "Restore"
 msgstr "Відновити"
 
-#: src/gui/element/findpdfui.cpp:121 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172
+#: src/gui/element/findpdfui.cpp:121 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "View"
 msgstr "Переглянути"
 
-#: src/gui/element/findpdfui.cpp:130 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172
+#: src/gui/element/findpdfui.cpp:130 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "Ignore"
 msgstr "Ігнорувати"
 
-#: src/gui/element/findpdfui.cpp:137 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172 src/gui/element/findpdfui.cpp:227
-#: src/gui/element/findpdfui.cpp:229
+#: src/gui/element/findpdfui.cpp:137 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176 src/gui/element/findpdfui.cpp:231
+#: src/gui/element/findpdfui.cpp:233
 #, kde-format
 msgid "Download"
 msgstr "Отримати"
 
-#: src/gui/element/findpdfui.cpp:144 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172
+#: src/gui/element/findpdfui.cpp:144 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "Use URL only"
 msgstr "Використовувати лише адресу"
 
-#: src/gui/element/findpdfui.cpp:380
+#: src/gui/element/findpdfui.cpp:384
 #, kde-format
 msgid "Result"
 msgstr "Результат"
 
-#: src/gui/element/findpdfui.cpp:432
+#: src/gui/element/findpdfui.cpp:436
 #, kde-format
 msgid "Starting to search..."
 msgstr "Розпочинаємо пошук…"
 
-#: src/gui/element/findpdfui.cpp:453
+#: src/gui/element/findpdfui.cpp:457
 #, kde-format
 msgctxt "@title:window"
 msgid "Find PDF"
 msgstr "Пошук PDF"
 
-#: src/gui/element/findpdfui.cpp:512
+#: src/gui/element/findpdfui.cpp:516
 #, kde-format
 msgid "Save URL '%1'"
 msgstr "Зберегти адресу «%1»"
 
-#: src/gui/element/findpdfui.cpp:566
+#: src/gui/element/findpdfui.cpp:570
 #, kde-format
 msgid ""
 "<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
@@ -1590,7 +1590,7 @@ msgstr "Текст буквально"
 msgid "Open '%1'"
 msgstr "Відкрити «%1»"
 
-#: src/gui/field/fieldlineedit.cpp:499
+#: src/gui/field/fieldlineedit.cpp:503
 #, kde-format
 msgid ""
 "The current text cannot be used as value of type '%1'.\n"
@@ -1606,62 +1606,62 @@ msgstr ""
 msgid "Remove value"
 msgstr "Вилучити значення"
 
-#: src/gui/field/fieldlistedit.cpp:156
+#: src/gui/field/fieldlistedit.cpp:160
 #, kde-format
 msgid "Move value down"
 msgstr "Пересунути значення нижче"
 
-#: src/gui/field/fieldlistedit.cpp:167
+#: src/gui/field/fieldlistedit.cpp:175
 #, kde-format
 msgid "Move value up"
 msgstr "Пересунути значення вище"
 
-#: src/gui/field/fieldlistedit.cpp:417
+#: src/gui/field/fieldlistedit.cpp:429
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "… та інші (та ін.)"
 
-#: src/gui/field/fieldlistedit.cpp:422
+#: src/gui/field/fieldlistedit.cpp:434
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Додати з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:423
+#: src/gui/field/fieldlistedit.cpp:435
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Додати список імен з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:485
+#: src/gui/field/fieldlistedit.cpp:497
 #, kde-format
 msgid "Add file..."
 msgstr "Додати файл…"
 
-#: src/gui/field/fieldlistedit.cpp:491
+#: src/gui/field/fieldlistedit.cpp:503
 #, kde-format
 msgid "Add reference ..."
 msgstr "Додати посилання…"
 
-#: src/gui/field/fieldlistedit.cpp:494
+#: src/gui/field/fieldlistedit.cpp:506
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Додати посилання з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:506
+#: src/gui/field/fieldlistedit.cpp:518
 #, kde-format
 msgid "File to Associate"
 msgstr "Файл, який слід пов’язати"
 
-#: src/gui/field/fieldlistedit.cpp:544 src/gui/field/fieldlistedit.cpp:624
+#: src/gui/field/fieldlistedit.cpp:556 src/gui/field/fieldlistedit.cpp:636
 #, kde-format
 msgid "Save file locally"
 msgstr "Зберегти файл локально"
 
-#: src/gui/field/fieldlistedit.cpp:594
+#: src/gui/field/fieldlistedit.cpp:606
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Зберегти файл «%1» локально"
 
-#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
+#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1673,23 +1673,23 @@ msgstr ""
 "\">%1</tt></p><p>Абсолютний запис є таким<br/><tt style=\"font-family: %3;\">"
 "%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:652
+#: src/gui/field/fieldlistedit.cpp:664
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Додати ключові слова зі списку"
 
-#: src/gui/field/fieldlistedit.cpp:653
+#: src/gui/field/fieldlistedit.cpp:665
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Додати ключові слова вибором з попередньо визначеного списку ключових слів"
 
-#: src/gui/field/fieldlistedit.cpp:656
+#: src/gui/field/fieldlistedit.cpp:668
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Додати ключові слова з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:657
+#: src/gui/field/fieldlistedit.cpp:669
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr ""
@@ -2525,12 +2525,12 @@ msgstr "Стиль BibTeX <strong>%1</strong> є недоступним."
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "Стиль BibTeX <strong>PLACEHOLDER</strong> є недоступним."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "Спроба пошуку «%1» зазнала невдачі з невідомої причини."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2541,8 +2541,8 @@ msgstr ""
 "\n"
 "%2"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:325
-#: src/program/mainwindow.cpp:366 src/program/program.cpp:53
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:326
+#: src/program/mainwindow.cpp:365 src/program/program.cpp:55
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -2559,14 +2559,14 @@ msgstr "Довільний текст:"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:79
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:90
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:81
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:82
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:125
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:115
 #, kde-format
 msgid "Number of Results:"
 msgstr "Кількість результатів:"
 
-#: src/networking/onlinesearch/onlinesearcharxiv.cpp:675
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:367
 #, kde-format
 msgid "arXiv.org"
 msgstr "arXiv.org"
@@ -2621,25 +2621,25 @@ msgstr "Сервер документів CERN"
 msgid "DOI:"
 msgstr "DOI:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
 #, kde-format
 msgid "Free text or DOI:"
 msgstr "Довільний текст або DOI:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:88
 #, kde-format
 msgid "Title:"
 msgstr "Заголовок:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:65
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:66
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:96
 #, kde-format
 msgid "Author:"
 msgstr "Автор:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:73
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:74
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:109
 #, kde-format
 msgid "Year:"
@@ -2663,7 +2663,7 @@ msgstr "Google Академія"
 msgid "IDEAS (RePEc)"
 msgstr "IDEAS (RePEc)"
 
-#: src/networking/onlinesearch/onlinesearchieeexplore.cpp:186
+#: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
 msgid "IEEEXplore"
 msgstr "IEEEXplore"
@@ -2718,12 +2718,12 @@ msgstr "MathSciNet"
 msgid "MR Lookup"
 msgstr "MR Lookup"
 
-#: src/networking/onlinesearch/onlinesearchpubmed.cpp:148
+#: src/networking/onlinesearch/onlinesearchpubmed.cpp:154
 #, kde-format
 msgid "PubMed"
 msgstr "PubMed"
 
-#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:217
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:216
 #, kde-format
 msgid "ScienceDirect"
 msgstr "ScienceDirect"
@@ -2733,7 +2733,7 @@ msgstr "ScienceDirect"
 msgid "Paper Reference:"
 msgstr "Посилання на роботу:"
 
-#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:237
+#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:232
 #, kde-format
 msgid "Semantic Scholar"
 msgstr "Semantic Scholar"
@@ -2758,7 +2758,7 @@ msgstr "Назва книги або журналу:"
 msgid "Author or Editor:"
 msgstr "Автор або редактор:"
 
-#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:302
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:452
 #, kde-format
 msgid "SpringerLink"
 msgstr "SpringerLink"
@@ -2768,7 +2768,7 @@ msgstr "SpringerLink"
 msgid "Unpaywall"
 msgstr "Unpaywall"
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
 msgid ""
 "The query to be sent to 'zbMATH Open' lacks author information, which may "
@@ -2778,7 +2778,7 @@ msgstr ""
 "автора. Це може призвести до того, що буде знайдено лише декілька записів "
 "або нічого не буде знайдено."
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
 msgid ""
 "The query to be sent to 'zbMATH Open' lacks 'year' information, which may "
@@ -2787,7 +2787,7 @@ msgstr ""
 "У запиті, який буде надіслано до «zbMATH Open» не вистачає даних щодо року. "
 "Це значно знизить якість пошуку."
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
 msgid ""
 "The query to be sent to 'zbMATH Open' lacks both author and 'year' "
@@ -2799,7 +2799,7 @@ msgstr ""
 "Це, найімовірніше, призведе до того, що буде знайдено лише декілька записів "
 "або нічого не буде знайдено."
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:143
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:149
 #, kde-format
 msgid "zbMATH Open"
 msgstr "zbMATH Open"
@@ -2880,133 +2880,133 @@ msgstr "Елемент"
 msgid "Main Toolbar"
 msgstr "Головна панель"
 
-#: src/parts/part.cpp:138 src/parts/part.cpp:215
+#: src/parts/part.cpp:137 src/parts/part.cpp:214
 #, kde-format
 msgid "View Document"
 msgstr "Переглянути документ"
 
-#: src/parts/part.cpp:165
+#: src/parts/part.cpp:164
 #, kde-format
 msgid "Save Copy As..."
 msgstr "Зберегти копію як…"
 
-#: src/parts/part.cpp:169
+#: src/parts/part.cpp:168
 #, kde-format
 msgid "Save Selection..."
 msgstr "Зберегти вибір…"
 
-#: src/parts/part.cpp:177
+#: src/parts/part.cpp:176
 #, kde-format
 msgid "Filter"
 msgstr "Фільтрувати"
 
-#: src/parts/part.cpp:182
+#: src/parts/part.cpp:181
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
 msgstr "Фільтрувати бібліографічні записи (%1)"
 
-#: src/parts/part.cpp:185
+#: src/parts/part.cpp:184
 #, kde-format
 msgid "New element"
 msgstr "Новий елемент"
 
-#: src/parts/part.cpp:191
+#: src/parts/part.cpp:190
 #, kde-format
 msgid "New entry"
 msgstr "Новий запис"
 
-#: src/parts/part.cpp:196
+#: src/parts/part.cpp:195
 #, kde-format
 msgid "New comment"
 msgstr "Новий коментар"
 
-#: src/parts/part.cpp:200
+#: src/parts/part.cpp:199
 #, kde-format
 msgid "New macro"
 msgstr "Новий макроc"
 
-#: src/parts/part.cpp:204
+#: src/parts/part.cpp:203
 #, kde-format
 msgid "New preamble"
 msgstr "Новий вступ"
 
-#: src/parts/part.cpp:209
+#: src/parts/part.cpp:208
 #, kde-format
 msgid "Edit Element"
 msgstr "Редагування елемента"
 
-#: src/parts/part.cpp:232
+#: src/parts/part.cpp:231
 #, kde-format
 msgid "Find PDF..."
 msgstr "Знайти PDF…"
 
-#: src/parts/part.cpp:237
+#: src/parts/part.cpp:236
 #, kde-format
 msgid "Format entry ids"
 msgstr "Форматування ідентифікаторів записів"
 
-#: src/parts/part.cpp:251
+#: src/parts/part.cpp:250
 #, kde-format
 msgid "Copy References"
 msgstr "Копіювати посилання"
 
-#: src/parts/part.cpp:306
+#: src/parts/part.cpp:305
 #, kde-format
 msgid "New%1"
 msgstr "Новий%1"
 
-#: src/parts/part.cpp:465
+#: src/parts/part.cpp:468
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
 msgstr "Не вдалося створити резервні копії документа «%1»."
 
-#: src/parts/part.cpp:465
+#: src/parts/part.cpp:468
 #, kde-format
 msgid "Backup copies"
 msgstr "Резервне копіювання"
 
-#: src/parts/part.cpp:498
+#: src/parts/part.cpp:501
 #, kde-format
 msgid "Save file"
 msgstr "Зберегти файл"
 
-#: src/parts/part.cpp:526
+#: src/parts/part.cpp:529
 #, kde-format
 msgid "BibUtils"
 msgstr "BibUtils"
 
-#: src/parts/part.cpp:527
+#: src/parts/part.cpp:530
 #, kde-format
 msgid "BibTeX2HTML"
 msgstr "BibTeX2HTML"
 
-#: src/parts/part.cpp:528
+#: src/parts/part.cpp:531
 #, kde-format
 msgid "Word XML bibliography"
 msgstr "Бібліографія XML Word"
 
-#: src/parts/part.cpp:529
+#: src/parts/part.cpp:532
 #, kde-format
 msgid "KBibTeX's own XML structure"
 msgstr "Власна структура XML KBibTeX"
 
-#: src/parts/part.cpp:530
+#: src/parts/part.cpp:533
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
 msgstr "Вбудований засіб експортування HTML KBibTeX"
 
-#: src/parts/part.cpp:531
+#: src/parts/part.cpp:534
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
 msgstr "Вбудований засіб експортування RIS KBibTeX"
 
-#: src/parts/part.cpp:540
+#: src/parts/part.cpp:543
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
 msgstr "Виберіть засіб експортування"
 
-#: src/parts/part.cpp:542
+#: src/parts/part.cpp:545
 #, kde-format
 msgid ""
 "Several exporter modules are available to write file '%1'.\n"
@@ -3018,49 +3018,49 @@ msgstr ""
 "\n"
 "Будь ласка, виберіть один з цих модулів."
 
-#: src/parts/part.cpp:573
+#: src/parts/part.cpp:576
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "Параметри файлів BibTeX"
 
-#: src/parts/part.cpp:591
+#: src/parts/part.cpp:594
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "Параметри файлів PDF/PostScript"
 
-#: src/parts/part.cpp:711
+#: src/parts/part.cpp:714
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr "Спроба зберегти файл бібліографії «%1» зазнала невдачі."
 
-#: src/parts/part.cpp:713 src/parts/part.cpp:719
+#: src/parts/part.cpp:716 src/parts/part.cpp:722
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr "Спроба зберегти бібліографію завершилася невдало"
 
-#: src/parts/part.cpp:715
+#: src/parts/part.cpp:718
 #, kde-format
 msgid "Saving bibliography failed:"
 msgstr "Спроба зберегти бібліографію завершилася невдало:"
 
-#: src/parts/part.cpp:718
+#: src/parts/part.cpp:721
 #, kde-format
 msgid "The following output was generated by the export filter:"
 msgstr "Фільтром експортування було виведено такі повідомлення:"
 
-#: src/parts/part.cpp:769
+#: src/parts/part.cpp:772
 #, kde-format
 msgid "Local Files"
 msgstr "Локальні файли"
 
-#: src/parts/part.cpp:794
+#: src/parts/part.cpp:797
 #, kde-format
 msgid "Remote Files"
 msgstr "Віддалені файли"
 
-#: src/parts/part.cpp:923
+#: src/parts/part.cpp:932
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3073,7 +3073,7 @@ msgstr ""
 "Перевірте, що у вас є право запису до цього файла, та наявність достатнього "
 "вільного місця."
 
-#: src/parts/part.cpp:1062
+#: src/parts/part.cpp:1071
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3081,12 +3081,12 @@ msgstr ""
 "Застосування типового форматування для ідентифікаторів записів неможливе: не "
 "вказано типового форматування."
 
-#: src/parts/part.cpp:1062
+#: src/parts/part.cpp:1071
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "Не вдалося застосувати типове форматування"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3097,17 +3097,17 @@ msgstr ""
 "\n"
 "Перезавантажити файл чи ігнорувати зміни на диску?"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid "File changed externally"
 msgstr "Файл змінено поза межами програми"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid "Reload file"
 msgstr "Перезавантажити файл"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Ігнорувати зміни на диску"
@@ -3431,18 +3431,18 @@ msgstr ""
 msgid "Open in external program"
 msgstr "Відкрити у зовнішній програмі"
 
-#: src/program/docklets/documentpreview.cpp:351
+#: src/program/docklets/documentpreview.cpp:352
 #, kde-format
 msgid "Refreshing..."
 msgstr "Оновлення…"
 
-#: src/program/docklets/documentpreview.cpp:380
+#: src/program/docklets/documentpreview.cpp:381
 #, kde-format
 msgid "No documents to show."
 msgstr "Немає документів для показу."
 
-#: src/program/docklets/documentpreview.cpp:387
-#: src/program/docklets/documentpreview.cpp:703
+#: src/program/docklets/documentpreview.cpp:388
+#: src/program/docklets/documentpreview.cpp:704
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3452,18 +3452,18 @@ msgstr ""
 "обмеження</a> щодо показу лише локальних файлів, щоб побачити віддалені "
 "документи.</qt>"
 
-#: src/program/docklets/documentpreview.cpp:514
+#: src/program/docklets/documentpreview.cpp:515
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "Не вдалося показати потрібну частину"
 
-#: src/program/docklets/documentpreview.cpp:541
-#: src/program/docklets/documentpreview.cpp:545
+#: src/program/docklets/documentpreview.cpp:542
+#: src/program/docklets/documentpreview.cpp:546
 #, kde-format
 msgid "Loading..."
 msgstr "Завантаження…"
 
-#: src/program/docklets/documentpreview.cpp:566
+#: src/program/docklets/documentpreview.cpp:567
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3478,7 +3478,7 @@ msgstr ""
 "компонентом перегляду PDF.<br/>Програма не може працювати з Okular для "
 "KDE&nbsp;4."
 
-#: src/program/docklets/documentpreview.cpp:567
+#: src/program/docklets/documentpreview.cpp:568
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3487,7 +3487,7 @@ msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr ""
 "<qt>Програмі невідомий спосіб показу документів типу MIME «%1». %2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:706
+#: src/program/docklets/documentpreview.cpp:707
 #, kde-format
 msgid ""
 "No documents to show.\n"
@@ -3541,81 +3541,67 @@ msgstr "Застосувати зміни"
 msgid "Discard changes"
 msgstr "Відкинути зміни"
 
-#: src/program/docklets/referencepreview.cpp:84
+#: src/program/docklets/referencepreview.cpp:83
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Початковий код (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:85
+#: src/program/docklets/referencepreview.cpp:84
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Початковий код (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:92
+#: src/program/docklets/referencepreview.cpp:91
 #, kde-format
 msgid "Standard"
 msgstr "Стандартний"
 
-#: src/program/docklets/referencepreview.cpp:93
-#, kde-format
-msgid "Fancy"
-msgstr "Красивий"
-
-#: src/program/docklets/referencepreview.cpp:94
+#: src/program/docklets/referencepreview.cpp:92
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Цитата з Вікіпедії"
 
-#: src/program/docklets/referencepreview.cpp:95
+#: src/program/docklets/referencepreview.cpp:93
 #, kde-format
 msgid "Abstract-only"
 msgstr "Лише резюме"
 
-#: src/program/docklets/referencepreview.cpp:126
+#: src/program/docklets/referencepreview.cpp:124
 #, kde-format
 msgid "Reason:"
 msgstr "Причина:"
 
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:148
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Відкрити посилання у програмі для перегляду інтернету."
 
-#: src/program/docklets/referencepreview.cpp:153
-#: src/program/docklets/referencepreview.cpp:428
+#: src/program/docklets/referencepreview.cpp:151
+#: src/program/docklets/referencepreview.cpp:431
 #, kde-format
 msgid "Save as HTML"
 msgstr "Зберегти як HTML"
 
-#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:152
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Зберегти посилання як фрагмент коду HTML."
 
-#: src/program/docklets/referencepreview.cpp:244
+#: src/program/docklets/referencepreview.cpp:247
 #, kde-format
 msgid "Preview disabled"
 msgstr "Попередній перегляд вимкнено"
 
-#: src/program/docklets/referencepreview.cpp:264
+#: src/program/docklets/referencepreview.cpp:262
 #, kde-format
 msgid "No element selected"
 msgstr "Не позначено жодного елемента"
 
-#: src/program/docklets/referencepreview.cpp:329
-#: src/program/docklets/referencepreview.cpp:399
+#: src/program/docklets/referencepreview.cpp:327
+#: src/program/docklets/referencepreview.cpp:402
 #, kde-format
 msgid "No output generated"
 msgstr "Нічого не виведено"
-
-#: src/program/docklets/referencepreview.cpp:358
-#, kde-format
-msgid ""
-"This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
-"command."
-msgstr ""
-"Підтримки цього типу елементів у команді <tt>{{cite}}</tt> для Вікіпедії не "
-"передбачено."
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -3951,67 +3937,67 @@ msgstr "Улюблене"
 msgid "Filesystem Browser"
 msgstr "Навігатор файловою системою"
 
-#: src/program/mainwindow.cpp:95
+#: src/program/mainwindow.cpp:94
 #, kde-format
 msgid "Show Panels"
 msgstr "Показувати панелі"
 
-#: src/program/mainwindow.cpp:100
+#: src/program/mainwindow.cpp:99
 #, kde-format
 msgid "Recently used files"
 msgstr "Нещодавно використані файли"
 
-#: src/program/mainwindow.cpp:117
+#: src/program/mainwindow.cpp:116
 #, kde-format
 msgid "List of Documents"
 msgstr "Список документів"
 
-#: src/program/mainwindow.cpp:127
+#: src/program/mainwindow.cpp:126
 #, kde-format
 msgid "List of Values"
 msgstr "Список значень"
 
-#: src/program/mainwindow.cpp:136
+#: src/program/mainwindow.cpp:135
 #, kde-format
 msgid "Statistics"
 msgstr "Статистика"
 
-#: src/program/mainwindow.cpp:145
+#: src/program/mainwindow.cpp:144
 #, kde-format
 msgid "Search Results"
 msgstr "Результати пошуку"
 
-#: src/program/mainwindow.cpp:156
+#: src/program/mainwindow.cpp:155
 #, kde-format
 msgid "Online Search"
 msgstr "Пошук у мережі"
 
-#: src/program/mainwindow.cpp:166
+#: src/program/mainwindow.cpp:165
 #, kde-format
 msgid "Zotero"
 msgstr "Zotero"
 
-#: src/program/mainwindow.cpp:177
+#: src/program/mainwindow.cpp:176
 #, kde-format
 msgid "Reference Preview"
 msgstr "Попередній перегляд посилань"
 
-#: src/program/mainwindow.cpp:186
+#: src/program/mainwindow.cpp:185
 #, kde-format
 msgid "Document Preview"
 msgstr "Попередній перегляд документа"
 
-#: src/program/mainwindow.cpp:197
+#: src/program/mainwindow.cpp:196
 #, kde-format
 msgid "Element Editor"
 msgstr "Редактор елементів"
 
-#: src/program/mainwindow.cpp:207
+#: src/program/mainwindow.cpp:206
 #, kde-format
 msgid "File Settings"
 msgstr "Параметри файла"
 
-#: src/program/mainwindow.cpp:302
+#: src/program/mainwindow.cpp:301
 #, kde-format
 msgid ""
 "Creating a new document of mime type '%1' failed as no editor component "
@@ -4020,22 +4006,22 @@ msgstr ""
 "Спроба створення документа з типом MIME «%1» зазнала невдачі, оскільки не "
 "вдалося запустити відповідний компонент редактора."
 
-#: src/program/mainwindow.cpp:302
+#: src/program/mainwindow.cpp:301
 #, kde-format
 msgid "Creating document failed"
 msgstr "Спроба створити документ зазнала невдачі"
 
-#: src/program/mainwindow.cpp:324
+#: src/program/mainwindow.cpp:323
 #, kde-format
 msgid "Open file"
 msgstr "Відкрити файл"
 
-#: src/program/mainwindow.cpp:366
+#: src/program/mainwindow.cpp:365
 #, kde-format
 msgid "%1 - KBibTeX"
 msgstr "%1 — KBibTeX"
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -4044,17 +4030,17 @@ msgstr ""
 "KBibTeX не є типовим редактором для підтримуваних бібліографій, зокрема у "
 "форматах BibTeX та RIS."
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Типовий редактор бібліографій"
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Зробити типовим редактором"
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Не змінювати параметрів"
@@ -4094,17 +4080,17 @@ msgstr "Відкрити…"
 msgid "List of recently used files:"
 msgstr "Список нещодавно використаних файлів:"
 
-#: src/program/mdiwidget.cpp:268
+#: src/program/mdiwidget.cpp:272
 #, kde-format
 msgid "No part available for file of mime type '%1'."
 msgstr "Не виявлено модуля для обробки файлів з типом MIME «%1»."
 
-#: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:272 src/program/mdiwidget.cpp:274
 #, kde-format
 msgid "No Part Available"
 msgstr "Недоступний модуль"
 
-#: src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:274
 #, kde-format
 msgid "No part available for file '%1'."
 msgstr "Модуль для обробки файла «%1» недоступний."
@@ -4114,32 +4100,32 @@ msgstr "Модуль для обробки файла «%1» недоступн�
 msgid "Unnamed-%1"
 msgstr "Без_назви-%1"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "Редактор BibTeX від KDE"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, kde-format
 msgid "Copyright 2004-2019 Thomas Fischer"
 msgstr "© Thomas Fischer, 2004–2019"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Maintainer"
 msgstr "Супровідник"
 
-#: src/program/program.cpp:73
+#: src/program/program.cpp:75
 #, kde-format
 msgid "File(s) to load."
 msgstr "Файли, які слід завантажити."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:111
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4152,10 +4138,20 @@ msgstr ""
 "\n"
 "У поточному стані можливості програми буде значно обмежено."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:111
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Комплект KBibTeX встановлено не повністю"
+
+#~ msgid "Fancy"
+#~ msgstr "Красивий"
+
+#~ msgid ""
+#~ "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
+#~ "command."
+#~ msgstr ""
+#~ "Підтримки цього типу елементів у команді <tt>{{cite}}</tt> для Вікіпедії "
+#~ "не передбачено."
 
 #~ msgid "KBibTeXPart"
 #~ msgstr "KBibTeXPart"

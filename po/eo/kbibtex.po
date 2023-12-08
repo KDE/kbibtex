@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-04 00:41+0000\n"
+"POT-Creation-Date: 2023-12-08 00:42+0000\n"
 "PO-Revision-Date: 2023-11-29 22:32+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -1088,13 +1088,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Vojo kiel Enigita en Eniro"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
+#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
 #, kde-format
 msgid "Relative Path"
 msgstr "Relativa Vojo"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
+#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
 #, kde-format
 msgid "Absolute Path"
 msgstr "Absoluta Vojo"
@@ -1112,7 +1112,7 @@ msgstr "Asocii Dokumenton kun Eniro"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:126
+#: src/program/docklets/referencepreview.cpp:124
 #, kde-format
 msgid "No preview available"
 msgstr "Neniu antaŭrigardo disponebla"
@@ -1292,13 +1292,13 @@ msgstr "Listo:"
 msgid "Value"
 msgstr "Valoro"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:261
+#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:260
 #, kde-format
 msgid "Delete"
 msgstr "Forigi"
 
 #: src/gui/element/elementwidgets.cpp:1005
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:147
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -1361,53 +1361,53 @@ msgstr "Fonto"
 msgid "Restore"
 msgstr "Restaŭri"
 
-#: src/gui/element/findpdfui.cpp:121 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172
+#: src/gui/element/findpdfui.cpp:121 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "View"
 msgstr "Vido"
 
-#: src/gui/element/findpdfui.cpp:130 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172
+#: src/gui/element/findpdfui.cpp:130 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "Ignore"
 msgstr "Ignori"
 
-#: src/gui/element/findpdfui.cpp:137 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172 src/gui/element/findpdfui.cpp:227
-#: src/gui/element/findpdfui.cpp:229
+#: src/gui/element/findpdfui.cpp:137 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176 src/gui/element/findpdfui.cpp:231
+#: src/gui/element/findpdfui.cpp:233
 #, kde-format
 msgid "Download"
 msgstr "Elŝuti"
 
-#: src/gui/element/findpdfui.cpp:144 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172
+#: src/gui/element/findpdfui.cpp:144 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "Use URL only"
 msgstr "Uzi nur URL"
 
-#: src/gui/element/findpdfui.cpp:380
+#: src/gui/element/findpdfui.cpp:384
 #, kde-format
 msgid "Result"
 msgstr "Rezulto"
 
-#: src/gui/element/findpdfui.cpp:432
+#: src/gui/element/findpdfui.cpp:436
 #, kde-format
 msgid "Starting to search..."
 msgstr "Komencante serĉi..."
 
-#: src/gui/element/findpdfui.cpp:453
+#: src/gui/element/findpdfui.cpp:457
 #, kde-format
 msgctxt "@title:window"
 msgid "Find PDF"
 msgstr "Trovi PDF"
 
-#: src/gui/element/findpdfui.cpp:512
+#: src/gui/element/findpdfui.cpp:516
 #, kde-format
 msgid "Save URL '%1'"
 msgstr "Konservi URL '%1'"
 
-#: src/gui/element/findpdfui.cpp:566
+#: src/gui/element/findpdfui.cpp:570
 #, kde-format
 msgid ""
 "<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
@@ -1587,7 +1587,7 @@ msgstr "Laŭvorta Teksto"
 msgid "Open '%1'"
 msgstr "Malfermi '%1'"
 
-#: src/gui/field/fieldlineedit.cpp:499
+#: src/gui/field/fieldlineedit.cpp:503
 #, kde-format
 msgid ""
 "The current text cannot be used as value of type '%1'.\n"
@@ -1603,62 +1603,62 @@ msgstr ""
 msgid "Remove value"
 msgstr "Forigi valoron"
 
-#: src/gui/field/fieldlistedit.cpp:156
+#: src/gui/field/fieldlistedit.cpp:160
 #, kde-format
 msgid "Move value down"
 msgstr "Movi valoron malsupren"
 
-#: src/gui/field/fieldlistedit.cpp:167
+#: src/gui/field/fieldlistedit.cpp:175
 #, kde-format
 msgid "Move value up"
 msgstr "Movi valoron supren"
 
-#: src/gui/field/fieldlistedit.cpp:417
+#: src/gui/field/fieldlistedit.cpp:429
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... kaj aliaj (et al.)"
 
-#: src/gui/field/fieldlistedit.cpp:422
+#: src/gui/field/fieldlistedit.cpp:434
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Aldoni el Clipboard"
 
-#: src/gui/field/fieldlistedit.cpp:423
+#: src/gui/field/fieldlistedit.cpp:435
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Aldoni liston de nomoj el tondujo"
 
-#: src/gui/field/fieldlistedit.cpp:485
+#: src/gui/field/fieldlistedit.cpp:497
 #, kde-format
 msgid "Add file..."
 msgstr "Aldoni dosieron..."
 
-#: src/gui/field/fieldlistedit.cpp:491
+#: src/gui/field/fieldlistedit.cpp:503
 #, kde-format
 msgid "Add reference ..."
 msgstr "Aldoni referencon..."
 
-#: src/gui/field/fieldlistedit.cpp:494
+#: src/gui/field/fieldlistedit.cpp:506
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Aldoni referencon el tondujo"
 
-#: src/gui/field/fieldlistedit.cpp:506
+#: src/gui/field/fieldlistedit.cpp:518
 #, kde-format
 msgid "File to Associate"
 msgstr "Dosiero al Asociita"
 
-#: src/gui/field/fieldlistedit.cpp:544 src/gui/field/fieldlistedit.cpp:624
+#: src/gui/field/fieldlistedit.cpp:556 src/gui/field/fieldlistedit.cpp:636
 #, kde-format
 msgid "Save file locally"
 msgstr "Konservi dosieron loke"
 
-#: src/gui/field/fieldlistedit.cpp:594
+#: src/gui/field/fieldlistedit.cpp:606
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Konservi dosieron '%1' loke"
 
-#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
+#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1669,23 +1669,23 @@ msgstr ""
 "vojo estus<br/><tt style=\"font-family: %3;\">%1</tt></p><p>La absoluta vojo "
 "estus<br/><tt style=\"font-familio: %3;\">%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:652
+#: src/gui/field/fieldlistedit.cpp:664
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Aldoni Ŝlosilvortojn el Listo"
 
-#: src/gui/field/fieldlistedit.cpp:653
+#: src/gui/field/fieldlistedit.cpp:665
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Aldonu ŝlosilvortojn kiel elektitajn el antaŭdifinita listo de ŝlosilvortoj"
 
-#: src/gui/field/fieldlistedit.cpp:656
+#: src/gui/field/fieldlistedit.cpp:668
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Aldoni Ŝlosilvortojn el Tondujo"
 
-#: src/gui/field/fieldlistedit.cpp:657
+#: src/gui/field/fieldlistedit.cpp:669
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "Aldoni interpunkcian liston de ŝlosilvortoj el tondujo"
@@ -2518,12 +2518,12 @@ msgstr "La stilo BibTeX <strong>%1</strong> ne estas disponebla."
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "La BibTeX-stilo <strong>PLACEHOLDER</strong> ne disponeblas."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "Serĉado de '%1' malsukcesis pro nekonata kialo."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2534,8 +2534,8 @@ msgstr ""
 "\n"
 "%2"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:325
-#: src/program/mainwindow.cpp:366 src/program/program.cpp:53
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:326
+#: src/program/mainwindow.cpp:365 src/program/program.cpp:55
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -2552,14 +2552,14 @@ msgstr "Libera teksto:"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:79
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:90
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:81
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:82
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:125
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:115
 #, kde-format
 msgid "Number of Results:"
 msgstr "Nombro de Rezultoj:"
 
-#: src/networking/onlinesearch/onlinesearcharxiv.cpp:675
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:367
 #, kde-format
 msgid "arXiv.org"
 msgstr "arXiv.org"
@@ -2614,25 +2614,25 @@ msgstr "CERN Dokumentservilo"
 msgid "DOI:"
 msgstr "DOI:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
 #, kde-format
 msgid "Free text or DOI:"
 msgstr "Libera teksto aŭ DOI:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:88
 #, kde-format
 msgid "Title:"
 msgstr "Titolo:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:65
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:66
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:96
 #, kde-format
 msgid "Author:"
 msgstr "Aŭtoro:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:73
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:74
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:109
 #, kde-format
 msgid "Year:"
@@ -2655,7 +2655,7 @@ msgstr "Google Scholar"
 msgid "IDEAS (RePEc)"
 msgstr "IDEOJ (RePEc)"
 
-#: src/networking/onlinesearch/onlinesearchieeexplore.cpp:186
+#: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
 msgid "IEEEXplore"
 msgstr "IEEE Esploro"
@@ -2710,12 +2710,12 @@ msgstr "MathSciNet"
 msgid "MR Lookup"
 msgstr "MR-Serĉo"
 
-#: src/networking/onlinesearch/onlinesearchpubmed.cpp:148
+#: src/networking/onlinesearch/onlinesearchpubmed.cpp:154
 #, kde-format
 msgid "PubMed"
 msgstr "PubMed"
 
-#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:217
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:216
 #, kde-format
 msgid "ScienceDirect"
 msgstr "ScienceDirect"
@@ -2725,7 +2725,7 @@ msgstr "ScienceDirect"
 msgid "Paper Reference:"
 msgstr "Papera Referenco:"
 
-#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:237
+#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:232
 #, kde-format
 msgid "Semantic Scholar"
 msgstr "Semantika Akademiulo"
@@ -2750,7 +2750,7 @@ msgstr "Libro/Revua titolo:"
 msgid "Author or Editor:"
 msgstr "Aŭtoro aŭ Redaktoro:"
 
-#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:302
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:452
 #, kde-format
 msgid "SpringerLink"
 msgstr "SpringerLink"
@@ -2760,7 +2760,7 @@ msgstr "SpringerLink"
 msgid "Unpaywall"
 msgstr "Malpagmuro"
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
 msgid ""
 "The query to be sent to 'zbMATH Open' lacks author information, which may "
@@ -2769,7 +2769,7 @@ msgstr ""
 "Al la demando sendota al 'zbMATH Open' mankas informoj pri aŭtoro, kio povas "
 "rezultigi malmultajn aŭ neniujn kongruajn rezultojn."
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
 msgid ""
 "The query to be sent to 'zbMATH Open' lacks 'year' information, which may "
@@ -2778,7 +2778,7 @@ msgstr ""
 "Al la demando sendota al 'zbMATH Open' mankas informoj pri \"jaro\", kio "
 "povas malbonigi rezultokvaliton."
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
 msgid ""
 "The query to be sent to 'zbMATH Open' lacks both author and 'year' "
@@ -2789,7 +2789,7 @@ msgstr ""
 "'jaro'.\n"
 "Tio plej verŝajne rezultos en malmultaj aŭ neniuj kongruaj rezultoj."
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:143
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:149
 #, kde-format
 msgid "zbMATH Open"
 msgstr "zbMATH Malfermita"
@@ -2869,133 +2869,133 @@ msgstr "Elemento"
 msgid "Main Toolbar"
 msgstr "Ĉefa Ilobreto"
 
-#: src/parts/part.cpp:138 src/parts/part.cpp:215
+#: src/parts/part.cpp:137 src/parts/part.cpp:214
 #, kde-format
 msgid "View Document"
 msgstr "Rigardi Dokumenton"
 
-#: src/parts/part.cpp:165
+#: src/parts/part.cpp:164
 #, kde-format
 msgid "Save Copy As..."
 msgstr "Konservi kopion kiel..."
 
-#: src/parts/part.cpp:169
+#: src/parts/part.cpp:168
 #, kde-format
 msgid "Save Selection..."
 msgstr "Konservi elekton..."
 
-#: src/parts/part.cpp:177
+#: src/parts/part.cpp:176
 #, kde-format
 msgid "Filter"
 msgstr "Filtrilo"
 
-#: src/parts/part.cpp:182
+#: src/parts/part.cpp:181
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
 msgstr "Filtri bibliografiajn enskribojn (%1)"
 
-#: src/parts/part.cpp:185
+#: src/parts/part.cpp:184
 #, kde-format
 msgid "New element"
 msgstr "Nova elemento"
 
-#: src/parts/part.cpp:191
+#: src/parts/part.cpp:190
 #, kde-format
 msgid "New entry"
 msgstr "Nova eniro"
 
-#: src/parts/part.cpp:196
+#: src/parts/part.cpp:195
 #, kde-format
 msgid "New comment"
 msgstr "Nova komento"
 
-#: src/parts/part.cpp:200
+#: src/parts/part.cpp:199
 #, kde-format
 msgid "New macro"
 msgstr "Nova makroo"
 
-#: src/parts/part.cpp:204
+#: src/parts/part.cpp:203
 #, kde-format
 msgid "New preamble"
 msgstr "Nova preambulo"
 
-#: src/parts/part.cpp:209
+#: src/parts/part.cpp:208
 #, kde-format
 msgid "Edit Element"
 msgstr "Redakti Elementon"
 
-#: src/parts/part.cpp:232
+#: src/parts/part.cpp:231
 #, kde-format
 msgid "Find PDF..."
 msgstr "Trovi PDF..."
 
-#: src/parts/part.cpp:237
+#: src/parts/part.cpp:236
 #, kde-format
 msgid "Format entry ids"
 msgstr "Formati enigajn idojn"
 
-#: src/parts/part.cpp:251
+#: src/parts/part.cpp:250
 #, kde-format
 msgid "Copy References"
 msgstr "Kopii Referencojn"
 
-#: src/parts/part.cpp:306
+#: src/parts/part.cpp:305
 #, kde-format
 msgid "New%1"
 msgstr "Nova%1"
 
-#: src/parts/part.cpp:465
+#: src/parts/part.cpp:468
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
 msgstr "Ne eblis krei rezervajn kopiojn de dokumento '%1'."
 
-#: src/parts/part.cpp:465
+#: src/parts/part.cpp:468
 #, kde-format
 msgid "Backup copies"
 msgstr "Rezervaj kopioj"
 
-#: src/parts/part.cpp:498
+#: src/parts/part.cpp:501
 #, kde-format
 msgid "Save file"
 msgstr "Konservi dosieron"
 
-#: src/parts/part.cpp:526
+#: src/parts/part.cpp:529
 #, kde-format
 msgid "BibUtils"
 msgstr "BibUtils"
 
-#: src/parts/part.cpp:527
+#: src/parts/part.cpp:530
 #, kde-format
 msgid "BibTeX2HTML"
 msgstr "BibTeX2HTML"
 
-#: src/parts/part.cpp:528
+#: src/parts/part.cpp:531
 #, kde-format
 msgid "Word XML bibliography"
 msgstr "Word XML-bibliografio"
 
-#: src/parts/part.cpp:529
+#: src/parts/part.cpp:532
 #, kde-format
 msgid "KBibTeX's own XML structure"
 msgstr "La propra XML-strukturo de KBibTeX"
 
-#: src/parts/part.cpp:530
+#: src/parts/part.cpp:533
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
 msgstr "La enkonstruita HTML-eksportilo de KBibTeX"
 
-#: src/parts/part.cpp:531
+#: src/parts/part.cpp:534
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
 msgstr "La enkonstruita RIS-eksportilo de KBibTeX"
 
-#: src/parts/part.cpp:540
+#: src/parts/part.cpp:543
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
 msgstr "Elekti Eksportilon"
 
-#: src/parts/part.cpp:542
+#: src/parts/part.cpp:545
 #, kde-format
 msgid ""
 "Several exporter modules are available to write file '%1'.\n"
@@ -3006,49 +3006,49 @@ msgstr ""
 "\n"
 "Bonvolu elekti unu."
 
-#: src/parts/part.cpp:573
+#: src/parts/part.cpp:576
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "BibTeX Dosiera Agordo"
 
-#: src/parts/part.cpp:591
+#: src/parts/part.cpp:594
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "PDF/PostScript Dosiera Agordo"
 
-#: src/parts/part.cpp:711
+#: src/parts/part.cpp:714
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr "Konservado de la bibliografio al dosiero '%1' malsukcesis."
 
-#: src/parts/part.cpp:713 src/parts/part.cpp:719
+#: src/parts/part.cpp:716 src/parts/part.cpp:722
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr "Konservado de bibliografio malsukcesis"
 
-#: src/parts/part.cpp:715
+#: src/parts/part.cpp:718
 #, kde-format
 msgid "Saving bibliography failed:"
 msgstr "Konservado de bibliografio malsukcesis:"
 
-#: src/parts/part.cpp:718
+#: src/parts/part.cpp:721
 #, kde-format
 msgid "The following output was generated by the export filter:"
 msgstr "La sekva eligo estis generita de la eksporta filtrilo:"
 
-#: src/parts/part.cpp:769
+#: src/parts/part.cpp:772
 #, kde-format
 msgid "Local Files"
 msgstr "Lokaj Dosieroj"
 
-#: src/parts/part.cpp:794
+#: src/parts/part.cpp:797
 #, kde-format
 msgid "Remote Files"
 msgstr "Foraj Dosieroj"
 
-#: src/parts/part.cpp:923
+#: src/parts/part.cpp:932
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3061,7 +3061,7 @@ msgstr ""
 "Kontrolu ke vi havas skriban aliron al ĉi tiu dosiero aŭ ke sufiĉa "
 "diskospaco estas disponebla."
 
-#: src/parts/part.cpp:1062
+#: src/parts/part.cpp:1071
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3069,12 +3069,12 @@ msgstr ""
 "Ne povas apliki defaŭltan formatadon por eniridentigiloj: Neniu defaŭlta "
 "formato specifita."
 
-#: src/parts/part.cpp:1062
+#: src/parts/part.cpp:1071
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "Ne Povas Apliki Defaŭltan Formatadon"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3085,17 +3085,17 @@ msgstr ""
 "\n"
 "Reŝargi dosieron aŭ ignori ŝanĝojn sur la disko?"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid "File changed externally"
 msgstr "Dosiero ŝanĝita ekstere"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid "Reload file"
 msgstr "Reŝargi dosieron"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Ignori sur-diskajn ŝanĝojn"
@@ -3410,18 +3410,18 @@ msgstr ""
 msgid "Open in external program"
 msgstr "Malfermi en ekstera programo"
 
-#: src/program/docklets/documentpreview.cpp:351
+#: src/program/docklets/documentpreview.cpp:352
 #, kde-format
 msgid "Refreshing..."
 msgstr "Refreŝigante..."
 
-#: src/program/docklets/documentpreview.cpp:380
+#: src/program/docklets/documentpreview.cpp:381
 #, kde-format
 msgid "No documents to show."
 msgstr "Neniuj dokumentoj por montri."
 
-#: src/program/docklets/documentpreview.cpp:387
-#: src/program/docklets/documentpreview.cpp:703
+#: src/program/docklets/documentpreview.cpp:388
+#: src/program/docklets/documentpreview.cpp:704
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3431,18 +3431,18 @@ msgstr ""
 "\">Malŝaltu la limigon</a> al lokaj dosieroj por vidi forajn dokumentojn.</"
 "qt>"
 
-#: src/program/docklets/documentpreview.cpp:514
+#: src/program/docklets/documentpreview.cpp:515
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "Ne povas montri petitan parton"
 
-#: src/program/docklets/documentpreview.cpp:541
-#: src/program/docklets/documentpreview.cpp:545
+#: src/program/docklets/documentpreview.cpp:542
+#: src/program/docklets/documentpreview.cpp:546
 #, kde-format
 msgid "Loading..."
 msgstr "Ŝargante..."
 
-#: src/program/docklets/documentpreview.cpp:566
+#: src/program/docklets/documentpreview.cpp:567
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3456,7 +3456,7 @@ msgstr ""
 "\">Okular</a> por KDE Frameworks 5 por uzi ĝian PDF-spektan komponanton.<br /"
 ">Okular por KDE 4 ne funkcios."
 
-#: src/program/docklets/documentpreview.cpp:567
+#: src/program/docklets/documentpreview.cpp:568
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3464,7 +3464,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>Ne scias kiel montri mimespecon '%1'.%2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:706
+#: src/program/docklets/documentpreview.cpp:707
 #, kde-format
 msgid ""
 "No documents to show.\n"
@@ -3516,81 +3516,67 @@ msgstr "Apliki ŝanĝojn"
 msgid "Discard changes"
 msgstr "Forĵeti ŝanĝojn"
 
-#: src/program/docklets/referencepreview.cpp:84
+#: src/program/docklets/referencepreview.cpp:83
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Fonto (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:85
+#: src/program/docklets/referencepreview.cpp:84
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Fonto (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:92
+#: src/program/docklets/referencepreview.cpp:91
 #, kde-format
 msgid "Standard"
 msgstr "Normo"
 
-#: src/program/docklets/referencepreview.cpp:93
-#, kde-format
-msgid "Fancy"
-msgstr "Fantazio"
-
-#: src/program/docklets/referencepreview.cpp:94
+#: src/program/docklets/referencepreview.cpp:92
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Vikipedia Citaĵo"
 
-#: src/program/docklets/referencepreview.cpp:95
+#: src/program/docklets/referencepreview.cpp:93
 #, kde-format
 msgid "Abstract-only"
 msgstr "Abstrakta-nur"
 
-#: src/program/docklets/referencepreview.cpp:126
+#: src/program/docklets/referencepreview.cpp:124
 #, kde-format
 msgid "Reason:"
 msgstr "Kialo:"
 
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:148
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Malfermi referencon en TTT-legilo."
 
-#: src/program/docklets/referencepreview.cpp:153
-#: src/program/docklets/referencepreview.cpp:428
+#: src/program/docklets/referencepreview.cpp:151
+#: src/program/docklets/referencepreview.cpp:431
 #, kde-format
 msgid "Save as HTML"
 msgstr "Konservi kiel HTML"
 
-#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:152
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Konservi referencon kiel HTML-fragmenton."
 
-#: src/program/docklets/referencepreview.cpp:244
+#: src/program/docklets/referencepreview.cpp:247
 #, kde-format
 msgid "Preview disabled"
 msgstr "Antaŭrigardo malŝaltita"
 
-#: src/program/docklets/referencepreview.cpp:264
+#: src/program/docklets/referencepreview.cpp:262
 #, kde-format
 msgid "No element selected"
 msgstr "Neniu elemento elektita"
 
-#: src/program/docklets/referencepreview.cpp:329
-#: src/program/docklets/referencepreview.cpp:399
+#: src/program/docklets/referencepreview.cpp:327
+#: src/program/docklets/referencepreview.cpp:402
 #, kde-format
 msgid "No output generated"
 msgstr "Neniu eligo generita"
-
-#: src/program/docklets/referencepreview.cpp:358
-#, kde-format
-msgid ""
-"This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
-"command."
-msgstr ""
-"Ĉi tiu tipo de elemento ne estas subtenata de la komando <tt>{{cite}}</tt> "
-"de Vikipedio."
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -3925,67 +3911,67 @@ msgstr "Plej ŝatataj"
 msgid "Filesystem Browser"
 msgstr "Dosiersistem-Foliumilo"
 
-#: src/program/mainwindow.cpp:95
+#: src/program/mainwindow.cpp:94
 #, kde-format
 msgid "Show Panels"
 msgstr "Montri Panelojn"
 
-#: src/program/mainwindow.cpp:100
+#: src/program/mainwindow.cpp:99
 #, kde-format
 msgid "Recently used files"
 msgstr "Lastatempe uzataj dosieroj"
 
-#: src/program/mainwindow.cpp:117
+#: src/program/mainwindow.cpp:116
 #, kde-format
 msgid "List of Documents"
 msgstr "Listo de Dokumentoj"
 
-#: src/program/mainwindow.cpp:127
+#: src/program/mainwindow.cpp:126
 #, kde-format
 msgid "List of Values"
 msgstr "Listo de Valoroj"
 
-#: src/program/mainwindow.cpp:136
+#: src/program/mainwindow.cpp:135
 #, kde-format
 msgid "Statistics"
 msgstr "Statistiko"
 
-#: src/program/mainwindow.cpp:145
+#: src/program/mainwindow.cpp:144
 #, kde-format
 msgid "Search Results"
 msgstr "Serĉrezultoj"
 
-#: src/program/mainwindow.cpp:156
+#: src/program/mainwindow.cpp:155
 #, kde-format
 msgid "Online Search"
 msgstr "Interreta Serĉo"
 
-#: src/program/mainwindow.cpp:166
+#: src/program/mainwindow.cpp:165
 #, kde-format
 msgid "Zotero"
 msgstr "Zotero"
 
-#: src/program/mainwindow.cpp:177
+#: src/program/mainwindow.cpp:176
 #, kde-format
 msgid "Reference Preview"
 msgstr "Referenca Antaŭrigardo"
 
-#: src/program/mainwindow.cpp:186
+#: src/program/mainwindow.cpp:185
 #, kde-format
 msgid "Document Preview"
 msgstr "Dokumenta Antaŭrigardo"
 
-#: src/program/mainwindow.cpp:197
+#: src/program/mainwindow.cpp:196
 #, kde-format
 msgid "Element Editor"
 msgstr "Elementa Redaktoro"
 
-#: src/program/mainwindow.cpp:207
+#: src/program/mainwindow.cpp:206
 #, kde-format
 msgid "File Settings"
 msgstr "Dosieraj Agordoj"
 
-#: src/program/mainwindow.cpp:302
+#: src/program/mainwindow.cpp:301
 #, kde-format
 msgid ""
 "Creating a new document of mime type '%1' failed as no editor component "
@@ -3994,22 +3980,22 @@ msgstr ""
 "Kreado de nova dokumento de mim-tipo '%1' malsukcesis ĉar neniu redaktila "
 "komponanto povus esti instanciigita."
 
-#: src/program/mainwindow.cpp:302
+#: src/program/mainwindow.cpp:301
 #, kde-format
 msgid "Creating document failed"
 msgstr "Kreado de dokumento malsukcesis"
 
-#: src/program/mainwindow.cpp:324
+#: src/program/mainwindow.cpp:323
 #, kde-format
 msgid "Open file"
 msgstr "Malfermi dosieron"
 
-#: src/program/mainwindow.cpp:366
+#: src/program/mainwindow.cpp:365
 #, kde-format
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -4018,17 +4004,17 @@ msgstr ""
 "KBibTeX ne estas la defaŭlta redaktilo por ĝiaj bibliografiaj formatoj kiel "
 "BibTeX aŭ RIS."
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Defaŭlta Bibliografia Redaktoro"
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Agordi kiel Defaŭltan Redaktilon"
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Konservi agordojn neŝanĝitaj"
@@ -4068,17 +4054,17 @@ msgstr "Malfermu..."
 msgid "List of recently used files:"
 msgstr "Listo de lastatempe uzitaj dosieroj:"
 
-#: src/program/mdiwidget.cpp:268
+#: src/program/mdiwidget.cpp:272
 #, kde-format
 msgid "No part available for file of mime type '%1'."
 msgstr "Neniu parto disponebla por dosiero de mimo-tipo '%1'."
 
-#: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:272 src/program/mdiwidget.cpp:274
 #, kde-format
 msgid "No Part Available"
 msgstr "Neniu Parto Havebla"
 
-#: src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:274
 #, kde-format
 msgid "No part available for file '%1'."
 msgstr "Neniu parto disponebla por dosiero '%1'."
@@ -4088,32 +4074,32 @@ msgstr "Neniu parto disponebla por dosiero '%1'."
 msgid "Unnamed-%1"
 msgstr "Nenomita-%1"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "BibTeX-redaktilo de KDE"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, kde-format
 msgid "Copyright 2004-2019 Thomas Fischer"
 msgstr "Kopirajto 2004-2019 Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Maintainer"
 msgstr "Prizorganto"
 
-#: src/program/program.cpp:73
+#: src/program/program.cpp:75
 #, kde-format
 msgid "File(s) to load."
 msgstr "Dosiero(j) por ŝargi."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:111
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4126,7 +4112,17 @@ msgstr ""
 "\n"
 "Nur limigitaj funkcioj estos disponeblaj."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:111
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nekompleta Instalado de KBibTeX"
+
+#~ msgid "Fancy"
+#~ msgstr "Fantazio"
+
+#~ msgid ""
+#~ "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
+#~ "command."
+#~ msgstr ""
+#~ "Ĉi tiu tipo de elemento ne estas subtenata de la komando <tt>{{cite}}</"
+#~ "tt> de Vikipedio."

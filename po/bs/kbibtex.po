@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-04 00:41+0000\n"
+"POT-Creation-Date: 2023-12-08 00:42+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -1108,13 +1108,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Putanja koja je unešena"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
+#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
 #, kde-format
 msgid "Relative Path"
 msgstr "Relativna putanja"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
+#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
 #, kde-format
 msgid "Absolute Path"
 msgstr "Apsolutna putanja."
@@ -1132,7 +1132,7 @@ msgstr ""
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:126
+#: src/program/docklets/referencepreview.cpp:124
 #, kde-format
 msgid "No preview available"
 msgstr "Prikaz nije dostupan"
@@ -1314,13 +1314,13 @@ msgstr "Lista:"
 msgid "Value"
 msgstr "Vrijednost"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:261
+#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:260
 #, kde-format
 msgid "Delete"
 msgstr "Obriši"
 
 #: src/gui/element/elementwidgets.cpp:1005
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:147
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -1383,54 +1383,54 @@ msgstr "Izvor"
 msgid "Restore"
 msgstr "Vrati"
 
-#: src/gui/element/findpdfui.cpp:121 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172
+#: src/gui/element/findpdfui.cpp:121 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "View"
 msgstr "Prikaz"
 
-#: src/gui/element/findpdfui.cpp:130 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172
+#: src/gui/element/findpdfui.cpp:130 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "Ignore"
 msgstr "Zanemari"
 
-#: src/gui/element/findpdfui.cpp:137 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172 src/gui/element/findpdfui.cpp:227
-#: src/gui/element/findpdfui.cpp:229
+#: src/gui/element/findpdfui.cpp:137 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176 src/gui/element/findpdfui.cpp:231
+#: src/gui/element/findpdfui.cpp:233
 #, kde-format
 msgid "Download"
 msgstr "Preuzimanje"
 
-#: src/gui/element/findpdfui.cpp:144 src/gui/element/findpdfui.cpp:170
-#: src/gui/element/findpdfui.cpp:172
+#: src/gui/element/findpdfui.cpp:144 src/gui/element/findpdfui.cpp:174
+#: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "Use URL only"
 msgstr "Koristi jedino URL"
 
-#: src/gui/element/findpdfui.cpp:380
+#: src/gui/element/findpdfui.cpp:384
 #, kde-format
 msgid "Result"
 msgstr "Rezultat"
 
-#: src/gui/element/findpdfui.cpp:432
+#: src/gui/element/findpdfui.cpp:436
 #, kde-format
 msgid "Starting to search..."
 msgstr "Početak pretrage..."
 
-#: src/gui/element/findpdfui.cpp:453
+#: src/gui/element/findpdfui.cpp:457
 #, fuzzy, kde-format
 #| msgid "Find PDF"
 msgctxt "@title:window"
 msgid "Find PDF"
 msgstr "Pronađi PDF"
 
-#: src/gui/element/findpdfui.cpp:512
+#: src/gui/element/findpdfui.cpp:516
 #, kde-format
 msgid "Save URL '%1'"
 msgstr "Snimi URL '%1'"
 
-#: src/gui/element/findpdfui.cpp:566
+#: src/gui/element/findpdfui.cpp:570
 #, kde-format
 msgid ""
 "<qt>Number of visited pages: <b>%1</b><br/>Number of running downloads: <b>"
@@ -1611,7 +1611,7 @@ msgstr "Običan tekst"
 msgid "Open '%1'"
 msgstr "Otvori „%1“"
 
-#: src/gui/field/fieldlineedit.cpp:499
+#: src/gui/field/fieldlineedit.cpp:503
 #, kde-format
 msgid ""
 "The current text cannot be used as value of type '%1'.\n"
@@ -1627,62 +1627,62 @@ msgstr ""
 msgid "Remove value"
 msgstr "Ukloni vrijednost"
 
-#: src/gui/field/fieldlistedit.cpp:156
+#: src/gui/field/fieldlistedit.cpp:160
 #, kde-format
 msgid "Move value down"
 msgstr "Pomjeri vrijednost nadolje"
 
-#: src/gui/field/fieldlistedit.cpp:167
+#: src/gui/field/fieldlistedit.cpp:175
 #, kde-format
 msgid "Move value up"
 msgstr "Pomjeri vrijednost nagore"
 
-#: src/gui/field/fieldlistedit.cpp:417
+#: src/gui/field/fieldlistedit.cpp:429
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... i ostali"
 
-#: src/gui/field/fieldlistedit.cpp:422
+#: src/gui/field/fieldlistedit.cpp:434
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Dodaj iz međuspremnika"
 
-#: src/gui/field/fieldlistedit.cpp:423
+#: src/gui/field/fieldlistedit.cpp:435
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Dodaj listu imena iz međuspremnika"
 
-#: src/gui/field/fieldlistedit.cpp:485
+#: src/gui/field/fieldlistedit.cpp:497
 #, kde-format
 msgid "Add file..."
 msgstr "Dodaj datoteku..."
 
-#: src/gui/field/fieldlistedit.cpp:491
+#: src/gui/field/fieldlistedit.cpp:503
 #, kde-format
 msgid "Add reference ..."
 msgstr "Dodaj referencu (napomenu) ..."
 
-#: src/gui/field/fieldlistedit.cpp:494
+#: src/gui/field/fieldlistedit.cpp:506
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Dodaj referencu iz međuspremnika"
 
-#: src/gui/field/fieldlistedit.cpp:506
+#: src/gui/field/fieldlistedit.cpp:518
 #, kde-format
 msgid "File to Associate"
 msgstr "Datoteka za povezivanje"
 
-#: src/gui/field/fieldlistedit.cpp:544 src/gui/field/fieldlistedit.cpp:624
+#: src/gui/field/fieldlistedit.cpp:556 src/gui/field/fieldlistedit.cpp:636
 #, kde-format
 msgid "Save file locally"
 msgstr "Lokalno sačuvaj datoteku"
 
-#: src/gui/field/fieldlistedit.cpp:594
+#: src/gui/field/fieldlistedit.cpp:606
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Sačuvaj datoteku '%1' lokalno"
 
-#: src/gui/field/fieldlistedit.cpp:607 src/gui/field/fieldlistedit.cpp:609
+#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1694,23 +1694,23 @@ msgstr ""
 "tt></p><p>A apsolutna putanja će biti<br/><tt style=\"font-family: %3;\">%2</"
 "tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:652
+#: src/gui/field/fieldlistedit.cpp:664
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Dodaj ključne riječi iz liste"
 
-#: src/gui/field/fieldlistedit.cpp:653
+#: src/gui/field/fieldlistedit.cpp:665
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Dodaj ključne riječi izabrane iz prethodno definisane liste ključnih riječi"
 
-#: src/gui/field/fieldlistedit.cpp:656
+#: src/gui/field/fieldlistedit.cpp:668
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Dodaj ključne riječi iz međuspremnika"
 
-#: src/gui/field/fieldlistedit.cpp:657
+#: src/gui/field/fieldlistedit.cpp:669
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "Dodaj zarezima odvojenu listu ključnih riječi iz međuspremnika"
@@ -2580,12 +2580,12 @@ msgstr "BibTeX stil <strong>%1</strong> nije dostupan."
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "BibTeX stil <strong>%1</strong> nije dostupan."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "Pretraživanje '%1' nije uspjelo iz nepoznatog razloga."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:220
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2596,8 +2596,8 @@ msgstr ""
 "\n"
 "%2"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:325
-#: src/program/mainwindow.cpp:366 src/program/program.cpp:53
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:326
+#: src/program/mainwindow.cpp:365 src/program/program.cpp:55
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -2614,14 +2614,14 @@ msgstr "Slobodan tekst:"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:79
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:90
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:81
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:82
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:125
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:115
 #, kde-format
 msgid "Number of Results:"
 msgstr "Broj rezultata:"
 
-#: src/networking/onlinesearch/onlinesearcharxiv.cpp:675
+#: src/networking/onlinesearch/onlinesearcharxiv.cpp:367
 #, kde-format
 msgid "arXiv.org"
 msgstr "arXiv.org"
@@ -2676,26 +2676,26 @@ msgstr "CERN Dokument Server"
 msgid "DOI:"
 msgstr "DOI:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:48
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
 #, fuzzy, kde-format
 #| msgid "Free text:"
 msgid "Free text or DOI:"
 msgstr "Slobodan tekst:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:57
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:88
 #, kde-format
 msgid "Title:"
 msgstr "Naslov:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:65
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:66
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:96
 #, kde-format
 msgid "Author:"
 msgstr "Autor:"
 
-#: src/networking/onlinesearch/onlinesearchgeneral.cpp:73
+#: src/networking/onlinesearch/onlinesearchgeneral.cpp:74
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:109
 #, kde-format
 msgid "Year:"
@@ -2717,7 +2717,7 @@ msgstr "Google stipendist"
 msgid "IDEAS (RePEc)"
 msgstr "IDEAS (RePEc)"
 
-#: src/networking/onlinesearch/onlinesearchieeexplore.cpp:186
+#: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
 msgid "IEEEXplore"
 msgstr "IEEEXplore"
@@ -2772,12 +2772,12 @@ msgstr "MathSciNet"
 msgid "MR Lookup"
 msgstr "MR Lookup"
 
-#: src/networking/onlinesearch/onlinesearchpubmed.cpp:148
+#: src/networking/onlinesearch/onlinesearchpubmed.cpp:154
 #, kde-format
 msgid "PubMed"
 msgstr "PubMed"
 
-#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:217
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:216
 #, kde-format
 msgid "ScienceDirect"
 msgstr "ScienceDirect"
@@ -2788,7 +2788,7 @@ msgstr "ScienceDirect"
 msgid "Paper Reference:"
 msgstr "Dio referentne knjige"
 
-#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:237
+#: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:232
 #, fuzzy, kde-format
 #| msgid "Google Scholar"
 msgid "Semantic Scholar"
@@ -2815,7 +2815,7 @@ msgstr "Naslov knjige/žurnala:"
 msgid "Author or Editor:"
 msgstr "Pisac ili urednik:"
 
-#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:302
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:452
 #, kde-format
 msgid "SpringerLink"
 msgstr "SpringerLink"
@@ -2825,21 +2825,21 @@ msgstr "SpringerLink"
 msgid "Unpaywall"
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
 msgid ""
 "The query to be sent to 'zbMATH Open' lacks author information, which may "
 "result in few or no matching results."
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
 msgid ""
 "The query to be sent to 'zbMATH Open' lacks 'year' information, which may "
 "degrade result quality."
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:92
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
 msgid ""
 "The query to be sent to 'zbMATH Open' lacks both author and 'year' "
@@ -2847,7 +2847,7 @@ msgid ""
 "This will most likely result in few or no matching results."
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchzbmath.cpp:143
+#: src/networking/onlinesearch/onlinesearchzbmath.cpp:149
 #, kde-format
 msgid "zbMATH Open"
 msgstr ""
@@ -2918,137 +2918,137 @@ msgstr "Element"
 msgid "Main Toolbar"
 msgstr "Glavna traka sa alatkama"
 
-#: src/parts/part.cpp:138 src/parts/part.cpp:215
+#: src/parts/part.cpp:137 src/parts/part.cpp:214
 #, kde-format
 msgid "View Document"
 msgstr "Prikaži dokument"
 
-#: src/parts/part.cpp:165
+#: src/parts/part.cpp:164
 #, kde-format
 msgid "Save Copy As..."
 msgstr "Spremi kopiju kao ..."
 
-#: src/parts/part.cpp:169
+#: src/parts/part.cpp:168
 #, kde-format
 msgid "Save Selection..."
 msgstr ""
 
-#: src/parts/part.cpp:177
+#: src/parts/part.cpp:176
 #, kde-format
 msgid "Filter"
 msgstr "Filter"
 
-#: src/parts/part.cpp:182
+#: src/parts/part.cpp:181
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
 msgstr "Filtriraj bibliografske unose (%1)"
 
-#: src/parts/part.cpp:185
+#: src/parts/part.cpp:184
 #, kde-format
 msgid "New element"
 msgstr "Novi element"
 
-#: src/parts/part.cpp:191
+#: src/parts/part.cpp:190
 #, kde-format
 msgid "New entry"
 msgstr "Novi unos"
 
-#: src/parts/part.cpp:196
+#: src/parts/part.cpp:195
 #, kde-format
 msgid "New comment"
 msgstr "Novi komentar"
 
-#: src/parts/part.cpp:200
+#: src/parts/part.cpp:199
 #, kde-format
 msgid "New macro"
 msgstr "Novi makro"
 
-#: src/parts/part.cpp:204
+#: src/parts/part.cpp:203
 #, kde-format
 msgid "New preamble"
 msgstr "Novi uvod"
 
-#: src/parts/part.cpp:209
+#: src/parts/part.cpp:208
 #, kde-format
 msgid "Edit Element"
 msgstr "Uredi element"
 
-#: src/parts/part.cpp:232
+#: src/parts/part.cpp:231
 #, kde-format
 msgid "Find PDF..."
 msgstr "Nađi PDF..."
 
-#: src/parts/part.cpp:237
+#: src/parts/part.cpp:236
 #, kde-format
 msgid "Format entry ids"
 msgstr "Formatiraj ulazne id-ove"
 
-#: src/parts/part.cpp:251
+#: src/parts/part.cpp:250
 #, kde-format
 msgid "Copy References"
 msgstr "Kopiraj reference"
 
-#: src/parts/part.cpp:306
+#: src/parts/part.cpp:305
 #, kde-format
 msgid "New%1"
 msgstr "Novi%1"
 
-#: src/parts/part.cpp:465
+#: src/parts/part.cpp:468
 #, fuzzy, kde-format
 #| msgid "<qt>Could not create backup copies of document<br/><b>%1</b>.</qt>"
 msgid "Could not create backup copies of document '%1'."
 msgstr "<qt>Neuspjelo kreiranje rezervnih kopija dokumenta<br/><b>%1</b>.</qt>"
 
-#: src/parts/part.cpp:465
+#: src/parts/part.cpp:468
 #, kde-format
 msgid "Backup copies"
 msgstr "Rezervne kopije"
 
-#: src/parts/part.cpp:498
+#: src/parts/part.cpp:501
 #, fuzzy, kde-format
 #| msgid "Save file locally"
 msgid "Save file"
 msgstr "Lokalno sačuvaj datoteku"
 
-#: src/parts/part.cpp:526
+#: src/parts/part.cpp:529
 #, kde-format
 msgid "BibUtils"
 msgstr ""
 
-#: src/parts/part.cpp:527
+#: src/parts/part.cpp:530
 #, fuzzy, kde-format
 #| msgid "KBibTeX"
 msgid "BibTeX2HTML"
 msgstr "KBibTeX"
 
-#: src/parts/part.cpp:528
+#: src/parts/part.cpp:531
 #, fuzzy, kde-format
 #| msgid "Load bibliography"
 msgid "Word XML bibliography"
 msgstr "Učitaj literaturu"
 
-#: src/parts/part.cpp:529
+#: src/parts/part.cpp:532
 #, kde-format
 msgid "KBibTeX's own XML structure"
 msgstr ""
 
-#: src/parts/part.cpp:530
+#: src/parts/part.cpp:533
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
 msgstr ""
 
-#: src/parts/part.cpp:531
+#: src/parts/part.cpp:534
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
 msgstr ""
 
-#: src/parts/part.cpp:540
+#: src/parts/part.cpp:543
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
 msgstr ""
 
-#: src/parts/part.cpp:542
+#: src/parts/part.cpp:545
 #, kde-format
 msgid ""
 "Several exporter modules are available to write file '%1'.\n"
@@ -3056,37 +3056,37 @@ msgid ""
 "Please choose one."
 msgstr ""
 
-#: src/parts/part.cpp:573
+#: src/parts/part.cpp:576
 #, fuzzy, kde-format
 #| msgid "BibTeX File Settings"
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "BibTeX Postavke datoteka"
 
-#: src/parts/part.cpp:591
+#: src/parts/part.cpp:594
 #, fuzzy, kde-format
 #| msgid "PDF/PostScript File Settings"
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "PDF/PostScript Postavke datoteka"
 
-#: src/parts/part.cpp:711
+#: src/parts/part.cpp:714
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr "Čuvanje literature u datoteku '%1' nije uspjelo."
 
-#: src/parts/part.cpp:713 src/parts/part.cpp:719
+#: src/parts/part.cpp:716 src/parts/part.cpp:722
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr "Čuvanje literature nije uspjelo"
 
-#: src/parts/part.cpp:715
+#: src/parts/part.cpp:718
 #, fuzzy, kde-format
 #| msgid "Saving bibliography failed"
 msgid "Saving bibliography failed:"
 msgstr "Čuvanje literature nije uspjelo"
 
-#: src/parts/part.cpp:718
+#: src/parts/part.cpp:721
 #, fuzzy, kde-format
 #| msgid ""
 #| "Saving the bibliography to file '%1' failed.\n"
@@ -3098,17 +3098,17 @@ msgstr ""
 "\n"
 "Sljedeći izlaz je generiran od strane izvoznog filtera:"
 
-#: src/parts/part.cpp:769
+#: src/parts/part.cpp:772
 #, kde-format
 msgid "Local Files"
 msgstr "Lokalne Datoteke"
 
-#: src/parts/part.cpp:794
+#: src/parts/part.cpp:797
 #, kde-format
 msgid "Remote Files"
 msgstr "Udaljene datoteke"
 
-#: src/parts/part.cpp:923
+#: src/parts/part.cpp:932
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3121,7 +3121,7 @@ msgstr ""
 "Provjerite da imate pristup za pisanje u ovu datoteku ili da na disku ima "
 "dovoljno mjesta."
 
-#: src/parts/part.cpp:1062
+#: src/parts/part.cpp:1071
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3129,12 +3129,12 @@ msgstr ""
 "Ne mogu primjeniti podrazumijevano formatiranje za ulazne id-ove: Nije "
 "specificiran podrazumijevani format."
 
-#: src/parts/part.cpp:1062
+#: src/parts/part.cpp:1071
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr ""
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3145,17 +3145,17 @@ msgstr ""
 "\n"
 "Da ponovo učitam datoteku ili da zanemarim promjene na disku?"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid "File changed externally"
 msgstr "Datoteka je promijenjena izvana"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid "Reload file"
 msgstr "Ponovno učitati datoteku"
 
-#: src/parts/part.cpp:1186
+#: src/parts/part.cpp:1195
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Zanemari promjene na disku"
@@ -3492,18 +3492,18 @@ msgstr ""
 msgid "Open in external program"
 msgstr "Otvori u vanjskom programu"
 
-#: src/program/docklets/documentpreview.cpp:351
+#: src/program/docklets/documentpreview.cpp:352
 #, kde-format
 msgid "Refreshing..."
 msgstr "Osvježavam..."
 
-#: src/program/docklets/documentpreview.cpp:380
+#: src/program/docklets/documentpreview.cpp:381
 #, kde-format
 msgid "No documents to show."
 msgstr "Nema dokumenata za prikazivanje."
 
-#: src/program/docklets/documentpreview.cpp:387
-#: src/program/docklets/documentpreview.cpp:703
+#: src/program/docklets/documentpreview.cpp:388
+#: src/program/docklets/documentpreview.cpp:704
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3513,18 +3513,18 @@ msgstr ""
 "\">Onemogući restrikciju</a>za lokalne datoteke da biste vidjeli i udaljene."
 "</qt>"
 
-#: src/program/docklets/documentpreview.cpp:514
+#: src/program/docklets/documentpreview.cpp:515
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "Ne mogu prikazati traženi dio"
 
-#: src/program/docklets/documentpreview.cpp:541
-#: src/program/docklets/documentpreview.cpp:545
+#: src/program/docklets/documentpreview.cpp:542
+#: src/program/docklets/documentpreview.cpp:546
 #, kde-format
 msgid "Loading..."
 msgstr "Učitavanje..."
 
-#: src/program/docklets/documentpreview.cpp:566
+#: src/program/docklets/documentpreview.cpp:567
 #, fuzzy, kde-format
 #| msgctxt ""
 #| "Additional information in case there is not KPart available for mime type "
@@ -3543,7 +3543,7 @@ msgstr ""
 "<br/><br/>Molim instalirajte <a href=\"https://userbase.kde.org/Okular"
 "\">Okular</a> da koristite njegovu PDF preglednu komponentu."
 
-#: src/program/docklets/documentpreview.cpp:567
+#: src/program/docklets/documentpreview.cpp:568
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3551,7 +3551,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>Ne znam kako da prikažem mime tip '%1'.%2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:706
+#: src/program/docklets/documentpreview.cpp:707
 #, kde-format
 msgid ""
 "No documents to show.\n"
@@ -3605,84 +3605,70 @@ msgstr "Primijeni izmjene"
 msgid "Discard changes"
 msgstr "Odbaci promjene"
 
-#: src/program/docklets/referencepreview.cpp:84
+#: src/program/docklets/referencepreview.cpp:83
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Izvor (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:85
+#: src/program/docklets/referencepreview.cpp:84
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Izvor (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:92
+#: src/program/docklets/referencepreview.cpp:91
 #, kde-format
 msgid "Standard"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:93
-#, kde-format
-msgid "Fancy"
-msgstr ""
-
-#: src/program/docklets/referencepreview.cpp:94
+#: src/program/docklets/referencepreview.cpp:92
 #, fuzzy, kde-format
 #| msgid "Wikipedia"
 msgid "Wikipedia Citation"
 msgstr "Wikipedia"
 
-#: src/program/docklets/referencepreview.cpp:95
+#: src/program/docklets/referencepreview.cpp:93
 #, fuzzy, kde-format
 #| msgid "Abstract"
 msgid "Abstract-only"
 msgstr "Rezime"
 
-#: src/program/docklets/referencepreview.cpp:126
+#: src/program/docklets/referencepreview.cpp:124
 #, kde-format
 msgid "Reason:"
 msgstr "Razlog:"
 
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:148
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Otvori referencu u web pregledniku."
 
-#: src/program/docklets/referencepreview.cpp:153
-#: src/program/docklets/referencepreview.cpp:428
+#: src/program/docklets/referencepreview.cpp:151
+#: src/program/docklets/referencepreview.cpp:431
 #, kde-format
 msgid "Save as HTML"
 msgstr "Sačuvaj kao HTML"
 
-#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:152
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Sačuvaj referencu kao HTML fragment."
 
-#: src/program/docklets/referencepreview.cpp:244
+#: src/program/docklets/referencepreview.cpp:247
 #, kde-format
 msgid "Preview disabled"
 msgstr "Prikaz onemogućen"
 
-#: src/program/docklets/referencepreview.cpp:264
+#: src/program/docklets/referencepreview.cpp:262
 #, kde-format
 msgid "No element selected"
 msgstr "Nijedan element nije izabran"
 
-#: src/program/docklets/referencepreview.cpp:329
-#: src/program/docklets/referencepreview.cpp:399
+#: src/program/docklets/referencepreview.cpp:327
+#: src/program/docklets/referencepreview.cpp:402
 #, fuzzy, kde-format
 #| msgid "No HTML output generated"
 msgid "No output generated"
 msgstr "Nijedan HTML izlaz nije generiran"
-
-#: src/program/docklets/referencepreview.cpp:358
-#, kde-format
-msgid ""
-"This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
-"command."
-msgstr ""
-"Ovaj tip elementa nije podržan od strane Wikipedijine <tt>{{cite}}</tt> "
-"komande."
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4022,67 +4008,67 @@ msgstr "Omiljeni"
 msgid "Filesystem Browser"
 msgstr "Preglednik datotečnog sistema"
 
-#: src/program/mainwindow.cpp:95
+#: src/program/mainwindow.cpp:94
 #, kde-format
 msgid "Show Panels"
 msgstr "Prikaži ploče"
 
-#: src/program/mainwindow.cpp:100
+#: src/program/mainwindow.cpp:99
 #, kde-format
 msgid "Recently used files"
 msgstr "Nedavno korištene datoteke"
 
-#: src/program/mainwindow.cpp:117
+#: src/program/mainwindow.cpp:116
 #, kde-format
 msgid "List of Documents"
 msgstr "Lista dokumenata"
 
-#: src/program/mainwindow.cpp:127
+#: src/program/mainwindow.cpp:126
 #, kde-format
 msgid "List of Values"
 msgstr "Lista vrijednosti"
 
-#: src/program/mainwindow.cpp:136
+#: src/program/mainwindow.cpp:135
 #, kde-format
 msgid "Statistics"
 msgstr "Statistika"
 
-#: src/program/mainwindow.cpp:145
+#: src/program/mainwindow.cpp:144
 #, kde-format
 msgid "Search Results"
 msgstr "Rezultati pretrage"
 
-#: src/program/mainwindow.cpp:156
+#: src/program/mainwindow.cpp:155
 #, kde-format
 msgid "Online Search"
 msgstr "Online pretraga"
 
-#: src/program/mainwindow.cpp:166
+#: src/program/mainwindow.cpp:165
 #, kde-format
 msgid "Zotero"
 msgstr "Zotero"
 
-#: src/program/mainwindow.cpp:177
+#: src/program/mainwindow.cpp:176
 #, kde-format
 msgid "Reference Preview"
 msgstr "Prikaz referenci"
 
-#: src/program/mainwindow.cpp:186
+#: src/program/mainwindow.cpp:185
 #, kde-format
 msgid "Document Preview"
 msgstr "Prikaz dokumenta"
 
-#: src/program/mainwindow.cpp:197
+#: src/program/mainwindow.cpp:196
 #, kde-format
 msgid "Element Editor"
 msgstr "Uređivač elementa"
 
-#: src/program/mainwindow.cpp:207
+#: src/program/mainwindow.cpp:206
 #, kde-format
 msgid "File Settings"
 msgstr "Postavke datoteke"
 
-#: src/program/mainwindow.cpp:302
+#: src/program/mainwindow.cpp:301
 #, kde-format
 msgid ""
 "Creating a new document of mime type '%1' failed as no editor component "
@@ -4091,23 +4077,23 @@ msgstr ""
 "Stvaranje novog dokumenta tipa mimike '%1' nije uspjelo jer nijedna "
 "komponenta uređivača nije mogla biti instancirana."
 
-#: src/program/mainwindow.cpp:302
+#: src/program/mainwindow.cpp:301
 #, kde-format
 msgid "Creating document failed"
 msgstr "Stvaranje dokumenta nije uspjelo"
 
-#: src/program/mainwindow.cpp:324
+#: src/program/mainwindow.cpp:323
 #, fuzzy, kde-format
 #| msgid "Open File"
 msgid "Open file"
 msgstr "Otvori Datoteku"
 
-#: src/program/mainwindow.cpp:366
+#: src/program/mainwindow.cpp:365
 #, kde-format
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -4116,17 +4102,17 @@ msgstr ""
 "KBibTeX nije podrazumijevani uređivač za svoje formate literature poput "
 "BibTeXa ili RISa."
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Podrazumijevani Ureživač literature"
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Podesi kao podrazumijevani uređivač"
 
-#: src/program/mainwindow.cpp:453 src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Zadrži postavke nepromijenjenim"
@@ -4166,19 +4152,19 @@ msgstr "Otvori..."
 msgid "List of recently used files:"
 msgstr "Lista nedavno korištenih datoteka:"
 
-#: src/program/mdiwidget.cpp:268
+#: src/program/mdiwidget.cpp:272
 #, fuzzy, kde-format
 #| msgid "No part available for file '%1'."
 msgid "No part available for file of mime type '%1'."
 msgstr "Nijedan dio nije dostupan za datoteku '%1'."
 
-#: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:272 src/program/mdiwidget.cpp:274
 #, fuzzy, kde-format
 #| msgid "No part available"
 msgid "No Part Available"
 msgstr "Nijedan dio nije dostupan"
 
-#: src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:274
 #, kde-format
 msgid "No part available for file '%1'."
 msgstr "Nijedan dio nije dostupan za datoteku '%1'."
@@ -4188,35 +4174,35 @@ msgstr "Nijedan dio nije dostupan za datoteku '%1'."
 msgid "Unnamed-%1"
 msgstr "Neimenovano-%1"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, fuzzy, kde-format
 #| msgid "A BibTeX editor for KDE"
 msgid "A BibTeX editor by KDE"
 msgstr "Uređivač BibTeX za KDE"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, fuzzy, kde-format
 #| msgid "Copyright 2004-2015 Thomas Fischer"
 msgid "Copyright 2004-2019 Thomas Fischer"
 msgstr "Sva prava zadržana 2004-2015 Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Maintainer"
 msgstr "Održavatelj"
 
-#: src/program/program.cpp:73
+#: src/program/program.cpp:75
 #, fuzzy, kde-format
 #| msgid "File(s) to load"
 msgid "File(s) to load."
 msgstr "Datoteke za učitavanje"
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:111
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4229,10 +4215,17 @@ msgstr ""
 "\n"
 "Samo ograničena funkcionalnost će biti dostupna."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:111
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nepotpuna KBibTeX instalacija"
+
+#~ msgid ""
+#~ "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
+#~ "command."
+#~ msgstr ""
+#~ "Ovaj tip elementa nije podržan od strane Wikipedijine <tt>{{cite}}</tt> "
+#~ "komande."
 
 #~ msgid "KBibTeXPart"
 #~ msgstr "KBibTeXPart"
