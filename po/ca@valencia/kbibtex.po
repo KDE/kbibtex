@@ -1076,7 +1076,7 @@ msgstr "Voleu canviar el nom del document?"
 #: src/gui/element/associatedfilesui.cpp:114
 #, kde-format
 msgid "Keep document's original filename"
-msgstr "Mantín el nom de fitxer original del document"
+msgstr "Mantín el nom del fitxer original del document"
 
 #: src/gui/element/associatedfilesui.cpp:120
 #, kde-format
@@ -4142,13 +4142,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instal·lació incompleta de KBibTeX"
-
-#~ msgid "Fancy"
-#~ msgstr "Sofisticada"
-
-#~ msgid ""
-#~ "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
-#~ "command."
-#~ msgstr ""
-#~ "Este tipus d'element no està admés per l'ordre <tt>{{cite}}</tt> de la "
-#~ "Viquipèdia."
