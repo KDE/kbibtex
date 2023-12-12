@@ -1076,7 +1076,7 @@ msgstr "Voleu canviar el nom del document?"
 #: src/gui/element/associatedfilesui.cpp:112
 #, kde-format
 msgid "Keep document's original filename"
-msgstr "Mantín el nom de fitxer original del document"
+msgstr "Mantín el nom del fitxer original del document"
 
 #: src/gui/element/associatedfilesui.cpp:118
 #, kde-format
