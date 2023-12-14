@@ -30,6 +30,7 @@
 #endif // HAVE_KFI18N
 
 #include "fileexporterbibtex.h"
+#include "fileexporter_p.h"
 #include "logging_io.h"
 
 class FileExporterBibTeX2HTML::FileExporterBibTeX2HTMLPrivate
@@ -122,10 +123,7 @@ FileExporterBibTeX2HTML::~FileExporterBibTeX2HTML()
 
 bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile)
 {
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_bibtexfile_or_iodevice_invalid(bibtexfile, iodevice);
 
     bool result = false;
 
@@ -145,10 +143,7 @@ bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const File *bibtexfile)
 
 bool FileExporterBibTeX2HTML::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_iodevice_invalid(iodevice);
 
     bool result = false;
 

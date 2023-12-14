@@ -26,6 +26,8 @@
 #include "kbibtexio_export.h"
 #endif // HAVE_KF
 
+#include "fileexporter_p.h"
+
 /**
 @author Thomas Fischer
  */

@@ -37,6 +37,7 @@
 #include <Value>
 #include <Comment>
 #include "encoderlatex.h"
+#include "fileexporter_p.h"
 #include "logging_io.h"
 
 #define normalizeText(text) (text).normalized(QString::NormalizationForm_C)
@@ -750,7 +751,8 @@ QString FileExporterBibTeX::toString(const QSharedPointer<const Element> &elemen
 {
     d->cancelFlag = false;
 
-    d->loadPreferencesAndProperties(bibtexfile);
+    if (bibtexfile != nullptr)
+        d->loadPreferencesAndProperties(bibtexfile);
 
     QString outputString;
     outputString.reserve(1024);
@@ -790,22 +792,11 @@ QString FileExporterBibTeX::toString(const File *bibtexfile)
     return outputString.normalized(QString::NormalizationForm_C);
 }
 
-
 bool FileExporterBibTeX::save(QIODevice *iodevice, const File *bibtexfile)
 {
     d->cancelFlag = false;
 
-    if (iodevice == nullptr || !iodevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    } else if (bibtexfile == nullptr) {
-        qCWarning(LOG_KBIBTEX_IO) << "No bibliography to write given";
-        return false;
-    } else if (bibtexfile->isEmpty()) {
-        qCDebug(LOG_KBIBTEX_IO) << "Bibliography is empty";
-        iodevice->close();
-        return true;
-    }
+    check_if_bibtexfile_or_iodevice_invalid(bibtexfile, iodevice);
 
     // Call 'toString' to get an in-memory representation of the BibTeX data,
     // then rewrite the output either protect only sensitive text (e.g. '&')
@@ -820,10 +811,7 @@ bool FileExporterBibTeX::save(QIODevice *iodevice, const QSharedPointer<const El
 {
     d->cancelFlag = false;
 
-    if (!iodevice->isWritable() && !iodevice->open(QIODevice::WriteOnly)) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_iodevice_invalid(iodevice);
 
     const bool result = d->writeOutString(toString(element, bibtexfile), iodevice);
 

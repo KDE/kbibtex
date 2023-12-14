@@ -31,6 +31,7 @@
 #include <Entry>
 #include "fileinfo.h"
 #include "fileexporterbibtex.h"
+#include "fileexporter_p.h"
 #include "logging_io.h"
 
 FileExporterPDF::FileExporterPDF(QObject *parent)
@@ -49,10 +50,7 @@ FileExporterPDF::~FileExporterPDF()
 
 bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile)
 {
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_bibtexfile_or_iodevice_invalid(bibtexfile, iodevice);
 
     bool result = false;
     m_embeddedFileList.clear();
@@ -77,10 +75,7 @@ bool FileExporterPDF::save(QIODevice *iodevice, const File *bibtexfile)
 
 bool FileExporterPDF::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_iodevice_invalid(iodevice);
 
     bool result = false;
     m_embeddedFileList.clear();

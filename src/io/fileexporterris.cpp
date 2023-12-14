@@ -25,6 +25,7 @@
 
 #include <Entry>
 #include <KBibTeX>
+#include "fileexporter_p.h"
 #include "logging_io.h"
 
 class FileExporterRIS::Private
@@ -190,10 +191,7 @@ bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 {
     Q_UNUSED(bibtexfile)
 
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCDebug(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_iodevice_invalid(iodevice);
 
     bool result = false;
     QTextStream stream(iodevice);
@@ -207,10 +205,7 @@ bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 
 bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile)
 {
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCDebug(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_bibtexfile_or_iodevice_invalid(bibtexfile, iodevice);
 
     bool result = true;
     QTextStream stream(iodevice);
@@ -218,12 +213,8 @@ bool FileExporterRIS::save(QIODevice *iodevice, const File *bibtexfile)
     for (File::ConstIterator it = bibtexfile->constBegin(); it != bibtexfile->constEnd() && result; ++it) {
         const QSharedPointer<const Entry> &entry = (*it).dynamicCast<Entry>();
         if (!entry.isNull()) {
-            if (bibtexfile == nullptr)
-                result |= d->writeEntry(stream, entry);
-            else {
-                const QSharedPointer<const Entry> resolvedEntry(entry->resolveCrossref(bibtexfile));
-                result |= d->writeEntry(stream, resolvedEntry);
-            }
+            const QSharedPointer<const Entry> resolvedEntry(entry->resolveCrossref(bibtexfile));
+            result |= d->writeEntry(stream, resolvedEntry);
         }
     }
 

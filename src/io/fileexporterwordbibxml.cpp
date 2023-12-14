@@ -26,6 +26,7 @@
 #include <File>
 #include <Entry>
 #include "encoderxml.h"
+#include "fileexporter_p.h"
 #include "logging_io.h"
 
 class FileExporterWordBibXML::Private
@@ -251,10 +252,7 @@ FileExporterWordBibXML::~FileExporterWordBibXML()
 
 bool FileExporterWordBibXML::save(QIODevice *iodevice, const File *bibtexfile)
 {
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_bibtexfile_or_iodevice_invalid(bibtexfile, iodevice);
 
     bool result = true;
     d->cancelFlag = false;
@@ -292,10 +290,7 @@ bool FileExporterWordBibXML::save(QIODevice *iodevice, const File *bibtexfile)
 
 bool FileExporterWordBibXML::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_iodevice_invalid(iodevice);
 
     d->cancelFlag = false;
     QTextStream stream(iodevice);

@@ -30,6 +30,7 @@
 #include <Comment>
 #include "fileimporterbibtex.h"
 #include "fileexporter.h"
+#include "fileexporter_p.h"
 #include "encoderxml.h"
 #include "logging_io.h"
 
@@ -562,10 +563,7 @@ void FileExporterXML::setOutputStyle(OutputStyle outputStyle)
 
 bool FileExporterXML::save(QIODevice *iodevice, const File *bibtexfile)
 {
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_bibtexfile_or_iodevice_invalid(bibtexfile, iodevice);
 
     bool result = true;
     QTextStream stream(iodevice);
@@ -590,10 +588,7 @@ bool FileExporterXML::save(QIODevice *iodevice, const QSharedPointer<const Eleme
 {
     Q_UNUSED(bibtexfile)
 
-    if (!iodevice->isWritable() && !iodevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_iodevice_invalid(iodevice);
 
     QTextStream stream(iodevice);
     // https://forum.qt.io/topic/135724/qt-6-replacement-for-qtextcodec

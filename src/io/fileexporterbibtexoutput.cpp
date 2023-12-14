@@ -31,6 +31,7 @@
 #include <Element>
 #include <Entry>
 #include "fileexporterbibtex.h"
+#include "fileexporter_p.h"
 #include "logging_io.h"
 
 FileExporterBibTeXOutput::FileExporterBibTeXOutput(OutputType outputType, QObject *parent)
@@ -45,12 +46,9 @@ FileExporterBibTeXOutput::~FileExporterBibTeXOutput()
     /// nothing
 }
 
-bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile)
+bool FileExporterBibTeXOutput::save(QIODevice *iodevice, const File *bibtexfile)
 {
-    if (!ioDevice->isWritable() && !ioDevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_bibtexfile_or_iodevice_invalid(bibtexfile, iodevice);
 
     bool result = false;
 
@@ -66,17 +64,14 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const File *bibtexfile)
         result = generateOutput();
 
     if (result)
-        result = writeFileToIODevice(m_fileStem + (m_outputType == OutputType::BibTeXLogFile ? KBibTeX::extensionBLG : KBibTeX::extensionBBL), ioDevice);
+        result = writeFileToIODevice(m_fileStem + (m_outputType == OutputType::BibTeXLogFile ? KBibTeX::extensionBLG : KBibTeX::extensionBBL), iodevice);
 
     return result;
 }
 
-bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
+bool FileExporterBibTeXOutput::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
 {
-    if (!ioDevice->isWritable() && !ioDevice->isWritable()) {
-        qCWarning(LOG_KBIBTEX_IO) << "Output device not writable";
-        return false;
-    }
+    check_if_iodevice_invalid(iodevice);
 
     bool result = false;
 
@@ -92,7 +87,7 @@ bool FileExporterBibTeXOutput::save(QIODevice *ioDevice, const QSharedPointer<co
         result = generateOutput();
 
     if (result)
-        result = writeFileToIODevice(m_fileStem + (m_outputType == OutputType::BibTeXLogFile ? KBibTeX::extensionBLG : KBibTeX::extensionBBL), ioDevice);
+        result = writeFileToIODevice(m_fileStem + (m_outputType == OutputType::BibTeXLogFile ? KBibTeX::extensionBLG : KBibTeX::extensionBBL), iodevice);
 
     return result;
 }
