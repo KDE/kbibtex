@@ -34,6 +34,7 @@
 
 #include <File>
 #include "fileimporterbibtex.h"
+#include "fileimporter_p.h"
 #include "logging_io.h"
 
 FileImporterPDF::FileImporterPDF(QObject *parent)
@@ -50,14 +51,7 @@ FileImporterPDF::~FileImporterPDF()
 
 File *FileImporterPDF::load(QIODevice *iodevice)
 {
-    if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
-        return nullptr;
-    } else if (iodevice->atEnd() || iodevice->size() <= 0) {
-        qCWarning(LOG_KBIBTEX_IO) << "Input device at end or does not contain any data";
-        Q_EMIT message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
-        return new File();
-    }
+    check_if_iodevice_invalid(iodevice);
 
     m_cancelFlag = false;
     File *result = nullptr;

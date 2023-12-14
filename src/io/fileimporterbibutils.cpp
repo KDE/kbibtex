@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,6 +23,7 @@
 
 #include <File>
 #include "fileimporterbibtex.h"
+#include "fileimporter_p.h"
 #include "logging_io.h"
 
 class FileImporterBibUtils::Private
@@ -58,14 +59,7 @@ FileImporterBibUtils::~FileImporterBibUtils()
 
 File *FileImporterBibUtils::load(QIODevice *iodevice)
 {
-    if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
-        return nullptr;
-    } else if (iodevice->atEnd() || iodevice->size() <= 0) {
-        qCWarning(LOG_KBIBTEX_IO) << "Input device at end or does not contain any data";
-        Q_EMIT message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
-        return new File();
-    }
+    check_if_iodevice_invalid(iodevice);
 
     QBuffer buffer;
     const bool result = convert(*iodevice, format(), buffer, BibUtils::Format::BibTeX);

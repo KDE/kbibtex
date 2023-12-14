@@ -37,6 +37,7 @@
 #include <Value>
 #include "encoder.h"
 #include "encoderlatex.h"
+#include "fileimporter_p.h"
 #include "logging_io.h"
 
 #define qint64toint(a) (static_cast<int>(qMax(0LL,qMin(0x7fffffffLL,(a)))))
@@ -1465,15 +1466,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
 {
     m_cancelFlag = false;
 
-    if (!iodevice->isReadable() && !iodevice->open(QIODevice::ReadOnly)) {
-        qCWarning(LOG_KBIBTEX_IO) << "Input device not readable";
-        Q_EMIT message(MessageSeverity::Error, QStringLiteral("Input device not readable"));
-        return nullptr;
-    } else if (iodevice->atEnd() || iodevice->size() <= 0) {
-        qCInfo(LOG_KBIBTEX_IO) << "Input device at end or does not contain any data";
-        Q_EMIT message(MessageSeverity::Warning, QStringLiteral("Input device at end or does not contain any data"));
-        return new File();
-    }
+    check_if_iodevice_invalid(iodevice);
 
     QByteArray rawData = iodevice->readAll();
     iodevice->close();
