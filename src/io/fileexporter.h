@@ -119,7 +119,7 @@ public:
      * @param[out] ok Pointer to a boolean variable used to return the success (@c true) or failure (@c false) state of the conversion; must not be @c nullptr
      * @return In case of success, the month as a positive int in the range 1 to 12, else undefined
      */
-    static int monthStringToNumber(const QString &monthString, bool *ok);
+    static int monthStringToNumber(const QString &monthString, bool *ok = nullptr);
 
 Q_SIGNALS:
     /**

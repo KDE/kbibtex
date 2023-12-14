@@ -273,18 +273,21 @@ int FileExporter::editionStringToNumber(const QString &editionString, bool *ok)
 
 int FileExporter::monthStringToNumber(const QString &monthString, bool *ok)
 {
-    *ok = false;
+    if (ok != nullptr)
+        *ok = false;
 
     if (monthString.isEmpty())
         return -1;
     else if (monthString[0].isDigit()) {
         int result = -1;
+        bool _ok = false;
         if (monthString.length() >= 2 && monthString[1].isDigit())
-            result = monthString.left(2).toInt(ok);
+            result = monthString.left(2).toInt(&_ok);
         else
-            result = monthString.left(1).toInt(ok);
-        if (ok && result >= 1 && result <= 12) {
-            *ok = true;
+            result = monthString.left(1).toInt(&_ok);
+        if (_ok && result >= 1 && result <= 12) {
+            if (ok != nullptr)
+                *ok = true;
             return result;
         }
     }
@@ -295,10 +298,12 @@ int FileExporter::monthStringToNumber(const QString &monthString, bool *ok)
     const QString needle = monthString.left(3).toLower();
     for (int i = 0; i < 12; i++)
         if (needle == KBibTeX::MonthsTriple[i]) {
-            *ok = true;
+            if (ok != nullptr)
+                *ok = true;
             return i + 1;
         }
 
-    *ok = false;
+    if (ok != nullptr)
+        *ok = false;
     return -1;
 }
