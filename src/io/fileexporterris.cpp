@@ -177,14 +177,14 @@ public:
 };
 
 FileExporterRIS::FileExporterRIS(QObject *parent)
-        : FileExporter(parent)
+        : FileExporter(parent), d(new Private(this))
 {
     /// nothing
 }
 
 FileExporterRIS::~FileExporterRIS()
 {
-    /// nothing
+    delete d;
 }
 
 bool FileExporterRIS::save(QIODevice *iodevice, const QSharedPointer<const Element> &element, const File *bibtexfile)
