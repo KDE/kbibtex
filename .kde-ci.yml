@@ -1,0 +1,23 @@
+# SPDX-FileCopyrightText: None
+# SPDX-License-Identifier: CC0-1.0
+
+Dependencies:
+- 'on': ['Linux/Qt5', 'FreeBSD/Qt5', 'Windows/Qt5', 'macOS/Qt5']
+  'require':
+    'frameworks/kconfig': '@stable'
+    'frameworks/ki18n': '@stable'
+    'frameworks/kxmlgui': '@stable'
+    'frameworks/kio': '@stable'
+    'frameworks/kiconthemes': '@stable'
+    'frameworks/kparts': '@stable'
+    'frameworks/kcoreaddons': '@stable'
+    'frameworks/ktexteditor': '@stable'
+    'frameworks/kwidgetsaddons': '@stable'
+    'frameworks/kwallet': '@stable'
+    'frameworks/kcrash': '@stable'
+    'frameworks/extra-cmake-modules': '@stable'
+
+Options:
+  test-before-installing: True
+  require-passing-tests-on: [ 'Linux', 'FreeBSD', 'Windows' ]
+  cmake-options: -DBUILD_TESTING:BOOL=ON
