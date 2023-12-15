@@ -152,7 +152,7 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
             if (internalText.startsWith(QStringLiteral("~") + QDir::separator())) {
                 const QString fullFilename = QDir::homePath() + internalText.mid(1);
                 const QFileInfo fileInfo(fullFilename);
-                const QUrl url = QUrl::fromLocalFile(fileInfo.filePath());
+                const QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
                 if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
                     result << url;
                     /// Stop searching for URLs or filenames in current internal text
@@ -167,7 +167,7 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
                 /// To get the absolute path, prepend filename fragment with base directory
                 const QString fullFilename = baseDirectory + QDir::separator() + internalText;
                 const QFileInfo fileInfo(fullFilename);
-                const QUrl url = QUrl::fromLocalFile(fileInfo.filePath());
+                const QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
                 if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
                     result << url;
                     /// Stop searching for URLs or filenames in current internal text
@@ -177,7 +177,7 @@ void FileInfo::urlsInText(const QString &text, const TestExistence testExistence
                 /// Either the filename fragment is an absolute path OR no base directory
                 /// was given (current working directory is assumed), ...
                 const QFileInfo fileInfo(internalText);
-                const QUrl url = QUrl::fromLocalFile(fileInfo.filePath());
+                const QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
                 if (fileInfo.exists() && fileInfo.isFile() && url.isValid() && !result.contains(url)) {
                     result << url;
                     /// stop searching for URLs or filenames in current internal text
@@ -303,7 +303,7 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
         for (const QString &extension : documentFileExtensions) {
             const QFileInfo fi(baseDirectory + QDir::separator() + entry->id() + extension);
             if (fi.exists()) {
-                const QUrl url = QUrl::fromLocalFile(fi.filePath());
+                const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
                 if (!result.contains(url))
                     result << url;
             }
@@ -321,7 +321,7 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
             for (const QString &extension : documentFileExtensions) {
                 const QFileInfo fi(directory + QDir::separator() + entry->id() + extension);
                 if (fi.exists()) {
-                    const QUrl url = QUrl::fromLocalFile(fi.filePath());
+                    const QUrl url = QUrl::fromLocalFile(fi.absoluteFilePath());
                     if (!result.contains(url))
                         result << url;
                 }
