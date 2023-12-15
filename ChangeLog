@@ -6,6 +6,7 @@ Diff 0.10.0 to 0.10.1
 - KDE Bug 470750: 'View Document' should check for existance of local PDF at keypress
 - KDE Bug 470169: Add a 'don't ask again' checkbox when notifying the user that KBibTeX
   is not the default bibliography editor
+- KDE Bug 478056: Linked Documents are opened via resolved path, not given path
 
 Diff 0.9.3.2 to 0.10.0
 
