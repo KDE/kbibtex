@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 00:42+0000\n"
+"POT-Creation-Date: 2023-12-16 00:42+0000\n"
 "PO-Revision-Date: 2023-11-17 08:21+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -1943,36 +1943,48 @@ msgstr "Кількість резервних копій:"
 msgid "Saving and Exporting"
 msgstr "Збереження і експортування"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:43
+#: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "John"
 msgstr "Іван"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:43
+#: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "Doe"
 msgstr "Іваненко"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:43
+#: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "Jr."
 msgstr "мол."
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:76
+#: src/gui/preferences/settingsgeneralwidget.cpp:79
 #, kde-format
 msgid "Bibliography System:"
 msgstr "Бібліографічна система:"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:80
+#: src/gui/preferences/settingsgeneralwidget.cpp:83
 #: src/gui/widgets/filesettingswidget.cpp:161
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "Форматування імен:"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:102
+#: src/gui/preferences/settingsgeneralwidget.cpp:93
+#, fuzzy, kde-format
+#| msgid "Reset"
+msgctxt "When asked to clear all 'don't ask again' settings"
+msgid "Reset All"
+msgstr "Скинути"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:94
+#, kde-format
+msgid "Clear all 'don't ask again' settings:"
+msgstr ""
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:121
 #, kde-format
 msgid "General"
 msgstr "Загальне"
@@ -2510,17 +2522,17 @@ msgstr "Скинути критерії фільтрування"
 msgid "Not set"
 msgstr "Не встановлено"
 
-#: src/io/fileexporterbibtex2html.cpp:80
+#: src/io/fileexporterbibtex2html.cpp:81
 #, kde-format
 msgid "The program <strong>bibtex2html</strong> is not available."
 msgstr "Програма <strong>bibtex2html</strong> недоступна."
 
-#: src/io/fileexporterbibtex2html.cpp:98
+#: src/io/fileexporterbibtex2html.cpp:99
 #, kde-format
 msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "Стиль BibTeX <strong>%1</strong> є недоступним."
 
-#: src/io/fileexporterbibtex2html.cpp:100
+#: src/io/fileexporterbibtex2html.cpp:101
 #, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "Стиль BibTeX <strong>PLACEHOLDER</strong> є недоступним."

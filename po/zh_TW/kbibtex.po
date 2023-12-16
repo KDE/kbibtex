@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 00:42+0000\n"
+"POT-Creation-Date: 2023-12-16 00:42+0000\n"
 "PO-Revision-Date: 2016-09-22 20:30+0800\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.linux.org.tw>\n"
@@ -1911,36 +1911,47 @@ msgstr ""
 msgid "Saving and Exporting"
 msgstr ""
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:43
+#: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "John"
 msgstr ""
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:43
+#: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "Doe"
 msgstr ""
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:43
+#: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:36
 #, kde-format
 msgid "Jr."
 msgstr ""
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:76
+#: src/gui/preferences/settingsgeneralwidget.cpp:79
 #, kde-format
 msgid "Bibliography System:"
 msgstr ""
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:80
+#: src/gui/preferences/settingsgeneralwidget.cpp:83
 #: src/gui/widgets/filesettingswidget.cpp:161
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr ""
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:102
+#: src/gui/preferences/settingsgeneralwidget.cpp:93
+#, kde-format
+msgctxt "When asked to clear all 'don't ask again' settings"
+msgid "Reset All"
+msgstr ""
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:94
+#, kde-format
+msgid "Clear all 'don't ask again' settings:"
+msgstr ""
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:121
 #, kde-format
 msgid "General"
 msgstr ""
@@ -2476,17 +2487,17 @@ msgstr ""
 msgid "Not set"
 msgstr ""
 
-#: src/io/fileexporterbibtex2html.cpp:80
+#: src/io/fileexporterbibtex2html.cpp:81
 #, kde-format
 msgid "The program <strong>bibtex2html</strong> is not available."
 msgstr ""
 
-#: src/io/fileexporterbibtex2html.cpp:98
+#: src/io/fileexporterbibtex2html.cpp:99
 #, kde-format
 msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr ""
 
-#: src/io/fileexporterbibtex2html.cpp:100
+#: src/io/fileexporterbibtex2html.cpp:101
 #, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr ""
