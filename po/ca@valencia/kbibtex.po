@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-04 02:26+0000\n"
+"POT-Creation-Date: 2023-12-16 02:31+0000\n"
 "PO-Revision-Date: 2023-03-16 10:07+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1919,36 +1919,48 @@ msgstr "Nombre de còpies de seguretat:"
 msgid "Saving and Exporting"
 msgstr "Guardada i exportació"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/preferences/settingsgeneralwidget.cpp:44
 #: src/gui/widgets/filesettingswidget.cpp:34
 #, kde-format
 msgid "John"
 msgstr "Joan"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/preferences/settingsgeneralwidget.cpp:44
 #: src/gui/widgets/filesettingswidget.cpp:34
 #, kde-format
 msgid "Doe"
 msgstr "Conill"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/preferences/settingsgeneralwidget.cpp:44
 #: src/gui/widgets/filesettingswidget.cpp:34
 #, kde-format
 msgid "Jr."
 msgstr "Jr."
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:74
+#: src/gui/preferences/settingsgeneralwidget.cpp:77
 #, kde-format
 msgid "Bibliography System:"
 msgstr "Sistema de bibliografia:"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:78
+#: src/gui/preferences/settingsgeneralwidget.cpp:81
 #: src/gui/widgets/filesettingswidget.cpp:161
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "Format dels noms de les persones:"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:100
+#: src/gui/preferences/settingsgeneralwidget.cpp:91
+#, fuzzy, kde-format
+#| msgid "Reset"
+msgctxt "When asked to clear all 'don't ask again' settings"
+msgid "Reset All"
+msgstr "Restaura"
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:92
+#, kde-format
+msgid "Clear all 'don't ask again' settings:"
+msgstr ""
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:119
 #, kde-format
 msgid "General"
 msgstr "General"
