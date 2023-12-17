@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-16 02:31+0000\n"
-"PO-Revision-Date: 2023-11-17 22:10+0100\n"
+"PO-Revision-Date: 2023-12-16 07:52+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -1933,16 +1933,15 @@ msgid "Person Names Formatting:"
 msgstr "Formatado de Personaj Nomoj:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Restarigi"
+msgstr "Restarigi Ĉiujn"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:92
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Viŝi ĉiujn agordojn pri 'ne redemandi':"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:119
 #, kde-format
