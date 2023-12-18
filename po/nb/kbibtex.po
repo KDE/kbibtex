@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-04 02:26+0000\n"
+"POT-Creation-Date: 2023-12-16 02:31+0000\n"
 "PO-Revision-Date: 2014-03-08 19:32+0100\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -1887,36 +1887,47 @@ msgstr "Antall Backup:"
 msgid "Saving and Exporting"
 msgstr "Lagring og Eksportering"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/preferences/settingsgeneralwidget.cpp:44
 #: src/gui/widgets/filesettingswidget.cpp:34
 #, kde-format
 msgid "John"
 msgstr "Ola"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/preferences/settingsgeneralwidget.cpp:44
 #: src/gui/widgets/filesettingswidget.cpp:34
 #, kde-format
 msgid "Doe"
 msgstr "Nordmann"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:41
+#: src/gui/preferences/settingsgeneralwidget.cpp:44
 #: src/gui/widgets/filesettingswidget.cpp:34
 #, kde-format
 msgid "Jr."
 msgstr "Jr."
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:74
+#: src/gui/preferences/settingsgeneralwidget.cpp:77
 #, kde-format
 msgid "Bibliography System:"
 msgstr "Bibliografisystem:"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:78
+#: src/gui/preferences/settingsgeneralwidget.cpp:81
 #: src/gui/widgets/filesettingswidget.cpp:161
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "Formatering Personnavn:"
 
-#: src/gui/preferences/settingsgeneralwidget.cpp:100
+#: src/gui/preferences/settingsgeneralwidget.cpp:91
+#, kde-format
+msgctxt "When asked to clear all 'don't ask again' settings"
+msgid "Reset All"
+msgstr ""
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:92
+#, kde-format
+msgid "Clear all 'don't ask again' settings:"
+msgstr ""
+
+#: src/gui/preferences/settingsgeneralwidget.cpp:119
 #, kde-format
 msgid "General"
 msgstr "Generelt"
