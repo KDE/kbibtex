@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-16 00:42+0000\n"
+"POT-Creation-Date: 2023-12-18 00:42+0000\n"
 "PO-Revision-Date: 2023-12-16 08:48+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -1087,13 +1087,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Шлях, який буде вставлено до запису"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Relative Path"
 msgstr "Відносний шлях"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Absolute Path"
 msgstr "Абсолютний шлях"
@@ -1153,39 +1153,39 @@ msgstr "З поточним записом буде пов’язано таки
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "Із записом «%1» буде пов’язано такий локальний документ:"
 
-#: src/gui/element/elementeditor.cpp:200
+#: src/gui/element/elementeditor.cpp:201
 #, kde-format
 msgid "Options"
 msgstr "Параметри"
 
-#: src/gui/element/elementeditor.cpp:206
+#: src/gui/element/elementeditor.cpp:207
 #, kde-format
 msgid "Show all fields"
 msgstr "Показати усі поля"
 
-#: src/gui/element/elementeditor.cpp:213
+#: src/gui/element/elementeditor.cpp:214
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Перехід за клавішею Tab здійснюється лише між редагованими полями"
 
-#: src/gui/element/elementeditor.cpp:221
+#: src/gui/element/elementeditor.cpp:222
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Перевірити за допомогою BibTeX"
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 "Ідентифікатор не вказано, отже буде відновлено попередній ідентифікатор — "
 "«%1»."
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id given"
 msgstr "Не вказано ідентифікатора"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1196,27 +1196,27 @@ msgstr ""
 "\n"
 "Зберегти початковий ідентифікатор, «%2»?"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Id already in use"
 msgstr "Ідентифікатор вже використовується"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Зберегти дублікати ідентифікаторів"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Restore original id"
 msgstr "Відновити початковий ідентифікатор"
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Поточний елемент не пройшов перевірки."
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1225,7 +1225,7 @@ msgstr ""
 "Поточний елемент не пройшов перевірки:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:581
 #, kde-format
 msgid "Element validation failed"
 msgstr "Елемент не пройшов перевірки"
@@ -1271,7 +1271,7 @@ msgid "Name:"
 msgstr "Назва:"
 
 #: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:105
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1601,67 +1601,67 @@ msgstr ""
 "\n"
 "Повертаємося до типу «%2»."
 
-#: src/gui/field/fieldlistedit.cpp:145
+#: src/gui/field/fieldlistedit.cpp:144
 #, kde-format
 msgid "Remove value"
 msgstr "Вилучити значення"
 
-#: src/gui/field/fieldlistedit.cpp:160
+#: src/gui/field/fieldlistedit.cpp:159
 #, kde-format
 msgid "Move value down"
 msgstr "Пересунути значення нижче"
 
-#: src/gui/field/fieldlistedit.cpp:175
+#: src/gui/field/fieldlistedit.cpp:174
 #, kde-format
 msgid "Move value up"
 msgstr "Пересунути значення вище"
 
-#: src/gui/field/fieldlistedit.cpp:429
+#: src/gui/field/fieldlistedit.cpp:428
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "… та інші (та ін.)"
 
-#: src/gui/field/fieldlistedit.cpp:434
+#: src/gui/field/fieldlistedit.cpp:433
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Додати з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:435
+#: src/gui/field/fieldlistedit.cpp:434
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Додати список імен з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:497
+#: src/gui/field/fieldlistedit.cpp:496
 #, kde-format
 msgid "Add file..."
 msgstr "Додати файл…"
 
-#: src/gui/field/fieldlistedit.cpp:503
+#: src/gui/field/fieldlistedit.cpp:502
 #, kde-format
 msgid "Add reference ..."
 msgstr "Додати посилання…"
 
-#: src/gui/field/fieldlistedit.cpp:506
+#: src/gui/field/fieldlistedit.cpp:505
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Додати посилання з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:518
+#: src/gui/field/fieldlistedit.cpp:517
 #, kde-format
 msgid "File to Associate"
 msgstr "Файл, який слід пов’язати"
 
-#: src/gui/field/fieldlistedit.cpp:556 src/gui/field/fieldlistedit.cpp:636
+#: src/gui/field/fieldlistedit.cpp:555 src/gui/field/fieldlistedit.cpp:635
 #, kde-format
 msgid "Save file locally"
 msgstr "Зберегти файл локально"
 
-#: src/gui/field/fieldlistedit.cpp:606
+#: src/gui/field/fieldlistedit.cpp:605
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Зберегти файл «%1» локально"
 
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1673,23 +1673,23 @@ msgstr ""
 "\">%1</tt></p><p>Абсолютний запис є таким<br/><tt style=\"font-family: %3;\">"
 "%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:664
+#: src/gui/field/fieldlistedit.cpp:663
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Додати ключові слова зі списку"
 
-#: src/gui/field/fieldlistedit.cpp:665
+#: src/gui/field/fieldlistedit.cpp:664
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Додати ключові слова вибором з попередньо визначеного списку ключових слів"
 
-#: src/gui/field/fieldlistedit.cpp:668
+#: src/gui/field/fieldlistedit.cpp:667
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Додати ключові слова з буфера обміну даними"
 
-#: src/gui/field/fieldlistedit.cpp:669
+#: src/gui/field/fieldlistedit.cpp:668
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr ""
@@ -2476,42 +2476,42 @@ msgstr "Упорядкувати за ідентифікатором"
 msgid "Entry Sorting"
 msgstr "Упорядкування записів"
 
-#: src/gui/widgets/filterbar.cpp:71
+#: src/gui/widgets/filterbar.cpp:70
 #, kde-format
 msgid "Filter:"
 msgstr "Фільтр:"
 
-#: src/gui/widgets/filterbar.cpp:87
+#: src/gui/widgets/filterbar.cpp:86
 #, kde-format
 msgid "Filter bibliographic entries"
 msgstr "Фільтрувати бібліографічні записи"
 
-#: src/gui/widgets/filterbar.cpp:91
+#: src/gui/widgets/filterbar.cpp:90
 #, kde-format
 msgid "any word"
 msgstr "будь-яке слово"
 
-#: src/gui/widgets/filterbar.cpp:92
+#: src/gui/widgets/filterbar.cpp:91
 #, kde-format
 msgid "every word"
 msgstr "усі слова"
 
-#: src/gui/widgets/filterbar.cpp:93
+#: src/gui/widgets/filterbar.cpp:92
 #, kde-format
 msgid "exact phrase"
 msgstr "фраза повністю"
 
-#: src/gui/widgets/filterbar.cpp:98
+#: src/gui/widgets/filterbar.cpp:97
 #, kde-format
 msgid "any field"
 msgstr "усі поля"
 
-#: src/gui/widgets/filterbar.cpp:116
+#: src/gui/widgets/filterbar.cpp:115
 #, kde-format
 msgid "Include PDF files in full-text search"
 msgstr "Включити до повнотекстового пошуку файли PDF"
 
-#: src/gui/widgets/filterbar.cpp:122
+#: src/gui/widgets/filterbar.cpp:121
 #, kde-format
 msgid "Reset filter criteria"
 msgstr "Скинути критерії фільтрування"
@@ -3769,27 +3769,27 @@ msgstr "Кількість коментарів:"
 msgid "Number of Macros:"
 msgstr "Кількість макросів:"
 
-#: src/program/docklets/valuelist.cpp:93
+#: src/program/docklets/valuelist.cpp:103
 #, kde-format
 msgid "Filter value list"
 msgstr "Фільтрувати список значень"
 
-#: src/program/docklets/valuelist.cpp:109
+#: src/program/docklets/valuelist.cpp:122
 #, kde-format
 msgid "Edit to replace all occurrences"
 msgstr "Редагувати для заміни усіх відповідників"
 
-#: src/program/docklets/valuelist.cpp:113
+#: src/program/docklets/valuelist.cpp:126
 #, kde-format
 msgid "Remove all occurrences"
 msgstr "Вилучити усі відповідники"
 
-#: src/program/docklets/valuelist.cpp:126
+#: src/program/docklets/valuelist.cpp:139
 #, kde-format
 msgid "Show Count Column"
 msgstr "Показати стовпчик даних щодо кількості"
 
-#: src/program/docklets/valuelist.cpp:130
+#: src/program/docklets/valuelist.cpp:143
 #, kde-format
 msgid "Sort by Count"
 msgstr "Упорядкувати за кількістю"

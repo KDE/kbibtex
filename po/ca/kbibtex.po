@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-16 00:42+0000\n"
+"POT-Creation-Date: 2023-12-18 00:42+0000\n"
 "PO-Revision-Date: 2023-12-16 12:59+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1089,13 +1089,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Camí com s'ha inserit a l'entrada"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Relative Path"
 msgstr "Camí relatiu"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Absolute Path"
 msgstr "Camí absolut"
@@ -1159,38 +1159,38 @@ msgid "The following local document is about to be associated with entry '%1':"
 msgstr ""
 "El següent document local està a punt de ser associat amb l'entrada «%1»:"
 
-#: src/gui/element/elementeditor.cpp:200
+#: src/gui/element/elementeditor.cpp:201
 #, kde-format
 msgid "Options"
 msgstr "Opcions"
 
-#: src/gui/element/elementeditor.cpp:206
+#: src/gui/element/elementeditor.cpp:207
 #, kde-format
 msgid "Show all fields"
 msgstr "Mostra tots els camps"
 
-#: src/gui/element/elementeditor.cpp:213
+#: src/gui/element/elementeditor.cpp:214
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "La tecla Tab només visita els camps editables"
 
-#: src/gui/element/elementeditor.cpp:221
+#: src/gui/element/elementeditor.cpp:222
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Comprova amb el BibTeX"
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 "No s'ha introduït cap ID, de manera que es restaurarà l'ID anterior «%1»."
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id given"
 msgstr "No s'ha proporcionat cap ID"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1201,27 +1201,27 @@ msgstr ""
 "\n"
 "Mantinc l'ID «%2» original?"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Id already in use"
 msgstr "L'ID ja està en ús"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Mantén els ID duplicats"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Restore original id"
 msgstr "Restaura l'ID original"
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Ha fallat la validació per a l'element actual."
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1230,7 +1230,7 @@ msgstr ""
 "Ha fallat la validació per a l'element actual:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:581
 #, kde-format
 msgid "Element validation failed"
 msgstr "Ha fallat la validació de l'element"
@@ -1276,7 +1276,7 @@ msgid "Name:"
 msgstr "Nom:"
 
 #: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:105
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1612,68 +1612,68 @@ msgstr ""
 "\n"
 "Es torna al tipus «%2»."
 
-#: src/gui/field/fieldlistedit.cpp:145
+#: src/gui/field/fieldlistedit.cpp:144
 #, kde-format
 msgid "Remove value"
 msgstr "Suprimeix el valor"
 
-#: src/gui/field/fieldlistedit.cpp:160
+#: src/gui/field/fieldlistedit.cpp:159
 #, kde-format
 msgid "Move value down"
 msgstr "Mou avall el valor"
 
-#: src/gui/field/fieldlistedit.cpp:175
+#: src/gui/field/fieldlistedit.cpp:174
 #, kde-format
 msgid "Move value up"
 msgstr "Mou amunt el valor"
 
 # skip-rule: punctuation-period-no
-#: src/gui/field/fieldlistedit.cpp:429
+#: src/gui/field/fieldlistedit.cpp:428
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "...entre altres (et al)."
 
-#: src/gui/field/fieldlistedit.cpp:434
+#: src/gui/field/fieldlistedit.cpp:433
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Afegeix des del porta-retalls"
 
-#: src/gui/field/fieldlistedit.cpp:435
+#: src/gui/field/fieldlistedit.cpp:434
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Afegeix una llista de noms des del porta-retalls"
 
-#: src/gui/field/fieldlistedit.cpp:497
+#: src/gui/field/fieldlistedit.cpp:496
 #, kde-format
 msgid "Add file..."
 msgstr "Afegeix un fitxer..."
 
-#: src/gui/field/fieldlistedit.cpp:503
+#: src/gui/field/fieldlistedit.cpp:502
 #, kde-format
 msgid "Add reference ..."
 msgstr "Afegeix una referència..."
 
-#: src/gui/field/fieldlistedit.cpp:506
+#: src/gui/field/fieldlistedit.cpp:505
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Afegeix una referència des del porta-retalls"
 
-#: src/gui/field/fieldlistedit.cpp:518
+#: src/gui/field/fieldlistedit.cpp:517
 #, kde-format
 msgid "File to Associate"
 msgstr "Fitxer a associar"
 
-#: src/gui/field/fieldlistedit.cpp:556 src/gui/field/fieldlistedit.cpp:636
+#: src/gui/field/fieldlistedit.cpp:555 src/gui/field/fieldlistedit.cpp:635
 #, kde-format
 msgid "Save file locally"
 msgstr "Desa el fitxer localment"
 
-#: src/gui/field/fieldlistedit.cpp:606
+#: src/gui/field/fieldlistedit.cpp:605
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Desa el fitxer «%1» localment"
 
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1684,24 +1684,24 @@ msgstr ""
 "relatiu serà<br/><tt style=\"font-family: %3;\">%1</tt></p><p>El camí "
 "absolut serà<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:664
+#: src/gui/field/fieldlistedit.cpp:663
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Afegeix paraules clau des de la llista"
 
-#: src/gui/field/fieldlistedit.cpp:665
+#: src/gui/field/fieldlistedit.cpp:664
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Afegeix paraules clau com s'han seleccionat des d'una llista predefinida de "
 "paraules clau"
 
-#: src/gui/field/fieldlistedit.cpp:668
+#: src/gui/field/fieldlistedit.cpp:667
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Afegeix paraules clau des del porta-retalls"
 
-#: src/gui/field/fieldlistedit.cpp:669
+#: src/gui/field/fieldlistedit.cpp:668
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr ""
@@ -2487,42 +2487,42 @@ msgstr "Ordena per identificador"
 msgid "Entry Sorting"
 msgstr "Ordenació de les entrades"
 
-#: src/gui/widgets/filterbar.cpp:71
+#: src/gui/widgets/filterbar.cpp:70
 #, kde-format
 msgid "Filter:"
 msgstr "Filtre:"
 
-#: src/gui/widgets/filterbar.cpp:87
+#: src/gui/widgets/filterbar.cpp:86
 #, kde-format
 msgid "Filter bibliographic entries"
 msgstr "Filtra les entrades bibliogràfiques"
 
-#: src/gui/widgets/filterbar.cpp:91
+#: src/gui/widgets/filterbar.cpp:90
 #, kde-format
 msgid "any word"
 msgstr "qualsevol paraula"
 
-#: src/gui/widgets/filterbar.cpp:92
+#: src/gui/widgets/filterbar.cpp:91
 #, kde-format
 msgid "every word"
 msgstr "cada paraula"
 
-#: src/gui/widgets/filterbar.cpp:93
+#: src/gui/widgets/filterbar.cpp:92
 #, kde-format
 msgid "exact phrase"
 msgstr "frase exacta"
 
-#: src/gui/widgets/filterbar.cpp:98
+#: src/gui/widgets/filterbar.cpp:97
 #, kde-format
 msgid "any field"
 msgstr "qualsevol camp"
 
-#: src/gui/widgets/filterbar.cpp:116
+#: src/gui/widgets/filterbar.cpp:115
 #, kde-format
 msgid "Include PDF files in full-text search"
 msgstr "Inclou els fitxers PDF en la cerca de tot el text"
 
-#: src/gui/widgets/filterbar.cpp:122
+#: src/gui/widgets/filterbar.cpp:121
 #, kde-format
 msgid "Reset filter criteria"
 msgstr "Restaura els criteris de filtratge"
@@ -3772,27 +3772,27 @@ msgstr "Nombre de comentaris:"
 msgid "Number of Macros:"
 msgstr "Nombre de macros:"
 
-#: src/program/docklets/valuelist.cpp:93
+#: src/program/docklets/valuelist.cpp:103
 #, kde-format
 msgid "Filter value list"
 msgstr "Filtre de la llista de valors"
 
-#: src/program/docklets/valuelist.cpp:109
+#: src/program/docklets/valuelist.cpp:122
 #, kde-format
 msgid "Edit to replace all occurrences"
 msgstr "Edita per a substituir totes les ocurrències"
 
-#: src/program/docklets/valuelist.cpp:113
+#: src/program/docklets/valuelist.cpp:126
 #, kde-format
 msgid "Remove all occurrences"
 msgstr "Elimina totes les ocurrències"
 
-#: src/program/docklets/valuelist.cpp:126
+#: src/program/docklets/valuelist.cpp:139
 #, kde-format
 msgid "Show Count Column"
 msgstr "Mostra la columna «Compte»"
 
-#: src/program/docklets/valuelist.cpp:130
+#: src/program/docklets/valuelist.cpp:143
 #, kde-format
 msgid "Sort by Count"
 msgstr "Ordena per càlcul"

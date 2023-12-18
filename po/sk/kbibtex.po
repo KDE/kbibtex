@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-16 00:42+0000\n"
+"POT-Creation-Date: 2023-12-18 00:42+0000\n"
 "PO-Revision-Date: 2023-12-06 19:13+0100\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -1081,13 +1081,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Cesta ako vložená do položky"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Relative Path"
 msgstr "Relatívna cesta"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Absolute Path"
 msgstr "Absolútna cesta"
@@ -1147,37 +1147,37 @@ msgstr "Nasledovný miestny dokument bude asociovaný s aktuálnou položkou:"
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "Nasledovný miestny dokument bude asociovaný s položkou '%1':"
 
-#: src/gui/element/elementeditor.cpp:200
+#: src/gui/element/elementeditor.cpp:201
 #, kde-format
 msgid "Options"
 msgstr "Voľby"
 
-#: src/gui/element/elementeditor.cpp:206
+#: src/gui/element/elementeditor.cpp:207
 #, kde-format
 msgid "Show all fields"
 msgstr "Zobraziť všetky polia"
 
-#: src/gui/element/elementeditor.cpp:213
+#: src/gui/element/elementeditor.cpp:214
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Kláves Tab prepína len editovateľné položky"
 
-#: src/gui/element/elementeditor.cpp:221
+#: src/gui/element/elementeditor.cpp:222
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Skontrolovať s BibTeX"
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr "Nebolo zadané žiadne ID, takže predchádzajúce ID '%1' bude obnovené."
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id given"
 msgstr "Nie je uvedené žiadne ID"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1188,27 +1188,27 @@ msgstr ""
 "\n"
 "Ponechajte namiesto toho pôvodné ID '%2'?"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Id already in use"
 msgstr "Id sa už používa"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Ponechať duplicitné idčka"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Restore original id"
 msgstr "Obnoviť pôvodné id"
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Overenie platnosti pre aktuálny prvok zlyhalo."
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1217,7 +1217,7 @@ msgstr ""
 "Overenie platnosti aktuálneho prvku zlyhalo:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:581
 #, kde-format
 msgid "Element validation failed"
 msgstr "Overenie prvku zlyhalo"
@@ -1263,7 +1263,7 @@ msgid "Name:"
 msgstr "Názov:"
 
 #: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:105
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1590,67 +1590,67 @@ msgstr ""
 "\n"
 "Prepínam späť na typ '%2'."
 
-#: src/gui/field/fieldlistedit.cpp:145
+#: src/gui/field/fieldlistedit.cpp:144
 #, kde-format
 msgid "Remove value"
 msgstr "Odstrániť hodnotu"
 
-#: src/gui/field/fieldlistedit.cpp:160
+#: src/gui/field/fieldlistedit.cpp:159
 #, kde-format
 msgid "Move value down"
 msgstr "Presunúť hodnotu dolu"
 
-#: src/gui/field/fieldlistedit.cpp:175
+#: src/gui/field/fieldlistedit.cpp:174
 #, kde-format
 msgid "Move value up"
 msgstr "Presunúť hodnotu hore"
 
-#: src/gui/field/fieldlistedit.cpp:429
+#: src/gui/field/fieldlistedit.cpp:428
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... a iné (et al.)"
 
-#: src/gui/field/fieldlistedit.cpp:434
+#: src/gui/field/fieldlistedit.cpp:433
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Pridať zo schránky"
 
-#: src/gui/field/fieldlistedit.cpp:435
+#: src/gui/field/fieldlistedit.cpp:434
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Pridať zoznam mien zo schránky"
 
-#: src/gui/field/fieldlistedit.cpp:497
+#: src/gui/field/fieldlistedit.cpp:496
 #, kde-format
 msgid "Add file..."
 msgstr "Pridať súbor..."
 
-#: src/gui/field/fieldlistedit.cpp:503
+#: src/gui/field/fieldlistedit.cpp:502
 #, kde-format
 msgid "Add reference ..."
 msgstr "Pridať referenciu..."
 
-#: src/gui/field/fieldlistedit.cpp:506
+#: src/gui/field/fieldlistedit.cpp:505
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Pridať referenciu zo schránky"
 
-#: src/gui/field/fieldlistedit.cpp:518
+#: src/gui/field/fieldlistedit.cpp:517
 #, kde-format
 msgid "File to Associate"
 msgstr "Súbor na asociáciu"
 
-#: src/gui/field/fieldlistedit.cpp:556 src/gui/field/fieldlistedit.cpp:636
+#: src/gui/field/fieldlistedit.cpp:555 src/gui/field/fieldlistedit.cpp:635
 #, kde-format
 msgid "Save file locally"
 msgstr "Uložiť súbor lokálne"
 
-#: src/gui/field/fieldlistedit.cpp:606
+#: src/gui/field/fieldlistedit.cpp:605
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Uložiť súbor '%1' lokálne"
 
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1661,23 +1661,23 @@ msgstr ""
 "cesta by bola<br/><tt style=\"font-family: %3;\">%1</tt></p> <p>Absolútna "
 "cesta by bola<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:664
+#: src/gui/field/fieldlistedit.cpp:663
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Pridať kľúčové slová zo zoznamu"
 
-#: src/gui/field/fieldlistedit.cpp:665
+#: src/gui/field/fieldlistedit.cpp:664
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Pridať kľúčové slová ako vybrané z preddefinovaného zoznamu kľúčových slov"
 
-#: src/gui/field/fieldlistedit.cpp:668
+#: src/gui/field/fieldlistedit.cpp:667
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Pridať kľúčové slová zo schránky"
 
-#: src/gui/field/fieldlistedit.cpp:669
+#: src/gui/field/fieldlistedit.cpp:668
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "Pridať interpunkciou oddelený zoznam kľúčových slov zo schránky"
@@ -2465,42 +2465,42 @@ msgstr "Zoradiť podľa počtu"
 msgid "Entry Sorting"
 msgstr "Triedenie"
 
-#: src/gui/widgets/filterbar.cpp:71
+#: src/gui/widgets/filterbar.cpp:70
 #, kde-format
 msgid "Filter:"
 msgstr "Filter:"
 
-#: src/gui/widgets/filterbar.cpp:87
+#: src/gui/widgets/filterbar.cpp:86
 #, kde-format
 msgid "Filter bibliographic entries"
 msgstr "Filtrovať bibliografické položky"
 
-#: src/gui/widgets/filterbar.cpp:91
+#: src/gui/widgets/filterbar.cpp:90
 #, kde-format
 msgid "any word"
 msgstr "ľubovoľné slovo"
 
-#: src/gui/widgets/filterbar.cpp:92
+#: src/gui/widgets/filterbar.cpp:91
 #, kde-format
 msgid "every word"
 msgstr "každé slovo"
 
-#: src/gui/widgets/filterbar.cpp:93
+#: src/gui/widgets/filterbar.cpp:92
 #, kde-format
 msgid "exact phrase"
 msgstr "presná fráza"
 
-#: src/gui/widgets/filterbar.cpp:98
+#: src/gui/widgets/filterbar.cpp:97
 #, kde-format
 msgid "any field"
 msgstr "akékoľvek pole"
 
-#: src/gui/widgets/filterbar.cpp:116
+#: src/gui/widgets/filterbar.cpp:115
 #, kde-format
 msgid "Include PDF files in full-text search"
 msgstr "Zahrnúť PDF súbory vo full-textovom vyhľadávaní"
 
-#: src/gui/widgets/filterbar.cpp:122
+#: src/gui/widgets/filterbar.cpp:121
 #, kde-format
 msgid "Reset filter criteria"
 msgstr "Vynulovať kritériá filtra"
@@ -3737,29 +3737,29 @@ msgstr "Počet komentárov:"
 msgid "Number of Macros:"
 msgstr "Počet makier:"
 
-#: src/program/docklets/valuelist.cpp:93
+#: src/program/docklets/valuelist.cpp:103
 #, kde-format
 msgid "Filter value list"
 msgstr "Zoznam hodnôt filtra"
 
-#: src/program/docklets/valuelist.cpp:109
+#: src/program/docklets/valuelist.cpp:122
 #, fuzzy, kde-format
 #| msgid "Replace all occurrences"
 msgid "Edit to replace all occurrences"
 msgstr "Nahradiť všetky výskyty"
 
-#: src/program/docklets/valuelist.cpp:113
+#: src/program/docklets/valuelist.cpp:126
 #, fuzzy, kde-format
 #| msgid "Replace all occurrences"
 msgid "Remove all occurrences"
 msgstr "Nahradiť všetky výskyty"
 
-#: src/program/docklets/valuelist.cpp:126
+#: src/program/docklets/valuelist.cpp:139
 #, kde-format
 msgid "Show Count Column"
 msgstr "Zobraziť počet stĺpcov"
 
-#: src/program/docklets/valuelist.cpp:130
+#: src/program/docklets/valuelist.cpp:143
 #, kde-format
 msgid "Sort by Count"
 msgstr "Zoradiť podľa počtu"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-16 00:42+0000\n"
+"POT-Creation-Date: 2023-12-18 00:42+0000\n"
 "PO-Revision-Date: 2023-03-14 20:54+0000\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -1085,13 +1085,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Path as Inserted into Entry"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Relative Path"
 msgstr "Relative Path"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Absolute Path"
 msgstr "Absolute Path"
@@ -1157,37 +1157,37 @@ msgid "The following local document is about to be associated with entry '%1':"
 msgstr ""
 "The following local document is about to be associated with entry '%1':"
 
-#: src/gui/element/elementeditor.cpp:200
+#: src/gui/element/elementeditor.cpp:201
 #, kde-format
 msgid "Options"
 msgstr "Options"
 
-#: src/gui/element/elementeditor.cpp:206
+#: src/gui/element/elementeditor.cpp:207
 #, kde-format
 msgid "Show all fields"
 msgstr "Show all fields"
 
-#: src/gui/element/elementeditor.cpp:213
+#: src/gui/element/elementeditor.cpp:214
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Tab key visits only editable fields"
 
-#: src/gui/element/elementeditor.cpp:221
+#: src/gui/element/elementeditor.cpp:222
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Check with BibTeX"
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr "No ID was entered, so the previous id '%1' will be restored."
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id given"
 msgstr "No ID given"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1198,27 +1198,27 @@ msgstr ""
 "\n"
 "Keep original id '%2' instead?"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Id already in use"
 msgstr "ID already in use"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Keep duplicate IDs"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Restore original id"
 msgstr "Restore original ID"
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Validation for the current element failed."
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1227,7 +1227,7 @@ msgstr ""
 "Validation for the current element failed:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:581
 #, kde-format
 msgid "Element validation failed"
 msgstr "Element validation failed"
@@ -1273,7 +1273,7 @@ msgid "Name:"
 msgstr "Name:"
 
 #: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:105
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1600,67 +1600,67 @@ msgstr ""
 "\n"
 "Switching back to type '%2'."
 
-#: src/gui/field/fieldlistedit.cpp:145
+#: src/gui/field/fieldlistedit.cpp:144
 #, kde-format
 msgid "Remove value"
 msgstr "Remove value"
 
-#: src/gui/field/fieldlistedit.cpp:160
+#: src/gui/field/fieldlistedit.cpp:159
 #, kde-format
 msgid "Move value down"
 msgstr "Move value down"
 
-#: src/gui/field/fieldlistedit.cpp:175
+#: src/gui/field/fieldlistedit.cpp:174
 #, kde-format
 msgid "Move value up"
 msgstr "Move value up"
 
-#: src/gui/field/fieldlistedit.cpp:429
+#: src/gui/field/fieldlistedit.cpp:428
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... and others (et al.)"
 
-#: src/gui/field/fieldlistedit.cpp:434
+#: src/gui/field/fieldlistedit.cpp:433
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Add from Clipboard"
 
-#: src/gui/field/fieldlistedit.cpp:435
+#: src/gui/field/fieldlistedit.cpp:434
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Add a list of names from clipboard"
 
-#: src/gui/field/fieldlistedit.cpp:497
+#: src/gui/field/fieldlistedit.cpp:496
 #, kde-format
 msgid "Add file..."
 msgstr "Add file..."
 
-#: src/gui/field/fieldlistedit.cpp:503
+#: src/gui/field/fieldlistedit.cpp:502
 #, kde-format
 msgid "Add reference ..."
 msgstr "Add reference ..."
 
-#: src/gui/field/fieldlistedit.cpp:506
+#: src/gui/field/fieldlistedit.cpp:505
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Add reference from clipboard"
 
-#: src/gui/field/fieldlistedit.cpp:518
+#: src/gui/field/fieldlistedit.cpp:517
 #, kde-format
 msgid "File to Associate"
 msgstr "File to Associate"
 
-#: src/gui/field/fieldlistedit.cpp:556 src/gui/field/fieldlistedit.cpp:636
+#: src/gui/field/fieldlistedit.cpp:555 src/gui/field/fieldlistedit.cpp:635
 #, kde-format
 msgid "Save file locally"
 msgstr "Save file locally"
 
-#: src/gui/field/fieldlistedit.cpp:606
+#: src/gui/field/fieldlistedit.cpp:605
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Save file '%1' locally"
 
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1671,22 +1671,22 @@ msgstr ""
 "path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute "
 "path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:664
+#: src/gui/field/fieldlistedit.cpp:663
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Add Keywords from List"
 
-#: src/gui/field/fieldlistedit.cpp:665
+#: src/gui/field/fieldlistedit.cpp:664
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr "Add keywords as selected from a pre-defined list of keywords"
 
-#: src/gui/field/fieldlistedit.cpp:668
+#: src/gui/field/fieldlistedit.cpp:667
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Add Keywords from Clipboard"
 
-#: src/gui/field/fieldlistedit.cpp:669
+#: src/gui/field/fieldlistedit.cpp:668
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "Add a punctuation-separated list of keywords from clipboard"
@@ -2472,42 +2472,42 @@ msgstr "Sort by identifier"
 msgid "Entry Sorting"
 msgstr "Entry Sorting"
 
-#: src/gui/widgets/filterbar.cpp:71
+#: src/gui/widgets/filterbar.cpp:70
 #, kde-format
 msgid "Filter:"
 msgstr "Filter:"
 
-#: src/gui/widgets/filterbar.cpp:87
+#: src/gui/widgets/filterbar.cpp:86
 #, kde-format
 msgid "Filter bibliographic entries"
 msgstr "Filter bibliographic entries"
 
-#: src/gui/widgets/filterbar.cpp:91
+#: src/gui/widgets/filterbar.cpp:90
 #, kde-format
 msgid "any word"
 msgstr "any word"
 
-#: src/gui/widgets/filterbar.cpp:92
+#: src/gui/widgets/filterbar.cpp:91
 #, kde-format
 msgid "every word"
 msgstr "every word"
 
-#: src/gui/widgets/filterbar.cpp:93
+#: src/gui/widgets/filterbar.cpp:92
 #, kde-format
 msgid "exact phrase"
 msgstr "exact phrase"
 
-#: src/gui/widgets/filterbar.cpp:98
+#: src/gui/widgets/filterbar.cpp:97
 #, kde-format
 msgid "any field"
 msgstr "any field"
 
-#: src/gui/widgets/filterbar.cpp:116
+#: src/gui/widgets/filterbar.cpp:115
 #, kde-format
 msgid "Include PDF files in full-text search"
 msgstr "Include PDF files in full-text search"
 
-#: src/gui/widgets/filterbar.cpp:122
+#: src/gui/widgets/filterbar.cpp:121
 #, kde-format
 msgid "Reset filter criteria"
 msgstr "Reset filter criteria"
@@ -3740,27 +3740,27 @@ msgstr "Number of Comments:"
 msgid "Number of Macros:"
 msgstr "Number of Macros:"
 
-#: src/program/docklets/valuelist.cpp:93
+#: src/program/docklets/valuelist.cpp:103
 #, kde-format
 msgid "Filter value list"
 msgstr "Filter value list"
 
-#: src/program/docklets/valuelist.cpp:109
+#: src/program/docklets/valuelist.cpp:122
 #, kde-format
 msgid "Edit to replace all occurrences"
 msgstr "Edit to replace all occurrences"
 
-#: src/program/docklets/valuelist.cpp:113
+#: src/program/docklets/valuelist.cpp:126
 #, kde-format
 msgid "Remove all occurrences"
 msgstr "Remove all occurrences"
 
-#: src/program/docklets/valuelist.cpp:126
+#: src/program/docklets/valuelist.cpp:139
 #, kde-format
 msgid "Show Count Column"
 msgstr "Show Count Column"
 
-#: src/program/docklets/valuelist.cpp:130
+#: src/program/docklets/valuelist.cpp:143
 #, kde-format
 msgid "Sort by Count"
 msgstr "Sort by Count"

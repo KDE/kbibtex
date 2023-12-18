@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-16 00:42+0000\n"
+"POT-Creation-Date: 2023-12-18 00:42+0000\n"
 "PO-Revision-Date: 2023-12-16 09:28+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -16,8 +16,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
-"%100<=4 ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
+"%100==4 ? 3 : 0);\n"
 "X-Generator: Poedit 3.4.1\n"
 
 #, kde-format
@@ -1086,13 +1086,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Pot kot je dodana ob vnosu"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Relative Path"
 msgstr "Relativna pot"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Absolute Path"
 msgstr "Absolutna pot"
@@ -1154,38 +1154,38 @@ msgstr ""
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "Naslednji lokalni dokument je namenjen, da bo povezan z vnosom '%1':"
 
-#: src/gui/element/elementeditor.cpp:200
+#: src/gui/element/elementeditor.cpp:201
 #, kde-format
 msgid "Options"
 msgstr "Možnosti"
 
-#: src/gui/element/elementeditor.cpp:206
+#: src/gui/element/elementeditor.cpp:207
 #, kde-format
 msgid "Show all fields"
 msgstr "Prikaži vsa polja"
 
-#: src/gui/element/elementeditor.cpp:213
+#: src/gui/element/elementeditor.cpp:214
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Tipka Tab obiskuje samo polja, ki jih je mogoče urejati"
 
-#: src/gui/element/elementeditor.cpp:221
+#: src/gui/element/elementeditor.cpp:222
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Preveri z BibTeX-om"
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 "Identifikator ni bil vnesen, zato bo obnovljen prejšnji identifikator '%1'."
 
-#: src/gui/element/elementeditor.cpp:543
+#: src/gui/element/elementeditor.cpp:544
 #, kde-format
 msgid "No id given"
 msgstr "NI danega identifikatorja"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1196,27 +1196,27 @@ msgstr ""
 "\n"
 "Naj namesto tega ohranim originalni identifikator '%2'?"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Id already in use"
 msgstr "Identifikator je že v rabi"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Ohrani dvojne identifikatorje"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:551
 #, kde-format
 msgid "Restore original id"
 msgstr "Obnosi izvirni identifikator"
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Preverjanje veljavnosti trenutnega elementa ni uspelo."
 
-#: src/gui/element/elementeditor.cpp:579
+#: src/gui/element/elementeditor.cpp:580
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1225,7 +1225,7 @@ msgstr ""
 "Preverjanje veljavnosti trenutnega elementa ni uspelo:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:581
 #, kde-format
 msgid "Element validation failed"
 msgstr "Preverjanje veljavnosti elementa ni uspelo"
@@ -1271,7 +1271,7 @@ msgid "Name:"
 msgstr "Ime:"
 
 #: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:105
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1598,67 +1598,67 @@ msgstr ""
 "\n"
 "Preklop nazaj na tip '%2'."
 
-#: src/gui/field/fieldlistedit.cpp:145
+#: src/gui/field/fieldlistedit.cpp:144
 #, kde-format
 msgid "Remove value"
 msgstr "Odstrani vrednost"
 
-#: src/gui/field/fieldlistedit.cpp:160
+#: src/gui/field/fieldlistedit.cpp:159
 #, kde-format
 msgid "Move value down"
 msgstr "Premakni vrednost navzdol"
 
-#: src/gui/field/fieldlistedit.cpp:175
+#: src/gui/field/fieldlistedit.cpp:174
 #, kde-format
 msgid "Move value up"
 msgstr "Premakni vrednost navzgor"
 
-#: src/gui/field/fieldlistedit.cpp:429
+#: src/gui/field/fieldlistedit.cpp:428
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... in ostali (et al.)"
 
-#: src/gui/field/fieldlistedit.cpp:434
+#: src/gui/field/fieldlistedit.cpp:433
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Dodaj iz odložišča"
 
-#: src/gui/field/fieldlistedit.cpp:435
+#: src/gui/field/fieldlistedit.cpp:434
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Dodaj seznam imen iz odložišča"
 
-#: src/gui/field/fieldlistedit.cpp:497
+#: src/gui/field/fieldlistedit.cpp:496
 #, kde-format
 msgid "Add file..."
 msgstr "Dodaj datoteko..."
 
-#: src/gui/field/fieldlistedit.cpp:503
+#: src/gui/field/fieldlistedit.cpp:502
 #, kde-format
 msgid "Add reference ..."
 msgstr "Dodaj referenco ..."
 
-#: src/gui/field/fieldlistedit.cpp:506
+#: src/gui/field/fieldlistedit.cpp:505
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Dodaj referenco iz odložišča"
 
-#: src/gui/field/fieldlistedit.cpp:518
+#: src/gui/field/fieldlistedit.cpp:517
 #, kde-format
 msgid "File to Associate"
 msgstr "Asociirana datoteka"
 
-#: src/gui/field/fieldlistedit.cpp:556 src/gui/field/fieldlistedit.cpp:636
+#: src/gui/field/fieldlistedit.cpp:555 src/gui/field/fieldlistedit.cpp:635
 #, kde-format
 msgid "Save file locally"
 msgstr "Shrani datoteko lokalno"
 
-#: src/gui/field/fieldlistedit.cpp:606
+#: src/gui/field/fieldlistedit.cpp:605
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Shrani datoteko '%1' lokalno"
 
-#: src/gui/field/fieldlistedit.cpp:619 src/gui/field/fieldlistedit.cpp:621
+#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1670,23 +1670,23 @@ msgstr ""
 "tt></p><p>Absolutna pot bi bila<br/><tt style=\"font-family: %3;\">%2</tt></"
 "p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:664
+#: src/gui/field/fieldlistedit.cpp:663
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Dodaj ključne besede iz seznama"
 
-#: src/gui/field/fieldlistedit.cpp:665
+#: src/gui/field/fieldlistedit.cpp:664
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Dodaj ključne besede kot izbiro iz vnaprej določenega seznama ključnih besed"
 
-#: src/gui/field/fieldlistedit.cpp:668
+#: src/gui/field/fieldlistedit.cpp:667
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Dodaj ključne besede iz odložišča"
 
-#: src/gui/field/fieldlistedit.cpp:669
+#: src/gui/field/fieldlistedit.cpp:668
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "Dodajte seznam ključnih besed, ločenih z ločili iz odložišča"
@@ -2470,42 +2470,42 @@ msgstr "Razvrsti po določilniku"
 msgid "Entry Sorting"
 msgstr "Razvrščanje vnosov"
 
-#: src/gui/widgets/filterbar.cpp:71
+#: src/gui/widgets/filterbar.cpp:70
 #, kde-format
 msgid "Filter:"
 msgstr "Filter:"
 
-#: src/gui/widgets/filterbar.cpp:87
+#: src/gui/widgets/filterbar.cpp:86
 #, kde-format
 msgid "Filter bibliographic entries"
 msgstr "Filtriraj bibliografske vnose"
 
-#: src/gui/widgets/filterbar.cpp:91
+#: src/gui/widgets/filterbar.cpp:90
 #, kde-format
 msgid "any word"
 msgstr "katerakoli beseda"
 
-#: src/gui/widgets/filterbar.cpp:92
+#: src/gui/widgets/filterbar.cpp:91
 #, kde-format
 msgid "every word"
 msgstr "vsaka beseda"
 
-#: src/gui/widgets/filterbar.cpp:93
+#: src/gui/widgets/filterbar.cpp:92
 #, kde-format
 msgid "exact phrase"
 msgstr "točna fraza"
 
-#: src/gui/widgets/filterbar.cpp:98
+#: src/gui/widgets/filterbar.cpp:97
 #, kde-format
 msgid "any field"
 msgstr "katerokoli polje"
 
-#: src/gui/widgets/filterbar.cpp:116
+#: src/gui/widgets/filterbar.cpp:115
 #, kde-format
 msgid "Include PDF files in full-text search"
 msgstr "Vključi datoteke PDF v iskanje po polnem besedilu"
 
-#: src/gui/widgets/filterbar.cpp:122
+#: src/gui/widgets/filterbar.cpp:121
 #, kde-format
 msgid "Reset filter criteria"
 msgstr "Ponovno nastavi kriterije filtra"
@@ -3747,27 +3747,27 @@ msgstr "Število komentarjev:"
 msgid "Number of Macros:"
 msgstr "Število makrojev:"
 
-#: src/program/docklets/valuelist.cpp:93
+#: src/program/docklets/valuelist.cpp:103
 #, kde-format
 msgid "Filter value list"
 msgstr "Filtriraj seznam vrednosti"
 
-#: src/program/docklets/valuelist.cpp:109
+#: src/program/docklets/valuelist.cpp:122
 #, kde-format
 msgid "Edit to replace all occurrences"
 msgstr "Uredi zamenjavo vseh pojavkov"
 
-#: src/program/docklets/valuelist.cpp:113
+#: src/program/docklets/valuelist.cpp:126
 #, kde-format
 msgid "Remove all occurrences"
 msgstr "Odstrani vse pojavke"
 
-#: src/program/docklets/valuelist.cpp:126
+#: src/program/docklets/valuelist.cpp:139
 #, kde-format
 msgid "Show Count Column"
 msgstr "Prikaži stolpec števcev"
 
-#: src/program/docklets/valuelist.cpp:130
+#: src/program/docklets/valuelist.cpp:143
 #, kde-format
 msgid "Sort by Count"
 msgstr "Razvrsti po števcih"
