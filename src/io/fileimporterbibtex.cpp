@@ -1517,7 +1517,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     } else {
         /// Assuming that encoding is ASCII-compatible, thus it is possible
         /// to search for a byte sequence containin ASCII text
-        const QByteArray rawDataBeginning = rawData.left(1024);
+        const QByteArray rawDataBeginning = rawData.left(8192);
         const int xkbibtexencodingpos = qMax(rawDataBeginning.indexOf("@comment{x-kbibtex-encoding="), rawDataBeginning.indexOf("@Comment{x-kbibtex-encoding="));
         if (xkbibtexencodingpos >= 0) {
             int i = xkbibtexencodingpos + 28, l = 0;
@@ -1544,6 +1544,23 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
                 encoding = encoding.trimmed();
                 rawData = rawData.left(jabrefencodingpos) + rawData.mid(i + 1); ///< remove encoding comment
                 encodingMayGetDeterminedByRawData = encoding.isEmpty();
+            } else {
+                bool prevByteHadMSBset = false;
+                bool prevPrevByteHadMSBset = false;
+                for (const char &c : rawDataBeginning) {
+                    const bool hasMSBset{static_cast<unsigned char>(c) >= 128};
+                    if (!prevPrevByteHadMSBset && prevByteHadMSBset && !hasMSBset) {
+                        // There was a single byte which had its most-significant bit (MSB) set,
+                        // surrounded by pure-ASCII bytes. As at least in UTF-8 no single bytes
+                        // with MSB set exist, guess that the data is ISO-8859-15, which seems
+                        // to be the most popular non-ASCII and non-Unicode encoding
+                        encoding = QStringLiteral("ISO-8859-15");
+                        encodingMayGetDeterminedByRawData = false;
+                        break;
+                    }
+                    prevPrevByteHadMSBset = prevByteHadMSBset;
+                    prevByteHadMSBset = hasMSBset;
+                }
             }
         }
     }
