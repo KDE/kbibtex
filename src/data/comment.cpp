@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2017 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,25 +29,37 @@
  * Private class to store internal variables that should not be visible
  * in the interface as defined in the header file.
  */
-class Comment::CommentPrivate
+class Comment::Private
 {
 public:
     QString text;
-    bool useCommand;
+    Preferences::CommentContext context;
+    // For use with context 'Prefix'
+    QString prefix;
+
+    Private(const QString &_text, Preferences::CommentContext _context, const QString &_prefix)
+            : text(_text), context(_context), prefix(_prefix)
+    {
+        if (context != Preferences::CommentContext::Prefix)
+            prefix.clear();
+        else if (context == Preferences::CommentContext::Prefix && (prefix.isEmpty() || !prefix.startsWith(QStringLiteral("%")))) {
+            qCDebug(LOG_KBIBTEX_DATA) << "Requested to create Comment with context 'prefix', but provided prefix was either empty or did not start with '%'. Changing comments context to 'Verbatim' and clearing prefix.";
+            context = Preferences::CommentContext::Verbatim;
+            prefix.clear();
+        }
+    }
 };
 
-Comment::Comment(const QString &text, bool useCommand)
-        : Element(), d(new Comment::CommentPrivate)
+Comment::Comment(const QString &text, Preferences::CommentContext context, const QString &prefix)
+        : Element(), d(new Comment::Private(text, context, prefix))
 {
-    d->text = text;
-    d->useCommand = useCommand;
+    // nothing
 }
 
 Comment::Comment(const Comment &other)
-        : Element(), d(new Comment::CommentPrivate)
+        : Element(), d(new Comment::Private(other.d->text, other.d->context, other.d->prefix))
 {
-    d->text = other.d->text;
-    d->useCommand = other.d->useCommand;
+    // nothing
 }
 
 Comment::~Comment()
@@ -58,8 +70,9 @@ Comment::~Comment()
 Comment &Comment::operator= (const Comment &other)
 {
     if (this != &other) {
-        d->text = other.text();
-        d->useCommand = other.useCommand();
+        d->text = other.d->text;
+        d->context = other.d->context;
+        d->prefix = other.d->prefix;
     }
     return *this;
 }
@@ -74,18 +87,38 @@ void Comment::setText(const QString &text)
     d->text = text;
 }
 
-bool Comment::useCommand() const
+Preferences::CommentContext Comment::context() const
 {
-    return d->useCommand;
+    return d->context;
 }
 
-void Comment::setUseCommand(bool useCommand)
+void Comment::setContext(Preferences::CommentContext context)
 {
-    d->useCommand = useCommand;
+    d->context = context;
+}
+
+QString Comment::prefix() const
+{
+    return d->prefix;
+}
+
+void Comment::setPrefix(const QString &prefix)
+{
+    d->prefix = prefix;
 }
 
 bool Comment::isComment(const Element &other) {
     return typeid(other) == typeid(Comment);
+}
+
+bool Comment::operator==(const Comment &other) const
+{
+    return d->text == other.d->text && d->context == other.d->context && (d->context != Preferences::CommentContext::Prefix || d->prefix == other.d->prefix);
+}
+
+bool Comment::operator!=(const Comment &other) const
+{
+    return !operator==(other);
 }
 
 QDebug operator<<(QDebug dbg, const Comment &comment) {

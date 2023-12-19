@@ -78,8 +78,10 @@ public:
     QString cachedBibTeXEncoding;
     bool dirtyFlagBibTeXStringDelimiter;
     QString cachedBibTeXStringDelimiter;
-    bool dirtyFlagBibTeXQuoteComment;
-    Preferences::QuoteComment cachedBibTeXQuoteComment;
+    bool dirtyFlagBibTeXCommentContext;
+    Preferences::CommentContext cachedBibTeXCommentContext;
+    bool dirtyFlagBibTeXCommentPrefix;
+    QString cachedBibTeXCommentPrefix;
     bool dirtyFlagBibTeXKeywordCasing;
     KBibTeX::Casing cachedBibTeXKeywordCasing;
     bool dirtyFlagBibTeXProtectCasing;
@@ -127,8 +129,10 @@ public:
         cachedBibTeXEncoding = Preferences::defaultBibTeXEncoding;
         dirtyFlagBibTeXStringDelimiter = true;
         cachedBibTeXStringDelimiter = Preferences::defaultBibTeXStringDelimiter;
-        dirtyFlagBibTeXQuoteComment = true;
-        cachedBibTeXQuoteComment = Preferences::defaultBibTeXQuoteComment;
+        dirtyFlagBibTeXCommentContext = true;
+        cachedBibTeXCommentContext = Preferences::defaultBibTeXCommentContext;
+        dirtyFlagBibTeXCommentPrefix = true;
+        cachedBibTeXCommentPrefix = Preferences::defaultBibTeXCommentPrefix;
         dirtyFlagBibTeXKeywordCasing = true;
         cachedBibTeXKeywordCasing = Preferences::defaultBibTeXKeywordCasing;
         dirtyFlagBibTeXProtectCasing = true;
@@ -205,10 +209,14 @@ public:
         return Preferences::availableBibTeXStringDelimiters.contains(valueToBeChecked);
     }
 
-    inline bool validateValueForBibTeXQuoteComment(const Preferences::QuoteComment valueToBeChecked) {
-        for (QVector<QPair<Preferences::QuoteComment, QString>>::ConstIterator it = Preferences::availableBibTeXQuoteComments.constBegin(); it != Preferences::availableBibTeXQuoteComments.constEnd(); ++it)
+    inline bool validateValueForBibTeXCommentContext(const Preferences::CommentContext valueToBeChecked) {
+        for (QVector<QPair<Preferences::CommentContext, QString>>::ConstIterator it = Preferences::availableBibTeXCommentContexts.constBegin(); it != Preferences::availableBibTeXCommentContexts.constEnd(); ++it)
             if (it->first == valueToBeChecked) return true;
         return false;
+    }
+
+    inline bool validateValueForBibTeXCommentPrefix(const QString &valueToBeChecked) {
+        return valueToBeChecked.isEmpty() || valueToBeChecked.startsWith(QStringLiteral("%"));
     }
 
     inline bool validateValueForBibTeXKeywordCasing(const KBibTeX::Casing valueToBeChecked) {
@@ -360,9 +368,14 @@ Preferences::Preferences()
             d->dirtyFlagBibTeXStringDelimiter = true;
             eventsToPublish.insert(NotificationHub::EventConfigurationChanged);
         }
-        if (group.name() == QStringLiteral("FileExporterBibTeX") && names.contains("BibTeXQuoteComment")) {
-            /// Configuration setting BibTeXQuoteComment got changed by another Preferences instance";
-            d->dirtyFlagBibTeXQuoteComment = true;
+        if (group.name() == QStringLiteral("FileExporterBibTeX") && names.contains("BibTeXCommentContext")) {
+            /// Configuration setting BibTeXCommentContext got changed by another Preferences instance";
+            d->dirtyFlagBibTeXCommentContext = true;
+            eventsToPublish.insert(NotificationHub::EventConfigurationChanged);
+        }
+        if (group.name() == QStringLiteral("FileExporterBibTeX") && names.contains("BibTeXCommentPrefix")) {
+            /// Configuration setting BibTeXCommentPrefix got changed by another Preferences instance";
+            d->dirtyFlagBibTeXCommentPrefix = true;
             eventsToPublish.insert(NotificationHub::EventConfigurationChanged);
         }
         if (group.name() == QStringLiteral("FileExporterBibTeX") && names.contains("BibTeXKeywordCasing")) {
@@ -907,40 +920,78 @@ bool Preferences::setBibTeXStringDelimiter(const QString &newValue)
 }
 #endif // HAVE_KF
 
-const QVector<QPair<Preferences::QuoteComment, QString>> Preferences::availableBibTeXQuoteComments {{Preferences::QuoteComment::None, i18nc("Comment Quoting", "None")}, {Preferences::QuoteComment::Command, i18nc("Comment Quoting", "@comment{\342\200\246}")}, {Preferences::QuoteComment::PercentSign, i18nc("Comment Quoting", "% \342\200\246")}};
-const Preferences::QuoteComment Preferences::defaultBibTeXQuoteComment = Preferences::availableBibTeXQuoteComments.front().first;
+const QVector<QPair<Preferences::CommentContext, QString>> Preferences::availableBibTeXCommentContexts {{Preferences::CommentContext::Verbatim, i18nc("Comment Context: The comment's text appears verbatim in the bibliography", "Verbatim")}, {Preferences::CommentContext::Prefix, i18nc("Comment Quoting: All lines of the comment share a common prefix like '%% ' which is not part of the comment's text", "Use prefix like '%% '")}, {Preferences::CommentContext::Command, i18nc("Comment Quoting: The comment is inside @comment{..}", "Use command @comment{...}")}};
+const Preferences::CommentContext Preferences::defaultBibTeXCommentContext = Preferences::availableBibTeXCommentContexts.front().first;
 
-Preferences::QuoteComment Preferences::bibTeXQuoteComment()
+Preferences::CommentContext Preferences::bibTeXCommentContext()
 {
 #ifdef HAVE_KF
-    if (d->dirtyFlagBibTeXQuoteComment) {
+    if (d->dirtyFlagBibTeXCommentContext) {
         d->config->reparseConfiguration();
         static const KConfigGroup configGroup(d->config, QStringLiteral("FileExporterBibTeX"));
-        const Preferences::QuoteComment valueFromConfig = static_cast<Preferences::QuoteComment>(configGroup.readEntry(QStringLiteral("BibTeXQuoteComment"), static_cast<int>(Preferences::defaultBibTeXQuoteComment)));
-        if (d->validateValueForBibTeXQuoteComment(valueFromConfig)) {
-            d->cachedBibTeXQuoteComment = valueFromConfig;
-            d->dirtyFlagBibTeXQuoteComment = false;
+        const Preferences::CommentContext valueFromConfig = static_cast<Preferences::CommentContext>(configGroup.readEntry(QStringLiteral("BibTeXCommentContext"), static_cast<int>(Preferences::defaultBibTeXCommentContext)));
+        if (d->validateValueForBibTeXCommentContext(valueFromConfig)) {
+            d->cachedBibTeXCommentContext = valueFromConfig;
+            d->dirtyFlagBibTeXCommentContext = false;
         } else {
-            /// Configuration file setting for BibTeXQuoteComment has an invalid value, using default as fallback
-            setBibTeXQuoteComment(Preferences::defaultBibTeXQuoteComment);
+            /// Configuration file setting for BibTeXCommentContext has an invalid value, using default as fallback
+            setBibTeXCommentContext(Preferences::defaultBibTeXCommentContext);
         }
     }
-    return d->cachedBibTeXQuoteComment;
+    return d->cachedBibTeXCommentContext;
 #else // HAVE_KF
-    return defaultBibTeXQuoteComment;
+    return defaultBibTeXCommentContext;
 #endif // HAVE_KF
 }
 
 #ifdef HAVE_KF
-bool Preferences::setBibTeXQuoteComment(const Preferences::QuoteComment newValue)
+bool Preferences::setBibTeXCommentContext(const Preferences::CommentContext newValue)
 {
-    if (!d->validateValueForBibTeXQuoteComment(newValue)) return false;
-    d->dirtyFlagBibTeXQuoteComment = false;
-    d->cachedBibTeXQuoteComment = newValue;
+    if (!d->validateValueForBibTeXCommentContext(newValue)) return false;
+    d->dirtyFlagBibTeXCommentContext = false;
+    d->cachedBibTeXCommentContext = newValue;
     static KConfigGroup configGroup(d->config, QStringLiteral("FileExporterBibTeX"));
-    const Preferences::QuoteComment valueFromConfig = static_cast<Preferences::QuoteComment>(configGroup.readEntry(QStringLiteral("BibTeXQuoteComment"), static_cast<int>(Preferences::defaultBibTeXQuoteComment)));
+    const Preferences::CommentContext valueFromConfig = static_cast<Preferences::CommentContext>(configGroup.readEntry(QStringLiteral("BibTeXCommentContext"), static_cast<int>(Preferences::defaultBibTeXCommentContext)));
     if (valueFromConfig == newValue) return false;
-    configGroup.writeEntry(QStringLiteral("BibTeXQuoteComment"), static_cast<int>(newValue), KConfig::Notify);
+    configGroup.writeEntry(QStringLiteral("BibTeXCommentContext"), static_cast<int>(newValue), KConfig::Notify);
+    d->config->sync();
+    return true;
+}
+#endif // HAVE_KF
+
+const QString Preferences::defaultBibTeXCommentPrefix = QString();
+
+const QString &Preferences::bibTeXCommentPrefix()
+{
+#ifdef HAVE_KF
+    if (d->dirtyFlagBibTeXCommentPrefix) {
+        d->config->reparseConfiguration();
+        static const KConfigGroup configGroup(d->config, QStringLiteral("FileExporterBibTeX"));
+        const QString valueFromConfig = configGroup.readEntry(QStringLiteral("BibTeXCommentPrefix"), Preferences::defaultBibTeXCommentPrefix);
+        if (d->validateValueForBibTeXCommentPrefix(valueFromConfig)) {
+            d->cachedBibTeXCommentPrefix = valueFromConfig;
+            d->dirtyFlagBibTeXCommentPrefix = false;
+        } else {
+            /// Configuration file setting for BibTeXCommentPrefix has an invalid value, using default as fallback
+            setBibTeXCommentPrefix(Preferences::defaultBibTeXCommentPrefix);
+        }
+    }
+    return d->cachedBibTeXCommentPrefix;
+#else // HAVE_KF
+    return defaultBibTeXCommentPrefix;
+#endif // HAVE_KF
+}
+
+#ifdef HAVE_KF
+bool Preferences::setBibTeXCommentPrefix(const QString &newValue)
+{
+    if (!d->validateValueForBibTeXCommentPrefix(newValue)) return false;
+    d->dirtyFlagBibTeXCommentPrefix = false;
+    d->cachedBibTeXCommentPrefix = newValue;
+    static KConfigGroup configGroup(d->config, QStringLiteral("FileExporterBibTeX"));
+    const QString valueFromConfig = configGroup.readEntry(QStringLiteral("BibTeXCommentPrefix"), Preferences::defaultBibTeXCommentPrefix);
+    if (valueFromConfig == newValue) return false;
+    configGroup.writeEntry(QStringLiteral("BibTeXCommentPrefix"), newValue, KConfig::Notify);
     d->config->sync();
     return true;
 }

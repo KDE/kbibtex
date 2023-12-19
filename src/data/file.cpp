@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,7 +35,8 @@
 const QString File::Url = QStringLiteral("Url");
 const QString File::Encoding = QStringLiteral("Encoding");
 const QString File::StringDelimiter = QStringLiteral("StringDelimiter");
-const QString File::QuoteComment = QStringLiteral("QuoteComment");
+const QString File::CommentContext = QStringLiteral("CommentContext");
+const QString File::CommentPrefix = QStringLiteral("CommentPrefix");
 const QString File::KeywordCasing = QStringLiteral("KeywordCasing");
 const QString File::ProtectCasing = QStringLiteral("ProtectCasing");
 const QString File::NameFormatting = QStringLiteral("NameFormatting");
@@ -97,7 +98,8 @@ public:
         /// Load and set configuration as stored in settings
         properties.insert(File::Encoding, Preferences::instance().bibTeXEncoding());
         properties.insert(File::StringDelimiter, Preferences::instance().bibTeXStringDelimiter());
-        properties.insert(File::QuoteComment,  static_cast<int>(Preferences::instance().bibTeXQuoteComment()));
+        properties.insert(File::CommentContext, static_cast<int>(Preferences::instance().bibTeXCommentContext()));
+        properties.insert(File::CommentPrefix, Preferences::instance().bibTeXCommentPrefix());
         properties.insert(File::KeywordCasing, static_cast<int>(Preferences::instance().bibTeXKeywordCasing()));
         properties.insert(File::NameFormatting, Preferences::instance().personNameFormat());
         properties.insert(File::ProtectCasing, static_cast<int>(Preferences::instance().bibTeXProtectCasing() ? Qt::Checked : Qt::Unchecked));
@@ -192,8 +194,9 @@ bool File::operator==(const File &other) const {
                     QSharedPointer<const Comment> otherComment = otherIt->dynamicCast<const Comment>();
                     if ((myComment.isNull() && !otherComment.isNull()) || (!myComment.isNull() && otherComment.isNull())) return false;
                     if (!myComment.isNull() && !otherComment.isNull()) {
-                        // TODO right now, don't care if comments are equal
-                        qCDebug(LOG_KBIBTEX_DATA) << "File objects being compared contain comments, ignoring those";
+                        if (myComment->text() != otherComment->text() || myComment->context() != otherComment->context() || (myComment->context() == Preferences::CommentContext::Prefix && myComment->prefix() != otherComment->prefix())) {
+                            return false;
+                        }
                     } else {
                         /// This case should never be reached
                         qCWarning(LOG_KBIBTEX_DATA) << "Met unhandled case while comparing two File objects";

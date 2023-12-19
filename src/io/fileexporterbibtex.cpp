@@ -85,7 +85,6 @@ public:
     QChar stringOpenDelimiter;
     QChar stringCloseDelimiter;
     KBibTeX::Casing keywordCasing;
-    Preferences::QuoteComment quoteComment;
     QString encoding, forcedEncoding;
     Qt::CheckState protectCasing;
     QString personNameFormatting;
@@ -96,7 +95,7 @@ public:
     Private(FileExporterBibTeX *p)
             : parent(p), cancelFlag(false)
     {
-        /// Initialize variables like 'keywordCasing' or 'quoteComment' from Preferences
+        // Initialize variables like 'keywordCasing' or 'personNameFormatting' from Preferences
         loadPreferencesAndProperties(nullptr /** no File object to evaluate properties from */);
     }
 
@@ -114,13 +113,11 @@ public:
         stringCloseDelimiter = stringDelimiter[1];
 #ifdef HAVE_KF
         keywordCasing = Preferences::instance().bibTeXKeywordCasing();
-        quoteComment = Preferences::instance().bibTeXQuoteComment();
         protectCasing = Preferences::instance().bibTeXProtectCasing() ? Qt::Checked : Qt::Unchecked;
         listSeparator =  Preferences::instance().bibTeXListSeparator();
         sortedByIdentifier = Preferences::instance().bibTeXEntriesSortedByIdentifier();
 #else // HAVE_KF
         keywordCasing = KBibTeX::Casing::LowerCase;
-        quoteComment = Preferences::QuoteComment::None;
         protectCasing = Qt::PartiallyChecked;
         listSeparator = QStringLiteral("; ");
         sortedByIdentifier = false;
@@ -140,8 +137,6 @@ public:
                 stringOpenDelimiter = stringDelimiter[0];
                 stringCloseDelimiter = stringDelimiter[1];
             }
-            if (bibtexfile->hasProperty(File::QuoteComment))
-                quoteComment = static_cast<Preferences::QuoteComment>(bibtexfile->property(File::QuoteComment).toInt());
             if (bibtexfile->hasProperty(File::KeywordCasing))
                 keywordCasing = static_cast<KBibTeX::Casing>(bibtexfile->property(File::KeywordCasing).toInt());
             if (bibtexfile->hasProperty(File::ProtectCasing))
@@ -355,28 +350,22 @@ public:
     bool writeComment(QString &output, const Comment &comment) {
         QString text = comment.text() ;
 
-        if (comment.useCommand() || quoteComment == Preferences::QuoteComment::Command) {
+        switch (comment.context()) {
+        case Preferences::CommentContext::Verbatim:
+            output.append(normalizeText(text)).append(QStringLiteral("\n\n"));
+            break;
+        case Preferences::CommentContext::Prefix: {
+            const QStringList commentLines = text.split(QStringLiteral("\n"));
+            for (const QString &line : commentLines)
+                output.append(comment.prefix()).append(normalizeText(line)).append(QLatin1Char('\n'));
+            output.append(QLatin1Char('\n'));
+        }
+        break;
+        case Preferences::CommentContext::Command:
             output.append(QLatin1Char('@')).append(BibTeXEntries::instance().format(QStringLiteral("Comment"), keywordCasing));
             output.append(QLatin1Char('{')).append(normalizeText(text));
             output.append(QLatin1Char('}')).append(QStringLiteral("\n\n"));
-        } else if (quoteComment == Preferences::QuoteComment::PercentSign) {
-#if QT_VERSION >= 0x050e00
-            QStringList commentLines = text.split(QStringLiteral("\n"), Qt::SkipEmptyParts);
-#else // QT_VERSION < 0x050e00
-            QStringList commentLines = text.split(QStringLiteral("\n"), QString::SkipEmptyParts);
-#endif // QT_VERSION >= 0x050e00
-            for (QStringList::Iterator it = commentLines.begin(); it != commentLines.end(); ++it) {
-                const QString &line = *it;
-                if (line.length() == 0 || line[0] != QLatin1Char('%')) {
-                    /// Guarantee that every line starts with
-                    /// a percent sign
-                    output.append(QLatin1Char('%'));
-                }
-                output.append(normalizeText(text)).append(QStringLiteral("\n"));
-            }
-            output.append(QLatin1Char('\n'));
-        } else {
-            output.append(normalizeText(text)).append(QStringLiteral("\n\n"));
+            break;
         }
 
         return true;

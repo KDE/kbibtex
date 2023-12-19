@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,6 +28,7 @@
 
 class QCheckBox;
 class QComboBox;
+class QLineEdit;
 
 class File;
 
@@ -54,7 +55,8 @@ Q_SIGNALS:
 private:
     QComboBox *m_comboBoxEncodings;
     QComboBox *m_comboBoxStringDelimiters;
-    QComboBox *m_comboBoxQuoteComment;
+    QComboBox *m_comboBoxCommentContext;
+    QLineEdit *m_lineEditCommentPrefix;
     QComboBox *m_comboBoxKeywordCasing;
     QCheckBox *m_checkBoxProtectCasing;
     QComboBox *m_comboBoxPersonNameFormatting;

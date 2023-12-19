@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -39,9 +39,9 @@ public:
 
     enum class BackupScope { None, LocalOnly, BothLocalAndRemote };
     enum class BibliographySystem { BibTeX, BibLaTeX };
+    enum class CommentContext { Verbatim, Prefix, Command };
     enum class FileViewDoubleClickAction { OpenEditor, ViewDocument };
     enum class PageSize { A4, Legal, Letter };
-    enum class QuoteComment { None, Command, PercentSign };
 
 
     /// *** BibliographySystem of type BibliographySystem ***
@@ -196,16 +196,28 @@ public:
 #endif // HAVE_KF
 
 
-    /// *** BibTeXQuoteComment of type QuoteComment ***
+    /// *** BibTeXCommentContext of type CommentContext ***
 
-    static const QuoteComment defaultBibTeXQuoteComment;
-    static const QVector<QPair<Preferences::QuoteComment, QString>> availableBibTeXQuoteComments;
-    QuoteComment bibTeXQuoteComment();
+    static const CommentContext defaultBibTeXCommentContext;
+    static const QVector<QPair<Preferences::CommentContext, QString>> availableBibTeXCommentContexts;
+    CommentContext bibTeXCommentContext();
 #ifdef HAVE_KF
     /*!
      * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
      */
-    bool setBibTeXQuoteComment(const QuoteComment bibTeXQuoteComment);
+    bool setBibTeXCommentContext(const CommentContext bibTeXCommentContext);
+#endif // HAVE_KF
+
+
+    /// *** BibTeXCommentPrefix of type QString ***
+
+    static const QString defaultBibTeXCommentPrefix;
+    const QString &bibTeXCommentPrefix();
+#ifdef HAVE_KF
+    /*!
+     * @return true if this setting has been changed, i.e. the new value was different from the old value; false otherwise or under error conditions
+     */
+    bool setBibTeXCommentPrefix(const QString &bibTeXCommentPrefix);
 #endif // HAVE_KF
 
 
@@ -328,6 +340,11 @@ inline uint qHash(const Preferences::BibliographySystem &bibliographySystem, uin
     return qHash(static_cast<int>(bibliographySystem), seed);
 }
 
+inline uint qHash(const Preferences::CommentContext &commentContext, uint seed)
+{
+    return qHash(static_cast<int>(commentContext), seed);
+}
+
 inline uint qHash(const Preferences::FileViewDoubleClickAction &fileViewDoubleClickAction, uint seed)
 {
     return qHash(static_cast<int>(fileViewDoubleClickAction), seed);
@@ -336,11 +353,6 @@ inline uint qHash(const Preferences::FileViewDoubleClickAction &fileViewDoubleCl
 inline uint qHash(const Preferences::PageSize &pageSize, uint seed)
 {
     return qHash(static_cast<int>(pageSize), seed);
-}
-
-inline uint qHash(const Preferences::QuoteComment &quoteComment, uint seed)
-{
-    return qHash(static_cast<int>(quoteComment), seed);
 }
 
 #endif // KBIBTEX_CONFIG_PREFERENCES_H

@@ -1129,7 +1129,11 @@ void KBibTeXPart::newPreambleTriggered()
 
 void KBibTeXPart::newCommentTriggered()
 {
-    QSharedPointer<Comment> newComment = QSharedPointer<Comment>(new Comment());
+    // Fetch comment context and prefix preferrably from File object,
+    // otherwise from Preferences
+    const Preferences::CommentContext commentContext {d->bibTeXFile != nullptr && d->bibTeXFile->hasProperty(File::CommentContext) ? static_cast<Preferences::CommentContext>(d->bibTeXFile->property(File::CommentContext).toInt()) : Preferences::instance().bibTeXCommentContext()};
+    const QString commentPrefix {commentContext == Preferences::CommentContext::Prefix ? (d->bibTeXFile != nullptr && d->bibTeXFile->hasProperty(File::CommentPrefix) ? d->bibTeXFile->property(File::CommentPrefix).toString() : Preferences::instance().bibTeXCommentPrefix()) : QString()};
+    QSharedPointer<Comment> newComment = QSharedPointer<Comment>(new Comment(QString(), commentContext, commentPrefix));
     d->model->insertRow(newComment, d->model->rowCount());
     d->partWidget->fileView()->setSelectedElement(newComment);
     if (d->partWidget->fileView()->editElement(newComment))

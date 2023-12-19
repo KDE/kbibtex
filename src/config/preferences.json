@@ -21,10 +21,10 @@
             "Legal",
             "Letter"
         ],
-        "QuoteComment": [
-            "None",
-            "Command",
-            "PercentSign"
+        "CommentContext": [
+            "Verbatim",
+            "Prefix",
+            "Command"
         ],
         "FileViewDoubleClickAction": [
             "OpenEditor",
@@ -138,11 +138,19 @@
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {
-            "stem": "BibTeXQuoteComment",
-            "type": "QuoteComment",
+            "stem": "BibTeXCommentContext",
+            "type": "CommentContext",
             "configgroup": "FileExporterBibTeX",
-            "availabletype": "QVector<QPair<Preferences::QuoteComment, QString>>",
-            "available": "{{Preferences::QuoteComment::None, i18nc(\"Comment Quoting\", \"None\")}, {Preferences::QuoteComment::Command, i18nc(\"Comment Quoting\", \"@comment{\\342\\200\\246}\")}, {Preferences::QuoteComment::PercentSign, i18nc(\"Comment Quoting\", \"% \\342\\200\\246\")}}",
+            "availabletype": "QVector<QPair<Preferences::CommentContext, QString>>",
+            "available": "{{Preferences::CommentContext::Verbatim, i18nc(\"Comment Context: The comment's text appears verbatim in the bibliography\", \"Verbatim\")}, {Preferences::CommentContext::Prefix, i18nc(\"Comment Quoting: All lines of the comment share a common prefix like '%% ' which is not part of the comment's text\", \"Use prefix like '%% '\")}, {Preferences::CommentContext::Command, i18nc(\"Comment Quoting: The comment is inside @comment{..}\", \"Use command @comment{...}\")}}",
+            "notificationevent": "NotificationHub::EventConfigurationChanged"
+        },
+        {
+            "stem": "BibTeXCommentPrefix",
+            "type": "QString",
+            "configgroup": "FileExporterBibTeX",
+            "default": "QString()",
+            "validationcode": "return valueToBeChecked.isEmpty() || valueToBeChecked.startsWith(QStringLiteral(\"%\"));",
             "notificationevent": "NotificationHub::EventConfigurationChanged"
         },
         {

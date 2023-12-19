@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -293,6 +293,31 @@ private:
 
 public:
     explicit PreambleWidget(QWidget *parent);
+
+    bool apply(QSharedPointer<Element> element) const override;
+    bool reset(QSharedPointer<const Element> element) override;
+    bool validate(QWidget **widgetWithIssue, QString &message) const override;
+    void setReadOnly(bool isReadOnly) override;
+    void showReqOptWidgets(bool, const QString &) override {}
+    QString label() override;
+    QIcon icon() override;
+
+    bool canEdit(const Element *element) override;
+};
+
+class CommentWidget : public ElementWidget
+{
+    Q_OBJECT
+
+private:
+    QComboBox *comboBoxContext;
+    QLineEdit *lineEditPrefix;
+    KTextEditor::Document *document;
+
+    void createGUI();
+
+public:
+    explicit CommentWidget(QWidget *parent);
 
     bool apply(QSharedPointer<Element> element) const override;
     bool reset(QSharedPointer<const Element> element) override;

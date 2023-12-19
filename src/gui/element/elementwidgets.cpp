@@ -20,6 +20,7 @@
 #include "elementwidgets.h"
 
 #include <QLayout>
+#include <QFormLayout>
 #include <QBuffer>
 #include <QLabel>
 #include <QLineEdit>
@@ -35,6 +36,11 @@
 #include <QPushButton>
 #include <QFontDatabase>
 #include <QRegularExpression>
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#include <QRegExpValidator>
+#else // #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+#include <QRegularExpressionValidator>
+#endif // #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 #include <QTimer>
 
 #include <kio_version.h>
@@ -71,6 +77,7 @@
 #include <IdSuggestions>
 #include "field/fieldinput.h"
 #include "field/fieldlineedit.h"
+#include "guihelper.h"
 #include "logging_gui.h"
 
 static const unsigned int interColumnSpace = 16;
@@ -1191,6 +1198,131 @@ void PreambleWidget::createGUI()
 }
 
 
+CommentWidget::CommentWidget(QWidget *parent)
+        : ElementWidget(parent)
+{
+    createGUI();
+}
+
+bool CommentWidget::apply(QSharedPointer<Element> element) const
+{
+    if (isReadOnly) return false; /// never save data if in read-only mode
+
+    QSharedPointer<Comment> comment = element.dynamicCast<Comment>();
+    if (comment.isNull()) return false;
+
+    QString msg;
+    if (!validate(nullptr, msg)) {
+        qCWarning(LOG_KBIBTEX_GUI) << "Could not apply value to comment:" << msg;
+        return false;
+    }
+
+    const Preferences::CommentContext context {static_cast<Preferences::CommentContext>(comboBoxContext->currentData().toInt())};
+    comment->setContext(context);
+    comment->setPrefix(context == Preferences::CommentContext::Prefix ? lineEditPrefix->text() : QString());
+    comment->setText(document->text());
+
+    return true;
+}
+
+bool CommentWidget::reset(QSharedPointer<const Element> element)
+{
+    QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
+    if (comment.isNull()) return false;
+    const QStringList lines {document->text().split(QStringLiteral("\n"))};
+
+    comboBoxContext->setCurrentIndex(qMax(0, GUIHelper::selectValue(comboBoxContext->model(), static_cast<int>(comment->context()), Qt::UserRole)));
+    lineEditPrefix->setText(comment->context() == Preferences::CommentContext::Prefix ? comment->prefix() : QString());
+    lineEditPrefix->setEnabled(comment->context() == Preferences::CommentContext::Prefix);
+
+    /// Limitation of KTextEditor: If editor is read-only, no text can be set
+    /// Therefore, temporarily lift read-only status
+    const bool originalReadWriteStatus = document->isReadWrite();
+    document->setReadWrite(true);
+    const bool success = document->setText(comment->text());
+    document->setReadWrite(originalReadWriteStatus);
+
+    return success;
+}
+
+bool CommentWidget::validate(QWidget **widgetWithIssue, QString &message) const
+{
+    const Preferences::CommentContext context {static_cast<Preferences::CommentContext>(comboBoxContext->currentData().toInt())};
+    if (context == Preferences::CommentContext::Prefix && !lineEditPrefix->text().startsWith(QStringLiteral("%"))) {
+        if (widgetWithIssue != nullptr)
+            *widgetWithIssue = lineEditPrefix;
+        message = i18n("The prefix of a comment must start with '%'");
+        return false;
+    }
+
+    const QStringList lines {document->text().split(QStringLiteral("\n"))};
+    if (context == Preferences::CommentContext::Verbatim && lines.contains(QString())) {
+        if (widgetWithIssue != nullptr)
+            *widgetWithIssue = document->views().at(0);
+        message = i18n("A comment in 'Verbatim' mode may not contain blank lines");
+        return false;
+    }
+
+    return true;
+}
+
+void CommentWidget::setReadOnly(bool _isReadOnly)
+{
+    ElementWidget::setReadOnly(_isReadOnly);
+
+    comboBoxContext->setEnabled(!_isReadOnly);
+    lineEditPrefix->setReadOnly(_isReadOnly);
+    document->setReadWrite(!_isReadOnly);
+}
+
+QString CommentWidget::label()
+{
+    return i18n("Comment");
+}
+
+QIcon CommentWidget::icon()
+{
+    return QIcon::fromTheme(QStringLiteral("comment"));
+}
+
+bool CommentWidget::canEdit(const Element *element)
+{
+    return Comment::isComment(*element);
+}
+
+void CommentWidget::createGUI()
+{
+    QBoxLayout *outerLayout = new QVBoxLayout(this);
+    QFormLayout *topLayout = new QFormLayout();
+    outerLayout->addLayout(topLayout, 0);
+
+    topLayout->addRow(i18n("Context:"), (comboBoxContext = new QComboBox(this)));
+    for (QVector<QPair<Preferences::CommentContext, QString>>::ConstIterator it = Preferences::availableBibTeXCommentContexts.constBegin(); it != Preferences::availableBibTeXCommentContexts.constEnd(); ++it)
+        comboBoxContext->addItem(it->second, static_cast<int>(it->first));
+
+    topLayout->addRow(i18n("Prefix:"), (lineEditPrefix = new QLineEdit(this)));
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    lineEditPrefix->setValidator(new QRegExpValidator(QRegExp(QStringLiteral("^%.*"))));
+#else // #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    lineEditPrefix->setValidator(new QRegularExpressionValidator(QRegularExpression(QStringLiteral("^%.*"))));
+#endif // #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    connect(comboBoxContext, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [this]() {
+        bool ok = false;
+        const Preferences::CommentContext currentCommentContext = static_cast<Preferences::CommentContext>(comboBoxContext->currentData().toInt(&ok));
+        lineEditPrefix->setEnabled(ok && currentCommentContext == Preferences::CommentContext::Prefix);
+    });
+
+    KTextEditor::Editor *editor = KTextEditor::Editor::instance();
+    document = editor->createDocument(this);
+    document->setHighlightingMode(QStringLiteral("BibTeX"));
+    KTextEditor::View *view = document->createView(this);
+    outerLayout->addWidget(view, 1);
+
+    connect(comboBoxContext, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &CommentWidget::gotModified);
+    connect(lineEditPrefix, &QLineEdit::textChanged, this, &CommentWidget::gotModified);
+    connect(document, &KTextEditor::Document::textChanged, this, &CommentWidget::gotModified);
+}
+
 class SourceWidget::Private
 {
 public:
@@ -1343,7 +1475,7 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
     case ElementClass::Comment: {
         QSharedPointer<Comment> comment = file->first().dynamicCast<Comment>();
         result = !comment.isNull();
-        if (!result) message = i18n("Given source code does not parse as one single BibTeX comment.");
+        if (!result) message = i18n("Given source code does not parse as one single BibTeX comment. Try removing blank lines inside the comment.");
     }
     break;
     case ElementClass::Invalid: {

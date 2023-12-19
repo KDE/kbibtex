@@ -22,6 +22,12 @@
 #include <QCheckBox>
 #include <QFormLayout>
 #include <QComboBox>
+#include <QLineEdit>
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#include <QRegExpValidator>
+#else // #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+#include <QRegularExpressionValidator>
+#endif // #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 
 #include <KLocalizedString>
 
@@ -60,11 +66,16 @@ void FileSettingsWidget::loadProperties(File *file)
         const int row = GUIHelper::selectValue(m_comboBoxStringDelimiters->model(), createDelimiterString(stringDelimiter[0], stringDelimiter[1]));
         m_comboBoxStringDelimiters->setCurrentIndex(row);
     }
-    if (file->hasProperty(File::QuoteComment)) {
-        QSignalBlocker comboBoxQuoteCommentSignalBlocker(m_comboBoxQuoteComment);
-        const Preferences::QuoteComment quoteComment = static_cast<Preferences::QuoteComment>(file->property(File::QuoteComment).toInt());
-        const int row = qMax(0, GUIHelper::selectValue(m_comboBoxQuoteComment->model(), static_cast<int>(quoteComment), Qt::UserRole));
-        m_comboBoxQuoteComment->setCurrentIndex(row);
+    if (file->hasProperty(File::CommentContext)) {
+        QSignalBlocker comboBoxCommentContextSignalBlocker(m_comboBoxCommentContext);
+        const Preferences::CommentContext commentContext = static_cast<Preferences::CommentContext>(file->property(File::CommentContext).toInt());
+        const int row = qMax(0, GUIHelper::selectValue(m_comboBoxCommentContext->model(), static_cast<int>(commentContext), Qt::UserRole));
+        m_comboBoxCommentContext->setCurrentIndex(row);
+    }
+    if (file->hasProperty(File::CommentPrefix)) {
+        QSignalBlocker lineEditCommentPrefixSignalBlocker(m_lineEditCommentPrefix);
+        const QString commentPrefix = file->property(File::CommentPrefix).toString();
+        m_lineEditCommentPrefix->setText(commentPrefix);
     }
     if (file->hasProperty(File::KeywordCasing)) {
         QSignalBlocker comboBoxKeywordCasingSignalBlocker(m_comboBoxKeywordCasing);
@@ -99,9 +110,12 @@ void FileSettingsWidget::saveProperties(File *file)
     const QString stringDelimiter = m_comboBoxStringDelimiters->currentText();
     file->setProperty(File::StringDelimiter, QString(QStringLiteral("%1%2")).arg(stringDelimiter[0], stringDelimiter[stringDelimiter.length() - 1]));
     bool ok = false;
-    const Preferences::QuoteComment quoteComment = static_cast<Preferences::QuoteComment>(m_comboBoxQuoteComment->currentData().toInt(&ok));
-    if (ok)
-        file->setProperty(File::QuoteComment, static_cast<int>(quoteComment));
+    const Preferences::CommentContext commentContext = static_cast<Preferences::CommentContext>(m_comboBoxCommentContext->currentData().toInt(&ok));
+    if (ok) {
+        file->setProperty(File::CommentContext, static_cast<int>(commentContext));
+        if (commentContext == Preferences::CommentContext::Prefix && m_lineEditCommentPrefix->hasAcceptableInput())
+            file->setProperty(File::CommentPrefix, m_lineEditCommentPrefix->text());
+    }
     const KBibTeX::Casing keywordCasing = static_cast<KBibTeX::Casing>(m_comboBoxKeywordCasing->currentIndex());
     file->setProperty(File::KeywordCasing, static_cast<int>(keywordCasing));
     file->setProperty(File::ProtectCasing, static_cast<int>(m_checkBoxProtectCasing->checkState()));
@@ -136,11 +150,25 @@ void FileSettingsWidget::setupGUI()
     m_comboBoxStringDelimiters->addItem(createDelimiterString('(', ')'));
     connect(m_comboBoxStringDelimiters, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
 
-    m_comboBoxQuoteComment = new QComboBox(this);
-    layout->addRow(i18n("Comment Quoting:"), m_comboBoxQuoteComment);
-    for (QVector<QPair<Preferences::QuoteComment, QString>>::ConstIterator it = Preferences::availableBibTeXQuoteComments.constBegin(); it != Preferences::availableBibTeXQuoteComments.constEnd(); ++it)
-        m_comboBoxQuoteComment->addItem(it->second, static_cast<int>(it->first));
-    connect(m_comboBoxQuoteComment, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
+    m_comboBoxCommentContext = new QComboBox(this);
+    layout->addRow(i18n("Comment Context:"), m_comboBoxCommentContext);
+    for (QVector<QPair<Preferences::CommentContext, QString>>::ConstIterator it = Preferences::availableBibTeXCommentContexts.constBegin(); it != Preferences::availableBibTeXCommentContexts.constEnd(); ++it)
+        m_comboBoxCommentContext->addItem(it->second, static_cast<int>(it->first));
+    connect(m_comboBoxCommentContext, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &FileSettingsWidget::widgetsChanged);
+
+    m_lineEditCommentPrefix = new QLineEdit(this);
+    layout->addRow(i18n("Comment Prefix:"), m_lineEditCommentPrefix);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    m_lineEditCommentPrefix->setValidator(new QRegExpValidator(QRegExp(QStringLiteral("^%.*"))));
+#else // #if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    m_lineEditCommentPrefix->setValidator(new QRegularExpressionValidator(QRegularExpression(QStringLiteral("^%.*"))));
+#endif // #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    connect(m_lineEditCommentPrefix, &QLineEdit::textEdited, this, &FileSettingsWidget::widgetsChanged);
+    connect(m_comboBoxCommentContext, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, [this]() {
+        bool ok = false;
+        const Preferences::CommentContext currentCommentContext = static_cast<Preferences::CommentContext>(m_comboBoxCommentContext->currentData().toInt(&ok));
+        m_lineEditCommentPrefix->setEnabled(ok && currentCommentContext == Preferences::CommentContext::Prefix);
+    });
 
     m_comboBoxKeywordCasing = new QComboBox(this);
     layout->addRow(i18n("Keyword Casing:"), m_comboBoxKeywordCasing);

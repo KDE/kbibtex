@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -124,6 +124,12 @@ public:
         tab->hideTab(index);
 
         widget = new MacroWidget(tab);
+        connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
+        widgets << widget;
+        index = tab->addTab(widget, widget->icon(), widget->label());
+        tab->hideTab(index);
+
+        widget = new CommentWidget(tab);
         connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
         widgets << widget;
         index = tab->addTab(widget, widget->icon(), widget->label());
@@ -352,7 +358,7 @@ public:
         } else {
             /// All widgets except for the source widget must validate their values
             for (WidgetList::ConstIterator it = widgets.begin(); it != widgets.end(); ++it) {
-                if ((*it) == sourceWidget) continue;
+                if ((*it) == sourceWidget || !tab->tabIsShown(*it)) continue;
                 const bool v = (*it)->validate(widgetWithIssue, message);
                 /// A single widget failing to validate lets the whole validation fail
                 if (!v) return false;

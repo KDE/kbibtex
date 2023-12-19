@@ -65,15 +65,14 @@ public:
         int countCurlyBrackets;
 
         int countQuotationMarks, countFirstNameFirst, countLastNameFirst;
-        int countNoCommentQuote, countCommentPercent, countCommentCommand;
+        QHash<QString, int> countCommentContext;
         int countProtectedTitle, countUnprotectedTitle;
         int countSortedByIdentifier, countNotSortedByIdentifier;
         QString mostRecentListSeparator;
 
         Statistics()
                 : countCurlyBrackets(0), countQuotationMarks(0), countFirstNameFirst(0),
-              countLastNameFirst(0), countNoCommentQuote(0), countCommentPercent(0),
-              countCommentCommand(0), countProtectedTitle(0), countUnprotectedTitle(0),
+              countLastNameFirst(0), countProtectedTitle(0), countUnprotectedTitle(0),
               countSortedByIdentifier(0), countNotSortedByIdentifier(0)
         {
             /// nothing
@@ -135,6 +134,20 @@ public:
         bool result = true;
         while ((state.nextChar.isSpace() || state.nextChar == QLatin1Char('\t') || state.nextChar == QLatin1Char('\n') || state.nextChar == QLatin1Char('\r')) && result) result = readChar(state);
         return result;
+    }
+
+    bool skipNewline(State &state)
+    {
+        if (state.nextChar == QLatin1Char('\r')) {
+            const bool result = readChar(state);
+            if (result && state.nextChar == QLatin1Char('\n'))
+                // Windows linebreak: CR LF
+                return readChar(state);
+        } else if (state.nextChar == QLatin1Char('\n')) {
+            // Linux/Unix linebreak: LF
+            return readChar(state);
+        }
+        return false;
     }
 
     Token nextToken(State &state)
@@ -718,33 +731,60 @@ public:
     {
         if (!readCharUntil(QStringLiteral("{("), state))
             return nullptr;
-        return new Comment(EncoderLaTeX::instance().decode(readBracketString(state)));
+        return new Comment(EncoderLaTeX::instance().decode(readBracketString(state)), Preferences::CommentContext::Command);
     }
 
-    Comment *readPlainCommentElement(const QString &prefix, State &state)
+    Comment *readPlainCommentElement(const QString &initialRead, State &state)
     {
-        QString result = rstrip(EncoderLaTeX::instance().decode(prefix + readLine(state)));
-        while (state.nextChar == QLatin1Char('\n') || state.nextChar == QLatin1Char('\r')) readChar(state);
-        while (!state.nextChar.isNull() && state.nextChar != QLatin1Char('@')) {
-            const QChar nextChar = state.nextChar;
-            const QString line = readLine(state);
-            while (state.nextChar == QLatin1Char('\n') || state.nextChar == QLatin1Char('\r')) readChar(state);
-            result.append(rstrip(EncoderLaTeX::instance().decode((nextChar == QLatin1Char('%') ? QString() : QString(nextChar)) + line)));
-        }
+        const QString firstLine {rstrip(EncoderLaTeX::instance().decode(initialRead + readLine(state)))};
+        if (firstLine.length() > 0 && firstLine[0] == QLatin1Char('%')) {
+            QStringList lines{{firstLine}};
+            // Read all lines that start with '%', compute common prefix, and remove prefix from all lines
+            // Stop when encountering a line that starts without '%'
+            while (skipNewline(state) && state.nextChar == QLatin1Char('%')) {
+                const QString nextLine {rstrip(EncoderLaTeX::instance().decode(QStringLiteral("%") + readLine(state)))};
+                lines.append(nextLine);
+            }
 
-        if (result.startsWith(QStringLiteral("x-kbibtex"))) {
-            qCWarning(LOG_KBIBTEX_IO) << "Plain comment element starts with 'x-kbibtex', this should not happen";
-            /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QStringLiteral("Plain comment element starts with 'x-kbibtex', this should not happen")));
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QStringLiteral("Plain comment element starts with 'x-kbibtex', this should not happen")));
-#endif
-            /// ignore special comments
+            int commonPrefixLen {0};
+            for (; commonPrefixLen < firstLine.length(); ++commonPrefixLen)
+                if (firstLine[commonPrefixLen] != QLatin1Char(' ') && firstLine[commonPrefixLen] != QLatin1Char('%'))
+                    break;
+            int longestLinLength = firstLine.length();
+            bool first = true;
+            for (const QString &line : lines) {
+                if (first) {
+                    first = false;
+                    continue;
+                }
+                commonPrefixLen = qMin(commonPrefixLen, line.length());
+                longestLinLength = qMax(longestLinLength, line.length());
+                for (int i = 0; i < commonPrefixLen; ++i)
+                    if (line[i] != firstLine[i]) {
+                        commonPrefixLen = i;
+                        break;
+                    }
+            }
+            const QString prefix {firstLine.left(commonPrefixLen)};
+            QString text;
+            text.reserve(longestLinLength * lines.length());
+            for (const QString &line : lines)
+                text.append(line.mid(commonPrefixLen)).append(QStringLiteral("\n"));
+
+            return new Comment(rstrip(text), Preferences::CommentContext::Prefix, prefix);
+        } else if (firstLine.length() > 0) {
+            QStringList lines{{firstLine}};
+            // Read all lines until a line is either empty or starts with '@'
+            while (skipNewline(state) && state.nextChar != QLatin1Char('\n') && state.nextChar != QLatin1Char('\r') && state.nextChar != QLatin1Char('@')) {
+                const QChar firstLineChar {state.nextChar};
+                const QString nextLine {rstrip(EncoderLaTeX::instance().decode(QString(firstLineChar) + readLine(state)))};
+                lines.append(nextLine);
+            }
+            return new Comment(lines.join(QStringLiteral("\n")), Preferences::CommentContext::Verbatim);
+        } else {
+            // Maybe a line with only spaces?
             return nullptr;
         }
-
-        return new Comment(result);
     }
 
     QString tokenidToString(Token token)
@@ -1116,8 +1156,10 @@ public:
             const QString elementTypeLower = elementType.toLower();
 
             if (elementTypeLower == QStringLiteral("comment")) {
-                ++statistics.countCommentCommand;
-                return readCommentElement(state);
+                Comment *comment {readCommentElement(state)};
+                if (comment != nullptr)
+                    statistics.countCommentContext.insert(QStringLiteral("@"), statistics.countCommentContext.value(QStringLiteral("@"), 0) + 1);
+                return comment;
             } else if (elementTypeLower == QStringLiteral("string"))
                 return readMacroElement(statistics, state);
             else if (elementTypeLower == QStringLiteral("preamble"))
@@ -1144,9 +1186,11 @@ public:
                 return nullptr;
             }
         } else if (token == Token::Unknown && state.nextChar == QLatin1Char('%')) {
-            /// do not complain about LaTeX-like comments, just eat them
-            ++statistics.countCommentPercent;
-            return readPlainCommentElement(QString(), state);
+            // Do not complain about LaTeX-like comments, just eat them
+            Comment *comment {readPlainCommentElement(QString(state.nextChar), state)};
+            if (comment != nullptr)
+                statistics.countCommentContext.insert(comment->prefix(), statistics.countCommentContext.value(comment->prefix(), 0) + 1);
+            return comment;
         } else if (token == Token::Unknown) {
             if (state.nextChar.isLetter()) {
 #if QT_VERSION >= 0x050e00
@@ -1185,8 +1229,11 @@ public:
                 QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Info), Q_ARG(QString, QString(QStringLiteral("Unknown character 0x%1 near line %2, treating as comment")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(state.lineNo)));
 #endif
             }
-            ++statistics.countNoCommentQuote;
-            return readPlainCommentElement(QString(state.prevChar) + state.nextChar, state);
+
+            Comment *comment {readPlainCommentElement(QString(state.prevChar) + state.nextChar, state)};
+            if (comment != nullptr)
+                statistics.countCommentContext.insert(QString(), statistics.countCommentContext.value(QString(), 0) + 1);
+            return comment;
         }
 
         if (token != Token::EndOfFile) {
@@ -1445,13 +1492,28 @@ File *FileImporterBibTeX::fromString(const QString &rawText)
         /// Set the file's preferences for title protected
         Qt::CheckState triState = (statistics.countProtectedTitle > statistics.countUnprotectedTitle * 4) ? Qt::Checked : ((statistics.countProtectedTitle * 4 < statistics.countUnprotectedTitle) ? Qt::Unchecked : Qt::PartiallyChecked);
         result->setProperty(File::ProtectCasing, static_cast<int>(triState));
-        /// Set the file's preferences for quoting of comments
-        if (statistics.countNoCommentQuote > statistics.countCommentCommand && statistics.countNoCommentQuote > statistics.countCommentPercent)
-            result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::None));
-        else if (statistics.countCommentCommand > statistics.countNoCommentQuote && statistics.countCommentCommand > statistics.countCommentPercent)
-            result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::Command));
-        else
-            result->setProperty(File::QuoteComment, static_cast<int>(Preferences::QuoteComment::PercentSign));
+        // Set the file's preferences for comment context
+        QString commentContextMapKey;
+        int commentContextMapValue = -1;
+        for (QHash<QString, int>::ConstIterator it = statistics.countCommentContext.constBegin(); it != statistics.countCommentContext.constEnd(); ++it)
+            if (it.value() > commentContextMapValue) {
+                commentContextMapKey = it.key();
+                commentContextMapValue = it.value();
+            }
+        if (commentContextMapValue < 0) {
+            // No comments in BibTeX file? Use value from Preferences ...
+            result->setProperty(File::CommentContext, static_cast<int>(Preferences::instance().bibTeXCommentContext()));
+            result->setProperty(File::CommentPrefix, Preferences::instance().bibTeXCommentPrefix());
+        } else if (commentContextMapKey == QStringLiteral("@")) {
+            result->setProperty(File::CommentContext, static_cast<int>(Preferences::CommentContext::Command));
+            result->setProperty(File::CommentPrefix, QString());
+        } else if (commentContextMapKey.isEmpty()) {
+            result->setProperty(File::CommentContext, static_cast<int>(Preferences::CommentContext::Verbatim));
+            result->setProperty(File::CommentPrefix, QString());
+        } else {
+            result->setProperty(File::CommentContext, static_cast<int>(Preferences::CommentContext::Prefix));
+            result->setProperty(File::CommentPrefix, commentContextMapKey);
+        }
         if (!statistics.mostRecentListSeparator.isEmpty())
             result->setProperty(File::ListSeparator, statistics.mostRecentListSeparator);
         /// Set the file's preference to have the entries sorted by identifier

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,7 +21,7 @@
 #define KBIBTEX_DATA_COMMENT_H
 
 #include <Element>
-
+#include <Preferences>
 #ifdef HAVE_KF
 #include "kbibtexdata_export.h"
 #endif // HAVE_KF
@@ -41,7 +41,7 @@ public:
      * @param text comment's textual content
      * @param useCommand mark this comment to use BibTeX's comment command
      */
-    explicit Comment(const QString &text = QString(), bool useCommand = false);
+    explicit Comment(const QString &text, Preferences::CommentContext context, const QString &prefix = QString());
 
     /**
      * Copy constructor cloning another comment object.
@@ -58,28 +58,42 @@ public:
     Comment &operator= (const Comment &other);
 
     /**
-     * Retrieve the text of this comment.
+     * Retrieve the text of this comment with out the prefix in case the context is 'Prefix'.
      * @return text of this comment
      */
     QString text() const;
 
     /**
-     * Set the text of this comment.
+     * Set the text of this comment (without the prefix in case the context is 'Prefix').
      * @param text text of this comment
      */
     void setText(const QString &text);
 
     /**
-     * Retrieve the flag whether to use BibTeX's comment command or not.
-     * @return mark if this comment has to use BibTeX's comment command
+     * Retrieve the context of this comment
+     * @return context of this comment
      */
-    bool useCommand() const;
+    Preferences::CommentContext context() const;
 
     /**
-     * Set the flag whether to use BibTeX's comment command or not.
-     * @param useCommand set if this comment has to use BibTeX's comment command
+     * Set the context of this comment
+     * @param context the context to use for this comment
      */
-    void setUseCommand(bool useCommand);
+    void setContext(const Preferences::CommentContext context);
+
+    /**
+     * Set the prefix of this comment.
+     * Invoking this function will change this comment's prefix to 'Prefix'.
+     * @param prefix the prefix to use for this comment
+     */
+    void setPrefix(const QString &prefix);
+
+    /**
+     * Retrieve the prefix of this comment.
+     * If the prefix uses another prefix, this function will return QString().
+     * @return prefix of this comment
+     */
+    QString prefix() const;
 
     /**
      * Cheap and fast test if another Element is a Comment object.
@@ -88,9 +102,12 @@ public:
      */
     static bool isComment(const Element &other);
 
+    bool operator==(const Comment &other) const;
+    bool operator!=(const Comment &other) const;
+
 private:
-    class CommentPrivate;
-    CommentPrivate *const d;
+    class Private;
+    Private *const d;
 };
 
 KBIBTEXDATA_EXPORT QDebug operator<<(QDebug dbg, const Comment &comment);

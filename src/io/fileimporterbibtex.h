@@ -118,10 +118,9 @@ private:
 
     bool m_cancelFlag;
 
-
     /// high-level parsing functions
     Comment *readCommentElement();
-    Comment *readPlainCommentElement(const QString &prefix);
+    Comment *readPlainCommentElement(const QString &initialRead);
 
     /**
      * Split a string into white-space separated chunks,
@@ -137,5 +136,7 @@ private:
     static QString bibtexAwareSimplify(const QString &text);
     static QString rstrip(const QString &text);
 };
+
+Q_DECLARE_METATYPE(FileImporterBibTeX::CommentHandling)
 
 #endif // KBIBTEX_IO_FILEIMPORTERBIBTEX_H
