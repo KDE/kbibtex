@@ -1966,16 +1966,15 @@ msgid "Person Names Formatting:"
 msgstr "Kişi Adlarının Biçimlendirmesi:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Sıfırla"
+msgstr "Tümünü Sıfırla"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Tüm 'bir daha sorma' ayarlarını temizle:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:121
 #, kde-format
@@ -4127,16 +4126,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Tamamlanmamış KBibTeX Kurulumu"
-
-#~ msgid "Fancy"
-#~ msgstr "Süslü"
-
-#~ msgid ""
-#~ "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
-#~ "command."
-#~ msgstr ""
-#~ "Bu tipte bir öge Wikipedia'nın <tt>{{cite}}</tt> komutu tarafından "
-#~ "desteklenmiyor."
-
-#~ msgid "KBibTeXPart"
-#~ msgstr "KBibTeXPart"
