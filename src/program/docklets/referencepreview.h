@@ -42,10 +42,8 @@ public Q_SLOTS:
     void setElement(QSharedPointer<const Element>, const File *);
 
 private:
-    class ReferencePreviewPrivate;
-    ReferencePreviewPrivate *d;
-
-    void setHtml(const QString &html, bool buttonsEnabled);
+    class Private;
+    Private *d;
 
 private Q_SLOTS:
     void renderHTML();

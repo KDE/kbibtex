@@ -56,6 +56,8 @@ private:
     Private *d;
 };
 
+Q_DECLARE_METATYPE(FileExporterXML::OutputStyle);
+
 inline size_t qHash(FileExporterXML::OutputStyle outputStyle, size_t seed = 0) {
     return ::qHash(static_cast<uint>(outputStyle), seed);
 }

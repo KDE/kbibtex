@@ -66,12 +66,14 @@
 #include "logging_program.h"
 
 typedef struct {
-    QString label, style, type;
+    int id;
+    QString label;
+    QHash<QString, QVariant> attributes;
 } PreviewStyle;
 
 Q_DECLARE_METATYPE(PreviewStyle)
 
-class ReferencePreview::ReferencePreviewPrivate
+class ReferencePreview::Private
 {
 private:
     ReferencePreview *p;
@@ -80,26 +82,31 @@ private:
         static QVector<PreviewStyle> listOfStyles;
         if (listOfStyles.isEmpty()) {
             listOfStyles = {
-                {i18n("Source (BibTeX)"), QStringLiteral("bibtex"), QStringLiteral("exporter")},
-                {i18n("Source (RIS)"), QStringLiteral("ris"), QStringLiteral("exporter")}
+                {1000, i18n("Source (BibTeX)"), {{QStringLiteral("exporter"), QStringLiteral("bibtex")}, {QStringLiteral("fixed-font"), true}}},
+                {1010, i18n("Source (RIS)"), {{QStringLiteral("exporter"), QStringLiteral("ris")}, {QStringLiteral("fixed-font"), true}}},
+                {1210, i18n("Standard"), {{QStringLiteral("exporter"), QStringLiteral("xml")}, {QStringLiteral("style"), QVariant::fromValue(FileExporterXML::OutputStyle::HTML_Standard)}, {QStringLiteral("html"), true}}},
+                {1220, i18n("Wikipedia Citation"), {{QStringLiteral("exporter"), QStringLiteral("xml")}, {QStringLiteral("style"), QVariant::fromValue(FileExporterXML::OutputStyle::Plain_WikipediaCite)}, {QStringLiteral("fixed-font"), true}}},
+                {1230, i18n("Abstract-only"), {{QStringLiteral("exporter"), QStringLiteral("xml")}, {QStringLiteral("style"), QVariant::fromValue(FileExporterXML::OutputStyle::HTML_AbstractOnly)}, {QStringLiteral("html"), true}}}
             };
-            /// Query from FileExporterBibTeX2HTML which BibTeX styles are available
-            if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty())
-                for (const QString &bibtex2htmlStyle : FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles())
-                    listOfStyles.append({bibtex2htmlStyle, bibtex2htmlStyle, QStringLiteral("bibtex2html")});
-            listOfStyles.append({
-                {i18n("Standard"), QStringLiteral("HTML_Standard"), QStringLiteral("xml")},
-                {i18n("Wikipedia Citation"), QStringLiteral("Plain_WikipediaCite"), QStringLiteral("xml")},
-                {i18n("Abstract-only"), QStringLiteral("HTML_AbstractOnly"), QStringLiteral("xml")}
-            });
+            if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty()) {
+                // If 'bibtex2html' binary is available ...
+                int id = 2000;
+                // Query from FileExporterBibTeX2HTML which BibTeX styles are available
+                for (const QString &bibtex2htmlStyle : FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles()) {
+                    const QString label{QString(QStringLiteral("%2 (bibtex2html)")).arg(bibtex2htmlStyle)};
+                    listOfStyles.append({id++, label, {{QStringLiteral("exporter"), QStringLiteral("bibtex2html")}, {QStringLiteral("html"), true}, {QStringLiteral("externalprogram"), true}, {QStringLiteral("bibtexstyle"), bibtex2htmlStyle}}});
+                }
+            }
         }
         return listOfStyles;
     }
 
 public:
     KSharedConfigPtr config;
-    const QString configGroupName;
-    const QString configKeyName;
+    static const QString configGroupName;
+    static const QString configKeyName;
+    static const QString errorMessageInnerTemplate;
+    const QString htmlStart, errorMessageOuterTemplate;
 
     QPushButton *buttonOpen, *buttonSaveAsHTML;
     QString htmlText;
@@ -110,18 +117,13 @@ public:
     QSharedPointer<const Element> element;
     const File *file;
     FileView *fileView;
-    const QColor textColor;
-    const int defaultFontSize;
-    const QString htmlStart;
-    const QString notAvailableMessage;
 
-    ReferencePreviewPrivate(ReferencePreview *parent)
-            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), configGroupName(QStringLiteral("Reference Preview Docklet")),
-          configKeyName(QStringLiteral("Style")), file(nullptr), fileView(nullptr),
-          textColor(QApplication::palette().text().color()),
-          defaultFontSize(QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize()),
-          htmlStart(QStringLiteral("<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: ") + textColor.name() + QStringLiteral("; font-size: ") + QString::number(defaultFontSize) + QStringLiteral("pt; font-family: '") + QFontDatabase::systemFont(QFontDatabase::GeneralFont).family() + QStringLiteral("'; background-color: '") + QApplication::palette().base().color().name(QColor::HexRgb) + QStringLiteral("'\">")),
-          notAvailableMessage(htmlStart + QStringLiteral("<p style=\"font-style: italic;\">") + i18n("No preview available") + QStringLiteral("</p><p style=\"font-size: 90%;\">") + i18n("Reason:") + QStringLiteral(" %1</p></body></html>")) {
+    Private(ReferencePreview *parent)
+            : p(parent), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))),
+          htmlStart(QString(QStringLiteral("<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n<style type=\"text/css\">\npre {\n white-space: pre-wrap;\n white-space: -moz-pre-wrap;\n white-space: -pre-wrap;\n white-space: -o-pre-wrap;\n word-wrap: break-word;\n}\n</style>\n</head>\n<body style=\"color: %1; background-color: '%2'; font-family: '%3'; font-size: %4pt\">")).arg(QApplication::palette().text().color().name(QColor::HexRgb), QApplication::palette().base().color().name(QColor::HexRgb), QFontDatabase::systemFont(QFontDatabase::GeneralFont).family(), QString::number(QFontDatabase::systemFont(QFontDatabase::GeneralFont).pointSize()))),
+          errorMessageOuterTemplate(htmlStart + errorMessageInnerTemplate + QStringLiteral("</body></html>")),
+          file(nullptr), fileView(nullptr)
+    {
         QGridLayout *gridLayout = new QGridLayout(p);
         gridLayout->setContentsMargins(0, 0, 0, 0);
         gridLayout->setColumnStretch(0, 1);
@@ -189,18 +191,15 @@ public:
     }
 
     void loadState() {
-        static bool hasBibTeX2HTML = !QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty();
-
         KConfigGroup configGroup(config, configGroupName);
-        const QString previousStyle = configGroup.readEntry(configKeyName, QString());
+        const int previousStyleId = configGroup.readEntry(configKeyName, -1);
 
         comboBox->clear();
 
         int styleIndex = 0, c = 0;
         for (const PreviewStyle &previewStyle : previewStyles()) {
-            if (!hasBibTeX2HTML && previewStyle.type.contains(QStringLiteral("bibtex2html"))) continue;
             comboBox->addItem(previewStyle.label, QVariant::fromValue(previewStyle));
-            if (previousStyle == previewStyle.style)
+            if (previousStyleId == previewStyle.id)
                 styleIndex = c;
             ++c;
         }
@@ -209,13 +208,25 @@ public:
 
     void saveState() {
         KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(configKeyName, comboBox->itemData(comboBox->currentIndex()).value<PreviewStyle>().style);
+        configGroup.writeEntry(configKeyName, comboBox->itemData(comboBox->currentIndex()).value<PreviewStyle>().id);
         config->sync();
+    }
+
+    void setHtml(const QString &html, bool buttonsEnabled)
+    {
+        htmlText = QString(html).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+        htmlDocument->setHtml(htmlText);
+        buttonOpen->setEnabled(buttonsEnabled);
+        buttonSaveAsHTML->setEnabled(buttonsEnabled);
     }
 };
 
+const QString ReferencePreview::Private::configGroupName {QStringLiteral("Reference Preview Docklet")};
+const QString ReferencePreview::Private::configKeyName {QStringLiteral("Style")};
+const QString ReferencePreview::Private::errorMessageInnerTemplate {QString(QStringLiteral("<p style=\"font-style: italic;\">%1</p><p style=\"font-size: 90%;\">%2 %3</p>")).arg(i18n("No preview available"), i18n("Reason:"))};
+
 ReferencePreview::ReferencePreview(QWidget *parent)
-        : QWidget(parent), d(new ReferencePreviewPrivate(this))
+        : QWidget(parent), d(new Private(this))
 {
     d->loadState();
 
@@ -231,20 +242,12 @@ ReferencePreview::~ReferencePreview()
     delete d;
 }
 
-void ReferencePreview::setHtml(const QString &html, bool buttonsEnabled)
-{
-    d->htmlText = QString(html).remove(QStringLiteral("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
-    d->htmlDocument->setHtml(d->htmlText);
-    d->buttonOpen->setEnabled(buttonsEnabled);
-    d->buttonSaveAsHTML->setEnabled(buttonsEnabled);
-}
-
 void ReferencePreview::setEnabled(bool enabled)
 {
     if (enabled)
-        setHtml(d->htmlText, true);
+        d->setHtml(d->htmlText, true);
     else
-        setHtml(d->notAvailableMessage.arg(i18n("Preview disabled")), false);
+        d->setHtml(d->errorMessageOuterTemplate.arg(i18nc("Message in case reference preview widget is disabled", "Preview disabled")), false);
     d->htmlView->setEnabled(enabled);
     d->comboBox->setEnabled(enabled);
 }
@@ -259,150 +262,148 @@ void ReferencePreview::setElement(QSharedPointer<const Element> element, const F
 void ReferencePreview::renderHTML()
 {
     if (d->element.isNull()) {
-        setHtml(d->notAvailableMessage.arg(i18n("No element selected")), false);
+        d->setHtml(d->errorMessageOuterTemplate.arg(i18nc("Message in case no bibliographic element is selected for preview", "No element selected")), false);
         return;
     }
 
-    QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-    FileExporter *exporter = nullptr;
-
+    const bool elementIsEntry {!d->element.dynamicCast<const Entry>().isNull()};
     const PreviewStyle previewStyle = d->comboBox->itemData(d->comboBox->currentIndex()).value<PreviewStyle>();
 
-    if (previewStyle.type == QStringLiteral("exporter")) {
-        if (previewStyle.style == QStringLiteral("bibtex")) {
+    const QString exporterName = previewStyle.attributes.value(QStringLiteral("exporter"), QString()).toString();
+    QScopedPointer<FileExporter> exporter([this, &previewStyle, &exporterName]() {
+        if (exporterName == QStringLiteral("bibtex")) {
             FileExporterBibTeX *exporterBibTeX = new FileExporterBibTeX(this);
             exporterBibTeX->setEncoding(QStringLiteral("utf-8"));
-            exporter = exporterBibTeX;
-        } else if (previewStyle.style == QStringLiteral("ris"))
-            exporter = new FileExporterRIS(this);
-        else
-            qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output style " << previewStyle.style << " for type " << previewStyle.type;
-    } else if (!QStandardPaths::findExecutable(QStringLiteral("bibtex2html")).isEmpty() && previewStyle.type == QStringLiteral("bibtex2html")) {
-        FileExporterBibTeX2HTML *exporterHTML = new FileExporterBibTeX2HTML(this);
-        exporterHTML->setLaTeXBibliographyStyle(previewStyle.style);
-        exporter = exporterHTML;
-    } else if (previewStyle.type == QStringLiteral("xml")) {
-        FileExporterXML *exporterXML = new FileExporterXML(this);
-        if (previewStyle.style == QStringLiteral("Plain_WikipediaCite"))
-            exporterXML->setOutputStyle(FileExporterXML::OutputStyle::Plain_WikipediaCite);
-        else if (previewStyle.style == QStringLiteral("HTML_Standard"))
-            exporterXML->setOutputStyle(FileExporterXML::OutputStyle::HTML_Standard);
-        else if (previewStyle.style == QStringLiteral("HTML_AbstractOnly"))
-            exporterXML->setOutputStyle(FileExporterXML::OutputStyle::HTML_AbstractOnly);
-        exporter = exporterXML;
-    } else
-        qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle output type " << previewStyle.type;
+            return qobject_cast<FileExporter *>(exporterBibTeX);
+        } else if (exporterName == QStringLiteral("ris"))
+            return qobject_cast<FileExporter * >(new FileExporterRIS(this));
+        else if (exporterName == QStringLiteral("bibtex2html")) {
+            FileExporterBibTeX2HTML *exporterBibTeX2HTML = new FileExporterBibTeX2HTML(this);
+            exporterBibTeX2HTML->setLaTeXBibliographyStyle(previewStyle.attributes.value(QStringLiteral("bibtexstyle"), QString()).toString());
+            return qobject_cast<FileExporter *>(exporterBibTeX2HTML);
+        } else if (exporterName == QStringLiteral("xml")) {
+            FileExporterXML *exporterXML = new FileExporterXML(this);
+            exporterXML->setOutputStyle(previewStyle.attributes.value(QStringLiteral("style"), QVariant::fromValue(FileExporterXML::OutputStyle::XML_KBibTeX)).value<FileExporterXML::OutputStyle>());
+            return qobject_cast<FileExporter *>(exporterXML);
+        } else if (!exporterName.isEmpty())
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "Don't know how to handle exporter " << exporterName << " for preview style " << previewStyle.label << "(" << previewStyle.id << ")";
 
-    if (exporter != nullptr) {
+        return static_cast<FileExporter *>(nullptr);
+    }());
+
+    QString text;
+    bool exporterResult = false;
+    bool textIsErrorMessage = false;
+    if (!exporter.isNull()) {
+        const bool externalProgramInvocation {previewStyle.attributes.value(QStringLiteral("externalprogram"), false).toBool()};
+        if (externalProgramInvocation) {
+            // Exporter may invoke external programs which take time, so set the busy cursor
+            QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+        }
         QBuffer buffer(this);
         buffer.open(QBuffer::WriteOnly);
-
-        bool exporterResult = false;
-        QSharedPointer<const Entry> entry = d->element.dynamicCast<const Entry>();
-        /** NOT USED
-        if (crossRefHandling == add && !entry.isNull()) {
-            QString crossRef = PlainTextValue::text(entry->value(QStringLiteral("crossref")));
-            QSharedPointer<const Entry> crossRefEntry = d->file == NULL ? QSharedPointer<const Entry>() : d->file->containsKey(crossRef) .dynamicCast<const Entry>();
-            if (!crossRefEntry.isNull()) {
-                File file;
-                file.append(QSharedPointer<Entry>(new Entry(*entry)));
-                file.append(QSharedPointer<Entry>(new Entry(*crossRefEntry)));
-                exporterResult = exporter->save(&buffer, &file);
-            } else
-                exporterResult = exporter->save(&buffer, d->element, d->file);
-        } else */
         exporterResult = exporter->save(&buffer, d->element, d->file);
         buffer.close();
-        delete exporter;
+        if (externalProgramInvocation)
+            QApplication::restoreOverrideCursor();
 
         buffer.open(QBuffer::ReadOnly);
-        QString text = QString::fromUtf8(buffer.readAll().constData()).trimmed();
+        text = QString::fromUtf8(buffer.readAll().constData()).trimmed();
         buffer.close();
-
-        bool buttonsEnabled = true;
-
-        if (!exporterResult || text.isEmpty()) {
-            /// something went wrong, no output ...
-            text = d->notAvailableMessage.arg(i18n("No output generated"));
-            buttonsEnabled = false;
-        } else {
-            /// beautify text
-            text.replace(QStringLiteral("``"), QStringLiteral("&ldquo;"));
-            text.replace(QStringLiteral("''"), QStringLiteral("&rdquo;"));
-            static const QRegularExpression openingSingleQuotationRegExp(QStringLiteral("(^|[> ,.;:!?])`(\\S)"));
-            static const QRegularExpression closingSingleQuotationRegExp(QStringLiteral("(\\S)'([ ,.;:!?<]|$)"));
-            text.replace(openingSingleQuotationRegExp, QStringLiteral("\\1&lsquo;\\2"));
-            text.replace(closingSingleQuotationRegExp, QStringLiteral("\\1&rsquo;\\2"));
-
-            /// Remove special comments from BibTeX code
-            int xsomethingpos = -1;
-            while ((xsomethingpos = text.indexOf(QStringLiteral("@comment{x-"))) >= 0) {
-                int endofxsomethingpos = text.indexOf(QStringLiteral("}"), xsomethingpos + 11);
-                if (endofxsomethingpos > xsomethingpos) {
-                    /// Trim empty lines around match
-                    while (xsomethingpos > 0 && text[xsomethingpos - 1] == QLatin1Char('\n')) --xsomethingpos;
-                    while (text[endofxsomethingpos + 1] == QLatin1Char('\n')) ++endofxsomethingpos;
-                    /// Clip comment out of text
-                    text = text.left(xsomethingpos) + text.mid(endofxsomethingpos + 1);
-                }
-            }
-
-            if (previewStyle.style == QStringLiteral("wikipedia-cite"))
-                text.remove(QStringLiteral("\n"));
-
-            if (previewStyle.style.startsWith(QStringLiteral("Plain_"))) {
-                // Plain text gets formatted as verbatim text in monospaced font
-                text.prepend(QStringLiteral("';\">"));
-                text.prepend(QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
-                text.prepend(QStringLiteral("<pre style=\"font-family: '"));
-                text.prepend(d->htmlStart);
-                text.append(QStringLiteral("</pre></body></html>"));
-            } else if (previewStyle.style.startsWith(QStringLiteral("HTML_"))) {
-                // Replace existing header up to <body> start with internal, predefined HTML start
-                int p = text.indexOf(QStringLiteral("<body"));
-                if (p >= 0) {
-                    p = text.indexOf(QStringLiteral(">"), p + 4);
-                    if (p >= 0)
-                        text = d->htmlStart + text.mid(p + 1);
-                }
-            } else if (previewStyle.type == QStringLiteral("bibtex2html")) {
-                /// bibtex2html
-
-                /// remove "generated by" line from HTML code if BibTeX2HTML was used
-                const int generatedByPos = text.indexOf(QStringLiteral("<hr><p><em>"));
-                if (generatedByPos > 0)
-                    text = text.left(generatedByPos);
-                text.remove(QRegularExpression(QStringLiteral("<[/]?(font)[^>]*>")));
-                text.remove(QRegularExpression(QStringLiteral("^.*?<td.*?</td.*?<td>")));
-                text.remove(QRegularExpression(QStringLiteral("</td>.*$")));
-                text.remove(QRegularExpression(QStringLiteral("\\[ <a.*?</a> \\]")));
-
-                /// replace ASCII art with Unicode characters
-                text.replace(QStringLiteral("---"), QString(QChar(0x2014)));
-                text.replace(QStringLiteral("--"), QString(QChar(0x2013)));
-
-                text.prepend(d->htmlStart);
-                text.append(QStringLiteral("</body></html>"));
-            } else if (previewStyle.type == QStringLiteral("xml")) {
-                /// XML/XSLT
-                text.prepend(d->htmlStart);
-                text.append(QStringLiteral("</body></html>"));
-            }
-
-            /// adopt current color scheme
-            text.replace(QStringLiteral("color: black;"), QString(QStringLiteral("color: %1;")).arg(d->textColor.name()));
-        }
-
-        setHtml(text, buttonsEnabled);
-
-        d->saveState();
     } else {
-        /// something went wrong, no exporter ...
-        setHtml(d->notAvailableMessage.arg(i18n("No output generated")), false);
+        text = d->errorMessageInnerTemplate.arg(i18nc("No exporter clould be located to generate output", "No output generated"));
+        textIsErrorMessage = true;
     }
 
-    QApplication::restoreOverrideCursor();
+    // Remove comments
+    int p = 0;
+    while ((p = text.indexOf(QStringLiteral("<!--"), p)) >= 0) {
+        const int p2 = text.indexOf(QStringLiteral("-->"), p + 3);
+        if (p2 > p) {
+            text = text.left(p).trimmed() + text.mid(p2 + 3).trimmed();
+        } else
+            break;
+    }
+
+    if (exporterName == QStringLiteral("bibtex")) {
+        // Remove special comments from BibTeX code
+        int xsomethingpos = 0;
+        while ((xsomethingpos = text.indexOf(QStringLiteral("@comment{x-"), xsomethingpos)) >= 0) {
+            int endofxsomethingpos = text.indexOf(QStringLiteral("}"), xsomethingpos + 11);
+            if (endofxsomethingpos > xsomethingpos) {
+                // Trim empty lines around match
+                while (xsomethingpos > 0 && text[xsomethingpos - 1] == QLatin1Char('\n')) --xsomethingpos;
+                while (endofxsomethingpos + 1 < text.length() && text[endofxsomethingpos + 1] == QLatin1Char('\n')) ++endofxsomethingpos;
+                // Clip comment out of text
+                text = text.left(xsomethingpos) + text.mid(endofxsomethingpos + 1);
+            }
+        }
+    } else if (exporterName == QStringLiteral("bibtex2html")) {
+        // Remove bibtex2html's output after the horizontal line
+        const int hrPos = text.indexOf(QStringLiteral("<hr"));
+        if (hrPos >= 0)
+            text = text.left(hrPos);
+
+        // Remove various HTML artifacts
+        static const QSet<const QRegularExpression> toBeRemovedSet{QRegularExpression(QStringLiteral("<[/]?(font)[^>]*>")), QRegularExpression(QStringLiteral("^.*?<td.*?</td.*?<td>")), QRegularExpression(QStringLiteral("</td>.*$")), QRegularExpression(QStringLiteral("\\[ <a.*?</a> \\]"))};
+        for (const auto &toBeRemoved : toBeRemovedSet)
+            text.remove(toBeRemoved);
+    }
+
+    if ((!exporterResult || text.isEmpty()) && !elementIsEntry) {
+        // Some exporters do not handle things like macros or preamble.
+        // Assume that this is the case here and provide an approriate error message for that
+        text = d->errorMessageInnerTemplate.arg(i18n("Cannot show a preview for this type of element"));
+        textIsErrorMessage = true;
+    }
+
+    if (!textIsErrorMessage && previewStyle.attributes.value(QStringLiteral("fixed-font"), false).toBool()) {
+        // Preview text gets formatted as verbatim text in monospaced font
+        text.prepend(QStringLiteral("';\">"));
+        text.prepend(QFontDatabase::systemFont(QFontDatabase::FixedFont).family());
+        text.prepend(QStringLiteral("<pre style=\"font-family: '"));
+        text.append(QStringLiteral("</pre>"));
+    } else if (!textIsErrorMessage && previewStyle.attributes.value(QStringLiteral("html"), false).toBool()) {
+        // Remove existing header up to and including <body>
+        int p = text.indexOf(QStringLiteral("<body"));
+        if (p >= 0) {
+            p = text.indexOf(QStringLiteral(">"), p + 4);
+            if (p >= 0)
+                text = text.mid(p + 1).trimmed();
+        }
+        // Remove existing footer starting with </body>
+        p = text.indexOf(QStringLiteral("</body"));
+        if (p >= 0)
+            text = text.left(p).trimmed();
+    }
+
+    if (previewStyle.attributes.value(QStringLiteral("style"), QVariant::fromValue(FileExporterXML::OutputStyle::XML_KBibTeX)).value<FileExporterXML::OutputStyle>() == FileExporterXML::OutputStyle::Plain_WikipediaCite)
+        text.remove(QStringLiteral("\n")).replace(QStringLiteral("| "), QStringLiteral("|"));
+    else if (previewStyle.attributes.value(QStringLiteral("style"), QVariant::fromValue(FileExporterXML::OutputStyle::XML_KBibTeX)).value<FileExporterXML::OutputStyle>() == FileExporterXML::OutputStyle::HTML_AbstractOnly) {
+        if (text.isEmpty()) {
+            text = d->errorMessageInnerTemplate.arg(i18nc("Cannot show a reference preview as entry does not contain an abstract", "No abstract"));
+            textIsErrorMessage = true;
+        }
+    }
+
+    // Beautify text
+    text.replace(QStringLiteral("``"), QStringLiteral("&ldquo;"));
+    text.replace(QStringLiteral("''"), QStringLiteral("&rdquo;"));
+    static const QRegularExpression openingSingleQuotationRegExp(QStringLiteral("(^|[> ,.;:!?])`(\\S)"));
+    static const QRegularExpression closingSingleQuotationRegExp(QStringLiteral("(\\S)'([ ,.;:!?<]|$)"));
+    text.replace(openingSingleQuotationRegExp, QStringLiteral("\\1&lsquo;\\2"));
+    text.replace(closingSingleQuotationRegExp, QStringLiteral("\\1&rsquo;\\2"));
+
+    // Replace ASCII art with Unicode characters
+    text.replace(QStringLiteral("---"), QString(QChar(0x2014)));
+    text.replace(QStringLiteral("--"), QString(QChar(0x2013)));
+
+    // Add common HTML start and end
+    text.prepend(d->htmlStart);
+    text.append(QStringLiteral("</body></html>"));
+
+    d->setHtml(text, !textIsErrorMessage);
+    d->saveState();
 }
 
 void ReferencePreview::openAsHTML()
@@ -428,8 +429,11 @@ void ReferencePreview::openAsHTML()
 
 void ReferencePreview::saveAsHTML()
 {
-    QUrl url = QFileDialog::getSaveFileUrl(this, i18n("Save as HTML"), QUrl(), QStringLiteral("text/html"));
-    if (url.isValid())
+    QPointer<QFileDialog> dlg = new QFileDialog(this, i18n("Save as HTML"));
+    dlg->setMimeTypeFilters({QStringLiteral("text/html")});
+    const int result = dlg->exec();
+    QUrl url;
+    if (result == QDialog::Accepted && !dlg->selectedUrls().isEmpty() && (url = dlg->selectedUrls().first()).isValid())
         d->saveHTML(url);
 }
 
