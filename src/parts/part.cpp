@@ -319,6 +319,7 @@ public:
         sortFilterProxyModel->setSourceModel(model);
         partWidget->fileView()->setModel(sortFilterProxyModel);
         connect(partWidget->filterBar(), &FilterBar::filterChanged, sortFilterProxyModel, &SortFilterFileModel::updateFilter);
+        p->setModified(false);
     }
 
     bool openFile(const QUrl &url, const QString &localFilePath) {
@@ -374,6 +375,7 @@ public:
         if (url.isLocalFile())
             fileSystemWatcher.addPath(url.toLocalFile());
 
+        p->setModified(false);
         qApp->restoreOverrideCursor();
 
         return true;
@@ -1196,7 +1198,8 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     else
         qCWarning(LOG_KBIBTEX_PART) << "No filename to stop watching";
 
-    if (KMessageBox::warningContinueCancel(widget(), i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path), i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme(QStringLiteral("edit-redo"))), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Continue) {
+    const QString message {isModified() ? i18n("The file '%1' has changed on disk but got also modified in KBibTeX.\n\nReload file and loose changes made in KBibTeX or ignore changes on disk and keep changes made in KBibTeX?", path) : i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path)};
+    if (KMessageBox::warningContinueCancel(widget(), message, i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme(QStringLiteral("edit-redo"))), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Continue) {
         d->openFile(QUrl::fromLocalFile(path), path);
         /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
         /// openFile(...) has done that already
