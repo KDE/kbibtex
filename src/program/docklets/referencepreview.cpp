@@ -36,6 +36,7 @@
 #include <QPushButton>
 #include <QFontDatabase>
 #include <QComboBox>
+#include <QPointer>
 
 #include <kio_version.h>
 #include <KLocalizedString>
