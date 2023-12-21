@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-18 00:42+0000\n"
+"POT-Creation-Date: 2023-12-21 00:42+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -469,7 +469,7 @@ msgstr "Adresa"
 msgid "Type"
 msgstr "Tip:"
 
-#: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:997
+#: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:1004
 #, kde-format
 msgid "Key"
 msgstr "Ključ"
@@ -898,53 +898,55 @@ msgstr "Sortiraj po godini izdavanja"
 msgid "ISAN"
 msgstr "ISAN"
 
-#: src/config/preferences.cpp:420
+#: src/config/preferences.cpp:433
 #, fuzzy, kde-format
 #| msgid "KBibTeX"
 msgid "BibTeX"
 msgstr "KBibTeX"
 
-#: src/config/preferences.cpp:420
+#: src/config/preferences.cpp:433
 #, kde-format
 msgid "BibLaTeX"
 msgstr ""
 
-#: src/config/preferences.cpp:584
+#: src/config/preferences.cpp:597
 #, kde-format
 msgid "No backups"
 msgstr "Bez rezervnih kopija"
 
-#: src/config/preferences.cpp:584
+#: src/config/preferences.cpp:597
 #, kde-format
 msgid "Local files only"
 msgstr "Samo lokalne datoteke"
 
-#: src/config/preferences.cpp:584
+#: src/config/preferences.cpp:597
 #, kde-format
 msgid "Both local and remote files"
 msgstr "I lokalne i udaljene datoteke"
 
-#: src/config/preferences.cpp:910
-#, kde-format
-msgctxt "Comment Quoting"
-msgid "None"
-msgstr "Nijedan"
-
-#: src/config/preferences.cpp:910
+#: src/config/preferences.cpp:923
 #, fuzzy, kde-format
-#| msgctxt "Comment Quoting"
-#| msgid "@comment{%1}"
-msgctxt "Comment Quoting"
-msgid "@comment{…}"
-msgstr "@komentar{%1}"
+#| msgid "Verbatim Text"
+msgctxt ""
+"Comment Context: The comment's text appears verbatim in the bibliography"
+msgid "Verbatim"
+msgstr "Običan tekst"
 
-#: src/config/preferences.cpp:910
+#: src/config/preferences.cpp:923
 #, kde-format
-msgctxt "Comment Quoting"
-msgid "% …"
+msgctxt ""
+"Comment Quoting: All lines of the comment share a common prefix like '%% ' "
+"which is not part of the comment's text"
+msgid "Use prefix like '%% '"
 msgstr ""
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:923
+#, kde-format
+msgctxt "Comment Quoting: The comment is inside @comment{..}"
+msgid "Use command @comment{...}"
+msgstr ""
+
+#: src/config/preferences.cpp:1000
 #, fuzzy, kde-format
 #| msgctxt "Keyword Casing"
 #| msgid "lowercase"
@@ -952,7 +954,7 @@ msgctxt "Casing of strings"
 msgid "lowercase"
 msgstr "mala slova"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, fuzzy, kde-format
 #| msgctxt "Keyword Casing"
 #| msgid "Initial capital"
@@ -960,7 +962,7 @@ msgctxt "Casing of strings"
 msgid "Initial capital"
 msgstr "Prvo slovo veliko"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, fuzzy, kde-format
 #| msgctxt "Keyword Casing"
 #| msgid "UpperCamelCase"
@@ -968,7 +970,7 @@ msgctxt "Casing of strings"
 msgid "UpperCamelCase"
 msgstr "VelikoPočetnoBezRazmaka"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, fuzzy, kde-format
 #| msgctxt "Keyword Casing"
 #| msgid "lowerCamelCase"
@@ -976,7 +978,7 @@ msgctxt "Casing of strings"
 msgid "lowerCamelCase"
 msgstr "malopočetnobezrazmaka"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, fuzzy, kde-format
 #| msgctxt "Keyword Casing"
 #| msgid "UPPERCASE"
@@ -984,60 +986,60 @@ msgctxt "Casing of strings"
 msgid "UPPERCASE"
 msgstr "VELIKA SLOVA"
 
-#: src/config/preferences.cpp:1186
+#: src/config/preferences.cpp:1237
 #, fuzzy, kde-format
 #| msgid "Open Editor"
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
 msgstr "Otvori Uređivač"
 
-#: src/config/preferences.cpp:1186
+#: src/config/preferences.cpp:1237
 #, fuzzy, kde-format
 #| msgid "View Document"
 msgctxt "What to do if double-clicking on a file view item"
 msgid "View Document"
 msgstr "Prikaži dokument"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, fuzzy, kde-format
 #| msgid "Important"
 msgctxt "Color Labels"
 msgid "Important"
 msgstr "Važno"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, fuzzy, kde-format
 #| msgid "Unread"
 msgctxt "Color Labels"
 msgid "Unread"
 msgstr "Nepročitano"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, fuzzy, kde-format
 #| msgid "Read"
 msgctxt "Color Labels"
 msgid "Read"
 msgstr "Pročitano"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, fuzzy, kde-format
 #| msgid "Watch"
 msgctxt "Color Labels"
 msgid "Watch"
 msgstr "Pogledaj"
 
-#: src/data/models/filemodel.cpp:256 src/gui/element/elementwidgets.cpp:440
-#: src/gui/element/elementwidgets.cpp:1096
+#: src/data/models/filemodel.cpp:256 src/gui/element/elementwidgets.cpp:447
+#: src/gui/element/elementwidgets.cpp:1103
 #, kde-format
 msgid "Macro"
 msgstr "Makronaredba"
 
-#: src/data/models/filemodel.cpp:266
+#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1280
 #, kde-format
 msgid "Comment"
 msgstr "Komentar"
 
-#: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1166
+#: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1173
 #, kde-format
 msgid "Preamble"
 msgstr "Uvod"
@@ -1132,7 +1134,7 @@ msgstr ""
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:124
+#: src/program/docklets/referencepreview.cpp:226
 #, kde-format
 msgid "No preview available"
 msgstr "Prikaz nije dostupan"
@@ -1180,37 +1182,37 @@ msgstr "Sljedeći lokalni dokument će biti povezan sa trenutnim unosom:"
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "Sljedeći lokalni dokument će biti povezan sa unosom '%1':"
 
-#: src/gui/element/elementeditor.cpp:201
+#: src/gui/element/elementeditor.cpp:207
 #, kde-format
 msgid "Options"
 msgstr "Podešavanja"
 
-#: src/gui/element/elementeditor.cpp:207
+#: src/gui/element/elementeditor.cpp:213
 #, kde-format
 msgid "Show all fields"
 msgstr "Prikaži sva polja"
 
-#: src/gui/element/elementeditor.cpp:214
+#: src/gui/element/elementeditor.cpp:220
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Tab tipka prikazuje samo polja koja se mogu uređivati"
 
-#: src/gui/element/elementeditor.cpp:222
+#: src/gui/element/elementeditor.cpp:228
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Provjeri sa BibTeXom"
 
-#: src/gui/element/elementeditor.cpp:544
+#: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:544
+#: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "No id given"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, fuzzy, kde-format
 #| msgid "The entered id '%1' is already in use for another entry."
 msgid ""
@@ -1219,166 +1221,189 @@ msgid ""
 "Keep original id '%2' instead?"
 msgstr "Unešeni id '%1' se već koristi za drugi unos."
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Id already in use"
 msgstr "ID je već u upotrebi"
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Zadrži duple id-ove"
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Restore original id"
 msgstr "Vrati izvorni id"
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:586
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:586
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
 "%1"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:581
+#: src/gui/element/elementeditor.cpp:587
 #, fuzzy, kde-format
 #| msgid "Element modified"
 msgid "Element validation failed"
 msgstr "Element izmijenjen"
 
-#: src/gui/element/elementwidgets.cpp:458
+#: src/gui/element/elementwidgets.cpp:465
 #, kde-format
 msgid "Element type '%1' is invalid."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:467
+#: src/gui/element/elementwidgets.cpp:474
 #, kde-format
 msgid "Id '%1' is invalid"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:519
+#: src/gui/element/elementwidgets.cpp:526
 #, kde-format
 msgid "Type:"
 msgstr "Tip:"
 
-#: src/gui/element/elementwidgets.cpp:528
+#: src/gui/element/elementwidgets.cpp:535
 #, kde-format
 msgid "Id:"
 msgstr "Id:"
 
-#: src/gui/element/elementwidgets.cpp:545
+#: src/gui/element/elementwidgets.cpp:552
 #, kde-format
 msgid "Select a suggested id for this entry"
 msgstr "Odaberi predložen id za ovaj unos"
 
-#: src/gui/element/elementwidgets.cpp:771
+#: src/gui/element/elementwidgets.cpp:778
 #, kde-format
 msgid "External"
 msgstr "Vanjski"
 
-#: src/gui/element/elementwidgets.cpp:857
+#: src/gui/element/elementwidgets.cpp:864
 #, kde-format
 msgid "Other Fields"
 msgstr "Ostala polja"
 
-#: src/gui/element/elementwidgets.cpp:973
+#: src/gui/element/elementwidgets.cpp:980
 #, kde-format
 msgid "Name:"
 msgstr "Ime:"
 
-#: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/element/elementwidgets.cpp:988
+#: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
 msgstr "Dodaj"
 
-#: src/gui/element/elementwidgets.cpp:985
+#: src/gui/element/elementwidgets.cpp:992
 #, kde-format
 msgid "Content:"
 msgstr "Sadržaj:"
 
-#: src/gui/element/elementwidgets.cpp:992
+#: src/gui/element/elementwidgets.cpp:999
 #, kde-format
 msgid "List:"
 msgstr "Lista:"
 
-#: src/gui/element/elementwidgets.cpp:997 src/gui/valuelistmodel.cpp:322
+#: src/gui/element/elementwidgets.cpp:1004 src/gui/valuelistmodel.cpp:322
 #, kde-format
 msgid "Value"
 msgstr "Vrijednost"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:260
+#: src/gui/element/elementwidgets.cpp:1009 src/parts/part.cpp:260
 #, kde-format
 msgid "Delete"
 msgstr "Obriši"
 
-#: src/gui/element/elementwidgets.cpp:1005
-#: src/program/docklets/referencepreview.cpp:147
+#: src/gui/element/elementwidgets.cpp:1012
+#: src/program/docklets/referencepreview.cpp:149
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
 msgstr "Otvori"
 
-#: src/gui/element/elementwidgets.cpp:1044
+#: src/gui/element/elementwidgets.cpp:1051
 #: src/program/docklets/elementform.cpp:98
 #, kde-format
 msgid "Apply"
 msgstr "Primijeni"
 
-#: src/gui/element/elementwidgets.cpp:1113
-#: src/gui/element/elementwidgets.cpp:1183
+#: src/gui/element/elementwidgets.cpp:1120
+#: src/gui/element/elementwidgets.cpp:1190
 #, kde-format
 msgid "Value:"
 msgstr "Vrijednost:"
 
-#: src/gui/element/elementwidgets.cpp:1319
+#: src/gui/element/elementwidgets.cpp:1254
+#, kde-format
+msgid "The prefix of a comment must start with '%'"
+msgstr ""
+
+#: src/gui/element/elementwidgets.cpp:1262
+#, kde-format
+msgid "A comment in 'Verbatim' mode may not contain blank lines"
+msgstr ""
+
+#: src/gui/element/elementwidgets.cpp:1299
+#, fuzzy, kde-format
+#| msgid "Content:"
+msgid "Context:"
+msgstr "Sadržaj:"
+
+#: src/gui/element/elementwidgets.cpp:1303
+#, kde-format
+msgid "Prefix:"
+msgstr ""
+
+#: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1328
+#: src/gui/element/elementwidgets.cpp:1460
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1334
+#: src/gui/element/elementwidgets.cpp:1466
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1340
+#: src/gui/element/elementwidgets.cpp:1472
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1346
+#: src/gui/element/elementwidgets.cpp:1478
 #, kde-format
-msgid "Given source code does not parse as one single BibTeX comment."
+msgid ""
+"Given source code does not parse as one single BibTeX comment. Try removing "
+"blank lines inside the comment."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1350
+#: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
 msgid "Element class not properly set"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1359
+#: src/gui/element/elementwidgets.cpp:1491
 #, kde-format
 msgid "No issues detected"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1374
+#: src/gui/element/elementwidgets.cpp:1506
 #, kde-format
 msgid "Source"
 msgstr "Izvor"
 
-#: src/gui/element/elementwidgets.cpp:1405
+#: src/gui/element/elementwidgets.cpp:1537
 #, kde-format
 msgid "Restore"
 msgstr "Vrati"
@@ -1972,19 +1997,19 @@ msgid "Saving and Exporting"
 msgstr "Čuvanje i izvođenje"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
-#: src/gui/widgets/filesettingswidget.cpp:36
+#: src/gui/widgets/filesettingswidget.cpp:42
 #, kde-format
 msgid "John"
 msgstr "John"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
-#: src/gui/widgets/filesettingswidget.cpp:36
+#: src/gui/widgets/filesettingswidget.cpp:42
 #, kde-format
 msgid "Doe"
 msgstr "Doe"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
-#: src/gui/widgets/filesettingswidget.cpp:36
+#: src/gui/widgets/filesettingswidget.cpp:42
 #, kde-format
 msgid "Jr."
 msgstr "Jr."
@@ -1995,7 +2020,7 @@ msgid "Bibliography System:"
 msgstr "Sistem literature:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:83
-#: src/gui/widgets/filesettingswidget.cpp:161
+#: src/gui/widgets/filesettingswidget.cpp:189
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "Formatiranje imena osoba:"
@@ -2449,83 +2474,90 @@ msgstr "Korisničko sučelje"
 msgid "Count"
 msgstr "Broj"
 
-#: src/gui/widgets/filesettingswidget.cpp:127
+#: src/gui/widgets/filesettingswidget.cpp:141
 #, kde-format
 msgid "Encoding:"
 msgstr "Šifriranje:"
 
-#: src/gui/widgets/filesettingswidget.cpp:133
+#: src/gui/widgets/filesettingswidget.cpp:147
 #, kde-format
 msgid "String Delimiters:"
 msgstr "Razdvajači riječi:"
 
-#: src/gui/widgets/filesettingswidget.cpp:140
-#, kde-format
-msgid "Comment Quoting:"
+#: src/gui/widgets/filesettingswidget.cpp:154
+#, fuzzy, kde-format
+#| msgid "Comment Quoting:"
+msgid "Comment Context:"
 msgstr "Citiranje komentara:"
 
-#: src/gui/widgets/filesettingswidget.cpp:146
+#: src/gui/widgets/filesettingswidget.cpp:160
+#, fuzzy, kde-format
+#| msgid "Comment Quoting:"
+msgid "Comment Prefix:"
+msgstr "Citiranje komentara:"
+
+#: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
 msgid "Keyword Casing:"
 msgstr "Format ključnih riječi:"
 
-#: src/gui/widgets/filesettingswidget.cpp:147
+#: src/gui/widgets/filesettingswidget.cpp:175
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowercase"
 msgstr "mala slova"
 
-#: src/gui/widgets/filesettingswidget.cpp:148
+#: src/gui/widgets/filesettingswidget.cpp:176
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "Initial capital"
 msgstr "Prvo slovo veliko"
 
-#: src/gui/widgets/filesettingswidget.cpp:149
+#: src/gui/widgets/filesettingswidget.cpp:177
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
 msgstr "VelikoPočetnoBezRazmaka"
 
-#: src/gui/widgets/filesettingswidget.cpp:150
+#: src/gui/widgets/filesettingswidget.cpp:178
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
 msgstr "malopočetnobezrazmaka"
 
-#: src/gui/widgets/filesettingswidget.cpp:151
+#: src/gui/widgets/filesettingswidget.cpp:179
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UPPERCASE"
 msgstr "VELIKA SLOVA"
 
-#: src/gui/widgets/filesettingswidget.cpp:154
+#: src/gui/widgets/filesettingswidget.cpp:182
 #, kde-format
 msgid "Protect Titles"
 msgstr "Zaštiti naslove"
 
-#: src/gui/widgets/filesettingswidget.cpp:156
+#: src/gui/widgets/filesettingswidget.cpp:184
 #, kde-format
 msgid "Protect Casing?"
 msgstr "Zaštiti omot?"
 
-#: src/gui/widgets/filesettingswidget.cpp:165
+#: src/gui/widgets/filesettingswidget.cpp:193
 #, kde-format
 msgid "Use global settings"
 msgstr "Koristi opće postavke"
 
-#: src/gui/widgets/filesettingswidget.cpp:171
+#: src/gui/widgets/filesettingswidget.cpp:199
 #, kde-format
 msgid "List Separator"
 msgstr "Separator liste"
 
-#: src/gui/widgets/filesettingswidget.cpp:176
+#: src/gui/widgets/filesettingswidget.cpp:204
 #, fuzzy, kde-format
 #| msgid "Sort by Count"
 msgid "Sort by identifier"
 msgstr "Sortiraj po broju"
 
-#: src/gui/widgets/filesettingswidget.cpp:177
+#: src/gui/widgets/filesettingswidget.cpp:205
 #, fuzzy, kde-format
 #| msgid "Sorting"
 msgid "Entry Sorting"
@@ -3146,7 +3178,7 @@ msgstr ""
 msgid "Cannot Apply Default Formatting"
 msgstr ""
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3157,17 +3189,17 @@ msgstr ""
 "\n"
 "Da ponovo učitam datoteku ili da zanemarim promjene na disku?"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid "File changed externally"
 msgstr "Datoteka je promijenjena izvana"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid "Reload file"
 msgstr "Ponovno učitati datoteku"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Zanemari promjene na disku"
@@ -3617,70 +3649,86 @@ msgstr "Primijeni izmjene"
 msgid "Discard changes"
 msgstr "Odbaci promjene"
 
-#: src/program/docklets/referencepreview.cpp:83
+#: src/program/docklets/referencepreview.cpp:85
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Izvor (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:84
+#: src/program/docklets/referencepreview.cpp:86
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Izvor (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:91
+#: src/program/docklets/referencepreview.cpp:87
 #, kde-format
 msgid "Standard"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:92
+#: src/program/docklets/referencepreview.cpp:88
 #, fuzzy, kde-format
 #| msgid "Wikipedia"
 msgid "Wikipedia Citation"
 msgstr "Wikipedia"
 
-#: src/program/docklets/referencepreview.cpp:93
+#: src/program/docklets/referencepreview.cpp:89
 #, fuzzy, kde-format
 #| msgid "Abstract"
 msgid "Abstract-only"
 msgstr "Rezime"
 
-#: src/program/docklets/referencepreview.cpp:124
-#, kde-format
-msgid "Reason:"
-msgstr "Razlog:"
-
-#: src/program/docklets/referencepreview.cpp:148
+#: src/program/docklets/referencepreview.cpp:150
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Otvori referencu u web pregledniku."
 
-#: src/program/docklets/referencepreview.cpp:151
-#: src/program/docklets/referencepreview.cpp:431
+#: src/program/docklets/referencepreview.cpp:153
+#: src/program/docklets/referencepreview.cpp:432
 #, kde-format
 msgid "Save as HTML"
 msgstr "Sačuvaj kao HTML"
 
-#: src/program/docklets/referencepreview.cpp:152
+#: src/program/docklets/referencepreview.cpp:154
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Sačuvaj referencu kao HTML fragment."
 
-#: src/program/docklets/referencepreview.cpp:247
+#: src/program/docklets/referencepreview.cpp:226
 #, kde-format
+msgid "Reason:"
+msgstr "Razlog:"
+
+#: src/program/docklets/referencepreview.cpp:250
+#, fuzzy, kde-format
+#| msgid "Preview disabled"
+msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Prikaz onemogućen"
 
-#: src/program/docklets/referencepreview.cpp:262
-#, kde-format
+#: src/program/docklets/referencepreview.cpp:265
+#, fuzzy, kde-format
+#| msgid "No element selected"
+msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Nijedan element nije izabran"
 
-#: src/program/docklets/referencepreview.cpp:327
-#: src/program/docklets/referencepreview.cpp:402
+#: src/program/docklets/referencepreview.cpp:314
 #, fuzzy, kde-format
 #| msgid "No HTML output generated"
+msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Nijedan HTML izlaz nije generiran"
+
+#: src/program/docklets/referencepreview.cpp:356
+#, kde-format
+msgid "Cannot show a preview for this type of element"
+msgstr ""
+
+#: src/program/docklets/referencepreview.cpp:384
+#, fuzzy, kde-format
+#| msgid "Abstract"
+msgctxt "Cannot show a reference preview as entry does not contain an abstract"
+msgid "No abstract"
+msgstr "Rezime"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4231,6 +4279,17 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nepotpuna KBibTeX instalacija"
+
+#~ msgctxt "Comment Quoting"
+#~ msgid "None"
+#~ msgstr "Nijedan"
+
+#, fuzzy
+#~| msgctxt "Comment Quoting"
+#~| msgid "@comment{%1}"
+#~ msgctxt "Comment Quoting"
+#~ msgid "@comment{…}"
+#~ msgstr "@komentar{%1}"
 
 #~ msgid ""
 #~ "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "

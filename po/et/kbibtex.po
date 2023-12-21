@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-18 00:42+0000\n"
+"POT-Creation-Date: 2023-12-21 00:42+0000\n"
 "PO-Revision-Date: 2020-04-26 10:18+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -466,7 +466,7 @@ msgstr "Aadress"
 msgid "Type"
 msgstr "Tüüp"
 
-#: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:997
+#: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:1004
 #, kde-format
 msgid "Key"
 msgstr "Võti"
@@ -895,127 +895,131 @@ msgstr "Sortimine aastate järgi"
 msgid "ISAN"
 msgstr "ISAN"
 
-#: src/config/preferences.cpp:420
+#: src/config/preferences.cpp:433
 #, kde-format
 msgid "BibTeX"
 msgstr "BibTeX"
 
-#: src/config/preferences.cpp:420
+#: src/config/preferences.cpp:433
 #, kde-format
 msgid "BibLaTeX"
 msgstr "BibLaTeX"
 
-#: src/config/preferences.cpp:584
+#: src/config/preferences.cpp:597
 #, kde-format
 msgid "No backups"
 msgstr "Varukoopiaid ei tehta"
 
-#: src/config/preferences.cpp:584
+#: src/config/preferences.cpp:597
 #, kde-format
 msgid "Local files only"
 msgstr "Ainult kohalikud failid"
 
-#: src/config/preferences.cpp:584
+#: src/config/preferences.cpp:597
 #, kde-format
 msgid "Both local and remote files"
 msgstr "Nii kohalikud kui ka võrgufailid"
 
-#: src/config/preferences.cpp:910
-#, kde-format
-msgctxt "Comment Quoting"
-msgid "None"
-msgstr "Puudub"
+#: src/config/preferences.cpp:923
+#, fuzzy, kde-format
+#| msgid "Verbatim Text"
+msgctxt ""
+"Comment Context: The comment's text appears verbatim in the bibliography"
+msgid "Verbatim"
+msgstr "Otsetekst"
 
-#: src/config/preferences.cpp:910
+#: src/config/preferences.cpp:923
 #, kde-format
-msgctxt "Comment Quoting"
-msgid "@comment{…}"
-msgstr "@comment{…}"
+msgctxt ""
+"Comment Quoting: All lines of the comment share a common prefix like '%% ' "
+"which is not part of the comment's text"
+msgid "Use prefix like '%% '"
+msgstr ""
 
-#: src/config/preferences.cpp:910
+#: src/config/preferences.cpp:923
 #, kde-format
-msgctxt "Comment Quoting"
-msgid "% …"
-msgstr "% …"
+msgctxt "Comment Quoting: The comment is inside @comment{..}"
+msgid "Use command @comment{...}"
+msgstr ""
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "lowercase"
 msgstr "väiketähed"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "Initial capital"
 msgstr "Alustav suurtäht"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UpperCamelCase"
 msgstr "SuureAlgustähegaKaamelkiri"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "lowerCamelCase"
 msgstr "väikeseAlgustähegaKaamelkiri"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UPPERCASE"
 msgstr "SUURTÄHED"
 
-#: src/config/preferences.cpp:1186
+#: src/config/preferences.cpp:1237
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
 msgstr "Ava redaktor"
 
-#: src/config/preferences.cpp:1186
+#: src/config/preferences.cpp:1237
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "View Document"
 msgstr "Näita dokumenti"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Important"
 msgstr "Tähtis"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Unread"
 msgstr "Lugemata"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Read"
 msgstr "Loetud"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Watch"
 msgstr "Jälgitav"
 
-#: src/data/models/filemodel.cpp:256 src/gui/element/elementwidgets.cpp:440
-#: src/gui/element/elementwidgets.cpp:1096
+#: src/data/models/filemodel.cpp:256 src/gui/element/elementwidgets.cpp:447
+#: src/gui/element/elementwidgets.cpp:1103
 #, kde-format
 msgid "Macro"
 msgstr "Makro"
 
-#: src/data/models/filemodel.cpp:266
+#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1280
 #, kde-format
 msgid "Comment"
 msgstr "Kommentaar"
 
-#: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1166
+#: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1173
 #, kde-format
 msgid "Preamble"
 msgstr "Preambula"
@@ -1108,7 +1112,7 @@ msgstr ""
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:124
+#: src/program/docklets/referencepreview.cpp:226
 #, kde-format
 msgid "No preview available"
 msgstr "Eelvaatlus puudub"
@@ -1150,37 +1154,37 @@ msgstr "Aktiivse kirjega kavatsetakse seostada järgmine kohalik dokument:"
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "Kirjega '%1' kavatsetakse seostada järgmine kohalik dokument:"
 
-#: src/gui/element/elementeditor.cpp:201
+#: src/gui/element/elementeditor.cpp:207
 #, kde-format
 msgid "Options"
 msgstr "Valikud"
 
-#: src/gui/element/elementeditor.cpp:207
+#: src/gui/element/elementeditor.cpp:213
 #, kde-format
 msgid "Show all fields"
 msgstr "Kõigi väljade näitamine"
 
-#: src/gui/element/elementeditor.cpp:214
+#: src/gui/element/elementeditor.cpp:220
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Tabeldusklahv läbib ainult muudetavaid välju"
 
-#: src/gui/element/elementeditor.cpp:222
+#: src/gui/element/elementeditor.cpp:228
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Kontrolli BibTeXi"
 
-#: src/gui/element/elementeditor.cpp:544
+#: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr "ID-d ei sisestatud, seetõttu taastatakse varasem ID \"%1\"."
 
-#: src/gui/element/elementeditor.cpp:544
+#: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "No id given"
 msgstr "ID jäeti andmata"
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1191,27 +1195,27 @@ msgstr ""
 "\n"
 "Kas hoida alles algne ID \"%2\"?"
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Id already in use"
 msgstr "ID on juba kasutusel"
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Säilita topelt-ID-d"
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Restore original id"
 msgstr "Taasta originaal-ID"
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:586
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Aktiivse elemendi valideerimine nurjus."
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:586
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1220,138 +1224,162 @@ msgstr ""
 "Aktiivse elemendi valideerimine nurjus:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:581
+#: src/gui/element/elementeditor.cpp:587
 #, kde-format
 msgid "Element validation failed"
 msgstr "Elemendi valideerimine nurjus"
 
-#: src/gui/element/elementwidgets.cpp:458
+#: src/gui/element/elementwidgets.cpp:465
 #, kde-format
 msgid "Element type '%1' is invalid."
 msgstr "Elemendi tüüp \"%1\" on vigane."
 
-#: src/gui/element/elementwidgets.cpp:467
+#: src/gui/element/elementwidgets.cpp:474
 #, kde-format
 msgid "Id '%1' is invalid"
 msgstr "ID \"%1\" on vigane"
 
-#: src/gui/element/elementwidgets.cpp:519
+#: src/gui/element/elementwidgets.cpp:526
 #, kde-format
 msgid "Type:"
 msgstr "Tüüp:"
 
-#: src/gui/element/elementwidgets.cpp:528
+#: src/gui/element/elementwidgets.cpp:535
 #, kde-format
 msgid "Id:"
 msgstr "ID:"
 
-#: src/gui/element/elementwidgets.cpp:545
+#: src/gui/element/elementwidgets.cpp:552
 #, kde-format
 msgid "Select a suggested id for this entry"
 msgstr "Kirjele soovitatud ID valimine"
 
-#: src/gui/element/elementwidgets.cpp:771
+#: src/gui/element/elementwidgets.cpp:778
 #, kde-format
 msgid "External"
 msgstr "Välised tööriistad"
 
-#: src/gui/element/elementwidgets.cpp:857
+#: src/gui/element/elementwidgets.cpp:864
 #, kde-format
 msgid "Other Fields"
 msgstr "Muud väljad"
 
-#: src/gui/element/elementwidgets.cpp:973
+#: src/gui/element/elementwidgets.cpp:980
 #, kde-format
 msgid "Name:"
 msgstr "Nimi:"
 
-#: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/element/elementwidgets.cpp:988
+#: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
 msgstr "Lisa"
 
-#: src/gui/element/elementwidgets.cpp:985
+#: src/gui/element/elementwidgets.cpp:992
 #, kde-format
 msgid "Content:"
 msgstr "Sisu:"
 
-#: src/gui/element/elementwidgets.cpp:992
+#: src/gui/element/elementwidgets.cpp:999
 #, kde-format
 msgid "List:"
 msgstr "Loend:"
 
-#: src/gui/element/elementwidgets.cpp:997 src/gui/valuelistmodel.cpp:322
+#: src/gui/element/elementwidgets.cpp:1004 src/gui/valuelistmodel.cpp:322
 #, kde-format
 msgid "Value"
 msgstr "Väärtus"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:260
+#: src/gui/element/elementwidgets.cpp:1009 src/parts/part.cpp:260
 #, kde-format
 msgid "Delete"
 msgstr "Kustuta"
 
-#: src/gui/element/elementwidgets.cpp:1005
-#: src/program/docklets/referencepreview.cpp:147
+#: src/gui/element/elementwidgets.cpp:1012
+#: src/program/docklets/referencepreview.cpp:149
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
 msgstr "Ava"
 
-#: src/gui/element/elementwidgets.cpp:1044
+#: src/gui/element/elementwidgets.cpp:1051
 #: src/program/docklets/elementform.cpp:98
 #, kde-format
 msgid "Apply"
 msgstr "Rakenda"
 
-#: src/gui/element/elementwidgets.cpp:1113
-#: src/gui/element/elementwidgets.cpp:1183
+#: src/gui/element/elementwidgets.cpp:1120
+#: src/gui/element/elementwidgets.cpp:1190
 #, kde-format
 msgid "Value:"
 msgstr "Väärtus:"
 
-#: src/gui/element/elementwidgets.cpp:1319
+#: src/gui/element/elementwidgets.cpp:1254
+#, kde-format
+msgid "The prefix of a comment must start with '%'"
+msgstr ""
+
+#: src/gui/element/elementwidgets.cpp:1262
+#, kde-format
+msgid "A comment in 'Verbatim' mode may not contain blank lines"
+msgstr ""
+
+#: src/gui/element/elementwidgets.cpp:1299
+#, fuzzy, kde-format
+#| msgid "Content:"
+msgid "Context:"
+msgstr "Sisu:"
+
+#: src/gui/element/elementwidgets.cpp:1303
+#, kde-format
+msgid "Prefix:"
+msgstr ""
+
+#: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi elemendina."
 
-#: src/gui/element/elementwidgets.cpp:1328
+#: src/gui/element/elementwidgets.cpp:1460
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi kirjena."
 
-#: src/gui/element/elementwidgets.cpp:1334
+#: src/gui/element/elementwidgets.cpp:1466
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi makrona."
 
-#: src/gui/element/elementwidgets.cpp:1340
+#: src/gui/element/elementwidgets.cpp:1472
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi preambulana."
 
-#: src/gui/element/elementwidgets.cpp:1346
-#, kde-format
-msgid "Given source code does not parse as one single BibTeX comment."
+#: src/gui/element/elementwidgets.cpp:1478
+#, fuzzy, kde-format
+#| msgid "Given source code does not parse as one single BibTeX comment."
+msgid ""
+"Given source code does not parse as one single BibTeX comment. Try removing "
+"blank lines inside the comment."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi kommentaarina."
 
-#: src/gui/element/elementwidgets.cpp:1350
+#: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Elemendi klass ei ole korrektselt määratud"
 
-#: src/gui/element/elementwidgets.cpp:1359
+#: src/gui/element/elementwidgets.cpp:1491
 #, kde-format
 msgid "No issues detected"
 msgstr "Probleeme ei leitud"
 
-#: src/gui/element/elementwidgets.cpp:1374
+#: src/gui/element/elementwidgets.cpp:1506
 #, kde-format
 msgid "Source"
 msgstr "Lähtekood"
 
-#: src/gui/element/elementwidgets.cpp:1405
+#: src/gui/element/elementwidgets.cpp:1537
 #, kde-format
 msgid "Restore"
 msgstr "Taasta"
@@ -1939,19 +1967,19 @@ msgid "Saving and Exporting"
 msgstr "Salvestamine ja eksport"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
-#: src/gui/widgets/filesettingswidget.cpp:36
+#: src/gui/widgets/filesettingswidget.cpp:42
 #, kde-format
 msgid "John"
 msgstr "John"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
-#: src/gui/widgets/filesettingswidget.cpp:36
+#: src/gui/widgets/filesettingswidget.cpp:42
 #, kde-format
 msgid "Doe"
 msgstr "Doe"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
-#: src/gui/widgets/filesettingswidget.cpp:36
+#: src/gui/widgets/filesettingswidget.cpp:42
 #, kde-format
 msgid "Jr."
 msgstr "Jr."
@@ -1962,7 +1990,7 @@ msgid "Bibliography System:"
 msgstr "Bibliograafiasüsteem:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:83
-#: src/gui/widgets/filesettingswidget.cpp:161
+#: src/gui/widgets/filesettingswidget.cpp:189
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "Isikunimede vormindamine:"
@@ -2394,83 +2422,90 @@ msgstr "Kasutajaliides"
 msgid "Count"
 msgstr "Arv"
 
-#: src/gui/widgets/filesettingswidget.cpp:127
+#: src/gui/widgets/filesettingswidget.cpp:141
 #, kde-format
 msgid "Encoding:"
 msgstr "Kodeering:"
 
-#: src/gui/widgets/filesettingswidget.cpp:133
+#: src/gui/widgets/filesettingswidget.cpp:147
 #, kde-format
 msgid "String Delimiters:"
 msgstr "Stringide eraldajad:"
 
-#: src/gui/widgets/filesettingswidget.cpp:140
-#, kde-format
-msgid "Comment Quoting:"
+#: src/gui/widgets/filesettingswidget.cpp:154
+#, fuzzy, kde-format
+#| msgid "Comment Quoting:"
+msgid "Comment Context:"
 msgstr "Kommentaaride tähis:"
 
-#: src/gui/widgets/filesettingswidget.cpp:146
+#: src/gui/widgets/filesettingswidget.cpp:160
+#, fuzzy, kde-format
+#| msgid "Comment Quoting:"
+msgid "Comment Prefix:"
+msgstr "Kommentaaride tähis:"
+
+#: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
 msgid "Keyword Casing:"
 msgstr "Võtmesõna tõst:"
 
-#: src/gui/widgets/filesettingswidget.cpp:147
+#: src/gui/widgets/filesettingswidget.cpp:175
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowercase"
 msgstr "väiketähed"
 
-#: src/gui/widgets/filesettingswidget.cpp:148
+#: src/gui/widgets/filesettingswidget.cpp:176
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "Initial capital"
 msgstr "Alustav suurtäht"
 
-#: src/gui/widgets/filesettingswidget.cpp:149
+#: src/gui/widgets/filesettingswidget.cpp:177
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
 msgstr "SuureAlgustähegaKaamelkiri"
 
-#: src/gui/widgets/filesettingswidget.cpp:150
+#: src/gui/widgets/filesettingswidget.cpp:178
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
 msgstr "väikeseAlgustähegaKaamelkiri"
 
-#: src/gui/widgets/filesettingswidget.cpp:151
+#: src/gui/widgets/filesettingswidget.cpp:179
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UPPERCASE"
 msgstr "SUURTÄHED"
 
-#: src/gui/widgets/filesettingswidget.cpp:154
+#: src/gui/widgets/filesettingswidget.cpp:182
 #, kde-format
 msgid "Protect Titles"
 msgstr "Pealkirjade kaitsmine"
 
-#: src/gui/widgets/filesettingswidget.cpp:156
+#: src/gui/widgets/filesettingswidget.cpp:184
 #, kde-format
 msgid "Protect Casing?"
 msgstr "Tõstu kaitsmine:"
 
-#: src/gui/widgets/filesettingswidget.cpp:165
+#: src/gui/widgets/filesettingswidget.cpp:193
 #, kde-format
 msgid "Use global settings"
 msgstr "Globaalse seadistuse kasutamine"
 
-#: src/gui/widgets/filesettingswidget.cpp:171
+#: src/gui/widgets/filesettingswidget.cpp:199
 #, kde-format
 msgid "List Separator"
 msgstr "Loendi eraldaja"
 
-#: src/gui/widgets/filesettingswidget.cpp:176
+#: src/gui/widgets/filesettingswidget.cpp:204
 #, fuzzy, kde-format
 #| msgid "Sort by Count"
 msgid "Sort by identifier"
 msgstr "Sordi arvu järgi"
 
-#: src/gui/widgets/filesettingswidget.cpp:177
+#: src/gui/widgets/filesettingswidget.cpp:205
 #, fuzzy, kde-format
 #| msgid "Sorting"
 msgid "Entry Sorting"
@@ -3086,7 +3121,7 @@ msgstr ""
 msgid "Cannot Apply Default Formatting"
 msgstr "Vaikevormingu rakendamine nurjus"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3097,17 +3132,17 @@ msgstr ""
 "\n"
 "Kas laadida fail uuesti või eirata muutusi kettal?"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid "File changed externally"
 msgstr "Faili on väljaspool muudetud"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid "Reload file"
 msgstr "Laadi fail uuesti"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Eira muutusi kettal"
@@ -3534,67 +3569,84 @@ msgstr "Rakenda muudatused"
 msgid "Discard changes"
 msgstr "Unusta muudatused"
 
-#: src/program/docklets/referencepreview.cpp:83
+#: src/program/docklets/referencepreview.cpp:85
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Lähtekood (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:84
+#: src/program/docklets/referencepreview.cpp:86
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Lähtekood (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:91
+#: src/program/docklets/referencepreview.cpp:87
 #, kde-format
 msgid "Standard"
 msgstr "Standardne"
 
-#: src/program/docklets/referencepreview.cpp:92
+#: src/program/docklets/referencepreview.cpp:88
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Wikipedia tsitaat"
 
-#: src/program/docklets/referencepreview.cpp:93
+#: src/program/docklets/referencepreview.cpp:89
 #, kde-format
 msgid "Abstract-only"
 msgstr "Ainult kokkuvõte"
 
-#: src/program/docklets/referencepreview.cpp:124
-#, kde-format
-msgid "Reason:"
-msgstr "Põhjus:"
-
-#: src/program/docklets/referencepreview.cpp:148
+#: src/program/docklets/referencepreview.cpp:150
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Viite avamine veebilehitsejas."
 
-#: src/program/docklets/referencepreview.cpp:151
-#: src/program/docklets/referencepreview.cpp:431
+#: src/program/docklets/referencepreview.cpp:153
+#: src/program/docklets/referencepreview.cpp:432
 #, kde-format
 msgid "Save as HTML"
 msgstr "Salvesta HTML-ina"
 
-#: src/program/docklets/referencepreview.cpp:152
+#: src/program/docklets/referencepreview.cpp:154
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Viite salvestamine HTML-fragmendina."
 
-#: src/program/docklets/referencepreview.cpp:247
+#: src/program/docklets/referencepreview.cpp:226
 #, kde-format
+msgid "Reason:"
+msgstr "Põhjus:"
+
+#: src/program/docklets/referencepreview.cpp:250
+#, fuzzy, kde-format
+#| msgid "Preview disabled"
+msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Eelvaatlus on keelatud"
 
-#: src/program/docklets/referencepreview.cpp:262
-#, kde-format
+#: src/program/docklets/referencepreview.cpp:265
+#, fuzzy, kde-format
+#| msgid "No element selected"
+msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Ühtegi elementi pole valitud"
 
-#: src/program/docklets/referencepreview.cpp:327
-#: src/program/docklets/referencepreview.cpp:402
-#, kde-format
+#: src/program/docklets/referencepreview.cpp:314
+#, fuzzy, kde-format
+#| msgid "No output generated"
+msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Väljundit ei ole genereeritud"
+
+#: src/program/docklets/referencepreview.cpp:356
+#, kde-format
+msgid "Cannot show a preview for this type of element"
+msgstr ""
+
+#: src/program/docklets/referencepreview.cpp:384
+#, fuzzy, kde-format
+#| msgid "Abstract"
+msgctxt "Cannot show a reference preview as entry does not contain an abstract"
+msgid "No abstract"
+msgstr "Kokkuvõte"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4137,6 +4189,18 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "KBibTeXi ebatäielik paigaldus"
+
+#~ msgctxt "Comment Quoting"
+#~ msgid "None"
+#~ msgstr "Puudub"
+
+#~ msgctxt "Comment Quoting"
+#~ msgid "@comment{…}"
+#~ msgstr "@comment{…}"
+
+#~ msgctxt "Comment Quoting"
+#~ msgid "% …"
+#~ msgstr "% …"
 
 #~ msgid "Fancy"
 #~ msgstr "Uhke"

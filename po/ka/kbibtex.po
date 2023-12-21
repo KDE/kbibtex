@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-18 00:42+0000\n"
+"POT-Creation-Date: 2023-12-21 00:42+0000\n"
 "PO-Revision-Date: 2023-11-18 21:32+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -465,7 +465,7 @@ msgstr "მისამართი"
 msgid "Type"
 msgstr "ტიპი"
 
-#: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:997
+#: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:1004
 #, kde-format
 msgid "Key"
 msgstr "გასაღები"
@@ -894,127 +894,131 @@ msgstr "წლით დალაგება"
 msgid "ISAN"
 msgstr "ISAN"
 
-#: src/config/preferences.cpp:420
+#: src/config/preferences.cpp:433
 #, kde-format
 msgid "BibTeX"
 msgstr "BibTeX"
 
-#: src/config/preferences.cpp:420
+#: src/config/preferences.cpp:433
 #, kde-format
 msgid "BibLaTeX"
 msgstr "BibLaTeX"
 
-#: src/config/preferences.cpp:584
+#: src/config/preferences.cpp:597
 #, kde-format
 msgid "No backups"
 msgstr "მარქაფის გარეშე"
 
-#: src/config/preferences.cpp:584
+#: src/config/preferences.cpp:597
 #, kde-format
 msgid "Local files only"
 msgstr "მხოლოდ ლოკალური ფაილები"
 
-#: src/config/preferences.cpp:584
+#: src/config/preferences.cpp:597
 #, kde-format
 msgid "Both local and remote files"
 msgstr "ორივე, ლოკალური და დაშორებული ფაილი"
 
-#: src/config/preferences.cpp:910
-#, kde-format
-msgctxt "Comment Quoting"
-msgid "None"
-msgstr "არაფერი"
+#: src/config/preferences.cpp:923
+#, fuzzy, kde-format
+#| msgid "Verbatim Text"
+msgctxt ""
+"Comment Context: The comment's text appears verbatim in the bibliography"
+msgid "Verbatim"
+msgstr "ტექსტის ასლი"
 
-#: src/config/preferences.cpp:910
+#: src/config/preferences.cpp:923
 #, kde-format
-msgctxt "Comment Quoting"
-msgid "@comment{…}"
-msgstr "@comment{…}"
+msgctxt ""
+"Comment Quoting: All lines of the comment share a common prefix like '%% ' "
+"which is not part of the comment's text"
+msgid "Use prefix like '%% '"
+msgstr ""
 
-#: src/config/preferences.cpp:910
+#: src/config/preferences.cpp:923
 #, kde-format
-msgctxt "Comment Quoting"
-msgid "% …"
-msgstr "% …"
+msgctxt "Comment Quoting: The comment is inside @comment{..}"
+msgid "Use command @comment{...}"
+msgstr ""
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "lowercase"
 msgstr "დაბალი რეგისტრი"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "Initial capital"
 msgstr "პირველი ასოს მაღალ რეგისტრში გადაყვანა"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UpperCamelCase"
 msgstr "UpperCamelCase"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "lowerCamelCase"
 msgstr "დაბალი რეგისტრი"
 
-#: src/config/preferences.cpp:949
+#: src/config/preferences.cpp:1000
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UPPERCASE"
 msgstr "მაღალირეგისტრი"
 
-#: src/config/preferences.cpp:1186
+#: src/config/preferences.cpp:1237
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
 msgstr "რედაქტორი"
 
-#: src/config/preferences.cpp:1186
+#: src/config/preferences.cpp:1237
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "View Document"
 msgstr "დოკუმენტის შენახვა"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Important"
 msgstr "მნიშვნელოვანი"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Unread"
 msgstr "წაუკითხავი"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Read"
 msgstr "წაკითხვა"
 
-#: src/config/preferences.cpp:1225
+#: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Watch"
 msgstr "ყურება"
 
-#: src/data/models/filemodel.cpp:256 src/gui/element/elementwidgets.cpp:440
-#: src/gui/element/elementwidgets.cpp:1096
+#: src/data/models/filemodel.cpp:256 src/gui/element/elementwidgets.cpp:447
+#: src/gui/element/elementwidgets.cpp:1103
 #, kde-format
 msgid "Macro"
 msgstr "მაკრო"
 
-#: src/data/models/filemodel.cpp:266
+#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1280
 #, kde-format
 msgid "Comment"
 msgstr "კომენტარი"
 
-#: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1166
+#: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1173
 #, kde-format
 msgid "Preamble"
 msgstr "პრეამბულა"
@@ -1107,7 +1111,7 @@ msgstr ""
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:124
+#: src/program/docklets/referencepreview.cpp:226
 #, kde-format
 msgid "No preview available"
 msgstr "გადახედვა შეუძლებელია"
@@ -1149,37 +1153,37 @@ msgstr ""
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:201
+#: src/gui/element/elementeditor.cpp:207
 #, kde-format
 msgid "Options"
 msgstr "გამართვა"
 
-#: src/gui/element/elementeditor.cpp:207
+#: src/gui/element/elementeditor.cpp:213
 #, kde-format
 msgid "Show all fields"
 msgstr "ყველა ველის ჩვენება"
 
-#: src/gui/element/elementeditor.cpp:214
+#: src/gui/element/elementeditor.cpp:220
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:222
+#: src/gui/element/elementeditor.cpp:228
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "BibTeX-ით შემოწმება"
 
-#: src/gui/element/elementeditor.cpp:544
+#: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:544
+#: src/gui/element/elementeditor.cpp:550
 #, kde-format
 msgid "No id given"
 msgstr "ID მთითებული არაა"
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1187,27 +1191,27 @@ msgid ""
 "Keep original id '%2' instead?"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Id already in use"
 msgstr "იდენტიფიკატორი უკვე გამოიყენება"
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "დუბლირებული იდენტიფიკატორების გამოყენება"
 
-#: src/gui/element/elementeditor.cpp:551
+#: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Restore original id"
 msgstr "საწყისი ID-ების აღდგენა"
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:586
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "მიმდინარე ელემენტის გადამოწმების შეცდომა."
 
-#: src/gui/element/elementeditor.cpp:580
+#: src/gui/element/elementeditor.cpp:586
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1216,138 +1220,161 @@ msgstr ""
 "მიმდინარე ელემენტის გადამოწმების შეცდომა:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:581
+#: src/gui/element/elementeditor.cpp:587
 #, kde-format
 msgid "Element validation failed"
 msgstr "ელემენტის გადამოწმების შეცდომა"
 
-#: src/gui/element/elementwidgets.cpp:458
+#: src/gui/element/elementwidgets.cpp:465
 #, kde-format
 msgid "Element type '%1' is invalid."
 msgstr "ელემენტის ტიპი '%1' არასწორია."
 
-#: src/gui/element/elementwidgets.cpp:467
+#: src/gui/element/elementwidgets.cpp:474
 #, kde-format
 msgid "Id '%1' is invalid"
 msgstr "Id '%1' არასწორია"
 
-#: src/gui/element/elementwidgets.cpp:519
+#: src/gui/element/elementwidgets.cpp:526
 #, kde-format
 msgid "Type:"
 msgstr "ტიპი:"
 
-#: src/gui/element/elementwidgets.cpp:528
+#: src/gui/element/elementwidgets.cpp:535
 #, kde-format
 msgid "Id:"
 msgstr "ID:"
 
-#: src/gui/element/elementwidgets.cpp:545
+#: src/gui/element/elementwidgets.cpp:552
 #, kde-format
 msgid "Select a suggested id for this entry"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:771
+#: src/gui/element/elementwidgets.cpp:778
 #, kde-format
 msgid "External"
 msgstr "გარე"
 
-#: src/gui/element/elementwidgets.cpp:857
+#: src/gui/element/elementwidgets.cpp:864
 #, kde-format
 msgid "Other Fields"
 msgstr "სხვა ველები"
 
-#: src/gui/element/elementwidgets.cpp:973
+#: src/gui/element/elementwidgets.cpp:980
 #, kde-format
 msgid "Name:"
 msgstr "სახელი:"
 
-#: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/element/elementwidgets.cpp:988
+#: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
 msgstr "დამატება"
 
-#: src/gui/element/elementwidgets.cpp:985
+#: src/gui/element/elementwidgets.cpp:992
 #, kde-format
 msgid "Content:"
 msgstr "შემცველობა:"
 
-#: src/gui/element/elementwidgets.cpp:992
+#: src/gui/element/elementwidgets.cpp:999
 #, kde-format
 msgid "List:"
 msgstr "სია:"
 
-#: src/gui/element/elementwidgets.cpp:997 src/gui/valuelistmodel.cpp:322
+#: src/gui/element/elementwidgets.cpp:1004 src/gui/valuelistmodel.cpp:322
 #, kde-format
 msgid "Value"
 msgstr "მნიშვნელობა"
 
-#: src/gui/element/elementwidgets.cpp:1002 src/parts/part.cpp:260
+#: src/gui/element/elementwidgets.cpp:1009 src/parts/part.cpp:260
 #, kde-format
 msgid "Delete"
 msgstr "წაშლა"
 
-#: src/gui/element/elementwidgets.cpp:1005
-#: src/program/docklets/referencepreview.cpp:147
+#: src/gui/element/elementwidgets.cpp:1012
+#: src/program/docklets/referencepreview.cpp:149
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
 msgstr "გახსნა"
 
-#: src/gui/element/elementwidgets.cpp:1044
+#: src/gui/element/elementwidgets.cpp:1051
 #: src/program/docklets/elementform.cpp:98
 #, kde-format
 msgid "Apply"
 msgstr "გადატარება"
 
-#: src/gui/element/elementwidgets.cpp:1113
-#: src/gui/element/elementwidgets.cpp:1183
+#: src/gui/element/elementwidgets.cpp:1120
+#: src/gui/element/elementwidgets.cpp:1190
 #, kde-format
 msgid "Value:"
 msgstr "მნიშვნელობა:"
 
-#: src/gui/element/elementwidgets.cpp:1319
+#: src/gui/element/elementwidgets.cpp:1254
+#, kde-format
+msgid "The prefix of a comment must start with '%'"
+msgstr ""
+
+#: src/gui/element/elementwidgets.cpp:1262
+#, kde-format
+msgid "A comment in 'Verbatim' mode may not contain blank lines"
+msgstr ""
+
+#: src/gui/element/elementwidgets.cpp:1299
+#, fuzzy, kde-format
+#| msgid "Content:"
+msgid "Context:"
+msgstr "შემცველობა:"
+
+#: src/gui/element/elementwidgets.cpp:1303
+#, kde-format
+msgid "Prefix:"
+msgstr ""
+
+#: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1328
+#: src/gui/element/elementwidgets.cpp:1460
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1334
+#: src/gui/element/elementwidgets.cpp:1466
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1340
+#: src/gui/element/elementwidgets.cpp:1472
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1346
+#: src/gui/element/elementwidgets.cpp:1478
 #, kde-format
-msgid "Given source code does not parse as one single BibTeX comment."
+msgid ""
+"Given source code does not parse as one single BibTeX comment. Try removing "
+"blank lines inside the comment."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1350
+#: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
 msgid "Element class not properly set"
 msgstr "ელემენტის კლასი არასწორადაა დაყენებული"
 
-#: src/gui/element/elementwidgets.cpp:1359
+#: src/gui/element/elementwidgets.cpp:1491
 #, kde-format
 msgid "No issues detected"
 msgstr "პრობლემების გარეშე"
 
-#: src/gui/element/elementwidgets.cpp:1374
+#: src/gui/element/elementwidgets.cpp:1506
 #, kde-format
 msgid "Source"
 msgstr "წყარო"
 
-#: src/gui/element/elementwidgets.cpp:1405
+#: src/gui/element/elementwidgets.cpp:1537
 #, kde-format
 msgid "Restore"
 msgstr "აღდგენა"
@@ -1915,19 +1942,19 @@ msgid "Saving and Exporting"
 msgstr "შენახვა და გატანა"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
-#: src/gui/widgets/filesettingswidget.cpp:36
+#: src/gui/widgets/filesettingswidget.cpp:42
 #, kde-format
 msgid "John"
 msgstr "რაღაცა"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
-#: src/gui/widgets/filesettingswidget.cpp:36
+#: src/gui/widgets/filesettingswidget.cpp:42
 #, kde-format
 msgid "Doe"
 msgstr "ვიღაცაშვილი"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
-#: src/gui/widgets/filesettingswidget.cpp:36
+#: src/gui/widgets/filesettingswidget.cpp:42
 #, kde-format
 msgid "Jr."
 msgstr "უმც."
@@ -1938,7 +1965,7 @@ msgid "Bibliography System:"
 msgstr "ბიბლიოგრაფიული სისტემა:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:83
-#: src/gui/widgets/filesettingswidget.cpp:161
+#: src/gui/widgets/filesettingswidget.cpp:189
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "სახელის ფორმატირება:"
@@ -2366,82 +2393,89 @@ msgstr "სამომხმარებლო ინტერფეისი"
 msgid "Count"
 msgstr "რაოდენობა"
 
-#: src/gui/widgets/filesettingswidget.cpp:127
+#: src/gui/widgets/filesettingswidget.cpp:141
 #, kde-format
 msgid "Encoding:"
 msgstr "კოდირება:"
 
-#: src/gui/widgets/filesettingswidget.cpp:133
+#: src/gui/widgets/filesettingswidget.cpp:147
 #, kde-format
 msgid "String Delimiters:"
 msgstr "სტრიქონის გამყოფები:"
 
-#: src/gui/widgets/filesettingswidget.cpp:140
-#, kde-format
-msgid "Comment Quoting:"
+#: src/gui/widgets/filesettingswidget.cpp:154
+#, fuzzy, kde-format
+#| msgid "Comment Quoting:"
+msgid "Comment Context:"
 msgstr "კომენტარის ციტირება:"
 
-#: src/gui/widgets/filesettingswidget.cpp:146
+#: src/gui/widgets/filesettingswidget.cpp:160
+#, fuzzy, kde-format
+#| msgid "Comment Quoting:"
+msgid "Comment Prefix:"
+msgstr "კომენტარის ციტირება:"
+
+#: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
 msgid "Keyword Casing:"
 msgstr "საკვანძო სიტყვების რეგისტრი:"
 
-#: src/gui/widgets/filesettingswidget.cpp:147
+#: src/gui/widgets/filesettingswidget.cpp:175
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowercase"
 msgstr "დაბალი რეგისტრი"
 
-#: src/gui/widgets/filesettingswidget.cpp:148
+#: src/gui/widgets/filesettingswidget.cpp:176
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "Initial capital"
 msgstr "პირველი ასოს მაღალ რეგისტრში გადაყვანა"
 
-#: src/gui/widgets/filesettingswidget.cpp:149
+#: src/gui/widgets/filesettingswidget.cpp:177
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UpperCamelCase"
 msgstr "UpperCamelCase"
 
-#: src/gui/widgets/filesettingswidget.cpp:150
+#: src/gui/widgets/filesettingswidget.cpp:178
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "lowerCamelCase"
 msgstr "დაბალი რეგისტრი"
 
-#: src/gui/widgets/filesettingswidget.cpp:151
+#: src/gui/widgets/filesettingswidget.cpp:179
 #, kde-format
 msgctxt "Keyword Casing"
 msgid "UPPERCASE"
 msgstr "მაღალირეგისტრი"
 
-#: src/gui/widgets/filesettingswidget.cpp:154
+#: src/gui/widgets/filesettingswidget.cpp:182
 #, kde-format
 msgid "Protect Titles"
 msgstr "დასახელებების დაცვა"
 
-#: src/gui/widgets/filesettingswidget.cpp:156
+#: src/gui/widgets/filesettingswidget.cpp:184
 #, kde-format
 msgid "Protect Casing?"
 msgstr "დავიცვა რეგისტრი?"
 
-#: src/gui/widgets/filesettingswidget.cpp:165
+#: src/gui/widgets/filesettingswidget.cpp:193
 #, kde-format
 msgid "Use global settings"
 msgstr "გლობალური პარამეტრების გამოყენება"
 
-#: src/gui/widgets/filesettingswidget.cpp:171
+#: src/gui/widgets/filesettingswidget.cpp:199
 #, kde-format
 msgid "List Separator"
 msgstr "სიის გამყოფი"
 
-#: src/gui/widgets/filesettingswidget.cpp:176
+#: src/gui/widgets/filesettingswidget.cpp:204
 #, kde-format
 msgid "Sort by identifier"
 msgstr "იდენტიფიკატორით დალაგება"
 
-#: src/gui/widgets/filesettingswidget.cpp:177
+#: src/gui/widgets/filesettingswidget.cpp:205
 #, kde-format
 msgid "Entry Sorting"
 msgstr "ჩანაწერების დალაგება"
@@ -3039,7 +3073,7 @@ msgstr ""
 msgid "Cannot Apply Default Formatting"
 msgstr "ნაგულისხმები ფორმატირების გადატარების შეცდომა"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3047,17 +3081,17 @@ msgid ""
 "Reload file or ignore changes on disk?"
 msgstr ""
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid "File changed externally"
 msgstr "ფაილი გარედან შეიცვალა"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid "Reload file"
 msgstr "ფაილის თავიდან ჩატვირთვა"
 
-#: src/parts/part.cpp:1195
+#: src/parts/part.cpp:1199
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "დისკზე ცვლილებების იგნორი"
@@ -3453,67 +3487,84 @@ msgstr "ცვლილებების გადატარება"
 msgid "Discard changes"
 msgstr "ცვლილებების გაუქმება"
 
-#: src/program/docklets/referencepreview.cpp:83
+#: src/program/docklets/referencepreview.cpp:85
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "წყარო (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:84
+#: src/program/docklets/referencepreview.cpp:86
 #, kde-format
 msgid "Source (RIS)"
 msgstr "წყარო (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:91
+#: src/program/docklets/referencepreview.cpp:87
 #, kde-format
 msgid "Standard"
 msgstr "სტანდარტული"
 
-#: src/program/docklets/referencepreview.cpp:92
+#: src/program/docklets/referencepreview.cpp:88
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "ციტატა ვიკიპედიიდან"
 
-#: src/program/docklets/referencepreview.cpp:93
+#: src/program/docklets/referencepreview.cpp:89
 #, kde-format
 msgid "Abstract-only"
 msgstr "მხოლოდ აბსტრაქცია"
 
-#: src/program/docklets/referencepreview.cpp:124
-#, kde-format
-msgid "Reason:"
-msgstr "მიზეზი:"
-
-#: src/program/docklets/referencepreview.cpp:148
+#: src/program/docklets/referencepreview.cpp:150
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "მიმართვის ბრაუზერში გახსნა."
 
-#: src/program/docklets/referencepreview.cpp:151
-#: src/program/docklets/referencepreview.cpp:431
+#: src/program/docklets/referencepreview.cpp:153
+#: src/program/docklets/referencepreview.cpp:432
 #, kde-format
 msgid "Save as HTML"
 msgstr "შენახვა HTML ფაილში"
 
-#: src/program/docklets/referencepreview.cpp:152
+#: src/program/docklets/referencepreview.cpp:154
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "მიმართვის HTML ფრაგმენტად შენახვა."
 
-#: src/program/docklets/referencepreview.cpp:247
+#: src/program/docklets/referencepreview.cpp:226
 #, kde-format
+msgid "Reason:"
+msgstr "მიზეზი:"
+
+#: src/program/docklets/referencepreview.cpp:250
+#, fuzzy, kde-format
+#| msgid "Preview disabled"
+msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "მინიატურა გათიშულია"
 
-#: src/program/docklets/referencepreview.cpp:262
-#, kde-format
+#: src/program/docklets/referencepreview.cpp:265
+#, fuzzy, kde-format
+#| msgid "No element selected"
+msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "ელემენტი არჩეული არაა"
 
-#: src/program/docklets/referencepreview.cpp:327
-#: src/program/docklets/referencepreview.cpp:402
-#, kde-format
+#: src/program/docklets/referencepreview.cpp:314
+#, fuzzy, kde-format
+#| msgid "No output generated"
+msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "გამოტანა არ დაგენერირებულა"
+
+#: src/program/docklets/referencepreview.cpp:356
+#, kde-format
+msgid "Cannot show a preview for this type of element"
+msgstr ""
+
+#: src/program/docklets/referencepreview.cpp:384
+#, fuzzy, kde-format
+#| msgid "Abstract"
+msgctxt "Cannot show a reference preview as entry does not contain an abstract"
+msgid "No abstract"
+msgstr "ანოტაცია"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4035,6 +4086,18 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "KBibTeX-ის დაყენება არასრულია"
+
+#~ msgctxt "Comment Quoting"
+#~ msgid "None"
+#~ msgstr "არაფერი"
+
+#~ msgctxt "Comment Quoting"
+#~ msgid "@comment{…}"
+#~ msgstr "@comment{…}"
+
+#~ msgctxt "Comment Quoting"
+#~ msgid "% …"
+#~ msgstr "% …"
 
 #~ msgid "Fancy"
 #~ msgstr "ჩვეულებრივი"
