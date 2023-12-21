@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-16 02:31+0000\n"
-"PO-Revision-Date: 2023-03-18 11:00+0100\n"
+"PO-Revision-Date: 2023-12-18 21:34+0100\n"
 "Last-Translator: Valter Mura <valtermura@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1947,16 +1947,15 @@ msgid "Person Names Formatting:"
 msgstr "Formattazione dei nomi di persona:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Reimposta"
+msgstr "Reimposta tutto"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:92
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Azzera tutte le impostazioni «Non chiedere più»:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:119
 #, kde-format
