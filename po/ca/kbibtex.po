@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-21 00:42+0000\n"
-"PO-Revision-Date: 2023-12-16 12:59+0100\n"
+"POT-Creation-Date: 2023-12-22 00:41+0000\n"
+"PO-Revision-Date: 2023-12-21 09:41+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -925,12 +925,11 @@ msgid "Both local and remote files"
 msgstr "Fitxers locals i remots"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Text literal"
+msgstr "Literal"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -938,13 +937,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Usa un prefix com «%% »"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Usa l'ordre @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1117,7 +1116,7 @@ msgstr "Associació del document amb l'entrada"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
 msgstr "Sense vista prèvia disponible"
@@ -1307,7 +1306,7 @@ msgid "Delete"
 msgstr "Suprimeix"
 
 #: src/gui/element/elementwidgets.cpp:1012
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:150
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -1328,23 +1327,23 @@ msgstr "Valor:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "El prefix d'un comentari cal que comenci per «%»"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
+"Un comentari en mode «Literal» (Verbatim) no pot contenir línies en blanc"
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Contingut:"
+msgstr "Context:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Prefix:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1374,14 +1373,13 @@ msgstr ""
 "BibTeX."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
 "El codi font indicat no es pot analitzar com un comentari individual del "
-"BibTeX."
+"BibTeX. Proveu d'eliminar les línies en blanc dins del comentari."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -2446,16 +2444,14 @@ msgid "String Delimiters:"
 msgstr "Delimitadors de cadena:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Citació dels comentaris:"
+msgstr "Context dels comentaris:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Citació dels comentaris:"
+msgstr "Prefix dels comentaris:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3586,84 +3582,80 @@ msgstr "Aplica els canvis"
 msgid "Discard changes"
 msgstr "Descarta els canvis"
 
-#: src/program/docklets/referencepreview.cpp:85
+#: src/program/docklets/referencepreview.cpp:86
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Origen (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:86
+#: src/program/docklets/referencepreview.cpp:87
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Origen (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:87
+#: src/program/docklets/referencepreview.cpp:88
 #, kde-format
 msgid "Standard"
 msgstr "Estàndard"
 
-#: src/program/docklets/referencepreview.cpp:88
+#: src/program/docklets/referencepreview.cpp:89
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Cita de la Viquipèdia"
 
-#: src/program/docklets/referencepreview.cpp:89
+#: src/program/docklets/referencepreview.cpp:90
 #, kde-format
 msgid "Abstract-only"
 msgstr "Només resum"
 
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:151
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Obre la referència en el navegador web."
 
-#: src/program/docklets/referencepreview.cpp:153
-#: src/program/docklets/referencepreview.cpp:432
+#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:433
 #, kde-format
 msgid "Save as HTML"
 msgstr "Desa com a HTML"
 
-#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:155
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Desa la referència com un fragment HTML."
 
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "Reason:"
 msgstr "Motiu:"
 
-#: src/program/docklets/referencepreview.cpp:250
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#: src/program/docklets/referencepreview.cpp:251
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Vista prèvia desactivada"
 
-#: src/program/docklets/referencepreview.cpp:265
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#: src/program/docklets/referencepreview.cpp:266
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Cap element seleccionat"
 
-#: src/program/docklets/referencepreview.cpp:314
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#: src/program/docklets/referencepreview.cpp:315
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "No s'ha generat cap sortida"
 
-#: src/program/docklets/referencepreview.cpp:356
+#: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "No s'ha pogut mostrar una vista prèvia d'aquest tipus d'element"
 
-#: src/program/docklets/referencepreview.cpp:384
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#: src/program/docklets/referencepreview.cpp:385
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Resum"
+msgstr "Sense resum"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4207,25 +4199,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instal·lació incompleta del KBibTeX"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "None"
-#~ msgstr "Cap"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "@comment{…}"
-#~ msgstr "@comentari{…}"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "% …"
-#~ msgstr "% …"
-
-#~ msgid "Fancy"
-#~ msgstr "Sofisticada"
-
-#~ msgid ""
-#~ "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
-#~ "command."
-#~ msgstr ""
-#~ "Aquest tipus d'element no està admès per l'ordre <tt>{{cite}}</tt> de la "
-#~ "Viquipèdia."

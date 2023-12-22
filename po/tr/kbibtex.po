@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-21 00:42+0000\n"
-"PO-Revision-Date: 2023-11-17 14:17+0300\n"
+"POT-Creation-Date: 2023-12-22 00:41+0000\n"
+"PO-Revision-Date: 2023-12-21 11:39+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 24.01.85\n"
 "X-POOTLE-MTIME: 1502202283.000000\n"
 
 #, kde-format
@@ -922,12 +922,11 @@ msgid "Both local and remote files"
 msgstr "Hem yerel hem de uzak dosyalar"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Verbatim Metin"
+msgstr "Sözlü"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -935,13 +934,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "'%% ' gibi bir önek kullan"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "@comment{...} komutunu kullan"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1114,7 +1113,7 @@ msgstr "Belgeyi Girdiyle İlişkilendir"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
 msgstr "Kullanılabilir önizleme yok"
@@ -1300,7 +1299,7 @@ msgid "Delete"
 msgstr "Sil"
 
 #: src/gui/element/elementwidgets.cpp:1012
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:150
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -1321,23 +1320,22 @@ msgstr "Değer:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "Bir komutun öneki '%' ile başlamalıdır"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "'Sözlü' kipindeki bir yorum boş satırlar içeremez"
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "İçerik:"
+msgstr "Bağlam:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Önek:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1360,12 +1358,13 @@ msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Verilen kaynak kodu tek bir BibTeX önsözü olarak ayrıştırılamıyor."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
-msgstr "Verilen kaynak kodu tek bir BibTeX yorumu olarak ayrıştırılamıyor."
+msgstr ""
+"Verilen kaynak kodu tek bir BibTeX yorumu olarak ayrıştırılamıyor. Yorumdaki "
+"boş satırları kaldırmayı deneyin."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -1606,7 +1605,7 @@ msgstr "Kaynak Kod"
 #: src/gui/field/fieldlineedit.cpp:341 src/gui/field/fieldlineedit.cpp:374
 #, kde-format
 msgid "Verbatim Text"
-msgstr "Verbatim Metin"
+msgstr "Sözlü Metin"
 
 #: src/gui/field/fieldlineedit.cpp:483
 #, kde-format
@@ -2428,16 +2427,14 @@ msgid "String Delimiters:"
 msgstr "Dizi Sınırlandırıcıları:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Yorum Alıntılama:"
+msgstr "Yorum bağlamı:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Yorum Alıntılama:"
+msgstr "Yorum öneki:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3562,84 +3559,80 @@ msgstr "Değişiklikleri uygula"
 msgid "Discard changes"
 msgstr "Değişiklikleri at"
 
-#: src/program/docklets/referencepreview.cpp:85
+#: src/program/docklets/referencepreview.cpp:86
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Kaynak (BibTex)"
 
-#: src/program/docklets/referencepreview.cpp:86
+#: src/program/docklets/referencepreview.cpp:87
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Kaynak (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:87
+#: src/program/docklets/referencepreview.cpp:88
 #, kde-format
 msgid "Standard"
 msgstr "Standart"
 
-#: src/program/docklets/referencepreview.cpp:88
+#: src/program/docklets/referencepreview.cpp:89
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Wikipedia Alıntısı"
 
-#: src/program/docklets/referencepreview.cpp:89
+#: src/program/docklets/referencepreview.cpp:90
 #, kde-format
 msgid "Abstract-only"
 msgstr "Yalnızca özet"
 
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:151
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Başvuruyu web tarayıcısında aç."
 
-#: src/program/docklets/referencepreview.cpp:153
-#: src/program/docklets/referencepreview.cpp:432
+#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:433
 #, kde-format
 msgid "Save as HTML"
 msgstr "HTML olarak kaydet"
 
-#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:155
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Başvuruyu HTML parçası olarak kaydet."
 
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "Reason:"
 msgstr "Gerekçe:"
 
-#: src/program/docklets/referencepreview.cpp:250
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#: src/program/docklets/referencepreview.cpp:251
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Önizleme devre dışı"
 
-#: src/program/docklets/referencepreview.cpp:265
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#: src/program/docklets/referencepreview.cpp:266
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Seçili öge yok"
 
-#: src/program/docklets/referencepreview.cpp:314
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#: src/program/docklets/referencepreview.cpp:315
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Üretilen çıktı yok"
 
-#: src/program/docklets/referencepreview.cpp:356
+#: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Bu tür öge için bir önizleme gösterilemiyor"
 
-#: src/program/docklets/referencepreview.cpp:384
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#: src/program/docklets/referencepreview.cpp:385
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Özet"
+msgstr "Özet yok"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format

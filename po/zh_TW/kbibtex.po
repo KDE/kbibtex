@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-21 00:42+0000\n"
+"POT-Creation-Date: 2023-12-22 00:41+0000\n"
 "PO-Revision-Date: 2016-09-22 20:30+0800\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.linux.org.tw>\n"
@@ -1109,7 +1109,7 @@ msgstr ""
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
 msgstr ""
@@ -1289,7 +1289,7 @@ msgid "Delete"
 msgstr ""
 
 #: src/gui/element/elementwidgets.cpp:1012
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:150
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -3463,76 +3463,76 @@ msgstr ""
 msgid "Discard changes"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:85
+#: src/program/docklets/referencepreview.cpp:86
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:86
+#: src/program/docklets/referencepreview.cpp:87
 #, kde-format
 msgid "Source (RIS)"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:87
+#: src/program/docklets/referencepreview.cpp:88
 #, kde-format
 msgid "Standard"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:88
+#: src/program/docklets/referencepreview.cpp:89
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:89
+#: src/program/docklets/referencepreview.cpp:90
 #, kde-format
 msgid "Abstract-only"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:151
 #, kde-format
 msgid "Open reference in web browser."
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:153
-#: src/program/docklets/referencepreview.cpp:432
+#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:433
 #, kde-format
 msgid "Save as HTML"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:155
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "Reason:"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:250
+#: src/program/docklets/referencepreview.cpp:251
 #, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:265
+#: src/program/docklets/referencepreview.cpp:266
 #, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:314
+#: src/program/docklets/referencepreview.cpp:315
 #, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:356
+#: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:384
+#: src/program/docklets/referencepreview.cpp:385
 #, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"

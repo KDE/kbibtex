@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-21 00:42+0000\n"
-"PO-Revision-Date: 2023-12-17 00:55+0100\n"
+"POT-Creation-Date: 2023-12-22 00:41+0000\n"
+"PO-Revision-Date: 2023-12-21 12:47+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -922,12 +922,11 @@ msgid "Both local and remote files"
 msgstr "Archivos locales y remotos"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Texto literal"
+msgstr "Literal"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -935,13 +934,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Usar prefijo como «%% »"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Usar la orden @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1114,7 +1113,7 @@ msgstr "Asociar documento con entrada"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
 msgstr "Ninguna vista previa disponible"
@@ -1306,7 +1305,7 @@ msgid "Delete"
 msgstr "Borrar"
 
 #: src/gui/element/elementwidgets.cpp:1012
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:150
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -1327,23 +1326,22 @@ msgstr "Valor:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "El prefijo de un comentario debe empezar con «%»"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Un comentario en modo «Literal» no puede contener líneas en blanco"
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Contenido:"
+msgstr "Contexto:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Prefijo:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1374,14 +1372,13 @@ msgstr ""
 "de BibTeX."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
 "El código fuente proporcionado no se puede analizar como un comentario único "
-"de BibTeX."
+"de BibTeX. Pruebe a eliminar las líneas en blanco dentro del comentario."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -2447,16 +2444,14 @@ msgid "String Delimiters:"
 msgstr "Delimitadores de cadena:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Comillas de comentario:"
+msgstr "Contexto del comentario:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Comillas de comentario:"
+msgstr "Prefijo del comentario:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3588,84 +3583,80 @@ msgstr "Aplicar cambios"
 msgid "Discard changes"
 msgstr "Descartar cambios"
 
-#: src/program/docklets/referencepreview.cpp:85
+#: src/program/docklets/referencepreview.cpp:86
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Fuente (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:86
+#: src/program/docklets/referencepreview.cpp:87
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Fuente (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:87
+#: src/program/docklets/referencepreview.cpp:88
 #, kde-format
 msgid "Standard"
 msgstr "Estándar"
 
-#: src/program/docklets/referencepreview.cpp:88
+#: src/program/docklets/referencepreview.cpp:89
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Cita de la Wikipedia"
 
-#: src/program/docklets/referencepreview.cpp:89
+#: src/program/docklets/referencepreview.cpp:90
 #, kde-format
 msgid "Abstract-only"
 msgstr "Solo sinopsis"
 
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:151
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Abrir referencia en el navegador web."
 
-#: src/program/docklets/referencepreview.cpp:153
-#: src/program/docklets/referencepreview.cpp:432
+#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:433
 #, kde-format
 msgid "Save as HTML"
 msgstr "Guardar como HTML"
 
-#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:155
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Guardar referencia como fragmento HTML."
 
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "Reason:"
 msgstr "Motivo:"
 
-#: src/program/docklets/referencepreview.cpp:250
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#: src/program/docklets/referencepreview.cpp:251
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Vista previa desactivada"
 
-#: src/program/docklets/referencepreview.cpp:265
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#: src/program/docklets/referencepreview.cpp:266
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
-msgstr "Ningún elemento seleccionado"
+msgstr "No se ha seleccionado ningún elemento"
 
-#: src/program/docklets/referencepreview.cpp:314
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#: src/program/docklets/referencepreview.cpp:315
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
-msgstr "No se ha generado salida"
+msgstr "No se ha generado ninguna salida"
 
-#: src/program/docklets/referencepreview.cpp:356
+#: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "No se puede mostrar una vista previa de este tipo de elemento"
 
-#: src/program/docklets/referencepreview.cpp:384
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#: src/program/docklets/referencepreview.cpp:385
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Sinopsis"
+msgstr "Sin sinopsis"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format

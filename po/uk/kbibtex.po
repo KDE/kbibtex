@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-21 00:42+0000\n"
-"PO-Revision-Date: 2023-12-16 08:48+0200\n"
+"POT-Creation-Date: 2023-12-22 00:41+0000\n"
+"PO-Revision-Date: 2023-12-21 08:40+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 20.12.0\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -924,12 +924,11 @@ msgid "Both local and remote files"
 msgstr "Локальні і віддалені файли"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Текст буквально"
+msgstr "Буквально"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -937,13 +936,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Скористатися префіксом, зокрема «%% »"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Скористатися командою @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1115,7 +1114,7 @@ msgstr "Пов'язування документа із записом"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
 msgstr "Перегляд недоступний"
@@ -1302,7 +1301,7 @@ msgid "Delete"
 msgstr "Вилучити"
 
 #: src/gui/element/elementwidgets.cpp:1012
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:150
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -1323,23 +1322,22 @@ msgstr "Значення:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "Префікс коментаря має починатися з «%»"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Коментар у режимі «Буквально» не може починатися з порожніх рядків"
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Вміст:"
+msgstr "Контекст:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Префікс:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1364,13 +1362,13 @@ msgstr ""
 "Наданий початковий код не може бути оброблено як єдину преамбулу BibTeX."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
-"Наданий початковий код не може бути оброблено як єдиний коментар BibTeX."
+"Наданий початковий код не може бути оброблено як єдиний коментар BibTeX. "
+"Намагаємося вилучити порожні рядки у коментарі."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -2435,16 +2433,14 @@ msgid "String Delimiters:"
 msgstr "Роздільники рядків:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Виокремлення коментарів:"
+msgstr "Контекст коментарів:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Виокремлення коментарів:"
+msgstr "Префікс коментарів:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3587,84 +3583,80 @@ msgstr "Застосувати зміни"
 msgid "Discard changes"
 msgstr "Відкинути зміни"
 
-#: src/program/docklets/referencepreview.cpp:85
+#: src/program/docklets/referencepreview.cpp:86
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Початковий код (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:86
+#: src/program/docklets/referencepreview.cpp:87
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Початковий код (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:87
+#: src/program/docklets/referencepreview.cpp:88
 #, kde-format
 msgid "Standard"
 msgstr "Стандартний"
 
-#: src/program/docklets/referencepreview.cpp:88
+#: src/program/docklets/referencepreview.cpp:89
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Цитата з Вікіпедії"
 
-#: src/program/docklets/referencepreview.cpp:89
+#: src/program/docklets/referencepreview.cpp:90
 #, kde-format
 msgid "Abstract-only"
 msgstr "Лише резюме"
 
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:151
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Відкрити посилання у програмі для перегляду інтернету."
 
-#: src/program/docklets/referencepreview.cpp:153
-#: src/program/docklets/referencepreview.cpp:432
+#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:433
 #, kde-format
 msgid "Save as HTML"
 msgstr "Зберегти як HTML"
 
-#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:155
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Зберегти посилання як фрагмент коду HTML."
 
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "Reason:"
 msgstr "Причина:"
 
-#: src/program/docklets/referencepreview.cpp:250
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#: src/program/docklets/referencepreview.cpp:251
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Попередній перегляд вимкнено"
 
-#: src/program/docklets/referencepreview.cpp:265
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#: src/program/docklets/referencepreview.cpp:266
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Не позначено жодного елемента"
 
-#: src/program/docklets/referencepreview.cpp:314
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#: src/program/docklets/referencepreview.cpp:315
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Нічого не виведено"
 
-#: src/program/docklets/referencepreview.cpp:356
+#: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Неможливо показати попередній перегляд для елемента цього типу"
 
-#: src/program/docklets/referencepreview.cpp:384
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#: src/program/docklets/referencepreview.cpp:385
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Резюме"
+msgstr "Немає резюме"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format

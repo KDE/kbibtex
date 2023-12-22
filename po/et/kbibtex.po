@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-21 00:42+0000\n"
+"POT-Creation-Date: 2023-12-22 00:41+0000\n"
 "PO-Revision-Date: 2020-04-26 10:18+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -1112,7 +1112,7 @@ msgstr ""
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
 msgstr "Eelvaatlus puudub"
@@ -1297,7 +1297,7 @@ msgid "Delete"
 msgstr "Kustuta"
 
 #: src/gui/element/elementwidgets.cpp:1012
-#: src/program/docklets/referencepreview.cpp:149
+#: src/program/docklets/referencepreview.cpp:150
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -3569,79 +3569,79 @@ msgstr "Rakenda muudatused"
 msgid "Discard changes"
 msgstr "Unusta muudatused"
 
-#: src/program/docklets/referencepreview.cpp:85
+#: src/program/docklets/referencepreview.cpp:86
 #, kde-format
 msgid "Source (BibTeX)"
 msgstr "Lähtekood (BibTeX)"
 
-#: src/program/docklets/referencepreview.cpp:86
+#: src/program/docklets/referencepreview.cpp:87
 #, kde-format
 msgid "Source (RIS)"
 msgstr "Lähtekood (RIS)"
 
-#: src/program/docklets/referencepreview.cpp:87
+#: src/program/docklets/referencepreview.cpp:88
 #, kde-format
 msgid "Standard"
 msgstr "Standardne"
 
-#: src/program/docklets/referencepreview.cpp:88
+#: src/program/docklets/referencepreview.cpp:89
 #, kde-format
 msgid "Wikipedia Citation"
 msgstr "Wikipedia tsitaat"
 
-#: src/program/docklets/referencepreview.cpp:89
+#: src/program/docklets/referencepreview.cpp:90
 #, kde-format
 msgid "Abstract-only"
 msgstr "Ainult kokkuvõte"
 
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:151
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Viite avamine veebilehitsejas."
 
-#: src/program/docklets/referencepreview.cpp:153
-#: src/program/docklets/referencepreview.cpp:432
+#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:433
 #, kde-format
 msgid "Save as HTML"
 msgstr "Salvesta HTML-ina"
 
-#: src/program/docklets/referencepreview.cpp:154
+#: src/program/docklets/referencepreview.cpp:155
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Viite salvestamine HTML-fragmendina."
 
-#: src/program/docklets/referencepreview.cpp:226
+#: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "Reason:"
 msgstr "Põhjus:"
 
-#: src/program/docklets/referencepreview.cpp:250
+#: src/program/docklets/referencepreview.cpp:251
 #, fuzzy, kde-format
 #| msgid "Preview disabled"
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Eelvaatlus on keelatud"
 
-#: src/program/docklets/referencepreview.cpp:265
+#: src/program/docklets/referencepreview.cpp:266
 #, fuzzy, kde-format
 #| msgid "No element selected"
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Ühtegi elementi pole valitud"
 
-#: src/program/docklets/referencepreview.cpp:314
+#: src/program/docklets/referencepreview.cpp:315
 #, fuzzy, kde-format
 #| msgid "No output generated"
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Väljundit ei ole genereeritud"
 
-#: src/program/docklets/referencepreview.cpp:356
+#: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:384
+#: src/program/docklets/referencepreview.cpp:385
 #, fuzzy, kde-format
 #| msgid "Abstract"
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
