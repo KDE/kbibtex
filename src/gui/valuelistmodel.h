@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2021 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -105,6 +105,7 @@ private:
     void readConfiguration();
     void updateValues();
     void insertValue(const Value &value);
+    void insertText(const QString &text, const QSharedPointer<ValueItem> &item, const QString &sortBy = QString());
     int indexOf(const QString &text);
     QString htmlize(const QString &text) const;
 

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -28,6 +28,7 @@
 #include <Preamble>
 #include <Comment>
 #include <FileInfo>
+#include "widgets/starrating.h"
 
 SortFilterFileModel::SortFilterFileModel(QObject *parent)
         : QSortFilterProxyModel(parent), m_internalModel(nullptr)
@@ -184,6 +185,20 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
                 for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
                     eachTerm[i] |= (*itsl).isEmpty() ? true : it.value().containsPattern(*itsl);
             }
+
+        if (m_filterQuery.field == Entry::ftStarRating && entry->contains(Entry::ftStarRating)) {
+            bool ok = false;
+            const double entryPercent {StarRatingPainter::roundToNearestHalfStarPercent(PlainTextValue::text(entry->value(Entry::ftStarRating)).toFloat(&ok))};
+            if (ok && entryPercent <= 100.0) {
+                int i = 0;
+                for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i) {
+                    ok = false;
+                    const double searchTermPercent {StarRatingPainter::roundToNearestHalfStarPercent((*itsl).toFloat(&ok))};
+                    if (ok && searchTermPercent == entryPercent)
+                        eachTerm[i] = true;
+                }
+            }
+        }
 
 #ifdef HAVE_POPPLERQT5
         /// Test associated PDF files

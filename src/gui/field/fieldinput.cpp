@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2020 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -135,7 +135,7 @@ public:
         }
         break;
         case KBibTeX::FieldInputType::StarRating: {
-            starRatingWidget = new StarRatingFieldInput(8 /* = #stars */, p);
+            starRatingWidget = new StarRatingFieldInput(p);
             connect(starRatingWidget, &StarRatingFieldInput::modified, p, &FieldInput::modified);
             layout->addWidget(starRatingWidget, 0);
         }

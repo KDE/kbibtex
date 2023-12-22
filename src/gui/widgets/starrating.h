@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,6 +22,8 @@
 
 #include <QWidget>
 
+#include <KRatingPainter>
+
 #include <Value>
 
 #include "kbibtexgui_export.h"
@@ -30,6 +32,18 @@ class QLabel;
 class QPaintEvent;
 class QMouseEvent;
 class QPushButton;
+
+class KBIBTEXGUI_EXPORT StarRatingPainter : public KRatingPainter
+{
+public:
+    static const int numberOfStars;
+
+    explicit StarRatingPainter();
+
+    void paint(QPainter *painter, const QRect &rect, double percent, double hoverPercent = -1.0);
+
+    static double roundToNearestHalfStarPercent(double percent);
+};
 
 /**
  * A widget which shows a number of stars in a horizonal row.
@@ -51,7 +65,7 @@ public:
      * @param maxNumberOfStars number of stars (recommended value is 8)
      * @param parent parent widget
      */
-    explicit StarRating(int maxNumberOfStars, QWidget *parent = nullptr);
+    explicit StarRating(QWidget *parent = nullptr);
     ~StarRating();
 
     /**
@@ -113,8 +127,8 @@ class KBIBTEXGUI_EXPORT StarRatingFieldInput : public StarRating
     Q_OBJECT
 
 public:
-    explicit StarRatingFieldInput(int maxNumberOfStars, QWidget *parent = nullptr)
-            : StarRating(maxNumberOfStars, parent) {
+    explicit StarRatingFieldInput(QWidget *parent = nullptr)
+            : StarRating(parent) {
         /* nothing */
     }
 

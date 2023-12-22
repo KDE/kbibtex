@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,6 +41,7 @@
 #include <Preferences>
 #include <Entry>
 #include <models/FileModel>
+#include "widgets/starrating.h"
 #include "field/fieldlineedit.h"
 #include "logging_gui.h"
 
@@ -133,6 +134,7 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
     /// the superclass.
     QStyledItemDelegate::initStyleOption(&option, index);
     QString field = option.text;
+    const bool customPainting {index.column() == 0 && d->fieldName.toLower() == Entry::ftStarRating};
 
     /// now calculate the rectangle for the text
     QStyle *s = d->treeView->style();
@@ -152,10 +154,10 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
     const QFontMetrics fm(painter->fontMetrics());
 #if QT_VERSION >= 0x050b00
     const int countWidth = fm.horizontalAdvance(count);
-    int fieldWidth = fm.horizontalAdvance(field);
+    int fieldWidth = customPainting ? textRect.width() - countWidth - 8 : fm.horizontalAdvance(field);
 #else // QT_VERSION >= 0x050b00
     const int countWidth = fm.width(count);
-    int fieldWidth = fm.width(field);
+    int fieldWidth = customPainting ? textRect.width() - countWidth - 8 : fm.width(field);
 #endif // QT_VERSION >= 0x050b00
     if (countWidth + fieldWidth > textRect.width()) {
         /// text plus count is too wide for column, cut text and insert "..."
@@ -180,8 +182,17 @@ void ValueListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &_op
         fieldRect.setLeft(fieldRect.right() - fieldWidth); ///< hm, indent necessary?
     }
 
-    /// draw field name
-    painter->drawText(fieldRect, Qt::AlignLeft, field);
+    if (customPainting) {
+        static StarRatingPainter starrating;
+        bool ok = false;
+        const float percent = field.toFloat(&ok);
+        if (ok && percent >= 0.0 && percent <= 100.0) {
+            starrating.paint(painter, fieldRect, percent);
+        }
+    } else {
+        // Draw field name
+        painter->drawText(fieldRect, Qt::AlignLeft, field);
+    }
 
     if (!count.isEmpty()) {
         /// determine rects to draw count
@@ -239,8 +250,14 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
                 QString colorText = colorToLabel[text];
                 if (colorText.isEmpty()) return QVariant(text);
                 return QVariant(colorText);
-            } else
-                return QVariant(values[index.row()].text);
+            } else if (fName == Entry::ftStarRating) {
+                bool ok = false;
+                const double percent {StarRatingPainter::roundToNearestHalfStarPercent(values[index.row()].text.toFloat(&ok))};
+                if (ok)
+                    return QVariant(QString::number(percent, 'f', 2));
+            }
+
+            return QVariant(values[index.row()].text);
         } else
             return QVariant(values[index.row()].count);
     } else if (role == SortRole) {
@@ -368,16 +385,21 @@ void ValueListModel::updateValues()
 
     for (const auto &element : const_cast<const File &>(*file)) {
         QSharedPointer<const Entry> entry = element.dynamicCast<const Entry>();
-        if (!entry.isNull()) {
-            for (Entry::ConstIterator eit = entry->constBegin(); eit != entry->constEnd(); ++eit) {
-                QString key = eit.key().toLower();
-                if (key == fName) {
-                    insertValue(eit.value());
-                    break;
+        if (!entry.isNull() && entry->contains(fName)) {
+            const Value &v {entry->value(fName)};
+            if (v.isEmpty())
+                qCWarning(LOG_KBIBTEX_GUI) << "value for key" << fName << "in entry" << entry->id() << "is empty";
+            if (fName == Entry::ftStarRating) {
+                bool ok = false;
+                const double percent {StarRatingPainter::roundToNearestHalfStarPercent(PlainTextValue::text(v).toFloat(&ok))};
+                if (ok) {
+                    const QString text {QString::number(percent, 'f', 2)};
+                    const QString zeroPadded {QString(QStringLiteral("%1")).arg(static_cast<int>(percent * 1000.0), 6, 10, QLatin1Char('0'))};
+                    QSharedPointer<PlainText> plainText {QSharedPointer<PlainText>(new PlainText(text))};
+                    insertText(text, plainText, zeroPadded);
                 }
-                if (eit.value().isEmpty())
-                    qCWarning(LOG_KBIBTEX_GUI) << "value for key" << key << "in entry" << entry->id() << "is empty";
-            }
+            } else
+                insertValue(v);
         }
     }
 }
@@ -388,24 +410,30 @@ void ValueListModel::insertValue(const Value &value)
         const QString text = PlainTextValue::text(*item);
         if (text.isEmpty()) continue; ///< skip empty values
 
-        int index = indexOf(text);
-        if (index < 0) {
-            /// previously unknown text
-            ValueLine newValueLine;
-            newValueLine.text = text;
-            newValueLine.count = 1;
-            newValueLine.value.append(item);
+        insertText(text, item);
+    }
+}
 
-            /// memorize sorting criterium:
-            /// * for persons, use last name first
-            /// * in any case, use lower case
-            const QSharedPointer<Person> person = item.dynamicCast<Person>();
-            newValueLine.sortBy = person.isNull() ? text.toLower() : person->lastName().toLower() + QStringLiteral(" ") + person->firstName().toLower();
+void ValueListModel::insertText(const QString &text, const QSharedPointer<ValueItem> &item, const QString &sortBy)
+{
+    int index = indexOf(text);
+    if (index < 0) {
+        // Previously unknown text
+        ValueLine newValueLine;
+        newValueLine.text = text;
+        newValueLine.count = 1;
+        newValueLine.value.append(item);
 
-            values << newValueLine;
-        } else {
-            ++values[index].count;
-        }
+        // Memorize sorting criterium:
+        // * if a sorting criterion is given via 'sortBy', use it
+        // * for persons, use last name first
+        // * in any other case, use lower case
+        const QSharedPointer<Person> person = item.dynamicCast<Person>();
+        newValueLine.sortBy = !sortBy.isEmpty() ? sortBy : (person.isNull() ? text.toLower() : person->lastName().toLower() + QStringLiteral(" ") + person->firstName().toLower());
+
+        values << newValueLine;
+    } else {
+        ++values[index].count;
     }
 }
 
