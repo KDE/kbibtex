@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-22 00:41+0000\n"
-"PO-Revision-Date: 2023-12-16 07:52+0100\n"
+"PO-Revision-Date: 2023-12-22 06:08+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -924,8 +924,7 @@ msgid "Both local and remote files"
 msgstr "Kaj lokaj kaj foraj dosieroj"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
@@ -937,13 +936,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Uzi prefikson kiel '%% '"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Uzi komandon @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1323,23 +1322,22 @@ msgstr "Valoro:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "La prefikso de komento devas komenciĝi per '%'"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Komento en 'Verbatim'-reĝimo ne enhavu malplenajn liniojn"
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Enhavo:"
+msgstr "Kunteksto:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Prefikso"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1362,12 +1360,13 @@ msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Donita fontkodo ne analizas kiel unu ununura BibTeX-preambulo."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
-msgstr "Donita fontkodo ne analizas kiel unu sola BibTeX-komento."
+msgstr ""
+"Donita fontkodo ne analiziĝas kiel unu sola BibTeX-komento. Provu forigi "
+"malplenajn liniojn ene de la komento."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -2428,16 +2427,14 @@ msgid "String Delimiters:"
 msgstr "Ĉenaj limigiloj:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Komento Citaĵo:"
+msgstr "Komenta Kunteksto:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Komento Citaĵo:"
+msgstr "Komenta Prefikso:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3609,22 +3606,19 @@ msgid "Reason:"
 msgstr "Kialo:"
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Antaŭrigardo malŝaltita"
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Neniu elemento elektita"
 
 #: src/program/docklets/referencepreview.cpp:315
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Neniu eligo generita"
@@ -3632,14 +3626,13 @@ msgstr "Neniu eligo generita"
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Ne eblas montri antaŭrigardon por ĉi tiu tipo de elemento"
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Abstraktaĵo"
+msgstr "Neniu abstraktaĵo"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4179,15 +4172,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nekompleta Instalado de KBibTeX"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "None"
-#~ msgstr "Neniu"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "@comment{…}"
-#~ msgstr "@comment{…}"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "% …"
-#~ msgstr "% …"
