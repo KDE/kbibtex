@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-22 00:41+0000\n"
-"PO-Revision-Date: 2023-12-20 11:24\n"
+"PO-Revision-Date: 2023-12-23 08:02\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -1317,10 +1317,9 @@ msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "内容："
+msgstr ""
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
@@ -2398,16 +2397,14 @@ msgid "String Delimiters:"
 msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment"
+#, kde-format
 msgid "Comment Context:"
-msgstr "评论"
+msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Document Preview"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "文档预览"
+msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3509,18 +3506,16 @@ msgid "Reason:"
 msgstr "原因："
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "No preview available"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
-msgstr "无预览"
+msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
-msgstr "请选择元素"
+msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:315
 #, kde-format
@@ -3534,11 +3529,10 @@ msgid "Cannot show a preview for this type of element"
 msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "摘要"
+msgstr ""
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4057,11 +4051,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr ""
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "None"
-#~ msgstr "未分组"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "% …"
-#~ msgstr "% …"
