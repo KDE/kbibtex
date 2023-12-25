@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-22 00:41+0000\n"
-"PO-Revision-Date: 2023-11-18 21:32+0100\n"
+"PO-Revision-Date: 2023-12-24 05:09+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -920,12 +920,11 @@ msgid "Both local and remote files"
 msgstr "ორივე, ლოკალური და დაშორებული ფაილი"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "ტექსტის ასლი"
+msgstr "ასლი"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -1322,15 +1321,14 @@ msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "შემცველობა:"
+msgstr "კონტექსტი:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "პრეფიქსი:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1971,11 +1969,10 @@ msgid "Person Names Formatting:"
 msgstr "სახელის ფორმატირება:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "საწყის მნიშვნელობებზე დაბრუნება"
+msgstr "ყველას ჩამოყრა"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
@@ -2404,16 +2401,14 @@ msgid "String Delimiters:"
 msgstr "სტრიქონის გამყოფები:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "კომენტარის ციტირება:"
+msgstr "კომენტარის კონტექსტი:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "კომენტარის ციტირება:"
+msgstr "კომენტარის პრეფიქსი:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3534,22 +3529,19 @@ msgid "Reason:"
 msgstr "მიზეზი:"
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "მინიატურა გათიშულია"
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "ელემენტი არჩეული არაა"
 
 #: src/program/docklets/referencepreview.cpp:315
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "გამოტანა არ დაგენერირებულა"
@@ -3560,11 +3552,10 @@ msgid "Cannot show a preview for this type of element"
 msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "ანოტაცია"
+msgstr "მინიატურის გარეშე"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
