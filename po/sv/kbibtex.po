@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-26 00:41+0000\n"
-"PO-Revision-Date: 2023-11-18 22:18+0100\n"
+"PO-Revision-Date: 2023-12-28 16:59+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -921,12 +921,11 @@ msgid "Both local and remote files"
 msgstr "Både lokala filer och fjärrfiler"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Verbatim text"
+msgstr "Verbatim"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -934,13 +933,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Använd prefix som '%% '"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Använd kommandot @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1319,23 +1318,22 @@ msgstr "Värde:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "En kommentars prefix måste börja med '%'"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "En kommentar med läget 'Verbatim' får inte innehålla tomma rader"
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Innehåll:"
+msgstr "Sammanhang:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Prefix:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1358,12 +1356,13 @@ msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Angiven källkod går inte att tolka som en enda Bibtex-inledning."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
-msgstr "Angiven källkod går inte att tolka som en enda Bibtex-kommentar."
+msgstr ""
+"Angiven källkod går inte att tolka som en enda Bibtex-kommentar. Försök ta "
+"bort tomma rader inne i kommentaren."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -1992,16 +1991,15 @@ msgid "Person Names Formatting:"
 msgstr "Formatering av personnamn:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Återställ"
+msgstr "Återställ alla"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Återställ alla inställningar av 'fråga inte igen':"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:121
 #, kde-format
@@ -2427,16 +2425,14 @@ msgid "String Delimiters:"
 msgstr "Strängavgränsare:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Citationstecken för kommentarer:"
+msgstr "Sammanhang för kommentarer:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Citationstecken för kommentarer:"
+msgstr "Prefix för kommentarer:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3128,6 +3124,10 @@ msgid ""
 "Reload file and loose changes made in KBibTeX or ignore changes on disk and "
 "keep changes made in KBibTeX?"
 msgstr ""
+"Filen '%1' har ändrats på disk men har också ändrats i Kbibtex.\n"
+"\n"
+"Läs in filen igen och förlora ändringarna i Kbibtex eller ignorera ändringar "
+"på disk och behåll ändringarna gjorda i Kbibtex?"
 
 #: src/parts/part.cpp:1201
 #, kde-format
@@ -3613,22 +3613,19 @@ msgid "Reason:"
 msgstr "Orsak:"
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Förhandsgranskning inaktiverad"
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Inget element valt"
 
 #: src/program/docklets/referencepreview.cpp:315
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Ingen utmatning skapad"
@@ -3636,14 +3633,13 @@ msgstr "Ingen utmatning skapad"
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Kan inte visa en förhandsgranskning för den här sortens element"
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Sammanfattning"
+msgstr "Ingen sammanfattning"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
