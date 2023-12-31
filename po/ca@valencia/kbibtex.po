@@ -3598,13 +3598,13 @@ msgid ""
 "Could not start searching the Internet:\n"
 "The search terms are not complete or invalid."
 msgstr ""
-"No s'ha pogut iniciar la busca a Internet:\n"
+"No s'ha pogut iniciar la busca en Internet:\n"
 "Els termes de la busca no estan complets o no són vàlids."
 
 #: src/program/docklets/searchform.cpp:411
 #, kde-format
 msgid "Searching the Internet"
-msgstr "Busca a Internet"
+msgstr "Busca en Internet"
 
 #: src/program/docklets/searchresults.cpp:85
 #: src/program/docklets/searchresults.cpp:100
