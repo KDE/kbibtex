@@ -2333,7 +2333,7 @@ msgstr "Vista prèvia:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr "Copia la cadena de format al porta-retalls"
+msgstr "Copia la cadena de format a dins del porta-retalls"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:622
 #, kde-format

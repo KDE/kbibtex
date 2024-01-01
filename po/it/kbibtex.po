@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-26 00:41+0000\n"
-"PO-Revision-Date: 2023-12-18 21:34+0100\n"
+"PO-Revision-Date: 2023-12-27 17:08+0100\n"
 "Last-Translator: Valter Mura <valtermura@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -921,12 +921,11 @@ msgid "Both local and remote files"
 msgstr "File locali e remoti"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Testo letterale"
+msgstr "Letterale"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -934,13 +933,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Usa prefisso tipo «%% »"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Usa comando @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1243,7 +1242,7 @@ msgstr "L'elemento di tipo «%1» non è valido."
 #: src/gui/element/elementwidgets.cpp:474
 #, kde-format
 msgid "Id '%1' is invalid"
-msgstr "L'Id «%1» non è valido"
+msgstr "L'identificatore «%1» non è valido"
 
 #: src/gui/element/elementwidgets.cpp:526
 #, kde-format
@@ -1324,23 +1323,22 @@ msgstr "Valore:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "Il prefisso di un commento deve iniziare con «%»"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Un commento nella modalità «Letterale» non può contenere righe vuote"
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Contenuto:"
+msgstr "Contesto:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Prefisso:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1371,14 +1369,13 @@ msgstr ""
 "BibTeX."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
 "Il codice sorgente fornito non appare dall'analisi come un singolo commento "
-"BibTeX."
+"BibTeX. Prova a rimuovere le righe vuote all'interno del commento."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -2442,16 +2439,14 @@ msgid "String Delimiters:"
 msgstr "Separatori di stringa:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Citazione del commento:"
+msgstr "Contesto del commento:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Citazione del commento:"
+msgstr "Prefisso del commento:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3144,6 +3139,11 @@ msgid ""
 "Reload file and loose changes made in KBibTeX or ignore changes on disk and "
 "keep changes made in KBibTeX?"
 msgstr ""
+"Il file «%1» è stato modificato sul disco ma è stato modificato anche in "
+"KBibTeX.\n"
+"\n"
+"Vuoi ricaricare il file e perdere le modifiche fatte in KBibTeX oppure vuoi "
+"ignorare le modifiche sul disco e mantenere quelle fatte in KBibTeX?"
 
 #: src/parts/part.cpp:1201
 #, kde-format
@@ -3635,22 +3635,19 @@ msgid "Reason:"
 msgstr "Motivo:"
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Anteprima disabilitata"
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Nessun elemento selezionato"
 
 #: src/program/docklets/referencepreview.cpp:315
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Nessun output generato"
@@ -3658,14 +3655,13 @@ msgstr "Nessun output generato"
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Impossibile mostra un'anteprima per questo tipo di elemento"
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Sunto"
+msgstr "Nessun sunto"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
