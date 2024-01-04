@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# giovanni <g.sora@tiscali.it>, 2017, 2020, 2021, 2022, 2023.
+# giovanni <g.sora@tiscali.it>, 2017, 2020, 2021, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-26 00:41+0000\n"
-"PO-Revision-Date: 2023-11-13 14:58+0100\n"
+"PO-Revision-Date: 2024-01-03 14:50+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -923,7 +923,7 @@ msgstr ""
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr ""
+msgstr "Parola pro parola"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -1317,15 +1317,14 @@ msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Contento:"
+msgstr "Contexto:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Prefixo:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1966,11 +1965,10 @@ msgid "Person Names Formatting:"
 msgstr ""
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Reinitialisa"
+msgstr "Reinitialisa toto"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
@@ -2399,16 +2397,14 @@ msgid "String Delimiters:"
 msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Commento"
+msgstr "Contexto de Commento:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Document Preview"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Vista preliminar de documento"
+msgstr "Prefixo de commento:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -2629,10 +2625,9 @@ msgid "DOI:"
 msgstr "DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
-#, fuzzy, kde-format
-#| msgid "Free text:"
+#, kde-format
 msgid "Free text or DOI:"
-msgstr "Texto libere:"
+msgstr "Texto libere o DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
@@ -3528,18 +3523,16 @@ msgid "Reason:"
 msgstr "Motivo:"
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "No preview available"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
-msgstr "Nulle vista preliminar disponibile"
+msgstr "Vista preliminar dishabilitate"
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "New element"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
-msgstr "Nove elemento"
+msgstr "Nulle elemento selectionate"
 
 #: src/program/docklets/referencepreview.cpp:315
 #, kde-format
@@ -3553,11 +3546,10 @@ msgid "Cannot show a preview for this type of element"
 msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Summario"
+msgstr "Nulle Summario"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
