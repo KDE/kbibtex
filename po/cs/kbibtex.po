@@ -1923,11 +1923,10 @@ msgid "Person Names Formatting:"
 msgstr "Formátování jmen osob:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Nastavit znovu"
+msgstr ""
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:92
 #, kde-format
