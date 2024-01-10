@@ -920,12 +920,11 @@ msgid "Both local and remote files"
 msgstr "Jak místní tak vzdálené soubory"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Podrobný text"
+msgstr ""
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -1319,15 +1318,14 @@ msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Obsah:"
+msgstr "Kontext:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Předpona:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1983,11 +1981,10 @@ msgid "Person Names Formatting:"
 msgstr "Formátování jmen osob:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Nastavit znovu"
+msgstr ""
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
@@ -2418,16 +2415,14 @@ msgid "String Delimiters:"
 msgstr "Oddělovače řetězců:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Uvození poznámky:"
+msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Uvození poznámky:"
+msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -3580,25 +3575,22 @@ msgid "Reason:"
 msgstr "Důvod:"
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
-msgstr "Náhled zakázán"
+msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
-msgstr "Nebyl vybrán žádný prvek"
+msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:315
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
-msgstr "Nebyl vytvořen žádný výstup"
+msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
@@ -3606,11 +3598,10 @@ msgid "Cannot show a preview for this type of element"
 msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Stručný obsah"
+msgstr ""
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4148,15 +4139,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Neúplná instalace KBibTeX"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "None"
-#~ msgstr "Žádný"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "@comment{…}"
-#~ msgstr "@poznámka{…}"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "% …"
-#~ msgstr "% …"
