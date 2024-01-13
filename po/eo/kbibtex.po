@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-16 02:31+0000\n"
-"PO-Revision-Date: 2023-12-16 07:52+0100\n"
+"PO-Revision-Date: 2024-01-08 22:51+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -2334,7 +2334,7 @@ msgstr "Uzantinterfaco"
 #: src/program/docklets/valuelist.cpp:75
 #, kde-format
 msgid "Count"
-msgstr "grafo"
+msgstr "Nombro"
 
 #: src/gui/widgets/filesettingswidget.cpp:127
 #, kde-format
@@ -3691,7 +3691,7 @@ msgstr "Montri Nombran Kolumnon"
 #: src/program/docklets/valuelist.cpp:142
 #, kde-format
 msgid "Sort by Count"
-msgstr "Ordigi laŭ grafo"
+msgstr "Ordigi laŭ nombro"
 
 #: src/program/docklets/valuelist.cpp:176
 #: src/program/docklets/valuelist.cpp:486
