@@ -68,7 +68,7 @@
 #include <KParts/PartLoader>
 #endif // KSERVICE_VERSION >= 0x055200 // >= 5.82.0
 #include <KParts/ReadOnlyPart>
-#include <kio/jobclasses.h>
+#include <kio/statjob.h>
 #include <kio/job.h>
 #include <kio/jobuidelegate.h>
 #include <KToolBar>
