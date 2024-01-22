@@ -50,10 +50,10 @@ target_include_directories(kbibtexprocessing
 
 target_link_libraries(kbibtexprocessing
     PUBLIC
-        Qt${QT_VERSION_MAJOR}::Core
+        Qt${QT_MAJOR_VERSION}::Core
         KBibTeX::Data
     PRIVATE
-        KF${QT_VERSION_MAJOR}::ConfigCore
+        KF${QT_MAJOR_VERSION}::ConfigCore
         KBibTeX::Config
         KBibTeX::IO
 )
@@ -61,17 +61,17 @@ target_link_libraries(kbibtexprocessing
 if(BUILD_KPART OR BUILD_TESTING)
     target_link_libraries(kbibtexprocessing
         PRIVATE
-            Qt${QT_VERSION_MAJOR}::Widgets
-            KF${QT_VERSION_MAJOR}::WidgetsAddons
-            KF${QT_VERSION_MAJOR}::XmlGui
-            KF${QT_VERSION_MAJOR}::Parts
+            Qt${QT_MAJOR_VERSION}::Widgets
+            KF${QT_MAJOR_VERSION}::WidgetsAddons
+            KF${QT_MAJOR_VERSION}::XmlGui
+            KF${QT_MAJOR_VERSION}::Parts
     )
 endif()
 
-if(KF${QT_VERSION_MAJOR}I18n_FOUND)
+if(KF${QT_MAJOR_VERSION}I18n_FOUND)
     target_link_libraries(kbibtexprocessing
         PRIVATE
-            KF${QT_VERSION_MAJOR}::I18n
+            KF${QT_MAJOR_VERSION}::I18n
     )
 endif()
 

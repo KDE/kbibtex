@@ -65,16 +65,16 @@ if(BUILD_APP_DESKTOP)
 
     target_link_libraries(kbibtex
         PRIVATE
-            Qt${QT_VERSION_MAJOR}::Core
-            KF${QT_VERSION_MAJOR}::CoreAddons
-            KF${QT_VERSION_MAJOR}::Crash
-            KF${QT_VERSION_MAJOR}::I18n
-            KF${QT_VERSION_MAJOR}::IconThemes
-            KF${QT_VERSION_MAJOR}::KIOCore
-            KF${QT_VERSION_MAJOR}::KIOFileWidgets
-            KF${QT_VERSION_MAJOR}::Parts
-            KF${QT_VERSION_MAJOR}::Wallet
-            KF${QT_VERSION_MAJOR}::TextWidgets
+            Qt${QT_MAJOR_VERSION}::Core
+            KF${QT_MAJOR_VERSION}::CoreAddons
+            KF${QT_MAJOR_VERSION}::Crash
+            KF${QT_MAJOR_VERSION}::I18n
+            KF${QT_MAJOR_VERSION}::IconThemes
+            KF${QT_MAJOR_VERSION}::KIOCore
+            KF${QT_MAJOR_VERSION}::KIOFileWidgets
+            KF${QT_MAJOR_VERSION}::Parts
+            KF${QT_MAJOR_VERSION}::Wallet
+            KF${QT_MAJOR_VERSION}::TextWidgets
             KBibTeX::Global
             KBibTeX::GUI
             KBibTeX::IO
@@ -82,14 +82,14 @@ if(BUILD_APP_DESKTOP)
             KBibTeX::Processing
     )
 
-    if(Qt${QT_VERSION_MAJOR}WebEngineWidgets_FOUND)
+    if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
         message(STATUS "Using QtWebEngine to render complex HTML content")
         target_link_libraries(kbibtex
             PRIVATE
-                Qt${QT_VERSION_MAJOR}::WebEngineWidgets
+                Qt${QT_MAJOR_VERSION}::WebEngineWidgets
         )
     else()
-        if(Qt${QT_VERSION_MAJOR}WebKitWidgets_FOUND)
+        if(Qt${QT_MAJOR_VERSION}WebKitWidgets_FOUND)
             message(STATUS "Using QtWebKit to render complex HTML content")
             # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
             add_definitions(
@@ -97,7 +97,7 @@ if(BUILD_APP_DESKTOP)
             )
             target_link_libraries(kbibtex
                 PRIVATE
-                    Qt${QT_VERSION_MAJOR}::WebKitWidgets
+                    Qt${QT_MAJOR_VERSION}::WebKitWidgets
             )
         else()
             message(STATUS "If available, using a KPart to render complex HTML content")
@@ -136,7 +136,7 @@ if(BUILD_APP_COMMAND_LINE)
 
     target_link_libraries(kbibtex-cli
         PRIVATE
-            Qt${QT_VERSION_MAJOR}::Core
+            Qt${QT_MAJOR_VERSION}::Core
             KBibTeX::Data
             KBibTeX::IO
             KBibTeX::Processing

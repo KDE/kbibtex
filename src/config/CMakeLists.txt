@@ -42,16 +42,16 @@ target_include_directories(kbibtexconfig
 
 target_link_libraries(kbibtexconfig
     PUBLIC
-        Qt${QT_VERSION_MAJOR}::Core
+        Qt${QT_MAJOR_VERSION}::Core
         KBibTeX::Global
     PRIVATE
-        KF${QT_VERSION_MAJOR}::ConfigCore
+        KF${QT_MAJOR_VERSION}::ConfigCore
 )
 
-if(KF${QT_VERSION_MAJOR}I18n_FOUND)
+if(KF${QT_MAJOR_VERSION}I18n_FOUND)
     target_link_libraries(kbibtexconfig
         PRIVATE
-            KF${QT_VERSION_MAJOR}::I18n
+            KF${QT_MAJOR_VERSION}::I18n
     )
 endif()
 

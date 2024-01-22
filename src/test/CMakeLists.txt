@@ -101,9 +101,9 @@ add_dependencies(kbibtexguitest
 )
 
 target_link_libraries(kbibtextest
-    Qt${QT_VERSION_MAJOR}::Core
-    KF${QT_VERSION_MAJOR}::KIOCore
-    KF${QT_VERSION_MAJOR}::I18n
+    Qt${QT_MAJOR_VERSION}::Core
+    KF${QT_MAJOR_VERSION}::KIOCore
+    KF${QT_MAJOR_VERSION}::I18n
     KBibTeX::Config
     KBibTeX::Data
     KBibTeX::IO
@@ -119,7 +119,7 @@ target_include_directories(kbibtextest
 
 target_link_libraries(kbibtexnetworkingtest
     PRIVATE
-        Qt${QT_VERSION_MAJOR}::Test
+        Qt${QT_MAJOR_VERSION}::Test
         KBibTeX::Networking
 )
 
@@ -130,9 +130,9 @@ target_include_directories(kbibtexnetworkingtest
 
 target_link_libraries(kbibtexiotest
     PRIVATE
-        Qt${QT_VERSION_MAJOR}::Test
-        KF${QT_VERSION_MAJOR}::I18n
-        KF${QT_VERSION_MAJOR}::ConfigCore
+        Qt${QT_MAJOR_VERSION}::Test
+        KF${QT_MAJOR_VERSION}::I18n
+        KF${QT_MAJOR_VERSION}::ConfigCore
         KBibTeX::IO
 )
 
@@ -143,7 +143,7 @@ target_include_directories(kbibtexiotest
 
 target_link_libraries(kbibtexdatatest
     PRIVATE
-        Qt${QT_VERSION_MAJOR}::Test
+        Qt${QT_MAJOR_VERSION}::Test
         KBibTeX::Data
         KBibTeX::IO
 )
@@ -155,7 +155,7 @@ target_include_directories(kbibtexdatatest
 
 target_link_libraries(kbibtexguitest
     PRIVATE
-        Qt${QT_VERSION_MAJOR}::Test
+        Qt${QT_MAJOR_VERSION}::Test
         KBibTeX::Global
         KBibTeX::Data
         KBibTeX::GUI
@@ -224,7 +224,7 @@ if(TESTSET_DIRECTORY)
     )
     target_link_libraries(kbibtexfilestest
         PRIVATE
-            Qt${QT_VERSION_MAJOR}::Test
+            Qt${QT_MAJOR_VERSION}::Test
             KBibTeX::Data
             KBibTeX::IO
     )

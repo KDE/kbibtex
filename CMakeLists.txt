@@ -15,25 +15,8 @@ project(
 
 set(CMAKE_CXX_STANDARD 14)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Core)
-message(STATUS "Found Qt version ${QT_VERSION_MAJOR}")
-if(BUILD_WITH_QT6)
-    message(STATUS "Using Qt version 6, honoring BUILD_WITH_QT6")
-    set(QT_VERSION_MAJOR 6)
-elseif(BUILD_WITH_QT5)
-    message(STATUS "Using Qt version 5, honoring BUILD_WITH_QT5")
-    set(QT_VERSION_MAJOR 5)
-elseif(QT_MAJOR_VERSION)
-    message(STATUS "Using Qt version " ${QT_MAJOR_VERSION} ", honoring QT_MAJOR_VERSION")
-    set(QT_VERSION_MAJOR ${QT_MAJOR_VERSION})
-endif()
-
 set(KF_MIN_VERSION "5.86")
 set(QT_REQUIRED_VERSION "5.15.2")
-if (QT_VERSION_MAJOR GREATER_EQUAL 6)
-    set(QT_REQUIRED_VERSION "6.4.0")
-    set(KF_MIN_VERSION "5.240.0")
-endif()
 
 set(KDE_COMPILERSETTINGS_LEVEL ${KF_MIN_VERSION})
 find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
@@ -128,7 +111,7 @@ find_package(
     REQUIRED
 )
 
-if (QT_VERSION_MAJOR GREATER_EQUAL 6)
+if (QT_MAJOR_VERSION GREATER_EQUAL 6)
     # Should become necessary once migrated from QTextCodec to QStringConverter
     find_package(
         Qt6 ${QT_REQUIRED_VERSION}
@@ -138,7 +121,7 @@ if (QT_VERSION_MAJOR GREATER_EQUAL 6)
     )
 endif()
 
-if (QT_VERSION_MAJOR EQUAL 5)
+if (QT_MAJOR_VERSION EQUAL 5)
     # Migrate away from QXmlQuery
     find_package(
         Qt5 ${QT_REQUIRED_VERSION}
@@ -150,7 +133,7 @@ endif()
 
 if(BUILD_KPART OR BUILD_TESTING)
     find_package(
-        Qt${QT_VERSION_MAJOR} ${QT_REQUIRED_VERSION}
+        Qt${QT_MAJOR_VERSION} ${QT_REQUIRED_VERSION}
         CONFIG
         COMPONENTS
         Gui
@@ -163,28 +146,28 @@ if(BUILD_KPART OR BUILD_TESTING)
         WebKitWidgets
         Test
     )
-    if (Qt${QT_VERSION_MAJOR}Widgets_FOUND)
+    if (Qt${QT_MAJOR_VERSION}Widgets_FOUND)
         add_compile_definitions(HAVE_QTWIDGETS)
     endif()
 endif()
 
-if(Qt${QT_VERSION_MAJOR}WebEngineWidgets_FOUND)
+if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
     add_compile_definitions(HAVE_WEBENGINEWIDGETS)
 endif()
 
-if (Qt${QT_VERSION_MAJOR}XmlPatterns_FOUND)
+if (Qt${QT_MAJOR_VERSION}XmlPatterns_FOUND)
     add_compile_definitions(HAVE_QTXMLPATTERNS)
 endif()
 
 find_package(
-    KF${QT_VERSION_MAJOR} ${KF_MIN_VERSION}
+    KF${QT_MAJOR_VERSION} ${KF_MIN_VERSION}
     MODULE
     REQUIRED
     Config
 )
 if(BUILD_KPART OR BUILD_TESTING)
     find_package(
-        KF${QT_VERSION_MAJOR} ${KF_MIN_VERSION}
+        KF${QT_MAJOR_VERSION} ${KF_MIN_VERSION}
         MODULE
         REQUIRED
         I18n
@@ -206,7 +189,7 @@ endif()
 if (KF6_FOUND)
     add_compile_definitions(HAVE_KF6 HAVE_KF)
 endif()
-if (KF${QT_VERSION_MAJOR}I18n_FOUND)
+if (KF${QT_MAJOR_VERSION}I18n_FOUND)
     add_compile_definitions(HAVE_KFI18N)
 endif()
 
@@ -214,10 +197,10 @@ find_package(
     Poppler
     MODULE
     REQUIRED
-    Qt${QT_VERSION_MAJOR}
+    Qt${QT_MAJOR_VERSION}
 )
-if (PKG_Poppler_Qt${QT_VERSION_MAJOR}_FOUND)
-    add_compile_definitions(HAVE_POPPLERQT${QT_VERSION_MAJOR} HAVE_POPPLERQT)
+if (PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
+    add_compile_definitions(HAVE_POPPLERQT${QT_MAJOR_VERSION} HAVE_POPPLERQT)
 endif()
 
 find_package(
@@ -244,12 +227,12 @@ if (MSVC)
     # in 1252 encoding as assumed by MSVC for C++ source files.
     set(BUILD_TESTING OFF)
 endif()
-if(NOT BUILD_TESTING AND Qt${QT_VERSION_MAJOR}Test_FOUND)
+if(NOT BUILD_TESTING AND Qt${QT_MAJOR_VERSION}Test_FOUND)
     message(STATUS
         "Testing is disabled, but can be enabled as the Qt::Test library is available"
     )
 endif()
-if(BUILD_TESTING AND NOT Qt${QT_VERSION_MAJOR}Test_FOUND)
+if(BUILD_TESTING AND NOT Qt${QT_MAJOR_VERSION}Test_FOUND)
     message(STATUS
         "Disabling building tests as Qt::Test library is not available"
     )
@@ -295,12 +278,12 @@ add_subdirectory(
 add_subdirectory(
     mime
 )
-if(KF${QT_VERSION_MAJOR}DocTools_FOUND)
+if(KF${QT_MAJOR_VERSION}DocTools_FOUND)
     add_subdirectory(doc)
     kdoctools_install(po)
 endif()
 
-if(KF${QT_VERSION_MAJOR}I18n_FOUND)
+if(KF${QT_MAJOR_VERSION}I18n_FOUND)
     ki18n_install(po)
 endif()
 

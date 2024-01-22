@@ -36,11 +36,11 @@ target_include_directories(kbibtexpart
 
 target_link_libraries(kbibtexpart
     PRIVATE
-        KF${QT_VERSION_MAJOR}::Parts
-        KF${QT_VERSION_MAJOR}::CoreAddons
-        KF${QT_VERSION_MAJOR}::I18n
-        KF${QT_VERSION_MAJOR}::KIOGui
-        KF${QT_VERSION_MAJOR}::JobWidgets
+        KF${QT_MAJOR_VERSION}::Parts
+        KF${QT_MAJOR_VERSION}::CoreAddons
+        KF${QT_MAJOR_VERSION}::I18n
+        KF${QT_MAJOR_VERSION}::KIOGui
+        KF${QT_MAJOR_VERSION}::JobWidgets
         KBibTeX::GUI
         KBibTeX::IO
         KBibTeX::Networking
@@ -51,5 +51,5 @@ install(
     TARGETS
     kbibtexpart
     DESTINATION
-    ${KDE_INSTALL_PLUGINDIR}/kf${QT_VERSION_MAJOR}/parts
+    ${KDE_INSTALL_PLUGINDIR}/kf${QT_MAJOR_VERSION}/parts
 )

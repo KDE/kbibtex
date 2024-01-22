@@ -39,9 +39,9 @@ target_include_directories(kbibtexglobal
 
 target_link_libraries(kbibtexglobal
     PUBLIC
-        Qt${QT_VERSION_MAJOR}::Core
+        Qt${QT_MAJOR_VERSION}::Core
     PRIVATE
-        KF${QT_VERSION_MAJOR}::ConfigCore
+        KF${QT_MAJOR_VERSION}::ConfigCore
 )
 
 install(
