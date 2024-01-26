@@ -585,7 +585,7 @@ latex exemple
 latex exemple</screen>
     <tip>
       <para
->Si utilitzeu algun intèrpret d'ordres avançat de &latex; com el &kile; o &lyx;, no haureu de preocupar-vos per executar totes aquestes ordres des de l'emulador de consola. Simplement utilitzeu una drecera (<keycombo
+>Si utilitzeu algun intèrpret d'ordres avançat de &latex; com el &kile; o &lyx;, no haureu de preocupar-vos per a executar totes aquestes ordres des de l'emulador de consola. Simplement utilitzeu una drecera (<keycombo
 >&Alt;<keycap
 >6</keycap
 ></keycombo
