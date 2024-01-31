@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Tommi Nieminen <translator@legisign.org>, 2014, 2015, 2018, 2019, 2020, 2021, 2022, 2023.
+# Tommi Nieminen <translator@legisign.org>, 2014, 2015, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2014, 2015, 2016.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-16 02:31+0000\n"
-"PO-Revision-Date: 2023-03-29 23:10+0300\n"
+"PO-Revision-Date: 2024-01-29 17:52+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -1929,16 +1929,15 @@ msgid "Person Names Formatting:"
 msgstr "Henkilönnimien muotoilu:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Tyhjennä"
+msgstr "Palauta kaikki"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:92
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Tyhjennä kaikki ”älä kysy enää” -valinnat:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:119
 #, kde-format
@@ -2742,8 +2741,8 @@ msgid ""
 "web page telling you that KBibTeX got authorized.<br/>This window will be "
 "closed automatically.</li></ol></qt>"
 msgstr ""
-"<qt><p>Tälle <strong>KBibTeX</strong>-instanssille on annettava "
-"käyttöoikeudet <strong>Zotero-kirjastoosi</strong>.</p><p>Valtuutus vaatii "
+"<qt><p>Tälle <strong>KBibTeX</strong>-ilmentymälle on annettava "
+"käyttöoikeudet <strong>Zotero-kirjastoon</strong>.</p><p>Valtuutus vaatii "
 "seuraavat vaiheet:</p><ol><li>Avaa annettu verkko-osoite selaimeen.</"
 "li><li>Kirjaudu Zoteroon ja myönnä KBibTeXille käyttöoikeudet.</"
 "li><li>Edellisen onnistuttua sinut ohjataan sivulle, joka kertoo KBibTeXin "
