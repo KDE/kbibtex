@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Tommi Nieminen <translator@legisign.org>, 2014, 2015, 2018, 2019, 2020, 2021, 2022, 2023.
+# Tommi Nieminen <translator@legisign.org>, 2014, 2015, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2014, 2015, 2016.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-26 00:41+0000\n"
-"PO-Revision-Date: 2023-04-20 17:32+0300\n"
+"PO-Revision-Date: 2024-01-29 17:52+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -935,13 +935,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Käytä etuliitettä kuten ”%% ”"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Käytä komentoa @comment{…}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1319,7 +1319,7 @@ msgstr "Arvo:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "Kommentin etuliitteen on alettava ”%”"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
@@ -1327,15 +1327,14 @@ msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Sisältö:"
+msgstr "Konteksti:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Etuliite:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1358,12 +1357,13 @@ msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Annettu lähdekoodi ei jäsenny yhdeksi BibTeX-johdannoksi."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
-msgstr "Annettu lähdekoodi ei jäsenny yhdeksi BibTeX-kommentiksi."
+msgstr ""
+"Annettu lähdekoodi ei jäsenny yhdeksi BibTeX-kommentiksi. Yritä poistaa "
+"kommentista tyhjät rivit."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -1990,16 +1990,15 @@ msgid "Person Names Formatting:"
 msgstr "Henkilönnimien muotoilu:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Tyhjennä"
+msgstr "Palauta kaikki"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Tyhjennä kaikki ”älä kysy enää” -valinnat:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:121
 #, kde-format
@@ -2426,16 +2425,14 @@ msgid "String Delimiters:"
 msgstr "Merkkijonoerottimet:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Kommenttien lainaus:"
+msgstr "Kommenttien konteksti:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Kommenttien lainaus:"
+msgstr "Kommenttietuliite:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -2661,10 +2658,9 @@ msgid "DOI:"
 msgstr "DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
-#, fuzzy, kde-format
-#| msgid "Free text:"
+#, kde-format
 msgid "Free text or DOI:"
-msgstr "Vapaa teksti:"
+msgstr "Vapaa teksti tai DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
@@ -2867,8 +2863,8 @@ msgid ""
 "web page telling you that KBibTeX got authorized.<br/>This window will be "
 "closed automatically.</li></ol></qt>"
 msgstr ""
-"<qt><p>Tälle <strong>KBibTeX</strong>-instanssille on annettava "
-"käyttöoikeudet <strong>Zotero-kirjastoosi</strong>.</p><p>Valtuutus vaatii "
+"<qt><p>Tälle <strong>KBibTeX</strong>-ilmentymälle on annettava "
+"käyttöoikeudet <strong>Zotero-kirjastoon</strong>.</p><p>Valtuutus vaatii "
 "seuraavat vaiheet:</p><ol><li>Avaa annettu verkko-osoite selaimeen.</"
 "li><li>Kirjaudu Zoteroon ja myönnä KBibTeXille käyttöoikeudet.</"
 "li><li>Edellisen onnistuttua sinut ohjataan sivulle, joka kertoo KBibTeXin "
@@ -3127,6 +3123,9 @@ msgid ""
 "Reload file and loose changes made in KBibTeX or ignore changes on disk and "
 "keep changes made in KBibTeX?"
 msgstr ""
+"Tiedosto ”%1” on muuttunut levyllä mutta myös KBibTeXissä.\n"
+"\n"
+"Ladataanko tiedosto uudelleen ja hylätään KBibTeXin muutokset vai pidetäänkö "
 
 #: src/parts/part.cpp:1201
 #, kde-format
@@ -3614,22 +3613,19 @@ msgid "Reason:"
 msgstr "Syy:"
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Esikatselu ei käytössä"
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
-msgstr "Ei valittua tietuetta"
+msgstr "Ei valittua alkiota"
 
 #: src/program/docklets/referencepreview.cpp:315
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Tulostetta ei luotu"
@@ -3637,14 +3633,13 @@ msgstr "Tulostetta ei luotu"
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Tämänlaisille alkioille ei voi näyttää esikatselua"
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Tiivistelmä"
+msgstr "Ei tiivistelmää"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
