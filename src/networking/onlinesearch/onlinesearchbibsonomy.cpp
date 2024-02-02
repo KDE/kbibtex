@@ -66,7 +66,7 @@ public:
     QSpinBox *numResultsField;
 
     Form(QWidget *widget)
-            : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine Bibsonomy")) {
+            : OnlineSearchAbstract::Form(widget), configGroupName(QStringLiteral("Search Engine BibSonomy")) {
         QGridLayout *layout = new QGridLayout(this);
         layout->setContentsMargins(0, 0, 0, 0);
 
@@ -228,7 +228,7 @@ void OnlineSearchBibsonomy::startSearchFromForm()
 QString OnlineSearchBibsonomy::label() const
 {
 #ifdef HAVE_KF
-    return i18n("Bibsonomy");
+    return i18n("BibSonomy");
 #else // HAVE_KF
     //= onlinesearch-bibsonomy-label
     return QObject::tr("Bibsonomy");

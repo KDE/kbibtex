@@ -279,7 +279,7 @@ public:
         QSignalBlocker enginesListSignalBlocker(enginesList);
 
         QListWidgetItem *item = new QListWidgetItem(engine->label(), enginesList);
-        static const QSet<QString> enginesEnabledByDefault {QStringLiteral("GoogleScholar"), QStringLiteral("Bibsonomy")};
+        static const QSet<QString> enginesEnabledByDefault {QStringLiteral("GoogleScholar"), QStringLiteral("BibSonomy")};
         item->setCheckState(configGroup.readEntry(engine->name(), enginesEnabledByDefault.contains(engine->name())) ? Qt::Checked : Qt::Unchecked);
         item->setIcon(engine->icon(item));
         item->setToolTip(engine->label());
