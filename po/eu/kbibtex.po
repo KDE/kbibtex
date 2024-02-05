@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-26 00:41+0000\n"
-"PO-Revision-Date: 2024-01-31 22:27+0100\n"
+"PO-Revision-Date: 2024-02-04 23:24+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -86,9 +86,9 @@ msgstr "Identifikatzailea"
 msgid "Sorting"
 msgstr "Sailkatzea"
 
-#, kde-format
+#, fuzzy, kde-format
 msgid "Sort Name"
-msgstr ""
+msgstr "Sailkatu izena"
 
 #, kde-format
 msgid "Abbreviations"
@@ -141,9 +141,9 @@ msgid "Technical Report"
 msgstr "Txosten teknikoa"
 
 #: src/config/bibtexentries.cpp:70 src/config/bibtexentries.cpp:94
-#, kde-format
+#, fuzzy, kde-format
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Beste zenbait"
 
 #: src/config/bibtexentries.cpp:71 src/config/bibtexentries.cpp:83
 #, kde-format
@@ -248,38 +248,38 @@ msgstr ""
 #: src/config/bibtexentries.cpp:102
 #, kde-format
 msgid "Single-volume Reference (e.g. Encyclopedia)"
-msgstr ""
+msgstr "Bolumen bakarreko aipamena (adib. Entziklopedia)"
 
 #: src/config/bibtexentries.cpp:103
 #, kde-format
 msgid "Multi-volume Reference (e.g. Encyclopedia)"
-msgstr ""
+msgstr "Bolumen anitzeko aipamena (adib. Entziklopedia)"
 
 #: src/config/bibtexentries.cpp:104
 #, kde-format
 msgid "Part of a Reference"
-msgstr ""
+msgstr "Aipamen baten zatia"
 
 #: src/config/bibtexentries.cpp:105
 #, kde-format
 msgid "Report"
-msgstr ""
+msgstr "Txostena"
 
 #: src/config/bibtexentries.cpp:106
 #, kde-format
 msgid "Thesis"
-msgstr ""
+msgstr "Tesia"
 
 #: src/config/bibtexfields.cpp:160 src/config/bibtexfields.cpp:199
 #, kde-format
 msgid "Element Type"
-msgstr ""
+msgstr "Elementu mota"
 
 #: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:200
 #: src/gui/file/findduplicatesui.cpp:159
 #, kde-format
 msgid "Identifier"
-msgstr ""
+msgstr "Identifikatzailea"
 
 #: src/config/bibtexfields.cpp:162 src/config/bibtexfields.cpp:201
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:323
@@ -288,17 +288,17 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:427
 #, kde-format
 msgid "Title"
-msgstr ""
+msgstr "Titulua"
 
 #: src/config/bibtexfields.cpp:163 src/config/bibtexfields.cpp:202
 #, kde-format
 msgid "Title or Book Title"
-msgstr ""
+msgstr "Titulua edo liburuaren titulua"
 
 #: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:211
 #, kde-format
 msgid "Author or Editor"
-msgstr ""
+msgstr "Egilea edo editorea"
 
 #: src/config/bibtexfields.cpp:165 src/config/bibtexfields.cpp:212
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:649
@@ -306,17 +306,17 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:79
 #, kde-format
 msgid "Author"
-msgstr ""
+msgstr "Egilea"
 
 #: src/config/bibtexfields.cpp:166 src/config/bibtexfields.cpp:217
 #, kde-format
 msgid "Editor"
-msgstr ""
+msgstr "Editorea"
 
 #: src/config/bibtexfields.cpp:167 src/config/bibtexfields.cpp:233
 #, kde-format
 msgid "Month"
-msgstr ""
+msgstr "Hilabetea"
 
 #: src/config/bibtexfields.cpp:168 src/config/bibtexfields.cpp:234
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:212
@@ -324,7 +324,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:688
 #, kde-format
 msgid "Year"
-msgstr ""
+msgstr "Urtea"
 
 #: src/config/bibtexfields.cpp:169
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:424
@@ -333,7 +333,7 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:477
 #, kde-format
 msgid "Journal"
-msgstr ""
+msgstr "Egunkaria"
 
 #: src/config/bibtexfields.cpp:170 src/config/bibtexfields.cpp:242
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:244
@@ -342,120 +342,120 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:520
 #, kde-format
 msgid "Volume"
-msgstr ""
+msgstr "Bolumena"
 
 #: src/config/bibtexfields.cpp:171 src/config/bibtexfields.cpp:244
 #, kde-format
 msgid "Number"
-msgstr ""
+msgstr "Zenbakia"
 
 #: src/config/bibtexfields.cpp:172 src/config/bibtexfields.cpp:251
 #, kde-format
 msgid "ISSN"
-msgstr ""
+msgstr "ISSN"
 
 #: src/config/bibtexfields.cpp:173 src/config/bibtexfields.cpp:252
 #, kde-format
 msgid "ISBN"
-msgstr ""
+msgstr "ISBN"
 
 #: src/config/bibtexfields.cpp:174 src/config/bibtexfields.cpp:253
 #, kde-format
 msgid "ISBN or ISSN"
-msgstr ""
+msgstr "ISBN edo ISSN"
 
 #: src/config/bibtexfields.cpp:175 src/config/bibtexfields.cpp:255
-#, kde-format
+#, fuzzy, kde-format
 msgid "How Published"
-msgstr ""
+msgstr "Nola argitaratua"
 
 #: src/config/bibtexfields.cpp:176 src/config/bibtexfields.cpp:256
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Oharra"
 
 #: src/config/bibtexfields.cpp:177 src/config/bibtexfields.cpp:259
-#, kde-format
+#, fuzzy, kde-format
 msgid "Abstract"
-msgstr ""
+msgstr "Abstraktua"
 
 #: src/config/bibtexfields.cpp:178 src/config/bibtexfields.cpp:260
 #, kde-format
 msgid "Pages"
-msgstr ""
+msgstr "Orriak"
 
 #: src/config/bibtexfields.cpp:179 src/config/bibtexfields.cpp:264
 #, kde-format
 msgid "Publisher"
-msgstr ""
+msgstr "Argitaratzailea"
 
 #: src/config/bibtexfields.cpp:180 src/config/bibtexfields.cpp:266
 #, kde-format
 msgid "Institution"
-msgstr ""
+msgstr "Erakundea"
 
 #: src/config/bibtexfields.cpp:181 src/config/bibtexfields.cpp:267
 #, kde-format
 msgid "Book Title"
-msgstr ""
+msgstr "Liburuaren titulua"
 
 #: src/config/bibtexfields.cpp:182 src/config/bibtexfields.cpp:272
 #, kde-format
 msgid "Series"
-msgstr ""
+msgstr "Serieak"
 
 #: src/config/bibtexfields.cpp:183 src/config/bibtexfields.cpp:274
 #, kde-format
 msgid "Edition"
-msgstr ""
+msgstr "Argitalpena"
 
 #: src/config/bibtexfields.cpp:184 src/config/bibtexfields.cpp:275
 #, kde-format
 msgid "Chapter"
-msgstr ""
+msgstr "Kapitulua"
 
 #: src/config/bibtexfields.cpp:185 src/config/bibtexfields.cpp:276
 #, kde-format
 msgid "Organization"
-msgstr ""
+msgstr "Erakundea"
 
 #: src/config/bibtexfields.cpp:186
 #, kde-format
 msgid "School"
-msgstr ""
+msgstr "Eskola"
 
 #: src/config/bibtexfields.cpp:187 src/config/bibtexfields.cpp:280
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:127
 #, kde-format
 msgid "Keywords"
-msgstr ""
+msgstr "Gako-hitzak"
 
 #: src/config/bibtexfields.cpp:188 src/config/bibtexfields.cpp:281
 #, kde-format
 msgid "Cross Reference"
-msgstr ""
+msgstr "Aipamen gurutzatua"
 
 #: src/config/bibtexfields.cpp:189 src/config/bibtexfields.cpp:283
 #: src/networking/onlinesearch/onlinesearchdoi.cpp:185
 #, kde-format
 msgid "DOI"
-msgstr ""
+msgstr "DOI"
 
 #: src/config/bibtexfields.cpp:190 src/config/bibtexfields.cpp:287
 #, kde-format
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: src/config/bibtexfields.cpp:191 src/config/bibtexfields.cpp:290
 #: src/config/bibtexfields.cpp:313
 #, kde-format
 msgid "Location"
-msgstr ""
+msgstr "Kokalekua"
 
 #: src/config/bibtexfields.cpp:192
 #, kde-format
 msgid "Address"
-msgstr ""
+msgstr "Helbidea"
 
 #: src/config/bibtexfields.cpp:193 src/config/bibtexfields.cpp:292
 #: src/gui/file/findduplicatesui.cpp:161
@@ -465,29 +465,29 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:499
 #, kde-format
 msgid "Type"
-msgstr ""
+msgstr "Mota"
 
 #: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:1004
 #, kde-format
 msgid "Key"
-msgstr ""
+msgstr "Gakoa"
 
 #: src/config/bibtexfields.cpp:195 src/config/bibtexfields.cpp:301
 #: src/gui/preferences/settingscolorlabelwidget.cpp:194
 #: src/gui/preferences/settingscolorlabelwidget.cpp:427
 #, kde-format
 msgid "Color"
-msgstr ""
+msgstr "Kolorea"
 
 #: src/config/bibtexfields.cpp:196
 #, kde-format
 msgid "Stars"
-msgstr ""
+msgstr "Izarrak"
 
 #: src/config/bibtexfields.cpp:203
 #, kde-format
 msgid "Subtitle"
-msgstr ""
+msgstr "Azpititulua"
 
 #: src/config/bibtexfields.cpp:204
 #, kde-format
@@ -502,7 +502,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:206
 #, kde-format
 msgid "Original Title"
-msgstr ""
+msgstr "Jatorrizko titulua"
 
 #: src/config/bibtexfields.cpp:207
 #, kde-format
@@ -510,9 +510,9 @@ msgid "Reprint Title"
 msgstr ""
 
 #: src/config/bibtexfields.cpp:208
-#, kde-format
+#, fuzzy, kde-format
 msgid "Main Title"
-msgstr ""
+msgstr "Izenburu nagusia"
 
 #: src/config/bibtexfields.cpp:209
 #, kde-format
@@ -537,12 +537,12 @@ msgstr ""
 #: src/config/bibtexfields.cpp:215
 #, kde-format
 msgid "Author Type"
-msgstr ""
+msgstr "Egile mota"
 
 #: src/config/bibtexfields.cpp:216
 #, kde-format
 msgid "Book Author"
-msgstr ""
+msgstr "Liburuaren egilea"
 
 #: src/config/bibtexfields.cpp:218
 #, kde-format
@@ -550,9 +550,9 @@ msgid "Short Editor"
 msgstr ""
 
 #: src/config/bibtexfields.cpp:219
-#, kde-format
+#, fuzzy, kde-format
 msgid "Editor Type"
-msgstr ""
+msgstr "Editore mota"
 
 #: src/config/bibtexfields.cpp:220
 #, kde-format
@@ -587,7 +587,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:226
 #, kde-format
 msgid "Translator"
-msgstr ""
+msgstr "Itzultzailea"
 
 #: src/config/bibtexfields.cpp:227
 #, kde-format
@@ -605,9 +605,9 @@ msgid "Foreword Author"
 msgstr ""
 
 #: src/config/bibtexfields.cpp:230
-#, kde-format
+#, fuzzy, kde-format
 msgid "Annotator"
-msgstr ""
+msgstr "Ohargilea"
 
 #: src/config/bibtexfields.cpp:231
 #, kde-format
@@ -617,17 +617,17 @@ msgstr ""
 #: src/config/bibtexfields.cpp:232
 #, kde-format
 msgid "Patent Holder"
-msgstr ""
+msgstr "Patentearen titularra"
 
 #: src/config/bibtexfields.cpp:235
 #, kde-format
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #: src/config/bibtexfields.cpp:236
 #, kde-format
 msgid "Date or Year"
-msgstr ""
+msgstr "Data edo urtea"
 
 #: src/config/bibtexfields.cpp:237
 #, kde-format
@@ -637,7 +637,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:238
 #, kde-format
 msgid "Original Date"
-msgstr ""
+msgstr "Jatorrizko data"
 
 #: src/config/bibtexfields.cpp:239
 #, kde-format
@@ -657,42 +657,42 @@ msgstr ""
 #: src/config/bibtexfields.cpp:243
 #, kde-format
 msgid "Number of Volumes"
-msgstr ""
+msgstr "Bolumen kopurua"
 
 #: src/config/bibtexfields.cpp:245
 #, kde-format
 msgid "Version"
-msgstr ""
+msgstr "Bertsioa"
 
 #: src/config/bibtexfields.cpp:246
 #, kde-format
 msgid "Part"
-msgstr ""
+msgstr "Zatia"
 
 #: src/config/bibtexfields.cpp:247
-#, kde-format
+#, fuzzy, kde-format
 msgid "Issue"
-msgstr ""
+msgstr "Jaulkipena"
 
 #: src/config/bibtexfields.cpp:248
 #, kde-format
 msgid "IASN"
-msgstr ""
+msgstr "IASN"
 
 #: src/config/bibtexfields.cpp:249
 #, kde-format
 msgid "ISMN"
-msgstr ""
+msgstr "ISMN"
 
 #: src/config/bibtexfields.cpp:250
 #, kde-format
 msgid "ISRN"
-msgstr ""
+msgstr "ISRN"
 
 #: src/config/bibtexfields.cpp:254
 #, kde-format
 msgid "ISWC"
-msgstr ""
+msgstr "ISWC"
 
 #: src/config/bibtexfields.cpp:257
 #, kde-format
@@ -702,12 +702,12 @@ msgstr ""
 #: src/config/bibtexfields.cpp:258
 #, kde-format
 msgid "Annotation"
-msgstr ""
+msgstr "Idatzoharra"
 
 #: src/config/bibtexfields.cpp:261
-#, kde-format
+#, fuzzy, kde-format
 msgid "Total Pages"
-msgstr ""
+msgstr "Guztirako elementuak"
 
 #: src/config/bibtexfields.cpp:262
 #, kde-format
@@ -755,9 +755,9 @@ msgid "Event Title"
 msgstr ""
 
 #: src/config/bibtexfields.cpp:278
-#, kde-format
+#, fuzzy, kde-format
 msgid "Venue"
-msgstr ""
+msgstr "Topalekua:"
 
 #: src/config/bibtexfields.cpp:279
 #, kde-format
@@ -767,32 +767,32 @@ msgstr ""
 #: src/config/bibtexfields.cpp:282
 #, kde-format
 msgid "XRef"
-msgstr ""
+msgstr "XRef"
 
 #: src/config/bibtexfields.cpp:284
 #, kde-format
 msgid "E-Print"
-msgstr ""
+msgstr "E-Print"
 
 #: src/config/bibtexfields.cpp:285
 #, kde-format
 msgid "E-Print Class"
-msgstr ""
+msgstr "E-Print klasea"
 
 #: src/config/bibtexfields.cpp:286
 #, kde-format
 msgid "E-Print Type"
-msgstr ""
+msgstr "E-Print mota"
 
 #: src/config/bibtexfields.cpp:288
 #, kde-format
 msgid "URL Date"
-msgstr ""
+msgstr "URL data"
 
 #: src/config/bibtexfields.cpp:289
 #, kde-format
 msgid "Local File URL"
-msgstr ""
+msgstr "Fitxategi lokalaren URL"
 
 #: src/config/bibtexfields.cpp:291
 #, kde-format
@@ -802,13 +802,13 @@ msgstr ""
 #: src/config/bibtexfields.cpp:293
 #, kde-format
 msgid "EID"
-msgstr ""
+msgstr "EID"
 
 #: src/config/bibtexfields.cpp:294
 #: src/gui/preferences/settingscolorlabelwidget.cpp:195
 #, kde-format
 msgid "Label"
-msgstr ""
+msgstr "Etiketa"
 
 #: src/config/bibtexfields.cpp:295
 #, kde-format
@@ -823,28 +823,28 @@ msgstr ""
 #: src/config/bibtexfields.cpp:297
 #, kde-format
 msgid "Publication State"
-msgstr ""
+msgstr "Argitalpen egoera"
 
 #: src/config/bibtexfields.cpp:298
 #, kde-format
 msgid "Language"
-msgstr ""
+msgstr "Hizkuntza"
 
 #: src/config/bibtexfields.cpp:299
 #, kde-format
 msgid "Original Language"
-msgstr ""
+msgstr "Jatorrizko hizkuntza"
 
 #: src/config/bibtexfields.cpp:300 src/networking/zotero/collection.cpp:96
 #: src/program/docklets/zoterobrowser.cpp:108
 #, kde-format
 msgid "Library"
-msgstr ""
+msgstr "Liburutegia"
 
 #: src/config/bibtexfields.cpp:302
 #, kde-format
 msgid "Gender"
-msgstr ""
+msgstr "Generoa"
 
 #: src/config/bibtexfields.cpp:303
 #, kde-format
@@ -859,7 +859,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:305
 #, kde-format
 msgid "Entry Options"
-msgstr ""
+msgstr "Sarrera-aukerak"
 
 #: src/config/bibtexfields.cpp:306
 #, kde-format
@@ -894,32 +894,32 @@ msgstr ""
 #: src/config/bibtexfields.cpp:312
 #, kde-format
 msgid "ISAN"
-msgstr ""
+msgstr "ISAN"
 
 #: src/config/preferences.cpp:433
 #, kde-format
 msgid "BibTeX"
-msgstr ""
+msgstr "BibTeX"
 
 #: src/config/preferences.cpp:433
 #, kde-format
 msgid "BibLaTeX"
-msgstr ""
+msgstr "BibLaTeX"
 
 #: src/config/preferences.cpp:597
 #, kde-format
 msgid "No backups"
-msgstr ""
+msgstr "Babes-kopiarik ez"
 
 #: src/config/preferences.cpp:597
 #, kde-format
 msgid "Local files only"
-msgstr ""
+msgstr "Fitxategi lokalak bakarrik"
 
 #: src/config/preferences.cpp:597
 #, kde-format
 msgid "Both local and remote files"
-msgstr ""
+msgstr "Biak, lokala eta urrutiko fitxategiak"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -943,10 +943,10 @@ msgid "Use command @comment{...}"
 msgstr ""
 
 #: src/config/preferences.cpp:1000
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Casing of strings"
 msgid "lowercase"
-msgstr ""
+msgstr "beheko kaxa"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -967,72 +967,72 @@ msgid "lowerCamelCase"
 msgstr ""
 
 #: src/config/preferences.cpp:1000
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Casing of strings"
 msgid "UPPERCASE"
-msgstr ""
+msgstr "Maiuskulak"
 
 #: src/config/preferences.cpp:1237
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
-msgstr ""
+msgstr "Ireki editorea"
 
 #: src/config/preferences.cpp:1237
 #, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "View Document"
-msgstr ""
+msgstr "Ikusi dokumentua"
 
 #: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Important"
-msgstr ""
+msgstr "Garrantzitsua"
 
 #: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Unread"
-msgstr ""
+msgstr "Irakurri gabe"
 
 #: src/config/preferences.cpp:1276
 #, kde-format
 msgctxt "Color Labels"
 msgid "Read"
-msgstr ""
+msgstr "Irakurrita"
 
 #: src/config/preferences.cpp:1276
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Color Labels"
 msgid "Watch"
-msgstr ""
+msgstr "erlojua"
 
 #: src/data/models/filemodel.cpp:256 src/gui/element/elementwidgets.cpp:447
 #: src/gui/element/elementwidgets.cpp:1103
 #, kde-format
 msgid "Macro"
-msgstr ""
+msgstr "Makroa"
 
 #: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1280
 #, kde-format
 msgid "Comment"
-msgstr ""
+msgstr "Iruzkina"
 
 #: src/data/models/filemodel.cpp:276 src/gui/element/elementwidgets.cpp:1173
 #, kde-format
 msgid "Preamble"
-msgstr ""
+msgstr "Abiaburua"
 
 #: src/data/value.cpp:684
 #, kde-format
 msgid " and "
-msgstr ""
+msgstr " eta "
 
 #: src/data/value.cpp:687
 #, kde-format
 msgid " and others"
-msgstr ""
+msgstr " eta beste batzuk"
 
 #: src/gui/element/associatedfilesui.cpp:77
 #, kde-format
@@ -1044,7 +1044,7 @@ msgstr ""
 #: src/gui/element/associatedfilesui.cpp:81
 #, kde-format
 msgid "File operation"
-msgstr ""
+msgstr "Fitxategi-eragiketa"
 
 #: src/gui/element/associatedfilesui.cpp:85
 #, kde-format
@@ -1064,17 +1064,17 @@ msgstr ""
 #: src/gui/element/associatedfilesui.cpp:101
 #, kde-format
 msgid "Path and filename of bibliography file:"
-msgstr ""
+msgstr "Bibliografia fitxategiaren bide-izena eta fitxategi-izena:"
 
 #: src/gui/element/associatedfilesui.cpp:107
 #, kde-format
 msgid "Rename Document?"
-msgstr ""
+msgstr "Dokumentua berrizendatu?"
 
 #: src/gui/element/associatedfilesui.cpp:114
 #, kde-format
 msgid "Keep document's original filename"
-msgstr ""
+msgstr "Mantendu dokumentuaren jatorrizko fitxategi-izena"
 
 #: src/gui/element/associatedfilesui.cpp:120
 #, kde-format
@@ -1090,13 +1090,13 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Relative Path"
-msgstr ""
+msgstr "Bide-izen erlatiboa"
 
 #: src/gui/element/associatedfilesui.cpp:140
 #: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
 msgid "Absolute Path"
-msgstr ""
+msgstr "Bide-izen absolutua"
 
 #: src/gui/element/associatedfilesui.cpp:152
 #, kde-format
@@ -1112,9 +1112,9 @@ msgstr ""
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:240
 #: src/program/docklets/referencepreview.cpp:227
-#, kde-format
+#, fuzzy, kde-format
 msgid "No preview available"
-msgstr ""
+msgstr "Aurreikuspegi erabilgarririk ez"
 
 #: src/gui/element/associatedfilesui.cpp:297
 #, kde-format
@@ -1156,7 +1156,7 @@ msgstr ""
 #: src/gui/element/elementeditor.cpp:207
 #, kde-format
 msgid "Options"
-msgstr ""
+msgstr "Aukerak"
 
 #: src/gui/element/elementeditor.cpp:213
 #, kde-format
@@ -1199,12 +1199,12 @@ msgstr ""
 #: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Keep duplicate ids"
-msgstr ""
+msgstr "Mantendu bikoiztutako IDak"
 
 #: src/gui/element/elementeditor.cpp:557
 #, kde-format
 msgid "Restore original id"
-msgstr ""
+msgstr "Lehengoratu jatorrizko ID"
 
 #: src/gui/element/elementeditor.cpp:586
 #, kde-format
@@ -1226,88 +1226,88 @@ msgstr ""
 #: src/gui/element/elementwidgets.cpp:465
 #, kde-format
 msgid "Element type '%1' is invalid."
-msgstr ""
+msgstr "'%1' elementu mota baliogabea da."
 
 #: src/gui/element/elementwidgets.cpp:474
 #, kde-format
 msgid "Id '%1' is invalid"
-msgstr ""
+msgstr "'%1' ID baliogabea da"
 
 #: src/gui/element/elementwidgets.cpp:526
 #, kde-format
 msgid "Type:"
-msgstr ""
+msgstr "Mota:"
 
 #: src/gui/element/elementwidgets.cpp:535
 #, kde-format
 msgid "Id:"
-msgstr ""
+msgstr "ID:"
 
 #: src/gui/element/elementwidgets.cpp:552
 #, kde-format
 msgid "Select a suggested id for this entry"
-msgstr ""
+msgstr "Aukeratu iradokitako ID bat sarrera honetarako"
 
 #: src/gui/element/elementwidgets.cpp:778
 #, kde-format
 msgid "External"
-msgstr ""
+msgstr "Kanpokoa"
 
 #: src/gui/element/elementwidgets.cpp:864
 #, kde-format
 msgid "Other Fields"
-msgstr ""
+msgstr "Beste eremuak"
 
 #: src/gui/element/elementwidgets.cpp:980
 #, kde-format
 msgid "Name:"
-msgstr ""
+msgstr "Izena:"
 
 #: src/gui/element/elementwidgets.cpp:988
 #: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:104
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
-msgstr ""
+msgstr "Gehitu"
 
 #: src/gui/element/elementwidgets.cpp:992
 #, kde-format
 msgid "Content:"
-msgstr ""
+msgstr "Edukia:"
 
 #: src/gui/element/elementwidgets.cpp:999
 #, kde-format
 msgid "List:"
-msgstr ""
+msgstr "Zerrenda:"
 
 #: src/gui/element/elementwidgets.cpp:1004 src/gui/valuelistmodel.cpp:339
 #, kde-format
 msgid "Value"
-msgstr ""
+msgstr "Balioa"
 
 #: src/gui/element/elementwidgets.cpp:1009 src/parts/part.cpp:260
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Ezabatu"
 
 #: src/gui/element/elementwidgets.cpp:1012
 #: src/program/docklets/referencepreview.cpp:150
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
-msgstr ""
+msgstr "Ireki"
 
 #: src/gui/element/elementwidgets.cpp:1051
 #: src/program/docklets/elementform.cpp:98
 #, kde-format
 msgid "Apply"
-msgstr ""
+msgstr "Aplikatu"
 
 #: src/gui/element/elementwidgets.cpp:1120
 #: src/gui/element/elementwidgets.cpp:1190
 #, kde-format
 msgid "Value:"
-msgstr ""
+msgstr "Balioa:"
 
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
@@ -1322,12 +1322,12 @@ msgstr ""
 #: src/gui/element/elementwidgets.cpp:1299
 #, kde-format
 msgid "Context:"
-msgstr ""
+msgstr "Testuingurua:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Aurrizkia:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1359,68 +1359,68 @@ msgstr ""
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
 msgid "Element class not properly set"
-msgstr ""
+msgstr "Elementu klasea ez da behar bezala ezarri"
 
 #: src/gui/element/elementwidgets.cpp:1491
 #, kde-format
 msgid "No issues detected"
-msgstr ""
+msgstr "Ez da arazorik antzeman"
 
 #: src/gui/element/elementwidgets.cpp:1506
 #, kde-format
 msgid "Source"
-msgstr ""
+msgstr "Sorburua"
 
 #: src/gui/element/elementwidgets.cpp:1537
 #, kde-format
 msgid "Restore"
-msgstr ""
+msgstr "Lehengoratu"
 
 #: src/gui/element/findpdfui.cpp:121 src/gui/element/findpdfui.cpp:174
 #: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "View"
-msgstr ""
+msgstr "Ikuspegia"
 
 #: src/gui/element/findpdfui.cpp:130 src/gui/element/findpdfui.cpp:174
 #: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "Ignore"
-msgstr ""
+msgstr "Ez ikusi egin"
 
 #: src/gui/element/findpdfui.cpp:137 src/gui/element/findpdfui.cpp:174
 #: src/gui/element/findpdfui.cpp:176 src/gui/element/findpdfui.cpp:231
 #: src/gui/element/findpdfui.cpp:233
 #, kde-format
 msgid "Download"
-msgstr ""
+msgstr "Zama-jaitsi"
 
 #: src/gui/element/findpdfui.cpp:144 src/gui/element/findpdfui.cpp:174
 #: src/gui/element/findpdfui.cpp:176
 #, kde-format
 msgid "Use URL only"
-msgstr ""
+msgstr "Erabili URL bakarrik"
 
 #: src/gui/element/findpdfui.cpp:384
 #, kde-format
 msgid "Result"
-msgstr ""
+msgstr "Emaitza"
 
 #: src/gui/element/findpdfui.cpp:436
 #, kde-format
 msgid "Starting to search..."
-msgstr ""
+msgstr "Bilaketa abiatzen..."
 
 #: src/gui/element/findpdfui.cpp:457
 #, kde-format
 msgctxt "@title:window"
 msgid "Find PDF"
-msgstr ""
+msgstr "Bilatu PDF"
 
 #: src/gui/element/findpdfui.cpp:516
 #, kde-format
 msgid "Save URL '%1'"
-msgstr ""
+msgstr "Gorde '%1' URL"
 
 #: src/gui/element/findpdfui.cpp:570
 #, kde-format
@@ -1433,17 +1433,17 @@ msgstr ""
 #: src/gui/preferences/settingscolorlabelwidget.cpp:452
 #, kde-format
 msgid "No color"
-msgstr ""
+msgstr "Kolorerik ez"
 
 #: src/gui/field/colorlabelwidget.cpp:95
 #, kde-format
 msgid "User-defined color"
-msgstr ""
+msgstr "Erabiltzaileak definitutako kolorea"
 
 #: src/gui/field/colorlabelwidget.cpp:106
 #, kde-format
 msgid "Color & Label"
-msgstr ""
+msgstr "Kolorea eta etiketa"
 
 #: src/gui/field/fieldinput.cpp:89
 #, kde-format
@@ -1458,82 +1458,82 @@ msgstr ""
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "1st"
-msgstr ""
+msgstr "1."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "2nd"
-msgstr ""
+msgstr "2."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "3rd"
-msgstr ""
+msgstr "3."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "4th"
-msgstr ""
+msgstr "4."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "5th"
-msgstr ""
+msgstr "5."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "6th"
-msgstr ""
+msgstr "6."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "7th"
-msgstr ""
+msgstr "7."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "8th"
-msgstr ""
+msgstr "8."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "9th"
-msgstr ""
+msgstr "9."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "10th"
-msgstr ""
+msgstr "10."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "11th"
-msgstr ""
+msgstr "11."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "12th"
-msgstr ""
+msgstr "12."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "13th"
-msgstr ""
+msgstr "13."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "14th"
-msgstr ""
+msgstr "14."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "15th"
-msgstr ""
+msgstr "15."
 
 #: src/gui/field/fieldinput.cpp:111
 #, kde-format
 msgid "16th"
-msgstr ""
+msgstr "16."
 
 #: src/gui/field/fieldinput.cpp:126
 #, kde-format
@@ -1566,29 +1566,29 @@ msgid "Source code could not be parsed correctly."
 msgstr ""
 
 #: src/gui/field/fieldlineedit.cpp:311 src/gui/field/fieldlineedit.cpp:366
-#, kde-format
+#, fuzzy, kde-format
 msgid "Plain Text"
-msgstr ""
+msgstr "Testu laua"
 
 #: src/gui/field/fieldlineedit.cpp:317 src/gui/field/fieldlineedit.cpp:367
-#, kde-format
+#, fuzzy, kde-format
 msgid "Reference"
-msgstr ""
+msgstr "Erreferentzia"
 
 #: src/gui/field/fieldlineedit.cpp:323 src/gui/field/fieldlineedit.cpp:368
-#, kde-format
+#, fuzzy, kde-format
 msgid "Person"
-msgstr ""
+msgstr "Pertsona"
 
 #: src/gui/field/fieldlineedit.cpp:329 src/gui/field/fieldlineedit.cpp:369
-#, kde-format
+#, fuzzy, kde-format
 msgid "Keyword"
-msgstr ""
+msgstr "Gako-hitza"
 
 #: src/gui/field/fieldlineedit.cpp:335 src/gui/field/fieldlineedit.cpp:371
-#, kde-format
+#, fuzzy, kde-format
 msgid "Source Code"
-msgstr ""
+msgstr "Sorburu kodea"
 
 #: src/gui/field/fieldlineedit.cpp:341 src/gui/field/fieldlineedit.cpp:374
 #, kde-format
@@ -1596,9 +1596,9 @@ msgid "Verbatim Text"
 msgstr ""
 
 #: src/gui/field/fieldlineedit.cpp:483
-#, kde-format
+#, fuzzy, kde-format
 msgid "Open '%1'"
-msgstr ""
+msgstr "Ireki..."
 
 #: src/gui/field/fieldlineedit.cpp:503
 #, kde-format
@@ -1639,9 +1639,9 @@ msgid "Add a list of names from clipboard"
 msgstr ""
 
 #: src/gui/field/fieldlistedit.cpp:496
-#, kde-format
+#, fuzzy, kde-format
 msgid "Add file..."
-msgstr ""
+msgstr "&Erantsi fitxategia..."
 
 #: src/gui/field/fieldlistedit.cpp:502
 #, kde-format
@@ -1697,9 +1697,9 @@ msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr ""
 
 #: src/gui/file/basicfileview.cpp:384
-#, kde-format
+#, fuzzy, kde-format
 msgid "Reset to defaults"
-msgstr ""
+msgstr "Berrezarri lehenetsietan"
 
 #: src/gui/file/basicfileview.cpp:391
 #, kde-format
@@ -1718,9 +1718,9 @@ msgid ""
 msgstr ""
 
 #: src/gui/file/fileview.cpp:89
-#, kde-format
+#, fuzzy, kde-format
 msgid "Discard changes?"
-msgstr ""
+msgstr "Aldaketak baztertu?"
 
 #: src/gui/file/fileview.cpp:89
 #, kde-format
@@ -1728,21 +1728,21 @@ msgid "Continue Editing"
 msgstr ""
 
 #: src/gui/file/fileview.cpp:331
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@title:window"
 msgid "View Element"
-msgstr ""
+msgstr "Ikusi elementua"
 
 #: src/gui/file/fileview.cpp:339
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@title:window"
 msgid "Edit Element"
-msgstr ""
+msgstr "Editatu elementua"
 
 #: src/gui/file/findduplicatesui.cpp:143
-#, kde-format
+#, fuzzy, kde-format
 msgid "Alternatives"
-msgstr ""
+msgstr "Hautabideak"
 
 #: src/gui/file/findduplicatesui.cpp:195
 #, kde-format
@@ -1765,9 +1765,9 @@ msgid "Next Clique"
 msgstr ""
 
 #: src/gui/file/findduplicatesui.cpp:652
-#, kde-format
+#, fuzzy, kde-format
 msgid "Find Duplicates"
-msgstr ""
+msgstr "Bilatu bikoizketak..."
 
 #: src/gui/file/findduplicatesui.cpp:685 src/gui/file/findduplicatesui.cpp:687
 #, kde-format
@@ -1797,15 +1797,15 @@ msgid "No duplicates were found."
 msgstr ""
 
 #: src/gui/file/findduplicatesui.cpp:712
-#, kde-format
+#, fuzzy, kde-format
 msgid "No duplicates found"
-msgstr ""
+msgstr "Ez da bikoiztutakorik aurkitu"
 
 #: src/gui/file/findduplicatesui.cpp:725
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@title:window"
 msgid "Merge Duplicates"
-msgstr ""
+msgstr "Batu bikoiztuak"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
@@ -1817,15 +1817,15 @@ msgstr ""
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
-#, kde-format
+#, fuzzy, kde-format
 msgid "Reset to Defaults"
-msgstr ""
+msgstr "Lehenetsietara berrezarri"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
-#, kde-format
+#, fuzzy, kde-format
 msgid "All settings"
-msgstr ""
+msgstr "Ezarpen guztiak"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
@@ -1834,30 +1834,30 @@ msgid "Only current page"
 msgstr ""
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:185
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "@title:window"
 msgid "Preferences"
-msgstr ""
+msgstr "Hobespenak"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:330
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:263
-#, kde-format
+#, fuzzy, kde-format
 msgid "Add..."
-msgstr ""
+msgstr "Gehitu..."
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:336
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:104
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:345
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:429
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:269
-#, kde-format
+#, fuzzy, kde-format
 msgid "Remove"
-msgstr ""
+msgstr "Kendu"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:360
-#, kde-format
+#, fuzzy, kde-format
 msgid "Color & Labels"
-msgstr ""
+msgstr "<br/><nobr><i>Etiketak</i></nobr>"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:392
 #, kde-format
@@ -1866,27 +1866,27 @@ msgid "NewColor%1"
 msgstr ""
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:90
-#, kde-format
+#, fuzzy, kde-format
 msgid "Paper Size:"
-msgstr ""
+msgstr "Pertzentila:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Paper size"
 msgid "A4"
-msgstr ""
+msgstr "A"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Paper size"
 msgid "Legal"
-msgstr ""
+msgstr "Legezkoa"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Paper size"
 msgid "Letter"
-msgstr ""
+msgstr "Gutuna"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:99
 #, kde-format
@@ -1940,21 +1940,21 @@ msgstr ""
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:42
-#, kde-format
+#, fuzzy, kde-format
 msgid "John"
-msgstr ""
+msgstr "Jone"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:42
-#, kde-format
+#, fuzzy, kde-format
 msgid "Doe"
-msgstr ""
+msgstr "Agirre"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:42
-#, kde-format
+#, fuzzy, kde-format
 msgid "Jr."
-msgstr ""
+msgstr "jr."
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:79
 #, kde-format
@@ -1968,10 +1968,10 @@ msgid "Person Names Formatting:"
 msgstr ""
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr ""
+msgstr "Berrezarri guztia"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
@@ -1979,9 +1979,9 @@ msgid "Clear all 'don't ask again' settings:"
 msgstr ""
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:121
-#, kde-format
+#, fuzzy, kde-format
 msgid "General"
-msgstr ""
+msgstr "Orokorra"
 
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:154
 #, kde-format
@@ -1989,9 +1989,9 @@ msgid "NewKeyword%1"
 msgstr ""
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:115
-#, kde-format
+#, fuzzy, kde-format
 msgid "Authors"
-msgstr ""
+msgstr "Egileak"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:119
 #, kde-format
@@ -2076,9 +2076,9 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:350
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:434
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:503
-#, kde-format
+#, fuzzy, kde-format
 msgid "No change"
-msgstr ""
+msgstr "Aldaketarik ez"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:140
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:351
@@ -2136,32 +2136,32 @@ msgid "No limitation"
 msgstr ""
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:215
-#, kde-format
+#, fuzzy, kde-format
 msgid "2 digits"
-msgstr ""
+msgstr "Digituak:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:216
-#, kde-format
+#, fuzzy, kde-format
 msgid "4 digits"
-msgstr ""
+msgstr "Digituak:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:217
-#, kde-format
+#, fuzzy, kde-format
 msgid "Digits:"
-msgstr ""
+msgstr "Digituak:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:248
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:116
-#, kde-format
+#, fuzzy, kde-format
 msgid "Volume:"
-msgstr ""
+msgstr "Bolumena:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:270
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:669
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:704
-#, kde-format
+#, fuzzy, kde-format
 msgid "Page Number"
-msgstr ""
+msgstr "Orrialde zenbakia"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:274
 #, kde-format
@@ -2275,19 +2275,19 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:554
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:673
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:708
-#, kde-format
+#, fuzzy, kde-format
 msgid "Text"
-msgstr ""
+msgstr "Testua"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:557
-#, kde-format
+#, fuzzy, kde-format
 msgid "Text:"
-msgstr ""
+msgstr "Testua:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:602
-#, kde-format
+#, fuzzy, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Aurreikusi:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
@@ -2328,19 +2328,19 @@ msgid "Id Suggestions"
 msgstr ""
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:266
-#, kde-format
+#, fuzzy, kde-format
 msgid "Edit..."
-msgstr ""
+msgstr "Editatu..."
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:272
-#, kde-format
+#, fuzzy, kde-format
 msgid "Up"
-msgstr ""
+msgstr "Gora"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:275
-#, kde-format
+#, fuzzy, kde-format
 msgid "Down"
-msgstr ""
+msgstr "Behera"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:278
 #, kde-format
@@ -2369,9 +2369,9 @@ msgstr ""
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:382
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
-#, kde-format
+#, fuzzy, kde-format
 msgid "Revert changes"
-msgstr ""
+msgstr "Leheneratu aldaketa guztiak"
 
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:69
 #, kde-format
@@ -2379,20 +2379,20 @@ msgid "When double-clicking an element:"
 msgstr ""
 
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:83
-#, kde-format
+#, fuzzy, kde-format
 msgid "User Interface"
-msgstr ""
+msgstr "Erabiltzailaren interfazea"
 
 #: src/gui/valuelistmodel.cpp:341 src/program/docklets/valuelist.cpp:73
 #: src/program/docklets/valuelist.cpp:75
-#, kde-format
+#, fuzzy, kde-format
 msgid "Count"
-msgstr ""
+msgstr "Kopurua"
 
 #: src/gui/widgets/filesettingswidget.cpp:141
-#, kde-format
+#, fuzzy, kde-format
 msgid "Encoding:"
-msgstr ""
+msgstr "Kodeketa:"
 
 #: src/gui/widgets/filesettingswidget.cpp:147
 #, kde-format
@@ -2405,9 +2405,9 @@ msgid "Comment Context:"
 msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, kde-format
+#, fuzzy, kde-format
 msgid "Comment Prefix:"
-msgstr ""
+msgstr "Iruzkinaren aurrizkia:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -2415,10 +2415,10 @@ msgid "Keyword Casing:"
 msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:175
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Keyword Casing"
 msgid "lowercase"
-msgstr ""
+msgstr "beheko kaxa"
 
 #: src/gui/widgets/filesettingswidget.cpp:176
 #, kde-format
@@ -2439,10 +2439,10 @@ msgid "lowerCamelCase"
 msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:179
-#, kde-format
+#, fuzzy, kde-format
 msgctxt "Keyword Casing"
 msgid "UPPERCASE"
-msgstr ""
+msgstr "Maiuskulak"
 
 #: src/gui/widgets/filesettingswidget.cpp:182
 #, kde-format
@@ -2455,9 +2455,9 @@ msgid "Protect Casing?"
 msgstr ""
 
 #: src/gui/widgets/filesettingswidget.cpp:193
-#, kde-format
+#, fuzzy, kde-format
 msgid "Use global settings"
-msgstr ""
+msgstr "Erabili ezarpen orokorrak"
 
 #: src/gui/widgets/filesettingswidget.cpp:199
 #, kde-format
@@ -2475,14 +2475,14 @@ msgid "Entry Sorting"
 msgstr ""
 
 #: src/gui/widgets/filterbar.cpp:70
-#, kde-format
+#, fuzzy, kde-format
 msgid "Filter:"
-msgstr ""
+msgstr "Iragazkia:"
 
 #: src/gui/widgets/filterbar.cpp:86
-#, kde-format
+#, fuzzy, kde-format
 msgid "Filter bibliographic entries"
-msgstr ""
+msgstr "Iragazi bibliografia sarrerak (%1)"
 
 #: src/gui/widgets/filterbar.cpp:90
 #, kde-format
@@ -2500,9 +2500,9 @@ msgid "exact phrase"
 msgstr ""
 
 #: src/gui/widgets/filterbar.cpp:97
-#, kde-format
+#, fuzzy, kde-format
 msgid "any field"
-msgstr ""
+msgstr "Edozein eremu"
 
 #: src/gui/widgets/filterbar.cpp:115
 #, kde-format
@@ -2515,9 +2515,9 @@ msgid "Reset filter criteria"
 msgstr ""
 
 #: src/gui/widgets/starrating.cpp:119
-#, kde-format
+#, fuzzy, kde-format
 msgid "Not set"
-msgstr ""
+msgstr "Ez da ezarri"
 
 #: src/io/fileexporterbibtex2html.cpp:81
 #, kde-format
@@ -2549,9 +2549,9 @@ msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:326
 #: src/program/mainwindow.cpp:365 src/program/program.cpp:55
-#, kde-format
+#, fuzzy, kde-format
 msgid "KBibTeX"
-msgstr ""
+msgstr "KBibTeX"
 
 #: src/networking/onlinesearch/onlinesearchacmportal.cpp:303
 #, kde-format
@@ -2559,9 +2559,9 @@ msgid "ACM Digital Library"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:70
-#, kde-format
+#, fuzzy, kde-format
 msgid "Free text:"
-msgstr ""
+msgstr "Testu askea:"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:79
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:90
@@ -2578,19 +2578,19 @@ msgid "arXiv.org"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:76
-#, kde-format
+#, fuzzy, kde-format
 msgid "Tag"
-msgstr ""
+msgstr "Etiketa"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:77
-#, kde-format
+#, fuzzy, kde-format
 msgid "User"
-msgstr ""
+msgstr "Erabiltzailea"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:78
-#, kde-format
+#, fuzzy, kde-format
 msgid "Group"
-msgstr ""
+msgstr "Taldea"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:80
 #, kde-format
@@ -2598,9 +2598,9 @@ msgid "Concept"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:81
-#, kde-format
+#, fuzzy, kde-format
 msgid "BibTeX Key"
-msgstr ""
+msgstr "Bibtex gakoa"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:82
 #, kde-format
@@ -2623,9 +2623,9 @@ msgid "CERN Document Server"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchdoi.cpp:63
-#, kde-format
+#, fuzzy, kde-format
 msgid "DOI:"
-msgstr ""
+msgstr "DOI"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
 #, kde-format
@@ -2635,21 +2635,21 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:88
-#, kde-format
+#, fuzzy, kde-format
 msgid "Title:"
-msgstr ""
+msgstr "Titulua:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:66
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:96
-#, kde-format
+#, fuzzy, kde-format
 msgid "Author:"
-msgstr ""
+msgstr "Egilea:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:74
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:109
-#, kde-format
+#, fuzzy, kde-format
 msgid "Year:"
-msgstr ""
+msgstr "Urtea:"
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
@@ -2673,9 +2673,9 @@ msgid "IEEEXplore"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:86
-#, kde-format
+#, fuzzy, kde-format
 msgid "Full text:"
-msgstr ""
+msgstr "Testu osoa"
 
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:101
 #, kde-format
@@ -2683,9 +2683,9 @@ msgid "Abstract/Keywords:"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:106
-#, kde-format
+#, fuzzy, kde-format
 msgid "Publication:"
-msgstr ""
+msgstr "Argitalpena:"
 
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:111
 #, kde-format
@@ -2745,32 +2745,32 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchsoanasaads.cpp:127
 #, kde-format
 msgid "NASA Astrophysics Data System (ADS)"
-msgstr ""
+msgstr "NASAren datu astrofisikoen sistema (ADS: Astrophysics Data System)"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:81
 #, kde-format
 msgid "Free Text:"
-msgstr ""
+msgstr "Testu askea:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:95
 #, kde-format
 msgid "Book/Journal title:"
-msgstr ""
+msgstr "Liburu/egunkari titulua:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:102
 #, kde-format
 msgid "Author or Editor:"
-msgstr ""
+msgstr "Egilea edo editorea:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:452
 #, kde-format
 msgid "SpringerLink"
-msgstr ""
+msgstr "SpringerLink"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
 msgid "Unpaywall"
-msgstr ""
+msgstr "Unpaywall"
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
@@ -2797,12 +2797,12 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:149
 #, kde-format
 msgid "zbMATH Open"
-msgstr ""
+msgstr "zbMATH Open"
 
 #: src/networking/zotero/collection.cpp:196
 #, kde-format
 msgid "%1's Library"
-msgstr ""
+msgstr "%1(e)ren liburutegia"
 
 #: src/networking/zotero/oauthwizard.cpp:86
 #, kde-format
@@ -2827,102 +2827,102 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:149
 #, kde-format
 msgid "Copy URL"
-msgstr ""
+msgstr "Kopiatu URL"
 
 #: src/networking/zotero/oauthwizard.cpp:154
 #, kde-format
 msgid "Open URL"
-msgstr ""
+msgstr "Ireki URL"
 
 #: src/networking/zotero/oauthwizard.cpp:178
 #, kde-format
 msgctxt "@title:window"
 msgid "Zotero OAuth Key Exchange"
-msgstr ""
+msgstr "Zotero OAuth gako trukea"
 
 #. i18n: ectx: Menu (file)
 #: src/parts/kbibtexpartui.rc:8 src/program/kbibtexui.rc:8
 #, kde-format
 msgid "File"
-msgstr ""
+msgstr "Fitxategia"
 
 #. i18n: ectx: Menu (edit)
 #: src/parts/kbibtexpartui.rc:14
 #, kde-format
 msgid "Edit"
-msgstr ""
+msgstr "Editatu"
 
 #. i18n: ectx: Menu (element)
 #: src/parts/kbibtexpartui.rc:21
 #, kde-format
 msgid "Element"
-msgstr ""
+msgstr "Elementua"
 
 #. i18n: ectx: ToolBar (mainToolBar)
 #: src/parts/kbibtexpartui.rc:37 src/program/kbibtexui.rc:24
 #, kde-format
 msgid "Main Toolbar"
-msgstr ""
+msgstr "Tresna-barra nagusia"
 
 #: src/parts/part.cpp:137 src/parts/part.cpp:214
 #, kde-format
 msgid "View Document"
-msgstr ""
+msgstr "Ikusi dokumentua"
 
 #: src/parts/part.cpp:164
 #, kde-format
 msgid "Save Copy As..."
-msgstr ""
+msgstr "Gorde kopia honela..."
 
 #: src/parts/part.cpp:168
 #, kde-format
 msgid "Save Selection..."
-msgstr ""
+msgstr "Gorde hautapena..."
 
 #: src/parts/part.cpp:176
 #, kde-format
 msgid "Filter"
-msgstr ""
+msgstr "Iragazkia"
 
 #: src/parts/part.cpp:181
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
-msgstr ""
+msgstr "Iragazi bibliografia sarrerak (%1)"
 
 #: src/parts/part.cpp:184
 #, kde-format
 msgid "New element"
-msgstr ""
+msgstr "Elementu berria"
 
 #: src/parts/part.cpp:190
 #, kde-format
 msgid "New entry"
-msgstr ""
+msgstr "Sarrera berria"
 
 #: src/parts/part.cpp:195
 #, kde-format
 msgid "New comment"
-msgstr ""
+msgstr "Iruzkin berria"
 
 #: src/parts/part.cpp:199
 #, kde-format
 msgid "New macro"
-msgstr ""
+msgstr "Makro berria"
 
 #: src/parts/part.cpp:203
 #, kde-format
 msgid "New preamble"
-msgstr ""
+msgstr "Abiaburu berria"
 
 #: src/parts/part.cpp:208
 #, kde-format
 msgid "Edit Element"
-msgstr ""
+msgstr "Editatu elementua"
 
 #: src/parts/part.cpp:231
 #, kde-format
 msgid "Find PDF..."
-msgstr ""
+msgstr "Bilatu PDF..."
 
 #: src/parts/part.cpp:236
 #, kde-format
@@ -2932,63 +2932,63 @@ msgstr ""
 #: src/parts/part.cpp:250
 #, kde-format
 msgid "Copy References"
-msgstr ""
+msgstr "Kopiatu erreferentziak"
 
 #: src/parts/part.cpp:305
 #, kde-format
 msgid "New%1"
-msgstr ""
+msgstr "Berria%1"
 
 #: src/parts/part.cpp:470
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
-msgstr ""
+msgstr "Ezin izan ditu '%1' dokumentuaren babeskopia kopiak sortu."
 
 #: src/parts/part.cpp:470
 #, kde-format
 msgid "Backup copies"
-msgstr ""
+msgstr "Babeskopia kopiak"
 
 #: src/parts/part.cpp:503
 #, kde-format
 msgid "Save file"
-msgstr ""
+msgstr "Gorde fitxategia"
 
 #: src/parts/part.cpp:531
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:532
 #, kde-format
 msgid "BibTeX2HTML"
-msgstr ""
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:533
 #, kde-format
 msgid "Word XML bibliography"
-msgstr ""
+msgstr "«Word» XML bibliografia"
 
 #: src/parts/part.cpp:534
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "«KBibTeX»en XML egitura propioa"
 
 #: src/parts/part.cpp:535
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "«KBibTeX»ek barnean eraikia duen HTML esportatzailea"
 
 #: src/parts/part.cpp:536
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "«KBibTeX»ek barnean eraikia duen RIS esportatzailea"
 
 #: src/parts/part.cpp:545
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Aukeratu esportatzailea"
 
 #: src/parts/part.cpp:547
 #, kde-format
@@ -2997,6 +2997,9 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"'%1' fitxategia idazteko esportatzeko hainbat modulu erabilgarri daude.\n"
+"\n"
+"Mesedez, aukeratu bat."
 
 #: src/parts/part.cpp:578
 #, kde-format
@@ -3048,6 +3051,10 @@ msgid ""
 "Check that you have write access to this file or that enough disk space is "
 "available."
 msgstr ""
+"Dokumentua ezin izan da gorde, ezin izan duelako '%1'(e)an idatzi.\n"
+"\n"
+"Egiaztatu fitxategi horretan idazteko sarbidea duzula edo diskoan behar "
+"adina leku erabilgarri dagoela."
 
 #: src/parts/part.cpp:1073
 #, kde-format
@@ -3869,9 +3876,9 @@ msgid "Save document"
 msgstr "Gorde dokumentua"
 
 #: src/program/documentlist.cpp:272 src/program/documentlist.cpp:274
-#, kde-format
+#, fuzzy, kde-format
 msgid "Do not switch"
-msgstr ""
+msgstr "Ez aldatu"
 
 #: src/program/documentlist.cpp:289
 #, kde-format
