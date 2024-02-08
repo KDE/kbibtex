@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-26 00:41+0000\n"
-"PO-Revision-Date: 2024-01-29 17:52+0200\n"
+"PO-Revision-Date: 2024-02-02 17:36+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -922,12 +922,11 @@ msgid "Both local and remote files"
 msgstr "Sekä paikalliset että etätiedostot"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Sanatarkka teksti"
+msgstr "Sanatarkka"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -1324,7 +1323,7 @@ msgstr "Kommentin etuliitteen on alettava ”%”"
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Sanatarkan tilan kommenteissa ei saa olla tyhjiä rivejä"
 
 #: src/gui/element/elementwidgets.cpp:1299
 #, kde-format
