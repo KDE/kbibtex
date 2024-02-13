@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-26 00:41+0000\n"
+"POT-Creation-Date: 2024-02-13 01:41+0000\n"
 "PO-Revision-Date: 2024-01-11 20:38-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2651,8 +2651,9 @@ msgid "Everywhere"
 msgstr "Em todos os lugares"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
-#, kde-format
-msgid "Bibsonomy"
+#, fuzzy, kde-format
+#| msgid "Bibsonomy"
+msgid "BibSonomy"
 msgstr "Bibsonomy"
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84

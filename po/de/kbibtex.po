@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KBibTeX 0.5\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-26 00:41+0000\n"
+"POT-Creation-Date: 2024-02-13 01:41+0000\n"
 "PO-Revision-Date: 2023-04-29 12:22+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -2657,8 +2657,9 @@ msgid "Everywhere"
 msgstr "Überall"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
-#, kde-format
-msgid "Bibsonomy"
+#, fuzzy, kde-format
+#| msgid "Bibsonomy"
+msgid "BibSonomy"
 msgstr "Bibsonomy"
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
