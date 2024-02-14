@@ -837,7 +837,7 @@ public:
 #else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
         KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
 #if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
-        job->setUiDelegate(new KIO::JobUiDelegate());
+        job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, p->widget()));
 #else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
         job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, p->widget()));
 #endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
@@ -1031,7 +1031,7 @@ void KBibTeXPart::elementViewDocument()
 #else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
         KIO::OpenUrlJob *job = new KIO::OpenUrlJob(url, mimeTypeName);
 #if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
-        job->setUiDelegate(new KIO::JobUiDelegate());
+        job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, widget()));
 #else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
         job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, widget()));
 #endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)

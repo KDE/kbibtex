@@ -955,7 +955,7 @@ void OtherFieldsWidget::actionOpen()
 #else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
         KIO::OpenUrlJob *job = new KIO::OpenUrlJob(currentUrl, mimeTypeName);
 #if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
-        job->setUiDelegate(new KIO::JobUiDelegate());
+        job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, this));
 #else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
         job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, this));
 #endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
