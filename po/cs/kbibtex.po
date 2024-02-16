@@ -2626,10 +2626,9 @@ msgid "Everywhere"
 msgstr "Všude"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
-#, fuzzy, kde-format
-#| msgid "Bibsonomy"
+#, kde-format
 msgid "BibSonomy"
-msgstr "Bibsonomy"
+msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
 #, kde-format
