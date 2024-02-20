@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-13 01:41+0000\n"
-"PO-Revision-Date: 2023-12-24 05:09+0100\n"
+"PO-Revision-Date: 2024-02-19 05:45+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2612,10 +2612,9 @@ msgid "Everywhere"
 msgstr "ყველგან"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
-#, fuzzy, kde-format
-#| msgid "Bibsonomy"
+#, kde-format
 msgid "BibSonomy"
-msgstr "Bibsonomy"
+msgstr "BibSonomy"
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
 #, kde-format
