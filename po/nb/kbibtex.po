@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-26 00:41+0000\n"
+"POT-Creation-Date: 2024-02-13 01:41+0000\n"
 "PO-Revision-Date: 2014-03-08 19:32+0100\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -2621,8 +2621,8 @@ msgstr "Overalt"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
 #, kde-format
-msgid "Bibsonomy"
-msgstr "Bibsonomy"
+msgid "BibSonomy"
+msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
 #, kde-format
