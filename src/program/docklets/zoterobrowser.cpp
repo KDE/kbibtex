@@ -210,7 +210,7 @@ const QString ZoteroBrowser::Private::walletKeyZoteroApiKey = QStringLiteral("Ap
 ZoteroBrowser::ZoteroBrowser(SearchResults *searchResults, QWidget *parent)
         : QWidget(parent), d(new ZoteroBrowser::Private(searchResults, this))
 {
-    /// Forece GUI update
+    /// Force GUI update
     updateButtons();
     radioButtonsToggled();
 }
