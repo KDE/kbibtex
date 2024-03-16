@@ -16,11 +16,18 @@ set(
     docklets/searchresults.cpp
     docklets/elementform.cpp
     docklets/filesettings.cpp
-    docklets/zoterobrowser.cpp
     openfileinfo.cpp
 
     program.qrc
 )
+
+if(Qt${QT_MAJOR_VERSION}NetworkAuth_FOUND)
+    set(
+        kbibtexprogram_SRCS
+        ${kbibtexprogram_SRCS}
+        docklets/zoterobrowser.cpp
+    )
+endif()
 
 set(
     kbibtexcliprogram_SRCS

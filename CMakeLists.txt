@@ -140,8 +140,8 @@ if(BUILD_KPART OR BUILD_TESTING)
         Widgets
         Network
         Concurrent
-        NetworkAuth
         OPTIONAL_COMPONENTS
+        NetworkAuth
         WebEngineWidgets
         WebKitWidgets
         Test
@@ -149,6 +149,13 @@ if(BUILD_KPART OR BUILD_TESTING)
     if (Qt${QT_MAJOR_VERSION}Widgets_FOUND)
         add_compile_definitions(HAVE_QTWIDGETS)
     endif()
+endif()
+
+if(Qt${QT_MAJOR_VERSION}NetworkAuth_FOUND)
+    add_compile_definitions(HAVE_QTNETWORKAUTH)
+    add_compile_definitions(HAVE_ZOTERO)
+else()
+    message(STATUS "No Qt NetworkAuth found, disabling certain functionality (Zotero)")
 endif()
 
 if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)

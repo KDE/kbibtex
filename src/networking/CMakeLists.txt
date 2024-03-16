@@ -36,7 +36,6 @@ set(
     zotero/collection.cpp
     zotero/items.cpp
     zotero/groups.cpp
-    zotero/oauthwizard.cpp
     zotero/tags.cpp
     zotero/tagmodel.cpp
     associatedfiles.cpp
@@ -45,6 +44,16 @@ set(
     internalnetworkaccessmanager.cpp
     urlchecker.cpp
 )
+
+if(Qt${QT_MAJOR_VERSION}NetworkAuth_FOUND)
+    # See also below for a similar if-clause
+    message(STATUS "Using NetworkAuth for Zotero")
+    set(
+        kbibtexnetworking_SRCS
+        ${kbibtexnetworking_SRCS}
+        zotero/oauthwizard.cpp
+    )
+endif()
 
 if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
     # See also below for a similar if-clause
@@ -96,7 +105,6 @@ target_link_libraries(kbibtexnetworking
     PRIVATE
         Poppler::Qt${QT_MAJOR_VERSION}
         Qt${QT_MAJOR_VERSION}::DBus
-        Qt${QT_MAJOR_VERSION}::NetworkAuth
         KF${QT_MAJOR_VERSION}::ConfigCore
         KF${QT_MAJOR_VERSION}::WidgetsAddons
         KF${QT_MAJOR_VERSION}::I18n
@@ -106,6 +114,14 @@ target_link_libraries(kbibtexnetworking
         KBibTeX::Global
         KBibTeX::IO
 )
+
+if(Qt${QT_MAJOR_VERSION}NetworkAuth_FOUND)
+    # See also above for a similar if-clause
+    target_link_libraries(kbibtexnetworking
+        PRIVATE
+            Qt${QT_MAJOR_VERSION}::NetworkAuth
+    )
+endif()
 
 if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
     # See also above for a similar if-clause
@@ -191,11 +207,18 @@ ecm_generate_headers(kbibtexnetworking_HEADERS
         zotero/CollectionModel
         zotero/Groups
         zotero/Items
-        zotero/OAuthWizard
         zotero/TagModel
         zotero/Tags
     REQUIRED_HEADERS kbibtexnetworking_HEADERS
 )
+
+if(Qt${QT_MAJOR_VERSION}NetworkAuth_FOUND)
+    ecm_generate_headers(kbibtexnetworking_HEADERS
+        HEADER_NAMES
+            zotero/OAuthWizard
+        REQUIRED_HEADERS kbibtexnetworking_HEADERS
+    )
+endif()
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kbibtexnetworking_export.h
