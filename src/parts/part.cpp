@@ -218,7 +218,7 @@ public:
 
         // Shortcut complementing elementViewDocumentAction; to be enabled if elementViewDocumentAction is disabled and vice versa
         // Triggers a check if elementViewDocumentAction should be enabled and then opens a document if so
-        updateViewDocumentShortcut = new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_D), partWidget);
+        updateViewDocumentShortcut = new QShortcut(QKeySequence(Qt::CTRL | Qt::Key_D), partWidget);
         updateViewDocumentShortcut->setEnabled(false);
         connect(updateViewDocumentShortcut, &QShortcut::activated, p, [this]() {
             // Update menu items for opening documents associated with an entry
