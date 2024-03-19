@@ -7,10 +7,13 @@
   SPDX-FileCopyrightText: 2018 Yuri Chornoivan <yurchor@ukr.net>
   SPDX-FileCopyrightText: 2015-2021 Various KDE Translators
   -->
-<component type="desktop">
+<component type="desktop-application">
   <id>org.kde.kbibtex.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
+  <developer id="org.kde">
+    <name translate="no">KDE</name>
+  </developer>
   <name>KBibTeX</name>
   <name xml:lang="ar">كبتخ</name>
   <name xml:lang="bs">KBibTeX</name>
@@ -390,6 +393,7 @@
   <provides>
     <binary>kbibtex</binary>
   </provides>
+  <launchable type="desktop-id">org.kde.kbibtex.desktop</launchable>
   <content_rating type="oars-1.1"/>
   <releases>
     <release version="0.9.2" date="2020-04-26"/>
