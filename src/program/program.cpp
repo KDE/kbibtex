@@ -65,8 +65,7 @@ int main(int argc, char *argv[])
     qCInfo(LOG_KBIBTEX_PROGRAM) << "Starting KBibTeX version" << aboutData.version();
 
     QCommandLineParser cmdLineParser;
-    cmdLineParser.addHelpOption();
-    cmdLineParser.addVersionOption();
+    aboutData.setupCommandLine(&cmdLineParser);
     cmdLineParser.addPositionalArgument(QStringLiteral("urls"), i18n("File(s) to load."), QStringLiteral("[urls...]"));
 
     cmdLineParser.process(programCore);
