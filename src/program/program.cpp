@@ -60,11 +60,6 @@ int main(int argc, char *argv[])
     aboutData.addAuthor(i18n("Thomas Fischer"), i18n("Maintainer"), QStringLiteral("fischer@unix-ag.uni-kl.de"));
 
     KAboutData::setApplicationData(aboutData);
-
-    programCore.setApplicationName(aboutData.componentName());
-    programCore.setOrganizationDomain(aboutData.organizationDomain());
-    programCore.setApplicationVersion(aboutData.version());
-    programCore.setApplicationDisplayName(aboutData.displayName());
     programCore.setWindowIcon(QIcon::fromTheme(QStringLiteral("kbibtex")));
 
     qCInfo(LOG_KBIBTEX_PROGRAM) << "Starting KBibTeX version" << aboutData.version();
