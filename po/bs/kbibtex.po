@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 01:41+0000\n"
+"POT-Creation-Date: 2024-03-20 01:41+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -4266,13 +4266,13 @@ msgstr "Thomas Fischer"
 msgid "Maintainer"
 msgstr "Održavatelj"
 
-#: src/program/program.cpp:75
+#: src/program/program.cpp:69
 #, fuzzy, kde-format
 #| msgid "File(s) to load"
 msgid "File(s) to load."
 msgstr "Datoteke za učitavanje"
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4285,7 +4285,7 @@ msgstr ""
 "\n"
 "Samo ograničena funkcionalnost će biti dostupna."
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nepotpuna KBibTeX instalacija"

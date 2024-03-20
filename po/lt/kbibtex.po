@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: l 10n\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 01:41+0000\n"
+"POT-Creation-Date: 2024-03-20 01:41+0000\n"
 "PO-Revision-Date: 2016-08-30 12:25+0300\n"
 "Last-Translator: Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -4059,12 +4059,12 @@ msgstr "Thomas Fischer"
 msgid "Maintainer"
 msgstr "Prižiūrėtojas"
 
-#: src/program/program.cpp:75
+#: src/program/program.cpp:69
 #, kde-format
 msgid "File(s) to load."
 msgstr ""
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4073,7 +4073,7 @@ msgid ""
 "Only limited functionality will be available."
 msgstr ""
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr ""

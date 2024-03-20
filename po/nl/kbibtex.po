@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 01:41+0000\n"
+"POT-Creation-Date: 2024-03-20 01:41+0000\n"
 "PO-Revision-Date: 2024-02-13 10:34+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -4181,12 +4181,12 @@ msgstr "Thomas Fischer"
 msgid "Maintainer"
 msgstr "Onderhouder"
 
-#: src/program/program.cpp:75
+#: src/program/program.cpp:69
 #, kde-format
 msgid "File(s) to load."
 msgstr "Te laden bestand(en)."
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4199,7 +4199,7 @@ msgstr ""
 "\n"
 "Alleen beperkte functionaliteit zal beschikbaar zijn."
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Onvolledige installatie van KBibTeX"

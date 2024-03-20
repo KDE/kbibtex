@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 01:41+0000\n"
+"POT-Creation-Date: 2024-03-20 01:41+0000\n"
 "PO-Revision-Date: 2024-01-11 20:38-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -4184,12 +4184,12 @@ msgstr "Thomas Fischer"
 msgid "Maintainer"
 msgstr "Mantenedor"
 
-#: src/program/program.cpp:75
+#: src/program/program.cpp:69
 #, kde-format
 msgid "File(s) to load."
 msgstr "Arquivo(s) a carregar."
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4202,7 +4202,7 @@ msgstr ""
 "\n"
 "Só estarão disponíveis funcionalidades limitadas."
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instalação incompleta do KBibTeX"

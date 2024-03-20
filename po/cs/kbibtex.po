@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 01:41+0000\n"
+"POT-Creation-Date: 2024-03-20 01:41+0000\n"
 "PO-Revision-Date: 2023-03-16 16:33+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -4117,12 +4117,12 @@ msgstr "Thomas Fischer"
 msgid "Maintainer"
 msgstr "Správce"
 
-#: src/program/program.cpp:75
+#: src/program/program.cpp:69
 #, kde-format
 msgid "File(s) to load."
 msgstr "Soubor(y) k načtení."
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4135,7 +4135,7 @@ msgstr ""
 "\n"
 "Bude dostupná jen omezená funkcionalita."
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Neúplná instalace KBibTeX"
