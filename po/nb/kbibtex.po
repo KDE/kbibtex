@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 01:41+0000\n"
+"POT-Creation-Date: 2024-03-20 01:41+0000\n"
 "PO-Revision-Date: 2014-03-08 19:32+0100\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -4090,12 +4090,12 @@ msgstr ""
 msgid "Maintainer"
 msgstr "Vedlikeholder"
 
-#: src/program/program.cpp:75
+#: src/program/program.cpp:69
 #, kde-format
 msgid "File(s) to load."
 msgstr ""
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4108,7 +4108,7 @@ msgstr ""
 "\n"
 "Kun begrenset funksjonalitet vil være tilgjengelig."
 
-#: src/program/program.cpp:111
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Ufullstendig KBibTeX Installasjon"
