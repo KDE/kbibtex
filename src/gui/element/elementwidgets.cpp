@@ -1413,10 +1413,6 @@ bool SourceWidget::apply(QSharedPointer<Element> element) const
 
 bool SourceWidget::reset(QSharedPointer<const Element> element)
 {
-    /// if signals are not deactivated, the "modified" signal would be emitted when
-    /// resetting the widget's value
-    const QSignalBlocker blocker(document);
-
     FileExporterBibTeX exporter(this);
     exporter.setEncoding(QStringLiteral("utf-8"));
     const QString exportedText = exporter.toString(element, m_file);
@@ -1545,10 +1541,6 @@ void SourceWidget::createGUI()
 
 void SourceWidget::reset()
 {
-    /// if signals are not deactivated, the "modified" signal would be emitted when
-    /// resetting the widget's value
-    const QSignalBlocker blocker(document);
-
     document->setText(originalText);
     setModified(false);
 }
