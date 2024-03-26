@@ -1,0 +1,2229 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY pdflatex "PDFL<superscript
+>A</superscript
+>T<subscript
+>E</subscript
+>X">
+  <!ENTITY tex "T<subscript
+>E</subscript
+>X">
+  <!ENTITY tetex "<application
+>teT<subscript
+>E</subscript
+>X</application
+>">
+  <!ENTITY texlive "<application
+>TeX Live</application
+>">
+  <!ENTITY bibtex "BibT<subscript
+>E</subscript
+>X">
+  <!ENTITY biblatex "<application
+>biblatex</application
+>">
+  <!ENTITY lyx "<application
+>LyX</application
+>">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Slovenian "INCLUDE">
+]>
+
+<book id="kbibtex" lang="&language;">
+
+<bookinfo>
+<title
+>&kbibtex; Priročnik</title>
+
+<authorgroup>
+  <author
+><firstname
+>Yuri</firstname
+><surname
+>Chornoivan</surname
+> <affiliation
+> <address
+> <email
+>yurchor@ukr.net</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>Matjaž</firstname
+><surname
+>Jeran</surname
+><affiliation
+><address
+><email
+>matjaz.jeran@amis.net</email
+></address
+></affiliation
+><contrib
+>Prevod</contrib
+></othercredit
+> 
+</authorgroup>
+
+<copyright>
+<year
+>2004</year
+><year
+>2014</year>
+<holder
+>Thomas Fischer</holder>
+</copyright>
+
+<date
+>07.05.2019</date>
+<releaseinfo
+>0,9</releaseinfo>
+
+<legalnotice>
+  &FDLNotice;
+</legalnotice>
+
+<abstract>
+  <para
+>&kbibtex; je grafični urejevalnik &bibtex; in lupina (shell). </para>
+</abstract>
+
+<keywordset>
+  <keyword
+>KDE</keyword>
+  <keyword
+>kbibtex</keyword>
+  <keyword
+>LaTeX</keyword>
+  <keyword
+>TeX</keyword>
+  <keyword
+>bibliografija</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="preface">
+  <title
+>Predgovor</title>
+  <sect1 id="preface_sect">
+    <title
+>Zahteve</title>
+    <para
+>Za zagon &kbibtex; morate imeti v sistemu nameščene naslednje komponente: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+><ulink url="https://www.kde.org/"
+>&kf5-full; knjižnice</ulink
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.ctan.org/"
+>&latex;</ulink
+>: visokokakovostni program za stavljenje dokumentov. Najverjetneje želite paket &texlive; (ali v starejših sistemih paket &tetex;), če ste v sistemu, podobnem Unixu. Je izbirna odvisnost, vendar brez nje &kbibtex; zagotavlja zelo omejeno funkcionalnost. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.lri.fr/~filliatr/bibtex2html/"
+>bibtex2html</ulink
+> zbirka orodij za prevajanje iz &bibtex; v &HTML; za izboljšanje &kbibtex; zmožnosti predogleda vnosa (izbirna odvisnost). </para>
+      </listitem>
+    </itemizedlist>
+    <para
+>Večina teh elementov, kot tudi &kbibtex; sam je lahko vključen v vašo &Linux; distribucijo; glejte distribucijsko dokumentacijo ali namestitveni &CD; ali DVD, za dodajanje teh paketov na vaš računalnik. </para>
+  </sect1>
+  <sect1 id="preface_audience">
+    <title
+>Predvideno občinstvo </title>
+    <para
+>Ta priročnik je namenjen vsakemu posamezniku, ne glede na njegove izkušnje z &latex;, &kde;, &kbibtex; ali &Linux;. </para>
+    <para
+>Napredni uporabniki verjetno ne bodo prebrali tega priročnika, vendar bodo upoštevani vsi predlogi glede dokumentacije. Če želite prispevati k temu projektu ali dokumentaciji, si oglejte <ulink url="https://userbase.kde.org/KBibTeX"
+>&kbibtex; spletno stran</ulink
+>. </para>
+  </sect1>
+
+</chapter>
+
+<chapter id="introduction">
+  <title
+>Uvod </title>
+  <sect1 id="intro_about">
+    <title
+>O &kbibtex; </title>
+    <para
+>&kbibtex; je integrirano okolje za ustvarjanje in urejanje bibliografij v &bibtex; formatu. &kbibtex; vam omogoča uporabo vseh funkcij &bibtex; v grafičnem vmesniku, ki vam omogoča enostaven, takojšen in prilagojen dostop do lokalnih in spletnih bibliografij z možnostjo dopolnjevanja vnosov, zbiranja, predogleda in iskanja. </para>
+    <sect2 id="intro-bibtex">
+      <title
+>O &bibtex;</title>
+      <para
+>&bibtex; je program in format datoteke, ki sta ga oblikovala Oren Patashnik in Leslie Lamport leta 1985 za &latex; sistem za pripravo dokumentov <citation
+>Lamport86</citation
+>. </para>
+      <para
+>Format v celoti temelji na znakih, zato ga lahko uporablja kateri koli program (čeprav je standardni nabor znakov za naglase &tex;). Temelji na polju (oznaki) in &bibtex; program bo prezrl neznana polja, zato je razširljiv. To je verjetno najpogostejši format za bibliografije na internetu. </para>
+      <para
+>&bibtex; program uporablja slogovne datoteke, seznam citatov iz &latex; in &bibtex; baze podatkov za ustvarjanje datoteke &latex; datoteka s seznamom citiranih referenc. Zamisel slogovnih datotek je, da se lahko končna kopija v kateri koli obliki, specifični za revijo, naredi samodejno. </para>
+      <para
+>Primer &bibtex; vnosa v bazo podatkov: </para>
+<programlisting
+>@article{PAM_doi:10.1007/BF00048294,
+        author = {Streitenberger, P. and Knott, John F.},
+        doi = {10.1007/BF00048294},
+        issn = {1573-2673},
+        journal = {{International Journal of Fracture}},
+        number = {3},
+        pages = {R49},
+        publisher = {Springer},
+        title = {{The calculation of crack opening area and crack opening volume from stress intensity factors}},
+        url = {https://dx.doi.org/10.1007/BF00048294},
+        volume = {76},
+        x-fetchedfrom = {SpringerLink},
+        year = {1995}
+}
+</programlisting>
+  </sect2>
+  <sect2 id="kbibtex-and-latex-editors">
+    <title
+>&kbibtex; in &latex; Urejevalnika</title>
+    <para
+>&latex; kodo je mogoče urejati s številnimi orodji, od preprostih minimalističnih urejevalnikov besedila do zmogljivih vizualnih paketov. Za primerjavo &latex; urejevalnikov, glejte <ulink url="https://en.wikipedia.org/wiki/Comparison_of_TeX_editors"
+>to stran</ulink
+>. </para>
+    <para
+>&kbibtex; omogoča <link linkend="integration"
+>integracijo s &kile; in &lyx;</link
+>, čeprav se lahko uspešno uporablja katerikoli &latex; urejevalnik. </para>
+  </sect2>
+  </sect1>
+  <sect1 id="intro_mainfeat">
+    <title
+>Glavne lastnosti &kbibtex; </title>
+    <para
+>&kbibtex; omogoča naslednje stvari: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+>Vnese preambulo, ki določa, kako naj bo posebno besedilo oblikovano v vaši bibliografiji, z uporabo menijske postavke <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nov element</guisubmenu
+><guimenuitem
+>Nova preambula</guimenuitem
+></menuchoice
+> ali <link linkend="main-toolbar"
+>Glavna orodna vrstica</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Izberite kodiranje vnosa z elementom <guilabel
+>Kodiranje</guilabel
+> v pogovornem oknu <guilabel
+>Shrani kot</guilabel
+> ali na <link linkend="file-settings"
+>podoknu z nastavitvami datoteke</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Vnesite komentarje, ki jih &bibtex; z uporabo elementa menija <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nov element</guisubmenu
+><guimenuitem
+>Nov komentar</guimenuitem
+></menuchoice
+> ali <link linkend="main-toolbar"
+>Glavna orodna vrstica</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Predogled in shranjevanje bibliografskih vnosov v različnih formatih (vir (&bibtex;), vir (RIS), Wikipedia, standardni (&XML;/XSLT), modni (&XML;/XSLT) in samo povzetek (&XML;/XSLT)) z uporabo <link linkend="reference-preview"
+>Podokno za predogled sklicevanja</link
+>. Dodatni slogi predogleda postanejo na voljo, ko je nameščen <application
+>bibtex2html</application
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Poiščite podatke o bibliografskih vnosih v spletnih bazah podatkov s pomočjo <link linkend="online-search"
+>podokna za spletno iskanje</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Oglejte si lokalne ali oddaljene (spletne) vire (kot so datoteke), <link linkend="adding-link"
+>povezane</link
+> v &bibtex; vnos z uporabo <link linkend="document-preview"
+>podokna za predogled dokumenta</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Poiščite in popravite podvojene vnose v bibliografiji z menijskim elementom <menuchoice
+><guimenu
+>Uredi</guimenu
+><guimenuitem
+>Poišči dvojnike</guimenuitem
+></menuchoice
+> ali <link linkend="main-toolbar"
+>glavno orodno vrstico</link 
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>Uvozite svojo knjižnico <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+> s pomočjo <link linkend="zotero"
+>podokna Zotero</link
+>. </para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>
+
+<chapter id="quickstart">
+  <title
+>Hitri začetek </title>
+  <sect1 id="quick_begin">
+    <title
+>Pisanje bibliografske datoteke za začetnike </title>
+    <!-- 1) No request from kbibtex from Distro user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distro user has a mimeapps.list in home, but no kbibtex in it
+         2b) Devel user has no mimeapps.list in home
+         2c) Systemsettings -> File Associations is the place to edit/change this in a kde desktop
+         update after rebuilding post 2014-01-12
+         Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
+         (why? from installation of distro?)
+         This dialog even pops up when opening a .bib file with LMB click in file manager
+    -->
+    <para
+>Po prvem zagonu bo &kbibtex; predlagal, da postane privzeti urejevalnik za formate bibliografij. Priporočamo vam, da to storite.<footnote
+><para
+>Če se boste iz kakršnih koli razlogov odločili ponovno razmisliti, odstranite nize s podnizom <literal
+>kbibtex</literal
+> iz datoteke <filename
+>mimeapps.list</filename
+> v <filename role="directory"
+>.local/share/applications </filename
+> v vaši domači mapi.</para
+></footnote>
+    </para>
+    <para
+>Nato boste videli okno, ki je videti podobno temu: </para>
+    <screenshot>
+      <screeninfo
+>&kbibtex; okno po prvem zagonu</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="first-run.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>&kbibtex; okno po prvem zagonu</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Za začetek novega bibliografskega dokumenta pritisnite gumb <guibutton
+>Nova</guibutton
+> na desni plošči, gumb <guibutton
+>Nova</guibutton
+> v orodni vrstici ali izberite <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>N</keycap
+></keycombo
+></shortcut
+><guimenu
+>Datoteka</guimenu
+><guimenuitem
+>Novo</guimenuitem
+></menuchoice
+> menijski element. </para>
+    <para
+>Zdaj je čas, da dodate nekaj vnosov. </para>
+    <para
+>Uporabniki &kbibtex; pri dodajanju novega vnosa imajo dve možnosti: uporabijo lahko <link linkend="online-search"
+>podokno za spletno iskanje</link
+>, da poiščejo podatke o vnosu na spletu, ali pa da kodo napišejo ročno. </para>
+    <para
+>Poskusimo ročno dodati knjižni vnos. </para>
+    <procedure>
+      <step id="element-editing">
+	<para
+>Izberite <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nov element</guisubmenu
+><guimenuitem
+>Nov vnos</guimenuitem
+></menuchoice
+> iz &kbibtex; meni. &kbibtex; mora odpreti okno <guilabel
+>Uredi element</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>&kbibtex; okno za urejanje elementa</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="element-editor.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>&kbibtex; okno za urejanje elementa</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Na spustnem seznamu <guilabel
+>Vrsta:</guilabel
+> izberite <guimenuitem
+>Knjiga</guimenuitem
+>. </para>
+      </step>
+      <step>
+	<para
+>Vnesite <userinput
+>Lamport86</userinput
+> v polje <guilabel
+>Id:</guilabel
+>. </para>
+	<tip>
+	  <para
+><quote
+>Id</quote
+> se uporablja za sklicevanje na bibliografski vnos v vašem glavnem dokumentu. </para>
+	</tip>
+      </step>
+      <step>
+	<para
+>Pojdite na zavihek <guilabel
+>Naslov</guilabel
+> in v besedilno polje <guilabel
+>Naslov:</guilabel
+> vnesite <userinput
+>LaTeX: A Document Preparation System</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Pojdite na zavihek <guilabel
+>Avtor/Urednik</guilabel
+>, kliknite gumb <guibutton
+>Dodaj</guibutton
+> in vnesite <userinput
+>Lamport, Leslie</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Pojdite na zavihek <guilabel
+>Publikacija</guilabel
+>, nato vnesite <userinput
+>1986</userinput
+> v besedilno polje <guilabel
+>Leto:</guilabel
+> in <userinput
+>Addison-Wesley</userinput
+> v besedilno polje<guilabel 
+>Založnik:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>Kliknite <guibutton
+>V redu</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Izberite <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>S</keycap
+></keycombo
+></shortcut
+><guimenu
+>Datoteka</guimenu
+><guimenuitem
+>Shrani</guimenuitem
+></menuchoice
+> menijski element in shranite bibliografsko datoteko kot <filename
+>example.bib</filename
+> v mapo, ki jo boste pisali. </para>
+      </step>
+    </procedure>
+  </sect1>
+
+  <sect1 id="quick-using">
+    <title
+>Uporaba bibliografije v vašem &latex; dokumentu </title>
+    <para
+>Če želite dejansko uporabiti bibliografijo v svojem prispevku, morate dodati naslednje ukaze v svoj &latex; datoteko (te ukaze običajno najdete na koncu dokumenta – kjer naj se pojavi razdelek <quote
+>Reference</quote
+>): </para>
+<programlisting
+>\bibliography{<replaceable
+>foo</replaceable
+>}
+\bibliographystyle{plain}
+</programlisting>
+    <para
+>Tu je <replaceable
+>foo</replaceable
+> ime vaše datoteke <filename role="extension"
+>bib</filename
+>, ustvarjene s &kbibtex; in <quote
+><literal
+>plain</literal
+></quote
+> je ime sloga bibliografije. </para>
+    <para
+>Obstaja veliko posebnih slogov bibliografije. Prosimo, posvetujte se s svojim založnikom, da izberete tisto, ali poskusite in poiščite tisto, ki najbolj ustreza vašim namenom. </para>
+    <para
+>Spodaj je seznam nekaterih splošnih slogov, ki so na voljo povsod: </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+      <literal
+>plain (navaden)</literal>
+	</term>
+	<listitem>
+	  <para
+>navaden slog, naveden po abecednem vrstnem redu in označen s številkami </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>unsrt</literal>
+	</term>
+	<listitem>
+	  <para
+>enako kot <literal
+>plain</literal
+>, le da so vnosi prikazani po vrstnem redu navedb </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>alpha</literal>
+	</term>
+	<listitem>
+	  <para
+>enako kot <literal
+>plain</literal
+>, le da so uporabljeni identifikatorji vnosa </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>abbrv (okrajšava)</literal>
+	</term>
+	<listitem>
+	  <para
+>enako kot <literal
+>plain</literal
+>, le da uporablja okrajšave za imena, imena mesecev in imena revij </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    <para
+>Torej lahko uporabite svoj &latex; zmožnosti urejevalnika (za to si oglejte dokumentacijo urejevalnika) ali preprosto vnesite naslednjo kodo v generični urejevalnik besedila in nato shranite datoteko s pripono imena <filename role="extension"
+>tex</filename
+>. </para>
+<programlisting
+>\documentclass{article}
+ \begin{document}
+ \bibliographystyle{plain}% Choose a bibliographic style
+ Test file with a reference (see~\cite{Lamport86}).
+ \bibliography{example}
+ \end{document}
+</programlisting>
+    <para
+>Za naše namene testiranja naj se ta datoteka poimenuje <userinput
+>example.tex</userinput
+>. </para>
+    <note>
+      <para
+>Prosimo, shranite to datoteko v isto mapo kot vaš <filename
+>example.bib</filename
+>. </para>
+    </note>
+    <para
+>Zdaj, ko imate osnovo za dokument, morate zagnati tako <application
+>latex</application
+> kot <application
+>bibtex</application
+>, da ga obdelate. </para>
+    <para
+>Najprej bi morali zagnati <application
+>latex</application
+> (da ustvarite datoteko <filename
+>foo.aux</filename
+>, ki jo <application
+>bibtex</application
+> bere). Nato enkrat zaženite <application
+>bibtex</application
+>, da dobite nekaj citatov in ustvarite datoteko <filename role="extension"
+>bbl</filename
+>. Nato znova zaženite <application
+>latex</application
+>, da bodo navzkrižni sklici med besedilno datoteko in bibliografijo pravilni. Morda boste želeli ponoviti izvajanje <application
+>bibtex</application
+> in <application
+>latex</application
+> v datoteki, da se prepričate, da so vsi navzkrižni sklici pravilni. Bodite opozorjeni, da boste za dodajanje/brisanje navedb in virov morali ponovno zagnati <application
+>bibtex</application
+>. </para>
+    <para
+>Tako lahko za prevajanje dokumenta iz konzole uporabite naslednje ukaze: </para>
+    <screen
+>latex example
+bibtex example
+latex example
+latex example</screen>
+    <tip>
+      <para
+>Če uporabljate nekaj naprednih &latex; lupin kot &kile; ali &lyx;, vam ni treba skrbeti za izvajanje vseh teh ukazov iz emulatorja konzole. Preprosto uporabite vročo tipko (<keycombo
+>&Alt;<keycap
+>6</keycap
+></keycombo
+> v &kile;) ali gumb v orodni vrstici, da vidite rezultate. </para>
+    </tip>
+    <para
+>Zdaj si lahko ogledate rezultate kot &DVI; ali &PDF; datoteko (oblika je odvisna od vaše konfiguracije), shranjeno v isti mapi kot vaše izvorne datoteke. </para>
+    <note>
+      <para
+>Čestitke! Pravkar ste ustvarili svoj prvi dokument z &bibtex; bibliografijo. </para>
+    </note>
+  </sect1>
+</chapter>
+
+<chapter id="interface">
+  <title
+>&kbibtex; Vmesnik </title>
+    <sect1 id="panels">
+    <title
+>Plošče &kbibtex; </title>
+    <para
+>Glavna funkcija &kbibtex; je na voljo prek svojih devetih plošč. Te plošče je mogoče preurediti ali jih celo ločiti od glavnega okna s klikom z &LMB; na glavo plošče in jo povlečete na novo mesto. </para>
+    <para
+>Lahko naredite &kbibtex; plošče vidne ali jih skrijete s podmenijem <menuchoice
+><guimenu
+>Nastavitve</guimenu
+><guimenuitem
+>Pokaži plošče</guimenuitem
+></menuchoice
+>. Dovolj je, da označite element plošče, da postane vidna, ali počistite polje, da skrijete ploščo. </para>
+    <sect2 id="list-of-documents">
+      <title
+>Plošča s seznamom dokumentov </title>
+	<para
+>Plošča <guilabel
+>Seznam dokumentov</guilabel
+> omogoča preklapljanje med odprtimi bibliografskimi dokumenti (zavihek <guilabel
+>Odprte datoteke</guilabel
+>), odpiranje nedavno uporabljenih dokumentov (zavihek <guilabel
+>Nedavno uporabljeni</guilabel
+>), odprite svoje glavne bibliografske dokumente (zavihek <guilabel
+>Priljubljene</guilabel
+>) ali pobrskajte po datotečnem sistemu vašega računalnika, da poiščete bibliografske dokumente (zavihek <guilabel
+>Brskalnik datotečnega sistema</guilabel
+>). </para>
+	<tip>
+	  <para
+>Če želite bibliografsko datoteko dodati med priljubljene, jo izberite na katerem koli zavihku razen <guilabel
+>Priljubljene</guilabel
+>, kliknite z &RMB; in izberite <guimenuitem
+>Dodaj med priljubljene</guimenuitem
+>. Če želite bibliografijo odstraniti iz priljubljenih, jo izberite na zavihku <guilabel
+>Priljubljene</guilabel
+>, kliknite z &RMB; in izberite <guimenuitem
+>Odstrani iz priljubljenih</guimenuitem
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Podokno s seznamom dokumentov</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-documents.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Podokno s seznamom dokumentov</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="list-of-values">
+      <title
+>Plošča s seznamom vrednosti </title>
+	<para
+>Podokno <guilabel
+>Seznam vrednosti</guilabel
+> lahko uporabite za lažji ogled statističnih podatkov o uporabi vrednosti v poljih vnosov in paketno urejanje teh vrednosti. </para>
+	<para
+>Zgornje spustno polje se uporablja za izbiro polja bibliografije za prikaz statističnih podatkov (število vnosov z enako vrednostjo polja) na spodnjem seznamu. </para>
+	<para
+>Lahko kliknete z &RMB; na vnosu na spodnjem seznamu za dostop do zmožnosti paketnega urejanja. Možno je <guimenuitem
+>Zamenjati vse pojave</guimenuitem
+> vrednosti, <guimenuitem
+>Izbrisati vse pojave</guimenuitem
+> vrednosti, <guimenuitem
+>Iskati izbrane vrednosti</guimenuitem
+> z uporabo <link linkend=" filter-toolbar"
+>Orodna vrstica filtrov</link
+>, <guimenuitem
+>Dodati vrednost izbranim vnosom</guimenuitem
+>, <guimenuitem
+>Zamenjati vrednost izbranih vnosov</guimenuitem
+> ali <guimenuitem
+>Odstraniti vrednost iz izbranih vnosov</guimenuitem
+> (nekatere vnose je treba najprej izbrati na glavnem seznamu vnosov). </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Podokno s seznamom vrednosti</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-values.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Podokno s seznamom vrednosti</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="statistics">
+      <title
+>Plošča s statistiko </title>
+      <para
+>Plošča <guilabel
+>Statistika</guilabel
+> je zasnovana za prikaz obširnega seznama statističnih informacij o trenutnem bibliografskem dokumentu. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Plošča s statistiko</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="statistics.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Plošče s statistiko</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="reference-preview">
+      <title
+>Referenčna plošča za predogled </title>
+	<para
+>Plošča <guilabel
+>Predogled sklicevanja</guilabel
+> se uporablja za predogled in shranjevanje v &HTML; format trenutno izbranega bibliografskega vnosa. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Podokno za predogled sklicevanja</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="reference-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Podokno za predogled sklicevanja</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Referenco si je mogoče predogledati v obliki vira (&bibtex;), vira (RIS), Wikipedije, standardne (&XML;/XSLT), modne (&XML;/XSLT) in samo abstraktne (&XML;/XSLT). Dodatne možnosti postanejo na voljo, ko je nameščena <application
+>bibtex2html</application
+>. </para>
+	<tip>
+	  <para
+>Ko kliknete na elemente sklica v formatu, ki temelji na &XML;, &kbibtex; bo uporabil ustrezno <link linkend="filter-toolbar"
+>filtriranje</link
+> za seznam bibliografije. </para>
+	</tip>
+	<para
+>Kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Odpri</guibutton
+>, da odprete sklic v privzetem internetni brskalnik. Gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Shrani kot &HTML;</guibutton
+> lahko uporabite za shranjevanje sklic v &HTML; za nadaljnjo uporabo na vaši spletni strani. </para>
+	<para
+>Lahko kliknete z &RMB; na plošči, da izberete <guimenuitem 
+>Znova naloži</guimenuitem 
+>, da posodobite sklic v skladu z zadnjimi spremembami v vnosu. </para>
+    </sect2>
+    <sect2 id="file-settings">
+      <title
+>Plošča z nastavitvami datotek </title>
+	<para
+>Podokno <guilabel
+>Nastavitve datoteke</guilabel
+> lahko uporabite za definiranje nekaterih parametrov datoteke <filename role="extension"
+>bib</filename
+> trenutne bibliografije. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Plošča z nastavitvami datoteke</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="file-settings.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Plošča z nastavitvami datoteke</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Možno je izbrati <guilabel
+>Kodiranje</guilabel
+>, <guilabel
+>Ločilnike nizov</guilabel
+>, <guilabel
+>Navednice komentarjev</guilabel
+>, <guilabel
+>velike/make ključne besede</guilabel
+>, in <guilabel
+>Oblikovanje osebnih imen</guilabel
+>. </para>
+	<para
+>Privzeto bo &bibtex; prestavil v male črke vse vmesne besede v stavkih. Odkljukajte rubriko <guilabel
+>Zaščiti naslove</guilabel
+> za zavarovanje velikih/malih črk v naslovih prispevkov. </para>
+    </sect2>
+    <sect2 id="online-search">
+      <title
+>Plošča spletnega iskanja </title>
+	<para
+>Za iskanje lahko uporabite ploščo <guilabel
+>Spletno iskanje</guilabel
+> v internetnih bibliografskih zbirkah podatkov, da poiščete potrebne vnose ali da pridobite celoten nabor podatkov za ročno vnesen vnos. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Plošča za spletno iskanje</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="online-search.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Podokno za spletno iskanje</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Vnose lahko iščete po <guilabel
+>Prostem besedilu</guilabel
+>, <guilabel
+>Naslovu</guilabel
+>, <guilabel
+>Avtorju</guilabel
+> ali <guilabel
+>Letu</guilabel
+>. Število rezultatov, prikazanih na <link linkend="search-results"
+>podoknu z rezultati iskanja</link
+>, je mogoče prilagoditi z vrtilnim poljem <guilabel
+>Število rezultatov</guilabel
+>. </para>
+	<para
+>Kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Uporabi vnos</guibutton
+>, da izpolnite polja iskalnih kriterijev iz trenutno izbranega bibliografskega vnosa. Tako lahko obstoječi vnos dopolnite s podatki iz internetnih baz. Gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="media-playback-start.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Iskanje</guibutton
+> lahko uporabite za zagon Iskanje. </para>
+	<para
+>&kbibtex; lahko izvede iskanje v najbolj priljubljenih internetnih bazah podatkov. Če želite izbrati nabor baz podatkov za vaše iskanje, preklopite na zavihek <guilabel
+>Mehanizmi</guilabel
+> ali kliknite z &LMB; na povezavi <guilabel
+>spremeni</guilabel
+> na zavihku <guilabel
+>Poizvedbeni pogoji</guilabel
+>. </para>
+	<para
+>Če želite obiskati spletno stran baze podatkov, kliknite z &RMB; na svojem vnosu v zavihku <guilabel
+>Mehanizmi</guilabel
+> in izberite <guimenuitem
+>Pojdi na domačo stran</guimenuitem
+>. </para>
+    </sect2>
+    <sect2 id="zotero">
+      <title
+>Plošča Zotero </title>
+	<para
+>Podokno <guilabel
+>Zotero</guilabel
+> lahko uporabite za uvoz vaše knjižnice <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+>. </para>
+	<para
+>Zotero uporablja specializirane dodatke brskalnika za shranjevanje bibliografskih vnosov z internetnih strani. Podatki so shranjeni v spletni zbirki podatkov, ki je dostopna od koder koli. Dokumentacijo Zotero lahko najdete <ulink url="https://www.zotero.org/support/"
+>tukaj</ulink
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Plošča Zotero</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="zotero.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Plošča Zotero</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Na Zavihek <guilabel
+>Poverilnice</guilabel
+> za zagon čarovnika za avtorizacijo Zotero. Sledite navodilom, da omogočite &kbibtex; dostop do vaše knjižnice Zotero. </para>
+	<para
+>Za dostop do vnosov v knjižnico dvokliknite ustrezno postavko na zavihkih <guilabel
+>Zbirke</guilabel
+> ali <guilabel
+>Oznake</guilabel
+>. Vnosi, ki izpolnjujejo izbrana merila, bodo prikazani na <link linkend="search-results"
+>podoknu z rezultati iskanja</link
+>. </para>
+    </sect2>
+    <sect2 id="search-results">
+      <title
+>Plošča z rezultati iskanja </title>
+	<para
+>Plošča <guilabel
+>Rezultati iskanja</guilabel
+> se uporablja za obdelavo rezultatov iskanja, pridobljenih s pomočjo <link linkend="online-search"
+>plošče spletnega iskanja</link
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Plošča z rezultati iskanja</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="search-results.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Plošča z rezultati iskanja</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="svn-update.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Uvoz</guibutton
+> za uvoz trenutno izbranega rezultata iskanja v vašo bibliografijo. </para>
+	<para
+>Za dostop do drugih dejanj za trenutno izbran rezultat iskanja kliknite nanj z &RMB;. V odprtem meniju lahko pregledate rezultat (postavka <guimenuitem
+>Ogled elementa</guimenuitem
+>) ali ga kopirate za nadaljnje lepljenje v &bibtex; formatirajte drugje s <keycombo
+>&Ctrl;<keycap
+>V</keycap
+></keycombo
+> (element <guimenuitem
+>Kopiraj</guimenuitem
+>). </para>
+    </sect2>
+    <sect2 id="element-editor">
+      <title
+>Plošča urejevalnika elementov </title>
+	<para
+>Ploščo <guilabel
+>Urejevalnik elementov</guilabel
+> lahko uporabite za urejanje trenutno izbranega elementa bibliografije. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Plošča urejevalnika elementov</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="element-editor.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Plošča urejevalnika elementov</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Kliknite gumb <inlinemediaobject
+> <imageobject
+> <imagedata fileref="view-filter.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, da izberete <link linkend="config-id-suggestions"
+> predlagani identifikator</link
+> za element. </para>
+	<para
+>Vnesite ustrezne podatke v polja urejevalnika. Format podatkov polja lahko preklapljate med <guimenuitem
+>Besedilo</guimenuitem
+>, <guimenuitem
+>Referenca</guimenuitem
+> in <guimenuitem
+>Izvorna koda</guimenuitem
+> s spustnim menijem na levi strani besedilnega polja. </para>
+	<para
+>Kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="configure.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Možnosti</guibutton
+>, da odprete spustni meni z dvema elementoma . </para>
+	<para
+>Element <guimenuitem
+>Pokaži vsa polja</guimenuitem
+> lahko uporabite za prikaz ali skrivanje vseh praznih polj trenutnega elementa. </para>
+	<para
+>Fokus tipkovnice je mogoče preklapljati med polji s tipko &Tab;. Drugi element menija, <guimenuitem
+>Tipka Tab obišče samo polja, ki jih je mogoče urejati</guimenuitem
+>, lahko uporabite za vklop in izklop navigacije samo med polji, ki jih je mogoče urejati. </para>
+	<para
+>Za predogled kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="tools-check-spelling.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Preveri z &bibtex;</guibutton
+> vnos za urejanje, kot bo prikazan v prevedeni datoteki &PDF;. </para>
+	<para
+>Označite polje <guilabel
+>Samodejno uporabi spremembe</guilabel
+>, da se vse vaše spremembe samodejno uporabijo za vnos, ne da bi morali klikniti gumb <guibutton
+>Uporabi</guibutton
+>. </para>
+	<para
+>Kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Ponastavi</guibutton
+>, da razveljavite vse svoje spremembe. </para>
+      </sect2>
+      <sect2 id="document-preview">
+      <title
+>Plošča za predogled dokumenta </title>
+	<para
+>Podokno <guilabel
+>Predogled dokumenta</guilabel
+> lahko uporabite za predogled strani ali dokumentov, <link linkend="adding-link"
+>povezanih</link
+> s trenutno izbranim bibliografskim vnosom. </para>
+	<tip>
+	  <para
+>Privzeto lahko ploščo <guilabel
+>Predogled dokumenta</guilabel
+> odprete s pritiskom na bližnjico na tipkovnici <keycombo
+>&Ctrl;&Shift;<keycap
+>D</keycap
+></keycombo
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Podokno za predogled dokumenta</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="document-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Plošča za predogled dokumenta</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Kliknite gumb <inlinemediaobject
+> <imageobject
+> <imagedata fileref="applications-internet.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, da preklapljate samo med lokalnimi datotekami in vsemi dokumenti, vključno z oddaljenimi. </para>
+	<para
+>Kliknite gumb <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, da odprete stran ali dokument v privzeti zunanji aplikaciji. </para>
+	<para
+>Spustno polje <guilabel
+>Naslov</guilabel
+> lahko uporabite za preklapljanje med stranmi in dokumenti. </para>
+    </sect2>
+  </sect1>
+  <sect1 id="toolbars">
+    <title
+>Orodne vrstice &kbibtex; </title>
+    <para
+>&kbibtex; ima dve popolnoma prilagodljivi orodni vrstici, ki se nahajata na zgornjem delu okna. </para>
+    <para
+>Več informacij o prilagajanju orodnih vrstic lahko najdete v <ulink url="help:/fundamentals/config.html#toolbars"
+>ustreznem razdelku &kde; Priročnik o osnovah</ulink
+>. Spodaj je kratek opis privzetih gumbov &kbibtex; orodne vrstice. </para>
+    <sect2 id="main-toolbar">
+      <title
+>Glavna orodna vrstica </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Glavna orodna vrstica</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="main-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Glavna orodna vrstica</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>Privzeta glavna orodna vrstica &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para
+><guibutton
+>Novo</guibutton
+>: ustvari nov bibliografski dokument. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Odpri</guibutton
+>: odpre <ulink url="help:/fundamentals/files.html"
+>generični &kde; Odpri/Shrani pogovorno okno</ulink
+>, da odprete obstoječo bibliografijo za urejanje. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Zapri</guibutton
+>: zapre trenutno aktivni bibliografski dokument. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Shrani</guibutton
+>: shrani trenutno aktivni bibliografski dokument. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Shrani kot</guibutton
+>: omogoča shranjevanje trenutno odprtega bibliografskega dokumenta pod novim imenom z uporabo <ulink url="help:/fundamentals/files.html"
+>generičnega &kde; Odpri/Shrani pogovorno okno</ulink
+>. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Nov element</guibutton
+>: omogoča ustvarjanje novega vnosa, komentarja, preambule ali <link linkend="macros"
+>makra</link
+> v trenutnem bibliografskem dokumentu. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Poišči dvojnike</guibutton
+>: najde in popravi podvojene elemente v trenutnem bibliografskem dokumentu. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>Pošlji v &lyx;/&kile;</guibutton
+>: pošlje sklic na trenutno izbrani bibliografski vnos v &lyx; ali &kile;. Več o tem v <link linkend="integration"
+>ustreznem poglavju tega priročnika</link
+>. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+    <sect2 id="filter-toolbar">
+      <title
+>Orodna vrstica filtra </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>Orodna vrstica filtra</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="filter-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Orodna vrstica filtra</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>Privzeta orodna vrstica filtra &kbibtex;. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>Najenostavnejša metoda za krmarjenje po velikih bibliografijah je uporaba orodne vrstice <guilabel
+>Filter</guilabel
+>: &kbibtex; bo filtriral prikazani seznam glede na vaš vnos. Če iščete nek element, vendar ne poznate njegovega točnega položaja na seznamu, preprosto vnesite nekaj črk iz njegovih podatkov v besedilno polje <guilabel
+>Filter</guilabel
+>. </para>
+	<para
+>Ko vnesete prvih nekaj črk, boste videli, da se seznam spreminja. Več črk kot vnesete, bolj pomanjšan seznam boste videli. To filtriranje se izvede takoj, ko tipkate. </para>
+	<para
+>Če pogledate desni del orodne vrstice <guilabel
+>Filter</guilabel
+>, boste opazili dva spustna menija. Spustni meniji so bili zasnovani tako, da lahko hitro prilagodite kriterije filtriranja svojim potrebam. Prvi spustni meni se uporablja za določitev načina ujemanja (<guimenuitem
+>katera koli beseda</guimenuitem
+>, <guimenuitem
+>vsaka beseda</guimenuitem
+> ali <guimenuitem
+>točna fraza</guimenuitem
+>). Drugi je, da določite polje, kjer naj se izvaja filtriranje. Izberete lahko <guimenuitem
+>poljubno polje</guimenuitem
+> ali izberete polje, da zožite seznam rezultatov v velikih bibliografijah. </para>
+	<para
+>V tej orodni vrstici sta tudi dva gumba: </para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="application-pdf.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>Vključi &PDF; datoteke pri iskanju po celotnem besedilu</guibutton
+>: omogoča vključitev celotnega besedila &PDF; v filtriranju. </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>Ponastavi kriterije filtra</guibutton
+>: ponastavi kriterije filtriranja. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+  </sect1>
+  <sect1 id="menus">
+    <title
+>Meniji &kbibtex; </title>
+    <para
+>&kbibtex; sledi standardu sheme &kde; menija. Tako ima veliko menijskih vnosov, ki so skupni vsem &kde; aplikacijam. Več informacij o teh vnosih v meniju najdete <ulink url="help:/fundamentals/menus.html"
+>v tem razdelku pomoči</ulink
+>. </para>
+    <para
+>Spodaj lahko najdete opise menijskih vnosov, specifičnih za &kbibtex;. </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Uredi</guimenu
+> <guimenuitem
+>Izbriši</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Brisanje trenutno izbranega elementa na seznamu bibliografije. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Uredi</guimenu
+> <guimenuitem
+>Poišči dvojnike</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Omogoča iskanje in odstranjevanje dvojnikov v trenutno odprti bibliografiji. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nov element</guisubmenu
+> <guimenuitem
+>Nov vnos</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Odpri okno <link linkend="element-editor"
+>Uredi element</link
+>, da vnesete nov bibliografski vnos. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nov element</guisubmenu
+> <guimenuitem
+>Nov komentar</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Odpri okno <link linkend="element-editor"
+>Uredi element</link
+>, da vnesete nov komentar, ki ga &bibtex; ne upošteva. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nov element</guisubmenu
+> <guimenuitem
+>Nov makro</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Odpri okno <link linkend="element-editor"
+>Uredi element</link
+>, da vnesete nov <link linkend="macros"
+>makro</link
+>. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Nov element</guisubmenu
+> <guimenuitem
+>Nova preambula</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Odprite okno <link linkend="element-editor"
+>Uredi element</link
+>, da vnesete novo preambulo bibliografije, ki določa, kako naj bo posebno besedilo oblikovano v vaši bibliografiji. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>E</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Element</guimenu
+> <guimenuitem
+>Uredi element</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Odprite okno <link linkend="element-editor"
+>Uredi element</link
+>, da uredite trenutno izbrani element bibliografije. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="adding-link">
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>D</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>Element</guimenu
+> <guisubmenu
+>Ogled dokumenta</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Odprite lokalni ali oddaljeni dokument za trenutno izbran vnos na seznamu bibliografije. </para>
+	  <para
+>Povezavo do dokumenta lahko dodate ali uredite z zavihkom <guilabel
+>Zunanji</guilabel
+> zavihek od okna<link linkend="element-editor"
+>Uredi element</link
+>. </para>
+	  <screenshot>
+	    <screeninfo
+>Zavihek Zunanji dokumenti pogovornega okna za urejanje vnosa</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="external-tab.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Zavihek Zunanji dokumenti pogovornega okna za urejanje vnosa</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>Gumb <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Dodaj</guilabel
+> lahko uporabite za dodajanje povezave do oddaljene strani. </para>
+	  <para
+>Uporablja se spustno polje <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Dodaj datoteko ...</guilabel
+> da izberete lokalno datoteko in dodate referenco ali celotno datoteko v trenutno bibliografijo. </para>
+	  <para
+>Če kliknete <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, bo trenutno izbrani element počiščen. </para>
+	  <para
+>Kliknite gumb <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open-remote.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, da odprete povezavo do dokumenta v brskalniku. </para>
+	  <para
+>Kliknite gumb <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, da odstranite trenutno izbrano postavko dokumenta. </para>
+	  <para
+>Za prerazporeditev elementov na seznamu dokumentov uporabite <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-down.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> in <inlinemediaobject
+> <imageobject
+> <imagedata fileref ="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> gumbe. </para>
+	  <para
+>Sčasoma lahko gumb <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> uporabite za lokalno shranjevanje oddaljenih dokumentov. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Najdi &PDF;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Poskusite najti nekaj &PDF; dokumentov za trenutno izbrani bibliografski vnos v internetu. </para>
+	  <screenshot>
+	    <screeninfo
+>Poišči &PDF; pogovorno okno</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="find-pdf.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>Poišči &PDF; dialog</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>Lahko <guilabel
+>Prezrete</guilabel
+>, <guilabel
+>Prenesete</guilabel
+> ali samo <guilabel
+>Uporabite &URL; samo</guilabel
+> za vnos. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="format-entry-ids">
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>ID-ji vnosov oblike</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Omogoča oblikovanje identifikatorjev za trenutno izbrane bibliografske vnose glede na privzeto oblikovanje. </para>
+	  <para
+>Privzeto oblikovanje identifikatorjev je mogoče določiti s pomočjo <link linkend="config-id-suggestions"
+>strani s predlogi za ID</link
+> &kbibtex; konfiguracijsko pogovorno okno. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guisubmenu
+>Barva</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Omogoča, da izberete barvno oznako za trenutno izbrane vnose v bibliografijo ali odstranite tako oznako (<guimenuitem
+>Brez barve</guimenuitem
+>). </para>
+	  <para
+>Barvne oznake je mogoče konfigurirati z <link linkend="config-color"
+>Color &amp; Stran z oznakami</link
+> &kbibtex; konfiguracijsko pogovorno okno. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Element</guimenu
+> <guimenuitem
+>Pošlji v &lyx;/&kile;</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+><link linkend="integration"
+>Pošlji reference</link
+> trenutno izbranih bibliografskih vnosov na &lyx; ali &kile;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>Nastavitve</guimenu
+> <guimenuitem
+>Konfiguriraj &kbibtex;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>Odpri <link linkend="config-dialog"
+>&kbibtex; konfiguracijsko pogovorno okno</link
+>. </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </sect1>
+  <sect1 id="config-dialog">
+    <title
+>Pogovorno okno za konfiguracijo &kbibtex; </title>
+    <para
+>Več &kbibtex; parametrov je mogoče konfigurirati prek pogovornega okna <guilabel
+>Nastavitve</guilabel
+>. To pogovorno okno lahko odprete z menijsko postavko <menuchoice
+><guimenu
+>Nastavitve</guimenu
+><guimenuitem
+>Konfiguriraj &kbibtex;...</guimenuitem
+></menuchoice
+>. Spodaj najdete opis &kbibtex; konfiguracijske strani. </para>
+    <para
+>Kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-revert.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Privzete nastavitve</guibutton
+>, da vse elemente ponastavite na privzete vrednote. </para>
+    <para
+>Z gumbom <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Ponastavi</guibutton
+> lahko zavržete vso spremembe trenutne konfiguracije, ne da bi zaprli okno <guilabel
+>Nastavitve</guilabel
+>. </para>
+    <sect2 id="config-general">
+      <title
+>Splošna konfiguracija </title>
+      <screenshot>
+	<screeninfo
+>Splošna konfiguracija</screeninfo>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="config-general.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase
+>Splošna konfiguracija</phrase>
+	  </textobject>
+	</mediaobject>
+      </screenshot>
+      <para
+>Ta konfiguracijska stran vam omogoča, da spremenite privzeto <guilabel
+>oblikovanje imen oseb</guilabel
+>, ki bo samodejno uporabljeno za imena, vnesena v pogovornem oknu <link linkend="element-editor"
+>Urejevalnik elementov</link
+>. </para>
+      </sect2>
+    <sect2 id="config-keywords">
+      <title
+>Konfiguracija ključnih besed </title>
+      <screenshot>
+	<screeninfo
+>Konfiguracija ključnih besed</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-keywords.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Konfiguracija ključnih besed</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>To stran lahko uporabite za urejanje seznama ključnih besed. Ključne besede, uporabljene za vnose v bibliografijo z <link linkend="element-editor"
+>urejevalnikom elementov</link
+>, so uporabne za strukturiranje vaše bibliografije. <link linkend="filter-toolbar"
+>Filtriranje</link
+> po ključnih besedah vam lahko da natančne rezultate po temah. </para>
+	<para
+>Gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Dodaj</guibutton
+> lahko uporabite za dodajanje ključne besede seznam. </para>
+	<para
+>Kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Odstrani</guibutton
+>, da odstranite trenutno izbrano ključno besedo postavka. </para>
+      </sect2>
+      <sect2 id="config-color">
+      <title
+>Barva &amp; Konfiguracija oznak </title>
+      <screenshot>
+	<screeninfo
+>Barva &amp; Konfiguracija oznak</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-color.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Barva &amp; Konfiguracija oznak</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Barvne oznake so še en uporaben način za strukturiranje vaše bibliografije. To konfiguracijsko stran lahko uporabite za določanje oznak in njihovih barv. </para>
+	<para
+>Z gumbom <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Dodaj</guibutton
+> lahko dodate oznako na seznam. </para>
+	<para
+>Kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Odstrani</guibutton
+>, da odstranite trenutno izbrano oznako . </para>
+	<para
+>Dvakrat kliknite na element v stolpcu <guilabel
+>Barva</guilabel
+> ali <guilabel
+>Oznaka</guilabel
+>, da ga začnete urejati. </para>
+      </sect2>
+      <sect2 id="config-id-suggestions">
+      <title
+>Konfiguracija predlogov za ID </title>
+      <screenshot>
+	<screeninfo
+>Konfiguracija predlogov ID</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-id-suggestions.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Konfiguracija predlogov ID</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Ta konfiguracijska stran se uporablja za obravnavanje shem predlogov identifikatorjev za <link linkend="element-editor"
+>urejevalnik elementov</link
+>. Sheme lahko dodajate, urejate, odstranjujete in preuredite z ustreznimi gumbi na desni strani seznama predlogov. </para>
+	<para
+>Kliknite gumb <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="favorites.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Preklopi privzeto</guibutton
+>, da preklopite privzeto shemo predlogov ID-ja na trenutno izbrani predmet. Ta gumb lahko uporabite za določitev oblike za dejanje <link linkend="format-entry-ids"
+>Oblikuj ID-je vnosa</link
+>. </para>
+      </sect2>
+      <sect2 id="config-user-interface">
+      <title
+>Konfiguracija uporabniškega vmesnika </title>
+      <screenshot>
+	<screeninfo
+>Konfiguracija uporabniškega vmesnika</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-user-interface.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Konfiguracija uporabniškega vmesnika</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>S to konfiguracijsko stranjo lahko naredite &kbibtex; pokažite ali skrijete komentarje in makre na seznamu bibliografije, izberite sistem bibliografije (&bibtex; ali &biblatex;) in določite, kaj storiti, ko dvokliknete element na seznamu bibliografije (<guimenuitem
+>Odpri urejevalnik</guimenuitem
+> ali <link linkend="document-preview"
+><guimenuitem
+>Ogled dokumenta</guimenuitem
+></link
+>). </para>
+	<tip>
+	  <para
+>&biblatex; je ponovna implementacija &bibtex;. Z &biblatex; oblikovanje bibliografije v celoti nadzoruje &latex; makri, ne datoteke <filename role="extension"
+>bst</filename
+>. Podpira razdeljene bibliografije, več bibliografij v enem dokumentu in ločene sezname bibliografskih okrajšav. Bibliografije so lahko razdeljene na dele in/ali segmentirane po temah. Tako kot sloge bibliografije lahko tudi vse ukaze za navajanje poljubno definirate. &biblatex; paket je popolnoma lokaliziran in se lahko poveže s paketom babel.<footnote
+><para
+>Iz &biblatex; dokumentacija.</para
+></footnote>
+	  </para>
+	  <para
+>Tudi &biblatex; lahko uporablja <ulink url="http://biblatex-biber.sourceforge.net/"
+>biber</ulink
+> kot zaledje. Z &biblatex; v bibliografskih vnosih je možna uporaba simbolov UTF-8. </para>
+	  <para
+>Torej lahko uporabite &biblatex; ustvariti sofisticirane bibliografije. </para>
+	</tip>
+      </sect2>
+      <sect2 id="config-saving">
+      <title
+>Shranjevanje in izvoz konfiguracije </title>
+      <screenshot>
+	<screeninfo
+>Shranjevanje in izvoz konfiguracije</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-saving.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Shranjevanje in izvoz konfiguracije</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>Na tej strani lahko izberete ukaz &latex; (&eg; <userinput
+>\cite{...}</userinput
+>), ki bo uporabljen kot ovoj za sklic, kopiran z <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;&Shift;<keycap
+>C</keycap
+></keycombo
+></shortcut
+><guimenuitem
+>Kopiraj referenco</guimenuitem
+></menuchoice
+> element pojavnega menija s seznama bibliografije. </para>
+	<para
+>Prav tako je mogoče narediti &kbibtex; določi <link linkend="lyx-integration"
+>&lyx; data pipe</link
+> samodejno, tako da označite ustrezno polje. </para>
+	<para
+>Ko <guilabel
+>Zazna &lyx; cev samodejno</guilabel
+> element ni označen, naslov cevi lahko dodate ročno v besedilno polje <guilabel
+>Ročno določeno &lyx; cev</guilabel
+> ali pa jo izberite z <ulink url="help:/fundamentals/files.html"
+>splošnim &kde; Odpri/Shrani pogovorno okno</ulink
+> s pritiskom na gumb na desni strani besedilnega polja. </para>
+	<para
+>Sčasoma lahko tukaj konfigurirate varnostne kopije. Možno je izbrati predmet varnostnega kopiranja (<guimenuitem
+>Samo lokalne datoteke</guimenuitem
+>, <guimenuitem
+>Brez varnostnih kopij</guimenuitem
+> ali <guimenuitem
+>Tako lokalne kot oddaljene datoteke</guimenuitem
+>) z uporabo <guilabel
+>Varnostne kopije pri shranjevanju </guilabel
+> spustno polje in število varnostnih kopij za shranjevanje. </para>
+      </sect2>
+      <sect2 id="config-pdf">
+      <title
+>&PDF; &amp; Konfiguracija Postscripta </title>
+      <screenshot>
+	<screeninfo
+>&PDF; &amp; Konfiguracija Postscripta </screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-pdf.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>&PDF; &amp; Konfiguracija Postscripta </phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>To konfiguracijsko stran lahko uporabite za izbiro nekaterih možnosti za <link linkend="element-editor"
+>predogled &kbibtex; vnosov</link
+>. Izberete lahko <guilabel
+>Velikost papirja</guilabel
+>, jezik za <ulink url="https://www.ctan.org/pkg/babel"
+>babel</ulink
+> &latex; paket in <link linkend="quick-using"
+>slog bibliografije</link
+>. </para>
+      </sect2>
+  </sect1>
+</chapter>
+
+<chapter id="advanced">
+  <title
+>Napredna uporaba </title>
+  <sect1 id="crossreferences">
+    <title
+>Navzkrižne reference </title>
+    <para
+>Navzkrižno sklicevanje vam omogoča, da prihranite nekaj časa z ustvarjanjem povezav med <quote
+>nadrejenim</quote
+> vnosom (lahko ga obravnavate kot zbornik ali zbirko člankov) in <quote
+>podrejenimi</quote
+> vnosi (poročila ali članki). </para>
+    <para
+>Če želite ustvariti navzkrižno sklicevanje, preprosto dodajte njegov identifikator v polje <guilabel
+>Navzkrižno sklicevanje:</guilabel
+> zavihka vnosa <guilabel
+>Publikacija</guilabel
+>. </para>
+    <screenshot>
+      <screeninfo
+>Zavihek Objava pogovornega okna za urejanje vnosa</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="cross-ref.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>Zavihek Objava pogovornega okna za urejanje vnosa</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>Identifikator lahko vnesete neposredno ali kliknete gumb <inlinemediaobject
+> <imageobject
+> <imagedata fileref="flag.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>, da ga izberete s seznama razpoložljivih identifikatorjev. </para>
+  </sect1>
+  <sect1 id="macros">
+    <title
+>Makri </title>
+    <para
+>Recimo, da vaša bibliografija vsebuje veliko referenc na isto revijo in ne želite znova in znova vnašati njenega naslova. Nato lahko določite makro za naslov revije. </para>
+    <para
+>Recimo, da želimo definirati makro <replaceable
+>efm</replaceable
+> za <quote
+>Inženirsko mehaniko loma</quote
+>. Potem bi morali narediti naslednje: </para>
+    <procedure>
+      <step>
+	<para
+>Izberite <menuchoice
+><guimenu
+>Element</guimenu
+><guisubmenu
+>Nov element</guisubmenu
+><guimenuitem
+>Nov makro</guimenuitem
+></menuchoice
+> element menija. </para>
+      </step>
+      <step>
+	<para
+>V besedilno polje <guilabel
+>Id:</guilabel
+> vnesite identifikator (okrajšavo) za naslov. Privzeti identifikator je <userinput
+>Novo1</userinput
+>. Vnesti bi morali <userinput
+>efm</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>Izberite <inlinemediaobject
+> <imageobject
+> <imagedata fileref="draw-text.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Navadno besedilo</guilabel
+>). Uporabite lahko drugo možnost, <inlinemediaobject
+> <imageobject
+> <imagedata fileref="code-context.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>Izvorna koda</guilabel
+>). če želite vstaviti makro z &latex; ukaze v njem. </para>
+      </step>
+      <step>
+	<para
+>V besedilno polje <guilabel
+>Vrednost:</guilabel
+> vnesite <userinput
+>Inženirska mehanika loma</userinput
+>. </para>
+	<screenshot>
+	  <screeninfo
+>Definiranje makra</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definiranje makra</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Kliknite gumb <guibutton
+>Uporabi</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Po želji preklopite na zavihek <guilabel
+>Vir</guilabel
+>, da pregledate kodo makra. </para>
+	<screenshot>
+	  <screeninfo
+>Definiranje makra (izvorna koda)</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro-source.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>Definiranje makra (izvorna koda)</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Kliknite gumb <guibutton
+>V redu</guibutton
+>. </para>
+      </step>
+    </procedure>
+    <para
+>Isti postopek lahko uporabite za popravljanje naslovov, avtorjev in imen mesecev &etc;. po pravilih okrajšav vašega založnika za vnose iz spletnih baz podatkov. Privzeto morajo biti ta pravila (makri) definirana v datotekah sloga bibliografije (<filename role="extension"
+>bst</filename
+>). </para>
+  </sect1>
+</chapter>
+
+<chapter id="integration">
+  <title
+>Integracija z &kile; in &lyx; </title>
+  <para
+>&kbibtex; je mogoče preprosto integrirati s skupnim &latex; urejevalniki, in sicer &kile; in &lyx;. </para>
+  <sect1 id="kile-intergation">
+    <title
+>Integracija z &kile; </title>
+    <para
+><ulink url="http://kile.sourceforge.net/"
+>&kile;</ulink
+> je &tex; in &latex; izvorni urejevalnik in lupina. </para>
+    <para
+>&kbibtex; je privzeti pregledovalnik/urejevalnik za &bibtex; datotek v &kile;, zato ni potrebe po dodatni konfiguraciji. </para>
+    <para
+>Če želite dodati izbrane citate iz bibliografskih datotek, zaženite &kile;, odprite nekaj &latex; datoteko, postavite kazalec tja, kamor želite dodati citat, nato preklopite na &kbibtex; izberite elemente na seznamu elementov in izberite <menuchoice
+><guimenu
+>Element</guimenu
+><guimenuitem
+>Pošlji v &lyx;/&kile;</guimenuitem
+></menuchoice
+> ali uporabite <guimenuitem
+>Pošlji v &lyx;/ &kile;</guimenuitem
+> element kontekstnega menija elementa (&RMB;-klik). </para>
+    <para
+>Citati bodo vstavljeni kot <userinput
+>\cite{<replaceable
+>identifikatorji elementov</replaceable
+>}</userinput
+> na položaj kazalca v trenutnem dokumenti &kile;. </para>
+  </sect1>
+  <sect1 id="lyx-integration">
+    <title
+>Integracija z &lyx; </title>
+    <para
+><ulink url="https://www.lyx.org/"
+>&lyx;</ulink
+> je procesor dokumentov, ki spodbuja pristop k pisanju na podlagi strukture vaših dokumentov (WYSIWYM) in ne le njihovega videza (WYSIWYG) ). </para>
+    <para
+>&kbibtex; mogoče vključiti v &lyx; prek &lyx; input/output cevi. </para>
+    <procedure>
+      <step>
+	<para
+>Najprej morate konfigurirati &lyx; za uporabo cevi. Izberite <menuchoice
+><guimenu
+>Orodja</guimenu
+><guimenuitem
+>Nastavitve</guimenuitem
+></menuchoice
+> iz &lyx; glavni meni. Odprite stran <guilabel
+>Poti</guilabel
+> in vnesite nekaj poti (&eg;. <filename
+>~/.lyx/lyxpipe</filename
+>) v besedilno polje <guilabel
+>LyXServer pipe</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>&lyx; konfiguracija</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="lyx-preferences.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>&lyx; konfiguracija</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>Kliknite <guibutton
+>Shrani</guibutton
+>, da shranite spremembe. </para>
+      </step>
+      <step>
+	<para
+>Izberite <menuchoice
+><guimenu
+>Orodja</guimenu
+><guimenuitem
+>Ponovna konfiguracija</guimenuitem
+></menuchoice
+>, da znova konfigurirate &lyx; in ga znova zaženite. </para>
+      </step>
+      <step>
+	<para
+>Če želite dodati izbrane citate iz bibliografskih datotek, odprite nek dokument, postavite kazalec tja, kamor želite dodati bibliografijo, in izberite <menuchoice
+><guimenu
+>Vstavi</guimenu
+><guisubmenu
+>Seznam / TOC</guisubmenu
+><guimenuitem
+>&bibtex; Bibliografija ...</guimenuitem
+></menuchoice
+> iz &lyx; glavni meni. </para>
+      </step>
+      <step>
+	<para
+>Pritisnite <guibutton
+>Dodaj...</guibutton
+> in nato <guibutton
+>Prebrskaj...</guibutton
+>. Točka &lyx; na &kbibtex; <filename role="extension"
+>bib</filename
+> datoteka. Kliknite <guibutton
+>Dodaj</guibutton
+> in nato kliknite <guibutton
+>V redu</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>Nato postavite kazalec, kamor želite dodati navedbo, in preklopite na &kbibtex; okno. Izberite elemente na seznamu elementov in izberite <menuchoice
+><guimenu
+>Element</guimenu
+><guimenuitem
+>Pošlji v &lyx;/&kile;</guimenuitem
+></menuchoice
+> ali uporabite <guimenuitem
+>Pošlji v &lyx;/&kile;</guimenuitem
+> element kontekstnega menija elementa (&RMB;klik). </para>
+      </step>
+      <step>
+	<para
+>Citati bodo vstavljeni kot referenca na položaj kazalke v trenutnem &lyx; dokumentu. </para>
+      </step>
+    </procedure>
+  </sect1>
+</chapter>
+
+<chapter id="credits">
+  <title
+>Zasluge in licenca</title>
+  <para
+>&kbibtex; </para>
+  <para
+>Avtorske pravice programa &copy; 2004-2014 Thomas Fischer <email
+>fischer@unix-ag.uni-kl.de</email
+> </para>
+  <para
+>Avtorske pravice za dokumentacijo &copy; 2013 Yuri Chornoivan <email
+>yurchor@ukr.net</email
+> </para>
+<para
+>Prevod: Matjaž Jeran <email
+>matjaz.jeran@amis.net</email
+></para
+> &underFDL; &underGPL; </chapter>
+
+<bibliography>
+  <biblioentry>
+    <abbrev
+>Lamport86</abbrev>
+    <author>
+      <personname
+><firstname
+>Leslie</firstname
+> <surname
+>Lamport</surname
+> </personname>
+    </author>
+    <title
+>Latex: sistem za pripravo dokumentov </title>
+    <pubdate
+>1986</pubdate>
+    <publisher>
+      <publishername
+>Addison-Wesley Publishing Company</publishername>
+    </publisher>
+  </biblioentry>
+</bibliography>
+
+&documentation.index;
+
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+-->
