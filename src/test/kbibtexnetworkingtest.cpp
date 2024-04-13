@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2024 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,7 @@
 #include <onlinesearch/OnlineSearchPubMed>
 #include <onlinesearch/OnlineSearchSpringerLink>
 #include <onlinesearch/OnlineSearchZbMath>
+#include <onlinesearch/ISBN>
 #include <AssociatedFiles>
 
 typedef QMultiMap<QString, QString> FormData;
@@ -69,6 +70,8 @@ private Q_SLOTS:
     void onlineSearchZbMathXMLparsing_data();
     void onlineSearchZbMathXMLparsing();
 #endif // BUILD_TESTING
+    void onlineSearchISBN_data();
+    void onlineSearchISBN();
 
     void associatedFilescomputeAssociateURL_data();
     void associatedFilescomputeAssociateURL();
@@ -758,6 +761,33 @@ void KBibTeXNetworkingTest::onlineSearchZbMathXMLparsing()
 }
 
 #endif // BUILD_TESTING
+
+void KBibTeXNetworkingTest::onlineSearchISBN_data() {
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<QString>("isbn");
+
+    // Examples without an ISBN at all
+    QTest::newRow("Empty text") << QString() << QString();
+    QTest::newRow("Lore ipsum") << QStringLiteral("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.") << QString();
+    // Examples with some numbers
+    QTest::newRow("Some numbers (1)") << QStringLiteral("BklJm 723-5834-4550 LyEZweeEN nvva yxTGEDa AwVL kDd") << QString();
+    QTest::newRow("Some numbers (2)") << QStringLiteral("raSa kZrBQpU qTsQIo scsyBW 35922856827 RPFdeq Ayq") << QString();
+    QTest::newRow("Some numbers (3)") << QStringLiteral("Nlfo 213-1919-28409 qSLsTl wMwLj DQsMMUq kyXCe qqHSY") << QString();
+    // Examples with valid check digits
+    QTest::newRow("From Wikipedia on ISBN (1)") << QStringLiteral("Haney, Robert (1974). Woodstock handmade houses. David Ballantine, Jonathan Elliott. New York: Ballantine Books. ISBN 0-345-24223-8.") << QStringLiteral("0345242238");
+    QTest::newRow("ISBN Users' Manual") << QStringLiteral("ISBN Users' Manual, International Edition (PDF) (6th ed.). London: International ISBN Agency. 2012. p. 23. ISBN 978-92-95055-02-5.") << QStringLiteral("9789295055025");
+    // Examples with incorrect check digits
+    QTest::newRow("From Wikipedia on ISBN (2)") << QStringLiteral("For example, the check digit for an ISBN-10 of 0-306-40615-X is calculated as follows") << QString();
+    QTest::newRow("From Wikipedia on ISBN (3)") << QStringLiteral("For example, the ISBN-13 check digit of 978-0-306-40615-X is calculated as follows") << QString();
+}
+
+void KBibTeXNetworkingTest::onlineSearchISBN()
+{
+    QFETCH(QString, text);
+    QFETCH(QString, isbn);
+
+    QCOMPARE(isbn, ISBN::locate(text));
+}
 
 void KBibTeXNetworkingTest::associatedFilescomputeAssociateURL_data()
 {

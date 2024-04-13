@@ -8,6 +8,7 @@
 
 set(
     kbibtexnetworking_SRCS
+    onlinesearch/isbn.cpp
     onlinesearch/onlinesearchabstract.cpp
     onlinesearch/onlinesearchbibsonomy.cpp
     onlinesearch/onlinesearcharxiv.cpp
@@ -178,6 +179,7 @@ ecm_generate_headers(kbibtexnetworking_HEADERS
         FavIconLocator
         InternalNetworkAccessManager
         UrlChecker
+        onlinesearch/ISBN
         onlinesearch/OnlineSearchAbstract
         onlinesearch/OnlineSearchGeneral
         onlinesearch/OnlineSearchAcmPortal
