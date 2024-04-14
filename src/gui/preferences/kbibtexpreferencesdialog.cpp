@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2024 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -134,7 +134,7 @@ public:
             break;
         }
 #if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
-        case KMessageBox::Yes: {
+        case KMessageBox::No: {
 #else // >= 5.100.0
         case KMessageBox::SecondaryAction: {
 #endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
