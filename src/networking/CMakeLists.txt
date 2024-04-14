@@ -13,6 +13,7 @@ set(
     onlinesearch/onlinesearchbibsonomy.cpp
     onlinesearch/onlinesearcharxiv.cpp
     onlinesearch/onlinesearchsciencedirect.cpp
+    onlinesearch/onlinesearchgooglebooks.cpp
     onlinesearch/onlinesearchgooglescholar.cpp
     onlinesearch/onlinesearchieeexplore.cpp
     onlinesearch/onlinesearchpubmed.cpp
@@ -132,7 +133,7 @@ if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
     )
 endif()
 
-set(onlinesearchgeneratorstems "arxiv" "ieeexplore" "pubmed" "springerlink" "zbmath")
+set(onlinesearchgeneratorstems "arxiv" "googlebooks" "ieeexplore" "pubmed" "springerlink" "zbmath")
 set(onlinesearchdependencies)
 foreach(stem ${onlinesearchgeneratorstems})
     add_custom_command(
@@ -188,6 +189,7 @@ ecm_generate_headers(kbibtexnetworking_HEADERS
         onlinesearch/OnlineSearchBioRxiv
         onlinesearch/OnlineSearchCERNDS
         onlinesearch/OnlineSearchDOI
+        onlinesearch/OnlineSearchGoogleBooks
         onlinesearch/OnlineSearchGoogleScholar
         onlinesearch/OnlineSearchIDEASRePEc
         onlinesearch/OnlineSearchIEEEXplore

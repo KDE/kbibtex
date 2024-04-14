@@ -1,7 +1,7 @@
 ###########################################################################
 #   SPDX-License-Identifier: GPL-2.0-or-later
 #                                                                         #
-#   SPDX-FileCopyrightText: 2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+#   SPDX-FileCopyrightText: 2023-2024 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 #                                                                         #
 #   This script is free software; you can redistribute it and/or modify   #
 #   it under the terms of the GNU General Public License as published by  #
@@ -21,6 +21,7 @@
 import sys
 import string
 import typing
+import re
 import zlib
 
 # Store information read from .txt files
@@ -46,6 +47,9 @@ def alphanumhash(text: str) -> str:
         result += string.ascii_uppercase[i % l]
         i = int(i // l)
     return result
+
+
+lambdaprefixregexp = re.compile(r"\[(?P<capture>.*?)\]\(\)")
 
 
 def rewriteVariablePlaceholder(text: str) -> str:
@@ -76,7 +80,16 @@ def rewriteVariablePlaceholder(text: str) -> str:
 
     # Final replacement in case text to process contains a lambda function:
     # pass  mapping  to the inside of the lambda function
-    return text.replace("[]()", "[&mapping]()")
+    m = lambdaprefixregexp.search(text)
+    if not m is None:
+        existingcapture = m.group("capture")
+        if len(existingcapture) == 0:
+            capture = "&mapping"
+        else:
+            capture = "&mapping," + existingcapture
+        text = text[: m.start() + 1] + capture + "]()" + text[m.end() :]
+
+    return text
 
 
 def indentCppCode(text: str, depth: int) -> str:
@@ -114,6 +127,74 @@ def indentCppCode(text: str, depth: int) -> str:
                     singlelineindent = True
                     depth += 4
         return result
+
+
+def assembleEntry(depth):
+    # Maybe some post-processing is necessary after mapping has been filled?
+    if not postprocessingmapping is None and len(postprocessingmapping) > 0:
+        print(rewriteVariablePlaceholder(postprocessingmapping), sep="", end="\n\n")
+
+    # Create an entry object, but postpone setting type and id for later
+    print(
+        depth * " ",
+        'QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry(QStringLiteral("placeholderType"), QStringLiteral("placeholderId")));',
+        sep="",
+    )
+
+    # Fill the entry with data
+
+    # Set all fields, i.e. where the .txt file had configuration where keys started with  field[
+    for fkey, fvalue in field.items():
+        # Determine type of field data: Either from configuration file or via educated guess
+        fieldType = "PlainText"
+        if fkey in valueItemType:
+            fieldType = valueItemType[fkey]
+        elif fkey in {"Entry::ftDOI", "Entry::ftUrl"}:
+            fieldType = "VerbatimText"
+        elif fkey in {"Entry::ftMonth"}:
+            fieldType = "MacroKey"
+
+        varname = f"value{alphanumhash(fkey)}"
+        # Handle field names with quotation marks instead of predefined ones like Entry::ftDOI
+        if len(fkey) > 2 and fkey[0] == '"' and fkey[-1] == '"':
+            fkey = f"QStringLiteral({fkey})"
+        # Replace/rewrite any  {{...}}  variables inside the configuration file data for this field
+        fvalue = indentCppCode(rewriteVariablePlaceholder(fvalue), depth)
+
+        # First, assign the computed value for this field in a QString
+        print(depth * " ", f"const QString {varname} ", sep="", end="")
+        if len(fvalue) > 2 and fvalue[0] == "{" and fvalue[-1] == "}":
+            print(fvalue, ";", sep="")
+        else:
+            print("= ", fvalue, ";", sep="")
+        # Then, only if it is a non-empty string, store this string in the entry
+        print(depth * " ", f"if (!{varname}.isEmpty())", sep="")
+        print((depth + 4) * " ", f"entry->insert({fkey}, Value() << QSharedPointer<{fieldType}>(new {fieldType}({varname})));", sep="")
+
+    # Set fields where not a string is given, but the configuration file contains code fragments that
+    # generate Value objects that can be directly assigned to the entry's fields
+    for vkey, vvalue in valuemap.items():
+        varname = f"value{alphanumhash(vkey)}"
+        if len(vkey) > 2 and vkey[0] == '"' and vkey[-1] == '"':
+            vkey = f"QStringLiteral({vkey})"
+        print(depth * " ", f"const Value {varname} = {indentCppCode(rewriteVariablePlaceholder(vvalue),depth)};", sep="")
+        print(depth * " ", f"if (!{varname}.isEmpty())", sep="")
+        print((depth + 4) * " ", f"entry->insert({vkey}, {varname});", sep="")
+
+    # Maybe some post-processing is necessary after all fields have been set?
+    if not postprocessingfields is None and len(postprocessingfields) > 0:
+        print("\n", depth * " ", indentCppCode(rewriteVariablePlaceholder(postprocessingfields), depth), sep="")
+
+    # As it was postponed, set entry's id and type now
+    print("\n", depth * " ", f"entry->setId({rewriteVariablePlaceholder(entryid)});", sep="")
+    print(depth * " ", f"entry->setType({indentCppCode(rewriteVariablePlaceholder(entrytype), depth)});", sep="")
+
+    # Finally, append the entry to the list of resulting entries
+    if len(entryvalidation) == 0:
+        print(depth * " ", "result.append(entry);", sep="")
+    else:
+        print(depth * " ", "if (", entryvalidation, ")", sep="")
+        print((depth + 4) * " ", "result.append(entry);", sep="")
 
 
 def xmlParser():
@@ -234,71 +315,7 @@ def xmlParser():
         end="\n\n",
     )
 
-    # Maybe some post-processing is necessary after mapping has been filled?
-    if not postprocessingmapping is None and len(postprocessingmapping) > 0:
-        print(rewriteVariablePlaceholder(postprocessingmapping), sep="", end="\n\n")
-
-    # Create an entry object, but postpone setting type and id for later
-    print(
-        depth * " ",
-        'QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry(QStringLiteral("placeholderType"), QStringLiteral("placeholderId")));',
-        sep="",
-    )
-
-    # Fill the entry with data
-
-    # Set all fields, i.e. where the .txt file had configuration where keys started with  field[
-    for fkey, fvalue in field.items():
-        # Determine type of field data: Either from configuration file or via educated guess
-        fieldType = "PlainText"
-        if fkey in valueItemType:
-            fieldType = valueItemType[fkey]
-        elif fkey in {"Entry::ftDOI", "Entry::ftUrl"}:
-            fieldType = "VerbatimText"
-        elif fkey in {"Entry::ftMonth"}:
-            fieldType = "MacroKey"
-
-        varname = f"value{alphanumhash(fkey)}"
-        # Handle field names with quotation marks instead of predefined ones like Entry::ftDOI
-        if len(fkey) > 2 and fkey[0] == '"' and fkey[-1] == '"':
-            fkey = f"QStringLiteral({fkey})"
-        # Replace/rewrite any  {{...}}  variables inside the configuration file data for this field
-        fvalue = indentCppCode(rewriteVariablePlaceholder(fvalue), depth)
-
-        # First, assign the computed value for this field in a QString
-        print(depth * " ", f"const QString {varname} ", sep="", end="")
-        if len(fvalue) > 2 and fvalue[0] == "{" and fvalue[-1] == "}":
-            print(fvalue, ";", sep="")
-        else:
-            print("= ", fvalue, ";", sep="")
-        # Then, only if it is a non-empty string, store this string in the entry
-        print(depth * " ", f"if (!{varname}.isEmpty())", sep="")
-        print((depth + 4) * " ", f"entry->insert({fkey}, Value() << QSharedPointer<{fieldType}>(new {fieldType}({varname})));", sep="")
-
-    # Set fields where not a string is given, but the configuration file contains code fragments that
-    # generate Value objects that can be directly assigned to the entry's fields
-    for vkey, vvalue in valuemap.items():
-        varname = f"value{alphanumhash(vkey)}"
-        if len(vkey) > 2 and vkey[0] == '"' and vkey[-1] == '"':
-            vkey = f"QStringLiteral({vkey})"
-        print(depth * " ", f"const Value {varname} = {indentCppCode(rewriteVariablePlaceholder(vvalue),depth)};", sep="")
-        print(depth * " ", f"if (!{varname}.isEmpty())", sep="")
-        print((depth + 4) * " ", f"entry->insert({vkey}, {varname});", sep="")
-
-    # Maybe some post-processing is necessary after all fields have been set?
-    if not postprocessingfields is None and len(postprocessingfields) > 0:
-        print("\n", depth * " ", indentCppCode(rewriteVariablePlaceholder(postprocessingfields), depth), sep="")
-
-    # As it was postponed, set entry's id and type now
-    print("\n", depth * " ", f"entry->setId({rewriteVariablePlaceholder(entryid)});", sep="")
-    print(depth * " ", f"entry->setType({indentCppCode(rewriteVariablePlaceholder(entrytype),depth)});", sep="")
-
-    # Finally, append the entry to the list of resulting entries
-    if len(entryvalidation) == 0:
-        print(depth * " ", "result.append(entry);", sep="")
-    else:
-        print(depth * " ", "if (", entryvalidation, ")", sep="")
-        print((depth + 4) * " ", "result.append(entry);", sep="")
+    assembleEntry(depth)
 
     # Close all loops and earlier checks
 
@@ -341,6 +358,114 @@ def xmlParser():
     depth -= 4
     print(depth * " ", "}", sep="")
     print("\n")
+
+
+def jsonParser():
+    """Generate C++ that can parse JSON code as specified in the .txt file (various global variables hold this data already)."""
+
+    if not introduction is None and len(introduction) > 0:
+        print(introduction, sep="", end="\n\n")  # Print 'introduction' sans << ... >>
+
+    depth: int = 8
+    # Read JSON file and build a 'global map', mapping the path to a value to its value as string
+    print(depth * " ", "QJsonParseError parseError;", sep="")
+    print(depth * " ", "const QJsonDocument document = QJsonDocument::fromJson(jsonData, &parseError);", sep="")
+    print(depth * " ", "if (parseError.error == QJsonParseError::NoError) {", sep="")
+    depth += 4
+    print(depth * " ", "if (document.isObject()) {", sep="")
+    depth += 4
+    print(depth * " ", "QMap<QString, QStringList> globalMapping;", sep="")
+    print(depth * " ", "QQueue<QPair<QJsonValue, QStringList>> queue;", sep="")
+    print(depth * " ", "queue.enqueue(qMakePair(document.object(), QStringList()));", sep="")
+    print(depth * " ", "while (!queue.isEmpty()) {", sep="")
+    depth += 4
+    print(depth * " ", "const auto p{queue.dequeue()};", sep="")
+    print(depth * " ", "const QJsonValue cur {p.first};", sep="")
+    print(depth * " ", "const QStringList path{p.second};", sep="")
+    print(depth * " ", "if (cur.isArray()) {", sep="")
+    depth += 4
+    # If current JSON value is an array, iterate over array and add '/0', '/1', ... to the path for each item
+    # and add each item to the queue
+    print(depth * " ", "const QJsonArray curArray = cur.toArray();", sep="")
+    print(depth * " ", "for (int i = 0; i < curArray.size(); ++i) {", sep="")
+    depth += 4
+    print(depth * " ", "const QJsonValue &curItem = curArray[i];", sep="")
+    print(depth * " ", "const QStringList newPath{QStringList(path) << QString::number(i)};", sep="")
+    print(depth * " ", "queue.enqueue(qMakePair(curItem, newPath));", sep="")
+    depth -= 4
+    print(depth * " ", "}", sep="")
+    depth -= 4
+    print(depth * " ", "} else if (cur.isObject()) {", sep="")
+    depth += 4
+    # If current JSON value is an object (i.e. a dictionary), add the key to the path and add each item to the queue
+    print(depth * " ", "const QJsonObject curObj = cur.toObject();", sep="")
+    print(depth * " ", "for (auto it = curObj.constBegin(); it != curObj.constEnd(); ++it) {", sep="")
+    depth += 4
+    print(depth * " ", "const QStringList newPath{QStringList(path) << it.key()};", sep="")
+    print(depth * " ", "queue.enqueue(qMakePair(it.value(), newPath));", sep="")
+    depth -= 4
+    print(depth * " ", "}", sep="")
+    depth -= 4
+    print(depth * " ", "} else if (cur.isString() || cur.isDouble() || cur.isBool()) {", sep="")
+    depth += 4
+    # 'Simple' values like strings, numbers, or boolean values are converted to a string and use as values in the global map
+    print(
+        depth * " ",
+        'const QString text {cur.isString() ? cur.toString() : (cur.isDouble() ? QString::number(cur.toDouble()) : (cur.isBool() ? (cur.toBool() ? QStringLiteral("True") : QStringLiteral("False")) : QString()))};',
+        sep="",
+    )
+    print(depth * " ", 'const QString key {path.join(QStringLiteral("/"))};', sep="")
+    print(depth * " ", "if (globalMapping.contains(key))", sep="")
+    print(depth * " ", "    globalMapping[key].append(text);", sep="")
+    print(depth * " ", "else", sep="")
+    print(depth * " ", "    globalMapping.insert(key, QStringList() << text);", sep="")
+    depth -= 4
+    print(depth * " ", "} else", sep="")
+    # Can only happen for non-supported JSON value types
+    print(depth * " ", '    qCWarning(LOG_KBIBTEX_NETWORKING) << "This should never happen";', sep="")
+    depth -= 4
+    print(depth * " ", "}", sep="")
+    print("#define LARGE_NUMBER 1024")
+    print(depth * " ", "for (int n = 0; n < LARGE_NUMBER; ++n) {", sep="")
+    depth += 4
+    print(
+        depth * " ",
+        'const QString keyPrefix {QString(QStringLiteral("%1/%2/")).arg(QStringLiteral("',
+        entries,
+        '"), QString::number(n))};',
+        sep="",
+    )
+    print(depth * " ", "QMap<QString, QStringList> mapping;", sep="")
+    print(depth * " ", 'static const QRegularExpression endsWithNumbersRegExp{QStringLiteral("/(0|[1-9][0-9]*)$")};', sep="")
+    print(depth * " ", "for (auto it = globalMapping.constBegin(); it != globalMapping.constEnd(); ++it)", sep="")
+    print(depth * " ", "    if (it.key().startsWith(keyPrefix)) {", sep="")
+    depth += 8
+    print(depth * " ", "QString key {it.key().mid(keyPrefix.length())};", sep="")
+    print(depth * " ", "const auto endsWithNumbersMatch {endsWithNumbersRegExp.match(key)};", sep="")
+    print(depth * " ", "if (endsWithNumbersMatch.hasMatch())", sep="")
+    print(depth * " ", "    key = key.left(key.length() - endsWithNumbersMatch.capturedLength());", sep="")
+    print(depth * " ", "if (mapping.contains(key))", sep="")
+    print(depth * " ", "    mapping[key].append(it.value());", sep="")
+    print(depth * " ", "else", sep="")
+    print(depth * " ", "    mapping[key] = it.value();", sep="")
+    depth -= 8
+    print(depth * " ", "    }", sep="")
+    print(depth * " ", "if (mapping.isEmpty()) break;", sep="")
+
+    assembleEntry(depth)
+
+    print(depth * " ", "*ok = true;", sep="")
+    depth -= 4
+    print(depth * " ", "}", sep="")
+    depth -= 4
+    print(depth * " ", "}", sep="")
+    depth -= 4
+    print(depth * " ", "} else {", sep="")
+    depth += 4
+    print(depth * " ", 'qCWarning(LOG_KBIBTEX_NETWORKING) << "Problem with JSON data: " << parseError.errorString();', sep="")
+    print(depth * " ", "*ok = false;", sep="")
+    depth -= 4
+    print(depth * " ", "}", sep="")
 
 
 # Read configuration file provided as the single argument to this Python script invocation
@@ -404,6 +529,4 @@ print(f"        // using information from configuration file '{sys.argv[-1]}'", 
 if format == "xml":
     xmlParser()
 elif format == "json":
-    # TODO
-    pass
-    # jsonParser()
+    jsonParser()

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2024 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -61,7 +61,8 @@
 #include <onlinesearch/OnlineSearchAbstract>
 #include <onlinesearch/OnlineSearchGeneral>
 #include <onlinesearch/OnlineSearchBibsonomy>
-#include <onlinesearch/onlinesearchgooglescholar.h>
+#include <onlinesearch/OnlineSearchGoogleBooks>
+#include <onlinesearch/OnlineSearchGoogleScholar>
 #include <onlinesearch/OnlineSearchPubMed>
 #include <onlinesearch/OnlineSearchIEEEXplore>
 #include <onlinesearch/OnlineSearchAcmPortal>
@@ -247,6 +248,7 @@ public:
         addEngine(new OnlineSearchArXiv(p));
         addEngine(new OnlineSearchBioRxiv(p));
         addEngine(new OnlineSearchBibsonomy(p));
+        addEngine(new OnlineSearchGoogleBooks(p));
         addEngine(new OnlineSearchGoogleScholar(p));
         addEngine(new OnlineSearchIEEEXplore(p));
         addEngine(new OnlineSearchIngentaConnect(p));

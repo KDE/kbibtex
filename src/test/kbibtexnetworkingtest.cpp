@@ -21,6 +21,7 @@
 
 #include <onlinesearch/OnlineSearchAbstract>
 #include <onlinesearch/OnlineSearchArXiv>
+#include <onlinesearch/OnlineSearchGoogleBooks>
 #include <onlinesearch/OnlineSearchIEEEXplore>
 #include <onlinesearch/OnlineSearchPubMed>
 #include <onlinesearch/OnlineSearchSpringerLink>
@@ -61,6 +62,8 @@ private Q_SLOTS:
 #ifdef BUILD_TESTING
     void onlineSearchArXivAtomRSSparsing_data();
     void onlineSearchArXivAtomRSSparsing();
+    void onlineSearchGoogleBooksParsing_data();
+    void onlineSearchGoogleBooksParsing();
     void onlineSearchIeeeXMLparsing_data();
     void onlineSearchIeeeXMLparsing();
     void onlineSearchPubMedXMLparsing_data();
@@ -299,6 +302,65 @@ void KBibTeXNetworkingTest::onlineSearchArXivAtomRSSparsing()
     OnlineSearchArXiv osa(this);
     bool ok = false;
     const auto generatedEntries = osa.parseAtomXML(xmlData, &ok);
+    QCOMPARE(expectedOk, ok);
+    QCOMPARE(generatedEntries.length(), expectedEntries.length());
+    if (ok) {
+        for (auto itA = expectedEntries.constBegin(), itB = generatedEntries.constBegin(); itA != expectedEntries.constEnd() && itB != generatedEntries.constEnd(); ++itA, ++itB) {
+            const QSharedPointer<Entry> &entryA = *itA;
+            const QSharedPointer<Entry> &entryB = *itB;
+            QCOMPARE(*entryA, *entryB);
+        }
+    }
+}
+
+void KBibTeXNetworkingTest::onlineSearchGoogleBooksParsing_data()
+{
+    QTest::addColumn<QByteArray>("jsonData");
+    QTest::addColumn<bool>("expectedOk");
+    QTest::addColumn<QVector<QSharedPointer<Entry>>>("expectedEntries");
+
+    QTest::newRow("Empty input data") << QByteArray() << false << QVector<QSharedPointer<Entry>>();
+
+    auto fnG8BAAAQBAJ = QSharedPointer<Entry>(new Entry(Entry::etBook, QStringLiteral("GoogleBooks:9781493905249")));
+    fnG8BAAAQBAJ->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Ecoregions: The Ecosystem Geography of the Oceans and Continents"))));
+    fnG8BAAAQBAJ->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Robert G."), QStringLiteral("Bailey"))));
+    fnG8BAAAQBAJ->insert(Entry::ftISBN, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("9781493905249"))));
+    fnG8BAAAQBAJ->insert(QStringLiteral("x-google-id"), Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("fnG8BAAAQBAJ"))));
+    fnG8BAAAQBAJ->insert(Entry::ftPublisher, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Springer Science & Business Media"))));
+    fnG8BAAAQBAJ->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2014"))));
+    fnG8BAAAQBAJ->insert(Entry::ftUrl, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://books.google.com/books?id=fnG8BAAAQBAJ"))));
+    QTest::newRow("fnG8BAAAQBAJ") << QByteArrayLiteral("{\"kind\":\"books#volumes\",\"totalItems\":1,\"items\":[{\"kind\":\"books#volume\",\"id\":\"fnG8BAAAQBAJ\",\"etag\":\"5Fjzzj0PvTA\",\"selfLink\":\"https://www.googleapis.com/books/v1/volumes/fnG8BAAAQBAJ\",\"volumeInfo\":{\"title\":\"Ecoregions\",\"subtitle\":\"The Ecosystem Geography of the Oceans and Continents\",\"authors\":[\"Robert G. Bailey\"],\"publisher\":\"Springer Science & Business Media\",\"publishedDate\":\"2014-04-03\",\"description\":\"Global warming and human-driven impacts are changing the World’s ecological zones. This book applies the principles described in Bailey’s Ecosystem Geography: From Ecoregions to Sites, 2nd ed. (Springer 2009, 1st ed. 1996) to describe and characterize the major terrestrial and aquatic ecological zones of the Earth. Bailey’s system for classifying these zones has been adopted by major organizations such as the U.S. Forest Service and The Nature Conservancy and this book is a significant contribution to a long tradition of classifying and studying the world’s ecological regions or ecoregions. It includes two color maps that show the major ecoregions of the continents and oceans. Also included are: - 106 illustrations with 55 in full color - A new chapter on mountains is included. - There are new sections that address concerns about how eco regions are changing under the relentless influence of humans and climate change - Another new feature is the discussion of using eco regional patterns to transfer research results and select sites for detecting climate change effects on ecosystem distribution - Use of ecoregional patterns to design monitoring networks and sustainable landscapes - Fire regimes in different regional ecosystems and their management implications.\",\"industryIdentifiers\":[{\"type\":\"ISBN_13\",\"identifier\":\"9781493905249\"},{\"type\":\"ISBN_10\",\"identifier\":\"1493905244\"}],\"readingModes\":{\"text\":true,\"image\":true},\"pageCount\":180,\"printType\":\"BOOK\",\"categories\":[\"Science\"],\"maturityRating\":\"NOT_MATURE\",\"allowAnonLogging\":false,\"contentVersion\":\"2.3.3.0.preview.3\",\"panelizationSummary\":{\"containsEpubBubbles\":false,\"containsImageBubbles\":false},\"imageLinks\":{\"smallThumbnail\":\"http://books.google.com/books/content?id=fnG8BAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api\",\"thumbnail\":\"http://books.google.com/books/content?id=fnG8BAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api\"},\"language\":\"en\",\"previewLink\":\"http://books.google.se/books?id=fnG8BAAAQBAJ&printsec=frontcover&dq=isbn:1493905244&hl=&cd=1&source=gbs_api\",\"infoLink\":\"https://play.google.com/store/books/details?id=fnG8BAAAQBAJ&source=gbs_api\",\"canonicalVolumeLink\":\"https://play.google.com/store/books/details?id=fnG8BAAAQBAJ\"},\"saleInfo\":{\"country\":\"SE\",\"saleability\":\"FOR_SALE\",\"isEbook\":true,\"listPrice\":{\"amount\":771.33,\"currencyCode\":\"SEK\"},\"retailPrice\":{\"amount\":539.93,\"currencyCode\":\"SEK\"},\"buyLink\":\"https://play.google.com/store/books/details?id=fnG8BAAAQBAJ&rdid=book-fnG8BAAAQBAJ&rdot=1&source=gbs_api\",\"offers\":[{\"finskyOfferType\":1,\"listPrice\":{\"amountInMicros\":771330000,\"currencyCode\":\"SEK\"},\"retailPrice\":{\"amountInMicros\":539930000,\"currencyCode\":\"SEK\"}}]},\"accessInfo\":{\"country\":\"SE\",\"viewability\":\"PARTIAL\",\"embeddable\":true,\"publicDomain\":false,\"textToSpeechPermission\":\"ALLOWED\",\"epub\":{\"isAvailable\":true,\"acsTokenLink\":\"http://books.google.se/books/download/Ecoregions-sample-epub.acsm?id=fnG8BAAAQBAJ&format=epub&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api\"},\"pdf\":{\"isAvailable\":true,\"acsTokenLink\":\"http://books.google.se/books/download/Ecoregions-sample-pdf.acsm?id=fnG8BAAAQBAJ&format=pdf&output=acs4_fulfillment_token&dl_type=sample&source=gbs_api\"},\"webReaderLink\":\"http://play.google.com/books/reader?id=fnG8BAAAQBAJ&hl=&source=gbs_api\",\"accessViewStatus\":\"SAMPLE\",\"quoteSharingAllowed\":false},\"searchInfo\":{\"textSnippet\":\"Over years since the book was first published a number of studies have greatly contributed to a better understanding of the Earth’s ecoregions. This second edition is a completely updated and expanded version.\"}}]}") << true << QVector<QSharedPointer<Entry>> {fnG8BAAAQBAJ};
+
+    auto gQYnPQAACAAJ = QSharedPointer<Entry>(new Entry(Entry::etBook, QStringLiteral("GoogleBooks:9783880531086")));
+    // Note: the final '[' in the title is not a typo -- it is there in Google's database
+    gQYnPQAACAAJ->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Guidelines for the Implementation of 13-Digit ISBNs["))));
+    gQYnPQAACAAJ->insert(Entry::ftISBN, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("9783880531086"))));
+    gQYnPQAACAAJ->insert(QStringLiteral("x-google-id"), Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("gQYnPQAACAAJ"))));
+    gQYnPQAACAAJ->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2004"))));
+    gQYnPQAACAAJ->insert(Entry::ftUrl, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://books.google.com/books?id=gQYnPQAACAAJ"))));
+    QTest::newRow("gQYnPQAACAAJ") << QByteArrayLiteral("{\"kind\":\"books#volumes\",\"totalItems\":1,\"items\":[{\"kind\":\"books#volume\",\"id\":\"gQYnPQAACAAJ\",\"etag\":\"VDz0rnjn+44\",\"selfLink\":\"https://www.googleapis.com/books/v1/volumes/gQYnPQAACAAJ\",\"volumeInfo\":{\"title\":\"Guidelines for the Implementation of 13-Digit ISBNs[\",\"publishedDate\":\"2004\",\"industryIdentifiers\":[{\"type\":\"ISBN_10\",\"identifier\":\"3880531080\"},{\"type\":\"ISBN_13\",\"identifier\":\"9783880531086\"}],\"readingModes\":{\"text\":false,\"image\":false},\"printType\":\"BOOK\",\"maturityRating\":\"NOT_MATURE\",\"allowAnonLogging\":false,\"contentVersion\":\"preview-1.0.0\",\"language\":\"de\",\"previewLink\":\"http://books.google.se/books?id=gQYnPQAACAAJ&dq=isbn:9783880531086&hl=&cd=1&source=gbs_api\",\"infoLink\":\"http://books.google.se/books?id=gQYnPQAACAAJ&dq=isbn:9783880531086&hl=&source=gbs_api\",\"canonicalVolumeLink\":\"https://books.google.com/books/about/Guidelines_for_the_Implementation_of_13.html?hl=&id=gQYnPQAACAAJ\"},\"saleInfo\":{\"country\":\"SE\",\"saleability\":\"NOT_FOR_SALE\",\"isEbook\":false},\"accessInfo\":{\"country\":\"SE\",\"viewability\":\"NO_PAGES\",\"embeddable\":false,\"publicDomain\":false,\"textToSpeechPermission\":\"ALLOWED\",\"epub\":{\"isAvailable\":false},\"pdf\":{\"isAvailable\":false},\"webReaderLink\":\"http://play.google.com/books/reader?id=gQYnPQAACAAJ&hl=&source=gbs_api\",\"accessViewStatus\":\"NONE\",\"quoteSharingAllowed\":false}}]}") << true << QVector<QSharedPointer<Entry>> {gQYnPQAACAAJ};
+
+
+    auto a3RmAAAAMAAJ = QSharedPointer<Entry>(new Entry(Entry::etBook, QStringLiteral("GoogleBooks:9172850426")));
+    // Note: the final '[' in the title is not a typo -- it is there in Google's database
+    a3RmAAAAMAAJ->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QString::fromUtf8("Vem \xC3\xA4r det? Svensk biografisk handbok"))));
+    a3RmAAAAMAAJ->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("Erik"), QStringLiteral("Thyselius"))) << QSharedPointer<Person>(new Person(QString::fromUtf8("G\xC3\xB6ran"), QStringLiteral("Lindblad"))));
+    a3RmAAAAMAAJ->insert(Entry::ftISBN, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("9172850426"))));
+    a3RmAAAAMAAJ->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2000"))));
+    a3RmAAAAMAAJ->insert(QStringLiteral("x-google-id"), Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("a3RmAAAAMAAJ"))));
+    a3RmAAAAMAAJ->insert(Entry::ftUrl, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("https://books.google.com/books?id=a3RmAAAAMAAJ"))));
+    QTest::newRow("a3RmAAAAMAAJ") << QByteArrayLiteral("{\"kind\":\"books#volumes\",\"totalItems\":1,\"items\":[{\"kind\":\"books#volume\",\"id\":\"a3RmAAAAMAAJ\",\"etag\":\"Zg16ltMubec\",\"selfLink\":\"https://www.googleapis.com/books/v1/volumes/a3RmAAAAMAAJ\",\"volumeInfo\":{\"title\":\"Vem \303\244r det?\",\"subtitle\":\"Svensk biografisk handbok\",\"authors\":[\"Erik Thyselius\",\"G\303\266ran Lindblad\"],\"publishedDate\":\"2000\",\"industryIdentifiers\":[{\"type\":\"OTHER\",\"identifier\":\"UOM:39015046807965\"}],\"readingModes\":{\"text\":false,\"image\":false},\"pageCount\":1312,\"printType\":\"BOOK\",\"categories\":[\"Sweden\"],\"maturityRating\":\"NOT_MATURE\",\"allowAnonLogging\":false,\"contentVersion\":\"1.5.2.0.preview.0\",\"panelizationSummary\":{\"containsEpubBubbles\":false,\"containsImageBubbles\":false},\"imageLinks\":{\"smallThumbnail\":\"http://books.google.com/books/content?id=a3RmAAAAMAAJ&printsec=frontcover&img=1&zoom=5&source=gbs_api\",\"thumbnail\":\"http://books.google.com/books/content?id=a3RmAAAAMAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api\"},\"language\":\"sv\",\"previewLink\":\"http://books.google.se/books?id=a3RmAAAAMAAJ&dq=isbn:9172850426&hl=&cd=1&source=gbs_api\",\"infoLink\":\"http://books.google.se/books?id=a3RmAAAAMAAJ&dq=isbn:9172850426&hl=&source=gbs_api\",\"canonicalVolumeLink\":\"https://books.google.com/books/about/Vem_%C3%A4r_det.html?hl=&id=a3RmAAAAMAAJ\"},\"saleInfo\":{\"country\":\"SE\",\"saleability\":\"NOT_FOR_SALE\",\"isEbook\":false},\"accessInfo\":{\"country\":\"SE\",\"viewability\":\"NO_PAGES\",\"embeddable\":false,\"publicDomain\":false,\"textToSpeechPermission\":\"ALLOWED\",\"epub\":{\"isAvailable\":false},\"pdf\":{\"isAvailable\":false},\"webReaderLink\":\"http://play.google.com/books/reader?id=a3RmAAAAMAAJ&hl=&source=gbs_api\",\"accessViewStatus\":\"NONE\",\"quoteSharingAllowed\":false}}]}") << true << QVector<QSharedPointer<Entry>> {a3RmAAAAMAAJ};
+}
+
+void KBibTeXNetworkingTest::onlineSearchGoogleBooksParsing()
+{
+    QFETCH(QByteArray, jsonData);
+    QFETCH(bool, expectedOk);
+    QFETCH(QVector<QSharedPointer<Entry>>, expectedEntries);
+
+    OnlineSearchGoogleBooks osgb(this);
+    bool ok = false;
+    const auto generatedEntries = osgb.parseGoogleBooks(jsonData, &ok);
     QCOMPARE(expectedOk, ok);
     QCOMPARE(generatedEntries.length(), expectedEntries.length());
     if (ok) {
