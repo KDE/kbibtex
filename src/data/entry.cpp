@@ -112,22 +112,45 @@ quint64 Entry::uniqueId() const
 
 bool Entry::operator==(const Entry &other) const
 {
-    /// Quick and easy tests first: id, type, and numer of fields
-    if (id() != other.id() || type().compare(other.type(), Qt::CaseInsensitive) != 0 || count() != other.count())
+    /// Quick and easy tests first: id, type, and number of fields
+    if (id() != other.id() || type().compare(other.type(), Qt::CaseInsensitive) != 0
+#ifndef BUILD_TESTING
+            || count() != other.count()
+#endif // NOT BUILD_TESTING
+       ) {
+#ifdef BUILD_TESTING
+        qCWarning(LOG_KBIBTEX_DATA) << "Either" << id() << "!=" << other.id() << " or " << type() << "!=" << other.type();
+#endif // BUILD_TESTING
         return false;
+    }
 
     /// Compare each field with other's corresponding field
     for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it) {
-        if (!other.contains(it.key())) return false;
+        if (!other.contains(it.key())) {
+#ifdef BUILD_TESTING
+            qCWarning(LOG_KBIBTEX_DATA) << "Field" << it.key() << "not contained in both entries";
+#endif // BUILD_TESTING
+            return false;
+        }
         const Value &thisValue = it.value();
         const Value &otherValue = other.value(it.key());
-        if (thisValue != otherValue) return false;
+        if (thisValue != otherValue) {
+#ifdef BUILD_TESTING
+            qCWarning(LOG_KBIBTEX_DATA) << "Values for field" << it.key() << "differ";
+#endif // BUILD_TESTING
+            return false;
+        }
     }
 
-    /// All fields of the other entry must occurr as well in this entry
+    /// All fields of the other entry must occur as well in this entry
     /// (no need to check equivalence again)
     for (Entry::ConstIterator it = other.constBegin(); it != other.constEnd(); ++it)
-        if (!contains(it.key())) return false;
+        if (!contains(it.key())) {
+#ifdef BUILD_TESTING
+            qCWarning(LOG_KBIBTEX_DATA) << "Field" << it.key() << "not contained in both entries";
+#endif // BUILD_TESTING
+            return false;
+        }
 
     return true;
 }
