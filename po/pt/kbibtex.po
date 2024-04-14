@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-20 01:41+0000\n"
+"POT-Creation-Date: 2024-04-14 01:38+0000\n"
 "PO-Revision-Date: 2023-03-20 11:37+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -2631,7 +2631,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:326
-#: src/program/mainwindow.cpp:365 src/program/program.cpp:55
+#: src/program/mainwindow.cpp:375 src/program/program.cpp:55
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -4050,67 +4050,67 @@ msgstr "Favoritos"
 msgid "Filesystem Browser"
 msgstr "Navegador no Sistema de Ficheiros"
 
-#: src/program/mainwindow.cpp:94
+#: src/program/mainwindow.cpp:100
 #, kde-format
 msgid "Show Panels"
 msgstr "Mostrar os Painéis"
 
-#: src/program/mainwindow.cpp:99
+#: src/program/mainwindow.cpp:105
 #, kde-format
 msgid "Recently used files"
 msgstr "Ficheiros usados recentemente"
 
-#: src/program/mainwindow.cpp:116
+#: src/program/mainwindow.cpp:122
 #, kde-format
 msgid "List of Documents"
 msgstr "Lista de Documentos"
 
-#: src/program/mainwindow.cpp:126
+#: src/program/mainwindow.cpp:132
 #, kde-format
 msgid "List of Values"
 msgstr "Lista de Valores"
 
-#: src/program/mainwindow.cpp:135
+#: src/program/mainwindow.cpp:141
 #, kde-format
 msgid "Statistics"
 msgstr "Estatísticas"
 
-#: src/program/mainwindow.cpp:144
+#: src/program/mainwindow.cpp:150
 #, kde-format
 msgid "Search Results"
 msgstr "Resultados da Procura"
 
-#: src/program/mainwindow.cpp:155
+#: src/program/mainwindow.cpp:161
 #, kde-format
 msgid "Online Search"
 msgstr "Pesquisa 'Online'"
 
-#: src/program/mainwindow.cpp:165
+#: src/program/mainwindow.cpp:172
 #, kde-format
 msgid "Zotero"
 msgstr "Zotero"
 
-#: src/program/mainwindow.cpp:176
+#: src/program/mainwindow.cpp:184
 #, kde-format
 msgid "Reference Preview"
 msgstr "Antevisão da Referência"
 
-#: src/program/mainwindow.cpp:185
+#: src/program/mainwindow.cpp:193
 #, kde-format
 msgid "Document Preview"
 msgstr "Antevisão do Documento"
 
-#: src/program/mainwindow.cpp:196
+#: src/program/mainwindow.cpp:204
 #, kde-format
 msgid "Element Editor"
 msgstr "Editor de Elementos"
 
-#: src/program/mainwindow.cpp:206
+#: src/program/mainwindow.cpp:214
 #, kde-format
 msgid "File Settings"
 msgstr "Configuração do Ficheiro"
 
-#: src/program/mainwindow.cpp:301
+#: src/program/mainwindow.cpp:311
 #, kde-format
 msgid ""
 "Creating a new document of mime type '%1' failed as no editor component "
@@ -4119,22 +4119,22 @@ msgstr ""
 "A criação de um novo documento do tipo MIME '%1' foi mal-sucedida, dado que "
 "não foi possível instanciar nenhum componente de edição."
 
-#: src/program/mainwindow.cpp:301
+#: src/program/mainwindow.cpp:311
 #, kde-format
 msgid "Creating document failed"
 msgstr "A criação do documento foi mal-sucedida"
 
-#: src/program/mainwindow.cpp:323
+#: src/program/mainwindow.cpp:333
 #, kde-format
 msgid "Open file"
 msgstr "Abrir um ficheiro"
 
-#: src/program/mainwindow.cpp:365
+#: src/program/mainwindow.cpp:375
 #, kde-format
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
+#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -4143,17 +4143,17 @@ msgstr ""
 "O KBibTeX não é o editor predefinido para os seus formatos bibliográficos, "
 "como o BibTeX ou o RIS."
 
-#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
+#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Editor Bibliográfico Predefinido"
 
-#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
+#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Definir como Editor por Omissão"
 
-#: src/program/mainwindow.cpp:452 src/program/mainwindow.cpp:454
+#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Manter as definições inalteradas"
@@ -4219,8 +4219,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Um editor de BibTeX do KDE"
 
 #: src/program/program.cpp:55
-#, kde-format
-msgid "Copyright 2004-2019 Thomas Fischer"
+#, fuzzy, kde-format
+#| msgid "Copyright 2004-2019 Thomas Fischer"
+msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr "Copyright 2004-2019 Thomas Fischer"
 
 #: src/program/program.cpp:60
