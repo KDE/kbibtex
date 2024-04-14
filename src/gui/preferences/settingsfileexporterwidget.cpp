@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2024 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,7 @@
 #include <QPushButton>
 #include <qplatformdefs.h>
 
+#include <kio_version.h>
 #include <KLocalizedString>
 #include <KUrlRequester>
 #include <KLineEdit> /// required as KUrlRequester returns it
@@ -141,7 +142,11 @@ public:
 #else // QT_VERSION >= 0x050b00
         lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QChar('W')) * 20);
 #endif // QT_VERSION >= 0x050b00
+#if KIO_VERSION < QT_VERSION_CHECK(5, 108, 0)
         lineeditLyXPipePath->setFilter(QStringLiteral("inode/fifo"));
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 108, 0) // >= 5.108.0
+        lineeditLyXPipePath->setMimeTypeFilters({QStringLiteral("inode/fifo")});
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 108, 0)
         lineeditLyXPipePath->setMode(KFile::ExistingOnly | KFile::LocalOnly);
 
         comboBoxBackupScope = new QComboBox(p);

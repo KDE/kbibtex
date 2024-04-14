@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2024 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,7 @@
 #include <QComboBox>
 #include <QStandardPaths>
 
+#include <kwidgetsaddons_version.h>
 #include <KLocalizedString>
 #include <KMessageBox>
 #include <KGuiItem>
@@ -112,15 +113,29 @@ public:
     }
 
     void restoreDefaults() {
-        switch (KMessageBox::warningYesNoCancel(p, i18n("This will reset the settings to factory defaults. Should this affect only the current page or all settings?"), i18n("Reset to Defaults"), KGuiItem(i18n("All settings"), QStringLiteral("edit-undo")), KGuiItem(i18n("Only current page"), QStringLiteral("document-revert")))) {
+        switch (
+#if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+            KMessageBox::warningYesNoCancel(p, i18n("This will reset the settings to factory defaults. Should this affect only the current page or all settings?"), i18n("Reset to Defaults"), KGuiItem(i18n("All settings"), QStringLiteral("edit-undo")), KGuiItem(i18n("Only current page"), QStringLiteral("document-revert")))
+#else // >= 5.100.0
+            KMessageBox::warningTwoActionsCancel(p, i18n("This will reset the settings to factory defaults. Should this affect only the current page or all settings?"), i18n("Reset to Defaults"), KGuiItem(i18n("All settings"), QStringLiteral("edit-undo")), KGuiItem(i18n("Only current page"), QStringLiteral("document-revert")))
+#endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+        ) {
+#if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
         case KMessageBox::Yes: {
+#else // >= 5.100.0
+        case KMessageBox::PrimaryAction: {
+#endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
             for (SettingsAbstractWidget *settingsWidget : const_cast<const QSet<SettingsAbstractWidget *> &>(settingWidgets)) {
                 settingsWidget->resetToDefaults();
             }
             notifyOfChanges = true;
             break;
         }
+#if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
         case KMessageBox::No: {
+#else // >= 5.100.0
+        case KMessageBox::SecondaryAction: {
+#endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
             SettingsAbstractWidget *widget = qobject_cast<SettingsAbstractWidget *>(p->currentPage()->widget());
             if (widget != nullptr)
                 widget->resetToDefaults();

@@ -85,8 +85,8 @@ int main(int argc, char *argv[])
 
     mainWindow->show();
 
-    KService::Ptr service = KService::serviceByStorageId(QStringLiteral("kbibtexpart.desktop"));
-    if (service.data() == nullptr) {
+    const KPluginMetaData service {KPluginMetaData(QStringLiteral("kbibtexpart"))};
+    if (!service.isValid()) {
         /// Dump some environment variables that may be helpful
         /// in tracing back why the part's .desktop file was not found
         qCDebug(LOG_KBIBTEX_PROGRAM) << "PATH=" << getenv("PATH");
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
         qCDebug(LOG_KBIBTEX_PROGRAM) << "QCoreApplication::libraryPaths=" << programCore.libraryPaths().join(QLatin1Char(':'));
         KMessageBox::error(mainWindow, i18n("KBibTeX seems to be not installed completely. KBibTeX could not locate its own KPart.\n\nOnly limited functionality will be available."), i18n("Incomplete KBibTeX Installation"));
     } else {
-        qCInfo(LOG_KBIBTEX_PROGRAM) << "Located KPart service:" << service->library() << "with description" << service->comment() << "from library" << service->library();
+        qCInfo(LOG_KBIBTEX_PROGRAM) << "Located KPart:" << service.pluginId() << "with description" << service.name() << ":" << service.description();
     }
 
     /*

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2024 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,7 +24,7 @@
 #include <QUrl>
 #include <QVariant>
 
-#include <KService>
+#include <KPluginMetaData>
 #include <FileInfo>
 
 namespace KParts
@@ -49,7 +49,7 @@ public:
 
     ~OpenFileInfo() override;
 
-    KParts::ReadOnlyPart *part(QWidget *parent, KService::Ptr servicePtr = KService::Ptr());
+    KParts::ReadOnlyPart *part(QWidget *parent, const KPluginMetaData &service = {});
 
     QString shortCaption() const;
     QString fullCaption() const;
@@ -75,9 +75,9 @@ public:
     QDateTime lastAccess() const;
     void setLastAccess(const QDateTime &dateTime = QDateTime::currentDateTime());
 
-    KService::List listOfServices();
-    KService::Ptr defaultService();
-    KService::Ptr currentService();
+    QVector<KPluginMetaData> listOfServices();
+    KPluginMetaData defaultService();
+    KPluginMetaData currentService();
 
     friend class OpenFileInfoManager;
 
@@ -144,13 +144,13 @@ public:
      */
     bool queryCloseAll();
 
-    void setCurrentFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
+    void setCurrentFile(OpenFileInfo *openFileInfo, const KPluginMetaData &service = {});
     OpenFileInfoList filteredItems(OpenFileInfo::StatusFlag required, OpenFileInfo::StatusFlags forbidden = OpenFileInfo::StatusFlags());
 
     friend class OpenFileInfo;
 
 signals:
-    void currentChanged(OpenFileInfo *, KService::Ptr);
+    void currentChanged(OpenFileInfo *, const KPluginMetaData &service);
     void flagsChanged(OpenFileInfo::StatusFlags statusFlags);
 
 protected:

@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2020 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2024 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,6 +27,8 @@
 #include <QIcon>
 #include <QAction>
 
+#include <kio_version.h>
+#include <kwidgetsaddons_version.h>
 #include <KIconLoader>
 #include <KLocalizedString>
 #include <KActionMenu>
@@ -61,7 +63,11 @@ public:
 
         dirOperator = new KDirOperator(QUrl(QStringLiteral("file:") + QDir::homePath()), this);
         layout->addWidget(dirOperator, 1, 0, 1, 3);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 100, 0)
         dirOperator->setView(KFile::Detail);
+#else // >= 5.100.0
+        dirOperator->setViewMode(KFile::Detail);
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 100, 0)
 
         connect(buttonUp, &QPushButton::clicked, dirOperator, &KDirOperator::cdUp);
         connect(buttonHome, &QPushButton::clicked, dirOperator, &KDirOperator::home);
@@ -254,12 +260,18 @@ public:
         /// nothing
     }
 
-    void openFileWithService(KService::Ptr service)
+    void openFileWithService(const KPluginMetaData &service)
     {
         const QModelIndex modelIndex = p->currentIndex();
         if (modelIndex != QModelIndex()) {
             OpenFileInfo *ofi = qvariant_cast<OpenFileInfo *>(modelIndex.data(Qt::UserRole));
-            if (!ofi->isModified() || (KMessageBox::questionYesNo(p, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), QIcon::fromTheme(QStringLiteral("document-save"))), KGuiItem(i18n("Do not switch"), QIcon::fromTheme(QStringLiteral("dialog-cancel")))) == KMessageBox::Yes && ofi->save()))
+            if (!ofi->isModified() || (
+#if KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+                        KMessageBox::questionYesNo(p, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), QIcon::fromTheme(QStringLiteral("document-save"))), KGuiItem(i18n("Do not switch"), QIcon::fromTheme(QStringLiteral("dialog-cancel")))) == KMessageBox::Yes
+#else // >= 5.100.0
+                        KMessageBox::questionTwoActions(p, i18n("The current document has to be saved before switching the viewer/editor component."), i18n("Save before switching?"), KGuiItem(i18n("Save document"), QIcon::fromTheme(QStringLiteral("document-save"))), KGuiItem(i18n("Do not switch"), QIcon::fromTheme(QStringLiteral("dialog-cancel")))) == KMessageBox::PrimaryAction
+#endif // KWIDGETSADDONS_VERSION < QT_VERSION_CHECK(5, 100, 0)
+                        && ofi->save()))
                 OpenFileInfoManager::instance().setCurrentFile(ofi, service);
         }
     }
@@ -361,14 +373,14 @@ void DocumentListView::currentChanged(const QModelIndex &current, const QModelIn
         d->actionOpenMenu->removeAction(action);
     }
     if (ofi != nullptr) {
-        const KService::List services = ofi->listOfServices();
-        for (KService::Ptr servicePtr : services) {
-            QAction *menuItem = new QAction(QIcon::fromTheme(servicePtr->icon()), servicePtr->name(), this);
+        const QVector<KPluginMetaData> services = ofi->listOfServices();
+        for (const KPluginMetaData &service : services) {
+            QAction *menuItem = new QAction(QIcon::fromTheme(service.iconName()), service.name(), this);
             d->actionOpenMenu->addAction(menuItem);
             d->openMenuActions << menuItem;
 
-            connect(menuItem, &QAction::triggered, this, [this, servicePtr]() {
-                d->openFileWithService(servicePtr);
+            connect(menuItem, &QAction::triggered, this, [this, service]() {
+                d->openFileWithService(service);
             });
         }
     }

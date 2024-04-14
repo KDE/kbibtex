@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2024 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -55,7 +55,7 @@ public slots:
      * Retrieving the part to be used will be delegated to the
      * OpenFileInfo object.
      */
-    void setFile(OpenFileInfo *openFileInfo, KService::Ptr servicePtr = KService::Ptr());
+    void setFile(OpenFileInfo *openFileInfo, const KPluginMetaData &service);
 
 signals:
     void setCaption(const QString &);

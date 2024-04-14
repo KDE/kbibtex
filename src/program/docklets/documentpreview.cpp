@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2004-2019 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
+ *   Copyright (C) 2004-2024 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -44,6 +44,7 @@
 #endif // HAVE_WEBENGINEWIDGETS
 
 #include <kio_version.h>
+#include <kservice_version.h>
 #include <KLocalizedString>
 #include <KJobWidgets>
 #if KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
@@ -56,9 +57,14 @@
 #else // < 5.71.0
 #include <KRun>
 #endif // KIO_VERSION >= QT_VERSION_CHECK(5, 71, 0)
+#if KSERVICE_VERSION < 0x055200 // < 5.82.0
 #include <KMimeTypeTrader>
+#endif // KSERVICE_VERSION < 0x055200 // < 5.82.0
 #include <KService>
 #include <KParts/Part>
+#if KSERVICE_VERSION >= 0x055200 // >= 5.82.0
+#include <KParts/PartLoader>
+#endif // KSERVICE_VERSION >= 0x055200 // >= 5.82.0
 #include <KParts/ReadOnlyPart>
 #include <kio/jobclasses.h>
 #include <kio/job.h>
@@ -154,9 +160,20 @@ public:
     bool anyRemote;
 
     KParts::ReadOnlyPart *locatePart(const QString &mimeType, QWidget *parentWidget) {
+#if KSERVICE_VERSION>= 0x055200 // >= 5.82.0
+        const QVector<KPluginMetaData> parts {KParts::PartLoader::partsForMimeType(mimeType)};
+        if (!parts.isEmpty()) {
+            KPluginFactory::Result<KPluginFactory> pluginFactory{KPluginFactory::loadFactory(parts.first())};
+#if KSERVICE_VERSION>= 0x055900 // >= 5.89.0
+            KParts::ReadOnlyPart *part {pluginFactory.plugin->create<KParts::ReadOnlyPart>(parentWidget, p, QVariantList())};
+#else // < 5.89.0
+            KParts::ReadOnlyPart *part {pluginFactory.plugin->create<KParts::ReadOnlyPart>(parentWidget, p)};
+#endif // >= 5.89.0
+#else // < 5.82.0
         KService::Ptr service = KMimeTypeTrader::self()->preferredService(mimeType, QStringLiteral("KParts/ReadOnlyPart"));
         if (service) {
             KParts::ReadOnlyPart *part = service->createInstance<KParts::ReadOnlyPart>(parentWidget, p);
+#endif // >= 5.82.0
             connect(part, static_cast<void(KParts::ReadOnlyPart::*)()>(&KParts::ReadOnlyPart::completed), p, &DocumentPreview::loadingFinished);
             return part;
         } else
