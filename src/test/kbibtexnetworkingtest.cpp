@@ -776,6 +776,8 @@ void KBibTeXNetworkingTest::onlineSearchISBN_data() {
     // Examples with valid check digits
     QTest::newRow("From Wikipedia on ISBN (1)") << QStringLiteral("Haney, Robert (1974). Woodstock handmade houses. David Ballantine, Jonathan Elliott. New York: Ballantine Books. ISBN 0-345-24223-8.") << QStringLiteral("0345242238");
     QTest::newRow("ISBN Users' Manual") << QStringLiteral("ISBN Users' Manual, International Edition (PDF) (6th ed.). London: International ISBN Agency. 2012. p. 23. ISBN 978-92-95055-02-5.") << QStringLiteral("9789295055025");
+    QTest::newRow("A Swedish book found in Google Books") << QStringLiteral("http://books.google.se/books?id=a3RmAAAAMAAJ&dq=isbn:9172850426&hl=&cd=1&source=gbs_api") << QStringLiteral("9172850426");
+    QTest::newRow("978-0-13-444190-0") << QStringLiteral("978-0-13-444190-0") << QStringLiteral("9780134441900");
     // Examples with incorrect check digits
     QTest::newRow("From Wikipedia on ISBN (2)") << QStringLiteral("For example, the check digit for an ISBN-10 of 0-306-40615-X is calculated as follows") << QString();
     QTest::newRow("From Wikipedia on ISBN (3)") << QStringLiteral("For example, the ISBN-13 check digit of 978-0-306-40615-X is calculated as follows") << QString();
