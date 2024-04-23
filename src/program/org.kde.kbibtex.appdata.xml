@@ -48,6 +48,7 @@
   <name xml:lang="uk">KBibTeX</name>
   <name xml:lang="x-test">xxKBibTeXxx</name>
   <name xml:lang="zh-CN">KBibTeX</name>
+  <name xml:lang="zh-TW">KBibTeX</name>
   <summary>BibTeX editor by KDE to edit bibliographies used with LaTeX</summary>
   <summary xml:lang="ar">محرر بب تخ بواسطة كِيدِي لتحرير المراجع المستخدمة مع لاتخ</summary>
   <summary xml:lang="ca">Editor de BibTeX, creat per la comunitat KDE, per a editar bibliografies emprant LaTeX</summary>
@@ -348,6 +349,7 @@
       <li xml:lang="uk">Імпортувати дані з вашої бібліотеки Zotero.</li>
       <li xml:lang="x-test">xxImport your Zotero library.xx</li>
       <li xml:lang="zh-CN">导入您的 Zotero 库。</li>
+      <li xml:lang="zh-TW">匯入您的 Zotero 資源庫。</li>
     </ul>
   </description>
   <url type="homepage">https://userbase.kde.org/KBibTeX</url>
@@ -386,6 +388,7 @@
       <caption xml:lang="uk">Головне вікно KBibTeX</caption>
       <caption xml:lang="x-test">xxKBibTeX main windowxx</caption>
       <caption xml:lang="zh-CN">KBibTeX 主窗口</caption>
+      <caption xml:lang="zh-TW">KBibTeX 主視窗</caption>
       <image>https://cdn.kde.org/screenshots/kbibtex/kbibtex-kf5.png</image>
     </screenshot>
   </screenshots>
