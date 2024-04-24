@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-04-14 01:38+0000\n"
-"PO-Revision-Date: 2024-02-29 22:10+0100\n"
+"PO-Revision-Date: 2024-04-20 22:45+0200\n"
 "Last-Translator: Valter Mura <valtermura@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -4169,10 +4169,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Editor BibTeX di KDE"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
-msgstr "Copyright 2004-2019 Thomas Fischer"
+msgstr "Copyright 2004-2024 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
