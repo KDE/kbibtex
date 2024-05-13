@@ -1406,7 +1406,7 @@ msgstr "Resultat"
 #: src/gui/element/findpdfui.cpp:430
 #, kde-format
 msgid "Starting to search..."
-msgstr "S'està començant la busca..."
+msgstr "S'està començant la busca…"
 
 #: src/gui/element/findpdfui.cpp:449
 #, kde-format
@@ -1627,7 +1627,7 @@ msgstr "Mou cap amunt el valor"
 #: src/gui/field/fieldlistedit.cpp:414
 #, kde-format
 msgid "... and others (et al.)"
-msgstr "...entre altres (et al)."
+msgstr "…entre altres (et al)."
 
 #: src/gui/field/fieldlistedit.cpp:419
 #, kde-format
@@ -1642,12 +1642,12 @@ msgstr "Afig una llista de noms des del porta-retalls"
 #: src/gui/field/fieldlistedit.cpp:482
 #, kde-format
 msgid "Add file..."
-msgstr "Afig un fitxer..."
+msgstr "Afig un fitxer…"
 
 #: src/gui/field/fieldlistedit.cpp:488
 #, kde-format
 msgid "Add reference ..."
-msgstr "Afig una referència..."
+msgstr "Afig una referència…"
 
 #: src/gui/field/fieldlistedit.cpp:491
 #, kde-format
@@ -1842,7 +1842,7 @@ msgstr "Preferències"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:266
 #, kde-format
 msgid "Add..."
-msgstr "Afig..."
+msgstr "Afig…"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:342
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
@@ -2037,7 +2037,7 @@ msgstr "|Últim autor"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:121
 #, kde-format
 msgid "... and last author"
-msgstr "...i últim autor"
+msgstr "…i últim autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:127
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:129
@@ -2295,7 +2295,7 @@ msgstr "Suggeriments d'ID"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:269
 #, kde-format
 msgid "Edit..."
-msgstr "Edita..."
+msgstr "Edita…"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:275
 #, kde-format
@@ -2817,7 +2817,7 @@ msgstr "Visualitza el document"
 #: src/parts/part.cpp:168
 #, kde-format
 msgid "Save Copy As..."
-msgstr "Anomena i guarda una còpia..."
+msgstr "Anomena i guarda una còpia…"
 
 #: src/parts/part.cpp:173
 #, kde-format
@@ -2857,7 +2857,7 @@ msgstr "Preàmbul nou"
 #: src/parts/part.cpp:228
 #, kde-format
 msgid "Find PDF..."
-msgstr "Busca PDF..."
+msgstr "Busca PDF…"
 
 #: src/parts/part.cpp:233
 #, kde-format
@@ -3148,7 +3148,7 @@ msgstr "Sense errors ni avisos"
 #: src/processing/findduplicates.cpp:382
 #, kde-format
 msgid "Searching ..."
-msgstr "S'està buscant..."
+msgstr "S'està buscant…"
 
 #: src/processing/findduplicates.cpp:382
 #, kde-format
@@ -3345,7 +3345,7 @@ msgstr "Obri en un programa extern"
 #: src/program/docklets/documentpreview.cpp:328
 #, kde-format
 msgid "Refreshing..."
-msgstr "S'està actualitzant..."
+msgstr "S'està actualitzant…"
 
 #: src/program/docklets/documentpreview.cpp:357
 #, kde-format
@@ -3372,7 +3372,7 @@ msgstr "No s'ha pogut mostrar la part requerida"
 #: src/program/docklets/documentpreview.cpp:522
 #, kde-format
 msgid "Loading..."
-msgstr "S'està carregant..."
+msgstr "S'està carregant…"
 
 #: src/program/docklets/documentpreview.cpp:543
 #, kde-format
@@ -4015,7 +4015,7 @@ msgstr "Nou"
 #: src/program/mdiwidget.cpp:152
 #, kde-format
 msgid "Open..."
-msgstr "Obri..."
+msgstr "Obri…"
 
 #: src/program/mdiwidget.cpp:156
 #, kde-format
