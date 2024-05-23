@@ -229,6 +229,10 @@ find_package(
 
 if(ICU_FOUND)
     add_compile_definitions(HAVE_ICU)
+    if(ICU_VERSION GREATER_EQUAL 75)
+        # Starting with ICU 75, it makes use of C++17 instead of C++11 before
+        set(CMAKE_CXX_STANDARD 17)
+    endif()
 endif()
 
 option(
