@@ -16,7 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 23.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3686,7 +3685,7 @@ msgstr "Użyj wpisu"
 #: src/program/docklets/searchform.cpp:310
 #, kde-format
 msgid "Search"
-msgstr "Znajdź"
+msgstr "Poszukaj"
 
 #: src/program/docklets/searchform.cpp:322
 #, kde-format
@@ -3750,7 +3749,7 @@ msgstr "Przeszukiwanie internetu"
 #: src/program/docklets/searchresults.cpp:102
 #, kde-format
 msgid "Import"
-msgstr "Zaimportuj"
+msgstr "Importuj"
 
 #: src/program/docklets/searchresults.cpp:97
 #, kde-format
