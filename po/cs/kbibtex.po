@@ -1,22 +1,22 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Vít Pelčák <vit@pelcak.org>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
-# Vit Pelcak <vit@pelcak.org>, 2021, 2023.
+# SPDX-FileCopyrightText: 2021, 2023, 2024 Vit Pelcak <vit@pelcak.org>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-04-14 01:38+0000\n"
-"PO-Revision-Date: 2023-03-16 16:33+0100\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2024-05-30 09:26+0200\n"
+"Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -924,7 +924,7 @@ msgstr "Jak místní tak vzdálené soubory"
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr ""
+msgstr "Doslovné"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -938,7 +938,7 @@ msgstr ""
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Použít příkaz @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1310,7 +1310,7 @@ msgstr "Hodnota:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "Komentář musí začínat '%'"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
@@ -1984,12 +1984,12 @@ msgstr "Formátování jmen osob:"
 #, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr ""
+msgstr "Resetovat vše"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Smazat všechny předvolby 'znovu se neptat':"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:121
 #, kde-format
@@ -2417,12 +2417,12 @@ msgstr "Oddělovače řetězců:"
 #: src/gui/widgets/filesettingswidget.cpp:154
 #, kde-format
 msgid "Comment Context:"
-msgstr ""
+msgstr "Kontext komentáře:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
 #, kde-format
 msgid "Comment Prefix:"
-msgstr ""
+msgstr "Předpona komentáře:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -2628,7 +2628,7 @@ msgstr "Všude"
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
 #, kde-format
 msgid "BibSonomy"
-msgstr ""
+msgstr "BibSonomy"
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
 #, kde-format
@@ -3578,19 +3578,19 @@ msgstr "Důvod:"
 #, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
-msgstr ""
+msgstr "Náhled zakázán"
 
 #: src/program/docklets/referencepreview.cpp:266
 #, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
-msgstr ""
+msgstr "Nebyl vybrán žádný prvek"
 
 #: src/program/docklets/referencepreview.cpp:315
 #, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
-msgstr ""
+msgstr "Nebyl vytvořen žádný výstup"
 
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
@@ -3601,7 +3601,7 @@ msgstr ""
 #, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr ""
+msgstr "Žádný obsah"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4105,7 +4105,7 @@ msgstr "Editor BibTeX pro KDE"
 #: src/program/program.cpp:55
 #, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
-msgstr ""
+msgstr "Autorská práva 2004-2024 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
