@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Steve Allewell <steve.allewell@gmail.com>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2022, 2023.
+# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2022, 2023, 2024 Steve Allewell <steve.allewell@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-16 02:31+0000\n"
-"PO-Revision-Date: 2023-03-26 14:45+0100\n"
+"PO-Revision-Date: 2024-06-02 12:16+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
 "Language: en_GB\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.03.70\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1935,16 +1935,15 @@ msgid "Person Names Formatting:"
 msgstr "Person Names Formatting:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Reset"
+msgstr "Reset All"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:92
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Clear all 'don't ask again' settings:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:119
 #, kde-format
