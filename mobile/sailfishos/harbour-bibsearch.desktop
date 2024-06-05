@@ -4,6 +4,7 @@ X-Nemo-Application-Type=silica-qt5
 Icon=harbour-bibsearch
 Exec=harbour-bibsearch
 Name=BibSearch
+Name[ar]=بحث بب
 Name[ca]=BibSearch
 Name[ca@valencia]=BibSearch
 Name[cs]=BibSearch
