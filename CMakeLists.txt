@@ -149,6 +149,7 @@ if(BUILD_KPART OR BUILD_TESTING)
         Widgets
         Network
         Concurrent
+        DBus
         OPTIONAL_COMPONENTS
         NetworkAuth
         WebEngineWidgets
