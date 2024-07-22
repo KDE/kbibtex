@@ -1,14 +1,14 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
+# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 #
-# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-04-14 01:38+0000\n"
-"PO-Revision-Date: 2023-12-23 14:18+0100\n"
-"Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmai.com>\n"
+"PO-Revision-Date: 2024-07-21 07:14+0200\n"
+"Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -921,12 +922,11 @@ msgid "Both local and remote files"
 msgstr "Pliki miejscowe i zdalne"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Dosłowny tekst"
+msgstr "Dosłownie"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -934,13 +934,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Użyj przedrostka w postaci '%% '"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Użyj polecenia @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1317,23 +1317,22 @@ msgstr "Wartość:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "Przedrostek komentarza musi zaczynać się na '%'"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Komentarz w trybie 'Dosłownym' może zawierać puste wiersze"
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Zawartość:"
+msgstr "Kontekst:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Przedrostek:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1362,13 +1361,13 @@ msgstr ""
 "BibTeX."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
-"Nie można przetworzyć danego kodu źródłowego jako pojedynczej uwagi BibTeX."
+"Nie można przetworzyć danego kodu źródłowego jako pojedynczego BibTeX. "
+"Spróbuj usunąć puste wiersze w komentarzu."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -2432,16 +2431,14 @@ msgid "String Delimiters:"
 msgstr "Rozgraniczenia w ciągu znaków:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Cytowanie w komentarzach:"
+msgstr "Kontekst komentarza:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Cytowanie w komentarzach:"
+msgstr "Przedrostek komentarza:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -2645,10 +2642,9 @@ msgid "Everywhere"
 msgstr "Wszędzie"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
-#, fuzzy, kde-format
-#| msgid "Bibsonomy"
+#, kde-format
 msgid "BibSonomy"
-msgstr "Bibsonomy"
+msgstr "BibSonomy"
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
 #, kde-format
@@ -2666,10 +2662,9 @@ msgid "DOI:"
 msgstr "DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
-#, fuzzy, kde-format
-#| msgid "Free text:"
+#, kde-format
 msgid "Free text or DOI:"
-msgstr "Dowolny tekst:"
+msgstr "Dowolny tekst lub DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
@@ -3134,6 +3129,10 @@ msgid ""
 "Reload file and loose changes made in KBibTeX or ignore changes on disk and "
 "keep changes made in KBibTeX?"
 msgstr ""
+"Plik '%1' uległ zmianie na dysku lub został zmieniony w KBibTeX.\n"
+"\n"
+"Wczytać plik ponownie i utracić zmiany w KBibTeX czy pominąć zmiany na dysku "
+"i zachować zmiany w KBibTeX?"
 
 #: src/parts/part.cpp:1201
 #, kde-format
@@ -3629,22 +3628,19 @@ msgid "Reason:"
 msgstr "Powód:"
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Wyłączono podgląd"
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Nie wybrano elementu"
 
 #: src/program/docklets/referencepreview.cpp:315
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Nie utworzono wyniku"
@@ -3652,14 +3648,13 @@ msgstr "Nie utworzono wyniku"
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Nie można pokazać podglądu dla tego rodzaju elementu"
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Streszczenie"
+msgstr "Bez streszczenia"
 
 #: src/program/docklets/searchform.cpp:193
 #, kde-format
@@ -4165,10 +4160,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Edytor BibTeX dla KDE"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
-msgstr "Copyright 2004-2019 Thomas Fischer"
+msgstr "Copyright 2004-2024 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
