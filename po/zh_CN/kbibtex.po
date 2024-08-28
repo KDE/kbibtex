@@ -49,7 +49,7 @@ msgstr "基本"
 
 #, kde-format
 msgid "Star Rating"
-msgstr ""
+msgstr "星级评定"
 
 #, kde-format
 msgid "Book Title Addon"
@@ -93,11 +93,11 @@ msgstr "缩写"
 
 #, kde-format
 msgid "Short Journal"
-msgstr ""
+msgstr "短日志"
 
 #, kde-format
 msgid "Short Series"
-msgstr ""
+msgstr "短系列"
 
 #, kde-format
 msgid "Short Title"
@@ -116,6 +116,8 @@ msgid ""
 "DOIs and URLs get handled in the &lsquo;<a href=\"#tab:external\">External</"
 "a>&rsquo; tab."
 msgstr ""
+"DOI 和 URL 在 &lsquo;<a href=\"#tab:external\">External</a>&rsquo; 标签中处"
+"理。"
 
 #: src/config/bibtexentries.cpp:66 src/config/bibtexentries.cpp:82
 #, kde-format
@@ -270,7 +272,7 @@ msgstr "论文"
 #: src/config/bibtexfields.cpp:160 src/config/bibtexfields.cpp:199
 #, kde-format
 msgid "Element Type"
-msgstr ""
+msgstr "元素类型"
 
 #: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:200
 #: src/gui/file/findduplicatesui.cpp:159
@@ -290,7 +292,7 @@ msgstr "名称"
 #: src/config/bibtexfields.cpp:163 src/config/bibtexfields.cpp:202
 #, kde-format
 msgid "Title or Book Title"
-msgstr ""
+msgstr "标题或书籍标题"
 
 #: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:211
 #, kde-format
@@ -467,7 +469,7 @@ msgstr "文件系统"
 #: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:1004
 #, kde-format
 msgid "Key"
-msgstr "键"
+msgstr "关键词"
 
 #: src/config/bibtexfields.cpp:195 src/config/bibtexfields.cpp:301
 #: src/gui/preferences/settingscolorlabelwidget.cpp:194
@@ -1158,17 +1160,17 @@ msgstr "选项"
 #: src/gui/element/elementeditor.cpp:213
 #, kde-format
 msgid "Show all fields"
-msgstr ""
+msgstr "显示所有字段"
 
 #: src/gui/element/elementeditor.cpp:220
 #, kde-format
 msgid "Tab key visits only editable fields"
-msgstr ""
+msgstr "Tab 键仅访问可编辑字段"
 
 #: src/gui/element/elementeditor.cpp:228
 #, kde-format
 msgid "Check with BibTeX"
-msgstr ""
+msgstr "使用 BibTeX 检查"
 
 #: src/gui/element/elementeditor.cpp:550
 #, kde-format
@@ -1253,7 +1255,7 @@ msgstr "外部"
 #: src/gui/element/elementwidgets.cpp:864
 #, kde-format
 msgid "Other Fields"
-msgstr ""
+msgstr "其它字段"
 
 #: src/gui/element/elementwidgets.cpp:980
 #, kde-format
@@ -1280,7 +1282,7 @@ msgstr "列表："
 #: src/gui/element/elementwidgets.cpp:1004 src/gui/valuelistmodel.cpp:339
 #, kde-format
 msgid "Value"
-msgstr "价值"
+msgstr "值"
 
 #: src/gui/element/elementwidgets.cpp:1009 src/parts/part.cpp:260
 #, kde-format
@@ -1366,7 +1368,7 @@ msgstr ""
 #: src/gui/element/elementwidgets.cpp:1506
 #, kde-format
 msgid "Source"
-msgstr "原因"
+msgstr "源代码"
 
 #: src/gui/element/elementwidgets.cpp:1537
 #, kde-format
@@ -1430,7 +1432,7 @@ msgstr ""
 #: src/gui/preferences/settingscolorlabelwidget.cpp:452
 #, kde-format
 msgid "No color"
-msgstr ""
+msgstr "无颜色"
 
 #: src/gui/field/colorlabelwidget.cpp:95
 #, kde-format
@@ -1628,12 +1630,12 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:433
 #, kde-format
 msgid "Add from Clipboard"
-msgstr ""
+msgstr "从剪贴板添加"
 
 #: src/gui/field/fieldlistedit.cpp:434
 #, kde-format
 msgid "Add a list of names from clipboard"
-msgstr ""
+msgstr "从剪贴板添加名称列表"
 
 #: src/gui/field/fieldlistedit.cpp:496
 #, kde-format
@@ -1648,7 +1650,7 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:505
 #, kde-format
 msgid "Add reference from clipboard"
-msgstr ""
+msgstr "从剪贴板添加引用"
 
 #: src/gui/field/fieldlistedit.cpp:517
 #, kde-format
@@ -1676,22 +1678,22 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:663
 #, kde-format
 msgid "Add Keywords from List"
-msgstr ""
+msgstr "从列表添加关键词"
 
 #: src/gui/field/fieldlistedit.cpp:664
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
-msgstr ""
+msgstr "从预定义的关键字列表中添加选定的关键字"
 
 #: src/gui/field/fieldlistedit.cpp:667
 #, kde-format
 msgid "Add Keywords from Clipboard"
-msgstr ""
+msgstr "从剪贴板添加关键字"
 
 #: src/gui/field/fieldlistedit.cpp:668
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
-msgstr ""
+msgstr "从剪贴板添加标点符号分隔的关键字列表"
 
 #: src/gui/file/basicfileview.cpp:384
 #, kde-format
@@ -1712,7 +1714,7 @@ msgstr ""
 #, kde-format
 msgid ""
 "The current entry has been modified. Do you want to discard your changes?"
-msgstr ""
+msgstr "当前条目已修改。您想丢弃修改吗？"
 
 #: src/gui/file/fileview.cpp:89
 #, kde-format
@@ -1722,7 +1724,7 @@ msgstr "丢弃修改?"
 #: src/gui/file/fileview.cpp:89
 #, kde-format
 msgid "Continue Editing"
-msgstr ""
+msgstr "继续编辑"
 
 #: src/gui/file/fileview.cpp:331
 #, kde-format
@@ -2474,7 +2476,7 @@ msgstr ""
 #: src/gui/widgets/filterbar.cpp:70
 #, kde-format
 msgid "Filter:"
-msgstr "滤镜："
+msgstr "筛选："
 
 #: src/gui/widgets/filterbar.cpp:86
 #, kde-format
@@ -2484,7 +2486,7 @@ msgstr ""
 #: src/gui/widgets/filterbar.cpp:90
 #, kde-format
 msgid "any word"
-msgstr ""
+msgstr "任意字词"
 
 #: src/gui/widgets/filterbar.cpp:91
 #, kde-format
@@ -2499,7 +2501,7 @@ msgstr ""
 #: src/gui/widgets/filterbar.cpp:97
 #, kde-format
 msgid "any field"
-msgstr ""
+msgstr "任意字段"
 
 #: src/gui/widgets/filterbar.cpp:115
 #, kde-format
@@ -2558,7 +2560,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:70
 #, kde-format
 msgid "Free text:"
-msgstr ""
+msgstr "自定义文本"
 
 #: src/networking/onlinesearch/onlinesearcharxiv.cpp:79
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:90
@@ -2627,7 +2629,7 @@ msgstr "DOI:"
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
 #, kde-format
 msgid "Free text or DOI:"
-msgstr ""
+msgstr "自定义文本或 DOI："
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
@@ -2657,7 +2659,7 @@ msgstr "Google 学术搜索拒绝了抓取数据，因为它认为您是机器�
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:461
 #, kde-format
 msgid "Google Scholar"
-msgstr ""
+msgstr "谷歌学术"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:108
 #, kde-format
@@ -2747,7 +2749,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:81
 #, kde-format
 msgid "Free Text:"
-msgstr ""
+msgstr "自定义文本"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:95
 #, kde-format
@@ -2799,7 +2801,7 @@ msgstr ""
 #: src/networking/zotero/collection.cpp:196
 #, kde-format
 msgid "%1's Library"
-msgstr ""
+msgstr "%1 的库"
 
 #: src/networking/zotero/oauthwizard.cpp:86
 #, kde-format
@@ -2808,6 +2810,8 @@ msgid ""
 "head><body><p>KBibTeX got successfully authorized to read your Zotero "
 "database.</p></body></html>"
 msgstr ""
+"<html><head><title>KBibTeX 已授权使用 Zotero</title></head><body><p>KBibTeX "
+"已成功授权读取您的 Zotero 数据库。</p></body></html>"
 
 #: src/networking/zotero/oauthwizard.cpp:143
 #, kde-format
@@ -2820,6 +2824,11 @@ msgid ""
 "web page telling you that KBibTeX got authorized.<br/>This window will be "
 "closed automatically.</li></ol></qt>"
 msgstr ""
+"<qt><p>要允许  <strong>KBibTeX</strong> 访问您的 <strong>Zotero 书目</"
+"strong>，该 KBibTeX 实例必须获得授权。</p><p>授权过程涉及多个步骤：</"
+"p><ol><li>在网络浏览器中打开如下所示的 URL。</li><li>登录 Zotero 并批准 "
+"KBibTeX 的权限。</li><li>如果成功，您将被重定向到一个网页，告诉您 KBibTeX 已"
+"获得授权。<br/>该窗口将自动关闭。</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:149
 #, kde-format
@@ -2829,7 +2838,7 @@ msgstr "复制 URL"
 #: src/networking/zotero/oauthwizard.cpp:154
 #, kde-format
 msgid "Open URL"
-msgstr "打开网址"
+msgstr "打开 URL"
 
 #: src/networking/zotero/oauthwizard.cpp:178
 #, kde-format
@@ -2879,7 +2888,7 @@ msgstr ""
 #: src/parts/part.cpp:176
 #, kde-format
 msgid "Filter"
-msgstr "滤镜"
+msgstr "筛选"
 
 #: src/parts/part.cpp:181
 #, kde-format
@@ -2889,7 +2898,7 @@ msgstr ""
 #: src/parts/part.cpp:184
 #, kde-format
 msgid "New element"
-msgstr ""
+msgstr "新元素"
 
 #: src/parts/part.cpp:190
 #, kde-format
@@ -2919,7 +2928,7 @@ msgstr "编辑元素"
 #: src/parts/part.cpp:231
 #, kde-format
 msgid "Find PDF..."
-msgstr ""
+msgstr "查找 PDF..."
 
 #: src/parts/part.cpp:236
 #, kde-format
@@ -2929,7 +2938,7 @@ msgstr ""
 #: src/parts/part.cpp:250
 #, kde-format
 msgid "Copy References"
-msgstr ""
+msgstr "复制引用"
 
 #: src/parts/part.cpp:305
 #, kde-format
@@ -3045,6 +3054,9 @@ msgid ""
 "Check that you have write access to this file or that enough disk space is "
 "available."
 msgstr ""
+"无法保存文档，原因是无法写入 '%1'。\n"
+"\n"
+"请检查您是否有此文件的写权限，或者磁盘空间是否充足。"
 
 #: src/parts/part.cpp:1073
 #, kde-format
@@ -3109,6 +3121,9 @@ msgid ""
 "\n"
 "See the following output to trace the error:"
 msgstr ""
+"运行 BibTeX 失败。\n"
+"\n"
+"请参阅以下输出以排查错误："
 
 #: src/processing/checkbibtex.cpp:92
 #, kde-format
@@ -3118,12 +3133,12 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:124
 #, kde-format
 msgid "Field <b>%1</b> is empty"
-msgstr ""
+msgstr "字段 <b>%1</b> 为空"
 
 #: src/processing/checkbibtex.cpp:127
 #, kde-format
 msgid "Fields <b>%1</b> and <b>%2</b> are empty, but at least one is required"
-msgstr ""
+msgstr "字段 <b>%1</b> 和 <b>%2</b> 为空，但至少需要一个"
 
 #: src/processing/checkbibtex.cpp:130
 #, kde-format
@@ -3153,7 +3168,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:151
 #, kde-format
 msgid "<qt><p>The following error was found:</p><pre>%1</pre></qt>"
-msgstr ""
+msgstr "<qt><p>发现以下错误：</p><pre>%1</pre></qt>"
 
 #: src/processing/checkbibtex.cpp:151
 #, kde-format
@@ -3163,12 +3178,12 @@ msgstr "发生错误"
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
 msgid "The following warnings were found:"
-msgstr ""
+msgstr "发现以下警告："
 
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
 msgid "Warnings found"
-msgstr ""
+msgstr "发现警告"
 
 #: src/processing/checkbibtex.cpp:156
 #, kde-format
@@ -3181,12 +3196,12 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:156
 #, kde-format
 msgid "No warnings or errors were found.%1"
-msgstr ""
+msgstr "没有发现警告或错误。%1"
 
 #: src/processing/checkbibtex.cpp:156
 #, kde-format
 msgid "No Errors or Warnings"
-msgstr ""
+msgstr "无错误或警告"
 
 #: src/processing/findduplicates.cpp:383
 #, kde-format
@@ -3332,7 +3347,7 @@ msgstr ""
 #: src/processing/lyx.cpp:81
 #, kde-format
 msgid "Send to LyX/Kile"
-msgstr ""
+msgstr "发送至 LyX/Kile"
 
 #: src/processing/lyx.cpp:101
 #, kde-format
@@ -3341,11 +3356,14 @@ msgid ""
 "\n"
 "Check that LyX or Kile are running and configured to receive references."
 msgstr ""
+"\n"
+"\n"
+"检查 LyX 或 Kile 是否正在运行并配置为接收引用."
 
 #: src/processing/lyx.cpp:102
 #, kde-format
 msgid "Send Reference to LyX"
-msgstr ""
+msgstr "发送引用到 LyX"
 
 #: src/processing/lyx.cpp:107
 #, kde-format
@@ -3355,7 +3373,7 @@ msgstr ""
 #: src/processing/lyx.cpp:112
 #, kde-format
 msgid "No references to send to LyX/Kile."
-msgstr ""
+msgstr "没有要发送到 LyX/Kile 的引用。"
 
 #: src/processing/lyx.cpp:118
 #, kde-format
@@ -3380,7 +3398,7 @@ msgstr "刷新..."
 #: src/program/docklets/documentpreview.cpp:381
 #, kde-format
 msgid "No documents to show."
-msgstr ""
+msgstr "没有文档可显示"
 
 #: src/program/docklets/documentpreview.cpp:388
 #: src/program/docklets/documentpreview.cpp:704
@@ -3535,7 +3553,7 @@ msgstr ""
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "无法显示此类型元素的预览"
 
 #: src/program/docklets/referencepreview.cpp:385
 #, kde-format
@@ -3591,6 +3609,7 @@ msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
 "\">change</a>)."
 msgstr ""
+"已选择搜索引擎 <b>%1</b> 与 <b>%2</b>（<a href=\"changeEngine\">更改</a>）。"
 
 #: src/program/docklets/searchform.cpp:348
 #, kde-format
@@ -3598,6 +3617,8 @@ msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
 "\"changeEngine\">change</a>)."
 msgstr ""
+"已选择搜索引擎 <b>%1</b>、<b>%2</b> 与 <b>%3</b>（<a href=\"changeEngine\">更"
+"改</a>）。"
 
 #: src/program/docklets/searchform.cpp:349
 #, kde-format
@@ -3605,6 +3626,7 @@ msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
 "\"changeEngine\">change</a>)."
 msgstr ""
+"已选择搜索引擎 <b>%1</b>、<b>%2</b> ……（<a href=\"changeEngine\">更改</a>）。"
 
 #: src/program/docklets/searchform.cpp:414
 #, kde-format
@@ -3627,7 +3649,7 @@ msgstr "导入"
 #: src/program/docklets/searchresults.cpp:97
 #, kde-format
 msgid "View Element"
-msgstr ""
+msgstr "查看元素"
 
 #: src/program/docklets/searchresults.cpp:107
 #, kde-format
@@ -3652,7 +3674,7 @@ msgstr ""
 #: src/program/docklets/statistics.cpp:53
 #, kde-format
 msgid "Number of Elements:"
-msgstr ""
+msgstr "元素数量："
 
 #: src/program/docklets/statistics.cpp:57
 #, kde-format
@@ -3717,32 +3739,32 @@ msgstr ""
 #: src/program/docklets/zoterobrowser.cpp:117
 #, kde-format
 msgid "Personal library"
-msgstr ""
+msgstr "个人库"
 
 #: src/program/docklets/zoterobrowser.cpp:119
 #, kde-format
 msgid "Group library"
-msgstr ""
+msgstr "群组库"
 
 #: src/program/docklets/zoterobrowser.cpp:128
 #, kde-format
 msgid "No groups available"
-msgstr ""
+msgstr "无可用组"
 
 #: src/program/docklets/zoterobrowser.cpp:144
 #, kde-format
 msgid "Numeric user id:"
-msgstr ""
+msgstr "数字用户 ID："
 
 #: src/program/docklets/zoterobrowser.cpp:150
 #, kde-format
 msgid "API key:"
-msgstr ""
+msgstr "API 密钥："
 
 #: src/program/docklets/zoterobrowser.cpp:156
 #, kde-format
 msgid "Get New Credentials"
-msgstr ""
+msgstr "获取新的凭据"
 
 #: src/program/docklets/zoterobrowser.cpp:163
 #, kde-format
@@ -3760,16 +3782,17 @@ msgid ""
 "KBibTeX failed to retrieve the bibliography from Zotero. Please check that "
 "the provided user id and API key are valid."
 msgstr ""
+"KBibTeX 从 Zotero 检索书目失败。请检查所提供的用户 ID 和 API 密钥是否有效。"
 
 #: src/program/docklets/zoterobrowser.cpp:241
 #, kde-format
 msgid "Failed to retrieve data from Zotero"
-msgstr ""
+msgstr "从 Zotero 检索数据失败"
 
 #: src/program/docklets/zoterobrowser.cpp:367
 #, kde-format
 msgid "No groups available or no permissions"
-msgstr ""
+msgstr "无可用组或无权限"
 
 #: src/program/documentlist.cpp:59
 #, kde-format
@@ -3866,7 +3889,7 @@ msgstr "文件系统浏览器"
 #: src/program/mainwindow.cpp:100
 #, kde-format
 msgid "Show Panels"
-msgstr ""
+msgstr "显示面板"
 
 #: src/program/mainwindow.cpp:105
 #, kde-format
@@ -3876,12 +3899,12 @@ msgstr ""
 #: src/program/mainwindow.cpp:122
 #, kde-format
 msgid "List of Documents"
-msgstr ""
+msgstr "文档列表"
 
 #: src/program/mainwindow.cpp:132
 #, kde-format
 msgid "List of Values"
-msgstr ""
+msgstr "值列表"
 
 #: src/program/mainwindow.cpp:141
 #, kde-format
@@ -3896,12 +3919,12 @@ msgstr "搜索结果"
 #: src/program/mainwindow.cpp:161
 #, kde-format
 msgid "Online Search"
-msgstr ""
+msgstr "在线检索"
 
 #: src/program/mainwindow.cpp:172
 #, kde-format
 msgid "Zotero"
-msgstr ""
+msgstr "Zotero"
 
 #: src/program/mainwindow.cpp:184
 #, kde-format
@@ -3916,7 +3939,7 @@ msgstr "文档预览"
 #: src/program/mainwindow.cpp:204
 #, kde-format
 msgid "Element Editor"
-msgstr ""
+msgstr "元素编辑器"
 
 #: src/program/mainwindow.cpp:214
 #, kde-format
@@ -3985,7 +4008,7 @@ msgstr ""
 #: src/program/mdiwidget.cpp:147
 #, kde-format
 msgid "<qt>Welcome to <b>KBibTeX</b></qt>"
-msgstr ""
+msgstr "<qt>欢迎来到 <b>KBibTeX</b></qt>"
 
 #: src/program/mdiwidget.cpp:150
 #, kde-format
@@ -4000,7 +4023,7 @@ msgstr "打开..."
 #: src/program/mdiwidget.cpp:158
 #, kde-format
 msgid "List of recently used files:"
-msgstr ""
+msgstr "最近打开的文件列表"
 
 #: src/program/mdiwidget.cpp:272
 #, kde-format
@@ -4025,7 +4048,7 @@ msgstr ""
 #: src/program/program.cpp:55
 #, kde-format
 msgid "A BibTeX editor by KDE"
-msgstr ""
+msgstr "由 KDE 开发的 BibTeX 编辑器"
 
 #: src/program/program.cpp:55
 #, kde-format
