@@ -77,7 +77,7 @@ msgstr ""
 
 #, kde-format
 msgid "Identifiers"
-msgstr "标识符"
+msgstr "标识"
 
 #, kde-format
 msgid "Sorting"
@@ -278,7 +278,7 @@ msgstr "元素类型"
 #: src/gui/file/findduplicatesui.cpp:159
 #, kde-format
 msgid "Identifier"
-msgstr ""
+msgstr "标识"
 
 #: src/config/bibtexfields.cpp:162 src/config/bibtexfields.cpp:201
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:323
@@ -786,12 +786,12 @@ msgstr ""
 #: src/config/bibtexfields.cpp:288
 #, kde-format
 msgid "URL Date"
-msgstr ""
+msgstr "URL 日期"
 
 #: src/config/bibtexfields.cpp:289
 #, kde-format
 msgid "Local File URL"
-msgstr ""
+msgstr "本地文件 URL"
 
 #: src/config/bibtexfields.cpp:291
 #, kde-format
@@ -908,17 +908,17 @@ msgstr "BibLaTeX"
 #: src/config/preferences.cpp:597
 #, kde-format
 msgid "No backups"
-msgstr ""
+msgstr "无备份"
 
 #: src/config/preferences.cpp:597
 #, kde-format
 msgid "Local files only"
-msgstr "仅支持本地文件"
+msgstr "仅本地文件"
 
 #: src/config/preferences.cpp:597
 #, kde-format
 msgid "Both local and remote files"
-msgstr ""
+msgstr "本地和远程文件"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -1145,12 +1145,12 @@ msgstr ""
 msgid ""
 "The following local document is about to be associated with the current "
 "entry:"
-msgstr ""
+msgstr "以下本地文件即将与当前条目相关联："
 
 #: src/gui/element/associatedfilesui.cpp:313
 #, kde-format
 msgid "The following local document is about to be associated with entry '%1':"
-msgstr ""
+msgstr "以下本地文件即将与条目 '%1' 关联："
 
 #: src/gui/element/elementeditor.cpp:207
 #, kde-format
@@ -1363,7 +1363,7 @@ msgstr ""
 #: src/gui/element/elementwidgets.cpp:1491
 #, kde-format
 msgid "No issues detected"
-msgstr ""
+msgstr "未发现问题"
 
 #: src/gui/element/elementwidgets.cpp:1506
 #, kde-format
@@ -1660,12 +1660,12 @@ msgstr ""
 #: src/gui/field/fieldlistedit.cpp:555 src/gui/field/fieldlistedit.cpp:635
 #, kde-format
 msgid "Save file locally"
-msgstr ""
+msgstr "本地保存文件"
 
 #: src/gui/field/fieldlistedit.cpp:605
 #, kde-format
 msgid "Save file '%1' locally"
-msgstr ""
+msgstr "本地保存文件 '%1'"
 
 #: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
 #, kde-format
@@ -1890,7 +1890,7 @@ msgstr ""
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:99
 #, kde-format
 msgid "Language for 'babel':"
-msgstr ""
+msgstr "‘babel' 的语言："
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:109
 #, kde-format
@@ -1905,7 +1905,7 @@ msgstr "PDF与Postscript"
 #: src/gui/preferences/settingsfileexporterwidget.cpp:123
 #, kde-format
 msgid "Command for 'Copy Reference':"
-msgstr ""
+msgstr "“复制引用”命令："
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:125
 #, kde-format
@@ -1915,27 +1915,27 @@ msgstr ""
 #: src/gui/preferences/settingsfileexporterwidget.cpp:133
 #, kde-format
 msgid "Detect LyX pipe automatically:"
-msgstr ""
+msgstr "自动检测 LyX 管道："
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:139
 #, kde-format
 msgid "Manually specified LyX pipe:"
-msgstr ""
+msgstr "手动指定 LyX 管道："
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:156
 #, kde-format
 msgid "Backups when saving:"
-msgstr ""
+msgstr "保存时备份："
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:162
 #, kde-format
 msgid "Number of Backups:"
-msgstr ""
+msgstr "备份数量"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:184
 #, kde-format
 msgid "Saving and Exporting"
-msgstr ""
+msgstr "保存与导出"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:46
 #: src/gui/widgets/filesettingswidget.cpp:42
@@ -1958,13 +1958,13 @@ msgstr "Jr."
 #: src/gui/preferences/settingsgeneralwidget.cpp:79
 #, kde-format
 msgid "Bibliography System:"
-msgstr ""
+msgstr "参考文献系统："
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:83
 #: src/gui/widgets/filesettingswidget.cpp:189
 #, kde-format
 msgid "Person Names Formatting:"
-msgstr ""
+msgstr "人名格式："
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
 #, kde-format
@@ -2286,7 +2286,7 @@ msgstr "文本："
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:602
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "预览："
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
@@ -2324,7 +2324,7 @@ msgstr "编辑 Id 建议"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:306
 #, kde-format
 msgid "Id Suggestions"
-msgstr ""
+msgstr "Id 建议"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:266
 #, kde-format
@@ -2344,7 +2344,7 @@ msgstr "下箭头"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:278
 #, kde-format
 msgid "Toggle Default"
-msgstr ""
+msgstr "切换默认值"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:382
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
@@ -2375,7 +2375,7 @@ msgstr ""
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:69
 #, kde-format
 msgid "When double-clicking an element:"
-msgstr ""
+msgstr "双击一个元素时："
 
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:83
 #, kde-format
@@ -2466,7 +2466,7 @@ msgstr ""
 #: src/gui/widgets/filesettingswidget.cpp:204
 #, kde-format
 msgid "Sort by identifier"
-msgstr ""
+msgstr "按标识排序"
 
 #: src/gui/widgets/filesettingswidget.cpp:205
 #, kde-format
@@ -2948,12 +2948,12 @@ msgstr ""
 #: src/parts/part.cpp:470
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
-msgstr ""
+msgstr "无法创建文档 '%1' 的备份副本。"
 
 #: src/parts/part.cpp:470
 #, kde-format
 msgid "Backup copies"
-msgstr ""
+msgstr "备份副本"
 
 #: src/parts/part.cpp:503
 #, kde-format
@@ -3019,17 +3019,17 @@ msgstr "PDF/PostScript 文件设置"
 #: src/parts/part.cpp:716
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
-msgstr ""
+msgstr "将参考文献保存到文件 '%1' 失败。"
 
 #: src/parts/part.cpp:718 src/parts/part.cpp:724
 #, kde-format
 msgid "Saving bibliography failed"
-msgstr ""
+msgstr "保存参考文献失败"
 
 #: src/parts/part.cpp:720
 #, kde-format
 msgid "Saving bibliography failed:"
-msgstr ""
+msgstr "保存参考文献失败："
 
 #: src/parts/part.cpp:723
 #, kde-format
@@ -3039,7 +3039,7 @@ msgstr ""
 #: src/parts/part.cpp:774
 #, kde-format
 msgid "Local Files"
-msgstr ""
+msgstr "本地文件"
 
 #: src/parts/part.cpp:799
 #, kde-format
@@ -3108,6 +3108,9 @@ msgid ""
 "\n"
 "The system may not know how to use KBibTeX to open bibliography files."
 msgstr ""
+"运行 “kbuildsycoca5” 更新 MIME 类型关联失败。\n"
+"\n"
+"系统可能不知道如何使用 KBibTeX 打开参考文献文件。"
 
 #: src/processing/bibliographyservice.cpp:189
 #, kde-format
@@ -3383,7 +3386,7 @@ msgstr ""
 #: src/program/docklets/documentpreview.cpp:206
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
-msgstr ""
+msgstr "在仅本地文件和包括远程文件在内的所有文件之间切换"
 
 #: src/program/docklets/documentpreview.cpp:217
 #, kde-format
@@ -3536,7 +3539,7 @@ msgstr "原因："
 #, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
-msgstr ""
+msgstr "预览已禁用"
 
 #: src/program/docklets/referencepreview.cpp:266
 #, kde-format
@@ -3894,7 +3897,7 @@ msgstr "显示面板"
 #: src/program/mainwindow.cpp:105
 #, kde-format
 msgid "Recently used files"
-msgstr ""
+msgstr "最近使用的文件"
 
 #: src/program/mainwindow.cpp:122
 #, kde-format
@@ -3998,12 +4001,12 @@ msgstr "文件名"
 #: src/program/mdiwidget.cpp:100
 #, kde-format
 msgid "Date/time of last use"
-msgstr ""
+msgstr "上次使用的日期/时间"
 
 #: src/program/mdiwidget.cpp:101
 #, kde-format
 msgid "Full filename"
-msgstr ""
+msgstr "完整文件名"
 
 #: src/program/mdiwidget.cpp:147
 #, kde-format
@@ -4013,7 +4016,7 @@ msgstr "<qt>欢迎来到 <b>KBibTeX</b></qt>"
 #: src/program/mdiwidget.cpp:150
 #, kde-format
 msgid "New"
-msgstr "新"
+msgstr "新建"
 
 #: src/program/mdiwidget.cpp:154
 #, kde-format
@@ -4023,7 +4026,7 @@ msgstr "打开..."
 #: src/program/mdiwidget.cpp:158
 #, kde-format
 msgid "List of recently used files:"
-msgstr "最近打开的文件列表"
+msgstr "最近使用的文件列表"
 
 #: src/program/mdiwidget.cpp:272
 #, kde-format
