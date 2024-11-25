@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-14 01:38+0000\n"
+"POT-Creation-Date: 2024-11-25 01:53+0000\n"
 "PO-Revision-Date: 2024-05-02 15:00+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -2679,6 +2679,12 @@ msgstr "Författare:"
 msgid "Year:"
 msgstr "År:"
 
+#: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
+#, fuzzy, kde-format
+#| msgid "Google Scholar"
+msgid "Google Books"
+msgstr "Google Scholar"
+
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
 msgid ""
@@ -3641,49 +3647,49 @@ msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
 msgstr "Ingen sammanfattning"
 
-#: src/program/docklets/searchform.cpp:193
+#: src/program/docklets/searchform.cpp:194
 #, kde-format
 msgid "Go to Homepage"
 msgstr "Gå till hemsida"
 
-#: src/program/docklets/searchform.cpp:217
+#: src/program/docklets/searchform.cpp:218
 #, kde-format
 msgid "Query Terms"
 msgstr "Frågebegrepp"
 
-#: src/program/docklets/searchform.cpp:220
+#: src/program/docklets/searchform.cpp:221
 #, kde-format
 msgid "Engines"
 msgstr "Söktjänster"
 
-#: src/program/docklets/searchform.cpp:226
+#: src/program/docklets/searchform.cpp:227
 #, kde-format
 msgid "Use Entry"
 msgstr "Använd post"
 
-#: src/program/docklets/searchform.cpp:236
-#: src/program/docklets/searchform.cpp:310
+#: src/program/docklets/searchform.cpp:237
+#: src/program/docklets/searchform.cpp:312
 #, kde-format
 msgid "Search"
 msgstr "Sök"
 
-#: src/program/docklets/searchform.cpp:322
+#: src/program/docklets/searchform.cpp:324
 #, kde-format
 msgid "Stop"
 msgstr "Stoppa"
 
-#: src/program/docklets/searchform.cpp:345
+#: src/program/docklets/searchform.cpp:347
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr "Ingen söktjänst vald (<a href=\"changeEngine\">ändra</a>)."
 
-#: src/program/docklets/searchform.cpp:346
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr "Söktjänsten <b>%1</b> är vald (<a href=\"changeEngine\">ändra</a>)."
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3692,7 +3698,7 @@ msgstr ""
 "Söktjänsterna <b>%1</b> och <b>%2</b> är valda (<a href=\"changeEngine"
 "\">ändra</a>)."
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:350
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3701,7 +3707,7 @@ msgstr ""
 "Söktjänsterna <b>%1</b>, <b>%2</b> och <b>%3</b> är valda (<a href="
 "\"changeEngine\">ändra</a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:351
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3710,7 +3716,7 @@ msgstr ""
 "Söktjänsterna <b>%1</b>, <b>%2</b> med flera är valda (<a href=\"changeEngine"
 "\">ändra</a>)."
 
-#: src/program/docklets/searchform.cpp:414
+#: src/program/docklets/searchform.cpp:416
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3719,7 +3725,7 @@ msgstr ""
 "Kunde inte påbörja sökning på Internet:\n"
 "Sökbegreppen är inte fullständiga eller är ogiltiga."
 
-#: src/program/docklets/searchform.cpp:414
+#: src/program/docklets/searchform.cpp:416
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Söker på Internet"

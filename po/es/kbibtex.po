@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-14 01:38+0000\n"
+"POT-Creation-Date: 2024-11-25 01:53+0000\n"
 "PO-Revision-Date: 2024-04-14 20:26+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -2698,6 +2698,12 @@ msgstr "Autor:"
 msgid "Year:"
 msgstr "Año:"
 
+#: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
+#, fuzzy, kde-format
+#| msgid "Google Scholar"
+msgid "Google Books"
+msgstr "Google Scholar"
+
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
 msgid ""
@@ -3671,45 +3677,45 @@ msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
 msgstr "Sin sinopsis"
 
-#: src/program/docklets/searchform.cpp:193
+#: src/program/docklets/searchform.cpp:194
 #, kde-format
 msgid "Go to Homepage"
 msgstr "Ir a la página de inicio"
 
-#: src/program/docklets/searchform.cpp:217
+#: src/program/docklets/searchform.cpp:218
 #, kde-format
 msgid "Query Terms"
 msgstr "Consultar términos"
 
-#: src/program/docklets/searchform.cpp:220
+#: src/program/docklets/searchform.cpp:221
 #, kde-format
 msgid "Engines"
 msgstr "Motores"
 
-#: src/program/docklets/searchform.cpp:226
+#: src/program/docklets/searchform.cpp:227
 #, kde-format
 msgid "Use Entry"
 msgstr "Usar entrada"
 
-#: src/program/docklets/searchform.cpp:236
-#: src/program/docklets/searchform.cpp:310
+#: src/program/docklets/searchform.cpp:237
+#: src/program/docklets/searchform.cpp:312
 #, kde-format
 msgid "Search"
 msgstr "Buscar"
 
-#: src/program/docklets/searchform.cpp:322
+#: src/program/docklets/searchform.cpp:324
 #, kde-format
 msgid "Stop"
 msgstr "Detener"
 
-#: src/program/docklets/searchform.cpp:345
+#: src/program/docklets/searchform.cpp:347
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "No se ha seleccionado un motor de búsqueda (<a href=\"changeEngine"
 "\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:346
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
@@ -3717,7 +3723,7 @@ msgstr ""
 "Se ha seleccionado el motor de búsqueda <b>%1</b> (<a href=\"changeEngine"
 "\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3726,7 +3732,7 @@ msgstr ""
 "Se han seleccionado los motores de búsqueda <b>%1</b> y <b>%2</b> (<a href="
 "\"changeEngine\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:350
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3735,7 +3741,7 @@ msgstr ""
 "Se han seleccionado los motores de búsqueda <b>%1</b>, <b>%2</b> y <b>%3</b> "
 "(<a href=\"changeEngine\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:351
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3744,7 +3750,7 @@ msgstr ""
 "Se han seleccionado los motores de búsqueda <b>%1</b> y <b>%2</b>, entre "
 "otros (<a href=\"changeEngine\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:414
+#: src/program/docklets/searchform.cpp:416
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3753,7 +3759,7 @@ msgstr ""
 "No se puede buscar en Internet:\n"
 "Los términos a buscar no están completos o no son válidos."
 
-#: src/program/docklets/searchform.cpp:414
+#: src/program/docklets/searchform.cpp:416
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Buscando en Internet"

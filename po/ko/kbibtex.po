@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-14 01:38+0000\n"
+"POT-Creation-Date: 2024-11-25 01:53+0000\n"
 "PO-Revision-Date: 2024-08-19 22:37+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2675,6 +2675,12 @@ msgstr "저자:"
 msgid "Year:"
 msgstr "연도:"
 
+#: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
+#, fuzzy, kde-format
+#| msgid "Google Scholar"
+msgid "Google Books"
+msgstr "Google 학술검색"
+
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
 msgid ""
@@ -3630,49 +3636,49 @@ msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
 msgstr "초록 없음"
 
-#: src/program/docklets/searchform.cpp:193
+#: src/program/docklets/searchform.cpp:194
 #, kde-format
 msgid "Go to Homepage"
 msgstr "홈페이지로 이동"
 
-#: src/program/docklets/searchform.cpp:217
+#: src/program/docklets/searchform.cpp:218
 #, kde-format
 msgid "Query Terms"
 msgstr "검색어"
 
-#: src/program/docklets/searchform.cpp:220
+#: src/program/docklets/searchform.cpp:221
 #, kde-format
 msgid "Engines"
 msgstr "엔진"
 
-#: src/program/docklets/searchform.cpp:226
+#: src/program/docklets/searchform.cpp:227
 #, kde-format
 msgid "Use Entry"
 msgstr "항목 사용"
 
-#: src/program/docklets/searchform.cpp:236
-#: src/program/docklets/searchform.cpp:310
+#: src/program/docklets/searchform.cpp:237
+#: src/program/docklets/searchform.cpp:312
 #, kde-format
 msgid "Search"
 msgstr "검색"
 
-#: src/program/docklets/searchform.cpp:322
+#: src/program/docklets/searchform.cpp:324
 #, kde-format
 msgid "Stop"
 msgstr "중지"
 
-#: src/program/docklets/searchform.cpp:345
+#: src/program/docklets/searchform.cpp:347
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr "검색 엔진이 선택되지 않음(<a href=\"changeEngine\">변경</a>)."
 
-#: src/program/docklets/searchform.cpp:346
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr "검색 엔진 <b>%1</b>이(가) 선택됨(<a href=\"changeEngine\">변경</a>)."
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3681,7 +3687,7 @@ msgstr ""
 "검색 엔진 <b>%1</b>와(과) <b>%2</b>이(가) 선택됨(<a href=\"changeEngine\">변"
 "경</a>)."
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:350
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3690,7 +3696,7 @@ msgstr ""
 "검색 엔진 <b>%1</b>, <b>%2</b>, <b>%3</b>이(가) 선택됨(<a href=\"changeEngine"
 "\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:351
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3699,7 +3705,7 @@ msgstr ""
 "검색 엔진 <b>%1</b>, <b>%2</b> 등이 선택됨 (<a href=\"changeEngine\">변경</"
 "a>)."
 
-#: src/program/docklets/searchform.cpp:414
+#: src/program/docklets/searchform.cpp:416
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3708,7 +3714,7 @@ msgstr ""
 "인터넷 검색을 시작할 수 없습니다.\n"
 "검색 용어가 완료되지 않았거나 잘못되었습니다."
 
-#: src/program/docklets/searchform.cpp:414
+#: src/program/docklets/searchform.cpp:416
 #, kde-format
 msgid "Searching the Internet"
 msgstr "인터넷 검색"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-14 01:38+0000\n"
+"POT-Creation-Date: 2024-11-25 01:53+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -2746,6 +2746,12 @@ msgstr "Autor:"
 msgid "Year:"
 msgstr "Godina:"
 
+#: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
+#, fuzzy, kde-format
+#| msgid "Google Scholar"
+msgid "Google Books"
+msgstr "Google stipendist"
+
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
 msgid ""
@@ -3740,51 +3746,51 @@ msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
 msgstr "Rezime"
 
-#: src/program/docklets/searchform.cpp:193
+#: src/program/docklets/searchform.cpp:194
 #, kde-format
 msgid "Go to Homepage"
 msgstr "Idi na početnu stranicu"
 
-#: src/program/docklets/searchform.cpp:217
+#: src/program/docklets/searchform.cpp:218
 #, kde-format
 msgid "Query Terms"
 msgstr "Upitni izrazi"
 
-#: src/program/docklets/searchform.cpp:220
+#: src/program/docklets/searchform.cpp:221
 #, kde-format
 msgid "Engines"
 msgstr "Mašine"
 
-#: src/program/docklets/searchform.cpp:226
+#: src/program/docklets/searchform.cpp:227
 #, kde-format
 msgid "Use Entry"
 msgstr "Koristi unos"
 
-#: src/program/docklets/searchform.cpp:236
-#: src/program/docklets/searchform.cpp:310
+#: src/program/docklets/searchform.cpp:237
+#: src/program/docklets/searchform.cpp:312
 #, kde-format
 msgid "Search"
 msgstr "Pretraga"
 
-#: src/program/docklets/searchform.cpp:322
+#: src/program/docklets/searchform.cpp:324
 #, kde-format
 msgid "Stop"
 msgstr "Prekini"
 
-#: src/program/docklets/searchform.cpp:345
+#: src/program/docklets/searchform.cpp:347
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Nijedan pretraživač nije izabran (<a href=\"changeEngine\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:346
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Pretraživač <b>%1</b> je odabran (<a href=\"changeEngine\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3793,7 +3799,7 @@ msgstr ""
 "Pretraživači <b>%1</b> i <b>%2</b> su odabrani (<a href=\"changeEngine"
 "\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:350
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3802,7 +3808,7 @@ msgstr ""
 "Pretraživači <b>%1</b>, <b>%2</b>, i <b>%3</b> su odabrani (<a href="
 "\"changeEngine\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:351
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3811,7 +3817,7 @@ msgstr ""
 "Pretraživači <b>%1</b>, <b>%2</b>, itd. su odabrani (<a href=\"changeEngine"
 "\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:414
+#: src/program/docklets/searchform.cpp:416
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3820,7 +3826,7 @@ msgstr ""
 "Nisam mogao početi pretraživati Internet:\n"
 "Postavke pretrage nisu kompletne ili su neispravne."
 
-#: src/program/docklets/searchform.cpp:414
+#: src/program/docklets/searchform.cpp:416
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Pretraživanje interneta"
