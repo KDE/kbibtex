@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-16 02:31+0000\n"
+"POT-Creation-Date: 2024-11-25 03:22+0000\n"
 "PO-Revision-Date: 2024-02-25 07:00+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -278,7 +278,7 @@ msgid "Element Type"
 msgstr "Elementa Tipo"
 
 #: src/config/bibtexfields.cpp:134 src/config/bibtexfields.cpp:173
-#: src/gui/file/findduplicatesui.cpp:156
+#: src/gui/file/findduplicatesui.cpp:157
 #, kde-format
 msgid "Identifier"
 msgstr "Identigilo"
@@ -460,7 +460,7 @@ msgid "Address"
 msgstr "Adreso"
 
 #: src/config/bibtexfields.cpp:166 src/config/bibtexfields.cpp:265
-#: src/gui/file/findduplicatesui.cpp:158
+#: src/gui/file/findduplicatesui.cpp:159
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:492
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:664
@@ -1088,13 +1088,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Vojo kiel Enigita en Eniro"
 
 #: src/gui/element/associatedfilesui.cpp:135
-#: src/gui/field/fieldlistedit.cpp:602
+#: src/gui/field/fieldlistedit.cpp:605 src/gui/field/fieldlistedit.cpp:607
 #, kde-format
 msgid "Relative Path"
 msgstr "Relativa Vojo"
 
 #: src/gui/element/associatedfilesui.cpp:138
-#: src/gui/field/fieldlistedit.cpp:602
+#: src/gui/field/fieldlistedit.cpp:605 src/gui/field/fieldlistedit.cpp:607
 #, kde-format
 msgid "Absolute Path"
 msgstr "Absoluta Vojo"
@@ -1110,7 +1110,7 @@ msgid "Associate Document with Entry"
 msgstr "Asocii Dokumenton kun Eniro"
 
 #: src/gui/element/associatedfilesui.cpp:233
-#: src/program/docklets/documentpreview.cpp:222
+#: src/program/docklets/documentpreview.cpp:239
 #: src/program/docklets/referencepreview.cpp:119
 #, kde-format
 msgid "No preview available"
@@ -1270,7 +1270,7 @@ msgid "Name:"
 msgstr "Nomo:"
 
 #: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:102
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:103
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:98
 #, kde-format
 msgid "Add"
@@ -1298,13 +1298,13 @@ msgstr "Forigi"
 
 #: src/gui/element/elementwidgets.cpp:1005
 #: src/program/docklets/referencepreview.cpp:142
-#: src/program/documentlist.cpp:207
+#: src/program/documentlist.cpp:213
 #, kde-format
 msgid "Open"
 msgstr "Malfermi"
 
 #: src/gui/element/elementwidgets.cpp:1044
-#: src/program/docklets/elementform.cpp:95
+#: src/program/docklets/elementform.cpp:96
 #, kde-format
 msgid "Apply"
 msgstr "Apliki"
@@ -1596,67 +1596,67 @@ msgstr ""
 "\n"
 "Reenŝanĝante al tipo '%2'."
 
-#: src/gui/field/fieldlistedit.cpp:142
+#: src/gui/field/fieldlistedit.cpp:143
 #, kde-format
 msgid "Remove value"
 msgstr "Forigi valoron"
 
-#: src/gui/field/fieldlistedit.cpp:153
+#: src/gui/field/fieldlistedit.cpp:154
 #, kde-format
 msgid "Move value down"
 msgstr "Movi valoron malsupren"
 
-#: src/gui/field/fieldlistedit.cpp:164
+#: src/gui/field/fieldlistedit.cpp:165
 #, kde-format
 msgid "Move value up"
 msgstr "Movi valoron supren"
 
-#: src/gui/field/fieldlistedit.cpp:414
+#: src/gui/field/fieldlistedit.cpp:415
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... kaj aliaj (et al.)"
 
-#: src/gui/field/fieldlistedit.cpp:419
+#: src/gui/field/fieldlistedit.cpp:420
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Aldoni el Clipboard"
 
-#: src/gui/field/fieldlistedit.cpp:420
+#: src/gui/field/fieldlistedit.cpp:421
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Aldoni liston de nomoj el tondujo"
 
-#: src/gui/field/fieldlistedit.cpp:482
+#: src/gui/field/fieldlistedit.cpp:483
 #, kde-format
 msgid "Add file..."
 msgstr "Aldoni dosieron..."
 
-#: src/gui/field/fieldlistedit.cpp:488
+#: src/gui/field/fieldlistedit.cpp:489
 #, kde-format
 msgid "Add reference ..."
 msgstr "Aldoni referencon..."
 
-#: src/gui/field/fieldlistedit.cpp:491
+#: src/gui/field/fieldlistedit.cpp:492
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Aldoni referencon el tondujo"
 
-#: src/gui/field/fieldlistedit.cpp:503
+#: src/gui/field/fieldlistedit.cpp:504
 #, kde-format
 msgid "File to Associate"
 msgstr "Dosiero al Asociita"
 
-#: src/gui/field/fieldlistedit.cpp:541 src/gui/field/fieldlistedit.cpp:615
+#: src/gui/field/fieldlistedit.cpp:542 src/gui/field/fieldlistedit.cpp:622
 #, kde-format
 msgid "Save file locally"
 msgstr "Konservi dosieron loke"
 
-#: src/gui/field/fieldlistedit.cpp:591
+#: src/gui/field/fieldlistedit.cpp:592
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Konservi dosieron '%1' loke"
 
-#: src/gui/field/fieldlistedit.cpp:602
+#: src/gui/field/fieldlistedit.cpp:605 src/gui/field/fieldlistedit.cpp:607
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1667,23 +1667,23 @@ msgstr ""
 "vojo estus<br/><tt style=\"font-family: %3;\">%1</tt></p><p>La absoluta vojo "
 "estus<br/><tt style=\"font-familio: %3;\">%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:643
+#: src/gui/field/fieldlistedit.cpp:650
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Aldoni Ŝlosilvortojn el Listo"
 
-#: src/gui/field/fieldlistedit.cpp:644
+#: src/gui/field/fieldlistedit.cpp:651
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Aldonu ŝlosilvortojn kiel elektitajn el antaŭdifinita listo de ŝlosilvortoj"
 
-#: src/gui/field/fieldlistedit.cpp:647
+#: src/gui/field/fieldlistedit.cpp:654
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Aldoni Ŝlosilvortojn el Tondujo"
 
-#: src/gui/field/fieldlistedit.cpp:648
+#: src/gui/field/fieldlistedit.cpp:655
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "Aldoni interpunkcian liston de ŝlosilvortoj el tondujo"
@@ -1724,37 +1724,37 @@ msgstr "Vidi Elementon"
 msgid "Edit Element"
 msgstr "Redakti Elementon"
 
-#: src/gui/file/findduplicatesui.cpp:140
+#: src/gui/file/findduplicatesui.cpp:141
 #, kde-format
 msgid "Alternatives"
 msgstr "Alternativoj"
 
-#: src/gui/file/findduplicatesui.cpp:192
+#: src/gui/file/findduplicatesui.cpp:193
 #, kde-format
 msgid "None of the above"
 msgstr "Neniu el la supraj"
 
-#: src/gui/file/findduplicatesui.cpp:548
+#: src/gui/file/findduplicatesui.cpp:549
 #, kde-format
 msgid "Select your duplicates"
 msgstr "Elektu viajn duplikatojn"
 
-#: src/gui/file/findduplicatesui.cpp:568
+#: src/gui/file/findduplicatesui.cpp:569
 #, kde-format
 msgid "Previous Clique"
 msgstr "Antaŭa Kliko"
 
-#: src/gui/file/findduplicatesui.cpp:570
+#: src/gui/file/findduplicatesui.cpp:571
 #, kde-format
 msgid "Next Clique"
 msgstr "Sekva Kliko"
 
-#: src/gui/file/findduplicatesui.cpp:649
+#: src/gui/file/findduplicatesui.cpp:650
 #, kde-format
 msgid "Find Duplicates"
 msgstr "Trovi Duplikatojn"
 
-#: src/gui/file/findduplicatesui.cpp:680
+#: src/gui/file/findduplicatesui.cpp:683 src/gui/file/findduplicatesui.cpp:685
 #, kde-format
 msgid ""
 "Multiple elements are selected. Do you want to search for duplicates only "
@@ -1763,37 +1763,38 @@ msgstr ""
 "Multoblaj elementoj estas elektitaj. Ĉu vi volas serĉi duplikatojn nur ene "
 "de la elekto aŭ en la tuta dokumento?"
 
-#: src/gui/file/findduplicatesui.cpp:680
+#: src/gui/file/findduplicatesui.cpp:683 src/gui/file/findduplicatesui.cpp:685
 #, kde-format
 msgid "Search only in selection?"
 msgstr "Ĉu serĉi nur en elekto?"
 
-#: src/gui/file/findduplicatesui.cpp:680
+#: src/gui/file/findduplicatesui.cpp:683 src/gui/file/findduplicatesui.cpp:685
 #, kde-format
 msgid "Only in selection"
 msgstr "Nur en elekto"
 
-#: src/gui/file/findduplicatesui.cpp:680
+#: src/gui/file/findduplicatesui.cpp:683 src/gui/file/findduplicatesui.cpp:685
 #, kde-format
 msgid "Whole document"
 msgstr "Tuta dokumento"
 
-#: src/gui/file/findduplicatesui.cpp:703
+#: src/gui/file/findduplicatesui.cpp:710
 #, kde-format
 msgid "No duplicates were found."
 msgstr "Neniuj duplikatoj estis trovitaj."
 
-#: src/gui/file/findduplicatesui.cpp:703
+#: src/gui/file/findduplicatesui.cpp:710
 #, kde-format
 msgid "No duplicates found"
 msgstr "Neniuj duplikatoj trovitaj"
 
-#: src/gui/file/findduplicatesui.cpp:710
+#: src/gui/file/findduplicatesui.cpp:717
 #, kde-format
 msgid "Merge Duplicates"
 msgstr "Kunfandi Duplikatojn"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:118
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #, kde-format
 msgid ""
 "This will reset the settings to factory defaults. Should this affect only "
@@ -1802,28 +1803,31 @@ msgstr ""
 "Ĉi tio restarigos la agordojn al fabrikaj defaŭltoj. Ĉu tio devus influi nur "
 "la nunan paĝon aŭ ĉiujn agordojn?"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:118
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #, kde-format
 msgid "Reset to Defaults"
 msgstr "Restarigi al defaŭltoj"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:118
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #, kde-format
 msgid "All settings"
 msgstr "Ĉiuj agordoj"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:118
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #, kde-format
 msgid "Only current page"
 msgstr "Nur aktuala paĝo"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:168
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:183
 #, kde-format
 msgid "Preferences"
 msgstr "Preferoj"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:336
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:266
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:267
 #, kde-format
 msgid "Add..."
 msgstr "Aldoni..."
@@ -1832,7 +1836,7 @@ msgstr "Aldoni..."
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:340
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:424
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:272
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:273
 #, kde-format
 msgid "Remove"
 msgstr "Forigi"
@@ -1868,37 +1872,37 @@ msgstr "Bibliografia stilo:"
 msgid "PDF & Postscript"
 msgstr "PDF kaj Postskribo"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:121
+#: src/gui/preferences/settingsfileexporterwidget.cpp:122
 #, kde-format
 msgid "Command for 'Copy Reference':"
 msgstr "Komando por 'Kopii Referencon':"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:123
+#: src/gui/preferences/settingsfileexporterwidget.cpp:124
 #, kde-format
 msgid "No command"
 msgstr "Neniu komando"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:131
+#: src/gui/preferences/settingsfileexporterwidget.cpp:132
 #, kde-format
 msgid "Detect LyX pipe automatically:"
 msgstr "Aŭtomate detekti LyX-pipon:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:137
+#: src/gui/preferences/settingsfileexporterwidget.cpp:138
 #, kde-format
 msgid "Manually specified LyX pipe:"
 msgstr "Mane specifita LyX-pipo:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:150
+#: src/gui/preferences/settingsfileexporterwidget.cpp:155
 #, kde-format
 msgid "Backups when saving:"
 msgstr "Sekurkopioj dum konservado:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:156
+#: src/gui/preferences/settingsfileexporterwidget.cpp:161
 #, kde-format
 msgid "Number of Backups:"
 msgstr "Nombro da sekurkopioj:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:178
+#: src/gui/preferences/settingsfileexporterwidget.cpp:183
 #, kde-format
 msgid "Saving and Exporting"
 msgstr "Konservado kaj Eksportado"
@@ -2260,7 +2264,7 @@ msgid "Add at bottom"
 msgstr "Aldoni ĉe la fundo"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:926
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:118
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:119
 #, kde-format
 msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
 msgstr "<qt>Strukturo:<ul><li>%1</li></ul>Ekzemplo: %2</qt>"
@@ -2270,33 +2274,34 @@ msgstr "<qt>Strukturo:<ul><li>%1</li></ul>Ekzemplo: %2</qt>"
 msgid "Edit Id Suggestion"
 msgstr "Redakti Id-Sugeston"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:170
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:309
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:171
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:310
 #, kde-format
 msgid "Id Suggestions"
 msgstr "Id-sugestoj"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:269
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:270
 #, kde-format
 msgid "Edit..."
 msgstr "Redaktu..."
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:275
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:276
 #, kde-format
 msgid "Up"
 msgstr "Supren"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:278
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:279
 #, kde-format
 msgid "Down"
 msgstr "Malsupren"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:281
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:282
 #, kde-format
 msgid "Toggle Default"
 msgstr "Baskuligi defaŭlton"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:386
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:388
 #, kde-format
 msgid ""
 "All token have been removed from this suggestion. Remove suggestion itself "
@@ -2305,17 +2310,20 @@ msgstr ""
 "Ĉiuj signoj estas forigitaj de ĉi tiu sugesto. Ĉu forigi sugeston mem aŭ "
 "restarigi originalan sugeston?"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:386
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:388
 #, kde-format
 msgid "Remove suggestion?"
 msgstr "Ĉu forigi sugeston?"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:386
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:388
 #, kde-format
 msgid "Remove suggestion"
 msgstr "Forigi sugeston"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:386
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:388
 #, kde-format
 msgid "Revert changes"
 msgstr "Reverti ŝanĝojn"
@@ -3001,7 +3009,7 @@ msgstr "BibTeX-redaktilo de KDE"
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
 #, kde-format
-msgid "Copyright 2004-2023 Thomas Fischer"
+msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr ""
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
@@ -3312,29 +3320,29 @@ msgstr "Neniuj referencoj sendi al LyX/Kile."
 msgid "Could not open LyX server pipe '%1'."
 msgstr "Ne eblis malfermi LyX-servilon tubon '%1'."
 
-#: src/program/docklets/documentpreview.cpp:188
+#: src/program/docklets/documentpreview.cpp:205
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
 "Ŝanĝu inter lokaj dosieroj nur kaj ĉiuj dokumentoj inkluzive de malproksimaj"
 
-#: src/program/docklets/documentpreview.cpp:199
+#: src/program/docklets/documentpreview.cpp:216
 #, kde-format
 msgid "Open in external program"
 msgstr "Malfermi en ekstera programo"
 
-#: src/program/docklets/documentpreview.cpp:328
+#: src/program/docklets/documentpreview.cpp:345
 #, kde-format
 msgid "Refreshing..."
 msgstr "Refreŝigante..."
 
-#: src/program/docklets/documentpreview.cpp:357
+#: src/program/docklets/documentpreview.cpp:374
 #, kde-format
 msgid "No documents to show."
 msgstr "Neniuj dokumentoj por montri."
 
-#: src/program/docklets/documentpreview.cpp:364
-#: src/program/docklets/documentpreview.cpp:681
+#: src/program/docklets/documentpreview.cpp:381
+#: src/program/docklets/documentpreview.cpp:698
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3344,18 +3352,18 @@ msgstr ""
 "\">Malŝaltu la limigon</a> al lokaj dosieroj por vidi forajn dokumentojn.</"
 "qt>"
 
-#: src/program/docklets/documentpreview.cpp:491
+#: src/program/docklets/documentpreview.cpp:508
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "Ne povas montri petitan parton"
 
-#: src/program/docklets/documentpreview.cpp:518
-#: src/program/docklets/documentpreview.cpp:522
+#: src/program/docklets/documentpreview.cpp:535
+#: src/program/docklets/documentpreview.cpp:539
 #, kde-format
 msgid "Loading..."
 msgstr "Ŝargante..."
 
-#: src/program/docklets/documentpreview.cpp:543
+#: src/program/docklets/documentpreview.cpp:560
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3369,7 +3377,7 @@ msgstr ""
 "\">Okular</a> por KDE Frameworks 5 por uzi ĝian PDF-spektan komponanton.<br /"
 ">Okular por KDE 4 ne funkcios."
 
-#: src/program/docklets/documentpreview.cpp:544
+#: src/program/docklets/documentpreview.cpp:561
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3377,7 +3385,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>Ne scias kiel montri mimespecon '%1'.%2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:684
+#: src/program/docklets/documentpreview.cpp:701
 #, kde-format
 msgid ""
 "No documents to show.\n"
@@ -3386,22 +3394,23 @@ msgstr ""
 "Neniuj dokumentoj por montri.\n"
 "Kelkaj URL-oj aŭ dosieroj ne povis esti prenitaj."
 
-#: src/program/docklets/elementform.cpp:75
+#: src/program/docklets/elementform.cpp:76
 #, kde-format
 msgid "Automatically apply changes"
 msgstr "Aŭtomate apliki ŝanĝojn"
 
-#: src/program/docklets/elementform.cpp:91
+#: src/program/docklets/elementform.cpp:92
 #, kde-format
 msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
 msgstr "Estas nekonservitaj ŝanĝoj. Bonvolu premi aŭ 'Apliki' aŭ 'Restarigi'."
 
-#: src/program/docklets/elementform.cpp:98
+#: src/program/docklets/elementform.cpp:99
 #, kde-format
 msgid "Reset"
 msgstr "Restarigi"
 
-#: src/program/docklets/elementform.cpp:186
+#: src/program/docklets/elementform.cpp:189
+#: src/program/docklets/elementform.cpp:191
 #, kde-format
 msgid ""
 "The current element got modified.\n"
@@ -3410,17 +3419,20 @@ msgstr ""
 "La nuna elemento estis modifita.\n"
 "Apliki aŭ forĵeti ŝanĝojn?"
 
-#: src/program/docklets/elementform.cpp:186
+#: src/program/docklets/elementform.cpp:189
+#: src/program/docklets/elementform.cpp:191
 #, kde-format
 msgid "Element modified"
 msgstr "Elemento modifita"
 
-#: src/program/docklets/elementform.cpp:186
+#: src/program/docklets/elementform.cpp:189
+#: src/program/docklets/elementform.cpp:191
 #, kde-format
 msgid "Apply changes"
 msgstr "Apliki ŝanĝojn"
 
-#: src/program/docklets/elementform.cpp:186
+#: src/program/docklets/elementform.cpp:189
+#: src/program/docklets/elementform.cpp:191
 #, kde-format
 msgid "Discard changes"
 msgstr "Forĵeti ŝanĝojn"
@@ -3758,37 +3770,37 @@ msgstr "Malsukcesis preni datumojn de Zotero"
 msgid "No groups available or no permissions"
 msgstr "Neniuj grupoj disponeblaj aŭ neniuj permesoj"
 
-#: src/program/documentlist.cpp:55
+#: src/program/documentlist.cpp:57
 #, kde-format
 msgid "One level up"
 msgstr "Unu nivelon supren"
 
-#: src/program/documentlist.cpp:59
+#: src/program/documentlist.cpp:61
 #, kde-format
 msgid "Go to Home folder"
 msgstr "Iri al Hejma dosierujo"
 
-#: src/program/documentlist.cpp:199
+#: src/program/documentlist.cpp:205
 #, kde-format
 msgid "<br/><small>located in <b>%1</b></small>"
 msgstr "<br/><small>situanta en <b>%1</b></small>"
 
-#: src/program/documentlist.cpp:203
+#: src/program/documentlist.cpp:209
 #, kde-format
 msgid "Favorite"
 msgstr "Ŝatata"
 
-#: src/program/documentlist.cpp:205 src/program/documentlist.cpp:395
+#: src/program/documentlist.cpp:211 src/program/documentlist.cpp:407
 #, kde-format
 msgid "Recently Used"
 msgstr "Lastatempe Uzita"
 
-#: src/program/documentlist.cpp:209
+#: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Modified"
 msgstr "Modifita"
 
-#: src/program/documentlist.cpp:262
+#: src/program/documentlist.cpp:270 src/program/documentlist.cpp:272
 #, kde-format
 msgid ""
 "The current document has to be saved before switching the viewer/editor "
@@ -3797,122 +3809,122 @@ msgstr ""
 "La nuna dokumento devas esti konservita antaŭ ol ŝanĝi la spektilon/"
 "redaktilon."
 
-#: src/program/documentlist.cpp:262
+#: src/program/documentlist.cpp:270 src/program/documentlist.cpp:272
 #, kde-format
 msgid "Save before switching?"
 msgstr "Ĉu konservi antaŭ ol ŝanĝi?"
 
-#: src/program/documentlist.cpp:262
+#: src/program/documentlist.cpp:270 src/program/documentlist.cpp:272
 #, kde-format
 msgid "Save document"
 msgstr "Konservi dokumenton"
 
-#: src/program/documentlist.cpp:262
+#: src/program/documentlist.cpp:270 src/program/documentlist.cpp:272
 #, kde-format
 msgid "Do not switch"
 msgstr "Ne ŝanĝi"
 
-#: src/program/documentlist.cpp:275
+#: src/program/documentlist.cpp:287
 #, kde-format
 msgid "Close File"
 msgstr "Fermi Dosieron"
 
-#: src/program/documentlist.cpp:279
+#: src/program/documentlist.cpp:291
 #, kde-format
 msgid "Open File"
 msgstr "Malfermi Dosieron"
 
-#: src/program/documentlist.cpp:284
+#: src/program/documentlist.cpp:296
 #, kde-format
 msgid "Open with"
 msgstr "Malfermi kun"
 
-#: src/program/documentlist.cpp:288
+#: src/program/documentlist.cpp:300
 #, kde-format
 msgid "Remove from Favorites"
 msgstr "Forigi el Favoritoj"
 
-#: src/program/documentlist.cpp:292
+#: src/program/documentlist.cpp:304
 #, kde-format
 msgid "Add to Favorites"
 msgstr "Aldoni al Favoritoj"
 
-#: src/program/documentlist.cpp:390
+#: src/program/documentlist.cpp:402
 #, kde-format
 msgid "Open Files"
 msgstr "Malfermi Dosierojn"
 
-#: src/program/documentlist.cpp:400
+#: src/program/documentlist.cpp:412
 #, kde-format
 msgid "Favorites"
 msgstr "Plej ŝatataj"
 
-#: src/program/documentlist.cpp:403
+#: src/program/documentlist.cpp:415
 #, kde-format
 msgid "Filesystem Browser"
 msgstr "Dosiersistem-Foliumilo"
 
-#: src/program/mainwindow.cpp:92
+#: src/program/mainwindow.cpp:93
 #, kde-format
 msgid "Show Panels"
 msgstr "Montri Panelojn"
 
-#: src/program/mainwindow.cpp:97
+#: src/program/mainwindow.cpp:98
 #, kde-format
 msgid "Recently used files"
 msgstr "Lastatempe uzataj dosieroj"
 
-#: src/program/mainwindow.cpp:114
+#: src/program/mainwindow.cpp:115
 #, kde-format
 msgid "List of Documents"
 msgstr "Listo de Dokumentoj"
 
-#: src/program/mainwindow.cpp:124
+#: src/program/mainwindow.cpp:125
 #, kde-format
 msgid "List of Values"
 msgstr "Listo de Valoroj"
 
-#: src/program/mainwindow.cpp:133
+#: src/program/mainwindow.cpp:134
 #, kde-format
 msgid "Statistics"
 msgstr "Statistiko"
 
-#: src/program/mainwindow.cpp:142
+#: src/program/mainwindow.cpp:143
 #, kde-format
 msgid "Search Results"
 msgstr "Serĉrezultoj"
 
-#: src/program/mainwindow.cpp:153
+#: src/program/mainwindow.cpp:154
 #, kde-format
 msgid "Online Search"
 msgstr "Interreta Serĉo"
 
-#: src/program/mainwindow.cpp:163
+#: src/program/mainwindow.cpp:164
 #, kde-format
 msgid "Zotero"
 msgstr "Zotero"
 
-#: src/program/mainwindow.cpp:174
+#: src/program/mainwindow.cpp:175
 #, kde-format
 msgid "Reference Preview"
 msgstr "Referenca Antaŭrigardo"
 
-#: src/program/mainwindow.cpp:183
+#: src/program/mainwindow.cpp:184
 #, kde-format
 msgid "Document Preview"
 msgstr "Dokumenta Antaŭrigardo"
 
-#: src/program/mainwindow.cpp:194
+#: src/program/mainwindow.cpp:195
 #, kde-format
 msgid "Element Editor"
 msgstr "Elementa Redaktoro"
 
-#: src/program/mainwindow.cpp:204
+#: src/program/mainwindow.cpp:205
 #, kde-format
 msgid "File Settings"
 msgstr "Dosieraj Agordoj"
 
-#: src/program/mainwindow.cpp:306
+#: src/program/mainwindow.cpp:307
 #, kde-format
 msgid ""
 "Creating a new document of mime type '%1' failed as no editor component "
@@ -3921,27 +3933,27 @@ msgstr ""
 "Kreado de nova dokumento de mim-tipo '%1' malsukcesis ĉar neniu redaktila "
 "komponanto povus esti instanciigita."
 
-#: src/program/mainwindow.cpp:306
+#: src/program/mainwindow.cpp:307
 #, kde-format
 msgid "Creating document failed"
 msgstr "Kreado de dokumento malsukcesis"
 
-#: src/program/mainwindow.cpp:328
+#: src/program/mainwindow.cpp:329
 #, kde-format
 msgid "Open file"
 msgstr "Malfermi dosieron"
 
-#: src/program/mainwindow.cpp:370 src/program/program.cpp:48
+#: src/program/mainwindow.cpp:371 src/program/program.cpp:48
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
 
-#: src/program/mainwindow.cpp:370
+#: src/program/mainwindow.cpp:371
 #, kde-format
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:458 src/program/mainwindow.cpp:460
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -3950,17 +3962,17 @@ msgstr ""
 "KBibTeX ne estas la defaŭlta redaktilo por ĝiaj bibliografiaj formatoj kiel "
 "BibTeX aŭ RIS."
 
-#: src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:458 src/program/mainwindow.cpp:460
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Defaŭlta Bibliografia Redaktoro"
 
-#: src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:458 src/program/mainwindow.cpp:460
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Agordi kiel Defaŭltan Redaktilon"
 
-#: src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:458 src/program/mainwindow.cpp:460
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Konservi agordojn neŝanĝitaj"
@@ -4000,22 +4012,22 @@ msgstr "Malfermu..."
 msgid "List of recently used files:"
 msgstr "Listo de lastatempe uzitaj dosieroj:"
 
-#: src/program/mdiwidget.cpp:268
+#: src/program/mdiwidget.cpp:266
 #, kde-format
 msgid "No part available for file of mime type '%1'."
 msgstr "Neniu parto disponebla por dosiero de mimo-tipo '%1'."
 
-#: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:266 src/program/mdiwidget.cpp:268
 #, kde-format
 msgid "No Part Available"
 msgstr "Neniu Parto Havebla"
 
-#: src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:268
 #, kde-format
 msgid "No part available for file '%1'."
 msgstr "Neniu parto disponebla por dosiero '%1'."
 
-#: src/program/openfileinfo.cpp:247
+#: src/program/openfileinfo.cpp:287
 #, kde-format
 msgid "Unnamed-%1"
 msgstr "Nenomita-%1"

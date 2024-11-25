@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-16 02:31+0000\n"
+"POT-Creation-Date: 2024-11-25 03:22+0000\n"
 "PO-Revision-Date: 2024-11-10 18:09+0100\n"
 "Last-Translator: Roman Paholík <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -274,7 +274,7 @@ msgid "Element Type"
 msgstr "Typ prvku"
 
 #: src/config/bibtexfields.cpp:134 src/config/bibtexfields.cpp:173
-#: src/gui/file/findduplicatesui.cpp:156
+#: src/gui/file/findduplicatesui.cpp:157
 #, kde-format
 msgid "Identifier"
 msgstr "Identifikátor"
@@ -456,7 +456,7 @@ msgid "Address"
 msgstr "Adresa"
 
 #: src/config/bibtexfields.cpp:166 src/config/bibtexfields.cpp:265
-#: src/gui/file/findduplicatesui.cpp:158
+#: src/gui/file/findduplicatesui.cpp:159
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:492
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:629
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:664
@@ -1083,13 +1083,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Cesta ako vložená do položky"
 
 #: src/gui/element/associatedfilesui.cpp:135
-#: src/gui/field/fieldlistedit.cpp:602
+#: src/gui/field/fieldlistedit.cpp:605 src/gui/field/fieldlistedit.cpp:607
 #, kde-format
 msgid "Relative Path"
 msgstr "Relatívna cesta"
 
 #: src/gui/element/associatedfilesui.cpp:138
-#: src/gui/field/fieldlistedit.cpp:602
+#: src/gui/field/fieldlistedit.cpp:605 src/gui/field/fieldlistedit.cpp:607
 #, kde-format
 msgid "Absolute Path"
 msgstr "Absolútna cesta"
@@ -1105,7 +1105,7 @@ msgid "Associate Document with Entry"
 msgstr "Asociovať dokument s položkou"
 
 #: src/gui/element/associatedfilesui.cpp:233
-#: src/program/docklets/documentpreview.cpp:222
+#: src/program/docklets/documentpreview.cpp:239
 #: src/program/docklets/referencepreview.cpp:119
 #, kde-format
 msgid "No preview available"
@@ -1264,7 +1264,7 @@ msgid "Name:"
 msgstr "Názov:"
 
 #: src/gui/element/elementwidgets.cpp:981
-#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:102
+#: src/gui/element/elementwidgets.cpp:1044 src/gui/field/fieldlistedit.cpp:103
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:98
 #, kde-format
 msgid "Add"
@@ -1292,13 +1292,13 @@ msgstr "Vymazať"
 
 #: src/gui/element/elementwidgets.cpp:1005
 #: src/program/docklets/referencepreview.cpp:142
-#: src/program/documentlist.cpp:207
+#: src/program/documentlist.cpp:213
 #, kde-format
 msgid "Open"
 msgstr "Otvoriť"
 
 #: src/gui/element/elementwidgets.cpp:1044
-#: src/program/docklets/elementform.cpp:95
+#: src/program/docklets/elementform.cpp:96
 #, kde-format
 msgid "Apply"
 msgstr "Použiť"
@@ -1590,67 +1590,67 @@ msgstr ""
 "\n"
 "Prepínam späť na typ '%2'."
 
-#: src/gui/field/fieldlistedit.cpp:142
+#: src/gui/field/fieldlistedit.cpp:143
 #, kde-format
 msgid "Remove value"
 msgstr "Odstrániť hodnotu"
 
-#: src/gui/field/fieldlistedit.cpp:153
+#: src/gui/field/fieldlistedit.cpp:154
 #, kde-format
 msgid "Move value down"
 msgstr "Presunúť hodnotu dolu"
 
-#: src/gui/field/fieldlistedit.cpp:164
+#: src/gui/field/fieldlistedit.cpp:165
 #, kde-format
 msgid "Move value up"
 msgstr "Presunúť hodnotu hore"
 
-#: src/gui/field/fieldlistedit.cpp:414
+#: src/gui/field/fieldlistedit.cpp:415
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... a iné (et al.)"
 
-#: src/gui/field/fieldlistedit.cpp:419
+#: src/gui/field/fieldlistedit.cpp:420
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Pridať zo schránky"
 
-#: src/gui/field/fieldlistedit.cpp:420
+#: src/gui/field/fieldlistedit.cpp:421
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Pridať zoznam mien zo schránky"
 
-#: src/gui/field/fieldlistedit.cpp:482
+#: src/gui/field/fieldlistedit.cpp:483
 #, kde-format
 msgid "Add file..."
 msgstr "Pridať súbor..."
 
-#: src/gui/field/fieldlistedit.cpp:488
+#: src/gui/field/fieldlistedit.cpp:489
 #, kde-format
 msgid "Add reference ..."
 msgstr "Pridať referenciu..."
 
-#: src/gui/field/fieldlistedit.cpp:491
+#: src/gui/field/fieldlistedit.cpp:492
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Pridať referenciu zo schránky"
 
-#: src/gui/field/fieldlistedit.cpp:503
+#: src/gui/field/fieldlistedit.cpp:504
 #, kde-format
 msgid "File to Associate"
 msgstr "Súbor na asociáciu"
 
-#: src/gui/field/fieldlistedit.cpp:541 src/gui/field/fieldlistedit.cpp:615
+#: src/gui/field/fieldlistedit.cpp:542 src/gui/field/fieldlistedit.cpp:622
 #, kde-format
 msgid "Save file locally"
 msgstr "Uložiť súbor lokálne"
 
-#: src/gui/field/fieldlistedit.cpp:591
+#: src/gui/field/fieldlistedit.cpp:592
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Uložiť súbor '%1' lokálne"
 
-#: src/gui/field/fieldlistedit.cpp:602
+#: src/gui/field/fieldlistedit.cpp:605 src/gui/field/fieldlistedit.cpp:607
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1661,23 +1661,23 @@ msgstr ""
 "cesta by bola<br/><tt style=\"font-family: %3;\">%1</tt></p> <p>Absolútna "
 "cesta by bola<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:643
+#: src/gui/field/fieldlistedit.cpp:650
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Pridať kľúčové slová zo zoznamu"
 
-#: src/gui/field/fieldlistedit.cpp:644
+#: src/gui/field/fieldlistedit.cpp:651
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Pridať kľúčové slová ako vybrané z preddefinovaného zoznamu kľúčových slov"
 
-#: src/gui/field/fieldlistedit.cpp:647
+#: src/gui/field/fieldlistedit.cpp:654
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Pridať kľúčové slová zo schránky"
 
-#: src/gui/field/fieldlistedit.cpp:648
+#: src/gui/field/fieldlistedit.cpp:655
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "Pridať interpunkciou oddelený zoznam kľúčových slov zo schránky"
@@ -1718,37 +1718,37 @@ msgstr "Zobraziť prvok"
 msgid "Edit Element"
 msgstr "Upraviť prvok"
 
-#: src/gui/file/findduplicatesui.cpp:140
+#: src/gui/file/findduplicatesui.cpp:141
 #, kde-format
 msgid "Alternatives"
 msgstr "Alternatívy"
 
-#: src/gui/file/findduplicatesui.cpp:192
+#: src/gui/file/findduplicatesui.cpp:193
 #, kde-format
 msgid "None of the above"
 msgstr "Nič z uvedeného"
 
-#: src/gui/file/findduplicatesui.cpp:548
+#: src/gui/file/findduplicatesui.cpp:549
 #, kde-format
 msgid "Select your duplicates"
 msgstr "Vybrať vaše duplikáty"
 
-#: src/gui/file/findduplicatesui.cpp:568
+#: src/gui/file/findduplicatesui.cpp:569
 #, kde-format
 msgid "Previous Clique"
 msgstr "Predošlá kľučka"
 
-#: src/gui/file/findduplicatesui.cpp:570
+#: src/gui/file/findduplicatesui.cpp:571
 #, kde-format
 msgid "Next Clique"
 msgstr "Ďalšia kľučka"
 
-#: src/gui/file/findduplicatesui.cpp:649
+#: src/gui/file/findduplicatesui.cpp:650
 #, kde-format
 msgid "Find Duplicates"
 msgstr "Hľadať duplikáty"
 
-#: src/gui/file/findduplicatesui.cpp:680
+#: src/gui/file/findduplicatesui.cpp:683 src/gui/file/findduplicatesui.cpp:685
 #, kde-format
 msgid ""
 "Multiple elements are selected. Do you want to search for duplicates only "
@@ -1757,37 +1757,38 @@ msgstr ""
 "Sú vybrané viaceré prvky. Chcete hľadať duplikáty iba vo výbere alebo v "
 "celom dokumente?"
 
-#: src/gui/file/findduplicatesui.cpp:680
+#: src/gui/file/findduplicatesui.cpp:683 src/gui/file/findduplicatesui.cpp:685
 #, kde-format
 msgid "Search only in selection?"
 msgstr "Hľadať iba vo výbere?"
 
-#: src/gui/file/findduplicatesui.cpp:680
+#: src/gui/file/findduplicatesui.cpp:683 src/gui/file/findduplicatesui.cpp:685
 #, kde-format
 msgid "Only in selection"
 msgstr "Iba vo výbere"
 
-#: src/gui/file/findduplicatesui.cpp:680
+#: src/gui/file/findduplicatesui.cpp:683 src/gui/file/findduplicatesui.cpp:685
 #, kde-format
 msgid "Whole document"
 msgstr "Celý dokument"
 
-#: src/gui/file/findduplicatesui.cpp:703
+#: src/gui/file/findduplicatesui.cpp:710
 #, kde-format
 msgid "No duplicates were found."
 msgstr "Duplikáty neboli nájdené."
 
-#: src/gui/file/findduplicatesui.cpp:703
+#: src/gui/file/findduplicatesui.cpp:710
 #, kde-format
 msgid "No duplicates found"
 msgstr "Duplikáty neboli nájdené!"
 
-#: src/gui/file/findduplicatesui.cpp:710
+#: src/gui/file/findduplicatesui.cpp:717
 #, kde-format
 msgid "Merge Duplicates"
 msgstr "Zlúčiť duplikáty"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:118
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #, kde-format
 msgid ""
 "This will reset the settings to factory defaults. Should this affect only "
@@ -1796,28 +1797,31 @@ msgstr ""
 "Toto vynuluje nastavenia na továrenské hodnoty. Má to mať efekt iba na "
 "aktuálnu stranu alebo na všetky nastavenia?"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:118
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #, kde-format
 msgid "Reset to Defaults"
 msgstr "Obnoviť predvolené"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:118
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #, kde-format
 msgid "All settings"
 msgstr "Všetky nastavenia"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:115
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:118
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #, kde-format
 msgid "Only current page"
 msgstr "Iba aktuálnu stranu"
 
-#: src/gui/preferences/kbibtexpreferencesdialog.cpp:168
+#: src/gui/preferences/kbibtexpreferencesdialog.cpp:183
 #, kde-format
 msgid "Preferences"
 msgstr "Nastavenia"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:336
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:266
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:267
 #, kde-format
 msgid "Add..."
 msgstr "Pridať..."
@@ -1826,7 +1830,7 @@ msgstr "Pridať..."
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:340
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:424
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:272
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:273
 #, kde-format
 msgid "Remove"
 msgstr "Odstrániť"
@@ -1862,37 +1866,37 @@ msgstr "Štýl bibliografie:"
 msgid "PDF & Postscript"
 msgstr "PDF & Postscript"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:121
+#: src/gui/preferences/settingsfileexporterwidget.cpp:122
 #, kde-format
 msgid "Command for 'Copy Reference':"
 msgstr "Príkaz pre 'Kopírovať referenciu':"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:123
+#: src/gui/preferences/settingsfileexporterwidget.cpp:124
 #, kde-format
 msgid "No command"
 msgstr "Žiadny príkaz"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:131
+#: src/gui/preferences/settingsfileexporterwidget.cpp:132
 #, kde-format
 msgid "Detect LyX pipe automatically:"
 msgstr "Detekovať LyX rúru automaticky:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:137
+#: src/gui/preferences/settingsfileexporterwidget.cpp:138
 #, kde-format
 msgid "Manually specified LyX pipe:"
 msgstr "Ručne vybraná LyX rúra:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:150
+#: src/gui/preferences/settingsfileexporterwidget.cpp:155
 #, kde-format
 msgid "Backups when saving:"
 msgstr "Zálohy pri ukladaní:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:156
+#: src/gui/preferences/settingsfileexporterwidget.cpp:161
 #, kde-format
 msgid "Number of Backups:"
 msgstr "Počet záloh:"
 
-#: src/gui/preferences/settingsfileexporterwidget.cpp:178
+#: src/gui/preferences/settingsfileexporterwidget.cpp:183
 #, kde-format
 msgid "Saving and Exporting"
 msgstr "Ukladám a exportujem"
@@ -2254,7 +2258,7 @@ msgid "Add at bottom"
 msgstr "Pridať na spodok"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:926
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:118
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:119
 #, kde-format
 msgid "<qt>Structure:<ul><li>%1</li></ul>Example: %2</qt>"
 msgstr "<qt>Štruktúra:<ul><li>%1</li></ul>Príklad: %2</qt>"
@@ -2264,33 +2268,34 @@ msgstr "<qt>Štruktúra:<ul><li>%1</li></ul>Príklad: %2</qt>"
 msgid "Edit Id Suggestion"
 msgstr "Upraviť návrh Id"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:170
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:309
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:171
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:310
 #, kde-format
 msgid "Id Suggestions"
 msgstr "Návrhy Id"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:269
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:270
 #, kde-format
 msgid "Edit..."
 msgstr "Upraviť..."
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:275
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:276
 #, kde-format
 msgid "Up"
 msgstr "Hore"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:278
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:279
 #, kde-format
 msgid "Down"
 msgstr "Dolu"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:281
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:282
 #, kde-format
 msgid "Toggle Default"
 msgstr "Prepnúť predvolené"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:386
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:388
 #, kde-format
 msgid ""
 "All token have been removed from this suggestion. Remove suggestion itself "
@@ -2299,17 +2304,20 @@ msgstr ""
 "Všetky tokeny sa odstránili pre tento návrh. Odstrániť samotný návrh alebo "
 "obnoviť pôvodný návrh?"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:386
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:388
 #, kde-format
 msgid "Remove suggestion?"
 msgstr "Odstrániť návrh?"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:386
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:388
 #, kde-format
 msgid "Remove suggestion"
 msgstr "Odstrániť návrh"
 
-#: src/gui/preferences/settingsidsuggestionswidget.cpp:383
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:386
+#: src/gui/preferences/settingsidsuggestionswidget.cpp:388
 #, kde-format
 msgid "Revert changes"
 msgstr "Vrátiť zmeny"
@@ -2996,8 +3004,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "BibTeX editor od KDE"
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
-#, kde-format
-msgid "Copyright 2004-2023 Thomas Fischer"
+#, fuzzy, kde-format
+#| msgid "Copyright 2004-2023 Thomas Fischer"
+msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr "Copyright 2004-2023 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
@@ -3306,30 +3315,30 @@ msgstr "Žiadne referencie na poslanie to LyX/Kile."
 msgid "Could not open LyX server pipe '%1'."
 msgstr "Nemôžem otvoriť LyX server pipe '%1'."
 
-#: src/program/docklets/documentpreview.cpp:188
+#: src/program/docklets/documentpreview.cpp:205
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
 "Prepnúť medzi iba miestnymi súbormi a všetkými dokumentami vrátane "
 "vzdialených"
 
-#: src/program/docklets/documentpreview.cpp:199
+#: src/program/docklets/documentpreview.cpp:216
 #, kde-format
 msgid "Open in external program"
 msgstr "Otvoriť v externom programe"
 
-#: src/program/docklets/documentpreview.cpp:328
+#: src/program/docklets/documentpreview.cpp:345
 #, kde-format
 msgid "Refreshing..."
 msgstr "Obnovujem..."
 
-#: src/program/docklets/documentpreview.cpp:357
+#: src/program/docklets/documentpreview.cpp:374
 #, kde-format
 msgid "No documents to show."
 msgstr "Žiadne dokumenty na zobrazenie."
 
-#: src/program/docklets/documentpreview.cpp:364
-#: src/program/docklets/documentpreview.cpp:681
+#: src/program/docklets/documentpreview.cpp:381
+#: src/program/docklets/documentpreview.cpp:698
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3339,18 +3348,18 @@ msgstr ""
 "\">Zakážte obmedzenie</a> na miestne súbory, aby ste videli vzdialené "
 "dokumenty.</qt>"
 
-#: src/program/docklets/documentpreview.cpp:491
+#: src/program/docklets/documentpreview.cpp:508
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "Nemôžem zobraziť požadovanú časť"
 
-#: src/program/docklets/documentpreview.cpp:518
-#: src/program/docklets/documentpreview.cpp:522
+#: src/program/docklets/documentpreview.cpp:535
+#: src/program/docklets/documentpreview.cpp:539
 #, kde-format
 msgid "Loading..."
 msgstr "Načítava sa..."
 
-#: src/program/docklets/documentpreview.cpp:543
+#: src/program/docklets/documentpreview.cpp:560
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3364,7 +3373,7 @@ msgstr ""
 "\">Okular</a> pre KDE Frameworks&nbsp;5 na použitie jeho PDF komponentu.<br/"
 ">Okular pre KDE&nbsp;4 nebude fungovať."
 
-#: src/program/docklets/documentpreview.cpp:544
+#: src/program/docklets/documentpreview.cpp:561
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3372,7 +3381,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>Neviem, ako zobraziť mime typ '%1'.%2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:684
+#: src/program/docklets/documentpreview.cpp:701
 #, kde-format
 msgid ""
 "No documents to show.\n"
@@ -3381,22 +3390,23 @@ msgstr ""
 "Žiadny dokument na zobrazenie.\n"
 "Niektoré URL alebo súbory nebolo možné obnoviť."
 
-#: src/program/docklets/elementform.cpp:75
+#: src/program/docklets/elementform.cpp:76
 #, kde-format
 msgid "Automatically apply changes"
 msgstr "Automaticky použiť zmeny"
 
-#: src/program/docklets/elementform.cpp:91
+#: src/program/docklets/elementform.cpp:92
 #, kde-format
 msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
 msgstr "Sú neuložené zmeny. Prosím, stlačte buď 'Použiť' alebo 'Vynulovať'."
 
-#: src/program/docklets/elementform.cpp:98
+#: src/program/docklets/elementform.cpp:99
 #, kde-format
 msgid "Reset"
 msgstr "Obnoviť"
 
-#: src/program/docklets/elementform.cpp:186
+#: src/program/docklets/elementform.cpp:189
+#: src/program/docklets/elementform.cpp:191
 #, kde-format
 msgid ""
 "The current element got modified.\n"
@@ -3405,17 +3415,20 @@ msgstr ""
 "Aktuálny prvok sa zmenil.\n"
 "Použiť alebo zahodiť zmeny?"
 
-#: src/program/docklets/elementform.cpp:186
+#: src/program/docklets/elementform.cpp:189
+#: src/program/docklets/elementform.cpp:191
 #, kde-format
 msgid "Element modified"
 msgstr "Prvok zmenený"
 
-#: src/program/docklets/elementform.cpp:186
+#: src/program/docklets/elementform.cpp:189
+#: src/program/docklets/elementform.cpp:191
 #, kde-format
 msgid "Apply changes"
 msgstr "Použiť zmeny"
 
-#: src/program/docklets/elementform.cpp:186
+#: src/program/docklets/elementform.cpp:189
+#: src/program/docklets/elementform.cpp:191
 #, kde-format
 msgid "Discard changes"
 msgstr "Zahodiť zmeny"
@@ -3754,37 +3767,37 @@ msgstr "Zlyhalo získanie údajov zo Zotera"
 msgid "No groups available or no permissions"
 msgstr "Nie sú dostupné skupiny alebo oprávnenia"
 
-#: src/program/documentlist.cpp:55
+#: src/program/documentlist.cpp:57
 #, kde-format
 msgid "One level up"
 msgstr "O úroveň vyššie"
 
-#: src/program/documentlist.cpp:59
+#: src/program/documentlist.cpp:61
 #, kde-format
 msgid "Go to Home folder"
 msgstr "Prejsť na domáci priečinok"
 
-#: src/program/documentlist.cpp:199
+#: src/program/documentlist.cpp:205
 #, kde-format
 msgid "<br/><small>located in <b>%1</b></small>"
 msgstr "<br/><small>nachádza sa v <b>%1</b></small>"
 
-#: src/program/documentlist.cpp:203
+#: src/program/documentlist.cpp:209
 #, kde-format
 msgid "Favorite"
 msgstr "Obľúbené"
 
-#: src/program/documentlist.cpp:205 src/program/documentlist.cpp:395
+#: src/program/documentlist.cpp:211 src/program/documentlist.cpp:407
 #, kde-format
 msgid "Recently Used"
 msgstr "Nedávno použité"
 
-#: src/program/documentlist.cpp:209
+#: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Modified"
 msgstr "Zmenené"
 
-#: src/program/documentlist.cpp:262
+#: src/program/documentlist.cpp:270 src/program/documentlist.cpp:272
 #, kde-format
 msgid ""
 "The current document has to be saved before switching the viewer/editor "
@@ -3793,122 +3806,122 @@ msgstr ""
 "Aktuálny dokument musí byť uložený pred prepnutím komponentu prehliadača/"
 "editora."
 
-#: src/program/documentlist.cpp:262
+#: src/program/documentlist.cpp:270 src/program/documentlist.cpp:272
 #, kde-format
 msgid "Save before switching?"
 msgstr "Uložiť pred prepnutím?"
 
-#: src/program/documentlist.cpp:262
+#: src/program/documentlist.cpp:270 src/program/documentlist.cpp:272
 #, kde-format
 msgid "Save document"
 msgstr "Uložiť dokument"
 
-#: src/program/documentlist.cpp:262
+#: src/program/documentlist.cpp:270 src/program/documentlist.cpp:272
 #, kde-format
 msgid "Do not switch"
 msgstr "Neprepínať"
 
-#: src/program/documentlist.cpp:275
+#: src/program/documentlist.cpp:287
 #, kde-format
 msgid "Close File"
 msgstr "Zatvoriť súbor"
 
-#: src/program/documentlist.cpp:279
+#: src/program/documentlist.cpp:291
 #, kde-format
 msgid "Open File"
 msgstr "Otvoriť súbor"
 
-#: src/program/documentlist.cpp:284
+#: src/program/documentlist.cpp:296
 #, kde-format
 msgid "Open with"
 msgstr "Otvorí pomocou"
 
-#: src/program/documentlist.cpp:288
+#: src/program/documentlist.cpp:300
 #, kde-format
 msgid "Remove from Favorites"
 msgstr "Odstrániť z obľúbených"
 
-#: src/program/documentlist.cpp:292
+#: src/program/documentlist.cpp:304
 #, kde-format
 msgid "Add to Favorites"
 msgstr "Pridať do obľúbených"
 
-#: src/program/documentlist.cpp:390
+#: src/program/documentlist.cpp:402
 #, kde-format
 msgid "Open Files"
 msgstr "Otvoriť súbory"
 
-#: src/program/documentlist.cpp:400
+#: src/program/documentlist.cpp:412
 #, kde-format
 msgid "Favorites"
 msgstr "Obľúbené"
 
-#: src/program/documentlist.cpp:403
+#: src/program/documentlist.cpp:415
 #, kde-format
 msgid "Filesystem Browser"
 msgstr "Prehliadač súborového systému"
 
-#: src/program/mainwindow.cpp:92
+#: src/program/mainwindow.cpp:93
 #, kde-format
 msgid "Show Panels"
 msgstr "Zobrazovať panely"
 
-#: src/program/mainwindow.cpp:97
+#: src/program/mainwindow.cpp:98
 #, kde-format
 msgid "Recently used files"
 msgstr "Nedávno použité súbory"
 
-#: src/program/mainwindow.cpp:114
+#: src/program/mainwindow.cpp:115
 #, kde-format
 msgid "List of Documents"
 msgstr "Zoznam dokumentov"
 
-#: src/program/mainwindow.cpp:124
+#: src/program/mainwindow.cpp:125
 #, kde-format
 msgid "List of Values"
 msgstr "Zoznam hodnôt"
 
-#: src/program/mainwindow.cpp:133
+#: src/program/mainwindow.cpp:134
 #, kde-format
 msgid "Statistics"
 msgstr "Štatistika"
 
-#: src/program/mainwindow.cpp:142
+#: src/program/mainwindow.cpp:143
 #, kde-format
 msgid "Search Results"
 msgstr "Výsledky hľadania"
 
-#: src/program/mainwindow.cpp:153
+#: src/program/mainwindow.cpp:154
 #, kde-format
 msgid "Online Search"
 msgstr "Online hľadanie"
 
-#: src/program/mainwindow.cpp:163
+#: src/program/mainwindow.cpp:164
 #, kde-format
 msgid "Zotero"
 msgstr "Zotero"
 
-#: src/program/mainwindow.cpp:174
+#: src/program/mainwindow.cpp:175
 #, kde-format
 msgid "Reference Preview"
 msgstr "Náhľad referencie"
 
-#: src/program/mainwindow.cpp:183
+#: src/program/mainwindow.cpp:184
 #, kde-format
 msgid "Document Preview"
 msgstr "Náhľad dokumentu"
 
-#: src/program/mainwindow.cpp:194
+#: src/program/mainwindow.cpp:195
 #, kde-format
 msgid "Element Editor"
 msgstr "Editor prvku"
 
-#: src/program/mainwindow.cpp:204
+#: src/program/mainwindow.cpp:205
 #, kde-format
 msgid "File Settings"
 msgstr "Nastavenie súboru"
 
-#: src/program/mainwindow.cpp:306
+#: src/program/mainwindow.cpp:307
 #, kde-format
 msgid ""
 "Creating a new document of mime type '%1' failed as no editor component "
@@ -3917,27 +3930,27 @@ msgstr ""
 "Vytvorenie nového dokumentu mime typu '%1' zlyhalo, pretože komponent "
 "nemohol byť inštancovaný."
 
-#: src/program/mainwindow.cpp:306
+#: src/program/mainwindow.cpp:307
 #, kde-format
 msgid "Creating document failed"
 msgstr "Vytvorenie dokumentu zlyhalo"
 
-#: src/program/mainwindow.cpp:328
+#: src/program/mainwindow.cpp:329
 #, kde-format
 msgid "Open file"
 msgstr "Otvoriť súbor"
 
-#: src/program/mainwindow.cpp:370 src/program/program.cpp:48
+#: src/program/mainwindow.cpp:371 src/program/program.cpp:48
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
 
-#: src/program/mainwindow.cpp:370
+#: src/program/mainwindow.cpp:371
 #, kde-format
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:458 src/program/mainwindow.cpp:460
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -3946,17 +3959,17 @@ msgstr ""
 "KBibTeX nie je predvolený editor bibliografických formátov ako BibTeX alebo "
 "RIS."
 
-#: src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:458 src/program/mainwindow.cpp:460
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Predvolený editor bibliografie"
 
-#: src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:458 src/program/mainwindow.cpp:460
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Nastaviť ako predvolený editor"
 
-#: src/program/mainwindow.cpp:455
+#: src/program/mainwindow.cpp:458 src/program/mainwindow.cpp:460
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Ponechať nastavenia nezmenené"
@@ -3996,22 +4009,22 @@ msgstr "Otvoriť..."
 msgid "List of recently used files:"
 msgstr "Zoznam nedávno použitých súborov:"
 
-#: src/program/mdiwidget.cpp:268
+#: src/program/mdiwidget.cpp:266
 #, kde-format
 msgid "No part available for file of mime type '%1'."
 msgstr "Nie je dostupná časť pre súbor mime typu '%1'."
 
-#: src/program/mdiwidget.cpp:268 src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:266 src/program/mdiwidget.cpp:268
 #, kde-format
 msgid "No Part Available"
 msgstr "Nedostupná časť"
 
-#: src/program/mdiwidget.cpp:270
+#: src/program/mdiwidget.cpp:268
 #, kde-format
 msgid "No part available for file '%1'."
 msgstr "Nedostupná časť pre súbor '%1'."
 
-#: src/program/openfileinfo.cpp:247
+#: src/program/openfileinfo.cpp:287
 #, kde-format
 msgid "Unnamed-%1"
 msgstr "Nepomenované-%1"
