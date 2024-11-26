@@ -1,14 +1,14 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the kbibtex package.
 #
 # SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Eloy Cuadra <ecuadra@eloihr.net>
-# Raul Gonzalez <raulgf83@gmail.com>, 2014, 2015.
+# SPDX-FileCopyrightText: 2014, 2015 Raul Gonzalez <raulgf83@gmail.com>
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-25 01:53+0000\n"
-"PO-Revision-Date: 2024-04-14 20:26+0200\n"
+"PO-Revision-Date: 2024-11-25 19:11+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.1\n"
+"X-Generator: Lokalize 24.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2699,10 +2699,9 @@ msgid "Year:"
 msgstr "Año:"
 
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Google Books"
-msgstr "Google Scholar"
+msgstr "Google Books"
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format

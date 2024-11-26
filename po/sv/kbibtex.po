@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-25 01:53+0000\n"
-"PO-Revision-Date: 2024-05-02 15:00+0200\n"
+"PO-Revision-Date: 2024-11-25 18:29+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 24.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2680,10 +2680,9 @@ msgid "Year:"
 msgstr "År:"
 
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Google Books"
-msgstr "Google Scholar"
+msgstr "Google böcker"
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format

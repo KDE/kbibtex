@@ -2651,10 +2651,9 @@ msgid "Year:"
 msgstr "年份："
 
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Google Books"
-msgstr "谷歌学术"
+msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
