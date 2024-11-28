@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-25 03:22+0000\n"
-"PO-Revision-Date: 2023-12-16 09:32+0100\n"
+"PO-Revision-Date: 2024-11-25 07:15+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
-"X-Generator: Poedit 3.4.1\n"
+"X-Generator: Poedit 3.5\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3009,10 +3009,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "BibTeX urejevalnik v okolju KDE"
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2023 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
-msgstr "Copyright 2004-2023 Thomas Fischer"
+msgstr "Copyright 2004-2024 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
 #, kde-format
