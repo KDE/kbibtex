@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-25 03:22+0000\n"
-"PO-Revision-Date: 2024-02-09 23:22+0100\n"
+"PO-Revision-Date: 2024-08-19 22:37+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -3001,10 +3001,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "KDE의 BibTeX 편집기"
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2023 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
-msgstr "Copyright 2004-2023 Thomas Fischer"
+msgstr "Copyright 2004-2024 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
 #, kde-format
