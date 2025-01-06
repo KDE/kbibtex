@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-11-25 03:22+0000\n"
-"PO-Revision-Date: 2024-02-25 07:00+0100\n"
+"PO-Revision-Date: 2025-01-03 21:16+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -861,7 +861,7 @@ msgstr "Indeksa Sortitolo"
 #: src/config/bibtexfields.cpp:278
 #, kde-format
 msgid "Entry Options"
-msgstr "Eniraj Opcioj"
+msgstr "Eniraj Elektebloj"
 
 #: src/config/bibtexfields.cpp:279
 #, kde-format
@@ -1156,7 +1156,7 @@ msgstr "La sekva loka dokumento estas asocionta kun eniro '%1':"
 #: src/gui/element/elementeditor.cpp:198
 #, kde-format
 msgid "Options"
-msgstr "Opcioj"
+msgstr "Elektebloj"
 
 #: src/gui/element/elementeditor.cpp:204
 #, kde-format
@@ -3010,7 +3010,7 @@ msgstr "BibTeX-redaktilo de KDE"
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
 #, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
-msgstr ""
+msgstr "Kopirajto 2004-2024 Thomas Fischer"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
 #, kde-format
