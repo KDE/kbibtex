@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2024 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -92,8 +92,6 @@ public:
 
         messageList = new QListWidget(this);
         layout->addWidget(messageList, 1, 0, 4, 4);
-
-        setupMenus();
     }
 
     void setProgress(int pos, int total) {
@@ -108,53 +106,74 @@ public:
         }
     }
 
-    void setupMenus() {
+    void setupMenus(QList<OnlineSearchAbstract*> &onlineSearchList)
+    {
         QMenu *menu = new QMenu(buttonStartTest);
         buttonStartTest->setMenu(menu);
 
-        /// ** Online Search **
-        actionStartOnlineSearchTests = new QAction(QStringLiteral("Online Search"), m_parent);
-        connect(actionStartOnlineSearchTests, &QAction::triggered, m_parent, &KBibTeXTest::startOnlineSearchTests);
-        menu->addAction(actionStartOnlineSearchTests);
+        QMenu *onlineSearchMenu = new QMenu(QStringLiteral("Online Search"), menu);
+        menu->addMenu(onlineSearchMenu);
+        actionStartOnlineSearchTests = new QAction(QStringLiteral("All engines"), m_parent);
+        connect(actionStartOnlineSearchTests, &QAction::triggered, m_parent, [this]() {
+            m_parent->onlineSearchActiveList = QList(m_parent->onlineSearchList);
+            m_parent->currentOnlineSearch = m_parent->onlineSearchActiveList.constBegin();
+            m_parent->startOnlineSearchTests();
+        });
+        onlineSearchMenu->addAction(actionStartOnlineSearchTests);
+
+        onlineSearchMenu->addSeparator();
+
+        for (const auto onlineSearch : onlineSearchList) {
+            QAction *searchAction = new QAction(onlineSearch->label(), m_parent);
+            connect(searchAction, &QAction::triggered, m_parent, [this, onlineSearch]() {
+                m_parent->onlineSearchActiveList = {onlineSearch};
+                m_parent->currentOnlineSearch = m_parent->onlineSearchActiveList.constBegin();
+                m_parent->startOnlineSearchTests();
+            });
+            onlineSearchMenu->addAction(searchAction);
+        }
     }
 
     void setBusy(bool isBusy) {
         buttonStartTest->setEnabled(!isBusy);
-        actionStartOnlineSearchTests->setEnabled(!isBusy);
     }
 };
+
 
 KBibTeXTest::KBibTeXTest(QWidget *parent)
         : QDialog(parent), m_running(false), m_isBusy(false)
 {
-    m_onlineSearchList << new OnlineSearchAcmPortal(this);
-    m_onlineSearchList << new OnlineSearchArXiv(this);
-    m_onlineSearchList << new OnlineSearchBibsonomy(this);
-    m_onlineSearchList << new OnlineSearchCERNDS(this);
-    m_onlineSearchList << new OnlineSearchGoogleBooks(this);
-    m_onlineSearchList << new OnlineSearchGoogleScholar(this);
-    m_onlineSearchList << new OnlineSearchIDEASRePEc(this);
-    m_onlineSearchList << new OnlineSearchIEEEXplore(this);
-    m_onlineSearchList << new OnlineSearchIngentaConnect(this);
-    m_onlineSearchList << new OnlineSearchInspireHep(this);
+    onlineSearchList << new OnlineSearchAcmPortal(this);
+    onlineSearchList << new OnlineSearchArXiv(this);
+    onlineSearchList << new OnlineSearchBibsonomy(this);
+    onlineSearchList << new OnlineSearchCERNDS(this);
+    onlineSearchList << new OnlineSearchGoogleBooks(this);
+    onlineSearchList << new OnlineSearchGoogleScholar(this);
+    onlineSearchList << new OnlineSearchIDEASRePEc(this);
+    onlineSearchList << new OnlineSearchIEEEXplore(this);
+    onlineSearchList << new OnlineSearchIngentaConnect(this);
+    onlineSearchList << new OnlineSearchInspireHep(this);
 #ifdef HAVE_WEBENGINEWIDGETS
-    m_onlineSearchList << new OnlineSearchJStor(this);
+    onlineSearchList << new OnlineSearchJStor(this);
 #endif // HAVE_WEBENGINEWIDGETS
-    m_onlineSearchList << new OnlineSearchMathSciNet(this);
-    m_onlineSearchList << new OnlineSearchMRLookup(this);
-    m_onlineSearchList << new OnlineSearchPubMed(this);
-    m_onlineSearchList << new OnlineSearchScienceDirect(this);
-    m_onlineSearchList << new OnlineSearchSOANASAADS(this);
-    m_onlineSearchList << new OnlineSearchSpringerLink(this);
-    m_onlineSearchList << new OnlineSearchBioRxiv(this);
-    m_onlineSearchList << new OnlineSearchSemanticScholar(this);
-    m_onlineSearchList << new OnlineSearchUnpaywall(this);
-    m_onlineSearchList << new OnlineSearchZbMath(this);
-    m_currentOnlineSearch = m_onlineSearchList.constBegin();
+    onlineSearchList << new OnlineSearchMathSciNet(this);
+    onlineSearchList << new OnlineSearchMRLookup(this);
+    onlineSearchList << new OnlineSearchPubMed(this);
+    onlineSearchList << new OnlineSearchScienceDirect(this);
+    onlineSearchList << new OnlineSearchSOANASAADS(this);
+    onlineSearchList << new OnlineSearchSpringerLink(this);
+    onlineSearchList << new OnlineSearchBioRxiv(this);
+    onlineSearchList << new OnlineSearchSemanticScholar(this);
+    onlineSearchList << new OnlineSearchUnpaywall(this);
+    onlineSearchList << new OnlineSearchZbMath(this);
+    onlineSearchActiveList = QList(onlineSearchList);
+    currentOnlineSearch = onlineSearchActiveList.constBegin();
 
     setWindowTitle(QStringLiteral("KBibTeX Test Suite"));
 
     m_testWidget = new TestWidget(this);
+    m_testWidget->setupMenus(onlineSearchList);
+
 #if QT_VERSION >= 0x050b00
     const int fontSize = m_testWidget->fontMetrics().horizontalAdvance(QLatin1Char('a'));
 #else // QT_VERSION >= 0x050b00
@@ -231,21 +250,21 @@ void KBibTeXTest::startOnlineSearchTests()
 
 void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
-    if (m_currentOnlineSearch != m_onlineSearchList.constEnd())
-        disconnect(*m_currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
+    if (currentOnlineSearch != onlineSearchActiveList.constEnd())
+        disconnect(*currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
     if (searchResult == OnlineSearchAbstract::resultNoError) {
         if (m_currentOnlineSearchNumFoundEntries == 0)
-            addMessage(QString(QStringLiteral("Got no error message searching '%1', but found NO entries")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Error);
+            addMessage(QString(QStringLiteral("Got no error message searching '%1', but found NO entries")).arg((*currentOnlineSearch)->label()), MessageStatus::Error);
         else
-            addMessage(QString(QStringLiteral("No error searching '%1', found %2 entries")).arg((*m_currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), MessageStatus::Ok);
+            addMessage(QString(QStringLiteral("No error searching '%1', found %2 entries")).arg((*currentOnlineSearch)->label()).arg(m_currentOnlineSearchNumFoundEntries), MessageStatus::Ok);
     } else if (searchResult == OnlineSearchAbstract::resultAuthorizationRequired) {
-        addMessage(QString(QStringLiteral("Authorization required for '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Auth);
+        addMessage(QString(QStringLiteral("Authorization required for '%1'")).arg((*currentOnlineSearch)->label()), MessageStatus::Auth);
     } else if (searchResult == OnlineSearchAbstract::resultNetworkError) {
-        addMessage(QString(QStringLiteral("Network error for '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Network);
+        addMessage(QString(QStringLiteral("Network error for '%1'")).arg((*currentOnlineSearch)->label()), MessageStatus::Network);
     } else {
-        addMessage(QString(QStringLiteral("Error searching '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Error);
+        addMessage(QString(QStringLiteral("Error searching '%1'")).arg((*currentOnlineSearch)->label()), MessageStatus::Error);
     }
-    m_currentOnlineSearch++;
+    currentOnlineSearch++;
 
     progress(-1, -1);
     processNextSearch();
@@ -258,31 +277,31 @@ void KBibTeXTest::progress(int pos, int total)
 
 void KBibTeXTest::processNextSearch()
 {
-    if (m_running && m_currentOnlineSearch != m_onlineSearchList.constEnd()) {
+    if (m_running && currentOnlineSearch != onlineSearchActiveList.constEnd()) {
         setBusy(true);
         m_currentOnlineSearchNumFoundEntries = 0;
-        addMessage(QString(QStringLiteral("Searching '%1'")).arg((*m_currentOnlineSearch)->label()), MessageStatus::Info);
+        addMessage(QString(QStringLiteral("Searching '%1'")).arg((*currentOnlineSearch)->label()), MessageStatus::Info);
 
         QMap<OnlineSearchAbstract::QueryKey, QString> query;
-        if (qobject_cast<OnlineSearchSemanticScholar *>(*m_currentOnlineSearch) != nullptr)
+        if (qobject_cast<OnlineSearchSemanticScholar*>(*currentOnlineSearch) != nullptr)
             /// Semantic Scholar cannot search for last names, but for DOIs or arXiv IDs instead
             query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1002/smj.863"));
-        else if (qobject_cast<OnlineSearchUnpaywall *>(*m_currentOnlineSearch) != nullptr)
+        else if (qobject_cast<OnlineSearchUnpaywall*>(*currentOnlineSearch) != nullptr)
             /// Unpaywall cannot search for last names, but for DOIs of open access publications
             query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1002/andp.201600209"));
-        else if (qobject_cast<OnlineSearchGoogleBooks *>(*m_currentOnlineSearch) != nullptr)
+        else if (qobject_cast<OnlineSearchGoogleBooks*>(*currentOnlineSearch) != nullptr)
             /// Google Books can only search for ISBN
             query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("1493905244"));
         else {
             static const QStringList lastNames{QStringLiteral("Smith"), QStringLiteral("Jones"), QStringLiteral("Andersson"), QStringLiteral("Ivanova"), QStringLiteral("Wang"), QStringLiteral("Gonzalez"), QStringLiteral("Garcia"), QStringLiteral("Lopez"), QStringLiteral("Ahmed"), QStringLiteral("Nkosi"), QStringLiteral("Kim"), QStringLiteral("Chen"), QStringLiteral("Devi"), QStringLiteral("Khan"), QStringLiteral("Johansson"), QStringLiteral("Sharipov"), QStringLiteral("Korhonen"), QStringLiteral("Muller"), QStringLiteral("Murphy"), QStringLiteral("Papadopoulos"), QStringLiteral("Rossi"), QStringLiteral("Hernandez"), QStringLiteral("Williams"), QStringLiteral("Zhang"), QStringLiteral("Singh"), QStringLiteral("Kumar")};
             query.insert(OnlineSearchAbstract::QueryKey::Author, lastNames[QRandomGenerator::global()->bounded(lastNames.count())]);
         }
-        connect(*m_currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
-        connect(*m_currentOnlineSearch, &OnlineSearchAbstract::foundEntry, this, [this]() {
+        connect(*currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
+        connect(*currentOnlineSearch, &OnlineSearchAbstract::foundEntry, this, [this]() {
             ++m_currentOnlineSearchNumFoundEntries;
         });
-        connect(*m_currentOnlineSearch, &OnlineSearchAbstract::progress, this, &KBibTeXTest::progress);
-        (*m_currentOnlineSearch)->startSearch(query, 3);
+        connect(*currentOnlineSearch, &OnlineSearchAbstract::progress, this, &KBibTeXTest::progress);
+        (*currentOnlineSearch)->startSearch(query, 3);
     } else {
         addMessage(QStringLiteral("Done testing"), MessageStatus::Info);
         setBusy(false);

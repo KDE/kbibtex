@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,6 +34,9 @@ class KBibTeXTest : public QDialog
 public:
     explicit KBibTeXTest(QWidget *parent = nullptr);
 
+    QList<OnlineSearchAbstract*>::ConstIterator currentOnlineSearch;
+    QList<OnlineSearchAbstract*> onlineSearchList, onlineSearchActiveList;
+
 public Q_SLOTS:
     void startOnlineSearchTests();
 
@@ -49,8 +52,6 @@ private:
     TestWidget *m_testWidget;
     bool m_isBusy;
 
-    QList<OnlineSearchAbstract *> m_onlineSearchList;
-    QList<OnlineSearchAbstract *>::ConstIterator m_currentOnlineSearch;
     int m_currentOnlineSearchNumFoundEntries;
 
     void addMessage(const QString &message, const MessageStatus messageStatus);
