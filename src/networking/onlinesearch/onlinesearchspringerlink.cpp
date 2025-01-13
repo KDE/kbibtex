@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -116,7 +116,7 @@ public:
         label->setBuddy(numResultsField);
         layout->addRow(label, numResultsField);
         numResultsField->setMinimum(3);
-        numResultsField->setMaximum(100);
+        numResultsField->setMaximum(25);
 
         lineEditFreeText->setFocus(Qt::TabFocusReason);
 
@@ -178,29 +178,42 @@ public:
 
         const QStringList titleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditTitle->text());
         for (const QString &titleChunk : titleChunks) {
-            queryString += QString(QStringLiteral(" title:%1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
+            /// Query parameter 'title:' is a Premium Plan feature at Springer Nature.
+            // queryString += QString(QStringLiteral(" title:%1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
+            /// Thus, searching just for the title's text without telling API that this is a title
+            queryString += QString(QStringLiteral(" %1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
         }
 
         const QStringList bookTitleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditBookTitle->text());
         for (const QString &titleChunk : bookTitleChunks) {
-            queryString += QString(QStringLiteral(" ( journal:%1 OR book:%1 )")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
+            /// Query parameters 'journal:' and 'book:' are a Premium Plan features at Springer Nature.
+            // queryString += QString(QStringLiteral(" ( journal:%1 OR book:%1 )")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
+            /// Thus, searching just for the book title's text without telling API that this is a journal or book
+            queryString += QString(QStringLiteral(" %1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
         }
 
         const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(form->lineEditAuthorEditor->text());
         for (const QString &author : authors) {
-            queryString += QString(QStringLiteral(" name:%1")).arg(Encoder::instance().convertToPlainAscii(author));
+            /// Query parameter 'name:' is a Premium Plan feature at Springer Nature.
+            // queryString += QString(QStringLiteral(" name:%1")).arg(Encoder::instance().convertToPlainAscii(author));
+            /// Thus, searching just for the name's text without telling API that this is a name
+            queryString += QString(QStringLiteral(" %1")).arg(Encoder::instance().convertToPlainAscii(author));
         }
 
         const QString year = form->lineEditYear->text();
-        if (!year.isEmpty())
-            queryString += QString(QStringLiteral(" year:%1")).arg(year);
+        if (!year.isEmpty()) {
+            /// Query parameter 'year:' is a Premium Plan feature at Springer Nature.
+            // queryString += QString(QStringLiteral(" year:%1")).arg(year);
+            /// Thus, searching just for the year's text without telling API that this is a year
+            queryString += QString(QStringLiteral(" %1")).arg(year);
+        }
 
         const int numResults = form->numResultsField->value();
 
         queryString = queryString.simplified();
         QUrlQuery query(queryUrl);
         query.addQueryItem(QStringLiteral("q"), queryString);
-        query.addQueryItem(QStringLiteral("p"), QString::number(numResults));
+        query.addQueryItem(QStringLiteral("p"), QString::number(qMin(1, qMax(25, numResults)))); //< Enforce sane number of request (max 25 for free Basic plan)
         query.addQueryItem(QStringLiteral("api_key"), springerMetadataKey);
         queryUrl.setQuery(query);
 
@@ -214,12 +227,18 @@ public:
 
         const QStringList titleChunks = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Title]);
         for (const QString &titleChunk : titleChunks) {
-            queryString += QString(QStringLiteral(" title:%1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
+            /// Query parameter 'title:' is a Premium Plan feature at Springer Nature.
+            // queryString += QString(QStringLiteral(" title:%1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
+            /// Thus, searching just for the title's text without telling API that this is a title
+            queryString += QString(QStringLiteral(" %1")).arg(Encoder::instance().convertToPlainAscii(titleChunk));
         }
 
         const QStringList authors = OnlineSearchAbstract::splitRespectingQuotationMarks(query[QueryKey::Author]);
         for (const QString &author : authors) {
-            queryString += QString(QStringLiteral(" name:%1")).arg(Encoder::instance().convertToPlainAscii(author));
+            /// Query parameter 'name:' is a Premium Plan feature at Springer Nature.
+            // queryString += QString(QStringLiteral(" name:%1")).arg(Encoder::instance().convertToPlainAscii(author));
+            /// Thus, searching just for the name's text without telling API that this is a name
+            queryString += QString(QStringLiteral(" %1")).arg(Encoder::instance().convertToPlainAscii(author));
         }
 
         QString year = query[QueryKey::Year];
@@ -228,14 +247,17 @@ public:
             const QRegularExpressionMatch yearRegExpMatch = yearRegExp.match(year);
             if (yearRegExpMatch.hasMatch()) {
                 year = yearRegExpMatch.captured(0);
-                queryString += QString(QStringLiteral(" year:%1")).arg(year);
+                /// Query parameter 'year:' is a Premium Plan feature at Springer Nature.
+                // queryString += QString(QStringLiteral(" year:%1")).arg(year);
+                /// Thus, searching just for the year's text without telling API that this is a year
+                queryString += QString(QStringLiteral(" %1")).arg(year);
             }
         }
 
         queryString = queryString.simplified();
         QUrlQuery q(queryUrl);
         q.addQueryItem(QStringLiteral("q"), queryString);
-        q.addQueryItem(QStringLiteral("p"), QString::number(numResults));
+        q.addQueryItem(QStringLiteral("p"), QString::number(qMin(1, qMax(25, numResults)))); //< Enforce sane number of request (max 25 for free Basic plan)
         q.addQueryItem(QStringLiteral("api_key"), springerMetadataKey);
         queryUrl.setQuery(q);
 
@@ -449,10 +471,10 @@ void OnlineSearchSpringerLink::startSearch(const QMap<QueryKey, QString> &query,
 QString OnlineSearchSpringerLink::label() const
 {
 #ifdef HAVE_KF
-    return i18n("SpringerLink");
+    return i18n("Springer Nature Link");
 #else // HAVE_KF
     //= onlinesearch-springerlink-label
-    return QObject::tr("SpringerLink");
+    return QObject::tr("Springer Nature Link");
 #endif // HAVE_KF
 }
 

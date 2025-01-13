@@ -33,9 +33,9 @@
  *
  * On the subject of having multiple "constraints" (search terms) in
  * a search, Springer's documentation states: "Each constraint that
- * appears in your request will automatically be ANDed with all the others
+ * appears in your request will automatically be AND'ed with all the others
  * For instance, a request including constraints: "title:bone+name:Jones"
- * is the equivilent to the request containing constraints concatenated by
+ * is the equivalent to the request containing constraints concatenated by
  * the AND operator: "title:bone%20AND%20name:Jones".
  * (source: https://dev.springernature.com/adding-constraints)
  */

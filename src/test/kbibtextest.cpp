@@ -286,6 +286,9 @@ void KBibTeXTest::processNextSearch()
         if (qobject_cast<OnlineSearchSemanticScholar*>(*currentOnlineSearch) != nullptr)
             /// Semantic Scholar cannot search for last names, but for DOIs or arXiv IDs instead
             query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1002/smj.863"));
+        else if (qobject_cast<OnlineSearchSpringerLink*>(*currentOnlineSearch) != nullptr)
+            /// Searching for author is a Premium Plan feature at Springer Nature, so search for DOI instead
+            query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1007/s42864-024-00293-x"));
         else if (qobject_cast<OnlineSearchUnpaywall*>(*currentOnlineSearch) != nullptr)
             /// Unpaywall cannot search for last names, but for DOIs of open access publications
             query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1002/andp.201600209"));
