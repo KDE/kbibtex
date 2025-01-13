@@ -182,7 +182,11 @@ void FileSettingsWidget::setupGUI()
     m_checkBoxProtectCasing = new QCheckBox(i18n("Protect Titles"), this);
     m_checkBoxProtectCasing->setTristate(true);
     layout->addRow(i18n("Protect Casing?"), m_checkBoxProtectCasing);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 8, 0))
     connect(m_checkBoxProtectCasing, &QCheckBox::stateChanged, this, &FileSettingsWidget::widgetsChanged);
+#else // (QT_VERSION >= QT_VERSION_CHECK(6, 8, 0))
+    connect(m_checkBoxProtectCasing, &QCheckBox::checkStateChanged, this, &FileSettingsWidget::widgetsChanged);
+#endif // (QT_VERSION < QT_VERSION_CHECK(6, 8, 0))
 
     m_comboBoxPersonNameFormatting = new QComboBox(this);
     m_comboBoxPersonNameFormatting->setObjectName(QStringLiteral("comboBoxPersonNameFormatting"));
@@ -203,5 +207,9 @@ void FileSettingsWidget::setupGUI()
 
     m_checkBoxSortedByIdentifier = new QCheckBox(i18n("Sort by identifier"), this);
     layout->addRow(i18n("Entry Sorting"), m_checkBoxSortedByIdentifier);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 8, 0))
     connect(m_checkBoxSortedByIdentifier, &QCheckBox::stateChanged, this, &FileSettingsWidget::widgetsChanged);
+#else // (QT_VERSION >= QT_VERSION_CHECK(6, 8, 0))
+    connect(m_checkBoxSortedByIdentifier, &QCheckBox::checkStateChanged, this, &FileSettingsWidget::widgetsChanged);
+#endif // (QT_VERSION < QT_VERSION_CHECK(6, 8, 0))
 }
