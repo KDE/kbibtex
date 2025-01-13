@@ -246,5 +246,3 @@ void OnlineSearchGoogleBooks::sanitizeEntry(QSharedPointer<Entry> entry)
         entry->insert(Entry::ftEdition, Value() << QSharedPointer<PlainText>(new PlainText(match.captured(QStringLiteral("number")))));
     }
 }
-
-#include "onlinesearchgooglebooks.moc"
