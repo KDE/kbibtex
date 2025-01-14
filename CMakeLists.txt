@@ -153,7 +153,6 @@ if(BUILD_KPART OR BUILD_TESTING)
         OPTIONAL_COMPONENTS
         NetworkAuth
         WebEngineWidgets
-        WebKitWidgets
         Test
     )
     if (Qt${QT_MAJOR_VERSION}Widgets_FOUND)

@@ -96,19 +96,7 @@ if(BUILD_APP_DESKTOP)
                 Qt${QT_MAJOR_VERSION}::WebEngineWidgets
         )
     else()
-        if(Qt${QT_MAJOR_VERSION}WebKitWidgets_FOUND)
-            message(STATUS "Using QtWebKit to render complex HTML content")
-            # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-            add_definitions(
-                -DHAVE_WEBKITWIDGETS
-            )
-            target_link_libraries(kbibtex
-                PRIVATE
-                    Qt${QT_MAJOR_VERSION}::WebKitWidgets
-            )
-        else()
-            message(STATUS "If available, using a KPart to render complex HTML content")
-        endif()
+        message(STATUS "If available, using a KPart to render complex HTML content")
     endif()
 
     install(

@@ -53,7 +53,7 @@ In detail, the following dependencies exist:
     - Qt 5.9 or later,
       required components: Core, Widgets, Network, XmlPatterns,
       Concurrent, and NetworkAuth,
-      optionally either Qt5WebEngineWidgets or Qt5WebKitWidgets,
+      optionally Qt5WebEngineWidgets,
       and Test
     - KDE Frameworks 5.51 or later,
       required components: I18n, XmlGui, KIO, IconThemes, ItemViews,

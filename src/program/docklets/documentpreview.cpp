@@ -39,10 +39,6 @@
 #include <QIcon>
 #ifdef HAVE_WEBENGINEWIDGETS
 #include <QWebEngineView>
-#else // HAVE_WEBENGINEWIDGETS
-#ifdef HAVE_WEBKITWIDGETS
-#include <QWebView>
-#endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
 
 #include <kio_version.h>
@@ -144,11 +140,7 @@ private:
 #ifdef HAVE_WEBENGINEWIDGETS
     QWebEngineView *htmlWidget;
 #else // HAVE_WEBENGINEWIDGETS
-#ifdef HAVE_WEBKITWIDGETS
-    QWebView *htmlWidget;
-#else // HAVE_WEBKITWIDGETS
     KParts::ReadOnlyPart *htmlPart;
-#endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
     int swpMessage, swpOkular, swpHTML;
 
@@ -250,7 +242,7 @@ public:
             qCWarning(LOG_KBIBTEX_PROGRAM) << "No 'KDE Frameworks 5'-based Okular part for PDF or PostScript document preview available.";
         }
 #ifdef HAVE_WEBENGINEWIDGETS
-        qCDebug(LOG_KBIBTEX_PROGRAM) << "WebEngine is available, using it instead of WebKit or HTML KPart (both neither considered nor tested for) for HTML/Web preview.";
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "WebEngine is available, using it instead of HTML KPart (neither considered nor tested for) for HTML/Web preview.";
         /// To make DrKonqi handle crashes in Chromium-based QtWebEngine,
         /// set a certain environment variable. For details, see here:
         /// https://www.dvratil.cz/2018/10/drkonqi-and-qtwebengine/
@@ -264,21 +256,14 @@ public:
         swpHTML = stackedWidget->addWidget(htmlWidget);
         connect(htmlWidget, &QWebEngineView::loadFinished, p, &DocumentPreview::loadingFinished);
 #else // HAVE_WEBENGINEWIDGETS
-#ifdef HAVE_WEBKITWIDGETS
-        qCDebug(LOG_KBIBTEX_PROGRAM) << "WebKit is available, using it instead of WebEngine (missing) or HTML KPart (not considered) for HTML/Web preview.";
-        htmlWidget = new QWebView(stackedWidget);
-        swpHTML = stackedWidget->addWidget(htmlWidget);
-        connect(htmlWidget, &QWebView::loadFinished, p, &DocumentPreview::loadingFinished);
-#else // HAVE_WEBKITWIDGETS
         htmlPart = locatePart(QStringLiteral("text/html"), stackedWidget);
         if (htmlPart != nullptr) {
-            qCDebug(LOG_KBIBTEX_PROGRAM) << "HTML KPart is available, using it instead of WebEngine or WebKit (neither available) for HTML/Web preview.";
+            qCDebug(LOG_KBIBTEX_PROGRAM) << "HTML KPart is available, using it instead of WebEngine (not available) for HTML/Web preview.";
             swpHTML = stackedWidget->addWidget(htmlPart->widget());
         } else {
             qCDebug(LOG_KBIBTEX_PROGRAM) << "No HTML viewing component is available, disabling HTML/Web preview.";
             swpHTML = -1;
         }
-#endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
 
         loadState();
@@ -338,12 +323,8 @@ public:
 #ifdef HAVE_WEBENGINEWIDGETS
         htmlWidget->stop();
 #else // HAVE_WEBENGINEWIDGETS
-#ifdef HAVE_WEBKITWIDGETS
-        htmlWidget->stop();
-#else // HAVE_WEBKITWIDGETS
         if (swpHTML >= 0 && htmlPart != nullptr)
             htmlPart->closeUrl();
-#endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
         urlComboBox->setEnabled(false);
         urlComboBox->clear();
@@ -498,16 +479,10 @@ public:
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
 #else // HAVE_WEBENGINEWIDGETS
-#ifdef HAVE_WEBKITWIDGETS
-        } else if (widget == htmlWidget) {
-            stackedWidget->setCurrentIndex(swpHTML);
-            stackedWidget->widget(swpHTML)->setEnabled(true);
-#else // HAVE_WEBKITWIDGETS
         } else if (htmlPart != nullptr && part == htmlPart && swpHTML >= 0) {
             stackedWidget->setCurrentIndex(swpHTML);
             stackedWidget->widget(swpHTML)->setEnabled(true);
             setupToolMenuBarForPart(htmlPart);
-#endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
         } else if (widget == message) {
             stackedWidget->setCurrentIndex(swpMessage);
@@ -529,12 +504,8 @@ public:
 #ifdef HAVE_WEBENGINEWIDGETS
         htmlWidget->stop();
 #else // HAVE_WEBENGINEWIDGETS
-#ifdef HAVE_WEBKITWIDGETS
-        htmlWidget->stop();
-#else // HAVE_WEBKITWIDGETS
         if (swpHTML >= 0 && htmlPart != nullptr)
             htmlPart->closeUrl();
-#endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
 
         if (swpOkular >= 0 && okularPart != nullptr && okularMimetypes.contains(urlInfo.mimeType)) {
@@ -548,12 +519,7 @@ public:
             htmlWidget->load(urlInfo.url);
             return true;
 #else // HAVE_WEBENGINEWIDGETS
-#ifdef HAVE_WEBKITWIDGETS
-            htmlWidget->load(urlInfo.url);
-            return true;
-#else // HAVE_WEBKITWIDGETS
             return (swpHTML >= 0 && htmlPart != nullptr) ? htmlPart->openUrl(urlInfo.url) : false;
-#endif // HAVE_WEBKITWIDGETS
 #endif // HAVE_WEBENGINEWIDGETS
         } else if (imageMimetypes.contains(urlInfo.mimeType)) {
             p->setCursor(Qt::BusyCursor);
