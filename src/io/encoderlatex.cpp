@@ -1521,7 +1521,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
 
             if (!found) {
                 qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
-                qCWarning(LOG_KBIBTEX_IO) << "Don't know how to encode Unicode char" << QString(QStringLiteral("0x%1")).arg(c.unicode(), 4, 16, QLatin1Char('0'));
+                qCWarning(LOG_KBIBTEX_IO) << "Don't know how to encode Unicode char" << QString(QStringLiteral("0x%1")).arg((uint)c.unicode(), 4, 16, QLatin1Char('0'));
                 output.append(c);
             }
         } else if ((targetEncoding == TargetEncoding::ASCII && c.unicode() <= 127)

@@ -52,7 +52,7 @@ QString htmlify(const QString &input)
             if (!skipChar.contains(c) || prev_c == QLatin1Char('\\'))
                 output.append(c);
         } else
-            output.append(QString(QStringLiteral("&#x%1;")).arg(c.unicode(), 4, 16, QLatin1Char('0')));
+            output.append(QString(QStringLiteral("&#x%1;")).arg((uint)c.unicode(), 4, 16, QLatin1Char('0')));
         prev_c = c;
     }
     return output;

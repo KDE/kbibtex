@@ -995,7 +995,7 @@ public:
 #endif
                 } else if (state.nextChar.isPrint()) {
 #if QT_VERSION >= 0x050e00
-                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << "): Comma symbol ',' expected but got character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
+                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << "): Comma symbol ',' expected but got character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
 #else // QT_VERSION < 0x050e00
                     qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << "): Comma symbol ',' expected but got character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
 #endif // QT_VERSION >= 0x050e00
@@ -1003,11 +1003,11 @@ public:
 #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                     QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Error), Q_ARG(QString, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (0x%4, token %5)")).arg(id).arg(state.lineNo).arg(state.nextChar).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token))));
 #else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-                    QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Error), Q_ARG(QString, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (0x%4, token %5)")).arg(id).arg(state.lineNo).arg(state.nextChar).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token))));
+                    QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Error), Q_ARG(QString, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (0x%4, token %5)")).arg(id).arg(state.lineNo).arg(state.nextChar).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token))));
 #endif
                 } else {
 #if QT_VERSION >= 0x050e00
-                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
+                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
 #else // QT_VERSION < 0x050e00
                     qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
 #endif // QT_VERSION >= 0x050e00
@@ -1015,7 +1015,7 @@ public:
 #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                     QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Error), Q_ARG(QString, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character 0x%3 (token %4)")).arg(id).arg(state.lineNo).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token))));
 #else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-                    QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Error), Q_ARG(QString, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character 0x%3 (token %4)")).arg(id).arg(state.lineNo).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token))));
+                    QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Error), Q_ARG(QString, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character 0x%3 (token %4)")).arg(id).arg(state.lineNo).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(tokenidToString(token))));
 #endif
                 }
                 delete entry;
@@ -1206,7 +1206,7 @@ public:
 #endif
             } else if (state.nextChar.isPrint()) {
 #if QT_VERSION >= 0x050e00
-                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ") near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << ")" << ", treating as comment";
+                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ") near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << ")" << ", treating as comment";
 #else // QT_VERSION < 0x050e00
                 qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ") near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << ")" << ", treating as comment";
 #endif // QT_VERSION >= 0x050e00
@@ -1214,11 +1214,11 @@ public:
 #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                 QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Info), Q_ARG(QString, QString(QStringLiteral("Unknown character '%1' (0x%2) near line %3, treating as comment")).arg(state.nextChar).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(state.lineNo)));
 #else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Info), Q_ARG(QString, QString(QStringLiteral("Unknown character '%1' (0x%2) near line %3, treating as comment")).arg(state.nextChar).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(state.lineNo)));
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Info), Q_ARG(QString, QString(QStringLiteral("Unknown character '%1' (0x%2) near line %3, treating as comment")).arg(state.nextChar).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(state.lineNo)));
 #endif
             } else {
 #if QT_VERSION >= 0x050e00
-                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << ")" << ", treating as comment";
+                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << ")" << ", treating as comment";
 #else // QT_VERSION < 0x050e00
                 qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << ")" << ", treating as comment";
 #endif // QT_VERSION >= 0x050e00
@@ -1226,7 +1226,7 @@ public:
 #if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
                 QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Info), Q_ARG(QString, QString(QStringLiteral("Unknown character 0x%1 near line %2, treating as comment")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(state.lineNo)));
 #else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Info), Q_ARG(QString, QString(QStringLiteral("Unknown character 0x%1 near line %2, treating as comment")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(state.lineNo)));
+                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Info), Q_ARG(QString, QString(QStringLiteral("Unknown character 0x%1 near line %2, treating as comment")).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')).arg(state.lineNo)));
 #endif
             }
 
