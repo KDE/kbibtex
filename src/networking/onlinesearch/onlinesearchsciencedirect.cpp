@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -43,11 +43,17 @@
 
 class OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate
 {
+private:
+    OnlineSearchScienceDirect *parent;
+
 public:
     static const QUrl apiUrl;
-    static const QString apiKey;
+    static const QString apiKeys[];
+    static const int apiKeysCount;
+    static int apiKeyIndex;
 
-    OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect *)
+    OnlineSearchScienceDirectPrivate(OnlineSearchScienceDirect *_parent)
+            : parent(_parent)
     {
         /// nothing
     }
@@ -175,10 +181,49 @@ public:
 
         return entry;
     }
+
+    bool startSearch(const QMap<QueryKey, QString> &query = QMap<QueryKey, QString>(), int numResults = -1) {
+        static QMap<QueryKey, QString> previousQuery;
+        static int previousNumResults = -1;
+        if (apiKeyIndex < 0 || apiKeyIndex >= apiKeysCount)
+            return false;
+        else if ((query.count() == 0 || numResults < 1) && (previousQuery.count() == 0 || previousNumResults < 1))
+            return false;
+        else if (query.count() > 0 && numResults > 0) {
+            previousQuery = query;
+            previousNumResults = numResults;
+        }
+
+        const int numSteps{apiKeysCount - apiKeyIndex};
+        Q_EMIT parent->progress(numSteps - 1, numSteps);
+
+        Q_ASSERT(apiKeys[apiKeyIndex].length() == 32);
+        QUrl u(apiUrl);
+        QNetworkRequest request(u);
+        request.setRawHeader(QByteArray("X-ELS-APIKey"), apiKeys[apiKeyIndex].toLatin1());
+        request.setRawHeader(QByteArray("Accept"), QByteArray("application/json"));
+        request.setHeader(QNetworkRequest::ContentTypeHeader, QByteArray("application/json"));
+
+        const QByteArray jsonData = buildJsonQuery(previousQuery, previousNumResults);
+        QNetworkReply *reply = InternalNetworkAccessManager::instance().put(request, jsonData);
+        InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
+        connect(reply, &QNetworkReply::finished, parent, &OnlineSearchScienceDirect::doneFetchingJSON);
+
+        parent->refreshBusyProperty();
+
+        return true;
+    }
 };
 
 const QUrl OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiUrl(QStringLiteral("https://api.elsevier.com/content/search/sciencedirect"));
-const QString OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiKey(InternalNetworkAccessManager::reverseObfuscate("\x43\x74\x9a\xa9\x6f\x5d\xa9\x9f\xeb\xda\xb9\xd8\x1b\x2b\x80\xe1\x3f\x5e\x29\x1c\xab\xc8\x54\x63\x58\x61\x13\x71\xca\xa9\xf1\xc4\xe4\xd3\xc9\xaa\x14\x70\xef\xdc\xb\x69\xff\xc6\xd5\xb6\x4a\x7d\x10\x27\xbb\xde\x92\xaa\xb0\xd6\xb9\x80\xd\x34\x48\x7e\x9d\xff"));
+const QString OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiKeys[] = {
+    InternalNetworkAccessManager::reverseObfuscate("\xd1\xb0\x9f\xa9\xd9\xeb\xf9\xcd\x73\x4a\x91\xf7\x65\x07\xd7\xe6\x95\xf6\xb6\x86\x37\x01\x7b\x1f\x60\x06\x45\x74\x82\xe3\x44\x7c\x65\x52\x34\x52\xfe\xc8\x1c\x24\x44\x20\xd4\xe6\x7e\x1a\x0f\x3e\xc6\xf6\xdb\xe2\x8d\xeb\x50\x31\xfd\xc4\xc8\xfd\x9b\xfd\xf1\xc6" /* 7f59af... */),
+    InternalNetworkAccessManager::reverseObfuscate("\x6a\x58\xac\x9e\xe6\xd3\xa4\x90\xc8\xae\x6a\x59\x95\xa0\x69\x58\x1d\x7c\xc0\xf9\x7b\x4c\xbe\xdb\xc9\xaf\xd6\xe5\xb5\x80\xf7\xc6\xf3\xc3\x23\x14\xcb\xa9\xaa\xce\x90\xa6\xba\x83\x7e\x4b\x99\xad\x49\x2c\x9f\xfc\xc3\xf2\xd0\xe7\x0e\x38\x39\x0a\xd6\xb4\x09\x38" /* 1b3671... */),
+    InternalNetworkAccessManager::reverseObfuscate("\xc5\xf5\x94\xf1\x88\xba\x15\x73\x90\xa7\x9f\xfd\xc0\xa6\x92\xf1\x21\x40\x38\x5c\x5d\x6d\x41\x24\x22\x12\x72\x13\x9f\xf9\x56\x65\x3b\x5d\x8f\xeb\xde\xbb\xed\xdd\x55\x60\x21\x15\x29\x1b\x80\xb5\xd8\xbd\xe1\xd5\x57\x60\xeb\xd2\x80\xb5\xa6\xc3\xea\xdc\x16\x72" /* d6e597... */),
+    InternalNetworkAccessManager::reverseObfuscate("\x58\x6f\xf2\xc1\x0f\x3d\x88\xbe\x6f\x5e\xa0\xc1\x24\x14\x42\x23\x0c\x6d\x72\x47\x78\x1b\x35\x02\x4a\x73\x7c\x1e\x8c\xef\x62\x57\xd5\xe2\x79\x1a\x6c\x08\x23\x10\xf9\x9b\x48\x71\xff\x9c\x0b\x3c\x59\x6e\xa4\xc1\x29\x11\x7f\x19\xcd\xf4\x5b\x62\x22\x14\x34\x56" /* b699f8... */)
+};
+const int OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiKeysCount = sizeof(OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiKeys) / sizeof(OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiKeys[0]);
+int OnlineSearchScienceDirect::OnlineSearchScienceDirectPrivate::apiKeyIndex = apiKeysCount - 1;
 
 OnlineSearchScienceDirect::OnlineSearchScienceDirect(QObject *parent)
         : OnlineSearchAbstract(parent), d(new OnlineSearchScienceDirectPrivate(this))
@@ -193,21 +238,9 @@ OnlineSearchScienceDirect::~OnlineSearchScienceDirect()
 
 void OnlineSearchScienceDirect::startSearch(const QMap<QueryKey, QString> &query, int numResults)
 {
-    Q_EMIT progress(curStep = 0, numSteps = 1);
-
-    QUrl u(OnlineSearchScienceDirectPrivate::apiUrl);
-    QNetworkRequest request(u);
-    request.setRawHeader(QByteArray("X-ELS-APIKey"), d->apiKey.toLatin1());
-    request.setRawHeader(QByteArray("Accept"), QByteArray("application/json"));
-    request.setRawHeader(QByteArray("Content-Type"), QByteArray("application/json"));
-
-    const QByteArray jsonData = d->buildJsonQuery(query, numResults);
-
-    QNetworkReply *reply = InternalNetworkAccessManager::instance().put(request, jsonData);
-    InternalNetworkAccessManager::instance().setNetworkReplyTimeout(reply);
-    connect(reply, &QNetworkReply::finished, this, &OnlineSearchScienceDirect::doneFetchingJSON);
-
-    refreshBusyProperty();
+    const bool r = d->startSearch(query, numResults);
+    if (!r)
+        delayedStoppedSearch(resultAuthorizationRequired);
 }
 
 QString OnlineSearchScienceDirect::label() const
@@ -227,9 +260,23 @@ QUrl OnlineSearchScienceDirect::homepage() const
 
 void OnlineSearchScienceDirect::doneFetchingJSON()
 {
+    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
+
+    if (reply->error() == 204 && reply->hasRawHeader("x-els-status") && reply->rawHeader("x-els-status").contains("AUTHORIZATION_ERROR")) {
+        if (OnlineSearchScienceDirectPrivate::apiKeyIndex > 0) {
+            --OnlineSearchScienceDirectPrivate::apiKeyIndex;
+            const bool r = d->startSearch();
+            if (!r)
+                delayedStoppedSearch(resultAuthorizationRequired);
+        } else {
+            // No more API keys to test
+            delayedStoppedSearch(resultAuthorizationRequired);
+        }
+        return;
+    }
+
     Q_EMIT progress(++curStep, numSteps);
 
-    QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
     if (handleErrors(reply)) {
         QJsonParseError parseError;
