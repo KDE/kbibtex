@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 01:53+0000\n"
+"POT-Creation-Date: 2025-02-04 01:53+0000\n"
 "PO-Revision-Date: 2024-07-07 07:01+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1109,7 +1109,7 @@ msgid "Associate Document with Entry"
 msgstr ""
 
 #: src/gui/element/associatedfilesui.cpp:236
-#: src/program/docklets/documentpreview.cpp:240
+#: src/program/docklets/documentpreview.cpp:232
 #: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
@@ -1963,7 +1963,7 @@ msgid "Bibliography System:"
 msgstr "ბიბლიოგრაფიული სისტემა:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:83
-#: src/gui/widgets/filesettingswidget.cpp:189
+#: src/gui/widgets/filesettingswidget.cpp:193
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "სახელის ფორმატირება:"
@@ -2455,22 +2455,22 @@ msgstr "დასახელებების დაცვა"
 msgid "Protect Casing?"
 msgstr "დავიცვა რეგისტრი?"
 
-#: src/gui/widgets/filesettingswidget.cpp:193
+#: src/gui/widgets/filesettingswidget.cpp:197
 #, kde-format
 msgid "Use global settings"
 msgstr "გლობალური პარამეტრების გამოყენება"
 
-#: src/gui/widgets/filesettingswidget.cpp:199
+#: src/gui/widgets/filesettingswidget.cpp:203
 #, kde-format
 msgid "List Separator"
 msgstr "სიის გამყოფი"
 
-#: src/gui/widgets/filesettingswidget.cpp:204
+#: src/gui/widgets/filesettingswidget.cpp:208
 #, kde-format
 msgid "Sort by identifier"
 msgstr "იდენტიფიკატორით დალაგება"
 
-#: src/gui/widgets/filesettingswidget.cpp:205
+#: src/gui/widgets/filesettingswidget.cpp:209
 #, kde-format
 msgid "Entry Sorting"
 msgstr "ჩანაწერების დალაგება"
@@ -2737,7 +2737,7 @@ msgstr "MR Lookup"
 msgid "PubMed"
 msgstr "PubMed"
 
-#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:216
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:249
 #, kde-format
 msgid "ScienceDirect"
 msgstr "ScienceDirect"
@@ -2772,9 +2772,10 @@ msgstr "წიგნის/ჟურნალის სათაური:"
 msgid "Author or Editor:"
 msgstr "ავტორი ან რედაქტორი:"
 
-#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:452
-#, kde-format
-msgid "SpringerLink"
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
+#, fuzzy, kde-format
+#| msgid "SpringerLink"
+msgid "Springer Nature Link"
 msgstr "SpringerLink"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
@@ -3387,46 +3388,46 @@ msgstr ""
 msgid "Could not open LyX server pipe '%1'."
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:206
+#: src/program/docklets/documentpreview.cpp:198
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:217
+#: src/program/docklets/documentpreview.cpp:209
 #, kde-format
 msgid "Open in external program"
 msgstr "გარე პროგრამით გახსნა"
 
-#: src/program/docklets/documentpreview.cpp:352
+#: src/program/docklets/documentpreview.cpp:333
 #, kde-format
 msgid "Refreshing..."
 msgstr "განახლება..."
 
-#: src/program/docklets/documentpreview.cpp:381
+#: src/program/docklets/documentpreview.cpp:362
 #, kde-format
 msgid "No documents to show."
 msgstr "საჩვენებელი დოკუმენტების გარეშე."
 
-#: src/program/docklets/documentpreview.cpp:388
-#: src/program/docklets/documentpreview.cpp:704
+#: src/program/docklets/documentpreview.cpp:369
+#: src/program/docklets/documentpreview.cpp:670
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
 "restriction</a> to local files to see remote documents.</qt>"
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:515
+#: src/program/docklets/documentpreview.cpp:490
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "მოთხოვნილი ნაწილის ჩვენება შეუძლებელია"
 
-#: src/program/docklets/documentpreview.cpp:542
-#: src/program/docklets/documentpreview.cpp:546
+#: src/program/docklets/documentpreview.cpp:513
+#: src/program/docklets/documentpreview.cpp:517
 #, kde-format
 msgid "Loading..."
 msgstr "ჩატვირთვა..."
 
-#: src/program/docklets/documentpreview.cpp:567
+#: src/program/docklets/documentpreview.cpp:533
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3437,7 +3438,7 @@ msgid ""
 ">Okular for KDE&nbsp;4 will not work."
 msgstr ""
 
-#: src/program/docklets/documentpreview.cpp:568
+#: src/program/docklets/documentpreview.cpp:534
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3445,7 +3446,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>არ ვიცი, როგორ გაჩვენოთ mimetype '%1'.%2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:707
+#: src/program/docklets/documentpreview.cpp:673
 #, kde-format
 msgid ""
 "No documents to show.\n"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 01:53+0000\n"
+"POT-Creation-Date: 2025-02-04 01:53+0000\n"
 "PO-Revision-Date: 2024-08-19 22:37+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1110,7 +1110,7 @@ msgid "Associate Document with Entry"
 msgstr "항목과 문서 연결"
 
 #: src/gui/element/associatedfilesui.cpp:236
-#: src/program/docklets/documentpreview.cpp:240
+#: src/program/docklets/documentpreview.cpp:232
 #: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
@@ -1981,7 +1981,7 @@ msgid "Bibliography System:"
 msgstr "서지 정보 시스템:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:83
-#: src/gui/widgets/filesettingswidget.cpp:189
+#: src/gui/widgets/filesettingswidget.cpp:193
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "인명 서식:"
@@ -2475,22 +2475,22 @@ msgstr "제목 보호"
 msgid "Protect Casing?"
 msgstr "대소문자 보호 여부?"
 
-#: src/gui/widgets/filesettingswidget.cpp:193
+#: src/gui/widgets/filesettingswidget.cpp:197
 #, kde-format
 msgid "Use global settings"
 msgstr "전역 설정 사용"
 
-#: src/gui/widgets/filesettingswidget.cpp:199
+#: src/gui/widgets/filesettingswidget.cpp:203
 #, kde-format
 msgid "List Separator"
 msgstr "목록 구분 기호"
 
-#: src/gui/widgets/filesettingswidget.cpp:204
+#: src/gui/widgets/filesettingswidget.cpp:208
 #, kde-format
 msgid "Sort by identifier"
 msgstr "식별자로 정렬"
 
-#: src/gui/widgets/filesettingswidget.cpp:205
+#: src/gui/widgets/filesettingswidget.cpp:209
 #, kde-format
 msgid "Entry Sorting"
 msgstr "항목 정렬"
@@ -2758,7 +2758,7 @@ msgstr "MR Lookup"
 msgid "PubMed"
 msgstr "PubMed"
 
-#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:216
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:249
 #, kde-format
 msgid "ScienceDirect"
 msgstr "ScienceDirect"
@@ -2793,9 +2793,10 @@ msgstr "도서/저널 제목:"
 msgid "Author or Editor:"
 msgstr "저자 또는 편집자:"
 
-#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:452
-#, kde-format
-msgid "SpringerLink"
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
+#, fuzzy, kde-format
+#| msgid "SpringerLink"
+msgid "Springer Nature Link"
 msgstr "SpringerLink"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
@@ -3446,28 +3447,28 @@ msgstr "LyX/Kile에 보낼 참조가 없습니다."
 msgid "Could not open LyX server pipe '%1'."
 msgstr "LyX 서버 파이프 '%1'을(를) 열 수 없습니다."
 
-#: src/program/docklets/documentpreview.cpp:206
+#: src/program/docklets/documentpreview.cpp:198
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr "로컬 파일만 및 원격 파일도 들어 있는 모든 문서 간에 전환"
 
-#: src/program/docklets/documentpreview.cpp:217
+#: src/program/docklets/documentpreview.cpp:209
 #, kde-format
 msgid "Open in external program"
 msgstr "외부 프로그램으로 열기"
 
-#: src/program/docklets/documentpreview.cpp:352
+#: src/program/docklets/documentpreview.cpp:333
 #, kde-format
 msgid "Refreshing..."
 msgstr "새로 고치는 중..."
 
-#: src/program/docklets/documentpreview.cpp:381
+#: src/program/docklets/documentpreview.cpp:362
 #, kde-format
 msgid "No documents to show."
 msgstr "표시할 문서가 없습니다."
 
-#: src/program/docklets/documentpreview.cpp:388
-#: src/program/docklets/documentpreview.cpp:704
+#: src/program/docklets/documentpreview.cpp:369
+#: src/program/docklets/documentpreview.cpp:670
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3476,18 +3477,18 @@ msgstr ""
 "<qt>표시할 문서가 없습니다.<br/><a href=\"disableonlylocalfiles\">제한 사용 "
 "안함</a>으로 설정해야 로컬 파일로 원격 문서를 볼 수 있습니다.</qt>"
 
-#: src/program/docklets/documentpreview.cpp:515
+#: src/program/docklets/documentpreview.cpp:490
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "요청한 부분을 표시할 수 없음"
 
-#: src/program/docklets/documentpreview.cpp:542
-#: src/program/docklets/documentpreview.cpp:546
+#: src/program/docklets/documentpreview.cpp:513
+#: src/program/docklets/documentpreview.cpp:517
 #, kde-format
 msgid "Loading..."
 msgstr "불러오는 중..."
 
-#: src/program/docklets/documentpreview.cpp:567
+#: src/program/docklets/documentpreview.cpp:533
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3501,7 +3502,7 @@ msgstr ""
 "\"https://userbase.kde.org/Okular\">Okular</a>를 설치하십시오.<br/>Okular "
 "KDE&nbsp;4는 작동하지 않습니다."
 
-#: src/program/docklets/documentpreview.cpp:568
+#: src/program/docklets/documentpreview.cpp:534
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3509,7 +3510,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>MIME 형식 '%1'을(를) 표시하는 방법을 알 수 없습니다.%2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:707
+#: src/program/docklets/documentpreview.cpp:673
 #, kde-format
 msgid ""
 "No documents to show.\n"

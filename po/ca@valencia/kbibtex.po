@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 01:53+0000\n"
+"POT-Creation-Date: 2025-02-04 01:53+0000\n"
 "PO-Revision-Date: 2024-11-25 10:06+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1115,7 +1115,7 @@ msgid "Associate Document with Entry"
 msgstr "Associació del document amb l'entrada"
 
 #: src/gui/element/associatedfilesui.cpp:236
-#: src/program/docklets/documentpreview.cpp:240
+#: src/program/docklets/documentpreview.cpp:232
 #: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
@@ -2003,7 +2003,7 @@ msgid "Bibliography System:"
 msgstr "Sistema de bibliografia:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:83
-#: src/gui/widgets/filesettingswidget.cpp:189
+#: src/gui/widgets/filesettingswidget.cpp:193
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "Format dels noms de les persones:"
@@ -2497,22 +2497,22 @@ msgstr "Protegix els títols"
 msgid "Protect Casing?"
 msgstr "Protegisc les majúscules/minúscules?"
 
-#: src/gui/widgets/filesettingswidget.cpp:193
+#: src/gui/widgets/filesettingswidget.cpp:197
 #, kde-format
 msgid "Use global settings"
 msgstr "Utilitza la configuració global"
 
-#: src/gui/widgets/filesettingswidget.cpp:199
+#: src/gui/widgets/filesettingswidget.cpp:203
 #, kde-format
 msgid "List Separator"
 msgstr "Separador de llistes"
 
-#: src/gui/widgets/filesettingswidget.cpp:204
+#: src/gui/widgets/filesettingswidget.cpp:208
 #, kde-format
 msgid "Sort by identifier"
 msgstr "Ordena per identificador"
 
-#: src/gui/widgets/filesettingswidget.cpp:205
+#: src/gui/widgets/filesettingswidget.cpp:209
 #, kde-format
 msgid "Entry Sorting"
 msgstr "Ordenació de les entrades"
@@ -2781,7 +2781,7 @@ msgstr "MR Lookup"
 msgid "PubMed"
 msgstr "PubMed"
 
-#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:216
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:249
 #, kde-format
 msgid "ScienceDirect"
 msgstr "ScienceDirect"
@@ -2816,9 +2816,10 @@ msgstr "Títol del llibre/diari:"
 msgid "Author or Editor:"
 msgstr "Autoria o editor:"
 
-#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:452
-#, kde-format
-msgid "SpringerLink"
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
+#, fuzzy, kde-format
+#| msgid "SpringerLink"
+msgid "Springer Nature Link"
 msgstr "SpringerLink"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
@@ -3481,30 +3482,30 @@ msgstr "No hi ha referències per a enviar a LyX/Kile."
 msgid "Could not open LyX server pipe '%1'."
 msgstr "No s'ha pogut obrir la canonada «%1» amb el servidor de LyX."
 
-#: src/program/docklets/documentpreview.cpp:206
+#: src/program/docklets/documentpreview.cpp:198
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
 "Alterna entre només fitxers locals i tots els documents, incloent-hi els "
 "remots"
 
-#: src/program/docklets/documentpreview.cpp:217
+#: src/program/docklets/documentpreview.cpp:209
 #, kde-format
 msgid "Open in external program"
 msgstr "Obri en un programa extern"
 
-#: src/program/docklets/documentpreview.cpp:352
+#: src/program/docklets/documentpreview.cpp:333
 #, kde-format
 msgid "Refreshing..."
 msgstr "S'està actualitzant…"
 
-#: src/program/docklets/documentpreview.cpp:381
+#: src/program/docklets/documentpreview.cpp:362
 #, kde-format
 msgid "No documents to show."
 msgstr "No hi ha cap document que s'haja de mostrar."
 
-#: src/program/docklets/documentpreview.cpp:388
-#: src/program/docklets/documentpreview.cpp:704
+#: src/program/docklets/documentpreview.cpp:369
+#: src/program/docklets/documentpreview.cpp:670
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3514,18 +3515,18 @@ msgstr ""
 "\"disableonlylocalfiles\">Desactiveu la restricció</a> en els fitxers locals "
 "per a veure els documents remots.</qt>"
 
-#: src/program/docklets/documentpreview.cpp:515
+#: src/program/docklets/documentpreview.cpp:490
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "No s'ha pogut mostrar la part requerida"
 
-#: src/program/docklets/documentpreview.cpp:542
-#: src/program/docklets/documentpreview.cpp:546
+#: src/program/docklets/documentpreview.cpp:513
+#: src/program/docklets/documentpreview.cpp:517
 #, kde-format
 msgid "Loading..."
 msgstr "S'està carregant…"
 
-#: src/program/docklets/documentpreview.cpp:567
+#: src/program/docklets/documentpreview.cpp:533
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3539,7 +3540,7 @@ msgstr ""
 "dels Frameworks 5 de KDE per a fer ús del seu component de visualització de "
 "PDF.<br/>Okular de KDE&nbsp;4 no funcionarà."
 
-#: src/program/docklets/documentpreview.cpp:568
+#: src/program/docklets/documentpreview.cpp:534
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3547,7 +3548,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>No es coneix com mostrar el tipus MIME «%1».%2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:707
+#: src/program/docklets/documentpreview.cpp:673
 #, kde-format
 msgid ""
 "No documents to show.\n"

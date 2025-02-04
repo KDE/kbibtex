@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 01:53+0000\n"
+"POT-Creation-Date: 2025-02-04 01:53+0000\n"
 "PO-Revision-Date: 2025-01-03 21:16+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -1114,7 +1114,7 @@ msgid "Associate Document with Entry"
 msgstr "Asocii Dokumenton kun Eniro"
 
 #: src/gui/element/associatedfilesui.cpp:236
-#: src/program/docklets/documentpreview.cpp:240
+#: src/program/docklets/documentpreview.cpp:232
 #: src/program/docklets/referencepreview.cpp:227
 #, kde-format
 msgid "No preview available"
@@ -1987,7 +1987,7 @@ msgid "Bibliography System:"
 msgstr "Bibliografia Sistemo:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:83
-#: src/gui/widgets/filesettingswidget.cpp:189
+#: src/gui/widgets/filesettingswidget.cpp:193
 #, kde-format
 msgid "Person Names Formatting:"
 msgstr "Formatado de Personaj Nomoj:"
@@ -2481,22 +2481,22 @@ msgstr "Protekti Titolojn"
 msgid "Protect Casing?"
 msgstr "Protekti Enfermaĵon?"
 
-#: src/gui/widgets/filesettingswidget.cpp:193
+#: src/gui/widgets/filesettingswidget.cpp:197
 #, kde-format
 msgid "Use global settings"
 msgstr "Uzi ĉieajn agordojn"
 
-#: src/gui/widgets/filesettingswidget.cpp:199
+#: src/gui/widgets/filesettingswidget.cpp:203
 #, kde-format
 msgid "List Separator"
 msgstr "Listo Apartigilo"
 
-#: src/gui/widgets/filesettingswidget.cpp:204
+#: src/gui/widgets/filesettingswidget.cpp:208
 #, kde-format
 msgid "Sort by identifier"
 msgstr "Ordigi laŭ identigilo"
 
-#: src/gui/widgets/filesettingswidget.cpp:205
+#: src/gui/widgets/filesettingswidget.cpp:209
 #, kde-format
 msgid "Entry Sorting"
 msgstr "Eniro Ordigo"
@@ -2763,7 +2763,7 @@ msgstr "MR-Serĉo"
 msgid "PubMed"
 msgstr "PubMed"
 
-#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:216
+#: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:249
 #, kde-format
 msgid "ScienceDirect"
 msgstr "ScienceDirect"
@@ -2798,9 +2798,10 @@ msgstr "Libro/Revua titolo:"
 msgid "Author or Editor:"
 msgstr "Aŭtoro aŭ Redaktoro:"
 
-#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:452
-#, kde-format
-msgid "SpringerLink"
+#: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
+#, fuzzy, kde-format
+#| msgid "SpringerLink"
+msgid "Springer Nature Link"
 msgstr "SpringerLink"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
@@ -3460,29 +3461,29 @@ msgstr "Neniuj referencoj sendi al LyX/Kile."
 msgid "Could not open LyX server pipe '%1'."
 msgstr "Ne eblis malfermi LyX-servilon tubon '%1'."
 
-#: src/program/docklets/documentpreview.cpp:206
+#: src/program/docklets/documentpreview.cpp:198
 #, kde-format
 msgid "Toggle between local files only and all documents including remote ones"
 msgstr ""
 "Ŝanĝu inter lokaj dosieroj nur kaj ĉiuj dokumentoj inkluzive de malproksimaj"
 
-#: src/program/docklets/documentpreview.cpp:217
+#: src/program/docklets/documentpreview.cpp:209
 #, kde-format
 msgid "Open in external program"
 msgstr "Malfermi en ekstera programo"
 
-#: src/program/docklets/documentpreview.cpp:352
+#: src/program/docklets/documentpreview.cpp:333
 #, kde-format
 msgid "Refreshing..."
 msgstr "Refreŝigante..."
 
-#: src/program/docklets/documentpreview.cpp:381
+#: src/program/docklets/documentpreview.cpp:362
 #, kde-format
 msgid "No documents to show."
 msgstr "Neniuj dokumentoj por montri."
 
-#: src/program/docklets/documentpreview.cpp:388
-#: src/program/docklets/documentpreview.cpp:704
+#: src/program/docklets/documentpreview.cpp:369
+#: src/program/docklets/documentpreview.cpp:670
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3492,18 +3493,18 @@ msgstr ""
 "\">Malŝaltu la limigon</a> al lokaj dosieroj por vidi forajn dokumentojn.</"
 "qt>"
 
-#: src/program/docklets/documentpreview.cpp:515
+#: src/program/docklets/documentpreview.cpp:490
 #, kde-format
 msgid "Cannot show requested part"
 msgstr "Ne povas montri petitan parton"
 
-#: src/program/docklets/documentpreview.cpp:542
-#: src/program/docklets/documentpreview.cpp:546
+#: src/program/docklets/documentpreview.cpp:513
+#: src/program/docklets/documentpreview.cpp:517
 #, kde-format
 msgid "Loading..."
 msgstr "Ŝargante..."
 
-#: src/program/docklets/documentpreview.cpp:567
+#: src/program/docklets/documentpreview.cpp:533
 #, kde-format
 msgctxt ""
 "Additional information in case there is not KPart available for mime type "
@@ -3517,7 +3518,7 @@ msgstr ""
 "\">Okular</a> por KDE Frameworks 5 por uzi ĝian PDF-spektan komponanton.<br /"
 ">Okular por KDE 4 ne funkcios."
 
-#: src/program/docklets/documentpreview.cpp:568
+#: src/program/docklets/documentpreview.cpp:534
 #, kde-format
 msgctxt ""
 "First parameter is mime type, second parameter is optional information (may "
@@ -3525,7 +3526,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>Ne scias kiel montri mimespecon '%1'.%2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:707
+#: src/program/docklets/documentpreview.cpp:673
 #, kde-format
 msgid ""
 "No documents to show.\n"
