@@ -58,5 +58,6 @@ entrytype: []() {
 entryid: [entry]() {
            const QString isbn{ {{field[Entry::ftISBN]}} };
            const QString id{ {{id}} };
-           return QString(QStringLiteral("GoogleBooks:%1")).arg(isbn.isEmpty()?id:isbn);
+           const QString authoryear { {{field[Entry::ftAuthor]}} + {{field[Entry::ftYear]}} };
+           return QString(QStringLiteral("GoogleBooks:%1")).arg(isbn.isEmpty()?(authoryear.isEmpty()?id:authoryear):isbn);
         }()
