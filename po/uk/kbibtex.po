@@ -3,13 +3,13 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
+# Yuri Chornoivan <yurchor@ukr.net>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-04 01:53+0000\n"
-"PO-Revision-Date: 2024-11-25 12:58+0200\n"
+"PO-Revision-Date: 2025-02-04 09:59+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -2806,10 +2806,9 @@ msgid "Author or Editor:"
 msgstr "Автор або редактор:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr "Посилання Springer Nature"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format

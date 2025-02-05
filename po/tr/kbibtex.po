@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# SPDX-FileCopyrightText: 2022, 2023, 2024 Emir SARI <emir_sari@icloud.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-04 01:53+0000\n"
-"PO-Revision-Date: 2024-11-25 21:11+0300\n"
+"PO-Revision-Date: 2025-02-04 11:07+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -2799,10 +2799,9 @@ msgid "Author or Editor:"
 msgstr "Yazar veya editör:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr "Springer Nature Link"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-04 01:53+0000\n"
-"PO-Revision-Date: 2024-11-25 06:56+0100\n"
+"PO-Revision-Date: 2025-02-04 07:20+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -2801,10 +2801,9 @@ msgid "Author or Editor:"
 msgstr "Avtor ali urednik:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr "Povezava Springer Nature"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
