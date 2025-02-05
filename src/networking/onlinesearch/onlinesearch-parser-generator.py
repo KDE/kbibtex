@@ -186,7 +186,7 @@ def assembleEntry(depth):
         print("\n", depth * " ", indentCppCode(rewriteVariablePlaceholder(postprocessingfields), depth), sep="")
 
     # As it was postponed, set entry's id and type now
-    print("\n", depth * " ", f"entry->setId({rewriteVariablePlaceholder(entryid)});", sep="")
+    print("\n", depth * " ", f"entry->setId({indentCppCode(rewriteVariablePlaceholder(entryid), depth)});", sep="")
     print(depth * " ", f"entry->setType({indentCppCode(rewriteVariablePlaceholder(entrytype), depth)});", sep="")
 
     # Finally, append the entry to the list of resulting entries
