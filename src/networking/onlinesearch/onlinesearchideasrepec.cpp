@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -38,26 +38,27 @@ public:
     QSet<const QUrl> publicationLinks;
 
     QUrl buildQueryUrl(const QMap<QueryKey, QString> &query, int numResults) {
-        QString urlBase = QStringLiteral("https://ideas.repec.org/cgi-bin/htsearch?cmd=Search%21&form=extended&m=all&fmt=url&wm=wrd&sp=1&sy=1&dt=range");
+        static const QString urlBase = QStringLiteral("https://ideas.repec.org/cgi-bin/htsearch2?cmd=Search%21&form=extended&wm=wrd&dt=range&ul=&s=R");
 
-        bool hasFreeText = !query[QueryKey::FreeText].isEmpty();
-        bool hasTitle = !query[QueryKey::Title].isEmpty();
-        bool hasAuthor = !query[QueryKey::Author].isEmpty();
-        bool hasYear = QRegularExpression(QStringLiteral("^(19|20)[0-9]{2}$")).match(query[QueryKey::Year]).hasMatch();
+        const bool hasFreeText = !query[QueryKey::FreeText].isEmpty();
+        const bool hasTitle = !query[QueryKey::Title].isEmpty();
+        const bool hasAuthor = !query[QueryKey::Author].isEmpty();
+        const bool hasYear = QRegularExpression(QStringLiteral("^(19|20)[0-9]{2}$")).match(query[QueryKey::Year]).hasMatch();
 
-        QString fieldWF = QStringLiteral("4BFF"); ///< search whole record by default
-        QString fieldQ, fieldDB, fieldDE;
+        QString fieldWF, fieldQ;
         if (hasAuthor && !hasFreeText && !hasTitle) {
-            /// If only the author field is used, search explictly for author
+            /// If only the author field is used, search explicitly for author
             fieldWF = QStringLiteral("000F");
             fieldQ = query[QueryKey::Author];
         } else if (!hasAuthor && !hasFreeText && hasTitle) {
-            /// If only the title field is used, search explictly for title
+            /// If only the title field is used, search explicitly for title
             fieldWF = QStringLiteral("00F0");
             fieldQ = query[QueryKey::Title];
         } else {
             fieldQ = query[QueryKey::FreeText] + QLatin1Char(' ') + query[QueryKey::Title] + QLatin1Char(' ') + query[QueryKey::Author] + QLatin1Char(' ');
+            fieldWF = QStringLiteral("4BFF"); ///< search whole record by default
         }
+        QString fieldDB, fieldDE;
         if (hasYear) {
             fieldDB = QStringLiteral("01/01/") + query[QueryKey::Year];
             fieldDE = QStringLiteral("31/12/") + query[QueryKey::Year];
@@ -105,7 +106,7 @@ void OnlineSearchIDEASRePEc::startSearch(const QMap<QueryKey, QString> &query, i
 
 QString OnlineSearchIDEASRePEc::label() const
 {
-    return i18n("IDEAS (RePEc)");
+    return i18n("IDEAS/RePEc");
 }
 
 QUrl OnlineSearchIDEASRePEc::homepage() const

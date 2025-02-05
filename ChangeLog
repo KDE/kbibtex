@@ -4,7 +4,7 @@ Diff 0.10.1 to 0.11.0
 
 - New online search: Unpaywall (can only search for freetext or DOI)
 - New online search: Google Books (can only search of ISBN)
-- Updating online search engine: Springer Nature Link, ScienceDirect
+- Updating online search engine: Springer Nature Link, ScienceDirect, IDEAS/RePEc
 - Searching for PDF files in SciHub (can be removed at compile time)
 - KDE Bug 444779: Adding zbMATH Open OAI-PMH search
 - Retrieving favicons by evaluation online search's webpage instead of hard-coding
