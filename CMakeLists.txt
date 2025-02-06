@@ -174,6 +174,8 @@ find_package(
     MODULE
     REQUIRED
     Config
+    OPTIONAL_COMPONENTS
+    DocTools
 )
 if(BUILD_KPART OR BUILD_TESTING)
     find_package(
