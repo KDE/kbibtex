@@ -103,13 +103,6 @@ if(${Poppler_FOUND})
     )
 endif()
 
-if(Qt5XmlPatterns_FOUND)
-    target_link_libraries(kbibtexio
-        PRIVATE
-            Qt5::XmlPatterns
-    )
-endif()
-
 install(
     TARGETS kbibtexgui
     EXPORT kbibtexgui-targets
