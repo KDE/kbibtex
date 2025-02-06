@@ -84,13 +84,6 @@ if(Qt6Core5Compat_FOUND)
     )
 endif()
 
-if(Qt5XmlPatterns_FOUND)
-    target_link_libraries(kbibtexio
-        PRIVATE
-            Qt5::XmlPatterns
-    )
-endif()
-
 if(KF${QT_MAJOR_VERSION}I18n_FOUND)
     target_link_libraries(kbibtexio
         PRIVATE

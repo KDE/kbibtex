@@ -120,16 +120,6 @@ find_package(
     REQUIRED
 )
 
-if (QT_MAJOR_VERSION EQUAL 5)
-    # Migrate away from QXmlQuery
-    find_package(
-        Qt5 ${QT_MIN_VERSION}
-        CONFIG
-        COMPONENTS
-        XmlPatterns
-    )
-endif()
-
 if(BUILD_KPART OR BUILD_TESTING)
     find_package(
         Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION}
@@ -163,10 +153,6 @@ endif()
 
 if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
     add_compile_definitions(HAVE_WEBENGINEWIDGETS)
-endif()
-
-if (Qt${QT_MAJOR_VERSION}XmlPatterns_FOUND)
-    add_compile_definitions(HAVE_QTXMLPATTERNS)
 endif()
 
 find_package(
