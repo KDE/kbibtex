@@ -5,6 +5,7 @@ Dependencies:
   - 'on': ['Linux/Qt5', 'FreeBSD/Qt5', 'Windows/Qt5', 'macOS/Qt5']
     'require':
       'frameworks/kconfig': '@stable'
+      'frameworks/kdoctools': '@stable'
       'frameworks/ki18n': '@stable'
       'frameworks/kxmlgui': '@stable'
       'frameworks/kio': '@stable'
@@ -20,6 +21,7 @@ Dependencies:
   - 'on': ['Linux/Qt6', 'FreeBSD/Qt6', 'Windows/Qt6', 'macOS/Qt6']
     'require':
       'frameworks/kconfig': '@latest-kf6'
+      'frameworks/kdoctools': '@latest-kf6'
       'frameworks/ki18n': '@latest-kf6'
       'frameworks/kxmlgui': '@latest-kf6'
       'frameworks/kio': '@latest-kf6'
