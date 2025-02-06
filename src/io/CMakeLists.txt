@@ -81,13 +81,6 @@ if(Qt6Core5Compat_FOUND)
     )
 endif()
 
-if(Qt5XmlPatterns_FOUND)
-    target_link_libraries(kbibtexio
-        PRIVATE
-            Qt5::XmlPatterns
-    )
-endif()
-
 if(BUILD_KPART OR BUILD_TESTING)
     target_link_libraries(kbibtexio
         PRIVATE
