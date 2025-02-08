@@ -84,8 +84,6 @@ public:
 };
 
 
-QString InternalNetworkAccessManager::userAgentString;
-
 InternalNetworkAccessManager::InternalNetworkAccessManager(QObject *parent)
         : QNetworkAccessManager(parent)
 {
@@ -176,23 +174,23 @@ QNetworkReply *InternalNetworkAccessManager::get(QNetworkRequest &request, const
 
 QString InternalNetworkAccessManager::userAgent()
 {
+    static QString userAgentString;
+
     /// Various browser strings to "disguise" origin
     if (userAgentString.isEmpty()) {
         if (randomGeneratorGlobalBounded(0, 1) == 0) {
             /// Fake Chrome user agent string
-            static const QString chromeTemplate{QStringLiteral("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/%1.%2 (KHTML, like Gecko) Chrome/%3.%4.%5.%6 Safari/%1.%2")};
-            const auto appleWebKitVersionMajor = randomGeneratorGlobalBounded(537, 856);
-            const auto appleWebKitVersionMinor = randomGeneratorGlobalBounded(3, 53);
-            const auto chromeVersionMajor = randomGeneratorGlobalBounded(77, 85);
-            const auto chromeVersionMinor = randomGeneratorGlobalBounded(0, 4);
-            const auto chromeVersionBuild = randomGeneratorGlobalBounded(3793, 8973);
-            const auto chromeVersionPatch = randomGeneratorGlobalBounded(53, 673);
-            userAgentString = chromeTemplate.arg(appleWebKitVersionMajor).arg(appleWebKitVersionMinor).arg(chromeVersionMajor).arg(chromeVersionMinor).arg(chromeVersionBuild).arg(chromeVersionPatch);
+            static const QString chromeTemplate{QStringLiteral("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/%1.%2.%3.%4 Safari/537.36")};
+            const auto chromeVersionMajor = randomGeneratorGlobalBounded(127,133);
+            const auto chromeVersionMinor = randomGeneratorGlobalBounded(0, 3);
+            const auto chromeVersionBuild = randomGeneratorGlobalBounded(6343, 6943);
+            const auto chromeVersionPatch = randomGeneratorGlobalBounded(11, 72);
+            userAgentString = chromeTemplate.arg(chromeVersionMajor).arg(chromeVersionMinor).arg(chromeVersionBuild).arg(chromeVersionPatch);
         } else {
             /// Fake Firefox user agent string
-            static const QString mozillaTemplate{QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:%1.%2) Gecko/20100101 Firefox/%1.%2")};
-            const auto firefoxVersionMajor = randomGeneratorGlobalBounded(69, 74);
-            const auto firefoxVersionMinor = randomGeneratorGlobalBounded(0, 2);
+            static const QString mozillaTemplate{QStringLiteral("Mozilla/5.0 (X11; Linux x86_64; rv:%1.%2) Gecko/20100101 Firefox/%1.%2")};
+            const auto firefoxVersionMajor = randomGeneratorGlobalBounded(121, 135);
+            const auto firefoxVersionMinor = randomGeneratorGlobalBounded(0, 3);
             userAgentString = mozillaTemplate.arg(firefoxVersionMajor).arg(firefoxVersionMinor);
         }
     }
