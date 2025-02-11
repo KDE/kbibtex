@@ -2670,10 +2670,9 @@ msgid "Year:"
 msgstr "Rok:"
 
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Google Books"
-msgstr "Google Scholar"
+msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
@@ -2787,10 +2786,9 @@ msgid "Author or Editor:"
 msgstr "Autor nebo vydavatel:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
