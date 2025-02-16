@@ -1,7 +1,7 @@
 # translation of kbibtex.pot to Esperanto
 # Copyright (C) 2014 Free Software Foundation, Inc.
 # This file is distributed under the same license as the kbibtex package.
-# Oliver Kellogg <okellogg@users.sourceforge.net>, 2005
+# Oliver Kellogg <olivermkellogg@gmail.com>, 2005
 #
 # Malgrandaj: ĉ ĝ ĵ ĥ ŝ ŭ   Grandaj: Ĉ Ĝ Ĵ Ĥ Ŝ Ŭ
 #
@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-02-04 01:53+0000\n"
-"PO-Revision-Date: 2025-01-03 21:16+0100\n"
-"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
+"PO-Revision-Date: 2025-02-15 14:15+0100\n"
+"Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr "Oliver Kellogg"
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "okellogg@users.sourceforge.net"
+msgstr "olivermkellogg@gmail.com"
 
 #, kde-format
 msgid "Author/Editor"
@@ -2799,10 +2799,9 @@ msgid "Author or Editor:"
 msgstr "Aŭtoro aŭ Redaktoro:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr "Springer Nature Link"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
