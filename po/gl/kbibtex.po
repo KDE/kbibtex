@@ -2916,7 +2916,7 @@ msgstr "Non foi posíbel abrir o ficheiro local «%1» para escribir nel."
 #: src/parts/part.cpp:652
 #, kde-format
 msgid "Failed to upload temporary file to final destination '%1'"
-msgstr "Non foi posíbel enviar o ficheiro temporal a «%1»."
+msgstr "Non foi posíbel subir o ficheiro temporal a «%1»."
 
 #: src/parts/part.cpp:654
 #, kde-format
