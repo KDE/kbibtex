@@ -181,7 +181,7 @@ public:
                 delete wallet;
             p->setEnabled(false);
             p->setCursor(Qt::WaitCursor);
-            wallet = Wallet::openWallet(Wallet::NetworkWallet(), p->winId(), Wallet::Asynchronous);
+            wallet = Wallet::openWallet(Wallet::NetworkWallet(), p->window()->winId(), Wallet::Asynchronous);
             connect(wallet, &Wallet::walletOpened, p, &ZoteroBrowser::readOAuthCredentials);
         }
     }
@@ -196,7 +196,7 @@ public:
                 delete wallet;
             p->setEnabled(false);
             p->setCursor(Qt::WaitCursor);
-            wallet = Wallet::openWallet(Wallet::NetworkWallet(), p->winId(), Wallet::Asynchronous);
+            wallet = Wallet::openWallet(Wallet::NetworkWallet(), p->window()->winId(), Wallet::Asynchronous);
             connect(wallet, &Wallet::walletOpened, p, &ZoteroBrowser::writeOAuthCredentials);
         }
     }
