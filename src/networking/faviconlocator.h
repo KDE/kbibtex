@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -43,9 +43,12 @@ public:
      * Search will run asynchronous, its end is signalled with
      * @see gotIcon().
      * @param webpageUrl Webpage where to search for a favicon
+     * @param faviconUrl Suggested URL for favicon if know else set to QUrl()
      * @param parent QObject-based parent of this object
      */
-    explicit FavIconLocator(const QUrl &webpageUrl, QObject *parent);
+    explicit FavIconLocator(const QUrl &webpageUrl, const QUrl &faviconUrl, QObject *parent);
+
+    ~FavIconLocator() override;
 
     /**
      * Icon know for the webpage this specific object was created
@@ -65,7 +68,8 @@ Q_SIGNALS:
     void gotIcon(QIcon);
 
 private:
-    QIcon favIcon;
+    class Private;
+    Private *const d;
 };
 
 #endif // KBIBTEX_NETWORKING_FAVICONLOCATOR_H

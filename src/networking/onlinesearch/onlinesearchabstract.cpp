@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -120,9 +120,10 @@ OnlineSearchAbstract::OnlineSearchAbstract(QObject *parent)
 #ifdef HAVE_QTWIDGETS
 QIcon OnlineSearchAbstract::icon(QListWidgetItem *listWidgetItem)
 {
-    FavIconLocator *fil = new FavIconLocator(homepage(), this);
-    connect(fil, &FavIconLocator::gotIcon, this, [listWidgetItem](const QIcon &icon) {
+    FavIconLocator *fil = new FavIconLocator(homepage(), favicon(), this);
+    connect(fil, &FavIconLocator::gotIcon, this, [listWidgetItem, fil](const QIcon &icon) {
         listWidgetItem->setIcon(icon);
+        fil->deleteLater();
     });
     return fil->icon();
 }
@@ -146,6 +147,11 @@ QString OnlineSearchAbstract::name()
         m_name = label().remove(invalidChars);
     }
     return m_name;
+}
+
+QUrl OnlineSearchAbstract::favicon() const
+{
+    return QUrl();
 }
 
 bool OnlineSearchAbstract::busy() const

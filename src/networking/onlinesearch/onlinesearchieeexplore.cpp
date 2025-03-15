@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -182,6 +182,11 @@ QString OnlineSearchIEEEXplore::label() const
 QUrl OnlineSearchIEEEXplore::homepage() const
 {
     return QUrl(QStringLiteral("https://ieeexplore.ieee.org/"));
+}
+
+QUrl OnlineSearchIEEEXplore::favicon() const
+{
+    return QUrl(QStringLiteral("https://ieeexplore.ieee.org/assets/img/favicon.ico"));
 }
 
 #ifdef BUILD_TESTING
