@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-04 01:53+0000\n"
+"POT-Creation-Date: 2025-03-16 01:58+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -2763,9 +2763,10 @@ msgstr ""
 msgid "Google Scholar"
 msgstr "Google stipendist"
 
-#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:108
-#, kde-format
-msgid "IDEAS (RePEc)"
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
+#, fuzzy, kde-format
+#| msgid "IDEAS (RePEc)"
+msgid "IDEAS/RePEc"
 msgstr "IDEAS (RePEc)"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: l 10n\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-04 01:53+0000\n"
+"POT-Creation-Date: 2025-03-16 01:58+0000\n"
 "PO-Revision-Date: 2016-08-30 12:25+0300\n"
 "Last-Translator: Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2670,9 +2670,9 @@ msgstr ""
 msgid "Google Scholar"
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:108
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
 #, kde-format
-msgid "IDEAS (RePEc)"
+msgid "IDEAS/RePEc"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175

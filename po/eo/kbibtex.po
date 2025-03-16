@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-04 01:53+0000\n"
+"POT-Creation-Date: 2025-03-16 01:58+0000\n"
 "PO-Revision-Date: 2025-02-15 14:15+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -2698,9 +2698,10 @@ msgstr ""
 msgid "Google Scholar"
 msgstr "Google Scholar"
 
-#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:108
-#, kde-format
-msgid "IDEAS (RePEc)"
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
+#, fuzzy, kde-format
+#| msgid "IDEAS (RePEc)"
+msgid "IDEAS/RePEc"
 msgstr "IDEOJ (RePEc)"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175

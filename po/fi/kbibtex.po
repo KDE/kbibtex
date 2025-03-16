@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-04 01:53+0000\n"
+"POT-Creation-Date: 2025-03-16 01:58+0000\n"
 "PO-Revision-Date: 2024-12-01 14:46+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -2696,9 +2696,10 @@ msgstr "Google Scholar esti tiedon louhinnan, koska pitää sinua robottina."
 msgid "Google Scholar"
 msgstr "Google Scholar"
 
-#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:108
-#, kde-format
-msgid "IDEAS (RePEc)"
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
+#, fuzzy, kde-format
+#| msgid "IDEAS (RePEc)"
+msgid "IDEAS/RePEc"
 msgstr "IDEAS (RePEc)"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
