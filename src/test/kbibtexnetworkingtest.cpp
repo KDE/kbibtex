@@ -26,6 +26,7 @@
 #include <onlinesearch/OnlineSearchPubMed>
 #include <onlinesearch/OnlineSearchSpringerLink>
 #include <onlinesearch/OnlineSearchZbMath>
+#include <onlinesearch/OnlineSearchBioRxiv>
 #include <onlinesearch/ISBN>
 #include <InternalNetworkAccessManager>
 #include <AssociatedFiles>
@@ -73,6 +74,10 @@ private Q_SLOTS:
     void onlineSearchSpringerLinkXMLparsing();
     void onlineSearchZbMathXMLparsing_data();
     void onlineSearchZbMathXMLparsing();
+    void onlineSearchBioRxivJSONparsing_data();
+    void onlineSearchBioRxivJSONparsing();
+    void onlineSearchMedRxivJSONparsing_data();
+    void onlineSearchMedRxivJSONparsing();
 #endif // BUILD_TESTING
     void onlineSearchISBN_data();
     void onlineSearchISBN();
@@ -824,6 +829,84 @@ void KBibTeXNetworkingTest::onlineSearchZbMathXMLparsing()
         }
     }
 }
+
+void KBibTeXNetworkingTest::onlineSearchBioRxivJSONparsing_data()
+{
+    QTest::addColumn<QByteArray>("jsonData");
+    QTest::addColumn<bool>("expectedOk");
+    QTest::addColumn<QVector<QSharedPointer<Entry>>>("expectedEntries");
+
+    QTest::newRow("Empty input data") << QByteArray() << false << QVector<QSharedPointer<Entry>>();
+    QTest::newRow("Glibberish") << QByteArrayLiteral("dfbhflbkndfsgn") << false << QVector<QSharedPointer<Entry>>();
+
+    auto bioRxiv10110120250314643318 = QSharedPointer<Entry>(new Entry(Entry::etMisc, QStringLiteral("biorxiv:10.1101/2025.03.14.643318")));
+    bioRxiv10110120250314643318->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Great Ape Childhoods: Development of infant bonobos (Pan paniscus) and chimpanzees (Pan troglodytes schweinfurthii) in the wild"))));
+    bioRxiv10110120250314643318->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("J. M. R."), QStringLiteral("Vlaeyen"))) << QSharedPointer<Person>(new Person(QStringLiteral("B."), QStringLiteral("van Boekholt"))) << QSharedPointer<Person>(new Person(QStringLiteral("F."), QStringLiteral("Wegdell"))) << QSharedPointer<Person>(new Person(QStringLiteral("R."), QStringLiteral("Katumba"))) << QSharedPointer<Person>(new Person(QStringLiteral("A."), QStringLiteral("Berghaenel"))) << QSharedPointer<Person>(new Person(QStringLiteral("M."), QStringLiteral("Surbeck"))) << QSharedPointer<Person>(new Person(QStringLiteral("S."), QStringLiteral("Pika"))));
+    bioRxiv10110120250314643318->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2025"))));
+    bioRxiv10110120250314643318->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.1101/2025.03.14.643318"))));
+    bioRxiv10110120250314643318->insert(Entry::ftAbstract, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Human development is marked by extended immaturity, necessitating extended care throughout infancy and childhood, facilitating advanced cognitive, social, and cultural skill acquisition. Parallels of extended development are also present in our closest living relatives, bonobos (Pan paniscus) and chimpanzees (Pan troglodytes). The Self-Domestication Hypothesis (SDH) suggests that human uniqueness stems from selection against aggression. Bonobos are also considered self-domesticated, exhibiting lower aggression and greater social tolerance, which are linked to delayed development and prolonged maternal dependence compared to chimpanzees. However, systematic, quantitative comparisons of the two species developmental patterns are limited and conflicting. This study addressed this gap by examining behavioural development in bonobo and chimpanzee infants aged 0-5.5 years living in two populations (Kokolopori community, Kokolopori Bonobo Reserve, DRC, N=21; Ngogo community, Kibale National Park, Uganda, N=22) in their natural environments. We specifically focused on (i) general behaviours (travel, feeding, grooming), and (ii) spatial independence. By systematically comparing developmental data and using consistent methods, we tested whether bonobo development aligns with SDH predictions. Our results showed similar developmental trajectories, with no species differences concerning ventral riding, nipple contact, or grooming. However, we found species differences regarding travel and proximity patterns, with chimpanzees exhibiting prolonged dorsal riding, bonobos travelling independently more often and maintaining greater distances from their mothers. Age, sibling presence, and maternal parity influenced behavioural patterns, but no sex differences were observed. These findings challenge assumptions of slower bonobo maturation, and highlight the importance of systematic, collaborative research on primate behavioural diversity in natural environments."))));
+    QTest::newRow("BioRxiv:10.1101/2025.03.14.643318") << QByteArrayLiteral("{\"messages\":[{\"status\":\"ok\"}], \"collection\":[{\"doi\":\"10.1101\\/2025.03.14.643318\",\"title\":\"Great Ape Childhoods: Development of infant bonobos (Pan paniscus) and chimpanzees (Pan troglodytes schweinfurthii) in the wild\",\"authors\":\"Vlaeyen, J. M. R.; van Boekholt, B.; Wegdell, F.; Katumba, R.; Berghaenel, A.; Surbeck, M.; Pika, S.\",\"author_corresponding\":\"Jolinde Marga Roza Vlaeyen\",\"author_corresponding_institution\":\"Institute of Cognitive Science, Comparative BioCognition, Osnabrueck University, Germany\",\"date\":\"2025-03-15\",\"version\":\"1\",\"type\":\"new results\",\"license\":\"cc_by\",\"category\":\"animal behavior and cognition\",\"jatsxml\":\"https:\\/\\/www.biorxiv.org\\/content\\/early\\/2025\\/03\\/15\\/2025.03.14.643318.source.xml\",\"abstract\":\"Human development is marked by extended immaturity, necessitating extended care throughout infancy and childhood, facilitating advanced cognitive, social, and cultural skill acquisition. Parallels of extended development are also present in our closest living relatives, bonobos (Pan paniscus) and chimpanzees (Pan troglodytes). The Self-Domestication Hypothesis (SDH) suggests that human uniqueness stems from selection against aggression. Bonobos are also considered self-domesticated, exhibiting lower aggression and greater social tolerance, which are linked to delayed development and prolonged maternal dependence compared to chimpanzees. However, systematic, quantitative comparisons of the two species developmental patterns are limited and conflicting. This study addressed this gap by examining behavioural development in bonobo and chimpanzee infants aged 0-5.5 years living in two populations (Kokolopori community, Kokolopori Bonobo Reserve, DRC, N=21; Ngogo community, Kibale National Park, Uganda, N=22) in their natural environments. We specifically focused on (i) general behaviours (travel, feeding, grooming), and (ii) spatial independence. By systematically comparing developmental data and using consistent methods, we tested whether bonobo development aligns with SDH predictions. Our results showed similar developmental trajectories, with no species differences concerning ventral riding, nipple contact, or grooming. However, we found species differences regarding travel and proximity patterns, with chimpanzees exhibiting prolonged dorsal riding, bonobos travelling independently more often and maintaining greater distances from their mothers. Age, sibling presence, and maternal parity influenced behavioural patterns, but no sex differences were observed. These findings challenge assumptions of slower bonobo maturation, and highlight the importance of systematic, collaborative research on primate behavioural diversity in natural environments.\",\"published\":\"NA\",\"server\":\"biorxiv\"}]}") << true << QVector<QSharedPointer<Entry>> {bioRxiv10110120250314643318};
+}
+
+void KBibTeXNetworkingTest::onlineSearchBioRxivJSONparsing()
+{
+    QFETCH(QByteArray, jsonData);
+    QFETCH(bool, expectedOk);
+    QFETCH(QVector<QSharedPointer<Entry>>, expectedEntries);
+
+    OnlineSearchBioRxiv searchBioRxiv(OnlineSearchBioRxiv::Rxiv::bioRxiv,this);
+    bool ok = false;
+    const auto generatedEntries = searchBioRxiv.parseBioRxivJSON(jsonData, &ok);
+    QCOMPARE(expectedOk, ok);
+    QCOMPARE(generatedEntries.length(), expectedEntries.length());
+    if (ok) {
+        for (auto itA = expectedEntries.constBegin(), itB = generatedEntries.constBegin(); itA != expectedEntries.constEnd() && itB != generatedEntries.constEnd(); ++itA, ++itB) {
+            const QSharedPointer<Entry> &entryA = *itA;
+            const QSharedPointer<Entry> &entryB = *itB;
+            QCOMPARE(*entryA, *entryB);
+        }
+    }
+}
+
+void KBibTeXNetworkingTest::onlineSearchMedRxivJSONparsing_data()
+{
+    QTest::addColumn<QByteArray>("jsonData");
+    QTest::addColumn<bool>("expectedOk");
+    QTest::addColumn<QVector<QSharedPointer<Entry>>>("expectedEntries");
+
+    QTest::newRow("Empty input data") << QByteArray() << false << QVector<QSharedPointer<Entry>>();
+    QTest::newRow("Glibberish") << QByteArrayLiteral("dfbhflbkndfsgn") << false << QVector<QSharedPointer<Entry>>();
+
+    auto medRxiv2025030425323343  = QSharedPointer<Entry>(new Entry(Entry::etMisc, QStringLiteral("medrxiv:10.1101/2025.03.04.25323343")));
+    medRxiv2025030425323343 ->insert(Entry::ftTitle, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("From Binge Drinking to Future Alcohol Severity: The Role of Emotion Regulation and Emerging Psychopathology"))));
+    medRxiv2025030425323343 ->insert(Entry::ftAuthor, Value() << QSharedPointer<Person>(new Person(QStringLiteral("C."), QStringLiteral("Carbia")))<< QSharedPointer<Person>(new Person(QStringLiteral("M. S."), QStringLiteral("Rodriguez")))<< QSharedPointer<Person>(new Person(QStringLiteral("S."), QStringLiteral("Suarez-Suarez")))<< QSharedPointer<Person>(new Person(QStringLiteral("S."), QStringLiteral("Doallo")))<< QSharedPointer<Person>(new Person(QStringLiteral("F."), QStringLiteral("Cadaveira")))<< QSharedPointer<Person>(new Person(QStringLiteral("M."), QStringLiteral("Corral"))));
+    medRxiv2025030425323343 ->insert(Entry::ftYear, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("2025"))));
+    medRxiv2025030425323343 ->insert(Entry::ftDOI, Value() << QSharedPointer<VerbatimText>(new VerbatimText(QStringLiteral("10.1101/2025.03.04.25323343"))));
+    medRxiv2025030425323343 ->insert(Entry::ftAbstract, Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("Binge drinking (BD) during emerging adulthood increases the risk of developing alcohol use disorders, yet not all individuals follow this trajectory. Deficits in emotion regulation has been identified as a risk factor for psychopathology, but its specific role in shaping long-term alcohol severity among young binge drinkers remains insufficiently understood. This study investigates the role of emotion regulation difficulties as a mediator in the relationship between binge BD and future alcohol severity in young people and the moderator role of emerging psychopathological symptoms. We followed a cohort of 192 university students (53% female) over two years, from ages 18 to 20 We measured alcohol consumption and emotion regulation (Difficulties in Emotion Regulation Scale), as well as psychopathological symptoms (Brief Symptom Inventory). Mediation and moderated mediation models were conducted with PROCESS. Results show that BD predicts future alcohol severity, with emotion regulation difficulties, specifically challenges in goal-directed behaviour, partially mediating this relationship. Psychopathological symptoms moderated the effects, with difficulties in emotion regulation being a significant predictor of future alcohol severity only in individuals with emerging psychopathological symptoms. Additionally, the association between BD and future alcohol severity was amplified in those with emerging psychopathological symptoms. These findings offer new insights into the risk factors underlying the escalation of problematic alcohol use and the interplay between BD, emotion regulation, and psychopathology. They also stress the importance of early interventions focused on enhancing emotion regulation abilities in young binge drinkers, especially those displaying early psychopathological symptoms."))));
+    QTest::newRow("MedRxiv:10.1101/2025.03.04.25323343") << QByteArrayLiteral("{\"messages\":[{\"status\":\"ok\"}], \"collection\":[{\"doi\":\"10.1101\\/2025.03.04.25323343\",\"title\":\"From Binge Drinking to Future Alcohol Severity: The Role of Emotion Regulation and Emerging Psychopathology\",\"authors\":\"Carbia, C.; Rodriguez, M. S.; Suarez-Suarez, S.; Doallo, S.; Cadaveira, F.; Corral, M.\",\"author_corresponding\":\"Maria Soledad Rodriguez\",\"author_corresponding_institution\":\"Universidade de Santiago  de Compostela\",\"date\":\"2025-03-05\",\"version\":\"1\",\"type\":\"PUBLISHAHEADOFPRINT\",\"license\":\"cc_no\",\"category\":\"addiction medicine\",\"jatsxml\":\"https:\\/\\/www.medrxiv.org\\/content\\/early\\/2025\\/03\\/05\\/2025.03.04.25323343.source.xml\",\"abstract\":\"Binge drinking (BD) during emerging adulthood increases the risk of developing alcohol use disorders, yet not all individuals follow this trajectory. Deficits in emotion regulation has been identified as a risk factor for psychopathology, but its specific role in shaping long-term alcohol severity among young binge drinkers remains insufficiently understood. This study investigates the role of emotion regulation difficulties as a mediator in the relationship between binge BD and future alcohol severity in young people and the moderator role of emerging psychopathological symptoms. We followed a cohort of 192 university students (53% female) over two years, from ages 18 to 20 We measured alcohol consumption and emotion regulation (Difficulties in Emotion Regulation Scale), as well as psychopathological symptoms (Brief Symptom Inventory). Mediation and moderated mediation models were conducted with PROCESS. Results show that BD predicts future alcohol severity, with emotion regulation difficulties, specifically challenges in goal-directed behaviour, partially mediating this relationship. Psychopathological symptoms moderated the effects, with difficulties in emotion regulation being a significant predictor of future alcohol severity only in individuals with emerging psychopathological symptoms. Additionally, the association between BD and future alcohol severity was amplified in those with emerging psychopathological symptoms. These findings offer new insights into the risk factors underlying the escalation of problematic alcohol use and the interplay between BD, emotion regulation, and psychopathology. They also stress the importance of early interventions focused on enhancing emotion regulation abilities in young binge drinkers, especially those displaying early psychopathological symptoms.\",\"published\":\"NA\",\"server\":\"medrxiv\"}]}") << true << QVector<QSharedPointer<Entry>> {medRxiv2025030425323343 };
+}
+
+void KBibTeXNetworkingTest::onlineSearchMedRxivJSONparsing()
+{
+    QFETCH(QByteArray, jsonData);
+    QFETCH(bool, expectedOk);
+    QFETCH(QVector<QSharedPointer<Entry>>, expectedEntries);
+
+    OnlineSearchBioRxiv searchBioRxiv(OnlineSearchBioRxiv::Rxiv::medRxiv,this);
+    bool ok = false;
+    const auto generatedEntries = searchBioRxiv.parseBioRxivJSON(jsonData, &ok);
+    QCOMPARE(expectedOk, ok);
+    QCOMPARE(generatedEntries.length(), expectedEntries.length());
+    if (ok) {
+        for (auto itA = expectedEntries.constBegin(), itB = generatedEntries.constBegin(); itA != expectedEntries.constEnd() && itB != generatedEntries.constEnd(); ++itA, ++itB) {
+            const QSharedPointer<Entry> &entryA = *itA;
+            const QSharedPointer<Entry> &entryB = *itB;
+            QCOMPARE(*entryA, *entryB);
+        }
+    }
+}
+
+
 
 #endif // BUILD_TESTING
 

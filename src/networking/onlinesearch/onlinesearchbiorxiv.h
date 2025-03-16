@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2016-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2016-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,21 +34,36 @@ class KBIBTEXNETWORKING_EXPORT OnlineSearchBioRxiv : public OnlineSearchAbstract
     Q_OBJECT
 
 public:
-    explicit OnlineSearchBioRxiv(QObject *parent);
+    enum class Rxiv {bioRxiv, medRxiv};
+
+    explicit OnlineSearchBioRxiv(Rxiv rxiv, QObject *parent);
     ~OnlineSearchBioRxiv() override;
 
+    Rxiv rxiv() const;
+
+#ifdef HAVE_QTWIDGETS
+    void startSearchFromForm() override;
+#endif // HAVE_QTWIDGETS
     void startSearch(const QMap<QueryKey, QString> &query, int numResults) override;
     QString label() const override;
+#ifdef HAVE_QTWIDGETS
+    OnlineSearchAbstract::Form *customWidget(QWidget *parent) override;
+#endif // HAVE_QTWIDGETS
     QUrl homepage() const override;
-
-private Q_SLOTS:
-    void resultsPageDone();
-    void resultPageDone();
-    void bibTeXDownloadDone();
+#ifdef BUILD_TESTING
+    // KBibTeXNetworkingTest::onlineSearchBioRxivJSONparsing  makes use of this function to test parsing Atom XML data
+    QVector<QSharedPointer<Entry>> parseBioRxivJSON(const QByteArray &jsonData, bool *ok);
+#endif // BUILD_TESTING
 
 private:
+#ifdef HAVE_QTWIDGETS
+    class Form;
+#endif // HAVE_QTWIDGETS
     class Private;
     Private *const d;
+
+private Q_SLOTS:
+    void downloadDone();
 };
 
 #endif // KBIBTEX_NETWORKING_ONLINESEARCHBIORXIV_H

@@ -162,7 +162,8 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     onlineSearchList << new OnlineSearchScienceDirect(this);
     onlineSearchList << new OnlineSearchSOANASAADS(this);
     onlineSearchList << new OnlineSearchSpringerLink(this);
-    onlineSearchList << new OnlineSearchBioRxiv(this);
+    onlineSearchList << new OnlineSearchBioRxiv(OnlineSearchBioRxiv::Rxiv::bioRxiv, this);
+    onlineSearchList << new OnlineSearchBioRxiv(OnlineSearchBioRxiv::Rxiv::medRxiv, this);
     onlineSearchList << new OnlineSearchSemanticScholar(this);
     onlineSearchList << new OnlineSearchUnpaywall(this);
     onlineSearchList << new OnlineSearchZbMath(this);
@@ -283,9 +284,13 @@ void KBibTeXTest::processNextSearch()
         addMessage(QString(QStringLiteral("Searching '%1'")).arg((*currentOnlineSearch)->label()), MessageStatus::Info);
 
         QMap<OnlineSearchAbstract::QueryKey, QString> query;
+        OnlineSearchBioRxiv* onlineSearchBioRxiv{nullptr};
         if (qobject_cast<OnlineSearchSemanticScholar*>(*currentOnlineSearch) != nullptr)
             /// Semantic Scholar cannot search for last names, but for DOIs or arXiv IDs instead
             query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1002/smj.863"));
+        else if ((onlineSearchBioRxiv = qobject_cast<OnlineSearchBioRxiv*>(*currentOnlineSearch)) != nullptr)
+            /// BioRxiv/MedRxiv cannot search for last names, but for DOIs instead
+            query.insert(OnlineSearchAbstract::QueryKey::FreeText, onlineSearchBioRxiv->rxiv() == OnlineSearchBioRxiv::Rxiv::medRxiv ? QStringLiteral("10.1101/2025.03.14.25323943") : QStringLiteral("10.1101/2025.03.14.643318"));
         else if (qobject_cast<OnlineSearchSpringerLink*>(*currentOnlineSearch) != nullptr)
             /// Searching for author is a Premium Plan feature at Springer Nature, so search for DOI instead
             query.insert(OnlineSearchAbstract::QueryKey::FreeText, QStringLiteral("10.1007/s42864-024-00293-x"));

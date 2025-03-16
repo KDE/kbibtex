@@ -133,7 +133,7 @@ if(Qt${QT_MAJOR_VERSION}WebEngineWidgets_FOUND)
     )
 endif()
 
-set(onlinesearchgeneratorstems "arxiv" "googlebooks" "ieeexplore" "pubmed" "springerlink" "zbmath")
+set(onlinesearchgeneratorstems "arxiv" "googlebooks" "ieeexplore" "pubmed" "springerlink" "zbmath" "biorxiv")
 set(onlinesearchdependencies)
 foreach(stem ${onlinesearchgeneratorstems})
     add_custom_command(
