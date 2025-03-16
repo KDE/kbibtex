@@ -2,37 +2,44 @@
 # SPDX-License-Identifier: CC0-1.0
 
 Dependencies:
-- 'on': ['Linux/Qt5', 'FreeBSD/Qt5', 'Windows/Qt5', 'macOS/Qt5']
-  'require':
-    'frameworks/kconfig': '@stable'
-    'frameworks/ki18n': '@stable'
-    'frameworks/kxmlgui': '@stable'
-    'frameworks/kio': '@stable'
-    'frameworks/kiconthemes': '@stable'
-    'frameworks/kparts': '@stable'
-    'frameworks/kcoreaddons': '@stable'
-    'frameworks/ktexteditor': '@stable'
-    'frameworks/kwidgetsaddons': '@stable'
-    'frameworks/kwallet': '@stable'
-    'frameworks/kcrash': '@stable'
-    'frameworks/extra-cmake-modules': '@stable'
+  - 'on': ['Linux/Qt5', 'FreeBSD/Qt5', 'Windows/Qt5', 'macOS/Qt5']
+    'require':
+      'frameworks/kconfig': '@stable'
+      'frameworks/ki18n': '@stable'
+      'frameworks/kxmlgui': '@stable'
+      'frameworks/kio': '@stable'
+      'frameworks/kiconthemes': '@stable'
+      'frameworks/kparts': '@stable'
+      'frameworks/kcoreaddons': '@stable'
+      'frameworks/ktexteditor': '@stable'
+      'frameworks/kwidgetsaddons': '@stable'
+      'frameworks/kwallet': '@stable'
+      'frameworks/kcrash': '@stable'
+      'frameworks/extra-cmake-modules': '@stable'
 
-- 'on': ['Linux/Qt6', 'FreeBSD/Qt6', 'Windows/Qt6', 'macOS/Qt6']
-  'require':
-    'frameworks/kconfig': '@latest-kf6'
-    'frameworks/ki18n': '@latest-kf6'
-    'frameworks/kxmlgui': '@latest-kf6'
-    'frameworks/kio': '@latest-kf6'
-    'frameworks/kiconthemes': '@latest-kf6'
-    'frameworks/kparts': '@latest-kf6'
-    'frameworks/kcoreaddons': '@latest-kf6'
-    'frameworks/ktexteditor': '@latest-kf6'
-    'frameworks/kwidgetsaddons': '@latest-kf6'
-    'frameworks/kwallet': '@latest-kf6'
-    'frameworks/kcrash': '@latest-kf6'
-    'frameworks/extra-cmake-modules': '@latest-kf6'
+  - 'on': ['Linux/Qt6', 'FreeBSD/Qt6', 'Windows/Qt6', 'macOS/Qt6']
+    'require':
+      'frameworks/kconfig': '@latest-kf6'
+      'frameworks/ki18n': '@latest-kf6'
+      'frameworks/kxmlgui': '@latest-kf6'
+      'frameworks/kio': '@latest-kf6'
+      'frameworks/kiconthemes': '@latest-kf6'
+      'frameworks/kparts': '@latest-kf6'
+      'frameworks/kcoreaddons': '@latest-kf6'
+      'frameworks/ktexteditor': '@latest-kf6'
+      'frameworks/kwidgetsaddons': '@latest-kf6'
+      'frameworks/kwallet': '@latest-kf6'
+      'frameworks/kcrash': '@latest-kf6'
+      'frameworks/extra-cmake-modules': '@latest-kf6'
 
 Options:
   test-before-installing: True
   require-passing-tests-on: [ 'Linux', 'FreeBSD', 'Windows' ]
   cmake-options: -DBUILD_TESTING:BOOL=ON
+  xml-validate-include:
+    - mime/bibliography.xml
+    - src/program/org.kde.kbibtex.appdata.xml
+    - src/parts/kbibtexpartui.rc
+    - src/parts/part.qrc
+    - src/program/kbibtexui.rc
+    - src/program/program.qrc
