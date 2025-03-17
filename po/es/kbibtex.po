@@ -1,3 +1,4 @@
+# Spanish translations for kbibtex.po package.
 # Copyright (C) 2014-2025 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kbibtex package.
 #
@@ -8,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-16 01:58+0000\n"
-"PO-Revision-Date: 2025-02-04 12:05+0100\n"
+"PO-Revision-Date: 2025-03-16 04:24+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.12.1\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -940,7 +941,7 @@ msgstr "Usar prefijo como «%% »"
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr "Usar la orden @comment{...}"
+msgstr "Usar la orden @comment{…}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1433,7 +1434,7 @@ msgstr "Resultado"
 #: src/gui/element/findpdfui.cpp:436
 #, kde-format
 msgid "Starting to search..."
-msgstr "Comenzando la búsqueda..."
+msgstr "Comenzando la búsqueda…"
 
 #: src/gui/element/findpdfui.cpp:457
 #, kde-format
@@ -1655,7 +1656,7 @@ msgstr "Subir valor"
 #: src/gui/field/fieldlistedit.cpp:428
 #, kde-format
 msgid "... and others (et al.)"
-msgstr "... y otros (et al.)"
+msgstr "… y otros (et al.)"
 
 #: src/gui/field/fieldlistedit.cpp:433
 #, kde-format
@@ -1670,12 +1671,12 @@ msgstr "Añadir una lista de nombres desde el portapapeles"
 #: src/gui/field/fieldlistedit.cpp:496
 #, kde-format
 msgid "Add file..."
-msgstr "Añadir archivo..."
+msgstr "Añadir archivo…"
 
 #: src/gui/field/fieldlistedit.cpp:502
 #, kde-format
 msgid "Add reference ..."
-msgstr "Añadir referencia..."
+msgstr "Añadir referencia…"
 
 #: src/gui/field/fieldlistedit.cpp:505
 #, kde-format
@@ -1885,7 +1886,7 @@ msgstr "Preferencias"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:263
 #, kde-format
 msgid "Add..."
-msgstr "Añadir..."
+msgstr "Añadir…"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:336
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:104
@@ -2098,7 +2099,7 @@ msgstr "|Último autor"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:126
 #, kde-format
 msgid "... and last author"
-msgstr "... y el último autor"
+msgstr "… y el último autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
@@ -2372,7 +2373,7 @@ msgstr "Sugerencias de ID"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:266
 #, kde-format
 msgid "Edit..."
-msgstr "Editar..."
+msgstr "Editar…"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:272
 #, kde-format
@@ -2717,10 +2718,9 @@ msgid "Google Scholar"
 msgstr "Google Scholar"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
-#, fuzzy, kde-format
-#| msgid "IDEAS (RePEc)"
+#, kde-format
 msgid "IDEAS/RePEc"
-msgstr "IDEAS (RePEc)"
+msgstr "IDEAS/RePEc"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
@@ -2945,12 +2945,12 @@ msgstr "Ver documento"
 #: src/parts/part.cpp:164
 #, kde-format
 msgid "Save Copy As..."
-msgstr "Guardar copia como..."
+msgstr "Guardar copia como…"
 
 #: src/parts/part.cpp:168
 #, kde-format
 msgid "Save Selection..."
-msgstr "Guardar la selección..."
+msgstr "Guardar la selección…"
 
 #: src/parts/part.cpp:176
 #, kde-format
@@ -2995,7 +2995,7 @@ msgstr "Editar elemento"
 #: src/parts/part.cpp:231
 #, kde-format
 msgid "Find PDF..."
-msgstr "Encontrar PDF..."
+msgstr "Encontrar PDF…"
 
 #: src/parts/part.cpp:236
 #, kde-format
@@ -3301,7 +3301,7 @@ msgstr "No se han producido errores ni advertencias"
 #: src/processing/findduplicates.cpp:383
 #, kde-format
 msgid "Searching ..."
-msgstr "Buscando..."
+msgstr "Buscando…"
 
 #: src/processing/findduplicates.cpp:383
 #, kde-format
@@ -3499,7 +3499,7 @@ msgstr "Abrir con programa externo"
 #: src/program/docklets/documentpreview.cpp:333
 #, kde-format
 msgid "Refreshing..."
-msgstr "Actualizando..."
+msgstr "Actualizando…"
 
 #: src/program/docklets/documentpreview.cpp:362
 #, kde-format
@@ -3526,7 +3526,7 @@ msgstr "No se puede mostrar la parte solicitada"
 #: src/program/docklets/documentpreview.cpp:517
 #, kde-format
 msgid "Loading..."
-msgstr "Cargando..."
+msgstr "Cargando…"
 
 #: src/program/docklets/documentpreview.cpp:533
 #, kde-format
@@ -4151,7 +4151,7 @@ msgstr "Nuevo"
 #: src/program/mdiwidget.cpp:154
 #, kde-format
 msgid "Open..."
-msgstr "Abrir..."
+msgstr "Abrir…"
 
 #: src/program/mdiwidget.cpp:158
 #, kde-format
