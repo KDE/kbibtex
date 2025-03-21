@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-02-04 01:53+0000\n"
+"POT-Creation-Date: 2025-03-16 01:58+0000\n"
 "PO-Revision-Date: 2014-03-08 19:32+0100\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -2679,9 +2679,9 @@ msgstr ""
 msgid "Google Scholar"
 msgstr "Google Scholar"
 
-#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:108
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
 #, kde-format
-msgid "IDEAS (RePEc)"
+msgid "IDEAS/RePEc"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
