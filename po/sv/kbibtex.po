@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-16 01:58+0000\n"
-"PO-Revision-Date: 2025-02-04 16:22+0100\n"
+"PO-Revision-Date: 2025-04-06 14:38+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.12.0\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2698,10 +2698,9 @@ msgid "Google Scholar"
 msgstr "Google Scholar"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
-#, fuzzy, kde-format
-#| msgid "IDEAS (RePEc)"
+#, kde-format
 msgid "IDEAS/RePEc"
-msgstr "IDEAS (RePEc)"
+msgstr "IDEAS/RePEc"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format

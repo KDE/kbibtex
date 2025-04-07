@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023, 2024 Shinjo Park <kde@peremen.name>
+# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023, 2024, 2025 Shinjo Park <kde@peremen.name>
 # Jung Hee Lee <daemul72@gmail.com>, 2019.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-16 01:58+0000\n"
-"PO-Revision-Date: 2024-08-19 22:37+0200\n"
+"PO-Revision-Date: 2025-04-06 22:27+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -2676,10 +2676,9 @@ msgid "Year:"
 msgstr "연도:"
 
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Google Books"
-msgstr "Google 학술검색"
+msgstr "Google 도서"
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
@@ -2694,10 +2693,9 @@ msgid "Google Scholar"
 msgstr "Google 학술검색"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
-#, fuzzy, kde-format
-#| msgid "IDEAS (RePEc)"
+#, kde-format
 msgid "IDEAS/RePEc"
-msgstr "IDEAS(RePEc)"
+msgstr "IDEAS/RePEc"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
@@ -2795,10 +2793,9 @@ msgid "Author or Editor:"
 msgstr "저자 또는 편집자:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr "Springer Nature 링크"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
