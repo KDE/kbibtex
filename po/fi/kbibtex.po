@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# SPDX-FileCopyrightText: 2014, 2015, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Tommi Nieminen <translator@legisign.org>
+# SPDX-FileCopyrightText: 2014, 2015, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Tommi Nieminen <translator@legisign.org>
 # Lasse Liehu <lasse.liehu@gmail.com>, 2014, 2015, 2016.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-16 01:58+0000\n"
-"PO-Revision-Date: 2024-12-01 14:46+0200\n"
+"PO-Revision-Date: 2025-04-20 10:32+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -2697,10 +2697,9 @@ msgid "Google Scholar"
 msgstr "Google Scholar"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
-#, fuzzy, kde-format
-#| msgid "IDEAS (RePEc)"
+#, kde-format
 msgid "IDEAS/RePEc"
-msgstr "IDEAS (RePEc)"
+msgstr "IDEAS/RePEc"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
@@ -2798,10 +2797,9 @@ msgid "Author or Editor:"
 msgstr "Kirjoittaja tai toimittaja:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr "Springer Nature -linkki"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
