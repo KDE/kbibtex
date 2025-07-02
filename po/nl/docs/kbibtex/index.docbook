@@ -1573,7 +1573,7 @@ latex voorbeeld</screen>
   </sect1>
   <sect1 id="config-dialog">
     <title
->Het configuratiescherm van &kbibtex; </title>
+>De configuratiedialoog van &kbibtex; </title>
     <para
 >U kunt verschillende parameters van &kbibtex; instellen in het <guilabel
 >Voorkeuren</guilabel
