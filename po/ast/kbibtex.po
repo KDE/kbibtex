@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 03:22+0000\n"
+"POT-Creation-Date: 2025-07-05 03:21+0000\n"
 "PO-Revision-Date: 2016-12-21 16:20+0100\n"
 "Last-Translator: enolp <enolp@softastur.org>\n"
 "Language-Team: Asturian <alministradores@softastur.org>\n"
@@ -2732,30 +2732,6 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:185
 #, kde-format
 msgid "Zotero OAuth Key Exchange"
-msgstr ""
-
-#. i18n: ectx: Menu (file)
-#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
-#, kde-format
-msgid "File"
-msgstr ""
-
-#. i18n: ectx: Menu (edit)
-#: src/parts/kbibtexpartui.rc:9
-#, kde-format
-msgid "Edit"
-msgstr ""
-
-#. i18n: ectx: Menu (element)
-#: src/parts/kbibtexpartui.rc:16
-#, kde-format
-msgid "Element"
-msgstr ""
-
-#. i18n: ectx: ToolBar (mainToolBar)
-#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
-#, kde-format
-msgid "Main Toolbar"
 msgstr ""
 
 #: src/parts/part.cpp:141 src/parts/part.cpp:211

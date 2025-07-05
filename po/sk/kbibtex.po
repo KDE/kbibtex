@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 03:22+0000\n"
+"POT-Creation-Date: 2025-07-05 03:21+0000\n"
 "PO-Revision-Date: 2024-11-10 18:09+0100\n"
 "Last-Translator: Roman Paholík <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -2772,30 +2772,6 @@ msgstr "Otvoriť URL"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Výmena kľúčov Zotero OAuth"
 
-#. i18n: ectx: Menu (file)
-#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
-#, kde-format
-msgid "File"
-msgstr "Súbor"
-
-#. i18n: ectx: Menu (edit)
-#: src/parts/kbibtexpartui.rc:9
-#, kde-format
-msgid "Edit"
-msgstr "Upraviť"
-
-#. i18n: ectx: Menu (element)
-#: src/parts/kbibtexpartui.rc:16
-#, kde-format
-msgid "Element"
-msgstr "Prvok"
-
-#. i18n: ectx: ToolBar (mainToolBar)
-#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
-#, kde-format
-msgid "Main Toolbar"
-msgstr "Hlavný panel nástrojov"
-
 #: src/parts/part.cpp:141 src/parts/part.cpp:211
 #, kde-format
 msgid "View Document"
@@ -4050,6 +4026,18 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nekompletná inštalácia KBibTeX"
+
+#~ msgid "File"
+#~ msgstr "Súbor"
+
+#~ msgid "Edit"
+#~ msgstr "Upraviť"
+
+#~ msgid "Element"
+#~ msgstr "Prvok"
+
+#~ msgid "Main Toolbar"
+#~ msgstr "Hlavný panel nástrojov"
 
 #~ msgid "Changing this option requires a restart to take effect."
 #~ msgstr "Zmena tejto voľby vyžaduje reštart, aby sa prejavila."
