@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:21+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2022-02-02 17:03+0300\n"
 "Last-Translator: Мария Шикунова <translation-team@basealt.ru>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2794,6 +2794,30 @@ msgstr "Открыть URL"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Обмен ключами Zotero OAuth"
 
+#. i18n: ectx: Menu (file)
+#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
+#, kde-format
+msgid "File"
+msgstr "Файл"
+
+#. i18n: ectx: Menu (edit)
+#: src/parts/kbibtexpartui.rc:9
+#, kde-format
+msgid "Edit"
+msgstr "Правка"
+
+#. i18n: ectx: Menu (element)
+#: src/parts/kbibtexpartui.rc:16
+#, kde-format
+msgid "Element"
+msgstr "Элемент"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
+#, kde-format
+msgid "Main Toolbar"
+msgstr "Основная панель инструментов"
+
 #: src/parts/part.cpp:141 src/parts/part.cpp:211
 #, kde-format
 msgid "View Document"
@@ -4062,18 +4086,6 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Неполная установка KBibTeX"
-
-#~ msgid "File"
-#~ msgstr "Файл"
-
-#~ msgid "Edit"
-#~ msgstr "Правка"
-
-#~ msgid "Element"
-#~ msgstr "Элемент"
-
-#~ msgid "Main Toolbar"
-#~ msgstr "Основная панель инструментов"
 
 #~ msgid "Changing this option requires a restart to take effect."
 #~ msgstr "Изменение этой настройки требует перезапуска программы"

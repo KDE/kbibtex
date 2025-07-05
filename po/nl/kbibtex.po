@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:21+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2024-11-25 11:10+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: Dutch <kde-i18n-nl@kde.org>\n"
@@ -2787,6 +2787,30 @@ msgstr "URL-adres openen"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Zotero OAuth uitwisseling van sleutel"
 
+#. i18n: ectx: Menu (file)
+#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
+#, kde-format
+msgid "File"
+msgstr "Bestand"
+
+#. i18n: ectx: Menu (edit)
+#: src/parts/kbibtexpartui.rc:9
+#, kde-format
+msgid "Edit"
+msgstr "Bewerken"
+
+#. i18n: ectx: Menu (element)
+#: src/parts/kbibtexpartui.rc:16
+#, kde-format
+msgid "Element"
+msgstr "Element"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
+#, kde-format
+msgid "Main Toolbar"
+msgstr "Hoofdwerkbalk"
+
 #: src/parts/part.cpp:141 src/parts/part.cpp:211
 #, kde-format
 msgid "View Document"
@@ -4046,18 +4070,6 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Onvolledige installatie van KBibTeX"
-
-#~ msgid "File"
-#~ msgstr "Bestand"
-
-#~ msgid "Edit"
-#~ msgstr "Bewerken"
-
-#~ msgid "Element"
-#~ msgstr "Element"
-
-#~ msgid "Main Toolbar"
-#~ msgstr "Hoofdwerkbalk"
 
 #~ msgid "Changing this option requires a restart to take effect."
 #~ msgstr "Deze optie wijzigen vereist opnieuw opstarten om effect te hebben."

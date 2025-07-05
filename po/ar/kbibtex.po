@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:21+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2025-06-28 17:33+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -2735,6 +2735,30 @@ msgstr "افتح المسار"
 msgid "Zotero OAuth Key Exchange"
 msgstr ""
 
+#. i18n: ectx: Menu (file)
+#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
+#, kde-format
+msgid "File"
+msgstr "ملف"
+
+#. i18n: ectx: Menu (edit)
+#: src/parts/kbibtexpartui.rc:9
+#, kde-format
+msgid "Edit"
+msgstr "حرّر"
+
+#. i18n: ectx: Menu (element)
+#: src/parts/kbibtexpartui.rc:16
+#, kde-format
+msgid "Element"
+msgstr "عنصر"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
+#, kde-format
+msgid "Main Toolbar"
+msgstr "شريط الأدوات الرئيسي"
+
 #: src/parts/part.cpp:141 src/parts/part.cpp:211
 #, kde-format
 msgid "View Document"
@@ -3926,15 +3950,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr ""
-
-#~ msgid "File"
-#~ msgstr "ملف"
-
-#~ msgid "Edit"
-#~ msgstr "حرّر"
-
-#~ msgid "Element"
-#~ msgstr "عنصر"
-
-#~ msgid "Main Toolbar"
-#~ msgstr "شريط الأدوات الرئيسي"

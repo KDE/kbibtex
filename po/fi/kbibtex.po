@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:21+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2024-10-27 10:01+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -2771,6 +2771,30 @@ msgstr "Avaa verkko-osoite"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Zotero OAuth -avainvaihto"
 
+#. i18n: ectx: Menu (file)
+#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
+#, kde-format
+msgid "File"
+msgstr "Tiedosto"
+
+#. i18n: ectx: Menu (edit)
+#: src/parts/kbibtexpartui.rc:9
+#, kde-format
+msgid "Edit"
+msgstr "Muokkaa"
+
+#. i18n: ectx: Menu (element)
+#: src/parts/kbibtexpartui.rc:16
+#, kde-format
+msgid "Element"
+msgstr "Tietue"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
+#, kde-format
+msgid "Main Toolbar"
+msgstr "Päätyökalurivi"
+
 #: src/parts/part.cpp:141 src/parts/part.cpp:211
 #, kde-format
 msgid "View Document"
@@ -4019,18 +4043,6 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Epätäydellinen KBibTeX-asennus"
-
-#~ msgid "File"
-#~ msgstr "Tiedosto"
-
-#~ msgid "Edit"
-#~ msgstr "Muokkaa"
-
-#~ msgid "Element"
-#~ msgstr "Tietue"
-
-#~ msgid "Main Toolbar"
-#~ msgstr "Päätyökalurivi"
 
 #~ msgid "Changing this option requires a restart to take effect."
 #~ msgstr "Tämä asetus tulee voimaan uudelleenkäynnistyksen jälkeen."

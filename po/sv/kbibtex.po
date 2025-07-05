@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:21+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2024-11-25 18:21+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -2775,6 +2775,30 @@ msgstr "Öppna webbadress"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Zotero OAuth-nyckelutbyte"
 
+#. i18n: ectx: Menu (file)
+#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
+#, kde-format
+msgid "File"
+msgstr "Arkiv"
+
+#. i18n: ectx: Menu (edit)
+#: src/parts/kbibtexpartui.rc:9
+#, kde-format
+msgid "Edit"
+msgstr "Redigera"
+
+#. i18n: ectx: Menu (element)
+#: src/parts/kbibtexpartui.rc:16
+#, kde-format
+msgid "Element"
+msgstr "Element"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
+#, kde-format
+msgid "Main Toolbar"
+msgstr "Huvudverktygsrad"
+
 #: src/parts/part.cpp:141 src/parts/part.cpp:211
 #, kde-format
 msgid "View Document"
@@ -4024,18 +4048,6 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Ofullständig Kbibtex-installation"
-
-#~ msgid "File"
-#~ msgstr "Arkiv"
-
-#~ msgid "Edit"
-#~ msgstr "Redigera"
-
-#~ msgid "Element"
-#~ msgstr "Element"
-
-#~ msgid "Main Toolbar"
-#~ msgstr "Huvudverktygsrad"
 
 #~ msgid "Changing this option requires a restart to take effect."
 #~ msgstr "Att ändra det här alternativet kräver en omstart för att få effekt."

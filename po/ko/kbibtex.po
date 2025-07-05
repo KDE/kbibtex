@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-07-05 03:21+0000\n"
+"POT-Creation-Date: 2025-07-05 05:54+0000\n"
 "PO-Revision-Date: 2024-08-19 22:37+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2769,6 +2769,30 @@ msgstr "URL 열기"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Zotero OAuth 키 교환"
 
+#. i18n: ectx: Menu (file)
+#: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
+#, kde-format
+msgid "File"
+msgstr "파일"
+
+#. i18n: ectx: Menu (edit)
+#: src/parts/kbibtexpartui.rc:9
+#, kde-format
+msgid "Edit"
+msgstr "편집"
+
+#. i18n: ectx: Menu (element)
+#: src/parts/kbibtexpartui.rc:16
+#, kde-format
+msgid "Element"
+msgstr "요소"
+
+#. i18n: ectx: ToolBar (mainToolBar)
+#: src/parts/kbibtexpartui.rc:32 src/program/kbibtexui.rc:20
+#, kde-format
+msgid "Main Toolbar"
+msgstr "주 도구 모음"
+
 #: src/parts/part.cpp:141 src/parts/part.cpp:211
 #, kde-format
 msgid "View Document"
@@ -4010,18 +4034,6 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "불완전한 KBibTeX 설치"
-
-#~ msgid "File"
-#~ msgstr "파일"
-
-#~ msgid "Edit"
-#~ msgstr "편집"
-
-#~ msgid "Element"
-#~ msgstr "요소"
-
-#~ msgid "Main Toolbar"
-#~ msgstr "주 도구 모음"
 
 #~ msgid "Changing this option requires a restart to take effect."
 #~ msgstr "이 옵션을 변경하려면 다시 시작해야 합니다."
