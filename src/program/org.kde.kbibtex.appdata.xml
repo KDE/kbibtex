@@ -128,7 +128,7 @@
     <p xml:lang="zh-CN">KBibTeX 可以完成以下工作：</p>
     <ul>
       <li>Preview bibliography entries in various formats (Source (BibTeX), Source (RIS), Wikipedia, standard (XML/XSLT), fancy (XML/XSLT), and abstract-only (XML/XSLT)). Additional preview styles become available when bibtex2html is installed.</li>
-      <li xml:lang="ar">معاينة إدخالات المراجع بتنسيقات مختلفة (المصدر (BibTeX)، المصدر (RIS)، ويكيبديا، القياسي (XML / XSLT)، fancy (XML / XSLT) ، والملخص فقط (XML / XSLT)). تصبح أنماط المعاينة الإضافية متاحة عند تثبيت bibtex2html.</li>
+      <li xml:lang="ar">معاينة إدخالات المراجع بتنسيقات مختلفة (المصدر (BibTeX)، المصدر (RIS)، ويكيبديا، القياسي (XML / XSLT)، fancy (XML / XSLT)، والملخص فقط (XML / XSLT)). تصبح أنماط المعاينة الإضافية متاحة عند تثبيت bibtex2html.</li>
       <li xml:lang="ca">Vista prèvia de les entrades a la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
       <li xml:lang="ca-valencia">Vista prèvia de les entrades en la bibliografia en diversos formats (Origen (BibTeX), Origen (RIS), Viquipèdia, estàndard (XML/XSLT), elaborat (XML/XSLT), i només el resum (XML/XSLT)). Hi ha disponibles estils de vista prèvia addicionals quan s'instal·la «bibtex2html».</li>
       <li xml:lang="de">Vorschau und Speichern von Bibliografie-Einträgen in verschiedenen Formaten (Quelltext (BibTeX), Quelltext (RIS), Wikipedia, Standard (XML/XSLT), fancy (XML/XSLT) und abstract-only (XML/XSLT)). Zusätzliche Vorschaustile sind verfügbar, wenn Sie „bibtex2html“ installiert haben.</li>
@@ -212,7 +212,7 @@
       <li xml:lang="x-test">xxSearch for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)xx</li>
       <li xml:lang="zh-CN">搜索在线数据库中的参考文献条目数据 (如 Google Scholar、ACM、IEEE、arXiv 等)</li>
       <li>Preview local or remote (online) resources, e.g. PDF files, linked in the BibTEX entry.</li>
-      <li xml:lang="ar">معاينة الموارد المحلية أو البعيدة (عبر الإنترنت) ، على سبيل المثال ملفات PDF ، المرتبطة في إدخال BibTEX.</li>
+      <li xml:lang="ar">معاينة الموارد المحلية أو البعيدة (عبر الإنترنت)، على سبيل المثال ملفات PDF، المرتبطة في إدخال BibTEX.</li>
       <li xml:lang="ca">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
       <li xml:lang="ca-valencia">Vista prèvia de recursos locals o remots (connectats), p. ex., fitxers PDF, vinculats amb l'entrada de BibTeX.</li>
       <li xml:lang="de">Anzeige von lokalen und entfernten (Online-) Ressourcen wie zum Beispiel PDF-Dateien, die mit einem BibTEX Eintrag verknüpft sind.</li>
