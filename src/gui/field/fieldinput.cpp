@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -64,6 +64,15 @@ public:
         else if (starRatingWidget != nullptr) delete starRatingWidget;
         else if (fieldLineEdit != nullptr) delete fieldLineEdit;
         else if (fieldListEdit != nullptr) delete fieldListEdit;
+    }
+
+    inline bool emit_modified()
+    {
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
+        return QMetaObject::invokeMethod(p, "modified");
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+        return QMetaObject::invokeMethod(p, &FieldInput::modified);
+#endif
     }
 
     void createGUI() {
@@ -293,12 +302,7 @@ public:
         Value value;
         value.append(QSharedPointer<MacroKey>(new MacroKey(KBibTeX::MonthsTriple[month - 1])));
         reset(value);
-        /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-        QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-        QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
-#endif
+        emit_modified();
     }
 
     void setEdition(int edition)
@@ -308,12 +312,7 @@ public:
             Value value;
             value.append(QSharedPointer<PlainText>(new PlainText(editionString)));
             reset(value);
-            /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
-#endif
+            emit_modified();
         }
     }
 };

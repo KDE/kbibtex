@@ -231,11 +231,11 @@ public:
             ofi->addFlags(OpenFileInfo::StatusFlag::RecentlyUsed);
 
             /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(p, "setCaption", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(QString, QString(QStringLiteral("%1 [%2]")).arg(ofi->shortCaption(), squeeze_text(ofi->fullCaption(), 64))));
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(p, "setCaption", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(QString, QString(QStringLiteral("%1 [%2]")).arg(ofi->shortCaption(), squeeze_text(ofi->fullCaption(), 64))));
-#endif //
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
+            QMetaObject::invokeMethod(p, "setCaption", Q_ARG(QString, QString(QStringLiteral("%1 [%2]")).arg(ofi->shortCaption(), squeeze_text(ofi->fullCaption(), 64))));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+            QMetaObject::invokeMethod(p, &MDIWidget::setCaption, QString(QStringLiteral("%1 [%2]")).arg(ofi->shortCaption(), squeeze_text(ofi->fullCaption(), 64)));
+#endif
         }
     }
 };

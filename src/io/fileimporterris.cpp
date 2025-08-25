@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -57,6 +57,25 @@ public:
         /// nothing
     }
 
+    static inline bool message(FileImporter::MessageSeverity messageSeverity, const QString &messageText, QObject *_parent)
+    {
+        FileImporterRIS *parent{qobject_cast<FileImporterRIS*>(_parent)};
+        if (parent != nullptr) {
+            // Only send message if parent is a FileImporterRIS object
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
+            return QMetaObject::invokeMethod(parent, "message", Q_ARG(FileImporter::MessageSeverity, messageSeverity), Q_ARG(QString, messageText));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+            return QMetaObject::invokeMethod(parent, &FileImporterRIS::message, messageSeverity, messageText);
+#endif
+        } else
+            return false;
+    }
+
+    inline bool message(FileImporter::MessageSeverity messageSeverity, const QString &messageText)
+    {
+        return message(messageSeverity, messageText, this->parent);
+    }
+
     RISitemList readElement(QTextStream &textStream) {
         RISitemList result;
         QString line = textStream.readLine();
@@ -90,11 +109,7 @@ public:
         if (!line.startsWith(QStringLiteral("ER  -")) && textStream.atEnd()) {
             qCWarning(LOG_KBIBTEX_IO) << "Expected that entry that starts with 'TY' ends with 'ER' but instead met end of file";
             /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QStringLiteral("Expected that entry that starts with 'TY' ends with 'ER' but instead met end of file")));
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QStringLiteral("Expected that entry that starts with 'TY' ends with 'ER' but instead met end of file")));
-#endif
+            message(MessageSeverity::Warning, QStringLiteral("Expected that entry that starts with 'TY' ends with 'ER' but instead met end of file"));
         }
         if (!value.isEmpty()) {
             RISitem item;
@@ -254,11 +269,7 @@ public:
             } else {
                 qCWarning(LOG_KBIBTEX_IO) << "Invalid year: " << dateFragments[0];
                 /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QString(QStringLiteral("Invalid year: '%1'")).arg(dateFragments[0])));
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QString(QStringLiteral("Invalid year: '%1'")).arg(dateFragments[0])));
-#endif
+                message(MessageSeverity::Warning, QString(QStringLiteral("Invalid year: '%1'")).arg(dateFragments[0]));
             }
         }
         if (dateFragments.count() > 1) {
@@ -271,11 +282,7 @@ public:
             } else {
                 qCWarning(LOG_KBIBTEX_IO) << "Invalid month: " << dateFragments[1];
                 /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QGenericReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QString(QStringLiteral("Invalid month: '%1'")).arg(dateFragments[1])));
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(parent, "message", Qt::DirectConnection, QMetaMethodReturnArgument(), Q_ARG(FileImporter::MessageSeverity, MessageSeverity::Warning), Q_ARG(QString, QString(QStringLiteral("Invalid month: '%1'")).arg(dateFragments[1])));
-#endif
+                message(MessageSeverity::Warning, QString(QStringLiteral("Invalid month: '%1'")).arg(dateFragments[1]));
             }
         }
 

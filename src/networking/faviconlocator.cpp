@@ -85,14 +85,19 @@ public:
         processNextInStack();
     }
 
+    inline bool gotIcon(const QIcon &icon)
+    {
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
+        return QMetaObject::invokeMethod(parent, "gotIcon", Q_ARG(QIcon, icon));
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+        return QMetaObject::invokeMethod(parent, &FavIconLocator::gotIcon, icon);
+#endif
+    }
+
     void signalIcon(const QIcon &favIcon) {
         this->favIcon = favIcon;
         QTimer::singleShot(100, parent, [this]() {
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(parent, "gotIcon", Qt::QueuedConnection, QGenericReturnArgument(), Q_ARG(QIcon, this->favIcon));
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(parent, "gotIcon", Qt::QueuedConnection, Q_ARG(QIcon, this->favIcon));
-#endif
+            gotIcon(this->favIcon);
         });
     }
 

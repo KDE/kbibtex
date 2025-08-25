@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -83,6 +83,15 @@ public:
     FieldListEditProtected(const FieldListEditProtected &other) = delete;
     FieldListEditProtected &operator= (const FieldListEditProtected &other) = delete;
 
+    inline bool emit_modified()
+    {
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
+        return QMetaObject::invokeMethod(p, "modified");
+#else // QT_VERSION >= QT_VERSION_CHECK(6, 7, 0)
+        return QMetaObject::invokeMethod(p, &FieldListEdit::modified);
+#endif
+    }
+
     void setupGUI() {
         QBoxLayout *outerLayout = new QVBoxLayout(p);
         outerLayout->setContentsMargins(0, 0, 0, 0);
@@ -147,12 +156,7 @@ public:
             removeFieldLineEdit(le);
             const QSize size(container->width(), recommendedHeight());
             container->resize(size);
-            /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-            QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
-#endif
+            emit_modified();
         });
 
         QPushButton *goDown = new QPushButton(QIcon::fromTheme(QStringLiteral("go-down")), QString(), le);
@@ -160,14 +164,8 @@ public:
         le->appendWidget(goDown);
         connect(goDown, &QPushButton::clicked, p, [this, le]() {
             const bool gotModified = goDownFieldLineEdit(le);
-            if (gotModified) {
-                /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
-#endif
-            }
+            if (gotModified)
+                emit_modified();
         });
 
         QPushButton *goUp = new QPushButton(QIcon::fromTheme(QStringLiteral("go-up")), QString(), le);
@@ -175,14 +173,8 @@ public:
         le->appendWidget(goUp);
         connect(goUp, &QPushButton::clicked, p, [this, le]() {
             const bool gotModified = goUpFieldLineEdit(le);
-            if (gotModified) {
-                /// Instead of an 'emit' ...
-#if QT_VERSION < QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QGenericReturnArgument());
-#else // QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-                QMetaObject::invokeMethod(p, "modified", Qt::DirectConnection, QMetaMethodReturnArgument());
-#endif
-            }
+            if (gotModified)
+                emit_modified();
         });
 
         connect(le, &FieldLineEdit::modified, p, &FieldListEdit::modified);
