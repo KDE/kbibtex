@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -88,7 +88,7 @@ public:
      */
     static QSet<QUrl> entryUrls(const QSharedPointer<const Entry> &entry, const QUrl &bibTeXUrl, TestExistence testExistence);
 
-#ifdef HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
     /**
      * Load the given PDF file and return the contained plain text.
      * Makes use of Poppler to load and parse the file. All text
@@ -97,15 +97,15 @@ public:
      * @return extracted plain text, either directly from PDF file or from cache OR QString() if there was an error
      */
     static QString pdfToText(const QString &pdfFilename);
-#endif // HAVE_POPPLERQT5
+#endif // HAVE_POPPLERQT
 
 protected:
     FileInfo();
 
 private:
-#ifdef HAVE_POPPLERQT5
-    static void extractPDFTextToCache(const QString &pdfFilename, const QString &cacheFilename);
-#endif // HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
+    static QString extractPDFTextToCache(const QString &pdfFilename, const QString &cacheFilename);
+#endif // HAVE_POPPLERQT
 };
 
 #endif // KBIBTEX_IO_FILEINFO_H

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,6 +21,12 @@
 
 #ifdef HAVE_POPPLERQT5
 #include <poppler-qt5.h>
+#else // not HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT6
+#include <poppler-qt6.h>
+#else // not HAVE_POPPLERQT6
+#error "Neither Poppler Qt5 nor Poppler Qt6 detected"
+#endif // HAVE_POPPLERQT6
 #endif // HAVE_POPPLERQT5
 
 #include <QFileInfo>
@@ -29,9 +35,6 @@
 #include <QTextStream>
 #include <QStandardPaths>
 #include <QRegularExpression>
-#ifdef HAVE_QTCONCURRENT
-#include <QtConcurrentRun>
-#endif // HAVE_QTCONCURRENT
 
 #include <KBibTeX>
 #include <Entry>
@@ -331,14 +334,22 @@ QSet<QUrl> FileInfo::entryUrls(const QSharedPointer<const Entry> &entry, const Q
     return result;
 }
 
-#ifdef HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
 QString FileInfo::pdfToText(const QString &pdfFilename)
 {
-    /// Build filename for text file where PDF file's plain text is cached
-    const QString cacheDirectory = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + QStringLiteral("/pdftotext");
-    if (!QDir(cacheDirectory).exists() && !QDir::home().mkdir(cacheDirectory))
+    const QString cacheLocation {QStandardPaths::writableLocation(QStandardPaths::CacheLocation)};
+    if (!QDir(cacheLocation).exists() && !QDir::home().mkdir(cacheLocation)) {
         /// Could not create cache directory
+        qCWarning(LOG_KBIBTEX_IO) << "Could not create cache location:" << cacheLocation;
         return QString();
+    }
+    /// Build filename for text file where PDF file's plain text is cached
+    const QString cacheDirectory {cacheLocation + QStringLiteral("/pdftotext")};
+    if (!QDir(cacheDirectory).exists() && !QDir::home().mkdir(cacheDirectory)) {
+        /// Could not create cache directory
+        qCWarning(LOG_KBIBTEX_IO) << "Could not create cache directory:" << cacheDirectory;
+        return QString();
+    }
     static const QRegularExpression invalidChars(QStringLiteral("[^-a-z0-9_]"), QRegularExpression::CaseInsensitiveOption);
     const QString textFilename = QString(pdfFilename).remove(invalidChars).append(QStringLiteral(".txt")).prepend(QStringLiteral("/")).prepend(cacheDirectory);
 
@@ -350,38 +361,40 @@ QString FileInfo::pdfToText(const QString &pdfFilename)
             const QString text = QString::fromUtf8(f.readAll());
             f.close();
             return text;
-        }
+        } else
+            return QString();
     } else {
-#ifdef HAVE_QTCONCURRENT
-        /// No cache file exists, so run text extraction in another thread
-        QtConcurrent::run(extractPDFTextToCache, pdfFilename, textFilename);
-#else // HAVE_QTCONCURRENT
-        extractPDFTextToCache(pdfFilename, textFilename);
-#endif // HAVE_QTCONCURRENT
+        return extractPDFTextToCache(pdfFilename, textFilename);
     }
-
-    return QString();
 }
 
-void FileInfo::extractPDFTextToCache(const QString &pdfFilename, const QString &cacheFilename) {
+QString FileInfo::extractPDFTextToCache(const QString &pdfFilename, const QString &cacheFilename) {
     /// In case of multiple calls, skip text extraction if cache file already exists
-    if (QFile(cacheFilename).exists()) return;
+    if (QFile(cacheFilename).exists())
+        return QString();
 
     QString text;
     QStringList msgList;
 
     /// Load PDF file through Poppler
-    Poppler::Document *doc = Poppler::Document::load(pdfFilename);
-    if (doc != nullptr) {
+#ifdef HAVE_POPPLERQT5
+    QScopedPointer<Poppler::Document> doc(Poppler::Document::load(pdfFilename));
+#else // not HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT6
+    std::unique_ptr<Poppler::Document> doc = Poppler::Document::load(pdfFilename);
+#endif // HAVE_POPPLERQT6
+#endif // HAVE_POPPLERQT5
+
+    if (!doc)
+        msgList << QStringLiteral("### Skipped as file could not be opened as PDF file ###");
+    else {
         static const int maxPages = 64;
         /// Build text by appending each page's text
         for (int i = 0; i < qMin(maxPages, doc->numPages()); ++i)
             text.append(doc->page(i)->text(QRect())).append(QStringLiteral("\n\n"));
         if (doc->numPages() > maxPages)
             msgList << QString(QStringLiteral("### Skipped %1 pages as PDF file contained too many pages (limit is %2 pages) ###")).arg(doc->numPages() - maxPages).arg(maxPages);
-        delete doc;
-    } else
-        msgList << QStringLiteral("### Skipped as file could not be opened as PDF file ###");
+    }
 
     /// Save text in cache file
     QFile f(cacheFilename);
@@ -400,5 +413,7 @@ void FileInfo::extractPDFTextToCache(const QString &pdfFilename, const QString &
 
         f.close();
     }
+
+    return text;
 }
-#endif // HAVE_POPPLERQT5
+#endif // HAVE_POPPLERQT

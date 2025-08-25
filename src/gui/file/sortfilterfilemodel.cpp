@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -200,7 +200,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
             }
         }
 
-#ifdef HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) {///< not filtering for any specific field
             const auto entryUrlList = FileInfo::entryUrls(entry, fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistence::Yes);
@@ -213,7 +213,7 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
                 }
             }
         }
-#endif // HAVE_POPPLERQT5
+#endif // HAVE_POPPLERQT
 
         int i = 0;
         if (m_filterQuery.field.isEmpty())
