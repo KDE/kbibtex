@@ -28,6 +28,7 @@ Diff 0.10.1 to 0.11.0
   during the move to Qt 6 and KDE Frameworks 6.
   Includes contributions by Nicolas Fella <nicolas.fella@gmx.de>
 - Fixing issues with closed QBuffer instances
+- Fixing issues and warnings with localization
 - Better support for JabRef's special structure for 'file' fields
 - Various improvements in XML export, now available in 'Save Copy As' operations
 - Migrating away from QtXmlPatterns (no longer available in Qt6): ArXiv, IEEE Xplore, PubMed, Springer Link, zbMATH

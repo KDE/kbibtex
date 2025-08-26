@@ -1427,7 +1427,7 @@ fieldInputLayout6=SingleLine
 identifier=misc
 uiCaption=Misc
 columns=1
-count=11
+count=10
 
 bibtexLabel1=type
 uiLabel1=Type
@@ -1445,30 +1445,30 @@ bibtexLabel3=addendum
 uiLabel3=Addendum
 fieldInputLayout3=SingleLine
 
-bibtexLabel5=url
-uiLabel5=URL
+bibtexLabel4=url
+uiLabel4=URL
+fieldInputLayout4=SingleLine
+
+bibtexLabel5=urldate
+uiLabel5=URL Date
 fieldInputLayout5=SingleLine
 
-bibtexLabel6=urldate
-uiLabel6=URL Date
+bibtexLabel6=file
+uiLabel6=Local File
 fieldInputLayout6=SingleLine
 
-bibtexLabel7=file
-uiLabel7=Local File
+bibtexLabel7=hyphenation
+uiLabel7=Hyphenation
 fieldInputLayout7=SingleLine
 
-bibtexLabel8=hyphenation
-uiLabel8=Hyphenation
-fieldInputLayout8=SingleLine
+bibtexLabel8=abstract
+uiLabel8=Abstract
+fieldInputLayout8=MultiLine
 
-bibtexLabel9=abstract
-uiLabel9=Abstract
-fieldInputLayout9=MultiLine
+bibtexLabel9=keywords
+uiLabel9=Keywords
+fieldInputLayout9=KeywordList
 
-bibtexLabel10=keywords
-uiLabel10=Keywords
-fieldInputLayout10=KeywordList
-
-bibtexLabel11=x-color
-uiLabel11=Color
-fieldInputLayout11=Color
+bibtexLabel10=x-color
+uiLabel10=Color
+fieldInputLayout10=Color

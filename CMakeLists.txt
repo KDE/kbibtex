@@ -234,6 +234,8 @@ if(ICU_FOUND)
     endif()
 endif()
 
+add_definitions(-DTRANSLATION_DOMAIN="kbibtex")
+
 option(
     BUILD_TESTING
     "Build automated and interactive tests"
