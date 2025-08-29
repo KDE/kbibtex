@@ -4,20 +4,21 @@
 #
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2014, 2015, 2016, 2019.
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
+# SPDX-FileCopyrightText: 2025 Marcus Gama <marcus.gama@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-03-16 01:58+0000\n"
-"PO-Revision-Date: 2024-01-11 20:38-0300\n"
-"Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
+"PO-Revision-Date: 2025-08-28 07:53-0300\n"
+"Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 25.08.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -923,12 +924,11 @@ msgid "Both local and remote files"
 msgstr "Arquivos locais e remotos"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Texto literal"
+msgstr "Verbatim"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -936,13 +936,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Use um prefixo como '%% '"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Usar comando @comentário{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1321,23 +1321,22 @@ msgstr "Valor:"
 #: src/gui/element/elementwidgets.cpp:1254
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "O prefixo de um comentário deve começar com '%'"
 
 #: src/gui/element/elementwidgets.cpp:1262
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Um comentário no modo 'Verbatim' não pode conter linhas em branco"
 
 #: src/gui/element/elementwidgets.cpp:1299
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Conteúdo:"
+msgstr "Contexto:"
 
 #: src/gui/element/elementwidgets.cpp:1303
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Prefixo:"
 
 #: src/gui/element/elementwidgets.cpp:1451
 #, kde-format
@@ -1366,14 +1365,13 @@ msgstr ""
 "BibTeX."
 
 #: src/gui/element/elementwidgets.cpp:1478
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
-"Não é possível processar o código-fonte indicado como um único comentário do "
-"BibTeX."
+"O código-fonte fornecido não pode ser analisado como um único comentário "
+"BibTeX. Tente remover as linhas em branco dentro do comentário."
 
 #: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
@@ -2438,16 +2436,14 @@ msgid "String Delimiters:"
 msgstr "Separadores de textos:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Citação dos comentários:"
+msgstr "Contexto do comentário:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Citação dos comentários:"
+msgstr "Prefixo do comentário:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -2651,8 +2647,7 @@ msgid "Everywhere"
 msgstr "Em todos os lugares"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
-#, fuzzy, kde-format
-#| msgid "Bibsonomy"
+#, kde-format
 msgid "BibSonomy"
 msgstr "Bibsonomy"
 
@@ -2696,10 +2691,9 @@ msgid "Year:"
 msgstr "Ano:"
 
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Google Books"
-msgstr "Google Acadêmico"
+msgstr "Google Books"
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
 #, kde-format
@@ -2714,10 +2708,9 @@ msgid "Google Scholar"
 msgstr "Google Acadêmico"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
-#, fuzzy, kde-format
-#| msgid "IDEAS (RePEc)"
+#, kde-format
 msgid "IDEAS/RePEc"
-msgstr "IDEAS (RePEc)"
+msgstr "IDEAS/RePEc"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
@@ -2815,10 +2808,9 @@ msgid "Author or Editor:"
 msgstr "Autor ou Editor:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr "Link do Springer Nature"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
@@ -3147,6 +3139,10 @@ msgid ""
 "Reload file and loose changes made in KBibTeX or ignore changes on disk and "
 "keep changes made in KBibTeX?"
 msgstr ""
+"O arquivo '%1' foi alterado no disco, mas também foi modificado no KBibTeX.\n"
+"\n"
+"Recarregar o arquivo e perder as alterações feitas no KBibTeX ou ignorar as "
+"alterações no disco e manter as alterações feitas no KBibTeX?"
 
 #: src/parts/part.cpp:1201
 #, kde-format
@@ -3641,22 +3637,19 @@ msgid "Reason:"
 msgstr "Motivo:"
 
 #: src/program/docklets/referencepreview.cpp:251
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Visualização desativada"
 
 #: src/program/docklets/referencepreview.cpp:266
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Nenhum elemento selecionado"
 
 #: src/program/docklets/referencepreview.cpp:315
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Nenhuma saída gerada"
@@ -3664,14 +3657,13 @@ msgstr "Nenhuma saída gerada"
 #: src/program/docklets/referencepreview.cpp:357
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Não é possível mostrar uma pré-visualização para este tipo de elemento"
 
 #: src/program/docklets/referencepreview.cpp:385
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Resumo"
+msgstr "Sem resumo"
 
 #: src/program/docklets/searchform.cpp:194
 #, kde-format
@@ -4178,10 +4170,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Um editor BibTeX do KDE"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
-msgstr "Copyright 2004-2019 Thomas Fischer"
+msgstr "Copyright 2004-2024 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
