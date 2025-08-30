@@ -28,7 +28,7 @@ set(
     bibutils.cpp
 )
 
-if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
+if(${Poppler_FOUND})
     set(
         kbibtexio_SRCS
         ${kbibtexio_SRCS}
@@ -117,7 +117,7 @@ if(ICU_FOUND)
     )
 endif()
 
-if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
+if(${Poppler_FOUND})
     target_link_libraries(kbibtexio
         PRIVATE
             Poppler::Qt${QT_MAJOR_VERSION}
@@ -160,7 +160,7 @@ ecm_generate_headers(kbibtexio_HEADERS
     REQUIRED_HEADERS kbibtexio_HEADERS
 )
 
-if(PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
+if(${Poppler_FOUND})
     ecm_generate_headers(kbibtexio_HEADERS
         HEADER_NAMES
             FileImporterPDF

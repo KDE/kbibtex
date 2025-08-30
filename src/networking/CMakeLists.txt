@@ -105,7 +105,6 @@ target_link_libraries(kbibtexnetworking
         Qt${QT_MAJOR_VERSION}::Widgets
         KBibTeX::Data
     PRIVATE
-        Poppler::Qt${QT_MAJOR_VERSION}
         Qt${QT_MAJOR_VERSION}::DBus
         KF${QT_MAJOR_VERSION}::ConfigCore
         KF${QT_MAJOR_VERSION}::WidgetsAddons
@@ -116,6 +115,13 @@ target_link_libraries(kbibtexnetworking
         KBibTeX::Global
         KBibTeX::IO
 )
+
+if(${Poppler_FOUND})
+    target_link_libraries(kbibtexnetworking
+        PRIVATE
+            Poppler::Qt${QT_MAJOR_VERSION}
+    )
+endif()
 
 if(Qt${QT_MAJOR_VERSION}NetworkAuth_FOUND)
     # See also above for a similar if-clause

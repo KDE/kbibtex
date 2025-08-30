@@ -215,11 +215,11 @@ endif()
 
 find_package(
     Poppler
-    MODULE
-    REQUIRED
+    COMPONENTS
     Qt${QT_MAJOR_VERSION}
 )
-if (PKG_Poppler_Qt${QT_MAJOR_VERSION}_FOUND)
+
+if (${Poppler_FOUND})
     add_compile_definitions(HAVE_POPPLERQT${QT_MAJOR_VERSION} HAVE_POPPLERQT)
 endif()
 

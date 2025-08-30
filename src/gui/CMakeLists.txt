@@ -77,7 +77,6 @@ target_link_libraries(kbibtexgui
         Qt${QT_MAJOR_VERSION}::Core
         Qt${QT_MAJOR_VERSION}::Widgets
     PRIVATE
-        Poppler::Qt${QT_MAJOR_VERSION}
         Qt${QT_MAJOR_VERSION}::Gui
         Qt${QT_MAJOR_VERSION}::Concurrent
         KF${QT_MAJOR_VERSION}::ConfigCore
@@ -96,6 +95,13 @@ target_link_libraries(kbibtexgui
         KBibTeX::Networking
         KBibTeX::Processing
 )
+
+if(${Poppler_FOUND})
+    target_link_libraries(kbibtexgui
+        PRIVATE
+            Poppler::Qt${QT_MAJOR_VERSION}
+    )
+endif()
 
 if(Qt5XmlPatterns_FOUND)
     target_link_libraries(kbibtexio

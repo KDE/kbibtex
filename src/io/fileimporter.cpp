@@ -27,9 +27,9 @@
 
 #include <Value>
 #include "fileimporterbibtex.h"
-#ifdef HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
 #include "fileimporterpdf.h"
-#endif // HAVE_POPPLERQT5
+#endif // HAVE_POPPLERQT
 #include "fileimporterris.h"
 #include "fileimporterbibutils.h"
 #include "logging_io.h"
@@ -49,11 +49,11 @@ FileImporter *FileImporter::factory(const QFileInfo &fileInfo, QObject *parent)
 {
     const QString ending = fileInfo.completeSuffix().toLower();
 
-#ifdef HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
     if (ending.endsWith(QStringLiteral("pdf"))) {
         return new FileImporterPDF(parent);
     } else
-#endif // HAVE_POPPLERQT5
+#endif // HAVE_POPPLERQT
         if (ending.endsWith(QStringLiteral("ris"))) {
             return new FileImporterRIS(parent);
         } else if (BibUtils::available() && ending.endsWith(QStringLiteral("isi"))) {

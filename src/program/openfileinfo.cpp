@@ -388,9 +388,9 @@ KPluginMetaData OpenFileInfo::defaultService()
     KPluginMetaData result;
     static const QSet<QString> supportedMimeTypes{
         QStringLiteral("text/x-bibtex"),
-#ifdef HAVE_POPPLERQT5
+#ifdef HAVE_POPPLERQT
         QStringLiteral("application/pdf"),
-#endif // HAVE_POPPLERQT5
+#endif // HAVE_POPPLERQT
         QStringLiteral("application/x-endnote-refer"), QStringLiteral("application/x-isi-export-format"), QStringLiteral("text/x-research-info-systems"),
         QStringLiteral("application/xml")
     };

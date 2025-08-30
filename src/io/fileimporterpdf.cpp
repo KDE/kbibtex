@@ -29,6 +29,8 @@
 #else // not HAVE_POPPLERQT5
 #ifdef HAVE_POPPLERQT6
 #include <poppler-qt6.h>
+#else // not HAVE_POPPLERQT6
+#error "Neither Poppler Qt5 nor Poppler Qt6 detected"
 #endif // HAVE_POPPLERQT6
 #endif // HAVE_POPPLERQT5
 
