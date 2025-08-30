@@ -1404,6 +1404,9 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
 {
     /// Perform Canonical Decomposition followed by Canonical Composition
     const QString input = ninput.normalized(QString::NormalizationForm_C);
+    if (targetEncoding == Encoder::TargetEncoding::RAW)
+        // Nothing more to do?
+        return input;
 
     int len = input.length();
     QString output;
