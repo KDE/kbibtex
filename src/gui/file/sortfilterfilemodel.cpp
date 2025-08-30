@@ -20,6 +20,7 @@
 #include "sortfilterfilemodel.h"
 
 #include <QRegularExpression>
+#include <QtConcurrentRun>
 
 #include <BibTeXFields>
 #include <BibTeXEntries>
@@ -204,9 +205,13 @@ bool SortFilterFileModel::filterAcceptsRow(int source_row, const QModelIndex &so
         /// Test associated PDF files
         if (m_filterQuery.searchPDFfiles && m_filterQuery.field.isEmpty()) {///< not filtering for any specific field
             const auto entryUrlList = FileInfo::entryUrls(entry, fileSourceModel()->bibliographyFile()->property(File::Url, QUrl()).toUrl(), FileInfo::TestExistence::Yes);
+            QList<QFuture<QString>> futurePdfToText;
             for (const QUrl &url : entryUrlList) {
-                if (url.isLocalFile() && url.fileName().endsWith(QStringLiteral(".pdf"))) {
-                    const QString text = FileInfo::pdfToText(url.toLocalFile());
+                if (url.isLocalFile() && url.fileName().endsWith(QStringLiteral(".pdf")))
+                    futurePdfToText.append(QtConcurrent::run(FileInfo::pdfToText, url.toLocalFile()));
+
+                for(const QFuture<QString> &f : std::as_const(futurePdfToText)) {
+                    const QString text{f.result()};
                     int i = 0;
                     for (QStringList::ConstIterator itsl = m_filterQuery.terms.constBegin(); itsl != m_filterQuery.terms.constEnd(); ++itsl, ++i)
                         eachTerm[i] |= (*itsl).isEmpty() ? true : text.contains(*itsl, Qt::CaseInsensitive);

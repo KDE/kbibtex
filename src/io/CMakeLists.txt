@@ -88,24 +88,10 @@ if(Qt5XmlPatterns_FOUND)
     )
 endif()
 
-if(BUILD_KPART OR BUILD_TESTING)
-    target_link_libraries(kbibtexio
-        PRIVATE
-            Qt${QT_MAJOR_VERSION}::Concurrent
-    )
-endif()
-
 if(KF${QT_MAJOR_VERSION}I18n_FOUND)
     target_link_libraries(kbibtexio
         PRIVATE
             KF${QT_MAJOR_VERSION}::I18n
-    )
-endif()
-
-if(Qt${QT_MAJOR_VERSION}Concurrent_FOUND)
-    # Once CMake 3.12.x is minimum requirement, use 'add_compile_definitions'
-    add_definitions(
-        -DHAVE_QTCONCURRENT
     )
 endif()
 
