@@ -16,14 +16,10 @@ project(
 set(CMAKE_CXX_STANDARD 17)
 
 if (QT_MAJOR_VERSION GREATER_EQUAL 6)
-    set(QT_REQUIRED_VERSION "6.4.0")
-    add_compile_definitions(QT_DISABLE_DEPRECATED_UP_TO=0x060300)
-    add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060300)
-    set(KF_MIN_VERSION "5.240.0")
-    set(KDE_COMPILERSETTINGS_LEVEL "5.85")
+    set(QT_MIN_VERSION "6.6.0")
+    set(KF_MIN_VERSION "6.0.0")
 else()
-    set(QT_REQUIRED_VERSION "5.15.2")
-    add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x050E00)
+    set(QT_MIN_VERSION "5.15.2")
     set(KF_MIN_VERSION "5.86")
 endif()
 
@@ -46,6 +42,7 @@ include(ECMSetupVersion)
 include(ECMAddAppIcon)
 include(GenerateExportHeader)
 include(ECMQtDeclareLoggingCategory)
+include(ECMDeprecationSettings)
 
 ecm_setup_version(
     PROJECT
@@ -54,6 +51,13 @@ ecm_setup_version(
     VERSION_HEADER "${CMAKE_BINARY_DIR}/kbibtex-version.h"
     PACKAGE_VERSION_FILE "${CMAKE_BINARY_DIR}/KBibTeXConfigVersion.cmake"
 )
+
+if (QT_MAJOR_VERSION GREATER_EQUAL 6)
+    ecm_set_disabled_deprecation_versions(
+        QT ${QT_MIN_VERSION}
+        KF ${KF_MIN_VERSION}
+    )
+endif()
 
 install(
     FILES ${CMAKE_BINARY_DIR}/kbibtex-version.h
@@ -123,7 +127,7 @@ find_package(
 if (QT_MAJOR_VERSION GREATER_EQUAL 6)
     # Should become necessary once migrated from QTextCodec to QStringConverter
     find_package(
-        Qt6 ${QT_REQUIRED_VERSION}
+        Qt6 ${QT_MIN_VERSION}
         CONFIG
         COMPONENTS
         Core5Compat
@@ -133,7 +137,7 @@ endif()
 if (QT_MAJOR_VERSION EQUAL 5)
     # Migrate away from QXmlQuery
     find_package(
-        Qt5 ${QT_REQUIRED_VERSION}
+        Qt5 ${QT_MIN_VERSION}
         CONFIG
         COMPONENTS
         XmlPatterns
@@ -142,7 +146,7 @@ endif()
 
 if(BUILD_KPART OR BUILD_TESTING)
     find_package(
-        Qt${QT_MAJOR_VERSION} ${QT_REQUIRED_VERSION}
+        Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION}
         CONFIG
         COMPONENTS
         Gui
