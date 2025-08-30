@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-16 01:58+0000\n"
+"POT-Creation-Date: 2025-08-30 02:04+0000\n"
 "PO-Revision-Date: 2025-03-20 20:25+0100\n"
 "Last-Translator: Valter Mura <valtermura@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -1089,13 +1089,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Percorso come inserito nella voce"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
+#: src/gui/field/fieldlistedit.cpp:610 src/gui/field/fieldlistedit.cpp:612
 #, kde-format
 msgid "Relative Path"
 msgstr "Percorso relativo"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
+#: src/gui/field/fieldlistedit.cpp:610 src/gui/field/fieldlistedit.cpp:612
 #, kde-format
 msgid "Absolute Path"
 msgstr "Percorso assoluto"
@@ -1275,7 +1275,7 @@ msgid "Name:"
 msgstr "Nome:"
 
 #: src/gui/element/elementwidgets.cpp:988
-#: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:113
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1468,162 +1468,162 @@ msgstr "Colore personalizzato"
 msgid "Color & Label"
 msgstr "Colore ed etichetta"
 
-#: src/gui/field/fieldinput.cpp:89
+#: src/gui/field/fieldinput.cpp:98
 #, kde-format
 msgid "Select a predefined month"
 msgstr "Seleziona un mese predefinito"
 
-#: src/gui/field/fieldinput.cpp:107
+#: src/gui/field/fieldinput.cpp:116
 #, kde-format
 msgid "Select a predefined edition"
 msgstr "Seleziona un'edizione predefinita"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "1st"
 msgstr "1°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "2nd"
 msgstr "2°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "3rd"
 msgstr "3°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "4th"
 msgstr "4°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "5th"
 msgstr "5°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "6th"
 msgstr "6°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "7th"
 msgstr "7°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "8th"
 msgstr "8°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "9th"
 msgstr "9°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "10th"
 msgstr "10°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "11th"
 msgstr "11°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "12th"
 msgstr "12°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "13th"
 msgstr "13°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "14th"
 msgstr "14°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "15th"
 msgstr "15°"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "16th"
 msgstr "16°"
 
-#: src/gui/field/fieldinput.cpp:126
+#: src/gui/field/fieldinput.cpp:135
 #, kde-format
 msgid "Select an existing entry"
 msgstr "Seleziona una voce esistente"
 
-#: src/gui/field/fieldinput.cpp:279
+#: src/gui/field/fieldinput.cpp:288
 #, kde-format
 msgid "Select Cross Reference"
 msgstr "Seleziona un riferimento incrociato"
 
-#: src/gui/field/fieldinput.cpp:279
+#: src/gui/field/fieldinput.cpp:288
 #, kde-format
 msgid "Select the cross reference to another entry:"
 msgstr "Seleziona un riferimento incrociato a un'altra voce:"
 
-#: src/gui/field/fieldlineedit.cpp:236 src/gui/field/fieldlineedit.cpp:254
+#: src/gui/field/fieldlineedit.cpp:245 src/gui/field/fieldlineedit.cpp:263
 #, kde-format
 msgid "Opening and closing curly brackets do not match."
 msgstr "Le parentesi graffe aperte e chiuse non corrispondono."
 
-#: src/gui/field/fieldlineedit.cpp:241
+#: src/gui/field/fieldlineedit.cpp:250
 #, kde-format
 msgid "Reference contains characters outside of the allowed set."
 msgstr "Il riferimento contiene caratteri fuori dall'insieme consentito."
 
-#: src/gui/field/fieldlineedit.cpp:251
+#: src/gui/field/fieldlineedit.cpp:260
 #, kde-format
 msgid "Source code could not be parsed correctly."
 msgstr "Impossibile analizzare correttamente il codice sorgente."
 
-#: src/gui/field/fieldlineedit.cpp:311 src/gui/field/fieldlineedit.cpp:366
+#: src/gui/field/fieldlineedit.cpp:320 src/gui/field/fieldlineedit.cpp:375
 #, kde-format
 msgid "Plain Text"
 msgstr "Testo semplice"
 
-#: src/gui/field/fieldlineedit.cpp:317 src/gui/field/fieldlineedit.cpp:367
+#: src/gui/field/fieldlineedit.cpp:326 src/gui/field/fieldlineedit.cpp:376
 #, kde-format
 msgid "Reference"
 msgstr "Riferimento"
 
-#: src/gui/field/fieldlineedit.cpp:323 src/gui/field/fieldlineedit.cpp:368
+#: src/gui/field/fieldlineedit.cpp:332 src/gui/field/fieldlineedit.cpp:377
 #, kde-format
 msgid "Person"
 msgstr "Persona"
 
-#: src/gui/field/fieldlineedit.cpp:329 src/gui/field/fieldlineedit.cpp:369
+#: src/gui/field/fieldlineedit.cpp:338 src/gui/field/fieldlineedit.cpp:378
 #, kde-format
 msgid "Keyword"
 msgstr "Parola chiave"
 
-#: src/gui/field/fieldlineedit.cpp:335 src/gui/field/fieldlineedit.cpp:371
+#: src/gui/field/fieldlineedit.cpp:344 src/gui/field/fieldlineedit.cpp:380
 #, kde-format
 msgid "Source Code"
 msgstr "Codice sorgente"
 
-#: src/gui/field/fieldlineedit.cpp:341 src/gui/field/fieldlineedit.cpp:374
+#: src/gui/field/fieldlineedit.cpp:350 src/gui/field/fieldlineedit.cpp:383
 #, kde-format
 msgid "Verbatim Text"
 msgstr "Testo letterale"
 
-#: src/gui/field/fieldlineedit.cpp:483
+#: src/gui/field/fieldlineedit.cpp:492
 #, kde-format
 msgid "Open '%1'"
 msgstr "Apri «%1»"
 
-#: src/gui/field/fieldlineedit.cpp:503
+#: src/gui/field/fieldlineedit.cpp:508
 #, kde-format
 msgid ""
 "The current text cannot be used as value of type '%1'.\n"
@@ -1634,67 +1634,67 @@ msgstr ""
 "\n"
 "Ritorno al tipo «%2»."
 
-#: src/gui/field/fieldlistedit.cpp:144
+#: src/gui/field/fieldlistedit.cpp:153
 #, kde-format
 msgid "Remove value"
 msgstr "Rimuovi valore"
 
-#: src/gui/field/fieldlistedit.cpp:159
+#: src/gui/field/fieldlistedit.cpp:163
 #, kde-format
 msgid "Move value down"
 msgstr "Sposta valore in basso"
 
-#: src/gui/field/fieldlistedit.cpp:174
+#: src/gui/field/fieldlistedit.cpp:172
 #, kde-format
 msgid "Move value up"
 msgstr "Sposta valore in alto"
 
-#: src/gui/field/fieldlistedit.cpp:428
+#: src/gui/field/fieldlistedit.cpp:420
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... e altri (et al.)"
 
-#: src/gui/field/fieldlistedit.cpp:433
+#: src/gui/field/fieldlistedit.cpp:425
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Aggiungi dagli appunti"
 
-#: src/gui/field/fieldlistedit.cpp:434
+#: src/gui/field/fieldlistedit.cpp:426
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Aggiungi un elenco di nomi dagli appunti"
 
-#: src/gui/field/fieldlistedit.cpp:496
+#: src/gui/field/fieldlistedit.cpp:488
 #, kde-format
 msgid "Add file..."
 msgstr "Aggiungi file..."
 
-#: src/gui/field/fieldlistedit.cpp:502
+#: src/gui/field/fieldlistedit.cpp:494
 #, kde-format
 msgid "Add reference ..."
 msgstr "Aggiungi riferimento ..."
 
-#: src/gui/field/fieldlistedit.cpp:505
+#: src/gui/field/fieldlistedit.cpp:497
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Aggiungi riferimento dagli appunti"
 
-#: src/gui/field/fieldlistedit.cpp:517
+#: src/gui/field/fieldlistedit.cpp:509
 #, kde-format
 msgid "File to Associate"
 msgstr "File da associare"
 
-#: src/gui/field/fieldlistedit.cpp:555 src/gui/field/fieldlistedit.cpp:635
+#: src/gui/field/fieldlistedit.cpp:547 src/gui/field/fieldlistedit.cpp:627
 #, kde-format
 msgid "Save file locally"
 msgstr "Salva localmente il file"
 
-#: src/gui/field/fieldlistedit.cpp:605
+#: src/gui/field/fieldlistedit.cpp:597
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Salva localmente il file «%1»"
 
-#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
+#: src/gui/field/fieldlistedit.cpp:610 src/gui/field/fieldlistedit.cpp:612
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1706,24 +1706,24 @@ msgstr ""
 "tt></p><p>Il percorso assoluto dovrebbe essere<br/><tt style=\"font-family: "
 "%3;\">%2</tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:663
+#: src/gui/field/fieldlistedit.cpp:655
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Aggiungi parole chiave dall'elenco"
 
-#: src/gui/field/fieldlistedit.cpp:664
+#: src/gui/field/fieldlistedit.cpp:656
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Aggiungi parole chiave come selezionate da un elenco predefinito di parole "
 "chiave"
 
-#: src/gui/field/fieldlistedit.cpp:667
+#: src/gui/field/fieldlistedit.cpp:659
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Aggiungi parole chiave dagli appunti"
 
-#: src/gui/field/fieldlistedit.cpp:668
+#: src/gui/field/fieldlistedit.cpp:660
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "Aggiungi un elenco di parole chiave separate da punti dagli appunti"
@@ -2573,12 +2573,12 @@ msgstr "Lo stile BibTeX <strong>%1</strong> non è disponibile."
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "Lo stile BibTeX <strong>PLACEHOLDER</strong> non è disponibile."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:227
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "Ricerca di «%1» non riuscita per ragioni sconosciute."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:227
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2589,8 +2589,8 @@ msgstr ""
 "\n"
 "%2"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:326
-#: src/program/mainwindow.cpp:375 src/program/program.cpp:55
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:332
+#: src/program/mainwindow.cpp:375 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -2654,20 +2654,26 @@ msgstr "Ovunque"
 msgid "BibSonomy"
 msgstr "BibSonomy"
 
-#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:70
+#: src/networking/onlinesearch/onlinesearchdoi.cpp:63
+#, kde-format
+msgid "DOI:"
+msgstr "DOI:"
+
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "bioRxiv"
 msgstr "bioRxiv"
+
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
+#, kde-format
+msgid "medRxiv"
+msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
 msgid "CERN Document Server"
 msgstr "CERN Document Server"
-
-#: src/networking/onlinesearch/onlinesearchdoi.cpp:63
-#, kde-format
-msgid "DOI:"
-msgstr "DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
 #, kde-format
@@ -3689,23 +3695,23 @@ msgid "Use Entry"
 msgstr "Usa voce"
 
 #: src/program/docklets/searchform.cpp:237
-#: src/program/docklets/searchform.cpp:312
+#: src/program/docklets/searchform.cpp:313
 #, kde-format
 msgid "Search"
 msgstr "Cerca"
 
-#: src/program/docklets/searchform.cpp:324
+#: src/program/docklets/searchform.cpp:325
 #, kde-format
 msgid "Stop"
 msgstr "Ferma"
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Nessun motore di ricerca selezionato (<a href=\"changeEngine\">cambia</a>)."
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
@@ -3713,7 +3719,7 @@ msgstr ""
 "È selezionato il motore di ricerca <b>%1</b> (<a href=\"changeEngine"
 "\">cambia</a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:350
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3722,7 +3728,7 @@ msgstr ""
 "Sono selezionati i motori di ricerca <b>%1</b> e <b>%2</b> (<a href="
 "\"changeEngine\">cambia</a>)."
 
-#: src/program/docklets/searchform.cpp:350
+#: src/program/docklets/searchform.cpp:351
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3731,7 +3737,7 @@ msgstr ""
 "Sono selezionati i motori di ricerca <b>%1</b>, <b>%2</b> e <b>%3</b> (<a "
 "href=\"changeEngine\">cambia</a>)."
 
-#: src/program/docklets/searchform.cpp:351
+#: src/program/docklets/searchform.cpp:352
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3740,7 +3746,7 @@ msgstr ""
 "Sono selezionati i motori di ricerca <b>%1</b>, <b>%2</b> e altri (<a href="
 "\"changeEngine\">cambia</a>)."
 
-#: src/program/docklets/searchform.cpp:416
+#: src/program/docklets/searchform.cpp:417
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3749,7 +3755,7 @@ msgstr ""
 "Impossibile avviare la ricerca Internet:\n"
 "I termini ricercati non sono completi o non sono validi."
 
-#: src/program/docklets/searchform.cpp:416
+#: src/program/docklets/searchform.cpp:417
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Ricerca Internet"
@@ -4168,32 +4174,32 @@ msgstr "Nessuna parte disponibile per il file «%1»."
 msgid "Unnamed-%1"
 msgstr "Senza nome-%1"
 
-#: src/program/program.cpp:55
+#: src/program/program.cpp:53
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "Editor BibTeX di KDE"
 
-#: src/program/program.cpp:55
+#: src/program/program.cpp:53
 #, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr "Copyright 2004-2024 Thomas Fischer"
 
-#: src/program/program.cpp:60
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:60
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "Responsabile"
 
-#: src/program/program.cpp:69
+#: src/program/program.cpp:67
 #, kde-format
 msgid "File(s) to load."
 msgstr "File da caricare."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:103
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4206,7 +4212,7 @@ msgstr ""
 "\n"
 "Sarà disponibile solo con funzionalità limitate."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:103
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Installazione di KBibTeX incompleta"

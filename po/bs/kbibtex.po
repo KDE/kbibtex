@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: $2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-16 01:58+0000\n"
+"POT-Creation-Date: 2025-08-30 02:04+0000\n"
 "PO-Revision-Date: 2015-02-24 22:26+0100\n"
 "Last-Translator: Samir Ribić <megaribi@epn.ba>\n"
 "Language-Team: none\n"
@@ -1110,13 +1110,13 @@ msgid "Path as Inserted into Entry"
 msgstr "Putanja koja je unešena"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
+#: src/gui/field/fieldlistedit.cpp:610 src/gui/field/fieldlistedit.cpp:612
 #, kde-format
 msgid "Relative Path"
 msgstr "Relativna putanja"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
+#: src/gui/field/fieldlistedit.cpp:610 src/gui/field/fieldlistedit.cpp:612
 #, kde-format
 msgid "Absolute Path"
 msgstr "Apsolutna putanja."
@@ -1295,7 +1295,7 @@ msgid "Name:"
 msgstr "Ime:"
 
 #: src/gui/element/elementwidgets.cpp:988
-#: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:113
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1480,163 +1480,163 @@ msgstr "Korisnički-definirana boja"
 msgid "Color & Label"
 msgstr "Boja i oznaka"
 
-#: src/gui/field/fieldinput.cpp:89
+#: src/gui/field/fieldinput.cpp:98
 #, kde-format
 msgid "Select a predefined month"
 msgstr "Izaberite prethodno definisan mjesec"
 
-#: src/gui/field/fieldinput.cpp:107
+#: src/gui/field/fieldinput.cpp:116
 #, fuzzy, kde-format
 #| msgid "Select a predefined month"
 msgid "Select a predefined edition"
 msgstr "Izaberite prethodno definisan mjesec"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "1st"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "2nd"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "3rd"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "4th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "5th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "6th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "7th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "8th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "9th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "10th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "11th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "12th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "13th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "14th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "15th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "16th"
 msgstr ""
 
-#: src/gui/field/fieldinput.cpp:126
+#: src/gui/field/fieldinput.cpp:135
 #, kde-format
 msgid "Select an existing entry"
 msgstr "Izaberite postojeći unos"
 
-#: src/gui/field/fieldinput.cpp:279
+#: src/gui/field/fieldinput.cpp:288
 #, kde-format
 msgid "Select Cross Reference"
 msgstr "Izaberite unakrsnu referencu"
 
-#: src/gui/field/fieldinput.cpp:279
+#: src/gui/field/fieldinput.cpp:288
 #, kde-format
 msgid "Select the cross reference to another entry:"
 msgstr "Izaberite unakrsnu referencu za drugi unos:"
 
-#: src/gui/field/fieldlineedit.cpp:236 src/gui/field/fieldlineedit.cpp:254
+#: src/gui/field/fieldlineedit.cpp:245 src/gui/field/fieldlineedit.cpp:263
 #, kde-format
 msgid "Opening and closing curly brackets do not match."
 msgstr ""
 
-#: src/gui/field/fieldlineedit.cpp:241
+#: src/gui/field/fieldlineedit.cpp:250
 #, kde-format
 msgid "Reference contains characters outside of the allowed set."
 msgstr ""
 
-#: src/gui/field/fieldlineedit.cpp:251
+#: src/gui/field/fieldlineedit.cpp:260
 #, kde-format
 msgid "Source code could not be parsed correctly."
 msgstr ""
 
-#: src/gui/field/fieldlineedit.cpp:311 src/gui/field/fieldlineedit.cpp:366
+#: src/gui/field/fieldlineedit.cpp:320 src/gui/field/fieldlineedit.cpp:375
 #, kde-format
 msgid "Plain Text"
 msgstr "Običan tekst"
 
-#: src/gui/field/fieldlineedit.cpp:317 src/gui/field/fieldlineedit.cpp:367
+#: src/gui/field/fieldlineedit.cpp:326 src/gui/field/fieldlineedit.cpp:376
 #, kde-format
 msgid "Reference"
 msgstr "Referenca"
 
-#: src/gui/field/fieldlineedit.cpp:323 src/gui/field/fieldlineedit.cpp:368
+#: src/gui/field/fieldlineedit.cpp:332 src/gui/field/fieldlineedit.cpp:377
 #, kde-format
 msgid "Person"
 msgstr "Osoba"
 
-#: src/gui/field/fieldlineedit.cpp:329 src/gui/field/fieldlineedit.cpp:369
+#: src/gui/field/fieldlineedit.cpp:338 src/gui/field/fieldlineedit.cpp:378
 #, kde-format
 msgid "Keyword"
 msgstr "Ključna riječ"
 
-#: src/gui/field/fieldlineedit.cpp:335 src/gui/field/fieldlineedit.cpp:371
+#: src/gui/field/fieldlineedit.cpp:344 src/gui/field/fieldlineedit.cpp:380
 #, kde-format
 msgid "Source Code"
 msgstr "Izvorni kod"
 
-#: src/gui/field/fieldlineedit.cpp:341 src/gui/field/fieldlineedit.cpp:374
+#: src/gui/field/fieldlineedit.cpp:350 src/gui/field/fieldlineedit.cpp:383
 #, kde-format
 msgid "Verbatim Text"
 msgstr "Običan tekst"
 
-#: src/gui/field/fieldlineedit.cpp:483
+#: src/gui/field/fieldlineedit.cpp:492
 #, kde-format
 msgid "Open '%1'"
 msgstr "Otvori „%1“"
 
-#: src/gui/field/fieldlineedit.cpp:503
+#: src/gui/field/fieldlineedit.cpp:508
 #, kde-format
 msgid ""
 "The current text cannot be used as value of type '%1'.\n"
@@ -1647,67 +1647,67 @@ msgstr ""
 "\n"
 "Prebacivanje natrag na tip '%2'."
 
-#: src/gui/field/fieldlistedit.cpp:144
+#: src/gui/field/fieldlistedit.cpp:153
 #, kde-format
 msgid "Remove value"
 msgstr "Ukloni vrijednost"
 
-#: src/gui/field/fieldlistedit.cpp:159
+#: src/gui/field/fieldlistedit.cpp:163
 #, kde-format
 msgid "Move value down"
 msgstr "Pomjeri vrijednost nadolje"
 
-#: src/gui/field/fieldlistedit.cpp:174
+#: src/gui/field/fieldlistedit.cpp:172
 #, kde-format
 msgid "Move value up"
 msgstr "Pomjeri vrijednost nagore"
 
-#: src/gui/field/fieldlistedit.cpp:428
+#: src/gui/field/fieldlistedit.cpp:420
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... i ostali"
 
-#: src/gui/field/fieldlistedit.cpp:433
+#: src/gui/field/fieldlistedit.cpp:425
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "Dodaj iz međuspremnika"
 
-#: src/gui/field/fieldlistedit.cpp:434
+#: src/gui/field/fieldlistedit.cpp:426
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "Dodaj listu imena iz međuspremnika"
 
-#: src/gui/field/fieldlistedit.cpp:496
+#: src/gui/field/fieldlistedit.cpp:488
 #, kde-format
 msgid "Add file..."
 msgstr "Dodaj datoteku..."
 
-#: src/gui/field/fieldlistedit.cpp:502
+#: src/gui/field/fieldlistedit.cpp:494
 #, kde-format
 msgid "Add reference ..."
 msgstr "Dodaj referencu (napomenu) ..."
 
-#: src/gui/field/fieldlistedit.cpp:505
+#: src/gui/field/fieldlistedit.cpp:497
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "Dodaj referencu iz međuspremnika"
 
-#: src/gui/field/fieldlistedit.cpp:517
+#: src/gui/field/fieldlistedit.cpp:509
 #, kde-format
 msgid "File to Associate"
 msgstr "Datoteka za povezivanje"
 
-#: src/gui/field/fieldlistedit.cpp:555 src/gui/field/fieldlistedit.cpp:635
+#: src/gui/field/fieldlistedit.cpp:547 src/gui/field/fieldlistedit.cpp:627
 #, kde-format
 msgid "Save file locally"
 msgstr "Lokalno sačuvaj datoteku"
 
-#: src/gui/field/fieldlistedit.cpp:605
+#: src/gui/field/fieldlistedit.cpp:597
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "Sačuvaj datoteku '%1' lokalno"
 
-#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
+#: src/gui/field/fieldlistedit.cpp:610 src/gui/field/fieldlistedit.cpp:612
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1719,23 +1719,23 @@ msgstr ""
 "tt></p><p>A apsolutna putanja će biti<br/><tt style=\"font-family: %3;\">%2</"
 "tt></p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:663
+#: src/gui/field/fieldlistedit.cpp:655
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "Dodaj ključne riječi iz liste"
 
-#: src/gui/field/fieldlistedit.cpp:664
+#: src/gui/field/fieldlistedit.cpp:656
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr ""
 "Dodaj ključne riječi izabrane iz prethodno definisane liste ključnih riječi"
 
-#: src/gui/field/fieldlistedit.cpp:667
+#: src/gui/field/fieldlistedit.cpp:659
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "Dodaj ključne riječi iz međuspremnika"
 
-#: src/gui/field/fieldlistedit.cpp:668
+#: src/gui/field/fieldlistedit.cpp:660
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "Dodaj zarezima odvojenu listu ključnih riječi iz međuspremnika"
@@ -2624,12 +2624,12 @@ msgstr "BibTeX stil <strong>%1</strong> nije dostupan."
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "BibTeX stil <strong>%1</strong> nije dostupan."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:227
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "Pretraživanje '%1' nije uspjelo iz nepoznatog razloga."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:227
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2640,8 +2640,8 @@ msgstr ""
 "\n"
 "%2"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:326
-#: src/program/mainwindow.cpp:375 src/program/program.cpp:55
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:332
+#: src/program/mainwindow.cpp:375 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -2706,20 +2706,26 @@ msgstr "Svugdje"
 msgid "BibSonomy"
 msgstr "Bibsonomija"
 
-#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:70
+#: src/networking/onlinesearch/onlinesearchdoi.cpp:63
+#, kde-format
+msgid "DOI:"
+msgstr "DOI:"
+
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "bioRxiv"
+msgstr ""
+
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
+#, kde-format
+msgid "medRxiv"
 msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
 msgid "CERN Document Server"
 msgstr "CERN Dokument Server"
-
-#: src/networking/onlinesearch/onlinesearchdoi.cpp:63
-#, kde-format
-msgid "DOI:"
-msgstr "DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
 #, fuzzy, kde-format
@@ -3769,30 +3775,30 @@ msgid "Use Entry"
 msgstr "Koristi unos"
 
 #: src/program/docklets/searchform.cpp:237
-#: src/program/docklets/searchform.cpp:312
+#: src/program/docklets/searchform.cpp:313
 #, kde-format
 msgid "Search"
 msgstr "Pretraga"
 
-#: src/program/docklets/searchform.cpp:324
+#: src/program/docklets/searchform.cpp:325
 #, kde-format
 msgid "Stop"
 msgstr "Prekini"
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Nijedan pretraživač nije izabran (<a href=\"changeEngine\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Pretraživač <b>%1</b> je odabran (<a href=\"changeEngine\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:350
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3801,7 +3807,7 @@ msgstr ""
 "Pretraživači <b>%1</b> i <b>%2</b> su odabrani (<a href=\"changeEngine"
 "\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:350
+#: src/program/docklets/searchform.cpp:351
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3810,7 +3816,7 @@ msgstr ""
 "Pretraživači <b>%1</b>, <b>%2</b>, i <b>%3</b> su odabrani (<a href="
 "\"changeEngine\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:351
+#: src/program/docklets/searchform.cpp:352
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3819,7 +3825,7 @@ msgstr ""
 "Pretraživači <b>%1</b>, <b>%2</b>, itd. su odabrani (<a href=\"changeEngine"
 "\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:416
+#: src/program/docklets/searchform.cpp:417
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3828,7 +3834,7 @@ msgstr ""
 "Nisam mogao početi pretraživati Internet:\n"
 "Postavke pretrage nisu kompletne ili su neispravne."
 
-#: src/program/docklets/searchform.cpp:416
+#: src/program/docklets/searchform.cpp:417
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Pretraživanje interneta"
@@ -4252,35 +4258,35 @@ msgstr "Nijedan dio nije dostupan za datoteku '%1'."
 msgid "Unnamed-%1"
 msgstr "Neimenovano-%1"
 
-#: src/program/program.cpp:55
+#: src/program/program.cpp:53
 #, fuzzy, kde-format
 #| msgid "A BibTeX editor for KDE"
 msgid "A BibTeX editor by KDE"
 msgstr "Uređivač BibTeX za KDE"
 
-#: src/program/program.cpp:55
+#: src/program/program.cpp:53
 #, fuzzy, kde-format
 #| msgid "Copyright 2004-2015 Thomas Fischer"
 msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr "Sva prava zadržana 2004-2015 Thomas Fischer"
 
-#: src/program/program.cpp:60
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:60
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "Održavatelj"
 
-#: src/program/program.cpp:69
+#: src/program/program.cpp:67
 #, fuzzy, kde-format
 #| msgid "File(s) to load"
 msgid "File(s) to load."
 msgstr "Datoteke za učitavanje"
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:103
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4293,7 +4299,7 @@ msgstr ""
 "\n"
 "Samo ograničena funkcionalnost će biti dostupna."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:103
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nepotpuna KBibTeX instalacija"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-03-16 01:58+0000\n"
+"POT-Creation-Date: 2025-08-30 02:04+0000\n"
 "PO-Revision-Date: 2025-04-06 22:27+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1087,13 +1087,13 @@ msgid "Path as Inserted into Entry"
 msgstr "항목으로 삽입된 경로"
 
 #: src/gui/element/associatedfilesui.cpp:137
-#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
+#: src/gui/field/fieldlistedit.cpp:610 src/gui/field/fieldlistedit.cpp:612
 #, kde-format
 msgid "Relative Path"
 msgstr "상대 경로"
 
 #: src/gui/element/associatedfilesui.cpp:140
-#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
+#: src/gui/field/fieldlistedit.cpp:610 src/gui/field/fieldlistedit.cpp:612
 #, kde-format
 msgid "Absolute Path"
 msgstr "절대 경로"
@@ -1269,7 +1269,7 @@ msgid "Name:"
 msgstr "이름:"
 
 #: src/gui/element/elementwidgets.cpp:988
-#: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:104
+#: src/gui/element/elementwidgets.cpp:1051 src/gui/field/fieldlistedit.cpp:113
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:100
 #, kde-format
 msgid "Add"
@@ -1454,162 +1454,162 @@ msgstr "사용자 정의 색상"
 msgid "Color & Label"
 msgstr "색상 및 라벨"
 
-#: src/gui/field/fieldinput.cpp:89
+#: src/gui/field/fieldinput.cpp:98
 #, kde-format
 msgid "Select a predefined month"
 msgstr "미리 정의된 달 선택"
 
-#: src/gui/field/fieldinput.cpp:107
+#: src/gui/field/fieldinput.cpp:116
 #, kde-format
 msgid "Select a predefined edition"
 msgstr "미리 정의된 판 선택"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "1st"
 msgstr "첫 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "2nd"
 msgstr "두 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "3rd"
 msgstr "세 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "4th"
 msgstr "네 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "5th"
 msgstr "다섯 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "6th"
 msgstr "여섯 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "7th"
 msgstr "일곱 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "8th"
 msgstr "여뎗 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "9th"
 msgstr "아홉 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "10th"
 msgstr "열 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "11th"
 msgstr "열한 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "12th"
 msgstr "열두 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "13th"
 msgstr "열세 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "14th"
 msgstr "열네 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "15th"
 msgstr "열다섯 번째"
 
-#: src/gui/field/fieldinput.cpp:111
+#: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "16th"
 msgstr "열여섯 번째"
 
-#: src/gui/field/fieldinput.cpp:126
+#: src/gui/field/fieldinput.cpp:135
 #, kde-format
 msgid "Select an existing entry"
 msgstr "기존 항목 선택"
 
-#: src/gui/field/fieldinput.cpp:279
+#: src/gui/field/fieldinput.cpp:288
 #, kde-format
 msgid "Select Cross Reference"
 msgstr "상호 참조 선택"
 
-#: src/gui/field/fieldinput.cpp:279
+#: src/gui/field/fieldinput.cpp:288
 #, kde-format
 msgid "Select the cross reference to another entry:"
 msgstr "다른 항목에 대한 상호 참조 선택:"
 
-#: src/gui/field/fieldlineedit.cpp:236 src/gui/field/fieldlineedit.cpp:254
+#: src/gui/field/fieldlineedit.cpp:245 src/gui/field/fieldlineedit.cpp:263
 #, kde-format
 msgid "Opening and closing curly brackets do not match."
 msgstr "여는 중괄호와 닫는 중괄호가 일치하지 않습니다."
 
-#: src/gui/field/fieldlineedit.cpp:241
+#: src/gui/field/fieldlineedit.cpp:250
 #, kde-format
 msgid "Reference contains characters outside of the allowed set."
 msgstr "참조에 허용된 집합 외부의 문자가 들어 있습니다."
 
-#: src/gui/field/fieldlineedit.cpp:251
+#: src/gui/field/fieldlineedit.cpp:260
 #, kde-format
 msgid "Source code could not be parsed correctly."
 msgstr "소스 코드를 올바르게 해석할 수 없습니다."
 
-#: src/gui/field/fieldlineedit.cpp:311 src/gui/field/fieldlineedit.cpp:366
+#: src/gui/field/fieldlineedit.cpp:320 src/gui/field/fieldlineedit.cpp:375
 #, kde-format
 msgid "Plain Text"
 msgstr "일반 텍스트"
 
-#: src/gui/field/fieldlineedit.cpp:317 src/gui/field/fieldlineedit.cpp:367
+#: src/gui/field/fieldlineedit.cpp:326 src/gui/field/fieldlineedit.cpp:376
 #, kde-format
 msgid "Reference"
 msgstr "참조"
 
-#: src/gui/field/fieldlineedit.cpp:323 src/gui/field/fieldlineedit.cpp:368
+#: src/gui/field/fieldlineedit.cpp:332 src/gui/field/fieldlineedit.cpp:377
 #, kde-format
 msgid "Person"
 msgstr "인물"
 
-#: src/gui/field/fieldlineedit.cpp:329 src/gui/field/fieldlineedit.cpp:369
+#: src/gui/field/fieldlineedit.cpp:338 src/gui/field/fieldlineedit.cpp:378
 #, kde-format
 msgid "Keyword"
 msgstr "키워드"
 
-#: src/gui/field/fieldlineedit.cpp:335 src/gui/field/fieldlineedit.cpp:371
+#: src/gui/field/fieldlineedit.cpp:344 src/gui/field/fieldlineedit.cpp:380
 #, kde-format
 msgid "Source Code"
 msgstr "소스 코드"
 
-#: src/gui/field/fieldlineedit.cpp:341 src/gui/field/fieldlineedit.cpp:374
+#: src/gui/field/fieldlineedit.cpp:350 src/gui/field/fieldlineedit.cpp:383
 #, kde-format
 msgid "Verbatim Text"
 msgstr "약어 텍스트"
 
-#: src/gui/field/fieldlineedit.cpp:483
+#: src/gui/field/fieldlineedit.cpp:492
 #, kde-format
 msgid "Open '%1'"
 msgstr "'%1' 열기"
 
-#: src/gui/field/fieldlineedit.cpp:503
+#: src/gui/field/fieldlineedit.cpp:508
 #, kde-format
 msgid ""
 "The current text cannot be used as value of type '%1'.\n"
@@ -1620,67 +1620,67 @@ msgstr ""
 "\n"
 "'%2' 형식으로 다시 전환합니다."
 
-#: src/gui/field/fieldlistedit.cpp:144
+#: src/gui/field/fieldlistedit.cpp:153
 #, kde-format
 msgid "Remove value"
 msgstr "값 삭제"
 
-#: src/gui/field/fieldlistedit.cpp:159
+#: src/gui/field/fieldlistedit.cpp:163
 #, kde-format
 msgid "Move value down"
 msgstr "값 아래로 이동"
 
-#: src/gui/field/fieldlistedit.cpp:174
+#: src/gui/field/fieldlistedit.cpp:172
 #, kde-format
 msgid "Move value up"
 msgstr "값 위로 이동"
 
-#: src/gui/field/fieldlistedit.cpp:428
+#: src/gui/field/fieldlistedit.cpp:420
 #, kde-format
 msgid "... and others (et al.)"
 msgstr "... 및 여러 사람(외)"
 
-#: src/gui/field/fieldlistedit.cpp:433
+#: src/gui/field/fieldlistedit.cpp:425
 #, kde-format
 msgid "Add from Clipboard"
 msgstr "클립보드에서 추가"
 
-#: src/gui/field/fieldlistedit.cpp:434
+#: src/gui/field/fieldlistedit.cpp:426
 #, kde-format
 msgid "Add a list of names from clipboard"
 msgstr "클립보드에서 이름 목록 추가"
 
-#: src/gui/field/fieldlistedit.cpp:496
+#: src/gui/field/fieldlistedit.cpp:488
 #, kde-format
 msgid "Add file..."
 msgstr "파일 추가..."
 
-#: src/gui/field/fieldlistedit.cpp:502
+#: src/gui/field/fieldlistedit.cpp:494
 #, kde-format
 msgid "Add reference ..."
 msgstr "참조 추가..."
 
-#: src/gui/field/fieldlistedit.cpp:505
+#: src/gui/field/fieldlistedit.cpp:497
 #, kde-format
 msgid "Add reference from clipboard"
 msgstr "클립보드에서 참조 추가"
 
-#: src/gui/field/fieldlistedit.cpp:517
+#: src/gui/field/fieldlistedit.cpp:509
 #, kde-format
 msgid "File to Associate"
 msgstr "연결할 파일"
 
-#: src/gui/field/fieldlistedit.cpp:555 src/gui/field/fieldlistedit.cpp:635
+#: src/gui/field/fieldlistedit.cpp:547 src/gui/field/fieldlistedit.cpp:627
 #, kde-format
 msgid "Save file locally"
 msgstr "로컬에 파일 저장"
 
-#: src/gui/field/fieldlistedit.cpp:605
+#: src/gui/field/fieldlistedit.cpp:597
 #, kde-format
 msgid "Save file '%1' locally"
 msgstr "'%1' 파일을 로컬에 저장"
 
-#: src/gui/field/fieldlistedit.cpp:618 src/gui/field/fieldlistedit.cpp:620
+#: src/gui/field/fieldlistedit.cpp:610 src/gui/field/fieldlistedit.cpp:612
 #, kde-format
 msgid ""
 "<qt><p>Use a filename relative to the bibliography file?</p><p>The relative "
@@ -1691,22 +1691,22 @@ msgstr ""
 "는 <br/><tt style=\"font-family: %3;\">%1</tt>입니다.</p>.<p>절대 경로는 <br/"
 "><tt style=\"font-family: %3;\">%2</tt>입니다.</p></qt>"
 
-#: src/gui/field/fieldlistedit.cpp:663
+#: src/gui/field/fieldlistedit.cpp:655
 #, kde-format
 msgid "Add Keywords from List"
 msgstr "목록에서 키워드 추가"
 
-#: src/gui/field/fieldlistedit.cpp:664
+#: src/gui/field/fieldlistedit.cpp:656
 #, kde-format
 msgid "Add keywords as selected from a pre-defined list of keywords"
 msgstr "사전 정의된 키워드 목록에서 선택된 키워드 추가"
 
-#: src/gui/field/fieldlistedit.cpp:667
+#: src/gui/field/fieldlistedit.cpp:659
 #, kde-format
 msgid "Add Keywords from Clipboard"
 msgstr "클립보드에서 키워드 추가"
 
-#: src/gui/field/fieldlistedit.cpp:668
+#: src/gui/field/fieldlistedit.cpp:660
 #, kde-format
 msgid "Add a punctuation-separated list of keywords from clipboard"
 msgstr "클립보드에서 구두점으로 구분된 키워드 목록 추가"
@@ -2555,12 +2555,12 @@ msgstr "BibTeX 스타일 <strong>%1</strong>을(를) 사용할 수 없습니다.
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
 msgstr "BibTeX 스타일 <strong>PLACEHOLDER</strong>을(를) 사용할 수 없습니다."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:227
 #, kde-format
 msgid "Searching '%1' failed for unknown reason."
 msgstr "알 수 없는 이유로 '%1'을(를) 검색하지 못했습니다."
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:221
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:227
 #, kde-format
 msgid ""
 "Searching '%1' failed with error message:\n"
@@ -2571,8 +2571,8 @@ msgstr ""
 "\n"
 "%2"
 
-#: src/networking/onlinesearch/onlinesearchabstract.cpp:326
-#: src/program/mainwindow.cpp:375 src/program/program.cpp:55
+#: src/networking/onlinesearch/onlinesearchabstract.cpp:332
+#: src/program/mainwindow.cpp:375 src/program/program.cpp:53
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -2636,20 +2636,26 @@ msgstr "어디서나"
 msgid "BibSonomy"
 msgstr "BibSonomy"
 
-#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:84
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:70
+#: src/networking/onlinesearch/onlinesearchdoi.cpp:63
+#, kde-format
+msgid "DOI:"
+msgstr "디지털 문서 식별자(DOI):"
+
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "bioRxiv"
 msgstr "bioRxiv"
+
+#: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
+#, kde-format
+msgid "medRxiv"
+msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
 msgid "CERN Document Server"
 msgstr "CERN 문서 서버"
-
-#: src/networking/onlinesearch/onlinesearchdoi.cpp:63
-#, kde-format
-msgid "DOI:"
-msgstr "디지털 문서 식별자(DOI):"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
 #, kde-format
@@ -3656,28 +3662,28 @@ msgid "Use Entry"
 msgstr "항목 사용"
 
 #: src/program/docklets/searchform.cpp:237
-#: src/program/docklets/searchform.cpp:312
+#: src/program/docklets/searchform.cpp:313
 #, kde-format
 msgid "Search"
 msgstr "검색"
 
-#: src/program/docklets/searchform.cpp:324
+#: src/program/docklets/searchform.cpp:325
 #, kde-format
 msgid "Stop"
 msgstr "중지"
 
-#: src/program/docklets/searchform.cpp:347
+#: src/program/docklets/searchform.cpp:348
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr "검색 엔진이 선택되지 않음(<a href=\"changeEngine\">변경</a>)."
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:349
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr "검색 엔진 <b>%1</b>이(가) 선택됨(<a href=\"changeEngine\">변경</a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:350
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3686,7 +3692,7 @@ msgstr ""
 "검색 엔진 <b>%1</b>와(과) <b>%2</b>이(가) 선택됨(<a href=\"changeEngine\">변"
 "경</a>)."
 
-#: src/program/docklets/searchform.cpp:350
+#: src/program/docklets/searchform.cpp:351
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3695,7 +3701,7 @@ msgstr ""
 "검색 엔진 <b>%1</b>, <b>%2</b>, <b>%3</b>이(가) 선택됨(<a href=\"changeEngine"
 "\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:351
+#: src/program/docklets/searchform.cpp:352
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3704,7 +3710,7 @@ msgstr ""
 "검색 엔진 <b>%1</b>, <b>%2</b> 등이 선택됨 (<a href=\"changeEngine\">변경</"
 "a>)."
 
-#: src/program/docklets/searchform.cpp:416
+#: src/program/docklets/searchform.cpp:417
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3713,7 +3719,7 @@ msgstr ""
 "인터넷 검색을 시작할 수 없습니다.\n"
 "검색 용어가 완료되지 않았거나 잘못되었습니다."
 
-#: src/program/docklets/searchform.cpp:416
+#: src/program/docklets/searchform.cpp:417
 #, kde-format
 msgid "Searching the Internet"
 msgstr "인터넷 검색"
@@ -4128,32 +4134,32 @@ msgstr "'%1' 파일에 사용할 수 있는 부분이 없습니다."
 msgid "Unnamed-%1"
 msgstr "이름없음-%1"
 
-#: src/program/program.cpp:55
+#: src/program/program.cpp:53
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "KDE의 BibTeX 편집기"
 
-#: src/program/program.cpp:55
+#: src/program/program.cpp:53
 #, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr "Copyright 2004-2024 Thomas Fischer"
 
-#: src/program/program.cpp:60
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:60
+#: src/program/program.cpp:58
 #, kde-format
 msgid "Maintainer"
 msgstr "관리자"
 
-#: src/program/program.cpp:69
+#: src/program/program.cpp:67
 #, kde-format
 msgid "File(s) to load."
 msgstr "불러올 파일입니다."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:103
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4166,7 +4172,7 @@ msgstr ""
 "\n"
 "제한된 기능만 사용할 수 있습니다."
 
-#: src/program/program.cpp:105
+#: src/program/program.cpp:103
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "불완전한 KBibTeX 설치"
