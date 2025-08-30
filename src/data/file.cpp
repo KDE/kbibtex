@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -166,35 +166,81 @@ File &File::operator= (File &&other) {
 }
 
 bool File::operator==(const File &other) const {
-    if (size() != other.size()) return false;
+    if (size() != other.size()) {
+#ifdef EXTRA_VERBOSE
+        qCWarning(LOG_KBIBTEX_DATA) << "Sizes of files to be compared do not match:" << size() << "!=" << other.size();
+#endif // EXTRA_VERBOSE
+        return false;
+    }
 
+#ifdef EXTRA_VERBOSE
+    int it_counter = 0;
+#endif // EXTRA_VERBOSE
     for (File::ConstIterator myIt = constBegin(), otherIt = other.constBegin(); myIt != constEnd() && otherIt != constEnd(); ++myIt, ++otherIt) {
+#ifdef EXTRA_VERBOSE
+        ++it_counter;
+#endif // EXTRA_VERBOSE
         QSharedPointer<const Entry> myEntry = myIt->dynamicCast<const Entry>();
         QSharedPointer<const Entry> otherEntry = otherIt->dynamicCast<const Entry>();
-        if ((myEntry.isNull() && !otherEntry.isNull()) || (!myEntry.isNull() && otherEntry.isNull())) return false;
+        if ((myEntry.isNull() && !otherEntry.isNull()) || (!myEntry.isNull() && otherEntry.isNull())) {
+#ifdef EXTRA_VERBOSE
+            qCWarning(LOG_KBIBTEX_DATA) << "Element" << it_counter << "in files differ: one is an entry, the other one is not";
+#endif // EXTRA_VERBOSE
+            return false;
+        }
         if (!myEntry.isNull() && !otherEntry.isNull()) {
-            if (myEntry->operator !=(*otherEntry.data()))
+            if (myEntry->operator !=(*otherEntry.data())) {
+#ifdef EXTRA_VERBOSE
+                qCWarning(LOG_KBIBTEX_DATA) << "Element" << it_counter << "in both files are entries, but they differ";
+#endif // EXTRA_VERBOSE
                 return false;
+            }
         } else {
             QSharedPointer<const Macro> myMacro = myIt->dynamicCast<const Macro>();
             QSharedPointer<const Macro> otherMacro = otherIt->dynamicCast<const Macro>();
-            if ((myMacro.isNull() && !otherMacro.isNull()) || (!myMacro.isNull() && otherMacro.isNull())) return false;
+            if ((myMacro.isNull() && !otherMacro.isNull()) || (!myMacro.isNull() && otherMacro.isNull())) {
+#ifdef EXTRA_VERBOSE
+                qCWarning(LOG_KBIBTEX_DATA) << "Element" << it_counter << "in files differ: one is a macro, the other one is not";
+#endif // EXTRA_VERBOSE
+                return false;
+            }
             if (!myMacro.isNull() && !otherMacro.isNull()) {
-                if (myMacro->operator !=(*otherMacro.data()))
+                if (myMacro->operator !=(*otherMacro.data())) {
+#ifdef EXTRA_VERBOSE
+                    qCWarning(LOG_KBIBTEX_DATA) << "Element" << it_counter << "in both files are macros, but they differ";
+#endif // EXTRA_VERBOSE
                     return false;
+                }
             } else {
                 QSharedPointer<const Preamble> myPreamble = myIt->dynamicCast<const Preamble>();
                 QSharedPointer<const Preamble> otherPreamble = otherIt->dynamicCast<const Preamble>();
-                if ((myPreamble.isNull() && !otherPreamble.isNull()) || (!myPreamble.isNull() && otherPreamble.isNull())) return false;
+                if ((myPreamble.isNull() && !otherPreamble.isNull()) || (!myPreamble.isNull() && otherPreamble.isNull())) {
+#ifdef EXTRA_VERBOSE
+                    qCWarning(LOG_KBIBTEX_DATA) << "Element" << it_counter << "in files differ: one is a preamble, the other one is not";
+#endif // EXTRA_VERBOSE
+                    return false;
+                }
                 if (!myPreamble.isNull() && !otherPreamble.isNull()) {
-                    if (myPreamble->operator !=(*otherPreamble.data()))
+                    if (myPreamble->operator !=(*otherPreamble.data())) {
+#ifdef EXTRA_VERBOSE
+                        qCWarning(LOG_KBIBTEX_DATA) << "Element" << it_counter << "in both files are preambles, but they differ";
+#endif // EXTRA_VERBOSE
                         return false;
+                    }
                 } else {
                     QSharedPointer<const Comment> myComment = myIt->dynamicCast<const Comment>();
                     QSharedPointer<const Comment> otherComment = otherIt->dynamicCast<const Comment>();
-                    if ((myComment.isNull() && !otherComment.isNull()) || (!myComment.isNull() && otherComment.isNull())) return false;
+                    if ((myComment.isNull() && !otherComment.isNull()) || (!myComment.isNull() && otherComment.isNull())) {
+#ifdef EXTRA_VERBOSE
+                        qCWarning(LOG_KBIBTEX_DATA) << "Element" << it_counter << "in both files are comments, but they differ";
+#endif // EXTRA_VERBOSE
+                        return false;
+                    }
                     if (!myComment.isNull() && !otherComment.isNull()) {
                         if (myComment->text() != otherComment->text() || myComment->context() != otherComment->context() || (myComment->context() == Preferences::CommentContext::Prefix && myComment->prefix() != otherComment->prefix())) {
+#ifdef EXTRA_VERBOSE
+                            qCWarning(LOG_KBIBTEX_DATA) << "Element" << it_counter << "in both files are comments, but they differ";
+#endif // EXTRA_VERBOSE
                             return false;
                         }
                     } else {

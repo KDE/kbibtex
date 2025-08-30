@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -118,26 +118,26 @@ bool Entry::operator==(const Entry &other) const
             || count() != other.count()
 #endif // NOT BUILD_TESTING
        ) {
-#ifdef BUILD_TESTING
+#if defined(BUILD_TESTING) || defined(EXTRA_VERBOSE)
         qCWarning(LOG_KBIBTEX_DATA) << "Either" << id() << "!=" << other.id() << " or " << type() << "!=" << other.type();
-#endif // BUILD_TESTING
+#endif // defined(BUILD_TESTING) || defined(EXTRA_VERBOSE)
         return false;
     }
 
     /// Compare each field with other's corresponding field
     for (Entry::ConstIterator it = constBegin(); it != constEnd(); ++it) {
         if (!other.contains(it.key())) {
-#ifdef BUILD_TESTING
+#if defined(BUILD_TESTING) || defined(EXTRA_VERBOSE)
             qCWarning(LOG_KBIBTEX_DATA) << "Field" << it.key() << "not contained in both entries";
-#endif // BUILD_TESTING
+#endif // defined(BUILD_TESTING) || defined(EXTRA_VERBOSE)
             return false;
         }
         const Value &thisValue = it.value();
         const Value &otherValue = other.value(it.key());
         if (thisValue != otherValue) {
-#ifdef BUILD_TESTING
+#if defined(BUILD_TESTING) || defined(EXTRA_VERBOSE)
             qCWarning(LOG_KBIBTEX_DATA) << "Values for field" << it.key() << "differ";
-#endif // BUILD_TESTING
+#endif // defined(BUILD_TESTING) || defined(EXTRA_VERBOSE)
             return false;
         }
     }
@@ -146,9 +146,9 @@ bool Entry::operator==(const Entry &other) const
     /// (no need to check equivalence again)
     for (Entry::ConstIterator it = other.constBegin(); it != other.constEnd(); ++it)
         if (!contains(it.key())) {
-#ifdef BUILD_TESTING
+#if defined(BUILD_TESTING) || defined(EXTRA_VERBOSE)
             qCWarning(LOG_KBIBTEX_DATA) << "Field" << it.key() << "not contained in both entries";
-#endif // BUILD_TESTING
+#endif // defined(BUILD_TESTING) || defined(EXTRA_VERBOSE)
             return false;
         }
 

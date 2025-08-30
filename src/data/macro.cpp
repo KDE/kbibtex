@@ -57,7 +57,12 @@ Macro::~Macro()
 
 bool Macro::operator==(const Macro &other) const
 {
-    return d->key == other.d->key && d->value == other.d->value;
+    const bool r{d->key == other.d->key && d->value == other.d->value};
+#ifdef EXTRA_VERBOSE
+    if (!r)
+        qCWarning(LOG_KBIBTEX_DATA) << "Macros differ: either"<<d->key << "!=" << other.d->key << " or values differ";
+#endif // EXTRA_VERBOSE
+    return r;
 }
 
 bool Macro::operator!=(const Macro &other) const

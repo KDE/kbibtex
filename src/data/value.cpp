@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -270,9 +270,16 @@ bool MacroKey::operator==(const ValueItem &other) const
 {
     const MacroKey *otherMacroKey = dynamic_cast<const MacroKey *>(&other);
     if (otherMacroKey != nullptr) {
-        return otherMacroKey->text() == text();
-    } else
+        const bool r{otherMacroKey->text() == text()};
+#ifdef EXTRA_VERBOSE
+        if (!r)
+            qCWarning(LOG_KBIBTEX_DATA) << "MacroKey differ:" << text() << "!=" << otherMacroKey->text();
+#endif // EXTRA_VERBOSE
+        return r;
+    } else {
+        qCWarning(LOG_KBIBTEX_DATA) << "Trying to compare a MacroKey to something that is not";
         return false;
+    }
 }
 
 bool MacroKey::isMacroKey(const ValueItem &other) {
@@ -325,9 +332,16 @@ bool PlainText::operator==(const ValueItem &other) const
 {
     const PlainText *otherPlainText = dynamic_cast<const PlainText *>(&other);
     if (otherPlainText != nullptr) {
-        return otherPlainText->text() == text();
-    } else
+        const bool r{otherPlainText->text() == text()};
+#ifdef EXTRA_VERBOSE
+        if (!r)
+            qCWarning(LOG_KBIBTEX_DATA) << "PlainText differ:" << text() << "!=" << otherPlainText->text();
+#endif // EXTRA_VERBOSE
+        return r;
+    } else {
+        qCWarning(LOG_KBIBTEX_DATA) << "Trying to compare a PlainText to something that is not";
         return false;
+    }
 }
 
 bool PlainText::isPlainText(const ValueItem &other) {
@@ -423,9 +437,16 @@ bool VerbatimText::operator==(const ValueItem &other) const
 {
     const VerbatimText *otherVerbatimText = dynamic_cast<const VerbatimText *>(&other);
     if (otherVerbatimText != nullptr) {
-        return otherVerbatimText->text() == text() && (!m_hasComment || otherVerbatimText->comment() == comment());
-    } else
+        const bool r{otherVerbatimText->text() == text() && (!m_hasComment || otherVerbatimText->comment() == comment())};
+#ifdef EXTRA_VERBOSE
+        if (!r)
+            qCWarning(LOG_KBIBTEX_DATA) << "VerbatimText differ:" << text() << "!=" << otherVerbatimText->text() << " or something about comments";
+#endif // EXTRA_VERBOSE
+        return r;
+    } else {
+        qCWarning(LOG_KBIBTEX_DATA) << "Trying to compare a VerbatimText to something that is not";
         return false;
+    }
 }
 
 bool VerbatimText::isVerbatimText(const ValueItem &other) {
@@ -566,47 +587,107 @@ bool Value::operator==(const Value &rhs) const
     const Value &lhs = *this; ///< just for readability to have a 'lhs' matching 'rhs'
 
     /// Obviously, both Values must be of same size
-    if (lhs.count() != rhs.count()) return false;
+    if (lhs.count() != rhs.count()) {
+#ifdef EXTRA_VERBOSE
+        qCWarning(LOG_KBIBTEX_DATA) << "Values have different numbers of ValueItems:" << lhs.count() << "!=" << rhs.count();
+#endif // EXTRA_VERBOSE
+        return false;
+    }
 
     /// Synchronously iterate over both Values' ValueItems
+#ifdef EXTRA_VERBOSE
+    int it_counter = 0;
+#endif // EXTRA_VERBOSE
     for (Value::ConstIterator lhsIt = lhs.constBegin(), rhsIt = rhs.constBegin(); lhsIt != lhs.constEnd() && rhsIt != rhs.constEnd(); ++lhsIt, ++rhsIt) {
+#ifdef EXTRA_VERBOSE
+        ++it_counter;
+#endif // EXTRA_VERBOSE
         /// Are both ValueItems PlainTexts and are both PlainTexts equal?
         const QSharedPointer<PlainText> lhsPlainText = lhsIt->dynamicCast<PlainText>();
         const QSharedPointer<PlainText> rhsPlainText = rhsIt->dynamicCast<PlainText>();
-        if ((lhsPlainText.isNull() && !rhsPlainText.isNull()) || (!lhsPlainText.isNull() && rhsPlainText.isNull())) return false;
+        if ((lhsPlainText.isNull() && !rhsPlainText.isNull()) || (!lhsPlainText.isNull() && rhsPlainText.isNull())) {
+#ifdef EXTRA_VERBOSE
+            qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in value differ: one is a PlainText, the other one is not";
+#endif // EXTRA_VERBOSE
+            return false;
+        }
         if (!lhsPlainText.isNull() && !rhsPlainText.isNull()) {
-            if (*lhsPlainText.data() != *rhsPlainText.data())
+            if (*lhsPlainText.data() != *rhsPlainText.data()) {
+#ifdef EXTRA_VERBOSE
+                qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in both files are PlainText, but they differ";
+#endif // EXTRA_VERBOSE
                 return false;
+            }
         } else {
             /// Remainder of comparisons is like for PlainText above, just for other descendants of ValueItem
             const QSharedPointer<MacroKey> lhsMacroKey = lhsIt->dynamicCast<MacroKey>();
             const QSharedPointer<MacroKey> rhsMacroKey = rhsIt->dynamicCast<MacroKey>();
-            if ((lhsMacroKey.isNull() && !rhsMacroKey.isNull()) || (!lhsMacroKey.isNull() && rhsMacroKey.isNull())) return false;
+            if ((lhsMacroKey.isNull() && !rhsMacroKey.isNull()) || (!lhsMacroKey.isNull() && rhsMacroKey.isNull())) {
+#ifdef EXTRA_VERBOSE
+                qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in value differ: one is a MacroKey, the other one is not";
+#endif // EXTRA_VERBOSE
+                return false;
+            }
             if (!lhsMacroKey.isNull() && !rhsMacroKey.isNull()) {
-                if (*lhsMacroKey.data() != *rhsMacroKey.data())
+                if (*lhsMacroKey.data() != *rhsMacroKey.data()) {
+#ifdef EXTRA_VERBOSE
+                    qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in both files are MacroKey, but they differ";
+#endif // EXTRA_VERBOSE
                     return false;
+                }
             } else {
                 const QSharedPointer<Person> lhsPerson = lhsIt->dynamicCast<Person>();
                 const QSharedPointer<Person> rhsPerson = rhsIt->dynamicCast<Person>();
-                if ((lhsPerson.isNull() && !rhsPerson.isNull()) || (!lhsPerson.isNull() && rhsPerson.isNull())) return false;
+                if ((lhsPerson.isNull() && !rhsPerson.isNull()) || (!lhsPerson.isNull() && rhsPerson.isNull())) {
+#ifdef EXTRA_VERBOSE
+                    qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in value differ: one is a Person, the other one is not";
+#endif // EXTRA_VERBOSE
+                    return false;
+                }
                 if (!lhsPerson.isNull() && !rhsPerson.isNull()) {
-                    if (*lhsPerson.data() != *rhsPerson.data())
+                    if (*lhsPerson.data() != *rhsPerson.data()) {
+#ifdef EXTRA_VERBOSE
+                        qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in both files are Person, but they differ";
+#endif // EXTRA_VERBOSE
                         return false;
+                    }
                 } else {
                     const QSharedPointer<VerbatimText> lhsVerbatimText = lhsIt->dynamicCast<VerbatimText>();
                     const QSharedPointer<VerbatimText> rhsVerbatimText = rhsIt->dynamicCast<VerbatimText>();
-                    if ((lhsVerbatimText.isNull() && !rhsVerbatimText.isNull()) || (!lhsVerbatimText.isNull() && rhsVerbatimText.isNull())) return false;
+                    if ((lhsVerbatimText.isNull() && !rhsVerbatimText.isNull()) || (!lhsVerbatimText.isNull() && rhsVerbatimText.isNull()))
+                    {
+#ifdef EXTRA_VERBOSE
+                        qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in value differ: one is a VerbatimText, the other one is not";
+#endif // EXTRA_VERBOSE
+                        return false;
+                    }
                     if (!lhsVerbatimText.isNull() && !rhsVerbatimText.isNull()) {
-                        if (*lhsVerbatimText.data() != *rhsVerbatimText.data())
+                        if (*lhsVerbatimText.data() != *rhsVerbatimText.data()) {
+#ifdef EXTRA_VERBOSE
+                            qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in both files are VerbatimText, but they differ";
+#endif // EXTRA_VERBOSE
                             return false;
+                        }
                     } else {
                         const QSharedPointer<Keyword> lhsKeyword = lhsIt->dynamicCast<Keyword>();
                         const QSharedPointer<Keyword> rhsKeyword = rhsIt->dynamicCast<Keyword>();
-                        if ((lhsKeyword.isNull() && !rhsKeyword.isNull()) || (!lhsKeyword.isNull() && rhsKeyword.isNull())) return false;
+                        if ((lhsKeyword.isNull() && !rhsKeyword.isNull()) || (!lhsKeyword.isNull() && rhsKeyword.isNull())) {
+#ifdef EXTRA_VERBOSE
+                            qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in value differ: one is a Keyword, the other one is not";
+#endif // EXTRA_VERBOSE
+                            return false;
+                        }
                         if (!lhsKeyword.isNull() && !rhsKeyword.isNull()) {
-                            if (*lhsKeyword.data() != *rhsKeyword.data())
+                            if (*lhsKeyword.data() != *rhsKeyword.data()) {
+#ifdef EXTRA_VERBOSE
+                                qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "in both files are Keyword, but they differ";
+#endif // EXTRA_VERBOSE
                                 return false;
+                            }
                         } else {
+#ifdef EXTRA_VERBOSE
+                            qCWarning(LOG_KBIBTEX_DATA) << "ValueItem" << it_counter << "is of unknown type";
+#endif // EXTRA_VERBOSE
                             /// If there are other descendants of ValueItem, add tests here ...
                             return false;
                         }

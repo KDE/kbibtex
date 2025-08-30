@@ -234,6 +234,7 @@ if(ICU_FOUND)
     endif()
 endif()
 
+#add_compile_definitions(EXTRA_VERBOSE) # Enable for some extra detailed debug output
 add_definitions(-DTRANSLATION_DOMAIN="kbibtex")
 
 option(
