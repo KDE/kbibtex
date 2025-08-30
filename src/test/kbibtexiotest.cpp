@@ -26,6 +26,7 @@
 #include <Value>
 #include <Entry>
 #include <Comment>
+#include <Macro>
 #include <File>
 #include <FileInfo>
 #include <EncoderXML>
@@ -58,6 +59,7 @@ private:
     File *mobyDickBibliography();
     File *latinUmlautBibliography();
     File *onlyComments(int numPercentSigns, int numLines);
+    File *onlyMacros();
     File *koreanBibliography();
     File *russianBibliography();
     QVector<QPair<const char *, File *> > fileImporterExporterTestCases();
@@ -381,6 +383,7 @@ void KBibTeXIOTest::fileInfoUrlsInText()
 
 static const char *fileImporterExporterTestCases_Label_Empty_file = "Empty file";
 static const char *fileImporterExporterTestCases_Label_Moby_Dick = "Moby Dick";
+static const char *fileImporterExporterTestCases_Label_Only_Macros = "Only Macros";
 
 File *KBibTeXIOTest::mobyDickBibliography()
 {
@@ -433,6 +436,19 @@ File *KBibTeXIOTest::onlyComments(int numPercentSigns, int numLines)
     return commentFiles[key];
 }
 
+File *KBibTeXIOTest::onlyMacros()
+{
+    static File *onlyMacrosFile = nullptr;
+    if (onlyMacrosFile == nullptr) {
+        onlyMacrosFile = new File();
+        QSharedPointer<Macro> macroA(new Macro(QStringLiteral("keyA"), Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("abc def ghi pol ikj")))));
+        onlyMacrosFile->append(macroA);
+        QSharedPointer<Macro> macroB(new Macro(QStringLiteral("keyB"), Value() << QSharedPointer<PlainText>(new PlainText(QStringLiteral("ZYX HGF REW TGB RFV")))));
+        onlyMacrosFile->append(macroB);
+    }
+    return onlyMacrosFile;
+}
+
 File *KBibTeXIOTest::koreanBibliography()
 {
     static File *koreanFile = nullptr;
@@ -478,6 +494,9 @@ QVector<QPair<const char *, File *> > KBibTeXIOTest::fileImporterExporterTestCas
 
         /// File with single entry, inspired by 'Moby Dick'
         result.append(QPair<const char *, File *>(fileImporterExporterTestCases_Label_Moby_Dick, mobyDickBibliography()));
+
+        /// File with only macros (@string{... = ...})
+        result.append(QPair<const char *, File *>(fileImporterExporterTestCases_Label_Only_Macros, onlyMacros()));
 
         // TODO add more file objects to result vector
 
@@ -570,6 +589,7 @@ void KBibTeXIOTest::fileExporterBibTeXsave_data()
 
     static const QHash<const char *, QString> keyToBibTeXData {
         {fileImporterExporterTestCases_Label_Empty_file, QString()},
+        {fileImporterExporterTestCases_Label_Only_Macros, QStringLiteral("@string{keyA = {{abc def ghi pol ikj}}}||@string{keyB = {{ZYX HGF REW TGB RFV}}}||")},
         {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("@book{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\tmonth = jun,|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
@@ -627,6 +647,7 @@ void KBibTeXIOTest::fileImporterBibTeXload_data()
 
     static const QHash<const char *, QString> keyToBibTeXData {
         {fileImporterExporterTestCases_Label_Empty_file, QString()},
+        {fileImporterExporterTestCases_Label_Only_Macros, QStringLiteral("@string{keyA=\"abc def ghi pol ikj\"}||@string{keyB=\"ZYX HGF REW TGB RFV\"}")},
         {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("@book{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\tmonth = jun,|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
