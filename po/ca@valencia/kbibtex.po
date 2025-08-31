@@ -1257,7 +1257,7 @@ msgstr "ID:"
 #: src/gui/element/elementwidgets.cpp:543
 #, kde-format
 msgid "Select a suggested id for this entry"
-msgstr "Seleccioneu un ID proposat per a esta entrada"
+msgstr "Trieu un ID proposat per a esta entrada"
 
 #: src/gui/element/elementwidgets.cpp:771
 #, kde-format
@@ -1446,12 +1446,12 @@ msgstr "Rètol i color"
 #: src/gui/field/fieldinput.cpp:86
 #, kde-format
 msgid "Select a predefined month"
-msgstr "Seleccioneu un mes predefinit"
+msgstr "Trieu un mes predefinit"
 
 #: src/gui/field/fieldinput.cpp:104
 #, kde-format
 msgid "Select a predefined edition"
-msgstr "Seleccioneu una edició predefinida"
+msgstr "Trieu una edició predefinida"
 
 #: src/gui/field/fieldinput.cpp:108
 #, kde-format
@@ -1536,17 +1536,17 @@ msgstr "16è"
 #: src/gui/field/fieldinput.cpp:123
 #, kde-format
 msgid "Select an existing entry"
-msgstr "Seleccioneu una entrada existent"
+msgstr "Trieu una entrada existent"
 
 #: src/gui/field/fieldinput.cpp:276
 #, kde-format
 msgid "Select Cross Reference"
-msgstr "Seleccioneu una referència creuada"
+msgstr "Trieu una referència creuada"
 
 #: src/gui/field/fieldinput.cpp:276
 #, kde-format
 msgid "Select the cross reference to another entry:"
-msgstr "Seleccioneu la referència creuada amb una altra entrada:"
+msgstr "Trieu la referència creuada amb una altra entrada:"
 
 #: src/gui/field/fieldlineedit.cpp:221 src/gui/field/fieldlineedit.cpp:239
 #, kde-format
@@ -1753,7 +1753,7 @@ msgstr "Cap de les anteriors"
 #: src/gui/file/findduplicatesui.cpp:549
 #, kde-format
 msgid "Select your duplicates"
-msgstr "Seleccioneu els vostres duplicats"
+msgstr "Trieu els vostres duplicats"
 
 #: src/gui/file/findduplicatesui.cpp:569
 #, kde-format
