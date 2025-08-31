@@ -4,13 +4,13 @@
 # version 3 or later versions approved by the membership of KDE e.V.
 #
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
-# Josep M. Ferrer <txemaq@gmail.com>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
+# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 02:04+0000\n"
-"PO-Revision-Date: 2025-03-16 09:47+0100\n"
+"POT-Creation-Date: 2025-08-31 02:04+0000\n"
+"PO-Revision-Date: 2025-08-30 12:52+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1027,12 +1027,12 @@ msgstr "Comentari"
 msgid "Preamble"
 msgstr "Preàmbul"
 
-#: src/data/value.cpp:684
+#: src/data/value.cpp:765
 #, kde-format
 msgid " and "
 msgstr " i "
 
-#: src/data/value.cpp:687
+#: src/data/value.cpp:768
 #, kde-format
 msgid " and others"
 msgstr " entre altres"
@@ -2675,7 +2675,7 @@ msgstr "bioRxiv"
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "medRxiv"
-msgstr ""
+msgstr "medRxiv"
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format

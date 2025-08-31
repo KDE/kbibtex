@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 02:04+0000\n"
+"POT-Creation-Date: 2025-08-31 02:04+0000\n"
 "PO-Revision-Date: 2014-05-04 18:07+0200\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1021,12 +1021,12 @@ msgstr ""
 msgid "Preamble"
 msgstr ""
 
-#: src/data/value.cpp:684
+#: src/data/value.cpp:765
 #, kde-format
 msgid " and "
 msgstr ""
 
-#: src/data/value.cpp:687
+#: src/data/value.cpp:768
 #, kde-format
 msgid " and others"
 msgstr ""

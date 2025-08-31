@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 02:04+0000\n"
+"POT-Creation-Date: 2025-08-31 02:04+0000\n"
 "PO-Revision-Date: 2025-08-28 07:53-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -1026,12 +1026,12 @@ msgstr "Comentário"
 msgid "Preamble"
 msgstr "Preâmbulo"
 
-#: src/data/value.cpp:684
+#: src/data/value.cpp:765
 #, kde-format
 msgid " and "
 msgstr " e "
 
-#: src/data/value.cpp:687
+#: src/data/value.cpp:768
 #, kde-format
 msgid " and others"
 msgstr " e outros"

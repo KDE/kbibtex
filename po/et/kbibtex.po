@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 02:04+0000\n"
+"POT-Creation-Date: 2025-08-31 02:04+0000\n"
 "PO-Revision-Date: 2020-04-26 10:18+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -1024,12 +1024,12 @@ msgstr "Kommentaar"
 msgid "Preamble"
 msgstr "Preambula"
 
-#: src/data/value.cpp:684
+#: src/data/value.cpp:765
 #, kde-format
 msgid " and "
 msgstr " ja "
 
-#: src/data/value.cpp:687
+#: src/data/value.cpp:768
 #, kde-format
 msgid " and others"
 msgstr " ja teised"

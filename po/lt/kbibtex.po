@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: l 10n\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 02:04+0000\n"
+"POT-Creation-Date: 2025-08-31 02:04+0000\n"
 "PO-Revision-Date: 2016-08-30 12:25+0300\n"
 "Last-Translator: Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -1025,12 +1025,12 @@ msgstr ""
 msgid "Preamble"
 msgstr ""
 
-#: src/data/value.cpp:684
+#: src/data/value.cpp:765
 #, kde-format
 msgid " and "
 msgstr ""
 
-#: src/data/value.cpp:687
+#: src/data/value.cpp:768
 #, kde-format
 msgid " and others"
 msgstr ""

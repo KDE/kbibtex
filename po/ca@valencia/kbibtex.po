@@ -4,13 +4,13 @@
 # version 3 or later versions approved by the membership of KDE e.V.
 #
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021.
-# Josep M. Ferrer <txemaq@gmail.com>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
+# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Josep M. Ferrer <txemaq@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 02:04+0000\n"
-"PO-Revision-Date: 2025-03-16 09:47+0100\n"
+"POT-Creation-Date: 2025-08-31 02:04+0000\n"
+"PO-Revision-Date: 2025-08-30 12:52+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1027,12 +1027,12 @@ msgstr "Comentari"
 msgid "Preamble"
 msgstr "Preàmbul"
 
-#: src/data/value.cpp:684
+#: src/data/value.cpp:765
 #, kde-format
 msgid " and "
 msgstr " i "
 
-#: src/data/value.cpp:687
+#: src/data/value.cpp:768
 #, kde-format
 msgid " and others"
 msgstr " entre altres"
@@ -1261,7 +1261,7 @@ msgstr "ID:"
 #: src/gui/element/elementwidgets.cpp:552
 #, kde-format
 msgid "Select a suggested id for this entry"
-msgstr "Seleccioneu un ID proposat per a esta entrada"
+msgstr "Trieu un ID proposat per a esta entrada"
 
 #: src/gui/element/elementwidgets.cpp:778
 #, kde-format
@@ -1474,12 +1474,12 @@ msgstr "Rètol i color"
 #: src/gui/field/fieldinput.cpp:98
 #, kde-format
 msgid "Select a predefined month"
-msgstr "Seleccioneu un mes predefinit"
+msgstr "Trieu un mes predefinit"
 
 #: src/gui/field/fieldinput.cpp:116
 #, kde-format
 msgid "Select a predefined edition"
-msgstr "Seleccioneu una edició predefinida"
+msgstr "Trieu una edició predefinida"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
@@ -1564,17 +1564,17 @@ msgstr "16è"
 #: src/gui/field/fieldinput.cpp:135
 #, kde-format
 msgid "Select an existing entry"
-msgstr "Seleccioneu una entrada existent"
+msgstr "Trieu una entrada existent"
 
 #: src/gui/field/fieldinput.cpp:288
 #, kde-format
 msgid "Select Cross Reference"
-msgstr "Seleccioneu una referència creuada"
+msgstr "Trieu una referència creuada"
 
 #: src/gui/field/fieldinput.cpp:288
 #, kde-format
 msgid "Select the cross reference to another entry:"
-msgstr "Seleccioneu la referència creuada amb una altra entrada:"
+msgstr "Trieu la referència creuada amb una altra entrada:"
 
 #: src/gui/field/fieldlineedit.cpp:245 src/gui/field/fieldlineedit.cpp:263
 #, kde-format
@@ -1789,7 +1789,7 @@ msgstr "Cap de les anteriors"
 #: src/gui/file/findduplicatesui.cpp:551
 #, kde-format
 msgid "Select your duplicates"
-msgstr "Seleccioneu els vostres duplicats"
+msgstr "Trieu els vostres duplicats"
 
 #: src/gui/file/findduplicatesui.cpp:571
 #, kde-format
@@ -2455,7 +2455,7 @@ msgstr "Prefix dels comentaris:"
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
 msgid "Keyword Casing:"
-msgstr "Maj./Min. en les paraules clau:"
+msgstr "Majús./Min. en les paraules clau:"
 
 #: src/gui/widgets/filesettingswidget.cpp:175
 #, kde-format
@@ -2674,7 +2674,7 @@ msgstr "bioRxiv"
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "medRxiv"
-msgstr ""
+msgstr "medRxiv"
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
@@ -3066,7 +3066,7 @@ msgstr "Exportador RIS integrat de KBibTeX"
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr "Seleccioneu l'exportador"
+msgstr "Trieu l'exportador"
 
 #: src/parts/part.cpp:547
 #, kde-format
@@ -3078,7 +3078,7 @@ msgstr ""
 "Hi ha diversos mòduls exportadors disponibles per a escriure el fitxer "
 "«%1».\n"
 "\n"
-"Seleccioneu-ne un."
+"Trieu-ne un."
 
 #: src/parts/part.cpp:578
 #, kde-format

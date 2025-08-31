@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 02:04+0000\n"
-"PO-Revision-Date: 2025-03-16 13:34+0300\n"
-"Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
+"POT-Creation-Date: 2025-08-31 02:04+0000\n"
+"PO-Revision-Date: 2025-08-30 18:31+0300\n"
+"Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.07.70\n"
+"X-Generator: Lokalize 25.08.0\n"
 "X-POOTLE-MTIME: 1502202283.000000\n"
 
 #, kde-format
@@ -1023,12 +1023,12 @@ msgstr "Yorum"
 msgid "Preamble"
 msgstr "Önsöz"
 
-#: src/data/value.cpp:684
+#: src/data/value.cpp:765
 #, kde-format
 msgid " and "
 msgstr " ve "
 
-#: src/data/value.cpp:687
+#: src/data/value.cpp:768
 #, kde-format
 msgid " and others"
 msgstr " ve diğerleri"
@@ -2655,7 +2655,7 @@ msgstr "bioRxiv"
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "medRxiv"
-msgstr ""
+msgstr "medRxiv"
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format

@@ -1,5 +1,5 @@
 # Spanish translations for kbibtex.po package.
-# Copyright (C) 2014-2025 This_file_is_part_of_KDE
+# Copyright (C) 2014-2025 This file is copyright:
 # This file is distributed under the same license as the kbibtex package.
 #
 # SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 02:04+0000\n"
-"PO-Revision-Date: 2025-03-16 04:24+0100\n"
+"POT-Creation-Date: 2025-08-31 02:04+0000\n"
+"PO-Revision-Date: 2025-08-30 14:50+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.08.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1025,12 +1025,12 @@ msgstr "Comentario"
 msgid "Preamble"
 msgstr "Preámbulo"
 
-#: src/data/value.cpp:684
+#: src/data/value.cpp:765
 #, kde-format
 msgid " and "
 msgstr " y "
 
-#: src/data/value.cpp:687
+#: src/data/value.cpp:768
 #, kde-format
 msgid " and others"
 msgstr " y otros"
@@ -2674,7 +2674,7 @@ msgstr "bioRxiv"
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "medRxiv"
-msgstr ""
+msgstr "medRxiv"
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
@@ -4226,245 +4226,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instalación de KBibTeX incompleta"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "None"
-#~ msgstr "Ninguna"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "@comment{…}"
-#~ msgstr "@comment{…}"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "% …"
-#~ msgstr "% …"
-
-#~ msgid "Fancy"
-#~ msgstr "Adornada"
-
-#~ msgid ""
-#~ "This type of element is not supported by Wikipedia's <tt>{{cite}}</tt> "
-#~ "command."
-#~ msgstr ""
-#~ "Este tipo de elemento no está permitido por la orden <tt>{{cite}}</tt> de "
-#~ "la Wikipedia."
-
-#~ msgid "KBibTeXPart"
-#~ msgstr "KBibTeXPart"
-
-#~ msgid "Delete all occurrences"
-#~ msgstr "Borrar todas las coincidencias"
-
-#~ msgid "Search for selected values"
-#~ msgstr "Buscar los valores seleccionados"
-
-#~ msgid "Add value to selected entries"
-#~ msgstr "Añadir valores a las entradas seleccionadas"
-
-#~ msgid "Remove value from selected entries"
-#~ msgstr "Eliminar los valores de las entradas seleccionadas"
-
-#~ msgid "Replace value of selected entries"
-#~ msgstr "Sustituir los valores de las entradas seleccionadas"
-
-#~ msgid "Running command '%1' using working directory '%2'"
-#~ msgstr "Ejecutando la orden «%1» usando el directorio de trabajo «%2»"
-
-#~ msgid "Starting command '%1' failed: %2"
-#~ msgstr "El inicio de la orden «%1» ha fallado: %2"
-
-#~ msgid "Command '%1' succeeded"
-#~ msgstr "La orden «%1» ha tenido éxito"
-
-#~ msgid "Command '%1' failed with exit code %2: %3"
-#~ msgstr "La orden «%1» ha fallado con el código de salida %2: %3"
-
-#~ msgid "Writing to file '%1' succeeded"
-#~ msgstr "La escritura en el archivo «%1» ha tenido éxito"
-
-#~ msgid "Writing to file '%1' failed"
-#~ msgstr "La escritura en el archivo «%1» ha fallado"
-
-#~ msgid "Could not write bibliographic data to file."
-#~ msgstr "No se han podido escribir los datos bibliográficos en el archivo."
-
-#~ msgid "Could not open local file '%1' for writing."
-#~ msgstr "No se ha podido abrir el archivo local «%1» para escritura."
-
-#~ msgid "Failed to upload temporary file to final destination '%1'"
-#~ msgstr "No se ha podido enviar el archivo temporal al destino final «%1»"
-
-#~ msgid "Could not write bibliographic data to temporary file."
-#~ msgstr ""
-#~ "No se han podido escribir los datos bibliográficos en el archivo temporal."
-
-#~ msgid "Could not open temporary file for writing."
-#~ msgstr "No se ha podido abrir el archivo temporal para escritura."
-
-#~ msgid "Comments not supported"
-#~ msgstr "Comentarios no permitidos"
-
-#~ msgid "ISBNdb.com"
-#~ msgstr "ISBNdb.com"
-
-#~ msgid "OCLC WorldCat"
-#~ msgstr "OCLC WorldCat"
-
-#~ msgid "Verification Code"
-#~ msgstr "Código de verificación"
-
-#~ msgid ""
-#~ "Copy the code from the web page and paste it in the input field below."
-#~ msgstr ""
-#~ "Copie el código de la página web y pegarlo en el siguiente campo de "
-#~ "entrada de texto."
-
-#~ msgid ""
-#~ "<qt><p>Once you have granted permissions to KBibTeX on Zotero's web page, "
-#~ "you should see a light-green field with a black hexadecimal code "
-#~ "(example: <span style=\"color:black;background:#cfc;"
-#~ "\">48b67422661cc282cdea</span>).</p></qt>"
-#~ msgstr ""
-#~ "<qt><p>Una vez haya obtenido permisos para KBibTeX en la página web de "
-#~ "Zotero, debería ver un campo en color verde claro con un código "
-#~ "hexadecimal en negro (por ejemplo: <span style=\"color:black;background:"
-#~ "#cfc;\">48b67422661cc282cdea</span>).</p></qt>"
-
-#~ msgid "Verification Code:"
-#~ msgstr "Código de verificación:"
-
-#~ msgid "Instructions"
-#~ msgstr "Instrucciones"
-
-#~ msgid ""
-#~ "<qt>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#~ "bibliography</strong>, this KBibTeX instance has to be authorized.</qt>"
-#~ msgstr ""
-#~ "<qt>Para permitir que <strong>KBibTeX</strong> acceda a su "
-#~ "<strong>bibliografía en Zotero </strong>, debe autorizar a esta instancia "
-#~ "de KBibTeX.</qt>"
-
-#~ msgid ""
-#~ "<qt><p>The process of authorization involves multiple steps:</"
-#~ "p><ol><li>Open the URL as shown on the next page.</li><li>Follow the "
-#~ "instructions as shown on Zotero's webpage.<br/>Configure permissions for "
-#~ "KBibTeX.</li><li>Eventually, you will get a hexadecimal string (black on "
-#~ "light-green background) which you have to copy and paste into this "
-#~ "wizard's last page</li></ol></qt>"
-#~ msgstr ""
-#~ "<qt><p>El proceso de autorización comprende varios pasos:</p><ol><li>Abra "
-#~ "el URL mostrado en la siguiente página.</li><li>Siga las instrucciones "
-#~ "que se muestran en la página web de Zotero.<br/>Configure los permisos "
-#~ "para KBibTeX.</li><li>Finalmente, obtendrá una cadena hexadecimal (en "
-#~ "color negro sobre fondo verde claro) que tendrá que copiar y pegar en la "
-#~ "última página de este asistente.</li></ol></qt>"
-
-#~ msgid "Authorization URL"
-#~ msgstr "URL de autorización"
-
-#~ msgid "Open the shown URL in your favorite browser."
-#~ msgstr "Abrir el URL mostrado en su navegador favorito."
-
-#~ msgid ""
-#~ "You will be asked to login into Zotero and select and confirm the "
-#~ "permissions for KBibTeX."
-#~ msgstr ""
-#~ "Se le pedirá que inicie sesión en Zotero y que seleccione y confirme los "
-#~ "permisos para KBibTeX."
-
-#~ msgid "Show Comments:"
-#~ msgstr "Mostrar comentarios:"
-
-#~ msgid "Show Macros:"
-#~ msgstr "Mostrar macros:"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "%{%1}"
-#~ msgstr "%{%1}"
-
-#~ msgid "Changing this option requires a restart to take effect."
-#~ msgstr ""
-#~ "El cambio de esta opción requiere un reinicio de la aplicación para hacer "
-#~ "efecto."
-
-#~ msgid "Copyright 2004-2017 Thomas Fischer"
-#~ msgstr "Copyright 2004-2017 Thomas Fischer"
-
-#~ msgid "The entered key '%1' is already in use for another macro."
-#~ msgstr "La clave introducida «%1» ya está siendo utilizada para otra macro."
-
-#~ msgid "Key already in use"
-#~ msgstr "Esta clave ya se encuentra en uso"
-
-#~ msgid "Keep duplicate keys"
-#~ msgstr "Mantener claves duplicadas"
-
-#~ msgid "Restore original key"
-#~ msgstr "Restaurar clave original"
-
-#~ msgid "Process '%1' failed"
-#~ msgstr "El proceso «%1» ha fallado"
-
-#~ msgid "Value '%1' is not a valid numeric identifier of a user or a group."
-#~ msgstr ""
-#~ "El valor «%1» no es un identificador numérico válido de un usuario ni de "
-#~ "un grupo."
-
-#~ msgid "Invalid numeric identifier"
-#~ msgstr "Identificador numérico no válido"
-
-#~ msgid "Discard"
-#~ msgstr "Descartar"
-
-#~ msgid ""
-#~ "A file named '%1' already exists. Are you sure you want to overwrite it?"
-#~ msgstr ""
-#~ "Ya existe un archivo llamado «%1». ¿Seguro que desea sobrescribirlo?"
-
-#~ msgid "Overwrite File?"
-#~ msgstr "¿Sobrescribir archivo?"
-
-#~ msgid "Searching '%1' failed: Could not extract form from ACM's start page."
-#~ msgstr ""
-#~ "La búsqueda de «%1» ha fallado. No se puede extraer el formulario de la "
-#~ "página de inicio de la ACM."
-
-#~ msgid "No Editor Component"
-#~ msgstr "Ningún componente de edición"
-
-#~ msgid "Credentials"
-#~ msgstr "Credenciales"
-
-#~ msgid "Add Keywords"
-#~ msgstr "Añadir palabras claves"
-
-#~ msgid "Select keywords to add:"
-#~ msgstr "Seleccione las palabras claves a añadir:"
-
-#~ msgid "Save as Default"
-#~ msgstr "Guardar como predeterminado"
-
-#~ msgid "Save this configuration as default for future Save As operations."
-#~ msgstr ""
-#~ "Guardar esta configuración como predeterminada para futuras operaciones "
-#~ "«Guardar como»."
-
-#~ msgid "No preview available due to missing QtWebKit support on your system."
-#~ msgstr ""
-#~ "No hay vista previa disponible porque falta el soporte lógico de QtWebKit "
-#~ "en su sistema."
-
-#~ msgid "No duplicates have been found."
-#~ msgstr "No se han encontrado duplicados."
-
-#~ msgid "Adjust Column Widths"
-#~ msgstr "Ajustar anchura de columnas"
-
-#~ msgid "Filter Toolbar"
-#~ msgstr "Barra de herramientas de filtrado"
-
-#~ msgctxt ""
-#~ "Small words that can be removed from titles when generating id "
-#~ "suggestions; separated by pipe symbol"
-#~ msgid "and|on|in|the|of|at|a|an|with|for|from"
-#~ msgstr "y|o|en|el|la|los|las|de|del|un|una|unos|unas|con|para"

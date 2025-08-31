@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-30 02:04+0000\n"
+"POT-Creation-Date: 2025-08-31 02:04+0000\n"
 "PO-Revision-Date: 2020-08-02 17:36+0200\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -1021,12 +1021,12 @@ msgstr "Kommentar"
 msgid "Preamble"
 msgstr "I&ndledning"
 
-#: src/data/value.cpp:684
+#: src/data/value.cpp:765
 #, kde-format
 msgid " and "
 msgstr " og "
 
-#: src/data/value.cpp:687
+#: src/data/value.cpp:768
 #, fuzzy, kde-format
 msgid " and others"
 msgstr "<i>og %1 andre</i>"
