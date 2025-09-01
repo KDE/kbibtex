@@ -1445,6 +1445,10 @@ bool SourceWidget::validate(QWidget **widgetWithIssue, QString &message) const
     const QString text = document->text();
     connect(d->importerBibTeX, &FileImporterBibTeX::message, this, &SourceWidget::addMessage);
     const QScopedPointer<const File> file(d->importerBibTeX->fromString(text));
+#ifdef EXTRA_VERBOSE
+    if (d->importerBibTeX == nullptr)
+        qCWarning(LOG_KBIBTEX_GUI) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
     disconnect(d->importerBibTeX, &FileImporterBibTeX::message, this, &SourceWidget::addMessage);
     if (file.isNull() || file->count() != 1) {
         if (widgetWithIssue != nullptr) *widgetWithIssue = document->views().at(0); ///< We create one view initially, so this should never fail

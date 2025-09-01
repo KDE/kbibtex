@@ -386,6 +386,10 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
         disconnect(oldFileView, &FileView::modified, d->valueList, &ValueList::update);
         disconnect(oldFileView, &FileView::modified, d->statistics, &Statistics::update);
         // FIXME disconnect(oldEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
+        #ifdef EXTRA_VERBOSE
+        if (d->elementForm == nullptr)
+            qWarning() << "About to disconnect from nullptr";
+        #endif // EXTRA_VERBOSE
         disconnect(d->elementForm, &ElementForm::elementModified, oldFileView, &FileView::externalModification);
     }
     if (newFileView != nullptr) {

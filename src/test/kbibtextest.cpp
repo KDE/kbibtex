@@ -251,8 +251,13 @@ void KBibTeXTest::startOnlineSearchTests()
 
 void KBibTeXTest::onlineSearchStoppedSearch(int searchResult)
 {
-    if (currentOnlineSearch != onlineSearchActiveList.constEnd())
+    if (currentOnlineSearch != onlineSearchActiveList.constEnd()) {
+#ifdef EXTRA_VERBOSE
+        if (*currentOnlineSearch == nullptr)
+            qWarning() << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
         disconnect(*currentOnlineSearch, &OnlineSearchAbstract::stoppedSearch, this, &KBibTeXTest::onlineSearchStoppedSearch);
+    }
     if (searchResult == OnlineSearchAbstract::resultNoError) {
         if (m_currentOnlineSearchNumFoundEntries == 0)
             addMessage(QString(QStringLiteral("Got no error message searching '%1', but found NO entries")).arg((*currentOnlineSearch)->label()), MessageStatus::Error);

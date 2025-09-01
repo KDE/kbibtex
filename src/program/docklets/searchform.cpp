@@ -306,8 +306,13 @@ public:
     }
 
     void switchToSearch() {
-        for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)
+        for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it) {
+#ifdef EXTRA_VERBOSE
+            if (searchButton == nullptr)
+                qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
             disconnect(searchButton, &QPushButton::clicked, it.value(), &OnlineSearchAbstract::cancel);
+        }
 
         connect(searchButton, &QPushButton::clicked, p, &SearchForm::startSearch);
         searchButton->setText(i18n("Search"));
@@ -318,6 +323,10 @@ public:
     }
 
     void switchToCancel() {
+#ifdef EXTRA_VERBOSE
+        if (searchButton == nullptr)
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
         disconnect(searchButton, &QPushButton::clicked, p, &SearchForm::startSearch);
 
         for (QMap<QListWidgetItem *, OnlineSearchAbstract *>::ConstIterator it = itemToOnlineSearch.constBegin(); it != itemToOnlineSearch.constEnd(); ++it)

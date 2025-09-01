@@ -48,6 +48,7 @@
 #include "elementwidgets.h"
 #include "widgets/hidingtabwidget.h"
 #include "widgets/menulineedit.h"
+#include "logging_gui.h"
 
 class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementInterface
 {
@@ -521,6 +522,10 @@ ElementEditor::ElementEditor(bool scrollable, QWidget *parent)
 
 ElementEditor::~ElementEditor()
 {
+#ifdef EXTRA_VERBOSE
+    if (d->tab == nullptr)
+        qCWarning(LOG_KBIBTEX_GUI) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
     disconnect(d->tab, &HidingTabWidget::currentChanged, this, &ElementEditor::tabChanged);
     delete d;
 }

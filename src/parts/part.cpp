@@ -815,6 +815,10 @@ public:
     }
 
     void readConfiguration() {
+#ifdef EXTRA_VERBOSE
+        if (partWidget->fileView() == nullptr)
+            qCWarning(LOG_KBIBTEX_PART) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
         disconnect(partWidget->fileView(), &FileView::elementExecuted, partWidget->fileView(), &FileView::editElement);
         disconnect(partWidget->fileView(), &FileView::elementExecuted, p, &KBibTeXPart::elementViewDocument);
         switch (Preferences::instance().fileViewDoubleClickAction()) {

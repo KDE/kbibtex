@@ -294,10 +294,26 @@ bool ZoteroBrowser::applyCredentials()
         int groupId = d->comboBoxGroupList->itemData(d->comboBoxGroupList->currentIndex()).toInt(&ok);
         if (!ok) groupId = -1;
 
+#ifdef EXTRA_VERBOSE
+        if (d->tags == nullptr)
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
         disconnect(d->tags, &Zotero::Tags::finishedLoading, this, &ZoteroBrowser::reenableWidget);
+#ifdef EXTRA_VERBOSE
+        if (d->items == nullptr)
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
         disconnect(d->items, &Zotero::Items::stoppedSearch, this, &ZoteroBrowser::reenableWidget);
         disconnect(d->items, &Zotero::Items::foundElement, this, &ZoteroBrowser::showItem);
+#ifdef EXTRA_VERBOSE
+        if (d->tagModel == nullptr)
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
         disconnect(d->tagModel, &Zotero::TagModel::modelReset, this, &ZoteroBrowser::modelReset);
+#ifdef EXTRA_VERBOSE
+        if (d->collectionModel == nullptr)
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
         disconnect(d->collectionModel, &Zotero::CollectionModel::modelReset, this, &ZoteroBrowser::modelReset);
 
         d->collection->deleteLater();
@@ -350,6 +366,10 @@ void ZoteroBrowser::retrieveGroupList() {
         d->comboBoxGroupList->clear();
         d->comboBoxGroupListInitialized = false;
 
+#ifdef EXTRA_VERBOSE
+        if (d->groups == nullptr)
+            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
         disconnect(d->groups, &Zotero::Groups::finishedLoading, this, &ZoteroBrowser::gotGroupList);
         d->groups->deleteLater();
         d->api.clear();
@@ -400,6 +420,10 @@ void ZoteroBrowser::getOAuthCredentials()
 
 void ZoteroBrowser::readOAuthCredentials(bool ok) {
     /// Do not call this slot a second time
+#ifdef EXTRA_VERBOSE
+    if (d->wallet == nullptr)
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
     disconnect(d->wallet, &Wallet::walletOpened, this, &ZoteroBrowser::readOAuthCredentials);
 
     if (ok && (d->wallet->hasFolder(ZoteroBrowser::Private::walletFolderOAuth) || d->wallet->createFolder(ZoteroBrowser::Private::walletFolderOAuth)) && d->wallet->setFolder(ZoteroBrowser::Private::walletFolderOAuth)) {
@@ -423,6 +447,10 @@ void ZoteroBrowser::readOAuthCredentials(bool ok) {
 }
 
 void ZoteroBrowser::writeOAuthCredentials(bool ok) {
+#ifdef EXTRA_VERBOSE
+    if (d->wallet == nullptr)
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
+#endif // EXTRA_VERBOSE
     disconnect(d->wallet, &Wallet::walletOpened, this, &ZoteroBrowser::writeOAuthCredentials);
 
     if (ok && (d->wallet->hasFolder(ZoteroBrowser::Private::walletFolderOAuth) || d->wallet->createFolder(ZoteroBrowser::Private::walletFolderOAuth)) && d->wallet->setFolder(ZoteroBrowser::Private::walletFolderOAuth)) {
