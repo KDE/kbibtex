@@ -379,14 +379,14 @@ void KBibTeXMainWindow::documentSwitched(FileView *oldFileView, FileView *newFil
     d->elementForm->setEnabled(newFileView != nullptr);
     d->documentPreview->setEnabled(newFileView != nullptr);
     if (oldFileView != nullptr) {
-        disconnect(newFileView, &FileView::currentElementChanged, d->referencePreview, &ReferencePreview::setElement);
-        disconnect(newFileView, &FileView::currentElementChanged, d->elementForm, &ElementForm::setElement);
-        disconnect(newFileView, &FileView::currentElementChanged, d->documentPreview, &DocumentPreview::setElement);
-        disconnect(newFileView, &FileView::currentElementChanged, d->searchForm, &SearchForm::setElement);
-        disconnect(newFileView, &FileView::modified, d->valueList, &ValueList::update);
-        disconnect(newFileView, &FileView::modified, d->statistics, &Statistics::update);
+        disconnect(oldFileView, &FileView::currentElementChanged, d->referencePreview, &ReferencePreview::setElement);
+        disconnect(oldFileView, &FileView::currentElementChanged, d->elementForm, &ElementForm::setElement);
+        disconnect(oldFileView, &FileView::currentElementChanged, d->documentPreview, &DocumentPreview::setElement);
+        disconnect(oldFileView, &FileView::currentElementChanged, d->searchForm, &SearchForm::setElement);
+        disconnect(oldFileView, &FileView::modified, d->valueList, &ValueList::update);
+        disconnect(oldFileView, &FileView::modified, d->statistics, &Statistics::update);
         // FIXME disconnect(oldEditor, SIGNAL(modified()), d->elementForm, SLOT(refreshElement()));
-        disconnect(d->elementForm, &ElementForm::elementModified, newFileView, &FileView::externalModification);
+        disconnect(d->elementForm, &ElementForm::elementModified, oldFileView, &FileView::externalModification);
     }
     if (newFileView != nullptr) {
         connect(newFileView, &FileView::currentElementChanged, d->referencePreview, &ReferencePreview::setElement);
