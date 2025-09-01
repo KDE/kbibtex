@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
-# SPDX-FileCopyrightText: 2008-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+# SPDX-FileCopyrightText: 2008-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
 # SPDX-FileContributor: 2013-2021 Pino Toscano <pino@kde.org>
 # SPDX-FileContributor: 2014-2021 Yuri Chornoivan <yurchor@ukr.net>
 # SPDX-FileContributor: 2015-2021 David Faure <faure@kde.org>
@@ -19,8 +19,8 @@ if (QT_MAJOR_VERSION GREATER_EQUAL 6)
     set(QT_MIN_VERSION "6.6.0")
     set(KF_MIN_VERSION "6.0.0")
 else()
-    set(QT_MIN_VERSION "5.15.2")
-    set(KF_MIN_VERSION "5.86")
+    set(QT_MIN_VERSION "5.14.0")
+    set(KF_MIN_VERSION "5.90")
 endif()
 
 set(KDE_COMPILERSETTINGS_LEVEL ${KF_MIN_VERSION})
