@@ -329,7 +329,7 @@ void KBibTeXMainWindow::openDocumentDialog()
         supportedMimeTypes.append(QStringLiteral("application/x-endnote-refer"));
     }
     supportedMimeTypes.append(QStringLiteral("application/pdf"));
-    supportedMimeTypes.append(QStringLiteral("all/all"));
+    supportedMimeTypes.append(QStringLiteral("application/octet-stream")); // will show "All files (*)"
     QPointer<QFileDialog> dlg = new QFileDialog(this, i18n("Open file") /* TODO better text */, startDir);
     dlg->setMimeTypeFilters(supportedMimeTypes);
     dlg->setFileMode(QFileDialog::ExistingFile);
