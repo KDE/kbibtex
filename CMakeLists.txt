@@ -13,8 +13,6 @@ project(
     LANGUAGES CXX
 )
 
-set(CMAKE_CXX_STANDARD 17)
-
 if (QT_MAJOR_VERSION GREATER_EQUAL 6)
     set(QT_MIN_VERSION "6.6.0")
     set(KF_MIN_VERSION "6.0.0")
@@ -23,7 +21,6 @@ else()
     set(KF_MIN_VERSION "5.90")
 endif()
 
-set(KDE_COMPILERSETTINGS_LEVEL ${KF_MIN_VERSION})
 find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
 
 set(
@@ -31,6 +28,7 @@ set(
     ${ECM_MODULE_PATH}
     ${CMAKE_MODULE_PATH}
 )
+set(KDE_COMPILERSETTINGS_LEVEL ${KF_MIN_VERSION})
 
 set(KDE_INSTALL_DIRS_NO_DEPRECATED TRUE)
 include(KDEInstallDirs)
@@ -52,12 +50,10 @@ ecm_setup_version(
     PACKAGE_VERSION_FILE "${CMAKE_BINARY_DIR}/KBibTeXConfigVersion.cmake"
 )
 
-if (QT_MAJOR_VERSION GREATER_EQUAL 6)
-    ecm_set_disabled_deprecation_versions(
-        QT ${QT_MIN_VERSION}
-        KF ${KF_MIN_VERSION}
-    )
-endif()
+ecm_set_disabled_deprecation_versions(
+    QT ${QT_MIN_VERSION}
+    KF ${KF_MIN_VERSION}
+)
 
 install(
     FILES ${CMAKE_BINARY_DIR}/kbibtex-version.h
@@ -232,7 +228,7 @@ find_package(
 
 if(ICU_FOUND)
     add_compile_definitions(HAVE_ICU)
-    if(ICU_VERSION GREATER_EQUAL 75)
+    if(ICU_VERSION GREATER_EQUAL 75 AND CMAKE_CXX_STANDARD LESS 17)
         # Starting with ICU 75, it makes use of C++17 instead of C++11 before
         set(CMAKE_CXX_STANDARD 17)
     endif()
