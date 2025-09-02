@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-31 02:04+0000\n"
+"POT-Creation-Date: 2025-09-02 02:23+0000\n"
 "PO-Revision-Date: 2023-12-06 19:13+0100\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -1151,37 +1151,37 @@ msgstr "Nasledovný miestny dokument bude asociovaný s aktuálnou položkou:"
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "Nasledovný miestny dokument bude asociovaný s položkou '%1':"
 
-#: src/gui/element/elementeditor.cpp:207
+#: src/gui/element/elementeditor.cpp:208
 #, kde-format
 msgid "Options"
 msgstr "Voľby"
 
-#: src/gui/element/elementeditor.cpp:213
+#: src/gui/element/elementeditor.cpp:214
 #, kde-format
 msgid "Show all fields"
 msgstr "Zobraziť všetky polia"
 
-#: src/gui/element/elementeditor.cpp:220
+#: src/gui/element/elementeditor.cpp:221
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Kláves Tab prepína len editovateľné položky"
 
-#: src/gui/element/elementeditor.cpp:228
+#: src/gui/element/elementeditor.cpp:229
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Skontrolovať s BibTeX"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:555
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr "Nebolo zadané žiadne ID, takže predchádzajúce ID '%1' bude obnovené."
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:555
 #, kde-format
 msgid "No id given"
 msgstr "Nie je uvedené žiadne ID"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1192,27 +1192,27 @@ msgstr ""
 "\n"
 "Ponechajte namiesto toho pôvodné ID '%2'?"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid "Id already in use"
 msgstr "Id sa už používa"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Ponechať duplicitné idčka"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid "Restore original id"
 msgstr "Obnoviť pôvodné id"
 
-#: src/gui/element/elementeditor.cpp:586
+#: src/gui/element/elementeditor.cpp:591
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Overenie platnosti pre aktuálny prvok zlyhalo."
 
-#: src/gui/element/elementeditor.cpp:586
+#: src/gui/element/elementeditor.cpp:591
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1221,7 +1221,7 @@ msgstr ""
 "Overenie platnosti aktuálneho prvku zlyhalo:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:587
+#: src/gui/element/elementeditor.cpp:592
 #, kde-format
 msgid "Element validation failed"
 msgstr "Overenie prvku zlyhalo"
@@ -1333,27 +1333,27 @@ msgstr "Obsah:"
 msgid "Prefix:"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1451
+#: src/gui/element/elementwidgets.cpp:1455
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr "Daný zdrojový kód sa nedá analyzovať ako jeden prvok BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1460
+#: src/gui/element/elementwidgets.cpp:1464
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr "Daný zdrojový kód sa nedá analyzovať ako jeden záznam BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1466
+#: src/gui/element/elementwidgets.cpp:1470
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr "Daný zdrojový kód sa nedá analyzovať ako jedno makro BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1472
+#: src/gui/element/elementwidgets.cpp:1476
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Daný zdrojový kód sa nedá analyzovať ako jedna preambula BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1478
+#: src/gui/element/elementwidgets.cpp:1482
 #, fuzzy, kde-format
 #| msgid "Given source code does not parse as one single BibTeX comment."
 msgid ""
@@ -1361,22 +1361,22 @@ msgid ""
 "blank lines inside the comment."
 msgstr "Daný zdrojový kód sa nedá analyzovať ako jeden prvok BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1482
+#: src/gui/element/elementwidgets.cpp:1486
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Trieda prvku nie je správne nastavená"
 
-#: src/gui/element/elementwidgets.cpp:1491
+#: src/gui/element/elementwidgets.cpp:1495
 #, kde-format
 msgid "No issues detected"
 msgstr "Neboli zistené žiadne problémy"
 
-#: src/gui/element/elementwidgets.cpp:1506
+#: src/gui/element/elementwidgets.cpp:1510
 #, kde-format
 msgid "Source"
 msgstr "Zdroj"
 
-#: src/gui/element/elementwidgets.cpp:1537
+#: src/gui/element/elementwidgets.cpp:1541
 #, kde-format
 msgid "Restore"
 msgstr "Obnoviť"
@@ -2578,7 +2578,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:332
-#: src/program/mainwindow.cpp:375 src/program/program.cpp:53
+#: src/program/mainwindow.cpp:375 src/program/program.cpp:55
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -3100,7 +3100,7 @@ msgstr "Miestne súbory"
 msgid "Remote Files"
 msgstr "Vzdialené súbo&ry"
 
-#: src/parts/part.cpp:934
+#: src/parts/part.cpp:938
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3113,7 +3113,7 @@ msgstr ""
 "Overte, že máte dostatočné práva pre zápis tohto súboru a že je\n"
 "k dispozícii dosť miesta na disku."
 
-#: src/parts/part.cpp:1073
+#: src/parts/part.cpp:1077
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3121,12 +3121,12 @@ msgstr ""
 "Nemôžem použiť predvolené formátovanie pre idčka položiek: Nie je určený "
 "predvolený formát."
 
-#: src/parts/part.cpp:1073
+#: src/parts/part.cpp:1077
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "Nemôžem použiť predvolené formátovanie"
 
-#: src/parts/part.cpp:1201
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
@@ -3135,7 +3135,7 @@ msgid ""
 "keep changes made in KBibTeX?"
 msgstr ""
 
-#: src/parts/part.cpp:1201
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3146,17 +3146,17 @@ msgstr ""
 "\n"
 "Znovu načítať súbor alebo ignorovať zmeny na disku?"
 
-#: src/parts/part.cpp:1202
+#: src/parts/part.cpp:1206
 #, kde-format
 msgid "File changed externally"
 msgstr "Súbor zmenený interne"
 
-#: src/parts/part.cpp:1202
+#: src/parts/part.cpp:1206
 #, kde-format
 msgid "Reload file"
 msgstr "Znovu načítať súbor"
 
-#: src/parts/part.cpp:1202
+#: src/parts/part.cpp:1206
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Ignorovať zmeny na disku"
@@ -3676,24 +3676,24 @@ msgid "Use Entry"
 msgstr "Použiť položku"
 
 #: src/program/docklets/searchform.cpp:237
-#: src/program/docklets/searchform.cpp:313
+#: src/program/docklets/searchform.cpp:318
 #, kde-format
 msgid "Search"
 msgstr "Hľadať"
 
-#: src/program/docklets/searchform.cpp:325
+#: src/program/docklets/searchform.cpp:334
 #, kde-format
 msgid "Stop"
 msgstr "Zastaviť"
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:357
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "Žiadny vyhľadávací nástroj nie je vybraný (<a href=\"changeEngine\">zmeniť</"
 "a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:358
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
@@ -3701,7 +3701,7 @@ msgstr ""
 "Vyhľadávací nástroj <b>%1</b> je vybraný (<a href=\"changeEngine\">zmeniť</"
 "a>)."
 
-#: src/program/docklets/searchform.cpp:350
+#: src/program/docklets/searchform.cpp:359
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3710,7 +3710,7 @@ msgstr ""
 "Vyhľadávacie nástroje <b>%1</b> a <b>%2</b> sú vybraté (<a href="
 "\"changeEngine\">zmeniť</a>)."
 
-#: src/program/docklets/searchform.cpp:351
+#: src/program/docklets/searchform.cpp:360
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3719,7 +3719,7 @@ msgstr ""
 "Vyhľadávacie nástroje <b>%1</b>, <b>%2</b>, a <b>%3</b> sú vybraté (<a href="
 "\"changeEngine\">zmeniť</a>)."
 
-#: src/program/docklets/searchform.cpp:352
+#: src/program/docklets/searchform.cpp:361
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3728,7 +3728,7 @@ msgstr ""
 "Vyhľadávacie nástroje <b>%1</b>, <b>%2</b>, a viac sú vybraté (<a href="
 "\"changeEngine\">zmeniť</a>)."
 
-#: src/program/docklets/searchform.cpp:417
+#: src/program/docklets/searchform.cpp:426
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3737,7 +3737,7 @@ msgstr ""
 "Nemôžem spustiť prehľadávanie Internetu:\n"
 "Hľadané termíny nie sú kompletné alebo platné."
 
-#: src/program/docklets/searchform.cpp:417
+#: src/program/docklets/searchform.cpp:426
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Hľadanie na Internete"
@@ -3894,7 +3894,7 @@ msgstr ""
 msgid "Failed to retrieve data from Zotero"
 msgstr "Zlyhalo získanie údajov zo Zotera"
 
-#: src/program/docklets/zoterobrowser.cpp:367
+#: src/program/docklets/zoterobrowser.cpp:387
 #, kde-format
 msgid "No groups available or no permissions"
 msgstr "Nie sú dostupné skupiny alebo oprávnenia"
@@ -4077,7 +4077,7 @@ msgstr "Otvoriť súbor"
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -4086,17 +4086,17 @@ msgstr ""
 "KBibTeX nie je predvolený editor bibliografických formátov ako BibTeX alebo "
 "RIS."
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Predvolený editor bibliografie"
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Nastaviť ako predvolený editor"
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Ponechať nastavenia nezmenené"
@@ -4156,33 +4156,33 @@ msgstr "Nedostupná časť pre súbor '%1'."
 msgid "Unnamed-%1"
 msgstr "Nepomenované-%1"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "BibTeX editor od KDE"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, fuzzy, kde-format
 #| msgid "Copyright 2004-2019 Thomas Fischer"
 msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr "Copyright 2004-2019 Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Maintainer"
 msgstr "Správca"
 
-#: src/program/program.cpp:67
+#: src/program/program.cpp:69
 #, kde-format
 msgid "File(s) to load."
 msgstr "Súbor(y) na načítanie."
 
-#: src/program/program.cpp:103
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4194,7 +4194,7 @@ msgstr ""
 "\n"
 "Bude dostupná iba obmedzená funkcionalita."
 
-#: src/program/program.cpp:103
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Nekompletná inštalácia KBibTeX"

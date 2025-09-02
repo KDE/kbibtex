@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-31 02:04+0000\n"
+"POT-Creation-Date: 2025-09-02 02:23+0000\n"
 "PO-Revision-Date: 2025-08-30 14:50+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1162,38 +1162,38 @@ msgid "The following local document is about to be associated with entry '%1':"
 msgstr ""
 "El siguiente documento local está a punto de ser asociado a la entrada «%1»:"
 
-#: src/gui/element/elementeditor.cpp:207
+#: src/gui/element/elementeditor.cpp:208
 #, kde-format
 msgid "Options"
 msgstr "Opciones"
 
-#: src/gui/element/elementeditor.cpp:213
+#: src/gui/element/elementeditor.cpp:214
 #, kde-format
 msgid "Show all fields"
 msgstr "Mostrar todos los campos"
 
-#: src/gui/element/elementeditor.cpp:220
+#: src/gui/element/elementeditor.cpp:221
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "La tecla del tabulador solo visita los campos editables"
 
-#: src/gui/element/elementeditor.cpp:228
+#: src/gui/element/elementeditor.cpp:229
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Comprobar con BibTeX"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:555
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 "So se ha introducido ningún ID, por lo que se restaurará el ID anterior «%1»."
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:555
 #, kde-format
 msgid "No id given"
 msgstr "No se ha proporcionado ningún ID"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1204,27 +1204,27 @@ msgstr ""
 "\n"
 "¿Mantener el ID original «%2» en su lugar?"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid "Id already in use"
 msgstr "Este ID ya se encuentra en uso"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Mantener los ID duplicados"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid "Restore original id"
 msgstr "Restaurar el ID original"
 
-#: src/gui/element/elementeditor.cpp:586
+#: src/gui/element/elementeditor.cpp:591
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "La validación del elemento actual ha fallado."
 
-#: src/gui/element/elementeditor.cpp:586
+#: src/gui/element/elementeditor.cpp:591
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1233,7 +1233,7 @@ msgstr ""
 "La validación del elemento actual ha fallado:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:587
+#: src/gui/element/elementeditor.cpp:592
 #, kde-format
 msgid "Element validation failed"
 msgstr "Validación de elemento fallida"
@@ -1344,35 +1344,35 @@ msgstr "Contexto:"
 msgid "Prefix:"
 msgstr "Prefijo:"
 
-#: src/gui/element/elementwidgets.cpp:1451
+#: src/gui/element/elementwidgets.cpp:1455
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 "El código fuente proporcionado no se puede analizar como un elemento único "
 "de BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1460
+#: src/gui/element/elementwidgets.cpp:1464
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 "El código fuente proporcionado no se puede analizar como una entrada única "
 "de BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1466
+#: src/gui/element/elementwidgets.cpp:1470
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 "El código fuente proporcionado no se puede analizar como una macro única de "
 "BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1472
+#: src/gui/element/elementwidgets.cpp:1476
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 "El código fuente proporcionado no se puede analizar como un preámbulo único "
 "de BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1478
+#: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
@@ -1381,22 +1381,22 @@ msgstr ""
 "El código fuente proporcionado no se puede analizar como un comentario único "
 "de BibTeX. Pruebe a eliminar las líneas en blanco dentro del comentario."
 
-#: src/gui/element/elementwidgets.cpp:1482
+#: src/gui/element/elementwidgets.cpp:1486
 #, kde-format
 msgid "Element class not properly set"
 msgstr "La clase del elemento no se ha definido correctamente"
 
-#: src/gui/element/elementwidgets.cpp:1491
+#: src/gui/element/elementwidgets.cpp:1495
 #, kde-format
 msgid "No issues detected"
 msgstr "No se han detectado problemas"
 
-#: src/gui/element/elementwidgets.cpp:1506
+#: src/gui/element/elementwidgets.cpp:1510
 #, kde-format
 msgid "Source"
 msgstr "Origen"
 
-#: src/gui/element/elementwidgets.cpp:1537
+#: src/gui/element/elementwidgets.cpp:1541
 #, kde-format
 msgid "Restore"
 msgstr "Restaurar"
@@ -2596,7 +2596,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:332
-#: src/program/mainwindow.cpp:375 src/program/program.cpp:53
+#: src/program/mainwindow.cpp:375 src/program/program.cpp:55
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -3122,7 +3122,7 @@ msgstr "Archivos locales"
 msgid "Remote Files"
 msgstr "Archivos remotos"
 
-#: src/parts/part.cpp:934
+#: src/parts/part.cpp:938
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3136,7 +3136,7 @@ msgstr ""
 "Compruebe que tiene acceso de escritura para este archivo y que dispone de "
 "espacio suficiente en disco."
 
-#: src/parts/part.cpp:1073
+#: src/parts/part.cpp:1077
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3144,12 +3144,12 @@ msgstr ""
 "No se puede aplicar el formato por omisión para los ID de las entradas: no "
 "se ha indicado un formato por omisión."
 
-#: src/parts/part.cpp:1073
+#: src/parts/part.cpp:1077
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "No se puede aplicar el formato por omisión"
 
-#: src/parts/part.cpp:1201
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
@@ -3162,7 +3162,7 @@ msgstr ""
 "¿Desea volver a cargar el archivo y perder los cambios realizados en KBibTeX "
 "o ignorar los cambios del disco y conservar los cambios hechos en KBibTeX?"
 
-#: src/parts/part.cpp:1201
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3173,17 +3173,17 @@ msgstr ""
 "\n"
 "¿Desea volver a cargar el archivo o ignorar los cambios del disco?"
 
-#: src/parts/part.cpp:1202
+#: src/parts/part.cpp:1206
 #, kde-format
 msgid "File changed externally"
 msgstr "Archivo modificado externamente"
 
-#: src/parts/part.cpp:1202
+#: src/parts/part.cpp:1206
 #, kde-format
 msgid "Reload file"
 msgstr "Volver a cargar archivo"
 
-#: src/parts/part.cpp:1202
+#: src/parts/part.cpp:1206
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Ignorar los cambios existentes en el disco"
@@ -3704,24 +3704,24 @@ msgid "Use Entry"
 msgstr "Usar entrada"
 
 #: src/program/docklets/searchform.cpp:237
-#: src/program/docklets/searchform.cpp:313
+#: src/program/docklets/searchform.cpp:318
 #, kde-format
 msgid "Search"
 msgstr "Buscar"
 
-#: src/program/docklets/searchform.cpp:325
+#: src/program/docklets/searchform.cpp:334
 #, kde-format
 msgid "Stop"
 msgstr "Detener"
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:357
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr ""
 "No se ha seleccionado un motor de búsqueda (<a href=\"changeEngine"
 "\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:358
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
@@ -3729,7 +3729,7 @@ msgstr ""
 "Se ha seleccionado el motor de búsqueda <b>%1</b> (<a href=\"changeEngine"
 "\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:350
+#: src/program/docklets/searchform.cpp:359
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3738,7 +3738,7 @@ msgstr ""
 "Se han seleccionado los motores de búsqueda <b>%1</b> y <b>%2</b> (<a href="
 "\"changeEngine\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:351
+#: src/program/docklets/searchform.cpp:360
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3747,7 +3747,7 @@ msgstr ""
 "Se han seleccionado los motores de búsqueda <b>%1</b>, <b>%2</b> y <b>%3</b> "
 "(<a href=\"changeEngine\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:352
+#: src/program/docklets/searchform.cpp:361
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3756,7 +3756,7 @@ msgstr ""
 "Se han seleccionado los motores de búsqueda <b>%1</b> y <b>%2</b>, entre "
 "otros (<a href=\"changeEngine\">cambiar</a>)."
 
-#: src/program/docklets/searchform.cpp:417
+#: src/program/docklets/searchform.cpp:426
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3765,7 +3765,7 @@ msgstr ""
 "No se puede buscar en Internet:\n"
 "Los términos a buscar no están completos o no son válidos."
 
-#: src/program/docklets/searchform.cpp:417
+#: src/program/docklets/searchform.cpp:426
 #, kde-format
 msgid "Searching the Internet"
 msgstr "Buscando en Internet"
@@ -3922,7 +3922,7 @@ msgstr ""
 msgid "Failed to retrieve data from Zotero"
 msgstr "La obtención de datos de Zotero ha fallado"
 
-#: src/program/docklets/zoterobrowser.cpp:367
+#: src/program/docklets/zoterobrowser.cpp:387
 #, kde-format
 msgid "No groups available or no permissions"
 msgstr "No hay grupos disponibles o no se tienen permisos."
@@ -4105,7 +4105,7 @@ msgstr "Abrir archivo"
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -4114,17 +4114,17 @@ msgstr ""
 "KBibTeX no es el editor por omisión para formatos bibliográficos BibTeX ni "
 "RIS."
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "Editor bibliográfico por omisión"
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "Fijar como editor por omisión"
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "Mantener las preferencias sin cambios"
@@ -4184,32 +4184,32 @@ msgstr "Ninguna parte disponible para el archivo «%1»."
 msgid "Unnamed-%1"
 msgstr "Sin nombre-%1"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "Un editor BibTeX creado por KDE"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr "Copyright 2004-2024 Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Maintainer"
 msgstr "Encargado"
 
-#: src/program/program.cpp:67
+#: src/program/program.cpp:69
 #, kde-format
 msgid "File(s) to load."
 msgstr "Archivo(s) a cargar."
 
-#: src/program/program.cpp:103
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4222,7 +4222,7 @@ msgstr ""
 "\n"
 "Solo dispondrá de funcionalidad limitada."
 
-#: src/program/program.cpp:103
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instalación de KBibTeX incompleta"

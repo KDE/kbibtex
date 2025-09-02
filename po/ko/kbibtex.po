@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-08-31 02:04+0000\n"
+"POT-Creation-Date: 2025-09-02 02:23+0000\n"
 "PO-Revision-Date: 2025-04-06 22:27+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1153,37 +1153,37 @@ msgstr "다음 로컬 문서가 현재 항목과 연결됩니다:"
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "다음 로컬 문서가 '%1' 항목과 연결됩니다:"
 
-#: src/gui/element/elementeditor.cpp:207
+#: src/gui/element/elementeditor.cpp:208
 #, kde-format
 msgid "Options"
 msgstr "옵션"
 
-#: src/gui/element/elementeditor.cpp:213
+#: src/gui/element/elementeditor.cpp:214
 #, kde-format
 msgid "Show all fields"
 msgstr "모든 필드 표시"
 
-#: src/gui/element/elementeditor.cpp:220
+#: src/gui/element/elementeditor.cpp:221
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "편집 가능한 필드만 Tab 키로 찾아가기"
 
-#: src/gui/element/elementeditor.cpp:228
+#: src/gui/element/elementeditor.cpp:229
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "BibTeX로 확인"
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:555
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr "ID를 입력하지 않았으므로 이전 ID '%1'이(가) 복원됩니다."
 
-#: src/gui/element/elementeditor.cpp:550
+#: src/gui/element/elementeditor.cpp:555
 #, kde-format
 msgid "No id given"
 msgstr "ID 지정되지 않음"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1194,27 +1194,27 @@ msgstr ""
 "\n"
 "'%2' 대신 원래 ID를 유지하시겠습니까?"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid "Id already in use"
 msgstr "이미 사용 중인 ID"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "중복 ID 유지"
 
-#: src/gui/element/elementeditor.cpp:557
+#: src/gui/element/elementeditor.cpp:562
 #, kde-format
 msgid "Restore original id"
 msgstr "원래 ID 복원"
 
-#: src/gui/element/elementeditor.cpp:586
+#: src/gui/element/elementeditor.cpp:591
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "현재 요소에 대한 유효성 검사에 실패했습니다."
 
-#: src/gui/element/elementeditor.cpp:586
+#: src/gui/element/elementeditor.cpp:591
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1223,7 +1223,7 @@ msgstr ""
 "현재 요소에 대한 유효성 검사에 실패함:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:587
+#: src/gui/element/elementeditor.cpp:592
 #, kde-format
 msgid "Element validation failed"
 msgstr "요소 검증 실패"
@@ -1334,27 +1334,27 @@ msgstr "문맥:"
 msgid "Prefix:"
 msgstr "접두사:"
 
-#: src/gui/element/elementwidgets.cpp:1451
+#: src/gui/element/elementwidgets.cpp:1455
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr "지정한 소스 코드가 단일 BibTeX 요소로 해석되지 않습니다."
 
-#: src/gui/element/elementwidgets.cpp:1460
+#: src/gui/element/elementwidgets.cpp:1464
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr "지정한 소스 코드가 단일 BibTeX 항목으로 해석되지 않습니다."
 
-#: src/gui/element/elementwidgets.cpp:1466
+#: src/gui/element/elementwidgets.cpp:1470
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr "지정한 소스 코드가 단일 BibTeX 매크로로 해석되지 않습니다."
 
-#: src/gui/element/elementwidgets.cpp:1472
+#: src/gui/element/elementwidgets.cpp:1476
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "지정한 소스 코드가 단일 BibTeX 서문으로 해석되지 않습니다."
 
-#: src/gui/element/elementwidgets.cpp:1478
+#: src/gui/element/elementwidgets.cpp:1482
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
@@ -1363,22 +1363,22 @@ msgstr ""
 "지정한 소스 코드가 단일 BibTeX 주석으로 해석되지 않습니다. 주석 내의 빈 줄을 "
 "삭제해 보십시오."
 
-#: src/gui/element/elementwidgets.cpp:1482
+#: src/gui/element/elementwidgets.cpp:1486
 #, kde-format
 msgid "Element class not properly set"
 msgstr "요소 클래스가 올바르게 설정되지 않았음"
 
-#: src/gui/element/elementwidgets.cpp:1491
+#: src/gui/element/elementwidgets.cpp:1495
 #, kde-format
 msgid "No issues detected"
 msgstr "감지된 문제 없음"
 
-#: src/gui/element/elementwidgets.cpp:1506
+#: src/gui/element/elementwidgets.cpp:1510
 #, kde-format
 msgid "Source"
 msgstr "소스"
 
-#: src/gui/element/elementwidgets.cpp:1537
+#: src/gui/element/elementwidgets.cpp:1541
 #, kde-format
 msgid "Restore"
 msgstr "복원"
@@ -2572,7 +2572,7 @@ msgstr ""
 "%2"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:332
-#: src/program/mainwindow.cpp:375 src/program/program.cpp:53
+#: src/program/mainwindow.cpp:375 src/program/program.cpp:55
 #, kde-format
 msgid "KBibTeX"
 msgstr "KBibTeX"
@@ -3094,7 +3094,7 @@ msgstr "로컬 파일"
 msgid "Remote Files"
 msgstr "원격 파일"
 
-#: src/parts/part.cpp:934
+#: src/parts/part.cpp:938
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3107,7 +3107,7 @@ msgstr ""
 "이 파일에 대한 쓰기 권한이 있는지 또는 사용 가능한 디스크 공간이 충분한지 확"
 "인하십시오."
 
-#: src/parts/part.cpp:1073
+#: src/parts/part.cpp:1077
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3115,12 +3115,12 @@ msgstr ""
 "항목 ID에 대해 기본 형식을 적용할 수 없습니다. 기본 형식을 지정하지 않았습니"
 "다."
 
-#: src/parts/part.cpp:1073
+#: src/parts/part.cpp:1077
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "기본 서식을 적용할 수 없음"
 
-#: src/parts/part.cpp:1201
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
@@ -3133,7 +3133,7 @@ msgstr ""
 "파일을 다시 불러오고 KBibTeX에서의 변경 사항을 버리시겠습니까, 아니면 디스크"
 "의 변경 사항을 무시하고 KBibTeX에서의 변경 사항으로 덮어쓰시겠습니까?"
 
-#: src/parts/part.cpp:1201
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3144,17 +3144,17 @@ msgstr ""
 "\n"
 "파일을 다시 읽거나 디스크의 변경 사항을 무시하시겠습니까?"
 
-#: src/parts/part.cpp:1202
+#: src/parts/part.cpp:1206
 #, kde-format
 msgid "File changed externally"
 msgstr "외부에서 파일 변경됨"
 
-#: src/parts/part.cpp:1202
+#: src/parts/part.cpp:1206
 #, kde-format
 msgid "Reload file"
 msgstr "파일 새로 고침"
 
-#: src/parts/part.cpp:1202
+#: src/parts/part.cpp:1206
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "디스크에서 변경 사항 무시"
@@ -3662,28 +3662,28 @@ msgid "Use Entry"
 msgstr "항목 사용"
 
 #: src/program/docklets/searchform.cpp:237
-#: src/program/docklets/searchform.cpp:313
+#: src/program/docklets/searchform.cpp:318
 #, kde-format
 msgid "Search"
 msgstr "검색"
 
-#: src/program/docklets/searchform.cpp:325
+#: src/program/docklets/searchform.cpp:334
 #, kde-format
 msgid "Stop"
 msgstr "중지"
 
-#: src/program/docklets/searchform.cpp:348
+#: src/program/docklets/searchform.cpp:357
 #, kde-format
 msgid "No search engine selected (<a href=\"changeEngine\">change</a>)."
 msgstr "검색 엔진이 선택되지 않음(<a href=\"changeEngine\">변경</a>)."
 
-#: src/program/docklets/searchform.cpp:349
+#: src/program/docklets/searchform.cpp:358
 #, kde-format
 msgid ""
 "Search engine <b>%1</b> is selected (<a href=\"changeEngine\">change</a>)."
 msgstr "검색 엔진 <b>%1</b>이(가) 선택됨(<a href=\"changeEngine\">변경</a>)."
 
-#: src/program/docklets/searchform.cpp:350
+#: src/program/docklets/searchform.cpp:359
 #, kde-format
 msgid ""
 "Search engines <b>%1</b> and <b>%2</b> are selected (<a href=\"changeEngine"
@@ -3692,7 +3692,7 @@ msgstr ""
 "검색 엔진 <b>%1</b>와(과) <b>%2</b>이(가) 선택됨(<a href=\"changeEngine\">변"
 "경</a>)."
 
-#: src/program/docklets/searchform.cpp:351
+#: src/program/docklets/searchform.cpp:360
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and <b>%3</b> are selected (<a href="
@@ -3701,7 +3701,7 @@ msgstr ""
 "검색 엔진 <b>%1</b>, <b>%2</b>, <b>%3</b>이(가) 선택됨(<a href=\"changeEngine"
 "\">change</a>)."
 
-#: src/program/docklets/searchform.cpp:352
+#: src/program/docklets/searchform.cpp:361
 #, kde-format
 msgid ""
 "Search engines <b>%1</b>, <b>%2</b>, and more are selected (<a href="
@@ -3710,7 +3710,7 @@ msgstr ""
 "검색 엔진 <b>%1</b>, <b>%2</b> 등이 선택됨 (<a href=\"changeEngine\">변경</"
 "a>)."
 
-#: src/program/docklets/searchform.cpp:417
+#: src/program/docklets/searchform.cpp:426
 #, kde-format
 msgid ""
 "Could not start searching the Internet:\n"
@@ -3719,7 +3719,7 @@ msgstr ""
 "인터넷 검색을 시작할 수 없습니다.\n"
 "검색 용어가 완료되지 않았거나 잘못되었습니다."
 
-#: src/program/docklets/searchform.cpp:417
+#: src/program/docklets/searchform.cpp:426
 #, kde-format
 msgid "Searching the Internet"
 msgstr "인터넷 검색"
@@ -3874,7 +3874,7 @@ msgstr ""
 msgid "Failed to retrieve data from Zotero"
 msgstr "Zotero에서 데이터를 가져올 수 없음"
 
-#: src/program/docklets/zoterobrowser.cpp:367
+#: src/program/docklets/zoterobrowser.cpp:387
 #, kde-format
 msgid "No groups available or no permissions"
 msgstr "사용 가능한 그룹이 없거나 사용 권한이 없음"
@@ -4055,7 +4055,7 @@ msgstr "파일 열기"
 msgid "%1 - KBibTeX"
 msgstr "%1 - KBibTeX"
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
@@ -4064,17 +4064,17 @@ msgstr ""
 "KBibTeX는 BibTeX 또는 RIS와 같은 서지 정보 목록 형식의 기본 편집기가 아닙니"
 "다."
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Default Bibliography Editor"
 msgstr "기본 서지 정보 목록 편집기"
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Set as Default Editor"
 msgstr "기본 편집기로 설정"
 
-#: src/program/mainwindow.cpp:462 src/program/mainwindow.cpp:464
+#: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Keep settings unchanged"
 msgstr "설정을 변경하지 않은 상태로 유지"
@@ -4134,32 +4134,32 @@ msgstr "'%1' 파일에 사용할 수 있는 부분이 없습니다."
 msgid "Unnamed-%1"
 msgstr "이름없음-%1"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, kde-format
 msgid "A BibTeX editor by KDE"
 msgstr "KDE의 BibTeX 편집기"
 
-#: src/program/program.cpp:53
+#: src/program/program.cpp:55
 #, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr "Copyright 2004-2024 Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Thomas Fischer"
 msgstr "Thomas Fischer"
 
-#: src/program/program.cpp:58
+#: src/program/program.cpp:60
 #, kde-format
 msgid "Maintainer"
 msgstr "관리자"
 
-#: src/program/program.cpp:67
+#: src/program/program.cpp:69
 #, kde-format
 msgid "File(s) to load."
 msgstr "불러올 파일입니다."
 
-#: src/program/program.cpp:103
+#: src/program/program.cpp:105
 #, kde-format
 msgid ""
 "KBibTeX seems to be not installed completely. KBibTeX could not locate its "
@@ -4172,7 +4172,7 @@ msgstr ""
 "\n"
 "제한된 기능만 사용할 수 있습니다."
 
-#: src/program/program.cpp:103
+#: src/program/program.cpp:105
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "불완전한 KBibTeX 설치"
