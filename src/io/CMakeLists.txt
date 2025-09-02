@@ -74,6 +74,7 @@ target_link_libraries(kbibtexio
         KBibTeX::Config
 )
 
+# FIXME get rid of Qt6Core5Compat
 if(Qt6Core5Compat_FOUND)
     target_link_libraries(kbibtexio
         PRIVATE

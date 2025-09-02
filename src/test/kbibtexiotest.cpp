@@ -20,7 +20,9 @@
 #include <QtTest>
 
 #include <QStandardPaths>
+#ifdef HAVE_QTEXTCODEC
 #include <QTextCodec>
+#endif // HAVE_QTEXTCODEC
 
 #include <KBibTeX>
 #include <Preferences>
@@ -97,8 +99,10 @@ private Q_SLOTS:
     void fileImporterBibTeXload();
     void fileExporterBibTeXEncoding_data();
     void fileExporterBibTeXEncoding();
+#ifdef HAVE_QTEXTCODEC
     void fileExporterBibTeXcanEncode_data();
     void fileExporterBibTeXcanEncode();
+#endif // HAVE_QTEXTCODEC
     void fileImportExportBibTeXroundtrip_data();
     void fileImportExportBibTeXroundtrip();
     void protectiveCasingEntryGeneratedOnTheFly();
@@ -753,6 +757,7 @@ void KBibTeXIOTest::fileExporterBibTeXEncoding()
     QVERIFY2(anyMatch, "generatedOutput does not match expectedOutput (even with BOM)");
 }
 
+#ifdef HAVE_QTEXTCODEC
 void KBibTeXIOTest::fileExporterBibTeXcanEncode_data()
 {
     QTest::addColumn<QChar>("character");
@@ -788,6 +793,7 @@ void KBibTeXIOTest::fileExporterBibTeXcanEncode()
         QVERIFY2(fileExporterBibTeX.canEncode(character, textCodec) == supportedByTextCodecs.contains(textCodec), qPrintable(QString(QStringLiteral("Mismatch for letter '%1' and codec '%2'").arg(QString(character), QString::fromUtf8(textCodec->name())))));
     }
 }
+#endif // HAVE_QTEXTCODEC
 
 void KBibTeXIOTest::fileImportExportBibTeXroundtrip_data() {
     struct TestCase {

@@ -21,7 +21,9 @@
 
 #include <typeinfo>
 
+#ifdef HAVE_QTEXTCODEC
 #include <QTextCodec>
+#endif // HAVE_QTEXTCODEC
 #include <QTextStream>
 #include <QStringList>
 #include <QBuffer>
@@ -47,6 +49,7 @@ class FileExporterBibTeX::Private
 private:
     FileExporterBibTeX *parent;
 
+#ifdef HAVE_QTEXTCODEC
     /**
      * Determine a codec to use based on various settings such as
      * the global preferences, per-file settings, or configuration
@@ -83,6 +86,7 @@ public:
         /// (due to QTextCodec::ConvertInvalidToNull above)
         return conversionResult.length() != 1 || conversionResult.at(0) != QLatin1Char('\0');
     }
+#endif // HAVE_QTEXTCODEC
 
 public:
     QChar stringOpenDelimiter;
@@ -498,7 +502,12 @@ public:
     }
 
     bool saveAsString(QString &output, const File *bibtexfile) {
+#ifdef HAVE_QTEXTCODEC
         const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") || determineTargetCodec().first == QStringLiteral("us-ascii") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
+#else // HAVE_QTEXTCODEC
+#error Missing implementation
+        const Encoder::TargetEncoding targetEncoding {Encoder::TargetEncoding::UTF8};
+#endif // HAVE_QTEXTCODEC
 
         const File *_bibtexfile = sortedByIdentifier ? File::sortByIdentifier(bibtexfile) : bibtexfile;
 
@@ -602,7 +611,12 @@ public:
     }
 
     bool saveAsString(QString &output, const QSharedPointer<const Element> &element) {
+#ifdef HAVE_QTEXTCODEC
         const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
+#else // HAVE_QTEXTCODEC
+#error Missing implementation
+        const Encoder::TargetEncoding targetEncoding {Encoder::TargetEncoding::UTF8};
+#endif // HAVE_QTEXTCODEC
 
         const QSharedPointer<const Entry> &entry = element.dynamicCast<const Entry>();
         if (!entry.isNull())
@@ -629,6 +643,7 @@ public:
     }
 
     QByteArray applyEncoding(const QString &input) {
+#ifdef HAVE_QTEXTCODEC
         QTextCodec *codec = determineTargetCodec().second;
 
         QString rewrittenInput;
@@ -685,6 +700,10 @@ public:
         rewrittenInput.squeeze();
 
         return codec == nullptr ? rewrittenInput.toUtf8() : codec->fromUnicode(rewrittenInput);
+#else // HAVE_QTEXTCODEC
+#error Missing implementation
+        return input.toUtf8();
+#endif // HAVE_QTEXTCODEC
     }
 
     bool writeOutString(const QString &outputString, QIODevice *iodevice) {
@@ -835,9 +854,11 @@ bool FileExporterBibTeX::isFileExporterBibTeX(const FileExporter &other) {
     return typeid(other) == typeid(FileExporterBibTeX);
 }
 
+#ifdef HAVE_QTEXTCODEC
 #ifdef BUILD_TESTING
 bool FileExporterBibTeX::canEncode(const QChar &c, QTextCodec *codec)
 {
     return d->canEncode(c, codec);
 }
 #endif // BUILD_TESTING
+#endif // HAVE_QTEXTCODEC

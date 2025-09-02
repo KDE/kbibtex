@@ -160,6 +160,10 @@ if(BUILD_KPART OR BUILD_TESTING)
     endif()
 endif()
 
+if(Qt5Core_FOUND OR Qt6Core5Compat_FOUND)
+    add_compile_definitions(HAVE_QTEXTCODEC)
+endif()
+
 if(Qt${QT_MAJOR_VERSION}NetworkAuth_FOUND)
     add_compile_definitions(HAVE_QTNETWORKAUTH)
     add_compile_definitions(HAVE_ZOTERO)

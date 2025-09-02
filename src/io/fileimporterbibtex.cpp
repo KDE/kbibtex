@@ -19,7 +19,9 @@
 
 #include "fileimporterbibtex.h"
 
+#ifdef HAVE_QTEXTCODEC
 #include <QTextCodec>
+#endif // HAVE_QTEXTCODEC
 #include <QIODevice>
 #include <QRegularExpression>
 #include <QCoreApplication>
@@ -1511,6 +1513,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         qCDebug(LOG_KBIBTEX_IO) << "Replacing deprecated encoding 'US-ASCII' with 'LaTeX'";
         encoding = QStringLiteral("latex"); //< encoding 'US-ASCII' is deprecated in favour of 'LaTeX'
     }
+#ifdef HAVE_QTEXTCODEC
     // For encoding 'LaTeX', fall back to encoding 'UTF-8' when creating
     // a QTextCodec instance, but keep 'LaTeX' as the bibliography's 'actual' encoding (used as its encoding property)
     QTextCodec *codec = QTextCodec::codecForName(encoding == QStringLiteral("latex") ? "utf-8" : encoding.toLatin1());
@@ -1520,6 +1523,10 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         return nullptr;
     }
     QString rawText = codec->toUnicode(rawData);
+#else // HAVE_QTEXTCODEC
+#error Missing implementation
+    QString rawText = QString::fromUtf8(rawData);
+#endif // HAVE_QTEXTCODEC
 
     /// Remove deprecated 'x-kbibtex-personnameformatting' from BibTeX raw text
     const int posPersonNameFormatting = rawText.indexOf(QStringLiteral("@comment{x-kbibtex-personnameformatting="));

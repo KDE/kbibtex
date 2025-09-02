@@ -41,7 +41,9 @@ class Entry;
 #include "encoder.h"
 
 #ifdef BUILD_TESTING
+#ifdef HAVE_QTEXTCODEC
 class QTextCodec;
+#endif // HAVE_QTEXTCODEC
 #endif // BUILD_TESTING
 
 /**
@@ -111,9 +113,11 @@ public:
      */
     static bool isFileExporterBibTeX(const FileExporter &other);
 
+#ifdef HAVE_QTEXTCODEC
 #ifdef BUILD_TESTING
     bool canEncode(const QChar &c, QTextCodec *codec);
 #endif // BUILD_TESTING
+#endif // HAVE_QTEXTCODEC
 
 public Q_SLOTS:
     void cancel() override;
