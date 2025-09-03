@@ -136,6 +136,13 @@ target_link_libraries(kbibtexiotest
         KBibTeX::IO
 )
 
+if(Qt6Core5Compat_FOUND)
+    target_link_libraries(kbibtexiotest
+        PRIVATE
+            Qt6::Core5Compat
+    )
+endif()
+
 target_include_directories(kbibtexiotest
     PRIVATE
         ${CMAKE_BINARY_DIR}

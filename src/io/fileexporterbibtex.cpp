@@ -69,6 +69,9 @@ private:
             return QPair<QString, QTextCodec *>(encoding, QTextCodec::codecForName(encoding.toLatin1().constData()));
     }
 
+#ifdef BUILD_TESTING
+public:
+#endif // BUILD_TESTING
     inline bool canEncode(const QChar &c, QTextCodec *codec) {
         if (codec == nullptr)
             return true; ///< no codec means 'use UTF-8'; assume that UTF-8 can encode anything
@@ -831,3 +834,10 @@ QString FileExporterBibTeX::editionNumberToString(const int edition, const Prefe
 bool FileExporterBibTeX::isFileExporterBibTeX(const FileExporter &other) {
     return typeid(other) == typeid(FileExporterBibTeX);
 }
+
+#ifdef BUILD_TESTING
+bool FileExporterBibTeX::canEncode(const QChar &c, QTextCodec *codec)
+{
+    return d->canEncode(c, codec);
+}
+#endif // BUILD_TESTING

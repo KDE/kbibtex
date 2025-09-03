@@ -40,6 +40,10 @@ class Entry;
 
 #include "encoder.h"
 
+#ifdef BUILD_TESTING
+class QTextCodec;
+#endif // BUILD_TESTING
+
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
@@ -106,6 +110,10 @@ public:
      * @return @c true if FileExporter is actually a FileExporterBibTeX, else @c false
      */
     static bool isFileExporterBibTeX(const FileExporter &other);
+
+#ifdef BUILD_TESTING
+    bool canEncode(const QChar &c, QTextCodec *codec);
+#endif // BUILD_TESTING
 
 public Q_SLOTS:
     void cancel() override;
