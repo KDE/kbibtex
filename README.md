@@ -60,7 +60,7 @@ In detail, the following dependencies exist:
       Parts, CoreAddons, Service, TextEditor,, DocTools, Wallet, Crash,
       and has helper package: extra-cmake-modules (ECM)
     - Poppler (any recent version should suffice) with Qt5 bindings,
-    - Optionally, ICU (any recent version should suffice),
+    - ICU (any recent version should suffice),
       required components: uc and i18n
 
 * Runtime

@@ -37,6 +37,7 @@ Diff 0.10.1 to 0.11.0
 - Various clean-ups and code modernizations
 - Adding scripts to compile and run KBibTeX in PodMan containers mimicing various
   Linux distributions
+- Re-introducing ICU as a hard dependency due to loss of QTextCodec from Qt6
 
 Various contributions by Albert Astals Cid <aacid@kde.org>, Antoni Bella Pérez
 <antonibella5@yahoo.com>, Friedrich W. H. Kossebau <kossebau@kde.org>, Luigi Toscano

@@ -226,16 +226,13 @@ endif()
 find_package(
     ICU
     MODULE
-    OPTIONAL_COMPONENTS
+    COMPONENTS
     uc i18n
 )
 
-if(ICU_FOUND)
-    add_compile_definitions(HAVE_ICU)
-    if(ICU_VERSION GREATER_EQUAL 75 AND CMAKE_CXX_STANDARD LESS 17)
-        # Starting with ICU 75, it makes use of C++17 instead of C++11 before
-        set(CMAKE_CXX_STANDARD 17)
-    endif()
+if(ICU_VERSION GREATER_EQUAL 75 AND CMAKE_CXX_STANDARD LESS 17)
+    # Starting with ICU 75, it makes use of C++17 instead of C++11 before
+    set(CMAKE_CXX_STANDARD 17)
 endif()
 
 #add_compile_definitions(EXTRA_VERBOSE) # Enable for some extra detailed debug output

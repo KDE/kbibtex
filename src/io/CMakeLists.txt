@@ -72,6 +72,8 @@ target_link_libraries(kbibtexio
         KBibTeX::Global
     PRIVATE
         KBibTeX::Config
+        ICU::uc
+        ICU::i18n
 )
 
 # FIXME get rid of Qt6Core5Compat
@@ -93,14 +95,6 @@ if(KF${QT_MAJOR_VERSION}I18n_FOUND)
     target_link_libraries(kbibtexio
         PRIVATE
             KF${QT_MAJOR_VERSION}::I18n
-    )
-endif()
-
-if(ICU_FOUND)
-    target_link_libraries(kbibtexio
-        PRIVATE
-            ICU::uc
-            ICU::i18n
     )
 endif()
 
