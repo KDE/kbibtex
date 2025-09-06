@@ -53,7 +53,9 @@ typedef QHash<FileExporterXML::OutputStyle, QString> MapFileExporterXMLOutputSty
 Q_DECLARE_METATYPE(MapFileExporterXMLOutputStyleToQString)
 Q_DECLARE_METATYPE(QMimeType)
 Q_DECLARE_METATYPE(QSharedPointer<Element>)
+#ifdef HAVE_QTEXTCODEC
 Q_DECLARE_METATYPE(QVector<QTextCodec*>)
+#endif // HAVE_QTEXTCODEC
 
 class KBibTeXIOTest : public QObject
 {
@@ -99,10 +101,8 @@ private Q_SLOTS:
     void fileImporterBibTeXload();
     void fileExporterBibTeXEncoding_data();
     void fileExporterBibTeXEncoding();
-#ifdef HAVE_QTEXTCODEC
     void fileExporterBibTeXcanEncode_data();
     void fileExporterBibTeXcanEncode();
-#endif // HAVE_QTEXTCODEC
     void fileImportExportBibTeXroundtrip_data();
     void fileImportExportBibTeXroundtrip();
     void protectiveCasingEntryGeneratedOnTheFly();
@@ -750,43 +750,85 @@ void KBibTeXIOTest::fileExporterBibTeXEncoding()
     QVERIFY2(anyMatch, "generatedOutput does not match expectedOutput (even with BOM)");
 }
 
-#ifdef HAVE_QTEXTCODEC
 void KBibTeXIOTest::fileExporterBibTeXcanEncode_data()
 {
     QTest::addColumn<QChar>("character");
-    QTest::addColumn<QVector<QTextCodec *>>("supportedByTextCodecs");
+#ifdef HAVE_QTEXTCODEC
+    QTest::addColumn<QVector<QTextCodec *>>("supportedByCodecs");
+#else // HAVE_QTEXTCODEC
+    QTest::addColumn<QVector<QString>>("supportedByCodecs");
+#endif // HAVE_QTEXTCODEC
 
-    static QTextCodec *textCodecUtf8{QTextCodec::codecForName("UTF-8")};
-    static QTextCodec *textCodecUtf16{QTextCodec::codecForName("UTF-16")};
-    static QTextCodec *textCodecISO885915{QTextCodec::codecForName("ISO-8859-15")};
-    static QTextCodec *textCodecWindows1250{QTextCodec::codecForName("Windows-1250")};
-    static QTextCodec *textCodecWindows1256{QTextCodec::codecForName("Windows-1256")};
+#ifdef HAVE_QTEXTCODEC
+    static QTextCodec *codecUtf8 {QTextCodec::codecForName("UTF-8")};
+    static QTextCodec *codecUtf16{QTextCodec::codecForName("UTF-16")};
+    static QTextCodec *codecISO885915{QTextCodec::codecForName("ISO-8859-15")};
+    static QTextCodec *codecWindows1250{QTextCodec::codecForName("Windows-1250")};
+    static QTextCodec *codecWindows1256{QTextCodec::codecForName("Windows-1256")};
+#else // HAVE_QTEXTCODEC
+    static QString codecUtf8 {QStringLiteral("UTF-8")};
+    static QString codecUtf16{QStringLiteral("UTF-16")};
+    static QString codecISO885915{QStringLiteral("ISO-8859-15")};
+    static QString codecWindows1250{QStringLiteral("Windows-1250")};
+    static QString codecWindows1256{QStringLiteral("Windows-1256")};
+#endif // HAVE_QTEXTCODEC
 
-    QTest::newRow("Letter 'a'") << QChar(QLatin1Char('a')) << QVector<QTextCodec *> {textCodecUtf8, textCodecUtf16, textCodecISO885915, textCodecWindows1250, textCodecWindows1256};
-    QTest::newRow("Letter 'Latin captial letter A with diaeresis' (U+00C4)") << QChar(0x00C4) << QVector<QTextCodec *> {textCodecUtf8, textCodecUtf16, textCodecISO885915, textCodecWindows1250};
-    QTest::newRow("Letter 'Latin captial letter A with ring above' (U+00C5)") << QChar(0x00C5) << QVector<QTextCodec *> {textCodecUtf8, textCodecUtf16, textCodecISO885915};
-    QTest::newRow("Letter 'downwards zigzag arrow' (U+21AF)") << QChar(0x21AF) << QVector<QTextCodec *> {textCodecUtf8, textCodecUtf16};
+    QTest::newRow("Letter 'a'") << QChar(QLatin1Char('a')) <<
+#ifdef HAVE_QTEXTCODEC
+        QVector<QTextCodec *>
+#else // HAVE_QTEXTCODEC
+        QVector<QString>
+#endif // HAVE_QTEXTCODEC
+            {codecUtf8, codecUtf16, codecISO885915, codecWindows1250, codecWindows1256};
+    QTest::newRow("Letter 'Latin captial letter A with diaeresis' (U+00C4)") << QChar(0x00C4) <<
+#ifdef HAVE_QTEXTCODEC
+        QVector<QTextCodec *>
+#else // HAVE_QTEXTCODEC
+        QVector<QString>
+#endif // HAVE_QTEXTCODEC
+            {codecUtf8, codecUtf16, codecISO885915, codecWindows1250};
+    QTest::newRow("Letter 'Latin captial letter A with ring above' (U+00C5)") << QChar(0x00C5) <<
+#ifdef HAVE_QTEXTCODEC
+        QVector<QTextCodec *>
+#else // HAVE_QTEXTCODEC
+        QVector<QString>
+#endif // HAVE_QTEXTCODEC
+            {codecUtf8, codecUtf16, codecISO885915};
+    QTest::newRow("Letter 'downwards zigzag arrow' (U+21AF)") << QChar(0x21AF) <<
+#ifdef HAVE_QTEXTCODEC
+        QVector<QTextCodec *>
+#else // HAVE_QTEXTCODEC
+        QVector<QString>
+#endif // HAVE_QTEXTCODEC
+            {codecUtf8, codecUtf16};
 }
 
 void KBibTeXIOTest::fileExporterBibTeXcanEncode()
 {
     QFETCH(QChar, character);
-    QFETCH(QVector<QTextCodec *>, supportedByTextCodecs);
+#ifdef HAVE_QTEXTCODEC
+    QFETCH(QVector<QTextCodec *>, supportedByCodecs);
+#else // HAVE_QTEXTCODEC
+    QFETCH(QVector<QString>, supportedByCodecs);
+#endif // HAVE_QTEXTCODEC
 
-    static const QVector<QTextCodec *> allTextCodecs{
-        QTextCodec::codecForName("UTF-8"),
-        QTextCodec::codecForName("UTF-16"),
-        QTextCodec::codecForName("ISO-8859-15"),
-        QTextCodec::codecForName("Windows-1250"),
-        QTextCodec::codecForName("Windows-1256")
-    };
+#ifdef HAVE_QTEXTCODEC
+    const QVector<QTextCodec*> allTextCodecs {QTextCodec::codecForName("UTF-8"), QTextCodec::codecForName("UTF-16"), QTextCodec::codecForName("ISO-8859-15"), QTextCodec::codecForName("Windows-1250"), QTextCodec::codecForName("Windows-1256")};
+#else // HAVE_QTEXTCODEC
+    const QVector<QString> allTextCodecs {QStringLiteral("UTF-8"), QStringLiteral("UTF-16"), QStringLiteral("ISO-8859-15"), QStringLiteral("Windows-1250"), QStringLiteral("Windows-1256")};
+#endif // HAVE_QTEXTCODEC
 
     FileExporterBibTeX fileExporterBibTeX(this);
+#ifdef HAVE_QTEXTCODEC
     for (QTextCodec *textCodec : allTextCodecs) {
-        QVERIFY2(fileExporterBibTeX.canEncode(character, textCodec) == supportedByTextCodecs.contains(textCodec), qPrintable(QString(QStringLiteral("Mismatch for letter '%1' and codec '%2'").arg(QString(character), QString::fromUtf8(textCodec->name())))));
+        const QString codecName{QString::fromUtf8(textCodec->name())};
+#else // HAVE_QTEXTCODEC
+    for (const QString &textCodec : allTextCodecs) {
+        const QString codecName{textCodec};
+#endif // HAVE_QTEXTCODEC
+        QVERIFY2(fileExporterBibTeX.canEncode(character, textCodec) == supportedByCodecs.contains(textCodec), qPrintable(QString(QStringLiteral("Mismatch for letter '%1' and codec '%2'").arg(QString(character), codecName))));
     }
 }
-#endif // HAVE_QTEXTCODEC
 
 void KBibTeXIOTest::fileImportExportBibTeXroundtrip_data() {
     struct TestCase {

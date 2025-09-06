@@ -23,6 +23,12 @@
 
 #ifdef HAVE_QTEXTCODEC
 #include <QTextCodec>
+#else // HAVE_QTEXTCODEC
+#include <unicode/translit.h>
+#include <unicode/ucnv.h>
+#include <unicode/ucnv_cb.h>
+#include <unicode/ucnv_err.h>
+#include <unicode/unistr.h>
 #endif // HAVE_QTEXTCODEC
 #include <QTextStream>
 #include <QStringList>
@@ -49,13 +55,36 @@ class FileExporterBibTeX::Private
 private:
     FileExporterBibTeX *parent;
 
+#ifndef HAVE_QTEXTCODEC
+    QHash<QString, UConverter *> uconvForEncoding;
+    UErrorCode uConvErrorCode;
+
+    inline UConverter *uconvGetterForEncoding(const QString &encoding)
+    {
+        uConvErrorCode = U_ZERO_ERROR;
+        if (!uconvForEncoding.contains(encoding)) {
+            UConverter *uconv = uconvForEncoding[encoding] = ucnv_open(encoding.toUtf8().constData(), &uConvErrorCode);
+            if (U_FAILURE(uConvErrorCode) || uconv == nullptr) {
+                qCWarning(LOG_KBIBTEX_IO) << "Could not create an UConverter instance for encoding" << encoding;
+                if (uconv != nullptr)
+                    ucnv_close(uconv);
+                uconvForEncoding.remove(encoding);
+                return nullptr;
+            } else
+                return uconv;
+        } else {
+            return uconvForEncoding[encoding];
+        }
+    }
+#endif // not HAVE_QTEXTCODEC
+
 #ifdef HAVE_QTEXTCODEC
     /**
      * Determine a codec to use based on various settings such as
      * the global preferences, per-file settings, or configuration
      * settings passed to this FileExporterBibTeX instance.
      */
-    QPair<QString, QTextCodec *> determineTargetCodec() {
+    QPair<Encoder::TargetEncoding, QTextCodec *> determineTargetCodec() {
         QString encoding = QStringLiteral("utf-8"); ///< default encoding if nothing else is set
         if (!this->encoding.isEmpty())
             /// Encoding as loaded in loadPreferencesAndProperties(..) has low priority
@@ -65,16 +94,35 @@ private:
             encoding = forcedEncoding;
         encoding = encoding.toLower();
         if (encoding == QStringLiteral("utf-8") || encoding == QStringLiteral("utf8"))
-            return QPair<QString, QTextCodec *>(QStringLiteral("utf-8"), nullptr); ///< a 'nullptr' encoder signifies UTF-8
-        else if (encoding == QStringLiteral("latex"))
-            return QPair<QString, QTextCodec *>(encoding, nullptr); ///< "LaTeX" encoding is actually just UTF-8
+            return QPair<Encoder::TargetEncoding, QTextCodec *>(Encoder::TargetEncoding::UTF8, nullptr); ///< a 'nullptr' encoder signifies UTF-8
+        else if (encoding == QStringLiteral("latex") || encoding.contains(QStringLiteral("ascii")))
+            return QPair<Encoder::TargetEncoding, QTextCodec *>(Encoder::TargetEncoding::ASCII, nullptr); ///< "LaTeX" encoding is actually just UTF-8
         else
-            return QPair<QString, QTextCodec *>(encoding, QTextCodec::codecForName(encoding.toLatin1().constData()));
+            return QPair<Encoder::TargetEncoding, QTextCodec *>(Encoder::TargetEncoding::UTF8, QTextCodec::codecForName(encoding.toLatin1().constData()));
     }
+#else // HAVE_QTEXTCODEC
+    QPair<Encoder::TargetEncoding, QString> determineTargetCodec() {
+        QString encoding = QStringLiteral("utf-8"); ///< default encoding if nothing else is set
+        if (!this->encoding.isEmpty())
+            /// Encoding as loaded in loadPreferencesAndProperties(..) has low priority
+            encoding = this->encoding;
+        if (!forcedEncoding.isEmpty())
+            /// Encoding as set via setEncoding(..) has high priority
+            encoding = forcedEncoding;
+        encoding = encoding.toLower();
+        if (encoding == QStringLiteral("utf-8") || encoding == QStringLiteral("utf8"))
+            return QPair<Encoder::TargetEncoding, QString>(Encoder::TargetEncoding::UTF8, QStringLiteral("utf-8"));
+        else if (encoding == QStringLiteral("latex") || encoding.contains(QStringLiteral("ascii")))
+            return QPair<Encoder::TargetEncoding, QString>(Encoder::TargetEncoding::ASCII, QStringLiteral("utf-8"));
+        else
+            return QPair<Encoder::TargetEncoding, QString>(Encoder::TargetEncoding::UTF8, encoding);
+    }
+#endif // HAVE_QTEXTCODEC
 
 #ifdef BUILD_TESTING
 public:
 #endif // BUILD_TESTING
+#ifdef HAVE_QTEXTCODEC
     inline bool canEncode(const QChar &c, QTextCodec *codec) {
         if (codec == nullptr)
             return true; ///< no codec means 'use UTF-8'; assume that UTF-8 can encode anything
@@ -85,6 +133,28 @@ public:
         /// Conversion failed if codec gave a single byte back which is 0x00
         /// (due to QTextCodec::ConvertInvalidToNull above)
         return conversionResult.length() != 1 || conversionResult.at(0) != QLatin1Char('\0');
+    }
+#else // HAVE_QTEXTCODEC
+    inline bool canEncode(const QChar &c, const QString &encoding) {
+        const auto u = c.unicode();
+        if (u < 128)
+            return true;
+
+        UConverter *uconv{uconvGetterForEncoding(encoding)};
+        if (uconv == nullptr)
+            return false;
+
+        uConvErrorCode = U_ZERO_ERROR;
+        ucnv_setToUCallBack(uconv, UCNV_TO_U_CALLBACK_STOP, nullptr, nullptr, nullptr, &uConvErrorCode);
+        if (U_FAILURE(uConvErrorCode))
+            return false;
+
+        static const size_t buffer_size{256};
+        static char buffer[buffer_size];
+        const icu::UnicodeString uText(u);
+        uConvErrorCode = U_ZERO_ERROR;
+        const int32_t len{ucnv_fromUChars(uconv, buffer, buffer_size, uText.getBuffer(), uText.length(), &uConvErrorCode)};
+        return len > 0 && U_SUCCESS(uConvErrorCode) && (u < 32 || static_cast<uint8_t>(buffer[0]) >= 32);
     }
 #endif // HAVE_QTEXTCODEC
 
@@ -104,6 +174,18 @@ public:
     {
         // Initialize variables like 'keywordCasing' or 'personNameFormatting' from Preferences
         loadPreferencesAndProperties(nullptr /** no File object to evaluate properties from */);
+    }
+
+    ~Private()
+    {
+#ifndef HAVE_QTEXTCODEC
+        // Clean up UConverter instances created earlier in 'uconvGetterForEncoding'
+        auto it = uconvForEncoding.constBegin();
+        while (it != uconvForEncoding.constEnd()) {
+            ucnv_close(it.value());
+            it = uconvForEncoding.erase(it);
+        }
+#endif // not HAVE_QTEXTCODEC
     }
 
     static inline bool progress(int current, int total, QObject *_parent)
@@ -502,13 +584,7 @@ public:
     }
 
     bool saveAsString(QString &output, const File *bibtexfile) {
-#ifdef HAVE_QTEXTCODEC
-        const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") || determineTargetCodec().first == QStringLiteral("us-ascii") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
-#else // HAVE_QTEXTCODEC
-#error Missing implementation
-        const Encoder::TargetEncoding targetEncoding {Encoder::TargetEncoding::UTF8};
-#endif // HAVE_QTEXTCODEC
-
+        const Encoder::TargetEncoding targetEncoding {determineTargetCodec().first};
         const File *_bibtexfile = sortedByIdentifier ? File::sortByIdentifier(bibtexfile) : bibtexfile;
 
         /// Memorize which entries are used in a crossref field
@@ -611,12 +687,7 @@ public:
     }
 
     bool saveAsString(QString &output, const QSharedPointer<const Element> &element) {
-#ifdef HAVE_QTEXTCODEC
-        const Encoder::TargetEncoding targetEncoding = determineTargetCodec().first == QStringLiteral("latex") ? Encoder::TargetEncoding::ASCII : Encoder::TargetEncoding::UTF8;
-#else // HAVE_QTEXTCODEC
-#error Missing implementation
-        const Encoder::TargetEncoding targetEncoding {Encoder::TargetEncoding::UTF8};
-#endif // HAVE_QTEXTCODEC
+        const Encoder::TargetEncoding targetEncoding {determineTargetCodec().first};
 
         const QSharedPointer<const Entry> &entry = element.dynamicCast<const Entry>();
         if (!entry.isNull())
@@ -643,20 +714,33 @@ public:
     }
 
     QByteArray applyEncoding(const QString &input) {
+        const auto dtc{determineTargetCodec()};
+        const Encoder::TargetEncoding targetEncoding{dtc.first};
 #ifdef HAVE_QTEXTCODEC
-        QTextCodec *codec = determineTargetCodec().second;
+        QTextCodec *codec {dtc.second};
+#else // HAVE_QTEXTCODEC
+        const QString encoding {dtc.second};
+#endif // HAVE_QTEXTCODEC
 
         QString rewrittenInput;
         rewrittenInput.reserve(input.length() * 12 / 10 /* add 20% */ + 1024 /* plus 1K */);
         const Encoder &laTeXEncoder = EncoderLaTeX::instance();
         for (const QChar &c : input) {
+#ifdef HAVE_QTEXTCODEC
             if (codec == nullptr /** meaning UTF-8, which can encode anything */ || canEncode(c, codec))
+#else //HAVE_QTEXTCODEC
+            if (targetEncoding == Encoder::TargetEncoding::UTF8 || encoding.startsWith(QStringLiteral("utf-")) || canEncode(c, encoding))
+#endif // HAVE_QTEXTCODEC
                 rewrittenInput.append(c);
             else
                 rewrittenInput.append(laTeXEncoder.encode(QString(c), Encoder::TargetEncoding::ASCII));
         }
 
+#ifdef HAVE_QTEXTCODEC
         if (codec == nullptr || (codec->name().toLower() != "utf-16" && codec->name().toLower() != "utf-32")) {
+#else // HAVE_QTEXTCODEC
+        if (encoding != QStringLiteral("utf-16") && encoding != QStringLiteral("utf-32")) {
+#endif //  HAVE_QTEXTCODEC
             // Unless encoding is UTF-16 or UTF-32 (those have BOM to detect encoding) ...
 
             // Determine which (if at all) encoding comment to be included in BibTeX data
@@ -669,6 +753,7 @@ public:
                 // (variable 'encoding' was set in 'loadPreferencesAndProperties')
                 encodingForComment = encoding;
 
+#ifdef HAVE_QTEXTCODEC
             if (!encodingForComment.isEmpty()) {
                 // Verify that 'encodingForComment', which labels an encoding,
                 // is compatible with the target codec
@@ -685,8 +770,9 @@ public:
                     return QByteArray();
                 }
             }
+#endif // HAVE_QTEXTCODEC
 
-            if (!encodingForComment.isEmpty() && encodingForComment.toLower() != QStringLiteral("latex") && encodingForComment.toLower() != QStringLiteral("us-ascii"))
+            if (!encodingForComment.isEmpty() && encodingForComment.toLower() != QStringLiteral("latex") && !encodingForComment.toLower().contains(QStringLiteral("ascii")))
                 // Only if encoding is not pure ASCII (i.e. 'LaTeX' or 'US-ASCII') add
                 // a comment at the beginning of the file to tell which encoding was used
                 rewrittenInput.prepend(QString(QStringLiteral("@comment{x-kbibtex-encoding=%1}\n\n")).arg(encodingForComment));
@@ -694,15 +780,30 @@ public:
             // For UTF-16 and UTF-32, no special comment needs to be added:
             // Those encodings are recognized by their BOM or the regular
             // occurrence of 0x00 bytes which is typically if encoding
-            // ASCII text.
+            // ASCII text in multi-byte encodings.
         }
 
         rewrittenInput.squeeze();
 
+#ifdef HAVE_QTEXTCODEC
         return codec == nullptr ? rewrittenInput.toUtf8() : codec->fromUnicode(rewrittenInput);
 #else // HAVE_QTEXTCODEC
-#error Missing implementation
-        return input.toUtf8();
+        uConvErrorCode = U_ZERO_ERROR;
+        UConverter *uconv{uconvGetterForEncoding(encoding)};
+        if (uconv == nullptr)
+            return  rewrittenInput.toUtf8();
+        else {
+            static const size_t buffer_size{1 << 24};
+            static char buffer[buffer_size];
+            icu::UnicodeString text{icu::UnicodeString(rewrittenInput.toStdU16String())};
+            uConvErrorCode = U_ZERO_ERROR;
+            const int32_t len{ucnv_fromUChars(uconv, buffer, buffer_size, text.getBuffer(), text.length(), &uConvErrorCode)};
+            if (U_FAILURE(uConvErrorCode) || (len == 0 && text.length() > 0)) {
+                qWarning() << "Conversion to" << encoding << "failed: " << u_errorName(uConvErrorCode);
+                return rewrittenInput.toUtf8();
+            } else
+                return QByteArray(buffer, len);
+        }
 #endif // HAVE_QTEXTCODEC
     }
 
@@ -854,11 +955,16 @@ bool FileExporterBibTeX::isFileExporterBibTeX(const FileExporter &other) {
     return typeid(other) == typeid(FileExporterBibTeX);
 }
 
-#ifdef HAVE_QTEXTCODEC
 #ifdef BUILD_TESTING
+#ifdef HAVE_QTEXTCODEC
 bool FileExporterBibTeX::canEncode(const QChar &c, QTextCodec *codec)
 {
     return d->canEncode(c, codec);
 }
-#endif // BUILD_TESTING
+#else // HAVE_QTEXTCODEC
+bool FileExporterBibTeX::canEncode(const QChar &c, const QString &encoding)
+{
+    return d->canEncode(c, encoding);
+}
 #endif // HAVE_QTEXTCODEC
+#endif // BUILD_TESTING

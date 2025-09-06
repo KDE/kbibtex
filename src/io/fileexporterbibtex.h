@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -113,11 +113,13 @@ public:
      */
     static bool isFileExporterBibTeX(const FileExporter &other);
 
-#ifdef HAVE_QTEXTCODEC
 #ifdef BUILD_TESTING
+#ifdef HAVE_QTEXTCODEC
     bool canEncode(const QChar &c, QTextCodec *codec);
-#endif // BUILD_TESTING
+#else // HAVE_QTEXTCODEC
+    bool canEncode(const QChar &c, const QString &encoding);
 #endif // HAVE_QTEXTCODEC
+#endif // BUILD_TESTING
 
 public Q_SLOTS:
     void cancel() override;
