@@ -120,16 +120,6 @@ find_package(
     REQUIRED
 )
 
-if (QT_MAJOR_VERSION GREATER_EQUAL 6)
-    # Should become necessary once migrated from QTextCodec to QStringConverter
-    find_package(
-        Qt6 ${QT_MIN_VERSION}
-        CONFIG
-        COMPONENTS
-        Core5Compat
-    )
-endif()
-
 if (QT_MAJOR_VERSION EQUAL 5)
     # Migrate away from QXmlQuery
     find_package(

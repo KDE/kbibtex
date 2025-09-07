@@ -35,7 +35,11 @@
 class KBIBTEXIO_EXPORT Encoder
 {
 public:
-    enum class TargetEncoding {RAW, ASCII, UTF8};
+    enum class TargetEncoding {
+        RAW, // No processing of data requested or necessary. Use, for example, for verbatim text
+        ASCII, // Try to restrict output to ASCII. For example, 'Latin capital A with ring above' may become {\AA} for LaTeX or &#197; for XML output
+        UTF8 // Keep Unicode symbols as far as possible. Only 'special' symbols, for example '$' for LaTeX receives special treatment
+    };
 
     static const Encoder &instance();
     virtual ~Encoder();

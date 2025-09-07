@@ -19,6 +19,9 @@
 
 #include <QtTest>
 
+#include <unicode/ucnv.h>
+#include <unicode/unistr.h>
+
 #include <QStandardPaths>
 #ifdef HAVE_QTEXTCODEC
 #include <QTextCodec>
@@ -384,6 +387,7 @@ void KBibTeXIOTest::fileInfoUrlsInText()
 
 static const char *fileImporterExporterTestCases_Label_Empty_file = "Empty file";
 static const char *fileImporterExporterTestCases_Label_Moby_Dick = "Moby Dick";
+static const char *fileImporterExporterTestCases_Label_Latin_Umlaut = "Latin umlaut";
 static const char *fileImporterExporterTestCases_Label_Only_Macros = "Only Macros";
 
 File *KBibTeXIOTest::mobyDickBibliography()
@@ -495,6 +499,9 @@ QVector<QPair<const char *, File *> > KBibTeXIOTest::fileImporterExporterTestCas
 
         /// File with single entry, inspired by 'Moby Dick'
         result.append(QPair<const char *, File *>(fileImporterExporterTestCases_Label_Moby_Dick, mobyDickBibliography()));
+
+        /// File with Latin umlauts
+        result.append(QPair<const char *, File *>(fileImporterExporterTestCases_Label_Latin_Umlaut, latinUmlautBibliography()));
 
         /// File with only macros (@string{... = ...})
         result.append(QPair<const char *, File *>(fileImporterExporterTestCases_Label_Only_Macros, onlyMacros()));
@@ -649,13 +656,49 @@ void KBibTeXIOTest::fileImporterBibTeXload_data()
     static const QHash<const char *, QString> keyToBibTeXData {
         {fileImporterExporterTestCases_Label_Empty_file, QString()},
         {fileImporterExporterTestCases_Label_Only_Macros, QStringLiteral("@string{keyA=\"abc def ghi pol ikj\"}||@string{keyB=\"ZYX HGF REW TGB RFV\"}")},
+        {fileImporterExporterTestCases_Label_Latin_Umlaut, QString(QStringLiteral("@article{einstein1907relativitaetsprinzip,|\tauthor = {Einstein, Albert},|\tpages = {23--42},|\ttitle = {{%1""ber das Relativit%2""tsprinzip und die aus demselben gezogenen Folgerungen}},|\tyear = {1907/08}|}||")).arg(QString(QChar(0x00DC)), QString(QChar(0x00E4)))},
         {fileImporterExporterTestCases_Label_Moby_Dick, QStringLiteral("@book{the-whale-1851,|\tauthor = {Melville, Herman and Dick, Moby},|\tmonth = jun,|\ttitle = {{Call me Ishmael}},|\tyear = {1851}|}||")}
     };
     static const QVector<QPair<const char *, File *> > keyFileTable = fileImporterExporterTestCases();
+    static const QVector<const char *> extraEncodings{"utf-16", "windows-1250", "iso-8859-15"};
 
     for (auto it = keyFileTable.constBegin(); it != keyFileTable.constEnd(); ++it)
-        if (keyToBibTeXData.contains(it->first))
-            QTest::newRow(it->first) << keyToBibTeXData.value(it->first).toUtf8().replace('|', '\n') << it->second ;
+        if (keyToBibTeXData.contains(it->first)) {
+            const QString bibTeXdata{QString(keyToBibTeXData.value(it->first)).replace(QStringLiteral("|"), QStringLiteral("\n"))};
+            static const size_t labelbuf_size{256};
+            static char labelbuf[labelbuf_size];
+            snprintf(labelbuf, labelbuf_size, "%s (utf-8)", it->first);
+            QTest::newRow(labelbuf) << QString(bibTeXdata).replace(QStringLiteral("--"), QChar(0x2013)).toUtf8() << it->second;
+
+            if (bibTeXdata.length() > 3) {
+                for (const char *encoding : extraEncodings) {
+                    QString customBibTeXdata{bibTeXdata};
+                    if (strncmp(encoding, "utf-", 4) != 0) {
+                        // Encodings other than UTF-16 or UTF-32 need a comment
+                        customBibTeXdata = customBibTeXdata.prepend(QString(QStringLiteral("@comment{x-kbibtex-encoding=%1}\n\n")).arg(QString::fromUtf8(encoding)));
+                    } else {
+                        // Unicode encodings support long dash (U+2013) instead of '--'
+                        customBibTeXdata = customBibTeXdata.replace(QStringLiteral("--"), QChar(0x2013));
+                    }
+
+                    const icu::UnicodeString text{icu::UnicodeString(customBibTeXdata.toStdU16String())};
+                    UErrorCode uConvErrorCode = U_ZERO_ERROR;
+                    UConverter *uconv{ucnv_open(encoding, &uConvErrorCode)};
+                    if (U_SUCCESS(uConvErrorCode) && uconv != nullptr) {
+                        uConvErrorCode = U_ZERO_ERROR;
+                        static const size_t buffer_size{1 << 16};
+                        static char buffer[buffer_size];
+                        const int32_t len{ucnv_fromUChars(uconv, buffer, buffer_size, text.getBuffer(), text.length(), &uConvErrorCode)};
+                        if (U_SUCCESS(uConvErrorCode)) {
+                            snprintf(labelbuf, labelbuf_size, "%s (%s)", it->first, encoding);
+                            QTest::newRow(labelbuf) << QByteArray(buffer, len) << it->second;
+                        }
+                        ucnv_close(uconv);
+                    } else if (uconv != nullptr)
+                        ucnv_close(uconv);
+                }
+            }
+        }
 }
 
 void KBibTeXIOTest::fileImporterBibTeXload()

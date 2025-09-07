@@ -19,6 +19,10 @@
 
 #include "fileimporterbibtex.h"
 
+#ifndef HAVE_QTEXTCODEC
+#include <unicode/ucnv.h>
+#endif // not HAVE_QTEXTCODEC
+
 #ifdef HAVE_QTEXTCODEC
 #include <QTextCodec>
 #endif // HAVE_QTEXTCODEC
@@ -1508,10 +1512,10 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         }
     }
 
-    encoding = encoding.toLower();
-    if (encoding == QStringLiteral("us-ascii")) {
-        qCDebug(LOG_KBIBTEX_IO) << "Replacing deprecated encoding 'US-ASCII' with 'LaTeX'";
-        encoding = QStringLiteral("latex"); //< encoding 'US-ASCII' is deprecated in favour of 'LaTeX'
+    encoding = encoding.toLower(); //< normalize encoding's name to lower-case
+    if (encoding.contains(QStringLiteral("ascii"))) {
+        qCDebug(LOG_KBIBTEX_IO) << "Replacing deprecated encoding 'ASCII' or 'US-ASCII' with 'LaTeX'";
+        encoding = QStringLiteral("latex"); //< encoding 'ASCII' or 'US-ASCII' is deprecated in favor of 'LaTeX'
     }
 #ifdef HAVE_QTEXTCODEC
     // For encoding 'LaTeX', fall back to encoding 'UTF-8' when creating
@@ -1524,8 +1528,31 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     }
     QString rawText = codec->toUnicode(rawData);
 #else // HAVE_QTEXTCODEC
-#error Missing implementation
-    QString rawText = QString::fromUtf8(rawData);
+    QString rawText;
+    if (encoding == QStringLiteral("latex") || encoding == QStringLiteral("utf-8"))
+        rawText = QString::fromUtf8(rawData);
+    else {
+        UErrorCode uConvErrorCode = U_ZERO_ERROR;
+        UConverter * const uconv = ucnv_open(encoding.toUtf8().constData(), &uConvErrorCode);
+        if (U_FAILURE(uConvErrorCode) || uconv == nullptr) {
+            qCWarning(LOG_KBIBTEX_IO) << "Failed to instantiate UConverter instance for encoding" << encoding;
+            Q_EMIT message(MessageSeverity::Warning, QString(QStringLiteral("Failed to instantiate UConverter instance for encoding '%1'")).arg(encoding));
+            if (uconv != nullptr)
+                ucnv_close(uconv);
+            return nullptr;
+        }
+        uConvErrorCode = U_ZERO_ERROR;
+        const qsizetype target_size {(((rawData.length() * 12 / 10) >> 8) +1) << 8};
+        QScopedPointer<UChar, QScopedPointerPodDeleter> target(reinterpret_cast<UChar*> (malloc(target_size * sizeof(UChar))));
+        const auto len{ucnv_toUChars(uconv, target.data(), target_size, rawData.constData(), rawData.length(), &uConvErrorCode)};
+        if (U_FAILURE(uConvErrorCode) || (len == 0 && rawData.length() > 0)) {
+            qCWarning(LOG_KBIBTEX_IO) << "Conversion of raw data via UConverter instance failed:" << u_errorName(uConvErrorCode);
+            Q_EMIT message(MessageSeverity::Warning, QString(QStringLiteral("Conversion of raw data via UConverter instance failed: %1")).arg(u_errorName(uConvErrorCode)));
+            ucnv_close(uconv);
+            return nullptr;
+        } else
+            rawText = QString::fromUtf16(reinterpret_cast < const char16_t* > (target.data()), len);
+    }
 #endif // HAVE_QTEXTCODEC
 
     /// Remove deprecated 'x-kbibtex-personnameformatting' from BibTeX raw text

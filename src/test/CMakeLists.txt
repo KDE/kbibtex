@@ -134,6 +134,8 @@ target_link_libraries(kbibtexiotest
         KF${QT_MAJOR_VERSION}::I18n
         KF${QT_MAJOR_VERSION}::ConfigCore
         KBibTeX::IO
+        ICU::uc
+        ICU::i18n
 )
 
 # FIXME get rid of Qt6Core5Compat
