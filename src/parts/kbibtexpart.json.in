@@ -25,7 +25,6 @@
                 "Name[sv]": "Thomas Fischer",
                 "Name[tr]": "Thomas Fischer",
                 "Name[uk]": "Thomas Fischer",
-                "Name[x-test]": "xxThomas Fischerxx",
                 "Name[zh_CN]": "Thomas Fischer"
             }
         ],
@@ -51,7 +50,6 @@
         "Copyright[sv]": "Copyright 2004-2023 Thomas Fischer",
         "Copyright[tr]": "Telif hakkı 2004-2023 Thomas Fischer",
         "Copyright[uk]": "© Thomas Fischer, 2004–2023",
-        "Copyright[x-test]": "xxCopyright 2004-2023 Thomas Fischerxx",
         "Copyright[zh_CN]": "版权所有 2004-2023 Thomas Fischer",
         "Description": "KParts component to view and edit bibliographic files",
         "Description[ca@valencia]": "Component de les KPart per a visualitzar i editar fitxers bibliogràfics",
@@ -75,7 +73,6 @@
         "Description[sv]": "Delprogram-komponent för att visa och redigera bibliografiska filer",
         "Description[tr]": "Kaynakça dosyalarını görüntülemek ve düzenlemek için KParts bileşeni",
         "Description[uk]": "Компонент KParts для перегляду та редагування файлів бібліографії",
-        "Description[x-test]": "xxKParts component to view and edit bibliographic filesxx",
         "Description[zh_CN]": "用于查看和编辑书目文件的 KParts 组件",
         "Icon": "kbibtex",
         "License": "GPLv2",
@@ -118,7 +115,6 @@
         "Name[sv]": "Bibtex-visning och redigering",
         "Name[tr]": "BibTeX Görüntüleyicisi ve Düzenleyicisi",
         "Name[uk]": "Переглядач та редактор BibTeX",
-        "Name[x-test]": "xxBibTeX Viewer and Editorxx",
         "Name[zh_CN]": "BibTeX 查看器和编辑器",
         "Name[zh_TW]": "BibTeX 檢視器與編輯器",
         "ServiceTypes": [
