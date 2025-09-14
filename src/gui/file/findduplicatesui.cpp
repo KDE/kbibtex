@@ -124,7 +124,7 @@ public:
             const auto alt = currentClique->values(fieldName);
             /// second, return number of alternatives for list of alternatives
             /// plus one for an "else" option
-            return alt.count() + (fieldName.startsWith(QLatin1Char('^')) || fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl ? 0 : 1);
+            return alt.count() + (fieldName.startsWith(u'^') || fieldName == Entry::ftKeywords || fieldName == Entry::ftUrl ? 0 : 1);
         }
 
         return 0;
@@ -165,7 +165,7 @@ public:
                 /// this is not to be a radio widget
                 return QVariant::fromValue(false);
             case Qt::FontRole:
-                if (fieldName.startsWith(QLatin1Char('^'))) {
+                if (fieldName.startsWith(u'^')) {
                     QFont f = p->font();
                     f.setItalic(true);
                     return f;
@@ -714,7 +714,7 @@ void FindDuplicatesUI::startDuplicatesSearch()
         /// Duplicates have been found, so let user choose how to handle duplicate fields
 
         /// Set all entries in all cliques as checked
-        for(EntryClique *ec : cliques){
+        for(EntryClique *ec : const_cast<const QVector<EntryClique *>&>(cliques)){
             for (auto &entry : ec->entryList())
                 ec->setEntryChecked(entry, true);
         }

@@ -131,15 +131,14 @@ public:
         comboBoxCombination->setCurrentIndex(configGroup.readEntry("CurrentCombination", 0));
         comboBoxField->setCurrentIndex(configGroup.readEntry("CurrentField", 0));
 
-#define connectStartingDelayedTimer(instance,signal) connect((instance),(signal),p,[this](){delayedTimer->start(500);})
-        connectStartingDelayedTimer(comboBoxFilterText->lineEdit(), &QLineEdit::textChanged);
+        connect(comboBoxFilterText->lineEdit(), &QLineEdit::textChanged, p, [this](){delayedTimer->start(500);});
         connect(comboBoxFilterText->lineEdit(), &QLineEdit::returnPressed, p, &FilterBar::userPressedEnter);
         connect(comboBoxCombination, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &FilterBar::comboboxStatusChanged);
         connect(comboBoxField, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, &FilterBar::comboboxStatusChanged);
         connect(buttonSearchPDFfiles, &QPushButton::toggled, p, &FilterBar::comboboxStatusChanged);
-        connectStartingDelayedTimer(comboBoxCombination, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged));
-        connectStartingDelayedTimer(comboBoxField, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged));
-        connectStartingDelayedTimer(buttonSearchPDFfiles, &QPushButton::toggled);
+        connect(comboBoxCombination, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, [this](){delayedTimer->start(500);});
+        connect(comboBoxField, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), p, [this](){delayedTimer->start(500);});
+        connect(buttonSearchPDFfiles, &QPushButton::toggled, p, [this](){delayedTimer->start(500);});
         connect(buttonClearAll, &QPushButton::clicked, p, &FilterBar::resetState);
     }
 

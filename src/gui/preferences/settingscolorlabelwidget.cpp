@@ -387,7 +387,7 @@ void SettingsColorLabelWidget::addColor()
     const auto randomBits = QRandomGenerator::global()->generate();
     const QColor newColor((randomBits & 0xff) | 0x30, ((randomBits >> 8) & 0xff) | 0x30, ((randomBits >> 16) & 0xff) | 0x30);
     /// Set the new label to be the color's hex string
-    const QString newColorName(newColor.name().remove(QLatin1Char('#')));
+    const QString newColorName(newColor.name().remove(u'#'));
     /// Add new color-label pair to model's data
     d->model->addColorLabel(newColor, i18nc("Label for a new color; placeholder is for a 6-digit hex string", "NewColor%1", newColorName));
 }

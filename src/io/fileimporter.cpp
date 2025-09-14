@@ -101,7 +101,7 @@ Person *FileImporter::splitName(const QString &name)
     QString lastName;
     QString suffix;
 
-    if (!name.contains(QLatin1Char(','))) {
+    if (!name.contains(u',')) {
         static const QRegularExpression splittingRegExp(QStringLiteral("[ ]+"));
         const QStringList segments = name.split(splittingRegExp);
 

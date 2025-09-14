@@ -39,13 +39,13 @@ QString ISBN::locate(const QString &haystack)
 #else // QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
     for (const QRegularExpressionMatch &match : isbnRegExp.globalMatch(haystack)) {
 #endif // QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        const QString needle {match.captured().remove(QLatin1Char('-')).remove(QLatin1Char(' '))};
+        const QString needle {match.captured().remove(u'-').remove(u' ')};
         // ISBNs may be either 10 or 13 characters long, with different checksum algorithms each
         if (needle.length() == 10) {
             // For potential ISBN-10 needles, perform checksum algorithm
             int s = 0;
             for (int i = 0, t = 0; i < 10; ++i) {
-                t += needle[i].toUpper() == QLatin1Char('X') ? 10 : needle[i].digitValue();
+                t += needle[i].toUpper() == u'X' ? 10 : needle[i].digitValue();
                 s += t;
             }
             if (s % 11 == 0)

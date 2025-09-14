@@ -141,7 +141,7 @@ public:
         *state.textStream >> state.nextChar;
 
         /// Test for new line
-        if (state.nextChar == QLatin1Char('\n')) {
+        if (state.nextChar == u'\n') {
             /// Update variables tracking line numbers and line content
             ++state.lineNo;
             state.prevLine = state.currentLine;
@@ -157,18 +157,18 @@ public:
     bool skipWhiteChar(State &state)
     {
         bool result = true;
-        while ((state.nextChar.isSpace() || state.nextChar == QLatin1Char('\t') || state.nextChar == QLatin1Char('\n') || state.nextChar == QLatin1Char('\r')) && result) result = readChar(state);
+        while ((state.nextChar.isSpace() || state.nextChar == u'\t' || state.nextChar == u'\n' || state.nextChar == u'\r') && result) result = readChar(state);
         return result;
     }
 
     bool skipNewline(State &state)
     {
-        if (state.nextChar == QLatin1Char('\r')) {
+        if (state.nextChar == u'\r') {
             const bool result = readChar(state);
-            if (result && state.nextChar == QLatin1Char('\n'))
+            if (result && state.nextChar == u'\n')
                 // Windows linebreak: CR LF
                 return readChar(state);
-        } else if (state.nextChar == QLatin1Char('\n')) {
+        } else if (state.nextChar == u'\n') {
             // Linux/Unix linebreak: LF
             return readChar(state);
         }
@@ -210,7 +210,7 @@ public:
                 result = Token::EndOfFile;
         }
 
-        if (state.nextChar != QLatin1Char('%')) {
+        if (state.nextChar != u'%') {
             /// Unclean solution, but necessary for comments
             /// that have a percent sign as a prefix
             readChar(state);
@@ -260,9 +260,9 @@ public:
                     if (!person.isNull())
                         value.append(person);
                     else {
-                        qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart, i - nameStart).join(QLatin1Char(' ')) << "does not form a name near line" << line_number;
+                        qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart, i - nameStart).join(u' ') << "does not form a name near line" << line_number;
                         if (parent != nullptr)
-                            message(MessageSeverity::Warning, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart, i - nameStart).join(QLatin1Char(' '))).arg(line_number), parent);
+                            message(MessageSeverity::Warning, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart, i - nameStart).join(u' ')).arg(line_number), parent);
                     }
                 } else {
                     qCInfo(LOG_KBIBTEX_IO) << "Found" << tokenAnd << "but no name before it near line" << line_number;
@@ -287,9 +287,9 @@ public:
             if (!person.isNull())
                 value.append(person);
             else {
-                qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart).join(QLatin1Char(' ')) << "does not form a name near line" << line_number;
+                qCInfo(LOG_KBIBTEX_IO) << "Text" << tokens.mid(nameStart).join(u' ') << "does not form a name near line" << line_number;
                 if (parent != nullptr)
-                    message(MessageSeverity::Warning, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart).join(QLatin1Char(' '))).arg(line_number), parent);
+                    message(MessageSeverity::Warning, QString(QStringLiteral("Text '%1' does not form a name near line %2")).arg(tokens.mid(nameStart).join(u' ')).arg(line_number), parent);
             }
         }
     }
@@ -317,7 +317,7 @@ public:
             /// Maintain statistics on if (book) titles are protected
             /// by surrounding curly brackets
             if (!text.isEmpty() && (iKey == Entry::ftTitle || iKey == Entry::ftBookTitle)) {
-                if (text[0] == QLatin1Char('{') && text[text.length() - 1] == QLatin1Char('}'))
+                if (text[0] == u'{' && text[text.length() - 1] == u'}')
                     ++statistics.countProtectedTitle;
                 else
                     ++statistics.countUnprotectedTitle;
@@ -379,7 +379,7 @@ public:
                                 } else if (filename.startsWith(QStringLiteral("home/"))) {
                                     /// If filename is a relative path but by name looks almost like it should be an absolute path
                                     /// (starting with some suspicious strings), prepend a slash
-                                    filename.prepend(QLatin1Char('/'));
+                                    filename.prepend(u'/');
                                 }
                             }
                         }
@@ -449,10 +449,10 @@ public:
 
     QString readBracketString(State &state)
     {
-        static const QChar backslash = QLatin1Char('\\');
+        static const QChar backslash = u'\\';
         QString result(0, QChar()); ///< Construct an empty but non-null string
         const QChar openingBracket = state.nextChar;
-        const QChar closingBracket = openingBracket == QLatin1Char('{') ? QLatin1Char('}') : (openingBracket == QLatin1Char('(') ? QLatin1Char(')') : QChar());
+        const QChar closingBracket = openingBracket == u'{' ? u'}' : (openingBracket == u'(' ? u')' : QChar());
         Q_ASSERT_X(!closingBracket.isNull(), "QString FileImporterBibTeX::readBracketString()", "openingBracket==state.nextChar is neither '{' nor '('");
         int counter = 1;
 
@@ -498,14 +498,14 @@ public:
 
         QChar prevChar = QChar(0x00);
         while (!state.nextChar.isNull()) {
-            if (readNestedCurlyBrackets && state.nextChar == QLatin1Char('{') && prevChar != QLatin1Char('\\')) {
+            if (readNestedCurlyBrackets && state.nextChar == u'{' && prevChar != u'\\') {
                 int depth = 1;
                 while (depth > 0) {
                     result.append(state.nextChar);
                     prevChar = state.nextChar;
                     if (!readChar(state)) return result;
-                    if (state.nextChar == QLatin1Char('{') && prevChar != QLatin1Char('\\')) ++depth;
-                    else if (state.nextChar == QLatin1Char('}') && prevChar != QLatin1Char('\\')) --depth;
+                    if (state.nextChar == u'{' && prevChar != u'\\') ++depth;
+                    else if (state.nextChar == u'}' && prevChar != u'\\') --depth;
                 }
                 result.append(state.nextChar);
                 prevChar = state.nextChar;
@@ -515,7 +515,7 @@ public:
             const ushort nextCharUnicode = state.nextChar.unicode();
             if (!until.isEmpty()) {
                 /// Variable "until" has user-defined value
-                if (state.nextChar == QLatin1Char('\n') || state.nextChar == QLatin1Char('\r') || until.contains(state.nextChar)) {
+                if (state.nextChar == u'\n' || state.nextChar == u'\r' || until.contains(state.nextChar)) {
                     /// Force break on line-breaks or if one of the "until" chars has been read
                     break;
                 } else {
@@ -537,7 +537,7 @@ public:
     {
         QString result(0, QChar()); ///< Construct an empty but non-null string
 
-        Q_ASSERT_X(state.nextChar == QLatin1Char('"'), "QString FileImporterBibTeX::readQuotedString()", "state.nextChar is not '\"'");
+        Q_ASSERT_X(state.nextChar == u'"', "QString FileImporterBibTeX::readQuotedString()", "state.nextChar is not '\"'");
 
         if (!readChar(state)) {
             /// Some error occurred while reading from data stream
@@ -545,7 +545,7 @@ public:
         }
 
         while (!state.nextChar.isNull()) {
-            if (state.nextChar == QLatin1Char('"') && state.prevChar != QLatin1Char('\\') && state.prevChar != QLatin1Char('{'))
+            if (state.nextChar == u'"' && state.prevChar != u'\\' && state.prevChar != u'{')
                 break;
             else
                 result.append(state.nextChar);
@@ -607,7 +607,7 @@ public:
     QString readLine(State &state)
     {
         QString result;
-        while (state.nextChar != QLatin1Char('\n') && state.nextChar != QLatin1Char('\r') && readChar(state))
+        while (state.nextChar != u'\n' && state.nextChar != u'\r' && readChar(state))
             result.append(state.nextChar);
         return result;
     }
@@ -701,18 +701,18 @@ public:
     Comment *readPlainCommentElement(const QString &initialRead, State &state)
     {
         const QString firstLine {rstrip(EncoderLaTeX::instance().decode(initialRead + readLine(state)))};
-        if (firstLine.length() > 0 && firstLine[0] == QLatin1Char('%')) {
+        if (firstLine.length() > 0 && firstLine[0] == u'%') {
             QStringList lines{{firstLine}};
             // Read all lines that start with '%', compute common prefix, and remove prefix from all lines
             // Stop when encountering a line that starts without '%'
-            while (skipNewline(state) && state.nextChar == QLatin1Char('%')) {
+            while (skipNewline(state) && state.nextChar == u'%') {
                 const QString nextLine {rstrip(EncoderLaTeX::instance().decode(QStringLiteral("%") + readLine(state)))};
                 lines.append(nextLine);
             }
 
             int commonPrefixLen {0};
             for (; commonPrefixLen < firstLine.length(); ++commonPrefixLen)
-                if (firstLine[commonPrefixLen] != QLatin1Char(' ') && firstLine[commonPrefixLen] != QLatin1Char('%'))
+                if (firstLine[commonPrefixLen] != u' ' && firstLine[commonPrefixLen] != u'%')
                     break;
             int longestLinLength = firstLine.length();
             bool first = true;
@@ -739,7 +739,7 @@ public:
         } else if (firstLine.length() > 0) {
             QStringList lines{{firstLine}};
             // Read all lines until a line is either empty or starts with '@'
-            while (skipNewline(state) && state.nextChar != QLatin1Char('\n') && state.nextChar != QLatin1Char('\r') && state.nextChar != QLatin1Char('@')) {
+            while (skipNewline(state) && state.nextChar != u'\n' && state.nextChar != u'\r' && state.nextChar != u'@') {
                 const QChar firstLineChar {state.nextChar};
                 const QString nextLine {rstrip(EncoderLaTeX::instance().decode(QString(firstLineChar) + readLine(state)))};
                 lines.append(nextLine);
@@ -834,7 +834,7 @@ public:
 
         QString id = readSimpleString(state, QStringLiteral(",}"), true).trimmed();
         if (id.isEmpty()) {
-            if (state.nextChar == QLatin1Char(',') || state.nextChar == QLatin1Char('}')) {
+            if (state.nextChar == u',' || state.nextChar == u'}') {
                 /// Cope with empty ids,
                 /// duplicates are handled further below
                 id = QStringLiteral("EmptyId");
@@ -863,7 +863,7 @@ public:
                 id = newId;
             }
         }
-        static const QVector<QChar> invalidIdCharacters = {QLatin1Char('{'), QLatin1Char('}'), QLatin1Char(',')};
+        static const QVector<QChar> invalidIdCharacters = {u'{', u'}', u','};
         for (const QChar &invalidIdCharacter : invalidIdCharacters)
             if (id.contains(invalidIdCharacter)) {
                 qCWarning(LOG_KBIBTEX_IO) << "Entry id" << id << "near line" << state.lineNo << "contains invalid character" << invalidIdCharacter;
@@ -909,18 +909,18 @@ public:
                     message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (token %4)")).arg(id).arg(state.lineNo).arg(state.nextChar).arg(tokenidToString(token)));
                 } else if (state.nextChar.isPrint()) {
 #if QT_VERSION >= 0x050e00
-                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << "): Comma symbol ',' expected but got character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
+                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << "): Comma symbol ',' expected but got character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QChar(u'0')) << ", token" << tokenidToString(token) << ")";
 #else // QT_VERSION < 0x050e00
-                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << "): Comma symbol ',' expected but got character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ", token" << tokenidToString(token) << ")";
+                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << "): Comma symbol ',' expected but got character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QChar(u'0')) << ", token" << tokenidToString(token) << ")";
 #endif // QT_VERSION >= 0x050e00
-                    message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (0x%4, token %5)")).arg(id).arg(state.lineNo).arg(state.nextChar).arg(static_cast<int>(state.nextChar.unicode()), 4, 16, QLatin1Char('0')).arg(tokenidToString(token)));
+                    message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character '%3' (0x%4, token %5)")).arg(id).arg(state.lineNo).arg(state.nextChar).arg(static_cast<int>(state.nextChar.unicode()), 4, 16, QChar(u'0')).arg(tokenidToString(token)));
                 } else {
 #if QT_VERSION >= 0x050e00
-                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
+                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QChar(u'0')) << "(token" << tokenidToString(token) << ")";
 #else // QT_VERSION < 0x050e00
-                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "(token" << tokenidToString(token) << ")";
+                    qCWarning(LOG_KBIBTEX_IO) << "Error in parsing entry" << id << "near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << "): Comma symbol (,) expected but got character" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QChar(u'0')) << "(token" << tokenidToString(token) << ")";
 #endif // QT_VERSION >= 0x050e00
-                    message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character 0x%3 (token %4)")).arg(id).arg(state.lineNo).arg(static_cast<int>(state.nextChar.unicode()), 4, 16, QLatin1Char('0')).arg(tokenidToString(token)));
+                    message(MessageSeverity::Error, QString(QStringLiteral("Error in parsing entry '%1' near line %2: Comma symbol ',' expected but got character 0x%3 (token %4)")).arg(id).arg(state.lineNo).arg(static_cast<int>(state.nextChar.unicode()), 4, 16, QChar(u'0')).arg(tokenidToString(token)));
                 }
                 delete entry;
                 return nullptr;
@@ -1049,7 +1049,7 @@ public:
                 message(MessageSeverity::Error, QString(QStringLiteral("Element type after '@' is empty or invalid near line %1")).arg(state.lineNo));
                 return nullptr;
             }
-        } else if (token == Token::Unknown && state.nextChar == QLatin1Char('%')) {
+        } else if (token == Token::Unknown && state.nextChar == u'%') {
             // Do not complain about LaTeX-like comments, just eat them
             Comment *comment {readPlainCommentElement(QString(state.nextChar), state)};
             if (comment != nullptr)
@@ -1065,18 +1065,18 @@ public:
                 message(MessageSeverity::Info, QString(QStringLiteral("Unknown character '%1' near line %2, treating as comment")).arg(state.nextChar).arg(state.lineNo));
             } else if (state.nextChar.isPrint()) {
 #if QT_VERSION >= 0x050e00
-                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ") near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << ")" << ", treating as comment";
+                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QChar(u'0')) << ") near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << ")" << ", treating as comment";
 #else // QT_VERSION < 0x050e00
-                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << ") near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << ")" << ", treating as comment";
+                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << state.nextChar << "(" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QChar(u'0')) << ") near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << ")" << ", treating as comment";
 #endif // QT_VERSION >= 0x050e00
-                message(MessageSeverity::Info, QString(QStringLiteral("Unknown character '%1' (0x%2) near line %3, treating as comment")).arg(state.nextChar).arg(static_cast<int>(state.nextChar.unicode()), 4, 16, QLatin1Char('0')).arg(state.lineNo));
+                message(MessageSeverity::Info, QString(QStringLiteral("Unknown character '%1' (0x%2) near line %3, treating as comment")).arg(state.nextChar).arg(static_cast<int>(state.nextChar.unicode()), 4, 16, QChar(u'0')).arg(state.lineNo));
             } else {
 #if QT_VERSION >= 0x050e00
-                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << ")" << ", treating as comment";
+                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << QString(QStringLiteral("0x%1")).arg((uint)state.nextChar.unicode(), 4, 16, QChar(u'0')) << "near line" << state.lineNo << "(" << state.prevLine << Qt::endl << state.currentLine << ")" << ", treating as comment";
 #else // QT_VERSION < 0x050e00
-                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QLatin1Char('0')) << "near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << ")" << ", treating as comment";
+                qCDebug(LOG_KBIBTEX_IO) << "Unknown character" << QString(QStringLiteral("0x%1")).arg(state.nextChar.unicode(), 4, 16, QChar(u'0')) << "near line" << state.lineNo << "(" << state.prevLine << endl << state.currentLine << ")" << ", treating as comment";
 #endif // QT_VERSION >= 0x050e00
-                message(MessageSeverity::Info, QString(QStringLiteral("Unknown character 0x%1 near line %2, treating as comment")).arg(static_cast<int>(state.nextChar.unicode()), 4, 16, QLatin1Char('0')).arg(state.lineNo));
+                message(MessageSeverity::Info, QString(QStringLiteral("Unknown character 0x%1 near line %2, treating as comment")).arg(static_cast<int>(state.nextChar.unicode()), 4, 16, QChar(u'0')).arg(state.lineNo));
             }
 
             Comment *comment {readPlainCommentElement(QString(state.prevChar) + state.nextChar, state)};
@@ -1136,12 +1136,12 @@ public:
                 int bracketCounter = 0;
                 for (int i = 0; i < token.length(); ++i) {
                     /// Consider opening curly brackets
-                    if (token[i] == QLatin1Char('{')) ++bracketCounter;
+                    if (token[i] == u'{') ++bracketCounter;
                     /// Consider closing curly brackets
-                    else if (token[i] == QLatin1Char('}')) --bracketCounter;
+                    else if (token[i] == u'}') --bracketCounter;
                     /// Only if outside any open curly bracket environments
                     /// consider comma characters
-                    else if (bracketCounter == 0 && token[i] == QLatin1Char(',')) {
+                    else if (bracketCounter == 0 && token[i] == u',') {
                         /// Memorize comma's position and break from loop
                         p = i;
                         break;
@@ -1172,7 +1172,7 @@ public:
         }
         if (commaCount > 0) {
             if (comma != nullptr) *comma = CommaContainment::Contains;
-            return QSharedPointer<Person>(new Person(partC.isEmpty() ? partB.join(QLatin1Char(' ')) : partC.join(QLatin1Char(' ')), partA.join(QLatin1Char(' ')), partC.isEmpty() ? QString() : partB.join(QLatin1Char(' '))));
+            return QSharedPointer<Person>(new Person(partC.isEmpty() ? partB.join(u' ') : partC.join(u' '), partA.join(u' '), partC.isEmpty() ? QString() : partB.join(u' ')));
         }
 
         /**
@@ -1196,7 +1196,7 @@ public:
         }
         if (!partB.isEmpty()) {
             /// Name was actually given in PubMed format
-            return QSharedPointer<Person>(new Person(partB.join(QLatin1Char(' ')), partA.join(QLatin1Char(' '))));
+            return QSharedPointer<Person>(new Person(partB.join(u' '), partA.join(u' ')));
         }
 
         /**
@@ -1225,12 +1225,12 @@ public:
         if (!partB.isEmpty()) {
             /// Name was actually like "Peter Ole van der Tuckwell",
             /// split into "Peter Ole" and "van der Tuckwell"
-            return QSharedPointer<Person>(new Person(partA.join(QLatin1Char(' ')), partB.join(QLatin1Char(' ')), partC.isEmpty() ? QString() : partC.join(QLatin1Char(' '))));
+            return QSharedPointer<Person>(new Person(partA.join(u' '), partB.join(u' '), partC.isEmpty() ? QString() : partC.join(u' ')));
         }
 
-        qCWarning(LOG_KBIBTEX_IO) << "Don't know how to handle name" << tokens.join(QLatin1Char(' ')) << "near line" << line_number;
+        qCWarning(LOG_KBIBTEX_IO) << "Don't know how to handle name" << tokens.join(u' ') << "near line" << line_number;
         if (parent != nullptr)
-            message(MessageSeverity::Warning, QString(QStringLiteral("Don't know how to handle name '%1' near line %2")).arg(tokens.join(QLatin1Char(' '))).arg(line_number), parent);
+            message(MessageSeverity::Warning, QString(QStringLiteral("Don't know how to handle name '%1' near line %2")).arg(tokens.join(u' ')).arg(line_number), parent);
         return QSharedPointer<Person>();
     }
 
@@ -1421,7 +1421,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
             int i = xkbibtexencodingpos + 28, l = 0;
             encoding.clear();
             encoding.reserve(32);
-            while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != QLatin1Char('\n') && rawData.at(i) != QLatin1Char('\r') && rawData.at(i) != QLatin1Char('}') && rawData.at(i) != QLatin1Char(')') && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
+            while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != u'\n' && rawData.at(i) != u'\r' && rawData.at(i) != u'}' && rawData.at(i) != u')' && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
                 encoding.append(QLatin1Char(rawData.at(i)));
                 ++i;
                 ++l;
@@ -1434,7 +1434,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
                 int i = jabrefencodingpos + 11, l = 0;
                 encoding.clear();
                 encoding.reserve(32);
-                while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != QLatin1Char('\n') && rawData.at(i) != QLatin1Char('\r') && rawData.at(i) != QLatin1Char('}') && rawData.at(i) != QLatin1Char(')') && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
+                while (l < 32 && rawData.at(i) >= 0x20 && rawData.at(i) != u'\n' && rawData.at(i) != u'\r' && rawData.at(i) != u'}' && rawData.at(i) != u')' && static_cast<unsigned char>(rawData.at(i)) < 0x80) {
                     encoding.append(QLatin1Char(rawData.at(i)));
                     ++i;
                     ++l;
@@ -1558,7 +1558,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
     /// Remove deprecated 'x-kbibtex-personnameformatting' from BibTeX raw text
     const int posPersonNameFormatting = rawText.indexOf(QStringLiteral("@comment{x-kbibtex-personnameformatting="));
     if (posPersonNameFormatting >= 0) {
-        const int endOfPersonNameFormatting = rawText.indexOf(QLatin1Char('}'), posPersonNameFormatting + 39);
+        const int endOfPersonNameFormatting = rawText.indexOf(u'}', posPersonNameFormatting + 39);
         if (endOfPersonNameFormatting > 0)
             rawText = rawText.left(posPersonNameFormatting) + rawText.mid(endOfPersonNameFormatting + 1);
     }
@@ -1644,7 +1644,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
     static const QList<QChar> invalidChars {QChar(0x00b7), QChar(0x2020), QChar(0x2217), QChar(0x2021), QChar(0x002a), QChar(0x21d1) /** Upwards double arrow */};
     for (const auto &invalidChar : invalidChars)
         /// Replacing daggers with commas ensures that they act as persons' names separator
-        internalText = internalText.replace(invalidChar, QLatin1Char(','));
+        internalText = internalText.replace(invalidChar, u',');
     /// Remove numbers to footnotes
     static const QRegularExpression numberFootnoteRegExp(QStringLiteral("(\\w)\\d+\\b"));
     internalText = internalText.replace(numberFootnoteRegExp, QStringLiteral("\\1"));
@@ -1666,7 +1666,7 @@ QList<QSharedPointer<Person> > FileImporterBibTeX::splitNames(const QString &tex
 
     bool containsSpace = true;
     for (QStringList::ConstIterator it = authorTokenList.constBegin(); containsSpace && it != authorTokenList.constEnd(); ++it)
-        containsSpace = (*it).contains(QLatin1Char(' '));
+        containsSpace = (*it).contains(u' ');
 
     QList<QSharedPointer<Person> > result;
     result.reserve(authorTokenList.size());
@@ -1717,9 +1717,9 @@ void FileImporterBibTeX::contextSensitiveSplit(const QString &text, QStringList 
     segments.clear(); ///< empty list for results before proceeding
 
     for (int pos = 0; pos < len; ++pos) {
-        if (text[pos] == QLatin1Char('{'))
+        if (text[pos] == u'{')
             ++bracketCounter;
-        else if (text[pos] == QLatin1Char('}'))
+        else if (text[pos] == u'}')
             --bracketCounter;
 
         if (text[pos].isSpace() && bracketCounter == 0) {

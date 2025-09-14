@@ -179,7 +179,7 @@ protected:
 private:
     bool m_previousBusyState;
     QString m_name;
-    static const char *httpUnsafeChars;
+    static const QString httpUnsafeChars;
 #ifdef HAVE_QTWIDGETS
     QMap<QNetworkReply *, QListWidgetItem *> m_iconReplyToListWidgetItem;
 #endif // HAVE_QTWIDGETS

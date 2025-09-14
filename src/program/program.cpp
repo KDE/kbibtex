@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
 
     KLocalizedString::setApplicationDomain("kbibtex");
 
-    KAboutData aboutData(QStringLiteral("kbibtex"), i18n("KBibTeX"), strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QLatin1String(KBIBTEX_GIT_INFO_STRING ", near " KBIBTEX_VERSION_STRING) : QLatin1String(KBIBTEX_VERSION_STRING), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2024 Thomas Fischer"), QString(), QStringLiteral("https://userbase.kde.org/KBibTeX"));
+    KAboutData aboutData(QStringLiteral("kbibtex"), i18n("KBibTeX"), strlen(KBIBTEX_GIT_INFO_STRING) > 0 ? QStringLiteral(KBIBTEX_GIT_INFO_STRING ", near " KBIBTEX_VERSION_STRING) : QStringLiteral(KBIBTEX_VERSION_STRING), i18n("A BibTeX editor by KDE"), KAboutLicense::GPL_V2, i18n("Copyright 2004-2025 Thomas Fischer"), QString(), QStringLiteral("https://userbase.kde.org/KBibTeX"));
 
     aboutData.setOrganizationDomain(QByteArray("kde.org"));
     aboutData.setDesktopFileName(QStringLiteral("org.kde.kbibtex"));
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
         qCDebug(LOG_KBIBTEX_PROGRAM) << "XDG_DATA_DIRS=" << getenv("XDG_DATA_DIRS");
         qCDebug(LOG_KBIBTEX_PROGRAM) << "QT_PLUGIN_PATH=" << getenv("QT_PLUGIN_PATH");
         qCDebug(LOG_KBIBTEX_PROGRAM) << "KDEDIRS=" << getenv("KDEDIRS");
-        qCDebug(LOG_KBIBTEX_PROGRAM) << "QCoreApplication::libraryPaths=" << programCore.libraryPaths().join(QLatin1Char(':'));
+        qCDebug(LOG_KBIBTEX_PROGRAM) << "QCoreApplication::libraryPaths=" << programCore.libraryPaths().join(u':');
         KMessageBox::error(mainWindow, i18n("KBibTeX seems to be not installed completely. KBibTeX could not locate its own KPart.\n\nOnly limited functionality will be available."), i18n("Incomplete KBibTeX Installation"));
     } else {
         qCInfo(LOG_KBIBTEX_PROGRAM) << "Located KPart:" << service.pluginId() << "with description" << service.name() << ":" << service.description();

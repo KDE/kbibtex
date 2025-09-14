@@ -132,7 +132,7 @@ public:
         const QByteArray conversionResult = codec->fromUnicode(&c, 1, &state);
         /// Conversion failed if codec gave a single byte back which is 0x00
         /// (due to QTextCodec::ConvertInvalidToNull above)
-        return conversionResult.length() != 1 || conversionResult.at(0) != QLatin1Char('\0');
+        return conversionResult.length() != 1 || conversionResult.at(0) != u'\0';
     }
 #else // HAVE_QTEXTCODEC
     inline bool canEncode(const QChar &c, const QString &encoding) {
@@ -180,8 +180,8 @@ public:
     {
 #ifndef HAVE_QTEXTCODEC
         // Clean up UConverter instances created earlier in 'uconvGetterForEncoding'
-        auto it = uconvForEncoding.constBegin();
-        while (it != uconvForEncoding.constEnd()) {
+        auto it = uconvForEncoding.begin();
+        while (it != uconvForEncoding.end()) {
             ucnv_close(it.value());
             it = uconvForEncoding.erase(it);
         }
@@ -287,7 +287,7 @@ public:
                         if (!result.isEmpty()) result.append(QStringLiteral(" # "));
                         result.append(stringOpenDelimiter);
                     } else if (!prev.dynamicCast<const PlainText>().isNull()) {
-                        if (key.toLower().startsWith(Entry::ftKeywords))
+                        if (key.startsWith(Entry::ftKeywords, Qt::CaseInsensitive))
                             // Keywords in the 'keywords' field are separated by semicolons
                             result.append(QStringLiteral(";"));
                         else
@@ -300,7 +300,7 @@ public:
                     }
                     isOpen = true;
 
-                    if (stringOpenDelimiter == QLatin1Char('"'))
+                    if (stringOpenDelimiter == u'"')
                         protectQuotationMarks(textBody);
                     result.append(textBody);
                     prev = plainText;
@@ -324,7 +324,7 @@ public:
                         }
                         isOpen = true;
 
-                        if (stringOpenDelimiter == QLatin1Char('"'))
+                        if (stringOpenDelimiter == u'"')
                             protectQuotationMarks(textBody);
                         if (keyToLower == Entry::ftFile && verbatimText->hasComment()) {
                             /// Special case: This verbatim text is for a 'file' field and contains a comment.
@@ -333,10 +333,10 @@ public:
                             /// To be compatible with JabRef, rebuild a string that matches what JabRef would
                             /// generate. As filetype is not stored, make an educated guess here.
                             /// Also, filenames are not verbatim for JabRef, so  _  must be written as  \_
-                            const int p = qMin(textBody.length(), qMin(8, qMax(2, textBody.lastIndexOf(QLatin1Char('.')))));
+                            const int p = qMin(textBody.length(), qMin(8, qMax(2, textBody.lastIndexOf(u'.'))));
                             const QString extension = textBody.right(p).toLower();
                             const QString filetype = extension == QStringLiteral(".pdf") ? QStringLiteral("PDF") : extension == QStringLiteral(".html") || extension == QStringLiteral(".htm") ? QStringLiteral("HTML") : extension == QStringLiteral(".doc") ? QStringLiteral("DOC") : extension == QStringLiteral(".docx") ? QStringLiteral("DOCX") : QStringLiteral("BINARY");
-                            result.append(verbatimText->comment()).append(QLatin1Char(':')).append(EncoderLaTeX::instance().encode(textBody, EncoderLaTeX::TargetEncoding::ASCII)).append(QLatin1Char(':')).append(filetype);
+                            result.append(verbatimText->comment()).append(u':').append(EncoderLaTeX::instance().encode(textBody, EncoderLaTeX::TargetEncoding::ASCII)).append(u':').append(filetype);
                         } else
                             result.append(textBody);
                         prev = verbatimText;
@@ -369,7 +369,7 @@ public:
                             }
                             isOpen = true;
 
-                            if (stringOpenDelimiter == QLatin1Char('"'))
+                            if (stringOpenDelimiter == u'"')
                                 protectQuotationMarks(thisName);
                             result.append(thisName);
                             prev = person;
@@ -387,7 +387,7 @@ public:
                                 }
                                 isOpen = true;
 
-                                if (stringOpenDelimiter == QLatin1Char('"'))
+                                if (stringOpenDelimiter == u'"')
                                     protectQuotationMarks(textBody);
                                 result.append(textBody);
                                 prev = keyword;
@@ -407,8 +407,8 @@ public:
 
     bool writeEntry(QString &output, const Entry &entry, const Encoder::TargetEncoding &targetEncoding) {
         /// write start of a entry (entry type and id) in plain ASCII
-        output.append(QLatin1Char('@')).append(BibTeXEntries::instance().format(entry.type(), keywordCasing));
-        output.append(QLatin1Char('{')).append(Encoder::instance().convertToPlainAscii(entry.id()));
+        output.append(u'@').append(BibTeXEntries::instance().format(entry.type(), keywordCasing));
+        output.append(u'{').append(Encoder::instance().convertToPlainAscii(entry.id()));
 
         for (Entry::ConstIterator it = entry.constBegin(); it != entry.constEnd(); ++it) {
             const QString &key = it.key();
@@ -447,8 +447,8 @@ public:
         else if (protectCasing == Qt::Unchecked)
             removeProtectiveCasing(text);
 
-        output.append(QLatin1Char('@')).append(BibTeXEntries::instance().format(QStringLiteral("String"), keywordCasing));
-        output.append(QLatin1Char('{')).append(normalizeText(macro.key()));
+        output.append(u'@').append(BibTeXEntries::instance().format(QStringLiteral("String"), keywordCasing));
+        output.append(u'{').append(normalizeText(macro.key()));
         output.append(QStringLiteral(" = ")).append(normalizeText(text));
         output.append(QStringLiteral("}\n\n"));
 
@@ -465,14 +465,14 @@ public:
         case Preferences::CommentContext::Prefix: {
             const QStringList commentLines = text.split(QStringLiteral("\n"));
             for (const QString &line : commentLines)
-                output.append(comment.prefix()).append(normalizeText(line)).append(QLatin1Char('\n'));
-            output.append(QLatin1Char('\n'));
+                output.append(comment.prefix()).append(normalizeText(line)).append(u'\n');
+            output.append(u'\n');
         }
         break;
         case Preferences::CommentContext::Command:
-            output.append(QLatin1Char('@')).append(BibTeXEntries::instance().format(QStringLiteral("Comment"), keywordCasing));
-            output.append(QLatin1Char('{')).append(normalizeText(text));
-            output.append(QLatin1Char('}')).append(QStringLiteral("\n\n"));
+            output.append(u'@').append(BibTeXEntries::instance().format(QStringLiteral("Comment"), keywordCasing));
+            output.append(u'{').append(normalizeText(text));
+            output.append(u'}').append(QStringLiteral("\n\n"));
             break;
         }
 
@@ -480,7 +480,7 @@ public:
     }
 
     bool writePreamble(QString &output, const Preamble &preamble) {
-        output.append(QLatin1Char('@')).append(BibTeXEntries::instance().format(QStringLiteral("Preamble"), keywordCasing)).append(QLatin1Char('{'));
+        output.append(u'@').append(BibTeXEntries::instance().format(QStringLiteral("Preamble"), keywordCasing)).append(u'{');
         /// Strings from preamble do not get LaTeX-encoded, may contain raw LaTeX commands and code
         output.append(normalizeText(internalValueToBibTeX(preamble.value(), Encoder::TargetEncoding::RAW)));
         output.append(QStringLiteral("}\n\n"));
@@ -493,20 +493,20 @@ public:
         ///  - text is too short (less than two characters)  or
         ///  - text neither starts/stops with double quotation marks
         ///    nor starts with { and stops with }
-        if (text.length() < 2 || ((text[0] != QLatin1Char('"') || text[text.length() - 1] != QLatin1Char('"')) && (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}')))) {
+        if (text.length() < 2 || ((text[0] != u'"' || text[text.length() - 1] != u'"') && (text[0] != u'{' || text[text.length() - 1] != u'}'))) {
             /// Nothing to protect, as this is no text string
             return text;
         }
 
         bool addBrackets = true;
 
-        if (text[1] == QLatin1Char('{') && text[text.length() - 2] == QLatin1Char('}')) {
+        if (text[1] == u'{' && text[text.length() - 2] == u'}') {
             /// If the given text looks like this:  {{...}}  or  "{...}"
             /// still check that it is not like this: {{..}..{..}}
             addBrackets = false;
             for (int i = text.length() - 2, count = 0; !addBrackets && i > 1; --i) {
-                if (text[i] == QLatin1Char('{')) ++count;
-                else if (text[i] == QLatin1Char('}')) --count;
+                if (text[i] == u'{') ++count;
+                else if (text[i] == u'}') --count;
                 if (count == 0) addBrackets = true;
             }
         }
@@ -522,12 +522,12 @@ public:
         ///  - text is too short (less than two characters)  or
         ///  - text neither starts/stops with double quotation marks
         ///    nor starts with { and stops with }
-        if (text.length() < 2 || ((text[0] != QLatin1Char('"') || text[text.length() - 1] != QLatin1Char('"')) && (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}')))) {
+        if (text.length() < 2 || ((text[0] != u'"' || text[text.length() - 1] != u'"') && (text[0] != u'{' || text[text.length() - 1] != u'}'))) {
             /// Nothing to protect, as this is no text string
             return text;
         }
 
-        if (text[1] != QLatin1Char('{') || text[text.length() - 2] != QLatin1Char('}'))
+        if (text[1] != u'{' || text[text.length() - 2] != u'}')
             /// Nothing to remove
             return text;
 
@@ -535,8 +535,8 @@ public:
         /// still check that it is not like this: {{..}..{..}}
         bool removeBrackets = true;
         for (int i = text.length() - 2, count = 0; removeBrackets && i > 1; --i) {
-            if (text[i] == QLatin1Char('{')) ++count;
-            else if (text[i] == QLatin1Char('}')) --count;
+            if (text[i] == u'{') ++count;
+            else if (text[i] == u'}') --count;
             if (count == 0) removeBrackets = false;
         }
 
@@ -548,8 +548,8 @@ public:
 
     QString &protectQuotationMarks(QString &text) {
         int p = -1;
-        while ((p = text.indexOf(QLatin1Char('"'), p + 1)) > 0)
-            if (p == 0 || text[p - 1] != QLatin1Char('\\')) {
+        while ((p = text.indexOf(u'"', p + 1)) > 0)
+            if (p == 0 || text[p - 1] != u'\\') {
                 text.insert(p + 1, QStringLiteral("}")).insert(p, QStringLiteral("{"));
                 ++p;
             }
@@ -557,7 +557,7 @@ public:
     }
 
     bool requiresPersonQuoting(const QString &text, bool isLastName) {
-        if (isLastName && !text.contains(QLatin1Char(' ')))
+        if (isLastName && !text.contains(u' '))
             /** Last name contains NO spaces, no quoting necessary */
             return false;
         else if (!isLastName && !text.contains(QStringLiteral(" and ")))
@@ -567,15 +567,15 @@ public:
             /** Last name starts with lower-case character (von, van, de, ...) */
             // FIXME does not work yet
             return false;
-        else if (text[0] != QLatin1Char('{') || text[text.length() - 1] != QLatin1Char('}'))
+        else if (text[0] != u'{' || text[text.length() - 1] != u'}')
             /** as either last name contains spaces or first name contains " and " and there is no protective quoting yet, there must be a protective quoting added */
             return true;
 
         int bracketCounter = 0;
         for (int i = text.length() - 1; i >= 0; --i) {
-            if (text[i] == QLatin1Char('{'))
+            if (text[i] == u'{')
                 ++bracketCounter;
-            else if (text[i] == QLatin1Char('}'))
+            else if (text[i] == u'}')
                 --bracketCounter;
             if (bracketCounter == 0 && i > 0)
                 return true;
@@ -757,7 +757,7 @@ public:
             if (!encodingForComment.isEmpty()) {
                 // Verify that 'encodingForComment', which labels an encoding,
                 // is compatible with the target codec
-#define normalizeCodecName(codecname) codecname.toLower().remove(QLatin1Char(' ')).remove(QLatin1Char('-')).remove(QLatin1Char('_')).replace(QStringLiteral("euckr"),QStringLiteral("windows949"))
+#define normalizeCodecName(codecname) codecname.toLower().remove(u' ').remove(u'-').remove(u'_').replace(QStringLiteral("euckr"),QStringLiteral("windows949"))
                 const QString lowerNormalizedEncodingForComment = normalizeCodecName(encodingForComment);
                 const QString lowerNormalizedCodecName = codec != nullptr ? normalizeCodecName(QString::fromLatin1(codec->name())) : QString();
                 if (codec == nullptr) {
@@ -772,7 +772,7 @@ public:
             }
 #endif // HAVE_QTEXTCODEC
 
-            if (!encodingForComment.isEmpty() && encodingForComment.toLower() != QStringLiteral("latex") && !encodingForComment.toLower().contains(QStringLiteral("ascii")))
+            if (!encodingForComment.isEmpty() && encodingForComment.toLower() != QStringLiteral("latex") && !encodingForComment.contains(QStringLiteral("ascii"), Qt::CaseInsensitive))
                 // Only if encoding is not pure ASCII (i.e. 'LaTeX' or 'US-ASCII') add
                 // a comment at the beginning of the file to tell which encoding was used
                 rewrittenInput.prepend(QString(QStringLiteral("@comment{x-kbibtex-encoding=%1}\n\n")).arg(encodingForComment));

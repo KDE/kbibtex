@@ -194,7 +194,7 @@ public:
         for (int i = 0; i < numHitsToFollow; ++i) {
             if ((p = text.indexOf(h3Tag, p + 1)) >= 0 && (p = text.indexOf(aTag, p + 1)) >= 0 && (p = text.indexOf(hrefAttrib, p + 1)) >= 0) {
                 int p1 = p + 6;
-                int p2 = text.indexOf(QLatin1Char('"'), p1 + 1);
+                int p2 = text.indexOf(u'"', p1 + 1);
                 QUrl url(text.mid(p1, p2 - p1));
                 const QString googleService = reply->url().host().contains(QStringLiteral("scholar.google")) ? QStringLiteral("scholar.google") : QStringLiteral("www.google");
                 queueUrl(reply->url().resolved(url), term, googleService, depth - 1);
@@ -296,7 +296,7 @@ public:
                 std::unique_ptr<Poppler::Page> page = doc->page(i);
 #endif // HAVE_POPPLERQT6
 #endif // HAVE_POPPLERQT5
-                if (!resultItem.textPreview.isEmpty()) resultItem.textPreview += QLatin1Char(' ');
+                if (!resultItem.textPreview.isEmpty()) resultItem.textPreview += u' ';
                 resultItem.textPreview += QStringView{page->text(QRect()).simplified()}.left(maxTextLen);
             }
             resultItem.textPreview.remove(QStringLiteral("Microsoft Word - ")); ///< Some word processors need to put their name everywhere ...
@@ -359,14 +359,14 @@ bool FindPDF::search(const Entry &entry)
         if (!titleChunks.isEmpty()) {
             searchWords = titleChunks[0];
             for (int i = 1; i < titleChunks.count() && searchWords.length() < 64; ++i)
-                searchWords += QLatin1Char(' ') + titleChunks[i];
+                searchWords += u' ' + titleChunks[i];
         }
     }
     const QStringList authors = entry.authorsLastName();
     for (int i = 0; i < authors.count() && searchWords.length() < 96; ++i)
-        searchWords += QLatin1Char(' ') + authors[i];
+        searchWords += u' ' + authors[i];
 
-    searchWords.remove(QLatin1Char('{')).remove(QLatin1Char('}'));
+    searchWords.remove(u'{').remove(u'}');
 
     QStringList urlFields {Entry::ftDOI, Entry::ftUrl, QStringLiteral("ee")};
     for (int i = 2; i < 256; ++i)

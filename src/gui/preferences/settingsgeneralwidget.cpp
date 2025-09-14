@@ -92,7 +92,7 @@ public:
         if (!configGroup.keyList().isEmpty()) {
             QPushButton *buttonResetAllDontAskAgain = new QPushButton(i18nc("When asked to clear all 'don't ask again' settings", "Reset All"), p);
             layout->addRow(i18n("Clear all 'don't ask again' settings:"), buttonResetAllDontAskAgain);
-            connect(buttonResetAllDontAskAgain, &QPushButton::clicked, p, [this, buttonResetAllDontAskAgain]() {
+            connect(buttonResetAllDontAskAgain, &QPushButton::clicked, p, [buttonResetAllDontAskAgain]() {
                 buttonResetAllDontAskAgain->setEnabled(false);
                 // In configuration file 'kbibtexrc', remove group '[Notification Messages]'
                 KSharedConfigPtr config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc")));

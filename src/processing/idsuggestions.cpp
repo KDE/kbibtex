@@ -35,13 +35,12 @@
 class IdSuggestions::IdSuggestionsPrivate
 {
 private:
-    IdSuggestions *p;
     static const QStringList smallWords;
 
 public:
 
-    IdSuggestionsPrivate(IdSuggestions *parent)
-            : p(parent) {
+    IdSuggestionsPrivate(IdSuggestions *)
+    {
         /// nothing
     }
 
@@ -380,11 +379,11 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
 #endif // QT_VERSION >= 0x050e00
     for (const QString &token : tokenList) {
         QString text;
-        if (token[0] == QLatin1Char('a') || token[0] == QLatin1Char('A') || token[0] == QLatin1Char('z')) {
+        if (token[0] == u'a' || token[0] == u'A' || token[0] == u'z') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
-            if (token[0] == QLatin1Char('a'))
+            if (token[0] == u'a')
                 info.startWord = info.endWord = 0;
-            else if (token[0] == QLatin1Char('z')) {
+            else if (token[0] == u'z') {
                 info.startWord = 1;
                 info.endWord = std::numeric_limits<int>::max();
             }
@@ -418,11 +417,11 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
                 text.append(QString(QStringLiteral(", with '%1' in between")).arg(info.inBetween));
 #endif // HAVE_KFI18N
         }
-        else if (token[0] == QLatin1Char('y'))
+        else if (token[0] == u'y')
             text.append(i18n("Year (2 digits)"));
-        else if (token[0] == QLatin1Char('Y'))
+        else if (token[0] == u'Y')
             text.append(i18n("Year (4 digits)"));
-        else if (token[0] == QLatin1Char('t') || token[0] == QLatin1Char('T')) {
+        else if (token[0] == u't' || token[0] == u'T') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Title"));
             if (info.startWord == 0 && info.endWord < std::numeric_limits<int>::max())
@@ -470,9 +469,9 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
 #else // HAVE_KFI18N
                 text.append(QString(QStringLiteral(", with '%1' in between")).arg(info.inBetween));
 #endif // HAVE_KFI18N
-            if (token[0] == QLatin1Char('T')) text.append(i18n(", small words removed"));
+            if (token[0] == u'T') text.append(i18n(", small words removed"));
         }
-        else if (token[0] == QLatin1Char('j')) {
+        else if (token[0] == u'j') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Journal"));
             if (info.len > 0 && info.len < std::numeric_limits<int>::max())
@@ -494,7 +493,7 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
             case IdSuggestions::CaseChange::None:
                 break;
             }
-        } else if (token[0] == QLatin1Char('e')) {
+        } else if (token[0] == u'e') {
             struct IdSuggestionTokenInfo info = evalToken(token.mid(1));
             text.append(i18n("Type"));
             if (info.len > 0 && info.len < std::numeric_limits<int>::max())
@@ -516,11 +515,11 @@ QStringList IdSuggestions::formatStrToHuman(const QString &formatStr)
             default:
                 break;
             }
-        } else if (token[0] == QLatin1Char('v')) {
+        } else if (token[0] == u'v') {
             text.append(i18n("Volume"));
-        } else if (token[0] == QLatin1Char('p')) {
+        } else if (token[0] == u'p') {
             text.append(i18n("First page number"));
-        } else if (token[0] == QLatin1Char('"'))
+        } else if (token[0] == u'"')
 #ifdef HAVE_KFI18N
             text.append(i18n("Text: '%1'", token.mid(1)));
 #else // HAVE_KFI18N
@@ -636,10 +635,10 @@ IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &tok
 
     int dvStart = 0, dvEnd = std::numeric_limits<int>::max();
     if (token.length() > pos + 2 ///< sufficiently many characters to follow
-            && token[pos] == QLatin1Char('w') ///< identifier to start specifying a range of words
+            && token[pos] == u'w' ///< identifier to start specifying a range of words
             && (dvStart = token[pos + 1].digitValue()) > -1 ///< first word index correctly parsed
             && (
-                token[pos + 2] == QLatin1Char('I') ///< infinitely many words
+                token[pos + 2] == u'I' ///< infinitely many words
                 || (dvEnd = token[pos + 2].digitValue()) > -1) ///< last word index finite and correctly parsed
        ) {
         result.startWord = dvStart;
@@ -647,13 +646,13 @@ IdSuggestions::IdSuggestionTokenInfo IdSuggestions::evalToken(const QString &tok
         pos += 3;
 
         /// Optionally, the last word (e.g. last author) is explicitly requested
-        if (token.length() > pos && token[pos] == QLatin1Char('L')) {
+        if (token.length() > pos && token[pos] == u'L') {
             result.lastWord = true;
             ++pos;
         }
     }
 
-    if (token.length() > pos + 1 && token[pos] == QLatin1Char('"'))
+    if (token.length() > pos + 1 && token[pos] == u'"')
         result.inBetween = token.mid(pos + 1);
 
     return result;

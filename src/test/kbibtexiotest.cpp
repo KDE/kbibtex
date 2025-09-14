@@ -429,7 +429,7 @@ File *KBibTeXIOTest::onlyComments(int numPercentSigns, int numLines)
     static QHash<int, File *> commentFiles;
     if (!commentFiles.contains(key)) {
         File *commentFile = new File();
-        const QString percentSigns {numPercentSigns > 0 ? QString(numPercentSigns, QLatin1Char('%')) + QStringLiteral(" ") : QString()};
+        const QString percentSigns {numPercentSigns > 0 ? QString(numPercentSigns, u'%') + QStringLiteral(" ") : QString()};
         QString rawText {numPercentSigns < 0 ? QStringLiteral("Inside command") : (numPercentSigns > 0 ? QString(QStringLiteral("%1 percent symbol(s), %2 line(s)")).arg(QString::number(numPercentSigns), QString::number(numLines)) : QStringLiteral("Direct comment"))};
         const QString moreLinesRawText {QStringLiteral("\nOne more line")};
         for (int i = 1; i < numLines; ++i)
@@ -558,7 +558,7 @@ void KBibTeXIOTest::fileExporterXMLsave()
     for (auto it = expectedData.constBegin(); it != expectedData.constEnd(); ++it) {
         fileExporterXML.setOutputStyle(it.key());
         const QString &expectedText = it.value();
-        const QString generatedText = fileExporterXML.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
+        const QString generatedText = fileExporterXML.toString(bibTeXfile).remove(u'\r').replace(u'\n', u'|');
         QCOMPARE(generatedText, expectedText);
     }
 }
@@ -585,7 +585,7 @@ void KBibTeXIOTest::fileExporterRISsave()
     QFETCH(QString, risData);
 
     FileExporterRIS fileExporterRIS(this);
-    const QString generatedData = fileExporterRIS.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
+    const QString generatedData = fileExporterRIS.toString(bibTeXfile).remove(u'\r').replace(u'\n', u'|');
 
     QCOMPARE(generatedData, risData);
 }
@@ -613,7 +613,7 @@ void KBibTeXIOTest::fileExporterBibTeXsave()
     QFETCH(QString, bibTeXdata);
 
     FileExporterBibTeX fileExporterBibTeX(this);
-    const QString generatedData = fileExporterBibTeX.toString(bibTeXfile).remove(QLatin1Char('\r')).replace(QLatin1Char('\n'), QLatin1Char('|'));
+    const QString generatedData = fileExporterBibTeX.toString(bibTeXfile).remove(u'\r').replace(u'\n', u'|');
 
     QCOMPARE(generatedData, bibTeXdata);
 }
@@ -816,7 +816,7 @@ void KBibTeXIOTest::fileExporterBibTeXcanEncode_data()
     static QString codecWindows1256{QStringLiteral("Windows-1256")};
 #endif // HAVE_QTEXTCODEC
 
-    QTest::newRow("Letter 'a'") << QChar(QLatin1Char('a')) <<
+    QTest::newRow("Letter 'a'") << QChar(u'a') <<
 #ifdef HAVE_QTEXTCODEC
         QVector<QTextCodec *>
 #else // HAVE_QTEXTCODEC

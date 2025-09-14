@@ -272,7 +272,7 @@ QVariant ValueListModel::data(const QModelIndex &index, int role) const
             /// Used if (a) two columns are shown (showCountColumn is true) and column 1
             /// (the count column) is to be sorted or (b) if only one column is shown
             /// (showCountColumn is false) and this single column is to be sorted by count.
-            return QString(QStringLiteral("%1%2")).arg(values[index.row()].count, 10, 10, QLatin1Char('0')).arg(buffer);
+            return QString(QStringLiteral("%1%2")).arg(values[index.row()].count, 10, 10, QChar(u'0')).arg(buffer);
         } else {
             /// Otherwise use lower-case text for sorting
             return QVariant(buffer);
@@ -394,7 +394,7 @@ void ValueListModel::updateValues()
                 const double percent {StarRatingPainter::roundToNearestHalfStarPercent(PlainTextValue::text(v).toFloat(&ok))};
                 if (ok) {
                     const QString text {QString::number(percent, 'f', 2)};
-                    const QString zeroPadded {QString(QStringLiteral("%1")).arg(static_cast<int>(percent * 1000.0), 6, 10, QLatin1Char('0'))};
+                    const QString zeroPadded {QString(QStringLiteral("%1")).arg(static_cast<int>(percent * 1000.0), 6, 10, QChar(u'0'))};
                     QSharedPointer<PlainText> plainText {QSharedPointer<PlainText>(new PlainText(text))};
                     insertText(text, plainText, zeroPadded);
                 }

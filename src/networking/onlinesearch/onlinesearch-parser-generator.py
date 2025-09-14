@@ -245,7 +245,8 @@ def xmlParser():
     # Clear previous type attributes
     print(depth * " ", "typeAttribute = qMakePair(QString(), QString());", sep="")
 
-    print(depth * " ", "for (const QXmlStreamAttribute &attr : xsr.attributes()) {", sep="")
+    print(depth * " ", "const auto xsrAttr {xsr.attributes()};", sep="")
+    print(depth * " ", "for (const QXmlStreamAttribute &attr : xsrAttr) {", sep="")
     # Go over all attributes of this XML element ...
     depth += 4
 

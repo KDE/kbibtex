@@ -100,7 +100,7 @@ public:
                 line = line.simplified();
                 if (line.length() > 1) {
                     /// multi-line field are joined to one long line
-                    value += QLatin1Char(' ') + line;
+                    value += u' ' + line;
                 }
             }
 
@@ -123,7 +123,7 @@ public:
 
     inline QString optionallyProtectCasing(const QString &text) const {
         if (protectCasing)
-            return QLatin1Char('{') + text + QLatin1Char('}');
+            return u'{' + text + u'}';
         else
             return text;
     }
@@ -176,7 +176,8 @@ public:
                 appendValue(entry, Entry::ftNote, QSharedPointer<PlainText>(new PlainText((*it).value)));
             } else if ((*it).key == QStringLiteral("KW")) {
                 QString text = (*it).value;
-                const QRegularExpression splitRegExp(text.contains(QStringLiteral(";")) ? QStringLiteral("\\s*[;\\n]\\s*") : (text.contains(QStringLiteral(",")) ? QStringLiteral("\\s*[,\\n]\\s*") : QStringLiteral("\\n")));
+                static const QRegularExpression semicolonRegExp{QStringLiteral("\\s*[;\\n]\\s*")}, commaRegExp{QStringLiteral("\\s*[,\\n]\\s*")}, linebreakRegExp{QStringLiteral("\\n")};
+                const QRegularExpression &splitRegExp{text.contains(QStringLiteral(";")) ? semicolonRegExp : (text.contains(QStringLiteral(",")) ? commaRegExp : linebreakRegExp)};
 #if QT_VERSION >= 0x050e00
                 QStringList newKeywords = text.split(splitRegExp, Qt::SkipEmptyParts);
 #else // QT_VERSION < 0x050e00

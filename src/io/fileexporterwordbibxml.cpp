@@ -45,15 +45,15 @@ public:
     }
 
     bool insideProtectiveCurleyBrackets(const QString &input) {
-        if (input.length() < 3 || input[0] != QLatin1Char('{') || input[input.length() - 1] != QLatin1Char('}'))
+        if (input.length() < 3 || input[0] != u'{' || input[input.length() - 1] != u'}')
             return false;
 
         int depth = 0;
         QChar prev;
         for (const QChar &c : input) {
-            if (c == QLatin1Char('{') && prev != QLatin1Char('\\'))
+            if (c == u'{' && prev != u'\\')
                 ++depth;
-            else if (c == QLatin1Char('}') && prev != QLatin1Char('\\'))
+            else if (c == u'}' && prev != u'\\')
                 --depth;
             prev = c;
         }
@@ -64,8 +64,8 @@ public:
     QString removeUnwantedChars(const QString &input) {
         QString result;
         result.reserve(input.length());
-        static const QSet<QChar> skip{QLatin1Char('{'), QLatin1Char('}'), QLatin1Char('<'), QLatin1Char('>'), QLatin1Char('&')};
-        static const QHash<QChar, QString> replace{{QLatin1Char('~'), QStringLiteral(" ")}};
+        static const QSet<QChar> skip{u'{', u'}', u'<', u'>', u'&'};
+        static const QHash<QChar, QString> replace{{u'~', QStringLiteral(" ")}};
         for (const QChar &c : input)
             if (skip.contains(c))
                 continue;
@@ -179,7 +179,7 @@ public:
 
         for (Entry::ConstIterator it = entry->constBegin(); it != entry->constEnd(); ++it) {
             const QString &key = it.key().toLower();
-            if (personFields.values().contains(key)) {
+            if (std::find(personFields.cbegin(), personFields.cend(), key)!= personFields.cend()) {
                 // Authors, editors, etc. were processed above
                 continue;
             }

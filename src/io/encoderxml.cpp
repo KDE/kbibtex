@@ -93,9 +93,9 @@ QString EncoderXML::decode(const QString &text) const
     for (const QString &backslashSymbol : EncoderXMLPrivate::backslashSymbols) {
         int p = -1;
         while ((p = result.indexOf(backslashSymbol[1], p + 1)) >= 0) {
-            if (p == 0 || result[p - 1] != QLatin1Char('\\')) {
+            if (p == 0 || result[p - 1] != u'\\') {
                 /// replace only symbols which have no backslash on their right
-                result = result.left(p) + QLatin1Char('\\') + result.mid(p);
+                result = result.left(p) + u'\\' + result.mid(p);
                 ++p;
             }
         }

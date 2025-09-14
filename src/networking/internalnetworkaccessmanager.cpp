@@ -211,7 +211,7 @@ QString InternalNetworkAccessManager::reverseObfuscate(const QByteArray &a) {
     QString result;
     result.reserve(a.length() / 2);
     for (int p = a.length() - 1; p >= 0; p -= 2) {
-        const QChar c = QLatin1Char(a.at(p) ^ a.at(p - 1));
+        const QChar c {QChar::fromLatin1(a.at(p) ^ a.at(p - 1))};
         result.append(c);
     }
     return result;

@@ -95,7 +95,7 @@ public:
     }
 
     void copyFromEntry(const Entry &entry) override {
-        lineEditFreeText->setText(d->authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditFreeText->setText(d->authorLastNames(entry).join(QStringLiteral(" ")) + u' ' + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
     void saveState() {

@@ -256,9 +256,9 @@ public:
         treeViewSuggestions->setRootIsDecorated(false);
         connect(treeViewSuggestions->selectionModel(), &QItemSelectionModel::currentChanged, p, &SettingsIdSuggestionsWidget::itemChanged);
 #if QT_VERSION >= 0x050b00
-        treeViewSuggestions->setMinimumSize(treeViewSuggestions->fontMetrics().horizontalAdvance(QLatin1Char('W')) * 25, treeViewSuggestions->fontMetrics().height() * 15);
+        treeViewSuggestions->setMinimumSize(treeViewSuggestions->fontMetrics().horizontalAdvance(u'W') * 25, treeViewSuggestions->fontMetrics().height() * 15);
 #else // QT_VERSION >= 0x050b00
-        treeViewSuggestions->setMinimumSize(treeViewSuggestions->fontMetrics().width(QLatin1Char('W')) * 25, treeViewSuggestions->fontMetrics().height() * 15);
+        treeViewSuggestions->setMinimumSize(treeViewSuggestions->fontMetrics().width(u'W') * 25, treeViewSuggestions->fontMetrics().height() * 15);
 #endif // QT_VERSION >= 0x050b00
         buttonNewSuggestion = new QPushButton(QIcon::fromTheme(QStringLiteral("list-add")), i18n("Add..."), p);
         layout->addWidget(buttonNewSuggestion, 0, 1, 1, 1);

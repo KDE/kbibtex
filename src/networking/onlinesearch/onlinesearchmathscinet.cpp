@@ -176,7 +176,8 @@ void OnlineSearchMathSciNet::doneFetchingResultPage()
         QUrlQuery query(url);
         static const QStringList copyParameters {QStringLiteral("foo"), QStringLiteral("bdl"), QStringLiteral("reqargs"), QStringLiteral("batch_title")};
         for (const QString &param : copyParameters) {
-            for (const QString &value : formParams.values(param))
+            const auto fpv {formParams.values(param)};
+            for (const QString &value : fpv)
                 query.addQueryItem(param, value);
         }
         query.addQueryItem(QStringLiteral("fmt"), QStringLiteral("bibtex"));
@@ -220,7 +221,7 @@ void OnlineSearchMathSciNet::doneFetchingBibTeXcode()
         int p1 = -1, p2 = -1;
         while ((p1 = htmlCode.indexOf(QStringLiteral("<pre>"), p2 + 1)) >= 0 && (p2 = htmlCode.indexOf(QStringLiteral("</pre>"), p1 + 1)) >= 0) {
             bibtexCode += QStringView{htmlCode}.mid(p1 + 5, p2 - p1 - 5);
-            bibtexCode += QLatin1Char('\n');
+            bibtexCode += u'\n';
         }
 
         FileImporterBibTeX importer(this);

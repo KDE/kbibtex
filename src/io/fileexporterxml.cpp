@@ -48,11 +48,11 @@ QString htmlify(const QString &input)
     QChar prev_c;
     for (const QChar &c : input) {
         if (c.unicode() < 128) {
-            static const QSet<QChar> skipChar{QLatin1Char('{'), QLatin1Char('}')};
-            if (!skipChar.contains(c) || prev_c == QLatin1Char('\\'))
+            static const QSet<QChar> skipChar{u'{', u'}'};
+            if (!skipChar.contains(c) || prev_c == u'\\')
                 output.append(c);
         } else
-            output.append(QString(QStringLiteral("&#x%1;")).arg((uint)c.unicode(), 4, 16, QLatin1Char('0')));
+            output.append(QString(QStringLiteral("&#x%1;")).arg((uint)c.unicode(), 4, 16, QChar(u'0')));
         prev_c = c;
     }
     return output;
@@ -453,7 +453,8 @@ QHash<FileExporterXML::OutputStyle, struct RewriteFunctions> rewriteFunctions =
                             continue;
                         const QRegularExpressionMatch match = re.match(bibText);
                         if (match.hasMatch()) {
-                            for (const QString &namedGroup : re.namedCaptureGroups()) {
+                            const auto ncg {re.namedCaptureGroups()};
+                            for (const QString &namedGroup : ncg) {
                                 if (namedGroup.isEmpty() || insertedKeys.contains(namedGroup))
                                     continue;
                                 const QString foundText = match.captured(namedGroup);
@@ -500,16 +501,13 @@ QHash<FileExporterXML::OutputStyle, struct RewriteFunctions> rewriteFunctions =
 
 class FileExporterXML::Private
 {
-private:
-    FileExporterXML *parent;
-
 public:
     static const QHash<FileExporterXML::OutputStyle, std::function<bool(const QTextStream &)>> outputHeader;
 
     OutputStyle outputStyle;
 
-    Private(FileExporterXML *p)
-            : parent(p), outputStyle(FileExporterXML::OutputStyle::XML_KBibTeX)
+    Private(FileExporterXML *)
+            : outputStyle(FileExporterXML::OutputStyle::XML_KBibTeX)
     {
         // nothing
     }

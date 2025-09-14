@@ -295,8 +295,8 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
                 /// syntax to differentiate required items (not used yet, but will be used
                 /// later if missing required items are marked).
                 QString visible = ed.requiredItems.join(QStringLiteral(","));
-                visible += QLatin1Char(',') + ed.optionalItems.join(QStringLiteral(","));
-                visible = visible.replace(QLatin1Char('|'), QLatin1Char(',')).replace(QLatin1Char('^'), QLatin1Char(','));
+                visible += u',' + ed.optionalItems.join(QStringLiteral(","));
+                visible = visible.replace(u'|', u',').replace(u'^', u',');
                 visibleItems = visible.split(QStringLiteral(","));
                 break;
             }
@@ -1229,7 +1229,6 @@ bool CommentWidget::reset(QSharedPointer<const Element> element)
 {
     QSharedPointer<const Comment> comment = element.dynamicCast<const Comment>();
     if (comment.isNull()) return false;
-    const QStringList lines {document->text().split(QStringLiteral("\n"))};
 
     comboBoxContext->setCurrentIndex(qMax(0, GUIHelper::selectValue(comboBoxContext->model(), static_cast<int>(comment->context()), Qt::UserRole)));
     lineEditPrefix->setText(comment->context() == Preferences::CommentContext::Prefix ? comment->prefix() : QString());

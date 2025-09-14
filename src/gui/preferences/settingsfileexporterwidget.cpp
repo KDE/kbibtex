@@ -139,9 +139,9 @@ public:
         layout->addRow(i18n("Manually specified LyX pipe:"), lineeditLyXPipePath);
         connect(qobject_cast<QLineEdit *>(lineeditLyXPipePath->lineEdit()), &QLineEdit::textEdited, p, &SettingsFileExporterWidget::changed);
 #if QT_VERSION >= 0x050b00
-        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().horizontalAdvance(QLatin1Char('W')) * 20);
+        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().horizontalAdvance(u'W') * 20);
 #else // QT_VERSION >= 0x050b00
-        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(QLatin1Char('W')) * 20);
+        lineeditLyXPipePath->setMinimumWidth(lineeditLyXPipePath->fontMetrics().width(u'W') * 20);
 #endif // QT_VERSION >= 0x050b00
 #if KIO_VERSION < QT_VERSION_CHECK(5, 108, 0)
         lineeditLyXPipePath->setFilter(QStringLiteral("inode/fifo"));

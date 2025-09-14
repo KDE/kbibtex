@@ -227,7 +227,7 @@ AssociatedFiles::PathType AssociatedFilesUI::pathType() const {
 
 QString AssociatedFilesUI::userDefinedFilename() const {
     QString text = d->lineEditUserDefinedName->text();
-    const int p = qMax(text.lastIndexOf(QLatin1Char('/')), text.lastIndexOf(QDir::separator()));
+    const int p = qMax(text.lastIndexOf(u'/'), text.lastIndexOf(QDir::separator()));
     if (p > 0) text = text.mid(p + 1);
     return text;
 }

@@ -78,7 +78,7 @@ void OnlineSearchJStor::startSearch(const QMap<QueryKey, QString> &query, int nu
     d->queryUrl.setPath(QStringLiteral("/action/doAdvancedSearch"));
     q.addQueryItem(QStringLiteral("Search"), QStringLiteral("Search"));
     q.addQueryItem(QStringLiteral("acc"), QStringLiteral("off")); /// all content, not just what you can access
-    q.addQueryItem(QStringLiteral("la"), QLatin1String("")); /// no specific language
+    q.addQueryItem(QStringLiteral("la"), QString()); /// no specific language
     q.addQueryItem(QStringLiteral("group"), QStringLiteral("none")); /// not sure what that means
     // TODO how to set number of results? 25 seems to be hard-coded standard
     // Unused query keys:
@@ -263,7 +263,7 @@ void OnlineSearchJStor::sanitizeEntry(QSharedPointer<Entry> entry)
     QString url = PlainTextValue::text(entry->value(Entry::ftUrl));
     if (url.startsWith(QStringLiteral("https://www.jstor.org/stable/"))) {
         /// use JSTOR's own stable ID for entry ID
-        entry->setId(QStringLiteral("jstor") + url.mid(28).replace(QLatin1Char(','), QString()));
+        entry->setId(QStringLiteral("jstor") + url.mid(28).replace(u',', QString()));
         /// store JSTOR's own stable ID
         Value v;
         v.append(QSharedPointer<VerbatimText>(new VerbatimText(url.mid(28))));

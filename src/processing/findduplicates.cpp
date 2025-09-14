@@ -81,7 +81,7 @@ QVector<Value> &EntryClique::values(const QString &field)
 Value EntryClique::chosenValue(const QString &field) const
 {
     Q_ASSERT_X(chosenValueMap[field].count() == 1, "Value EntryClique::chosenValue(const QString &field) const", "Exactly one value expected in chosenValueMap");
-    return chosenValueMap[field].first();
+    return chosenValueMap[field].constFirst();
 }
 
 QVector<Value> EntryClique::chosenValues(const QString &field) const

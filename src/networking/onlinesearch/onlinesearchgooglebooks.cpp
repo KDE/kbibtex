@@ -203,7 +203,8 @@ void OnlineSearchGoogleBooks::downloadBibTeXDone()
                 if (!bibtexFile->isEmpty()) {
                     QSharedPointer<Entry> entryFromBibTeX = bibtexFile->first().dynamicCast<Entry>();
                     if (!entryFromBibTeX.isNull()) {
-                        for (const QString &field : entryFromBibTeX->keys()) {
+                        const auto efbk {entryFromBibTeX->keys()};
+                        for (const QString &field : efbk) {
                             if (!entryFromAPI->contains(field))
                                 entryFromAPI->insert(field, entryFromBibTeX->value(field));
                         }

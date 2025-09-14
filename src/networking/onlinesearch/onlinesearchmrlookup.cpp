@@ -95,7 +95,7 @@ void OnlineSearchMRLookup::doneFetchingResultPage()
         int p1 = -1, p2 = -1;
         while ((p1 = htmlCode.indexOf(QStringLiteral("<pre>"), p2 + 1)) >= 0 && (p2 = htmlCode.indexOf(QStringLiteral("</pre>"), p1 + 1)) >= 0) {
             bibtexCode += QStringView{htmlCode}.mid(p1 + 5, p2 - p1 - 5);
-            bibtexCode += QLatin1Char('\n');
+            bibtexCode += u'\n';
         }
 
         FileImporterBibTeX importer(this);

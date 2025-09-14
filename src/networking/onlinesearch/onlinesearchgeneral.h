@@ -35,6 +35,8 @@ namespace OnlineSearchGeneral {
  */
 class KBIBTEXNETWORKING_EXPORT Form : public OnlineSearchAbstract::Form
 {
+    Q_OBJECT
+
 public:
     explicit Form(QWidget *parent);
     ~Form();

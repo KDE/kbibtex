@@ -234,9 +234,9 @@ public:
     LooksLike looksLikeWhat(const QMimeData *mimeData) const {
         if (mimeData->hasText()) {
             QString text = QString::fromUtf8(mimeData->data(QStringLiteral("text/plain")));
-            const int p1 = text.indexOf(QLatin1Char('@'));
-            const int p2 = text.lastIndexOf(QLatin1Char('}'));
-            const int p3 = text.lastIndexOf(QLatin1Char(')'));
+            const int p1 = text.indexOf(u'@');
+            const int p2 = text.lastIndexOf(u'}');
+            const int p3 = text.lastIndexOf(u')');
             if (p1 >= 0 && (p2 >= 0 || p3 >= 0)) {
                 text = text.mid(p1, qMax(p2, p3) - p1 + 1);
                 static const QRegularExpression bibTeXElement(QStringLiteral("^@([a-z]{5,})[{()]"), QRegularExpression::CaseInsensitiveOption);

@@ -76,7 +76,7 @@ public:
             if (p1 > 0) {
                 p1 = htmlText.indexOf(QStringLiteral("href=\""), p1);
                 if (p1 > 0) {
-                    int p2 = htmlText.indexOf(QLatin1Char('"'), p1 + 7);
+                    int p2 = htmlText.indexOf(u'"', p1 + 7);
                     if (p2 > 0)
                         return htmlText.mid(p1 + 6, p2 - p1 - 6).replace(QStringLiteral("&amp;"), QStringLiteral("&"));
                 }
@@ -99,7 +99,7 @@ public:
             /// Variables p1 and p2 are used to close in to the document's URL
             int p1 = htmlText.indexOf(QStringLiteral("href=\""), posH3);
             if (p1 > 0) {
-                int p2 = htmlText.indexOf(QLatin1Char('"'), p1 + 7);
+                int p2 = htmlText.indexOf(u'"', p1 + 7);
                 if (p2 > 0)
                     return htmlText.mid(p1 + 6, p2 - p1 - 6).replace(QStringLiteral("&amp;"), QStringLiteral("&"));
             }
@@ -239,9 +239,11 @@ void OnlineSearchGoogleScholar::doneFetchingConfigPage()
 
             QUrl url = reply->url().resolved(QUrl(decodeURL(formOpeningTagMatch.captured(1))));
             QUrlQuery query(url);
-            for (const QString &key : inputMap.keys()) {
+            const auto imk {inputMap.keys()};
+            for (const QString &key : imk) {
                 query.removeQueryItem(key);
-                for (const QString &value : inputMap.values(key))
+                const auto imv {inputMap.values(key)};
+                for (const QString &value : imv)
                     query.addQueryItem(key, value);
             }
             url.setQuery(query);

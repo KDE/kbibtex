@@ -93,7 +93,8 @@ private:
                 // If 'bibtex2html' binary is available ...
                 int id = 2000;
                 // Query from FileExporterBibTeX2HTML which BibTeX styles are available
-                for (const QString &bibtex2htmlStyle : FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles()) {
+                const auto albs {FileExporterBibTeX2HTML::availableLaTeXBibliographyStyles()};
+                for (const QString &bibtex2htmlStyle : albs) {
                     const QString label{QString(QStringLiteral("%2 (bibtex2html)")).arg(bibtex2htmlStyle)};
                     listOfStyles.append({id++, label, {{QStringLiteral("exporter"), QStringLiteral("bibtex2html")}, {QStringLiteral("html"), true}, {QStringLiteral("externalprogram"), true}, {QStringLiteral("bibtexstyle"), bibtex2htmlStyle}}});
                 }
@@ -198,7 +199,8 @@ public:
         comboBox->clear();
 
         int styleIndex = 0, c = 0;
-        for (const PreviewStyle &previewStyle : previewStyles()) {
+        const auto ps {previewStyles()};
+        for (const PreviewStyle &previewStyle : ps) {
             comboBox->addItem(previewStyle.label, QVariant::fromValue(previewStyle));
             if (previousStyleId == previewStyle.id)
                 styleIndex = c;
@@ -333,8 +335,8 @@ void ReferencePreview::renderHTML()
             int endofxsomethingpos = text.indexOf(QStringLiteral("}"), xsomethingpos + 11);
             if (endofxsomethingpos > xsomethingpos) {
                 // Trim empty lines around match
-                while (xsomethingpos > 0 && text[xsomethingpos - 1] == QLatin1Char('\n')) --xsomethingpos;
-                while (endofxsomethingpos + 1 < text.length() && text[endofxsomethingpos + 1] == QLatin1Char('\n')) ++endofxsomethingpos;
+                while (xsomethingpos > 0 && text[xsomethingpos - 1] == u'\n') --xsomethingpos;
+                while (endofxsomethingpos + 1 < text.length() && text[endofxsomethingpos + 1] == u'\n') ++endofxsomethingpos;
                 // Clip comment out of text
                 text = text.left(xsomethingpos) + text.mid(endofxsomethingpos + 1);
             }

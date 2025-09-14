@@ -30,12 +30,8 @@
 
 class FileExporterRIS::Private
 {
-private:
-    FileExporterRIS *parent;
-
 public:
-    Private(FileExporterRIS *p)
-            : parent(p)
+    Private(FileExporterRIS *)
     {
         // nothing
     }
@@ -146,7 +142,7 @@ public:
                 if (KBibTeX::MonthsTriple[i] == month)
                     monthAsInt = i + 1;
             if (monthAsInt > 0)
-                result &= writeKeyValue(stream, QStringLiteral("PY"), QString(QStringLiteral("%1/%2//")).arg(year).arg(monthAsInt, 2, 10, QLatin1Char('0')));
+                result &= writeKeyValue(stream, QStringLiteral("PY"), QString(QStringLiteral("%1/%2//")).arg(year).arg(monthAsInt, 2, 10, QChar(u'0')));
             else
                 result &= writeKeyValue(stream, QStringLiteral("PY"), QString(QStringLiteral("%1///%2")).arg(year, month));
         }

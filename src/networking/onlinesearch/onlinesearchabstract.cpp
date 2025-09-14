@@ -61,7 +61,7 @@ const int OnlineSearchAbstract::resultAuthorizationRequired = 2;
 const int OnlineSearchAbstract::resultNetworkError = 3;
 const int OnlineSearchAbstract::resultInvalidArguments = 4;
 
-const char *OnlineSearchAbstract::httpUnsafeChars = "%:/=+$?&\0";
+const QString OnlineSearchAbstract::httpUnsafeChars {QStringLiteral("%:/=+$?&\0")};
 
 
 #ifdef HAVE_QTWIDGETS
@@ -173,13 +173,13 @@ QStringList OnlineSearchAbstract::splitRespectingQuotationMarks(const QString &t
     QStringList result;
 
     while (p1 < max) {
-        while (text[p1] == QLatin1Char(' ')) ++p1;
+        while (text[p1] == u' ') ++p1;
         p2 = p1;
-        if (text[p2] == QLatin1Char('"')) {
+        if (text[p2] == u'"') {
             ++p2;
-            while (p2 < max && text[p2] != QLatin1Char('"'))  ++p2;
+            while (p2 < max && text[p2] != u'"')  ++p2;
         } else
-            while (p2 < max && text[p2] != QLatin1Char(' ')) ++p2;
+            while (p2 < max && text[p2] != u' ') ++p2;
         result << text.mid(p1, p2 - p1 + 1).simplified();
         p1 = p2 + 1;
     }
@@ -253,7 +253,7 @@ bool OnlineSearchAbstract::handleErrors(QNetworkReply *reply, QUrl &newUrl, cons
 
 QString OnlineSearchAbstract::htmlAttribute(const QString &htmlCode, const int startPos, const QString &attribute) const
 {
-    const int endPos = htmlCode.indexOf(QLatin1Char('>'), startPos);
+    const int endPos = htmlCode.indexOf(u'>', startPos);
     if (endPos < 0) return QString(); ///< no closing angle bracket found
 
     const QString attributePattern = QString(QStringLiteral(" %1=")).arg(attribute);
@@ -263,7 +263,7 @@ QString OnlineSearchAbstract::htmlAttribute(const QString &htmlCode, const int s
     const int attributePatternLen = attributePattern.length();
     const int openingQuotationMarkPos = attributePatternPos + attributePatternLen;
     const QChar quotationMark = htmlCode[openingQuotationMarkPos];
-    if (quotationMark != QLatin1Char('"') && quotationMark != QLatin1Char('\'')) {
+    if (quotationMark != u'"' && quotationMark != u'\'') {
         /// No valid opening quotation mark found
         int spacePos = openingQuotationMarkPos;
         while (spacePos < endPos && !htmlCode[spacePos].isSpace()) ++spacePos;
@@ -279,7 +279,7 @@ QString OnlineSearchAbstract::htmlAttribute(const QString &htmlCode, const int s
 
 bool OnlineSearchAbstract::htmlAttributeIsSelected(const QString &htmlCode, const int startPos, const QString &attribute) const
 {
-    const int endPos = htmlCode.indexOf(QLatin1Char('>'), startPos);
+    const int endPos = htmlCode.indexOf(u'>', startPos);
     if (endPos < 0) return false; ///< no closing angle bracket found
 
     const QString attributePattern = QStringLiteral(" ") + attribute;
@@ -288,10 +288,10 @@ bool OnlineSearchAbstract::htmlAttributeIsSelected(const QString &htmlCode, cons
 
     const int attributePatternLen = attributePattern.length();
     const QChar nextAfterAttributePattern = htmlCode[attributePatternPos + attributePatternLen];
-    if (nextAfterAttributePattern.isSpace() || nextAfterAttributePattern == QLatin1Char('>') || nextAfterAttributePattern == QLatin1Char('/'))
+    if (nextAfterAttributePattern.isSpace() || nextAfterAttributePattern == u'>' || nextAfterAttributePattern == u'/')
         /// No value given for attribute (old-style HTML), so assuming it means checked/selected
         return true;
-    else if (nextAfterAttributePattern == QLatin1Char('=')) {
+    else if (nextAfterAttributePattern == u'=') {
         /// Expecting value to attribute, so retrieve it and check for 'selected' or 'checked'
         const QString attributeValue = htmlAttribute(htmlCode, attributePatternPos, attribute).toLower();
         return attributeValue == QStringLiteral("selected") || attributeValue == QStringLiteral("checked");
@@ -340,12 +340,9 @@ void OnlineSearchAbstract::sendVisualNotification(const QString &text, const QSt
 
 QString OnlineSearchAbstract::encodeURL(QString rawText)
 {
-    const char *cur = httpUnsafeChars;
-    while (*cur != '\0') {
-        rawText = rawText.replace(QLatin1Char(*cur), QStringLiteral("%") + QString::number(*cur, 16));
-        ++cur;
-    }
-    rawText = rawText.replace(QLatin1Char(' '), QLatin1Char('+'));
+    for(const QChar &c : httpUnsafeChars)
+        rawText = rawText.replace(c, QStringLiteral("%") + QString::number(c.unicode() & 0x7f, 16));
+    rawText = rawText.replace(u' ', u'+');
     return rawText;
 }
 
@@ -359,7 +356,7 @@ QString OnlineSearchAbstract::decodeURL(QString rawText)
         if (ok)
             rawText = rawText.replace(mimeRegExpMatch.captured(0), c);
     }
-    rawText = rawText.replace(QStringLiteral("&amp;"), QStringLiteral("&")).replace(QLatin1Char('+'), QStringLiteral(" "));
+    rawText = rawText.replace(QStringLiteral("&amp;"), QStringLiteral("&")).replace(u'+', QStringLiteral(" "));
     return rawText;
 }
 
@@ -368,12 +365,12 @@ QString OnlineSearchAbstract::deHTMLify(const QString &input) {
     result.replace(QStringLiteral("&amp;"), QStringLiteral("&"));
     int p1 = result.indexOf(QStringLiteral("&#x"));
     while (p1 >= 0) {
-        if (p1 < result.length() - 8 && result[p1 + 7] == QLatin1Char(';')) {
+        if (p1 < result.length() - 8 && result[p1 + 7] == u';') {
             bool ok = false;
             const int code{result.mid(p1 + 3, 4).toInt(&ok, 16)};
             if (ok && code > 32 && code <= 0xffff)
                 result = result.left(p1) + QChar(code) + result.mid(p1 + 8);
-        } else if (p1 < result.length() - 6 && result[p1 + 2] == QLatin1Char('#') && result[p1 + 5] == QLatin1Char(';')) {
+        } else if (p1 < result.length() - 6 && result[p1 + 2] == u'#' && result[p1 + 5] == u';') {
             bool ok = false;
             const int code{result.mid(p1 + 3, 2).toInt(&ok, 16)};
             if (ok && code > 32 && code <= 0xffff)

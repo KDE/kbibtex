@@ -581,7 +581,8 @@ public:
         }
 
         /// Make more specific guesses on an URL's MIME type
-        if (QRegularExpression(QStringLiteral("^http[s]?://arxiv.org/pdf/")).match(url.url(QUrl::PreferLocalFile)).hasMatch()) {
+        static const QRegularExpression arxivPDFUrlRegExp {QStringLiteral("^http[s]?://arxiv.org/pdf/")};
+        if (arxivPDFUrlRegExp.match(url.url(QUrl::PreferLocalFile)).hasMatch()) {
             result.mimeType = QStringLiteral("application/pdf");
         }
 

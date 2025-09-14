@@ -157,7 +157,7 @@ public:
         comboboxFieldNames->clear();
         for (const auto &fd : const_cast<const BibTeXFields &>(BibTeXFields::instance())) {
             if (!fd.upperCamelCaseAlt.isEmpty()) continue; /// keep only "single" fields and not combined ones like "Author or Editor"
-            if (fd.upperCamelCase.startsWith(QLatin1Char('^'))) continue; /// skip "type" and "id" (those are marked with '^')
+            if (fd.upperCamelCase.startsWith(u'^')) continue; /// skip "type" and "id" (those are marked with '^')
             comboboxFieldNames->addItem(fd.label, fd.upperCamelCase);
         }
         // Sort the combo box locale-aware. Thus we need a SortFilterProxyModel

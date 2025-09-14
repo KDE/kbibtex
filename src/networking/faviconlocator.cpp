@@ -185,11 +185,11 @@ public:
                 // Some ugly but hopefully fast/flexible/robust HTML code parsing
                 int p1 = -1;
                 while (!favIconUrl.isValid() && (p1 = htmlCode.indexOf(QStringLiteral("<link "), p1 + 5)) > 0) {
-                    const int p2 = htmlCode.indexOf(QLatin1Char('>'), p1 + 5);
+                    const int p2 = htmlCode.indexOf(u'>', p1 + 5);
                     if (p2 > p1) {
                         const int p3 = htmlCode.indexOf(QStringLiteral("rel=\""), p1 + 5);
                         if (p3 > p1 && p3 < p2) {
-                            const int p4 = htmlCode.indexOf(QLatin1Char('"'), p3 + 5);
+                            const int p4 = htmlCode.indexOf(u'"', p3 + 5);
                             if (p4 > p3 && p4 < p2) {
                                 const QString relValue = htmlCode.mid(p3 + 5, p4 - p3 - 5);
                                 if (relValue == QStringLiteral("icon") || relValue == QStringLiteral("shortcut icon")) {
@@ -197,7 +197,7 @@ public:
                                     if (p5 > p1 && p5 < p2) {
                                         const int p6 = earliest(htmlCode, {QStringLiteral("\""), QStringLiteral(" "), QStringLiteral(">")}, p5 + 6);
                                         if (p6 > p5 + 5 && p6 <= p2) {
-                                            QString hrefValue = htmlCode.mid(p5 + 6, p6 - p5 - 6).replace(QLatin1Char('&'), QLatin1String("&amp;")).replace(QLatin1Char('>'), QLatin1String("&gt;")).replace(QLatin1Char('<'), QLatin1String("&lt;"));
+                                            QString hrefValue = htmlCode.mid(p5 + 6, p6 - p5 - 6).replace(u'&', QStringLiteral("&amp;")).replace(u'>', QStringLiteral("&gt;")).replace(u'<', QStringLiteral("&lt;"));
                                             // Do some resolving in case favicon URL in HTML code is relative
                                             favIconUrl = cur.url.resolved(QUrl(hrefValue));
                                             if (favIconUrl.isValid())

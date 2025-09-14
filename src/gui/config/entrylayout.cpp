@@ -124,7 +124,7 @@ public:
             if (!untranslatedInfoMessage.isEmpty()) {
                 const QString infoMessagePipeSeparated = i18n(untranslatedInfoMessage.toUtf8().constData());
                 if (!infoMessagePipeSeparated.isEmpty())
-                    etl->infoMessages = infoMessagePipeSeparated.split(QLatin1Char('|'));
+                    etl->infoMessages = infoMessagePipeSeparated.split(u'|');
             }
 
             p->append(etl);

@@ -301,7 +301,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
             }
 
             if (!lastEntryLastAuthorLastName.isEmpty()) {
-                if (lastEntryLastAuthorLastName[0] == QLatin1Char('{') && lastEntryLastAuthorLastName[lastEntryLastAuthorLastName.length() - 1] == QLatin1Char('}'))
+                if (lastEntryLastAuthorLastName[0] == u'{' && lastEntryLastAuthorLastName[lastEntryLastAuthorLastName.length() - 1] == u'}')
                     lastEntryLastAuthorLastName = lastEntryLastAuthorLastName.mid(1, lastEntryLastAuthorLastName.length() - 2);
                 lastAuthorsList << lastEntryLastAuthorLastName;
             }
@@ -322,7 +322,7 @@ void KBibTeXFilesTest::loadFile(const QString &absoluteFilename, const TestFile 
 
 #ifdef WRITE_RAWDATAFILE
     static const QRegularExpression filenameStemRegExp(QStringLiteral("/?([^/]+)[.]bib$"));
-    const QString filenameStem = filenameStemRegExp.match(currentTestFile.filename).captured(1).remove(QLatin1Char('-')).remove(QLatin1Char('_'));
+    const QString filenameStem = filenameStemRegExp.match(currentTestFile.filename).captured(1).remove(u'-').remove(u'_');
     QFile rawDataFile("kbibtexfilestest-rawdata.h");
     if (rawDataFile.open(QFile::Append)) {
         QTextStream ts(&rawDataFile);

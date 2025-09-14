@@ -190,7 +190,7 @@ QString Person::transcribePersonName(const QString &formatting, const QString &f
 {
     QString result = formatting;
     int p1 = -1, p2 = -1, p3 = -1;
-    while ((p1 = result.indexOf(QLatin1Char('<'))) >= 0 && (p2 = result.indexOf(QLatin1Char('>'), p1 + 1)) >= 0 && (p3 = result.indexOf(QLatin1Char('%'), p1)) >= 0 && p3 < p2) {
+    while ((p1 = result.indexOf(u'<')) >= 0 && (p2 = result.indexOf(u'>', p1 + 1)) >= 0 && (p3 = result.indexOf(u'%', p1)) >= 0 && p3 < p2) {
         QString insert;
         switch (result[p3 + 1].toLatin1()) {
         case 'f':
@@ -828,7 +828,7 @@ QString PlainTextValue::text(const ValueItem &valueItem, ValueItemType &vit)
     /// clean up result string
     const int len = result.length();
     int j = 0;
-    static const QChar cbo = QLatin1Char('{'), cbc = QLatin1Char('}'), bs = QLatin1Char('\\'), mns = QLatin1Char('-'), comma = QLatin1Char(','), thinspace = QChar(0x2009), tilde = QLatin1Char('~'), nobreakspace = QChar(0x00a0);
+    static const QChar cbo = u'{', cbc = u'}', bs = u'\\', mns = u'-', comma = u',', thinspace = QChar(0x2009), tilde = u'~', nobreakspace = QChar(0x00a0);
     for (int i = 0; i < len; ++i) {
         if ((result[i] == cbo || result[i] == cbc) && (i < 1 || result[i - 1] != bs)) {
             /// hop over curly brackets

@@ -125,7 +125,7 @@ QPair<QUrl, QUrl> AssociatedFiles::computeSourceDestinationUrls(const QUrl &sour
     if (suffix.isEmpty())
         suffix = QStringLiteral("html");
     if (filename.isEmpty() || renameOperation == RenameOperation::EntryId)
-        filename = entryId + QLatin1Char('.') + suffix;
+        filename = entryId + u'.' + suffix;
     if (filename.isEmpty() || renameOperation == RenameOperation::UserDefined)
         filename = userDefinedFilename;
 

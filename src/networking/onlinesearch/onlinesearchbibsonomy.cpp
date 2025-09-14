@@ -108,7 +108,7 @@ public:
 
     void copyFromEntry(const Entry &entry) override {
         comboBoxSearchWhere->setCurrentIndex(comboBoxSearchWhere->count() - 1);
-        lineEditSearchTerm->setText(d->authorLastNames(entry).join(QStringLiteral(" ")) + QLatin1Char(' ') + PlainTextValue::text(entry[Entry::ftTitle]));
+        lineEditSearchTerm->setText(d->authorLastNames(entry).join(QStringLiteral(" ")) + u' ' + PlainTextValue::text(entry[Entry::ftTitle]));
     }
 
     void saveState() {
@@ -169,7 +169,7 @@ public:
         }
 
         QString queryString = queryFragments.join(QStringLiteral("%20"));
-        url.append(searchType + QLatin1Char('/') + queryString + QString(QStringLiteral("?items=%1")).arg(numResults));
+        url.append(searchType + u'/' + queryString + QString(QStringLiteral("?items=%1")).arg(numResults));
 
         return QUrl(url);
     }

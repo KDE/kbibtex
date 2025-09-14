@@ -43,7 +43,8 @@ public:
         const bool hasFreeText = !query[QueryKey::FreeText].isEmpty();
         const bool hasTitle = !query[QueryKey::Title].isEmpty();
         const bool hasAuthor = !query[QueryKey::Author].isEmpty();
-        const bool hasYear = QRegularExpression(QStringLiteral("^(19|20)[0-9]{2}$")).match(query[QueryKey::Year]).hasMatch();
+        static const QRegularExpression yearRegExp {QStringLiteral("^(19|20)[0-9]{2}$")};
+        const bool hasYear = yearRegExp.match(query[QueryKey::Year]).hasMatch();
 
         QString fieldWF, fieldQ;
         if (hasAuthor && !hasFreeText && !hasTitle) {
@@ -55,7 +56,7 @@ public:
             fieldWF = QStringLiteral("00F0");
             fieldQ = query[QueryKey::Title];
         } else {
-            fieldQ = query[QueryKey::FreeText] + QLatin1Char(' ') + query[QueryKey::Title] + QLatin1Char(' ') + query[QueryKey::Author] + QLatin1Char(' ');
+            fieldQ = query[QueryKey::FreeText] + u' ' + query[QueryKey::Title] + u' ' + query[QueryKey::Author] + u' ';
             fieldWF = QStringLiteral("4BFF"); ///< search whole record by default
         }
         QString fieldDB, fieldDE;
@@ -187,9 +188,11 @@ void OnlineSearchIDEASRePEc::downloadPublicationDone()
         form.replace(QStringLiteral("output"), QStringLiteral("2")); ///< enforce BibTeX output
 
         QByteArray body;
-        for (const QString &key : form.keys()) {
+        const auto formKeys {form.keys()};
+        for (const QString &key : formKeys) {
             if (!body.isEmpty()) body += '&';
-            for (const QString &value : form.values(key))
+            const auto formValues {form.values(key)};
+            for (const QString &value : formValues)
                 body += key.toLatin1() + '=' + QUrl::toPercentEncoding(value);
         }
 

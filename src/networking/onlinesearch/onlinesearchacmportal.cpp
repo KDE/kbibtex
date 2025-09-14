@@ -64,7 +64,9 @@ public:
         /// for or actually found.
         static const QSet<QString> evaluatedOrIgnoredValues{QStringLiteral("id"), QStringLiteral("call-number"), QStringLiteral("DOI"), QStringLiteral("ISBN"), QStringLiteral("ISSN"), QStringLiteral("URL"), QStringLiteral("type"), QStringLiteral("author"), QStringLiteral("issued"), QStringLiteral("original-date"), QStringLiteral("number-of-pages"), QStringLiteral("page"), QStringLiteral("number"), QStringLiteral("issue"), QStringLiteral("volume"), QStringLiteral("publisher"), QStringLiteral("publisher-place"), QStringLiteral("title"), QStringLiteral("collection-title"), QStringLiteral("container-title"), QStringLiteral("event-place"), QStringLiteral("keyword"), QStringLiteral("accessed")};
         QSet<QString> objectsValues;
-        for (const QString &objectValue : object.keys()) objectsValues.insert(objectValue);
+        const auto objectKeys {object.keys()};
+        for (const QString &objectValue : objectKeys)
+            objectsValues.insert(objectValue);
         const QSet<QString> unusedValues = objectsValues - evaluatedOrIgnoredValues;
         for (const QString &unusedValue : unusedValues) {
             const QString valueString = object.value(unusedValue).toString();
@@ -82,7 +84,8 @@ public:
                 doi = doiInIdMatch.captured(QStringLiteral("doi"));
         }
         QString entryIdSerial = !doi.isEmpty() ? doi : (!isbn.isEmpty() ? isbn : (!id.isEmpty() ? id : object.value(QStringLiteral("URL")).toString().remove(QStringLiteral("http://")).remove(QStringLiteral("https://"))));
-        const QString entryId = QStringLiteral("ACM-") + entryIdSerial.remove(QRegularExpression(QStringLiteral("[^0-9./-]")));
+        static const QRegularExpression invalidCharsRegExp {QStringLiteral("[^0-9./-]")};
+        const QString entryId = QStringLiteral("ACM-") + entryIdSerial.remove(invalidCharsRegExp);
 
         QString entryType = Entry::etMisc;
         const QString type = object.value(QStringLiteral("type")).toString().toUpper();
@@ -231,7 +234,8 @@ public:
 
         const QString keywords = object.value(QStringLiteral("keyword")).toString();
         if (!keywords.isEmpty()) {
-            const QStringList keywordList = keywords.split(QRegularExpression(QStringLiteral("\\s*,\\s*")));
+            static const QRegularExpression spaceCommaSpaceRegExp {QStringLiteral("\\s*,\\s*")};
+            const QStringList keywordList = keywords.split(spaceCommaSpaceRegExp);
             Value v;
             for (const QString &keyword : keywordList)
                 v.append(QSharedPointer<ValueItem>(new Keyword(keyword)));

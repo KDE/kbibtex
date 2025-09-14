@@ -176,9 +176,9 @@ KBibTeXTest::KBibTeXTest(QWidget *parent)
     m_testWidget->setupMenus(onlineSearchList);
 
 #if QT_VERSION >= 0x050b00
-    const int fontSize = m_testWidget->fontMetrics().horizontalAdvance(QLatin1Char('a'));
+    const int fontSize = m_testWidget->fontMetrics().horizontalAdvance(u'a');
 #else // QT_VERSION >= 0x050b00
-    const int fontSize = m_testWidget->fontMetrics().width(QLatin1Char('a'));
+    const int fontSize = m_testWidget->fontMetrics().width(u'a');
 #endif // QT_VERSION >= 0x050b00
     m_testWidget->setMinimumSize(fontSize * 96, fontSize * 48);
     QBoxLayout *boxLayout = new QVBoxLayout(this);

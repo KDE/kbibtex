@@ -172,7 +172,7 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
     if (index.row() < 0 || index.row() >= rowCount()) return QVariant();
 
     OpenFileInfo *openFileInfo = d->ofiList[index.row()];
-    const QString iconName = openFileInfo->mimeType().replace(QLatin1Char('/'), QLatin1Char('-'));
+    const QString iconName = openFileInfo->mimeType().replace(u'/', u'-');
 
     switch (role) {
     case Qt::DisplayRole: return openFileInfo->shortCaption();
@@ -202,8 +202,8 @@ QVariant DocumentListModel::data(const QModelIndex &index, int role) const
         const QUrl url = openFileInfo->url();
         if (url.isValid()) {
             QString path(QFileInfo(url.path()).path());
-            if (!path.endsWith(QLatin1Char('/')))
-                path.append(QLatin1Char('/'));
+            if (!path.endsWith(u'/'))
+                path.append(u'/');
             htmlText.append(i18n("<br/><small>located in <b>%1</b></small>", path));
         }
         QStringList flagListItems;

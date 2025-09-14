@@ -86,7 +86,7 @@ public:
 
         /// Join all search terms with an AND operation
         url.append(queryFragments.join(QStringLiteral("+AND+")));
-        url = url.replace(QLatin1Char('"'), QStringLiteral("%22"));
+        url = url.replace(u'"', QStringLiteral("%22"));
 
         /// set number of expected results
         url.append(QString(QStringLiteral("&retstart=0&retmax=%1&retmode=xml")).arg(numResults));
@@ -133,7 +133,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QueryKey, QString> &query, int n
     /// enforcing limit on number of results
     numResults = qMin(OnlineSearchPubMedPrivate::maxNumResults, numResults);
     /// enforcing choke on number of searchs per time
-    if (QDateTime::currentDateTimeUtc().toSecsSinceEpoch() - lastQueryEpoch < OnlineSearchPubMedPrivate::queryChokeTimeout) {
+    if (QDateTime::currentSecsSinceEpoch() - lastQueryEpoch < OnlineSearchPubMedPrivate::queryChokeTimeout) {
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Too many search queries per time; choke enforces pause of" << OnlineSearchPubMedPrivate::queryChokeTimeout << "seconds between queries";
         delayedStoppedSearch(resultNoError);
         return;
@@ -173,7 +173,7 @@ QVector<QSharedPointer<Entry>> OnlineSearchPubMed::parsePubMedXML(const QByteArr
 void OnlineSearchPubMed::eSearchDone()
 {
     Q_EMIT progress(++curStep, numSteps);
-    lastQueryEpoch = QDateTime::currentDateTimeUtc().toSecsSinceEpoch();
+    lastQueryEpoch = QDateTime::currentSecsSinceEpoch();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 
@@ -216,7 +216,7 @@ void OnlineSearchPubMed::eSearchDone()
 void OnlineSearchPubMed::eFetchDone()
 {
     Q_EMIT progress(++curStep, numSteps);
-    lastQueryEpoch = QDateTime::currentDateTimeUtc().toSecsSinceEpoch();
+    lastQueryEpoch = QDateTime::currentSecsSinceEpoch();
 
     QNetworkReply *reply = static_cast<QNetworkReply *>(sender());
 

@@ -184,7 +184,7 @@ public:
     }
 
     inline bool validateValueForIdSuggestionFormatStrings(const QStringList &valueToBeChecked) {
-        return !valueToBeChecked.isEmpty() && (valueToBeChecked.front().contains(QLatin1Char('A')) || valueToBeChecked.front().contains(QLatin1Char('a')) || valueToBeChecked.front().contains(QLatin1Char('y')) || valueToBeChecked.front().contains(QLatin1Char('Y')) || valueToBeChecked.front().contains(QLatin1Char('T')));
+        return !valueToBeChecked.isEmpty() && (valueToBeChecked.front().contains(u'A') || valueToBeChecked.front().contains(u'a') || valueToBeChecked.front().contains(u'y') || valueToBeChecked.front().contains(u'Y') || valueToBeChecked.front().contains(u'T'));
     }
 
     inline bool validateValueForActiveIdSuggestionFormatString(const QString &valueToBeChecked) {
@@ -198,7 +198,7 @@ public:
     }
 
     inline bool validateValueForLyXPipePath(const QString &valueToBeChecked) {
-        return valueToBeChecked.startsWith(QLatin1Char('/'));
+        return valueToBeChecked.startsWith(u'/');
     }
 
     inline bool validateValueForBibTeXEncoding(const QString &valueToBeChecked) {

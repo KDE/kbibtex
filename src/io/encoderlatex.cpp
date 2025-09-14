@@ -25,21 +25,21 @@
 #include "logging_io.h"
 
 inline bool isAsciiLetter(const QChar c) {
-    static const ushort upperCaseLetterA = QLatin1Char('A').unicode();
-    static const ushort upperCaseLetterZ = QLatin1Char('Z').unicode();
-    static const ushort lowerCaseLetterA = QLatin1Char('a').unicode();
-    static const ushort lowerCaseLetterZ = QLatin1Char('z').unicode();
+    static const ushort upperCaseLetterA = QChar(u'A').unicode();
+    static const ushort upperCaseLetterZ = QChar(u'Z').unicode();
+    static const ushort lowerCaseLetterA = QChar(u'a').unicode();
+    static const ushort lowerCaseLetterZ = QChar(u'z').unicode();
     const ushort unicode = c.unicode();
     return (unicode >= upperCaseLetterA && unicode <= upperCaseLetterZ) || (unicode >= lowerCaseLetterA && unicode <= lowerCaseLetterZ);
 }
 
 inline int asciiLetterOrDigitToPos(const QChar c) {
-    static const ushort upperCaseLetterA = QLatin1Char('A').unicode();
-    static const ushort upperCaseLetterZ = QLatin1Char('Z').unicode();
-    static const ushort lowerCaseLetterA = QLatin1Char('a').unicode();
-    static const ushort lowerCaseLetterZ = QLatin1Char('z').unicode();
-    static const ushort digit0 = QLatin1Char('0').unicode();
-    static const ushort digit9 = QLatin1Char('9').unicode();
+    static const ushort upperCaseLetterA = QChar(u'A').unicode();
+    static const ushort upperCaseLetterZ = QChar(u'Z').unicode();
+    static const ushort lowerCaseLetterA = QChar(u'a').unicode();
+    static const ushort lowerCaseLetterZ = QChar(u'z').unicode();
+    static const ushort digit0 = QChar(u'0').unicode();
+    static const ushort digit9 = QChar(u'9').unicode();
     const ushort unicode = c.unicode();
     if (unicode >= upperCaseLetterA && unicode <= upperCaseLetterZ) return unicode - upperCaseLetterA;
     else if (unicode >= lowerCaseLetterA && unicode <= lowerCaseLetterZ) return unicode + 26 - lowerCaseLetterA;
@@ -48,10 +48,10 @@ inline int asciiLetterOrDigitToPos(const QChar c) {
 }
 
 inline bool isIJ(const QChar c) {
-    static const QChar upperCaseLetterI = QLatin1Char('I');
-    static const QChar upperCaseLetterJ = QLatin1Char('J');
-    static const QChar lowerCaseLetterI = QLatin1Char('i');
-    static const QChar lowerCaseLetterJ = QLatin1Char('j');
+    static const QChar upperCaseLetterI = u'I';
+    static const QChar upperCaseLetterJ = u'J';
+    static const QChar lowerCaseLetterI = u'i';
+    static const QChar lowerCaseLetterJ = u'j';
     return c == upperCaseLetterI || c == upperCaseLetterJ || c == lowerCaseLetterI || c == lowerCaseLetterJ;
 }
 
@@ -86,258 +86,258 @@ static const struct EncoderLaTeXEscapedCharacter {
     const EncoderLaTeXCommandDirection direction;
 }
 encoderLaTeXEscapedCharacters[] = {
-    {QLatin1Char('`'), QLatin1Char('A'), 0x00C0, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('A'), 0x00C1, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('A'), 0x00C2, DirectionBoth},
-    {QLatin1Char('~'), QLatin1Char('A'), 0x00C3, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('A'), 0x00C4, DirectionBoth},
-    {QLatin1Char('r'), QLatin1Char('A'), 0x00C5, DirectionBoth},
+    {u'`', u'A', 0x00C0, DirectionBoth},
+    {u'\'', u'A', 0x00C1, DirectionBoth},
+    {u'^', u'A', 0x00C2, DirectionBoth},
+    {u'~', u'A', 0x00C3, DirectionBoth},
+    {u'"', u'A', 0x00C4, DirectionBoth},
+    {u'r', u'A', 0x00C5, DirectionBoth},
     /** 0x00C6: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('c'), QLatin1Char('C'), 0x00C7, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('E'), 0x00C8, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('E'), 0x00C9, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('E'), 0x00CA, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('E'), 0x00CB, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('I'), 0x00CC, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('I'), 0x00CD, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('I'), 0x00CE, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('I'), 0x00CF, DirectionBoth},
+    {u'c', u'C', 0x00C7, DirectionBoth},
+    {u'`', u'E', 0x00C8, DirectionBoth},
+    {u'\'', u'E', 0x00C9, DirectionBoth},
+    {u'^', u'E', 0x00CA, DirectionBoth},
+    {u'"', u'E', 0x00CB, DirectionBoth},
+    {u'`', u'I', 0x00CC, DirectionBoth},
+    {u'\'', u'I', 0x00CD, DirectionBoth},
+    {u'^', u'I', 0x00CE, DirectionBoth},
+    {u'"', u'I', 0x00CF, DirectionBoth},
     /** 0x00D0: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('~'), QLatin1Char('N'), 0x00D1, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('O'), 0x00D2, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('O'), 0x00D3, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('O'), 0x00D4, DirectionBoth},
-    {QLatin1Char('~'), QLatin1Char('O'), 0x00D5, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('O'), 0x00D6, DirectionBoth},
+    {u'~', u'N', 0x00D1, DirectionBoth},
+    {u'`', u'O', 0x00D2, DirectionBoth},
+    {u'\'', u'O', 0x00D3, DirectionBoth},
+    {u'^', u'O', 0x00D4, DirectionBoth},
+    {u'~', u'O', 0x00D5, DirectionBoth},
+    {u'"', u'O', 0x00D6, DirectionBoth},
     /** 0x00D7: see EncoderLaTeXCharacterCommand */
     /** 0x00D8: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('`'), QLatin1Char('U'), 0x00D9, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('U'), 0x00DA, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('U'), 0x00DB, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('U'), 0x00DC, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('Y'), 0x00DD, DirectionBoth},
+    {u'`', u'U', 0x00D9, DirectionBoth},
+    {u'\'', u'U', 0x00DA, DirectionBoth},
+    {u'^', u'U', 0x00DB, DirectionBoth},
+    {u'"', u'U', 0x00DC, DirectionBoth},
+    {u'\'', u'Y', 0x00DD, DirectionBoth},
     /** 0x00DE: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('"'), QLatin1Char('s'), 0x00DF, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('a'), 0x00E0, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('a'), 0x00E1, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('a'), 0x00E2, DirectionBoth},
-    {QLatin1Char('~'), QLatin1Char('a'), 0x00E3, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('a'), 0x00E4, DirectionBoth},
-    {QLatin1Char('r'), QLatin1Char('a'), 0x00E5, DirectionBoth},
+    {u'"', u's', 0x00DF, DirectionBoth},
+    {u'`', u'a', 0x00E0, DirectionBoth},
+    {u'\'', u'a', 0x00E1, DirectionBoth},
+    {u'^', u'a', 0x00E2, DirectionBoth},
+    {u'~', u'a', 0x00E3, DirectionBoth},
+    {u'"', u'a', 0x00E4, DirectionBoth},
+    {u'r', u'a', 0x00E5, DirectionBoth},
     /** 0x00E6: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('c'), QLatin1Char('c'), 0x00E7, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('e'), 0x00E8, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('e'), 0x00E9, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('e'), 0x00EA, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('e'), 0x00EB, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('i'), 0x00EC, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('i'), 0x00ED, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('i'), 0x00EE, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('i'), 0x00EF, DirectionBoth},
+    {u'c', u'c', 0x00E7, DirectionBoth},
+    {u'`', u'e', 0x00E8, DirectionBoth},
+    {u'\'', u'e', 0x00E9, DirectionBoth},
+    {u'^', u'e', 0x00EA, DirectionBoth},
+    {u'"', u'e', 0x00EB, DirectionBoth},
+    {u'`', u'i', 0x00EC, DirectionBoth},
+    {u'\'', u'i', 0x00ED, DirectionBoth},
+    {u'^', u'i', 0x00EE, DirectionBoth},
+    {u'"', u'i', 0x00EF, DirectionBoth},
     /** 0x00F0: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('~'), QLatin1Char('n'), 0x00F1, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('o'), 0x00F2, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('o'), 0x00F3, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('o'), 0x00F4, DirectionBoth},
-    {QLatin1Char('~'), QLatin1Char('o'), 0x00F5, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('o'), 0x00F6, DirectionBoth},
+    {u'~', u'n', 0x00F1, DirectionBoth},
+    {u'`', u'o', 0x00F2, DirectionBoth},
+    {u'\'', u'o', 0x00F3, DirectionBoth},
+    {u'^', u'o', 0x00F4, DirectionBoth},
+    {u'~', u'o', 0x00F5, DirectionBoth},
+    {u'"', u'o', 0x00F6, DirectionBoth},
     /** 0x00F7: see EncoderLaTeXCharacterCommand */
     /** 0x00F8: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('`'), QLatin1Char('u'), 0x00F9, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('u'), 0x00FA, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('u'), 0x00FB, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('u'), 0x00FC, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('y'), 0x00FD, DirectionBoth},
+    {u'`', u'u', 0x00F9, DirectionBoth},
+    {u'\'', u'u', 0x00FA, DirectionBoth},
+    {u'^', u'u', 0x00FB, DirectionBoth},
+    {u'"', u'u', 0x00FC, DirectionBoth},
+    {u'\'', u'y', 0x00FD, DirectionBoth},
     /** 0x00FE: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('"'), QLatin1Char('y'), 0x00FF, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('A'), 0x0100, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('a'), 0x0101, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('A'), 0x0102, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('a'), 0x0103, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('A'), 0x0104, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('a'), 0x0105, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('C'), 0x0106, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('c'), 0x0107, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('C'), 0x0108, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('c'), 0x0109, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('C'), 0x010A, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('c'), 0x010B, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('C'), 0x010C, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('c'), 0x010D, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('D'), 0x010E, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('d'), 0x010F, DirectionBoth},
-    {QLatin1Char('B'), QLatin1Char('D'), 0x0110, DirectionCommandToUnicode}, //< 'African D', command provided by package 'fc' (command seems to be the same as \M{D})
-    {QLatin1Char('B'), QLatin1Char('d'), 0x0111, DirectionCommandToUnicode}, //< 'African d' (?), command provided by package 'fc'
-    {QLatin1Char('='), QLatin1Char('E'), 0x0112, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('e'), 0x0113, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('E'), 0x0114, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('e'), 0x0115, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('E'), 0x0116, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('e'), 0x0117, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('E'), 0x0118, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('e'), 0x0119, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('E'), 0x011A, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('e'), 0x011B, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('G'), 0x011C, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('g'), 0x011D, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('G'), 0x011E, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('g'), 0x011F, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('G'), 0x0120, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('g'), 0x0121, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('G'), 0x0122, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('g'), 0x0123, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('H'), 0x0124, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('h'), 0x0125, DirectionBoth},
-    {QLatin1Char('B'), QLatin1Char('H'), 0x0126, DirectionCommandToUnicode},
-    {QLatin1Char('B'), QLatin1Char('h'), 0x0127, DirectionCommandToUnicode},
-    {QLatin1Char('~'), QLatin1Char('I'), 0x0128, DirectionBoth},
-    {QLatin1Char('~'), QLatin1Char('i'), 0x0129, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('I'), 0x012A, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('i'), 0x012B, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('I'), 0x012C, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('i'), 0x012D, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('I'), 0x012E, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('i'), 0x012F, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('I'), 0x0130, DirectionBoth},
+    {u'"', u'y', 0x00FF, DirectionBoth},
+    {u'=', u'A', 0x0100, DirectionBoth},
+    {u'=', u'a', 0x0101, DirectionBoth},
+    {u'u', u'A', 0x0102, DirectionBoth},
+    {u'u', u'a', 0x0103, DirectionBoth},
+    {u'k', u'A', 0x0104, DirectionBoth},
+    {u'k', u'a', 0x0105, DirectionBoth},
+    {u'\'', u'C', 0x0106, DirectionBoth},
+    {u'\'', u'c', 0x0107, DirectionBoth},
+    {u'^', u'C', 0x0108, DirectionBoth},
+    {u'^', u'c', 0x0109, DirectionBoth},
+    {u'.', u'C', 0x010A, DirectionBoth},
+    {u'.', u'c', 0x010B, DirectionBoth},
+    {u'v', u'C', 0x010C, DirectionBoth},
+    {u'v', u'c', 0x010D, DirectionBoth},
+    {u'v', u'D', 0x010E, DirectionBoth},
+    {u'v', u'd', 0x010F, DirectionBoth},
+    {u'B', u'D', 0x0110, DirectionCommandToUnicode}, //< 'African D', command provided by package 'fc' (command seems to be the same as \M{D})
+    {u'B', u'd', 0x0111, DirectionCommandToUnicode}, //< 'African d' (?), command provided by package 'fc'
+    {u'=', u'E', 0x0112, DirectionBoth},
+    {u'=', u'e', 0x0113, DirectionBoth},
+    {u'u', u'E', 0x0114, DirectionBoth},
+    {u'u', u'e', 0x0115, DirectionBoth},
+    {u'.', u'E', 0x0116, DirectionBoth},
+    {u'.', u'e', 0x0117, DirectionBoth},
+    {u'k', u'E', 0x0118, DirectionBoth},
+    {u'k', u'e', 0x0119, DirectionBoth},
+    {u'v', u'E', 0x011A, DirectionBoth},
+    {u'v', u'e', 0x011B, DirectionBoth},
+    {u'^', u'G', 0x011C, DirectionBoth},
+    {u'^', u'g', 0x011D, DirectionBoth},
+    {u'u', u'G', 0x011E, DirectionBoth},
+    {u'u', u'g', 0x011F, DirectionBoth},
+    {u'.', u'G', 0x0120, DirectionBoth},
+    {u'.', u'g', 0x0121, DirectionBoth},
+    {u'c', u'G', 0x0122, DirectionBoth},
+    {u'c', u'g', 0x0123, DirectionBoth},
+    {u'^', u'H', 0x0124, DirectionBoth},
+    {u'^', u'h', 0x0125, DirectionBoth},
+    {u'B', u'H', 0x0126, DirectionCommandToUnicode},
+    {u'B', u'h', 0x0127, DirectionCommandToUnicode},
+    {u'~', u'I', 0x0128, DirectionBoth},
+    {u'~', u'i', 0x0129, DirectionBoth},
+    {u'=', u'I', 0x012A, DirectionBoth},
+    {u'=', u'i', 0x012B, DirectionBoth},
+    {u'u', u'I', 0x012C, DirectionBoth},
+    {u'u', u'i', 0x012D, DirectionBoth},
+    {u'k', u'I', 0x012E, DirectionBoth},
+    {u'k', u'i', 0x012F, DirectionBoth},
+    {u'.', u'I', 0x0130, DirectionBoth},
     /** 0x0131: see EncoderLaTeXCharacterCommand */
     /** 0x0132: see EncoderLaTeXCharacterCommand */
     /** 0x0133: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('^'), QLatin1Char('J'), 0x012E, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('j'), 0x012F, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('K'), 0x0136, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('k'), 0x0137, DirectionBoth},
+    {u'^', u'J', 0x012E, DirectionBoth},
+    {u'^', u'j', 0x012F, DirectionBoth},
+    {u'c', u'K', 0x0136, DirectionBoth},
+    {u'c', u'k', 0x0137, DirectionBoth},
     /** 0x0138: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('\''), QLatin1Char('L'), 0x0139, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('l'), 0x013A, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('L'), 0x013B, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('l'), 0x013C, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('L'), 0x013D, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('l'), 0x013E, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('L'), 0x013F, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('l'), 0x0140, DirectionBoth},
-    {QLatin1Char('B'), QLatin1Char('L'), 0x0141, DirectionCommandToUnicode},
-    {QLatin1Char('B'), QLatin1Char('l'), 0x0142, DirectionCommandToUnicode},
-    {QLatin1Char('\''), QLatin1Char('N'), 0x0143, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('n'), 0x0144, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('n'), 0x0145, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('n'), 0x0146, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('N'), 0x0147, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('n'), 0x0148, DirectionBoth},
+    {u'\'', u'L', 0x0139, DirectionBoth},
+    {u'\'', u'l', 0x013A, DirectionBoth},
+    {u'c', u'L', 0x013B, DirectionBoth},
+    {u'c', u'l', 0x013C, DirectionBoth},
+    {u'v', u'L', 0x013D, DirectionBoth},
+    {u'v', u'l', 0x013E, DirectionBoth},
+    {u'.', u'L', 0x013F, DirectionBoth},
+    {u'.', u'l', 0x0140, DirectionBoth},
+    {u'B', u'L', 0x0141, DirectionCommandToUnicode},
+    {u'B', u'l', 0x0142, DirectionCommandToUnicode},
+    {u'\'', u'N', 0x0143, DirectionBoth},
+    {u'\'', u'n', 0x0144, DirectionBoth},
+    {u'c', u'n', 0x0145, DirectionBoth},
+    {u'c', u'n', 0x0146, DirectionBoth},
+    {u'v', u'N', 0x0147, DirectionBoth},
+    {u'v', u'n', 0x0148, DirectionBoth},
     /** 0x0149: TODO n preceded by apostrophe */
-    {QLatin1Char('m'), QLatin1Char('N'), 0x014A, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('n'), 0x014B, DirectionCommandToUnicode},
-    {QLatin1Char('='), QLatin1Char('O'), 0x014C, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('o'), 0x014D, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('O'), 0x014E, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('o'), 0x014F, DirectionBoth},
-    {QLatin1Char('H'), QLatin1Char('O'), 0x0150, DirectionBoth},
-    {QLatin1Char('H'), QLatin1Char('o'), 0x0151, DirectionBoth},
+    {u'm', u'N', 0x014A, DirectionCommandToUnicode},
+    {u'm', u'n', 0x014B, DirectionCommandToUnicode},
+    {u'=', u'O', 0x014C, DirectionBoth},
+    {u'=', u'o', 0x014D, DirectionBoth},
+    {u'u', u'O', 0x014E, DirectionBoth},
+    {u'u', u'o', 0x014F, DirectionBoth},
+    {u'H', u'O', 0x0150, DirectionBoth},
+    {u'H', u'o', 0x0151, DirectionBoth},
     /** 0x0152: see EncoderLaTeXCharacterCommand */
     /** 0x0153: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('\''), QLatin1Char('R'), 0x0154, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('r'), 0x0155, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('R'), 0x0156, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('r'), 0x0157, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('R'), 0x0158, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('r'), 0x0159, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('S'), 0x015A, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('s'), 0x015B, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('S'), 0x015C, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('s'), 0x015D, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('S'), 0x015E, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('s'), 0x015F, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('S'), 0x0160, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('s'), 0x0161, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('T'), 0x0162, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('t'), 0x0163, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('T'), 0x0164, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('t'), 0x0165, DirectionBoth},
-    {QLatin1Char('B'), QLatin1Char('T'), 0x0166, DirectionCommandToUnicode},
-    {QLatin1Char('B'), QLatin1Char('t'), 0x0167, DirectionCommandToUnicode},
-    {QLatin1Char('~'), QLatin1Char('U'), 0x0168, DirectionBoth},
-    {QLatin1Char('~'), QLatin1Char('u'), 0x0169, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('U'), 0x016A, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('u'), 0x016B, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('U'), 0x016C, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('u'), 0x016D, DirectionBoth},
-    {QLatin1Char('r'), QLatin1Char('U'), 0x016E, DirectionBoth},
-    {QLatin1Char('r'), QLatin1Char('u'), 0x016F, DirectionBoth},
-    {QLatin1Char('H'), QLatin1Char('U'), 0x0170, DirectionBoth},
-    {QLatin1Char('H'), QLatin1Char('u'), 0x0171, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('U'), 0x0172, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('u'), 0x0173, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('W'), 0x0174, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('w'), 0x0175, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('Y'), 0x0176, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('y'), 0x0177, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('Y'), 0x0178, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('Z'), 0x0179, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('z'), 0x017A, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('Z'), 0x017B, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('z'), 0x017C, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('Z'), 0x017D, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('z'), 0x017E, DirectionBoth},
+    {u'\'', u'R', 0x0154, DirectionBoth},
+    {u'\'', u'r', 0x0155, DirectionBoth},
+    {u'c', u'R', 0x0156, DirectionBoth},
+    {u'c', u'r', 0x0157, DirectionBoth},
+    {u'v', u'R', 0x0158, DirectionBoth},
+    {u'v', u'r', 0x0159, DirectionBoth},
+    {u'\'', u'S', 0x015A, DirectionBoth},
+    {u'\'', u's', 0x015B, DirectionBoth},
+    {u'^', u'S', 0x015C, DirectionBoth},
+    {u'^', u's', 0x015D, DirectionBoth},
+    {u'c', u'S', 0x015E, DirectionBoth},
+    {u'c', u's', 0x015F, DirectionBoth},
+    {u'v', u'S', 0x0160, DirectionBoth},
+    {u'v', u's', 0x0161, DirectionBoth},
+    {u'c', u'T', 0x0162, DirectionBoth},
+    {u'c', u't', 0x0163, DirectionBoth},
+    {u'v', u'T', 0x0164, DirectionBoth},
+    {u'v', u't', 0x0165, DirectionBoth},
+    {u'B', u'T', 0x0166, DirectionCommandToUnicode},
+    {u'B', u't', 0x0167, DirectionCommandToUnicode},
+    {u'~', u'U', 0x0168, DirectionBoth},
+    {u'~', u'u', 0x0169, DirectionBoth},
+    {u'=', u'U', 0x016A, DirectionBoth},
+    {u'=', u'u', 0x016B, DirectionBoth},
+    {u'u', u'U', 0x016C, DirectionBoth},
+    {u'u', u'u', 0x016D, DirectionBoth},
+    {u'r', u'U', 0x016E, DirectionBoth},
+    {u'r', u'u', 0x016F, DirectionBoth},
+    {u'H', u'U', 0x0170, DirectionBoth},
+    {u'H', u'u', 0x0171, DirectionBoth},
+    {u'k', u'U', 0x0172, DirectionBoth},
+    {u'k', u'u', 0x0173, DirectionBoth},
+    {u'^', u'W', 0x0174, DirectionBoth},
+    {u'^', u'w', 0x0175, DirectionBoth},
+    {u'^', u'Y', 0x0176, DirectionBoth},
+    {u'^', u'y', 0x0177, DirectionBoth},
+    {u'"', u'Y', 0x0178, DirectionBoth},
+    {u'\'', u'Z', 0x0179, DirectionBoth},
+    {u'\'', u'z', 0x017A, DirectionBoth},
+    {u'.', u'Z', 0x017B, DirectionBoth},
+    {u'.', u'z', 0x017C, DirectionBoth},
+    {u'v', u'Z', 0x017D, DirectionBoth},
+    {u'v', u'z', 0x017E, DirectionBoth},
     /** 0x017F: TODO long s */
-    {QLatin1Char('B'), QLatin1Char('b'), 0x0180, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('B'), 0x0181, DirectionCommandToUnicode},
+    {u'B', u'b', 0x0180, DirectionCommandToUnicode},
+    {u'm', u'B', 0x0181, DirectionCommandToUnicode},
     /** 0x0182 */
     /** 0x0183 */
     /** 0x0184 */
     /** 0x0185 */
-    {QLatin1Char('m'), QLatin1Char('O'), 0x0186, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('C'), 0x0187, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('c'), 0x0188, DirectionCommandToUnicode},
-    {QLatin1Char('M'), QLatin1Char('D'), 0x0189, DirectionBoth}, //< 'African D', command provided by package 'fc' (command seems to be the same as \B{D})
-    {QLatin1Char('m'), QLatin1Char('D'), 0x018A, DirectionCommandToUnicode},
+    {u'm', u'O', 0x0186, DirectionCommandToUnicode},
+    {u'm', u'C', 0x0187, DirectionCommandToUnicode},
+    {u'm', u'c', 0x0188, DirectionCommandToUnicode},
+    {u'M', u'D', 0x0189, DirectionBoth}, //< 'African D', command provided by package 'fc' (command seems to be the same as \B{D})
+    {u'm', u'D', 0x018A, DirectionCommandToUnicode},
     /** 0x018B */
     /** 0x018C */
     /** 0x018D */
-    {QLatin1Char('M'), QLatin1Char('E'), 0x018E, DirectionCommandToUnicode},
+    {u'M', u'E', 0x018E, DirectionCommandToUnicode},
     /** 0x018F */
-    {QLatin1Char('m'), QLatin1Char('E'), 0x0190, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('F'), 0x0191, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('f'), 0x0192, DirectionCommandToUnicode},
+    {u'm', u'E', 0x0190, DirectionCommandToUnicode},
+    {u'm', u'F', 0x0191, DirectionCommandToUnicode},
+    {u'm', u'f', 0x0192, DirectionCommandToUnicode},
     /** 0x0193 */
-    {QLatin1Char('m'), QLatin1Char('G'), 0x0194, DirectionCommandToUnicode},
+    {u'm', u'G', 0x0194, DirectionCommandToUnicode},
     /** 0x0195: see EncoderLaTeXCharacterCommand */
-    {QLatin1Char('m'), QLatin1Char('I'), 0x0196, DirectionCommandToUnicode},
-    {QLatin1Char('B'), QLatin1Char('I'), 0x0197, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('K'), 0x0198, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('k'), 0x0199, DirectionCommandToUnicode},
-    {QLatin1Char('B'), QLatin1Char('l'), 0x019A, DirectionCommandToUnicode},
+    {u'm', u'I', 0x0196, DirectionCommandToUnicode},
+    {u'B', u'I', 0x0197, DirectionCommandToUnicode},
+    {u'm', u'K', 0x0198, DirectionCommandToUnicode},
+    {u'm', u'k', 0x0199, DirectionCommandToUnicode},
+    {u'B', u'l', 0x019A, DirectionCommandToUnicode},
     /** 0x019B */
     /** 0x019C */
-    {QLatin1Char('m'), QLatin1Char('J'), 0x019D, DirectionCommandToUnicode},
+    {u'm', u'J', 0x019D, DirectionCommandToUnicode},
     /** 0x019E */
     /** 0x019F */
     /** 0x01A0 */
     /** 0x01A1 */
     /** 0x01A2 */
     /** 0x01A3 */
-    {QLatin1Char('m'), QLatin1Char('P'), 0x01A4, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('p'), 0x01A5, DirectionCommandToUnicode},
+    {u'm', u'P', 0x01A4, DirectionCommandToUnicode},
+    {u'm', u'p', 0x01A5, DirectionCommandToUnicode},
     /** 0x01A6 */
     /** 0x01A7 */
     /** 0x01A8 */
     /** 0x01A9: see EncoderLaTeXCharacterCommand */
     /** 0x01AA */
     /** 0x01AB */
-    {QLatin1Char('m'), QLatin1Char('T'), 0x01AC, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('t'), 0x01AD, DirectionCommandToUnicode},
-    {QLatin1Char('M'), QLatin1Char('T'), 0x01AE, DirectionCommandToUnicode},
+    {u'm', u'T', 0x01AC, DirectionCommandToUnicode},
+    {u'm', u't', 0x01AD, DirectionCommandToUnicode},
+    {u'M', u'T', 0x01AE, DirectionCommandToUnicode},
     /** 0x01AF */
     /** 0x01B0 */
-    {QLatin1Char('m'), QLatin1Char('U'), 0x01B1, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('V'), 0x01B2, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('Y'), 0x01B3, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('y'), 0x01B4, DirectionCommandToUnicode},
-    {QLatin1Char('B'), QLatin1Char('Z'), 0x01B5, DirectionCommandToUnicode},
-    {QLatin1Char('B'), QLatin1Char('z'), 0x01B6, DirectionCommandToUnicode},
-    {QLatin1Char('m'), QLatin1Char('Z'), 0x01B7, DirectionCommandToUnicode},
+    {u'm', u'U', 0x01B1, DirectionCommandToUnicode},
+    {u'm', u'V', 0x01B2, DirectionCommandToUnicode},
+    {u'm', u'Y', 0x01B3, DirectionCommandToUnicode},
+    {u'm', u'y', 0x01B4, DirectionCommandToUnicode},
+    {u'B', u'Z', 0x01B5, DirectionCommandToUnicode},
+    {u'B', u'z', 0x01B6, DirectionCommandToUnicode},
+    {u'm', u'Z', 0x01B7, DirectionCommandToUnicode},
     /** 0x01B8 */
     /** 0x01B9 */
     /** 0x01BA */
-    {QLatin1Char('B'), QLatin1Char('2'), 0x01BB, DirectionCommandToUnicode},
+    {u'B', u'2', 0x01BB, DirectionCommandToUnicode},
     /** 0x01BC */
     /** 0x01BD */
     /** 0x01BE */
@@ -355,107 +355,107 @@ encoderLaTeXEscapedCharacters[] = {
     /** 0x01CA */
     /** 0x01CB */
     /** 0x01CC */
-    {QLatin1Char('v'), QLatin1Char('A'), 0x01CD, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('a'), 0x01CE, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('G'), 0x01E6, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('g'), 0x01E7, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('O'), 0x01EA, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('o'), 0x01EB, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('F'), 0x01F4, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('f'), 0x01F5, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('A'), 0x0226, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('a'), 0x0227, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('E'), 0x0228, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('e'), 0x0229, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('Y'), 0x0232, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('y'), 0x0233, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('O'), 0x022E, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('o'), 0x022F, DirectionBoth},
-    {QLatin1Char('M'), QLatin1Char('d'), 0x0256, DirectionBoth}, //< 'African d', command provided by package 'fc' (may be same as \B{d} ?)
-    {QLatin1Char('.'), QLatin1Char('B'), 0x1E02, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('b'), 0x1E03, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('B'), 0x1E04, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('b'), 0x1E05, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('D'), 0x1E0A, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('d'), 0x1E0B, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('D'), 0x1E0C, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('d'), 0x1E0D, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('D'), 0x1E10, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('d'), 0x1E11, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('E'), 0x1E1E, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('e'), 0x1E1F, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('H'), 0x1E22, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('h'), 0x1E23, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('H'), 0x1E24, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('h'), 0x1E25, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('H'), 0x1E26, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('h'), 0x1E27, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('H'), 0x1E28, DirectionBoth},
-    {QLatin1Char('c'), QLatin1Char('h'), 0x1E29, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('K'), 0x1E32, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('k'), 0x1E33, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('L'), 0x1E36, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('l'), 0x1E37, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('M'), 0x1E40, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('m'), 0x1E41, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('M'), 0x1E42, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('m'), 0x1E43, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('N'), 0x1E44, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('n'), 0x1E45, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('N'), 0x1E46, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('n'), 0x1E47, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('P'), 0x1E56, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('p'), 0x1E57, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('R'), 0x1E58, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('r'), 0x1E59, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('R'), 0x1E5A, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('r'), 0x1E5B, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('S'), 0x1E60, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('s'), 0x1E61, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('S'), 0x1E62, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('s'), 0x1E63, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('T'), 0x1E6A, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('t'), 0x1E6B, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('T'), 0x1E6C, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('t'), 0x1E6D, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('V'), 0x1E7E, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('v'), 0x1E7F, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('W'), 0x1E80, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('w'), 0x1E81, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('W'), 0x1E82, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('w'), 0x1E83, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('W'), 0x1E84, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('w'), 0x1E85, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('W'), 0x1E86, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('w'), 0x1E87, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('W'), 0x1E88, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('w'), 0x1E88, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('X'), 0x1E8A, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('x'), 0x1E8B, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('X'), 0x1E8C, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('x'), 0x1E8D, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('Y'), 0x1E8E, DirectionBoth},
-    {QLatin1Char('.'), QLatin1Char('y'), 0x1E8F, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('Z'), 0x1E92, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('z'), 0x1E93, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('t'), 0x1E97, DirectionBoth},
-    {QLatin1Char('r'), QLatin1Char('w'), 0x1E98, DirectionBoth},
-    {QLatin1Char('r'), QLatin1Char('y'), 0x1E99, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('A'), 0x1EA0, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('a'), 0x1EA1, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('E'), 0x1EB8, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('e'), 0x1EB9, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('I'), 0x1ECA, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('i'), 0x1ECB, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('O'), 0x1ECC, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('o'), 0x1ECD, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('U'), 0x1EE4, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('u'), 0x1EE5, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('Y'), 0x1EF2, DirectionBoth},
-    {QLatin1Char('`'), QLatin1Char('y'), 0x1EF3, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('Y'), 0x1EF4, DirectionBoth},
-    {QLatin1Char('d'), QLatin1Char('y'), 0x1EF5, DirectionBoth},
-    {QLatin1Char('r'), QLatin1Char('q'), 0x2019, DirectionCommandToUnicode} ///< tricky: this is \rq
+    {u'v', u'A', 0x01CD, DirectionBoth},
+    {u'v', u'a', 0x01CE, DirectionBoth},
+    {u'v', u'G', 0x01E6, DirectionBoth},
+    {u'v', u'g', 0x01E7, DirectionBoth},
+    {u'k', u'O', 0x01EA, DirectionBoth},
+    {u'k', u'o', 0x01EB, DirectionBoth},
+    {u'\'', u'F', 0x01F4, DirectionBoth},
+    {u'\'', u'f', 0x01F5, DirectionBoth},
+    {u'.', u'A', 0x0226, DirectionBoth},
+    {u'.', u'a', 0x0227, DirectionBoth},
+    {u'c', u'E', 0x0228, DirectionBoth},
+    {u'c', u'e', 0x0229, DirectionBoth},
+    {u'=', u'Y', 0x0232, DirectionBoth},
+    {u'=', u'y', 0x0233, DirectionBoth},
+    {u'.', u'O', 0x022E, DirectionBoth},
+    {u'.', u'o', 0x022F, DirectionBoth},
+    {u'M', u'd', 0x0256, DirectionBoth}, //< 'African d', command provided by package 'fc' (may be same as \B{d} ?)
+    {u'.', u'B', 0x1E02, DirectionBoth},
+    {u'.', u'b', 0x1E03, DirectionBoth},
+    {u'd', u'B', 0x1E04, DirectionBoth},
+    {u'd', u'b', 0x1E05, DirectionBoth},
+    {u'.', u'D', 0x1E0A, DirectionBoth},
+    {u'.', u'd', 0x1E0B, DirectionBoth},
+    {u'd', u'D', 0x1E0C, DirectionBoth},
+    {u'd', u'd', 0x1E0D, DirectionBoth},
+    {u'c', u'D', 0x1E10, DirectionBoth},
+    {u'c', u'd', 0x1E11, DirectionBoth},
+    {u'.', u'E', 0x1E1E, DirectionBoth},
+    {u'.', u'e', 0x1E1F, DirectionBoth},
+    {u'.', u'H', 0x1E22, DirectionBoth},
+    {u'.', u'h', 0x1E23, DirectionBoth},
+    {u'd', u'H', 0x1E24, DirectionBoth},
+    {u'd', u'h', 0x1E25, DirectionBoth},
+    {u'"', u'H', 0x1E26, DirectionBoth},
+    {u'"', u'h', 0x1E27, DirectionBoth},
+    {u'c', u'H', 0x1E28, DirectionBoth},
+    {u'c', u'h', 0x1E29, DirectionBoth},
+    {u'd', u'K', 0x1E32, DirectionBoth},
+    {u'd', u'k', 0x1E33, DirectionBoth},
+    {u'd', u'L', 0x1E36, DirectionBoth},
+    {u'd', u'l', 0x1E37, DirectionBoth},
+    {u'.', u'M', 0x1E40, DirectionBoth},
+    {u'.', u'm', 0x1E41, DirectionBoth},
+    {u'd', u'M', 0x1E42, DirectionBoth},
+    {u'd', u'm', 0x1E43, DirectionBoth},
+    {u'.', u'N', 0x1E44, DirectionBoth},
+    {u'.', u'n', 0x1E45, DirectionBoth},
+    {u'.', u'N', 0x1E46, DirectionBoth},
+    {u'.', u'n', 0x1E47, DirectionBoth},
+    {u'.', u'P', 0x1E56, DirectionBoth},
+    {u'.', u'p', 0x1E57, DirectionBoth},
+    {u'.', u'R', 0x1E58, DirectionBoth},
+    {u'.', u'r', 0x1E59, DirectionBoth},
+    {u'd', u'R', 0x1E5A, DirectionBoth},
+    {u'd', u'r', 0x1E5B, DirectionBoth},
+    {u'.', u'S', 0x1E60, DirectionBoth},
+    {u'.', u's', 0x1E61, DirectionBoth},
+    {u'd', u'S', 0x1E62, DirectionBoth},
+    {u'd', u's', 0x1E63, DirectionBoth},
+    {u'.', u'T', 0x1E6A, DirectionBoth},
+    {u'.', u't', 0x1E6B, DirectionBoth},
+    {u'd', u'T', 0x1E6C, DirectionBoth},
+    {u'd', u't', 0x1E6D, DirectionBoth},
+    {u'd', u'V', 0x1E7E, DirectionBoth},
+    {u'd', u'v', 0x1E7F, DirectionBoth},
+    {u'`', u'W', 0x1E80, DirectionBoth},
+    {u'`', u'w', 0x1E81, DirectionBoth},
+    {u'\'', u'W', 0x1E82, DirectionBoth},
+    {u'\'', u'w', 0x1E83, DirectionBoth},
+    {u'"', u'W', 0x1E84, DirectionBoth},
+    {u'"', u'w', 0x1E85, DirectionBoth},
+    {u'.', u'W', 0x1E86, DirectionBoth},
+    {u'.', u'w', 0x1E87, DirectionBoth},
+    {u'd', u'W', 0x1E88, DirectionBoth},
+    {u'd', u'w', 0x1E88, DirectionBoth},
+    {u'.', u'X', 0x1E8A, DirectionBoth},
+    {u'.', u'x', 0x1E8B, DirectionBoth},
+    {u'"', u'X', 0x1E8C, DirectionBoth},
+    {u'"', u'x', 0x1E8D, DirectionBoth},
+    {u'.', u'Y', 0x1E8E, DirectionBoth},
+    {u'.', u'y', 0x1E8F, DirectionBoth},
+    {u'd', u'Z', 0x1E92, DirectionBoth},
+    {u'd', u'z', 0x1E93, DirectionBoth},
+    {u'"', u't', 0x1E97, DirectionBoth},
+    {u'r', u'w', 0x1E98, DirectionBoth},
+    {u'r', u'y', 0x1E99, DirectionBoth},
+    {u'd', u'A', 0x1EA0, DirectionBoth},
+    {u'd', u'a', 0x1EA1, DirectionBoth},
+    {u'd', u'E', 0x1EB8, DirectionBoth},
+    {u'd', u'e', 0x1EB9, DirectionBoth},
+    {u'd', u'I', 0x1ECA, DirectionBoth},
+    {u'd', u'i', 0x1ECB, DirectionBoth},
+    {u'd', u'O', 0x1ECC, DirectionBoth},
+    {u'd', u'o', 0x1ECD, DirectionBoth},
+    {u'd', u'U', 0x1EE4, DirectionBoth},
+    {u'd', u'u', 0x1EE5, DirectionBoth},
+    {u'`', u'Y', 0x1EF2, DirectionBoth},
+    {u'`', u'y', 0x1EF3, DirectionBoth},
+    {u'd', u'Y', 0x1EF4, DirectionBoth},
+    {u'd', u'y', 0x1EF5, DirectionBoth},
+    {u'r', u'q', 0x2019, DirectionCommandToUnicode} ///< tricky: this is \rq
 };
 
 
@@ -476,18 +476,18 @@ static const struct DotlessIJCharacter {
     const EncoderLaTeXCommandDirection direction;
 }
 dotlessIJCharacters[] = {
-    {QLatin1Char('`'), QLatin1Char('i'), 0x00EC, DirectionBoth},
-    {QLatin1Char('\''), QLatin1Char('i'), 0x00ED, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('i'), 0x00EE, DirectionBoth},
-    {QLatin1Char('"'), QLatin1Char('i'), 0x00EF, DirectionBoth},
-    {QLatin1Char('~'), QLatin1Char('i'), 0x0129, DirectionBoth},
-    {QLatin1Char('='), QLatin1Char('i'), 0x012B, DirectionBoth},
-    {QLatin1Char('u'), QLatin1Char('i'), 0x012D, DirectionBoth},
-    {QLatin1Char('k'), QLatin1Char('i'), 0x012F, DirectionBoth},
-    {QLatin1Char('^'), QLatin1Char('j'), 0x0135, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('i'), 0x01D0, DirectionBoth},
-    {QLatin1Char('v'), QLatin1Char('j'), 0x01F0, DirectionBoth},
-    {QLatin1Char('G'), QLatin1Char('i'), 0x0209, DirectionCommandToUnicode}
+    {u'`', u'i', 0x00EC, DirectionBoth},
+    {u'\'', u'i', 0x00ED, DirectionBoth},
+    {u'^', u'i', 0x00EE, DirectionBoth},
+    {u'"', u'i', 0x00EF, DirectionBoth},
+    {u'~', u'i', 0x0129, DirectionBoth},
+    {u'=', u'i', 0x012B, DirectionBoth},
+    {u'u', u'i', 0x012D, DirectionBoth},
+    {u'k', u'i', 0x012F, DirectionBoth},
+    {u'^', u'j', 0x0135, DirectionBoth},
+    {u'v', u'i', 0x01D0, DirectionBoth},
+    {u'v', u'j', 0x01F0, DirectionBoth},
+    {u'G', u'i', 0x0209, DirectionCommandToUnicode}
 };
 
 
@@ -860,9 +860,9 @@ encoderLaTeXCharacterCommands[] = {
     {QStringLiteral("textdownarrow"), 0x2193, DirectionBoth}
 };
 
-const QChar EncoderLaTeX::encoderLaTeXProtectedSymbols[] = {QLatin1Char('#'), QLatin1Char('&'), QLatin1Char('%')};
+const QChar EncoderLaTeX::encoderLaTeXProtectedSymbols[] = {u'#', u'&', u'%'};
 
-const QChar EncoderLaTeX::encoderLaTeXProtectedTextOnlySymbols[] = {QLatin1Char('_')};
+const QChar EncoderLaTeX::encoderLaTeXProtectedTextOnlySymbols[] = {u'_'};
 
 
 /**
@@ -922,11 +922,11 @@ EncoderLaTeX::EncoderLaTeX()
             /// If no special character is known for a letter+modifier
             /// combination, fall back using the ASCII character only
             for (ushort k = 0; k < 26; ++k) {
-                lookupTable[lookupTableCount]->unicode[k] = QChar(QLatin1Char('A').unicode() + k);
-                lookupTable[lookupTableCount]->unicode[k + 26] = QChar(QLatin1Char('a').unicode() + k);
+                lookupTable[lookupTableCount]->unicode[k] = QChar(QChar(u'A').unicode() + k);
+                lookupTable[lookupTableCount]->unicode[k + 26] = QChar(QChar(u'a').unicode() + k);
             }
             for (ushort k = 0; k < 10; ++k)
-                lookupTable[lookupTableCount]->unicode[k + 52] = QChar(QLatin1Char('0').unicode() + k);
+                lookupTable[lookupTableCount]->unicode[k + 52] = QChar(QChar(u'0').unicode() + k);
             j = lookupTableCount;
             ++lookupTableCount;
         }
@@ -976,10 +976,10 @@ QString EncoderLaTeX::decode(const QString &input) const
         /// Fetch current input char
         const QChar c = input[i];
 
-        if (c == QLatin1Char('{')) {
+        if (c == u'{') {
             /// First case: An opening curly bracket,
             /// which is harmless (see else case), unless ...
-            if (i < len - 3 && input[i + 1] == QLatin1Char('\\')) {
+            if (i < len - 3 && input[i + 1] == u'\\') {
                 /// ... it continues with a backslash
 
                 /// Next, check if there follows a modifier after the backslash
@@ -989,10 +989,10 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// Check for spaces between modifier and character, for example
                 /// like {\H o}
                 int skipSpaces = 0;
-                while (i + 3 + skipSpaces < len && input[i + 3 + skipSpaces] == QLatin1Char(' ') && skipSpaces < 16) ++skipSpaces;
+                while (i + 3 + skipSpaces < len && input[i + 3 + skipSpaces] == u' ' && skipSpaces < 16) ++skipSpaces;
 
                 bool found = false;
-                if (lookupTablePos >= 0 && (skipSpaces > 0 || !input[i + 2].isLetter()) && i + skipSpaces < len - 4 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 3 + skipSpaces])) >= 0 && input[i + 4 + skipSpaces] == QLatin1Char('}')) {
+                if (lookupTablePos >= 0 && (skipSpaces > 0 || !input[i + 2].isLetter()) && i + skipSpaces < len - 4 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 3 + skipSpaces])) >= 0 && input[i + 4 + skipSpaces] == u'}') {
                     /// If we found a modifier which is followed by
                     /// a letter followed by a closing curly bracket,
                     /// we are looking at something like {\"A}
@@ -1007,7 +1007,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     }
                     /// Don't print any warnings yet, as this if-case may got triggered by e.g. \mu
                     /// ('m' is a potential modifier, yet \mu should be recognized as Greek letter later)
-                } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
+                } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 3 + skipSpaces] == u'\\' && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == u'}') {
                     /// This is the case for {\'\i} or alike.
                     for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                         if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
@@ -1024,7 +1024,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Step over those additional characters
                     i += 5 + skipSpaces;
                     found = true;
-                } else if (lookupTablePos >= 0 && i + skipSpaces < len - 6 && input[i + 3 + skipSpaces] == QLatin1Char('{') && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 4 + skipSpaces])) >= 0 && input[i + 5 + skipSpaces] == QLatin1Char('}') && input[i + 6 + skipSpaces] == QLatin1Char('}')) {
+                } else if (lookupTablePos >= 0 && i + skipSpaces < len - 6 && input[i + 3 + skipSpaces] == u'{' && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 4 + skipSpaces])) >= 0 && input[i + 5 + skipSpaces] == u'}' && input[i + 6 + skipSpaces] == u'}') {
                     /// If we found a modifier which is followed by
                     /// an opening curly bracket followed by a letter
                     /// followed by two closing curly brackets,
@@ -1043,7 +1043,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// Step over those additional characters
                     i += 6 + skipSpaces;
                     found = true;
-                } else if (lookupTablePos >= 0 && i + skipSpaces < len - 7 && input[i + 3 + skipSpaces] == QLatin1Char('{') && input[i + 4 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 5 + skipSpaces]) && input[i + 6 + skipSpaces] == QLatin1Char('}') && input[i + 7 + skipSpaces] == QLatin1Char('}')) {
+                } else if (lookupTablePos >= 0 && i + skipSpaces < len - 7 && input[i + 3 + skipSpaces] == u'{' && input[i + 4 + skipSpaces] == u'\\' && isIJ(input[i + 5 + skipSpaces]) && input[i + 6 + skipSpaces] == u'}' && input[i + 7 + skipSpaces] == u'}') {
                     /// This is the case for {\'{\i}} or alike.
                     for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                         if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 5 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 2]) {
@@ -1069,7 +1069,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     /// but which then should be kept unmodified
                     const QString alpha = readAlphaCharacters(input, i + 2);
                     int nextPosAfterAlpha = i + 2 + alpha.size();
-                    if (nextPosAfterAlpha < input.length() && input[nextPosAfterAlpha] == QLatin1Char('}')) {
+                    if (nextPosAfterAlpha < input.length() && input[nextPosAfterAlpha] == u'}') {
                         /// We may deal with a string like {\AA} or {\mu}
                         /// Check which command it is, then insert corresponding Unicode character
                         found = false;
@@ -1109,7 +1109,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// Nothing special, copy input char to output
                 output.append(c);
             }
-        } else if (c == QLatin1Char('\\') && i < len - 1) {
+        } else if (c == u'\\' && i < len - 1) {
             /// Second case: A backslash as in \"o
 
             /// Sometimes such command are closed with just {},
@@ -1123,7 +1123,7 @@ QString EncoderLaTeX::decode(const QString &input) const
             /// Check for spaces between modifier and character, for example
             /// like \H o
             int skipSpaces = 0;
-            while (i + 2 + skipSpaces < len && input[i + 2 + skipSpaces] == QLatin1Char(' ') && skipSpaces < 16) ++skipSpaces;
+            while (i + 2 + skipSpaces < len && input[i + 2 + skipSpaces] == u' ' && skipSpaces < 16) ++skipSpaces;
 
             bool found = false;
             if (lookupTablePos >= 0 && (skipSpaces > 0 || !input[i + 1].isLetter()) && i + skipSpaces <= len - 3 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 2 + skipSpaces])) >= 0) {
@@ -1142,7 +1142,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 }
                 /// Don't print any warnings yet, as this if-case may got triggered by e.g. \mu
                 /// ('m' is a potential modifier, yet \mu should be recognized as Greek letter later)
-            } else if (lookupTablePos >= 0 && (skipSpaces > 0 || !input[i + 1].isLetter()) && i + skipSpaces <= len - 3 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 2 + skipSpaces])) >= 0 && (i + skipSpaces == len - 3 || input[i + 3 + skipSpaces] == QLatin1Char('}') || input[i + 3 + skipSpaces] == QLatin1Char('{') || input[i + 3 + skipSpaces] == QLatin1Char(' ') || input[i + 3 + skipSpaces] == QLatin1Char('\t') || input[i + 3 + skipSpaces] == QLatin1Char('\\') || input[i + 3 + skipSpaces] == QLatin1Char('\r') || input[i + 3 + skipSpaces] == QLatin1Char('\n'))) {
+            } else if (lookupTablePos >= 0 && (skipSpaces > 0 || !input[i + 1].isLetter()) && i + skipSpaces <= len - 3 && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 2 + skipSpaces])) >= 0 && (i + skipSpaces == len - 3 || input[i + 3 + skipSpaces] == u'}' || input[i + 3 + skipSpaces] == u'{' || input[i + 3 + skipSpaces] == u' ' || input[i + 3 + skipSpaces] == u'\t' || input[i + 3 + skipSpaces] == u'\\' || input[i + 3 + skipSpaces] == u'\r' || input[i + 3 + skipSpaces] == u'\n')) {
                 /// We found a modifier which is followed by
                 /// a letter followed by a command delimiter such
                 /// as a whitespace, so we are looking at something
@@ -1156,7 +1156,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                     i += 2 + skipSpaces;
                     found = true;
 
-                    if (input[i + 1] != QLatin1Char(' ') && input[i + 1] != QLatin1Char('\r') && input[i + 1] != QLatin1Char('\n')) {
+                    if (input[i + 1] != u' ' && input[i + 1] != u'\r' && input[i + 1] != u'\n') {
                         /// If no whitespace follows, still
                         /// check for extra curly brackets
                         checkForExtraCurlyAtEnd = true;
@@ -1164,7 +1164,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 }
                 /// Don't print any warnings yet, as this if-case may got triggered by e.g. \mu
                 /// ('m' is a potential modifier, yet \mu should be recognized as Greek letter later)
-            } else if (lookupTablePos >= 0 && i + skipSpaces < len - 4 && input[i + 2 + skipSpaces] == QLatin1Char('{') && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 3 + skipSpaces])) >= 0 && input[i + 4 + skipSpaces] == QLatin1Char('}')) {
+            } else if (lookupTablePos >= 0 && i + skipSpaces < len - 4 && input[i + 2 + skipSpaces] == u'{' && (cachedAsciiLetterOrDigitToPos = asciiLetterOrDigitToPos(input[i + 3 + skipSpaces])) >= 0 && input[i + 4 + skipSpaces] == u'}') {
                 /// We found a modifier which is followed by an opening
                 /// curly bracket followed a letter followed by a closing
                 /// curly bracket, so we are looking at something
@@ -1183,7 +1183,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// Step over those additional characters
                 i += 4 + skipSpaces;
                 found = true;
-            } else if (lookupTablePos >= 0 && i + skipSpaces < len - 3 && input[i + 2 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 3 + skipSpaces])) {
+            } else if (lookupTablePos >= 0 && i + skipSpaces < len - 3 && input[i + 2 + skipSpaces] == u'\\' && isIJ(input[i + 3 + skipSpaces])) {
                 /// This is the case for \'\i or alike.
                 for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                     if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 3 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
@@ -1200,7 +1200,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// Step over those additional characters
                 i += 3 + skipSpaces;
                 found = true;
-            } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 2 + skipSpaces] == QLatin1Char('{') && input[i + 3 + skipSpaces] == QLatin1Char('\\') && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == QLatin1Char('}')) {
+            } else if (lookupTablePos >= 0 && i + skipSpaces < len - 5 && input[i + 2 + skipSpaces] == u'{' && input[i + 3 + skipSpaces] == u'\\' && isIJ(input[i + 4 + skipSpaces]) && input[i + 5 + skipSpaces] == u'}') {
                 /// This is the case for \'{\i} or alike.
                 for (const DotlessIJCharacter &dotlessIJCharacter : dotlessIJCharacters)
                     if ((dotlessIJCharacter.direction & DirectionCommandToUnicode) && dotlessIJCharacter.letter == input[i + 4 + skipSpaces] && dotlessIJCharacter.modifier == input[i + 1]) {
@@ -1254,7 +1254,7 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// Now, after a command, a whitespace may follow
                         /// which has to get "eaten" as it acts as a command
                         /// delimiter
-                        if (nextPosAfterAlpha + 1 < input.length() && (input[nextPosAfterAlpha + 1] == QLatin1Char(' ') || input[nextPosAfterAlpha + 1] == QLatin1Char('\r') || input[nextPosAfterAlpha + 1] == QLatin1Char('\n')))
+                        if (nextPosAfterAlpha + 1 < input.length() && (input[nextPosAfterAlpha + 1] == u' ' || input[nextPosAfterAlpha + 1] == u'\r' || input[nextPosAfterAlpha + 1] == u'\n'))
                             ++nextPosAfterAlpha;
                         else {
                             /// If no whitespace follows, still
@@ -1265,11 +1265,11 @@ QString EncoderLaTeX::decode(const QString &input) const
                         /// No command found? Just copy input char to output
                         output.append(QStringView{input}.mid(i, 1 + alpha.size()));
 
-                        if (alpha == QStringLiteral("ensuremath") && input[nextPosAfterAlpha + 1] == QLatin1Char('{')) {
+                        if (alpha == QStringLiteral("ensuremath") && input[nextPosAfterAlpha + 1] == u'{') {
                             currentMathMode.push(MathModeEnsureMath);
                             popEnsureMathAtOpenCurlyBacketCounter.push(openCurlyBracketCounterEnsureMath);
                             ++openCurlyBracketCounterEnsureMath;
-                            output.append(QLatin1Char('{'));
+                            output.append(u'{');
                             ++nextPosAfterAlpha;
                         }
                     }
@@ -1317,7 +1317,7 @@ QString EncoderLaTeX::decode(const QString &input) const
 
             /// Finally, check if there may be extra curly brackets
             /// like {} and hop over them
-            if (checkForExtraCurlyAtEnd && i < len - 2 && input[i + 1] == QLatin1Char('{') && input[i + 2] == QLatin1Char('}'))
+            if (checkForExtraCurlyAtEnd && i < len - 2 && input[i + 1] == u'{' && input[i + 2] == u'}')
                 i += 2;
         } else {
             /// So far, no opening curly bracket and no backslash
@@ -1351,16 +1351,16 @@ QString EncoderLaTeX::decode(const QString &input) const
                 /// Still, check if input character is a dollar sign
                 /// without a preceding backslash, means toggling between
                 /// text mode and math mode
-                if (c == QLatin1Char('$') && (i == 0 || input[i - 1] != QLatin1Char('\\'))) {
+                if (c == u'$' && (i == 0 || input[i - 1] != u'\\')) {
                     if (currentMathModeTop() == MathModeDollar)
                         currentMathMode.pop(); //< the Dollar sign that got just read closes the math mode
                     else
                         currentMathMode.push(MathModeDollar); //< the Dollar sign that got just read starts a new math mode
                 }
                 if (currentMathModeTop() == MathModeEnsureMath) {
-                    if (c == QLatin1Char('{'))
+                    if (c == u'{')
                         ++openCurlyBracketCounterEnsureMath;
-                    else if (c == QLatin1Char('}'))
+                    else if (c == u'}')
                         --openCurlyBracketCounterEnsureMath;
                     if (!popEnsureMathAtOpenCurlyBacketCounter.empty() && openCurlyBracketCounterEnsureMath == popEnsureMathAtOpenCurlyBacketCounter.top()) {
                         popEnsureMathAtOpenCurlyBacketCounter.pop();
@@ -1389,8 +1389,8 @@ bool EncoderLaTeX::testAndCopyVerbatimCommands(const QString &input, int &pos, Q
     if (copyBytesCount > 0) {
         while (openedClosedCurlyBrackets > 0 && pos + copyBytesCount < input.length()) {
             ++copyBytesCount;
-            if (input[pos + copyBytesCount] == QLatin1Char('{') && input[pos + copyBytesCount - 1] != QLatin1Char('\\')) ++openedClosedCurlyBrackets;
-            else if (input[pos + copyBytesCount] == QLatin1Char('}') && input[pos + copyBytesCount - 1] != QLatin1Char('\\')) --openedClosedCurlyBrackets;
+            if (input[pos + copyBytesCount] == u'{' && input[pos + copyBytesCount - 1] != u'\\') ++openedClosedCurlyBrackets;
+            else if (input[pos + copyBytesCount] == u'}' && input[pos + copyBytesCount - 1] != u'\\') --openedClosedCurlyBrackets;
         }
 
         output.append(QStringView{input}.mid(pos, copyBytesCount));
@@ -1441,7 +1441,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                     if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
                         output.append(QString(QStringLiteral("\\%1")).arg(mathCommand.command));
                         const QChar peekAhead = i < len - 1 ? input[i + 1] : QChar();
-                        if (peekAhead != QLatin1Char('\\') && peekAhead != QLatin1Char('}') && peekAhead != QLatin1Char('$')) {
+                        if (peekAhead != u'\\' && peekAhead != u'}' && peekAhead != u'$') {
                             // Between current command and following character a separator is necessary
                             // FIXME This peek-ahead won't do its job properly, as it is not yet known
                             // whether the next character will be kept as-is or rewritten to, for example, a LaTeX command
@@ -1524,7 +1524,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
 
             if (!found) {
                 qCDebug(LOG_KBIBTEX_IO) << input.mid(qMax(0, i - 5), 10);
-                qCWarning(LOG_KBIBTEX_IO) << "Don't know how to encode Unicode char" << QString(QStringLiteral("0x%1")).arg((uint)c.unicode(), 4, 16, QLatin1Char('0'));
+                qCWarning(LOG_KBIBTEX_IO) << "Don't know how to encode Unicode char" << QString(QStringLiteral("0x%1")).arg((uint)c.unicode(), 4, 16, QChar(u'0'));
                 output.append(c);
             }
         } else if ((targetEncoding == TargetEncoding::ASCII && c.unicode() <= 127)
@@ -1539,7 +1539,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             bool found = false;
             for (const QChar &encoderLaTeXProtectedSymbol : encoderLaTeXProtectedSymbols)
                 if (encoderLaTeXProtectedSymbol == c) {
-                    output.append(QLatin1Char('\\')).append(c);
+                    output.append(u'\\').append(c);
                     found = true;
                     break;
                 }
@@ -1550,7 +1550,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                     if ((mathCommand.direction & DirectionUnicodeToCommand) && mathCommand.unicode == c.unicode()) {
                         output.append(QString(QStringLiteral("\\%1")).arg(mathCommand.command));
                         const QChar peekAhead = i < len - 1 ? input[i + 1] : QChar();
-                        if (peekAhead != QLatin1Char('\\') && peekAhead != QLatin1Char('}') && peekAhead != QLatin1Char('$')) {
+                        if (peekAhead != u'\\' && peekAhead != u'}' && peekAhead != u'$') {
                             // Between current command and following character a separator is necessary
                             // FIXME This peek-ahead won't do its job properly, as it is not yet known
                             // whether the next character will be kept as-is or rewritten to, for example, a LaTeX command
@@ -1567,7 +1567,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             if (!found && currentMathMode.empty())
                 for (const QChar &encoderLaTeXProtectedTextOnlySymbol : encoderLaTeXProtectedTextOnlySymbols)
                     if (encoderLaTeXProtectedTextOnlySymbol == c) {
-                        output.append(QLatin1Char('\\')).append(c);
+                        output.append(u'\\').append(c);
                         found = true;
                         break;
                     }
@@ -1582,7 +1582,7 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
             /// Finally, check if input character is a dollar sign
             /// without a preceding backslash, means toggling between
             /// text mode and math mode
-            if (c == QLatin1Char('$') && (i == 0 || input[i - 1] != QLatin1Char('\\'))) {
+            if (c == u'$' && (i == 0 || input[i - 1] != u'\\')) {
                 if (currentMathMode.empty())
                     currentMathMode.push(MathModeDollar);
                 else if (currentMathModeTop() == MathModeDollar)
@@ -1593,13 +1593,13 @@ QString EncoderLaTeX::encode(const QString &ninput, const TargetEncoding targetE
                 currentMathMode.push(MathModeEnsureMath);
                 popEnsureMathAtOpenCurlyBacketCounter.push(openCurlyBracketCounterEnsureMath);
                 // ++openCurlyBracketCounterEnsureMath; //< not necessary as right below both
-                /// 'currentMathModeTop() == MathModeEnsureMath' and 'c == QLatin1Char('{')'
+                /// 'currentMathModeTop() == MathModeEnsureMath' and 'c == u'{''
                 /// will be true
             }
             if (currentMathModeTop() == MathModeEnsureMath) {
-                if (c == QLatin1Char('{'))
+                if (c == u'{')
                     ++openCurlyBracketCounterEnsureMath;
-                else if (c == QLatin1Char('}'))
+                else if (c == u'}')
                     --openCurlyBracketCounterEnsureMath;
                 if (!popEnsureMathAtOpenCurlyBacketCounter.empty() && openCurlyBracketCounterEnsureMath == popEnsureMathAtOpenCurlyBacketCounter.top()) {
                     popEnsureMathAtOpenCurlyBacketCounter.pop();

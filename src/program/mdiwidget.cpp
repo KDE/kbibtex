@@ -75,7 +75,7 @@ public:
                     const QString fileName = url.fileName();
                     return fileName.isEmpty() ? squeeze_text(url.url(QUrl::PreferLocalFile), 32) : fileName;
                 } else if (role == Qt::DecorationRole)
-                    return QIcon::fromTheme(ofiItem->mimeType().replace(QLatin1Char('/'), QLatin1Char('-')));
+                    return QIcon::fromTheme(ofiItem->mimeType().replace(u'/', u'-'));
                 else if (role == Qt::ToolTipRole)
                     return squeeze_text(ofiItem->url().url(QUrl::PreferLocalFile), 64);
             } else if (index.column() == 1) {

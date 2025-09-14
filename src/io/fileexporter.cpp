@@ -233,37 +233,37 @@ int FileExporter::editionStringToNumber(const QString &editionString, bool *ok)
     }
 
     // Test if string is a spelled-out English ordinal (in some cases consider mis-spellings)
-    if (editionStringLower == QLatin1String("first"))
+    if (editionStringLower == QStringLiteral("first"))
         return 1;
-    else if (editionStringLower == QLatin1String("second"))
+    else if (editionStringLower == QStringLiteral("second"))
         return 2;
-    else if (editionStringLower == QLatin1String("third"))
+    else if (editionStringLower == QStringLiteral("third"))
         return 3;
-    else if (editionStringLower == QLatin1String("fourth"))
+    else if (editionStringLower == QStringLiteral("fourth"))
         return 4;
-    else if (editionStringLower == QLatin1String("fifth") || editionStringLower == QLatin1String("fivth"))
+    else if (editionStringLower == QStringLiteral("fifth") || editionStringLower == QStringLiteral("fivth"))
         return 5;
-    else if (editionStringLower == QLatin1String("sixth"))
+    else if (editionStringLower == QStringLiteral("sixth"))
         return 6;
-    else if (editionStringLower == QLatin1String("seventh"))
+    else if (editionStringLower == QStringLiteral("seventh"))
         return 7;
-    else if (editionStringLower == QLatin1String("eighth") || editionStringLower == QLatin1String("eigth"))
+    else if (editionStringLower == QStringLiteral("eighth") || editionStringLower == QStringLiteral("eigth"))
         return 8;
-    else if (editionStringLower == QLatin1String("nineth") || editionStringLower == QLatin1String("ninth"))
+    else if (editionStringLower == QStringLiteral("nineth") || editionStringLower == QStringLiteral("ninth"))
         return 9;
-    else if (editionStringLower == QLatin1String("tenth"))
+    else if (editionStringLower == QStringLiteral("tenth"))
         return 10;
-    else if (editionStringLower == QLatin1String("eleventh"))
+    else if (editionStringLower == QStringLiteral("eleventh"))
         return 11;
-    else if (editionStringLower == QLatin1String("twelvth") || editionStringLower == QLatin1String("twelfth"))
+    else if (editionStringLower == QStringLiteral("twelvth") || editionStringLower == QStringLiteral("twelfth"))
         return 12;
-    else if (editionStringLower == QLatin1String("thirdteeth"))
+    else if (editionStringLower == QStringLiteral("thirdteeth"))
         return 13;
-    else if (editionStringLower == QLatin1String("fourteenth"))
+    else if (editionStringLower == QStringLiteral("fourteenth"))
         return 14;
-    else if (editionStringLower == QLatin1String("fifteenth"))
+    else if (editionStringLower == QStringLiteral("fifteenth"))
         return 15;
-    else if (editionStringLower == QLatin1String("sixteenth"))
+    else if (editionStringLower == QStringLiteral("sixteenth"))
         return 16;
 
     // No test above succeeded, so communicate that conversion failed

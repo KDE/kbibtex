@@ -216,9 +216,9 @@ public:
         int openingCB = 0, closingCB = 0;
 
         for (int i = 0; i < text.length(); ++i) {
-            if (i == 0 || text[i - 1] != QLatin1Char('\\')) {
-                if (text[i] == QLatin1Char('{')) ++openingCB;
-                else if (text[i] == QLatin1Char('}')) ++closingCB;
+            if (i == 0 || text[i - 1] != u'\\') {
+                if (text[i] == u'{') ++openingCB;
+                else if (text[i] == u'}') ++closingCB;
             }
         }
 

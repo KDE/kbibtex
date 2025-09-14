@@ -60,7 +60,7 @@ public:
             QString line;
             while (!(line = ts.readLine().trimmed()).isNull()) {
                 /// Skip empty lines or comments
-                if (line.isEmpty() || line.startsWith(QLatin1Char('#'))) continue;
+                if (line.isEmpty() || line.startsWith(u'#')) continue;
                 const QStringList columns = line.split(splitRegExp);
                 /// Skip lines that do not have at least two columns
                 if (columns.count() < 2) continue;

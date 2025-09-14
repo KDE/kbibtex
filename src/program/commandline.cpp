@@ -55,7 +55,8 @@ int main(int argc, char *argv[])
 
     QVector<QString> arguments;
     arguments.reserve(cmdLineParser.positionalArguments().length());
-    for (const QString &pa : cmdLineParser.positionalArguments())
+    const auto clppa {cmdLineParser.positionalArguments()};
+    for (const QString &pa : clppa)
         if (pa.length() > 0)
             arguments.append(pa);
 
@@ -90,7 +91,8 @@ int main(int argc, char *argv[])
                             coreApp.exit(exitCode = 1);
                         } else {
                             std::cerr << "Using the following format string:" << std::endl;
-                            for (const QString &fse : IdSuggestions::formatStrToHuman(formatString))
+                            const auto fsth {IdSuggestions::formatStrToHuman(formatString)};
+                            for (const QString &fse : fsth)
                                 std::cerr << " * " << fse.toLocal8Bit().constData() << std::endl;
                             for (QSharedPointer<Element> &element : *file) {
                                 /// For every element in the loaded bibliography file ...
@@ -123,8 +125,9 @@ int main(int argc, char *argv[])
                                 QString exporterClassHint;
                                 if (cmdLineParser.isSet(outputformatCLI)) {
                                     const QString cmpTo = cmdLineParser.value(outputformatCLI).toLower();
-                                    for (const QString &exporterClass : FileExporter::exporterClasses(outputFileInfo))
-                                        if (exporterClass.toLower().contains(cmpTo)) {
+                                    const auto ec {FileExporter::exporterClasses(outputFileInfo)};
+                                    for (const QString &exporterClass : ec)
+                                        if (exporterClass.contains(cmpTo, Qt::CaseInsensitive)) {
                                             exporterClassHint = exporterClass;
                                             std::cerr << "Choosing exporter " << exporterClassHint.toLocal8Bit().constData() << " based on --output-format=" << cmpTo.toLocal8Bit().constData() << std::endl;
                                             break;

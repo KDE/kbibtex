@@ -409,7 +409,7 @@ KBibTeX::TypeFlags BibTeXFields::typeFlagsFromString(const QString &typeFlagsStr
 {
     KBibTeX::TypeFlags result;
 
-    const QStringList list = typeFlagsString.split(QLatin1Char(';'));
+    const QStringList list = typeFlagsString.split(u';');
     for (const QString &s : list)
         result |= typeFlagFromString(s);
 
@@ -425,7 +425,7 @@ QString BibTeXFields::typeFlagsToString(KBibTeX::TypeFlags typeFlags)
     if (typeFlags & KBibTeX::TypeFlag::Keyword) resultList << QStringLiteral("Keyword");
     if (typeFlags & KBibTeX::TypeFlag::Reference) resultList << QStringLiteral("Reference");
     if (typeFlags & KBibTeX::TypeFlag::Verbatim) resultList << QStringLiteral("Verbatim");
-    return resultList.join(QChar(QLatin1Char(';')));
+    return resultList.join(QChar(u';'));
 }
 
 QString BibTeXFields::typeFlagToString(KBibTeX::TypeFlag typeFlag)
