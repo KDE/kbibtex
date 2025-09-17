@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-02 02:23+0000\n"
+"POT-Creation-Date: 2025-09-17 01:57+0000\n"
 "PO-Revision-Date: 2025-04-26 10:33+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -283,7 +283,7 @@ msgstr "იდენტიფიკატორი"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:323
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:645
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:680
-#: src/processing/idsuggestions.cpp:427
+#: src/processing/idsuggestions.cpp:426
 #, kde-format
 msgid "Title"
 msgstr "სათაური"
@@ -328,7 +328,7 @@ msgstr "წელი"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:424
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:657
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:692
-#: src/processing/idsuggestions.cpp:477
+#: src/processing/idsuggestions.cpp:476
 #, kde-format
 msgid "Journal"
 msgstr "ჟურნალი"
@@ -337,7 +337,7 @@ msgstr "ჟურნალი"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:244
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:665
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:700
-#: src/processing/idsuggestions.cpp:520
+#: src/processing/idsuggestions.cpp:519
 #, kde-format
 msgid "Volume"
 msgstr "ტომი"
@@ -460,7 +460,7 @@ msgstr "მისამართი"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:497
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:661
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:696
-#: src/processing/idsuggestions.cpp:499
+#: src/processing/idsuggestions.cpp:498
 #, kde-format
 msgid "Type"
 msgstr "ტიპი"
@@ -1012,7 +1012,7 @@ msgstr "ყურება"
 msgid "Macro"
 msgstr "მაკრო"
 
-#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1280
+#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1279
 #, kde-format
 msgid "Comment"
 msgstr "კომენტარი"
@@ -1110,7 +1110,7 @@ msgstr ""
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:232
-#: src/program/docklets/referencepreview.cpp:227
+#: src/program/docklets/referencepreview.cpp:229
 #, kde-format
 msgid "No preview available"
 msgstr "გადახედვა შეუძლებელია"
@@ -1292,7 +1292,7 @@ msgid "Delete"
 msgstr "წაშლა"
 
 #: src/gui/element/elementwidgets.cpp:1012
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:151
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -1310,69 +1310,69 @@ msgstr "გადატარება"
 msgid "Value:"
 msgstr "მნიშვნელობა:"
 
-#: src/gui/element/elementwidgets.cpp:1254
+#: src/gui/element/elementwidgets.cpp:1253
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1262
+#: src/gui/element/elementwidgets.cpp:1261
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1299
+#: src/gui/element/elementwidgets.cpp:1298
 #, kde-format
 msgid "Context:"
 msgstr "კონტექსტი:"
 
-#: src/gui/element/elementwidgets.cpp:1303
+#: src/gui/element/elementwidgets.cpp:1302
 #, kde-format
 msgid "Prefix:"
 msgstr "პრეფიქსი:"
 
-#: src/gui/element/elementwidgets.cpp:1455
+#: src/gui/element/elementwidgets.cpp:1454
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1464
+#: src/gui/element/elementwidgets.cpp:1463
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1470
+#: src/gui/element/elementwidgets.cpp:1469
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1476
+#: src/gui/element/elementwidgets.cpp:1475
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1482
+#: src/gui/element/elementwidgets.cpp:1481
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1486
+#: src/gui/element/elementwidgets.cpp:1485
 #, kde-format
 msgid "Element class not properly set"
 msgstr "ელემენტის კლასი არასწორადაა დაყენებული"
 
-#: src/gui/element/elementwidgets.cpp:1495
+#: src/gui/element/elementwidgets.cpp:1494
 #, kde-format
 msgid "No issues detected"
 msgstr "პრობლემების გარეშე"
 
-#: src/gui/element/elementwidgets.cpp:1510
+#: src/gui/element/elementwidgets.cpp:1509
 #, kde-format
 msgid "Source"
 msgstr "წყარო"
 
-#: src/gui/element/elementwidgets.cpp:1541
+#: src/gui/element/elementwidgets.cpp:1540
 #, kde-format
 msgid "Restore"
 msgstr "აღდგენა"
@@ -2061,14 +2061,14 @@ msgstr "... და ბოლო ავტორი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
-#: src/processing/idsuggestions.cpp:550
+#: src/processing/idsuggestions.cpp:549
 #, kde-format
 msgid "From first author to author %1 and last author"
 msgstr "პირველი ავტორიდან %1 ავტორამდე და ბოლო ავტორი"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
-#: src/processing/idsuggestions.cpp:567 src/processing/idsuggestions.cpp:587
+#: src/processing/idsuggestions.cpp:566 src/processing/idsuggestions.cpp:586
 #, kde-format
 msgid "From author %1 to author %2 and last author"
 msgstr "%1 ავტორიდან %2 ავტორამდე და ბოლო ავტორი"
@@ -2557,7 +2557,7 @@ msgstr ""
 msgid "KBibTeX"
 msgstr "KBibTeX"
 
-#: src/networking/onlinesearch/onlinesearchacmportal.cpp:303
+#: src/networking/onlinesearch/onlinesearchacmportal.cpp:307
 #, kde-format
 msgid "ACM Digital Library"
 msgstr "ACM ციფრული ბიბლიოთეკა"
@@ -2666,18 +2666,18 @@ msgstr "წელი:"
 msgid "Google Books"
 msgstr "Google Books"
 
-#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:331
 #, kde-format
 msgid ""
 "'Google Scholar' denied scrapping data because it thinks you are a robot."
 msgstr ""
 
-#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:461
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:463
 #, kde-format
 msgid "Google Scholar"
 msgstr "Google Scholar"
 
-#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:110
 #, kde-format
 msgid "IDEAS/RePEc"
 msgstr "IDEAS/RePEc"
@@ -2949,63 +2949,63 @@ msgstr "ჩანაწერების იდენტიფიკატო�
 msgid "Copy References"
 msgstr "მიმართვის კოპირება"
 
-#: src/parts/part.cpp:305
+#: src/parts/part.cpp:306
 #, kde-format
 msgid "New%1"
 msgstr "ახალი%1"
 
-#: src/parts/part.cpp:470
+#: src/parts/part.cpp:471
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
 msgstr "დოკუმენტის ('%1') სამარქაფე ასლების შექმნა შეუძლებელია."
 
-#: src/parts/part.cpp:470
+#: src/parts/part.cpp:471
 #, kde-format
 msgid "Backup copies"
 msgstr "ასლების მარქაფი"
 
-#: src/parts/part.cpp:503
+#: src/parts/part.cpp:504
 #, kde-format
 msgid "Save file"
 msgstr "ფაილის შენახვა"
 
-#: src/parts/part.cpp:531
+#: src/parts/part.cpp:532
 #, kde-format
 msgid "BibUtils"
 msgstr "BibUtils"
 
-#: src/parts/part.cpp:532
+#: src/parts/part.cpp:533
 #, kde-format
 msgid "BibTeX2HTML"
 msgstr "BibTeX2HTML"
 
-#: src/parts/part.cpp:533
+#: src/parts/part.cpp:534
 #, kde-format
 msgid "Word XML bibliography"
 msgstr "მსოფლიოს XML ბიბლიოგრაფია"
 
-#: src/parts/part.cpp:534
+#: src/parts/part.cpp:535
 #, kde-format
 msgid "KBibTeX's own XML structure"
 msgstr "KBibTeX-ის საკუთარი XML სტრუქტურ"
 
-#: src/parts/part.cpp:535
+#: src/parts/part.cpp:536
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
 msgstr "KBibTeX-ის ჩაშენებული HTML გამტანი"
 
-#: src/parts/part.cpp:536
+#: src/parts/part.cpp:537
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
 msgstr "KBibTeX-ის ჩაშენებული RIS გამტანი"
 
-#: src/parts/part.cpp:545
+#: src/parts/part.cpp:546
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
 msgstr "აირჩიეთ გამტანი"
 
-#: src/parts/part.cpp:547
+#: src/parts/part.cpp:548
 #, kde-format
 msgid ""
 "Several exporter modules are available to write file '%1'.\n"
@@ -3013,49 +3013,49 @@ msgid ""
 "Please choose one."
 msgstr ""
 
-#: src/parts/part.cpp:578
+#: src/parts/part.cpp:579
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "BibTeX ფაილის მორგება"
 
-#: src/parts/part.cpp:596
+#: src/parts/part.cpp:597
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "PDF/PostScript ფაილის მორგება"
 
-#: src/parts/part.cpp:716
+#: src/parts/part.cpp:715
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr "ბიბლიოგრაფიის ფაილში '%1' შენახვის შეცდომა."
 
-#: src/parts/part.cpp:718 src/parts/part.cpp:724
+#: src/parts/part.cpp:717 src/parts/part.cpp:723
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr "ბიბლიოგრაფიის შენახვის შეცდომა"
 
-#: src/parts/part.cpp:720
+#: src/parts/part.cpp:719
 #, kde-format
 msgid "Saving bibliography failed:"
 msgstr "ბიბლიოგრაფიის შენახვის შეცდომა:"
 
-#: src/parts/part.cpp:723
+#: src/parts/part.cpp:722
 #, kde-format
 msgid "The following output was generated by the export filter:"
 msgstr "გატანის ფილტრის მიერ დაგენერირებული ტექსტი:"
 
-#: src/parts/part.cpp:774
+#: src/parts/part.cpp:773
 #, kde-format
 msgid "Local Files"
 msgstr "ლოკალური ფაილები"
 
-#: src/parts/part.cpp:799
+#: src/parts/part.cpp:798
 #, kde-format
 msgid "Remote Files"
 msgstr "დაშორებული ფაილები"
 
-#: src/parts/part.cpp:938
+#: src/parts/part.cpp:937
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3068,18 +3068,18 @@ msgstr ""
 "შეამოწმეთ, გაქვთ თუ არა ამ ფაილში ჩაწერის უფლება და დისკზე ადგილი საკმარისი "
 "თუა."
 
-#: src/parts/part.cpp:1077
+#: src/parts/part.cpp:1076
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
 msgstr ""
 
-#: src/parts/part.cpp:1077
+#: src/parts/part.cpp:1076
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "ნაგულისხმები ფორმატირების გადატარების შეცდომა"
 
-#: src/parts/part.cpp:1205
+#: src/parts/part.cpp:1204
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
@@ -3088,7 +3088,7 @@ msgid ""
 "keep changes made in KBibTeX?"
 msgstr ""
 
-#: src/parts/part.cpp:1205
+#: src/parts/part.cpp:1204
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3096,17 +3096,17 @@ msgid ""
 "Reload file or ignore changes on disk?"
 msgstr ""
 
-#: src/parts/part.cpp:1206
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid "File changed externally"
 msgstr "ფაილი გარედან შეიცვალა"
 
-#: src/parts/part.cpp:1206
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid "Reload file"
 msgstr "ფაილის თავიდან ჩატვირთვა"
 
-#: src/parts/part.cpp:1206
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "დისკზე ცვლილებების იგნორი"
@@ -3226,7 +3226,7 @@ msgctxt "@title:window"
 msgid "Finding Duplicates"
 msgstr "დუბლიკატების მოძებნა"
 
-#: src/processing/idsuggestions.cpp:319
+#: src/processing/idsuggestions.cpp:318
 #, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
@@ -3244,117 +3244,117 @@ msgstr ""
 "which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
 "wird|with|you|und|and|ein|eine|einer|eines"
 
-#: src/processing/idsuggestions.cpp:395
+#: src/processing/idsuggestions.cpp:394
 #, kde-format
 msgid ", but only first letter of each last name"
 msgid_plural ", but only first %1 letters of each last name"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/processing/idsuggestions.cpp:402 src/processing/idsuggestions.cpp:455
-#: src/processing/idsuggestions.cpp:486 src/processing/idsuggestions.cpp:508
+#: src/processing/idsuggestions.cpp:401 src/processing/idsuggestions.cpp:454
+#: src/processing/idsuggestions.cpp:485 src/processing/idsuggestions.cpp:507
 #, kde-format
 msgid ", in upper case"
 msgstr ", მაღალ რეგისტრში"
 
-#: src/processing/idsuggestions.cpp:405 src/processing/idsuggestions.cpp:458
-#: src/processing/idsuggestions.cpp:489 src/processing/idsuggestions.cpp:511
+#: src/processing/idsuggestions.cpp:404 src/processing/idsuggestions.cpp:457
+#: src/processing/idsuggestions.cpp:488 src/processing/idsuggestions.cpp:510
 #, kde-format
 msgid ", in lower case"
 msgstr ", დაბალ რეგისტრში"
 
-#: src/processing/idsuggestions.cpp:408 src/processing/idsuggestions.cpp:461
-#: src/processing/idsuggestions.cpp:492 src/processing/idsuggestions.cpp:514
+#: src/processing/idsuggestions.cpp:407 src/processing/idsuggestions.cpp:460
+#: src/processing/idsuggestions.cpp:491 src/processing/idsuggestions.cpp:513
 #, kde-format
 msgid ", in CamelCase"
 msgstr ", აქლემგისტრში"
 
-#: src/processing/idsuggestions.cpp:416 src/processing/idsuggestions.cpp:469
+#: src/processing/idsuggestions.cpp:415 src/processing/idsuggestions.cpp:468
 #, kde-format
 msgid ", with '%1' in between"
 msgstr ", შუაში '%1' -ით"
 
-#: src/processing/idsuggestions.cpp:422
+#: src/processing/idsuggestions.cpp:421
 #, kde-format
 msgid "Year (2 digits)"
 msgstr "წელი (2 ციფრი)"
 
-#: src/processing/idsuggestions.cpp:424
+#: src/processing/idsuggestions.cpp:423
 #, kde-format
 msgid "Year (4 digits)"
 msgstr "წელი (4 ციფრი)"
 
-#: src/processing/idsuggestions.cpp:430
+#: src/processing/idsuggestions.cpp:429
 #, kde-format
 msgid ", but only the first word"
 msgid_plural ", but only first %1 words"
 msgstr[0] ", მხოლოდ პირველი სიტყვა"
 msgstr[1] ", მხოლოდ პირველი %1 სიტყვა"
 
-#: src/processing/idsuggestions.cpp:436
+#: src/processing/idsuggestions.cpp:435
 #, kde-format
 msgid ", but only starting from word %1"
 msgstr ", მხოლოდ თუ იწყება სიტყვით %1"
 
-#: src/processing/idsuggestions.cpp:442
+#: src/processing/idsuggestions.cpp:441
 #, kde-format
 msgid ", but only from word %1 to word %2"
 msgstr ""
 
-#: src/processing/idsuggestions.cpp:448 src/processing/idsuggestions.cpp:480
-#: src/processing/idsuggestions.cpp:502
+#: src/processing/idsuggestions.cpp:447 src/processing/idsuggestions.cpp:479
+#: src/processing/idsuggestions.cpp:501
 #, kde-format
 msgid ", but only first letter of each word"
 msgid_plural ", but only first %1 letters of each word"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/processing/idsuggestions.cpp:473
+#: src/processing/idsuggestions.cpp:472
 #, kde-format
 msgid ", small words removed"
 msgstr ", პატარა სიტყვების გარეშე"
 
-#: src/processing/idsuggestions.cpp:522
+#: src/processing/idsuggestions.cpp:521
 #, kde-format
 msgid "First page number"
 msgstr "პირველი გვერდის ნომერი"
 
-#: src/processing/idsuggestions.cpp:525
+#: src/processing/idsuggestions.cpp:524
 #, kde-format
 msgid "Text: '%1'"
 msgstr "ტექსტი: '%1'"
 
-#: src/processing/idsuggestions.cpp:542
+#: src/processing/idsuggestions.cpp:541
 #, kde-format
 msgid "First and last authors only"
 msgstr "მხოლოდ პირველი და ბოლო ავტორები"
 
-#: src/processing/idsuggestions.cpp:544
+#: src/processing/idsuggestions.cpp:543
 #, kde-format
 msgid "First author only"
 msgstr "მხოლოდ პირველი ავტორი"
 
-#: src/processing/idsuggestions.cpp:546
+#: src/processing/idsuggestions.cpp:545
 #, kde-format
 msgid "All authors"
 msgstr "ყველა ავტორი"
 
-#: src/processing/idsuggestions.cpp:556
+#: src/processing/idsuggestions.cpp:555
 #, kde-format
 msgid "From first author to author %1"
 msgstr "პირველი ავტორიდან %1-ე ავტორამდე"
 
-#: src/processing/idsuggestions.cpp:563
+#: src/processing/idsuggestions.cpp:562
 #, kde-format
 msgid "All but first author"
 msgstr "ყველა ავტორი, პირველის გარდა"
 
-#: src/processing/idsuggestions.cpp:573 src/processing/idsuggestions.cpp:593
+#: src/processing/idsuggestions.cpp:572 src/processing/idsuggestions.cpp:592
 #, kde-format
 msgid "From author %1 to author %2"
 msgstr "ავტორიდან %1 ავტორამდე %2"
 
-#: src/processing/idsuggestions.cpp:581
+#: src/processing/idsuggestions.cpp:580
 #, kde-format
 msgid "From author %1 to last author"
 msgstr "ავტორიდან %1 ბოლო ავტორამდე"
@@ -3413,7 +3413,7 @@ msgid "No documents to show."
 msgstr "საჩვენებელი დოკუმენტების გარეშე."
 
 #: src/program/docklets/documentpreview.cpp:369
-#: src/program/docklets/documentpreview.cpp:670
+#: src/program/docklets/documentpreview.cpp:671
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3450,7 +3450,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>არ ვიცი, როგორ გაჩვენოთ mimetype '%1'.%2</qt>"
 
-#: src/program/docklets/documentpreview.cpp:673
+#: src/program/docklets/documentpreview.cpp:674
 #, kde-format
 msgid ""
 "No documents to show.\n"
@@ -3527,51 +3527,51 @@ msgstr "ციტატა ვიკიპედიიდან"
 msgid "Abstract-only"
 msgstr "მხოლოდ აბსტრაქცია"
 
-#: src/program/docklets/referencepreview.cpp:151
+#: src/program/docklets/referencepreview.cpp:152
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "მიმართვის ბრაუზერში გახსნა."
 
-#: src/program/docklets/referencepreview.cpp:154
-#: src/program/docklets/referencepreview.cpp:433
+#: src/program/docklets/referencepreview.cpp:155
+#: src/program/docklets/referencepreview.cpp:435
 #, kde-format
 msgid "Save as HTML"
 msgstr "შენახვა HTML ფაილში"
 
-#: src/program/docklets/referencepreview.cpp:155
+#: src/program/docklets/referencepreview.cpp:156
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "მიმართვის HTML ფრაგმენტად შენახვა."
 
-#: src/program/docklets/referencepreview.cpp:227
+#: src/program/docklets/referencepreview.cpp:229
 #, kde-format
 msgid "Reason:"
 msgstr "მიზეზი:"
 
-#: src/program/docklets/referencepreview.cpp:251
+#: src/program/docklets/referencepreview.cpp:253
 #, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "მინიატურა გათიშულია"
 
-#: src/program/docklets/referencepreview.cpp:266
+#: src/program/docklets/referencepreview.cpp:268
 #, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "ელემენტი არჩეული არაა"
 
-#: src/program/docklets/referencepreview.cpp:315
+#: src/program/docklets/referencepreview.cpp:317
 #, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "გამოტანა არ დაგენერირებულა"
 
-#: src/program/docklets/referencepreview.cpp:357
+#: src/program/docklets/referencepreview.cpp:359
 #, kde-format
 msgid "Cannot show a preview for this type of element"
 msgstr ""
 
-#: src/program/docklets/referencepreview.cpp:385
+#: src/program/docklets/referencepreview.cpp:387
 #, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
@@ -4065,8 +4065,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "BibTeX რედაქტორი KDE-სგან"
 
 #: src/program/program.cpp:55
-#, kde-format
-msgid "Copyright 2004-2024 Thomas Fischer"
+#, fuzzy, kde-format
+#| msgid "Copyright 2004-2024 Thomas Fischer"
+msgid "Copyright 2004-2025 Thomas Fischer"
 msgstr "2004-2024 თომას ფიშერი, ყველა უფლება დაცულია"
 
 #: src/program/program.cpp:60

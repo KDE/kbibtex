@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-02 02:23+0000\n"
+"POT-Creation-Date: 2025-09-17 01:57+0000\n"
 "PO-Revision-Date: 2025-08-31 10:28+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -294,7 +294,7 @@ msgstr "Identifiant"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:323
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:645
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:680
-#: src/processing/idsuggestions.cpp:427
+#: src/processing/idsuggestions.cpp:426
 #, kde-format
 msgid "Title"
 msgstr "Titre "
@@ -339,7 +339,7 @@ msgstr "Année"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:424
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:657
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:692
-#: src/processing/idsuggestions.cpp:477
+#: src/processing/idsuggestions.cpp:476
 #, kde-format
 msgid "Journal"
 msgstr "Journal"
@@ -348,7 +348,7 @@ msgstr "Journal"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:244
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:665
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:700
-#: src/processing/idsuggestions.cpp:520
+#: src/processing/idsuggestions.cpp:519
 #, kde-format
 msgid "Volume"
 msgstr "Volume"
@@ -471,7 +471,7 @@ msgstr "Adresse"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:497
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:661
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:696
-#: src/processing/idsuggestions.cpp:499
+#: src/processing/idsuggestions.cpp:498
 #, kde-format
 msgid "Type"
 msgstr "Type"
@@ -1023,7 +1023,7 @@ msgstr "Observer"
 msgid "Macro"
 msgstr "Macro"
 
-#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1280
+#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1279
 #, kde-format
 msgid "Comment"
 msgstr "Commentaire"
@@ -1124,7 +1124,7 @@ msgstr "Associer le document avec l'entrée"
 
 #: src/gui/element/associatedfilesui.cpp:236
 #: src/program/docklets/documentpreview.cpp:232
-#: src/program/docklets/referencepreview.cpp:227
+#: src/program/docklets/referencepreview.cpp:229
 #, kde-format
 msgid "No preview available"
 msgstr "Aucun aperçu disponible"
@@ -1311,7 +1311,7 @@ msgid "Delete"
 msgstr "Supprimer"
 
 #: src/gui/element/elementwidgets.cpp:1012
-#: src/program/docklets/referencepreview.cpp:150
+#: src/program/docklets/referencepreview.cpp:151
 #: src/program/documentlist.cpp:215
 #, kde-format
 msgid "Open"
@@ -1329,53 +1329,53 @@ msgstr "Appliquer"
 msgid "Value:"
 msgstr "Valeur :"
 
-#: src/gui/element/elementwidgets.cpp:1254
+#: src/gui/element/elementwidgets.cpp:1253
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
 msgstr "Le préfixe d'un commentaire doit commencer par « % »"
 
-#: src/gui/element/elementwidgets.cpp:1262
+#: src/gui/element/elementwidgets.cpp:1261
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
 "Un commentaire en mode « Verbatim » peut ne pas contenir de lignes vides."
 
-#: src/gui/element/elementwidgets.cpp:1299
+#: src/gui/element/elementwidgets.cpp:1298
 #, kde-format
 msgid "Context:"
 msgstr "Contexte :"
 
-#: src/gui/element/elementwidgets.cpp:1303
+#: src/gui/element/elementwidgets.cpp:1302
 #, kde-format
 msgid "Prefix:"
 msgstr "Préfixe :"
 
-#: src/gui/element/elementwidgets.cpp:1455
+#: src/gui/element/elementwidgets.cpp:1454
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 "Impossible d'analyser le code source renseigné comme un seul élément BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1464
+#: src/gui/element/elementwidgets.cpp:1463
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 "Impossible d'analyser le code source renseigné comme une seule entrée BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1470
+#: src/gui/element/elementwidgets.cpp:1469
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 "Impossible d'analyser le code source renseigné comme une seule macro BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1476
+#: src/gui/element/elementwidgets.cpp:1475
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 "Impossible d'analyser le code source renseigné comme un seul préambule "
 "BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1482
+#: src/gui/element/elementwidgets.cpp:1481
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
@@ -1385,22 +1385,22 @@ msgstr ""
 "« BibTeX ». Veuillez essayer en supprimant mes lignes vies à l'intérieur du "
 "commentaire."
 
-#: src/gui/element/elementwidgets.cpp:1486
+#: src/gui/element/elementwidgets.cpp:1485
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Classe de l'élément définie de manière incorrecte"
 
-#: src/gui/element/elementwidgets.cpp:1495
+#: src/gui/element/elementwidgets.cpp:1494
 #, kde-format
 msgid "No issues detected"
 msgstr "Aucun problème détecté"
 
-#: src/gui/element/elementwidgets.cpp:1510
+#: src/gui/element/elementwidgets.cpp:1509
 #, kde-format
 msgid "Source"
 msgstr "Source"
 
-#: src/gui/element/elementwidgets.cpp:1541
+#: src/gui/element/elementwidgets.cpp:1540
 #, kde-format
 msgid "Restore"
 msgstr "Restaurer"
@@ -2108,14 +2108,14 @@ msgstr "... et le dernier auteur"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
-#: src/processing/idsuggestions.cpp:550
+#: src/processing/idsuggestions.cpp:549
 #, kde-format
 msgid "From first author to author %1 and last author"
 msgstr "Du premier auteur à l'auteur %1 et le dernier auteur"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
-#: src/processing/idsuggestions.cpp:567 src/processing/idsuggestions.cpp:587
+#: src/processing/idsuggestions.cpp:566 src/processing/idsuggestions.cpp:586
 #, kde-format
 msgid "From author %1 to author %2 and last author"
 msgstr "De l'auteur %1 à l'auteur %2 et le dernier auteur"
@@ -2606,7 +2606,7 @@ msgstr ""
 msgid "KBibTeX"
 msgstr "KBibTeX"
 
-#: src/networking/onlinesearch/onlinesearchacmportal.cpp:303
+#: src/networking/onlinesearch/onlinesearchacmportal.cpp:307
 #, kde-format
 msgid "ACM Digital Library"
 msgstr "Bibliothèque numérique ACM"
@@ -2715,7 +2715,7 @@ msgstr "Année :"
 msgid "Google Books"
 msgstr "Google Books"
 
-#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:329
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:331
 #, kde-format
 msgid ""
 "'Google Scholar' denied scrapping data because it thinks you are a robot."
@@ -2723,12 +2723,12 @@ msgstr ""
 "« Google Scholar » a refusé que vous téléchargiez les données car il pense "
 "que vous êtes un robot."
 
-#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:461
+#: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:463
 #, kde-format
 msgid "Google Scholar"
 msgstr "Google Scholar"
 
-#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:109
+#: src/networking/onlinesearch/onlinesearchideasrepec.cpp:110
 #, kde-format
 msgid "IDEAS/RePEc"
 msgstr "IDEAS / RePEc"
@@ -3022,63 +3022,63 @@ msgstr "Format des identifiants d'entrée"
 msgid "Copy References"
 msgstr "Copier les références"
 
-#: src/parts/part.cpp:305
+#: src/parts/part.cpp:306
 #, kde-format
 msgid "New%1"
 msgstr "Nouveau%1"
 
-#: src/parts/part.cpp:470
+#: src/parts/part.cpp:471
 #, kde-format
 msgid "Could not create backup copies of document '%1'."
 msgstr "Impossible de créer des copies de sauvegarde du document « %1 »."
 
-#: src/parts/part.cpp:470
+#: src/parts/part.cpp:471
 #, kde-format
 msgid "Backup copies"
 msgstr "Copies de sauvegarde"
 
-#: src/parts/part.cpp:503
+#: src/parts/part.cpp:504
 #, kde-format
 msgid "Save file"
 msgstr "Enregistrer le fichier"
 
-#: src/parts/part.cpp:531
+#: src/parts/part.cpp:532
 #, kde-format
 msgid "BibUtils"
 msgstr "Bibutils"
 
-#: src/parts/part.cpp:532
+#: src/parts/part.cpp:533
 #, kde-format
 msgid "BibTeX2HTML"
 msgstr "BibTeX2HTML"
 
-#: src/parts/part.cpp:533
+#: src/parts/part.cpp:534
 #, kde-format
 msgid "Word XML bibliography"
 msgstr "Bibliographie de mots au format « XML »"
 
-#: src/parts/part.cpp:534
+#: src/parts/part.cpp:535
 #, kde-format
 msgid "KBibTeX's own XML structure"
 msgstr "La structure propre au format « XML » de KBibTeX"
 
-#: src/parts/part.cpp:535
+#: src/parts/part.cpp:536
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
 msgstr "Le module intégré d'exportation au format « HTML » de KBibTeX"
 
-#: src/parts/part.cpp:536
+#: src/parts/part.cpp:537
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
 msgstr "Le module intégré d'exportation au format « RIS » de KBibTeX"
 
-#: src/parts/part.cpp:545
+#: src/parts/part.cpp:546
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
 msgstr "Sélectionner un module d'exportation"
 
-#: src/parts/part.cpp:547
+#: src/parts/part.cpp:548
 #, kde-format
 msgid ""
 "Several exporter modules are available to write file '%1'.\n"
@@ -3090,49 +3090,49 @@ msgstr ""
 "\n"
 "Veuillez en sélectionner un."
 
-#: src/parts/part.cpp:578
+#: src/parts/part.cpp:579
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
 msgstr "Paramètres de fichier « BibTeX »"
 
-#: src/parts/part.cpp:596
+#: src/parts/part.cpp:597
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
 msgstr "Paramètres de fichier « PDF / PostScript »"
 
-#: src/parts/part.cpp:716
+#: src/parts/part.cpp:715
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
 msgstr "L'enregistrement de la bibliographie dans le fichier « %1 » a échoué."
 
-#: src/parts/part.cpp:718 src/parts/part.cpp:724
+#: src/parts/part.cpp:717 src/parts/part.cpp:723
 #, kde-format
 msgid "Saving bibliography failed"
 msgstr "L'enregistrement de la bibliographie a échoué"
 
-#: src/parts/part.cpp:720
+#: src/parts/part.cpp:719
 #, kde-format
 msgid "Saving bibliography failed:"
 msgstr "L'enregistrement de la bibliographie a échoué :"
 
-#: src/parts/part.cpp:723
+#: src/parts/part.cpp:722
 #, kde-format
 msgid "The following output was generated by the export filter:"
 msgstr "La sortie suivante a été générée par le filtre d'export :"
 
-#: src/parts/part.cpp:774
+#: src/parts/part.cpp:773
 #, kde-format
 msgid "Local Files"
 msgstr "Fichiers locaux"
 
-#: src/parts/part.cpp:799
+#: src/parts/part.cpp:798
 #, kde-format
 msgid "Remote Files"
 msgstr "Fichiers distants"
 
-#: src/parts/part.cpp:938
+#: src/parts/part.cpp:937
 #, kde-format
 msgid ""
 "The document could not be saved, as it was not possible to write to '%1'.\n"
@@ -3145,7 +3145,7 @@ msgstr ""
 "Vérifiez que vous avez l'accès en écriture à ce fichier ou qu'il y a "
 "suffisamment d'espace disponible sur le disque."
 
-#: src/parts/part.cpp:1077
+#: src/parts/part.cpp:1076
 #, kde-format
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
@@ -3153,12 +3153,12 @@ msgstr ""
 "Impossible d'appliquer le format par défaut pour les identifiants "
 "d'entrées : aucun format par défaut spécifié."
 
-#: src/parts/part.cpp:1077
+#: src/parts/part.cpp:1076
 #, kde-format
 msgid "Cannot Apply Default Formatting"
 msgstr "Impossible d'appliquer le formatage par défaut"
 
-#: src/parts/part.cpp:1205
+#: src/parts/part.cpp:1204
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
@@ -3173,7 +3173,7 @@ msgstr ""
 "dans KBibTeX ou ignorer les modifications sur le disque et conserver celles "
 "effectuées dans KBibTeX ?"
 
-#: src/parts/part.cpp:1205
+#: src/parts/part.cpp:1204
 #, kde-format
 msgid ""
 "The file '%1' has changed on disk.\n"
@@ -3184,17 +3184,17 @@ msgstr ""
 "\n"
 "Voulez-vous le recharger ou ignorer les changements sur le disque ?"
 
-#: src/parts/part.cpp:1206
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid "File changed externally"
 msgstr "Le fichier a changé à l'extérieur du programme"
 
-#: src/parts/part.cpp:1206
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid "Reload file"
 msgstr "Recharger le fichier"
 
-#: src/parts/part.cpp:1206
+#: src/parts/part.cpp:1205
 #, kde-format
 msgid "Ignore on-disk changes"
 msgstr "Ignorer les changements sur le disque"
@@ -3329,7 +3329,7 @@ msgctxt "@title:window"
 msgid "Finding Duplicates"
 msgstr "Recherche de doublons"
 
-#: src/processing/idsuggestions.cpp:319
+#: src/processing/idsuggestions.cpp:318
 #, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
@@ -3347,117 +3347,117 @@ msgstr ""
 "which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
 "wird|with|you|und|and|ein|eine|einer|eines"
 
-#: src/processing/idsuggestions.cpp:395
+#: src/processing/idsuggestions.cpp:394
 #, kde-format
 msgid ", but only first letter of each last name"
 msgid_plural ", but only first %1 letters of each last name"
 msgstr[0] ", mais seulement la première lettre de chaque nom propre"
 msgstr[1] ", mais seulement les %1 premières lettres de chaque nom propre"
 
-#: src/processing/idsuggestions.cpp:402 src/processing/idsuggestions.cpp:455
-#: src/processing/idsuggestions.cpp:486 src/processing/idsuggestions.cpp:508
+#: src/processing/idsuggestions.cpp:401 src/processing/idsuggestions.cpp:454
+#: src/processing/idsuggestions.cpp:485 src/processing/idsuggestions.cpp:507
 #, kde-format
 msgid ", in upper case"
 msgstr ", en majuscules"
 
-#: src/processing/idsuggestions.cpp:405 src/processing/idsuggestions.cpp:458
-#: src/processing/idsuggestions.cpp:489 src/processing/idsuggestions.cpp:511
+#: src/processing/idsuggestions.cpp:404 src/processing/idsuggestions.cpp:457
+#: src/processing/idsuggestions.cpp:488 src/processing/idsuggestions.cpp:510
 #, kde-format
 msgid ", in lower case"
 msgstr ", en minuscules"
 
-#: src/processing/idsuggestions.cpp:408 src/processing/idsuggestions.cpp:461
-#: src/processing/idsuggestions.cpp:492 src/processing/idsuggestions.cpp:514
+#: src/processing/idsuggestions.cpp:407 src/processing/idsuggestions.cpp:460
+#: src/processing/idsuggestions.cpp:491 src/processing/idsuggestions.cpp:513
 #, kde-format
 msgid ", in CamelCase"
 msgstr ", en CasseMélangée"
 
-#: src/processing/idsuggestions.cpp:416 src/processing/idsuggestions.cpp:469
+#: src/processing/idsuggestions.cpp:415 src/processing/idsuggestions.cpp:468
 #, kde-format
 msgid ", with '%1' in between"
 msgstr ", avec « %1 » entre chacun"
 
-#: src/processing/idsuggestions.cpp:422
+#: src/processing/idsuggestions.cpp:421
 #, kde-format
 msgid "Year (2 digits)"
 msgstr "Année (2 chiffres)"
 
-#: src/processing/idsuggestions.cpp:424
+#: src/processing/idsuggestions.cpp:423
 #, kde-format
 msgid "Year (4 digits)"
 msgstr "Année (4 chiffres)"
 
-#: src/processing/idsuggestions.cpp:430
+#: src/processing/idsuggestions.cpp:429
 #, kde-format
 msgid ", but only the first word"
 msgid_plural ", but only first %1 words"
 msgstr[0] ", mais seulement le premier mot"
 msgstr[1] ", mais seulement les %1 premiers mots"
 
-#: src/processing/idsuggestions.cpp:436
+#: src/processing/idsuggestions.cpp:435
 #, kde-format
 msgid ", but only starting from word %1"
 msgstr ", mais seulement à partir du mot %1"
 
-#: src/processing/idsuggestions.cpp:442
+#: src/processing/idsuggestions.cpp:441
 #, kde-format
 msgid ", but only from word %1 to word %2"
 msgstr ", mais seulement du mot %1 au mot %2"
 
-#: src/processing/idsuggestions.cpp:448 src/processing/idsuggestions.cpp:480
-#: src/processing/idsuggestions.cpp:502
+#: src/processing/idsuggestions.cpp:447 src/processing/idsuggestions.cpp:479
+#: src/processing/idsuggestions.cpp:501
 #, kde-format
 msgid ", but only first letter of each word"
 msgid_plural ", but only first %1 letters of each word"
 msgstr[0] ", mais seulement la première lettre de chaque mot"
 msgstr[1] ", mais seulement les %1 premières lettres de chaque mot"
 
-#: src/processing/idsuggestions.cpp:473
+#: src/processing/idsuggestions.cpp:472
 #, kde-format
 msgid ", small words removed"
 msgstr ", mots courts supprimés"
 
-#: src/processing/idsuggestions.cpp:522
+#: src/processing/idsuggestions.cpp:521
 #, kde-format
 msgid "First page number"
 msgstr "Numéro de la première page"
 
-#: src/processing/idsuggestions.cpp:525
+#: src/processing/idsuggestions.cpp:524
 #, kde-format
 msgid "Text: '%1'"
 msgstr "Texte : « %1 »"
 
-#: src/processing/idsuggestions.cpp:542
+#: src/processing/idsuggestions.cpp:541
 #, kde-format
 msgid "First and last authors only"
 msgstr "Premier et dernier auteurs uniquement"
 
-#: src/processing/idsuggestions.cpp:544
+#: src/processing/idsuggestions.cpp:543
 #, kde-format
 msgid "First author only"
 msgstr "Premier auteur uniquement"
 
-#: src/processing/idsuggestions.cpp:546
+#: src/processing/idsuggestions.cpp:545
 #, kde-format
 msgid "All authors"
 msgstr "Tous les auteurs"
 
-#: src/processing/idsuggestions.cpp:556
+#: src/processing/idsuggestions.cpp:555
 #, kde-format
 msgid "From first author to author %1"
 msgstr "Du premier auteur à l'auteur %1"
 
-#: src/processing/idsuggestions.cpp:563
+#: src/processing/idsuggestions.cpp:562
 #, kde-format
 msgid "All but first author"
 msgstr "Tout sauf le premier auteur"
 
-#: src/processing/idsuggestions.cpp:573 src/processing/idsuggestions.cpp:593
+#: src/processing/idsuggestions.cpp:572 src/processing/idsuggestions.cpp:592
 #, kde-format
 msgid "From author %1 to author %2"
 msgstr "De l'auteur %1 à l'auteur %2"
 
-#: src/processing/idsuggestions.cpp:581
+#: src/processing/idsuggestions.cpp:580
 #, kde-format
 msgid "From author %1 to last author"
 msgstr "De l'auteur %1 jusqu'au dernier"
@@ -3522,7 +3522,7 @@ msgid "No documents to show."
 msgstr "Aucun document à afficher."
 
 #: src/program/docklets/documentpreview.cpp:369
-#: src/program/docklets/documentpreview.cpp:670
+#: src/program/docklets/documentpreview.cpp:671
 #, kde-format
 msgid ""
 "<qt>No documents to show.<br/><a href=\"disableonlylocalfiles\">Disable the "
@@ -3565,7 +3565,7 @@ msgctxt ""
 msgid "<qt>Don't know how to show mimetype '%1'.%2</qt>"
 msgstr "<qt>Savez-vous comment afficher le type MIME « %1.%2 » ?</qt>"
 
-#: src/program/docklets/documentpreview.cpp:673
+#: src/program/docklets/documentpreview.cpp:674
 #, kde-format
 msgid ""
 "No documents to show.\n"
@@ -3644,51 +3644,51 @@ msgstr "Citation Wikipédia"
 msgid "Abstract-only"
 msgstr "Abstrait uniquement"
 
-#: src/program/docklets/referencepreview.cpp:151
+#: src/program/docklets/referencepreview.cpp:152
 #, kde-format
 msgid "Open reference in web browser."
 msgstr "Ouvrir la référence dans un navigateur."
 
-#: src/program/docklets/referencepreview.cpp:154
-#: src/program/docklets/referencepreview.cpp:433
+#: src/program/docklets/referencepreview.cpp:155
+#: src/program/docklets/referencepreview.cpp:435
 #, kde-format
 msgid "Save as HTML"
 msgstr "Enregistrer comme HTML"
 
-#: src/program/docklets/referencepreview.cpp:155
+#: src/program/docklets/referencepreview.cpp:156
 #, kde-format
 msgid "Save reference as HTML fragment."
 msgstr "Enregistrer la référence comme un fragment HTML."
 
-#: src/program/docklets/referencepreview.cpp:227
+#: src/program/docklets/referencepreview.cpp:229
 #, kde-format
 msgid "Reason:"
 msgstr "Raison :"
 
-#: src/program/docklets/referencepreview.cpp:251
+#: src/program/docklets/referencepreview.cpp:253
 #, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Aperçu désactivé"
 
-#: src/program/docklets/referencepreview.cpp:266
+#: src/program/docklets/referencepreview.cpp:268
 #, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Aucun élément sélectionné"
 
-#: src/program/docklets/referencepreview.cpp:315
+#: src/program/docklets/referencepreview.cpp:317
 #, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Aucune sortie générée"
 
-#: src/program/docklets/referencepreview.cpp:357
+#: src/program/docklets/referencepreview.cpp:359
 #, kde-format
 msgid "Cannot show a preview for this type of element"
 msgstr "Impossible d'afficher un aperçu de ce type d'élément"
 
-#: src/program/docklets/referencepreview.cpp:385
+#: src/program/docklets/referencepreview.cpp:387
 #, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
@@ -4200,8 +4200,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Un éditeur BibTeX par KDE"
 
 #: src/program/program.cpp:55
-#, kde-format
-msgid "Copyright 2004-2024 Thomas Fischer"
+#, fuzzy, kde-format
+#| msgid "Copyright 2004-2024 Thomas Fischer"
+msgid "Copyright 2004-2025 Thomas Fischer"
 msgstr "Licence 2004 - 2024 Thomas Fischer"
 
 #: src/program/program.cpp:60
