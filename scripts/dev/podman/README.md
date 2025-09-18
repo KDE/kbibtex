@@ -4,7 +4,7 @@
 It is well supported on Linux distributions like Fedora or Arch.
 For further information, please visit Podman's webpage at [podman.io](https://podman.io/).
 
-Before proceeding with this README, please ensure that you have a working Podman installation and that you as a non-priviledged user can pull images from Docker's hub and run container instances.
+Before proceeding with this README, please ensure that you have a working Podman installation and that you as a non-privileged user can pull images from Docker's hub and run container instances.
 Please refer to your Linux distribution's manual and Podman's official documentation.
 
 There are two scripts that prepare images for KBibTeX and allow running KBibTeX or any of its automated tests.

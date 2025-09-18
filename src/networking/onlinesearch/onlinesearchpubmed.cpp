@@ -132,7 +132,7 @@ void OnlineSearchPubMed::startSearch(const QMap<QueryKey, QString> &query, int n
 
     /// enforcing limit on number of results
     numResults = qMin(OnlineSearchPubMedPrivate::maxNumResults, numResults);
-    /// enforcing choke on number of searchs per time
+    /// enforcing choke on number of searches per time
     if (QDateTime::currentSecsSinceEpoch() - lastQueryEpoch < OnlineSearchPubMedPrivate::queryChokeTimeout) {
         qCWarning(LOG_KBIBTEX_NETWORKING) << "Too many search queries per time; choke enforces pause of" << OnlineSearchPubMedPrivate::queryChokeTimeout << "seconds between queries";
         delayedStoppedSearch(resultNoError);

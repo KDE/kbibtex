@@ -68,7 +68,7 @@ private:
      * It is the caller's responsibility to pass a valid argument to @p outFile
      * and later delete the returned File object.
      *
-     * @param absoluteFilename biblography file to laod
+     * @param absoluteFilename biblography file to load
      * @param currentTestFile data structure holding the baseline values
      * @param outFile returns pointer to the opened file
      */

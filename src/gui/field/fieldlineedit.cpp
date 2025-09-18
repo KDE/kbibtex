@@ -600,7 +600,7 @@ void FieldLineEdit::dropEvent(QDropEvent *event)
 
     if (!success) {
         /// In case above cases were not met and thus 'success' is still false,
-        /// clear this line edit and use the clipboad text as its content
+        /// clear this line edit and use the clipboard text as its content
         setText(clipboardText);
         Q_EMIT textChanged(clipboardText);
     }

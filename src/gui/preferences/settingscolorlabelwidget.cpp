@@ -322,7 +322,7 @@ public:
         connect(model, &ColorLabelSettingsModel::modified, p, &SettingsColorLabelWidget::changed);
 
         /// Delegate to handle changes of color (through KColorButton)
-        /// and label (throuh QLineEdit)
+        /// and label (through QLineEdit)
         delegate = new ColorLabelSettingsDelegate(view);
         view->setItemDelegate(delegate);
 

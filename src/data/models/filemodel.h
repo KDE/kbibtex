@@ -66,7 +66,7 @@ public:
 
     QSharedPointer<Element> element(int row) const;
     int row(QSharedPointer<Element> element) const;
-    /// Notifies the model that a given element has been modifed
+    /// Notifies the model that a given element has been modified
     void elementChanged(int row);
 
     void notificationEvent(int eventId) override;

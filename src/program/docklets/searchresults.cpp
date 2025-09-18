@@ -210,7 +210,7 @@ void SearchResults::importSelected()
         /// that may be hidden through sorting
         int row = d->resultList->sortFilterProxyModel()->mapToSource(modelIndex).row();
         /// Should only be an Entry,
-        /// everthing else is unexpected
+        /// everything else is unexpected
         QSharedPointer<Entry> entry = sourceModel->element(row).dynamicCast<Entry>();
         if (!entry.isNull()) {
             /// Important: make clone of entry before inserting

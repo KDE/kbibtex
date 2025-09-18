@@ -60,7 +60,7 @@ public:
             qCWarning(LOG_KBIBTEX_GUI) << "Number of columns in file view does not match number of bibliography fields:" << p->header()->count() << "!=" << BibTeXFields::instance().count();
             return;
         } else if (!automaticBalancing) {
-            qCWarning(LOG_KBIBTEX_GUI) << "Will not automaticlly balance columns if automatic balancing is disabled";
+            qCWarning(LOG_KBIBTEX_GUI) << "Will not automatically balance columns if automatic balancing is disabled";
             return;
         }
 

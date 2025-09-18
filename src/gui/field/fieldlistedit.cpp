@@ -248,7 +248,7 @@ bool FieldListEdit::reset(const Value &value)
     for (const auto &valueItem : value) {
         Value v;
         v.append(valueItem);
-        // Re-use existing FieldInput widgets and only create new ones if necessary
+        // Reuse existing FieldInput widgets and only create new ones if necessary
         FieldLineEdit *fieldLineEdit = pos < d->lineEditList.count() ? d->lineEditList.at(pos) : addFieldLineEdit();
         fieldLineEdit->setFile(d->file);
         fieldLineEdit->reset(v);
@@ -381,7 +381,7 @@ void FieldListEdit::dropEvent(QDropEvent *event)
 
     if (!success) {
         // In case above cases were not met and thus 'success' is still false,
-        // keep a single FieldLineEdit and use the clipboad text as its content
+        // keep a single FieldLineEdit and use the clipboard text as its content
         FieldLineEdit *fle = d->lineEditList.count() > 0 ? d->lineEditList.first() : addFieldLineEdit();
         fle->setText(clipboardText);
 

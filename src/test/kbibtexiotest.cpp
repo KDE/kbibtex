@@ -823,14 +823,14 @@ void KBibTeXIOTest::fileExporterBibTeXcanEncode_data()
         QVector<QString>
 #endif // HAVE_QTEXTCODEC
             {codecUtf8, codecUtf16, codecISO885915, codecWindows1250, codecWindows1256};
-    QTest::newRow("Letter 'Latin captial letter A with diaeresis' (U+00C4)") << QChar(0x00C4) <<
+    QTest::newRow("Letter 'Latin capital letter A with diaeresis' (U+00C4)") << QChar(0x00C4) <<
 #ifdef HAVE_QTEXTCODEC
         QVector<QTextCodec *>
 #else // HAVE_QTEXTCODEC
         QVector<QString>
 #endif // HAVE_QTEXTCODEC
             {codecUtf8, codecUtf16, codecISO885915, codecWindows1250};
-    QTest::newRow("Letter 'Latin captial letter A with ring above' (U+00C5)") << QChar(0x00C5) <<
+    QTest::newRow("Letter 'Latin capital letter A with ring above' (U+00C5)") << QChar(0x00C5) <<
 #ifdef HAVE_QTEXTCODEC
         QVector<QTextCodec *>
 #else // HAVE_QTEXTCODEC

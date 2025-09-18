@@ -1323,7 +1323,7 @@ QString EncoderLaTeX::decode(const QString &input) const
             /// So far, no opening curly bracket and no backslash
             /// May still be a symbol sequence like ---
             bool isSymbolSequence = false;
-            /// Go through all known symbol sequnces
+            /// Go through all known symbol sequences
             for (const EncoderLaTeXSymbolSequence &encoderLaTeXSymbolSequence : encoderLaTeXSymbolSequences) {
                 /// First, check if read input character matches beginning of symbol sequence
                 /// and input buffer as enough characters left to potentially contain

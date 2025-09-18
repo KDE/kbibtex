@@ -46,7 +46,7 @@ public:
 };
 
 /**
- * A widget which shows a number of stars in a horizonal row.
+ * A widget which shows a number of stars in a horizontal row.
  * A floating-point value between 0.0 and n (n=number of stars) can be
  * assigned to this widget; based on this value, the corresponding
  * number of stars on the left side will be colored golden, the stars
@@ -92,7 +92,7 @@ public:
 
     /**
      * Set this widget in read-only or read-writeable mode.
-     * @param isReadOnly @c true if widget is to be read-only, @c false if modifyable
+     * @param isReadOnly @c true if widget is to be read-only, @c false if modifiable
      */
     void setReadOnly(bool isReadOnly);
 
@@ -116,7 +116,7 @@ private:
 };
 
 /**
- * A specialization of @see StarRating mimicing a FieldInput widget.
+ * A specialization of @see StarRating mimicking a FieldInput widget.
  * As part of this specialization, @see apply and @see reset functions
  * to write to or read from a Value object.
  *

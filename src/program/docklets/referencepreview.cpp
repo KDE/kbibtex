@@ -355,7 +355,7 @@ void ReferencePreview::renderHTML()
 
     if ((!exporterResult || text.isEmpty()) && !elementIsEntry) {
         // Some exporters do not handle things like macros or preamble.
-        // Assume that this is the case here and provide an approriate error message for that
+        // Assume that this is the case here and provide an appropriate error message for that
         text = d->errorMessageInnerTemplate.arg(i18n("Cannot show a preview for this type of element"));
         textIsErrorMessage = true;
     }

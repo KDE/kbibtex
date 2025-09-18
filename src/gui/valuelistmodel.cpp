@@ -571,9 +571,9 @@ void ValueListModel::removeValueFromEntries(const QModelIndex &index)
                     const QString valueFullText = PlainTextValue::text(eit.value());
                     if (valueFullText == toBeDeletedText) {
                         /// If the key-value pair's value's textual representation is the same
-                        /// as the value to be delted, remove this key-value pair
+                        /// as the value to be deleted, remove this key-value pair
                         /// This test is usually true for keys like title, year, or edition.
-                        entry->remove(key); /// This would break the Iterator, but code "breakes" from loop anyways
+                        entry->remove(key); /// This would break the Iterator, but code "breaks" from loop anyways
                     } else {
                         /// The test above failed, but the delete operation may have
                         /// to be applied to a ValueItem inside the value.
@@ -596,7 +596,7 @@ void ValueListModel::removeValueFromEntries(const QModelIndex &index)
 
                         if (eit.value().isEmpty()) {
                             /// This value does no longer contain any ValueItems.
-                            entry->remove(key); /// This would break the Iterator, but code "breakes" from loop anyways
+                            entry->remove(key); /// This would break the Iterator, but code "breaks" from loop anyways
                         }
                     }
                     break;

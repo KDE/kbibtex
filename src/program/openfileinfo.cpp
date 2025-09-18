@@ -405,7 +405,7 @@ KPluginMetaData OpenFileInfo::defaultService()
 
     if (!result.isValid()) {
         // If above test for supported mime types failed
-        // or no valid KPluginMetaData could be instanciated for 'kbibtexpart',
+        // or no valid KPluginMetaData could be instantiated for 'kbibtexpart',
         // pick any of the other available parts supporting the requested mime type
 
         const QVector<KPluginMetaData> parts = listOfServices();
@@ -549,7 +549,7 @@ OpenFileInfoManager::OpenFileInfoManager(QObject *parent)
         /// In case there is at least one file marked as 'open' but it is not yet actually open,
         /// set it as current file now. The file to be opened (identified by URL) should be
         /// preferably the file that was actively open at the end of last KBibTeX session.
-        /// Slightly delaying the actually opening of files is necessary to give precendence
+        /// Slightly delaying the actually opening of files is necessary to give precedence
         /// to bibliography files passed as command line arguments (see program.cpp) over files
         /// that where open when the previous KBibTeX session was quit.
         /// See KDE bug 417164.
@@ -597,7 +597,7 @@ OpenFileInfo *OpenFileInfoManager::open(const QUrl &url)
         result = new OpenFileInfo(this, url);
         connect(result, &OpenFileInfo::flagsChanged, this, &OpenFileInfoManager::flagsChanged);
         d->openFileInfoList << result;
-    } /// else: file was already open, re-use and return existing OpenFileInfo pointer
+    } /// else: file was already open, reuse and return existing OpenFileInfo pointer
     result->setLastAccess();
     return result;
 }
@@ -627,7 +627,7 @@ bool OpenFileInfoManager::changeUrl(OpenFileInfo *openFileInfo, const QUrl &url)
     openFileInfo->setUrl(url);
 
     if (url != oldUrl && oldUrl.isValid()) {
-        /// current document was most probabily renamed (e.g. due to "Save As")
+        /// current document was most probably renamed (e.g. due to "Save As")
         /// add old URL to recently used files, but exclude the open files list
         OpenFileInfo *ofi = open(oldUrl); // krazy:exclude=syscalls
         OpenFileInfo::StatusFlags statusFlags = (openFileInfo->flags() & ~static_cast<int>(OpenFileInfo::StatusFlag::Open)) | OpenFileInfo::StatusFlag::RecentlyUsed;

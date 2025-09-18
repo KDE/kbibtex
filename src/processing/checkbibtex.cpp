@@ -54,7 +54,7 @@ CheckBibTeX::CheckBibTeXResult CheckBibTeX::checkBibTeX(QSharedPointer<Entry> &e
     /// create temporary entry to work with
     dummyFile << entry;
 
-    /// fetch and inser crossref'ed entry
+    /// fetch and insert crossref'ed entry
     QString crossRefStr;
     Value crossRefVal = entry->value(Entry::ftCrossRef);
     if (!crossRefVal.isEmpty() && file != nullptr) {

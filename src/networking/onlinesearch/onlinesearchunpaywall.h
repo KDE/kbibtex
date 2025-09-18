@@ -29,7 +29,7 @@
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *
- * See hhttps://unpaywall.org/products/api for more technical information about Unpaywall.
+ * See https://unpaywall.org/products/api for more technical information about Unpaywall.
  */
 class KBIBTEXNETWORKING_EXPORT OnlineSearchUnpaywall : public OnlineSearchAbstract
 {

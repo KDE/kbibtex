@@ -678,7 +678,7 @@ public:
             }
 
         if (_bibtexfile != bibtexfile)
-            /// _bibtexfile is not the origianl bibtexfile passed to this function,
+            /// _bibtexfile is not the original bibtexfile passed to this function,
             /// but was generated as part of the sorting by identifier,
             /// thus destroy it now
             delete _bibtexfile;

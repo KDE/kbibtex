@@ -50,7 +50,7 @@ public:
     QWidget *hideTab(int index);
 
     /**
-     * Shows a previously hidden tab reusing its properties (label, icon, tooltip, what's this, enbled).
+     * Shows a previously hidden tab reusing its properties (label, icon, tooltip, what's this, enabled).
      * If possible, the hidden tab will be shown between its previous neighbor tabs.
      * If the provided @param page was not added by @see addTab or @see insertTab,
      * the function will return InvalidTabPosition. If the tab could be shown again, its new position will be returned.

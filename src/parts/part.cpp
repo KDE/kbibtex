@@ -511,7 +511,7 @@ public:
 #endif // QT_VERSION >= 0x050e00
         /// Setting the dialog into "Saving" mode make the "add extension" checkbox available
         saveDlg->setAcceptMode(QFileDialog::AcceptSave);
-        /// Mime type 'text/x-bibtex' is guaranteed to be pre-selected, so set default filename suffix accordingly
+        /// Mime type 'text/x-bibtex' is guaranteed to be preselected, so set default filename suffix accordingly
         saveDlg->setDefaultSuffix(QStringLiteral("bib"));
         saveDlg->setFileMode(QFileDialog::AnyFile);
         if (saveDlg->exec() != QDialog::Accepted)
@@ -1134,7 +1134,7 @@ void KBibTeXPart::newPreambleTriggered()
 
 void KBibTeXPart::newCommentTriggered()
 {
-    // Fetch comment context and prefix preferrably from File object,
+    // Fetch comment context and prefix preferably from File object,
     // otherwise from Preferences
     const Preferences::CommentContext commentContext {d->bibTeXFile != nullptr && d->bibTeXFile->hasProperty(File::CommentContext) ? static_cast<Preferences::CommentContext>(d->bibTeXFile->property(File::CommentContext).toInt()) : Preferences::instance().bibTeXCommentContext()};
     const QString commentPrefix {commentContext == Preferences::CommentContext::Prefix ? (d->bibTeXFile != nullptr && d->bibTeXFile->hasProperty(File::CommentPrefix) ? d->bibTeXFile->property(File::CommentPrefix).toString() : Preferences::instance().bibTeXCommentPrefix()) : QString()};

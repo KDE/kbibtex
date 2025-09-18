@@ -523,7 +523,7 @@ public:
                     result.append(state.nextChar);
                 }
             } else if ((nextCharUnicode >= static_cast<ushort>('a') && nextCharUnicode <= static_cast<ushort>('z')) || (nextCharUnicode >= static_cast<ushort>('A') && nextCharUnicode <= static_cast<ushort>('Z')) || (nextCharUnicode >= static_cast<ushort>('0') && nextCharUnicode <= static_cast<ushort>('9')) || extraAlphaNumChars.contains(state.nextChar)) {
-                /// Accept default set of alpha-numeric characters
+                /// Accept default set of alphanumeric characters
                 result.append(state.nextChar);
             } else
                 break;
@@ -1414,7 +1414,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         encodingMayGetDeterminedByRawData = false;
     } else {
         /// Assuming that encoding is ASCII-compatible, thus it is possible
-        /// to search for a byte sequence containin ASCII text
+        /// to search for a byte sequence containing ASCII text
         const QByteArray rawDataBeginning = rawData.left(8192);
         const int xkbibtexencodingpos = qMax(rawDataBeginning.indexOf("@comment{x-kbibtex-encoding="), rawDataBeginning.indexOf("@Comment{x-kbibtex-encoding="));
         if (xkbibtexencodingpos >= 0) {

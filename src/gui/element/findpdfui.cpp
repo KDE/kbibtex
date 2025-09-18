@@ -225,7 +225,7 @@ void PDFItemDelegate::updateItemWidgets(const QList<QWidget *> &widgets, const Q
 
 QSize PDFItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &) const
 {
-    /// set a size that is suiteable
+    /// set a size that is suitable
     QSize size;
 #if QT_VERSION >= 0x050b00
     size.setWidth(option.fontMetrics.horizontalAdvance(i18n("Download")) * 6);
@@ -483,7 +483,7 @@ bool FindPDFUI::apply(Entry &entry, const File &bibtexFile)
         bool ok = false;
         FindPDF::DownloadMode downloadMode = static_cast<FindPDF::DownloadMode>(model->data(model->index(i, 0), PDFListModel::DownloadModeRole).toInt(&ok));
         if (!ok) {
-            qCDebug(LOG_KBIBTEX_GUI) << "Could not interprete download mode";
+            qCDebug(LOG_KBIBTEX_GUI) << "Could not interpret download mode";
             downloadMode = FindPDF::DownloadMode::No;
         }
 

@@ -308,7 +308,7 @@ void EntryConfiguredWidget::layoutGUI(bool forceVisible, const QString &entryTyp
     /// variables to keep track which and how many field inputs will be visible
     int countVisible = 0;
     QScopedArrayPointer<bool> visible(new bool[fieldInputCount]);
-    /// ... and if any field input is vertically expaning
+    /// ... and if any field input is vertically expanding
     /// (e.g. a list, important for layout)
     bool anyoneVerticallyExpanding = false;
 

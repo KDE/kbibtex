@@ -458,11 +458,11 @@ public:
         const bool isToSourceWidget = futureTab == sourceWidget;
         /// Switch from some widget to the source widget?
         const bool isFromSourceWidget = previousWidget == sourceWidget;
-        /// Interprete future widget as an ElementWidget
+        /// Interpret future widget as an ElementWidget
         ElementWidget *futureWidget = qobject_cast<ElementWidget *>(futureTab);
         /// Past and future ElementWidget values are valid?
         if (previousWidget != nullptr && futureWidget != nullptr) {
-            /// Assign to temp wihch internal variable holds current state
+            /// Assign to temp which internal variable holds current state
             QSharedPointer<Element> temp;
             if (!internalEntry.isNull())
                 temp = internalEntry;
@@ -480,7 +480,7 @@ public:
             if (isToSourceWidget && referenceWidget != nullptr) referenceWidget->apply(temp);
             /// Tell future widget to initialize itself based on internal state
             futureWidget->reset(temp);
-            /// When switchin from source widget to another widget, initialize reference widget
+            /// When switching from source widget to another widget, initialize reference widget
             if (isFromSourceWidget && referenceWidget != nullptr)
                 referenceWidget->reset(temp);
         }

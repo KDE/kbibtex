@@ -43,7 +43,7 @@ typedef struct {
     QString upperCamelCaseAlt;
     /**
      * List of aliases for a field. Empty for most fields. Alias for BibLaTeX
-     * must be explictly mentioned in BibLaTeX's official documentation, see
+     * must be explicitly mentioned in BibLaTeX's official documentation, see
      * section 'Field Aliases'.
      * Field aliases shall not be used as alternative field names.
      */

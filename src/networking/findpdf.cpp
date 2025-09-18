@@ -281,7 +281,7 @@ public:
                 }
             } else {
                 /// Failed to create temporary file
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to create temporary file for templaet" << resultItem.tempFilename->fileTemplate();
+                qCWarning(LOG_KBIBTEX_NETWORKING) << "Failed to create temporary file for template" << resultItem.tempFilename->fileTemplate();
                 delete resultItem.tempFilename;
                 resultItem.tempFilename = nullptr;
             }
