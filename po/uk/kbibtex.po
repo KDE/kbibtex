@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-17 01:57+0000\n"
-"PO-Revision-Date: 2025-08-30 13:14+0300\n"
+"PO-Revision-Date: 2025-09-17 15:12+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -4186,10 +4186,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Редактор BibTeX від KDE"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2024 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2025 Thomas Fischer"
-msgstr "© Thomas Fischer, 2004–2024"
+msgstr "© Thomas Fischer, 2004–2025"
 
 #: src/program/program.cpp:60
 #, kde-format

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-17 01:57+0000\n"
-"PO-Revision-Date: 2025-08-30 12:52+0200\n"
+"PO-Revision-Date: 2025-09-17 10:15+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -4187,10 +4187,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Un editor de BibTeX, creat per la comunitat KDE"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2024 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2025 Thomas Fischer"
-msgstr "Copyright 2004-2024 Thomas Fischer"
+msgstr "Copyright 2004-2025 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format

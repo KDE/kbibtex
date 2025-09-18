@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-09-17 01:57+0000\n"
-"PO-Revision-Date: 2025-08-30 18:31+0300\n"
+"PO-Revision-Date: 2025-09-17 14:49+0300\n"
 "Last-Translator: Emir SARI <emir_sari@îcloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.08.1\n"
 "X-POOTLE-MTIME: 1502202283.000000\n"
 
 #, kde-format
@@ -1689,9 +1689,9 @@ msgid ""
 "path would be<br/><tt style=\"font-family: %3;\">%1</tt></p><p>The absolute "
 "path would be<br/><tt style=\"font-family: %3;\">%2</tt></p></qt>"
 msgstr ""
-"<qt><p>Kaynakça dosyasına göre dosya adı mı kullanıyorsunuz?</p><p>Göreceli "
-"yol<br/><tt style=\"font-family: %3;\">%1</tt></p>olacaktır<p>Kesin yol<br/"
-"><tt style=\"font-family: %3;\">%2</tt></p>olacaktır</qt>"
+"<qt><p>Kaynakça dosyasına göreceli bir dosya adı mı kullanılsın?</"
+"p><p>Göreceli yol<br/><tt style=\"font-family: %3;\">%1</tt> olur.</"
+"p><p>Mutlak yol<br/><tt style=\"font-family: %3;\">%2</tt> olur.</p></qt>"
 
 #: src/gui/field/fieldlistedit.cpp:655
 #, kde-format
@@ -4159,10 +4159,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "KDE tarafından yapılmiş bir BibTeX düzenleyicisi"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2024 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2025 Thomas Fischer"
-msgstr "Telif hakkı 2004–2024 Thomas Fischer"
+msgstr "© 2004–2025 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
