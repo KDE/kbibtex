@@ -178,13 +178,11 @@ public:
             request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
             QNetworkReply *reply = InternalNetworkAccessManager::instance().get(request);
             connect(reply, &QNetworkReply::finished, parent, [this, reply, cur]() {
-                QUrl favIconUrl;
-
                 // Assume that favicon information is within the first 16K of HTML code
                 const QString htmlCode = QString::fromUtf8(reply->readAll()).left(16384);
                 // Some ugly but hopefully fast/flexible/robust HTML code parsing
                 int p1 = -1;
-                while (!favIconUrl.isValid() && (p1 = htmlCode.indexOf(QStringLiteral("<link "), p1 + 5)) > 0) {
+                while ((p1 = htmlCode.indexOf(QStringLiteral("<link "), p1 + 5)) > 0) {
                     const int p2 = htmlCode.indexOf(u'>', p1 + 5);
                     if (p2 > p1) {
                         const int p3 = htmlCode.indexOf(QStringLiteral("rel=\""), p1 + 5);
@@ -199,22 +197,17 @@ public:
                                         if (p6 > p5 + 5 && p6 <= p2) {
                                             QString hrefValue = htmlCode.mid(p5 + 6, p6 - p5 - 6).replace(u'&', QStringLiteral("&amp;")).replace(u'>', QStringLiteral("&gt;")).replace(u'<', QStringLiteral("&lt;"));
                                             // Do some resolving in case favicon URL in HTML code is relative
-                                            favIconUrl = cur.url.resolved(QUrl(hrefValue));
-                                            if (favIconUrl.isValid())
-                                                break;
-                                            else
-                                                favIconUrl.clear();
+                                            const QUrl favIconUrl{cur.url.resolved(QUrl(hrefValue))};
+                                            if (favIconUrl.isValid()) {
+                                                qCDebug(LOG_KBIBTEX_NETWORKING) << "Found favicon URL" << favIconUrl.toDisplayString() << "in HTML code of webpage" << InternalNetworkAccessManager::removeApiKey(cur.url).toDisplayString();
+                                                typedUrlStack.push({UrlType::FavIcon, favIconUrl});
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                }
-
-                if (favIconUrl.isValid()) {
-                    qCDebug(LOG_KBIBTEX_NETWORKING) << "Found favicon URL" << favIconUrl.toDisplayString() << "in HTML code of webpage" << InternalNetworkAccessManager::removeApiKey(cur.url).toDisplayString();
-                    typedUrlStack.push({UrlType::FavIcon, favIconUrl});
                 }
 
                 processNextInStack();
