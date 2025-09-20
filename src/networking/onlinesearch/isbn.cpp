@@ -51,7 +51,7 @@ QString ISBN::locate(const QString &haystack)
             if (s % 11 == 0)
                 return needle;
             else
-                qCInfo(LOG_KBIBTEX_NETWORKING) << "ISBN-10 needle did not pass checksum validation:" << needle;
+                qCDebug(LOG_KBIBTEX_NETWORKING) << "ISBN-10 needle did not pass checksum validation:" << needle;
         } else if (needle.length() == 13) {
             // For potential ISBN-13 needles, perform checksum algorithm
             int s = 0;
@@ -61,7 +61,7 @@ QString ISBN::locate(const QString &haystack)
             if ((10 - (s % 10)) % 10 == needle[12].digitValue())
                 return needle;
             else
-                qCWarning(LOG_KBIBTEX_NETWORKING) << "ISBN-13 needle did not pass checksum validation:" << needle;
+                qCDebug(LOG_KBIBTEX_NETWORKING) << "ISBN-13 needle did not pass checksum validation:" << needle;
         }
     }
 

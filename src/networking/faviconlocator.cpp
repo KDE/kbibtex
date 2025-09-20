@@ -104,7 +104,7 @@ public:
     void processNextInStack()
     {
         if (typedUrlStack.isEmpty()) {
-            qCWarning(LOG_KBIBTEX_NETWORKING) << "All methods to locate FavIcon exhausted, giving up for original URL(s)" << originalUrls;
+            qCInfo(LOG_KBIBTEX_NETWORKING) << "All methods to locate FavIcon exhausted, giving up for original URL(s)" << originalUrls;
             return;
         }
 
@@ -121,7 +121,6 @@ public:
                         // If FavIcon is older than 90 days, delete it and fetch current one
                         QFile::remove(fileName);
                     } else {
-                        qCDebug(LOG_KBIBTEX_NETWORKING) << "Found cached FavIcon for" << originalUrls << "in file" << fileName;
                         signalIcon(QIcon(fileName));
                         return;
                     }
@@ -147,9 +146,9 @@ public:
                     } else if (iconData[0] == '<') {
                         // HTML or XML code
                         const QString htmlCode = QString::fromUtf8(iconData);
-                        qCWarning(LOG_KBIBTEX_NETWORKING) << "Received XML or HTML data from " << InternalNetworkAccessManager::removeApiKey(cur.url).toDisplayString() << ": " << htmlCode.left(128);
+                        qCDebug(LOG_KBIBTEX_NETWORKING) << "Received XML or HTML data from " << InternalNetworkAccessManager::removeApiKey(cur.url).toDisplayString() << ": " << htmlCode.left(128);
                     } else {
-                        qCWarning(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << InternalNetworkAccessManager::removeApiKey(cur.url).toDisplayString();
+                        qCDebug(LOG_KBIBTEX_NETWORKING) << "Favicon is of unknown format: " << InternalNetworkAccessManager::removeApiKey(cur.url).toDisplayString();
                     }
 
                     if (!extension.isEmpty()) {

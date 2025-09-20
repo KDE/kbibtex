@@ -430,7 +430,7 @@ QMultiMap<QString, QString> OnlineSearchAbstract::formParameters(const QString &
     /// determined boundaries of (only) "form" tag
     int endPos = htmlText.indexOf(formTagEnd, startPos, Qt::CaseInsensitive);
     if (startPos < 0 || endPos < 0) {
-        qCWarning(LOG_KBIBTEX_NETWORKING) << "Could not locate form in text";
+        qCDebug(LOG_KBIBTEX_NETWORKING) << "Could not locate form in text";
         return result;
     }
 
