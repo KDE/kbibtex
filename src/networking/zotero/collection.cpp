@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -240,7 +240,8 @@ void Collection::finishedFetchingCollection()
         } else
             d->runNextInDownloadQueue();
     } else {
-        qCWarning(LOG_KBIBTEX_NETWORKING) << reply->errorString(); ///< something went wrong
+        const QByteArray data{reply->readAll()};
+        qCWarning(LOG_KBIBTEX_NETWORKING) << "Fetching collections from URL" << reply->url().toDisplayString() << "failed with code" << reply->error() << "and message" << reply->errorString() << "and data" << data.left(64);
         d->initialized = false;
         emitFinishedLoading();
     }

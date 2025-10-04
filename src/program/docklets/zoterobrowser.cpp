@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -294,33 +294,25 @@ bool ZoteroBrowser::applyCredentials()
         int groupId = d->comboBoxGroupList->itemData(d->comboBoxGroupList->currentIndex()).toInt(&ok);
         if (!ok) groupId = -1;
 
-#ifdef EXTRA_VERBOSE
-        if (d->tags == nullptr)
-            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
-#endif // EXTRA_VERBOSE
-        disconnect(d->tags, &Zotero::Tags::finishedLoading, this, &ZoteroBrowser::reenableWidget);
-#ifdef EXTRA_VERBOSE
-        if (d->items == nullptr)
-            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
-#endif // EXTRA_VERBOSE
-        disconnect(d->items, &Zotero::Items::stoppedSearch, this, &ZoteroBrowser::reenableWidget);
-        disconnect(d->items, &Zotero::Items::foundElement, this, &ZoteroBrowser::showItem);
-#ifdef EXTRA_VERBOSE
-        if (d->tagModel == nullptr)
-            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
-#endif // EXTRA_VERBOSE
-        disconnect(d->tagModel, &Zotero::TagModel::modelReset, this, &ZoteroBrowser::modelReset);
-#ifdef EXTRA_VERBOSE
-        if (d->collectionModel == nullptr)
-            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
-#endif // EXTRA_VERBOSE
-        disconnect(d->collectionModel, &Zotero::CollectionModel::modelReset, this, &ZoteroBrowser::modelReset);
-
-        d->collection->deleteLater();
-        d->items->deleteLater();
-        d->tags->deleteLater();
-        d->collectionModel->deleteLater();
-        d->tagModel->deleteLater();
+        if (d->tags != nullptr) {
+            disconnect(d->tags, &Zotero::Tags::finishedLoading, this, &ZoteroBrowser::reenableWidget);
+            d->tags->deleteLater();
+        }
+        if (d->items != nullptr) {
+            disconnect(d->items, &Zotero::Items::stoppedSearch, this, &ZoteroBrowser::reenableWidget);
+            disconnect(d->items, &Zotero::Items::foundElement, this, &ZoteroBrowser::showItem);
+            d->items->deleteLater();
+        }
+        if (d->tagModel != nullptr) {
+            disconnect(d->tagModel, &Zotero::TagModel::modelReset, this, &ZoteroBrowser::modelReset);
+            d->tagModel->deleteLater();
+        }
+        if (d->collectionModel != nullptr) {
+            disconnect(d->collectionModel, &Zotero::CollectionModel::modelReset, this, &ZoteroBrowser::modelReset);
+            d->collectionModel->deleteLater();
+        }
+        if (d->collection != nullptr)
+            d->collection->deleteLater();
         d->api.clear();
 
         const bool makeGroupRequest = d->radioGroupLibrary->isChecked() && groupId > 0;
@@ -342,8 +334,10 @@ bool ZoteroBrowser::applyCredentials()
         d->needToApplyCredentials = false;
 
         return true;
-    } else
+    } else {
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Either Zotero User ID is not a number or API key is empty: Check whether"<<d->lineEditNumericUserId->text() << "is a number and" << d->lineEditApiKey->text() << "is a non-empty string";
         return false;
+    }
 }
 
 void ZoteroBrowser::radioButtonsToggled() {
@@ -366,12 +360,10 @@ void ZoteroBrowser::retrieveGroupList() {
         d->comboBoxGroupList->clear();
         d->comboBoxGroupListInitialized = false;
 
-#ifdef EXTRA_VERBOSE
-        if (d->groups == nullptr)
-            qCWarning(LOG_KBIBTEX_PROGRAM) << "About to disconnect from nullptr";
-#endif // EXTRA_VERBOSE
-        disconnect(d->groups, &Zotero::Groups::finishedLoading, this, &ZoteroBrowser::gotGroupList);
-        d->groups->deleteLater();
+        if (d->groups != nullptr) {
+            disconnect(d->groups, &Zotero::Groups::finishedLoading, this, &ZoteroBrowser::gotGroupList);
+            d->groups->deleteLater();
+        }
         d->api.clear();
 
         d->api = QSharedPointer<Zotero::API>(new Zotero::API(Zotero::API::RequestScope::User, userId, d->lineEditApiKey->text(), this));
@@ -408,12 +400,14 @@ void ZoteroBrowser::gotGroupList() {
 void ZoteroBrowser::getOAuthCredentials()
 {
     QPointer<Zotero::OAuthWizard> wizard = new Zotero::OAuthWizard(this);
-    if (wizard->exec() && !wizard->apiKey().isEmpty() && wizard->userId() >= 0) {
+    if (wizard->exec() && !wizard->apiKey().isEmpty() && !wizard->userId().isEmpty()) {
         d->lineEditApiKey->setText(wizard->apiKey());
-        d->lineEditNumericUserId->setText(QString::number(wizard->userId()));
+        d->lineEditNumericUserId->setText(wizard->userId());
         d->queueWriteOAuthCredentials();
         updateButtons();
         retrieveGroupList();
+    } else {
+        qCWarning(LOG_KBIBTEX_PROGRAM) << "Retrieving Zotero API credentials via wizard failed or aborted";
     }
     delete wizard;
 }

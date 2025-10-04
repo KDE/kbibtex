@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2022 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,6 +21,7 @@
 
 #include <QLabel>
 #include <QLayout>
+#include <QFormLayout>
 #include <QDialogButtonBox>
 #include <QGridLayout>
 #include <QClipboard>
@@ -30,7 +31,10 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QRegularExpression>
+#include <QRegularExpressionValidator>
 #include <QtNetworkAuth>
+#include <QWizardPage>
+#include <QTimer>
 
 #include <kio_version.h>
 #include <KLocalizedString>
@@ -50,6 +54,84 @@
 
 using namespace Zotero;
 
+void openLink(const QString &link, QWidget *parent)
+{
+    static const QString mimeHTML{QStringLiteral("text/html")};
+#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
+    KRun::runUrl(QUrl(link), mimeHTML, parent, KRun::RunFlags());
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
+    KIO::OpenUrlJob *job = new KIO::OpenUrlJob(QUrl(link), mimeHTML);
+#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
+    job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, parent));
+#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
+    job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, parent));
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
+    job->start();
+#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
+}
+
+class ValidatedLineEditPage : public QWizardPage
+{
+private:
+    QValidator *validator;
+    QLineEdit *lineEdit;
+    QLabel *labelExplanation;
+
+public:
+
+    ValidatedLineEditPage(const QString &explanation, const QString &lineEditLabel, QValidator *_validator, QWizard *parent)
+            : QWizardPage(parent), validator(_validator)
+    {
+
+        QBoxLayout *boxLayout = new QVBoxLayout(this);
+
+        labelExplanation = new QLabel(explanation, this);
+        boxLayout->addWidget(labelExplanation);
+
+        boxLayout->addSpacing(labelExplanation->fontMetrics().averageCharWidth());
+
+        QFormLayout *formLayout{new QFormLayout()};
+        boxLayout->addLayout(formLayout);
+        lineEdit = new QLineEdit(this);
+        formLayout->addRow(lineEditLabel, lineEdit);
+        lineEdit->setValidator(validator);
+        validator->setParent(lineEdit);
+        connect(validator, &QValidator::changed, this, [this]() {
+            Q_EMIT completeChanged();
+        });
+        connect(lineEdit, &QLineEdit::textChanged, this, [this](const QString &) {
+            Q_EMIT completeChanged();
+        });
+        connect(labelExplanation, &QLabel::linkActivated, this, [this](const QString & link) {
+            if (link.startsWith(QStringLiteral("http")))
+                openLink(link, this);
+        });
+    }
+
+    bool isComplete() const override
+    {
+        QString s{lineEdit->text()};
+        int i{0};
+        const bool r{!s.isEmpty() && validator->validate(s, i) == QValidator::Acceptable};
+        return r;
+    }
+
+    inline bool isValid() const
+    {
+        return isComplete();
+    }
+
+    QString enteredText() const
+    {
+        return lineEdit->text();
+    }
+
+    void clear()
+    {
+        lineEdit->clear();
+    }
+};
+
 class Zotero::OAuthWizard::Private
 {
 private:
@@ -61,11 +143,10 @@ private:
 
 public:
 
-    int userId;
-    QString apiKey;
+    ValidatedLineEditPage *validatedAPIkeyPage, *validatedUserIDpage;
 
     Private(Zotero::OAuthWizard *parent)
-            : p(parent), userId(-1) {
+            : p(parent) {
         /// Configure the OAuth 1 object, including KBibTeX's app-specific credentials
         /// and various URLs required for the OAuth handshakes
         qOAuth = new QOAuth1(&InternalNetworkAccessManager::instance(), parent);
@@ -109,71 +190,110 @@ public:
             buttonOpenAuthorizationUrl->setEnabled(true);
             QApplication::restoreOverrideCursor();
         });
-        connect(replyHandler, &QOAuthHttpServerReplyHandler::tokensReceived, parent, [this, parent](const QVariantMap &tokens) {
-            /// Upon successful authorization, when the web browser is redirected
-            /// to the local webserver run by the QOAuthHttpServerReplyHandler instance,
-            /// extract the relevant parameters passed along as part of the GET
-            /// request sent to this webserver.
-            static const QString oauthTokenKey = QStringLiteral("oauth_token");
-            static const QString userIdKey = QStringLiteral("userID");
-            if (tokens.contains(oauthTokenKey) && tokens.contains(userIdKey)) {
-                apiKey = tokens[oauthTokenKey].toString();
-                bool ok = false;
-                userId = tokens[userIdKey].toString().toInt(&ok);
-                if (!ok) {
-                    userId = -1;
-                    apiKey.clear();
-                    parent->reject();
-                } else
-                    parent->accept();
-            } else {
-                apiKey.clear();
-                userId = -1;
+        connect(qOAuth, &QAbstractOAuth::requestFailed, parent, [](const QAbstractOAuth::Error error) {
+            static const QHash<QAbstractOAuth::Error, QString> errorMsg{
+                {QAbstractOAuth::Error::NoError, QStringLiteral("No error has ocurred")},
+                {QAbstractOAuth::Error::NetworkError, QStringLiteral("Failed to connect to the server")},
+                {QAbstractOAuth::Error::ServerError, QStringLiteral("The server answered the request with an error, or its response was not successfully received")},
+                {QAbstractOAuth::Error::OAuthTokenNotFoundError, QStringLiteral("The server's response to a token request provided no token identifier")},
+                {QAbstractOAuth::Error::OAuthTokenSecretNotFoundError, QStringLiteral("The server's response to a token request provided no token secret")},
+                {QAbstractOAuth::Error::OAuthCallbackNotVerified, QStringLiteral("The authorization server has not verified the supplied callback URI in the request")}
+            };
+            qCWarning(LOG_KBIBTEX_NETWORKING) << "OAuth1 failed:" << errorMsg.value(error, QStringLiteral("Unknown error"));
+        });
+        connect(qOAuth, &QAbstractOAuth::statusChanged, parent, [this](QAbstractOAuth::Status status) {
+            static const QHash<QAbstractOAuth::Status, QString> statusMsg{
+                {QAbstractOAuth::Status::NotAuthenticated, QStringLiteral("No token has been retrieved")},
+                {QAbstractOAuth::Status::TemporaryCredentialsReceived, QStringLiteral("Temporary credentials have been received, this status is used in some OAuth authetication methods")},
+                {QAbstractOAuth::Status::Granted, QStringLiteral("Token credentials have been received and authenticated calls are allowed")},
+                {QAbstractOAuth::Status::RefreshingToken, QStringLiteral("New token credentials have been requested")}
+            };
+            qCInfo(LOG_KBIBTEX_NETWORKING) << "OAuth status changed:" << statusMsg.value(status, QStringLiteral("Unknown status"));
+        });
+#ifdef EXTRA_VERBOSE
+        connect(qOAuth, &QAbstractOAuth::granted, parent, [this]() {
+            qCInfo(LOG_KBIBTEX_NETWORKING) << "OAuth: authorization flow finished successfully:" << qOAuth->token();
+        });
+        connect(qOAuth, &QAbstractOAuth::tokenChanged, parent, [this](const QString & token) {
+            qCInfo(LOG_KBIBTEX_NETWORKING) << "tokenChanged: token=" << token;
+        });
+        connect(qOAuth, &QAbstractOAuth::extraTokensChanged, parent, [this](const QVariantMap & tokens) {
+            for (auto it = tokens.constBegin(); it != tokens.constEnd(); ++it) {
+                qCInfo(LOG_KBIBTEX_NETWORKING) << "extraTokensChanged: " << it.key() << "=" << it.value().toString();
             }
         });
-
+        connect(qOAuth, &QAbstractOAuth::contentTypeChanged, parent, [](QAbstractOAuth::ContentType contentType) {
+            qCInfo(LOG_KBIBTEX_NETWORKING) << "contentTypeChanged: contentType=" << static_cast<int>(contentType);
+        });
+        connect(qOAuth, &QAbstractOAuth::clientIdentifierChanged, parent, [](const QString & clientIdentifier) {
+            qCInfo(LOG_KBIBTEX_NETWORKING) << "clientIdentifierChanged: clientIdentifier=" << clientIdentifier;
+        });
+        connect(qOAuth, &QAbstractOAuth::authorizationUrlChanged, parent, [](const QUrl & url) {
+            qCInfo(LOG_KBIBTEX_NETWORKING) << "authorizationUrlChanged: url=" << url.toDisplayString();
+        });
+        connect(replyHandler, &QOAuthHttpServerReplyHandler::tokensReceived, parent, [this, parent](const QVariantMap & tokens) {
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "QOAuthHttpServerReplyHandler::tokensReceived";
+            for (auto it = tokens.constBegin(), end = tokens.constEnd(); it != end; ++it) {
+                qCDebug(LOG_KBIBTEX_NETWORKING) << "  key=" << qPrintable(it.key()) << " value=" << it.value();
+            }
+        });
+        connect(replyHandler, &QOAuthHttpServerReplyHandler::replyDataReceived, parent, [this, parent](const QByteArray & data) {
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "QOAuthHttpServerReplyHandler::replyDataReceived  data=" << data.left(256);
+        });
+        connect(replyHandler, &QOAuthHttpServerReplyHandler::callbackReceived, parent, [this, parent](const QVariantMap & values) {
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "QOAuthHttpServerReplyHandler::replyDataReceived";
+            for (auto it = values.constBegin(), end = values.constEnd(); it != end; ++it) {
+                qCDebug(LOG_KBIBTEX_NETWORKING) << "  key=" << qPrintable(it.key()) << " value=" << it.value();
+            }
+        });
+        connect(replyHandler, &QOAuthHttpServerReplyHandler::callbackDataReceived, parent, [this, parent](const QByteArray & data) {
+            qCDebug(LOG_KBIBTEX_NETWORKING) << "QOAuthHttpServerReplyHandler::callbackDataReceived  data=" << data.left(256);
+        });
+#endif // EXTRA_VERBOSE
         qOAuth->grant();
     }
 
     void setupGUI() {
-        QGridLayout *gridLayout = new QGridLayout(p);
+        QWizardPage *page{new QWizardPage(p)};
+        p->addPage(page);
+        page->setTitle(i18n("Authentication via Web Browser"));
+
+        QGridLayout *gridLayout = new QGridLayout(page);
         gridLayout->setColumnStretch(0, 1);
         gridLayout->setColumnStretch(1, 0);
         gridLayout->setColumnStretch(2, 0);
-        QLabel *labelExplanation = new QLabel(i18n("<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The process of authorization involves multiple steps:</p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at Zotero and approve the permissions for KBibTeX.</li><li>If successful, you will be redirected to a web page telling you that KBibTeX got authorized.<br/>This window will be closed automatically.</li></ol></qt>"), p);
+        QLabel *labelExplanation = new QLabel(i18n("<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The process of authorization involves multiple steps:</p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at Zotero and approve the permissions for KBibTeX.</li><li>If successful, you will be redirected to a web page showing you a green text on green background like this:<br/><span style=\"color:#1e622d;background-color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</span><br/>Click on 'Next' to get to the next page in this wizard to enter this text.</li></ol></qt>"), page);
         gridLayout->addWidget(labelExplanation, 0, 0, 1, 3);
         gridLayout->setRowMinimumHeight(1, p->fontMetrics().xHeight() * 2);
-        lineEditAuthorizationUrl = new QLineEdit(p);
+        lineEditAuthorizationUrl = new QLineEdit(page);
         lineEditAuthorizationUrl->setReadOnly(true);
         gridLayout->addWidget(lineEditAuthorizationUrl, 2, 0, 1, 3);
         buttonCopyAuthorizationUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("edit-copy")), i18n("Copy URL"), p);
         gridLayout->addWidget(buttonCopyAuthorizationUrl, 3, 1, 1, 1);
         connect(buttonCopyAuthorizationUrl, &QPushButton::clicked, p, [this]() {
             QApplication::clipboard()->setText(lineEditAuthorizationUrl->text());
+            QTimer::singleShot(500, p, [this]() {
+                p->next();
+            });
         });
         buttonOpenAuthorizationUrl = new QPushButton(QIcon::fromTheme(QStringLiteral("document-open-remote")), i18n("Open URL"), p);
         gridLayout->addWidget(buttonOpenAuthorizationUrl, 3, 2, 1, 1);
         connect(buttonOpenAuthorizationUrl, &QPushButton::clicked, p, [this]() {
-#if KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
-            KRun::runUrl(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"), p, KRun::RunFlags());
-#else // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0) // >= 5.71.0
-            KIO::OpenUrlJob *job = new KIO::OpenUrlJob(QUrl(lineEditAuthorizationUrl->text()), QStringLiteral("text/html"));
-#if KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // < 5.98.0
-            job->setUiDelegate(new KIO::JobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, p));
-#else // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0) // >= 5.98.0
-            job->setUiDelegate(KIO::createDefaultJobUiDelegate(KJobUiDelegate::AutoHandlingEnabled, p));
-#endif // KIO_VERSION < QT_VERSION_CHECK(5, 98, 0)
-            job->start();
-#endif // KIO_VERSION < QT_VERSION_CHECK(5, 71, 0)
+            openLink(lineEditAuthorizationUrl->text(), p);
+            QTimer::singleShot(500, p, [this]() {
+                p->next();
+            });
         });
 
-        gridLayout->setRowMinimumHeight(4, p->fontMetrics().xHeight() * 2);
-        QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, Qt::Horizontal, p);
-        gridLayout->addWidget(buttonBox, 5, 0, 1, 3);
-        connect(buttonBox, &QDialogButtonBox::clicked, p, [this, buttonBox](QAbstractButton *button) {
-            if (button == buttonBox->button(QDialogButtonBox::Close))
-                p->reject();
-        });
+        QValidator *v{new QRegularExpressionValidator(QRegularExpression(QStringLiteral("^[a-zA-Z0-9]{12,32}$")), p)};
+        validatedAPIkeyPage = new ValidatedLineEditPage(i18n("<qt><p>In your web browser, you should have reached a web page showing you a green text on green background like this:<br/><span style=\"color:#1e622d;background-color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</span></p><p>In your web browser, copy this green and enter it in the text field below.</p></qt>"), i18n("API key:"), v, p);
+        validatedAPIkeyPage->setTitle(i18n("Enter API Key from Web Browser"));
+        p->addPage(validatedAPIkeyPage);
+
+        v = new QIntValidator(1000, 99999999, p);
+        validatedUserIDpage = new ValidatedLineEditPage(i18n("<qt><p>Finally, please enter the numeric user ID for use in API calls.<br/>This ID can be found on your <a href=\"https://www.zotero.org/settings/security#applications\">personal settings page in Zotero, in tab 'Security', section 'Applications'</a>.</p></qt>"), i18n("User ID:"), v, p);
+        validatedUserIDpage->setTitle(i18n("Enter User ID for API Calls"));
+        p->addPage(validatedUserIDpage);
 
         p->setWindowTitle(i18nc("@title:window", "Zotero OAuth Key Exchange"));
     }
@@ -181,7 +301,7 @@ public:
 
 
 OAuthWizard::OAuthWizard(QWidget *parent)
-        : QDialog(parent), d(new OAuthWizard::Private(this))
+        : QWizard(parent), d(new OAuthWizard::Private(this))
 {
     /// nothing
 }
@@ -193,21 +313,21 @@ OAuthWizard::~OAuthWizard()
 
 int OAuthWizard::exec()
 {
-    const int result = QDialog::exec();
-    if (result != Accepted || d->userId < 0) {
-        d->userId = -1;
-        d->apiKey.clear();
+    const int result = QWizard::exec();
+    if (result != Accepted || userId().isEmpty() || apiKey().isEmpty()) {
+        d->validatedUserIDpage->clear();
+        d->validatedAPIkeyPage->clear();
         return Rejected;
     } else
         return Accepted;
 }
 
-int OAuthWizard::userId() const
+QString OAuthWizard::userId() const
 {
-    return d->userId;
+    return d->validatedUserIDpage->isValid() ? d->validatedUserIDpage->enteredText() : QString();
 }
 
 QString OAuthWizard::apiKey() const
 {
-    return d->apiKey;
+    return d->validatedAPIkeyPage->isValid() ? d->validatedAPIkeyPage->enteredText() : QString();
 }

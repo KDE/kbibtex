@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,7 +20,7 @@
 #ifndef KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
 #define KBIBTEX_NETWORKING_ZOTERO_OAUTHWIZARD_H
 
-#include <QDialog>
+#include <QWizard>
 
 #ifdef HAVE_KF
 #include "kbibtexnetworking_export.h"
@@ -32,7 +32,7 @@ namespace Zotero
 /**
  * @author Thomas Fischer <fischer@unix-ag.uni-kl.de>
  */
-class KBIBTEXNETWORKING_EXPORT OAuthWizard : public QDialog
+class KBIBTEXNETWORKING_EXPORT OAuthWizard : public QWizard
 {
     Q_OBJECT
 
@@ -42,7 +42,7 @@ public:
 
     int exec() override;
 
-    int userId() const;
+    QString userId() const;
     QString apiKey() const;
 
 private:
