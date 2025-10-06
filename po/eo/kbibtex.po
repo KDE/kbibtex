@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-09-17 01:57+0000\n"
+"POT-Creation-Date: 2025-10-06 02:09+0000\n"
 "PO-Revision-Date: 2025-03-17 21:10+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -2853,7 +2853,7 @@ msgstr "zbMATH Malfermita"
 msgid "%1's Library"
 msgstr "Biblioteko de %1"
 
-#: src/networking/zotero/oauthwizard.cpp:86
+#: src/networking/zotero/oauthwizard.cpp:167
 #, kde-format
 msgid ""
 "<html><head><title>KBibTeX authorized to use Zotero</title></"
@@ -2864,16 +2864,31 @@ msgstr ""
 "head><body><p>KBibTeX sukcese rajtigis legi vian Zotero-datumbazon.</p></"
 "body></html>"
 
-#: src/networking/zotero/oauthwizard.cpp:143
+#: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
+msgid "Authentication via Web Browser"
+msgstr ""
+
+#: src/networking/zotero/oauthwizard.cpp:265
+#, fuzzy, kde-format
+#| msgid ""
+#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
+#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
+#| "p><p>The process of authorization involves multiple steps:</"
+#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
+#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
+#| "you will be redirected to a web page telling you that KBibTeX got "
+#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
 "process of authorization involves multiple steps:</p><ol><li>Open the URL as "
 "shown below in a web browser.</li><li>Log in at Zotero and approve the "
 "permissions for KBibTeX.</li><li>If successful, you will be redirected to a "
-"web page telling you that KBibTeX got authorized.<br/>This window will be "
-"closed automatically.</li></ol></qt>"
+"web page showing you a green text on green background like this:<br/><span "
+"style=\"color:#1e622d;background-color:#d8f2dd;border: 1px solid #c8edd0;"
+"\">zqB0KmelCOJcBvY40J</span><br/>Click on 'Next' to get to the next page in "
+"this wizard to enter this text.</li></ol></qt>"
 msgstr ""
 "<qt><p>Por permesi <strong>KBibTeX</strong> aliri vian <strong>Zotero-"
 "bibliografion</strong>, ĉi tiu KBibTeX-okezaĵo devas esti rajtigita.</"
@@ -2883,17 +2898,58 @@ msgstr ""
 "diranta al vi, ke KBibTeX rajtiĝis.<br/>Ĉi tiu fenestro estos aŭtomate "
 "fermita.</li></ol></qt>"
 
-#: src/networking/zotero/oauthwizard.cpp:149
+#: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
 msgid "Copy URL"
 msgstr "Kopii URL"
 
-#: src/networking/zotero/oauthwizard.cpp:154
+#: src/networking/zotero/oauthwizard.cpp:279
 #, kde-format
 msgid "Open URL"
 msgstr "Malfermi URL"
 
-#: src/networking/zotero/oauthwizard.cpp:178
+#: src/networking/zotero/oauthwizard.cpp:289
+#, kde-format
+msgid ""
+"<qt><p>In your web browser, you should have reached a web page showing you a "
+"green text on green background like this:<br/><span style=\"color:#1e622d;"
+"background-color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</"
+"span></p><p>In your web browser, copy this green and enter it in the text "
+"field below.</p></qt>"
+msgstr ""
+
+#: src/networking/zotero/oauthwizard.cpp:289
+#: src/program/docklets/zoterobrowser.cpp:150
+#, kde-format
+msgid "API key:"
+msgstr "API-ŝlosilo:"
+
+#: src/networking/zotero/oauthwizard.cpp:290
+#, kde-format
+msgid "Enter API Key from Web Browser"
+msgstr ""
+
+#: src/networking/zotero/oauthwizard.cpp:294
+#, kde-format
+msgid ""
+"<qt><p>Finally, please enter the numeric user ID for use in API calls.<br/"
+">This ID can be found on your <a href=\"https://www.zotero.org/settings/"
+"security#applications\">personal settings page in Zotero, in tab 'Security', "
+"section 'Applications'</a>.</p></qt>"
+msgstr ""
+
+#: src/networking/zotero/oauthwizard.cpp:294
+#, fuzzy, kde-format
+#| msgid "User"
+msgid "User ID:"
+msgstr "Uzanto"
+
+#: src/networking/zotero/oauthwizard.cpp:295
+#, kde-format
+msgid "Enter User ID for API Calls"
+msgstr ""
+
+#: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format
 msgctxt "@title:window"
 msgid "Zotero OAuth Key Exchange"
@@ -3858,11 +3914,6 @@ msgstr "Neniuj grupoj disponeblaj"
 msgid "Numeric user id:"
 msgstr "Nombra uzantidentigilo:"
 
-#: src/program/docklets/zoterobrowser.cpp:150
-#, kde-format
-msgid "API key:"
-msgstr "API-ŝlosilo:"
-
 #: src/program/docklets/zoterobrowser.cpp:156
 #, kde-format
 msgid "Get New Credentials"
@@ -3892,7 +3943,7 @@ msgstr ""
 msgid "Failed to retrieve data from Zotero"
 msgstr "Malsukcesis preni datumojn de Zotero"
 
-#: src/program/docklets/zoterobrowser.cpp:387
+#: src/program/docklets/zoterobrowser.cpp:379
 #, kde-format
 msgid "No groups available or no permissions"
 msgstr "Neniuj grupoj disponeblaj aŭ neniuj permesoj"
