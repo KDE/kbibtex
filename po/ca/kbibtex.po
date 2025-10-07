@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-06 02:09+0000\n"
-"PO-Revision-Date: 2025-09-17 10:15+0200\n"
+"PO-Revision-Date: 2025-10-06 11:36+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -2886,18 +2886,10 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
 msgid "Authentication via Web Browser"
-msgstr ""
+msgstr "Autenticació mitjançant navegador web"
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2914,9 +2906,11 @@ msgstr ""
 "instància del KBibTeX.</p><p>El procés d'autorització implica diversos "
 "passos:</p><ol><li>Obrir l'URL que es mostra a sota a un navegador web.</"
 "li><li>Connectar-se al Zotero i aprovar els permisos per al KBibTeX.</"
-"li><li>Si tot va bé, es redirigirà a una pàgina web que indicarà que el "
-"KBibTeX ha aconseguit l'autorització.<br/>Aquesta finestra es tancarà "
-"automàticament.</li></ol></qt>"
+"li><li>Si tot va bé, es redirigirà a una pàgina web que mostrarà un text "
+"verd sobre un fons verd com aquest:<br/><span style=\"color:#1e622d;"
+"background-color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</"
+"span><br/>Feu clic a «Següent» per anar a la pàgina següent d'aquest "
+"assistent per a introduir-hi aquest text.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2937,6 +2931,11 @@ msgid ""
 "span></p><p>In your web browser, copy this green and enter it in the text "
 "field below.</p></qt>"
 msgstr ""
+"<qt><p>Al navegador web hauríeu d'haver arribat a una pàgina web que us "
+"mostra un text verd sobre un fons verd com aquest:<br/><span style=\"color:"
+"#1e622d;background-color:#d8f2dd;border: 1px solid #c8edd0;"
+"\">zqB0KmelCOJcBvY40J</span></p><p>Al navegador web copieu aquest text verd "
+"i introduïu-lo en el camp de text de sota.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #: src/program/docklets/zoterobrowser.cpp:150
@@ -2947,7 +2946,7 @@ msgstr "Clau de l'API:"
 #: src/networking/zotero/oauthwizard.cpp:290
 #, kde-format
 msgid "Enter API Key from Web Browser"
-msgstr ""
+msgstr "Introduïu la clau de l'API des del navegador web"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -2957,17 +2956,20 @@ msgid ""
 "security#applications\">personal settings page in Zotero, in tab 'Security', "
 "section 'Applications'</a>.</p></qt>"
 msgstr ""
+"<qt><p>Finalment, introduïu l'ID d'usuari numèric per a fer-lo servir a les "
+"crides de l'API.<br/>Aquest ID es pot trobar a la <a href=\"https://www."
+"zotero.org/settings/security#applications\">pàgina de configuració personal "
+"del Zotero, a la pestanya «Seguretat», secció «Aplicacions»</a>.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "Usuari"
+msgstr "ID d'usuari:"
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
 msgid "Enter User ID for API Calls"
-msgstr ""
+msgstr "Introducció de l'ID d'usuari per a les crides de l'API"
 
 #: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format
