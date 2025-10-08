@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-06 02:09+0000\n"
-"PO-Revision-Date: 2025-09-25 20:30+0400\n"
+"PO-Revision-Date: 2025-10-07 09:00+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -2860,18 +2860,10 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
 msgid "Authentication via Web Browser"
-msgstr ""
+msgstr "الاستيثاق بواسطة متصفح الويب"
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2883,12 +2875,15 @@ msgid ""
 "\">zqB0KmelCOJcBvY40J</span><br/>Click on 'Next' to get to the next page in "
 "this wizard to enter this text.</li></ol></qt>"
 msgstr ""
-"<qt><p>للسماح لـ<strong>كبتخ</strong> بالوصول إلى <strong>ببليوغرافيا "
-"زوتيرو</strong>، لا بد من الإذن لنسخة كبتخ هذه.</p><p>عملية الإذن تتضمن "
-"خطوات متعددة:</p><ol><li>افتح الرابط كما هو موضح أدناه في متصفح ويب.</"
-"li><li>سجّل الدخول في زوتيرو واعتمد أذونات كبتخ.</li><li>إن نجح، سيعاد توجيهك "
-"إلى صفحة ويب تخبرك بأن كبتخ أُذِن له.<br/>هذه النافذة ستغلق آليًّا.</li></ol></"
-"qt>"
+"<qt><p>للسماح لـ <strong>KBibTeX</strong> بالوصول إلى <strong>ببليوغرافيا "
+"Zotero</strong> الخاصة بك، يجب أن يتم تفويض مثيل KBibTeX هذا.</p><p>تتضمن "
+"عملية التفويض عدة خطوات:</p><ol><li>افتح عنوان URL كما هو موضح أدناه في "
+"متصفح الويب.</li><li>سجّل الدخول إلى Zotero ووافق على أذونات كبتخ.</"
+"li><li>إذا نجحت العملية، سيتم إعادة توجيهك إلى صفحة ويب تعرض نصًا أخضر على "
+"خلفية خضراء مثل هذا:<br/><span style=\"color:#1e622d;background-color:"
+"#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</span><br/>انقر على "
+"”التالي“ للانتقال إلى الصفحة التالية في هذا المعالج لإدخال هذا النص.</li></"
+"ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2909,6 +2904,11 @@ msgid ""
 "span></p><p>In your web browser, copy this green and enter it in the text "
 "field below.</p></qt>"
 msgstr ""
+"<qt><p>في متصفح الويب الخاص بك، يجب أن تكون قد وصلت إلى صفحة ويب تعرض نصًا "
+"أخضر على خلفية خضراء مثل هذا:<br/><span style=\"color:#1e622d;background-"
+"color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</span></"
+"p><p>في متصفح الويب الخاص بك، انسخ هذا النص الأخضر وأدخله في حقل النص أدناه."
+"</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #: src/program/docklets/zoterobrowser.cpp:150
@@ -2919,7 +2919,7 @@ msgstr "مفتاح API:"
 #: src/networking/zotero/oauthwizard.cpp:290
 #, kde-format
 msgid "Enter API Key from Web Browser"
-msgstr ""
+msgstr "أدخل مفتاح API من متصفح الويب"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -2929,17 +2929,20 @@ msgid ""
 "security#applications\">personal settings page in Zotero, in tab 'Security', "
 "section 'Applications'</a>.</p></qt>"
 msgstr ""
+"<qt><p>أخيرًا، يرجى إدخال معرف المستخدم الرقمي لاستخدامه في استدعاءات API.<br/"
+">يمكن العثور على هذا المعرف في <a href=\"https://www.zotero.org/settings/"
+"security#applications\">صفحة الإعدادات الشخصية في Zotero، في علامة التبويب "
+"”الأمان“، قسم ”التطبيقات“</a>.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "المستخدم"
+msgstr "مُعرّف المستخدم:"
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
 msgid "Enter User ID for API Calls"
-msgstr ""
+msgstr "أدخل معرف المستخدم لطلبات API"
 
 #: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format

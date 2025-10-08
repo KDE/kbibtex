@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-06 02:09+0000\n"
-"PO-Revision-Date: 2025-09-17 05:21-0300\n"
+"PO-Revision-Date: 2025-10-07 07:45-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -2876,18 +2876,10 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
 msgid "Authentication via Web Browser"
-msgstr ""
+msgstr "Autenticação via navegador web"
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2903,9 +2895,12 @@ msgstr ""
 "<strong>bibliografia no Zotero</strong>, esta instância do KBibTeX precisa "
 "ser autorizada.</p><p>O processo de autorização involve várias etapas:</"
 "p><ol><li>Abra a URL como exibido abaixo em um navegador Web.</li><li>Entre "
-"no Zotero e aprove as permissões para o KBibTeX.</li><li>Se bem sucedido, "
-"você será redirecionado a um site dizendo a você que o KBibTeX foi "
-"autorizado.<br/>Esta janela será fechada automaticamente.</li></ol></qt>"
+"no Zotero e aprove as permissões para o KBibTeX.</li><li>Se for bem-"
+"sucedido, você será redirecionado para uma página da web que exibe um texto "
+"verde sobre fundo verde, como este:<br/><span style=\"color:#1e622d;"
+"background-color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</"
+"span><br/>Clique em \"Avançar\" para acessar a próxima página deste "
+"assistente e inserir este texto.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2926,6 +2921,11 @@ msgid ""
 "span></p><p>In your web browser, copy this green and enter it in the text "
 "field below.</p></qt>"
 msgstr ""
+"<qt><p>No seu navegador, você deve ter acessado uma página que mostra um "
+"texto verde sobre fundo verde como este:<br/><span style=\"color:#1e622d;"
+"background-color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</"
+"span></p><p>No seu navegador, copie este verde e insira-o no campo de texto "
+"abaixo.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #: src/program/docklets/zoterobrowser.cpp:150
@@ -2936,7 +2936,7 @@ msgstr "Chave da API:"
 #: src/networking/zotero/oauthwizard.cpp:290
 #, kde-format
 msgid "Enter API Key from Web Browser"
-msgstr ""
+msgstr "Insira a chave API do navegador web"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -2946,17 +2946,20 @@ msgid ""
 "security#applications\">personal settings page in Zotero, in tab 'Security', "
 "section 'Applications'</a>.</p></qt>"
 msgstr ""
+"<qt><p>Por fim, insira o ID numérico do usuário para uso em chamadas de API."
+"<br/>Este ID pode ser encontrado na sua <a href=\"https://www.zotero.org/"
+"settings/security#applications\">página de configurações pessoais no Zotero, "
+"na aba \"Segurança\", seção \"Aplicativos\"</a>.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "Usuário"
+msgstr "ID do usuário:"
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
 msgid "Enter User ID for API Calls"
-msgstr ""
+msgstr "Insira o ID do usuário para chamadas de API"
 
 #: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format
