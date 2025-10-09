@@ -208,7 +208,9 @@ find_package(
     uc i18n
 )
 
-if(ICU_VERSION GREATER_EQUAL 75 AND CMAKE_CXX_STANDARD LESS 17)
+string(REGEX MATCH "^[1-9][0-9]*" ICU_MAJOR_VERSION ${ICU_VERSION})
+add_compile_definitions(ICU_MAJOR_VERSION=${ICU_MAJOR_VERSION})
+if(ICU_MAJOR_VERSION GREATER_EQUAL 75 AND CMAKE_CXX_STANDARD LESS 17)
     # Starting with ICU 75, it makes use of C++17 instead of C++11 before
     set(CMAKE_CXX_STANDARD 17)
 endif()

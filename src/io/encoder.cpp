@@ -123,7 +123,11 @@ QString Encoder::convertToPlainAscii(const QString &_input) const
     }
 
     /// Create an ICU-specific Unicode string
-    icu::UnicodeString uString = icu::UnicodeString(input.toStdU16String());
+#if (ICU_MAJOR_VERSION >= 76)
+    icu::UnicodeString uString {icu::UnicodeString(input.toStdU16String())};
+#else // ICU_MAJOR_VERSION < 76
+    icu::UnicodeString uString {icu::UnicodeString::fromUTF8(input.toUtf8().constData())};
+#endif // ICU_MAJOR_VERSION
     /// Perform the actual transliteration, modifying Unicode string
     d->translit->transliterate(uString);
     if (U_FAILURE(d->translitErrorCode)) {

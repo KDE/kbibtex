@@ -795,7 +795,11 @@ public:
         else {
             static const size_t buffer_size{1 << 24};
             static char buffer[buffer_size];
-            icu::UnicodeString text{icu::UnicodeString(rewrittenInput.toStdU16String())};
+#if (ICU_MAJOR_VERSION >= 76)
+            icu::UnicodeString text {icu::UnicodeString(rewrittenInput.toStdU16String())};
+#else // ICU_MAJOR_VERSION < 76
+            icu::UnicodeString text {icu::UnicodeString::fromUTF8(rewrittenInput.toUtf8().constData())};
+#endif // ICU_MAJOR_VERSION
             uConvErrorCode = U_ZERO_ERROR;
             const int32_t len{ucnv_fromUChars(uconv, buffer, buffer_size, text.getBuffer(), text.length(), &uConvErrorCode)};
             if (U_FAILURE(uConvErrorCode) || (len == 0 && text.length() > 0)) {

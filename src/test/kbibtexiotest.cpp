@@ -681,7 +681,11 @@ void KBibTeXIOTest::fileImporterBibTeXload_data()
                         customBibTeXdata = customBibTeXdata.replace(QStringLiteral("--"), QChar(0x2013));
                     }
 
-                    const icu::UnicodeString text{icu::UnicodeString(customBibTeXdata.toStdU16String())};
+#if (ICU_MAJOR_VERSION >= 76)
+                    icu::UnicodeString text {icu::UnicodeString(customBibTeXdata.toStdU16String())};
+#else // ICU_MAJOR_VERSION < 76
+                    icu::UnicodeString text {icu::UnicodeString::fromUTF8(customBibTeXdata.toUtf8().constData())};
+#endif // ICU_MAJOR_VERSION
                     UErrorCode uConvErrorCode = U_ZERO_ERROR;
                     UConverter *uconv{ucnv_open(encoding, &uConvErrorCode)};
                     if (U_SUCCESS(uConvErrorCode) && uconv != nullptr) {

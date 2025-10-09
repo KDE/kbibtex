@@ -331,3 +331,31 @@ QString OAuthWizard::apiKey() const
 {
     return d->validatedAPIkeyPage->isValid() ? d->validatedAPIkeyPage->enteredText() : QString();
 }
+
+inline size_t qHash(const QAbstractOAuth::Error &error, size_t seed = 0)
+{
+    switch (error) {
+    case QAbstractOAuth::Error::NoError: return (seed << 8) | 0;
+    case QAbstractOAuth::Error::NetworkError: return (seed << 8) | 1;
+    case QAbstractOAuth::Error::ServerError: return (seed << 8) | 2;
+    case QAbstractOAuth::Error::OAuthTokenNotFoundError: return (seed << 8) | 3;
+    case QAbstractOAuth::Error::OAuthTokenSecretNotFoundError: return (seed << 8) | 4;
+    case QAbstractOAuth::Error::OAuthCallbackNotVerified: return (seed << 8) | 5;
+#if QT_VERSION > QT_VERSION_CHECK(6, 9, 0)
+    case QAbstractOAuth::Error::ClientError: return (seed << 8) | 6;
+    case QAbstractOAuth::Error::ExpiredError: return (seed << 8) | 7;
+#endif // QT_VERSION > QT_VERSION_CHECK(6, 9, 0)
+    default: return (seed << 8) | 254;
+    }
+}
+
+inline size_t qHash(const QAbstractOAuth::Status &status, size_t seed = 0)
+{
+    switch (status) {
+    case QAbstractOAuth::Status::NotAuthenticated: return (seed << 8) | 0;
+    case QAbstractOAuth::Status::TemporaryCredentialsReceived: return (seed << 8) | 1;
+    case QAbstractOAuth::Status::Granted: return (seed << 8) | 2;
+    case QAbstractOAuth::Status::RefreshingToken: return (seed << 8) | 3;
+    default: return (seed << 8) | 254;
+    }
+}
