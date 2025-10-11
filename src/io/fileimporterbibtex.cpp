@@ -1547,7 +1547,7 @@ File *FileImporterBibTeX::load(QIODevice *iodevice)
         const auto len{ucnv_toUChars(uconv, target.data(), target_size, rawData.constData(), rawData.length(), &uConvErrorCode)};
         if (U_FAILURE(uConvErrorCode) || (len == 0 && rawData.length() > 0)) {
             qCWarning(LOG_KBIBTEX_IO) << "Conversion of raw data via UConverter instance failed:" << u_errorName(uConvErrorCode);
-            Q_EMIT message(MessageSeverity::Warning, QString(QStringLiteral("Conversion of raw data via UConverter instance failed: %1")).arg(u_errorName(uConvErrorCode)));
+            Q_EMIT message(MessageSeverity::Warning, QString(QStringLiteral("Conversion of raw data via UConverter instance failed: %1")).arg(QString::fromUtf8(u_errorName(uConvErrorCode))));
             ucnv_close(uconv);
             return nullptr;
         } else
