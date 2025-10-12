@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-06 02:09+0000\n"
-"PO-Revision-Date: 2025-09-18 11:20+0200\n"
+"POT-Creation-Date: 2025-10-12 02:02+0000\n"
+"PO-Revision-Date: 2025-10-06 19:51+0200\n"
 "Last-Translator: Valter Mura <valtermura@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.08.0\n"
+"X-Generator: Lokalize 25.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1340,35 +1340,35 @@ msgstr "Contesto:"
 msgid "Prefix:"
 msgstr "Prefisso:"
 
-#: src/gui/element/elementwidgets.cpp:1454
+#: src/gui/element/elementwidgets.cpp:1450
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 "Il codice sorgente fornito non appare dall'analisi come un singolo elemento "
 "BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1463
+#: src/gui/element/elementwidgets.cpp:1459
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 "Il codice sorgente fornito non appare dall'analisi come una singola voce "
 "BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1469
+#: src/gui/element/elementwidgets.cpp:1465
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 "Il codice sorgente fornito non appare dall'analisi come una singola macro "
 "BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1475
+#: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 "Il codice sorgente fornito non appare dall'analisi come un singolo preambolo "
 "BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1481
+#: src/gui/element/elementwidgets.cpp:1477
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
@@ -1377,22 +1377,22 @@ msgstr ""
 "Il codice sorgente fornito non appare dall'analisi come un singolo commento "
 "BibTeX. Prova a rimuovere le righe vuote all'interno del commento."
 
-#: src/gui/element/elementwidgets.cpp:1485
+#: src/gui/element/elementwidgets.cpp:1481
 #, kde-format
 msgid "Element class not properly set"
 msgstr "La classe dell'elemento non è impostata correttamente"
 
-#: src/gui/element/elementwidgets.cpp:1494
+#: src/gui/element/elementwidgets.cpp:1490
 #, kde-format
 msgid "No issues detected"
 msgstr "Nessun problema rilevato"
 
-#: src/gui/element/elementwidgets.cpp:1509
+#: src/gui/element/elementwidgets.cpp:1505
 #, kde-format
 msgid "Source"
 msgstr "Fonte"
 
-#: src/gui/element/elementwidgets.cpp:1540
+#: src/gui/element/elementwidgets.cpp:1536
 #, kde-format
 msgid "Restore"
 msgstr "Ripristina"
@@ -2880,18 +2880,10 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
 msgid "Authentication via Web Browser"
-msgstr ""
+msgstr "Autenticazione tramite browser web"
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2908,9 +2900,11 @@ msgstr ""
 "p><p>Il processo di autorizzazione si compone di più passaggi:</"
 "p><ol><li>Apri l'URL in un browser web come mostrato sotto.</li><li>Accedi a "
 "Zotero e approva i permessi per KBibTeX.</li><li>Se tutto è andato nel verso "
-"giusto, sarai reindirizzato alla pagina web che ti informa che KBibTeX è "
-"stato autorizzato.<br/>Questa finestra si chiuderà automaticamente.</li></"
-"ol></qt>"
+"giusto, sarai reindirizzato alla pagina web che ti mostra un testo verde su "
+"uno sfondo verde, tipo questo:<br/><span style=\"color:#1e622d;background-"
+"color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</span><br/>Fai "
+"clic su «Successivo» per andare alla pagina successiva di questa procedura "
+"guidata per inserire questo testo.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2931,6 +2925,11 @@ msgid ""
 "span></p><p>In your web browser, copy this green and enter it in the text "
 "field below.</p></qt>"
 msgstr ""
+"<qt><p>Nel browser web, dovresti aver raggiunto una pagina web che ti mostra "
+"un testo verde su uno sfondo verde, tipo questo:<br/><span style=\"color:"
+"#1e622d;background-color:#d8f2dd;border: 1px solid #c8edd0;"
+"\">zqB0KmelCOJcBvY40J</span></p><p>Nel browser web, copia questo testo verde "
+"e inseriscilo nel campo di testo sottostante.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #: src/program/docklets/zoterobrowser.cpp:150
@@ -2941,7 +2940,7 @@ msgstr "Chiave API:"
 #: src/networking/zotero/oauthwizard.cpp:290
 #, kde-format
 msgid "Enter API Key from Web Browser"
-msgstr ""
+msgstr "Inserisci la chiave API dal browser web"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -2951,17 +2950,20 @@ msgid ""
 "security#applications\">personal settings page in Zotero, in tab 'Security', "
 "section 'Applications'</a>.</p></qt>"
 msgstr ""
+"<qt><p>Infine, inserisci l'ID utente numerico per l'utilizzo nelle chiamate "
+"API.<br/>Questo ID si trova nella tua <a href=\"https://www.zotero.org/"
+"settings/security#applications\">pagina delle impostazioni personali in "
+"Zotero, scheda «Sicurezza», sezione «Applicazioni»</a>.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "Utente"
+msgstr "ID utente:"
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
 msgid "Enter User ID for API Calls"
-msgstr ""
+msgstr "Inserisci l'ID utente per le chiamate API"
 
 #: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-06 02:09+0000\n"
+"POT-Creation-Date: 2025-10-12 02:02+0000\n"
 "PO-Revision-Date: 2014-05-04 18:07+0200\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1326,49 +1326,49 @@ msgstr ""
 msgid "Prefix:"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1454
+#: src/gui/element/elementwidgets.cpp:1450
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1463
+#: src/gui/element/elementwidgets.cpp:1459
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1469
+#: src/gui/element/elementwidgets.cpp:1465
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1475
+#: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1481
+#: src/gui/element/elementwidgets.cpp:1477
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1485
+#: src/gui/element/elementwidgets.cpp:1481
 #, kde-format
 msgid "Element class not properly set"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1494
+#: src/gui/element/elementwidgets.cpp:1490
 #, kde-format
 msgid "No issues detected"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1509
+#: src/gui/element/elementwidgets.cpp:1505
 #, kde-format
 msgid "Source"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1540
+#: src/gui/element/elementwidgets.cpp:1536
 #, kde-format
 msgid "Restore"
 msgstr ""

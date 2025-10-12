@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-06 02:09+0000\n"
+"POT-Creation-Date: 2025-10-12 02:02+0000\n"
 "PO-Revision-Date: 2025-10-06 21:04+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -1335,27 +1335,27 @@ msgstr "Sammanhang:"
 msgid "Prefix:"
 msgstr "Prefix:"
 
-#: src/gui/element/elementwidgets.cpp:1454
+#: src/gui/element/elementwidgets.cpp:1450
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr "Angiven källkod går inte att tolka som ett enda Bibtex-element."
 
-#: src/gui/element/elementwidgets.cpp:1463
+#: src/gui/element/elementwidgets.cpp:1459
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr "Angiven källkod går inte att tolka som en enda Bibtex-post."
 
-#: src/gui/element/elementwidgets.cpp:1469
+#: src/gui/element/elementwidgets.cpp:1465
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr "Angiven källkod går inte att tolka som ett enda Bibtex-makro."
 
-#: src/gui/element/elementwidgets.cpp:1475
+#: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Angiven källkod går inte att tolka som en enda Bibtex-inledning."
 
-#: src/gui/element/elementwidgets.cpp:1481
+#: src/gui/element/elementwidgets.cpp:1477
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
@@ -1364,22 +1364,22 @@ msgstr ""
 "Angiven källkod går inte att tolka som en enda Bibtex-kommentar. Försök ta "
 "bort tomma rader inne i kommentaren."
 
-#: src/gui/element/elementwidgets.cpp:1485
+#: src/gui/element/elementwidgets.cpp:1481
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Elementklass inte riktigt angiven"
 
-#: src/gui/element/elementwidgets.cpp:1494
+#: src/gui/element/elementwidgets.cpp:1490
 #, kde-format
 msgid "No issues detected"
 msgstr "Inga problem hittades"
 
-#: src/gui/element/elementwidgets.cpp:1509
+#: src/gui/element/elementwidgets.cpp:1505
 #, kde-format
 msgid "Source"
 msgstr "Källa"
 
-#: src/gui/element/elementwidgets.cpp:1540
+#: src/gui/element/elementwidgets.cpp:1536
 #, kde-format
 msgid "Restore"
 msgstr "Återställ"

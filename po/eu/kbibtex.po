@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-06 02:09+0000\n"
+"POT-Creation-Date: 2025-10-12 02:02+0000\n"
 "PO-Revision-Date: 2024-02-10 01:50+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1329,49 +1329,49 @@ msgstr "Testuingurua:"
 msgid "Prefix:"
 msgstr "Aurrizkia:"
 
-#: src/gui/element/elementwidgets.cpp:1454
+#: src/gui/element/elementwidgets.cpp:1450
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1463
+#: src/gui/element/elementwidgets.cpp:1459
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1469
+#: src/gui/element/elementwidgets.cpp:1465
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1475
+#: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1481
+#: src/gui/element/elementwidgets.cpp:1477
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1485
+#: src/gui/element/elementwidgets.cpp:1481
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Elementu klasea ez da behar bezala ezarri"
 
-#: src/gui/element/elementwidgets.cpp:1494
+#: src/gui/element/elementwidgets.cpp:1490
 #, kde-format
 msgid "No issues detected"
 msgstr "Ez da arazorik antzeman"
 
-#: src/gui/element/elementwidgets.cpp:1509
+#: src/gui/element/elementwidgets.cpp:1505
 #, kde-format
 msgid "Source"
 msgstr "Sorburua"
 
-#: src/gui/element/elementwidgets.cpp:1540
+#: src/gui/element/elementwidgets.cpp:1536
 #, kde-format
 msgid "Restore"
 msgstr "Lehengoratu"

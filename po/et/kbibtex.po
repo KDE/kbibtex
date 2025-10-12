@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-06 02:09+0000\n"
+"POT-Creation-Date: 2025-10-12 02:02+0000\n"
 "PO-Revision-Date: 2020-04-26 10:18+0300\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -1336,27 +1336,27 @@ msgstr "Sisu:"
 msgid "Prefix:"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1454
+#: src/gui/element/elementwidgets.cpp:1450
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi elemendina."
 
-#: src/gui/element/elementwidgets.cpp:1463
+#: src/gui/element/elementwidgets.cpp:1459
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi kirjena."
 
-#: src/gui/element/elementwidgets.cpp:1469
+#: src/gui/element/elementwidgets.cpp:1465
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi makrona."
 
-#: src/gui/element/elementwidgets.cpp:1475
+#: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi preambulana."
 
-#: src/gui/element/elementwidgets.cpp:1481
+#: src/gui/element/elementwidgets.cpp:1477
 #, fuzzy, kde-format
 #| msgid "Given source code does not parse as one single BibTeX comment."
 msgid ""
@@ -1364,22 +1364,22 @@ msgid ""
 "blank lines inside the comment."
 msgstr "Määratud lähtekood ei ole parsitav ühe BibTeXi kommentaarina."
 
-#: src/gui/element/elementwidgets.cpp:1485
+#: src/gui/element/elementwidgets.cpp:1481
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Elemendi klass ei ole korrektselt määratud"
 
-#: src/gui/element/elementwidgets.cpp:1494
+#: src/gui/element/elementwidgets.cpp:1490
 #, kde-format
 msgid "No issues detected"
 msgstr "Probleeme ei leitud"
 
-#: src/gui/element/elementwidgets.cpp:1509
+#: src/gui/element/elementwidgets.cpp:1505
 #, kde-format
 msgid "Source"
 msgstr "Lähtekood"
 
-#: src/gui/element/elementwidgets.cpp:1540
+#: src/gui/element/elementwidgets.cpp:1536
 #, kde-format
 msgid "Restore"
 msgstr "Taasta"
