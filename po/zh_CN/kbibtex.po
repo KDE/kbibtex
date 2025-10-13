@@ -2830,15 +2830,7 @@ msgid "Authentication via Web Browser"
 msgstr ""
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2850,11 +2842,6 @@ msgid ""
 "\">zqB0KmelCOJcBvY40J</span><br/>Click on 'Next' to get to the next page in "
 "this wizard to enter this text.</li></ol></qt>"
 msgstr ""
-"<qt><p>要允许  <strong>KBibTeX</strong> 访问您的 <strong>Zotero 书目</"
-"strong>，该 KBibTeX 实例必须获得授权。</p><p>授权过程涉及多个步骤：</"
-"p><ol><li>在网络浏览器中打开如下所示的 URL。</li><li>登录 Zotero 并批准 "
-"KBibTeX 的权限。</li><li>如果成功，您将被重定向到一个网页，告诉您 KBibTeX 已"
-"获得授权。<br/>该窗口将自动关闭。</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2897,10 +2884,9 @@ msgid ""
 msgstr ""
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "所有者"
+msgstr ""
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
