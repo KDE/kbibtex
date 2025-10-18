@@ -320,25 +320,20 @@ public:
             else
                 sourceWidget->setElementClass(SourceWidget::ElementClass::Invalid);
             sourceWidget->apply(element);
+        } else if (e.isNull() && m.isNull() && c.isNull() && p.isNull()) {
+            Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::apply(QSharedPointer<Element> element)", "element is not NULL but could not be cast on a valid Element sub-class");
         } else {
             /// Start by assigning the current internal element's
-            /// data to the output element
-            if (!e.isNull())
+            /// data to the output element, but only if the internal element is valid
+            /// (i.e. reset() has been called and ran to completion)
+            if (!e.isNull() && !internalEntry.isNull())
                 *e = *internalEntry;
-            else {
-                if (!m.isNull())
-                    *m = *internalMacro;
-                else {
-                    if (!c.isNull())
-                        *c = *internalComment;
-                    else {
-                        if (!p.isNull())
-                            *p = *internalPreamble;
-                        else
-                            Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::apply(QSharedPointer<Element> element)", "element is not NULL but could not be cast on a valid Element sub-class");
-                    }
-                }
-            }
+            else if (!m.isNull() && !internalMacro.isNull())
+                *m = *internalMacro;
+            else if (!c.isNull() && !internalComment.isNull())
+                *c = *internalComment;
+            else if (!p.isNull() && !internalPreamble.isNull())
+                *p = *internalPreamble;
 
             /// The internal element may be outdated (only updated on tab switch),
             /// so apply the reference widget's data on the output element
