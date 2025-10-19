@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-10-12 02:02+0000\n"
-"PO-Revision-Date: 2025-04-20 10:32+0300\n"
+"PO-Revision-Date: 2025-10-13 20:58+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2655,7 +2655,7 @@ msgstr "bioRxiv"
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "medRxiv"
-msgstr ""
+msgstr "medRxiv"
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
@@ -2865,18 +2865,10 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
 msgid "Authentication via Web Browser"
-msgstr ""
+msgstr "Valtuutus selaimella"
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2888,12 +2880,14 @@ msgid ""
 "\">zqB0KmelCOJcBvY40J</span><br/>Click on 'Next' to get to the next page in "
 "this wizard to enter this text.</li></ol></qt>"
 msgstr ""
-"<qt><p>Tälle <strong>KBibTeX</strong>-ilmentymälle on annettava "
-"käyttöoikeudet <strong>Zotero-kirjastoon</strong>.</p><p>Valtuutus vaatii "
-"seuraavat vaiheet:</p><ol><li>Avaa annettu verkko-osoite selaimeen.</"
-"li><li>Kirjaudu Zoteroon ja myönnä KBibTeXille käyttöoikeudet.</"
-"li><li>Edellisen onnistuttua sinut ohjataan sivulle, joka kertoo KBibTeXin "
-"saaneen käyttöoikeudet.<br/>Ikkuna sulkeutuu automaattisesti.</li></ol></qt>"
+"<qt><p>Salliaksesi <strong>KBibTeXin</strong> käyttää <strong>Zotero-"
+"lähdeluetteloasi</strong> KBibTeX-ilmentymä tulee valtuuttaa.</"
+"p><p>Valtuutus vaatii seuraavat vaiheet:</p><ol><li>Avaa alla näkyvä verkko-"
+"osoite selaimeen.</li><li>Jos tämä onnistuu, sinut ohjataan sivulle, jolla "
+"näkyy vihreää tekstiä vihreällä taustalla seuraavasti:<br/><span style="
+"\"color:#1e622d;background-color:#d8f2dd;border: 1px solid #c8edd0;"
+"\">zqB0KmelCOJcBvY40J</span><br/>Napsauta ”Seuraava” siirtyäksesi avustetun "
+"toiminnon seuraavalle sivulle ja syöttääksesi tekstin.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2914,6 +2908,11 @@ msgid ""
 "span></p><p>In your web browser, copy this green and enter it in the text "
 "field below.</p></qt>"
 msgstr ""
+"<qt><p>Verkkoselaimen tulisi olla päätynyt sivulle, jolla näkyy vihreää "
+"tekstiä vihreällä taustalla seuraavasti:<br/><span style=\"color:#1e622d;"
+"background-color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</"
+"span></p><p>Kopioi teksti selaimessa ja syötä se alla olevaan tekstikenttään."
+"</p>"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #: src/program/docklets/zoterobrowser.cpp:150
@@ -2924,7 +2923,7 @@ msgstr "API-avain:"
 #: src/networking/zotero/oauthwizard.cpp:290
 #, kde-format
 msgid "Enter API Key from Web Browser"
-msgstr ""
+msgstr "Syötä API-avain selaimesta"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -2934,17 +2933,20 @@ msgid ""
 "security#applications\">personal settings page in Zotero, in tab 'Security', "
 "section 'Applications'</a>.</p></qt>"
 msgstr ""
+"<qt><p>Lopuksi syötä API-kutsuissa käytettävä numeerinen käyttäjätunnisteesi."
+"<br/>Tunniste löytyy <a href=\"https://www.zotero.org/settings/"
+"security#applications\">Zoteron henkilökohtaisten asetusten sivulta, "
+"välilehdeltä ”Tietoturva”, osiosta ”Sovellukset”</a>.</p>"
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "Käyttäjä"
+msgstr "Käyttäjätunniste:"
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
 msgid "Enter User ID for API Calls"
-msgstr ""
+msgstr "Syötä API-kutsujen käyttäjätunniste"
 
 #: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format
@@ -4202,10 +4204,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "KDE:n BibTeX-muokkain"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2024 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2025 Thomas Fischer"
-msgstr "Tekijänoikeudet 2004–2024 Thomas Fischer"
+msgstr "Tekijänoikeudet 2004–2025 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
