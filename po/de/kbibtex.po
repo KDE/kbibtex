@@ -4245,10 +4245,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Ein BibTeX-Editor von KDE"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2025 Thomas Fischer"
-msgstr "Copyright 2004-2019 Thomas Fischer"
+msgstr "© 2004–2025 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
