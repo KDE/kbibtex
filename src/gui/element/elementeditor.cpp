@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2023 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -50,284 +50,259 @@
 #include "widgets/menulineedit.h"
 #include "logging_gui.h"
 
-class ElementEditor::ElementEditorPrivate : public ElementEditor::ApplyElementInterface
-{
-private:
-    const File *file;
-    QSharedPointer<Entry> internalEntry;
-    QSharedPointer<Macro> internalMacro;
-    QSharedPointer<Preamble> internalPreamble;
-    QSharedPointer<Comment> internalComment;
-    ElementEditor *p;
-    ElementWidget *previousWidget;
-    ReferenceWidget *referenceWidget;
-    QPushButton *buttonCheckWithBibTeX;
+#include "elementeditor_p.h"
 
-    /// Settings management through a push button with menu
-    KSharedConfigPtr config;
-    QPushButton *buttonOptions;
-    QAction *actionForceShowAllWidgets, *actionLimitKeyboardTabStops;
+ElementEditor::ElementEditorPrivate::ElementEditorPrivate(bool scrollable, ElementEditor *parent)
+        : file(nullptr), p(parent), previousWidget(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
+    internalEntry = QSharedPointer<Entry>();
+    internalMacro = QSharedPointer<Macro>();
+    internalComment = QSharedPointer<Comment>();
+    internalPreamble = QSharedPointer<Preamble>();
 
-public:
-    typedef QVector<ElementWidget *> WidgetList;
-    QSharedPointer<Element> element;
-    HidingTabWidget *tab;
-    WidgetList widgets;
-    SourceWidget *sourceWidget;
-    FilesWidget *filesWidget;
-    bool elementChanged, elementUnapplied;
+    createGUI(scrollable);
+}
 
-    ElementEditorPrivate(bool scrollable, ElementEditor *parent)
-            : file(nullptr), p(parent), previousWidget(nullptr), config(KSharedConfig::openConfig(QStringLiteral("kbibtexrc"))), elementChanged(false), elementUnapplied(false) {
-        internalEntry = QSharedPointer<Entry>();
-        internalMacro = QSharedPointer<Macro>();
-        internalComment = QSharedPointer<Comment>();
-        internalPreamble = QSharedPointer<Preamble>();
+ElementEditor::ElementEditorPrivate::~ElementEditorPrivate() {
+    clearWidgets();
+}
 
-        createGUI(scrollable);
+void ElementEditor::ElementEditorPrivate::clearWidgets() {
+    for (int i = widgets.count() - 1; i >= 0; --i) {
+        QWidget *w = widgets[i];
+        w->deleteLater();
     }
+    widgets.clear();
+}
 
-    ~ElementEditorPrivate() override {
-        clearWidgets();
-    }
+void ElementEditor::ElementEditorPrivate::setElement(QSharedPointer<Element> element, const File *file) {
+    this->element = element;
+    this->file = file;
+    referenceWidget->setOriginalElement(element);
+    updateTabVisibility();
+}
 
-    void clearWidgets() {
-        for (int i = widgets.count() - 1; i >= 0; --i) {
-            QWidget *w = widgets[i];
-            w->deleteLater();
-        }
-        widgets.clear();
-    }
-
-    void setElement(QSharedPointer<Element> element, const File *file) {
-        this->element = element;
-        this->file = file;
-        referenceWidget->setOriginalElement(element);
-        updateTabVisibility();
-    }
-
-    void addTabWidgets() {
-        for (const auto &etl : EntryLayout::instance()) {
-            EntryConfiguredWidget *widget = new EntryConfiguredWidget(etl, tab);
-            connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
-            connect(widget, &EntryConfiguredWidget::requestingTabChange, p, &ElementEditor::switchToTab);
-            widgets << widget;
-            if (previousWidget == nullptr)
-                previousWidget = widget; ///< memorize the first tab
-            int index = tab->addTab(widget, widget->icon(), widget->label());
-            tab->hideTab(index);
-        }
-
-        ElementWidget *widget = new PreambleWidget(tab);
+void ElementEditor::ElementEditorPrivate::addTabWidgets() {
+    for (const auto &etl : EntryLayout::instance()) {
+        EntryConfiguredWidget *widget = new EntryConfiguredWidget(etl, tab);
         connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
+        connect(widget, &EntryConfiguredWidget::requestingTabChange, p, &ElementEditor::switchToTab);
         widgets << widget;
+        if (previousWidget == nullptr)
+            previousWidget = widget; ///< memorize the first tab
         int index = tab->addTab(widget, widget->icon(), widget->label());
         tab->hideTab(index);
-
-        widget = new MacroWidget(tab);
-        connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
-        widgets << widget;
-        index = tab->addTab(widget, widget->icon(), widget->label());
-        tab->hideTab(index);
-
-        widget = new CommentWidget(tab);
-        connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
-        widgets << widget;
-        index = tab->addTab(widget, widget->icon(), widget->label());
-        tab->hideTab(index);
-
-        filesWidget = new FilesWidget(tab);
-        connect(filesWidget, &FilesWidget::modified, p, &ElementEditor::childModified);
-        widgets << filesWidget;
-        index = tab->addTab(filesWidget, filesWidget->icon(), filesWidget->label());
-        tab->hideTab(index);
-
-        QStringList blacklistedFields;
-
-        /// blacklist fields covered by EntryConfiguredWidget
-        for (const auto &etl : EntryLayout::instance())
-            for (const auto &sfl : const_cast<const QList<SingleFieldLayout> &>(etl->singleFieldLayouts))
-                blacklistedFields << sfl.bibtexLabel;
-
-        /// blacklist fields covered by FilesWidget
-        blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftFile) << QString(Entry::ftDOI) << QStringLiteral("ee") << QStringLiteral("biburl") << QStringLiteral("postscript");
-        for (int i = 2; i < 256; ++i) // FIXME replace number by constant
-            blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) << QString(Entry::ftFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QStringLiteral("ee") + QString::number(i) << QStringLiteral("postscript") + QString::number(i);
-
-        widget = new OtherFieldsWidget(blacklistedFields, tab);
-        connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
-        widgets << widget;
-        index = tab->addTab(widget, widget->icon(), widget->label());
-        tab->hideTab(index);
-
-        sourceWidget = new SourceWidget(tab);
-        connect(sourceWidget, &ElementWidget::modified, p, &ElementEditor::childModified);
-        widgets << sourceWidget;
-        index = tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
-        tab->hideTab(index);
     }
 
-    void createGUI(bool scrollable) {
-        /// load configuration for options push button
-        static const QString configGroupName = QStringLiteral("User Interface");
-        static const QString keyEnableAllWidgets = QStringLiteral("EnableAllWidgets");
-        KConfigGroup configGroup(config, configGroupName);
-        const bool showAll = configGroup.readEntry(keyEnableAllWidgets, true);
-        const bool limitKeyboardTabStops = configGroup.readEntry(MenuLineEdit::keyLimitKeyboardTabStops, false);
+    ElementWidget *widget = new PreambleWidget(tab);
+    connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
+    widgets << widget;
+    int index = tab->addTab(widget, widget->icon(), widget->label());
+    tab->hideTab(index);
 
-        QBoxLayout *vLayout = new QVBoxLayout(p);
-        vLayout->setContentsMargins({});
+    widget = new MacroWidget(tab);
+    connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
+    widgets << widget;
+    index = tab->addTab(widget, widget->icon(), widget->label());
+    tab->hideTab(index);
 
-        referenceWidget = new ReferenceWidget(p);
-        referenceWidget->setApplyElementInterface(this);
-        connect(referenceWidget, &ElementWidget::modified, p, &ElementEditor::childModified);
-        connect(referenceWidget, &ReferenceWidget::entryTypeChanged, p, [this]() {
-            updateReqOptWidgets();
-        });
-        vLayout->addWidget(referenceWidget, 0);
-        widgets << referenceWidget;
+    widget = new CommentWidget(tab);
+    connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
+    widgets << widget;
+    index = tab->addTab(widget, widget->icon(), widget->label());
+    tab->hideTab(index);
 
-        if (scrollable) {
-            QScrollArea *sa = new QScrollArea(p);
-            tab = new HidingTabWidget(sa);
-            sa->setFrameStyle(0);
-            sa->setWidget(tab);
-            sa->setWidgetResizable(true);
-            sa->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-            sa->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-            vLayout->addWidget(sa, 10);
-        } else {
-            tab = new HidingTabWidget(p);
-            vLayout->addWidget(tab, 10);
-        }
+    filesWidget = new FilesWidget(tab);
+    connect(filesWidget, &FilesWidget::modified, p, &ElementEditor::childModified);
+    widgets << filesWidget;
+    index = tab->addTab(filesWidget, filesWidget->icon(), filesWidget->label());
+    tab->hideTab(index);
 
-        QBoxLayout *hLayout = new QHBoxLayout();
-        vLayout->addLayout(hLayout, 0);
+    QStringList blacklistedFields;
 
-        /// Push button with menu to toggle various options
-        buttonOptions = new QPushButton(QIcon::fromTheme(QStringLiteral("configure")), i18n("Options"), p);
-        hLayout->addWidget(buttonOptions, 0);
-        QMenu *menuOptions = new QMenu(buttonOptions);
-        buttonOptions->setMenu(menuOptions);
+    /// blacklist fields covered by EntryConfiguredWidget
+    for (const auto &etl : EntryLayout::instance())
+        for (const auto &sfl : const_cast<const QList<SingleFieldLayout> &>(etl->singleFieldLayouts))
+            blacklistedFields << sfl.bibtexLabel;
 
-        /// Option to show all fields or only those require for current entry type
-        actionForceShowAllWidgets = menuOptions->addAction(i18n("Show all fields"), p, [this]() {
-            updateReqOptWidgets();
-        });
-        actionForceShowAllWidgets->setCheckable(true);
-        actionForceShowAllWidgets->setChecked(showAll);
+    /// blacklist fields covered by FilesWidget
+    blacklistedFields << QString(Entry::ftUrl) << QString(Entry::ftLocalFile) << QString(Entry::ftFile) << QString(Entry::ftDOI) << QStringLiteral("ee") << QStringLiteral("biburl") << QStringLiteral("postscript");
+    for (int i = 2; i < 256; ++i) // FIXME replace number by constant
+        blacklistedFields << QString(Entry::ftUrl) + QString::number(i) << QString(Entry::ftLocalFile) + QString::number(i) << QString(Entry::ftFile) + QString::number(i) <<  QString(Entry::ftDOI) + QString::number(i) << QStringLiteral("ee") + QString::number(i) << QStringLiteral("postscript") + QString::number(i);
 
-        /// Option to disable tab key focus to reach/visit various non-editable widgets
-        actionLimitKeyboardTabStops = menuOptions->addAction(i18n("Tab key visits only editable fields"), p, [this]() {
-            this->limitKeyboardTabStops(); /// naming conflict between local variable 'limitKeyboardTabStops' and function 'limitKeyboardTabStops'
-        });
-        actionLimitKeyboardTabStops->setCheckable(true);
-        actionLimitKeyboardTabStops->setChecked(limitKeyboardTabStops);
+    widget = new OtherFieldsWidget(blacklistedFields, tab);
+    connect(widget, &ElementWidget::modified, p, &ElementEditor::childModified);
+    widgets << widget;
+    index = tab->addTab(widget, widget->icon(), widget->label());
+    tab->hideTab(index);
 
-        hLayout->addStretch(10);
+    sourceWidget = new SourceWidget(tab);
+    connect(sourceWidget, &ElementWidget::modified, p, &ElementEditor::childModified);
+    widgets << sourceWidget;
+    index = tab->addTab(sourceWidget, sourceWidget->icon(), sourceWidget->label());
+    tab->hideTab(index);
+}
 
-        buttonCheckWithBibTeX = new QPushButton(QIcon::fromTheme(QStringLiteral("tools-check-spelling")), i18n("Check with BibTeX"), p);
-        hLayout->addWidget(buttonCheckWithBibTeX, 0);
-        connect(buttonCheckWithBibTeX, &QPushButton::clicked, p, [this]() {
-            checkBibTeX();
-        });
+void ElementEditor::ElementEditorPrivate::createGUI(bool scrollable) {
+    /// load configuration for options push button
+    static const QString configGroupName = QStringLiteral("User Interface");
+    static const QString keyEnableAllWidgets = QStringLiteral("EnableAllWidgets");
+    KConfigGroup configGroup(config, configGroupName);
+    const bool showAll = configGroup.readEntry(keyEnableAllWidgets, true);
+    const bool limitKeyboardTabStops = configGroup.readEntry(MenuLineEdit::keyLimitKeyboardTabStops, false);
 
-        addTabWidgets();
+    QBoxLayout *vLayout = new QVBoxLayout(p);
+    vLayout->setContentsMargins({});
+
+    referenceWidget = new ReferenceWidget(p);
+    referenceWidget->setApplyElementInterface(this);
+    connect(referenceWidget, &ElementWidget::modified, p, &ElementEditor::childModified);
+    connect(referenceWidget, &ReferenceWidget::entryTypeChanged, p, [this]() {
+        updateReqOptWidgets();
+    });
+    vLayout->addWidget(referenceWidget, 0);
+    widgets << referenceWidget;
+
+    if (scrollable) {
+        QScrollArea *sa = new QScrollArea(p);
+        tab = new HidingTabWidget(sa);
+        sa->setFrameStyle(0);
+        sa->setWidget(tab);
+        sa->setWidgetResizable(true);
+        sa->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        sa->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        vLayout->addWidget(sa, 10);
+    } else {
+        tab = new HidingTabWidget(p);
+        vLayout->addWidget(tab, 10);
     }
 
-    void updateTabVisibility() {
-        const QSignalBlocker blocker(tab);
+    QBoxLayout *hLayout = new QHBoxLayout();
+    vLayout->addLayout(hLayout, 0);
 
-        if (element.isNull()) {
-            p->setEnabled(false);
-        } else {
-            p->setEnabled(true);
-            int firstEnabledTab = 1024;
+    /// Push button with menu to toggle various options
+    buttonOptions = new QPushButton(QIcon::fromTheme(QStringLiteral("configure")), i18n("Options"), p);
+    hLayout->addWidget(buttonOptions, 0);
+    QMenu *menuOptions = new QMenu(buttonOptions);
+    buttonOptions->setMenu(menuOptions);
 
-            for (ElementWidget *widget : const_cast<const WidgetList &>(widgets)) {
-                const int index = tab->indexOf(widget);
-                const bool canEdit = widget->canEdit(element.data());
+    /// Option to show all fields or only those require for current entry type
+    actionForceShowAllWidgets = menuOptions->addAction(i18n("Show all fields"), p, [this]() {
+        updateReqOptWidgets();
+    });
+    actionForceShowAllWidgets->setCheckable(true);
+    actionForceShowAllWidgets->setChecked(showAll);
 
-                if (widget == referenceWidget) {
-                    /// Reference widget
-                    widget->setVisible(canEdit);
-                    widget->setEnabled(canEdit);
-                } else {
-                    if (canEdit) tab->showTab(widget);
-                    else if (index >= 0) tab->hideTab(index);
-                    if (canEdit && index >= 0 && index < firstEnabledTab)
-                        firstEnabledTab = index;
-                }
+    /// Option to disable tab key focus to reach/visit various non-editable widgets
+    actionLimitKeyboardTabStops = menuOptions->addAction(i18n("Tab key visits only editable fields"), p, [this]() {
+        this->limitKeyboardTabStops(); /// naming conflict between local variable 'limitKeyboardTabStops' and function 'limitKeyboardTabStops'
+    });
+    actionLimitKeyboardTabStops->setCheckable(true);
+    actionLimitKeyboardTabStops->setChecked(limitKeyboardTabStops);
+
+    hLayout->addStretch(10);
+
+    buttonCheckWithBibTeX = new QPushButton(QIcon::fromTheme(QStringLiteral("tools-check-spelling")), i18n("Check with BibTeX"), p);
+    hLayout->addWidget(buttonCheckWithBibTeX, 0);
+    connect(buttonCheckWithBibTeX, &QPushButton::clicked, p, [this]() {
+        checkBibTeX();
+    });
+
+    addTabWidgets();
+}
+
+void ElementEditor::ElementEditorPrivate::updateTabVisibility() {
+    const QSignalBlocker blocker(tab);
+
+    if (element.isNull()) {
+        p->setEnabled(false);
+    } else {
+        p->setEnabled(true);
+        int firstEnabledTab = 1024;
+
+        for (ElementWidget *widget : const_cast<const WidgetList &>(widgets)) {
+            const int index = tab->indexOf(widget);
+            const bool canEdit = widget->canEdit(element.data());
+
+            if (widget == referenceWidget) {
+                /// Reference widget
+                widget->setVisible(canEdit);
+                widget->setEnabled(canEdit);
+            } else {
+                if (canEdit) tab->showTab(widget);
+                else if (index >= 0) tab->hideTab(index);
+                if (canEdit && index >= 0 && index < firstEnabledTab)
+                    firstEnabledTab = index;
             }
-            if (firstEnabledTab < 1024)
-                tab->setCurrentIndex(firstEnabledTab);
         }
+        if (firstEnabledTab < 1024)
+            tab->setCurrentIndex(firstEnabledTab);
     }
+}
 
-    /**
-     * If this element editor makes use of a reference widget
-     * (e.g. where entry type and entry id/macro key can be edited),
-     * then return the current value of the entry id/macro key
-     * editing widget.
-     * Otherwise, return an empty string.
-     *
-     * @return Current value of entry id/macro key if any, otherwise empty string
-     */
-    QString currentId() const {
-        if (referenceWidget != nullptr)
-            return referenceWidget->currentId();
-        return QString();
-    }
+/**
+ * If this element editor makes use of a reference widget
+ * (e.g. where entry type and entry id/macro key can be edited),
+ * then return the current value of the entry id/macro key
+ * editing widget.
+ * Otherwise, return an empty string.
+ *
+ * @return Current value of entry id/macro key if any, otherwise empty string
+ */
+QString ElementEditor::ElementEditorPrivate::currentId() const {
+    if (referenceWidget != nullptr)
+        return referenceWidget->currentId();
+    return QString();
+}
 
-    void setCurrentId(const QString &newId) {
-        if (referenceWidget != nullptr)
-            return referenceWidget->setCurrentId(newId);
-    }
+void ElementEditor::ElementEditorPrivate::setCurrentId(const QString &newId) {
+    if (referenceWidget != nullptr)
+        return referenceWidget->setCurrentId(newId);
+}
 
-    /**
-     * Return the current File object set for this element editor.
-     * May be NULL if nothing has been set or if it has been cleared.
-     *
-     * @return Current File object, may be nullptr
-     */
-    const File *currentFile() const {
-        return file;
-    }
+/**
+ * Return the current File object set for this element editor.
+ * May be NULL if nothing has been set or if it has been cleared.
+ *
+ * @return Current File object, may be nullptr
+ */
+const File *ElementEditor::ElementEditorPrivate::currentFile() const {
+    return file;
+}
 
-    void apply() {
-        elementChanged = true;
-        elementUnapplied = false;
-        apply(element);
-    }
+void ElementEditor::ElementEditorPrivate::apply() {
+    elementChanged = true;
+    elementUnapplied = false;
+    apply(element);
+}
 
-    void apply(QSharedPointer<Element> element) override {
-        QSharedPointer<Entry> e = element.dynamicCast<Entry>();
-        QSharedPointer<Macro> m = e.isNull() ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
-        QSharedPointer<Comment> c = e.isNull() && m.isNull() ? element.dynamicCast<Comment>() : QSharedPointer<Comment>();
-        QSharedPointer<Preamble> p = e.isNull() && m.isNull() && c.isNull() ? element.dynamicCast<Preamble>() : QSharedPointer<Preamble>();
+void ElementEditor::ElementEditorPrivate::apply(QSharedPointer<Element> element) {
+    QSharedPointer<Entry> e = element.dynamicCast<Entry>();
+    QSharedPointer<Macro> m = e.isNull() ? element.dynamicCast<Macro>() : QSharedPointer<Macro>();
+    QSharedPointer<Comment> c = e.isNull() && m.isNull() ? element.dynamicCast<Comment>() : QSharedPointer<Comment>();
+    QSharedPointer<Preamble> p = e.isNull() && m.isNull() && c.isNull() ? element.dynamicCast<Preamble>() : QSharedPointer<Preamble>();
 
-        if (tab->currentWidget() == sourceWidget) {
-            /// Very simple if source view is active: BibTeX code contains
-            /// all necessary data
-            if (!e.isNull())
-                sourceWidget->setElementClass(SourceWidget::ElementClass::Entry);
-            else if (!m.isNull())
-                sourceWidget->setElementClass(SourceWidget::ElementClass::Macro);
-            else if (!p.isNull())
-                sourceWidget->setElementClass(SourceWidget::ElementClass::Preamble);
-            else if (!c.isNull())
-                sourceWidget->setElementClass(SourceWidget::ElementClass::Comment);
-            else
-                sourceWidget->setElementClass(SourceWidget::ElementClass::Invalid);
-            sourceWidget->apply(element);
+    if (tab->currentWidget() == sourceWidget) {
+        /// Very simple if source view is active: BibTeX code contains
+        /// all necessary data
+        if (!e.isNull())
+            sourceWidget->setElementClass(SourceWidget::ElementClass::Entry);
+        else if (!m.isNull())
+            sourceWidget->setElementClass(SourceWidget::ElementClass::Macro);
+        else if (!p.isNull())
+            sourceWidget->setElementClass(SourceWidget::ElementClass::Preamble);
+        else if (!c.isNull())
+            sourceWidget->setElementClass(SourceWidget::ElementClass::Comment);
+        else
+            sourceWidget->setElementClass(SourceWidget::ElementClass::Invalid);
+        sourceWidget->apply(element);
         } else if (e.isNull() && m.isNull() && c.isNull() && p.isNull()) {
             Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::apply(QSharedPointer<Element> element)", "element is not NULL but could not be cast on a valid Element sub-class");
-        } else {
-            /// Start by assigning the current internal element's
-            /// data to the output element, but only if the internal element is valid
-            /// (i.e. reset() has been called and ran to completion)
+} else {
+        /// Start by assigning the current internal element's
+        /// data to the output element, but only if the internal element is valid
+        /// (i.e. reset() has been called and ran to completion)
             if (!e.isNull() && !internalEntry.isNull())
-                *e = *internalEntry;
+            *e = *internalEntry;
             else if (!m.isNull() && !internalMacro.isNull())
                 *m = *internalMacro;
             else if (!c.isNull() && !internalComment.isNull())
@@ -335,179 +310,178 @@ public:
             else if (!p.isNull() && !internalPreamble.isNull())
                 *p = *internalPreamble;
 
-            /// The internal element may be outdated (only updated on tab switch),
-            /// so apply the reference widget's data on the output element
-            if (referenceWidget != nullptr)
-                referenceWidget->apply(element);
-            /// The internal element may be outdated (only updated on tab switch),
-            /// so apply the current widget's data on the output element
-            ElementWidget *currentElementWidget = qobject_cast<ElementWidget *>(tab->currentWidget());
-            if (currentElementWidget != nullptr)
-                currentElementWidget->apply(element);
+        /// The internal element may be outdated (only updated on tab switch),
+        /// so apply the reference widget's data on the output element
+        if (referenceWidget != nullptr)
+            referenceWidget->apply(element);
+        /// The internal element may be outdated (only updated on tab switch),
+        /// so apply the current widget's data on the output element
+        ElementWidget *currentElementWidget = qobject_cast<ElementWidget *>(tab->currentWidget());
+        if (currentElementWidget != nullptr)
+            currentElementWidget->apply(element);
+    }
+}
+
+bool ElementEditor::ElementEditorPrivate::validate(QWidget **widgetWithIssue, QString &message) const {
+    if (tab->currentWidget() == sourceWidget) {
+        /// Source widget must check its textual content for being valid BibTeX code
+        return sourceWidget->validate(widgetWithIssue, message);
+    } else {
+        /// All widgets except for the source widget must validate their values
+        for (WidgetList::ConstIterator it = widgets.begin(); it != widgets.end(); ++it) {
+            if ((*it) == sourceWidget || !tab->tabIsShown(*it)) continue;
+            const bool v = (*it)->validate(widgetWithIssue, message);
+            /// A single widget failing to validate lets the whole validation fail
+            if (!v) return false;
         }
+        return true;
+    }
+}
+
+void ElementEditor::ElementEditorPrivate::reset() {
+    elementChanged = false;
+    elementUnapplied = false;
+    reset(element);
+
+    /// show checkbox to enable all fields only if editing an entry
+    actionForceShowAllWidgets->setVisible(!internalEntry.isNull());
+    /// Disable widgets if necessary
+    if (!actionForceShowAllWidgets->isChecked())
+        updateReqOptWidgets();
+}
+
+void ElementEditor::ElementEditorPrivate::reset(QSharedPointer<const Element> element) {
+    for (ElementEditor::ElementEditorPrivate::WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it) {
+        (*it)->setFile(file);
+        (*it)->reset(element);
+        (*it)->setModified(false);
     }
 
-    bool validate(QWidget **widgetWithIssue, QString &message) const override {
-        if (tab->currentWidget() == sourceWidget) {
-            /// Source widget must check its textual content for being valid BibTeX code
-            return sourceWidget->validate(widgetWithIssue, message);
+    QSharedPointer<const Entry> e = element.dynamicCast<const Entry>();
+    if (!e.isNull()) {
+        internalEntry = QSharedPointer<Entry>(new Entry(*e.data()));
+        sourceWidget->setElementClass(SourceWidget::ElementClass::Entry);
+    } else {
+        QSharedPointer<const Macro> m = element.dynamicCast<const Macro>();
+        if (!m.isNull()) {
+            internalMacro = QSharedPointer<Macro>(new Macro(*m.data()));
+            sourceWidget->setElementClass(SourceWidget::ElementClass::Macro);
         } else {
-            /// All widgets except for the source widget must validate their values
-            for (WidgetList::ConstIterator it = widgets.begin(); it != widgets.end(); ++it) {
-                if ((*it) == sourceWidget || !tab->tabIsShown(*it)) continue;
-                const bool v = (*it)->validate(widgetWithIssue, message);
-                /// A single widget failing to validate lets the whole validation fail
-                if (!v) return false;
-            }
-            return true;
-        }
-    }
-
-    void reset() {
-        elementChanged = false;
-        elementUnapplied = false;
-        reset(element);
-
-        /// show checkbox to enable all fields only if editing an entry
-        actionForceShowAllWidgets->setVisible(!internalEntry.isNull());
-        /// Disable widgets if necessary
-        if (!actionForceShowAllWidgets->isChecked())
-            updateReqOptWidgets();
-    }
-
-    void reset(QSharedPointer<const Element> element) {
-        for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it) {
-            (*it)->setFile(file);
-            (*it)->reset(element);
-            (*it)->setModified(false);
-        }
-
-        QSharedPointer<const Entry> e = element.dynamicCast<const Entry>();
-        if (!e.isNull()) {
-            internalEntry = QSharedPointer<Entry>(new Entry(*e.data()));
-            sourceWidget->setElementClass(SourceWidget::ElementClass::Entry);
-        } else {
-            QSharedPointer<const Macro> m = element.dynamicCast<const Macro>();
-            if (!m.isNull()) {
-                internalMacro = QSharedPointer<Macro>(new Macro(*m.data()));
-                sourceWidget->setElementClass(SourceWidget::ElementClass::Macro);
+            QSharedPointer<const Comment> c = element.dynamicCast<const Comment>();
+            if (!c.isNull()) {
+                internalComment = QSharedPointer<Comment>(new Comment(*c.data()));
+                sourceWidget->setElementClass(SourceWidget::ElementClass::Comment);
             } else {
-                QSharedPointer<const Comment> c = element.dynamicCast<const Comment>();
-                if (!c.isNull()) {
-                    internalComment = QSharedPointer<Comment>(new Comment(*c.data()));
-                    sourceWidget->setElementClass(SourceWidget::ElementClass::Comment);
-                } else {
-                    QSharedPointer<const Preamble> p = element.dynamicCast<const Preamble>();
-                    if (!p.isNull()) {
-                        internalPreamble = QSharedPointer<Preamble>(new Preamble(*p.data()));
-                        sourceWidget->setElementClass(SourceWidget::ElementClass::Preamble);
-                    } else
-                        Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::reset(QSharedPointer<const Element> element)", "element is not NULL but could not be cast on a valid Element sub-class");
-                }
+                QSharedPointer<const Preamble> p = element.dynamicCast<const Preamble>();
+                if (!p.isNull()) {
+                    internalPreamble = QSharedPointer<Preamble>(new Preamble(*p.data()));
+                    sourceWidget->setElementClass(SourceWidget::ElementClass::Preamble);
+                } else
+                    Q_ASSERT_X(element.isNull(), "ElementEditor::ElementEditorPrivate::reset(QSharedPointer<const Element> element)", "element is not NULL but could not be cast on a valid Element sub-class");
             }
         }
-
-        buttonCheckWithBibTeX->setEnabled(!internalEntry.isNull());
     }
 
-    void setReadOnly(bool isReadOnly) {
-        for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
-            (*it)->setReadOnly(isReadOnly);
+    buttonCheckWithBibTeX->setEnabled(!internalEntry.isNull());
+}
+
+void ElementEditor::ElementEditorPrivate::setReadOnly(bool isReadOnly) {
+    for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
+        (*it)->setReadOnly(isReadOnly);
+}
+
+void ElementEditor::ElementEditorPrivate::updateReqOptWidgets() {
+    /// this function is only relevant if editing an entry (and not e.g. a comment)
+    if (internalEntry.isNull()) return; /// quick-and-dirty test if editing an entry
+
+    /// make a temporary snapshot of the current state
+    QSharedPointer<Entry> tempEntry = QSharedPointer<Entry>(new Entry());
+    apply(tempEntry);
+
+    /// update the enabled/disabled state of required and optional widgets/fields
+    bool forceVisible = actionForceShowAllWidgets->isChecked();
+    for (ElementWidget *elementWidget : const_cast<const WidgetList &>(widgets)) {
+        elementWidget->showReqOptWidgets(forceVisible, tempEntry->type());
     }
 
-    void updateReqOptWidgets() {
-        /// this function is only relevant if editing an entry (and not e.g. a comment)
-        if (internalEntry.isNull()) return; /// quick-and-dirty test if editing an entry
+    /// save configuration
+    static const QString configGroupName = QStringLiteral("User Interface");
+    static const QString keyEnableAllWidgets = QStringLiteral("EnableAllWidgets");
+    KConfigGroup configGroup(config, configGroupName);
+    configGroup.writeEntry(keyEnableAllWidgets, actionForceShowAllWidgets->isChecked());
+    config->sync();
+}
 
-        /// make a temporary snapshot of the current state
-        QSharedPointer<Entry> tempEntry = QSharedPointer<Entry>(new Entry());
-        apply(tempEntry);
+void ElementEditor::ElementEditorPrivate::limitKeyboardTabStops() {
+    /// save configuration
+    static const QString configGroupName = QStringLiteral("User Interface");
+    KConfigGroup configGroup(config, configGroupName);
+    configGroup.writeEntry(MenuLineEdit::keyLimitKeyboardTabStops, actionLimitKeyboardTabStops->isChecked());
+    config->sync();
 
-        /// update the enabled/disabled state of required and optional widgets/fields
-        bool forceVisible = actionForceShowAllWidgets->isChecked();
-        for (ElementWidget *elementWidget : const_cast<const WidgetList &>(widgets)) {
-            elementWidget->showReqOptWidgets(forceVisible, tempEntry->type());
-        }
+    /// notify all listening MenuLineEdit widgets to change their behavior
+    NotificationHub::publishEvent(MenuLineEdit::MenuLineConfigurationChangedEvent);
+}
 
-        /// save configuration
-        static const QString configGroupName = QStringLiteral("User Interface");
-        static const QString keyEnableAllWidgets = QStringLiteral("EnableAllWidgets");
-        KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(keyEnableAllWidgets, actionForceShowAllWidgets->isChecked());
-        config->sync();
+void ElementEditor::ElementEditorPrivate::switchTo(QWidget *futureTab) {
+    /// Switched from source widget to another widget?
+    const bool isToSourceWidget = futureTab == sourceWidget;
+    /// Switch from some widget to the source widget?
+    const bool isFromSourceWidget = previousWidget == sourceWidget;
+    /// Interpret future widget as an ElementWidget
+    ElementWidget *futureWidget = qobject_cast<ElementWidget *>(futureTab);
+    /// Past and future ElementWidget values are valid?
+    if (previousWidget != nullptr && futureWidget != nullptr) {
+        /// Assign to temp which internal variable holds current state
+        QSharedPointer<Element> temp;
+        if (!internalEntry.isNull())
+            temp = internalEntry;
+        else if (!internalMacro.isNull())
+            temp = internalMacro;
+        else if (!internalComment.isNull())
+            temp = internalComment;
+        else if (!internalPreamble.isNull())
+            temp = internalPreamble;
+        Q_ASSERT_X(!temp.isNull(), "void ElementEditor::ElementEditorPrivate::switchTo(QWidget *newTab)", "temp is NULL");
+
+        /// Past widget writes its state to the internal state
+        previousWidget->apply(temp);
+        /// Before switching to source widget, store internally reference widget's state
+        if (isToSourceWidget && referenceWidget != nullptr) referenceWidget->apply(temp);
+        /// Tell future widget to initialize itself based on internal state
+        futureWidget->reset(temp);
+        /// When switching from source widget to another widget, initialize reference widget
+        if (isFromSourceWidget && referenceWidget != nullptr)
+            referenceWidget->reset(temp);
     }
+    previousWidget = futureWidget;
 
-    void limitKeyboardTabStops() {
-        /// save configuration
-        static const QString configGroupName = QStringLiteral("User Interface");
-        KConfigGroup configGroup(config, configGroupName);
-        configGroup.writeEntry(MenuLineEdit::keyLimitKeyboardTabStops, actionLimitKeyboardTabStops->isChecked());
-        config->sync();
+    /// Enable/disable tabs
+    for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
+        (*it)->setEnabled(!isToSourceWidget || *it == futureTab);
+}
 
-        /// notify all listening MenuLineEdit widgets to change their behavior
-        NotificationHub::publishEvent(MenuLineEdit::MenuLineConfigurationChangedEvent);
-    }
+/**
+  * Test current entry if it compiles with BibTeX.
+  * Show warnings and errors in message box.
+  */
+void ElementEditor::ElementEditorPrivate::checkBibTeX() {
+    /// disable GUI under process
+    p->setEnabled(false);
+    QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry());
+    apply(entry);
+    CheckBibTeX::checkBibTeX(entry, file, p);
+    p->setEnabled(true);
+}
 
-    void switchTo(QWidget *futureTab) {
-        /// Switched from source widget to another widget?
-        const bool isToSourceWidget = futureTab == sourceWidget;
-        /// Switch from some widget to the source widget?
-        const bool isFromSourceWidget = previousWidget == sourceWidget;
-        /// Interpret future widget as an ElementWidget
-        ElementWidget *futureWidget = qobject_cast<ElementWidget *>(futureTab);
-        /// Past and future ElementWidget values are valid?
-        if (previousWidget != nullptr && futureWidget != nullptr) {
-            /// Assign to temp which internal variable holds current state
-            QSharedPointer<Element> temp;
-            if (!internalEntry.isNull())
-                temp = internalEntry;
-            else if (!internalMacro.isNull())
-                temp = internalMacro;
-            else if (!internalComment.isNull())
-                temp = internalComment;
-            else if (!internalPreamble.isNull())
-                temp = internalPreamble;
-            Q_ASSERT_X(!temp.isNull(), "void ElementEditor::ElementEditorPrivate::switchTo(QWidget *newTab)", "temp is NULL");
+void ElementEditor::ElementEditorPrivate::setModified(bool newIsModified) {
+    for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
+        (*it)->setModified(newIsModified);
+}
 
-            /// Past widget writes its state to the internal state
-            previousWidget->apply(temp);
-            /// Before switching to source widget, store internally reference widget's state
-            if (isToSourceWidget && referenceWidget != nullptr) referenceWidget->apply(temp);
-            /// Tell future widget to initialize itself based on internal state
-            futureWidget->reset(temp);
-            /// When switching from source widget to another widget, initialize reference widget
-            if (isFromSourceWidget && referenceWidget != nullptr)
-                referenceWidget->reset(temp);
-        }
-        previousWidget = futureWidget;
-
-        /// Enable/disable tabs
-        for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
-            (*it)->setEnabled(!isToSourceWidget || *it == futureTab);
-    }
-
-    /**
-      * Test current entry if it compiles with BibTeX.
-      * Show warnings and errors in message box.
-      */
-    void checkBibTeX() {
-        /// disable GUI under process
-        p->setEnabled(false);
-        QSharedPointer<Entry> entry = QSharedPointer<Entry>(new Entry());
-        apply(entry);
-        CheckBibTeX::checkBibTeX(entry, file, p);
-        p->setEnabled(true);
-    }
-
-    void setModified(bool newIsModified) {
-        for (WidgetList::Iterator it = widgets.begin(); it != widgets.end(); ++it)
-            (*it)->setModified(newIsModified);
-    }
-
-    void referenceWidgetSetEntryIdByDefault() {
-        referenceWidget->setEntryIdByDefault();
-    }
-};
+void ElementEditor::ElementEditorPrivate::referenceWidgetSetEntryIdByDefault() {
+    referenceWidget->setEntryIdByDefault();
+}
 
 ElementEditor::ElementEditor(bool scrollable, QWidget *parent)
         : QWidget(parent), d(new ElementEditorPrivate(scrollable, this))

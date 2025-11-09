@@ -166,6 +166,7 @@ target_include_directories(kbibtexdatatest
 target_link_libraries(kbibtexguitest
     PRIVATE
         Qt${QT_MAJOR_VERSION}::Test
+        KF${QT_MAJOR_VERSION}::ConfigCore
         KBibTeX::Global
         KBibTeX::Data
         KBibTeX::GUI

@@ -1,7 +1,7 @@
 /***************************************************************************
  *   SPDX-License-Identifier: GPL-2.0-or-later
  *                                                                         *
- *   SPDX-FileCopyrightText: 2004-2019 Thomas Fischer <fischer@unix-ag.uni-kl.de>
+ *   SPDX-FileCopyrightText: 2004-2025 Thomas Fischer <fischer@unix-ag.uni-kl.de>
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -40,6 +40,9 @@ public:
         virtual ~ApplyElementInterface() {
             /** nothing */
         }
+        /**
+         * Apply the current state of of an editor to an element.
+         */
         virtual void apply(QSharedPointer<Element>) = 0;
         virtual bool validate(QWidget **widgetWithIssue, QString &message) const = 0;
     };
@@ -71,6 +74,9 @@ private Q_SLOTS:
     void childModified(bool);
 
 private:
+#ifdef BUILD_TESTING
+    friend class KBibTeXGUITest;
+#endif // BUILD_TESTING
     class ElementEditorPrivate;
     ElementEditorPrivate *d;
 };

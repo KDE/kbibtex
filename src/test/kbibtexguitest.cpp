@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2022 by Thomas Fischer <fischer@unix-ag.uni-kl.de>      *
+ *   Copyright (C) 2022-2025 by Thomas Fischer <fischer@unix-ag.uni-kl.de> *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -20,6 +20,8 @@
 #include <field/FieldLineEdit>
 #include <File>
 #include <Entry>
+#include <element/ElementEditor>
+#include "element/elementeditor_p.h"
 #include <models/FileModel>
 #include <file/SortFilterFileModel>
 #include <preferences/SettingsGlobalKeywordsWidget>
@@ -33,6 +35,7 @@ private Q_SLOTS:
 
     void sortedFilterFileModelSetSourceModel();
     void settingsGlobalKeywordsWidgetAddRemove();
+    void elementEditorApply();
 
 private:
 };
@@ -78,6 +81,18 @@ void KBibTeXGUITest::settingsGlobalKeywordsWidgetAddRemove()
     gotChanged = false;
     sgkw->removeKeyword();
     QCOMPARE(gotChanged, true);
+}
+
+void KBibTeXGUITest::elementEditorApply()
+{
+    auto elementEditor{ElementEditor(false, nullptr)};
+
+    // This code will trigger a SIGSEGV when running 'apply(entry)'
+    // unless the fix as discussed in KDE Invent merge request 37 is applied:
+    // https://invent.kde.org/office/kbibtex/-/merge_requests/37
+    // as merge in commit 28849cc0154166a4f59fe7bb3100853afe5b49c0
+    QSharedPointer<Element> entry(new Entry());
+    elementEditor.d->apply(entry);
 }
 
 QTEST_MAIN(KBibTeXGUITest)
