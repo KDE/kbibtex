@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-12 02:02+0000\n"
+"POT-Creation-Date: 2025-11-10 02:08+0000\n"
 "PO-Revision-Date: 2014-04-10 21:36+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -1011,7 +1011,7 @@ msgstr ""
 msgid "Macro"
 msgstr ""
 
-#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1279
+#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1274
 #, kde-format
 msgid "Comment"
 msgstr ""
@@ -1150,37 +1150,37 @@ msgstr ""
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:208
+#: src/gui/element/elementeditor.cpp:183
 #, kde-format
 msgid "Options"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:214
+#: src/gui/element/elementeditor.cpp:189
 #, kde-format
 msgid "Show all fields"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:221
+#: src/gui/element/elementeditor.cpp:196
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:229
+#: src/gui/element/elementeditor.cpp:204
 #, kde-format
 msgid "Check with BibTeX"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:555
+#: src/gui/element/elementeditor.cpp:524
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:555
+#: src/gui/element/elementeditor.cpp:524
 #, kde-format
 msgid "No id given"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1188,34 +1188,34 @@ msgid ""
 "Keep original id '%2' instead?"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Id already in use"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Restore original id"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:591
+#: src/gui/element/elementeditor.cpp:560
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:591
+#: src/gui/element/elementeditor.cpp:560
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
 "%1"
 msgstr ""
 
-#: src/gui/element/elementeditor.cpp:592
+#: src/gui/element/elementeditor.cpp:561
 #, kde-format
 msgid "Element validation failed"
 msgstr ""
@@ -1306,69 +1306,69 @@ msgstr ""
 msgid "Value:"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1253
+#: src/gui/element/elementwidgets.cpp:1248
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1261
+#: src/gui/element/elementwidgets.cpp:1256
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1298
+#: src/gui/element/elementwidgets.cpp:1293
 #, kde-format
 msgid "Context:"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1302
+#: src/gui/element/elementwidgets.cpp:1297
 #, kde-format
 msgid "Prefix:"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1450
+#: src/gui/element/elementwidgets.cpp:1440
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1459
+#: src/gui/element/elementwidgets.cpp:1449
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1465
+#: src/gui/element/elementwidgets.cpp:1455
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1471
+#: src/gui/element/elementwidgets.cpp:1461
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1477
+#: src/gui/element/elementwidgets.cpp:1467
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1481
+#: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
 msgid "Element class not properly set"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1490
+#: src/gui/element/elementwidgets.cpp:1480
 #, kde-format
 msgid "No issues detected"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1505
+#: src/gui/element/elementwidgets.cpp:1495
 #, kde-format
 msgid "Source"
 msgstr ""
 
-#: src/gui/element/elementwidgets.cpp:1536
+#: src/gui/element/elementwidgets.cpp:1526
 #, kde-format
 msgid "Restore"
 msgstr ""

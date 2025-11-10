@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-12 02:02+0000\n"
+"POT-Creation-Date: 2025-11-10 02:08+0000\n"
 "PO-Revision-Date: 2025-10-06 21:04+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -1013,7 +1013,7 @@ msgstr "Bevakat"
 msgid "Macro"
 msgstr "Makro"
 
-#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1279
+#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1274
 #, kde-format
 msgid "Comment"
 msgstr "Kommentar"
@@ -1152,39 +1152,39 @@ msgstr "Följande lokala dokument ska just associeras med aktuell post:"
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "Följande lokala dokument ska just associeras med post '%1':"
 
-#: src/gui/element/elementeditor.cpp:208
+#: src/gui/element/elementeditor.cpp:183
 #, kde-format
 msgid "Options"
 msgstr "Alternativ"
 
-#: src/gui/element/elementeditor.cpp:214
+#: src/gui/element/elementeditor.cpp:189
 #, kde-format
 msgid "Show all fields"
 msgstr "Visa alla fält"
 
-#: src/gui/element/elementeditor.cpp:221
+#: src/gui/element/elementeditor.cpp:196
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Tabulatortangenten besöker bara redigerbara fält"
 
-#: src/gui/element/elementeditor.cpp:229
+#: src/gui/element/elementeditor.cpp:204
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Kontrollera med Bibtex"
 
-#: src/gui/element/elementeditor.cpp:555
+#: src/gui/element/elementeditor.cpp:524
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 "Ingen identifierare matades in, alltså återställs föregående identifierare "
 "'%1'."
 
-#: src/gui/element/elementeditor.cpp:555
+#: src/gui/element/elementeditor.cpp:524
 #, kde-format
 msgid "No id given"
 msgstr "Ingen identifierare angiven"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1195,27 +1195,27 @@ msgstr ""
 "\n"
 "Ska istället originalidentifieraren '%2' behållas?"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Id already in use"
 msgstr "Identifierare används redan"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Behåll dubbletter av identifierare"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Restore original id"
 msgstr "Återställ ursprunglig identifierare"
 
-#: src/gui/element/elementeditor.cpp:591
+#: src/gui/element/elementeditor.cpp:560
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Validering av aktuellt element misslyckades."
 
-#: src/gui/element/elementeditor.cpp:591
+#: src/gui/element/elementeditor.cpp:560
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1224,7 +1224,7 @@ msgstr ""
 "Validering av aktuellt element misslyckades:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:592
+#: src/gui/element/elementeditor.cpp:561
 #, kde-format
 msgid "Element validation failed"
 msgstr "Validering av element misslyckades"
@@ -1315,47 +1315,47 @@ msgstr "Verkställ"
 msgid "Value:"
 msgstr "Värde:"
 
-#: src/gui/element/elementwidgets.cpp:1253
+#: src/gui/element/elementwidgets.cpp:1248
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
 msgstr "En kommentars prefix måste börja med '%'"
 
-#: src/gui/element/elementwidgets.cpp:1261
+#: src/gui/element/elementwidgets.cpp:1256
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr "En kommentar med läget 'Verbatim' får inte innehålla tomma rader"
 
-#: src/gui/element/elementwidgets.cpp:1298
+#: src/gui/element/elementwidgets.cpp:1293
 #, kde-format
 msgid "Context:"
 msgstr "Sammanhang:"
 
-#: src/gui/element/elementwidgets.cpp:1302
+#: src/gui/element/elementwidgets.cpp:1297
 #, kde-format
 msgid "Prefix:"
 msgstr "Prefix:"
 
-#: src/gui/element/elementwidgets.cpp:1450
+#: src/gui/element/elementwidgets.cpp:1440
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr "Angiven källkod går inte att tolka som ett enda Bibtex-element."
 
-#: src/gui/element/elementwidgets.cpp:1459
+#: src/gui/element/elementwidgets.cpp:1449
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr "Angiven källkod går inte att tolka som en enda Bibtex-post."
 
-#: src/gui/element/elementwidgets.cpp:1465
+#: src/gui/element/elementwidgets.cpp:1455
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr "Angiven källkod går inte att tolka som ett enda Bibtex-makro."
 
-#: src/gui/element/elementwidgets.cpp:1471
+#: src/gui/element/elementwidgets.cpp:1461
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Angiven källkod går inte att tolka som en enda Bibtex-inledning."
 
-#: src/gui/element/elementwidgets.cpp:1477
+#: src/gui/element/elementwidgets.cpp:1467
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
@@ -1364,22 +1364,22 @@ msgstr ""
 "Angiven källkod går inte att tolka som en enda Bibtex-kommentar. Försök ta "
 "bort tomma rader inne i kommentaren."
 
-#: src/gui/element/elementwidgets.cpp:1481
+#: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Elementklass inte riktigt angiven"
 
-#: src/gui/element/elementwidgets.cpp:1490
+#: src/gui/element/elementwidgets.cpp:1480
 #, kde-format
 msgid "No issues detected"
 msgstr "Inga problem hittades"
 
-#: src/gui/element/elementwidgets.cpp:1505
+#: src/gui/element/elementwidgets.cpp:1495
 #, kde-format
 msgid "Source"
 msgstr "Källa"
 
-#: src/gui/element/elementwidgets.cpp:1536
+#: src/gui/element/elementwidgets.cpp:1526
 #, kde-format
 msgid "Restore"
 msgstr "Återställ"

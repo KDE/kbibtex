@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-12 02:02+0000\n"
+"POT-Creation-Date: 2025-11-10 02:08+0000\n"
 "PO-Revision-Date: 2025-10-06 14:06+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -1016,7 +1016,7 @@ msgstr "Спостереження"
 msgid "Macro"
 msgstr "Макрос"
 
-#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1279
+#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1274
 #, kde-format
 msgid "Comment"
 msgstr "Коментар"
@@ -1156,39 +1156,39 @@ msgstr "З поточним записом буде пов’язано таки
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "Із записом «%1» буде пов’язано такий локальний документ:"
 
-#: src/gui/element/elementeditor.cpp:208
+#: src/gui/element/elementeditor.cpp:183
 #, kde-format
 msgid "Options"
 msgstr "Параметри"
 
-#: src/gui/element/elementeditor.cpp:214
+#: src/gui/element/elementeditor.cpp:189
 #, kde-format
 msgid "Show all fields"
 msgstr "Показати усі поля"
 
-#: src/gui/element/elementeditor.cpp:221
+#: src/gui/element/elementeditor.cpp:196
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Перехід за клавішею Tab здійснюється лише між редагованими полями"
 
-#: src/gui/element/elementeditor.cpp:229
+#: src/gui/element/elementeditor.cpp:204
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Перевірити за допомогою BibTeX"
 
-#: src/gui/element/elementeditor.cpp:555
+#: src/gui/element/elementeditor.cpp:524
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 "Ідентифікатор не вказано, отже буде відновлено попередній ідентифікатор — "
 "«%1»."
 
-#: src/gui/element/elementeditor.cpp:555
+#: src/gui/element/elementeditor.cpp:524
 #, kde-format
 msgid "No id given"
 msgstr "Не вказано ідентифікатора"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1199,27 +1199,27 @@ msgstr ""
 "\n"
 "Зберегти початковий ідентифікатор, «%2»?"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Id already in use"
 msgstr "Ідентифікатор вже використовується"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Зберегти дублікати ідентифікаторів"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Restore original id"
 msgstr "Відновити початковий ідентифікатор"
 
-#: src/gui/element/elementeditor.cpp:591
+#: src/gui/element/elementeditor.cpp:560
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Поточний елемент не пройшов перевірки."
 
-#: src/gui/element/elementeditor.cpp:591
+#: src/gui/element/elementeditor.cpp:560
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1228,7 +1228,7 @@ msgstr ""
 "Поточний елемент не пройшов перевірки:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:592
+#: src/gui/element/elementeditor.cpp:561
 #, kde-format
 msgid "Element validation failed"
 msgstr "Елемент не пройшов перевірки"
@@ -1319,49 +1319,49 @@ msgstr "Застосувати"
 msgid "Value:"
 msgstr "Значення:"
 
-#: src/gui/element/elementwidgets.cpp:1253
+#: src/gui/element/elementwidgets.cpp:1248
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
 msgstr "Префікс коментаря має починатися з «%»"
 
-#: src/gui/element/elementwidgets.cpp:1261
+#: src/gui/element/elementwidgets.cpp:1256
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr "Коментар у режимі «Буквально» не може починатися з порожніх рядків"
 
-#: src/gui/element/elementwidgets.cpp:1298
+#: src/gui/element/elementwidgets.cpp:1293
 #, kde-format
 msgid "Context:"
 msgstr "Контекст:"
 
-#: src/gui/element/elementwidgets.cpp:1302
+#: src/gui/element/elementwidgets.cpp:1297
 #, kde-format
 msgid "Prefix:"
 msgstr "Префікс:"
 
-#: src/gui/element/elementwidgets.cpp:1450
+#: src/gui/element/elementwidgets.cpp:1440
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr ""
 "Наданий початковий код не може бути оброблено як єдиний елемент BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1459
+#: src/gui/element/elementwidgets.cpp:1449
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr "Наданий початковий код не може бути оброблено як єдиний запис BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1465
+#: src/gui/element/elementwidgets.cpp:1455
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr "Наданий початковий код не може бути оброблено як єдиний макрос BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1471
+#: src/gui/element/elementwidgets.cpp:1461
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
 "Наданий початковий код не може бути оброблено як єдину преамбулу BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1477
+#: src/gui/element/elementwidgets.cpp:1467
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
@@ -1370,22 +1370,22 @@ msgstr ""
 "Наданий початковий код не може бути оброблено як єдиний коментар BibTeX. "
 "Намагаємося вилучити порожні рядки у коментарі."
 
-#: src/gui/element/elementwidgets.cpp:1481
+#: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Клас елемента не встановлено належним чином"
 
-#: src/gui/element/elementwidgets.cpp:1490
+#: src/gui/element/elementwidgets.cpp:1480
 #, kde-format
 msgid "No issues detected"
 msgstr "Проблем не виявлено"
 
-#: src/gui/element/elementwidgets.cpp:1505
+#: src/gui/element/elementwidgets.cpp:1495
 #, kde-format
 msgid "Source"
 msgstr "Джерело"
 
-#: src/gui/element/elementwidgets.cpp:1536
+#: src/gui/element/elementwidgets.cpp:1526
 #, kde-format
 msgid "Restore"
 msgstr "Відновити"

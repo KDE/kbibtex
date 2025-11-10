@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-10-12 02:02+0000\n"
+"POT-Creation-Date: 2025-11-10 02:08+0000\n"
 "PO-Revision-Date: 2025-03-17 21:10+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -1016,7 +1016,7 @@ msgstr "Observi"
 msgid "Macro"
 msgstr "Makroo"
 
-#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1279
+#: src/data/models/filemodel.cpp:266 src/gui/element/elementwidgets.cpp:1274
 #, kde-format
 msgid "Comment"
 msgstr "Komento"
@@ -1157,38 +1157,38 @@ msgstr "La sekva loka dokumento estas asocionta kun la nuna enskribo:"
 msgid "The following local document is about to be associated with entry '%1':"
 msgstr "La sekva loka dokumento estas asocionta kun eniro '%1':"
 
-#: src/gui/element/elementeditor.cpp:208
+#: src/gui/element/elementeditor.cpp:183
 #, kde-format
 msgid "Options"
 msgstr "Elektebloj"
 
-#: src/gui/element/elementeditor.cpp:214
+#: src/gui/element/elementeditor.cpp:189
 #, kde-format
 msgid "Show all fields"
 msgstr "Montri ĉiujn kampojn"
 
-#: src/gui/element/elementeditor.cpp:221
+#: src/gui/element/elementeditor.cpp:196
 #, kde-format
 msgid "Tab key visits only editable fields"
 msgstr "Tab-klavo vizitas nur redakteblajn kampojn"
 
-#: src/gui/element/elementeditor.cpp:229
+#: src/gui/element/elementeditor.cpp:204
 #, kde-format
 msgid "Check with BibTeX"
 msgstr "Kontroli kun BibTeX"
 
-#: src/gui/element/elementeditor.cpp:555
+#: src/gui/element/elementeditor.cpp:524
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
 msgstr ""
 "Neniu identigilo estis enigita, do la antaŭa id '%1' estos restarigita."
 
-#: src/gui/element/elementeditor.cpp:555
+#: src/gui/element/elementeditor.cpp:524
 #, kde-format
 msgid "No id given"
 msgstr "Neniu identigilo donita"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid ""
 "The entered id '%1' is already in use for another element.\n"
@@ -1199,27 +1199,27 @@ msgstr ""
 "\n"
 "Konservi originalan id '%2' anstataŭe?"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Id already in use"
 msgstr "Id jam uzata"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Keep duplicate ids"
 msgstr "Konservi duplikatajn identigilojn"
 
-#: src/gui/element/elementeditor.cpp:562
+#: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Restore original id"
 msgstr "Restarigi originan identigilon"
 
-#: src/gui/element/elementeditor.cpp:591
+#: src/gui/element/elementeditor.cpp:560
 #, kde-format
 msgid "Validation for the current element failed."
 msgstr "Valimigo por la nuna elemento malsukcesis."
 
-#: src/gui/element/elementeditor.cpp:591
+#: src/gui/element/elementeditor.cpp:560
 #, kde-format
 msgid ""
 "Validation for the current element failed:\n"
@@ -1228,7 +1228,7 @@ msgstr ""
 "Validiĝo por la nuna elemento malsukcesis:\n"
 "%1"
 
-#: src/gui/element/elementeditor.cpp:592
+#: src/gui/element/elementeditor.cpp:561
 #, kde-format
 msgid "Element validation failed"
 msgstr "Elementa validigo malsukcesis"
@@ -1319,47 +1319,47 @@ msgstr "Apliki"
 msgid "Value:"
 msgstr "Valoro:"
 
-#: src/gui/element/elementwidgets.cpp:1253
+#: src/gui/element/elementwidgets.cpp:1248
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
 msgstr "La prefikso de komento devas komenciĝi per '%'"
 
-#: src/gui/element/elementwidgets.cpp:1261
+#: src/gui/element/elementwidgets.cpp:1256
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr "Komento en 'Verbatim'-reĝimo ne enhavu malplenajn liniojn"
 
-#: src/gui/element/elementwidgets.cpp:1298
+#: src/gui/element/elementwidgets.cpp:1293
 #, kde-format
 msgid "Context:"
 msgstr "Kunteksto:"
 
-#: src/gui/element/elementwidgets.cpp:1302
+#: src/gui/element/elementwidgets.cpp:1297
 #, kde-format
 msgid "Prefix:"
 msgstr "Prefikso"
 
-#: src/gui/element/elementwidgets.cpp:1450
+#: src/gui/element/elementwidgets.cpp:1440
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
 msgstr "Donita fontkodo ne analizas kiel unu ununura elemento BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1459
+#: src/gui/element/elementwidgets.cpp:1449
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
 msgstr "Donita fontkodo ne analizas kiel unu ununura BibTeX-eniro."
 
-#: src/gui/element/elementwidgets.cpp:1465
+#: src/gui/element/elementwidgets.cpp:1455
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
 msgstr "Donita fontkodo ne analizas kiel unu ununura makroo BibTeX."
 
-#: src/gui/element/elementwidgets.cpp:1471
+#: src/gui/element/elementwidgets.cpp:1461
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Donita fontkodo ne analizas kiel unu ununura BibTeX-preambulo."
 
-#: src/gui/element/elementwidgets.cpp:1477
+#: src/gui/element/elementwidgets.cpp:1467
 #, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
@@ -1368,22 +1368,22 @@ msgstr ""
 "Donita fontkodo ne analiziĝas kiel unu sola BibTeX-komento. Provu forigi "
 "malplenajn liniojn ene de la komento."
 
-#: src/gui/element/elementwidgets.cpp:1481
+#: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
 msgid "Element class not properly set"
 msgstr "Elementklaso ne ĝuste agordita"
 
-#: src/gui/element/elementwidgets.cpp:1490
+#: src/gui/element/elementwidgets.cpp:1480
 #, kde-format
 msgid "No issues detected"
 msgstr "Neniuj problemoj detektitaj"
 
-#: src/gui/element/elementwidgets.cpp:1505
+#: src/gui/element/elementwidgets.cpp:1495
 #, kde-format
 msgid "Source"
 msgstr "Fonto"
 
-#: src/gui/element/elementwidgets.cpp:1536
+#: src/gui/element/elementwidgets.cpp:1526
 #, kde-format
 msgid "Restore"
 msgstr "Restaŭri"
