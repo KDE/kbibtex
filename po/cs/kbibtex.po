@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Vít Pelčák <vit@pelcak.org>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020.
+# SPDX-FileCopyrightText: 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2025 Vít Pelčák <vit@pelcak.org>
 # SPDX-FileCopyrightText: 2021, 2023, 2024 Vit Pelcak <vit@pelcak.org>
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
-"PO-Revision-Date: 2024-05-30 09:26+0200\n"
+"PO-Revision-Date: 2025-12-05 10:52+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2678,7 +2678,7 @@ msgstr "Rok:"
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
 #, kde-format
 msgid "Google Books"
-msgstr ""
+msgstr "Knihy Google"
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:331
 #, kde-format
@@ -2694,7 +2694,7 @@ msgstr "Google Scholar"
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:110
 #, kde-format
 msgid "IDEAS/RePEc"
-msgstr ""
+msgstr "IDEAS/RePEc"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
@@ -2844,7 +2844,7 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
 msgid "Authentication via Web Browser"
-msgstr ""
+msgstr "Ověření přes webový prohlížeč"
 
 #: src/networking/zotero/oauthwizard.cpp:265
 #, kde-format
@@ -2908,7 +2908,7 @@ msgstr "ID uživatele:"
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
 msgid "Enter User ID for API Calls"
-msgstr ""
+msgstr "Zadejte uživatelské ID pro volání API"
 
 #: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format
@@ -4158,7 +4158,7 @@ msgstr "Editor BibTeX pro KDE"
 #: src/program/program.cpp:55
 #, kde-format
 msgid "Copyright 2004-2025 Thomas Fischer"
-msgstr ""
+msgstr "Autorská práva 2004-2025 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
