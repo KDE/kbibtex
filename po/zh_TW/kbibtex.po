@@ -1,36 +1,35 @@
-# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+# SPDX-FileCopyrightText: 2026 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
-"PO-Revision-Date: 2016-09-22 20:30+0800\n"
-"Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
-"Language-Team: Traditional Chinese <zh-l10n@lists.linux.org.tw>\n"
+"PO-Revision-Date: 2026-01-05 03:19+0900\n"
+"Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
+"Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: Traditional Chinese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Translate Toolkit 1.10.0\n"
+"X-Generator: Lokalize 26.03.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Kisaragi Hiu"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "mail@kisaragi-hiu.com"
 
 #, kde-format
 msgid "Author/Editor"
-msgstr ""
+msgstr "作者/編輯"
 
 #, kde-format
 msgid "Publication"
@@ -42,15 +41,15 @@ msgstr ""
 
 #, kde-format
 msgid "Cross-Reference"
-msgstr ""
+msgstr "交叉參考"
 
 #, kde-format
 msgid "Misc"
-msgstr ""
+msgstr "雜項"
 
 #, kde-format
 msgid "Star Rating"
-msgstr ""
+msgstr "星級評等"
 
 #, kde-format
 msgid "Book Title Addon"
@@ -78,19 +77,19 @@ msgstr ""
 
 #, kde-format
 msgid "Identifiers"
-msgstr ""
+msgstr "識別子"
 
 #, kde-format
 msgid "Sorting"
-msgstr ""
+msgstr "排序"
 
 #, kde-format
 msgid "Sort Name"
-msgstr ""
+msgstr "排序名稱"
 
 #, kde-format
 msgid "Abbreviations"
-msgstr ""
+msgstr "縮寫"
 
 #, kde-format
 msgid "Short Journal"
@@ -216,12 +215,12 @@ msgstr ""
 #: src/config/bibtexentries.cpp:95
 #, kde-format
 msgid "Online Resource"
-msgstr ""
+msgstr "線上資源"
 
 #: src/config/bibtexentries.cpp:96
 #, kde-format
 msgid "Patent"
-msgstr ""
+msgstr "專利"
 
 #: src/config/bibtexentries.cpp:97
 #, kde-format
@@ -261,23 +260,23 @@ msgstr ""
 #: src/config/bibtexentries.cpp:105
 #, kde-format
 msgid "Report"
-msgstr ""
+msgstr "報告"
 
 #: src/config/bibtexentries.cpp:106
 #, kde-format
 msgid "Thesis"
-msgstr ""
+msgstr "論文"
 
 #: src/config/bibtexfields.cpp:160 src/config/bibtexfields.cpp:199
 #, kde-format
 msgid "Element Type"
-msgstr ""
+msgstr "元素類型"
 
 #: src/config/bibtexfields.cpp:161 src/config/bibtexfields.cpp:200
 #: src/gui/file/findduplicatesui.cpp:159
 #, kde-format
 msgid "Identifier"
-msgstr ""
+msgstr "識別子"
 
 #: src/config/bibtexfields.cpp:162 src/config/bibtexfields.cpp:201
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:323
@@ -286,17 +285,17 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:426
 #, kde-format
 msgid "Title"
-msgstr ""
+msgstr "標題"
 
 #: src/config/bibtexfields.cpp:163 src/config/bibtexfields.cpp:202
 #, kde-format
 msgid "Title or Book Title"
-msgstr ""
+msgstr "標題或書名"
 
 #: src/config/bibtexfields.cpp:164 src/config/bibtexfields.cpp:211
 #, kde-format
 msgid "Author or Editor"
-msgstr ""
+msgstr "作者或編輯"
 
 #: src/config/bibtexfields.cpp:165 src/config/bibtexfields.cpp:212
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:649
@@ -304,17 +303,17 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:79
 #, kde-format
 msgid "Author"
-msgstr ""
+msgstr "作者"
 
 #: src/config/bibtexfields.cpp:166 src/config/bibtexfields.cpp:217
 #, kde-format
 msgid "Editor"
-msgstr ""
+msgstr "編輯"
 
 #: src/config/bibtexfields.cpp:167 src/config/bibtexfields.cpp:233
 #, kde-format
 msgid "Month"
-msgstr ""
+msgstr "月份"
 
 #: src/config/bibtexfields.cpp:168 src/config/bibtexfields.cpp:234
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:212
@@ -322,7 +321,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:688
 #, kde-format
 msgid "Year"
-msgstr ""
+msgstr "年份"
 
 #: src/config/bibtexfields.cpp:169
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:424
@@ -350,22 +349,22 @@ msgstr ""
 #: src/config/bibtexfields.cpp:172 src/config/bibtexfields.cpp:251
 #, kde-format
 msgid "ISSN"
-msgstr ""
+msgstr "ISSN"
 
 #: src/config/bibtexfields.cpp:173 src/config/bibtexfields.cpp:252
 #, kde-format
 msgid "ISBN"
-msgstr ""
+msgstr "ISBN"
 
 #: src/config/bibtexfields.cpp:174 src/config/bibtexfields.cpp:253
 #, kde-format
 msgid "ISBN or ISSN"
-msgstr ""
+msgstr "ISBN 或 ISSN"
 
 #: src/config/bibtexfields.cpp:175 src/config/bibtexfields.cpp:255
 #, kde-format
 msgid "How Published"
-msgstr ""
+msgstr "如何出版"
 
 #: src/config/bibtexfields.cpp:176 src/config/bibtexfields.cpp:256
 #, kde-format
@@ -375,32 +374,32 @@ msgstr ""
 #: src/config/bibtexfields.cpp:177 src/config/bibtexfields.cpp:259
 #, kde-format
 msgid "Abstract"
-msgstr ""
+msgstr "摘要"
 
 #: src/config/bibtexfields.cpp:178 src/config/bibtexfields.cpp:260
 #, kde-format
 msgid "Pages"
-msgstr ""
+msgstr "頁數"
 
 #: src/config/bibtexfields.cpp:179 src/config/bibtexfields.cpp:264
 #, kde-format
 msgid "Publisher"
-msgstr ""
+msgstr "出版社"
 
 #: src/config/bibtexfields.cpp:180 src/config/bibtexfields.cpp:266
 #, kde-format
 msgid "Institution"
-msgstr ""
+msgstr "機構"
 
 #: src/config/bibtexfields.cpp:181 src/config/bibtexfields.cpp:267
 #, kde-format
 msgid "Book Title"
-msgstr ""
+msgstr "書名"
 
 #: src/config/bibtexfields.cpp:182 src/config/bibtexfields.cpp:272
 #, kde-format
 msgid "Series"
-msgstr ""
+msgstr "系列"
 
 #: src/config/bibtexfields.cpp:183 src/config/bibtexfields.cpp:274
 #, kde-format
@@ -410,50 +409,50 @@ msgstr ""
 #: src/config/bibtexfields.cpp:184 src/config/bibtexfields.cpp:275
 #, kde-format
 msgid "Chapter"
-msgstr ""
+msgstr "章節"
 
 #: src/config/bibtexfields.cpp:185 src/config/bibtexfields.cpp:276
 #, kde-format
 msgid "Organization"
-msgstr ""
+msgstr "組織"
 
 #: src/config/bibtexfields.cpp:186
 #, kde-format
 msgid "School"
-msgstr ""
+msgstr "學校"
 
 #: src/config/bibtexfields.cpp:187 src/config/bibtexfields.cpp:280
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:127
 #, kde-format
 msgid "Keywords"
-msgstr ""
+msgstr "關鍵字"
 
 #: src/config/bibtexfields.cpp:188 src/config/bibtexfields.cpp:281
 #, kde-format
 msgid "Cross Reference"
-msgstr ""
+msgstr "交互參考"
 
 #: src/config/bibtexfields.cpp:189 src/config/bibtexfields.cpp:283
 #: src/networking/onlinesearch/onlinesearchdoi.cpp:185
 #, kde-format
 msgid "DOI"
-msgstr ""
+msgstr "DOI"
 
 #: src/config/bibtexfields.cpp:190 src/config/bibtexfields.cpp:287
 #, kde-format
 msgid "URL"
-msgstr ""
+msgstr "網址"
 
 #: src/config/bibtexfields.cpp:191 src/config/bibtexfields.cpp:290
 #: src/config/bibtexfields.cpp:313
 #, kde-format
 msgid "Location"
-msgstr ""
+msgstr "地點"
 
 #: src/config/bibtexfields.cpp:192
 #, kde-format
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #: src/config/bibtexfields.cpp:193 src/config/bibtexfields.cpp:292
 #: src/gui/file/findduplicatesui.cpp:161
@@ -463,7 +462,7 @@ msgstr ""
 #: src/processing/idsuggestions.cpp:498
 #, kde-format
 msgid "Type"
-msgstr ""
+msgstr "類型"
 
 #: src/config/bibtexfields.cpp:194 src/gui/element/elementwidgets.cpp:1004
 #, kde-format
@@ -475,7 +474,7 @@ msgstr ""
 #: src/gui/preferences/settingscolorlabelwidget.cpp:427
 #, kde-format
 msgid "Color"
-msgstr ""
+msgstr "色彩"
 
 #: src/config/bibtexfields.cpp:196
 #, kde-format
@@ -485,7 +484,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:203
 #, kde-format
 msgid "Subtitle"
-msgstr ""
+msgstr "副標題"
 
 #: src/config/bibtexfields.cpp:204
 #, kde-format
@@ -500,7 +499,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:206
 #, kde-format
 msgid "Original Title"
-msgstr ""
+msgstr "原始標題"
 
 #: src/config/bibtexfields.cpp:207
 #, kde-format
@@ -585,7 +584,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:226
 #, kde-format
 msgid "Translator"
-msgstr ""
+msgstr "譯者"
 
 #: src/config/bibtexfields.cpp:227
 #, kde-format
@@ -600,7 +599,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:229
 #, kde-format
 msgid "Foreword Author"
-msgstr ""
+msgstr "前言作者"
 
 #: src/config/bibtexfields.cpp:230
 #, kde-format
@@ -615,27 +614,27 @@ msgstr ""
 #: src/config/bibtexfields.cpp:232
 #, kde-format
 msgid "Patent Holder"
-msgstr ""
+msgstr "專利持有者"
 
 #: src/config/bibtexfields.cpp:235
 #, kde-format
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #: src/config/bibtexfields.cpp:236
 #, kde-format
 msgid "Date or Year"
-msgstr ""
+msgstr "日期或年份"
 
 #: src/config/bibtexfields.cpp:237
 #, kde-format
 msgid "Event Date"
-msgstr ""
+msgstr "活動日期"
 
 #: src/config/bibtexfields.cpp:238
 #, kde-format
 msgid "Original Date"
-msgstr ""
+msgstr "原始日期"
 
 #: src/config/bibtexfields.cpp:239
 #, kde-format
@@ -750,7 +749,7 @@ msgstr ""
 #: src/config/bibtexfields.cpp:277
 #, kde-format
 msgid "Event Title"
-msgstr ""
+msgstr "活動標題"
 
 #: src/config/bibtexfields.cpp:278
 #, kde-format
@@ -1999,76 +1998,76 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "First author"
-msgstr ""
+msgstr "第一個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Second author"
-msgstr ""
+msgstr "第二個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Third author"
-msgstr ""
+msgstr "第三個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Fourth author"
-msgstr ""
+msgstr "第四個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Fifth author"
-msgstr ""
+msgstr "第五個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Sixth author"
-msgstr ""
+msgstr "第六個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Seventh author"
-msgstr ""
+msgstr "第七個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Eighth author"
-msgstr ""
+msgstr "第八個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Ninth author"
-msgstr ""
+msgstr "第九個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Tenth author"
-msgstr ""
+msgstr "第十個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "|Last author"
-msgstr ""
+msgstr "最後一個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:126
 #, kde-format
 msgid "... and last author"
-msgstr ""
+msgstr "... 和最後一個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
 #: src/processing/idsuggestions.cpp:549
 #, kde-format
 msgid "From first author to author %1 and last author"
-msgstr ""
+msgstr "從第 1 個作者到第 %1 個作者以及最後一個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:132
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
 #: src/processing/idsuggestions.cpp:566 src/processing/idsuggestions.cpp:586
 #, kde-format
 msgid "From author %1 to author %2 and last author"
-msgstr ""
+msgstr "從第 %1 個作者到第 %2 個作者以及最後一個作者"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:139
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:350
@@ -2076,7 +2075,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:503
 #, kde-format
 msgid "No change"
-msgstr ""
+msgstr "不改變"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:140
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:351
@@ -2084,7 +2083,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:504
 #, kde-format
 msgid "To upper case"
-msgstr ""
+msgstr "改為大寫"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:141
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:352
@@ -2092,7 +2091,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:505
 #, kde-format
 msgid "To lower case"
-msgstr ""
+msgstr "改為小寫"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:142
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:353
@@ -2100,7 +2099,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:506
 #, kde-format
 msgid "To CamelCase"
-msgstr ""
+msgstr "改為 CamelCase"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:143
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:354
@@ -2108,7 +2107,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:507
 #, kde-format
 msgid "Change casing:"
-msgstr ""
+msgstr "變更大小寫："
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:147
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:358
@@ -2136,17 +2135,17 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:215
 #, kde-format
 msgid "2 digits"
-msgstr ""
+msgstr "2 位數"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:216
 #, kde-format
 msgid "4 digits"
-msgstr ""
+msgstr "4 位數"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:217
 #, kde-format
 msgid "Digits:"
-msgstr ""
+msgstr "位數："
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:248
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:116
@@ -2159,7 +2158,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:704
 #, kde-format
 msgid "Page Number"
-msgstr ""
+msgstr "頁碼"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:274
 #, kde-format
@@ -2317,33 +2316,33 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "Edit Id Suggestion"
-msgstr ""
+msgstr "編輯 ID 建議"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:167
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:306
 #, kde-format
 msgid "Id Suggestions"
-msgstr ""
+msgstr "ID 建議"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:266
 #, kde-format
 msgid "Edit..."
-msgstr ""
+msgstr "編輯..."
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:272
 #, kde-format
 msgid "Up"
-msgstr ""
+msgstr "上移"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:275
 #, kde-format
 msgid "Down"
-msgstr ""
+msgstr "下移"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:278
 #, kde-format
 msgid "Toggle Default"
-msgstr ""
+msgstr "切換預設值"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:382
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
@@ -2357,40 +2356,40 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Remove suggestion?"
-msgstr ""
+msgstr "移除建議？"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:382
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Remove suggestion"
-msgstr ""
+msgstr "移除建議"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:382
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
 #, kde-format
 msgid "Revert changes"
-msgstr ""
+msgstr "回復變更"
 
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:69
 #, kde-format
 msgid "When double-clicking an element:"
-msgstr ""
+msgstr "對元素點兩下時："
 
 #: src/gui/preferences/settingsuserinterfacewidget.cpp:83
 #, kde-format
 msgid "User Interface"
-msgstr ""
+msgstr "使用者介面"
 
 #: src/gui/valuelistmodel.cpp:341 src/program/docklets/valuelist.cpp:73
 #: src/program/docklets/valuelist.cpp:75
 #, kde-format
 msgid "Count"
-msgstr ""
+msgstr "計數"
 
 #: src/gui/widgets/filesettingswidget.cpp:141
 #, kde-format
 msgid "Encoding:"
-msgstr ""
+msgstr "編碼："
 
 #: src/gui/widgets/filesettingswidget.cpp:147
 #, kde-format
@@ -2475,7 +2474,7 @@ msgstr ""
 #: src/gui/widgets/filterbar.cpp:70
 #, kde-format
 msgid "Filter:"
-msgstr ""
+msgstr "過濾器："
 
 #: src/gui/widgets/filterbar.cpp:86
 #, kde-format
@@ -2614,7 +2613,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchdoi.cpp:63
 #, kde-format
 msgid "DOI:"
-msgstr ""
+msgstr "DOI："
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
@@ -2629,7 +2628,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
 msgid "CERN Document Server"
-msgstr ""
+msgstr "CERN 文件伺服器"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
 #, kde-format
@@ -2734,7 +2733,7 @@ msgstr ""
 #: src/networking/onlinesearch/onlinesearchpubmed.cpp:154
 #, kde-format
 msgid "PubMed"
-msgstr ""
+msgstr "PubMed"
 
 #: src/networking/onlinesearch/onlinesearchsciencedirect.cpp:249
 #, kde-format
@@ -2843,12 +2842,12 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
 msgid "Copy URL"
-msgstr ""
+msgstr "複製網址"
 
 #: src/networking/zotero/oauthwizard.cpp:279
 #, kde-format
 msgid "Open URL"
-msgstr ""
+msgstr "開啟網址"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #, kde-format
@@ -2864,7 +2863,7 @@ msgstr ""
 #: src/program/docklets/zoterobrowser.cpp:150
 #, kde-format
 msgid "API key:"
-msgstr ""
+msgstr "API 金鑰："
 
 #: src/networking/zotero/oauthwizard.cpp:290
 #, kde-format
@@ -2883,7 +2882,7 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
 msgid "User ID:"
-msgstr ""
+msgstr "使用者 ID："
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
@@ -2900,45 +2899,45 @@ msgstr ""
 #: src/parts/kbibtexpartui.rc:8 src/program/kbibtexui.rc:8
 #, kde-format
 msgid "File"
-msgstr ""
+msgstr "檔案"
 
 #. i18n: ectx: Menu (edit)
 #: src/parts/kbibtexpartui.rc:14
 #, kde-format
 msgid "Edit"
-msgstr ""
+msgstr "編輯"
 
 #. i18n: ectx: Menu (element)
 #: src/parts/kbibtexpartui.rc:21
 #, kde-format
 msgid "Element"
-msgstr ""
+msgstr "元素"
 
 #. i18n: ectx: ToolBar (mainToolBar)
 #: src/parts/kbibtexpartui.rc:37 src/program/kbibtexui.rc:24
 #, kde-format
 msgid "Main Toolbar"
-msgstr ""
+msgstr "主工具列"
 
 #: src/parts/part.cpp:137 src/parts/part.cpp:214
 #, kde-format
 msgid "View Document"
-msgstr ""
+msgstr "檢視文件"
 
 #: src/parts/part.cpp:164
 #, kde-format
 msgid "Save Copy As..."
-msgstr ""
+msgstr "儲存副本為…"
 
 #: src/parts/part.cpp:168
 #, kde-format
 msgid "Save Selection..."
-msgstr ""
+msgstr "儲存選擇..."
 
 #: src/parts/part.cpp:176
 #, kde-format
 msgid "Filter"
-msgstr ""
+msgstr "過濾器"
 
 #: src/parts/part.cpp:181
 #, kde-format
@@ -2973,12 +2972,12 @@ msgstr ""
 #: src/parts/part.cpp:208
 #, kde-format
 msgid "Edit Element"
-msgstr ""
+msgstr "編輯元素"
 
 #: src/parts/part.cpp:231
 #, kde-format
 msgid "Find PDF..."
-msgstr ""
+msgstr "尋找 PDF..."
 
 #: src/parts/part.cpp:236
 #, kde-format
@@ -3008,7 +3007,7 @@ msgstr ""
 #: src/parts/part.cpp:504
 #, kde-format
 msgid "Save file"
-msgstr ""
+msgstr "儲存檔案"
 
 #: src/parts/part.cpp:532
 #, kde-format
@@ -3018,7 +3017,7 @@ msgstr ""
 #: src/parts/part.cpp:533
 #, kde-format
 msgid "BibTeX2HTML"
-msgstr ""
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:534
 #, kde-format
@@ -3028,23 +3027,23 @@ msgstr ""
 #: src/parts/part.cpp:535
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "KBibTeX 自己的 XML 結構"
 
 #: src/parts/part.cpp:536
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "KBibTeX 內建的 HTML 匯出器"
 
 #: src/parts/part.cpp:537
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "KBibTeX 內建的 RIS 匯出器"
 
 #: src/parts/part.cpp:546
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "選擇匯出器"
 
 #: src/parts/part.cpp:548
 #, kde-format
@@ -3058,13 +3057,13 @@ msgstr ""
 #, kde-format
 msgctxt "@title:window"
 msgid "BibTeX File Settings"
-msgstr ""
+msgstr "BibTeX 檔案設定"
 
 #: src/parts/part.cpp:597
 #, kde-format
 msgctxt "@title:window"
 msgid "PDF/PostScript File Settings"
-msgstr ""
+msgstr "PDF/PostScript 檔案設定"
 
 #: src/parts/part.cpp:715
 #, kde-format
@@ -3089,12 +3088,12 @@ msgstr ""
 #: src/parts/part.cpp:773
 #, kde-format
 msgid "Local Files"
-msgstr ""
+msgstr "本地檔案"
 
 #: src/parts/part.cpp:798
 #, kde-format
 msgid "Remote Files"
-msgstr ""
+msgstr "遠端檔案"
 
 #: src/parts/part.cpp:937
 #, kde-format
@@ -3217,7 +3216,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:151
 #, kde-format
 msgid "Errors found"
-msgstr ""
+msgstr "發現錯誤"
 
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
@@ -3227,7 +3226,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:153
 #, kde-format
 msgid "Warnings found"
-msgstr ""
+msgstr "發現警告"
 
 #: src/processing/checkbibtex.cpp:156
 #, kde-format
@@ -3281,7 +3280,6 @@ msgstr ""
 msgid ", but only first letter of each last name"
 msgid_plural ", but only first %1 letters of each last name"
 msgstr[0] ""
-msgstr[1] ""
 
 #: src/processing/idsuggestions.cpp:401 src/processing/idsuggestions.cpp:454
 #: src/processing/idsuggestions.cpp:485 src/processing/idsuggestions.cpp:507
@@ -3321,7 +3319,6 @@ msgstr ""
 msgid ", but only the first word"
 msgid_plural ", but only first %1 words"
 msgstr[0] ""
-msgstr[1] ""
 
 #: src/processing/idsuggestions.cpp:435
 #, kde-format
@@ -3339,7 +3336,6 @@ msgstr ""
 msgid ", but only first letter of each word"
 msgid_plural ", but only first %1 letters of each word"
 msgstr[0] ""
-msgstr[1] ""
 
 #: src/processing/idsuggestions.cpp:472
 #, kde-format
@@ -3564,7 +3560,7 @@ msgstr ""
 #: src/program/docklets/referencepreview.cpp:435
 #, kde-format
 msgid "Save as HTML"
-msgstr ""
+msgstr "儲存為 HTML"
 
 #: src/program/docklets/referencepreview.cpp:156
 #, kde-format
@@ -3574,13 +3570,13 @@ msgstr ""
 #: src/program/docklets/referencepreview.cpp:229
 #, kde-format
 msgid "Reason:"
-msgstr ""
+msgstr "原因："
 
 #: src/program/docklets/referencepreview.cpp:253
 #, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
-msgstr ""
+msgstr "預覽已停用"
 
 #: src/program/docklets/referencepreview.cpp:268
 #, kde-format
@@ -3684,17 +3680,17 @@ msgstr ""
 #: src/program/docklets/searchresults.cpp:102
 #, kde-format
 msgid "Import"
-msgstr ""
+msgstr "匯入"
 
 #: src/program/docklets/searchresults.cpp:97
 #, kde-format
 msgid "View Element"
-msgstr ""
+msgstr "檢視元素"
 
 #: src/program/docklets/searchresults.cpp:107
 #, kde-format
 msgid "Copy"
-msgstr ""
+msgstr "複製"
 
 #: src/program/docklets/searchresults.cpp:149
 #, kde-format
@@ -3948,12 +3944,12 @@ msgstr ""
 #: src/program/mainwindow.cpp:150
 #, kde-format
 msgid "Search Results"
-msgstr ""
+msgstr "搜尋結果"
 
 #: src/program/mainwindow.cpp:161
 #, kde-format
 msgid "Online Search"
-msgstr ""
+msgstr "線上搜尋"
 
 #: src/program/mainwindow.cpp:172
 #, kde-format
@@ -3963,22 +3959,22 @@ msgstr ""
 #: src/program/mainwindow.cpp:184
 #, kde-format
 msgid "Reference Preview"
-msgstr ""
+msgstr "參考預覽"
 
 #: src/program/mainwindow.cpp:193
 #, kde-format
 msgid "Document Preview"
-msgstr ""
+msgstr "文件預覽"
 
 #: src/program/mainwindow.cpp:204
 #, kde-format
 msgid "Element Editor"
-msgstr ""
+msgstr "元素編輯器"
 
 #: src/program/mainwindow.cpp:214
 #, kde-format
 msgid "File Settings"
-msgstr ""
+msgstr "檔案設定"
 
 #: src/program/mainwindow.cpp:311
 #, kde-format
@@ -3995,12 +3991,12 @@ msgstr ""
 #: src/program/mainwindow.cpp:333
 #, kde-format
 msgid "Open file"
-msgstr ""
+msgstr "開啟檔案"
 
 #: src/program/mainwindow.cpp:375
 #, kde-format
 msgid "%1 - KBibTeX"
-msgstr ""
+msgstr "%1 - KBibTeX"
 
 #: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
@@ -4027,7 +4023,7 @@ msgstr ""
 #: src/program/mdiwidget.cpp:99
 #, kde-format
 msgid "Filename"
-msgstr ""
+msgstr "檔案名稱"
 
 #: src/program/mdiwidget.cpp:100
 #, kde-format
@@ -4037,7 +4033,7 @@ msgstr ""
 #: src/program/mdiwidget.cpp:101
 #, kde-format
 msgid "Full filename"
-msgstr ""
+msgstr "完整檔案名稱"
 
 #: src/program/mdiwidget.cpp:147
 #, kde-format
@@ -4047,12 +4043,12 @@ msgstr ""
 #: src/program/mdiwidget.cpp:150
 #, kde-format
 msgid "New"
-msgstr ""
+msgstr "新增"
 
 #: src/program/mdiwidget.cpp:154
 #, kde-format
 msgid "Open..."
-msgstr ""
+msgstr "開啟..."
 
 #: src/program/mdiwidget.cpp:158
 #, kde-format
@@ -4092,12 +4088,12 @@ msgstr ""
 #: src/program/program.cpp:60
 #, kde-format
 msgid "Thomas Fischer"
-msgstr ""
+msgstr "Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
 msgid "Maintainer"
-msgstr ""
+msgstr "維護者"
 
 #: src/program/program.cpp:69
 #, kde-format
