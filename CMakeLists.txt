@@ -5,7 +5,7 @@
 # SPDX-FileContributor: 2015-2021 David Faure <faure@kde.org>
 # SPDX-FileContributor: 2016-2021 Andreas Sturmlechner <andreas.sturmlechner@gmail.com>
 
-cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16.0)
 
 project(
     kbibtex
