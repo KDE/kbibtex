@@ -2493,7 +2493,7 @@ msgstr "S'executa l'ordre «%1» emprant el directori de treball «%2»"
 #: src/io/fileexportertoolchain.cpp:95
 #, kde-format
 msgid "Starting command '%1' failed: %2"
-msgstr "No s'ha pogut iniciar l'ordre «%1»: %2"
+msgstr "Ha fallat mentre s'iniciava l'ordre «%1»: %2"
 
 #: src/io/fileexportertoolchain.cpp:104
 #, kde-format
@@ -2513,7 +2513,7 @@ msgstr "S'ha aconseguit escriure en el fitxer «%1»"
 #: src/io/fileexportertoolchain.cpp:132
 #, kde-format
 msgid "Writing to file '%1' failed"
-msgstr "No s'ha pogut escriure en el fitxer «%1»"
+msgstr "Ha fallat mentre s'escrivia al fitxer «%1»"
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:230
 #, kde-format
@@ -2920,7 +2920,8 @@ msgstr "No s'ha pogut obrir el fitxer local «%1» per a escriure-hi."
 #: src/parts/part.cpp:652
 #, kde-format
 msgid "Failed to upload temporary file to final destination '%1'"
-msgstr "No s'ha pogut pujar el fitxer temporal a la destinació final «%1»"
+msgstr ""
+"Ha fallat mentre es pujava el fitxer temporal a la destinació final «%1»"
 
 #: src/parts/part.cpp:654
 #, kde-format
@@ -2935,17 +2936,17 @@ msgstr "No s'ha pogut obrir el fitxer temporal per escriptura."
 #: src/parts/part.cpp:664
 #, kde-format
 msgid "Saving the bibliography to file '%1' failed."
-msgstr "No s'ha pogut guardar la bibliografia en el fitxer «%1»."
+msgstr "Ha fallat mentre es guardava la bibliografia al fitxer «%1»."
 
 #: src/parts/part.cpp:666 src/parts/part.cpp:672
 #, kde-format
 msgid "Saving bibliography failed"
-msgstr "No s'ha pogut guardar la bibliografia"
+msgstr "Ha fallat mentre es guardava la bibliografia"
 
 #: src/parts/part.cpp:668
 #, kde-format
 msgid "Saving bibliography failed:"
-msgstr "No s'ha pogut guardar la bibliografia:"
+msgstr "Ha fallat mentre es guardava la bibliografia:"
 
 #: src/parts/part.cpp:671
 #, kde-format
@@ -3046,8 +3047,8 @@ msgid ""
 "\n"
 "The system may not know how to use KBibTeX to open bibliography files."
 msgstr ""
-"No s'ha pogut executar «kbuildsycoca5» per a actualitzar les associacions "
-"dels tipus MIME.\n"
+"Ha fallat mentre s'executava «kbuildsycoca5» per a actualitzar les "
+"associacions dels tipus MIME.\n"
 "\n"
 "El sistema pot no saber com utilitzar KBibTeX per a obrir els fitxers de "
 "bibliografia."
@@ -3055,7 +3056,7 @@ msgstr ""
 #: src/processing/bibliographyservice.cpp:187
 #, kde-format
 msgid "Failed to run 'kbuildsycoca5'"
-msgstr "No s'ha pogut executar «kbuildsycoca5»"
+msgstr "Ha fallat mentre s'executava «kbuildsycoca5»"
 
 #: src/processing/checkbibtex.cpp:84
 #, kde-format
@@ -3064,14 +3065,14 @@ msgid ""
 "\n"
 "See the following output to trace the error:"
 msgstr ""
-"No s'ha pogut executar BibTeX.\n"
+"Ha fallat mentre s'executava BibTeX.\n"
 "\n"
 "Vegeu l'eixida següent per a rastrejar l'error:"
 
 #: src/processing/checkbibtex.cpp:84
 #, kde-format
 msgid "Running BibTeX failed."
-msgstr "No s'ha pogut executar BibTeX."
+msgstr "Ha fallat mentre s'executava BibTeX."
 
 #: src/processing/checkbibtex.cpp:116
 #, kde-format
@@ -3786,7 +3787,7 @@ msgstr ""
 #: src/program/docklets/zoterobrowser.cpp:239
 #, kde-format
 msgid "Failed to retrieve data from Zotero"
-msgstr "No s'han pogut recuperar les dades des de Zotero"
+msgstr "Ha fallat mentre es recuperaven les dades des de Zotero"
 
 #: src/program/docklets/zoterobrowser.cpp:365
 #, kde-format
