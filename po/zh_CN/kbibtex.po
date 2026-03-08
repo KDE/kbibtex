@@ -2276,7 +2276,7 @@ msgstr ""
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:708
 #, kde-format
 msgid "Text"
-msgstr "文字"
+msgstr "文本"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:557
 #, kde-format
