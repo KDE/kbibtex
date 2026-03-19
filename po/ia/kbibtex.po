@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# giovanni <g.sora@tiscali.it>, 2017, 2020, 2021, 2022, 2023, 2024.
+# SPDX-FileCopyrightText: 2017, 2020, 2021, 2022, 2023, 2024, 2026 giovanni <g.sora@tiscali.it>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
-"PO-Revision-Date: 2024-04-30 12:24+0200\n"
+"PO-Revision-Date: 2026-03-18 11:39+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -85,7 +85,7 @@ msgstr "Ordinar"
 
 #, kde-format
 msgid "Sort Name"
-msgstr ""
+msgstr "Ordina nomine"
 
 #, kde-format
 msgid "Abbreviations"
@@ -1643,7 +1643,7 @@ msgstr "Adde file..."
 #: src/gui/field/fieldlistedit.cpp:494
 #, kde-format
 msgid "Add reference ..."
-msgstr ""
+msgstr "Adde referentia ..."
 
 #: src/gui/field/fieldlistedit.cpp:497
 #, kde-format
@@ -1722,7 +1722,7 @@ msgstr "Abandona modificationes?"
 #: src/gui/file/fileview.cpp:89
 #, kde-format
 msgid "Continue Editing"
-msgstr ""
+msgstr "Continua a modificar"
 
 #: src/gui/file/fileview.cpp:331
 #, kde-format
@@ -2880,10 +2880,9 @@ msgid ""
 msgstr ""
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "Usator"
+msgstr "ID de usator: "
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
@@ -3442,7 +3441,7 @@ msgstr ""
 #: src/program/docklets/documentpreview.cpp:333
 #, kde-format
 msgid "Refreshing..."
-msgstr ""
+msgstr "Refrescante ..."
 
 #: src/program/docklets/documentpreview.cpp:362
 #, kde-format
@@ -4090,10 +4089,9 @@ msgid "A BibTeX editor by KDE"
 msgstr ""
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2024 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2025 Thomas Fischer"
-msgstr "Copyright 2004-2024 Thomas Fischer"
+msgstr "Copyright 2004-2025 Thomas Fischer"
 
 #: src/program/program.cpp:60
 #, kde-format
