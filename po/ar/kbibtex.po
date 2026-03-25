@@ -3714,7 +3714,7 @@ msgstr "لا يوجد ملخص"
 #: src/program/docklets/searchform.cpp:194
 #, kde-format
 msgid "Go to Homepage"
-msgstr "اذهب إلى الصفحة الرئيسية"
+msgstr "اذهب إلى الصفحة الرئيسة"
 
 #: src/program/docklets/searchform.cpp:218
 #, kde-format
