@@ -1201,7 +1201,7 @@ void KBibTeXPart::fileExternallyChange(const QString &path)
     else
         qCWarning(LOG_KBIBTEX_PART) << "No filename to stop watching";
 
-    const QString message {isModified() ? i18n("The file '%1' has changed on disk but got also modified in KBibTeX.\n\nReload file and loose changes made in KBibTeX or ignore changes on disk and keep changes made in KBibTeX?", path) : i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path)};
+    const QString message {isModified() ? i18n("The file '%1' has changed on disk but got also modified in KBibTeX.\n\nReload file and lose changes made in KBibTeX or ignore changes on disk and keep changes made in KBibTeX?", path) : i18n("The file '%1' has changed on disk.\n\nReload file or ignore changes on disk?", path)};
     if (KMessageBox::warningContinueCancel(widget(), message, i18n("File changed externally"), KGuiItem(i18n("Reload file"), QIcon::fromTheme(QStringLiteral("edit-redo"))), KGuiItem(i18n("Ignore on-disk changes"), QIcon::fromTheme(QStringLiteral("edit-undo")))) == KMessageBox::Continue) {
         d->openFile(QUrl::fromLocalFile(path), path);
         /// No explicit call to QFileSystemWatcher.addPath(...) necessary,
