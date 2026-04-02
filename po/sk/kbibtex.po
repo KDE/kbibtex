@@ -3004,8 +3004,7 @@ msgid "A BibTeX editor by KDE"
 msgstr "BibTeX editor od KDE"
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2023 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
 msgstr "Copyright 2004-2023 Thomas Fischer"
 
@@ -4177,7 +4176,7 @@ msgstr "Nekompletná inštalácia KBibTeX"
 #~ msgid "Overwrite File?"
 #~ msgstr "Prepísať súbor?"
 
-#, fuzzy
+#
 #~| msgid "Editor Type"
 #~ msgid "No Editor Component"
 #~ msgstr "Typ editora"
