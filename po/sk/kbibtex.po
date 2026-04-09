@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Lokalize 23.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -115,6 +115,8 @@ msgid ""
 "DOIs and URLs get handled in the &lsquo;<a href=\"#tab:external\">External</"
 "a>&rsquo; tab."
 msgstr ""
+"DOI a URL sa spracúvajú v karte &lsquo;<a href=\"#tab:external\">Externé</"
+"a>&rsquo;."
 
 #: src/config/bibtexentries.cpp:66 src/config/bibtexentries.cpp:82
 #, kde-format
@@ -918,12 +920,11 @@ msgid "Both local and remote files"
 msgstr "Miestna aj vzdialené súbory"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Doslovný text"
+msgstr "Verbatim"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -1323,15 +1324,14 @@ msgid "A comment in 'Verbatim' mode may not contain blank lines"
 msgstr ""
 
 #: src/gui/element/elementwidgets.cpp:1293
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Obsah:"
+msgstr "Kontext:"
 
 #: src/gui/element/elementwidgets.cpp:1297
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Predpona:"
 
 #: src/gui/element/elementwidgets.cpp:1440
 #, kde-format
@@ -1354,8 +1354,7 @@ msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Daný zdrojový kód sa nedá analyzovať ako jedna preambula BibTeX."
 
 #: src/gui/element/elementwidgets.cpp:1467
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
@@ -1986,16 +1985,15 @@ msgid "Person Names Formatting:"
 msgstr "Formátovanie mien osôb:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Obnoviť"
+msgstr "Vynulovať všetko"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Vymazať všetky nastavenia \"nepýtať sa znova\":"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:121
 #, kde-format
@@ -2314,8 +2312,7 @@ msgid "Copy format string to clipboard"
 msgstr ""
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:622
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
 msgstr "Formátovať idčka položiek"
 
@@ -2422,14 +2419,12 @@ msgid "String Delimiters:"
 msgstr "Oddeľovače reťazcov:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
 msgstr "Citácia komentára:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
 msgstr "Citácia komentára:"
 
@@ -2489,14 +2484,12 @@ msgid "List Separator"
 msgstr "Oddeľovač v zozname"
 
 #: src/gui/widgets/filesettingswidget.cpp:208
-#, fuzzy, kde-format
-#| msgid "Sort by Count"
+#, kde-format
 msgid "Sort by identifier"
 msgstr "Zoradiť podľa počtu"
 
 #: src/gui/widgets/filesettingswidget.cpp:209
-#, fuzzy, kde-format
-#| msgid "Sorting"
+#, kde-format
 msgid "Entry Sorting"
 msgstr "Triedenie"
 
@@ -2556,10 +2549,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "BibTeX štýl <strong>%1</strong> nie je dostupný."
 
 #: src/io/fileexporterbibtex2html.cpp:101
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "BibTeX štýl <strong>%1</strong> nie je dostupný."
+msgstr ""
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:227
 #, kde-format
@@ -2638,8 +2630,7 @@ msgid "Everywhere"
 msgstr "Všade"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
-#, fuzzy, kde-format
-#| msgid "Bibsonomy"
+#, kde-format
 msgid "BibSonomy"
 msgstr "Bibsonomy"
 
@@ -2665,8 +2656,7 @@ msgid "CERN Document Server"
 msgstr "CERN Document Server"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
-#, fuzzy, kde-format
-#| msgid "Free text:"
+#, kde-format
 msgid "Free text or DOI:"
 msgstr "Voľný text:"
 
@@ -2690,8 +2680,7 @@ msgid "Year:"
 msgstr "Rok:"
 
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Google Books"
 msgstr "Google Scholar"
 
@@ -2709,8 +2698,7 @@ msgid "Google Scholar"
 msgstr "Google Scholar"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:110
-#, fuzzy, kde-format
-#| msgid "IDEAS (RePEc)"
+#, kde-format
 msgid "IDEAS/RePEc"
 msgstr "IDEAS (RePEc)"
 
@@ -2810,8 +2798,7 @@ msgid "Author or Editor:"
 msgstr "Autor alebo editor:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
 msgstr "SpringerLink"
 
@@ -2869,15 +2856,7 @@ msgid "Authentication via Web Browser"
 msgstr ""
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2889,14 +2868,6 @@ msgid ""
 "\">zqB0KmelCOJcBvY40J</span><br/>Click on 'Next' to get to the next page in "
 "this wizard to enter this text.</li></ol></qt>"
 msgstr ""
-"<qt><p>Aby ste povolili <strong>KBibTeX</strong> prístup k vašej "
-"<strong>Zotero bibliografii</strong>, musí byť táto inštancia KBibTeX "
-"autorizovaná.</p> <p>Proces autorizácie zahŕňa niekoľko krokov: </p> <ol> "
-"<li> Vo webovom prehliadači otvorte webovú adresu tak, ako je to zobrazené "
-"nižšie. </li> <li> Prihláste sa na serveri Zotero a schváľte povolenia pre "
-"KBibTeX. </li> <li> Ak bude úspešný, budete presmerovaní na webovú stránku s "
-"oznámením, že KBibTeX získal autorizáciu. <br/> Toto okno sa automaticky "
-"zatvorí. </li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2939,10 +2910,9 @@ msgid ""
 msgstr ""
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "Používateľ"
+msgstr "ID užívateľov"
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
@@ -3075,8 +3045,7 @@ msgid "BibUtils"
 msgstr ""
 
 #: src/parts/part.cpp:533
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
 msgstr "BibTeX"
 
@@ -3679,22 +3648,19 @@ msgid "Reason:"
 msgstr "Dôvod:"
 
 #: src/program/docklets/referencepreview.cpp:253
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Náhľad zakázaný"
 
 #: src/program/docklets/referencepreview.cpp:268
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Žiadny prvok nie je vybraný"
 
 #: src/program/docklets/referencepreview.cpp:317
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Výstup sa nevygeneroval"
@@ -3705,8 +3671,7 @@ msgid "Cannot show a preview for this type of element"
 msgstr ""
 
 #: src/program/docklets/referencepreview.cpp:387
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
 msgstr "Abstraktné"
@@ -3875,14 +3840,12 @@ msgid "Filter value list"
 msgstr "Zoznam hodnôt filtra"
 
 #: src/program/docklets/valuelist.cpp:122
-#, fuzzy, kde-format
-#| msgid "Replace all occurrences"
+#, kde-format
 msgid "Edit to replace all occurrences"
 msgstr "Nahradiť všetky výskyty"
 
 #: src/program/docklets/valuelist.cpp:126
-#, fuzzy, kde-format
-#| msgid "Replace all occurrences"
+#, kde-format
 msgid "Remove all occurrences"
 msgstr "Nahradiť všetky výskyty"
 
@@ -4213,8 +4176,7 @@ msgid "A BibTeX editor by KDE"
 msgstr "BibTeX editor od KDE"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2025 Thomas Fischer"
 msgstr "Copyright 2004-2019 Thomas Fischer"
 
@@ -4307,12 +4269,10 @@ msgstr "Nekompletná inštalácia KBibTeX"
 #~ msgstr "Zápis do súboru '%1' zlyhal"
 
 #, fuzzy
-#~| msgid "Copy document next to bibliography file"
 #~ msgid "Could not write bibliographic data to file."
 #~ msgstr "Kopírovať dokument k súboru bibliografie"
 
 #, fuzzy
-#~| msgid "Could not open LyX server pipe '%1'."
 #~ msgid "Could not open local file '%1' for writing."
 #~ msgstr "Nemôžem otvoriť LyX server pipe '%1'."
 
@@ -4437,7 +4397,6 @@ msgstr "Nekompletná inštalácia KBibTeX"
 #~ msgstr "Prepísať súbor?"
 
 #, fuzzy
-#~| msgid "Editor Type"
 #~ msgid "No Editor Component"
 #~ msgstr "Typ editora"
 
