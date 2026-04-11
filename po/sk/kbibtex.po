@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
-"PO-Revision-Date: 2023-12-06 19:13+0100\n"
+"PO-Revision-Date: 2026-04-10 12:00+0200\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
@@ -932,13 +932,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Použiť prefix ako '%% '"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Použiť príkaz @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1316,12 +1316,12 @@ msgstr "Hodnota:"
 #: src/gui/element/elementwidgets.cpp:1248
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "Prefix komentára musí začínať znakom '%'"
 
 #: src/gui/element/elementwidgets.cpp:1256
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Komentár v režime 'Verbatim' nesmie obsahovať prázdne riadky"
 
 #: src/gui/element/elementwidgets.cpp:1293
 #, kde-format
@@ -1717,7 +1717,7 @@ msgstr "Vrátiť na štandardné"
 #: src/gui/file/basicfileview.cpp:391
 #, kde-format
 msgid "Allow manual column resizing/positioning"
-msgstr ""
+msgstr "Povoliť manuálnu zmenu veľkosti/pozície stĺpcov"
 
 #: src/gui/file/basicfileview.cpp:408
 #, kde-format
@@ -2309,7 +2309,7 @@ msgstr "Náhľad:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Kopírovať formátovací reťazec do schránky"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:622
 #, kde-format
@@ -2551,7 +2551,7 @@ msgstr "BibTeX štýl <strong>%1</strong> nie je dostupný."
 #: src/io/fileexporterbibtex2html.cpp:101
 #, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr ""
+msgstr "Štýl BibTeX <strong>PLACEHOLDER</strong> nie je dostupný."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:227
 #, kde-format
@@ -2648,7 +2648,7 @@ msgstr "bioRxiv"
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "medRxiv"
-msgstr ""
+msgstr "medRxiv"
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
@@ -2805,7 +2805,7 @@ msgstr "SpringerLink"
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
 msgid "Unpaywall"
-msgstr ""
+msgstr "Unpaywall"
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
@@ -2813,6 +2813,8 @@ msgid ""
 "The query to be sent to 'zbMATH Open' lacks author information, which may "
 "result in few or no matching results."
 msgstr ""
+"Dotazu odoslanému do 'zbMATH Open' chýbajú informácie o autorovi, čo môže "
+"viesť k málo alebo žiadnym zodpovedajúcim výsledkom."
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
@@ -2820,6 +2822,8 @@ msgid ""
 "The query to be sent to 'zbMATH Open' lacks 'year' information, which may "
 "degrade result quality."
 msgstr ""
+"Dotazu odoslanému do 'zbMATH Open' chýba informácia o 'roku', čo môže znížiť "
+"kvalitu výsledkov."
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
@@ -2828,11 +2832,13 @@ msgid ""
 "information.\n"
 "This will most likely result in few or no matching results."
 msgstr ""
+"Dotazu odoslanému do 'zbMATH Open' chýbajú informácie o autorovi aj 'roku'.\n"
+"Toto s najväčšou pravdepodobnosťou povedie k málo alebo žiadnym výsledkom."
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:149
 #, kde-format
 msgid "zbMATH Open"
-msgstr ""
+msgstr "zbMATH Open"
 
 #: src/networking/zotero/collection.cpp:196
 #, kde-format
@@ -2853,7 +2859,7 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
 msgid "Authentication via Web Browser"
-msgstr ""
+msgstr "Overenie cez webový prehliadač"
 
 #: src/networking/zotero/oauthwizard.cpp:265
 #, kde-format
@@ -2868,6 +2874,16 @@ msgid ""
 "\">zqB0KmelCOJcBvY40J</span><br/>Click on 'Next' to get to the next page in "
 "this wizard to enter this text.</li></ol></qt>"
 msgstr ""
+"<qt><p>Na povolenie prístupu <strong>KBibTeX</strong> k vašej "
+"<strong>bibliografii Zotero</strong> musí byť táto inštancia KBibTeX "
+"autorizovaná.</p><p>Proces autorizácie zahŕňa niekoľko krokov:</"
+"p><ol><li>Otvorte URL uvedenú nižšie vo webovom prehliadači.</"
+"li><li>Prihláste sa do Zotero a schváľte oprávnenia pre KBibTeX.</li><li>V "
+"prípade úspechu budete presmerovaní na webovú stránku s zeleným textom na "
+"zelenom pozadí takto:<br/><span style=\"color:#1e622d;background-color:"
+"#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</span><br/>Kliknite "
+"na 'Ďalej' pre prechod na ďalšiu stránku sprievodcu na zadanie tohto textu.</"
+"li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2888,6 +2904,11 @@ msgid ""
 "span></p><p>In your web browser, copy this green and enter it in the text "
 "field below.</p></qt>"
 msgstr ""
+"<qt><p>Vo webovom prehliadači by ste mali vidieť stránku so zeleným textom "
+"na zelenom pozadí takto:<br/><span style=\"color:#1e622d;background-color:"
+"#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</span></p><p>Vo "
+"webovom prehliadači skopírujte tento zelený text a zadajte ho do textového "
+"poľa nižšie.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #: src/program/docklets/zoterobrowser.cpp:150
@@ -2898,7 +2919,7 @@ msgstr "API kľúč:"
 #: src/networking/zotero/oauthwizard.cpp:290
 #, kde-format
 msgid "Enter API Key from Web Browser"
-msgstr ""
+msgstr "Zadajte kľúč API z webového prehliadača"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -2908,6 +2929,10 @@ msgid ""
 "security#applications\">personal settings page in Zotero, in tab 'Security', "
 "section 'Applications'</a>.</p></qt>"
 msgstr ""
+"<qt><p>Nakoniec zadajte číselné ID používateľa na použitie v API volaniach."
+"<br/>Toto ID nájdete na vašej <a href=\"https://www.zotero.org/settings/"
+"security#applications\">stránke osobných nastavení v Zotero, na karte "
+"'Zabezpečenie', v sekcii 'Aplikácie'</a>.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -2917,7 +2942,7 @@ msgstr "ID užívateľov"
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
 msgid "Enter User ID for API Calls"
-msgstr ""
+msgstr "Zadajte ID používateľa pre API volania"
 
 #: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format
@@ -3042,7 +3067,7 @@ msgstr "Uložiť súbor"
 #: src/parts/part.cpp:532
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:533
 #, kde-format
@@ -3052,28 +3077,28 @@ msgstr "BibTeX"
 #: src/parts/part.cpp:534
 #, kde-format
 msgid "Word XML bibliography"
-msgstr ""
+msgstr "Bibliografia Word XML"
 
 #: src/parts/part.cpp:535
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "Vlastná štruktúra XML programu KBibTeX"
 
 #: src/parts/part.cpp:536
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "Vstavaný exportér HTML programu KBibTeX"
 
 #: src/parts/part.cpp:537
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "Vstavaný exportér RIS programu KBibTeX"
 
 #: src/parts/part.cpp:546
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Výber exportéra"
 
 #: src/parts/part.cpp:548
 #, kde-format
@@ -3082,6 +3107,9 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Na zápis súboru '%1' je dostupných niekoľko exportných modulov.\n"
+"\n"
+"Vyberte prosím jeden."
 
 #: src/parts/part.cpp:579
 #, kde-format
@@ -3159,6 +3187,10 @@ msgid ""
 "Reload file and loose changes made in KBibTeX or ignore changes on disk and "
 "keep changes made in KBibTeX?"
 msgstr ""
+"Súbor '%1' sa zmenil na disku, ale bol tiež upravený v KBibTeX.\n"
+"\n"
+"Načítať súbor znova a stratiť zmeny vykonané v KBibTeX alebo ignorovať zmeny "
+"na disku a ponechať zmeny vykonané v KBibTeX?"
 
 #: src/parts/part.cpp:1204
 #, kde-format
@@ -3668,7 +3700,7 @@ msgstr "Výstup sa nevygeneroval"
 #: src/program/docklets/referencepreview.cpp:359
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Nie je možné zobraziť náhľad pre tento typ elementu"
 
 #: src/program/docklets/referencepreview.cpp:387
 #, kde-format
