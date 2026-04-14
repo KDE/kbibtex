@@ -2,21 +2,21 @@
 # SPDX-FileCopyrightText: 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 Burkhard Lück <lueck@hube-lueck.de>
 # SPDX-FileCopyrightText: 2014 Jürgen Spitzmüller <spitz@lyx.org>
 # SPDX-FileCopyrightText: 2016, 2018, 2022, 2023 Frederik Schwarzer <schwarzer@kde.org>
-# SPDX-FileCopyrightText: 2023 Frank Steinmetzger <dev-kde@felsenfleischer.de>
+# SPDX-FileCopyrightText: 2023, 2026 Frank Steinmetzger <dev-kde@felsenfleischer.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 09:01+0000\n"
-"PO-Revision-Date: 2023-04-29 12:22+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"PO-Revision-Date: 2026-04-11 23:38+0200\n"
+"Last-Translator: Frank Steinmetzger <dev-kde@felsenfleischer.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.07.70\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -922,8 +922,7 @@ msgid "Both local and remote files"
 msgstr "Lokale und Ferndateien"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
@@ -935,13 +934,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Präfix wie etwa „%% “ verwenden"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Befehl @comment{…} verwenden"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -971,7 +970,7 @@ msgstr "kamelHöckerKleinerAnfang"
 #, kde-format
 msgctxt "Casing of strings"
 msgid "UPPERCASE"
-msgstr "GROSSBUCHSTABEN"
+msgstr "GROẞBUCHSTABEN"
 
 #: src/config/preferences.cpp:1237
 #, kde-format
@@ -1324,23 +1323,22 @@ msgstr "Wert:"
 #: src/gui/element/elementwidgets.cpp:1248
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "Das Präfix eines Kommentars muss mit „%“ beginnen"
 
 #: src/gui/element/elementwidgets.cpp:1256
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Ein Kommentar im Modus „Unverändert“ darf keine Leerzeilen enthalten"
 
 #: src/gui/element/elementwidgets.cpp:1293
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Inhalt:"
+msgstr "Kontext:"
 
 #: src/gui/element/elementwidgets.cpp:1297
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Präfix:"
 
 #: src/gui/element/elementwidgets.cpp:1440
 #, kde-format
@@ -1371,14 +1369,13 @@ msgstr ""
 "werden."
 
 #: src/gui/element/elementwidgets.cpp:1467
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
 "Der angegebene Quelltext kann nicht als einzelner BibTeX-Kommentar "
-"eingelesen werden."
+"eingelesen werden. Versuchen Sie, Leerzeilen aus dem Kommentar zu entfernen."
 
 #: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
@@ -2009,16 +2006,15 @@ msgid "Person Names Formatting:"
 msgstr "Namenformatierung:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Zurücksetzen"
+msgstr "Alle zurücksetzen"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Alle „Nicht erneut nachfragen“-Einstellungen zurücksetzen:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:121
 #, kde-format
@@ -2444,16 +2440,14 @@ msgid "String Delimiters:"
 msgstr "Textbegrenzung:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Kommentareinfassung:"
+msgstr "Kommentarkontext:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Kommentareinfassung:"
+msgstr "Kommentar-Präfix:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -2657,10 +2651,9 @@ msgid "Everywhere"
 msgstr "Überall"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
-#, fuzzy, kde-format
-#| msgid "Bibsonomy"
+#, kde-format
 msgid "BibSonomy"
-msgstr "Bibsonomy"
+msgstr "BibSonomy"
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:70
 #: src/networking/onlinesearch/onlinesearchdoi.cpp:63
@@ -2676,7 +2669,7 @@ msgstr "bioRxiv"
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "medRxiv"
-msgstr ""
+msgstr "medRxiv"
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
@@ -2684,10 +2677,9 @@ msgid "CERN Document Server"
 msgstr "CERN Document Server"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
-#, fuzzy, kde-format
-#| msgid "Free text:"
+#, kde-format
 msgid "Free text or DOI:"
-msgstr "Freitext:"
+msgstr "Freitext oder DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
@@ -2709,10 +2701,9 @@ msgid "Year:"
 msgstr "Jahr:"
 
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Google Books"
-msgstr "Google Scholar"
+msgstr "Google Books"
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:331
 #, kde-format
@@ -2728,10 +2719,9 @@ msgid "Google Scholar"
 msgstr "Google Scholar"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:110
-#, fuzzy, kde-format
-#| msgid "IDEAS (RePEc)"
+#, kde-format
 msgid "IDEAS/RePEc"
-msgstr "IDEAS (RePEc)"
+msgstr "IDEAS/RePEc"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
@@ -2829,10 +2819,9 @@ msgid "Author or Editor:"
 msgstr "Autor oder Herausgeber:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr "Springer Nature Link"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
@@ -2892,18 +2881,10 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
 msgid "Authentication via Web Browser"
-msgstr ""
+msgstr "Authentifizierung über Webbrowser"
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2915,14 +2896,17 @@ msgid ""
 "\">zqB0KmelCOJcBvY40J</span><br/>Click on 'Next' to get to the next page in "
 "this wizard to enter this text.</li></ol></qt>"
 msgstr ""
-"<qt><p>Um <strong>KBibTeX</strong> den Zugriff auf Ihr <strong>Zotero-"
+"<qt><p>Um <strong>KBibTeX</strong> den Zugriff auf Ihre <strong>Zotero-"
 "Bibliographie</strong> zu erlauben, muss diese KBibTeX-Instanz autorisiert "
 "werden.</p><p>Der Prozess der Autorisierung umfasst mehrere Schritte:</"
-"p><ol><li>Öffnen Sie die URL wie unten in einem Webbrowser.</li><li>Melden "
-"Sie sich bei Zotero an und bestätigen Sie die Berechtigungen für KBibTeX.</"
-"li><li>Wenn erfolgreich, werden Sie auf eine Webseite weitergeleitet, die "
-"Ihnen mitteilt, dass KBibTeX autorisiert wurde.<br/>Dieses Fenster wird "
-"automatisch geschlossen.</li></ol></qt>"
+"p><ol><li>Öffnen Sie die Adresse wie unten zu sehen in einem Webbrowser.</"
+"li><li>Melden Sie sich bei Zotero an und bestätigen Sie die Berechtigungen "
+"für KBibTeX.</li><li>Wenn erfolgreich, werden Sie auf eine Webseite "
+"weitergeleitet, die Ihnen wie folgt grünen Text auf grünem Hintergrund zeigt:"
+"<br/><span style=\"color:#1e622d;background-color:#d8f2dd;border: 1px solid "
+"#c8edd0;\">zqB0KmelCOJcBvY40J</span><br/>Klicken Sie auf „Weiter“, um auf "
+"die nächste Seite dieses Assistenten zu gelangen und dort diesen Text "
+"einzugeben.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2943,6 +2927,11 @@ msgid ""
 "span></p><p>In your web browser, copy this green and enter it in the text "
 "field below.</p></qt>"
 msgstr ""
+"<qt><p>Sie sollten in Ihrem Webbrowser eine Webseite sehen, die Ihnen wie "
+"folgt grünen Text auf grünem Hintergrund zeigt:<br/><span style=\"color:"
+"#1e622d;background-color:#d8f2dd;border: 1px solid #c8edd0;"
+"\">zqB0KmelCOJcBvY40J</span></p><p>Kopieren Sie den grünen Text in Ihrem "
+"Webbrowser und geben Sie ihn in dem Textfeld unten ein.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #: src/program/docklets/zoterobrowser.cpp:150
@@ -2953,7 +2942,7 @@ msgstr "API-Schlüssel:"
 #: src/networking/zotero/oauthwizard.cpp:290
 #, kde-format
 msgid "Enter API Key from Web Browser"
-msgstr ""
+msgstr "Geben Sie den API-Schlüssel aus Ihren Webbrowser ein"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -2965,15 +2954,14 @@ msgid ""
 msgstr ""
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "Benutzer"
+msgstr "Benutzerkennung:"
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
 msgid "Enter User ID for API Calls"
-msgstr ""
+msgstr "Geben Sie die Benutzerkennung für API-Aufrufe ein"
 
 #: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format
@@ -3106,31 +3094,30 @@ msgid "BibTeX2HTML"
 msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:534
-#, fuzzy, kde-format
-#| msgid "Load bibliography"
+#, kde-format
 msgid "Word XML bibliography"
-msgstr "Bibliografie laden"
+msgstr "Word-XML-Bibliographie"
 
 #: src/parts/part.cpp:535
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "KBibTeXs eigene XML-Struktur"
 
 #: src/parts/part.cpp:536
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "KBibTeXs eingebauter HTML-Exporter"
 
 #: src/parts/part.cpp:537
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "KBibTeXs eingebauter RIS-Exporter"
 
 #: src/parts/part.cpp:546
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Exporter auswählen"
 
 #: src/parts/part.cpp:548
 #, kde-format
@@ -3139,6 +3126,9 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Es sind mehrere Exporter-Module verfügbar, um die Datei „%1“ zu schreiben.\n"
+"\n"
+"Bitte wählen Sie eines aus."
 
 #: src/parts/part.cpp:579
 #, kde-format
@@ -3217,6 +3207,12 @@ msgid ""
 "Reload file and loose changes made in KBibTeX or ignore changes on disk and "
 "keep changes made in KBibTeX?"
 msgstr ""
+"Die Datei „%1“ wurde sowohl auf der Festplatte als auch in KBibTeX "
+"verändert.\n"
+"\n"
+"Möchten Sie die Datei neu laden und die Änderungen von KBibTeX verwerfen, "
+"oder die Änderungen von der Festplatte ignorieren und die KBibTeX-Änderungen "
+"behalten?"
 
 #: src/parts/part.cpp:1204
 #, kde-format
@@ -3714,22 +3710,19 @@ msgid "Reason:"
 msgstr "Grund:"
 
 #: src/program/docklets/referencepreview.cpp:253
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Vorschau deaktiviert"
 
 #: src/program/docklets/referencepreview.cpp:268
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Kein Element ausgewählt"
 
 #: src/program/docklets/referencepreview.cpp:317
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Keine Ausgabe erzeugt"
@@ -3737,14 +3730,13 @@ msgstr "Keine Ausgabe erzeugt"
 #: src/program/docklets/referencepreview.cpp:359
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Für diesen Elementtyp kann keine Vorschau angezeigt werden"
 
 #: src/program/docklets/referencepreview.cpp:387
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Zusammenfassung"
+msgstr "Keine Zusammenfassung"
 
 #: src/program/docklets/searchform.cpp:194
 #, kde-format
