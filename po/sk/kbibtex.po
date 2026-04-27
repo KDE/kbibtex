@@ -1134,7 +1134,7 @@ msgstr "Nasledovný vzdialený dokument bude asociovaný s položkou '%1':"
 #: src/gui/element/associatedfilesui.cpp:311
 #, kde-format
 msgid "Rename after entry's id: '%1'"
-msgstr "Premenovať po idčku poožky: '%1'"
+msgstr "Premenovať podľa ID položky: '%1'"
 
 #: src/gui/element/associatedfilesui.cpp:307
 #, kde-format
