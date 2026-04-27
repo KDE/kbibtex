@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 09:01+0000\n"
+"POT-Creation-Date: 2026-04-27 02:11+0000\n"
 "PO-Revision-Date: 2026-04-10 12:00+0200\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -1138,7 +1138,7 @@ msgstr "Nasledovný vzdialený dokument bude asociovaný s položkou '%1':"
 #: src/gui/element/associatedfilesui.cpp:314
 #, kde-format
 msgid "Rename after entry's id: '%1'"
-msgstr "Premenovať po idčku poožky: '%1'"
+msgstr "Premenovať podľa ID položky: '%1'"
 
 #: src/gui/element/associatedfilesui.cpp:310
 #, kde-format
@@ -3180,11 +3180,16 @@ msgid "Cannot Apply Default Formatting"
 msgstr "Nemôžem použiť predvolené formátovanie"
 
 #: src/parts/part.cpp:1204
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
+#| "\n"
+#| "Reload file and loose changes made in KBibTeX or ignore changes on disk "
+#| "and keep changes made in KBibTeX?"
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
 "\n"
-"Reload file and loose changes made in KBibTeX or ignore changes on disk and "
+"Reload file and lose changes made in KBibTeX or ignore changes on disk and "
 "keep changes made in KBibTeX?"
 msgstr ""
 "Súbor '%1' sa zmenil na disku, ale bol tiež upravený v KBibTeX.\n"
