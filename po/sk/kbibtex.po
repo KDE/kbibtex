@@ -3180,12 +3180,7 @@ msgid "Cannot Apply Default Formatting"
 msgstr "Nemôžem použiť predvolené formátovanie"
 
 #: src/parts/part.cpp:1204
-#, fuzzy, kde-format
-#| msgid ""
-#| "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
-#| "\n"
-#| "Reload file and loose changes made in KBibTeX or ignore changes on disk "
-#| "and keep changes made in KBibTeX?"
+#, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
 "\n"

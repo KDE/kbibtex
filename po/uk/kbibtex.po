@@ -3,13 +3,13 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025.
+# Yuri Chornoivan <yurchor@ukr.net>, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-27 02:11+0000\n"
-"PO-Revision-Date: 2025-10-06 14:06+0300\n"
+"PO-Revision-Date: 2026-04-27 08:14+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -3199,12 +3199,7 @@ msgid "Cannot Apply Default Formatting"
 msgstr "Не вдалося застосувати типове форматування"
 
 #: src/parts/part.cpp:1204
-#, fuzzy, kde-format
-#| msgid ""
-#| "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
-#| "\n"
-#| "Reload file and loose changes made in KBibTeX or ignore changes on disk "
-#| "and keep changes made in KBibTeX?"
+#, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
 "\n"

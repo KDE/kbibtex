@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-27 02:11+0000\n"
-"PO-Revision-Date: 2025-10-12 22:45+0200\n"
+"PO-Revision-Date: 2026-04-27 07:22+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.9\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3189,12 +3189,7 @@ msgid "Cannot Apply Default Formatting"
 msgstr "Privzetega oblikovanja ni mogoče uporabiti"
 
 #: src/parts/part.cpp:1204
-#, fuzzy, kde-format
-#| msgid ""
-#| "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
-#| "\n"
-#| "Reload file and loose changes made in KBibTeX or ignore changes on disk "
-#| "and keep changes made in KBibTeX?"
+#, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
 "\n"
@@ -3204,8 +3199,8 @@ msgstr ""
 "Datoteka '%1' je bila spremenjena na disku, vendar je bila spremenjena tudi "
 "v KBibTeX.\n"
 "\n"
-"Naj ponovno naložim datoteko in izgubim spremembe narejene v KBibTeX-u ali "
-"naj prezrem spremembe na disku in ohranim spremembe, narejene v KBibTeX?"
+"Naj ponovno naložim datoteko in izgubim spremembe narejene v KBibTeXu ali "
+"naj prezrem spremembe na disku in ohranim spremembe, narejene v KBibTeXu?"
 
 #: src/parts/part.cpp:1204
 #, kde-format
