@@ -1,14 +1,15 @@
-# Copyright (C) YEAR This_file_is_part_of_KDE
+# Spanish translations for kbibtex.po package.
+# Copyright (C) 2014-2026 This file is copyright:
 # This file is distributed under the same license as the kbibtex package.
 #
-# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2022, 2023, 2024 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2014-2020, 2022-2024, 2026 Eloy Cuadra <ecuadra@eloihr.net>
 # SPDX-FileCopyrightText: 2014, 2015 Raul Gonzalez <raulgf83@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2024-11-25 19:10+0100\n"
+"PO-Revision-Date: 2026-04-29 00:20+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 26.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1407,7 +1408,7 @@ msgstr "Resultado"
 #: src/gui/element/findpdfui.cpp:430
 #, kde-format
 msgid "Starting to search..."
-msgstr "Comenzando la búsqueda..."
+msgstr "Comenzando la búsqueda…"
 
 #: src/gui/element/findpdfui.cpp:449
 #, kde-format
@@ -1628,7 +1629,7 @@ msgstr "Subir valor"
 #: src/gui/field/fieldlistedit.cpp:415
 #, kde-format
 msgid "... and others (et al.)"
-msgstr "... y otros (et al.)"
+msgstr "… y otros (et al.)"
 
 #: src/gui/field/fieldlistedit.cpp:420
 #, kde-format
@@ -1643,12 +1644,12 @@ msgstr "Añadir una lista de nombres desde el portapapeles"
 #: src/gui/field/fieldlistedit.cpp:483
 #, kde-format
 msgid "Add file..."
-msgstr "Añadir archivo..."
+msgstr "Añadir archivo…"
 
 #: src/gui/field/fieldlistedit.cpp:489
 #, kde-format
 msgid "Add reference ..."
-msgstr "Añadir referencia..."
+msgstr "Añadir referencia…"
 
 #: src/gui/field/fieldlistedit.cpp:492
 #, kde-format
@@ -1849,7 +1850,7 @@ msgstr "Preferencias"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:267
 #, kde-format
 msgid "Add..."
-msgstr "Añadir..."
+msgstr "Añadir…"
 
 #: src/gui/preferences/settingscolorlabelwidget.cpp:342
 #: src/gui/preferences/settingsglobalkeywordswidget.cpp:102
@@ -2044,7 +2045,7 @@ msgstr "|Último autor"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:121
 #, kde-format
 msgid "... and last author"
-msgstr "... y el último autor"
+msgstr "… y el último autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:127
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:129
@@ -2302,7 +2303,7 @@ msgstr "Sugerencias de ID"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:270
 #, kde-format
 msgid "Edit..."
-msgstr "Editar..."
+msgstr "Editar…"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:276
 #, kde-format
@@ -2829,7 +2830,7 @@ msgstr "Ver documento"
 #: src/parts/part.cpp:168
 #, kde-format
 msgid "Save Copy As..."
-msgstr "Guardar copia como..."
+msgstr "Guardar copia como…"
 
 #: src/parts/part.cpp:173
 #, kde-format
@@ -2869,7 +2870,7 @@ msgstr "Nuevo preámbulo"
 #: src/parts/part.cpp:228
 #, kde-format
 msgid "Find PDF..."
-msgstr "Encontrar PDF..."
+msgstr "Encontrar PDF…"
 
 #: src/parts/part.cpp:233
 #, kde-format
@@ -3164,7 +3165,7 @@ msgstr "No se han producido errores ni advertencias"
 #: src/processing/findduplicates.cpp:382
 #, kde-format
 msgid "Searching ..."
-msgstr "Buscando..."
+msgstr "Buscando…"
 
 #: src/processing/findduplicates.cpp:382
 #, kde-format
@@ -3361,7 +3362,7 @@ msgstr "Abrir con programa externo"
 #: src/program/docklets/documentpreview.cpp:345
 #, kde-format
 msgid "Refreshing..."
-msgstr "Actualizando..."
+msgstr "Actualizando…"
 
 #: src/program/docklets/documentpreview.cpp:374
 #, kde-format
@@ -3388,7 +3389,7 @@ msgstr "No se puede mostrar la parte solicitada"
 #: src/program/docklets/documentpreview.cpp:539
 #, kde-format
 msgid "Loading..."
-msgstr "Cargando..."
+msgstr "Cargando…"
 
 #: src/program/docklets/documentpreview.cpp:560
 #, kde-format
@@ -3400,9 +3401,9 @@ msgid ""
 "a> for KDE Frameworks&nbsp;5 to make use of its PDF viewing component.<br/"
 ">Okular for KDE&nbsp;4 will not work."
 msgstr ""
-"<br/><br/>Por favor, instale <a href=\"https://userbase.kde.org/Okular"
-"\">Okular</a> para KDE Frameworks&nbsp;5 para poder usar su componente de "
-"visualización de PDF.<br/>Okular para KDE&nbsp;4 no funcionará."
+"<br/><br/>Instale <a href=\"https://userbase.kde.org/Okular\">Okular</a> "
+"para KDE Frameworks&nbsp;5 para poder usar su componente de visualización de "
+"PDF.<br/>Okular para KDE&nbsp;4 no funcionará."
 
 #: src/program/docklets/documentpreview.cpp:561
 #, kde-format
@@ -3429,7 +3430,7 @@ msgstr "Aplicar cambios automáticamente"
 #: src/program/docklets/elementform.cpp:92
 #, kde-format
 msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
-msgstr "Hay cambios sin guardar. Por favor, pulse «Aplicar» o «Reiniciar»."
+msgstr "Hay cambios sin guardar. Pulse «Aplicar» o «Reiniciar»."
 
 #: src/program/docklets/elementform.cpp:99
 #, kde-format
@@ -3789,8 +3790,8 @@ msgid ""
 "KBibTeX failed to retrieve the bibliography from Zotero. Please check that "
 "the provided user id and API key are valid."
 msgstr ""
-"KBibTeX no ha podido obtener la bibliografía de Zotero. Por favor, compruebe "
-"que el ID de usuario y la clave de API proporcionados son válidos."
+"KBibTeX no ha podido obtener la bibliografía de Zotero. Compruebe que el ID "
+"de usuario y la clave de API que ha proporcionado son válidos."
 
 #: src/program/docklets/zoterobrowser.cpp:239
 #, kde-format
@@ -3820,7 +3821,7 @@ msgstr "<br/><small>ubicado en <b>%1</b></small>"
 #: src/program/documentlist.cpp:209
 #, kde-format
 msgid "Favorite"
-msgstr "Favorito"
+msgstr "Favorita"
 
 #: src/program/documentlist.cpp:211 src/program/documentlist.cpp:407
 #, kde-format
@@ -3874,12 +3875,12 @@ msgstr "Abrir con"
 #: src/program/documentlist.cpp:300
 #, kde-format
 msgid "Remove from Favorites"
-msgstr "Eliminar de favoritos"
+msgstr "Eliminar de favoritas"
 
 #: src/program/documentlist.cpp:304
 #, kde-format
 msgid "Add to Favorites"
-msgstr "Añadir a favoritos"
+msgstr "Añadir a favoritas"
 
 #: src/program/documentlist.cpp:402
 #, kde-format
@@ -4037,7 +4038,7 @@ msgstr "Nuevo"
 #: src/program/mdiwidget.cpp:152
 #, kde-format
 msgid "Open..."
-msgstr "Abrir..."
+msgstr "Abrir…"
 
 #: src/program/mdiwidget.cpp:156
 #, kde-format
@@ -4086,180 +4087,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instalación de KBibTeX incompleta"
-
-#~ msgid "Changing this option requires a restart to take effect."
-#~ msgstr ""
-#~ "El cambio de esta opción requiere un reinicio de la aplicación para hacer "
-#~ "efecto."
-
-#~ msgid "Show Comments:"
-#~ msgstr "Mostrar comentarios:"
-
-#~ msgid "Show Macros:"
-#~ msgstr "Mostrar macros:"
-
-#~ msgctxt "Comment Quoting"
-#~ msgid "%{%1}"
-#~ msgstr "%{%1}"
-
-#~ msgid "ISBNdb.com"
-#~ msgstr "ISBNdb.com"
-
-#~ msgid "OCLC WorldCat"
-#~ msgstr "OCLC WorldCat"
-
-#~ msgid "Verification Code"
-#~ msgstr "Código de verificación"
-
-#~ msgid ""
-#~ "Copy the code from the web page and paste it in the input field below."
-#~ msgstr ""
-#~ "Copie el código de la página web y pegarlo en el siguiente campo de "
-#~ "entrada de texto."
-
-#~ msgid ""
-#~ "<qt><p>Once you have granted permissions to KBibTeX on Zotero's web page, "
-#~ "you should see a light-green field with a black hexadecimal code "
-#~ "(example: <span style=\"color:black;background:#cfc;"
-#~ "\">48b67422661cc282cdea</span>).</p></qt>"
-#~ msgstr ""
-#~ "<qt><p>Una vez haya obtenido permisos para KBibTeX en la página web de "
-#~ "Zotero, debería ver un campo en color verde claro con un código "
-#~ "hexadecimal en negro (por ejemplo: <span style=\"color:black;background:"
-#~ "#cfc;\">48b67422661cc282cdea</span>).</p></qt>"
-
-#~ msgid "Verification Code:"
-#~ msgstr "Código de verificación:"
-
-#~ msgid "Instructions"
-#~ msgstr "Instrucciones"
-
-#~ msgid ""
-#~ "<qt>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#~ "bibliography</strong>, this KBibTeX instance has to be authorized.</qt>"
-#~ msgstr ""
-#~ "<qt>Para permitir que <strong>KBibTeX</strong> acceda a su "
-#~ "<strong>bibliografía en Zotero </strong>, debe autorizar a esta instancia "
-#~ "de KBibTeX.</qt>"
-
-#~ msgid ""
-#~ "<qt><p>The process of authorization involves multiple steps:</"
-#~ "p><ol><li>Open the URL as shown on the next page.</li><li>Follow the "
-#~ "instructions as shown on Zotero's webpage.<br/>Configure permissions for "
-#~ "KBibTeX.</li><li>Eventually, you will get a hexadecimal string (black on "
-#~ "light-green background) which you have to copy and paste into this "
-#~ "wizard's last page</li></ol></qt>"
-#~ msgstr ""
-#~ "<qt><p>El proceso de autorización comprende varios pasos:</p><ol><li>Abra "
-#~ "el URL mostrado en la siguiente página.</li><li>Siga las instrucciones "
-#~ "que se muestran en la página web de Zotero.<br/>Configure los permisos "
-#~ "para KBibTeX.</li><li>Finalmente, obtendrá una cadena hexadecimal (en "
-#~ "color negro sobre fondo verde claro) que tendrá que copiar y pegar en la "
-#~ "última página de este asistente.</li></ol></qt>"
-
-#~ msgid "Authorization URL"
-#~ msgstr "URL de autorización"
-
-#~ msgid "Open the shown URL in your favorite browser."
-#~ msgstr "Abrir el URL mostrado en su navegador favorito."
-
-#~ msgid ""
-#~ "You will be asked to login into Zotero and select and confirm the "
-#~ "permissions for KBibTeX."
-#~ msgstr ""
-#~ "Se le pedirá que inicie sesión en Zotero y que seleccione y confirme los "
-#~ "permisos para KBibTeX."
-
-#~ msgid "A4"
-#~ msgstr "A4"
-
-#~ msgid "Letter"
-#~ msgstr "Carta"
-
-#~ msgid "Legal"
-#~ msgstr "Legal"
-
-#~ msgid "Copyright 2004-2017 Thomas Fischer"
-#~ msgstr "Copyright 2004-2017 Thomas Fischer"
-
-#~ msgid "The entered key '%1' is already in use for another macro."
-#~ msgstr "La clave introducida «%1» ya está siendo utilizada para otra macro."
-
-#~ msgid "Key already in use"
-#~ msgstr "Esta clave ya se encuentra en uso"
-
-#~ msgid "Keep duplicate keys"
-#~ msgstr "Mantener claves duplicadas"
-
-#~ msgid "Restore original key"
-#~ msgstr "Restaurar clave original"
-
-#~ msgid "Process '%1' failed"
-#~ msgstr "El proceso «%1» ha fallado"
-
-#~ msgid "Value '%1' is not a valid numeric identifier of a user or a group."
-#~ msgstr ""
-#~ "El valor «%1» no es un identificador numérico válido de un usuario ni de "
-#~ "un grupo."
-
-#~ msgid "Invalid numeric identifier"
-#~ msgstr "Identificador numérico no válido"
-
-#~ msgid "Discard"
-#~ msgstr "Descartar"
-
-#~ msgid ""
-#~ "A file named '%1' already exists. Are you sure you want to overwrite it?"
-#~ msgstr ""
-#~ "Ya existe un archivo llamado «%1». ¿Seguro que desea sobrescribirlo?"
-
-#~ msgid "Overwrite File?"
-#~ msgstr "¿Sobrescribir archivo?"
-
-#~ msgid "Load bibliography"
-#~ msgstr "Cargar bibliografía"
-
-#~ msgid "Searching '%1' failed: Could not extract form from ACM's start page."
-#~ msgstr ""
-#~ "La búsqueda de «%1» ha fallado. No se puede extraer el formulario de la "
-#~ "página de inicio de la ACM."
-
-#~ msgid "No Editor Component"
-#~ msgstr "Ningún componente de edición"
-
-#~ msgid "Credentials"
-#~ msgstr "Credenciales"
-
-#~ msgid "Add Keywords"
-#~ msgstr "Añadir palabras claves"
-
-#~ msgid "Select keywords to add:"
-#~ msgstr "Seleccione las palabras claves a añadir:"
-
-#~ msgid "Save as Default"
-#~ msgstr "Guardar como predeterminado"
-
-#~ msgid "Save this configuration as default for future Save As operations."
-#~ msgstr ""
-#~ "Guardar esta configuración como predeterminada para futuras operaciones "
-#~ "«Guardar como»."
-
-#~ msgid "No preview available due to missing QtWebKit support on your system."
-#~ msgstr ""
-#~ "No hay vista previa disponible porque falta el soporte lógico de QtWebKit "
-#~ "en su sistema."
-
-#~ msgid "No duplicates have been found."
-#~ msgstr "No se han encontrado duplicados."
-
-#~ msgid "Adjust Column Widths"
-#~ msgstr "Ajustar anchura de columnas"
-
-#~ msgid "Filter Toolbar"
-#~ msgstr "Barra de herramientas de filtrado"
-
-#~ msgctxt ""
-#~ "Small words that can be removed from titles when generating id "
-#~ "suggestions; separated by pipe symbol"
-#~ msgid "and|on|in|the|of|at|a|an|with|for|from"
-#~ msgstr "y|o|en|el|la|los|las|de|del|un|una|unos|unas|con|para"
