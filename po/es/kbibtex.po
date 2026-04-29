@@ -1,15 +1,15 @@
 # Spanish translations for kbibtex.po package.
-# Copyright (C) 2014-2025 This file is copyright:
+# Copyright (C) 2014-2026 This file is copyright:
 # This file is distributed under the same license as the kbibtex package.
 #
-# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2014-2026 Eloy Cuadra <ecuadra@eloihr.net>
 # SPDX-FileCopyrightText: 2014, 2015 Raul Gonzalez <raulgf83@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-27 02:11+0000\n"
-"PO-Revision-Date: 2025-10-07 03:33+0100\n"
+"PO-Revision-Date: 2026-04-29 00:20+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 25.08.1\n"
+"X-Generator: Lokalize 26.04.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3208,12 +3208,7 @@ msgid "Cannot Apply Default Formatting"
 msgstr "No se puede aplicar el formato por omisión"
 
 #: src/parts/part.cpp:1204
-#, fuzzy, kde-format
-#| msgid ""
-#| "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
-#| "\n"
-#| "Reload file and loose changes made in KBibTeX or ignore changes on disk "
-#| "and keep changes made in KBibTeX?"
+#, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
 "\n"
@@ -3607,9 +3602,9 @@ msgid ""
 "a> for KDE Frameworks&nbsp;5 to make use of its PDF viewing component.<br/"
 ">Okular for KDE&nbsp;4 will not work."
 msgstr ""
-"<br/><br/>Por favor, instale <a href=\"https://userbase.kde.org/Okular"
-"\">Okular</a> para KDE Frameworks&nbsp;5 para poder usar su componente de "
-"visualización de PDF.<br/>Okular para KDE&nbsp;4 no funcionará."
+"<br/><br/>Instale <a href=\"https://userbase.kde.org/Okular\">Okular</a> "
+"para KDE Frameworks&nbsp;5 para poder usar su componente de visualización de "
+"PDF.<br/>Okular para KDE&nbsp;4 no funcionará."
 
 #: src/program/docklets/documentpreview.cpp:534
 #, kde-format
@@ -3636,7 +3631,7 @@ msgstr "Aplicar cambios automáticamente"
 #: src/program/docklets/elementform.cpp:94
 #, kde-format
 msgid "There are unsaved changes. Please press either 'Apply' or 'Reset'."
-msgstr "Hay cambios sin guardar. Por favor, pulse «Aplicar» o «Reiniciar»."
+msgstr "Hay cambios sin guardar. Pulse «Aplicar» o «Reiniciar»."
 
 #: src/program/docklets/elementform.cpp:101
 #, kde-format
@@ -3972,8 +3967,8 @@ msgid ""
 "KBibTeX failed to retrieve the bibliography from Zotero. Please check that "
 "the provided user id and API key are valid."
 msgstr ""
-"KBibTeX no ha podido obtener la bibliografía de Zotero. Por favor, compruebe "
-"que el ID de usuario y la clave de API proporcionados son válidos."
+"KBibTeX no ha podido obtener la bibliografía de Zotero. Compruebe que el ID "
+"de usuario y la clave de API que ha proporcionado son válidos."
 
 #: src/program/docklets/zoterobrowser.cpp:241
 #, kde-format
@@ -4003,7 +3998,7 @@ msgstr "<br/><small>ubicado en <b>%1</b></small>"
 #: src/program/documentlist.cpp:211
 #, kde-format
 msgid "Favorite"
-msgstr "Favorito"
+msgstr "Favorita"
 
 #: src/program/documentlist.cpp:213 src/program/documentlist.cpp:409
 #, kde-format
@@ -4057,12 +4052,12 @@ msgstr "Abrir con"
 #: src/program/documentlist.cpp:302
 #, kde-format
 msgid "Remove from Favorites"
-msgstr "Eliminar de favoritos"
+msgstr "Eliminar de favoritas"
 
 #: src/program/documentlist.cpp:306
 #, kde-format
 msgid "Add to Favorites"
-msgstr "Añadir a favoritos"
+msgstr "Añadir a favoritas"
 
 #: src/program/documentlist.cpp:404
 #, kde-format
