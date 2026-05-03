@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-27 02:11+0000\n"
-"PO-Revision-Date: 2026-04-27 21:37+0300\n"
+"PO-Revision-Date: 2026-05-02 19:39+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1199,7 +1199,7 @@ msgstr ""
 #: src/gui/element/elementeditor.cpp:531
 #, kde-format
 msgid "Id already in use"
-msgstr "Kimlik halihazırda kullanımda"
+msgstr "Kimlik hâlihazırda kullanımda"
 
 #: src/gui/element/elementeditor.cpp:531
 #, kde-format
@@ -1904,7 +1904,7 @@ msgstr "A4"
 #, kde-format
 msgctxt "Paper size"
 msgid "Legal"
-msgstr "Resmi"
+msgstr "Resmî"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
 #, kde-format
