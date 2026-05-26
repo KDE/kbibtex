@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023, 2024, 2025 Shinjo Park <kde@peremen.name>
+# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 Shinjo Park <kde@peremen.name>
 # Jung Hee Lee <daemul72@gmail.com>, 2019.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-27 02:11+0000\n"
-"PO-Revision-Date: 2025-10-09 02:03+0200\n"
+"PO-Revision-Date: 2026-05-25 19:11+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 24.12.3\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2863,15 +2863,7 @@ msgid "Authentication via Web Browser"
 msgstr "웹 브라우저에서 인증"
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2887,8 +2879,11 @@ msgstr ""
 "할 수 있도록 하려면 이 KBibTeX 인스턴스를 인증해야 합니다.</p><p>인증 과정은 "
 "다음과 같습니다:</p><ol><li>웹 브라우저에서 아래에 표시된 URL을 여십시오.</"
 "li><li>Zotero에 로그인한 다음 KBibTeX에 권한을 부여하십시오.</li><li>이 과정"
-"이 성공하면 KBibTeX이 인증되었다는 웹 페이지로 전환됩니다.<br/>이 창은 자동으"
-"로 닫힙니다.</li></ol></qt>"
+"이 성공하면 KBibTeX이 인증되었다는 웹 페이지로 전환되며, 녹색 배경색에 녹색 "
+"글자색으로 다음과 같은 문자열이 표시됩니다.<br/><span style=\"color:#1e622d;"
+"background-color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</"
+"span><br/>'다음'을 클릭한 후 마법사의 다음 쪽에 이 문자열을 붙여 넣으십시오."
+"</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2909,6 +2904,10 @@ msgid ""
 "span></p><p>In your web browser, copy this green and enter it in the text "
 "field below.</p></qt>"
 msgstr ""
+"<qt><p>웹 브라우저에 녹색 배경색에 녹색 글자색으로 다음과 같은 문자열이 표시"
+"됩니다.<br/><span style=\"color:#1e622d;background-color:#d8f2dd;border: 1px "
+"solid #c8edd0;\">zqB0KmelCOJcBvY40J</span></p><p>녹색으로 표시된 문자열을 복"
+"사한 후 아래에 붙여 넣으십시오.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #: src/program/docklets/zoterobrowser.cpp:150
@@ -2921,6 +2920,7 @@ msgstr "API 키:"
 msgid "Enter API Key from Web Browser"
 msgstr "웹 브라우저에서 API 키 입력"
 
+# Zotero 웹 사이트는 한국어를 지원하지 않음
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
 msgid ""
@@ -2929,6 +2929,10 @@ msgid ""
 "security#applications\">personal settings page in Zotero, in tab 'Security', "
 "section 'Applications'</a>.</p></qt>"
 msgstr ""
+"<qt><p>그 다음 API 호출에 사용할 숫자로 된 사용자 ID를 입력하십시오.<br/>이 "
+"ID는 <a href=\"https://www.zotero.org/settings/security#applications\">Zotero"
+"의 개인 설정 페이지의 'Security' 탭의 'Applications' 부분에서 찾을 수 있습니"
+"다.</a></p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -3176,12 +3180,7 @@ msgid "Cannot Apply Default Formatting"
 msgstr "기본 서식을 적용할 수 없음"
 
 #: src/parts/part.cpp:1204
-#, fuzzy, kde-format
-#| msgid ""
-#| "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
-#| "\n"
-#| "Reload file and loose changes made in KBibTeX or ignore changes on disk "
-#| "and keep changes made in KBibTeX?"
+#, kde-format
 msgid ""
 "The file '%1' has changed on disk but got also modified in KBibTeX.\n"
 "\n"
