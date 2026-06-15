@@ -142,7 +142,7 @@ msgstr "技术报告"
 #: src/config/bibtexentries.cpp:70 src/config/bibtexentries.cpp:94
 #, kde-format
 msgid "Miscellaneous"
-msgstr "杂项"
+msgstr "其他"
 
 #: src/config/bibtexentries.cpp:71 src/config/bibtexentries.cpp:83
 #, kde-format
