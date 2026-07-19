@@ -2,31 +2,32 @@
 # This file is distributed under the same license as the PACKAGE package.
 # SPDX-FileCopyrightText: 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2025 Vít Pelčák <vit@pelcak.org>
 # SPDX-FileCopyrightText: 2021, 2023, 2024 Vit Pelcak <vit@pelcak.org>
+# SPDX-FileCopyrightText: 2026 Libor Filípek <libor.filipek@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2024-05-30 09:26+0200\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2026-07-18 23:50+0200\n"
+"Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.08.3\n"
+"X-Generator: Poedit 3.9\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Vít Pelčák,Pavel Fric"
+msgstr "Vít Pelčák,Pavel Fric,Libor Filípek"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "vit@pelcak.org,pavelfric@seznam.cz"
+msgstr "vit@pelcak.org,pavelfric@seznam.cz,libor.filipek@gmail.com"
 
 #, kde-format
 msgid "Author/Editor"
@@ -117,6 +118,8 @@ msgid ""
 "DOIs and URLs get handled in the &lsquo;<a href=\"#tab:external\">External</"
 "a>&rsquo; tab."
 msgstr ""
+"S DOI a adresami URL se pracuje na záložce &lsquo;<a href=\"#tab:external"
+"\">Externí</a>&rsquo;."
 
 #: src/config/bibtexentries.cpp:65 src/config/bibtexentries.cpp:81
 #, kde-format
@@ -1034,7 +1037,7 @@ msgstr " a další"
 msgid ""
 "The following operations can be performed when associating the document with "
 "the entry:"
-msgstr ""
+msgstr "Při přiřazování dokumentu k záznamu lze provádět následující operace:"
 
 #: src/gui/element/associatedfilesui.cpp:79
 #, kde-format
@@ -1044,17 +1047,17 @@ msgstr "Operace se soubory"
 #: src/gui/element/associatedfilesui.cpp:83
 #, kde-format
 msgid "Do not copy or move document, only insert reference to it"
-msgstr ""
+msgstr "Dokument nekopírujte ani nepřesouvejte, pouze do něj vložte odkaz"
 
 #: src/gui/element/associatedfilesui.cpp:86
 #, kde-format
 msgid "Copy document next to bibliography file"
-msgstr ""
+msgstr "Zkopírujte dokument vedle souboru se seznamem použité literatury"
 
 #: src/gui/element/associatedfilesui.cpp:89
 #, kde-format
 msgid "Move document next to bibliography file"
-msgstr ""
+msgstr "Přesuňte dokument vedle souboru se seznamem použité literatury"
 
 #: src/gui/element/associatedfilesui.cpp:99
 #, kde-format
@@ -1069,17 +1072,17 @@ msgstr "Přejmenovat dokument?"
 #: src/gui/element/associatedfilesui.cpp:112
 #, kde-format
 msgid "Keep document's original filename"
-msgstr ""
+msgstr "Zachovat původní název souboru dokumentu"
 
 #: src/gui/element/associatedfilesui.cpp:118
 #, kde-format
 msgid "User-defined name:"
-msgstr ""
+msgstr "Název zadaný uživatelem:"
 
 #: src/gui/element/associatedfilesui.cpp:131
 #, kde-format
 msgid "Path as Inserted into Entry"
-msgstr ""
+msgstr "Cesta tak, jak byla vložena do záznamu"
 
 #: src/gui/element/associatedfilesui.cpp:135
 #: src/gui/field/fieldlistedit.cpp:605 src/gui/field/fieldlistedit.cpp:607
@@ -1096,7 +1099,7 @@ msgstr "Absolutní cesta"
 #: src/gui/element/associatedfilesui.cpp:150
 #, kde-format
 msgid "Preview of reference to be inserted:"
-msgstr ""
+msgstr "Náhled odkazu, který má být vložen:"
 
 #: src/gui/element/associatedfilesui.cpp:163
 #, kde-format
@@ -1115,37 +1118,37 @@ msgstr "Není dostupný žádný náhled"
 msgid ""
 "The following remote document is about to be associated with the current "
 "entry:"
-msgstr ""
+msgstr "Následující vzdálený dokument bude přiřazen k aktuálnímu záznamu:"
 
 #: src/gui/element/associatedfilesui.cpp:295
 #: src/gui/element/associatedfilesui.cpp:308
 #, kde-format
 msgid "Rename after entry's id"
-msgstr ""
+msgstr "Přejmenovat po id záznamu"
 
 #: src/gui/element/associatedfilesui.cpp:297
 #, kde-format
 msgid ""
 "The following remote document is about to be associated with entry '%1':"
-msgstr ""
+msgstr "Následující vzdálený dokument bude přiřazen k záznamu '%1':"
 
 #: src/gui/element/associatedfilesui.cpp:298
 #: src/gui/element/associatedfilesui.cpp:311
 #, kde-format
 msgid "Rename after entry's id: '%1'"
-msgstr ""
+msgstr "Přejmenovat po id záznamu: '%1'"
 
 #: src/gui/element/associatedfilesui.cpp:307
 #, kde-format
 msgid ""
 "The following local document is about to be associated with the current "
 "entry:"
-msgstr ""
+msgstr "K aktuálnímu záznamu se má přiřadit následující místní dokument:"
 
 #: src/gui/element/associatedfilesui.cpp:310
 #, kde-format
 msgid "The following local document is about to be associated with entry '%1':"
-msgstr ""
+msgstr "Následující místní dokument bude přiřazen k záznamu '%1':"
 
 #: src/gui/element/elementeditor.cpp:198
 #, kde-format
@@ -1170,12 +1173,12 @@ msgstr "Vyzkoušet s BibTeX"
 #: src/gui/element/elementeditor.cpp:541
 #, kde-format
 msgid "No id was entered, so the previous id '%1' will be restored."
-msgstr ""
+msgstr "Nebylo zadáno žádné ID, proto bude obnoveno předchozí ID '%1'."
 
 #: src/gui/element/elementeditor.cpp:541
 #, kde-format
 msgid "No id given"
-msgstr ""
+msgstr "Nebylo zadáno ID"
 
 #: src/gui/element/elementeditor.cpp:548
 #, kde-format
@@ -1184,6 +1187,9 @@ msgid ""
 "\n"
 "Keep original id '%2' instead?"
 msgstr ""
+"Zadané ID '%1' je již použito pro jiný prvek.\n"
+"\n"
+"Chcete místo toho ponechat původní ID '%2'?"
 
 #: src/gui/element/elementeditor.cpp:548
 #, kde-format
@@ -1203,7 +1209,7 @@ msgstr "Obnovit původní identifikátor"
 #: src/gui/element/elementeditor.cpp:577
 #, kde-format
 msgid "Validation for the current element failed."
-msgstr ""
+msgstr "Ověření aktuálního prvku se nezdařilo."
 
 #: src/gui/element/elementeditor.cpp:577
 #, kde-format
@@ -1211,21 +1217,23 @@ msgid ""
 "Validation for the current element failed:\n"
 "%1"
 msgstr ""
+"Ověření aktuálního prvku se nezdařilo:\n"
+"%1"
 
 #: src/gui/element/elementeditor.cpp:578
 #, kde-format
 msgid "Element validation failed"
-msgstr ""
+msgstr "Ověření prvku se nezdařilo"
 
 #: src/gui/element/elementwidgets.cpp:456
 #, kde-format
 msgid "Element type '%1' is invalid."
-msgstr ""
+msgstr "Typ prvku '%1' je neplatný."
 
 #: src/gui/element/elementwidgets.cpp:465
 #, kde-format
 msgid "Id '%1' is invalid"
-msgstr ""
+msgstr "ID '%1' je neplatné"
 
 #: src/gui/element/elementwidgets.cpp:517
 #, kde-format
@@ -1306,27 +1314,29 @@ msgstr "Hodnota:"
 #: src/gui/element/elementwidgets.cpp:1319
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX element."
-msgstr ""
+msgstr "Uvedený zdrojový kód nelze zpracovat jako jeden jediný prvek BibTeXu."
 
 #: src/gui/element/elementwidgets.cpp:1328
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX entry."
-msgstr ""
+msgstr "Uvedený zdrojový kód nelze zpracovat jako jeden jediný záznam BibTeXu."
 
 #: src/gui/element/elementwidgets.cpp:1334
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX macro."
-msgstr ""
+msgstr "Uvedený zdrojový kód nelze zpracovat jako jediné makro BibTeX."
 
 #: src/gui/element/elementwidgets.cpp:1340
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr ""
+"Uvedený zdrojový kód nelze zpracovat jako jednu jedinou preambuli BibTeXu."
 
 #: src/gui/element/elementwidgets.cpp:1346
 #, kde-format
 msgid "Given source code does not parse as one single BibTeX comment."
 msgstr ""
+"Uvedený zdrojový kód nelze zpracovat jako jeden jediný komentář v BibTeXu."
 
 #: src/gui/element/elementwidgets.cpp:1350
 #, kde-format
@@ -1336,7 +1346,7 @@ msgstr "Třída prvku není správně nastavena"
 #: src/gui/element/elementwidgets.cpp:1359
 #, kde-format
 msgid "No issues detected"
-msgstr ""
+msgstr "Nebyly zjištěny žádné problémy"
 
 #: src/gui/element/elementwidgets.cpp:1374
 #, kde-format
@@ -1526,17 +1536,17 @@ msgstr "Vybrat křížový odkaz na jiný záznam:"
 #: src/gui/field/fieldlineedit.cpp:221 src/gui/field/fieldlineedit.cpp:239
 #, kde-format
 msgid "Opening and closing curly brackets do not match."
-msgstr ""
+msgstr "Otvírací a zavírací složené závorky se neshodují."
 
 #: src/gui/field/fieldlineedit.cpp:226
 #, kde-format
 msgid "Reference contains characters outside of the allowed set."
-msgstr ""
+msgstr "Odkaz obsahuje znaky, které nejsou součástí povolené sady."
 
 #: src/gui/field/fieldlineedit.cpp:236
 #, kde-format
 msgid "Source code could not be parsed correctly."
-msgstr ""
+msgstr "Zdrojový kód se nepodařilo správně zpracovat."
 
 #: src/gui/field/fieldlineedit.cpp:296 src/gui/field/fieldlineedit.cpp:351
 #, kde-format
@@ -1627,12 +1637,12 @@ msgstr "Přidat odkaz ..."
 #: src/gui/field/fieldlistedit.cpp:492
 #, kde-format
 msgid "Add reference from clipboard"
-msgstr "Přidat odkaz ze schránky ..."
+msgstr "Přidat odkaz ze schránky"
 
 #: src/gui/field/fieldlistedit.cpp:504
 #, kde-format
 msgid "File to Associate"
-msgstr ""
+msgstr "Soubor k přiřazení"
 
 #: src/gui/field/fieldlistedit.cpp:542 src/gui/field/fieldlistedit.cpp:622
 #, kde-format
@@ -1875,12 +1885,12 @@ msgstr "Žádný příkaz"
 #: src/gui/preferences/settingsfileexporterwidget.cpp:132
 #, kde-format
 msgid "Detect LyX pipe automatically:"
-msgstr ""
+msgstr "Automatická detekce roury LyX:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:138
 #, kde-format
 msgid "Manually specified LyX pipe:"
-msgstr ""
+msgstr "Ručně zadaná roura v LyXu:"
 
 #: src/gui/preferences/settingsfileexporterwidget.cpp:155
 #, kde-format
@@ -2015,21 +2025,21 @@ msgstr "|Poslední autor"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:121
 #, kde-format
 msgid "... and last author"
-msgstr ""
+msgstr "... a poslední autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:127
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:129
 #: src/processing/idsuggestions.cpp:511
 #, kde-format
 msgid "From first author to author %1 and last author"
-msgstr ""
+msgstr "Od prvního autora k autorovi %1 a poslednímu autorovi"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:127
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:129
 #: src/processing/idsuggestions.cpp:520 src/processing/idsuggestions.cpp:528
 #, kde-format
 msgid "From author %1 to author %2 and last author"
-msgstr ""
+msgstr "Od autora %1 po autora %2 a poslední autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:134
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:345
@@ -2125,7 +2135,7 @@ msgstr "Číslo stránky"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:269
 #, kde-format
 msgid "First page's number:"
-msgstr ""
+msgstr "Číslo první stránky:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:301
 #, kde-format
@@ -2412,7 +2422,7 @@ msgstr "Filtr:"
 #: src/gui/widgets/filterbar.cpp:85
 #, kde-format
 msgid "Filter bibliographic entries"
-msgstr ""
+msgstr "Filtrovat záznamy použité literatury"
 
 #: src/gui/widgets/filterbar.cpp:89
 #, kde-format
@@ -2462,22 +2472,22 @@ msgstr "Styl BibTeX <strong>%1</strong> není dostupný."
 #: src/io/fileexportertoolchain.cpp:74
 #, kde-format
 msgid "Running command '%1' using working directory '%2'"
-msgstr ""
+msgstr "Spouštění příkazu '%1' v pracovním adresáři '%2'"
 
 #: src/io/fileexportertoolchain.cpp:95
 #, kde-format
 msgid "Starting command '%1' failed: %2"
-msgstr ""
+msgstr "Spuštění příkazu '%1' se nezdařilo: %2"
 
 #: src/io/fileexportertoolchain.cpp:104
 #, kde-format
 msgid "Command '%1' succeeded"
-msgstr ""
+msgstr "Příkaz '%1' byl úspěšně proveden"
 
 #: src/io/fileexportertoolchain.cpp:106
 #, kde-format
 msgid "Command '%1' failed with exit code %2: %3"
-msgstr ""
+msgstr "Příkaz '%1' selhal s návratovým kódem %2: %3"
 
 #: src/io/fileexportertoolchain.cpp:127
 #, kde-format
@@ -2604,6 +2614,7 @@ msgstr "Rok:"
 msgid ""
 "'Google Scholar' denied scrapping data because it thinks you are a robot."
 msgstr ""
+"'Google Scholar' vám odepřel smazání dat, protože vás považuje za robota."
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:460
 #, kde-format
@@ -2668,7 +2679,7 @@ msgstr "MathSciNet"
 #: src/networking/onlinesearch/onlinesearchmrlookup.cpp:74
 #, kde-format
 msgid "MR Lookup"
-msgstr ""
+msgstr "MR Lookup"
 
 #: src/networking/onlinesearch/onlinesearchpubmed.cpp:146
 #, kde-format
@@ -2683,12 +2694,12 @@ msgstr "ScienceDirect"
 #: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:66
 #, kde-format
 msgid "Paper Reference:"
-msgstr ""
+msgstr "Odkaz na článek:"
 
 #: src/networking/onlinesearch/onlinesearchsemanticscholar.cpp:235
 #, kde-format
 msgid "Semantic Scholar"
-msgstr ""
+msgstr "Semantic Scholar"
 
 #: src/networking/onlinesearch/onlinesearchsoanasaads.cpp:133
 #, kde-format
@@ -2727,6 +2738,9 @@ msgid ""
 "head><body><p>KBibTeX got successfully authorized to read your Zotero "
 "database.</p></body></html>"
 msgstr ""
+"<html><head><title>KBibTeX získal oprávnění k používání Zotera</title></"
+"head><body><p>KBibTeX získal oprávnění ke čtení vaší databáze Zotera.</p></"
+"body></html>"
 
 #: src/networking/zotero/oauthwizard.cpp:150
 #, kde-format
@@ -2739,6 +2753,14 @@ msgid ""
 "web page telling you that KBibTeX got authorized.<br/>This window will be "
 "closed automatically.</li></ol></qt>"
 msgstr ""
+"<qt><p>Aby mohl <strong>KBibTeX</strong> přistupovat k vašim "
+"<strong>seznamům použité literatury v Zotero</strong>, je nutné tuto "
+"instanci KBibTeX autorizovat.</p><p>Proces autorizace zahrnuje několik kroků:"
+"</p><ol><li>Otevřete v webovém prohlížeči níže uvedenou adresu URL.</"
+"li><li>Přihlaste se do Zotera a schválte oprávnění pro KBibTeX.</"
+"li><li>Pokud bude autorizace úspěšná, budete přesměrováni na webovou stránku "
+"s informací, že KBibTeX byl autorizován.<br/>Toto okno se automaticky zavře."
+"</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:156
 #, kde-format
@@ -2753,7 +2775,7 @@ msgstr "Otevřít URL"
 #: src/networking/zotero/oauthwizard.cpp:185
 #, kde-format
 msgid "Zotero OAuth Key Exchange"
-msgstr ""
+msgstr "Výměna klíčů Zotero OAuth"
 
 #. i18n: ectx: Menu (file)
 #: src/parts/kbibtexpartui.rc:4 src/program/kbibtexui.rc:4
@@ -2797,7 +2819,7 @@ msgstr "Filtr"
 #: src/parts/part.cpp:178
 #, kde-format
 msgid "Filter bibliographic entries (%1)"
-msgstr ""
+msgstr "Filtrovat záznamy použité literatury (%1)"
 
 #: src/parts/part.cpp:181
 #, kde-format
@@ -2872,27 +2894,27 @@ msgstr "Nastavení pro soubory PDF/PostScript"
 #: src/parts/part.cpp:628
 #, kde-format
 msgid "Could not write bibliographic data to file."
-msgstr ""
+msgstr "Nelze zapsat data se seznamy použité literatury do souboru."
 
 #: src/parts/part.cpp:630
 #, kde-format
 msgid "Could not open local file '%1' for writing."
-msgstr ""
+msgstr "Nelze otevřít místní soubor '%1' pro zápis."
 
 #: src/parts/part.cpp:652
 #, kde-format
 msgid "Failed to upload temporary file to final destination '%1'"
-msgstr ""
+msgstr "Nepodařilo se nahrát dočasný soubor do konečného umístění '%1'"
 
 #: src/parts/part.cpp:654
 #, kde-format
 msgid "Could not write bibliographic data to temporary file."
-msgstr ""
+msgstr "Nelze zapsat data se seznamy použité literatury do dočasného souboru."
 
 #: src/parts/part.cpp:656
 #, kde-format
 msgid "Could not open temporary file for writing."
-msgstr ""
+msgstr "Nelze otevřít dočasný soubor pro zápis."
 
 #: src/parts/part.cpp:664
 #, kde-format
@@ -2912,7 +2934,7 @@ msgstr "Uložení seznamu použité literatury selhalo:"
 #: src/parts/part.cpp:671
 #, kde-format
 msgid "The following output was generated by the export filter:"
-msgstr ""
+msgstr "Následující výstup byl vygenerován exportním filtrem:"
 
 #: src/parts/part.cpp:722
 #, kde-format
@@ -2948,7 +2970,7 @@ msgstr ""
 #: src/parts/part.cpp:993
 #, kde-format
 msgid "Cannot Apply Default Formatting"
-msgstr ""
+msgstr "Nelze použít výchozí formátování"
 
 #: src/parts/part.cpp:1117
 #, kde-format
@@ -3032,7 +3054,7 @@ msgstr ""
 #: src/processing/checkbibtex.cpp:84
 #, kde-format
 msgid "Running BibTeX failed."
-msgstr ""
+msgstr "Spuštění BibTeXu se nezdařilo."
 
 #: src/processing/checkbibtex.cpp:116
 #, kde-format
@@ -3089,7 +3111,7 @@ msgstr "Byla nalezena následující varování:"
 #: src/processing/checkbibtex.cpp:145
 #, kde-format
 msgid "Warnings found"
-msgstr ""
+msgstr "Nalezeno varování"
 
 #: src/processing/checkbibtex.cpp:148
 #, kde-format
@@ -3111,7 +3133,7 @@ msgstr "Nebyla nalezena žádná varování nebo chyby. %1"
 #: src/processing/checkbibtex.cpp:148
 #, kde-format
 msgid "No Errors or Warnings"
-msgstr ""
+msgstr "Žádné chyby ani varování"
 
 #: src/processing/findduplicates.cpp:382
 #, kde-format
@@ -3140,6 +3162,11 @@ msgid ""
 "which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
 "wird|with|you|und|and|ein|eine|einer|eines"
 msgstr ""
+"a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|er|"
+"es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|kein|la|"
+"le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|von|was|wer|"
+"which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|wer|which|wie|"
+"wird|with|you|und|and|ein|eine|einer|eines"
 
 #: src/processing/idsuggestions.cpp:398
 #, kde-format
@@ -3283,7 +3310,7 @@ msgstr "Poslat odkaz LyXu"
 #: src/processing/lyx.cpp:105
 #, kde-format
 msgid "No 'LyX server pipe' was detected."
-msgstr ""
+msgstr "Nebyla zjištěna žádná 'LyX server pipe'."
 
 #: src/processing/lyx.cpp:110
 #, kde-format
@@ -3346,6 +3373,9 @@ msgid ""
 "a> for KDE Frameworks&nbsp;5 to make use of its PDF viewing component.<br/"
 ">Okular for KDE&nbsp;4 will not work."
 msgstr ""
+"<br/><br/>Nainstalujte si prosím <a href=\"https://userbase.kde.org/Okular"
+"\">Okular</a> pro KDE Frameworks 5, abyste mohli využívat jeho komponentu "
+"pro prohlížení souborů PDF.<br/>Okular pro KDE 4 nebude fungovat."
 
 #: src/program/docklets/documentpreview.cpp:561
 #, kde-format
@@ -3437,7 +3467,7 @@ msgstr "Citace Wikipedie"
 #: src/program/docklets/referencepreview.cpp:84
 #, kde-format
 msgid "Abstract-only"
-msgstr ""
+msgstr "Pouze abstrakt"
 
 #: src/program/docklets/referencepreview.cpp:119
 #, kde-format
@@ -3583,16 +3613,20 @@ msgstr "Kopírovat"
 #, kde-format
 msgid "No results to import and no bibliography open to import to."
 msgstr ""
+"Nejsou k dispozici žádné výsledky k importu a není otevřen žádný seznam "
+"použité literatury, do kterého by bylo možné importovat."
 
 #: src/program/docklets/searchresults.cpp:149
 #, kde-format
 msgid "No bibliography open to import to."
 msgstr ""
+"Není otevřen žádný seznam použité literatury, do kterého by bylo možné "
+"importovat."
 
 #: src/program/docklets/searchresults.cpp:151
 #, kde-format
 msgid "No results to import."
-msgstr ""
+msgstr "Nejsou žádné výsledky k importu."
 
 #: src/program/docklets/statistics.cpp:51
 #, kde-format
@@ -3637,7 +3671,7 @@ msgstr "Počet maker:"
 #: src/program/docklets/valuelist.cpp:93
 #, kde-format
 msgid "Filter value list"
-msgstr ""
+msgstr "Seznam hodnot filtru"
 
 #: src/program/docklets/valuelist.cpp:109
 #, kde-format
@@ -3700,7 +3734,7 @@ msgstr "Skupiny nejsou dostupné"
 #: src/program/docklets/zoterobrowser.cpp:142
 #, kde-format
 msgid "Numeric user id:"
-msgstr ""
+msgstr "Číselné ID uživatele:"
 
 #: src/program/docklets/zoterobrowser.cpp:148
 #, kde-format
@@ -3728,16 +3762,18 @@ msgid ""
 "KBibTeX failed to retrieve the bibliography from Zotero. Please check that "
 "the provided user id and API key are valid."
 msgstr ""
+"KBibTeXu se nepodařilo načíst seznam použité literatury ze Zotero. "
+"Zkontrolujte prosím, zda jsou zadané uživatelské jméno a klíč API platné."
 
 #: src/program/docklets/zoterobrowser.cpp:239
 #, kde-format
 msgid "Failed to retrieve data from Zotero"
-msgstr ""
+msgstr "Nelze načíst data ze Zotero"
 
 #: src/program/docklets/zoterobrowser.cpp:365
 #, kde-format
 msgid "No groups available or no permissions"
-msgstr ""
+msgstr "Nejsou k dispozici žádné skupiny nebo chybí oprávnění"
 
 #: src/program/documentlist.cpp:57
 #, kde-format
@@ -3752,7 +3788,7 @@ msgstr "Jít do domovské složky"
 #: src/program/documentlist.cpp:205
 #, kde-format
 msgid "<br/><small>located in <b>%1</b></small>"
-msgstr ""
+msgstr "<br/><small>nachází se v <b>%1</b></small>"
 
 #: src/program/documentlist.cpp:209
 #, kde-format
@@ -3983,7 +4019,7 @@ msgstr "Seznam nedávno použitých souborů:"
 #: src/program/mdiwidget.cpp:266
 #, kde-format
 msgid "No part available for file of mime type '%1'."
-msgstr ""
+msgstr "Pro soubor s MIME typem '%1' není k dispozici žádná část."
 
 #: src/program/mdiwidget.cpp:266 src/program/mdiwidget.cpp:268
 #, kde-format
