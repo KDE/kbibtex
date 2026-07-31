@@ -110,7 +110,7 @@
     <title
 >Voraussetzungen</title>
     <para
->Um &kbibtex; zu benutzen, müssen folgende Komponenten auf dem System installiert sein: </para>
+>Um &kbibtex; zu verwenden, müssen folgende Komponenten auf dem System installiert sein: </para>
     <itemizedlist>
       <listitem>
 	<para
@@ -154,7 +154,7 @@
     <title
 >Über &kbibtex; </title>
     <para
->&kbibtex; ist eine integrierte Umgebung für die Erstellung und Bearbeitung von Bibliografien im &bibtex;-Format. &kbibtex; erlaubt es Ihnen, alle Funktionen von &bibtex; mit einer grafischen Bedienungsoberfläche zu benutzen. Sie haben einen einfachen, sofortigen und benutzerdefinierten Zugriff auf lokale und Online-Bibliografien mit der Möglichkeit, Einträge zu vervollständigen, zusammenzufassen, eine Vorschau zu sehen und nach Einträgen zu suchen. </para>
+>&kbibtex; ist eine integrierte Umgebung für die Erstellung und Bearbeitung von Bibliografien im &bibtex;-Format. &kbibtex; erlaubt es Ihnen, alle Funktionen von &bibtex; mit einer grafischen Bedienungsoberfläche zu verwenden. Sie haben einen einfachen, sofortigen und benutzerdefinierten Zugriff auf lokale und Online-Bibliografien mit der Möglichkeit, Einträge zu vervollständigen, zusammenzufassen, eine Vorschau zu sehen und nach Einträgen zu suchen. </para>
     <sect2 id="intro-bibtex">
       <title
 >Über &bibtex;</title>
@@ -165,7 +165,7 @@
       <para
 >Das Format basiert vollständig auf Zeichen, so dass es von jedem Programm verwendet werden kann. Der Standardzeichensatz für Akzente beruht auf &tex;. Es basiert auf Feldern (Stichwörtern) und das &bibtex;-Programm ignoriert unbekannte Felder. Daher kann es erweitert werden. Es ist wahrscheinlich das am meisten verwendete Format für Bibliografien im Internet. </para>
       <para
->Das &bibtex;-Programm benutzt Stildateien, eine Liste von Zitaten von &latex; und eine &bibtex;-Datenbank für die Erstellung von &latex;-Dateien mit Listen der Referenzen. Der Grund für die Stildateien liegt darin, dass die endgültige Kopie automatisch in jeder speziellen Form für eine Zeitschrift erzeugt werden kann. </para>
+>Das &bibtex;-Programm verwendet Stildateien, eine Liste von Zitaten von &latex; und eine &bibtex;-Datenbank für die Erstellung von &latex;-Dateien mit Listen der Referenzen. Der Grund für die Stildateien liegt darin, dass die endgültige Kopie automatisch in jeder speziellen Form für eine Zeitschrift erzeugt werden kann. </para>
       <para
 >Ein Beispiel eines &bibtex;-Datenbankeintrags: </para>
 <programlisting
@@ -260,7 +260,7 @@
 	<para
 >Anzeige von lokalen und entfernten (Online-) Ressourcen wie zum Beispiel Dateien, die mit einem &bibtex;-Eintrag <link linkend="adding-link"
 >verknüpft</link
-> sind. Benutzen Sie dazu die <link linkend="document-preview"
+> sind. Verwenden Sie dazu die <link linkend="document-preview"
 >Dokumentvorschau</link
 >. </para>
       </listitem>
@@ -349,7 +349,7 @@
     <para
 >Nun sollen einige Einträge hinzugefügt werden. </para>
     <para
->Als &kbibtex; haben Sie zwei Möglichkeiten, einen neuen Eintrag einzufügen: Entweder Sie benutzen die <link linkend="online-search"
+>Als &kbibtex; haben Sie zwei Möglichkeiten, einen neuen Eintrag einzufügen: Entweder Sie verwenden die <link linkend="online-search"
 >Online-Suche</link
 >, um Daten im Internet zu finden oder Sie geben die Einträge von Hand ein. </para>
     <para
@@ -469,7 +469,7 @@
     <title
 >Verwendung der Bibliografie in Ihrem &latex;-Dokument </title>
     <para
->Um die Bibliografie tatsächlich in Ihrer Arbeit zu benutzen, müssen Sie die folgenden Befehle in Ihr &latex;-Dokument einfügen, üblicherweise am Ende des Dokuments, wo sich der Abschnitt <quote
+>Um die Bibliografie tatsächlich in Ihrer Arbeit zu verwenden, müssen Sie die folgenden Befehle in Ihr &latex;-Dokument einfügen, üblicherweise am Ende des Dokuments, wo sich der Abschnitt <quote
 >Referenzen</quote
 > befindet: </para>
 <programlisting
@@ -541,7 +541,7 @@
       </varlistentry>
     </variablelist>
     <para
->Daher können Sie die Fähigkeiten Ihres &latex;-Editors benutzen, lesen Sie dazu die Dokumentation für Ihren Editor. Oder geben Sie den folgenden Quelltext in einem einfachen Texteditor ein und speichern Sie die Datei dann mit der Erweiterung <filename role="extension"
+>Daher können Sie die Fähigkeiten Ihres &latex;-Editors verwenden, lesen Sie dazu die Dokumentation für Ihren Editor. Oder geben Sie den folgenden Quelltext in einem einfachen Texteditor ein und speichern Sie die Datei dann mit der Erweiterung <filename role="extension"
 >tex</filename
 >. </para>
 <programlisting
@@ -589,7 +589,7 @@
 >bibtex</application
 > erneut ausgeführt werden muss. </para>
     <para
->Daher können folgende Befehle zum Kompilieren des Dokuments in der Konsole benutzen: </para>
+>Daher können folgende Befehle zum Kompilieren des Dokuments in der Konsole verwenden: </para>
     <screen
 >latex example
 bibtex example
@@ -597,7 +597,7 @@ latex example
 latex example</screen>
     <tip>
       <para
->Verwenden Sie eine Benutzerschnittstelle für &latex; wie &kile; oder &lyx;, müssen Sie diese Befehle nicht jedesmal in einer Konsole ausführen. Benutzen Sie einen Kurzbefehl wie zum Beispiel <keycombo
+>Verwenden Sie eine Benutzerschnittstelle für &latex; wie &kile; oder &lyx;, müssen Sie diese Befehle nicht jedesmal in einer Konsole ausführen. Verwenden Sie einen Kurzbefehl wie zum Beispiel <keycombo
 >&Alt;<keycap
 >6</keycap
 ></keycombo
@@ -677,7 +677,7 @@ latex example</screen>
 	<para
 >Der Rahmen <guilabel
 >Werteliste</guilabel
-> kann benutzt werden, um Statistiken der Anwendung von Werten in den Feldeinträgen und Stapelbearbeitung dieser Werte. </para>
+> kann verwendet werden, um Statistiken der Anwendung von Werten in den Feldeinträgen und Stapelbearbeitung dieser Werte. </para>
 	<para
 >Im Auswahlfeld oben können Felder mit Bibliografie-Einträgen zur Anzeige der statistischen Daten (die Anzahl der Einträge mit dem gleichen Wert des Felds) in der Liste unten. </para>
 	<para
@@ -741,7 +741,7 @@ latex example</screen>
 	<para
 >In der <guilabel
 >Referenzvorschau</guilabel
-> kann benutzt werden, um den aktuell ausgewählten Bibliografie-Eintrag im &HTML;-Format anzuzeigen und zu speichern. </para>
+> kann verwendet werden, um den aktuell ausgewählten Bibliografie-Eintrag im &HTML;-Format anzuzeigen und zu speichern. </para>
 	<para>
 	  <screenshot>
 	    <screeninfo
@@ -780,7 +780,7 @@ latex example</screen>
 > <imagedata fileref="document-save.png" format="PNG"/> </imageobject
 > </inlinemediaobject
 >Als &HTML; speichern</guibutton
-> kann benutzt werden, um die Referenz im &HTML;-Format für Ihre Webseite zu speichern. </para>
+> kann verwendet werden, um die Referenz im &HTML;-Format für Ihre Webseite zu speichern. </para>
 	<para
 >Sie können mit der &RMBn; Maustaste auf den Rahmen klicken und <guimenuitem
 >Neu laden</guimenuitem
@@ -898,7 +898,7 @@ latex example</screen>
 	<para
 >Der Rahmen <guilabel
 >Zotero</guilabel
-> kann benutzt werden, um Ihre <ulink url="https://www.zotero.org/"
+> kann verwendet werden, um Ihre <ulink url="https://www.zotero.org/"
 >Zotero</ulink
 >-Bibliothek zu importieren. </para>
 	<para
@@ -1063,7 +1063,7 @@ latex example</screen>
 	<para
 >Die <guilabel
 >Dokumentvorschau</guilabel
-> kann benutzt werden, um eine Vorschau von Seiten oder Dokumenten anzuzeigen, die mit dem aktuell ausgewählten Bibliografie-Eintrag <link linkend="adding-link"
+> kann verwendet werden, um eine Vorschau von Seiten oder Dokumenten anzuzeigen, die mit dem aktuell ausgewählten Bibliografie-Eintrag <link linkend="adding-link"
 >verknüpft</link
 > ist. </para>
 	<tip>
@@ -1479,7 +1479,7 @@ latex example</screen>
 > </inlinemediaobject
 >, um das gerade ausgewählte Dokument-Element zu löschen. </para>
 	  <para
->Um die Dokumente in der Liste neu anzuordnen, benutzen Sie die Knöpfe <inlinemediaobject
+>Um die Dokumente in der Liste neu anzuordnen, verwenden Sie die Knöpfe <inlinemediaobject
 > <imageobject
 > <imagedata fileref="go-down.png" format="PNG"/> </imageobject
 > </inlinemediaobject
@@ -1493,7 +1493,7 @@ latex example</screen>
 > <imageobject
 > <imagedata fileref="document-save.png" format="PNG"/> </imageobject
 > </inlinemediaobject
-> auch benutzt werden, Dokumente auf entfernten Rechnern lokal zu speichern. </para>
+> auch verwendet werden, Dokumente auf entfernten Rechnern lokal zu speichern. </para>
 	</listitem>
       </varlistentry>
       <varlistentry>
@@ -1674,7 +1674,7 @@ latex example</screen>
 	<para
 >Auf dieser Seite können Sie die Liste der Schlagworte bearbeiten. Mit den Schlagworten, die im <link linkend="element-editor"
 >Element-Editor</link
-> benutzt werden, können Sie Ihre Bibliografie strukturieren. Durch <link linkend="filter-toolbar"
+> verwendet werden, können Sie Ihre Bibliografie strukturieren. Durch <link linkend="filter-toolbar"
 >Filterung</link
 > nach Schlagworten erhalten Sie genauere Ergebnisse anhand von Themen. </para>
 	<para
@@ -1802,9 +1802,9 @@ latex example</screen>
 	  <para
 >&biblatex; kann auch <ulink url="http://biblatex-biber.sourceforge.net/"
 >biber</ulink
-> als Backend benutzen. Mit &biblatex; können Sie UTF-8-Symbole in Bibliografie-Einträgen verwenden. </para>
+> als Backend verwenden. Mit &biblatex; können Sie UTF-8-Symbole in Bibliografie-Einträgen verwenden. </para>
 	  <para
->So können Sie &biblatex; benutzen um komplexe Bibliografien zu erstellen. </para>
+>So können Sie &biblatex; verwenden um komplexe Bibliografien zu erstellen. </para>
 	</tip>
       </sect2>
       <sect2 id="config-saving">
@@ -1826,7 +1826,7 @@ latex example</screen>
 	<para
 >Auf dieser Seite können Sie den &latex;-Befehl wie &eg; <userinput
 >\cite{...}</userinput
-> auswählen, der als Wrapper für Referenzen benutzt wird, die mit dem Eintrag <menuchoice
+> auswählen, der als Wrapper für Referenzen verwendet wird, die mit dem Eintrag <menuchoice
 ><shortcut
 ><keycombo
 >&Ctrl;&Shift;<keycap
@@ -1976,7 +1976,7 @@ latex example</screen>
 > </inlinemediaobject
 > <guilabel
 >Quelltext</guilabel
-> können Sie benutzen, um Makros mit &latex;-Befehlen darin einzufügen. </para>
+> können Sie verwenden, um Makros mit &latex;-Befehlen darin einzufügen. </para>
       </step>
       <step>
 	<para
@@ -2053,7 +2053,7 @@ latex example</screen>
     <para
 >&kbibtex; ist in der Voreinstellung der Betrachter/Editor für &bibtex;-Dateien in &kile;, daher ist keine weitere Einrichtung nötig. </para>
     <para
->Um Zitate aus Bibliografiedateien einzufügen, starten Sie &kile;, öffnen einige &latex;-Dateien und platzieren den Cursor an den Stellen, wo Sie die Zitate einfügen möchten. Wechseln Sie dann zum &kbibtex;-Fenster, wählen Elemente in der Elementliste und benutzen dann <menuchoice
+>Um Zitate aus Bibliografiedateien einzufügen, starten Sie &kile;, öffnen einige &latex;-Dateien und platzieren den Cursor an den Stellen, wo Sie die Zitate einfügen möchten. Wechseln Sie dann zum &kbibtex;-Fenster, wählen Elemente in der Elementliste und verwenden dann <menuchoice
 ><guimenu
 >Element</guimenu
 ><guimenuitem
@@ -2152,7 +2152,7 @@ latex example</screen>
       </step>
       <step>
 	<para
->Platzieren Sie dann den Cursor an den Stellen, wo Sie die Zitate einfügen möchten. Wechseln Sie dann zum &kbibtex;-Fenster, wählen Elemente in der Elementliste und benutzen dann <menuchoice
+>Platzieren Sie dann den Cursor an den Stellen, wo Sie die Zitate einfügen möchten. Wechseln Sie dann zum &kbibtex;-Fenster, wählen Elemente in der Elementliste und verwenden dann <menuchoice
 ><guimenu
 >Element</guimenu
 ><guimenuitem

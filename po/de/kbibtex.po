@@ -248,12 +248,12 @@ msgstr "Veröffentlichung in Tagungsbänden"
 #: src/config/bibtexentries.cpp:102
 #, kde-format
 msgid "Single-volume Reference (e.g. Encyclopedia)"
-msgstr "Einbändiges Nachschlagewerk (z. B. Enzyklopädie)"
+msgstr "Einbändiges Nachschlagewerk (z. B. Enzyklopädie)"
 
 #: src/config/bibtexentries.cpp:103
 #, kde-format
 msgid "Multi-volume Reference (e.g. Encyclopedia)"
-msgstr "Mehrbändiges Nachschlagewerk (z. B. Enzyklopädie)"
+msgstr "Mehrbändiges Nachschlagewerk (z. B. Enzyklopädie)"
 
 #: src/config/bibtexentries.cpp:104
 #, kde-format
@@ -2497,7 +2497,7 @@ msgstr "Groß-/Kleinschreibung schützen?"
 #: src/gui/widgets/filesettingswidget.cpp:197
 #, kde-format
 msgid "Use global settings"
-msgstr "Globale Einstellungen benutzen"
+msgstr "Globale Einstellungen verwenden"
 
 #: src/gui/widgets/filesettingswidget.cpp:203
 #, kde-format
@@ -3256,7 +3256,7 @@ msgstr ""
 "Zuordnungen ist fehlgeschlagen.\n"
 "\n"
 "Das System kann wahrscheinlich KBibTeX zum Öffnen von Bibliografiedateien "
-"nicht benutzen."
+"nicht verwenden."
 
 #: src/processing/bibliographyservice.cpp:189
 #, kde-format
@@ -4081,7 +4081,7 @@ msgstr "Rahmen zeigen"
 #: src/program/mainwindow.cpp:105
 #, kde-format
 msgid "Recently used files"
-msgstr "Kürzliche benutzte Dateien"
+msgstr "Kürzliche verwendete Dateien"
 
 #: src/program/mainwindow.cpp:122
 #, kde-format
@@ -4214,7 +4214,7 @@ msgstr "Öffnen ..."
 #: src/program/mdiwidget.cpp:158
 #, kde-format
 msgid "List of recently used files:"
-msgstr "Liste der zuletzt benutzen Dateien:"
+msgstr "Liste der zuletzt verwenden Dateien:"
 
 #: src/program/mdiwidget.cpp:272
 #, kde-format
