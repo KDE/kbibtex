@@ -86,7 +86,7 @@
     <p xml:lang="ca">El KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per a recollir bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
     <p xml:lang="ca-valencia">KBibTeX és una aplicació per a la gestió de referències que es pot utilitzar per a arreplegar bibliografies en TeX/LaTeX i exportar-les a diversos formats.</p>
     <p xml:lang="cs">KBibTeX je referenční aplikace pro správu, kterou lze použít ke shromažďování seznamu použité literatury v TeXu/LaTeXu a k jejich exportu do různých formátů.</p>
-    <p xml:lang="de">KBibTeX ist ein Programm zur Verwaltung von Referenzen und kann dazu benutzt werden, TeX/LaTeX-Bibliografien zusammenzustellen und sie in verschiedenen Formaten zu exportieren.</p>
+    <p xml:lang="de">KBibTeX ist ein Programm zur Verwaltung von Referenzen und kann dazu verwendet werden, TeX/LaTeX-Bibliografien zusammenzustellen und sie in verschiedenen Formaten zu exportieren.</p>
     <p xml:lang="en-GB">KBibTeX is a reference management application which can be used to collect TeX/LaTeX bibliographies and export them in various formats.</p>
     <p xml:lang="eo">KBibTeX estas referencadministra aplikaĵo, kiu povas esti uzata por kolekti TeX/LaTeX-bibliografiojn kaj eksporti ilin en diversaj formatoj.</p>
     <p xml:lang="es">KBibTeX es una aplicación de gestión de referencias que se puede utilizar para recoger bibliografías TeX/LaTeX y exportarlas en varios formatos.</p>
@@ -205,7 +205,7 @@
       <li xml:lang="ca">Cerca dades d'entrades bibliogràfiques a les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="ca-valencia">Busca dades d'entrades bibliogràfiques en les bases de dades en línia (p. ex., Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="cs">Vyhledat údaje o záznamech použité literatury v online databázích (např. Google Scholar, ACM, IEEE, arXiv atd.)</li>
-      <li xml:lang="de">Suche nach Daten mit Bibliografie-Einträgen in Online-Datenbanken (z. B. Google Scholar, ACM, IEEE, arXiv, usw.)</li>
+      <li xml:lang="de">Suche nach Daten mit Bibliografie-Einträgen in Online-Datenbanken (z. B. Google Scholar, ACM, IEEE, arXiv, usw.)</li>
       <li xml:lang="en-GB">Search for the bibliography entries data in online databases (e.g. Google Scholar, ACM, IEEE, arXiv, etc.)</li>
       <li xml:lang="eo">Serĉu la datumojn pri bibliografiaj eniroj en interretaj datumbazoj (ekz. Google Scholar, ACM, IEEE, arXiv, ktp.)</li>
       <li xml:lang="es">Busca datos de las entradas bibliográficas en bases de datos en línea (por ejemplo Google Scholar, ACM, IEEE, arXiv, etc.)</li>
