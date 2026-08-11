@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-27 02:11+0000\n"
-"PO-Revision-Date: 2026-04-30 08:49+0400\n"
+"PO-Revision-Date: 2026-08-10 18:31+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2878,12 +2878,11 @@ msgstr ""
 "<qt><p>للسماح لـ <strong>KBibTeX</strong> بالوصول إلى <strong>ببليوغرافيا "
 "Zotero</strong> الخاصة بك، يجب أن يتم تفويض مثيل KBibTeX هذا.</p><p>تتضمن "
 "عملية التفويض عدة خطوات:</p><ol><li>افتح عنوان URL كما هو موضح أدناه في "
-"متصفح الويب.</li><li>سجّل الدخول إلى Zotero ووافق على أذونات كبتخ.</"
-"li><li>إذا نجحت العملية، سيتم إعادة توجيهك إلى صفحة ويب تعرض نصًا أخضر على "
-"خلفية خضراء مثل هذا:<br/><span style=\"color:#1e622d;background-color:"
-"#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</span><br/>انقر على "
-"”التالي“ للانتقال إلى الصفحة التالية في هذا المعالج لإدخال هذا النص.</li></"
-"ol></qt>"
+"متصفح الويب.</li><li>سجّل الدخول إلى Zotero ووافق على أذون كبتخ.</li><li>إذا "
+"نجحت العملية، سيتم إعادة توجيهك إلى صفحة ويب تعرض نصًا أخضر على خلفية خضراء "
+"مثل هذا:<br/><span style=\"color:#1e622d;background-color:#d8f2dd;border: "
+"1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</span><br/>انقر على ”التالي“ "
+"للانتقال إلى الصفحة التالية في هذا المعالج لإدخال هذا النص.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -3941,7 +3940,7 @@ msgstr "فشل استرداد البيانات من زوتيرو"
 #: src/program/docklets/zoterobrowser.cpp:379
 #, kde-format
 msgid "No groups available or no permissions"
-msgstr "لا مجموعات متاحة أو لا توجد أذونات"
+msgstr "لا مجموعات متاحة أو لا توجد أذون"
 
 #: src/program/documentlist.cpp:59
 #, kde-format
