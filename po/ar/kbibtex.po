@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-02-19 08:21+0400\n"
+"PO-Revision-Date: 2026-08-10 18:31+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2749,7 +2749,7 @@ msgstr ""
 "<qt><p>للسماح لـ<strong>كبتخ</strong> بالوصول إلى <strong>ببليوغرافيا "
 "زوتيرو</strong>، لا بد من الإذن لنسخة كبتخ هذه.</p><p>عملية الإذن تتضمن "
 "خطوات متعددة:</p><ol><li>افتح الرابط كما هو موضح أدناه في متصفح ويب.</"
-"li><li>سجّل الدخول في زوتيرو واعتمد أذونات كبتخ.</li><li>إن نجح، سيعاد توجيهك "
+"li><li>سجّل الدخول في زوتيرو واعتمد أذون كبتخ.</li><li>إن نجح، سيعاد توجيهك "
 "إلى صفحة ويب تخبرك بأن كبتخ أُذِن له.<br/>هذه النافذة ستغلق آليًّا.</li></ol></"
 "qt>"
 
@@ -3758,7 +3758,7 @@ msgstr "فشل استرداد البيانات من زوتيرو"
 #: src/program/docklets/zoterobrowser.cpp:365
 #, kde-format
 msgid "No groups available or no permissions"
-msgstr "لا مجموعات متاحة أو لا توجد أذونات"
+msgstr "لا مجموعات متاحة أو لا توجد أذون"
 
 #: src/program/documentlist.cpp:57
 #, kde-format
