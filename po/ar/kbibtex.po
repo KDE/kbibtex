@@ -1188,7 +1188,7 @@ msgid ""
 msgstr ""
 "المعرّف '%1' الذي أدخلته قيد الاستخدام بالفعل في عنصر آخر.\n"
 "\n"
-"أبقِ على المعرّف الأصلي '%2' بدلاً من ذلك؟"
+"أبقِ على المعرّف الأصلي '%2' بدلًا من ذلك؟"
 
 #: src/gui/element/elementeditor.cpp:548
 #, kde-format
@@ -1518,7 +1518,7 @@ msgstr "السادس عشر"
 #: src/gui/field/fieldinput.cpp:123
 #, kde-format
 msgid "Select an existing entry"
-msgstr "اختر مدخلاً موجودًا"
+msgstr "اختر مدخلًا موجودًا"
 
 #: src/gui/field/fieldinput.cpp:276
 #, kde-format
@@ -1624,7 +1624,7 @@ msgstr "أضف قائمة من الأسماء من الحافظة"
 #: src/gui/field/fieldlistedit.cpp:483
 #, kde-format
 msgid "Add file..."
-msgstr "&ضف ملفاً..."
+msgstr "&ضف ملفًا..."
 
 #: src/gui/field/fieldlistedit.cpp:489
 #, kde-format
@@ -3981,7 +3981,7 @@ msgstr "اسم الملف الكامل"
 #: src/program/mdiwidget.cpp:145
 #, kde-format
 msgid "<qt>Welcome to <b>KBibTeX</b></qt>"
-msgstr "<qt>أهلاً بك في <b>كبتخ</b></qt>"
+msgstr "<qt>أهلًا بك في <b>كبتخ</b></qt>"
 
 #: src/program/mdiwidget.cpp:148
 #, kde-format
