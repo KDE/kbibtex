@@ -1504,62 +1504,62 @@ msgstr "4t"
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "5th"
-msgstr "5è"
+msgstr "5é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "6th"
-msgstr "6è"
+msgstr "6é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "7th"
-msgstr "7è"
+msgstr "7é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "8th"
-msgstr "8è"
+msgstr "8é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "9th"
-msgstr "9è"
+msgstr "9é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "10th"
-msgstr "10è"
+msgstr "10é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "11th"
-msgstr "11è"
+msgstr "11é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "12th"
-msgstr "12è"
+msgstr "12é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "13th"
-msgstr "13è"
+msgstr "13é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "14th"
-msgstr "14è"
+msgstr "14é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "15th"
-msgstr "15è"
+msgstr "15é"
 
 #: src/gui/field/fieldinput.cpp:120
 #, kde-format
 msgid "16th"
-msgstr "16è"
+msgstr "16é"
 
 #: src/gui/field/fieldinput.cpp:135
 #, kde-format
@@ -2062,32 +2062,32 @@ msgstr "Quart autor"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Fifth author"
-msgstr "Cinquè autor"
+msgstr "Cinqué autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Sixth author"
-msgstr "Sisè autor"
+msgstr "Sisé autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Seventh author"
-msgstr "Setè autor"
+msgstr "Seté autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Eighth author"
-msgstr "Vuitè autor"
+msgstr "Huité autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Ninth author"
-msgstr "Novè autor"
+msgstr "Nové autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
 msgid "Tenth author"
-msgstr "Desè autor"
+msgstr "Desé autor"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:120
 #, kde-format
