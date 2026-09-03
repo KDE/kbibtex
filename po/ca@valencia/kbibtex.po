@@ -3,8 +3,8 @@
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 Josep M. Ferrer <txemaq@gmail.com>
-# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 Antoni Bella Pérez <antonibella5@yahoo.com>
+# SPDX-FileCopyrightText: 2014-2025 Josep M. Ferrer <txemaq@gmail.com>
+# SPDX-FileCopyrightText: 2014-2021 Antoni Bella Pérez <antonibella5@yahoo.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
@@ -2931,7 +2931,7 @@ msgstr "No s'han pogut escriure les dades bibliogràfiques al fitxer temporal."
 #: src/parts/part.cpp:656
 #, kde-format
 msgid "Could not open temporary file for writing."
-msgstr "No s'ha pogut obrir el fitxer temporal per escriptura."
+msgstr "No s'ha pogut obrir el fitxer temporal per a escriptura."
 
 #: src/parts/part.cpp:664
 #, kde-format
