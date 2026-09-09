@@ -3574,7 +3574,7 @@ msgstr "Ouvrir dans un programme externe"
 #: src/program/docklets/documentpreview.cpp:333
 #, kde-format
 msgid "Refreshing..."
-msgstr "Rafraîchissement..."
+msgstr "Rafraichissement..."
 
 #: src/program/docklets/documentpreview.cpp:362
 #, kde-format
