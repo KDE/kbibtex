@@ -2345,7 +2345,7 @@ msgstr "Copier la chaine de formatage dans le presse-papier"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:622
 #, kde-format
 msgid "Format string:"
-msgstr "Chaîne de formatage :"
+msgstr "Chaine de formatage :"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:635
 #, kde-format
