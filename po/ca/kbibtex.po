@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-27 02:11+0000\n"
-"PO-Revision-Date: 2026-04-27 08:46+0200\n"
+"PO-Revision-Date: 2026-09-11 12:36+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -1657,7 +1657,7 @@ msgstr "Mou amunt el valor"
 #: src/gui/field/fieldlistedit.cpp:420
 #, kde-format
 msgid "... and others (et al.)"
-msgstr "...entre altres (et al)."
+msgstr "...entre altres (et al.)."
 
 #: src/gui/field/fieldlistedit.cpp:425
 #, kde-format
@@ -2840,7 +2840,7 @@ msgid ""
 "result in few or no matching results."
 msgstr ""
 "La consulta que s'enviarà a «Obre zbMATH» no té informació de l'autor, el "
-"qual pot resultar en pocs o cap resultat coincident."
+"qual pot dona com a resultat en pocs o cap resultat coincident."
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
@@ -2860,7 +2860,7 @@ msgid ""
 msgstr ""
 "La consulta que s'enviarà a «Obre zbMATH» no té informació de l'autor ni de "
 "l'any.\n"
-"Això probablement resultarà en pocs o cap resultat coincident."
+"Això probablement donarà com a resultat pocs o cap resultat coincident."
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:149
 #, kde-format
