@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-04-27 02:11+0000\n"
-"PO-Revision-Date: 2022-10-02 14:52+0300\n"
+"PO-Revision-Date: 2026-09-27 09:21+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -928,12 +928,11 @@ msgid "Both local and remote files"
 msgstr "Локальные и удалённые файлы"
 
 #: src/config/preferences.cpp:923
-#, fuzzy, kde-format
-#| msgid "Verbatim Text"
+#, kde-format
 msgctxt ""
 "Comment Context: The comment's text appears verbatim in the bibliography"
 msgid "Verbatim"
-msgstr "Дословный текст"
+msgstr "Дословно"
 
 #: src/config/preferences.cpp:923
 #, kde-format
@@ -941,13 +940,13 @@ msgctxt ""
 "Comment Quoting: All lines of the comment share a common prefix like '%% ' "
 "which is not part of the comment's text"
 msgid "Use prefix like '%% '"
-msgstr ""
+msgstr "Использовать префикс вида «%% »"
 
 #: src/config/preferences.cpp:923
 #, kde-format
 msgctxt "Comment Quoting: The comment is inside @comment{..}"
 msgid "Use command @comment{...}"
-msgstr ""
+msgstr "Использовать команду @comment{...}"
 
 #: src/config/preferences.cpp:1000
 #, kde-format
@@ -1325,23 +1324,22 @@ msgstr "Значение:"
 #: src/gui/element/elementwidgets.cpp:1248
 #, kde-format
 msgid "The prefix of a comment must start with '%'"
-msgstr ""
+msgstr "Префикс комментария должен начинаться с «%»"
 
 #: src/gui/element/elementwidgets.cpp:1256
 #, kde-format
 msgid "A comment in 'Verbatim' mode may not contain blank lines"
-msgstr ""
+msgstr "Комментарий в режиме «Дословно» не может содержать пустых строк"
 
 #: src/gui/element/elementwidgets.cpp:1293
-#, fuzzy, kde-format
-#| msgid "Content:"
+#, kde-format
 msgid "Context:"
-msgstr "Содержимое:"
+msgstr "Контекст:"
 
 #: src/gui/element/elementwidgets.cpp:1297
 #, kde-format
 msgid "Prefix:"
-msgstr ""
+msgstr "Префикс:"
 
 #: src/gui/element/elementwidgets.cpp:1440
 #, kde-format
@@ -1364,13 +1362,13 @@ msgid "Given source code does not parse as one single BibTeX preamble."
 msgstr "Данный исходный код не распознаётся как единственная преамбула BibTeX."
 
 #: src/gui/element/elementwidgets.cpp:1467
-#, fuzzy, kde-format
-#| msgid "Given source code does not parse as one single BibTeX comment."
+#, kde-format
 msgid ""
 "Given source code does not parse as one single BibTeX comment. Try removing "
 "blank lines inside the comment."
 msgstr ""
-"Данный исходный код не распознаётся как единственный комментарий BibTeX."
+"Данный исходный код не распознаётся как единственный комментарий BibTeX. "
+"Попробуйте удалить пустые строки внутри комментария."
 
 #: src/gui/element/elementwidgets.cpp:1471
 #, kde-format
@@ -1901,22 +1899,19 @@ msgid "Paper Size:"
 msgstr "Размер страницы:"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "A4"
+#, kde-format
 msgctxt "Paper size"
 msgid "A4"
 msgstr "A4"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Legal"
+#, kde-format
 msgctxt "Paper size"
 msgid "Legal"
 msgstr "US Legal"
 
 #: src/gui/preferences/settingsfileexporterpdfpswidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Letter"
+#, kde-format
 msgctxt "Paper size"
 msgid "Letter"
 msgstr "US Letter"
@@ -2001,16 +1996,15 @@ msgid "Person Names Formatting:"
 msgstr "Форматирование имён:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:93
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Сбросить"
+msgstr "Сбросить все"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:94
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Сбросить все параметры «больше не спрашивать»:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:121
 #, kde-format
@@ -2321,18 +2315,17 @@ msgstr "Текст:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:602
 #, kde-format
 msgid "Preview:"
-msgstr ""
+msgstr "Предварительный просмотр:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr ""
+msgstr "Копировать строку формата в буфер обмена"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:622
-#, fuzzy, kde-format
-#| msgid "Format entry ids"
+#, kde-format
 msgid "Format string:"
-msgstr "Форматировать идентификаторы записей"
+msgstr "Строка формата:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:635
 #, kde-format
@@ -2437,16 +2430,14 @@ msgid "String Delimiters:"
 msgstr "Разделители строки:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Context:"
-msgstr "Выделение комментариев:"
+msgstr "Контекст комментария:"
 
 #: src/gui/widgets/filesettingswidget.cpp:160
-#, fuzzy, kde-format
-#| msgid "Comment Quoting:"
+#, kde-format
 msgid "Comment Prefix:"
-msgstr "Выделение комментариев:"
+msgstr "Префикс комментария:"
 
 #: src/gui/widgets/filesettingswidget.cpp:174
 #, kde-format
@@ -2504,16 +2495,14 @@ msgid "List Separator"
 msgstr "Разделитель элементов списка"
 
 #: src/gui/widgets/filesettingswidget.cpp:208
-#, fuzzy, kde-format
-#| msgid "Sort by Count"
+#, kde-format
 msgid "Sort by identifier"
-msgstr "Сортировать по количеству"
+msgstr "Сортировать по идентификатору"
 
 #: src/gui/widgets/filesettingswidget.cpp:209
-#, fuzzy, kde-format
-#| msgid "Sorting"
+#, kde-format
 msgid "Entry Sorting"
-msgstr "Сортировка"
+msgstr "Сортировка записей"
 
 #: src/gui/widgets/filterbar.cpp:70
 #, kde-format
@@ -2571,10 +2560,9 @@ msgid "The BibTeX style <strong>%1</strong> is not available."
 msgstr "Стиль BibTeX <strong>%1</strong> недоступен."
 
 #: src/io/fileexporterbibtex2html.cpp:101
-#, fuzzy, kde-format
-#| msgid "The BibTeX style <strong>%1</strong> is not available."
+#, kde-format
 msgid "The BibTeX style <strong>PLACEHOLDER</strong> is not available."
-msgstr "Стиль BibTeX <strong>%1</strong> недоступен."
+msgstr "Стиль BibTeX <strong>PLACEHOLDER</strong> недоступен."
 
 #: src/networking/onlinesearch/onlinesearchabstract.cpp:227
 #, kde-format
@@ -2653,10 +2641,9 @@ msgid "Everywhere"
 msgstr "Везде"
 
 #: src/networking/onlinesearch/onlinesearchbibsonomy.cpp:231
-#, fuzzy, kde-format
-#| msgid "Bibsonomy"
+#, kde-format
 msgid "BibSonomy"
-msgstr "Bibsonomy"
+msgstr "BibSonomy"
 
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:70
 #: src/networking/onlinesearch/onlinesearchdoi.cpp:63
@@ -2672,7 +2659,7 @@ msgstr "bioRxiv"
 #: src/networking/onlinesearch/onlinesearchbiorxiv.cpp:206
 #, kde-format
 msgid "medRxiv"
-msgstr ""
+msgstr "medRxiv"
 
 #: src/networking/onlinesearch/onlinesearchcernds.cpp:37
 #, kde-format
@@ -2680,10 +2667,9 @@ msgid "CERN Document Server"
 msgstr "Сервер документов ЦЕРН"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:49
-#, fuzzy, kde-format
-#| msgid "Free text:"
+#, kde-format
 msgid "Free text or DOI:"
-msgstr "Искать текст:"
+msgstr "Произвольный текст или DOI:"
 
 #: src/networking/onlinesearch/onlinesearchgeneral.cpp:58
 #: src/networking/onlinesearch/onlinesearchingentaconnect.cpp:91
@@ -2705,10 +2691,9 @@ msgid "Year:"
 msgstr "Год:"
 
 #: src/networking/onlinesearch/onlinesearchgooglebooks.cpp:105
-#, fuzzy, kde-format
-#| msgid "Google Scholar"
+#, kde-format
 msgid "Google Books"
-msgstr "Академия Google"
+msgstr "Google Книги"
 
 #: src/networking/onlinesearch/onlinesearchgooglescholar.cpp:331
 #, kde-format
@@ -2724,10 +2709,9 @@ msgid "Google Scholar"
 msgstr "Академия Google"
 
 #: src/networking/onlinesearch/onlinesearchideasrepec.cpp:110
-#, fuzzy, kde-format
-#| msgid "IDEAS (RePEc)"
+#, kde-format
 msgid "IDEAS/RePEc"
-msgstr "IDEAS (RePEc)"
+msgstr "IDEAS/RePEc"
 
 #: src/networking/onlinesearch/onlinesearchieeexplore.cpp:175
 #, kde-format
@@ -2825,15 +2809,14 @@ msgid "Author or Editor:"
 msgstr "Автор или редактор:"
 
 #: src/networking/onlinesearch/onlinesearchspringerlink.cpp:474
-#, fuzzy, kde-format
-#| msgid "SpringerLink"
+#, kde-format
 msgid "Springer Nature Link"
-msgstr "SpringerLink"
+msgstr "Springer Nature Link"
 
 #: src/networking/onlinesearch/onlinesearchunpaywall.cpp:135
 #, kde-format
 msgid "Unpaywall"
-msgstr ""
+msgstr "Unpaywall"
 
 #: src/networking/onlinesearch/onlinesearchzbmath.cpp:88
 #, kde-format
@@ -2890,18 +2873,10 @@ msgstr ""
 #: src/networking/zotero/oauthwizard.cpp:259
 #, kde-format
 msgid "Authentication via Web Browser"
-msgstr ""
+msgstr "Аутентификация через веб-браузер"
 
 #: src/networking/zotero/oauthwizard.cpp:265
-#, fuzzy, kde-format
-#| msgid ""
-#| "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
-#| "bibliography</strong>, this KBibTeX instance has to be authorized.</"
-#| "p><p>The process of authorization involves multiple steps:</"
-#| "p><ol><li>Open the URL as shown below in a web browser.</li><li>Log in at "
-#| "Zotero and approve the permissions for KBibTeX.</li><li>If successful, "
-#| "you will be redirected to a web page telling you that KBibTeX got "
-#| "authorized.<br/>This window will be closed automatically.</li></ol></qt>"
+#, kde-format
 msgid ""
 "<qt><p>To allow <strong>KBibTeX</strong> access your <strong>Zotero "
 "bibliography</strong>, this KBibTeX instance has to be authorized.</p><p>The "
@@ -2916,11 +2891,13 @@ msgstr ""
 "<qt><p>Чтобы предоставить <strong>KBibTeX</strong> доступ к "
 "<strong>библиографии Zotero</strong>, требуется авторизовать этот экземпляр "
 "KBibTeX.</p><p>Процедура авторизации состоит из нескольких шагов:</"
-"p><ol><li>Откройте URL-адрес, как показано ниже, в веб-браузере.</"
+"p><ol><li>Откройте URL-адрес, показанный ниже, в веб-браузере.</"
 "li><li>Войдите в Zotero и подтвердите разрешения для KBibTeX.</li><li>При "
-"успешном выполнении этого действия будет осуществлён переход на страницу, "
-"оповещающую о том, что KBibTeX авторизован.<br/>Это окно закроется "
-"автоматически.</li></ol></qt>"
+"успешном выполнении этого действия будет выполнен переход на страницу, "
+"показывающую зелёный текст на зелёном фоне, например такой:<br/><span style="
+"\"color:#1e622d;background-color:#d8f2dd;border: 1px solid #c8edd0;"
+"\">zqB0KmelCOJcBvY40J</span><br/>Нажмите кнопку «Далее», чтобы перейти к "
+"следующей странице этого помощника и ввести этот текст.</li></ol></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:271
 #, kde-format
@@ -2941,6 +2918,11 @@ msgid ""
 "span></p><p>In your web browser, copy this green and enter it in the text "
 "field below.</p></qt>"
 msgstr ""
+"<qt><p>В веб-браузере должна была открыться страница, показывающая зелёный "
+"текст на зелёном фоне, например такой:<br/><span style=\"color:#1e622d;"
+"background-color:#d8f2dd;border: 1px solid #c8edd0;\">zqB0KmelCOJcBvY40J</"
+"span></p><p>Скопируйте этот зелёный текст в веб-браузере и введите его в "
+"поле ниже.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:289
 #: src/program/docklets/zoterobrowser.cpp:150
@@ -2951,7 +2933,7 @@ msgstr "Ключ API:"
 #: src/networking/zotero/oauthwizard.cpp:290
 #, kde-format
 msgid "Enter API Key from Web Browser"
-msgstr ""
+msgstr "Ввод ключа API из веб-браузера"
 
 #: src/networking/zotero/oauthwizard.cpp:294
 #, kde-format
@@ -2961,17 +2943,20 @@ msgid ""
 "security#applications\">personal settings page in Zotero, in tab 'Security', "
 "section 'Applications'</a>.</p></qt>"
 msgstr ""
+"<qt><p>Наконец, введите числовой идентификатор пользователя для вызовов API."
+"<br/>Этот идентификатор указан на <a href=\"https://www.zotero.org/settings/"
+"security#applications\">странице личных параметров Zotero, на вкладке "
+"«Security», в разделе «Applications»</a>.</p></qt>"
 
 #: src/networking/zotero/oauthwizard.cpp:294
-#, fuzzy, kde-format
-#| msgid "User"
+#, kde-format
 msgid "User ID:"
-msgstr "Пользователь"
+msgstr "Идентификатор пользователя:"
 
 #: src/networking/zotero/oauthwizard.cpp:295
 #, kde-format
 msgid "Enter User ID for API Calls"
-msgstr ""
+msgstr "Ввод идентификатора пользователя для вызовов API"
 
 #: src/networking/zotero/oauthwizard.cpp:298
 #, kde-format
@@ -3096,39 +3081,38 @@ msgstr "Сохранить файл"
 #: src/parts/part.cpp:532
 #, kde-format
 msgid "BibUtils"
-msgstr ""
+msgstr "BibUtils"
 
 #: src/parts/part.cpp:533
-#, fuzzy, kde-format
-#| msgid "BibTeX"
+#, kde-format
 msgid "BibTeX2HTML"
-msgstr "BibTeX"
+msgstr "BibTeX2HTML"
 
 #: src/parts/part.cpp:534
-#, fuzzy, kde-format
+#, kde-format
 msgid "Word XML bibliography"
-msgstr "Не удалось сохранить библиографию"
+msgstr "Библиография Word XML"
 
 #: src/parts/part.cpp:535
 #, kde-format
 msgid "KBibTeX's own XML structure"
-msgstr ""
+msgstr "Собственная структура XML KBibTeX"
 
 #: src/parts/part.cpp:536
 #, kde-format
 msgid "KBibTeX's built-in HTML exporter"
-msgstr ""
+msgstr "Встроенный модуль экспорта в HTML KBibTeX"
 
 #: src/parts/part.cpp:537
 #, kde-format
 msgid "KBibTeX's built-in RIS exporter"
-msgstr ""
+msgstr "Встроенный модуль экспорта в RIS KBibTeX"
 
 #: src/parts/part.cpp:546
 #, kde-format
 msgctxt "@title:window"
 msgid "Choose Exporter"
-msgstr ""
+msgstr "Выбор модуля экспорта"
 
 #: src/parts/part.cpp:548
 #, kde-format
@@ -3137,6 +3121,9 @@ msgid ""
 "\n"
 "Please choose one."
 msgstr ""
+"Для записи файла «%1» доступно несколько модулей экспорта.\n"
+"\n"
+"Выберите один из них."
 
 #: src/parts/part.cpp:579
 #, kde-format
@@ -3214,6 +3201,10 @@ msgid ""
 "Reload file and lose changes made in KBibTeX or ignore changes on disk and "
 "keep changes made in KBibTeX?"
 msgstr ""
+"Файл «%1» изменился на диске, но был изменён и в KBibTeX.\n"
+"\n"
+"Перезагрузить файл, потеряв изменения, сделанные в KBibTeX, или пропустить "
+"изменения на диске и сохранить изменения, сделанные в KBibTeX?"
 
 #: src/parts/part.cpp:1204
 #, kde-format
@@ -3707,22 +3698,19 @@ msgid "Reason:"
 msgstr "Причина:"
 
 #: src/program/docklets/referencepreview.cpp:253
-#, fuzzy, kde-format
-#| msgid "Preview disabled"
+#, kde-format
 msgctxt "Message in case reference preview widget is disabled"
 msgid "Preview disabled"
 msgstr "Предпросмотр заблокирован"
 
 #: src/program/docklets/referencepreview.cpp:268
-#, fuzzy, kde-format
-#| msgid "No element selected"
+#, kde-format
 msgctxt "Message in case no bibliographic element is selected for preview"
 msgid "No element selected"
 msgstr "Не выбран элемент"
 
 #: src/program/docklets/referencepreview.cpp:317
-#, fuzzy, kde-format
-#| msgid "No output generated"
+#, kde-format
 msgctxt "No exporter clould be located to generate output"
 msgid "No output generated"
 msgstr "Вывод не создан"
@@ -3730,14 +3718,13 @@ msgstr "Вывод не создан"
 #: src/program/docklets/referencepreview.cpp:359
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr ""
+msgstr "Не удалось показать предварительный просмотр для этого типа элементов"
 
 #: src/program/docklets/referencepreview.cpp:387
-#, fuzzy, kde-format
-#| msgid "Abstract"
+#, kde-format
 msgctxt "Cannot show a reference preview as entry does not contain an abstract"
 msgid "No abstract"
-msgstr "Аннотация"
+msgstr "Нет аннотации"
 
 #: src/program/docklets/searchform.cpp:194
 #, kde-format
@@ -4238,10 +4225,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Редактор BibTeX от KDE"
 
 #: src/program/program.cpp:55
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2025 Thomas Fischer"
-msgstr "© Thomas Fischer, 2004-2019"
+msgstr "© Thomas Fischer, 2004—2025"
 
 #: src/program/program.cpp:60
 #, kde-format
