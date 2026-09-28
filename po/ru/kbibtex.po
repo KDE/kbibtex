@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2022-02-02 17:03+0300\n"
+"PO-Revision-Date: 2026-09-27 09:22+0300\n"
 "Last-Translator: Мария Шикунова <translation-team@basealt.ru>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -1952,16 +1952,15 @@ msgid "Person Names Formatting:"
 msgstr "Форматирование имён:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:91
-#, fuzzy, kde-format
-#| msgid "Reset"
+#, kde-format
 msgctxt "When asked to clear all 'don't ask again' settings"
 msgid "Reset All"
-msgstr "Сбросить"
+msgstr "Сбросить все"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:92
 #, kde-format
 msgid "Clear all 'don't ask again' settings:"
-msgstr ""
+msgstr "Сбросить все параметры «больше не спрашивать»:"
 
 #: src/gui/preferences/settingsgeneralwidget.cpp:119
 #, kde-format
