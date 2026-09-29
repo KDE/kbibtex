@@ -114,15 +114,15 @@
     <itemizedlist>
       <listitem>
 	<para
-><ulink url="https://www.kde.org/"
->&kf5-full; libraries</ulink
+><ulink url="http://www.kde.org/"
+>библиотеки &kf5-full;</ulink
 >. </para>
       </listitem>
       <listitem>
 	<para
-><ulink url="https://www.ctan.org/"
+><ulink url="http://www.ctan.org/"
 >&latex;</ulink
->: high-quality document typesetting program. Most likely you want the &texlive; (or on older systems the &tetex;) package, if you are on a Unix-like system. It is an optional dependency, but without it &kbibtex; provides very limited functionality. </para>
+>: качественная программа для создания документов. В &UNIX;-подобных системах используется пакет &texlive; (на более старых системах — &tetex;). Это необязательная зависимость, но без неё &kbibtex; будет работать с ограниченным функционалом. </para>
       </listitem>
       <listitem>
 	<para
@@ -178,7 +178,7 @@
         pages = {R49},
         publisher = {Springer},
         title = {{The calculation of crack opening area and crack opening volume from stress intensity factors}},
-        url = {https://dx.doi.org/10.1007/BF00048294},
+        url = {http://dx.doi.org/10.1007/BF00048294},
         volume = {76},
         x-fetchedfrom = {SpringerLink},
         year = {1995}
@@ -481,64 +481,48 @@
 \bibliographystyle{plain}
 </programlisting>
     <para
->Here, <replaceable
+>В этом примере <replaceable
 >foo</replaceable
-> is the name of your <filename role="extension"
+> — это имя файла <filename role="extension"
 >bib</filename
-> file created with &kbibtex; and <quote
-><literal
->plain</literal
-></quote
-> is the name of bibliography style. </para>
+>, соданного с помощью &kbibtex;, а <quote
+>plain</quote
+> — это название библиографического стиля. </para>
     <para
 >Существует множество особых библиографических стилей. Проконсультируйтесь со своим издателем, чтобы выбрать подходящий, или попробуйте самостоятельно найти тот, который лучше всего подходит для ваших целей. </para>
     <para
 >Ниже приведён список некоторых универсальных стилей, доступных везде: </para>
     <variablelist>
       <varlistentry>
-	<term>
-      <literal
->plain</literal>
-	</term>
+	<term
+>plain </term>
 	<listitem>
 	  <para
 >обычный стиль, пункты списка которого перечислены в алфавитном порядке и обозначены цифрами </para>
 	</listitem>
       </varlistentry>
       <varlistentry>
-	<term>
-	  <literal
->unsrt</literal>
-	</term>
+	<term
+>unsrt </term>
 	<listitem>
 	  <para
->same as <literal
->plain</literal
-> except entries appear in order of citation </para>
+>аналогичен plain, за исключением того, что записи отображаются в порядке цитирования </para>
 	</listitem>
       </varlistentry>
       <varlistentry>
-	<term>
-	  <literal
->alpha</literal>
-	</term>
+	<term
+>alpha </term>
 	<listitem>
 	  <para
->same as <literal
->plain</literal
-> except entry identifiers are used </para>
+>аналогичен plain, за исключением того, что используются идентификаторы записей </para>
 	</listitem>
       </varlistentry>
       <varlistentry>
-	<term>
-	  <literal
->abbrv</literal>
-	</term>
+	<term
+>abbrv </term>
 	<listitem>
 	  <para
->same as <literal
->plain</literal
-> except uses abbreviations for first names, month names, and journal names </para>
+>аналогичен plain, за исключением того, что в списке используются сокращения для имён, названий месяцев и названий журналов </para>
 	</listitem>
       </varlistentry>
     </variablelist>
@@ -571,25 +555,23 @@
 >bibtex</application
 >. </para>
     <para
->First, you should run <application
+>Запустите <application
 >latex</application
-> (to create a <filename
->foo.aux</filename
-> file, which <application
+> (для создания файла foo.aux, который будет читаться приложением <application
 >bibtex</application
-> reads). Then run <application
+>). Затем откройте <application
 >bibtex</application
-> once to get some of the citations and create a <filename role="extension"
+>, чтобы указать несколько цитат и создать файл <filename role="extension"
 >bbl</filename
-> file. Then run <application
+>. Снова запустите <application
 >latex</application
-> again so that the cross references between the text file and the bibliography are correct. You may want to repeat running <application
+>, чтобы убедиться, что перекрёстные ссылки корректно связаны с файлом библиографии. Для этих же целей рекомендуется повторно открыть файл в <application
 >bibtex</application
-> and <application
+> и <application
 >latex</application
-> on the file to make sure that all cross references are correct. Be warned that adding/deleting citations and sources will require running <application
+>. Обратите внимание, что после добавления или удаления цитат требуется заново запустить <application
 >bibtex</application
-> again. </para>
+>. </para>
     <para
 >Таким образом, для компиляции документа в консоли следует использовать следующие команды: </para>
     <screen
@@ -923,15 +905,15 @@ latex example</screen>
 	  </screenshot>
 	</para>
 	<para
->Click the <guibutton
+>Нажмите кнопку <guibutton
 > <inlinemediaobject
 > <imageobject
 > <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/> </imageobject
 > </inlinemediaobject
-> Get New Credentials</guibutton
-> button on <guilabel
->Credentials</guilabel
-> tab to start the Zotero authorization wizard. Follow the instructions to allow &kbibtex; access your Zotero library. </para>
+> Получить новые учётные данные</guibutton
+> на вкладке <guilabel
+>Учётные данные</guilabel
+>, чтобы запустить мастер авторизации Zotero. Следуйте инструкциям, чтобы предоставить &kbibtex; доступ к библиотеке Zotero. </para>
 	<para
 >Чтобы получить доступ к записям библиотеки, дважды щёлкните по вкладкам <guilabel
 >Коллекции</guilabel
@@ -1108,9 +1090,7 @@ latex example</screen>
 > </inlinemediaobject
 > для открытия страницы документа в соответствующем внешнем приложении, установленном по умолчанию. </para>
 	<para
->The <guilabel
->Address</guilabel
-> drop down box can be used to switch between the pages and documents. </para>
+>Чтобы переключаться между страницами и документами, воспользуйтесь соответствующим раскрывающимся списком. </para>
     </sect2>
   </sect1>
   <sect1 id="toolbars">
@@ -1119,9 +1099,9 @@ latex example</screen>
     <para
 >&kbibtex; имеет две полностью настраиваемые панели инструментов, расположенные в верхней части окна. </para>
     <para
->More information on customizing the toolbars can be found in the <ulink url="help:/fundamentals/config.html#toolbars"
->corresponding section of &kde; Fundamentals manual</ulink
->. Below is the short description of the default buttons of &kbibtex; toolbars. </para>
+>Более подробная информация по настройке панелей инструментов доступна в <ulink url="Help:/fundamentals/config.html#toolbars"
+>соответствующем разделе руководства пользователя основ &kde;</ulink
+>. Ниже представлено краткое описание основных кнопок панели инструментов &kbibtex;. </para>
     <sect2 id="main-toolbar">
       <title
 >Основная панель инструментов </title>
@@ -1611,15 +1591,15 @@ latex example</screen>
     <title
 >Диалог настройки &kbibtex; </title>
     <para
->Several &kbibtex; parameters can be configured via the <guilabel
->Preferences</guilabel
-> dialog. This dialog can be opened using the <menuchoice
+>Некоторые параметры &kbibtex; возможно настроить с помощью диалога <guilabel
+>Предпочтения</guilabel
+>. Этот диалог открывается с помощью пункта меню <menuchoice
 ><guimenu
->Settings</guimenu
+>Настройка</guimenu
 ><guimenuitem
->Configure &kbibtex;...</guimenuitem
+>Настроить &kbibtex;</guimenuitem
 ></menuchoice
-> menu item. Below you can find a description of &kbibtex; configuration pages. </para>
+>. Ниже представлено описание страниц настройки &kbibtex;. </para>
     <para
 >Нажмите кнопку <guibutton
 > <inlinemediaobject
@@ -1883,14 +1863,14 @@ latex example</screen>
 	  </mediaobject>
 	</screenshot>
 	<para
->This configuration page can be used to choose some options for <link linkend="element-editor"
->previewing of &kbibtex; entries</link
->. You can select <guilabel
->Paper Size</guilabel
->, language for <ulink url="https://www.ctan.org/pkg/babel"
+>Эта страница позволяет настроить <link linkend="element-editor"
+>просмотр записей &kbibtex;</link
+>. Например, возможно указать <guilabel
+>Размер страницы</guilabel
+>, язык для пакета &latex; <ulink url="http://www.ctan.org/pkg/babel"
 >babel</ulink
-> &latex; package and the <link linkend="quick-using"
->bibliography style</link
+> и <link linkend="quick-using"
+>стиль библиографии</link
 >. </para>
       </sect2>
   </sect1>
@@ -2079,9 +2059,9 @@ latex example</screen>
     <title
 >Интеграция с &lyx; </title>
     <para
-><ulink url="https://www.lyx.org/"
+><ulink url="http://www.lyx.org/"
 >&lyx;</ulink
-> is a document processor that encourages an approach to writing based on the structure of your documents (WYSIWYM) and not simply their appearance (WYSIWYG). </para>
+> — это обработчик документов, который поощряет подход к написанию текста, основанный на структуре документов (WYSIWYM), а не только на их внешнем виде (WYSIWYG). </para>
     <para
 >&kbibtex; возможно интегрировать с &lyx; с помощью канала ввода/вывода &lyx;. </para>
     <procedure>

@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 16:18+0000\n"
-"PO-Revision-Date: 2026-09-27 09:22+0300\n"
-"Last-Translator: Мария Шикунова <translation-team@basealt.ru>\n"
+"PO-Revision-Date: 2026-09-28 19:08+0200\n"
+"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -933,9 +933,7 @@ msgid "None"
 msgstr "Нет"
 
 #: src/config/preferences.cpp:890
-#, fuzzy, kde-format
-#| msgctxt "Comment Quoting"
-#| msgid "@comment{…}"
+#, kde-format
 msgctxt "Comment Quoting"
 msgid "@comment{…}"
 msgstr "@comment{…}"
@@ -977,9 +975,7 @@ msgid "UPPERCASE"
 msgstr "ВЕРХНИЙ РЕГИСТР"
 
 #: src/config/preferences.cpp:1128
-#, fuzzy, kde-format
-#| msgctxt "What to do if double-clicking on a file view item"
-#| msgid "Open Editor"
+#, kde-format
 msgctxt "What to do if double-clicking on a file view item"
 msgid "Open Editor"
 msgstr "Открыть редактор"
@@ -991,33 +987,25 @@ msgid "View Document"
 msgstr "Просмотр"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Important"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Important"
 msgstr "Важное"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Unread"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Unread"
 msgstr "Непрочитанное"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Read"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Read"
 msgstr "Прочитанное"
 
 #: src/config/preferences.cpp:1167
-#, fuzzy, kde-format
-#| msgctxt "Color Labels"
-#| msgid "Watch"
+#, kde-format
 msgctxt "Color Labels"
 msgid "Watch"
 msgstr "Наблюдать"
@@ -3025,10 +3013,9 @@ msgid "A BibTeX editor by KDE"
 msgstr "Редактор BibTeX от KDE"
 
 #: src/parts/partfactory.cpp:34 src/program/program.cpp:48
-#, fuzzy, kde-format
-#| msgid "Copyright 2004-2019 Thomas Fischer"
+#, kde-format
 msgid "Copyright 2004-2024 Thomas Fischer"
-msgstr "© Thomas Fischer, 2004-2019"
+msgstr "© Thomas Fischer, 2004-2024"
 
 #: src/parts/partfactory.cpp:38 src/program/program.cpp:53
 #, kde-format
@@ -3167,16 +3154,7 @@ msgid "Finding Duplicates"
 msgstr "Поиск дубликатов"
 
 #: src/processing/idsuggestions.cpp:312
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Small words that can be removed from titles when generating id "
-#| "suggestions; separated by pipe symbol"
-#| msgid ""
-#| "a|als|am|an|are|as|at|auf|aus|be|but|by|das|dass|de|der|des|dich|dir|du|"
-#| "er|es|for|from|had|have|he|her|his|how|ihr|ihre|ihres|im|in|is|ist|it|"
-#| "kein|la|le|les|mein|mich|mir|mit|of|on|sein|sie|that|the|this|to|un|une|"
-#| "von|was|wer|which|wie|wird|with|yousie|that|the|this|to|un|une|von|was|"
-#| "wer|which|wie|wird|with|you|und|and|ein|eine|einer|eines"
+#, kde-format
 msgctxt ""
 "Small words that can be removed from titles when generating id suggestions; "
 "separated by pipe symbol"
