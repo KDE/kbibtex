@@ -1,0 +1,2213 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY pdflatex "PDFL<superscript
+>A</superscript
+>T<subscript
+>E</subscript
+>X">
+  <!ENTITY tex "T<subscript
+>E</subscript
+>X">
+  <!ENTITY tetex "<application
+>teT<subscript
+>E</subscript
+>X</application
+>">
+  <!ENTITY texlive "<application
+>TeX Live</application
+>">
+  <!ENTITY bibtex "BibT<subscript
+>E</subscript
+>X">
+  <!ENTITY biblatex "<application
+>biblatex</application
+>">
+  <!ENTITY lyx "<application
+>LyX</application
+>">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Arabic "INCLUDE">
+]>
+
+<book id="kbibtex" lang="&language;">
+
+<bookinfo>
+<title
+>دليل كبتخ</title>
+
+<authorgroup>
+  <author
+><firstname
+>Yuri</firstname
+><surname
+>Chornoivan</surname
+> <affiliation
+> <address
+> <email
+>yurchor@ukr.net</email>
+      </address>
+    </affiliation>
+  </author>
+<othercredit role="translator"
+><firstname
+>زايد</firstname
+><surname
+>السعيدي</surname
+><affiliation
+><address
+><email
+>zayed.alsaidi@gmail.com</email
+></address
+></affiliation
+><contrib
+>التّرجمة العربيّة</contrib
+></othercredit
+> 
+</authorgroup>
+
+<copyright>
+<year
+>2004</year
+><year
+>2014</year>
+<holder
+>توماس فيشر</holder>
+</copyright>
+
+<date
+>2019-05-07</date>
+<releaseinfo
+>0.9</releaseinfo>
+
+<legalnotice>
+  &FDLNotice;
+</legalnotice>
+
+<abstract>
+  <para
+>كبتخ هو محرر وصدفة رسوميان لـ &bibtex;. </para>
+</abstract>
+
+<keywordset>
+  <keyword
+>كيدي</keyword>
+  <keyword
+>كبتخ</keyword>
+  <keyword
+>لاتخ</keyword>
+  <keyword
+>تخ</keyword>
+  <keyword
+>ثبَت مراجع</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="preface">
+  <title
+>مقدمة</title>
+  <sect1 id="preface_sect">
+    <title
+>المتطلبات</title>
+    <para
+>لتشغيل كبتخ، يجب أن تكون المكونات التالية مثبتة على نظامك: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+>مكتبات <ulink url="https://www.kde.org/"
+>&kf5-full;</ulink
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+><ulink url="https://www.ctan.org/"
+>&latex;</ulink
+>: برنامج تنضيد مستندات عالي الجودة. على الأرجح تريد حزمة &texlive; (أو &tetex; على الأنظمة القديمة) إذا كنت على نظام شبيه بيونكس. هو تبعية اختيارية، لكن بدونها يوفر كبتخ وظائف محدودة جدًا. </para>
+      </listitem>
+      <listitem>
+	<para
+>مجموعة أدوات <ulink url="https://www.lri.fr/~filliatr/bibtex2html/"
+>bibtex2html</ulink
+> للترجمة من &bibtex; إلى &HTML; لتعزيز قدرات معاينة مدخلات كبتخ (تبعية اختيارية). </para>
+      </listitem>
+    </itemizedlist>
+    <para
+>معظم هذه العناصر بالإضافة إلى كبتخ نفسه قد تكون مضمنة في توزيعة &Linux; الخاصة بك؛ يُرجى الرجوع إلى وثائق توزيعتك، أو الرجوع إلى &CD; التثبيت أو DVD لإضافة هذه الحزم إلى حاسوبك. </para>
+  </sect1>
+  <sect1 id="preface_audience">
+    <title
+>الجمهور المستهدف </title>
+    <para
+>هذا الدليل مخصص لأي فرد، بغض النظر عن خبرته مع &latex; أو &kde; أو كبتخ أو &Linux;. </para>
+    <para
+>من غير المرجح أن يقرأ المستخدمون المتقدمون هذا الدليل، لكن جميع الاقتراحات حول التوثيق ستؤخذ بعين الاعتبار. إذا كنت ترغب في المساهمة في هذا المشروع أو التوثيق، يُرجى زيارة <ulink url="https://userbase.kde.org/KBibTeX"
+>صفحة كبتخ على الويب</ulink
+>. </para>
+  </sect1>
+
+</chapter>
+
+<chapter id="introduction">
+  <title
+>مقدمة </title>
+  <sect1 id="intro_about">
+    <title
+>حول كبتخ </title>
+    <para
+>كبتخ هو بيئة متكاملة لإنشاء وتحرير قوائم المراجع بتنسيق &bibtex;. يمنحك كبتخ القدرة على استخدام جميع وظائف &bibtex; في واجهة رسومية، مما يمنحك وصولًا سهلًا وفوريًا ومخصصًا لقوائم المراجع المحلية وعبر الإنترنت مع القدرة على إكمال المدخلات وتجميعها ومعاينتها والبحث فيها. </para>
+    <sect2 id="intro-bibtex">
+      <title
+>حول &bibtex;</title>
+      <para
+>&bibtex; هو برنامج وتنسيق ملف صممه أورين باتاشنيك وليزلي لامبورت في عام 1985 لنظام إعداد المستندات &latex; <citation
+>Lamport86</citation
+>. </para>
+      <para
+>التنسيق قائم على الأحرف بالكامل، لذا يمكن استخدامه بواسطة أي برنامج (على الرغم من أن مجموعة الأحرف القياسية للنبرات هي &tex;). وهو قائم على الحقول (الوسوم) وسيتجاهل برنامج &bibtex; الحقول غير المعروفة، لذا فهو قابل للتوسيع. وهو على الأرجح التنسيق الأكثر شيوعًا لقوائم المراجع على الإنترنت. </para>
+      <para
+>يستخدم برنامج &bibtex; ملفات الأنماط، وقائمة بالاستشهادات من &latex;، وقاعدة بيانات &bibtex; لإنشاء ملف &latex; يسرد المراجع المُستشهد بها. فكرة ملفات الأنماط هي أن النسخة النهائية بأي شكل خاص بمجلة يمكن إنجازها آليًا. </para>
+      <para
+>مثال لمدخل قاعدة بيانات &bibtex;: </para>
+<programlisting
+>@article{PAM_doi:10.1007/BF00048294,
+</programlisting>
+  </sect2>
+  <sect2 id="kbibtex-and-latex-editors">
+    <title
+>كبتخ ومحررات &latex;</title>
+    <para
+>يمكن تحرير كود &latex; باستخدام مجموعة واسعة من الأدوات بدءًا من محررات النصوص البسيطة إلى الحزم البصرية القوية. لمقارنة محررات &latex;، انظر <ulink url="https://en.wikipedia.org/wiki/Comparison_of_TeX_editors"
+>هذه الصفحة</ulink
+>. </para>
+    <para
+>يوفر كبتخ <link linkend="integration"
+>تكاملًا جاهزًا مع &kile; و &lyx;</link
+> على الرغم من أنه يمكن استخدامه بنجاح مع أي نوع من محررات &latex;. </para>
+  </sect2>
+  </sect1>
+  <sect1 id="intro_mainfeat">
+    <title
+>الميزات الرئيسة لـ كبتخ </title>
+    <para
+>يسمح لك كبتخ بالقيام بما يلي: </para>
+    <itemizedlist>
+      <listitem>
+	<para
+>أدخل تمهيدًا يحدد كيفية تنسيق النص الخاص في قائمة المراجع باستخدام عنصر القائمة <menuchoice
+><guimenu
+>عنصر</guimenu
+><guisubmenu
+>عنصر جديد</guisubmenu
+><guimenuitem
+>تمهيد جديد</guimenuitem
+></menuchoice
+> أو <link linkend="main-toolbar"
+>شريط الأدوات الرئيس</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>اختر ترميز مدخل باستخدام عنصر <guilabel
+>الترميز</guilabel
+> في حوار <guilabel
+>حفظ باسم</guilabel
+> أو على <link linkend="file-settings"
+>لوحة إعدادات الملف</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>أدخل تعليقات لا يؤخذ بها في &bibtex; باستخدام عنصر القائمة <menuchoice
+><guimenu
+>عنصر</guimenu
+><guisubmenu
+>عنصر جديد</guisubmenu
+><guimenuitem
+>تعليق جديد</guimenuitem
+></menuchoice
+> أو <link linkend="main-toolbar"
+>شريط الأدوات الرئيس</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>عاين واحفظ مدخلات قائمة المراجع بتنسيقات مختلفة (المصدر (&bibtex;)، المصدر (RIS)، ويكيبيديا، القياسي (&XML;/XSLT)، الفاخر (&XML;/XSLT)، والملخص فقط (&XML;/XSLT)) باستخدام <link linkend="reference-preview"
+>لوحة معاينة المراجع</link
+>. تتوفر أنماط معاينة إضافية عند تثبيت <application
+>bibtex2html</application
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>ابحث عن بيانات مدخلات المراجع في قواعد البيانات عبر الإنترنت باستخدام <link linkend="online-search"
+>لوحة البحث عبر الإنترنت</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>اعرض الموارد المحلية أو البعيدة (عبر الإنترنت) (مثل الملفات) <link linkend="adding-link"
+>الموصولة</link
+> في مدخل &bibtex; باستخدام <link linkend="document-preview"
+>لوحة معاينة المستند</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>ابحث عن المدخلات المكررة في المراجع وأصلحها باستخدام عنصر القائمة <menuchoice
+><guimenu
+>تحرير</guimenu
+><guimenuitem
+>ابحث عن المكررات</guimenuitem
+></menuchoice
+> أو <link linkend="main-toolbar"
+>شريط الأدوات الرئيس</link
+>. </para>
+      </listitem>
+      <listitem>
+	<para
+>استورد مكتبة <ulink url="https://www.zotero.org/"
+>Zotero</ulink
+> الخاصة بك باستخدام <link linkend="zotero"
+>لوحة Zotero</link
+>. </para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>
+
+<chapter id="quickstart">
+  <title
+>بداية سريعة </title>
+  <sect1 id="quick_begin">
+    <title
+>كتابة ملف مراجع للمبتدئين </title>
+    <!-- 1) No request from kbibtex from Distro user (Kubuntu) nor from kbibtex self compiled as devel user
+         2a) Distro user has a mimeapps.list in home, but no kbibtex in it
+         2b) Devel user has no mimeapps.list in home
+         2c) Systemsettings -> File Associations is the place to edit/change this in a kde desktop
+         update after rebuilding post 2014-01-12
+         Now request Dialog, but in File Associations first app for text/x-bibtext is already kbibtex
+         (why? from installation of distro?)
+         This dialog even pops up when opening a .bib file with LMB click in file manager
+    -->
+    <para
+>بعد التشغيل الأول، سيقترح كبتخ جعله المحرر المبدئي لصيغ المراجع. نوصيك بفعل ذلك.<footnote
+><para
+>إذا قررت إعادة النظر لأي سبب، فالرجاء إزالة السلاسل النصية ذات السلسلة الفرعية <literal
+>kbibtex</literal
+> من ملف <filename
+>mimeapps.list</filename
+> في مجلد <filename role="directory"
+>.local/share/applications</filename
+> من مجلد منزلك.</para
+></footnote>
+    </para>
+    <para
+>ثم سترى نافذة تشبه هذه: </para>
+    <screenshot>
+      <screeninfo
+>نافذة كبتخ بعد البدء الأول</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="first-run.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>نافذة كبتخ بعد البدء الأول</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>لبدء مستند مراجع جديد، اضغط على الزر <guibutton
+>جديد</guibutton
+> في اللوحة اليمنى، أو الزر <guibutton
+>جديد</guibutton
+> على شريط الأدوات، أو اختر عنصر القائمة <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>N</keycap
+></keycombo
+></shortcut
+><guimenu
+>ملف</guimenu
+><guimenuitem
+>جديد</guimenuitem
+></menuchoice
+>. </para>
+    <para
+>حان الوقت الآن لإضافة بعض المدخلات. </para>
+    <para
+>مستخدمو كبتخ لديهم خياران عند إضافة مدخل جديد: يمكنهم استخدام <link linkend="online-search"
+>لوحة البحث عبر الإنترنت</link
+> للعثور على بيانات المدخل عبر الإنترنت أو يمكنهم كتابة الكود يدويًا. </para>
+    <para
+>لنجرب إضافة مدخل كتاب يدويًا. </para>
+    <procedure>
+      <step id="element-editing">
+	<para
+>اختر <menuchoice
+><guimenu
+>عنصر</guimenu
+><guisubmenu
+>عنصر جديد</guisubmenu
+><guimenuitem
+>مدخل جديد</guimenuitem
+></menuchoice
+> من قائمة كبتخ. يجب أن يفتح كبتخ نافذة <guilabel
+>تحرير العنصر</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>نافذة تحرير عنصر كبتخ</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="element-editor.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>نافذة تحرير عنصر كبتخ</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>اختر <guimenuitem
+>كتاب</guimenuitem
+> من القائمة المنسدلة <guilabel
+>النوع:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>أدخل <userinput
+>Lamport86</userinput
+> في حقل <guilabel
+>المعرّف:</guilabel
+>. </para>
+	<tip>
+	  <para
+>يُستخدم <quote
+>المعرّف</quote
+> للإشارة إلى مدخل المراجع في مستندك الرئيس. </para>
+	</tip>
+      </step>
+      <step>
+	<para
+>انتقل إلى اللسان <guilabel
+>العنوان</guilabel
+> وأدخل <userinput
+>LaTeX: A Document Preparation System</userinput
+> في مربع النص <guilabel
+>العنوان:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>انتقل إلى اللسان <guilabel
+>المؤلف/المحرر</guilabel
+>، وانقر على الزر <guibutton
+>إضافة</guibutton
+> وأدخل <userinput
+>Lamport, Leslie</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>انتقل إلى اللسان <guilabel
+>النشر</guilabel
+> ثم أدخل <userinput
+>1986</userinput
+> في مربع النص <guilabel
+>السنة:</guilabel
+> و<userinput
+>Addison-Wesley</userinput
+> في مربع النص <guilabel
+>الناشر:</guilabel
+>. </para>
+      </step>
+      <step>
+	<para
+>انقر <guibutton
+>موافق</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>اختر عنصر القائمة <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;<keycap
+>S</keycap
+></keycombo
+></shortcut
+><guimenu
+>ملف</guimenu
+><guimenuitem
+>حفظ</guimenuitem
+></menuchoice
+> واحفظ ملف المراجع الخاص بك باسم <filename
+>example.bib</filename
+> في مجلد ورقتك البحثية التي ستُكتب. </para>
+      </step>
+    </procedure>
+  </sect1>
+
+  <sect1 id="quick-using">
+    <title
+>استخدام المراجع في مستند &latex; الخاص بك </title>
+    <para
+>لاستخدام المراجع فعليًا في ورقتك البحثية، تحتاج إلى إضافة الأوامر التالية في ملف &latex; الخاص بك (توجد هذه الأوامر عادةً في نهاية المستند - حيث سيظهر قسم <quote
+>المراجع</quote
+>): </para>
+<programlisting
+>\bibliography{<replaceable
+>foo</replaceable
+>}
+</programlisting>
+    <para
+>هنا، <replaceable
+>foo</replaceable
+> هو اسم ملف <filename role="extension"
+>bib</filename
+> الذي أُنشئ باستخدام كبتخ و<quote
+><literal
+>plain</literal
+></quote
+> هو اسم نمط المراجع. </para>
+    <para
+>هناك العديد من أنماط المراجع الببليوغرافية المحددة. يُرجى استشارة ناشرك لاختيار النمط المناسب أو محاولة إيجاد الأنسب لأغراضك. </para>
+    <para
+>فيما يلي قائمة ببعض الأنماط العامة المتوفرة في كل مكان: </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+      <literal
+>خالِص</literal>
+	</term>
+	<listitem>
+	  <para
+>النمط العادي، مُرتَّب ترتيبًا أبجديًا ومُرقَّم رقميًا </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>unsrt</literal>
+	</term>
+	<listitem>
+	  <para
+>مثل <literal
+>plain</literal
+> باستثناء أن المدخلات تظهر حسب ترتيب الاستشهاد </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>ألفا</literal>
+	</term>
+	<listitem>
+	  <para
+>مثل <literal
+>plain</literal
+> باستثناء استخدام مُعرِّفات المدخلات </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <literal
+>abbrv</literal>
+	</term>
+	<listitem>
+	  <para
+>مثل <literal
+>plain</literal
+> باستثناء استخدام اختصارات للأسماء الأولى وأسماء الأشهر وأسماء المجلات </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+    <para
+>لذا يمكنك استخدام إمكانيات محرر &latex; الخاص بك (يُرجى مراجعة وثائق المحرر لهذا) أو فقط أدخل الكود التالي في محرر نصوص عام ثم احفظ الملف بامتداد اسم <filename role="extension"
+>tex</filename
+>. </para>
+<programlisting
+>\documentclass{article}
+</programlisting>
+    <para
+>لأغراض الاختبار لدينا، ليكن اسم هذا الملف <userinput
+>example.tex</userinput
+>. </para>
+    <note>
+      <para
+>يُرجى حفظ هذا الملف في نفس المجلد الذي يحتوي على ملف <filename
+>example.bib</filename
+> الخاص بك. </para>
+    </note>
+    <para
+>الآن بعد أن أصبح لديك أساس المستند، يجب تشغيل كل من <application
+>latex</application
+> و<application
+>bibtex</application
+> لمعالجته. </para>
+    <para
+>أولًا، يجب تشغيل <application
+>latex</application
+> (لإنشاء ملف <filename
+>foo.aux</filename
+>، الذي يقرؤه <application
+>bibtex</application
+>). ثم شغّل <application
+>bibtex</application
+> مرة واحدة للحصول على بعض الاستشهادات وإنشاء ملف <filename role="extension"
+>bbl</filename
+>. ثم شغّل <application
+>latex</application
+> مرة أخرى حتى تكون المراجع التبادلية بين ملف النص وقائمة المراجع صحيحة. قد ترغب في تكرار تشغيل <application
+>bibtex</application
+> و<application
+>latex</application
+> على الملف للتأكد من صحة جميع المراجع التبادلية. انتبه إلى أن إضافة/حذف الاستشهادات والمصادر سيتطلب تشغيل <application
+>bibtex</application
+> مرة أخرى. </para>
+    <para
+>وبالتالي، يمكن استخدام الأوامر التالية لتجميع المستند من وحدة التحكم: </para>
+    <screen
+>latex example</screen>
+    <tip>
+      <para
+>إذا كنت تستخدم صدفة &latex; متقدمة مثل &kile; أو &lyx;، فلا داعي للقلق بشأن تشغيل كل هذه الأوامر من محاكي وحدة التحكم. فقط استخدم مفتاح اختصار (<keycombo
+>&Alt;<keycap
+>6</keycap
+></keycombo
+> في &kile;) أو زر شريط أدوات لرؤية النتائج. </para>
+    </tip>
+    <para
+>الآن، يمكنك رؤية النتائج كملف &DVI; أو &PDF; (يعتمد التنسيق على إعداداتك)، مخزَّن في نفس مجلد ملفات المصدر الخاصة بك. </para>
+    <note>
+      <para
+>تهانينا! لقد أنشأت للتو أول مستند لك مع قائمة مراجع &bibtex;. </para>
+    </note>
+  </sect1>
+</chapter>
+
+<chapter id="interface">
+  <title
+>واجهة كبتخ </title>
+    <sect1 id="panels">
+    <title
+>لوحات كبتخ </title>
+    <para
+>الوظيفة الرئيسة لـ كبتخ متاحة من خلال لوحاتها التسع. من الممكن إعادة ترتيب هذه اللوحات أو حتى فصلها عن النافذة الرئيسة بالنقر بزر الفأرة الأيسر على رأس اللوحة وسحبها إلى المكان الجديد. </para>
+    <para
+>يمكنك جعل لوحات كبتخ مرئية أو إخفاؤها باستخدام القائمة الفرعية <menuchoice
+><guimenu
+>الإعدادات</guimenu
+><guimenuitem
+>إظهار اللوحات</guimenuitem
+></menuchoice
+>. يكفي تحديد عنصر اللوحة لجعلها مرئية أو إلغاء تحديده لإخفاء اللوحة. </para>
+    <sect2 id="list-of-documents">
+      <title
+>لوحة قائمة المستندات </title>
+	<para
+>تسمح لوحة <guilabel
+>قائمة المستندات</guilabel
+> بالتبديل بين مستندات المراجع الببليوغرافية المفتوحة (التبويب <guilabel
+>الملفات المفتوحة</guilabel
+>)، وفتح المستندات المستخدمة مؤخرًا (التبويب <guilabel
+>المستخدمة مؤخرًا</guilabel
+>)، وفتح مستندات المراجع الببليوغرافية الرئيسة لديك (التبويب <guilabel
+>المفضلة</guilabel
+>)، أو تصفح نظام ملفات حاسوبك للعثور على مستندات المراجع الببليوغرافية (التبويب <guilabel
+>متصفح نظام الملفات</guilabel
+>). </para>
+	<tip>
+	  <para
+>لإضافة ملف مراجع ببليوغرافية إلى المفضلة، حدده في أي تبويب باستثناء <guilabel
+>المفضلة</guilabel
+>، وانقر بزر الفأرة الأيمن واختر <guimenuitem
+>أضف إلى المفضلة</guimenuitem
+>. لإزالة المراجع الببليوغرافية من المفضلة، حددها في التبويب <guilabel
+>المفضلة</guilabel
+>، وانقر بزر الفأرة الأيمن واختر <guimenuitem
+>أزل من المفضلة</guimenuitem
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة قائمة المستندات</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-documents.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة قائمة المستندات</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="list-of-values">
+      <title
+>لوحة قائمة القيم </title>
+	<para
+>يمكن استخدام لوحة <guilabel
+>قائمة القيم</guilabel
+> لتسهيل عرض إحصائيات استخدام القيم في حقول المدخلات وتحرير هذه القيم دفعة واحدة. </para>
+	<para
+>يُستخدم مربع السحب العلوي لاختيار حقل المراجع لعرض البيانات الإحصائية (عدد المدخلات ذات القيمة نفسها للحقل) في القائمة السفلية. </para>
+	<para
+>يمكنك النقر بزر الفأرة الأيمن (&RMB;) على مدخل في القائمة السفلية للوصول إلى إمكانيات التحرير الدفعي. من الممكن <guimenuitem
+>استبدال كل التكرارات</guimenuitem
+> للقيمة، <guimenuitem
+>حذف كل التكرارات</guimenuitem
+> للقيمة، <guimenuitem
+>البحث عن القيم المحددة</guimenuitem
+> باستخدام <link linkend="filter-toolbar"
+>شريط أدوات التصفية</link
+>، <guimenuitem
+>إضافة قيمة إلى المدخلات المحددة</guimenuitem
+>، <guimenuitem
+>استبدال قيمة المدخلات المحددة</guimenuitem
+> أو <guimenuitem
+>إزالة قيمة من المدخلات المحددة</guimenuitem
+> (يجب تحديد بعض المدخلات في قائمة المدخلات الرئيسة أولًا). </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة قائمة القيم</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="list-of-values.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة قائمة القيم</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="statistics">
+      <title
+>لوحة الإحصائيات </title>
+      <para
+>صُممت لوحة <guilabel
+>الإحصائيات</guilabel
+> لعرض قائمة شاملة بالمعلومات الإحصائية حول مستند المراجع الحالي. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة الإحصائيات</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="statistics.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة الإحصائيات</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+    </sect2>
+    <sect2 id="reference-preview">
+      <title
+>لوحة معاينة المرجع </title>
+	<para
+>تُستخدم لوحة <guilabel
+>معاينة المرجع</guilabel
+> لمعاينة وحفظ مدخل المراجع المحدد حاليًا بصيغة &HTML;. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة معاينة المرجع</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="reference-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة معاينة المرجع</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>من الممكن معاينة المرجع بصيغ المصدر (&bibtex;)، المصدر (RIS)، ويكيبيديا، القياسية (&XML;/XSLT)، الفاخرة (&XML;/XSLT)، والملخص فقط (&XML;/XSLT). تتوفر خيارات إضافية عند تثبيت <application
+>bibtex2html</application
+>. </para>
+	<tip>
+	  <para
+>عند النقر على عناصر المرجع بصيغة &XML;، سيطبق كبتخ التصفية المقابلة <link linkend="filter-toolbar"
+>لشريط أدوات التصفية</link
+> على قائمة المراجع. </para>
+	</tip>
+	<para
+>انقر على الزر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> فتح</guibutton
+> لفتح المرجع في متصفح الإنترنت المبدئي. يمكن استخدام الزر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> حفظ بصيغة &HTML;</guibutton
+> لحفظ المرجع بصيغة &HTML; لاستخدامه لاحقًا على موقعك الإلكتروني. </para>
+	<para
+>يمكنك النقر بزر الفأرة الأيمن (&RMB;) على اللوحة لاختيار <guimenuitem
+>إعادة تحميل</guimenuitem
+> لتحديث المرجع وفقًا لأحدث التغييرات في المدخل. </para>
+    </sect2>
+    <sect2 id="file-settings">
+      <title
+>لوحة إعدادات الملف </title>
+	<para
+>يمكن استخدام لوحة <guilabel
+>إعدادات الملف</guilabel
+> لتحديد بعض معاملات ملف <filename role="extension"
+>bib</filename
+> للمراجع الحالي. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة إعدادات الملف</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="file-settings.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة إعدادات الملف</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>من الممكن تحديد <guilabel
+>الترميز</guilabel
+>، <guilabel
+>محددات السلاسل النصية</guilabel
+>، <guilabel
+>اقتباس التعليقات</guilabel
+>، <guilabel
+>حالة الكلمات المفتاحية</guilabel
+>، و <guilabel
+>تنسيق أسماء الأشخاص</guilabel
+>. </para>
+	<para
+>بشكل مبدئي، سيحول &bibtex; جميع الكلمات الوسيطة في الجمل إلى أحرف صغيرة. حدد مربع الاختيار <guilabel
+>حماية العناوين</guilabel
+> لحماية حالة الأحرف في عناوين المدخلات. </para>
+    </sect2>
+    <sect2 id="online-search">
+      <title
+>لوحة البحث عبر الإنترنت </title>
+	<para
+>يمكن استخدام لوحة <guilabel
+>البحث عبر الإنترنت</guilabel
+> لإجراء بحث في قواعد بيانات المراجع على الإنترنت للعثور على المدخلات المطلوبة أو للحصول على مجموعة كاملة من البيانات لمدخل أُدخل يدويًا. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة البحث عبر الإنترنت</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="online-search.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة البحث عبر الإنترنت</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>يمكن البحث في المدخلات بواسطة <guilabel
+>نص حر</guilabel
+> أو <guilabel
+>عنوان</guilabel
+> أو <guilabel
+>مؤلف</guilabel
+> أو <guilabel
+>سنة</guilabel
+>. يمكن ضبط عدد النتائج المعروضة في <link linkend="search-results"
+>لوحة نتائج البحث</link
+> باستخدام مربع الدوران <guilabel
+>عدد النتائج</guilabel
+>. </para>
+	<para
+>انقر زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> استخدام المدخل</guibutton
+> لملء حقول معايير البحث من المدخل الببليوغرافي المحدد حاليًا. بهذه الطريقة يمكنك إكمال المدخل الحالي بالبيانات من قواعد البيانات على الإنترنت. يمكن استخدام زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="media-playback-start.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> بحث</guibutton
+> لبدء البحث. </para>
+	<para
+>يمكن لـ كبتخ إجراء بحث في أشهر قواعد البيانات على الإنترنت. لاختيار مجموعة قواعد البيانات لبحثك، انتقل إلى لسان <guilabel
+>محركات</guilabel
+> أو انقر بزر الفأرة الأيسر على رابط <guilabel
+>تغيير</guilabel
+> في لسان <guilabel
+>شروط الاستعلام</guilabel
+>. </para>
+	<para
+>لزيارة الصفحة الرئيسية لقاعدة البيانات على الإنترنت، انقر بزر الفأرة الأيمن على مدخلها في لسان <guilabel
+>محركات</guilabel
+> واختر <guimenuitem
+>اذهب إلى الصفحة الرئيسية</guimenuitem
+>. </para>
+    </sect2>
+    <sect2 id="zotero">
+      <title
+>لوحة زوتيرو </title>
+	<para
+>يمكن استخدام لوحة <guilabel
+>زوتيرو</guilabel
+> لاستيراد مكتبة <ulink url="https://www.zotero.org/"
+>زوتيرو</ulink
+> الخاصة بك. </para>
+	<para
+>يستخدم زوتيرو إضافات متخصصة للمتصفح لحفظ المدخلات الببليوغرافية من صفحات الإنترنت. تُخزَّن البيانات في قاعدة بيانات على الإنترنت يمكن الوصول إليها من أي مكان. يمكن العثور على وثائق زوتيرو <ulink url="https://www.zotero.org/support/"
+>هنا</ulink
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة زوتيرو</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="zotero.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة زوتيرو</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>انقر زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="preferences-web-browser-identification.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> الحصول على بيانات اعتماد جديدة</guibutton
+> في لسان <guilabel
+>بيانات الاعتماد</guilabel
+> لبدء معالج تفويض زوتيرو. اتبع التعليمات للسماح لـ كبتخ بالوصول إلى مكتبة زوتيرو الخاصة بك. </para>
+	<para
+>للوصول إلى مدخلات المكتبة، انقر نقرًا مزدوجًا على العنصر المقابل في لساني <guilabel
+>مجموعات</guilabel
+> أو <guilabel
+>وسوم</guilabel
+>. ستُعرض المدخلات التي تستوفي المعايير المختارة في <link linkend="search-results"
+>لوحة نتائج البحث</link
+>. </para>
+    </sect2>
+    <sect2 id="search-results">
+      <title
+>لوحة نتائج البحث </title>
+	<para
+>تُستخدم لوحة <guilabel
+>نتائج البحث</guilabel
+> لمعالجة نتائج البحث التي تم الحصول عليها باستخدام <link linkend="online-search"
+>لوحة البحث عبر الإنترنت</link
+>. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة نتائج البحث</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="search-results.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة نتائج البحث</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>انقر زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="svn-update.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> استيراد</guibutton
+> لاستيراد نتيجة البحث المحددة حاليًا إلى ببليوغرافياك. </para>
+	<para
+>للوصول إلى إجراءات أخرى لنتيجة البحث المحددة حاليًا، انقر عليها بزر الفأرة الأيمن. من القائمة المفتوحة يمكنك مراجعة النتيجة (عنصر <guimenuitem
+>عرض العنصر</guimenuitem
+>) أو نسخها للصقها لاحقًا بصيغة &bibtex; في مكان آخر باستخدام <keycombo
+>&Ctrl;<keycap
+>V</keycap
+></keycombo
+> (عنصر <guimenuitem
+>نسخ</guimenuitem
+>). </para>
+    </sect2>
+    <sect2 id="element-editor">
+      <title
+>لوحة محرر العنصر </title>
+	<para
+>يمكن استخدام لوحة <guilabel
+>محرر العنصر</guilabel
+> لتحرير العنصر الببليوغرافي المحدد حاليًا. </para>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة محرر العنصر</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="element-editor.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة محرر العنصر</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>انقر زر <inlinemediaobject
+> <imageobject
+> <imagedata fileref="view-filter.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> لاختيار <link linkend="config-id-suggestions"
+>معرّف مقترح</link
+> للعنصر. </para>
+	<para
+>أدخل البيانات المعنية في حقول المحرر. يمكن تبديل تنسيق بيانات الحقل بين <guimenuitem
+>نص</guimenuitem
+> و<guimenuitem
+>مرجع</guimenuitem
+> و<guimenuitem
+>رمز مصدري</guimenuitem
+> باستخدام المربع المنسدل إلى يسار مربع النص. </para>
+	<para
+>انقر زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="configure.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> خيارات</guibutton
+> لفتح قائمة منسدلة تحتوي على عنصرين. </para>
+	<para
+>يمكن استخدام عنصر <guimenuitem
+>إظهار كل الحقول</guimenuitem
+> لإظهار أو إخفاء كل الحقول الفارغة للعنصر الحالي. </para>
+	<para
+>من الممكن تبديل التركيز بلوحة المفاتيح بين الحقول باستخدام مفتاح &Tab;. لذا يمكن استخدام عنصر القائمة الثاني، <guimenuitem
+>مفتاح Tab يزور الحقول القابلة للتحرير فقط</guimenuitem
+>، لتشغيل وإيقاف التنقل بين الحقول القابلة للتحرير فقط. </para>
+	<para
+>انقر زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="tools-check-spelling.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> تحقق مع &bibtex;</guibutton
+> لمعاينة المدخل الجاري تحريره كما سيظهر في ملف &PDF; المترجم. </para>
+	<para
+>حدد مربع <guilabel
+>طبق التغييرات آليًا</guilabel
+> لتطبيق كل تغييراتك على المدخل آليًا دون الحاجة إلى النقر على زر <guibutton
+>طبق</guibutton
+>. </para>
+	<para
+>انقر زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> إعادة تعيين</guibutton
+> للتراجع عن كل تغييراتك. </para>
+      </sect2>
+      <sect2 id="document-preview">
+      <title
+>لوحة معاينة المستند </title>
+	<para
+>يمكن استخدام لوحة <guilabel
+>معاينة المستند</guilabel
+> لمعاينة الصفحات أو المستندات <link linkend="adding-link"
+>المرتبطة</link
+> مع مدخلة المراجع المحددة حاليًا. </para>
+	<tip>
+	  <para
+>افتراضيًا، يمكن فتح لوحة <guilabel
+>معاينة المستند</guilabel
+> بالضغط على اختصار لوحة المفاتيح <keycombo
+>&Ctrl;&Shift;<keycap
+>D</keycap
+></keycombo
+>. </para>
+	</tip>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>لوحة معاينة المستند</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="document-preview.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لوحة معاينة المستند</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>انقر زر <inlinemediaobject
+> <imageobject
+> <imagedata fileref="applications-internet.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> للتبديل بين الملفات المحلية فقط وجميع المستندات بما فيها البعيدة. </para>
+	<para
+>انقر زر <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> لفتح الصفحة أو المستند في التطبيق الخارجي المبدئي. </para>
+	<para
+>يمكن استخدام مربع السحب <guilabel
+>العنوان</guilabel
+> للتبديل بين الصفحات والمستندات. </para>
+    </sect2>
+  </sect1>
+  <sect1 id="toolbars">
+    <title
+>أشرطة أدوات كبتخ </title>
+    <para
+>يمتلك كبتخ شريطي أدوات قابلين للتخصيص بالكامل يقعان في الجزء العلوي من نافذته. </para>
+    <para
+>يمكن إيجاد مزيد من المعلومات حول تخصيص أشرطة الأدوات في <ulink url="help:/fundamentals/config.html#toolbars"
+>القسم المقابل من دليل أساسيات &kde;</ulink
+>. فيما يلي وصف مختصر للأزرار المبدئية لأشرطة أدوات كبتخ. </para>
+    <sect2 id="main-toolbar">
+      <title
+>شريط الأدوات الرئيس </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>شريط الأدوات الرئيس</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="main-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>شريط الأدوات الرئيس</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>شريط الأدوات الرئيس المبدئي لـ كبتخ. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para
+><guibutton
+>جديد</guibutton
+>: ينشئ مستند مراجع جديدًا. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>افتح</guibutton
+>: يفتح <ulink url="help:/fundamentals/files.html"
+>حوار الفتح/الحفظ العام لـ &kde;</ulink
+> لفتح مراجع موجودة للتعديل. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>أغلق</guibutton
+>: يغلق مستند المراجع النشط حاليًا. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>احفظ</guibutton
+>: يحفظ مستند المراجع النشط حاليًا. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>احفظ باسم</guibutton
+>: يسمح بحفظ مستند المراجع المفتوح حاليًا تحت اسم جديد باستخدام <ulink url="help:/fundamentals/files.html"
+>حوار الفتح/الحفظ العام لـ &kde;</ulink
+>. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>عنصر جديد</guibutton
+>: يسمح بإنشاء مدخلة أو تعليق أو تمهيد أو <link linkend="macros"
+>ماكرو</link
+> جديد في مستند المراجع الحالي. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>ابحث عن المكررات</guibutton
+>: يجد ويصلح العناصر المكررة في مستند المراجع الحالي. </para>
+	    </listitem>
+	    <listitem>
+	      <para
+><guibutton
+>أرسل إلى &lyx;/&kile;</guibutton
+>: يرسل مرجعًا على مدخلة المراجع المحددة حاليًا إلى &lyx; أو &kile;. مزيد حول هذا في <link linkend="integration"
+>الفصل المقابل من هذا الدليل</link
+>. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+    <sect2 id="filter-toolbar">
+      <title
+>شريط أدوات المرشح </title>
+	<para>
+	  <screenshot>
+	    <screeninfo
+>شريط أدوات المرشح</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="filter-toolbar.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>شريط أدوات المرشح</phrase>
+	      </textobject>
+	      <caption>
+		<para
+>شريط أدوات التصفية المبدئي لـ كبتخ. </para>
+	      </caption>
+	    </mediaobject>
+	  </screenshot>
+	</para>
+	<para
+>أبسط طريقة للتنقل في المراجع الكبيرة هي استخدام شريط أدوات <guilabel
+>التصفية</guilabel
+>: سيقوم كبتخ بتصفية القائمة المعروضة وفقًا لإدخالك. إذا كنت تبحث عن عنصر ما، ولكنك لا تعرف موقعه الدقيق في القائمة، فاكتب بعض الحروف من بياناته في مربع نص <guilabel
+>التصفية</guilabel
+>. </para>
+	<para
+>عند إدخال الحروف القليلة الأولى، سترى القائمة تتغير. كلما أدخلت حروفًا أكثر، كلما رأيت قائمة أكثر اختصارًا. تحدث هذه التصفية فورًا أثناء الكتابة. </para>
+	<para
+>إذا نظرت إلى الجزء الأيمن من شريط أدوات <guilabel
+>التصفية</guilabel
+>، ستلاحظ قائمتين منسدلتين. صُممت القائمتان المنسدلتان لتتمكن من تخصيص معايير التصفية بسرعة لتناسب احتياجاتك. تُستخدم القائمة المنسدلة الأولى لتحديد نمط المطابقة (<guimenuitem
+>أي كلمة</guimenuitem
+> أو <guimenuitem
+>كل كلمة</guimenuitem
+> أو <guimenuitem
+>العبارة الدقيقة</guimenuitem
+>). والثانية لتحديد الحقل الذي يجب أن تتم فيه التصفية. يمكنك اختيار <guimenuitem
+>أي حقل</guimenuitem
+> أو تحديد حقل لتضييق قائمة النتائج في المراجع الكبيرة. </para>
+	<para
+>يوجد أيضًا زران على شريط الأدوات هذا: </para>
+	<para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="application-pdf.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>ضمّن ملفات &PDF; في البحث النصي الكامل</guibutton
+>: يسمح لك بتضمين &PDF; النصي الكامل في التصفية. </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<inlinemediaobject>
+		  <imageobject>
+		    <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/>
+		  </imageobject
+></inlinemediaobject
+> <guibutton
+>أعد ضبط معايير التصفية</guibutton
+>: يعيد ضبط معايير التصفية. </para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+    </sect2>
+  </sect1>
+  <sect1 id="menus">
+    <title
+>قوائم كبتخ </title>
+    <para
+>يتبع كبتخ مخطط القوائم القياسي لـ &kde;. لذا يحتوي على العديد من إدخالات القوائم الشائعة في جميع تطبيقات &kde;. يمكن العثور على مزيد من المعلومات حول إدخالات القوائم هذه في <ulink url="help:/fundamentals/menus.html"
+>قسم المساعدة هذا</ulink
+>. </para>
+    <para
+>أدناه، يمكنك العثور على أوصاف لإدخالات القوائم الخاصة بـ كبتخ. </para>
+    <variablelist>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+> حرر</guimenu
+> <guimenuitem
+>احذف</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>احذف العنصر المحدد حاليًا في قائمة المراجع. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>تحرير</guimenu
+> <guimenuitem
+>إيجاد المكررات</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>يتيح لك إيجاد وإزالة المكررات في قائمة المراجع المفتوحة حاليًا. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>عنصر</guimenu
+> <guisubmenu
+>عنصر جديد</guisubmenu
+> <guimenuitem
+>إدخال جديد</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>افتح نافذة <link linkend="element-editor"
+>تحرير العنصر</link
+> لإدخال إدخال مرجعي جديد. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>عنصر</guimenu
+> <guisubmenu
+>عنصر جديد</guisubmenu
+> <guimenuitem
+>تعليق جديد</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>افتح نافذة <link linkend="element-editor"
+>تحرير العنصر</link
+> لإدخال تعليق جديد لا يعتبره &bibtex;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>عنصر</guimenu
+> <guisubmenu
+>عنصر جديد</guisubmenu
+> <guimenuitem
+>ماكرو جديد</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>افتح نافذة <link linkend="element-editor"
+>تحرير العنصر</link
+> لإدخال <link linkend="macros"
+>ماكرو</link
+> جديد. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>عنصر</guimenu
+> <guisubmenu
+>عنصر جديد</guisubmenu
+> <guimenuitem
+>تمهيد جديد</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>افتح نافذة <link linkend="element-editor"
+>تحرير العنصر</link
+> لإدخال تمهيد مرجعي جديد يحدد كيفية تنسيق النص الخاص في قائمة المراجع. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>E</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>عنصر</guimenu
+> <guimenuitem
+>تحرير العنصر</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>افتح نافذة <link linkend="element-editor"
+>تحرير العنصر</link
+> لتحرير عنصر قائمة المراجع المحدد حاليًا. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="adding-link">
+	<term>
+	  <menuchoice
+><shortcut
+> <keycombo
+> &Ctrl; <keycap
+>D</keycap
+> </keycombo
+> </shortcut
+> <guimenu
+>عنصر</guimenu
+> <guisubmenu
+>عرض المستند</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>افتح مستندًا محليًا أو بعيدًا للإدخال المحدد حاليًا في قائمة المراجع. </para>
+	  <para
+>يمكن إضافة الرابط إلى المستند أو تحريره باستخدام لسان <guilabel
+>خارجي</guilabel
+> في نافذة <link linkend="element-editor"
+>تحرير العنصر</link
+>. </para>
+	  <screenshot>
+	    <screeninfo
+>لسان المستندات الخارجية في حوار تحرير الإدخال</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="external-tab.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>لسان المستندات الخارجية في حوار تحرير الإدخال</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>يمكن استخدام زر <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> إضافة</guilabel
+> لإضافة رابط إلى صفحة بعيدة. </para>
+	  <para
+>يستخدم مربع القائمة المنسدلة <guilabel
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> إضافة ملف...</guilabel
+> لاختيار ملف محلي وإضافة مرجع أو الملف بأكمله إلى قائمة المراجع الحالية. </para>
+	  <para
+>إذا نقرت على <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-clear-locationbar-rtl.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> فسيُمسح العنصر المحدد حاليًا. </para>
+	  <para
+>انقر على زر <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-open-remote.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> لفتح رابط المستند في المتصفح. </para>
+	  <para
+>انقر على زر <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> لإزالة عنصر المستند المحدد حاليًا. </para>
+	  <para
+>لإعادة ترتيب العناصر في قائمة المستندات، استخدم زرّي <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-down.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> و <inlinemediaobject
+> <imageobject
+> <imagedata fileref="go-up.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>. </para>
+	  <para
+>أخيرًا، يمكن استخدام زر <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-save.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> لحفظ المستندات البعيدة محليًا. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>عنصر</guimenu
+> <guimenuitem
+>إيجاد &PDF;...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>حاول إيجاد بعض مستندات &PDF; للإدخال المرجعي المحدد حاليًا على الإنترنت. </para>
+	  <screenshot>
+	    <screeninfo
+>حوار إيجاد &PDF;</screeninfo>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata fileref="find-pdf.png" format="PNG"/>
+	      </imageobject>
+	      <textobject>
+		<phrase
+>حوار البحث عن &PDF;</phrase>
+	      </textobject>
+	    </mediaobject>
+	  </screenshot>
+	  <para
+>يمكنك <guilabel
+>تجاهل</guilabel
+> أو <guilabel
+>تنزيل</guilabel
+> أو فقط <guilabel
+>استخدام &URL; فقط</guilabel
+> للمدخلة. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry id="format-entry-ids">
+	<term>
+	  <menuchoice
+><guimenu
+>عنصر</guimenu
+> <guimenuitem
+>تنسيق معرفات المدخلات</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>يسمح لك بتنسيق المعرفات لمدخلات المراجع المحددة حاليًا وفقًا للتنسيق المبدئي. </para>
+	  <para
+>يمكن تعريف تنسيق المعرفات المبدئي باستخدام <link linkend="config-id-suggestions"
+>صفحة اقتراحات المعرفات</link
+> من حوار ضبط كبتخ. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>عنصر</guimenu
+> <guisubmenu
+>لون</guisubmenu
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>يسمح لك بتحديد لصيقة لون لمدخلات المراجع المحددة حاليًا أو إزالة هذه اللصيقة (<guimenuitem
+>بلا لون</guimenuitem
+>). </para>
+	  <para
+>يمكن ضبط لصائق الألوان باستخدام <link linkend="config-color"
+>صفحة الألوان واللصائق</link
+> من حوار ضبط كبتخ. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>عنصر</guimenu
+> <guimenuitem
+>أرسل إلى &lyx;/&kile;</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+><link linkend="integration"
+>أرسل المراجع</link
+> إلى مدخلات المراجع المحددة حاليًا إلى &lyx; أو &kile;. </para>
+	</listitem>
+      </varlistentry>
+      <varlistentry>
+	<term>
+	  <menuchoice
+><guimenu
+>إعدادات</guimenu
+> <guimenuitem
+>اضبط كبتخ...</guimenuitem
+> </menuchoice>
+	</term>
+	<listitem>
+	  <para
+>افتح <link linkend="config-dialog"
+>حوار ضبط كبتخ</link
+>. </para>
+	</listitem>
+      </varlistentry>
+    </variablelist>
+  </sect1>
+  <sect1 id="config-dialog">
+    <title
+>حوار ضبط كبتخ </title>
+    <para
+>يمكن ضبط عدة معاملات لـ كبتخ عبر حوار <guilabel
+>التفضيلات</guilabel
+>. يمكن فتح هذا الحوار باستخدام عنصر القائمة <menuchoice
+><guimenu
+>إعدادات</guimenu
+><guimenuitem
+>اضبط كبتخ...</guimenuitem
+></menuchoice
+>. أدناه يمكنك العثور على وصف لصفحات ضبط كبتخ. </para>
+    <para
+>انقر زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="document-revert.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> المبدئيات</guibutton
+> لإعادة جميع العناصر إلى قيمها المبدئية. </para>
+    <para
+>يمكن استخدام زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="edit-undo.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> إعادة</guibutton
+> لتجاهل جميع تغييرات الضبط الحالية دون إغلاق نافذة <guilabel
+>التفضيلات</guilabel
+>. </para>
+    <sect2 id="config-general">
+      <title
+>ضبط عام </title>
+      <screenshot>
+	<screeninfo
+>ضبط عام</screeninfo>
+	<mediaobject>
+	  <imageobject>
+	    <imagedata fileref="config-general.png" format="PNG"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase
+>ضبط عام</phrase>
+	  </textobject>
+	</mediaobject>
+      </screenshot>
+      <para
+>تسمح لك صفحة الضبط هذه بتغيير <guilabel
+>تنسيق أسماء الأشخاص</guilabel
+> المبدئي الذي سيُطبق آليًا على الأسماء المدخلة في حوار <link linkend="element-editor"
+>محرر العناصر</link
+>. </para>
+      </sect2>
+    <sect2 id="config-keywords">
+      <title
+>ضبط الكلمات المفتاحية </title>
+      <screenshot>
+	<screeninfo
+>ضبط الكلمات المفتاحية</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-keywords.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>ضبط الكلمات المفتاحية</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>يمكن استخدام هذه الصفحة لتحرير قائمة الكلمات المفتاحية. الكلمات المفتاحية المطبقة على مدخلات المراجع باستخدام <link linkend="element-editor"
+>محرر العناصر</link
+> مفيدة لتنظيم مراجعك. <link linkend="filter-toolbar"
+>الترشيح</link
+> بالكلمات المفتاحية يمكن أن يعطيك نتائج دقيقة حسب المواضيع. </para>
+	<para
+>يمكن استخدام زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> إضافة</guibutton
+> لإضافة كلمة مفتاحية إلى القائمة. </para>
+	<para
+>انقر على زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> إزالة</guibutton
+> لإزالة عنصر الكلمة المفتاحية المحدد حاليًا. </para>
+      </sect2>
+      <sect2 id="config-color">
+      <title
+>ضبط الألوان واللصائق </title>
+      <screenshot>
+	<screeninfo
+>ضبط الألوان واللصائق</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-color.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>ضبط الألوان واللصائق</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>لصائق الألوان هي طريقة مفيدة أخرى لتنظيم مراجعك. يمكن استخدام صفحة الضبط هذه لتعريف اللصائق وألوانها. </para>
+	<para
+>يمكن استخدام زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-add.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> إضافة</guibutton
+> لإضافة لصيقة إلى القائمة. </para>
+	<para
+>انقر على زر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="list-remove.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> إزالة</guibutton
+> لإزالة اللصيقة المحددة حاليًا. </para>
+	<para
+>انقر مرتين على عنصر في العمود <guilabel
+>لون</guilabel
+> أو <guilabel
+>لصيقة</guilabel
+> لبدء تحريره. </para>
+      </sect2>
+      <sect2 id="config-id-suggestions">
+      <title
+>ضبط اقتراحات المعرفات </title>
+      <screenshot>
+	<screeninfo
+>ضبط اقتراحات المعرفات</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-id-suggestions.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>ضبط اقتراحات المعرفات</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>تُستخدم صفحة الضبط هذه لإدارة مخططات اقتراح المعرفات لـ <link linkend="element-editor"
+>محرر العناصر</link
+>. يمكنك إضافة المخططات وتحريرها وإزالتها وإعادة ترتيبها باستخدام الأزرار المقابلة على يمين قائمة الاقتراحات. </para>
+	<para
+>انقر الزر <guibutton
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="favorites.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> تبديل المبدئي</guibutton
+> لتحويل مخطط اقتراح المعرفات المبدئي إلى العنصر المحدد حاليًا. يمكن استخدام هذا الزر لتحديد تنسيق إجراء <link linkend="format-entry-ids"
+>تنسيق معرفات المدخلات</link
+>. </para>
+      </sect2>
+      <sect2 id="config-user-interface">
+      <title
+>ضبط واجهة المستخدم </title>
+      <screenshot>
+	<screeninfo
+>ضبط واجهة المستخدم</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-user-interface.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>ضبط واجهة المستخدم</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>باستخدام صفحة الضبط هذه، يمكنك جعل كبتخ يعرض أو يخفي التعليقات والماكرو في قائمة المراجع، واختيار نظام المراجع (&bibtex; أو &biblatex;)، وتحديد ما يحدث عند النقر المزدوج على عنصر في قائمة المراجع (<guimenuitem
+>فتح المحرر</guimenuitem
+> أو <link linkend="document-preview"
+><guimenuitem
+>عرض المستند</guimenuitem
+></link
+>). </para>
+	<tip>
+	  <para
+>&biblatex; هو إعادة تطبيق لـ &bibtex;. مع &biblatex;، يُتحكم في تنسيق المراجع بالكامل بواسطة ماكرو &latex;، وليس ملفات <filename role="extension"
+>bst</filename
+>. يدعم المراجع المقسمة، والمراجع المتعددة ضمن مستند واحد، وقوائم منفصلة للاختصارات الببليوغرافية. يمكن تقسيم المراجع إلى أجزاء و/أو تجزئتها حسب الموضوعات. تمامًا مثل أنماط المراجع، يمكن تعريف جميع أوامر الاستشهاد بحرية. حزمة &biblatex; مُعربة بالكامل ويمكنها التفاعل مع حزمة babel.<footnote
+><para
+>من وثائق &biblatex;.</para
+></footnote>
+	  </para>
+	  <para
+>أيضًا، يمكن لـ &biblatex; استخدام <ulink url="http://biblatex-biber.sourceforge.net/"
+>biber</ulink
+> كخلفية. مع &biblatex;، من الممكن استخدام رموز UTF-8 في مدخلات المراجع. </para>
+	  <para
+>لذا يمكنك استخدام &biblatex; لإنشاء مراجع متطورة. </para>
+	</tip>
+      </sect2>
+      <sect2 id="config-saving">
+      <title
+>ضبط الحفظ والتصدير </title>
+      <screenshot>
+	<screeninfo
+>ضبط الحفظ والتصدير</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-saving.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>ضبط الحفظ والتصدير</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>تسمح لك هذه الصفحة باختيار أمر &latex; (مثل <userinput
+>\cite{...}</userinput
+>) الذي سيُستخدم كغلاف للمرجع المنسوخ باستخدام عنصر <menuchoice
+><shortcut
+><keycombo
+>&Ctrl;&Shift;<keycap
+>C</keycap
+></keycombo
+></shortcut
+><guimenuitem
+>نسخ المرجع</guimenuitem
+></menuchoice
+> من القائمة المنبثقة من قائمة المراجع. </para>
+	<para
+>من الممكن أيضًا جعل كبتخ يحدد <link linkend="lyx-integration"
+>أنبوب بيانات &lyx;</link
+> آليًا عن طريق تحديد المربع المقابل. </para>
+	<para
+>عندما لا يكون العنصر <guilabel
+>كشف أنبوب &lyx; آليًا</guilabel
+> محددًا، يمكنك إضافة عنوان الأنبوب يدويًا في مربع النص <guilabel
+>أنبوب &lyx; محدد يدويًا</guilabel
+> أو تحديده باستخدام <ulink url="help:/fundamentals/files.html"
+>حوار فتح/حفظ &kde; العام</ulink
+> بالضغط على الزر على يمين مربع النص. </para>
+	<para
+>أخيرًا، يمكنك ضبط النسخ الاحتياطية هنا. من الممكن تحديد موضوع النسخ الاحتياطي (<guimenuitem
+>الملفات المحلية فقط</guimenuitem
+>، <guimenuitem
+>لا نسخ احتياطية</guimenuitem
+> أو <guimenuitem
+>الملفات المحلية والبعيدة معًا</guimenuitem
+>) باستخدام مربع القائمة المنسدلة <guilabel
+>نسخ احتياطية عند الحفظ</guilabel
+> وعدد النسخ الاحتياطية المراد تخزينها. </para>
+      </sect2>
+      <sect2 id="config-pdf">
+      <title
+>ضبط &PDF; &amp; Postscript </title>
+      <screenshot>
+	<screeninfo
+>ضبط &PDF; &amp; Postscript</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="config-pdf.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>ضبط &PDF; &amp; Postscript</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+	<para
+>يمكن استخدام صفحة الضبط هذه لاختيار بعض الخيارات لـ <link linkend="element-editor"
+>معاينة مدخلات كبتخ</link
+>. يمكنك تحديد <guilabel
+>حجم الورق</guilabel
+>، ولغة حزمة &latex; <ulink url="https://www.ctan.org/pkg/babel"
+>babel</ulink
+> و <link linkend="quick-using"
+>نمط المراجع</link
+>. </para>
+      </sect2>
+  </sect1>
+</chapter>
+
+<chapter id="advanced">
+  <title
+>الاستخدام المتقدم </title>
+  <sect1 id="crossreferences">
+    <title
+>مراجع متبادلة </title>
+    <para
+>تسمح لك المراجع المتقاطعة بتوفير بعض الوقت عن طريق إنشاء روابط بين المدخلات <quote
+>الأصلية</quote
+> (يمكن معاملتها كإجراءات أو مجموعات مقالات) والمدخلات <quote
+>الفرعية</quote
+> (تقارير أو مقالات). </para>
+    <para
+>لإنشاء مرجع متقاطع، أضف معرفه في حقل <guilabel
+>مرجع متقاطع:</guilabel
+> من علامة تبويب <guilabel
+>نشر</guilabel
+> للمدخل. </para>
+    <screenshot>
+      <screeninfo
+>علامة تبويب النشر في حوار تحرير المدخل</screeninfo>
+      <mediaobject>
+	<imageobject>
+	  <imagedata fileref="cross-ref.png" format="PNG"/>
+	</imageobject>
+	<textobject>
+	  <phrase
+>علامة تبويب النشر في حوار تحرير المدخل</phrase>
+	</textobject>
+      </mediaobject>
+    </screenshot>
+    <para
+>يمكنك إما إدخال المعرف مباشرة أو النقر على زر <inlinemediaobject
+> <imageobject
+> <imagedata fileref="flag.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> لاختياره من قائمة المعرفات المتاحة. </para>
+  </sect1>
+  <sect1 id="macros">
+    <title
+>وحدات الماكرو </title>
+    <para
+>افترض أن قائمة مراجعك تحتوي على إشارات كثيرة إلى نفس الدورية ولا تريد إدخال عنوانها مرارًا وتكرارًا. عندها يمكنك تعريف ماكرو لعنوان الدورية. </para>
+    <para
+>لنقل أننا نريد تعريف ماكرو <replaceable
+>efm</replaceable
+> لـ <quote
+>Engineering Fracture Mechanics</quote
+>. عندها ينبغي أن نفعل ما يلي: </para>
+    <procedure>
+      <step>
+	<para
+>اختر عنصر القائمة <menuchoice
+><guimenu
+>عنصر</guimenu
+><guisubmenu
+>عنصر جديد</guisubmenu
+><guimenuitem
+>ماكرو جديد</guimenuitem
+></menuchoice
+>. </para>
+      </step>
+      <step>
+	<para
+>أدخل معرفًا (اختصارًا) للعنوان في مربع النص <guilabel
+>المعرف:</guilabel
+>. المعرف المبدئي هو <userinput
+>New1</userinput
+>. ينبغي أن ندخل <userinput
+>efm</userinput
+>. </para>
+      </step>
+      <step>
+	<para
+>اختر <inlinemediaobject
+> <imageobject
+> <imagedata fileref="draw-text.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>نص عادي</guilabel
+>). الخيار الآخر، <inlinemediaobject
+> <imageobject
+> <imagedata fileref="code-context.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> (<guilabel
+>شفرة مصدرية</guilabel
+>)، يمكن استخدامه إذا أردت إدراج ماكرو يحتوي على أوامر &latex;. </para>
+      </step>
+      <step>
+	<para
+>أدخل <userinput
+>Engineering Fracture Mechanics</userinput
+> في مربع النص <guilabel
+>القيمة:</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>تعريف ماكرو</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>تعريف ماكرو</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>انقر على الزر <guibutton
+>تطبيق</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>اختياريًا، انتقل إلى اللسان <guilabel
+>المصدر</guilabel
+> لتفقد شفرة الماكرو. </para>
+	<screenshot>
+	  <screeninfo
+>تعريف ماكرو (شفرة مصدرية)</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="add-macro-source.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>تعريف ماكرو (شفرة مصدرية)</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>انقر على الزر <guibutton
+>موافق</guibutton
+>. </para>
+      </step>
+    </procedure>
+    <para
+>يمكن استخدام الإجراء نفسه لتثبيت العناوين وأسماء المؤلفين والأشهر، &etc; وفقًا لقواعد الاختصار الخاصة بناشرك للعناصر من قواعد البيانات على الخط. مبدئيًا، ينبغي تعريف هذه القواعد (الماكروهات) في ملفات أنماط قائمة المراجع (<filename role="extension"
+>bst</filename
+>). </para>
+  </sect1>
+</chapter>
+
+<chapter id="integration">
+  <title
+>التكامل مع &kile; و&lyx; </title>
+  <para
+>يمكن دمج كبتخ بسهولة مع محررات &latex; الشائعة، وهي &kile; و&lyx;. </para>
+  <sect1 id="kile-intergation">
+    <title
+>التكامل مع &kile; </title>
+    <para
+><ulink url="http://kile.sourceforge.net/"
+>&kile;</ulink
+> هو محرر وصدفة لمصادر &tex; و&latex;. </para>
+    <para
+>كبتخ هو العارض/المحرر المبدئي لملفات &bibtex; في &kile;، لذا لا حاجة لتشكيل إضافي. </para>
+    <para
+>لإضافة استشهادات محددة من ملفات قائمة المراجع، ابدأ &kile;، وافتح ملف &latex;، وضع المؤشر حيث تريد إضافة الاستشهاد، ثم انتقل إلى نافذة كبتخ، واختر عناصر في قائمة العناصر واختر <menuchoice
+><guimenu
+>عنصر</guimenu
+><guimenuitem
+>أرسل إلى &lyx;/&kile;</guimenuitem
+></menuchoice
+> أو استخدم عنصر القائمة السياقية (<guimenuitem
+>أرسل إلى &lyx;/&kile;</guimenuitem
+>) (انقر بزر الفأرة الأيمن). </para>
+    <para
+>سيُدرج الاستشهاد كـ <userinput
+>\cite{<replaceable
+>معرفات العناصر</replaceable
+>}</userinput
+> في موضع المؤشر في مستند &kile; الحالي. </para>
+  </sect1>
+  <sect1 id="lyx-integration">
+    <title
+>التكامل مع &lyx; </title>
+    <para
+><ulink url="https://www.lyx.org/"
+>&lyx;</ulink
+> هو معالج مستندات يشجع نهجًا في الكتابة يعتمد على بنية مستنداتك (WYSIWYM) وليس فقط مظهرها (WYSIWYG). </para>
+    <para
+>يمكن دمج كبتخ في &lyx; عبر أنبوب الإدخال/الإخراج لـ &lyx;. </para>
+    <procedure>
+      <step>
+	<para
+>أولًا، عليك تشكيل &lyx; لاستخدام الأنبوب. اختر <menuchoice
+><guimenu
+>أدوات</guimenu
+><guimenuitem
+>التفضيلات</guimenuitem
+></menuchoice
+> من القائمة الرئيسة لـ &lyx;. افتح صفحة <guilabel
+>المسارات</guilabel
+> وأدخل مسارًا (&eg; <filename
+>~/.lyx/lyxpipe</filename
+>) في مربع النص <guilabel
+>أنبوب خادم LyX</guilabel
+>. </para>
+	<screenshot>
+	  <screeninfo
+>تشكيل &lyx;</screeninfo>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata fileref="lyx-preferences.png" format="PNG"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase
+>تشكيل &lyx;</phrase>
+	    </textobject>
+	  </mediaobject>
+	</screenshot>
+      </step>
+      <step>
+	<para
+>انقر <guibutton
+>حفظ</guibutton
+> لحفظ التغييرات. </para>
+      </step>
+      <step>
+	<para
+>اختر <menuchoice
+><guimenu
+>أدوات</guimenu
+><guimenuitem
+>أعد الضبط</guimenuitem
+></menuchoice
+> لإعادة ضبط &lyx; وإعادة تشغيله. </para>
+      </step>
+      <step>
+	<para
+>لإضافة استشهادات محددة من ملفات المراجع، افتح مستندا، ضع المؤشر حيث تريد إضافة مراجع واختر <menuchoice
+><guimenu
+>إدراج</guimenu
+><guisubmenu
+>قائمة / فهرس</guisubmenu
+><guimenuitem
+>&bibtex; مراجع...</guimenuitem
+></menuchoice
+> من القائمة الرئيسة لـ &lyx;. </para>
+      </step>
+      <step>
+	<para
+>اضغط <guibutton
+>أضف...</guibutton
+> ثم <guibutton
+>تصفح...</guibutton
+>. وجّه &lyx; إلى ملف كبتخ <filename role="extension"
+>bib</filename
+>. انقر <guibutton
+>أضف</guibutton
+> ثم انقر <guibutton
+>موافق</guibutton
+>. </para>
+      </step>
+      <step>
+	<para
+>ثم ضع المؤشر حيث تريد إضافة الاستشهاد وانتقل إلى نافذة كبتخ. اختر عناصر في قائمة العناصر واختر <menuchoice
+><guimenu
+>عنصر</guimenu
+><guimenuitem
+>أرسل إلى &lyx;/&kile;</guimenuitem
+></menuchoice
+> أو استخدم عنصر <guimenuitem
+>أرسل إلى &lyx;/&kile;</guimenuitem
+> من قائمة السياق (نقرة &RMB;). </para>
+      </step>
+      <step>
+	<para
+>سيُدرج الاستشهاد كمرجع في موضع المؤشر في مستند &lyx; الحالي. </para>
+      </step>
+    </procedure>
+  </sect1>
+</chapter>
+
+<chapter id="credits">
+  <title
+>الحقوق والترخيص</title>
+  <para
+>كبتخ </para>
+  <para
+>حقوق نشر البرنامج &copy; 2004-2014 توماس فيشر <email
+>fischer@unix-ag.uni-kl.de</email
+> </para>
+  <para
+>حقوق نشر التوثيق &copy; 2013 يوري تشورنويفان <email
+>yurchor@ukr.net</email
+> </para>
+<para
+>الترجمة: زايد السعيدي <email
+>zayed.alsaidi@gmail.com</email
+></para
+> &underFDL; &underGPL; </chapter>
+
+<bibliography>
+  <biblioentry>
+    <abbrev
+>Lamport86</abbrev>
+    <author>
+      <personname
+><firstname
+>Leslie</firstname
+> <surname
+>Lamport</surname
+> </personname>
+    </author>
+    <title
+>لاتخ: نظام تحضير مستندات </title>
+    <pubdate
+>1986</pubdate>
+    <publisher>
+      <publishername
+>Addison-Wesley Publishing Company</publishername>
+    </publisher>
+  </biblioentry>
+</bibliography>
+
+&documentation.index;
+
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+-->

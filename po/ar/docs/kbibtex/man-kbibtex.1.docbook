@@ -1,0 +1,124 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+<!ENTITY % Arabic "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<title
+>دليل مستخدم كبتخ</title>
+<author
+><firstname
+>Thomas</firstname
+><surname
+>Fischer</surname
+> <contrib
+>KBibTeX man page.</contrib
+> <email
+>fischer@unix-ag.uni-kl.de</email
+></author>
+<date
+>2016-06-29</date>
+<productname
+>كبتخ</productname>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle
+><command
+>kbibtex</command
+></refentrytitle>
+<manvolnum
+>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname
+><command
+>kbibtex</command
+></refname>
+<refpurpose
+>محرر كبتخ من كيدي، كتبه توماس فيشر، وأُصدر تحت رخصة GPL الإصدار 2 أو ما يليه.</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis
+><command
+>kbibtex</command
+> <arg choice="opt"
+><replaceable
+>URL</replaceable
+></arg
+> </cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title
+>الوصف</title>
+<para
+>كبتخ هو محرر BibTeX من كيدي، كتبه توماس فيشر، وأُصدر تحت رخصة GPL الإصدار 2 أو ما يليه. </para>
+<para
+>يمكن تشغيل KBibTeX كبرنامج مستقل أو تضمينه كجزء KPart في أي برنامج كيدي تقريبًا (مثل Konqueror). </para>
+</refsect1>
+
+<refsect1 id="arguments"
+><title
+>المعطيات</title>
+<variablelist>
+  <varlistentry>
+    <term
+><option
+>URL</option
+></term>
+  <listitem>
+    <para
+>عنوان أو عدة عناوين لوثائق المراجع التي ستُفتح.</para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</refsect1>
+
+<refsect1>
+<title
+>انظر أيضًا</title>
+<simplelist>
+<member
+>وثائق المستخدم المفصلة متوفرة من <ulink url="help:/kbibtex"
+>help:/kbibtex</ulink
+> (إما بإدخال هذا <acronym
+>URL</acronym
+> في Konqueror، أو بتشغيل <userinput
+><command
+>khelpcenter</command
+> <parameter
+>help:/kbibtex</parameter
+></userinput
+>).</member>
+<member
+>kf5options(7)</member>
+<member
+>qt5options(7)</member>
+<member
+>تتوفر أيضًا معلومات إضافية في <ulink url="https://userbase.kde.org/KBibTeX"
+>الموقع الرسمي لـ كبتخ</ulink
+>.</member>
+</simplelist>
+
+</refsect1>
+
+<refsect1>
+<title
+>المؤلفون</title>
+<para
+>كتب كبتخ <personname
+><firstname
+>توماس</firstname
+><surname
+>فيشر</surname
+></personname
+> <email
+>fischer@unix-ag.uni-kl.de</email
+>. </para>
+</refsect1>
+
+</refentry>
