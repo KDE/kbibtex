@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-08 04:38+0000\n"
-"PO-Revision-Date: 2026-11-10 21:42+0300\n"
+"PO-Revision-Date: 2026-11-18 18:15+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1102,7 +1102,7 @@ msgstr "Mutlak Yol"
 #: src/gui/element/associatedfilesui.cpp:152
 #, kde-format
 msgid "Preview of reference to be inserted:"
-msgstr "Eklenecek başvuruların önizlemesi:"
+msgstr "Eklenecek başvuruların ön izlemesi:"
 
 #: src/gui/element/associatedfilesui.cpp:165
 #, kde-format
@@ -1115,7 +1115,7 @@ msgstr "Belgeyi Girdiyle İlişkilendir"
 #: src/program/docklets/referencepreview.cpp:229
 #, kde-format
 msgid "No preview available"
-msgstr "Kullanılabilir önizleme yok"
+msgstr "Kullanılabilir ön izleme yok"
 
 #: src/gui/element/associatedfilesui.cpp:297
 #, kde-format
@@ -3708,7 +3708,7 @@ msgstr "Üretilen çıktı yok"
 #: src/program/docklets/referencepreview.cpp:359
 #, kde-format
 msgid "Cannot show a preview for this type of element"
-msgstr "Bu tür öge için bir önizleme gösterilemiyor"
+msgstr "Bu tür öge için bir ön izleme gösterilemiyor"
 
 #: src/program/docklets/referencepreview.cpp:387
 #, kde-format
