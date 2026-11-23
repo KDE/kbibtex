@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-08 04:38+0000\n"
-"PO-Revision-Date: 2026-11-18 18:15+0300\n"
+"PO-Revision-Date: 2026-11-22 19:50+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1719,7 +1719,7 @@ msgstr ""
 #: src/gui/file/basicfileview.cpp:384
 #, kde-format
 msgid "Reset to defaults"
-msgstr "Öntanımlı ayarlara dön"
+msgstr "Varsayılan ayarlara dön"
 
 #: src/gui/file/basicfileview.cpp:391
 #, kde-format
@@ -1836,14 +1836,14 @@ msgid ""
 "This will reset the settings to factory defaults. Should this affect only "
 "the current page or all settings?"
 msgstr ""
-"Bu, ayarları fabrika öntanımlılarına sıfırlayacaktır. Bu yalnızca geçerli "
+"Bu, ayarları fabrika varsayılanlarına sıfırlayacaktır. Bu yalnızca geçerli "
 "sayfayı mı yoksa tüm ayarları mı etkilemeli?"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
 #, kde-format
 msgid "Reset to Defaults"
-msgstr "Öntanımlı Ayarlara Dön"
+msgstr "Varsayılan Ayarlara Dön"
 
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:120
 #: src/gui/preferences/kbibtexpreferencesdialog.cpp:122
@@ -2369,7 +2369,7 @@ msgstr "Aşağı"
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:278
 #, kde-format
 msgid "Toggle Default"
-msgstr "Öntanımlıyı Değiştir"
+msgstr "Varsayılanı Değiştir"
 
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:382
 #: src/gui/preferences/settingsidsuggestionswidget.cpp:384
@@ -3178,13 +3178,13 @@ msgstr ""
 msgid ""
 "Cannot apply default formatting for entry ids: No default format specified."
 msgstr ""
-"Girdi kimlikleri için öntanımlı biçimlendirme uygulanamıyor: Öntanımlı biçim "
-"belirtilmedi."
+"Girdi kimlikleri için varsayılan biçimlendirme uygulanamıyor: Varsayılan "
+"biçim belirtilmedi."
 
 #: src/parts/part.cpp:1076
 #, kde-format
 msgid "Cannot Apply Default Formatting"
-msgstr "Öntanımlı Biçimlendirme Uygulanamıyor"
+msgstr "Varsayılan Biçimlendirme Uygulanamıyor"
 
 #: src/parts/part.cpp:1204
 #, kde-format
@@ -4134,18 +4134,18 @@ msgid ""
 "KBibTeX is not the default editor for its bibliography formats like BibTeX "
 "or RIS."
 msgstr ""
-"KBibTeX, BibTex veya RIS gibi kaynakça formatlarının öntanımlı düzenleyicisi "
-"değil."
+"KBibTeX, BibTex veya RIS gibi kaynakça formatlarının varsayılan "
+"düzenleyicisi değil."
 
 #: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Default Bibliography Editor"
-msgstr "Öntanımlı Kaynakça Düzenleyicisi"
+msgstr "Varsayılan Kaynakça Düzenleyicisi"
 
 #: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
 msgid "Set as Default Editor"
-msgstr "Öntanımlı Düzenleyici Olarak Ayarla"
+msgstr "Varsayılan Düzenleyici Olarak Ayarla"
 
 #: src/program/mainwindow.cpp:466 src/program/mainwindow.cpp:468
 #, kde-format
