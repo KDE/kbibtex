@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-08 04:38+0000\n"
+"POT-Creation-Date: 2026-11-24 03:11+0000\n"
 "PO-Revision-Date: 2026-07-18 23:50+0200\n"
 "Last-Translator: Libor Filípek <libor.filipek@gmail.com>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2959,30 +2959,6 @@ msgctxt "@title:window"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Výměna klíčů Zotero OAuth"
 
-#. i18n: ectx: Menu (file)
-#: src/parts/kbibtexpartui.rc:8 src/program/kbibtexui.rc:8
-#, kde-format
-msgid "File"
-msgstr "Soubor"
-
-#. i18n: ectx: Menu (edit)
-#: src/parts/kbibtexpartui.rc:14
-#, kde-format
-msgid "Edit"
-msgstr "Upravit"
-
-#. i18n: ectx: Menu (element)
-#: src/parts/kbibtexpartui.rc:21
-#, kde-format
-msgid "Element"
-msgstr "Prvek"
-
-#. i18n: ectx: ToolBar (mainToolBar)
-#: src/parts/kbibtexpartui.rc:37 src/program/kbibtexui.rc:24
-#, kde-format
-msgid "Main Toolbar"
-msgstr "Hlavní panel nástrojů"
-
 #: src/parts/part.cpp:137 src/parts/part.cpp:214
 #, kde-format
 msgid "View Document"
@@ -4256,3 +4232,15 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Neúplná instalace KBibTeX"
+
+#~ msgid "File"
+#~ msgstr "Soubor"
+
+#~ msgid "Edit"
+#~ msgstr "Upravit"
+
+#~ msgid "Element"
+#~ msgstr "Prvek"
+
+#~ msgid "Main Toolbar"
+#~ msgstr "Hlavní panel nástrojů"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-08 04:38+0000\n"
+"POT-Creation-Date: 2026-11-24 03:11+0000\n"
 "PO-Revision-Date: 2024-04-22 16:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2899,30 +2899,6 @@ msgctxt "@title:window"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Zotero OAuth 密钥交换"
 
-#. i18n: ectx: Menu (file)
-#: src/parts/kbibtexpartui.rc:8 src/program/kbibtexui.rc:8
-#, kde-format
-msgid "File"
-msgstr "文件"
-
-#. i18n: ectx: Menu (edit)
-#: src/parts/kbibtexpartui.rc:14
-#, kde-format
-msgid "Edit"
-msgstr "编辑"
-
-#. i18n: ectx: Menu (element)
-#: src/parts/kbibtexpartui.rc:21
-#, kde-format
-msgid "Element"
-msgstr "元素"
-
-#. i18n: ectx: ToolBar (mainToolBar)
-#: src/parts/kbibtexpartui.rc:37 src/program/kbibtexui.rc:24
-#, kde-format
-msgid "Main Toolbar"
-msgstr "主工具栏"
-
 #: src/parts/part.cpp:137 src/parts/part.cpp:214
 #, kde-format
 msgid "View Document"
@@ -4134,3 +4110,15 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr ""
+
+#~ msgid "File"
+#~ msgstr "文件"
+
+#~ msgid "Edit"
+#~ msgstr "编辑"
+
+#~ msgid "Element"
+#~ msgstr "元素"
+
+#~ msgid "Main Toolbar"
+#~ msgstr "主工具栏"

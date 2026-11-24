@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-11-08 04:38+0000\n"
+"POT-Creation-Date: 2026-11-24 03:11+0000\n"
 "PO-Revision-Date: 2026-04-27 06:21-0300\n"
 "Last-Translator: Marcus Gama <marcus.gama@kde.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2967,30 +2967,6 @@ msgctxt "@title:window"
 msgid "Zotero OAuth Key Exchange"
 msgstr "Troca de chaves OAuth do Zotero"
 
-#. i18n: ectx: Menu (file)
-#: src/parts/kbibtexpartui.rc:8 src/program/kbibtexui.rc:8
-#, kde-format
-msgid "File"
-msgstr "Arquivo"
-
-#. i18n: ectx: Menu (edit)
-#: src/parts/kbibtexpartui.rc:14
-#, kde-format
-msgid "Edit"
-msgstr "Editar"
-
-#. i18n: ectx: Menu (element)
-#: src/parts/kbibtexpartui.rc:21
-#, kde-format
-msgid "Element"
-msgstr "Elemento"
-
-#. i18n: ectx: ToolBar (mainToolBar)
-#: src/parts/kbibtexpartui.rc:37 src/program/kbibtexui.rc:24
-#, kde-format
-msgid "Main Toolbar"
-msgstr "Barra de ferramentas principal"
-
 #: src/parts/part.cpp:137 src/parts/part.cpp:214
 #, kde-format
 msgid "View Document"
@@ -4266,6 +4242,18 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr "Instalação incompleta do KBibTeX"
+
+#~ msgid "File"
+#~ msgstr "Arquivo"
+
+#~ msgid "Edit"
+#~ msgstr "Editar"
+
+#~ msgid "Element"
+#~ msgstr "Elemento"
+
+#~ msgid "Main Toolbar"
+#~ msgstr "Barra de ferramentas principal"
 
 #~ msgctxt "Comment Quoting"
 #~ msgid "None"
