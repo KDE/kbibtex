@@ -4110,15 +4110,3 @@ msgstr ""
 #, kde-format
 msgid "Incomplete KBibTeX Installation"
 msgstr ""
-
-#~ msgid "File"
-#~ msgstr "文件"
-
-#~ msgid "Edit"
-#~ msgstr "编辑"
-
-#~ msgid "Element"
-#~ msgstr "元素"
-
-#~ msgid "Main Toolbar"
-#~ msgstr "主工具栏"
