@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kbibtex\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-11-24 03:11+0000\n"
-"PO-Revision-Date: 2026-11-22 19:50+0300\n"
+"PO-Revision-Date: 2026-11-26 17:24+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -2316,12 +2316,12 @@ msgstr "Önizleme:"
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:616
 #, kde-format
 msgid "Copy format string to clipboard"
-msgstr "Biçimlendirme dizisini panoya kopyala"
+msgstr "Biçim dizgesini panoya kopyala"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:622
 #, kde-format
 msgid "Format string:"
-msgstr "Biçim dizisi:"
+msgstr "Biçim dizgesi:"
 
 #: src/gui/preferences/settingsidsuggestionseditor.cpp:635
 #, kde-format
@@ -2423,7 +2423,7 @@ msgstr "Kodlama:"
 #: src/gui/widgets/filesettingswidget.cpp:147
 #, kde-format
 msgid "String Delimiters:"
-msgstr "Dizi sınırlandırıcıları:"
+msgstr "Dizge sınırlandırıcıları:"
 
 #: src/gui/widgets/filesettingswidget.cpp:154
 #, kde-format
